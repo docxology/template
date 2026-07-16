@@ -28,8 +28,9 @@ Europe PMC, bioRxiv/medRxiv), kept in sync with
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Sequence
 from statistics import mean
-from typing import Any, Sequence
+from typing import Any
 
 from literature.corpus import Corpus
 from literature.query_router import QueryRouter

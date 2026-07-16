@@ -23,8 +23,9 @@ Semantic Scholar first (broadest interdisciplinary coverage).
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Literal, Sequence
+from typing import Literal
 
 QueryType = Literal["academic", "industry", "mixed"]
 
@@ -164,7 +165,7 @@ class QueryRouter:
             query_type = "mixed"
             confidence = 0.50 + 0.05 * min(len(academic_hits) + len(industry_hits), 4)
 
-        prefer_preprints = bool(preprint_hits or exact_hits and "arxiv_id" in exact_hits)
+        prefer_preprints = bool(preprint_hits or (exact_hits and "arxiv_id" in exact_hits))
         if prefer_preprints:
             source_order = PREPRINT_SOURCE_ORDER
         elif query_type == "academic":

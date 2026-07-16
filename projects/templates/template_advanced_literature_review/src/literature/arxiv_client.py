@@ -14,13 +14,12 @@ from __future__ import annotations
 import logging
 import random
 import time
-import xml.etree.ElementTree as ET  # noqa: S405 — used only for type hints / ParseError
+import xml.etree.ElementTree as ET
+from collections.abc import Callable
 from datetime import date
-from typing import Optional, Callable
-
-from defusedxml.ElementTree import fromstring as _safe_fromstring
 
 import requests
+from defusedxml.ElementTree import fromstring as _safe_fromstring
 
 from .models import Author, Paper
 
@@ -68,7 +67,7 @@ def parse_arxiv_response(xml_text: str) -> list[Paper]:
     return papers
 
 
-def _parse_entry(entry: ET.Element) -> Optional[Paper]:
+def _parse_entry(entry: ET.Element) -> Paper | None:
     """Parse a single Atom entry element into a Paper.
 
     Args:
@@ -102,8 +101,8 @@ def _parse_entry(entry: ET.Element) -> Optional[Paper]:
 
     # Publication date
     published_elem = entry.find(f"{{{ATOM_NS}}}published")
-    pub_date: Optional[date] = None
-    year: Optional[int] = None
+    pub_date: date | None = None
+    year: int | None = None
     if published_elem is not None and published_elem.text:
         date_str = published_elem.text.strip()
         try:
@@ -113,7 +112,7 @@ def _parse_entry(entry: ET.Element) -> Optional[Paper]:
             pass
 
     # arXiv ID from the <id> element
-    arxiv_id: Optional[str] = None
+    arxiv_id: str | None = None
     id_elem = entry.find(f"{{{ATOM_NS}}}id")
     if id_elem is not None and id_elem.text:
         raw_id = id_elem.text.strip()
@@ -125,7 +124,7 @@ def _parse_entry(entry: ET.Element) -> Optional[Paper]:
                 arxiv_id = arxiv_id.rsplit("v", 1)[0]
 
     # DOI from arxiv namespace
-    doi: Optional[str] = None
+    doi: str | None = None
     doi_elem = entry.find(f"{{{ARXIV_NS}}}doi")
     if doi_elem is not None and doi_elem.text:
         doi = doi_elem.text.strip()
@@ -156,7 +155,7 @@ def _fetch_page(
     base_url: str,
     session: requests.Session,
     rate_limit_seconds: float,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Fetch a single page of results from the arXiv API with retry.
 
@@ -176,7 +175,7 @@ def _fetch_page(
         requests.HTTPError: If all retries are exhausted.
     """
     sleep_fn = delay_override or time.sleep
-    params = {
+    params: dict[str, str | int | float] = {
         "search_query": query,
         "start": start,
         "max_results": page_size,
@@ -213,9 +212,9 @@ def search_arxiv(
     query: str,
     max_results: int = 100,
     base_url: str = ARXIV_API_URL,
-    session: Optional[requests.Session] = None,
+    session: requests.Session | None = None,
     rate_limit_seconds: float = DEFAULT_RATE_LIMIT_SECONDS,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Search the arXiv API for papers matching a query.
 
@@ -291,5 +290,9 @@ def search_arxiv(
         if session is None:
             http.close()
 
-    logger.info("arXiv search complete: %d total papers for query '%s'", len(all_papers), query[:80])
+    logger.info(
+        "arXiv search complete: %d total papers for query '%s'",
+        len(all_papers),
+        query[:80],
+    )
     return all_papers

@@ -161,7 +161,7 @@ def normalized_rating(node: WorkflowNode) -> float:
     Returns:
         Normalized rating in ``[0.0, 1.0]``.
     """
-    clamped = min(4, max(1, node.reproducibility_rating))
+    clamped = min(4.0, max(1.0, float(node.reproducibility_rating)))
     return (clamped - 1) / 3
 
 
@@ -182,9 +182,7 @@ def stage_average(graph: WorkflowGraph, node_type: NodeType) -> Optional[float]:
     return sum(ratings) / len(ratings)
 
 
-def content_score(
-    graph: WorkflowGraph, weights: ContentWeights = ContentWeights()
-) -> tuple[float, dict[str, float]]:
+def content_score(graph: WorkflowGraph, weights: ContentWeights = ContentWeights()) -> tuple[float, dict[str, float]]:
     """Compute the content score ``Rc`` -- a renormalized, weighted stage average.
 
     Only stages that actually have >=1 node contribute; the configured

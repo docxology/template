@@ -89,8 +89,19 @@ class TestPublicSurface:
             "template-drift",
             "counts",
             "skills-manifest",
+            "semantic-standins",
+            "operations-manifest",
+            "skill-reachability",
         ):
             assert gate in specs
+
+        assert specs["semantic-standins"][-3:] == [
+            "--inventory",
+            "--max-dependency-replacements",
+            "0",
+        ]
+        assert specs["operations-manifest"][-1] == "operations-check"
+        assert specs["skill-reachability"][-1] == "scripts/gates/skill_reachability_check.py"
 
     def test_ci_security_and_platform_oracles_fail_closed(self) -> None:
         workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")

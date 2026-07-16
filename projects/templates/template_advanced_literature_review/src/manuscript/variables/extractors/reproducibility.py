@@ -22,7 +22,10 @@ from manuscript.variables.context import ExtractContext
 
 _DEFAULT_LOW_SCORE_THRESHOLD = 0.5
 _MAX_TABLE_ROWS = 15
-_TABLE_HEADER = ["| Paper | Composite | Content | Structural |", "| --- | --- | --- | --- |"]
+_TABLE_HEADER = [
+    "| Paper | Composite | Content | Structural |",
+    "| --- | --- | --- | --- |",
+]
 
 
 def extract_reproducibility(ctx: ExtractContext) -> dict[str, str]:

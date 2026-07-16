@@ -289,7 +289,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>This manuscript was generated from a live retrieval run. To
 reproduce:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Live search (all 9 engines, max 1000 per engine)</span></span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Live search (all 10 engines, max 1000 per engine)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/01_literature_search.py <span class="at">--query</span> modafinil <span class="at">--max-results</span> 1000 <span class="at">--no-resume</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis pipeline</span></span>
@@ -316,7 +316,7 @@ degrade to skipped sources. The CLI supports per-engine skip flags:
 <code>--skip-openalex</code>, <code>--skip-crossref</code>,
 <code>--skip-pubmed</code>, <code>--skip-sovietrxiv</code>,
 <code>--skip-chinarxiv</code>, <code>--skip-europepmc</code>,
-<code>--skip-biorxiv</code>.</p>
+<code>--skip-biorxiv</code>, <code>--skip-medrxiv</code>.</p>
 <h2 id="deep-research-offline-fixture-replay">Deep Research (Offline
 Fixture Replay)</h2>
 <p>This exemplar also demonstrates the shared
@@ -351,8 +351,8 @@ class="math inline">\(\geq 90\%\)</span> statement coverage on
 <ul>
 <li>Record models and serialization (deduplication, canonical ID
 hierarchy)</li>
-<li>All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
-PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with
+<li>All 10 engine paths (arXiv, Semantic Scholar, OpenAlex, Crossref,
+PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with
 pytest-httpserver integration tests</li>
 <li>Search runner (multi-engine dispatch, relevance filtering,
 resume/clear, YAML config)</li>

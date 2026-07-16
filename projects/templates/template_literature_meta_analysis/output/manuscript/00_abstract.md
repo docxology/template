@@ -4,8 +4,8 @@ Manual synthesis cannot keep pace with a fast-growing research literature, and a
 reviews bind no evidence to a reproducible pipeline. We present a configurable,
 reproducible meta-analysis framework that takes a single search term and produces a
 complete quantitative portrait of its literature. For this instance the term is
-**Modafinil**. The pipeline dispatches across 9 literature
-engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading gracefully to a skipped source when an API
+**Modafinil**. The pipeline dispatches across 10 literature
+engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each degrading gracefully to a skipped source when an API
 key or the network is unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI $>$ arXiv ID $>$ Semantic Scholar ID $>$ OpenAlex ID $>$ title
 digest) into a corpus of $N = 2334$ records spanning 2000--2026

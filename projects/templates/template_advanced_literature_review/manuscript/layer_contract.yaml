@@ -1,0 +1,5 @@
+# Stage 08 deliberately demonstrates the shared provider-neutral deep-research
+# models through deterministic fixture replay. All other project source remains
+# standalone from template infrastructure.
+allow_infrastructure_imports:
+  - src/deep_research/dispatch.py

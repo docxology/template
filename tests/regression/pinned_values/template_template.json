@@ -4,7 +4,7 @@
     "project_name": "template_template",
     "populated_on": "2026-07-01",
     "populated_by": "Marcus Webb (Engineer)",
-    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the frozen pipeline.yaml DAG structure (declared 14 / default-full 10 / core-only 8) and the confidentiality-invariant public exemplar roster count (16) at tolerance 0; (2) the live infrastructure module_count (23) at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
+    "note": "First real regression pins for the autopoietic meta-template. This exemplar introspects the LIVE repository (infrastructure/ subdirectory roster, pipeline.yaml DAG, PUBLIC_PROJECT_NAMES) and injects the numbers into its own manuscript via build_manuscript_metrics_dict. Every value below is re-derived by calling the real src.template_template.introspection functions on the repo root -- never hand-copied from a rendered ${token}. Two stability tiers are pinned: (1) the declared pipeline.yaml DAG structure and the current confidentiality-controlled public exemplar roster count (24) at tolerance 0; (2) the live infrastructure module_count at abs_tolerance 2, following this exemplar's own convention (manuscript/AGENTS.md: rotating layout facts link to docs/_generated/COUNTS.md) -- the band catches a broken discovery (0, halved) or a large jump while tolerating single-module organic repo growth."
   },
   "_provenance": {
     "pipeline_stages_declared": {
@@ -28,7 +28,7 @@
     "public_exemplar_roster_count": {
       "commit": "691d6ebf",
       "date": "2026-07-01",
-      "reason": "Count of git-tracked public exemplars in infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES. The manuscript injects the full roster as ${public_exemplar_list} (abstract, introduction, architecture, appendix-exemplars) and discover_projects(public_only=True) returns exactly this set. The roster is a confidentiality invariant (only these names may ever reach the public DOI), so its size is a hard, frozen claim -> tolerance 0. Re-derived via public_project_names(root), not copied from prose (the appendix prose 'currently nine workspaces' is stale and deliberately NOT pinned).",
+      "reason": "Count of git-tracked public exemplars in infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES. The manuscript injects the full roster as ${public_exemplar_list} (abstract, introduction, architecture, appendix-exemplars) and discover_projects(public_only=True) returns exactly this set. Membership is confidentiality-controlled and the count must match the current revision exactly (tolerance 0), while intentional exemplar promotions refresh this pin together with generated rosters and gates. Re-derived via public_project_names(root), not copied from prose.",
       "script": "PYTHONPATH=.:projects/templates/template_template/src uv run python -c 'len(public_project_names(Path(\".\").resolve()))'"
     },
     "module_count": {
@@ -78,17 +78,17 @@
   "public_exemplar_roster_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 08d_appendix_exemplars.md / ${public_exemplar_list}",
     "claim_text": "an empirical evaluation across the canonical exemplar projects under `projects/templates/` (${public_exemplar_list}) ... The full public exemplar roster is: ${public_exemplar_list}.",
-    "value": 23,
+    "value": 24,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.project.public_scope.public_project_names",
     "verifier_args": {"repo_root": ".", "read": "len"},
     "pinned_on": "2026-07-01",
     "pinned_by": "Marcus Webb (Engineer)",
     "pinned_at_commit": "691d6ebf",
-    "refreshed_on": "2026-07-10",
-    "refreshed_by": "template-sync-cohere-20260710",
-    "refresh_commit": "d4aef518",
-    "refresh_reason": "public_project_names() returns 23: template_formal (local stream) plus template_data_descriptor, template_redacted_report, template_registered_report (remote stream) joined PUBLIC_PROJECT_NAMES since the 2026-07-07 refresh at 19."
+    "refreshed_on": "2026-07-15",
+    "refreshed_by": "repo-wide-methods-and-exemplars-review",
+    "refresh_commit": "working-tree",
+    "refresh_reason": "public_project_names() returns 24 after template_advanced_literature_review joined PUBLIC_PROJECT_NAMES; generated rosters, CI scope, ownership, documentation, claims, and standalone-export gates were updated in the same change."
   },
   "module_count": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03e_quality.md, 04_results.md, 05b_scalability.md, 06_infrastructure_modules.md, 05d_ai_collaboration.md, 08e_appendix_docs.md / ${module_count}",

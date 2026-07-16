@@ -46,6 +46,11 @@ def resolve_manuscript_dir(project_root: Path) -> Path:
                 else:
                     _shutil.copy2(cfg_src, cfg_dst)
                     logger.info(f"Refreshed config.yaml in injected manuscript: {cfg_dst}")
+            preamble_src = source_dir / "preamble.md"
+            if preamble_src.is_file():
+                preamble_dst = injected_dir / preamble_src.name
+                _shutil.copy2(preamble_src, preamble_dst)
+                logger.info(f"Refreshed {preamble_src.name} in injected manuscript: {preamble_dst}")
             for bib in sorted(source_dir.glob("*.bib")):
                 bib_dst = injected_dir / bib.name
                 _shutil.copy2(bib, bib_dst)

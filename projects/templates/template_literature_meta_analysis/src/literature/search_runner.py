@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Callable, TypedDict
 
 from config_loader import load_search_config
+from config_validation import require_valid_search_config
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.engine_dispatch import dispatch_ordered
@@ -323,7 +324,7 @@ def _europepmc_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_europepmc(query, max_results=max_results, base_url=url, delay_override=delay)
+        return list(search_europepmc(query, max_results=max_results, base_url=url, delay_override=delay))
 
     return _search
 
@@ -332,6 +333,7 @@ def _biorxiv_search_fn(
     base_url: str | None,
     *,
     fast: bool,
+    server: str = "biorxiv",
 ) -> Callable[..., list[Paper]]:
     from literature.biorxiv_client import BIORXIV_API_URL, search_biorxiv
 
@@ -339,7 +341,15 @@ def _biorxiv_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_biorxiv(query, max_results=max_results, base_url=url, delay_override=delay)
+        return list(
+            search_biorxiv(
+                query,
+                max_results=max_results,
+                base_url=url,
+                delay_override=delay,
+                server=server,
+            )
+        )
 
     return _search
 
@@ -366,7 +376,13 @@ def run_literature_search(
     """
     logger = logging.getLogger("literature_search")
     config_path = Path(args.config) if args.config else project_root / "manuscript" / "config.yaml"
+    if args.config and not config_path.exists():
+        raise FileNotFoundError(f"Configuration file does not exist: {config_path}")
     if config_path.exists():
+        require_valid_search_config(
+            config_path,
+            query_override=getattr(args, "query", None),
+        )
         cfg = load_search_config(config_path)
         if cfg.get("query"):
             args.query = cfg["query"]
@@ -475,6 +491,7 @@ def run_literature_search(
             "chinarxiv",
             "europepmc",
             "biorxiv",
+            "medrxiv",
         ],
     )
     logger.info(
@@ -695,6 +712,34 @@ def run_literature_search(
         if result:
             sources_searched.append(result)
 
+    def run_medrxiv() -> None:
+        """Run medRxiv as a distinct provenance-bearing preprint source."""
+        skip_medrxiv = getattr(args, "skip_medrxiv", getattr(args, "skip_biorxiv", False))
+        medrxiv_on = engines.get("medrxiv", True) and not skip_medrxiv
+        if not medrxiv_on or (biorxiv_base_url is None and fast_api):
+            _record_skipped(
+                observations,
+                "medRxiv",
+                "disabled" if not medrxiv_on else "not_injected_in_hermetic_run",
+            )
+            return
+        medrxiv_search = _biorxiv_search_fn(
+            biorxiv_base_url,
+            fast=fast_api,
+            server="medrxiv",
+        )
+        result = search_source(
+            "medRxiv",
+            medrxiv_search,
+            args.query,
+            args.max_results,
+            corpus,
+            logger,
+            observations=observations,
+        )
+        if result:
+            sources_searched.append(result)
+
     source_runners = {
         "arxiv": run_arxiv,
         "semantic_scholar": run_semantic_scholar,
@@ -705,6 +750,7 @@ def run_literature_search(
         "chinarxiv": run_chinarxiv,
         "europepmc": run_europepmc,
         "biorxiv": run_biorxiv,
+        "medrxiv": run_medrxiv,
     }
 
     dispatch_ordered(route.source_order, source_runners)

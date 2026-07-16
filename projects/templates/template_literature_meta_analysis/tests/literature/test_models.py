@@ -287,6 +287,16 @@ class TestPaperConstruction:
         p = Paper(title="Test", abstract="Has abstract", year=2020, doi="10.1234/t")
         assert p.metadata_completeness == 3  # abstract, year, doi
 
+    def test_europe_pmc_source_does_not_imply_preprint(self):
+        """Europe PMC indexes journal articles as well as preprints."""
+        paper = Paper(
+            title="Peer-reviewed Europe PMC record",
+            doi="10.1000/journal",
+            venue="Journal of Reliable Results",
+            full_text_source="europepmc",
+        )
+        assert paper.is_preprint is False
+
 
 # ---------------------------------------------------------------------------
 # Round-trip serialization

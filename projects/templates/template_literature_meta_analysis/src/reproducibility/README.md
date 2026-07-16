@@ -116,18 +116,20 @@ Key functions:
 - `extract_workflow_graph(paper, fulltext, config) -> WorkflowGraph` — nodes
   then `build_workflow_graph()`, kept as two separate calls so dependency
   resolution stays independently testable with plain data
-- `extract_workflow_graphs_llm(papers, fulltext_dir, config, *, output_path=None, existing=None) -> list[WorkflowGraph]` —
+- `extract_workflow_graphs_llm(papers, fulltext_dir, config, *, output_path=None, existing=None) -> WorkflowExtractionResult` —
   incremental multi-paper driver with checkpointing every
   `config.checkpoint_interval` papers; skips a paper entirely (zero LLM
   calls) when it is already processed or its
-  `<fulltext_dir>/<safe_filename(canonical_id)>.txt` does not exist
+  `<fulltext_dir>/<safe_filename(canonical_id)>.txt` does not exist; returns
+  graphs plus explicit failed/no-fulltext paper IDs for run accounting
 
 ### `runner.py`
 
 Pipeline orchestrator, mirroring `knowledge_graph.kg_runner`'s incremental
-shape: load config, load the corpus, determine which papers still need a
-workflow graph, run LLM extraction only for those, score every graph
-(existing plus new) via the pure `scoring` functions, and write three
+shape: validate/load config, load the corpus, determine the active sampled and
+bounded candidate set, run LLM extraction only for uncached candidates, score
+only graphs in that active set while retaining the broader persistent cache,
+and write three
 JSON/JSONL artifacts. Full-text availability is opt-in and gated by
 `project_config.fulltext` in `manuscript/config.yaml`
 (`config_loader.load_fulltext_config()`); when disabled and no
@@ -145,8 +147,10 @@ Outputs (under `<output_dir>/data/`):
   `quote_verification_rate` (`None` when the paper's fulltext isn't on disk
   or the graph has zero nodes — distinct from "0% of quotes verified")
 - `reproducibility_summary.json` — `mean_composite_score`,
-  `n_papers_scored`, `n_low_score`, `low_score_threshold`,
+  `n_candidate_papers`, `n_papers_scored`, `n_low_score`, `low_score_threshold`,
   `n_skipped_no_fulltext`, `n_skipped_unparseable_pdf`,
+  `n_skipped_fulltext_disabled`, `n_failed_extraction`, explicit failure and
+  unclassified IDs, reconciled `candidate_accounting_*` fields, and
   `fulltext_available`
 
 ## Scoring Formula

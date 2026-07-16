@@ -169,6 +169,18 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
             ["uv", "run", "python", "scripts/audit/verify_no_mocks.py"],
         ),
         (
+            "semantic-standins",
+            [
+                "uv",
+                "run",
+                "python",
+                "scripts/audit/verify_no_mocks.py",
+                "--inventory",
+                "--max-dependency-replacements",
+                "0",
+            ],
+        ),
+        (
             "all-exports",
             [
                 "uv",
@@ -182,6 +194,21 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         (
             "skills-manifest",
             ["uv", "run", "python", "-m", "infrastructure.skills", "check"],
+        ),
+        (
+            "operations-manifest",
+            [
+                "uv",
+                "run",
+                "python",
+                "-m",
+                "infrastructure.skills",
+                "operations-check",
+            ],
+        ),
+        (
+            "skill-reachability",
+            ["uv", "run", "python", "scripts/gates/skill_reachability_check.py"],
         ),
         (
             "confidentiality",

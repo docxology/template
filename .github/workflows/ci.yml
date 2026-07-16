@@ -156,6 +156,9 @@ jobs:
       - name: Audit __all__ on re-exporting modules
         run: uv run python -m infrastructure.skills check-all-exports
 
+      - name: Verify operations manifest freshness
+        run: uv run python -m infrastructure.skills operations-check
+
       - name: Reject tracked generated artifacts
         run: uv run python scripts/audit/check_tracked_generated_artifacts.py
 

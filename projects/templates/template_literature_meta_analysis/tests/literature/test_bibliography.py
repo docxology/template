@@ -105,6 +105,22 @@ class TestCorpusToBibtexVariedCompleteness:
         assert entry.get("url") == "https://arxiv.org/pdf/2401.00001"
         assert entry.get("doi") is None
 
+    def test_multiline_provider_fields_are_whitespace_safe(self) -> None:
+        paper = Paper(
+            title="  A provider-formatted title\n",
+            abstract="First line.  \n\n Second line.\tThird line.",
+            authors=[Author(name="Jane Doe")],
+            year=2024,
+        )
+        corpus = Corpus()
+        corpus.add(paper)
+
+        bibtex_text = corpus_to_bibtex(corpus)
+
+        assert "title={A provider-formatted title}" in bibtex_text
+        assert "abstract={First line. Second line. Third line.}" in bibtex_text
+        assert not any(line.endswith((" ", "\t")) for line in bibtex_text.splitlines())
+
 
 class TestCitationKeyDisambiguation:
     """Two papers that would generate the SAME citation key must disambiguate."""

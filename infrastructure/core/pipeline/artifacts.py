@@ -13,7 +13,17 @@ from infrastructure.core.files.portability import sanitize_machine_local_paths
 from infrastructure.core.pipeline.types import StageContract
 
 _IGNORED_OUTPUT_PARTS = frozenset(
-    {".checkpoints", ".pipeline", "logs", "hitl", "snapshots", "__pycache__", "llm", "translations"}
+    {
+        ".checkpoints",
+        ".pipeline",
+        "logs",
+        "hitl",
+        "snapshots",
+        "__pycache__",
+        "fulltext",
+        "llm",
+        "translations",
+    }
 )
 _IGNORED_OUTPUT_FILENAMES = frozenset(
     {

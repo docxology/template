@@ -31,7 +31,6 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Optional
 
 from .models import Paper
 
@@ -44,7 +43,7 @@ def _preprint_rank(paper: Paper, *, prefer_preprints: bool) -> tuple[int, int, i
         int(paper.doi is not None),
         int(paper.publication_date is not None),
         int(paper.metadata_completeness),
-        int(len(paper.abstract or "")),
+        len(paper.abstract or ""),
         int(paper.citation_count),
     )
 
@@ -60,7 +59,7 @@ class Corpus:
         _papers: Internal dictionary mapping canonical_id to Paper.
     """
 
-    def __init__(self, papers: Optional[list[Paper]] = None) -> None:
+    def __init__(self, papers: list[Paper] | None = None) -> None:
         """Initialize corpus, optionally with an initial list of papers.
 
         Args:
@@ -102,7 +101,10 @@ class Corpus:
         for ids in grouped.values():
             if len(ids) <= 1:
                 continue
-            winner_id = max(ids, key=lambda cid: _preprint_rank(self._papers[cid], prefer_preprints=prefer_preprints))
+            winner_id = max(
+                ids,
+                key=lambda cid: _preprint_rank(self._papers[cid], prefer_preprints=prefer_preprints),
+            )
             winner = self._papers[winner_id]
             for cid in ids:
                 if cid == winner_id:
@@ -133,7 +135,7 @@ class Corpus:
         """
         return list(self._papers.values())
 
-    def get(self, canonical_id: str) -> Optional[Paper]:
+    def get(self, canonical_id: str) -> Paper | None:
         """Retrieve a paper by its canonical ID.
 
         Args:
@@ -160,7 +162,15 @@ class Corpus:
         papers = self._papers.values()
         total = len(self._papers)
         if total == 0:
-            return {"total": 0, "with_doi": 0, "with_abstract": 0, "with_authors": 0, "with_year": 0, "preprints": 0, "mean_completeness": 0.0}
+            return {
+                "total": 0,
+                "with_doi": 0,
+                "with_abstract": 0,
+                "with_authors": 0,
+                "with_year": 0,
+                "preprints": 0,
+                "mean_completeness": 0.0,
+            }
         with_doi = sum(1 for p in papers if p.doi)
         with_abstract = sum(1 for p in papers if p.abstract and p.abstract.strip())
         with_authors = sum(1 for p in papers if p.authors)
@@ -195,7 +205,7 @@ class Corpus:
             return True
         return False
 
-    def filter_by_year(self, start: Optional[int] = None, end: Optional[int] = None) -> Corpus:
+    def filter_by_year(self, start: int | None = None, end: int | None = None) -> Corpus:
         """Filter papers by publication year range.
 
         Args:
@@ -274,7 +284,7 @@ class Corpus:
             FileNotFoundError: If the path does not exist.
         """
         papers: list[Paper] = []
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:

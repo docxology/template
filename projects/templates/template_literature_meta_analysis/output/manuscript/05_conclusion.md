@@ -3,7 +3,7 @@
 We have presented a configurable, reproducible meta-analysis template that turns a single
 search term into a complete, evidence-bound portrait of its literature. Applied to
 **Modafinil**, it retrieved and de-duplicated 2334 records across
-9 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), classified them into 6 configurable
+10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), classified them into 6 configurable
 subfields (with **Clinical Sleep** dominant at 63.0\%), extracted
 5 topics over a 500-feature vocabulary, computed
 reproducible document embeddings, mapped the citation network (2234 nodes,
@@ -45,7 +45,7 @@ traceable to a regenerable artifact.
 
 ## Reproducibility
 
-This manuscript was generated from a live retrieval run using 9 engines.
+This manuscript was generated from a live retrieval run using 10 engines.
 Every number, table, and figure in this document is injected from a committed artifact
 (`output/data/*.json`, `output/figures/*.png`). Re-running the pipeline with the same
 configuration reproduces identical data outputs; the 21 figures are

@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
 if sys.version_info >= (3, 11):
     import tomllib
 else:  # pragma: no cover - Python 3.10
@@ -314,7 +316,55 @@ def _resolve_source(repo_root: Path, source: str) -> Path:
 def _source_files(repo_root: Path, source_root: Path) -> tuple[Path, ...]:
     git_files = _git_source_files(repo_root, source_root)
     files = git_files or _walk_source_files(source_root)
-    return tuple(sorted(path for path in files if _is_clean_source_path(path)))
+    clean = tuple(path for path in files if _is_clean_source_path(path))
+    return _expand_public_symlinks(repo_root, source_root, clean)
+
+
+def _resolve_public_symlink(repo_root: Path, source: Path) -> Path:
+    """Resolve a symlink only when its target belongs to a public exemplar.
+
+    Public exemplars may share implementation snapshots with one another while
+    the exported tree must remain standalone. Targets outside the declared
+    public roster remain a hard error so clean-copy can never dereference a
+    private sidecar or arbitrary host path.
+    """
+    try:
+        target = source.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise ValueError(f"refusing to dereference invalid symlink in exemplar copy: {source}") from exc
+
+    for project_name in PUBLIC_PROJECT_NAMES:
+        public_root = (repo_root / "projects" / project_name).resolve()
+        if target == public_root or target.is_relative_to(public_root):
+            return target
+    raise ValueError(f"refusing to dereference symlink outside public exemplars: {source}")
+
+
+def _expand_public_symlinks(repo_root: Path, source_root: Path, files: tuple[Path, ...]) -> tuple[Path, ...]:
+    """Expand tracked public directory symlinks into standalone file paths."""
+    expanded: set[Path] = set()
+
+    def visit(relative: Path, source: Path, ancestors: frozenset[Path]) -> None:
+        if not source.is_symlink():
+            expanded.add(relative)
+            return
+        target = _resolve_public_symlink(repo_root, source)
+        if target.is_file():
+            expanded.add(relative)
+            return
+        if not target.is_dir():
+            raise ValueError(f"refusing to dereference non-file symlink in exemplar copy: {source}")
+        if target in ancestors:
+            raise ValueError(f"refusing cyclic public-exemplar symlink: {source}")
+        children = _git_source_files(repo_root, target) or _walk_source_files(target)
+        for child in children:
+            combined = relative / child
+            if _is_clean_source_path(combined):
+                visit(combined, target / child, ancestors | {target})
+
+    for relative in files:
+        visit(relative, source_root / relative, frozenset())
+    return tuple(sorted(expanded))
 
 
 def _git_source_files(repo_root: Path, source_root: Path) -> tuple[Path, ...]:
@@ -374,7 +424,10 @@ def _copy_one(
 ) -> None:
     dest.parent.mkdir(parents=True, exist_ok=True)
     if source.is_symlink():
-        raise ValueError(f"refusing to dereference symlink in exemplar copy: {source}")
+        repo_root = _find_repo_root(source)
+        source = _resolve_public_symlink(repo_root, source)
+        if not source.is_file():
+            raise ValueError(f"refusing to copy unresolved directory symlink: {source}")
     data = source.read_bytes()
     if new_name:
         try:
@@ -396,6 +449,14 @@ def _copy_one(
         return
     dest.write_bytes(data)
     shutil.copystat(source, dest)
+
+
+def _find_repo_root(source: Path) -> Path:
+    """Return the ancestor containing the public project registry surface."""
+    for parent in (source, *source.parents):
+        if (parent / "infrastructure" / "project" / "public_scope.py").is_file():
+            return parent
+    raise ValueError(f"refusing to dereference symlink outside a template checkout: {source}")
 
 
 def _renamed_path(path: Path, old_name: str, new_name: str | None) -> Path:

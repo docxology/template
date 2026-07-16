@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from manuscript.variables.io import count_jsonl_lines, load_config, load_json
 
@@ -43,7 +43,7 @@ class ExtractContext:
             payload = load_json(self.output_dir / name)
         if payload.get("_error") is not None:
             return {}
-        return payload
+        return cast(dict[str, Any], payload)
 
     def load_json_raw(self, name: str) -> Any:
         """Load json raw from a file."""

@@ -3,7 +3,8 @@
 ## Overview
 
 Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv,
-Europe PMC, bioRxiv/medRxiv), query routing, corpus management, and data models.
+Europe PMC, and independently toggled bioRxiv and medRxiv engines), query routing,
+corpus management, and data models.
 Orchestration lives in `literature/search_runner.py` (called from `scripts/01_literature_search.py`).
 `run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=..., crossref_base_url=..., pubmed_esearch_url=..., pubmed_efetch_url=..., sovietrxiv_base_url=..., chinarxiv_base_url=..., europepmc_base_url=..., biorxiv_base_url=...)`
 accepts injectable API roots for `pytest-httpserver` integration tests without changing production defaults.
@@ -13,7 +14,7 @@ SovietRxiv and ChinaRxiv share the same unified API (`sovietrxiv_client.py`) but
 `https://russiarxiv.org` and `https://chinaxiv.org` respectively; the `source` query parameter
 distinguishes their sub-corpora.
 Europe PMC (`europepmc_client.py`) is a keyless biomedical aggregator search endpoint.
-bioRxiv/medRxiv (`biorxiv_client.py`) share one unified date-window + cursor `details` API at
+bioRxiv/medRxiv (`biorxiv_client.py`) share one date-window + cursor `details` API at
 `https://api.biorxiv.org`; the `server` parameter (`"biorxiv"` or `"medrxiv"`) selects the corpus.
 Full-text reporting: `literature/fulltext_assessment.py` (`scripts/06_fulltext_assessment.py`).
 The corpus JSONL is the single input
@@ -69,7 +70,8 @@ to all downstream pipeline stages.
 | SovietRxiv | 30/min anonymous, 300/min polite | 1–100/page, cursor | Keyless; `X-API-Email` header for polite pool |
 | ChinaRxiv | 30/min anonymous, 300/min polite | 1–100/page, cursor | Keyless; same unified API as SovietRxiv |
 | Europe PMC | No documented hard limit; be polite (~10 req/s) | Up to 1000/page (`pageSize`) | Keyless; one request per search call |
-| bioRxiv/medRxiv | No documented limit; date-window + cursor paginated, keep modest | 100/page fixed, cursor | Keyless; not free-text search — date-window then client-side filter (see `biorxiv_client.py`) |
+| bioRxiv | No documented limit; date-window + cursor paginated, keep modest | 100/page fixed, cursor | Keyless; client-side query filter; distinct engine/provenance |
+| medRxiv | No documented limit; date-window + cursor paginated, keep modest | 100/page fixed, cursor | Keyless; client-side query filter; distinct engine/provenance |
 
 ## Known Limitations
 

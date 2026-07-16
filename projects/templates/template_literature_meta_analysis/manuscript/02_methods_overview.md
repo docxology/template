@@ -54,8 +54,9 @@ A single `manuscript/config.yaml` controls:
 
 - **Search parameters**: term, query string, per-engine queries, relevance keywords,
   start year, max results, resume/clear behaviour
-- **Engine toggles**: arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each independently enabled or disabled)
+- **Engine toggles**: arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
+  SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (each independently
+  enabled or disabled)
 - **SovietRxiv/ChinaRxiv settings**: optional `api_email` for the polite pool, `source`
   filter (`russiarxiv` or `chinaxiv`)
 - **Full-text download**: opt-in Unpaywall resolution with `unpaywall_email`

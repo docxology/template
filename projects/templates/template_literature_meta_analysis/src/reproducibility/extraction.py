@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import logging
 import time
+from dataclasses import dataclass
 from pathlib import Path
 
 import requests
@@ -47,6 +48,21 @@ from reproducibility.prompts import _SYSTEM_PROMPT as _REPRO_SYSTEM_PROMPT
 from reproducibility.prompts import build_prompt
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class WorkflowExtractionResult:
+    """Graphs plus explicit non-success outcomes from one extraction run.
+
+    The graph checkpoint remains the durable success cache. Failed and
+    no-fulltext paper IDs are returned separately so the orchestrator can emit
+    a reconciled, machine-readable run summary instead of losing failures in
+    transient log lines.
+    """
+
+    graphs: list[WorkflowGraph]
+    failed_paper_ids: tuple[str, ...] = ()
+    skipped_no_fulltext_ids: tuple[str, ...] = ()
 
 
 def extract_workflow_nodes(paper: Paper, fulltext: str, config: LLMConfig) -> list[WorkflowNode]:
@@ -185,7 +201,7 @@ def extract_workflow_graphs_llm(
     *,
     output_path: Path | str | None = None,
     existing: list[WorkflowGraph] | None = None,
-) -> list[WorkflowGraph]:
+) -> WorkflowExtractionResult:
     """Incrementally extract workflow graphs for a corpus of papers.
 
     Mirrors :func:`knowledge_graph.llm_extraction.extract_assertions_llm`'s
@@ -221,8 +237,9 @@ def extract_workflow_graphs_llm(
             loaded from *output_path*.
 
     Returns:
-        Prior (existing/file) graphs plus every newly-extracted graph from
-        this run.
+        A :class:`WorkflowExtractionResult` containing prior
+        (existing/file) graphs plus newly-extracted graphs, alongside the
+        paper IDs that failed extraction or lacked fulltext in this run.
     """
     fulltext_dir = Path(fulltext_dir)
     resolved_output_path = Path(output_path) if output_path is not None else None
@@ -245,8 +262,8 @@ def extract_workflow_graphs_llm(
     new_graphs: list[WorkflowGraph] = []
     new_count = 0
     success_count = 0
-    fail_count = 0
-    skipped_no_fulltext = 0
+    failed_paper_ids: list[str] = []
+    skipped_no_fulltext_ids: list[str] = []
     t0 = time.monotonic()
 
     for paper in papers:
@@ -255,7 +272,7 @@ def extract_workflow_graphs_llm(
 
         fulltext_path = fulltext_dir / f"{safe_filename(paper.canonical_id)}.txt"
         if not fulltext_path.is_file():
-            skipped_no_fulltext += 1
+            skipped_no_fulltext_ids.append(paper.canonical_id)
             logger.info(
                 "Skipping %s: no fulltext at %s",
                 paper.canonical_id[:40],
@@ -273,7 +290,7 @@ def extract_workflow_graphs_llm(
             new_count += 1
         except RuntimeError as exc:
             logger.error("  ✗ Failed %s: %s", paper.canonical_id[:40], exc)
-            fail_count += 1
+            failed_paper_ids.append(paper.canonical_id)
             new_count += 1
 
         if (
@@ -289,20 +306,24 @@ def extract_workflow_graphs_llm(
         append_workflow_graphs(buffer, resolved_output_path)
 
     logger.info(
-        "LLM workflow extraction complete: %d succeeded, %d failed, %d skipped (no fulltext), "
-        "%d total graphs (%.1fs)",
+        "LLM workflow extraction complete: %d succeeded, %d failed, %d skipped (no fulltext), %d total graphs (%.1fs)",
         success_count,
-        fail_count,
-        skipped_no_fulltext,
+        len(failed_paper_ids),
+        len(skipped_no_fulltext_ids),
         len(prior_graphs) + len(new_graphs),
         time.monotonic() - t0,
     )
 
-    return prior_graphs + new_graphs
+    return WorkflowExtractionResult(
+        graphs=prior_graphs + new_graphs,
+        failed_paper_ids=tuple(failed_paper_ids),
+        skipped_no_fulltext_ids=tuple(skipped_no_fulltext_ids),
+    )
 
 
 __all__ = [
     "LLMConfig",
+    "WorkflowExtractionResult",
     "extract_workflow_nodes",
     "extract_workflow_graph",
     "extract_workflow_graphs_llm",

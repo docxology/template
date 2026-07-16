@@ -28,7 +28,7 @@ API reference: https://europepmc.org/RestfulWebService
 from __future__ import annotations
 
 import logging
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import requests
 
@@ -78,7 +78,7 @@ def _extract_authors(item: dict) -> list[Author]:
     return authors
 
 
-def _extract_year(item: dict) -> Optional[int]:
+def _extract_year(item: dict) -> int | None:
     """Extract the publication year from a Europe PMC result's ``pubYear`` field.
 
     ``pubYear`` may be a string or an int, or absent entirely.
@@ -98,7 +98,7 @@ def _extract_year(item: dict) -> Optional[int]:
         return None
 
 
-def _extract_venue(item: dict) -> Optional[str]:
+def _extract_venue(item: dict) -> str | None:
     """Extract the journal title from ``journalInfo.journal.title``.
 
     Args:
@@ -117,7 +117,7 @@ def _extract_venue(item: dict) -> Optional[str]:
     return str(title) if title else None
 
 
-def _extract_pdf_url(item: dict) -> Optional[str]:
+def _extract_pdf_url(item: dict) -> str | None:
     """Extract a full-text PDF URL from ``fullTextUrlList.fullTextUrl``.
 
     Prefers an entry whose ``documentStyle`` is ``"pdf"`` (case-insensitive);
@@ -150,7 +150,7 @@ def _extract_pdf_url(item: dict) -> Optional[str]:
     return str(fallback_url) if fallback_url else None
 
 
-def _extract_open_access(item: dict) -> Optional[bool]:
+def _extract_open_access(item: dict) -> bool | None:
     """Translate the Europe PMC ``isOpenAccess`` ``"Y"``/``"N"`` flag to bool.
 
     Args:
@@ -208,8 +208,8 @@ def search_europepmc(
     *,
     max_results: int = 100,
     base_url: str = EUROPEPMC_API_URL,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Search Europe PMC for works matching a free-text query.
 
@@ -262,9 +262,13 @@ def search_europepmc(
             raise ValueError("Europe PMC search payload missing result list")
 
         papers = [_parse_europepmc_result(item) for item in results if isinstance(item, dict)]
-        logger.info("Europe PMC search complete: %d papers for query %r", len(papers), query[:80])
+        logger.info(
+            "Europe PMC search complete: %d papers for query %r",
+            len(papers),
+            query[:80],
+        )
         return papers[:max_results]
-    except Exception as exc:  # noqa: BLE001 -- safety net: any engine error degrades to an empty result set
+    except (requests.RequestException, TypeError, ValueError) as exc:
         logger.warning("Europe PMC search failed for query %r: %s", query, exc)
         return []
     finally:

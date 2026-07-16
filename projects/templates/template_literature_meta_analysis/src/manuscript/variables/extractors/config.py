@@ -38,7 +38,8 @@ def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:
         "sovietrxiv": "SovietRxiv",
         "chinarxiv": "ChinaRxiv",
         "europepmc": "Europe PMC",
-        "biorxiv": "bioRxiv/medRxiv",
+        "biorxiv": "bioRxiv",
+        "medrxiv": "medRxiv",
     }
 
     # Only include enabled engines, fallback to all if none specified
@@ -49,15 +50,9 @@ def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:
     variables["N_ENGINES"] = str(len(enabled))
     variables["ENGINE_LIST"] = humanize_list(enabled)
 
-    # Corpus size with error handling
-    try:
-        corpus_size = ctx.corpus_size
-        variables["CORPUS_SIZE"] = str(corpus_size)
-        variables["CORPUS_SIZE_LATEX"] = latex_number(corpus_size)
-    except Exception:
-        # Fallback for missing or corrupt corpus
-        variables["CORPUS_SIZE"] = "0"
-        variables["CORPUS_SIZE_LATEX"] = "0"
-        # Note: ExtractContext should handle corpus loading errors upstream
+    # Context construction owns corpus loading and normalizes missing inputs to 0.
+    corpus_size = ctx.corpus_size
+    variables["CORPUS_SIZE"] = str(corpus_size)
+    variables["CORPUS_SIZE_LATEX"] = latex_number(corpus_size)
 
     return variables

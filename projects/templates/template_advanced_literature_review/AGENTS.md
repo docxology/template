@@ -1,20 +1,21 @@
 # AGENTS.md - template_advanced_literature_review
 
-Advanced multi-phase literature review exemplar for systematic reviews with iterative search refinement, multi-phrase querying, deterministic + LLM-based filtering, and cross-method validation. Features 3 search phases (foundation, JWST-era, molecular detection) with 2505 real exoplanet papers, 11-stage pipeline, and comprehensive knowledge graph extraction. The bundled corpus targets **exoplanet atmospheric composition**, but the project is designed to be retargeted through `manuscript/config.yaml` and phase configuration.
+Advanced multi-phase literature review exemplar for systematic reviews with iterative search refinement, multi-phrase querying, deterministic + LLM-based filtering, and cross-method validation. It demonstrates three configurable search phases (foundation, JWST-era, and molecular detection) over a tracked exoplanet-atmosphere evidence snapshot. The project is designed to be retargeted through `manuscript/config.yaml`; derive corpus counts from generated evidence instead of copying them into prose.
 
 ## Ground Truth
 
 | Surface | Source of truth |
 | --- | --- |
 | Search phases, terms, keywords, hypotheses, subfields | `manuscript/config.yaml` under `project_config` |
-| Multi-phase corpus data | `data/fixtures/exoplanet_corpus_phases.jsonl` |
+| Multi-phase corpus data | `output/data/combined_corpus.jsonl` (tracked evidence snapshot) |
 | Phase-aware retrieval/filtering | `src/literature/` and `src/multi_phase/` |
-| Bibliometrics, text analytics, embeddings, topics | `src/analysis/` (symlinked to single-term template) |
-| Knowledge graph extraction and scoring | `src/knowledge_graph/` (symlinked to single-term template) |
-| Reproducibility assessment | `src/reproducibility/` (symlinked to single-term template) |
-| Figure styling and generation | `src/visualization/` (symlinked to single-term template) |
+| Bibliometrics, text analytics, embeddings, topics | `src/analysis/` (standalone-safe mirror of the single-term implementation) |
+| Knowledge graph extraction and scoring | `src/knowledge_graph/` (standalone-safe mirror of the single-term implementation) |
+| Reproducibility assessment | `src/reproducibility/` (standalone-safe mirror of the single-term implementation) |
+| Figure styling and generation | `src/visualization/` (standalone-safe mirror of the single-term implementation) |
 | Multi-phase manuscript tokens and variables | `src/manuscript/variables/` and `scripts/05_inject_variables.py` |
-| Full 11-stage pipeline orchestration | `scripts/01_multi_phase_search.py` through `scripts/11_validate_outputs.py` |
+| Offline deep-research replay | `src/deep_research/dispatch.py` and its tracked fixture |
+| Full 11-stage pipeline orchestration | `scripts/01_multi_phase_search.py` through `scripts/11_fulltext_download.py` |
 | Open follow-up scope | `TODO.md` |
 | Live public roster/count facts | `../../../docs/_generated/active_projects.md` and `../../../docs/_generated/COUNTS.md` |
 
@@ -29,36 +30,44 @@ or config and regenerate.
 | --- | --- | --- |
 | Retarget the review topic | `manuscript/config.yaml` | Change phase definitions, queries, keywords, hypotheses, and subfields together. |
 | Multi-phase search configuration | `src/multi_phase/AGENTS.md` | Phase-aware search with iterative refinement and filtering. |
-| Literature engines | `src/literature/AGENTS.md` (symlinked) | Clients degrade gracefully; shared with single-term template. |
-| Bibliometric or NLP metrics | `src/analysis/AGENTS.md` (symlinked) | Pure functions plus runners; shared with single-term template. |
-| Knowledge graph / LLM extraction | `src/knowledge_graph/AGENTS.md` (symlinked) | Optional, resumable, network/LLM gated; shared with single-term template. |
-| Reproducibility scoring | `src/reproducibility/AGENTS.md` (symlinked) | Workflow-graph assessment; shared with single-term template. |
-| Figures and visualization | `src/visualization/AGENTS.md` (symlinked) | Headless matplotlib, colorblind palette; shared with single-term template. |
+| Literature engines | `src/literature/AGENTS.md` | Clients degrade gracefully; drift checks keep the mirror aligned with the single-term template. |
+| Bibliometric or NLP metrics | `src/analysis/AGENTS.md` | Pure functions plus runners; copied into standalone exports. |
+| Knowledge graph / LLM extraction | `src/knowledge_graph/AGENTS.md` | Optional, resumable, network/LLM gated; copied into standalone exports. |
+| Reproducibility scoring | `src/reproducibility/AGENTS.md` | Workflow-graph assessment; copied into standalone exports. |
+| Figures and visualization | `src/visualization/AGENTS.md` | Headless matplotlib, colorblind palette; copied into standalone exports. |
 | Multi-phase manuscript tokens | `src/manuscript/AGENTS.md` and `manuscript/AGENTS.md` | Phase-aware variables from generated JSON outputs and config. |
 | Project scripts (11-stage pipeline) | `scripts/AGENTS.md` | Orchestrators for stages 01-11; dependency order is explicit. |
 | Tests | `tests/AGENTS.md` | Real data, temp files, multi-phase fixtures, no mocks. |
-| Human docs | `docs/README.md` | Project-local architecture, multi-phase specifics, testing. |
+| Human docs | `README.md` | Project-local architecture, multi-phase specifics, testing. |
 
 ## Regeneration Order
 
-For the deterministic offline path from the template repository root:
+For a live corpus refresh followed by deterministic downstream stages, run from the template repository root:
 
 ```bash
 uv sync --group scientific --group llm
-uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py --offline
-uv run python projects/templates/template_advanced_literature_review/scripts/02_filter_and_classify.py
+uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
+uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
 uv run python projects/templates/template_advanced_literature_review/scripts/03_build_knowledge_graph.py --max-papers 0
 uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
-uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
 uv run python projects/templates/template_advanced_literature_review/scripts/06_fulltext_assessment.py
 uv run python projects/templates/template_advanced_literature_review/scripts/07_literature_evaluation.py
 uv run python projects/templates/template_advanced_literature_review/scripts/08_deep_research_dispatch.py
 uv run python projects/templates/template_advanced_literature_review/scripts/09_export_bibliography.py
-uv run python projects/templates/template_advanced_literature_review/scripts/10_reproducibility_assessment.py
-uv run python projects/templates/template_advanced_literature_review/scripts/11_validate_outputs.py
+uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
 ```
 
-Stage 01 (`01_multi_phase_search.py`) is the live/network multi-phase retrieval path with iterative refinement. Use it only when intentionally refreshing the corpus from engines. The `--offline` flag uses the bundled fixture corpus. Each phase writes provenance and filtering metadata to `output/data/phase_X_report.json`.
+Full-text download and reproducibility scoring are explicit network/LLM
+enrichments. Run their dependency chain in this order, then reinject the
+manuscript variables so the new evidence is visible:
+
+```bash
+uv run python projects/templates/template_advanced_literature_review/scripts/11_fulltext_download.py
+uv run python projects/templates/template_advanced_literature_review/scripts/10_reproducibility_assessment.py
+uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
+```
+
+Stage 01 (`01_multi_phase_search.py`) is the live/network multi-phase retrieval path with iterative refinement. Use it only when intentionally refreshing the tracked corpus snapshot. Stages 02–09 are the normal deterministic analysis path. Stages 11 and 10 are explicit network/full-text and reproducibility enrichments and must run in that order before rerunning stage 05 variable injection. Stage 01 writes per-phase corpora and `output/data/phase_metadata.json`.
 
 ## Verification Commands
 
@@ -73,7 +82,7 @@ uv run python scripts/audit/check_tracked_all.py
 
 The advanced template extends the single-term approach with:
 
-- **Phase-based search strategy**: Foundation (pre-2010) → JWST-era (2010-2021) → Molecular detection (2022+)
+- **Phase-based search strategy**: broad foundation (2010+) → JWST-focused work (2020+) → molecular-detection work (2015+), with overlaps preserved in provenance
 - **Iterative filtering**: Each phase applies deterministic (year, venue, citation) and LLM-based (abstract content) filters
 - **Cross-phase validation**: Papers from later phases validate/extend findings from earlier phases
 - **Enhanced variable extraction**: Phase-aware manuscript variables including per-phase statistics

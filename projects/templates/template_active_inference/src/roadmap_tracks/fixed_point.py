@@ -176,6 +176,21 @@ def _validate_fixed_point(root: Path) -> list[str]:
     return issues
 
 
+def _source_contract_issues(root: Path) -> list[str]:
+    """Return source defects that generated-artifact settlement cannot repair.
+
+    Fixed-point writers are deliberately allowed to replace generated outputs,
+    but they must never launder an invalid authored model into a green artifact
+    set.  The GNN lint builder is a pure parse of the live source files, so its
+    findings are stable across settlement passes and can fail before any of the
+    expensive writers run.
+    """
+    from roadmap_tracks.formal_interop import build_gnn_lint_report
+
+    report = build_gnn_lint_report(root)
+    return [str(issue) for issue in report.get("issues") or []]
+
+
 def _existing_fixed_point_paths(root: Path) -> dict[str, Path]:
     from roadmap_tracks.sheaf_tracks import CANONICAL_ARTIFACTS
 
@@ -238,10 +253,24 @@ def run_semantic_fixed_point(
 ) -> dict[str, Path]:
     """Settle manuscript, semantic, and contract artifacts to a validated fixed point."""
     root = project_root.resolve()
-    if not _validate_fixed_point(root):
+    source_issues = _source_contract_issues(root)
+    if source_issues:
+        joined = "; ".join(dict.fromkeys(source_issues))
+        raise RuntimeError(f"semantic fixed point cannot repair source contract defects: {joined}")
+
+    initial_issues = _validate_fixed_point(root)
+    if not initial_issues:
         return _existing_fixed_point_paths(root)
 
     paths: dict[str, Path] = {}
+    from roadmap_tracks.formal_interop import write_formal_interop_artifacts
+
+    paths.update(write_formal_interop_artifacts(root, missing_only=True))
+    if paths:
+        final_issues = _validate_fixed_point(root)
+        if not final_issues:
+            return _existing_fixed_point_paths(root)
+
     previous = ""
     for _ in range(max_passes):
         paths.update(_write_fixed_point_pass(root, require_analysis_outputs=require_analysis_outputs))

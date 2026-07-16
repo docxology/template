@@ -94,14 +94,24 @@ timeout = 10
 [tool.coverage.run]
 source = ["src"]
 branch = true
+# Shared literature/config/manuscript infrastructure is inherited from and
+# coverage-gated by template_literature_meta_analysis. This exemplar's 90% gate
+# measures the project-owned phase orchestration surface.
 omit = [
     "*/tests/*",
     "*/test_*.py",
     "*/__pycache__/*",
     "*/.*",
+    "src/__init__.py",
+    "src/config.py",
+    "src/config_validation.py",
+    "src/literature/*",
+    "src/manuscript/*",
+    "*/template_literature_meta_analysis/src/*",
 ]
 
 [tool.coverage.report]
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
@@ -112,8 +122,10 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py310"
+
+[tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -130,7 +142,7 @@ ignore = [
 ]
 unfixable = ["B"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = ["B011"]  # Assert false in tests is okay
 "scripts/*" = ["E402"]  # sys.path manipulation before imports is expected
 "src/manuscript/variables/extractors/*" = ["E402"]

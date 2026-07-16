@@ -407,3 +407,66 @@ def test_run_literature_search_chinarxiv_dispatch(
     corpus = Corpus.load(path)
     titles = [p.title for p in corpus.papers]
     assert "Modafinil effects on cognition: a ChinaRxiv record" in titles
+
+
+def test_run_literature_search_dispatches_biorxiv_and_medrxiv_distinctly(
+    httpserver: HTTPServer,
+    tmp_path: Path,
+) -> None:
+    """Both preprint corpora are queried and retain distinct provenance."""
+    interval = "2013-01-01/2099-12-31"
+    httpserver.expect_request(f"/details/biorxiv/{interval}/0/json").respond_with_json(
+        {
+            "collection": [
+                {
+                    "doi": "10.1101/bio",
+                    "title": "Modafinil bioRxiv study",
+                    "abstract": "A modafinil preclinical study.",
+                    "date": "2024-01-01",
+                    "authors": "Bio Author",
+                }
+            ]
+        }
+    )
+    httpserver.expect_request(f"/details/medrxiv/{interval}/0/json").respond_with_json(
+        {
+            "collection": [
+                {
+                    "doi": "10.1101/med",
+                    "title": "Modafinil medRxiv trial",
+                    "abstract": "A modafinil clinical trial.",
+                    "date": "2024-02-01",
+                    "authors": "Med Author",
+                }
+            ]
+        }
+    )
+
+    output_dir = tmp_path / "output"
+    args = _base_args(output_dir)
+    args.query = "modafinil"
+    args.skip_arxiv = True
+    args.skip_s2 = True
+    args.skip_openalex = True
+    args.skip_crossref = True
+    args.skip_pubmed = True
+    args.skip_sovietrxiv = True
+    args.skip_chinarxiv = True
+    args.skip_europepmc = True
+    args.skip_biorxiv = False
+    args.skip_medrxiv = False
+
+    path = run_literature_search(
+        args,
+        project_root=tmp_path,
+        biorxiv_base_url=httpserver.url_for(""),
+    )
+
+    corpus = Corpus.load(path)
+    assert {paper.full_text_source for paper in corpus.papers} == {"biorxiv", "medrxiv"}
+    report = json.loads((output_dir / "data" / "retrieval_report.json").read_text())
+    rows = {row["source"]: row for row in report["engines"]}
+    assert rows["bioRxiv"]["status"] == "ok"
+    assert rows["medRxiv"]["status"] == "ok"
+    assert rows["bioRxiv"]["fetched"] == 1
+    assert rows["medRxiv"]["fetched"] == 1

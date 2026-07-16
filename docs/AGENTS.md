@@ -38,7 +38,10 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 
 ## Key Conventions
 
-- **`projects/` rotates:** only [`projects/templates/template_code_project/`](../projects/templates/template_code_project/) is guaranteed as the stable control-positive exemplar; current names → [`_generated/active_projects.md`](_generated/active_projects.md).
+- **Public exemplars are generated scope:** tracked canonical templates are listed
+  in [`_generated/active_projects.md`](_generated/active_projects.md). Use
+  [`projects/templates/template_code_project/`](../projects/templates/template_code_project/)
+  as the default concrete walkthrough; private lifecycle mirrors rotate locally.
 - **CodeGraph is local-only:** `.codegraph/` is generated agent-navigation state; see [`guides/codegraph-local.md`](guides/codegraph-local.md) before documenting or initializing it.
 - Each sub-directory has a `README.md` (user-facing index) and `AGENTS.md` (technical guide)
 - `documentation-index.md` is the comprehensive flat index of all files

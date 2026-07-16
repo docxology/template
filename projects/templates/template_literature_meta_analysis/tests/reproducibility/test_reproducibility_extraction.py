@@ -67,9 +67,7 @@ def test_extract_workflow_nodes_parses_valid_response(httpserver: HTTPServer):
     method_node = next(n for n in nodes if n.node_id == "n2")
 
     assert source_node.node_type == NodeType.SOURCE
-    assert source_node.source_quote == (
-        "We used the publicly available EEG dataset from the OpenNeuro repository."
-    )
+    assert source_node.source_quote == ("We used the publicly available EEG dataset from the OpenNeuro repository.")
     assert source_node.reproducibility_rating == 3
     assert source_node.paper_id == paper.canonical_id
 
@@ -162,9 +160,7 @@ def test_extract_workflow_nodes_rejects_invalid_node_type(httpserver: HTTPServer
 
 def test_extract_workflow_nodes_retries_then_raises_runtimeerror(httpserver: HTTPServer):
     """Every attempt hits an HTTP 500 -> retries are exhausted -> RuntimeError."""
-    httpserver.expect_request("/api/generate", method="POST").respond_with_data(
-        "Internal Server Error", status=500
-    )
+    httpserver.expect_request("/api/generate", method="POST").respond_with_data("Internal Server Error", status=500)
 
     config = LLMConfig(
         base_url=httpserver_base_url(httpserver),
@@ -217,12 +213,13 @@ def test_extract_workflow_graphs_llm_incremental_resume(httpserver: HTTPServer, 
         max_retries=1,
     )
 
-    graphs = extract_workflow_graphs_llm(
+    result = extract_workflow_graphs_llm(
         [paper_a, paper_b],
         fulltext_dir,
         config,
         existing=[existing_graph],
     )
+    graphs = result.graphs
 
     # Exactly one LLM call was made (for paper B).
     assert len(httpserver.log) == 1
@@ -235,6 +232,8 @@ def test_extract_workflow_graphs_llm_incremental_resume(httpserver: HTTPServer, 
 
     graph_a = next(g for g in graphs if g.paper_id == paper_a.canonical_id)
     assert graph_a is existing_graph
+    assert result.failed_paper_ids == ()
+    assert result.skipped_no_fulltext_ids == ()
 
 
 def test_extract_workflow_graphs_llm_skips_papers_without_fulltext(httpserver: HTTPServer, tmp_path):
@@ -251,9 +250,11 @@ def test_extract_workflow_graphs_llm_skips_papers_without_fulltext(httpserver: H
         max_retries=1,
     )
 
-    graphs = extract_workflow_graphs_llm([paper], fulltext_dir, config)
+    result = extract_workflow_graphs_llm([paper], fulltext_dir, config)
 
-    assert graphs == []
+    assert result.graphs == []
+    assert result.skipped_no_fulltext_ids == (paper.canonical_id,)
+    assert result.failed_paper_ids == ()
     assert len(httpserver.log) == 0
 
 
@@ -352,9 +353,7 @@ def test_extract_workflow_graphs_llm_resumes_from_output_path(httpserver: HTTPSe
     )
     existing_graph = build_workflow_graph(paper_a.canonical_id, [existing_node])
     output_path = tmp_path / "workflow_graphs.jsonl"
-    output_path.write_text(
-        "\n".join(serialize_workflow_graphs([existing_graph])) + "\n", encoding="utf-8"
-    )
+    output_path.write_text("\n".join(serialize_workflow_graphs([existing_graph])) + "\n", encoding="utf-8")
 
     # Only paper_b should hit the LLM.
     httpserver.expect_request("/api/generate", method="POST").respond_with_json(
@@ -367,14 +366,44 @@ def test_extract_workflow_graphs_llm_resumes_from_output_path(httpserver: HTTPSe
         max_retries=1,
     )
 
-    graphs = extract_workflow_graphs_llm(
+    result = extract_workflow_graphs_llm(
         [paper_a, paper_b],
         fulltext_dir,
         config,
         output_path=output_path,
     )
+    graphs = result.graphs
 
     # Only paper_b hit the LLM (paper_a was already in output_path).
     assert len(httpserver.log) == 1
     graph_ids = {g.paper_id for g in graphs}
     assert graph_ids == {paper_a.canonical_id, paper_b.canonical_id}
+
+
+def test_extract_workflow_graphs_llm_returns_failed_paper_ids(
+    httpserver: HTTPServer,
+    tmp_path,
+) -> None:
+    """Exhausted LLM retries remain machine-readable after the driver returns."""
+    paper = make_paper(doi="10.1/outcome-failure", title="Outcome Failure")
+    fulltext_dir = tmp_path / "fulltext"
+    fulltext_dir.mkdir()
+    (fulltext_dir / f"{safe_filename(paper.canonical_id)}.txt").write_text(
+        "Full text describing a workflow.",
+        encoding="utf-8",
+    )
+    httpserver.expect_request("/api/generate", method="POST").respond_with_data(
+        "failed",
+        status=500,
+    )
+    config = LLMConfig(
+        base_url=httpserver_base_url(httpserver),
+        model="test-model",
+        max_retries=1,
+    )
+
+    result = extract_workflow_graphs_llm([paper], fulltext_dir, config)
+
+    assert result.graphs == []
+    assert result.failed_paper_ids == (paper.canonical_id,)
+    assert result.skipped_no_fulltext_ids == ()

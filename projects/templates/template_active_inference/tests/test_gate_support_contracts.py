@@ -63,6 +63,24 @@ def test_session_prewarm_skips_collect_only() -> None:
     project_conftest._prewarm_gate_artifacts(session, source_iterator=fail_if_called)
 
 
+def test_collection_hook_skips_collect_only_before_selection() -> None:
+    project_conftest = _load_tests_conftest()
+    session = SimpleNamespace(config=SimpleNamespace(option=SimpleNamespace(collectonly=True)))
+    config = SimpleNamespace(option=SimpleNamespace(collectonly=True))
+    items = [SimpleNamespace(path=Path("tests/gates/test_manuscript_gates.py"))]
+
+    project_conftest.pytest_collection_modifyitems(session, config, items)
+
+
+def test_direct_only_selection_skips_gate_prewarm() -> None:
+    project_conftest = _load_tests_conftest()
+    direct_items = [SimpleNamespace(path=Path("tests/test_fixed_point_direct.py"))]
+    mixed_items = [*direct_items, SimpleNamespace(path=Path("tests/gates/test_manuscript_gates.py"))]
+
+    assert project_conftest._selection_needs_gate_prewarm(direct_items) is False
+    assert project_conftest._selection_needs_gate_prewarm(mixed_items) is True
+
+
 def test_mutable_output_snapshot_includes_gate_contract_artifacts() -> None:
     project_conftest = _load_tests_conftest()
 

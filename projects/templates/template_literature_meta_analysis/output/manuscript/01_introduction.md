@@ -52,7 +52,7 @@ the field would ask:
 The pipeline contributes an end-to-end, domain-agnostic workflow:
 
 1. **Multiple-engine retrieval with graceful degradation.** Records are gathered from
-   9 independent engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). An engine with no API key or no
+   10 independent engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). An engine with no API key or no
    network reports a *skipped* status; the run completes from whatever engines remain
    plus a committed offline corpus. Each new retrieval persists per-engine outcome and
    count provenance in `output/data/retrieval_report.json`; the merged corpus alone is

@@ -4,8 +4,8 @@ Manual synthesis cannot keep pace with a fast-growing research literature, and a
 reviews bind no evidence to a reproducible pipeline. We present a configurable,
 reproducible meta-analysis framework that takes a single search term and produces a
 complete quantitative portrait of its literature. For this instance the term is
-**Modafinil**. The pipeline dispatches across 9 literature
-engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading gracefully to a skipped source when an API
+**Modafinil**. The pipeline dispatches across 10 literature
+engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each degrading gracefully to a skipped source when an API
 key or the network is unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI $>$ arXiv ID $>$ Semantic Scholar ID $>$ OpenAlex ID $>$ title
 digest) into a corpus of $N = 2334$ records spanning 2000--2026
@@ -96,7 +96,7 @@ the field would ask:
 The pipeline contributes an end-to-end, domain-agnostic workflow:
 
 1. **Multiple-engine retrieval with graceful degradation.** Records are gathered from
-   9 independent engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). An engine with no API key or no
+   10 independent engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). An engine with no API key or no
    network reports a *skipped* status; the run completes from whatever engines remain
    plus a committed offline corpus. Each new retrieval persists per-engine outcome and
    count provenance in `output/data/retrieval_report.json`; the merged corpus alone is
@@ -142,7 +142,7 @@ no computational logic resides in scripts.
 ## Pipeline Stages
 
 1. **Retrieval** (`01_literature_search.py`) — dispatch the configured query across
-   9 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), merge, and de-duplicate into `corpus.jsonl`.
+   10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into `corpus.jsonl`.
    Each engine is an isolated adapter exposing a uniform `search(query) -> list[Paper]`
    interface; engines that are keyless need no credentials, while Semantic Scholar uses
    a key when present. SovietRxiv and ChinaRxiv share a unified API with an optional
@@ -187,8 +187,9 @@ A single `manuscript/config.yaml` controls:
 
 - **Search parameters**: term, query string, per-engine queries, relevance keywords,
   start year, max results, resume/clear behaviour
-- **Engine toggles**: arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each independently enabled or disabled)
+- **Engine toggles**: arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
+  SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (each independently
+  enabled or disabled)
 - **SovietRxiv/ChinaRxiv settings**: optional `api_email` for the polite pool, `source`
   filter (`russiarxiv` or `chinaxiv`)
 - **Full-text download**: opt-in Unpaywall resolution with `unpaywall_email`
@@ -207,8 +208,8 @@ A single `manuscript/config.yaml` controls:
 
 # Retrieval and De-duplication
 
-Retrieval dispatches the configured query across 9 independent literature
-engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is an isolated adapter exposing a uniform
+Retrieval dispatches the configured query across 10 independent literature
+engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each engine is an isolated adapter exposing a uniform
 `search(query) -> list[Record]` interface; engines that are keyless — arXiv, OpenAlex
 [@priem2022openalex], Crossref [@hendricks2020crossref], PubMed/Entrez
 [@sayers2022entrez], SovietRxiv / RussiaRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv —
@@ -1137,7 +1138,7 @@ architecture.
 We have presented a configurable, reproducible meta-analysis template that turns a single
 search term into a complete, evidence-bound portrait of its literature. Applied to
 **Modafinil**, it retrieved and de-duplicated 2334 records across
-9 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), classified them into 6 configurable
+10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), classified them into 6 configurable
 subfields (with **Clinical Sleep** dominant at 63.0\%), extracted
 5 topics over a 500-feature vocabulary, computed
 reproducible document embeddings, mapped the citation network (2234 nodes,
@@ -1179,7 +1180,7 @@ traceable to a regenerable artifact.
 
 ## Reproducibility
 
-This manuscript was generated from a live retrieval run using 9 engines.
+This manuscript was generated from a live retrieval run using 10 engines.
 Every number, table, and figure in this document is injected from a committed artifact
 (`output/data/*.json`, `../figures/*.png`). Re-running the pipeline with the same
 configuration reproduces identical data outputs; the 21 figures are
@@ -1217,7 +1218,7 @@ uv run python scripts/05_inject_variables.py
 This manuscript was generated from a live retrieval run. To reproduce:
 
 ```bash
-# Live search (all 9 engines, max 1000 per engine)
+# Live search (all 10 engines, max 1000 per engine)
 uv run python scripts/01_literature_search.py --query modafinil --max-results 1000 --no-resume
 
 # Analysis pipeline
@@ -1243,7 +1244,8 @@ Enable engines under `project_config.search.engines`, supply any optional creden
 (Unpaywall email, Semantic Scholar key), and run `scripts/01_literature_search.py`; absent
 engines degrade to skipped sources. The CLI supports per-engine skip flags:
 `--skip-arxiv`, `--skip-s2`, `--skip-openalex`, `--skip-crossref`, `--skip-pubmed`,
-`--skip-sovietrxiv`, `--skip-chinarxiv`, `--skip-europepmc`, `--skip-biorxiv`.
+`--skip-sovietrxiv`, `--skip-chinarxiv`, `--skip-europepmc`, `--skip-biorxiv`,
+`--skip-medrxiv`.
 
 ## Deep Research (Offline Fixture Replay)
 
@@ -1274,8 +1276,9 @@ Every stage is covered by a no-mocks test suite (real computation and
 `src/`. The suite covers:
 
 - Record models and serialization (deduplication, canonical ID hierarchy)
-- All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with pytest-httpserver integration tests
+- All 10 engine paths (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed,
+  SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with pytest-httpserver
+  integration tests
 - Search runner (multi-engine dispatch, relevance filtering, resume/clear, YAML config)
 - Bibliometric analysis (subfield classification, temporal metrics, TF-IDF, NMF, citation
   network)
@@ -1355,7 +1358,7 @@ $t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 5.48\%, doubling tim
 
 A single `manuscript/config.yaml` controls the search term, per-engine query and keyword
 sets, engine enable toggles, subfield taxonomy, hypotheses, full-text and embedding
-options, and paper metadata. This run drew on 9 engines, a
+options, and paper metadata. This run drew on 10 engines, a
 6-bucket taxonomy, and 6 hypotheses.
 
 ## Artifacts
@@ -1432,7 +1435,7 @@ principles:
 The default corpus is synthetic and labelled as such; the manuscript does not present
 fixture-derived numbers as empirical findings about modafinil. Live findings require
 a real retrieval run with regenerated artifacts — as produced in this instance, which
-retrieved 2334 real records from 9 live engines.
+retrieved 2334 real records from 10 live engines.
 
 
 
@@ -1447,7 +1450,7 @@ retrieved 2334 real records from 9 live engines.
 | --- | --- |
 | **Record / Paper** | A single bibliographic entry with metadata and identifiers. |
 | **Canonical identifier** | The highest-priority available ID (DOI $>$ arXiv $>$ Semantic Scholar $>$ OpenAlex $>$ title digest) used for de-duplication and citation resolution. |
-| **Engine** | An independent literature source adapter (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv) with a uniform search interface and graceful skip-on-failure. |
+| **Engine** | An independent literature source adapter (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv) with a uniform search interface and graceful skip-on-failure. |
 | **Subfield** | One of the 6 configurable keyword-defined buckets (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety, and Neuroscience) into which records are classified. |
 | **Topic** | A latent theme from non-negative matrix factorization over the TF-IDF representation. |
 | **Embedding** | A deterministic offline vector (TF-IDF $\rightarrow$ truncated SVD) for a title, abstract, or full text. |

@@ -31,6 +31,9 @@ copy of the project tree built by `direct_recompute_support.copy_project_tree()`
   executable on `PATH` (a real subprocess with test-scripted responses — the
   CLI analogue of the sanctioned `pytest-httpserver` pattern), so they stay
   covered on CI runners with no Lean toolchain.
+- Focused selections containing only `test_*_direct.py` modules skip the
+  real-tree gate-artifact prewarm. Mixed and full-suite selections still run
+  the prewarm once, before per-test timeout accounting starts.
 
 ## Runtime and parallelism
 

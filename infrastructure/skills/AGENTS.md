@@ -31,7 +31,7 @@ flowchart TB
 - `SkillDescriptor` — `absolute_path`, `relative_path`, `name`, `description`, `frontmatter`; properties `path_posix`, `cursor_at`
 - `split_yaml_frontmatter(source: str) -> tuple[dict | None, str]`
 - `load_skill_descriptor(skill_path: Path, repo_root: Path) -> SkillDescriptor`
-- `iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]`
+- `iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]` — paths under `projects/templates/` are limited to `PUBLIC_PROJECT_NAMES`, so ignored local templates cannot affect public manifests or duplicate-name checks
 - `discover_skills(repo_root, *, search_roots=None) -> list[SkillDescriptor]` — sorted by path; raises `ValueError` on duplicate `name`
 - `build_manifest_payload(skills) -> dict`
 - `write_skill_manifest(repo_root, output_path=None, *, search_roots=None) -> Path` — default `.cursor/skill_manifest.json`

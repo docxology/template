@@ -154,6 +154,29 @@ def test_exemplar_source_hash_ignores_untracked_build_metadata(tmp_path: Path) -
     assert exemplar_source_hash(tmp_path, "demo") == before
 
 
+def test_exemplar_source_hash_tracks_linked_shared_source(tmp_path: Path) -> None:
+    """Tracked project symlinks include their in-repository target content."""
+    project = tmp_path / "projects" / "templates" / "demo"
+    shared = tmp_path / "projects" / "templates" / "shared" / "src"
+    tests = project / "tests"
+    (project / "src").mkdir(parents=True)
+    shared.mkdir(parents=True)
+    tests.mkdir()
+    shared_source = shared / "shared.py"
+    shared_source.write_text("VALUE = 1\n", encoding="utf-8")
+    linked_source = project / "src" / "shared"
+    linked_source.symlink_to(shared, target_is_directory=True)
+    test_file = tests / "test_demo.py"
+    test_file.write_text("def test_value():\n    assert True\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "--", linked_source, shared_source, test_file], cwd=tmp_path, check=True)
+
+    before = exemplar_source_hash(tmp_path, "demo")
+    shared_source.write_text("VALUE = 2\n", encoding="utf-8")
+
+    assert exemplar_source_hash(tmp_path, "demo") != before
+
+
 def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
     projects: dict[str, dict[str, str]] = {}
     for snapshot in EXEMPLAR_SNAPSHOT:

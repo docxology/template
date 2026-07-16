@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def extract_phase_variables(ctx: Any) -> dict[str, Any]:
     """Extract variables from multi-phase search metadata."""
-    variables = {}
+    variables: dict[str, Any] = {}
 
     # Load phase metadata
     phase_metadata = ctx.load_json("phase_metadata.json")

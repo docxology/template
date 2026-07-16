@@ -30,6 +30,7 @@
 # BEGIN GENERATED PUBLIC/SENSITIVE OWNERS
 # Public exemplars (derived from PUBLIC_PROJECT_NAMES).
 /projects/templates/template_active_inference/ @docxology
+/projects/templates/template_advanced_literature_review/ @docxology
 /projects/templates/template_autoresearch_project/ @docxology
 /projects/templates/template_autopoiesis/ @docxology
 /projects/templates/template_code_project/ @docxology

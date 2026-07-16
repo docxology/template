@@ -1,0 +1,38 @@
+{
+  "mode": "fixture-replay",
+  "provider_profile": {
+    "catalogue": [
+      "openai",
+      "gemini"
+    ],
+    "available": [],
+    "openai_model": "o3-deep-research",
+    "gemini_agent": "deep-research-preview-04-2026"
+  },
+  "request": {
+    "query": "Survey the cognitive-enhancement evidence for modafinil in healthy and sleep-deprived adults",
+    "provider": "auto"
+  },
+  "report": {
+    "provider": "openai",
+    "job_id": "resp_recorded_offline_0001",
+    "status": "completed",
+    "query": "Survey the cognitive-enhancement evidence for modafinil in healthy and sleep-deprived adults",
+    "output_chars": 1088,
+    "citation_count": 3,
+    "citations": [
+      {
+        "title": "Cognitive effects of modafinil in healthy individuals: a systematic review",
+        "url": "https://example.org/modafinil-systematic-review"
+      },
+      {
+        "title": "Modafinil for shift-work sleep disorder: randomized controlled trial",
+        "url": "https://example.org/modafinil-shift-work-rct"
+      },
+      {
+        "title": "Heterogeneity in executive-function outcomes with modafinil",
+        "url": "https://example.org/modafinil-executive-heterogeneity"
+      }
+    ]
+  }
+}

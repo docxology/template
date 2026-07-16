@@ -139,15 +139,15 @@ pattern: no computational logic resides in scripts.
 \begin{enumerate}
 \item
   \textbf{Retrieval} (\breaktt{01\_literature\_search.py}) --- dispatch
-  the configured query across 9 engines (arXiv, OpenAlex, Semantic
-  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
-  bioRxiv/medRxiv), merge, and de-duplicate into \texttt{corpus.jsonl}.
-  Each engine is an isolated adapter exposing a uniform
-  \texttt{search(query)\ -\textgreater{}\ list{[}Paper{]}} interface;
-  engines that are keyless need no credentials, while Semantic Scholar
-  uses a key when present. SovietRxiv and ChinaRxiv share a unified API
-  with an optional \texttt{X-API-Email} header for the polite rate-limit
-  pool (300/min vs 30/min anonymous).
+  the configured query across 10 engines (arXiv, OpenAlex, Semantic
+  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+  bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into
+  \texttt{corpus.jsonl}. Each engine is an isolated adapter exposing a
+  uniform \texttt{search(query)\ -\textgreater{}\ list{[}Paper{]}}
+  interface; engines that are keyless need no credentials, while
+  Semantic Scholar uses a key when present. SovietRxiv and ChinaRxiv
+  share a unified API with an optional \texttt{X-API-Email} header for
+  the polite rate-limit pool (300/min vs 30/min anonymous).
 \item
   \textbf{Meta-analysis} (\breaktt{02\_meta\_analysis\_pipeline.py}) ---
   subfield classification, temporal metrics, TF-IDF, non-negative matrix
@@ -203,7 +203,7 @@ A single \breaktt{manuscript/config.yaml} controls:
   relevance keywords, start year, max results, resume/clear behaviour
 \item
   \textbf{Engine toggles}: arXiv, OpenAlex, Semantic Scholar, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (each
   independently enabled or disabled)
 \item
   \textbf{SovietRxiv/ChinaRxiv settings}: optional \texttt{api\_email}

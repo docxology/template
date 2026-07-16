@@ -34,7 +34,9 @@ import logging
 import re
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
+
+import requests
 
 from literature.corpus import Corpus
 from literature.models import Paper
@@ -49,25 +51,23 @@ _BACKOFF_BASE = 0.5
 def _request_with_retry(
     url: str,
     *,
-    params: Optional[dict[str, Any]] = None,
+    params: dict[str, Any] | None = None,
     session: Any = None,
     timeout: float = 30.0,
     max_retries: int = MAX_RETRIES,
-    delay_override: Optional[float] = None,
+    delay_override: float | None = None,
     stream: bool = False,
-) -> Optional[Any]:
+) -> Any | None:
     """GET ``url`` with bounded exponential backoff. Return the response or None.
 
     Returns None on exhausted retries or any request exception — never raises.
     """
-    import requests
-
     sess = session or requests
-    last_exc: Optional[Exception] = None
+    last_exc: requests.RequestException | None = None
     for attempt in range(max_retries):
         try:
             resp = sess.get(url, params=params, timeout=timeout, stream=stream)
-        except Exception as exc:  # noqa: BLE001 pragma: no cover -- safety net: any request error retries/degrades
+        except requests.RequestException as exc:
             last_exc = exc
             resp = None
         if resp is not None:
@@ -84,7 +84,7 @@ def _request_with_retry(
     return None
 
 
-def _parse_unpaywall(data: dict) -> Optional[str]:
+def _parse_unpaywall(data: dict) -> str | None:
     """Extract the best OA PDF (or landing) URL from an Unpaywall record."""
     if not isinstance(data, dict):
         return None
@@ -104,18 +104,18 @@ def _parse_unpaywall(data: dict) -> Optional[str]:
 def resolve_fulltext_url(
     paper: Paper,
     *,
-    unpaywall_email: Optional[str] = None,
+    unpaywall_email: str | None = None,
     unpaywall_base_url: str = UNPAYWALL_API_URL,
     session: Any = None,
-    delay_override: Optional[float] = None,
-) -> Optional[str]:
+    delay_override: float | None = None,
+) -> str | None:
     """Return a downloadable full-text URL for ``paper`` or None.
 
     Resolution order: the record's own ``pdf_url`` first; otherwise, if the record
     has a DOI and an Unpaywall email is supplied, query Unpaywall.
     """
     if paper.pdf_url:
-        return paper.pdf_url
+        return str(paper.pdf_url)
     if not paper.doi or not unpaywall_email:
         return None
     base = unpaywall_base_url if unpaywall_base_url.endswith("/") else unpaywall_base_url + "/"
@@ -129,7 +129,7 @@ def resolve_fulltext_url(
         return None
     try:
         return _parse_unpaywall(resp.json())
-    except Exception:  # noqa: BLE001 pragma: no cover -- safety net: malformed payload yields no URL
+    except ValueError:
         return None
 
 
@@ -150,10 +150,10 @@ def download_fulltext(
     *,
     session: Any = None,
     resolve: bool = True,
-    url: Optional[str] = None,
-    unpaywall_email: Optional[str] = None,
-    delay_override: Optional[float] = None,
-) -> Optional[Path]:
+    url: str | None = None,
+    unpaywall_email: str | None = None,
+    delay_override: float | None = None,
+) -> Path | None:
     """Download the full-text PDF for ``paper`` into ``dest_dir``; return the path or None.
 
     Network-gated and non-raising: if no URL can be resolved or the request fails,
@@ -181,9 +181,12 @@ def download_fulltext(
         content = resp.content if hasattr(resp, "content") else resp.read()
         tmp_path.write_bytes(content)
         tmp_path.replace(out_path)
-    except Exception:  # noqa: BLE001 pragma: no cover -- safety net: I/O failure cleans up and returns None
-        if tmp_path.exists():
-            tmp_path.unlink()
+    except (OSError, requests.RequestException) as exc:
+        logger.warning("Failed to persist full text for %s: %s", paper.canonical_id, exc)
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except OSError as cleanup_exc:
+            logger.warning("Failed to remove partial download %s: %s", tmp_path, cleanup_exc)
         return None
     return out_path
 
@@ -213,7 +216,7 @@ def assess_fulltext_availability(papers: list[Paper]) -> dict[str, Any]:
 _BLANK_LINES_RE = re.compile(r"\n{3,}")
 
 
-def extract_fulltext_text(pdf_path: Path) -> Optional[str]:
+def extract_fulltext_text(pdf_path: Path) -> str | None:
     """Extract concatenated plaintext from every page of a downloaded PDF.
 
     Pages are joined with a blank line (``"\\n\\n"``); runs of 3+ consecutive
@@ -226,7 +229,14 @@ def extract_fulltext_text(pdf_path: Path) -> Optional[str]:
     try:
         reader = pypdf.PdfReader(str(pdf_path))
         pages_text = [page.extract_text() or "" for page in reader.pages]
-    except Exception as exc:  # noqa: BLE001 pragma: no cover -- safety net: corrupt/unparseable PDF degrades to None
+    except (
+        OSError,
+        KeyError,
+        TypeError,
+        ValueError,
+        pypdf.errors.DependencyError,
+        pypdf.errors.PyPdfError,
+    ) as exc:
         logger.warning("extract_fulltext_text: failed to parse %s: %s", pdf_path, exc)
         return None
     text = "\n\n".join(pages_text).strip()
@@ -251,7 +261,13 @@ def extract_figures(pdf_path: Path, dest_dir: Path, *, stem: str) -> list[Path]:
 
     try:
         reader = pypdf.PdfReader(str(pdf_path))
-    except Exception as exc:  # noqa: BLE001 pragma: no cover -- safety net: corrupt/unparseable PDF degrades to []
+    except (
+        OSError,
+        TypeError,
+        ValueError,
+        pypdf.errors.DependencyError,
+        pypdf.errors.PyPdfError,
+    ) as exc:
         logger.warning("extract_figures: failed to parse %s: %s", pdf_path, exc)
         return []
 
@@ -262,8 +278,18 @@ def extract_figures(pdf_path: Path, dest_dir: Path, *, stem: str) -> list[Path]:
     for page in reader.pages:
         try:
             images = list(page.images)
-        except Exception as exc:  # noqa: BLE001 -- safety net: a malformed page's image list is skipped, not fatal
-            logger.warning("extract_figures: failed to enumerate images on a page of %s: %s", pdf_path, exc)
+        except (
+            KeyError,
+            TypeError,
+            ValueError,
+            pypdf.errors.DependencyError,
+            pypdf.errors.PyPdfError,
+        ) as exc:
+            logger.warning(
+                "extract_figures: failed to enumerate images on a page of %s: %s",
+                pdf_path,
+                exc,
+            )
             continue
         for image_file in images:
             try:
@@ -275,8 +301,20 @@ def extract_figures(pdf_path: Path, dest_dir: Path, *, stem: str) -> list[Path]:
                 out_path = dest_dir / f"{stem}_fig{n}.{ext}"
                 out_path.write_bytes(image_file.data)
                 written.append(out_path)
-            except Exception as exc:  # noqa: BLE001 -- safety net: a single bad image is skipped, not fatal
-                logger.warning("extract_figures: failed to write an image from %s: %s", pdf_path, exc)
+            except (
+                OSError,
+                AttributeError,
+                KeyError,
+                TypeError,
+                ValueError,
+                pypdf.errors.DependencyError,
+                pypdf.errors.PyPdfError,
+            ) as exc:
+                logger.warning(
+                    "extract_figures: failed to write an image from %s: %s",
+                    pdf_path,
+                    exc,
+                )
                 continue
     return written
 
@@ -287,9 +325,9 @@ def download_and_extract_fulltext(
     *,
     session: Any = None,
     resolve: bool = True,
-    url: Optional[str] = None,
-    unpaywall_email: Optional[str] = None,
-    delay_override: Optional[float] = None,
+    url: str | None = None,
+    unpaywall_email: str | None = None,
+    delay_override: float | None = None,
 ) -> dict[str, Any]:
     """Download the full-text PDF for ``paper`` then extract text and figures from it.
 
@@ -314,7 +352,11 @@ def download_and_extract_fulltext(
         unpaywall_email=unpaywall_email,
         delay_override=delay_override,
     )
-    result: dict[str, Any] = {"pdf_path": pdf_path, "text_path": None, "figure_paths": []}
+    result: dict[str, Any] = {
+        "pdf_path": pdf_path,
+        "text_path": None,
+        "figure_paths": [],
+    }
     if pdf_path is None:
         return result
 

@@ -93,3 +93,13 @@ class TestScriptGracefulSkip:
     def test_disabled_project_returns_two(self, tmp_path: Path) -> None:
         result = run_script("--project", "nonexistent_project_xyz", "--stage", "survey", cwd=tmp_path)
         assert result.returncode == 2
+
+    def test_malformed_yaml_returns_two_without_traceback(self, tmp_path: Path) -> None:
+        project = tmp_path / "projects" / "malformed_project" / "manuscript"
+        project.mkdir(parents=True)
+        (project / "config.yaml").write_text("research_workflow: [\n", encoding="utf-8")
+
+        result = run_script("--project", "malformed_project", "--stage", "survey", cwd=tmp_path)
+
+        assert result.returncode == 2
+        assert "traceback" not in result.stderr.lower()

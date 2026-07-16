@@ -103,7 +103,7 @@ infrastructure, pipeline stages, or cross-template validation.
 
 | Capability | Where |
 | --- | --- |
-| Multi-engine dispatch (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv) with per-engine on/off toggles and graceful `skipped` degradation when a key/network is absent | `src/literature/*_client.py`, `src/literature/search_runner.py` |
+| Ten-engine dispatch (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with per-engine on/off toggles and graceful `skipped` degradation when a key/network is absent | `src/literature/*_client.py`, `src/literature/search_runner.py` |
 | Canonical `Paper` record + de-duplication/merge by DOI / arXiv / S2 / OpenAlex / title-hash | `src/literature/models.py`, `src/literature/corpus.py` |
 | Full-text resolution + download (Unpaywall / OA / direct PDF), opt-in & network-gated | `src/literature/fulltext_download.py` |
 | Descriptive statistics + consolidated meta-analysis report (counts, citation distribution + Gini, author productivity) | `src/analysis/descriptive_stats.py` |
@@ -111,6 +111,7 @@ infrastructure, pipeline stages, or cross-template validation.
 | Document embeddings (offline deterministic TF-IDF→SVD) for title/abstract/full text + similarity, clustering, 2-D projection | `src/analysis/embeddings.py` |
 | Topic modeling (NMF), temporal trends, citation network (networkx) | `src/analysis/{topic_modeling,temporal_analysis,citation_network}.py` |
 | Optional knowledge-graph layer: assertion extraction, hypothesis scoring, RDF/TriG nanopublications (LLM-gated, offline-safe) | `src/knowledge_graph/` |
+| Optional reproducibility assessment: workflow-graph extraction, content/structure scores, and full-text quote verification | `src/reproducibility/`, `scripts/10_reproducibility_assessment.py` |
 | Publication-ready figures + auto-injected manuscript | `src/visualization/`, `src/manuscript/` |
 
 ## Configuration
@@ -120,13 +121,17 @@ The single control surface is [`manuscript/config.yaml`](manuscript/config.yaml)
 fresh configuration). Its `project_config.search.term`, `query`, `arxiv_queries`,
 `relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions` blocks define
 what is searched and how records are classified; `project_config.search.engines`
-toggles each engine; `project_config.fulltext` and `project_config.embeddings`
-configure the optional full-text and embedding stages.
+toggles each engine; `project_config.fulltext`, `project_config.embeddings`,
+`project_config.sampling`, and `project_config.reproducibility_assessment`
+configure the optional full-text, embedding, deterministic-sampling, and
+reproducibility stages. Full-text download and reproducibility assessment are
+explicit opt-ins: run script `11` before its consumer, script `10`.
 
 ## Outputs and validation
 
 The pipeline writes all artifacts under `output/` (corpus JSONL, analysis JSON,
-figures, rendered manuscript) — everything there is disposable and regenerable. The
+figures, rendered manuscript). These artifacts are regenerable; the canonical
+public exemplar also tracks its latest publication-evidence snapshot in Git. The
 **validate** stage (`scripts/pipeline/stage_04_validate.py` / stage 04) checks the rendered
 output, and the project test suite plus the ≥90 % coverage gate validate `src/`
 before any figures or manuscript numbers are trusted.
@@ -155,9 +160,10 @@ project environment; the Stage-01 command above is the fresh-clone contract.
 src/literature/      retrieval engines, Paper model, corpus, de-dup, full-text
 src/analysis/        stats, entities, embeddings, topics, temporal, citation network
 src/knowledge_graph/ assertions, hypotheses, nanopublications (optional, LLM-gated)
+src/reproducibility/ workflow-graph extraction and reproducibility scoring (optional)
 src/visualization/   figures
 src/manuscript/      variable injection
-scripts/             thin orchestrators (01_literature_search … 06, fixture generator)
+scripts/             thin orchestrators (01_literature_search … 11_fulltext_download)
 tests/               no-mocks suite (pytest-httpserver + real computation), >=90% cov
 manuscript/          config.yaml (the control surface) + sections
 data/fixtures/       committed deterministic offline corpus

@@ -10,6 +10,14 @@
       "coverage_floor": 90
     },
     {
+      "name": "template_advanced_literature_review",
+      "qualified_name": "templates/template_advanced_literature_review",
+      "title": "Advanced Multi-Phase Literature Review Template",
+      "use_when": "Use this template when one review question needs distinct retrieval phases, phase-specific filters, and explicit cross-phase provenance.",
+      "test_file_count": 3,
+      "coverage_floor": 90
+    },
+    {
       "name": "template_autoresearch_project",
       "qualified_name": "templates/template_autoresearch_project",
       "title": "template_autoresearch_project",
@@ -62,7 +70,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 54,
+      "test_file_count": 66,
       "coverage_floor": 90
     },
     {

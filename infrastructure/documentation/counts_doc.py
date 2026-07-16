@@ -21,22 +21,23 @@ back out via the markers ``Last refreshed count: **N**`` and
 
 Per-exemplar collection totals are derived live with ``pytest --collect-only``.
 Coverage remains a separately labelled measured snapshot because recomputing all
-23 coverage gates during every documentation check would be prohibitively slow.
+24 coverage gates during every documentation check would be prohibitively slow.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
-import os
 from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.project_pyproject import project_declares_dev_extra
+from infrastructure.core.pytest_orchestration import test_runner_dependency_specs
 from infrastructure.project.public_scope import public_project_names
 
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
@@ -44,10 +45,10 @@ COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-07-13"
+GENERATED_DATE = "2026-07-15"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-11"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-15"
 
 
 @dataclass(frozen=True)
@@ -61,38 +62,32 @@ class ExemplarSnapshot:
 # Measured per-exemplar coverage snapshot. Collection totals are intentionally
 # absent here and are derived in isolated project environments on every run.
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    # template_active_inference coverage is re-derived in its OWN environment
-    # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
-    # cannot exercise): measured 2026-07-11 via
-    # `stage_01_test.py --project templates/template_active_inference
-    # --project-only --include-slow` (699 passed). Collected count from
-    # --collect-only in the project env.
-    ExemplarSnapshot("template_active_inference", "93.55 %"),
-    ExemplarSnapshot("template_autopoiesis", "96.41 %"),
-    ExemplarSnapshot("template_autoresearch_project", "92.81 %"),
-    ExemplarSnapshot("template_autoscientists", "99.60 %"),
-    ExemplarSnapshot("template_code_project", "98.78 %"),
-    ExemplarSnapshot("template_data_descriptor", "99.13 %"),
-    ExemplarSnapshot("template_eda_notebook", "100.00 %"),
-    ExemplarSnapshot("template_formal", "96.03 %"),
-    ExemplarSnapshot("template_gold_refinement", "97.55 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "96.77 %"),
-    ExemplarSnapshot("template_madlib", "93.96 %"),
-    ExemplarSnapshot("template_methods_paper", "99.01 %"),
-    ExemplarSnapshot("template_newspaper", "99.81 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.70 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "95.52 %"),
-    ExemplarSnapshot("template_prose_project", "100.00 %"),
-    # Union of two independent 2026-07-10 coverage-debt closures (both real
-    # no-mock suites over visuals.py, written in parallel sessions): 95 tests,
-    # 99.05 % — was 55.91 % when the 1500-line kmyth/TPM module landed with 7.
-    ExemplarSnapshot("template_redacted_report", "98.83 %"),
-    ExemplarSnapshot("template_registered_report", "96.37 %"),
-    ExemplarSnapshot("template_search_project", "95.13 %"),
-    ExemplarSnapshot("template_sia", "97.16 %"),
-    ExemplarSnapshot("template_storybook", "93.92 %"),
-    ExemplarSnapshot("template_template", "99.37 %"),
-    ExemplarSnapshot("template_textbook", "96.73 %"),
+    # Measured 2026-07-15 with each exemplar's full project-local coverage gate.
+    # Active Inference uses its own pinned environment: 706 passed, 6 deselected.
+    ExemplarSnapshot("template_active_inference", "90.59 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "95.57 %"),
+    ExemplarSnapshot("template_autopoiesis", "97.56 %"),
+    ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
+    ExemplarSnapshot("template_autoscientists", "99.28 %"),
+    ExemplarSnapshot("template_code_project", "97.91 %"),
+    ExemplarSnapshot("template_data_descriptor", "98.75 %"),
+    ExemplarSnapshot("template_eda_notebook", "98.97 %"),
+    ExemplarSnapshot("template_formal", "95.21 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.64 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "92.40 %"),
+    ExemplarSnapshot("template_madlib", "99.47 %"),
+    ExemplarSnapshot("template_methods_paper", "98.98 %"),
+    ExemplarSnapshot("template_newspaper", "99.68 %"),
+    ExemplarSnapshot("template_pitch_deck", "97.73 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "94.88 %"),
+    ExemplarSnapshot("template_prose_project", "99.57 %"),
+    ExemplarSnapshot("template_redacted_report", "97.53 %"),
+    ExemplarSnapshot("template_registered_report", "96.42 %"),
+    ExemplarSnapshot("template_search_project", "96.35 %"),
+    ExemplarSnapshot("template_sia", "99.69 %"),
+    ExemplarSnapshot("template_storybook", "95.07 %"),
+    ExemplarSnapshot("template_template", "99.14 %"),
+    ExemplarSnapshot("template_textbook", "98.38 %"),
 )
 
 
@@ -135,9 +130,14 @@ def _exemplar_collected_count(repo_root: Path, name: str) -> int:
         f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
     )
     command = [uv, "run", "--project", str(project_root)]
+    for dependency_spec in test_runner_dependency_specs():
+        command.extend(["--with", dependency_spec])
     if project_declares_dev_extra(project_root):
         command.extend(["--extra", "dev"])
-    command.extend(["pytest", "tests/", "--collect-only", "-q", "--no-cov"])
+    # Invoke pytest as a module so a relocated checkout does not depend on a
+    # stale absolute interpreter path embedded in an existing console-script
+    # shebang inside the project's portable `.venv`.
+    command.extend(["python", "-m", "pytest", "tests/", "--collect-only", "-q", "--no-cov"])
     proc = subprocess.run(  # noqa: S603 - resolved uv executable, fixed arguments
         command,
         cwd=project_root,
@@ -242,8 +242,33 @@ def exemplar_source_hash(repo_root: Path, name: str) -> str:
             if path.is_file() and "__pycache__" not in path.parts
         )
     for path in files:
-        digest.update(path.relative_to(project_root).as_posix().encode("utf-8"))
+        logical_path = path.relative_to(project_root).as_posix()
+        digest.update(logical_path.encode("utf-8"))
         digest.update(b"\0")
+        if path.is_symlink():
+            digest.update(os.readlink(path).encode("utf-8"))
+            digest.update(b"\0")
+            resolved = path.resolve(strict=False)
+            try:
+                resolved.relative_to(repo_root.resolve())
+            except ValueError:
+                # External links are configuration, not public source. Hash the
+                # link target above without reading outside the repository.
+                continue
+            if resolved.is_dir():
+                for child in sorted(
+                    candidate
+                    for candidate in resolved.rglob("*")
+                    if candidate.is_file() and "__pycache__" not in candidate.parts
+                ):
+                    digest.update(f"{logical_path}/{child.relative_to(resolved).as_posix()}".encode("utf-8"))
+                    digest.update(b"\0")
+                    digest.update(child.read_bytes())
+                    digest.update(b"\0")
+            elif resolved.is_file():
+                digest.update(resolved.read_bytes())
+                digest.update(b"\0")
+            continue
         digest.update(path.read_bytes())
         digest.update(b"\0")
     return digest.hexdigest()
@@ -393,7 +418,7 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}):
 
 {_exemplar_table(facts.exemplar_tests)}
 

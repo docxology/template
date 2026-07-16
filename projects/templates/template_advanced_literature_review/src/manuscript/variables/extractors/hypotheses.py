@@ -63,7 +63,7 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
         from knowledge_graph.hypothesis import config_key_to_hypothesis_id
     except ImportError:  # pragma: no cover
 
-        def config_key_to_hypothesis_id(key: str, name: str = "") -> str:  # type: ignore[misc]
+        def config_key_to_hypothesis_id(key: str, name: str = "") -> str:
             """Process config key to hypothesis id."""
             return key
 
@@ -76,7 +76,10 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
         return "pending"
 
     hyp_list_parts: list[str] = []
-    hyp_table = ["| ID | Hypothesis | Scope | Evidence score |", "| --- | --- | --- | --- |"]
+    hyp_table = [
+        "| ID | Hypothesis | Scope | Evidence score |",
+        "| --- | --- | --- | --- |",
+    ]
     for hid, hdef in hyp_defs.items():
         hname = str((hdef or {}).get("name", hid)) if isinstance(hdef, dict) else str(hdef)
         hscope = str((hdef or {}).get("scope", "")) if isinstance(hdef, dict) else ""

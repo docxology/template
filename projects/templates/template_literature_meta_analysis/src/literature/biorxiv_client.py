@@ -165,6 +165,7 @@ def _parse_biorxiv_paper(item: dict, server: str) -> Paper:
         doi=doi,
         venue=None,
         pdf_url=_build_pdf_url(server, doi),
+        is_open_access=True,
         full_text_source=server,
     )
 

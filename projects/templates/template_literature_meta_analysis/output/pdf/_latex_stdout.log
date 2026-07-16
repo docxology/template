@@ -93,12 +93,12 @@ k.sty
 (/usr/local/texlive/2026basic/texmf-dist/tex/generic/uniquecounter/uniquecounte
 r.sty)))
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def))
-(/Users/hum/Library/texmf/tex/latex/seqsplit/seqsplit.sty)
+(<home>/Library/texmf/tex/latex/seqsplit/seqsplit.sty)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amscls/amsthm.sty)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/geometry/geometry.sty
 (/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/ifvtex.sty))
-(/Users/hum/Library/texmf/tex/latex/placeins/placeins.sty)
-(/Users/hum/Library/texmf/tex/latex/multirow/multirow.sty)
+(<home>/Library/texmf/tex/latex/placeins/placeins.sty)
+(<home>/Library/texmf/tex/latex/multirow/multirow.sty)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/listings.sty
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/lstpatch.sty)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/listings/lstmisc.sty)
@@ -109,9 +109,9 @@ r.sty)))
     but found:
         2025/11/14 1.11b (Carsten Heinz)
     so I'm assuming it got fixed.
-(/Users/hum/Library/texmf/tex/latex/cleveref/cleveref.sty)
+(<home>/Library/texmf/tex/latex/cleveref/cleveref.sty)
 ==> First Aid for cleveref.sty applied!
-(/Users/hum/Library/texmf/tex/latex/algorithm2e/algorithm2e.sty)
+(<home>/Library/texmf/tex/latex/algorithm2e/algorithm2e.sty)
 (./_combined_manuscript.aux)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/mt-LatinModernRoma
 n.cfg)
@@ -123,63 +123,63 @@ n.cfg)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/microtype/mt-msb.cfg)
 [1]) [2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
-Overfull \hbox (138.22891pt too wide) in paragraph at lines 1009--1010
+Overfull \hbox (138.22491pt too wide) in paragraph at lines 1016--1017
 [][]\TU/lmr/m/n/10 {{#fig:hypothesis_dashboard}} 
 [12] [13]
-Overfull \hbox (100.83806pt too wide) in paragraph at lines 1022--1023
+Overfull \hbox (100.84279pt too wide) in paragraph at lines 1029--1030
 [][]\TU/lmr/m/n/10 {{#fig:growth_curve}} 
 [14]
-Overfull \hbox (105.87892pt too wide) in paragraph at lines 1085--1086
+Overfull \hbox (105.87073pt too wide) in paragraph at lines 1092--1093
 [][]\TU/lmr/m/n/10 {{#fig:field_summary}} 
 
-Overfull \hbox (131.80548pt too wide) in paragraph at lines 1087--1088
+Overfull \hbox (131.79898pt too wide) in paragraph at lines 1094--1095
 [][]\TU/lmr/m/n/10 {{#fig:subfield_distribution}} 
 [15]
-Overfull \hbox (115.56807pt too wide) in paragraph at lines 1089--1090
+Overfull \hbox (115.5728pt too wide) in paragraph at lines 1096--1097
 [][]\TU/lmr/m/n/10 {{#fig:subfield_timeline}} 
 [16]
-Overfull \hbox (131.73871pt too wide) in paragraph at lines 1128--1129
+Overfull \hbox (131.7369pt too wide) in paragraph at lines 1135--1136
 [][]\TU/lmr/m/n/10 {{#fig:citation_distribution}} 
 [17]
-Overfull \hbox (90.27806pt too wide) in paragraph at lines 1153--1154
+Overfull \hbox (90.28279pt too wide) in paragraph at lines 1160--1161
 [][]\TU/lmr/m/n/10 {{#fig:top_venues}} 
 [18]
-Overfull \hbox (130.03806pt too wide) in paragraph at lines 1178--1179
+Overfull \hbox (130.04279pt too wide) in paragraph at lines 1185--1186
 [][]\TU/lmr/m/n/10 {{#fig:author_productivity}} 
 [19] [20] [21]
-Overfull \hbox (115.3426pt too wide) in paragraph at lines 1286--1287
+Overfull \hbox (115.3261pt too wide) in paragraph at lines 1293--1294
 [][]\TU/lmr/m/n/10 {{#fig:topic_term_bars}} 
 
-Overfull \hbox (113.61807pt too wide) in paragraph at lines 1296--1297
+Overfull \hbox (113.6228pt too wide) in paragraph at lines 1303--1304
 [][]\TU/lmr/m/n/10 {{#fig:pca_embeddings}} 
 [22]
-Overfull \hbox (91.96178pt too wide) in paragraph at lines 1298--1299
+Overfull \hbox (91.96689pt too wide) in paragraph at lines 1305--1306
 [][]\TU/lmr/m/n/10 {{#fig:dendrogram}} 
 [23]
-Overfull \hbox (105.52371pt too wide) in paragraph at lines 1306--1307
+Overfull \hbox (105.5369pt too wide) in paragraph at lines 1313--1314
 [][]\TU/lmr/m/n/10 {{#fig:term_heatmap}} 
 [24]
-Overfull \hbox (116.95807pt too wide) in paragraph at lines 1342--1343
+Overfull \hbox (116.9628pt too wide) in paragraph at lines 1349--1350
 [][]\TU/lmr/m/n/10 {{#fig:entity_bar_chart}} 
 [25] [26]
-Overfull \hbox (126.14806pt too wide) in paragraph at lines 1417--1418
+Overfull \hbox (126.15279pt too wide) in paragraph at lines 1424--1425
 [][]\TU/lmr/m/n/10 {{#fig:similarity_heatmap}} 
 
-Overfull \hbox (91.93585pt too wide) in paragraph at lines 1419--1420
+Overfull \hbox (91.9399pt too wide) in paragraph at lines 1426--1427
 [][]\TU/lmr/m/n/10 {{#fig:word_cloud}} 
 [27]
-Overfull \hbox (132.52986pt too wide) in paragraph at lines 1421--1422
+Overfull \hbox (132.52747pt too wide) in paragraph at lines 1428--1429
 [][]\TU/lmr/m/n/10 {{#fig:cooccurrence_matrix}} 
 [28] [29]
-Overfull \hbox (115.2606pt too wide) in paragraph at lines 1515--1516
+Overfull \hbox (115.25436pt too wide) in paragraph at lines 1522--1523
 [][]\TU/lmr/m/n/10 {{#fig:citation_network}} 
 [30]
-Overfull \hbox (126.18806pt too wide) in paragraph at lines 1517--1518
+Overfull \hbox (126.20071pt too wide) in paragraph at lines 1524--1525
 [][]\TU/lmr/m/n/10 {{#fig:degree_distribution}} 
 [31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42]
 (./_combined_manuscript.bbl)
 
-Package caption Warning: Unused \captionsetup[sub] on input line 213.
+Package caption Warning: Unused \captionsetup[sub] on input line 219.
 See the caption package documentation for explanation.
 
 [43] (./_combined_manuscript.aux) )

@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 00:52
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 12:44
 entering extended mode
  %&-line parsing enabled.
-**/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
+**<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
 c/template/projects/templates/template_literature_meta_analysis/output/slides/0
 3c_results_text_analytics_slides.tex
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 c_results_text_analytics_slides.tex
 LaTeX2e <2025-11-01>
@@ -1215,7 +1215,7 @@ Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ))
 \pandoc@box=\box88
 
-(/Users/hum/Library/texmf/tex/latex/seqsplit/seqsplit.sty
+(<home>/Library/texmf/tex/latex/seqsplit/seqsplit.sty
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
@@ -1229,7 +1229,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 c_results_text_analytics_slides.aux)
 \openout1 = `03c_results_text_analytics_slides.aux'.
@@ -1593,7 +1593,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 c_results_text_analytics_slides.nav) [1
 
@@ -1601,7 +1601,7 @@ c_results_text_analytics_slides.nav) [1
 File: ../figures/topic_term_bars.png Graphic file (type bmp)
 <../figures/topic_term_bars.png>
 
-Overfull \hbox (120.2032pt too wide) in paragraph at lines 198--198
+Overfull \hbox (120.20895pt too wide) in paragraph at lines 198--198
 [][]\TU/lmss/m/n/10.95 {{#fig:topic_term_bars}}  
  []
 
@@ -1617,14 +1617,14 @@ Overfull \hbox (120.2032pt too wide) in paragraph at lines 198--198
 File: ../figures/pca_embeddings.png Graphic file (type bmp)
 <../figures/pca_embeddings.png>
 
-Overfull \hbox (120.26724pt too wide) in paragraph at lines 211--211
+Overfull \hbox (120.26753pt too wide) in paragraph at lines 211--211
 [][]\TU/lmss/m/n/10.95 {{#fig:pca_embeddings}}  
  []
 
 File: ../figures/dendrogram.png Graphic file (type bmp)
 <../figures/dendrogram.png>
 
-Overfull \hbox (97.46649pt too wide) in paragraph at lines 211--211
+Overfull \hbox (97.461pt too wide) in paragraph at lines 211--211
 [][]\TU/lmss/m/n/10.95 {{#fig:dendrogram}}  
  []
 
@@ -1640,7 +1640,7 @@ Overfull \hbox (97.46649pt too wide) in paragraph at lines 211--211
 File: ../figures/term_heatmap.png Graphic file (type bmp)
 <../figures/term_heatmap.png>
 
-Overfull \hbox (111.13329pt too wide) in paragraph at lines 220--220
+Overfull \hbox (111.13544pt too wide) in paragraph at lines 220--220
 [][]\TU/lmss/m/n/10.95 {{#fig:term_heatmap}}  
  []
 
@@ -1650,7 +1650,7 @@ Overfull \hbox (111.13329pt too wide) in paragraph at lines 220--220
 File: ../figures/entity_bar_chart.png Graphic file (type bmp)
 <../figures/entity_bar_chart.png>
 
-Overfull \hbox (121.15419pt too wide) in paragraph at lines 283--283
+Overfull \hbox (121.15448pt too wide) in paragraph at lines 283--283
 [][]\TU/lmss/m/n/10.95 {{#fig:entity_bar_chart}}  
  []
 
@@ -1705,21 +1705,21 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: ../figures/similarity_heatmap.png Graphic file (type bmp)
 <../figures/similarity_heatmap.png>
 
-Overfull \hbox (130.63689pt too wide) in paragraph at lines 336--336
+Overfull \hbox (130.63718pt too wide) in paragraph at lines 336--336
 [][]\TU/lmss/m/n/10.95 {{#fig:similarity_heatmap}}  
  []
 
 File: ../figures/word_cloud.png Graphic file (type bmp)
 <../figures/word_cloud.png>
 
-Overfull \hbox (96.54999pt too wide) in paragraph at lines 336--336
+Overfull \hbox (96.55237pt too wide) in paragraph at lines 336--336
 [][]\TU/lmss/m/n/10.95 {{#fig:word_cloud}}  
  []
 
 File: ../figures/cooccurrence_matrix.png Graphic file (type bmp)
 <../figures/cooccurrence_matrix.png>
 
-Overfull \hbox (139.38565pt too wide) in paragraph at lines 336--336
+Overfull \hbox (139.3917pt too wide) in paragraph at lines 336--336
 [][]\TU/lmss/m/n/10.95 {{#fig:cooccurrence_matrix}}  
  []
 
@@ -1736,7 +1736,7 @@ Underfull \vbox (badness 1112) detected at line 336
  []
 
 
-Overfull \vbox (50.28593pt too high) detected at line 336
+Overfull \vbox (50.30313pt too high) detected at line 336
  []
 
 [15
@@ -1753,7 +1753,7 @@ Overfull \vbox (50.28593pt too high) detected at line 336
 \openout7 = `03c_results_text_analytics_slides.snm'.
 
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 c_results_text_analytics_slides.aux)
  ***********
@@ -1764,12 +1764,12 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  30933 strings out of 469709
  625004 string characters out of 5466024
- 1170309 words of memory out of 5000000
+ 1170310 words of memory out of 5000000
  59029 multiletter control sequences out of 15000+600000
  631224 words of font info for 68 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  101i,11n,114p,1185b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxo
+Output written on <home>/Documents/GitHub/HumOS/projects/platform/hum-docxo
 logy/repos/public/template/projects/templates/template_literature_meta_analysis
 /output/slides/03c_results_text_analytics_slides.pdf (15 pages).

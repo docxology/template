@@ -80,8 +80,10 @@ testing:
 # extraction (03) — neither is reproducible in CI. The scripts below run from
 # the committed fixture corpus with no network or API keys, matching the
 # `offline_fixture` reference condition in experiment_plan.yaml. Run the
-# network/LLM stages explicitly: scripts/01_literature_search.py and
-# scripts/03_build_knowledge_graph.py --max-papers 0 (see scripts/README.md).
+# network/LLM stages explicitly: scripts/01_literature_search.py,
+# scripts/03_build_knowledge_graph.py --max-papers 0, and the opt-in full-text
+# chain `11_fulltext_download.py` then `10_reproducibility_assessment.py` (see
+# scripts/README.md). The latter two must remain outside this default allowlist.
 analysis:
   scripts:
     - 02_meta_analysis_pipeline.py
@@ -90,8 +92,6 @@ analysis:
     - 07_literature_evaluation.py
     - 08_deep_research_dispatch.py
     - 09_export_bibliography.py
-    - 10_reproducibility_assessment.py
-    - 11_fulltext_download.py
     - 05_inject_variables.py
 
 # Project-specific configuration namespace.
@@ -122,10 +122,11 @@ project_config:
       # No documented hard rate limit; recommends staying under ~10 req/s (one
       # request per search call here, so this is naturally respected).
       europepmc: true
-      # bioRxiv/medRxiv: keyless preprint servers sharing one unified API. No
-      # documented rate limit, but the details endpoint is date-window + cursor
-      # paginated, so keep usage modest.
+      # bioRxiv and medRxiv are distinct engines over one keyless API. Their
+      # details endpoints are date-window + cursor paginated, so keep usage
+      # modest and toggle either corpus independently.
       biorxiv: true
+      medrxiv: true
     # SovietRxiv / RussiaRxiv (translated Soviet-era preprints from Math-Net.Ru
     # and CyberLeninka). Keyless engine; set api_email for the polite rate-limit
     # pool (300/min vs 30/min anonymous). Set source: "russiarxiv" to restrict.
@@ -168,11 +169,20 @@ project_config:
     seed: 42
 
   # Deterministic subsampling for expensive LLM stages (KG + reproducibility).
-  # The full bibliography is always complete; only the LLM-gated stages sample.
-  # Sampling is deterministic (seed=42): same corpus + same config = same sample,
-  # so runs are idempotent and resumable. The sample is drawn from the full
-  # deduplicated corpus after relevance/year filtering, in canonical_id order
-  # (not random shuffle) so the selection is stable and reproducible.
+  #
+  # DESIGN RATIONALE: The full bibliography is always complete (every engine,
+  # every paper discovered). Subsampling only applies to LLM-gated analysis stages
+  # to keep runtime practical for large corpora. The sample is deterministic:
+  # same corpus + same config = same sample, enabling reproducible runs.
+  #
+  # SAMPLING METHOD: Papers are sorted by canonical_id (deterministic order),
+  # then sampled using Python's random.Random(seed) for reproducible selection.
+  # This ensures the same papers are selected across multiple runs of the same
+  # configuration, but different corpora or seeds produce different samples.
+  #
+  # USAGE: Set fraction=0.1 for 10% sampling, fraction=1.0 for no sampling.
+  # For 2334 papers at 0.05 fraction: ~117 papers selected for LLM processing.
+  # Change the seed to get a different sample from the same corpus.
   sampling:
     # Fraction of the corpus to include in the LLM sample (0.0-1.0).
     # 1.0 = all papers (no subsampling). 0.05 = 5% of papers.
@@ -272,7 +282,7 @@ project_config:
       inputs: []
       outputs:
         - output/data/corpus.jsonl
-      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv; merge and deduplicate"
+      description: "Query 10 engines: arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv; merge and deduplicate"
 
     - name: meta_analysis
       script: 02_meta_analysis_pipeline.py
@@ -316,16 +326,6 @@ project_config:
         - output/figures/topic_term_bars.png
       description: "Render publication-ready visualizations from analysis JSON outputs"
 
-    - name: inject_variables
-      script: 05_inject_variables.py
-      inputs:
-        - output/data/corpus.jsonl
-        - output/data/temporal_analysis.json
-        - output/data/subfield_classification.json
-      outputs:
-        - manuscript/00_abstract.md
-      description: "Compute dynamic variables from pipeline outputs and inject them into manuscript Markdown templates"
-
     - name: export_bibliography
       script: 09_export_bibliography.py
       inputs:
@@ -333,6 +333,15 @@ project_config:
       outputs:
         - output/data/bibliography.bib
       description: "Export the de-duplicated corpus to a single unified BibTeX file"
+
+    - name: fulltext_download
+      script: 11_fulltext_download.py
+      inputs:
+        - output/data/corpus.jsonl
+      outputs:
+        - output/fulltext/
+        - output/data/fulltext_extraction.json
+      description: "Download open-access full-text PDFs via Unpaywall, extract plaintext and figures (network-gated, opt-in)"
 
     - name: reproducibility_assessment
       script: 10_reproducibility_assessment.py
@@ -345,14 +354,15 @@ project_config:
         - output/data/reproducibility_summary.json
       description: "Decompose each paper's pipeline into a workflow graph and score reproducibility (LLM-gated, opt-in)"
 
-    - name: fulltext_download
-      script: 11_fulltext_download.py
+    - name: inject_variables
+      script: 05_inject_variables.py
       inputs:
         - output/data/corpus.jsonl
+        - output/data/temporal_analysis.json
+        - output/data/subfield_classification.json
       outputs:
-        - output/fulltext/
-        - output/data/fulltext_extraction.json
-      description: "Download open-access full-text PDFs via Unpaywall, extract plaintext and figures (network-gated, opt-in)"
+        - manuscript/00_abstract.md
+      description: "Compute dynamic variables from pipeline outputs and inject them into manuscript Markdown templates"
 
   # Subfield taxonomy: keyword sets that classify each record into one bucket.
   # These are domain-specific (modafinil); swap them when re-targeting.

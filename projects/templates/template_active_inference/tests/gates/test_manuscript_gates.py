@@ -6,13 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from manuscript.hydrate import write_resolved_manuscript
 from manuscript.sheaf import compose_all_sections
-from manuscript.variables import generate_variables
-from orchestration.coverage_pipeline import ensure_coverage_artifacts
 from gates.validation import validate_manuscript
-from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
-from visualizations.figure_registry import write_figure_registry_json
+from gate_support import ensure_gate_artifacts
 
 pytestmark = [pytest.mark.timeout(300)]
 
@@ -35,24 +31,18 @@ def composed_methods_sheaf() -> Path:
     return PROJECT_ROOT
 
 
-def _prepare_minimal_manuscript_gate_artifacts(project_root: Path) -> None:
-    """Build only the manuscript and coverage artifacts needed by contract checks."""
-    ensure_gate_artifacts(project_root)
-    compose_all_sections(project_root)
-    ensure_coverage_artifacts(project_root, write_page=True, render_heatmap=True, force=False)
-    write_figure_registry_json(project_root)
-    write_resolved_manuscript(project_root, generate_variables(project_root, require_analysis_outputs=False))
-
-
 @pytest.mark.timeout(900)
 def test_validate_manuscript_contract(project_root: Path) -> None:
     from gates.claim_ledger import typed_claim_evidence_issues
 
-    _prepare_minimal_manuscript_gate_artifacts(project_root)
+    # ``ensure_gate_artifacts`` proves that the committed/session-settled
+    # snapshot is complete and semantically current.  Re-composing and
+    # rehydrating here used to invalidate hash-bound claim evidence and trigger
+    # a second full research-pipeline settlement inside this one assertion.
+    # Writer behavior is covered by the direct recompute tests; this gate test
+    # validates the settled publication contract without churning it first.
+    ensure_gate_artifacts(project_root)
     checks = validate_manuscript(project_root)
-    if not checks["claim_ledger_valid"]:
-        refresh_generated_gate_artifacts(project_root)
-        checks = validate_manuscript(project_root)
     assert checks["sheaf_manifest"]
     assert checks["sheaf_registry"]
     assert checks["sheaf_valid"]

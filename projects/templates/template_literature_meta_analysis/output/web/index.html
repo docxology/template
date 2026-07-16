@@ -790,11 +790,11 @@ literature, and ad-hoc reviews bind no evidence to a reproducible
 pipeline. We present a configurable, reproducible meta-analysis
 framework that takes a single search term and produces a complete
 quantitative portrait of its literature. For this instance the term is
-<strong>Modafinil</strong>. The pipeline dispatches across 9 literature
+<strong>Modafinil</strong>. The pipeline dispatches across 10 literature
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading
-gracefully to a skipped source when an API key or the network is
-unavailable, then merges and de-duplicates records by a canonical
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each
+degrading gracefully to a skipped source when an API key or the network
+is unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI <span class="math inline">\(&gt;\)</span>
 arXiv ID <span class="math inline">\(&gt;\)</span> Semantic Scholar ID
 <span class="math inline">\(&gt;\)</span> OpenAlex ID <span
@@ -891,12 +891,12 @@ class="header-section-number">2.2</span> Contributions</h2>
 <p>The pipeline contributes an end-to-end, domain-agnostic workflow:</p>
 <ol type="1">
 <li><p><strong>Multiple-engine retrieval with graceful
-degradation.</strong> Records are gathered from 9 independent engines
+degradation.</strong> Records are gathered from 10 independent engines
 (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). An engine with no API key
-or no network reports a <em>skipped</em> status; the run completes from
-whatever engines remain plus a committed offline corpus. Each new
-retrieval persists per-engine outcome and count provenance in
+ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). An engine with no
+API key or no network reports a <em>skipped</em> status; the run
+completes from whatever engines remain plus a committed offline corpus.
+Each new retrieval persists per-engine outcome and count provenance in
 <code>output/data/retrieval_report.json</code>; the merged corpus alone
 is never used to infer which engine supplied a record.</p></li>
 <li><p><strong>Record de-duplication.</strong> Heterogeneous records are
@@ -934,9 +934,9 @@ scripts.</p>
 class="header-section-number">3.1</span> Pipeline Stages</h2>
 <ol type="1">
 <li><p><strong>Retrieval</strong> (<code>01_literature_search.py</code>)
-— dispatch the configured query across 9 engines (arXiv, OpenAlex,
+— dispatch the configured query across 10 engines (arXiv, OpenAlex,
 Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-and bioRxiv/medRxiv), merge, and de-duplicate into
+bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into
 <code>corpus.jsonl</code>. Each engine is an isolated adapter exposing a
 uniform <code>search(query) -&gt; list[Paper]</code> interface; engines
 that are keyless need no credentials, while Semantic Scholar uses a key
@@ -989,8 +989,8 @@ class="header-section-number">3.3</span> Configuration Surface</h2>
 queries, relevance keywords, start year, max results, resume/clear
 behaviour</li>
 <li><strong>Engine toggles</strong>: arXiv, OpenAlex, Semantic Scholar,
-Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv
-(each independently enabled or disabled)</li>
+Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and
+medRxiv (each independently enabled or disabled)</li>
 <li><strong>SovietRxiv/ChinaRxiv settings</strong>: optional
 <code>api_email</code> for the polite pool, <code>source</code> filter
 (<code>russiarxiv</code> or <code>chinaxiv</code>)</li>
@@ -1010,10 +1010,10 @@ license, repository URL</li>
 <hr />
 <h1 data-number="4" id="retrieval-and-de-duplication"><span
 class="header-section-number">4</span> Retrieval and De-duplication</h1>
-<p>Retrieval dispatches the configured query across 9 independent
+<p>Retrieval dispatches the configured query across 10 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is
-an isolated adapter exposing a uniform
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each
+engine is an isolated adapter exposing a uniform
 <code>search(query) -&gt; list[Record]</code> interface; engines that
 are keyless — arXiv, OpenAlex <span class="citation"
 data-cites="priem2022openalex">(<a href="#ref-priem2022openalex"
@@ -2544,13 +2544,14 @@ class="header-section-number">16</span> Conclusion</h1>
 <p>We have presented a configurable, reproducible meta-analysis template
 that turns a single search term into a complete, evidence-bound portrait
 of its literature. Applied to <strong>Modafinil</strong>, it retrieved
-and de-duplicated 2334 records across 9 engines (arXiv, OpenAlex,
+and de-duplicated 2334 records across 10 engines (arXiv, OpenAlex,
 Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-and bioRxiv/medRxiv), classified them into 6 configurable subfields
-(with <strong>Clinical Sleep</strong> dominant at 63.0%), extracted 5
-topics over a 500-feature vocabulary, computed reproducible document
-embeddings, mapped the citation network (2234 nodes, 8,623 edges, 1416
-communities), and framed 6 hypotheses for optional evidence scoring.</p>
+bioRxiv/medRxiv, and medrxiv), classified them into 6 configurable
+subfields (with <strong>Clinical Sleep</strong> dominant at 63.0%),
+extracted 5 topics over a 500-feature vocabulary, computed reproducible
+document embeddings, mapped the citation network (2234 nodes, 8,623
+edges, 1416 communities), and framed 6 hypotheses for optional evidence
+scoring.</p>
 <h2 data-number="16.1" id="key-findings"><span
 class="header-section-number">16.1</span> Key Findings</h2>
 <p>The analysis answers the four research questions posed in the
@@ -2591,7 +2592,7 @@ on demand as a field evolves, with every number traceable to a
 regenerable artifact.</p>
 <h2 data-number="16.3" id="reproducibility"><span
 class="header-section-number">16.3</span> Reproducibility</h2>
-<p>This manuscript was generated from a live retrieval run using 9
+<p>This manuscript was generated from a live retrieval run using 10
 engines. Every number, table, and figure in this document is injected
 from a committed artifact (<code>output/data/*.json</code>,
 <code>../figures/*.png</code>). Re-running the pipeline with the same
@@ -2624,7 +2625,7 @@ class="header-section-number">17.2</span> Reproduce the Live Run</h2>
 <p>This manuscript was generated from a live retrieval run. To
 reproduce:</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Live search (all 9 engines, max 1000 per engine)</span></span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Live search (all 10 engines, max 1000 per engine)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/01_literature_search.py <span class="at">--query</span> modafinil <span class="at">--max-results</span> 1000 <span class="at">--no-resume</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis pipeline</span></span>
@@ -2654,7 +2655,7 @@ degrade to skipped sources. The CLI supports per-engine skip flags:
 <code>--skip-openalex</code>, <code>--skip-crossref</code>,
 <code>--skip-pubmed</code>, <code>--skip-sovietrxiv</code>,
 <code>--skip-chinarxiv</code>, <code>--skip-europepmc</code>,
-<code>--skip-biorxiv</code>.</p>
+<code>--skip-biorxiv</code>, <code>--skip-medrxiv</code>.</p>
 <h2 data-number="17.5" id="deep-research-offline-fixture-replay"><span
 class="header-section-number">17.5</span> Deep Research (Offline Fixture
 Replay)</h2>
@@ -2691,8 +2692,8 @@ class="math inline">\(\geq 90\%\)</span> statement coverage on
 <ul>
 <li>Record models and serialization (deduplication, canonical ID
 hierarchy)</li>
-<li>All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
-PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with
+<li>All 10 engine paths (arXiv, Semantic Scholar, OpenAlex, Crossref,
+PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with
 pytest-httpserver integration tests</li>
 <li>Search runner (multi-engine dispatch, relevance filtering,
 resume/clear, YAML config)</li>
@@ -2781,7 +2782,7 @@ class="header-section-number">18.5</span> Configuration Surface</h2>
 <p>A single <code>manuscript/config.yaml</code> controls the search
 term, per-engine query and keyword sets, engine enable toggles, subfield
 taxonomy, hypotheses, full-text and embedding options, and paper
-metadata. This run drew on 9 engines, a 6-bucket taxonomy, and 6
+metadata. This run drew on 10 engines, a 6-bucket taxonomy, and 6
 hypotheses.</p>
 <h2 data-number="18.6" id="artifacts"><span
 class="header-section-number">18.6</span> Artifacts</h2>
@@ -2920,7 +2921,7 @@ class="header-section-number">19.4</span> Honesty</h2>
 does not present fixture-derived numbers as empirical findings about
 modafinil. Live findings require a real retrieval run with regenerated
 artifacts — as produced in this instance, which retrieved 2334 real
-records from 9 live engines.</p>
+records from 10 live engines.</p>
 <hr />
 <h1 data-number="20" id="glossary"><span
 class="header-section-number">20</span> Glossary</h1>
@@ -2952,9 +2953,9 @@ de-duplication and citation resolution.</td>
 <tr>
 <td><strong>Engine</strong></td>
 <td>An independent literature source adapter (arXiv, OpenAlex, Semantic
-Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
-bioRxiv/medRxiv) with a uniform search interface and graceful
-skip-on-failure.</td>
+Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+bioRxiv/medRxiv, and medrxiv) with a uniform search interface and
+graceful skip-on-failure.</td>
 </tr>
 <tr>
 <td><strong>Subfield</strong></td>

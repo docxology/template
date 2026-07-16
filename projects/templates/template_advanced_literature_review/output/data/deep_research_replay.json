@@ -1,0 +1,34 @@
+{
+  "mode": "fixture-replay",
+  "provider_profile": {
+    "catalogue": [
+      "openai",
+      "gemini"
+    ],
+    "available": [],
+    "openai_model": "o3-deep-research",
+    "gemini_agent": "deep-research-preview-04-2026"
+  },
+  "request": {
+    "query": "Survey robust evidence and uncertainty in exoplanet atmosphere characterization",
+    "provider": "auto"
+  },
+  "report": {
+    "provider": "curated-fixture",
+    "job_id": "",
+    "status": "completed",
+    "query": "Survey robust evidence and uncertainty in exoplanet atmosphere characterization",
+    "output_chars": 520,
+    "citation_count": 2,
+    "citations": [
+      {
+        "title": "Early Release Science of the exoplanet WASP-39b with JWST NIRISS",
+        "url": "https://www.nature.com/articles/s41586-022-05674-1"
+      },
+      {
+        "title": "Sulfur dioxide in the mid-infrared transmission spectrum of WASP-39b",
+        "url": "https://www.nature.com/articles/s41586-024-07040-9"
+      }
+    ]
+  }
+}

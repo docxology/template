@@ -17,9 +17,10 @@ module test on each project render.
 - Use subprocess calls for CLI behavior.
 - Use temporary directories for filesystem behavior.
 - Use live services only when a test is explicitly marked for them.
-- Treat `monkeypatch.setattr`/`setitem` as measured semantic-stand-in debt, not
-  as evidence that a test is mock-free. The lexical gate and advisory inventory
-  boundary is documented in [`tests/AGENTS.md`](../AGENTS.md#automated-gate-versus-semantic-inventory).
+- Treat `monkeypatch.setattr`/`setitem` as prohibited semantic dependency
+  replacement, not evidence that a test is mock-free. The enforced lexical and
+  semantic gates are documented in
+  [`tests/AGENTS.md`](../AGENTS.md#automated-gate-versus-semantic-inventory).
 
 ## Covered Areas
 

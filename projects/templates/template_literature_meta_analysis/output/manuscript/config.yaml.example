@@ -24,6 +24,19 @@ authors:
 
 publication:
   doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: ""
+  repository_url: ""
+  repository_label: ""
+  published_artifacts:
+    ipfs_pinata: ""
+    huggingface_hub: ""
+    osf: ""
+    pypi: ""
+    netlify: ""
+    github_pages: ""
+    software_heritage: ""
   journal: ""
   volume: ""
   pages: ""
@@ -78,16 +91,19 @@ testing:
 # extraction (03) — neither is reproducible in CI. The scripts below run from
 # the committed fixture corpus with no network or API keys, matching the
 # `offline_fixture` reference condition in experiment_plan.yaml. Run the
-# network/LLM stages explicitly: scripts/01_literature_search.py and
-# scripts/03_build_knowledge_graph.py --max-papers 0 (see scripts/README.md).
+# network/LLM stages explicitly: scripts/01_literature_search.py,
+# scripts/03_build_knowledge_graph.py --max-papers 0, and the opt-in full-text
+# chain `11_fulltext_download.py` then `10_reproducibility_assessment.py` (see
+# scripts/README.md). The latter two must remain outside this default allowlist.
 analysis:
   scripts:
     - 02_meta_analysis_pipeline.py
     - 04_generate_figures.py
-    - 05_inject_variables.py
     - 06_fulltext_assessment.py
     - 07_literature_evaluation.py
     - 08_deep_research_dispatch.py
+    - 09_export_bibliography.py
+    - 05_inject_variables.py
 
 # Project-specific configuration namespace.
 # Keys under project_config are passed through without schema validation warnings.
@@ -113,6 +129,11 @@ project_config:
       pubmed: true
       sovietrxiv: true
       chinarxiv: true
+      # Europe PMC: keyless biomedical aggregator (PubMed/PMC/patents/preprints).
+      europepmc: true
+      # Distinct engine toggles over the shared keyless API.
+      biorxiv: true
+      medrxiv: true
     # SovietRxiv / RussiaRxiv (translated Soviet-era preprints from Math-Net.Ru
     # and CyberLeninka). Keyless engine; set api_email for the polite rate-limit
     # pool (300/min vs 30/min anonymous). Set source: "russiarxiv" to restrict.
@@ -154,6 +175,12 @@ project_config:
     max_features: 2000
     seed: 42
 
+  # Deterministic subsampling applies only to expensive LLM stages; the
+  # bibliography continues to cover the complete corpus.
+  sampling:
+    fraction: 0.05
+    seed: 42
+
   knowledge_graph:
     resume: true
     checkpoint_interval: 50
@@ -169,6 +196,32 @@ project_config:
     timeout_seconds: 120
     max_retries: 3
     min_confidence: 0.6
+
+  # Opt-in workflow-graph extraction and reproducibility scoring. Run the
+  # full-text producer (script 11) before the consumer (script 10).
+  reproducibility_assessment:
+    checkpoint_interval: 50
+    clear_workflow_graphs: false
+    max_papers: null
+    llm_model: "gemma3:4b"
+    llm_url: "http://localhost:11434"
+    llm_temperature: 0.1
+    llm_max_tokens: 2048
+    llm_timeout: 120
+    llm_max_retries: 3
+    content_weights:
+      sources: 0.30
+      methods: 0.20
+      experiments: 0.20
+      sinks: 0.30
+    structural_weights:
+      source_consumption: 0.25
+      sink_production: 0.25
+      reference_resolution: 0.20
+      path_coverage: 0.15
+      cohesion: 0.15
+    low_score_threshold: 0.4
+    fuzzy_quote_threshold: 0.85
 
   # Domain hypotheses scored against the corpus. Replace these to re-target.
   hypothesis_definitions:
@@ -203,7 +256,7 @@ project_config:
       inputs: []
       outputs:
         - output/data/corpus.jsonl
-      description: "Query arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv; merge and deduplicate"
+      description: "Query 10 engines: arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv; merge and deduplicate"
 
     - name: meta_analysis
       script: 02_meta_analysis_pipeline.py
@@ -246,6 +299,34 @@ project_config:
         - output/figures/pca_embeddings.png
         - output/figures/topic_term_bars.png
       description: "Render publication-ready visualizations from analysis JSON outputs"
+
+    - name: export_bibliography
+      script: 09_export_bibliography.py
+      inputs:
+        - output/data/corpus.jsonl
+      outputs:
+        - output/data/bibliography.bib
+      description: "Export the de-duplicated corpus to a single unified BibTeX file"
+
+    - name: fulltext_download
+      script: 11_fulltext_download.py
+      inputs:
+        - output/data/corpus.jsonl
+      outputs:
+        - output/fulltext/
+        - output/data/fulltext_extraction.json
+      description: "Download open-access full-text PDFs via Unpaywall, extract plaintext and figures (network-gated, opt-in)"
+
+    - name: reproducibility_assessment
+      script: 10_reproducibility_assessment.py
+      inputs:
+        - output/data/corpus.jsonl
+        - output/fulltext/
+      outputs:
+        - output/data/workflow_graphs.jsonl
+        - output/data/reproducibility_scores.json
+        - output/data/reproducibility_summary.json
+      description: "Decompose each paper's pipeline into a workflow graph and score reproducibility (LLM-gated, opt-in)"
 
     - name: inject_variables
       script: 05_inject_variables.py

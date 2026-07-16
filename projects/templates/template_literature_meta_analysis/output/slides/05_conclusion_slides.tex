@@ -129,13 +129,13 @@
 We have presented a configurable, reproducible meta-analysis template
 that turns a single search term into a complete, evidence-bound portrait
 of its literature. Applied to \textbf{Modafinil}, it retrieved and
-de-duplicated 2334 records across 9 engines (arXiv, OpenAlex, Semantic
-Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
-bioRxiv/medRxiv), classified them into 6 configurable subfields (with
-\textbf{Clinical Sleep} dominant at 63.0\%), extracted 5 topics over a
-500-feature vocabulary, computed reproducible document embeddings,
-mapped the citation network (2234 nodes, 8,623 edges, 1416 communities),
-and framed 6 hypotheses for optional evidence scoring.
+de-duplicated 2334 records across 10 engines (arXiv, OpenAlex, Semantic
+Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+bioRxiv/medRxiv, and medrxiv), classified them into 6 configurable
+subfields (with \textbf{Clinical Sleep} dominant at 63.0\%), extracted 5
+topics over a 500-feature vocabulary, computed reproducible document
+embeddings, mapped the citation network (2234 nodes, 8,623 edges, 1416
+communities), and framed 6 hypotheses for optional evidence scoring.
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Key Findings}
@@ -189,9 +189,9 @@ regenerable artifact.
 
 \begin{frame}[fragile,allowframebreaks]{Reproducibility}
 \protect\phantomsection\label{reproducibility}
-This manuscript was generated from a live retrieval run using 9 engines.
-Every number, table, and figure in this document is injected from a
-committed artifact (\breaktt{output/data/*.json},
+This manuscript was generated from a live retrieval run using 10
+engines. Every number, table, and figure in this document is injected
+from a committed artifact (\breaktt{output/data/*.json},
 \breaktt{output/figures/*.png}). Re-running the pipeline with the same
 configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated

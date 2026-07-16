@@ -115,6 +115,14 @@ this, unlike `knowledge_graph.hypothesis`'s `STANDARD_HYPOTHESES` list.
   `get_processed_paper_ids()`). Never delete this file without an explicit
   `--clear-workflow-graphs` flag unless asked to restart; deleting it
   triggers full LLM re-extraction over every paper with available fulltext.
+- **Persistent cache is not active scope.** Sampling and `--max-papers` define
+  the candidate set for each run. Retain all cached graphs on disk, but score
+  and report only active candidate IDs; otherwise a smaller rerun silently
+  inherits stale scores from a prior broader run.
+- **Every active candidate is reconciled.** The summary must classify each
+  candidate as scored, extraction-failed, no-fulltext, unparseable-PDF,
+  fulltext-disabled, or explicitly unclassified. Preserve the
+  `candidate_accounting_complete` invariant and machine-readable failure IDs.
 - **A paper with no fulltext file on disk is skipped, not fabricated.**
   `extract_workflow_graphs_llm()` only calls the LLM for a paper when
   `<fulltext_dir>/<safe_filename(canonical_id)>.txt` exists. There is no

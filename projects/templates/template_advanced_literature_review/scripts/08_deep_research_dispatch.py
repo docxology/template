@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deep-research dispatch orchestrator (thin wrapper around the offline adapter).
+"""Run the advanced exemplar's deterministic deep-research replay stage.
 
 Wires ``infrastructure.search.deep_research`` (a PAID, non-deterministic
 capability) into the project. By default it REPLAYS a recorded report fixture:
@@ -15,7 +15,6 @@ Offline (default)::
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import sys
 from pathlib import Path
@@ -30,13 +29,8 @@ from _bootstrap import bootstrap_project
 # when the script is run standalone (outside the root pytest pythonpath).
 PROJECT_ROOT = bootstrap_project(include_infrastructure=True)
 
-from deep_research.deep_research_adapter import (
-    build_offline_request,
-    list_provider_profile,
-    replay_recorded_report,
-)
-
 from config import DATA_DIR as DEFAULT_DATA_DIR
+from deep_research.dispatch import dispatch_offline_replay
 
 
 def parse_args() -> argparse.Namespace:
@@ -48,7 +42,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--query",
-        default="Survey the cognitive-enhancement evidence for modafinil in healthy and sleep-deprived adults",
+        default="Survey robust evidence and uncertainty in exoplanet atmosphere characterization",
         help="Query used to build the (real) provider-neutral deep-research request.",
     )
     parser.add_argument(
@@ -76,8 +70,13 @@ def main() -> None:
     )
     logger = logging.getLogger("deep_research_dispatch")
 
-    profile = list_provider_profile()
-    request = build_offline_request(args.query)
+    fixture = Path(args.fixture) if args.fixture else None
+    replay = dispatch_offline_replay(
+        args.query,
+        Path(args.output_dir),
+        fixture_path=fixture,
+    )
+    profile = replay.provider_profile
     logger.info(
         "deep_research providers: catalogue=%s available=%s",
         profile["catalogue"],
@@ -85,34 +84,18 @@ def main() -> None:
     )
 
     if profile["available"]:
-        logger.info("Live keys detected (%s); still replaying for determinism.", ", ".join(profile["available"]))
-
-    fixture = Path(args.fixture) if args.fixture else None
-    report = replay_recorded_report(fixture)
-
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "deep_research_replay.json"
-    payload = {
-        "mode": "fixture-replay",
-        "provider_profile": profile,
-        "request": {"query": request.query, "provider": request.provider},
-        "report": {
-            "provider": report.provider,
-            "job_id": report.job_id,
-            "status": report.status,
-            "query": report.query,
-            "output_chars": len(report.output_text),
-            "citation_count": report.citation_count,
-            "citations": list(report.citations),
-        },
-    }
-    output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        logger.info(
+            "Live keys detected (%s); still replaying for determinism.",
+            ", ".join(profile["available"]),
+        )
 
     print("\nDeep research mode: fixture-replay (offline, deterministic)")
     print(f"Provider catalogue: {', '.join(profile['catalogue'])}")
-    print(f"Replayed report: provider={report.provider} status={report.status} citations={report.citation_count}")
-    print(str(output_path))
+    print(
+        f"Replayed report: provider={replay.result.provider} "
+        f"status={replay.result.status} citations={len(replay.result.citations)}"
+    )
+    print(str(replay.output_path))
 
 
 if __name__ == "__main__":

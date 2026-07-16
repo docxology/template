@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 00:51
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 12:43
 entering extended mode
  %&-line parsing enabled.
-**/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
+**<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
 c/template/projects/templates/template_literature_meta_analysis/output/slides/0
 3a_results_field_overview_slides.tex
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 a_results_field_overview_slides.tex
 LaTeX2e <2025-11-01>
@@ -1215,7 +1215,7 @@ Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ))
 \pandoc@box=\box88
 
-(/Users/hum/Library/texmf/tex/latex/seqsplit/seqsplit.sty
+(<home>/Library/texmf/tex/latex/seqsplit/seqsplit.sty
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
@@ -1229,7 +1229,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 a_results_field_overview_slides.aux)
 \openout1 = `03a_results_field_overview_slides.aux'.
@@ -1593,7 +1593,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 a_results_field_overview_slides.nav) [1
 
@@ -1641,7 +1641,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: ../figures/growth_curve.png Graphic file (type bmp)
 <../figures/growth_curve.png>
 
-Overfull \hbox (106.17459pt too wide) in paragraph at lines 160--160
+Overfull \hbox (106.17488pt too wide) in paragraph at lines 160--160
 [][]\TU/lmss/m/n/10.95 {{#fig:growth_curve}}  
  []
 
@@ -1656,21 +1656,21 @@ Overfull \hbox (106.17459pt too wide) in paragraph at lines 160--160
 File: ../figures/field_summary.png Graphic file (type bmp)
 <../figures/field_summary.png>
 
-Overfull \hbox (110.52863pt too wide) in paragraph at lines 227--227
+Overfull \hbox (110.52888pt too wide) in paragraph at lines 227--227
 [][]\TU/lmss/m/n/10.95 {{#fig:field_summary}}  
  []
 
 File: ../figures/subfield_distribution.png Graphic file (type bmp)
 <../figures/subfield_distribution.png>
 
-Overfull \hbox (123.79279pt too wide) in paragraph at lines 227--227
+Overfull \hbox (123.64285pt too wide) in paragraph at lines 227--227
 [][]\TU/lmss/m/n/10.95 {{#fig:subfield_distribution}}  
  []
 
 File: ../figures/subfield_timeline.png Graphic file (type bmp)
 <../figures/subfield_timeline.png>
 
-Overfull \hbox (120.92424pt too wide) in paragraph at lines 227--227
+Overfull \hbox (120.92453pt too wide) in paragraph at lines 227--227
 [][]\TU/lmss/m/n/10.95 {{#fig:subfield_timeline}}  
  []
 
@@ -1684,7 +1684,7 @@ Underfull \vbox (badness 1112) detected at line 227
  []
 
 
-Overfull \vbox (204.89076pt too high) detected at line 227
+Overfull \vbox (204.877pt too high) detected at line 227
  []
 
 [7
@@ -1696,21 +1696,21 @@ Overfull \vbox (204.89076pt too high) detected at line 227
 File: ../figures/citation_distribution.png Graphic file (type bmp)
 <../figures/citation_distribution.png>
 
-Overfull \hbox (136.74088pt too wide) in paragraph at lines 314--314
+Overfull \hbox (136.74748pt too wide) in paragraph at lines 314--314
 [][]\TU/lmss/m/n/10.95 {{#fig:citation_distribution}}  
  []
 
 File: ../figures/top_venues.png Graphic file (type bmp)
 <../figures/top_venues.png>
 
-Overfull \hbox (95.89255pt too wide) in paragraph at lines 314--314
+Overfull \hbox (95.89284pt too wide) in paragraph at lines 314--314
 [][]\TU/lmss/m/n/10.95 {{#fig:top_venues}}  
  []
 
 File: ../figures/author_productivity.png Graphic file (type bmp)
 <../figures/author_productivity.png>
 
-Overfull \hbox (133.9657pt too wide) in paragraph at lines 314--314
+Overfull \hbox (133.96599pt too wide) in paragraph at lines 314--314
 [][]\TU/lmss/m/n/10.95 {{#fig:author_productivity}}  
  []
 
@@ -1742,7 +1742,7 @@ Overfull \hbox (133.9657pt too wide) in paragraph at lines 314--314
 \openout7 = `03a_results_field_overview_slides.snm'.
 
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/03
 a_results_field_overview_slides.aux)
  ***********
@@ -1753,12 +1753,12 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  30920 strings out of 469709
  624732 string characters out of 5466024
- 1167150 words of memory out of 5000000
+ 1167151 words of memory out of 5000000
  59017 multiletter control sequences out of 15000+600000
  631224 words of font info for 68 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  101i,11n,114p,1185b,403s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxo
+Output written on <home>/Documents/GitHub/HumOS/projects/platform/hum-docxo
 logy/repos/public/template/projects/templates/template_literature_meta_analysis
 /output/slides/03a_results_field_overview_slides.pdf (14 pages).

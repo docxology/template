@@ -9,7 +9,7 @@ A single \breaktt{manuscript/config.yaml} controls:
   relevance keywords, start year, max results, resume/clear behaviour
 \item
   \textbf{Engine toggles}: arXiv, OpenAlex, Semantic Scholar, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (each
   independently enabled or disabled)
 \item
   \textbf{SovietRxiv/ChinaRxiv settings}: optional \texttt{api\_email}

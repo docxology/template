@@ -12,7 +12,7 @@ or touch the network. The :class:`QueryRoute` it returns is consumed by
 report and by :func:`literature.search_runner.run_literature_search` for
 optional query-aware engine ordering.
 
-All nine engines appear in every source-order tuple so that no engine is
+All ten engines appear in every source-order tuple so that no engine is
 silently excluded by routing. The ordering within each tuple is the only
 thing that changes — academic queries put Crossref first (best DOI
 coverage), preprint queries put arXiv first, industry queries put
@@ -85,6 +85,7 @@ ACADEMIC_SOURCE_ORDER = (
     "europepmc",
     "arxiv",
     "biorxiv",
+    "medrxiv",
     "sovietrxiv",
     "chinarxiv",
 )
@@ -96,6 +97,7 @@ INDUSTRY_SOURCE_ORDER = (
     "europepmc",
     "arxiv",
     "biorxiv",
+    "medrxiv",
     "sovietrxiv",
     "chinarxiv",
 )
@@ -107,12 +109,14 @@ MIXED_SOURCE_ORDER = (
     "europepmc",
     "arxiv",
     "biorxiv",
+    "medrxiv",
     "sovietrxiv",
     "chinarxiv",
 )
 PREPRINT_SOURCE_ORDER = (
     "arxiv",
     "biorxiv",
+    "medrxiv",
     "sovietrxiv",
     "chinarxiv",
     "semantic_scholar",

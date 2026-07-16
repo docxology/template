@@ -209,11 +209,11 @@ literature, and ad-hoc reviews bind no evidence to a reproducible
 pipeline. We present a configurable, reproducible meta-analysis
 framework that takes a single search term and produces a complete
 quantitative portrait of its literature. For this instance the term is
-<strong>Modafinil</strong>. The pipeline dispatches across 9 literature
+<strong>Modafinil</strong>. The pipeline dispatches across 10 literature
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading
-gracefully to a skipped source when an API key or the network is
-unavailable, then merges and de-duplicates records by a canonical
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each
+degrading gracefully to a skipped source when an API key or the network
+is unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI <span class="math inline">\(&gt;\)</span>
 arXiv ID <span class="math inline">\(&gt;\)</span> Semantic Scholar ID
 <span class="math inline">\(&gt;\)</span> OpenAlex ID <span

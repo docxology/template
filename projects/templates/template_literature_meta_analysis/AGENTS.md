@@ -11,12 +11,16 @@ Public literature meta-analysis exemplar for systematic/scoping reviews, bibliom
 | Retrieval/de-duplication | `src/literature/` |
 | Bibliometrics, text analytics, embeddings, topics | `src/analysis/` |
 | Optional assertion extraction and nanopublications | `src/knowledge_graph/` |
+| Optional full-text ingestion and reproducibility scoring | `src/literature/fulltext_download.py` and `src/reproducibility/` |
 | Figure styling and generation | `src/visualization/` |
 | Manuscript tokens and hydrated copies | `src/manuscript/variables/` and `scripts/05_inject_variables.py`, `scripts/06_fulltext_assessment.py`, `scripts/07_literature_evaluation.py`, `scripts/08_deep_research_dispatch.py` |
 | Open follow-up scope | `TODO.md` |
 | Live public roster/count facts | `../../../docs/_generated/active_projects.md` and `../../../docs/_generated/COUNTS.md` |
 
-Generated `output/` files are disposable. Do not hand-edit `output/manuscript/`, `output/data/`, or `output/figures/`; edit `manuscript/`, `src/`, `scripts/`, or config and regenerate.
+Generated `output/` files are regenerable; this canonical public exemplar tracks
+its current evidence snapshot. Never hand-edit `output/manuscript/`,
+`output/data/`, or `output/figures/`; edit `manuscript/`, `src/`, `scripts/`,
+or config and regenerate.
 
 ## Where To Look
 
@@ -26,9 +30,10 @@ Generated `output/` files are disposable. Do not hand-edit `output/manuscript/`,
 | Retrieval engines | `src/literature/AGENTS.md` | Clients degrade to `skipped` without network/keys; tests use `pytest-httpserver`. |
 | Bibliometric or NLP metrics | `src/analysis/AGENTS.md` | Pure functions plus runner helpers; keep I/O in scripts or runner boundaries. |
 | Knowledge graph / LLM extraction | `src/knowledge_graph/AGENTS.md` | Optional, resumable, and network/local-LLM gated. |
+| Reproducibility scoring | `src/reproducibility/AGENTS.md` | Opt-in; script 11 produces validated full text before script 10 consumes it. |
 | Figures | `src/visualization/AGENTS.md` | Headless matplotlib, colorblind palette, CLI DPI propagation. |
 | Manuscript tokens | `src/manuscript/AGENTS.md` and `manuscript/AGENTS.md` | Variables come from generated JSON outputs and config. |
-| Project scripts | `scripts/AGENTS.md` | Thin orchestrators for stages 01-08. |
+| Project scripts | `scripts/AGENTS.md` | Thin orchestrators for roles 01-11; dependency order is explicit, not numeric. |
 | Tests | `tests/AGENTS.md` | Real data, temp files, local HTTP servers, no mocks. |
 | Human docs | `docs/README.md` | Project-local architecture, testing, style, and output docs. |
 
@@ -42,6 +47,10 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/gener
 uv run python projects/templates/template_literature_meta_analysis/scripts/02_meta_analysis_pipeline.py
 uv run python projects/templates/template_literature_meta_analysis/scripts/03_build_knowledge_graph.py --max-papers 0
 uv run python projects/templates/template_literature_meta_analysis/scripts/04_generate_figures.py --dpi 300
+uv run python projects/templates/template_literature_meta_analysis/scripts/06_fulltext_assessment.py
+uv run python projects/templates/template_literature_meta_analysis/scripts/07_literature_evaluation.py
+uv run python projects/templates/template_literature_meta_analysis/scripts/08_deep_research_dispatch.py
+uv run python projects/templates/template_literature_meta_analysis/scripts/09_export_bibliography.py
 uv run python projects/templates/template_literature_meta_analysis/scripts/05_inject_variables.py
 ```
 
@@ -53,7 +62,7 @@ Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it 
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_literature_meta_analysis --project-only
 uv run python scripts/audit/check_template_drift.py --strict --project templates/template_literature_meta_analysis
 uv run python scripts/docgen/exemplar_roster.py --check
-uv run python scripts/audit/check_tracked_projects.py
+uv run python scripts/audit/check_tracked_all.py
 ```
 
 Stage 01 creates/uses the project's isolated environment and installs the

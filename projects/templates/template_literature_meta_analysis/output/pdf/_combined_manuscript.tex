@@ -179,6 +179,12 @@
 \usepackage{amsfonts}
 \usepackage{amsthm}
 
+% Theorem-like environments expected by the combined-PDF renderer. Define the
+% shared counter before dependent environments so every XeLaTeX pass is clean.
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
 % Document layout
 \usepackage[margin=1.8cm]{geometry}
 \usepackage{float}
@@ -290,19 +296,20 @@ literature, and ad-hoc reviews bind no evidence to a reproducible
 pipeline. We present a configurable, reproducible meta-analysis
 framework that takes a single search term and produces a complete
 quantitative portrait of its literature. For this instance the term is
-\textbf{Modafinil}. The pipeline dispatches across 9 literature engines
+\textbf{Modafinil}. The pipeline dispatches across 10 literature engines
 (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading gracefully
-to a skipped source when an API key or the network is unavailable, then
-merges and de-duplicates records by a canonical identifier hierarchy
-(DOI \(>\) arXiv ID \(>\) Semantic Scholar ID \(>\) OpenAlex ID \(>\)
-title digest) into a corpus of \(N = 2334\) records spanning 2000--2026
-(26 years). Records are classified into a configurable 6-bucket subfield
-taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
-and Neuroscience); the largest subfield is \textbf{Clinical Sleep}
-(63.0\% of the classified corpus). The corpus grows at a compound annual
-rate of 5.48\% (mean year-over-year growth 7.8\%, doubling time 9.2
-years), peaking in 2025 with 147 records.
+ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each degrading
+gracefully to a skipped source when an API key or the network is
+unavailable, then merges and de-duplicates records by a canonical
+identifier hierarchy (DOI \(>\) arXiv ID \(>\) Semantic Scholar ID \(>\)
+OpenAlex ID \(>\) title digest) into a corpus of \(N = 2334\) records
+spanning 2000--2026 (26 years). Records are classified into a
+configurable 6-bucket subfield taxonomy (Clinical Sleep, Cognition,
+Pharmacology, Psychiatry, Safety, and Neuroscience); the largest
+subfield is \textbf{Clinical Sleep} (63.0\% of the classified corpus).
+The corpus grows at a compound annual rate of 5.48\% (mean
+year-over-year growth 7.8\%, doubling time 9.2 years), peaking in 2025
+with 147 records.
 
 Non-negative matrix factorization extracts 5 latent topics over a
 500-feature vocabulary, offline deterministic embeddings place every
@@ -399,12 +406,12 @@ The pipeline contributes an end-to-end, domain-agnostic workflow:
 \def\labelenumi{\arabic{enumi}.}
 \item
   \textbf{Multiple-engine retrieval with graceful degradation.} Records
-  are gathered from 9 independent engines (arXiv, OpenAlex, Semantic
-  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
-  bioRxiv/medRxiv). An engine with no API key or no network reports a
-  \emph{skipped} status; the run completes from whatever engines remain
-  plus a committed offline corpus. Each new retrieval persists
-  per-engine outcome and count provenance in
+  are gathered from 10 independent engines (arXiv, OpenAlex, Semantic
+  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+  bioRxiv/medRxiv, and medrxiv). An engine with no API key or no network
+  reports a \emph{skipped} status; the run completes from whatever
+  engines remain plus a committed offline corpus. Each new retrieval
+  persists per-engine outcome and count provenance in
   \breaktt{output/data/retrieval\_report.json}; the merged corpus alone
   is never used to infer which engine supplied a record.
 \item
@@ -450,15 +457,15 @@ pattern: no computational logic resides in scripts.
 \def\labelenumi{\arabic{enumi}.}
 \item
   \textbf{Retrieval} (\breaktt{01\_literature\_search.py}) --- dispatch
-  the configured query across 9 engines (arXiv, OpenAlex, Semantic
-  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
-  bioRxiv/medRxiv), merge, and de-duplicate into \texttt{corpus.jsonl}.
-  Each engine is an isolated adapter exposing a uniform
-  \texttt{search(query)\ -\textgreater{}\ list{[}Paper{]}} interface;
-  engines that are keyless need no credentials, while Semantic Scholar
-  uses a key when present. SovietRxiv and ChinaRxiv share a unified API
-  with an optional \texttt{X-API-Email} header for the polite rate-limit
-  pool (300/min vs 30/min anonymous).
+  the configured query across 10 engines (arXiv, OpenAlex, Semantic
+  Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+  bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into
+  \texttt{corpus.jsonl}. Each engine is an isolated adapter exposing a
+  uniform \texttt{search(query)\ -\textgreater{}\ list{[}Paper{]}}
+  interface; engines that are keyless need no credentials, while
+  Semantic Scholar uses a key when present. SovietRxiv and ChinaRxiv
+  share a unified API with an optional \texttt{X-API-Email} header for
+  the polite rate-limit pool (300/min vs 30/min anonymous).
 \item
   \textbf{Meta-analysis} (\breaktt{02\_meta\_analysis\_pipeline.py}) ---
   subfield classification, temporal metrics, TF-IDF, non-negative matrix
@@ -512,7 +519,7 @@ A single \breaktt{manuscript/config.yaml} controls:
   relevance keywords, start year, max results, resume/clear behaviour
 \item
   \textbf{Engine toggles}: arXiv, OpenAlex, Semantic Scholar, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv (each
   independently enabled or disabled)
 \item
   \textbf{SovietRxiv/ChinaRxiv settings}: optional \texttt{api\_email}
@@ -541,10 +548,10 @@ A single \breaktt{manuscript/config.yaml} controls:
 \section{Retrieval and
 De-duplication}\label{retrieval-and-de-duplication}
 
-Retrieval dispatches the configured query across 9 independent
+Retrieval dispatches the configured query across 10 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is
-an isolated adapter exposing a uniform
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each
+engine is an isolated adapter exposing a uniform
 \texttt{search(query)\ -\textgreater{}\ list{[}Record{]}} interface;
 engines that are keyless --- arXiv, OpenAlex \citep{priem2022openalex},
 Crossref \citep{hendricks2020crossref}, PubMed/Entrez
@@ -1712,13 +1719,13 @@ change to the core architecture.
 We have presented a configurable, reproducible meta-analysis template
 that turns a single search term into a complete, evidence-bound portrait
 of its literature. Applied to \textbf{Modafinil}, it retrieved and
-de-duplicated 2334 records across 9 engines (arXiv, OpenAlex, Semantic
-Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and
-bioRxiv/medRxiv), classified them into 6 configurable subfields (with
-\textbf{Clinical Sleep} dominant at 63.0\%), extracted 5 topics over a
-500-feature vocabulary, computed reproducible document embeddings,
-mapped the citation network (2234 nodes, 8,623 edges, 1416 communities),
-and framed 6 hypotheses for optional evidence scoring.
+de-duplicated 2334 records across 10 engines (arXiv, OpenAlex, Semantic
+Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
+bioRxiv/medRxiv, and medrxiv), classified them into 6 configurable
+subfields (with \textbf{Clinical Sleep} dominant at 63.0\%), extracted 5
+topics over a 500-feature vocabulary, computed reproducible document
+embeddings, mapped the citation network (2234 nodes, 8,623 edges, 1416
+communities), and framed 6 hypotheses for optional evidence scoring.
 
 \subsection{Key Findings}\label{key-findings}
 
@@ -1772,9 +1779,9 @@ regenerable artifact.
 
 \subsection{Reproducibility}\label{reproducibility}
 
-This manuscript was generated from a live retrieval run using 9 engines.
-Every number, table, and figure in this document is injected from a
-committed artifact (\breaktt{output/data/*.json},
+This manuscript was generated from a live retrieval run using 10
+engines. Every number, table, and figure in this document is injected
+from a committed artifact (\breaktt{output/data/*.json},
 \breaktt{../figures/*.png}). Re-running the pipeline with the same
 configuration reproduces identical data outputs; the 21 figures are
 deterministic given fixed seeds, and the manuscript text is regenerated
@@ -1813,7 +1820,7 @@ This manuscript was generated from a live retrieval run. To reproduce:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Live search (all 9 engines, max 1000 per engine)}
+\CommentTok{\# Live search (all 10 engines, max 1000 per engine)}
 \ExtensionTok{uv}\NormalTok{ run python scripts/01\_literature\_search.py }\AttributeTok{{-}{-}query}\NormalTok{ modafinil }\AttributeTok{{-}{-}max{-}results}\NormalTok{ 1000 }\AttributeTok{{-}{-}no{-}resume}
 
 \CommentTok{\# Analysis pipeline}
@@ -1847,7 +1854,7 @@ skipped sources. The CLI supports per-engine skip flags:
 \breaktt{-\/-skip-openalex}, \breaktt{-\/-skip-crossref},
 \texttt{-\/-skip-pubmed}, \breaktt{-\/-skip-sovietrxiv},
 \breaktt{-\/-skip-chinarxiv}, \breaktt{-\/-skip-europepmc},
-\breaktt{-\/-skip-biorxiv}.
+\breaktt{-\/-skip-biorxiv}, \breaktt{-\/-skip-medrxiv}.
 
 \subsection{Deep Research (Offline Fixture
 Replay)}\label{deep-research-offline-fixture-replay}
@@ -1891,8 +1898,8 @@ statement coverage on \texttt{src/}. The suite covers:
   Record models and serialization (deduplication, canonical ID
   hierarchy)
 \item
-  All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref,
-  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with
+  All 10 engine paths (arXiv, Semantic Scholar, OpenAlex, Crossref,
+  PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with
   pytest-httpserver integration tests
 \item
   Search runner (multi-engine dispatch, relevance filtering,
@@ -1984,7 +1991,7 @@ CAGR = 5.48\%, doubling time = 9.2 years.
 A single \breaktt{manuscript/config.yaml} controls the search term,
 per-engine query and keyword sets, engine enable toggles, subfield
 taxonomy, hypotheses, full-text and embedding options, and paper
-metadata. This run drew on 9 engines, a 6-bucket taxonomy, and 6
+metadata. This run drew on 10 engines, a 6-bucket taxonomy, and 6
 hypotheses.
 
 \subsection{Artifacts}\label{artifacts}
@@ -2108,7 +2115,7 @@ The default corpus is synthetic and labelled as such; the manuscript
 does not present fixture-derived numbers as empirical findings about
 modafinil. Live findings require a real retrieval run with regenerated
 artifacts --- as produced in this instance, which retrieved 2334 real
-records from 9 live engines.
+records from 10 live engines.
 
 \newpage
 
@@ -2135,8 +2142,8 @@ identifiers. \\
 used for de-duplication and citation resolution. \\
 \textbf{Engine} & An independent literature source adapter (arXiv,
 OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv,
-Europe PMC, and bioRxiv/medRxiv) with a uniform search interface and
-graceful skip-on-failure. \\
+Europe PMC, bioRxiv/medRxiv, and medrxiv) with a uniform search
+interface and graceful skip-on-failure. \\
 \textbf{Subfield} & One of the 6 configurable keyword-defined buckets
 (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety, and
 Neuroscience) into which records are classified. \\

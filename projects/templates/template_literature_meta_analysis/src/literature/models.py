@@ -25,8 +25,6 @@ _PREPRINT_HINTS = (
     "preprint",
     "working paper",
     "hal",
-    "europepmc",
-    "europe pmc",
 )
 
 
@@ -117,6 +115,7 @@ class Paper:
         is_open_access: Whether the paper is open access
         full_text_source: Provenance of the full text (e.g., "arxiv",
             "publisher", "repository")
+        keywords: Search-engine or author-supplied subject keywords.
     """
 
     title: str

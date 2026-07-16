@@ -41,7 +41,8 @@ All scripts use `parents[2]` from `scripts/audit/` — three levels to repo root
 
 ## Pitfalls
 
-- `check_tracked_projects.py` runs in pre-push hook — keep it fast.
+- `check_tracked_all.py` runs in pre-push and composes every resource-pool guard;
+  keep each constituent check fast.
 - `audit_documentation.py` is advisory; non-zero exit is a warning, not a gate.
 - `copy_exemplar.py` modifies tracked files — review diff before committing.
 - `verify_no_mocks.py --inventory --max-dependency-replacements 0` is blocking

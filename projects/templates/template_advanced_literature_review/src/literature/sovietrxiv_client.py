@@ -46,8 +46,8 @@ from __future__ import annotations
 import logging
 import random
 import time
+from collections.abc import Callable
 from datetime import date
-from typing import Callable, Optional
 
 import requests
 
@@ -62,7 +62,7 @@ SOVIETRXIV_API_URL = "https://russiarxiv.org"
 # The `source` query parameter distinguishes chinaxiv vs russiarxiv records.
 CHINARXIV_API_URL = "https://chinaxiv.org"
 
-# Pagination settings. The API permits 1–100 results per page (default 20).
+# Pagination settings. The API permits 1-100 results per page (default 20).
 SOVIETRXIV_PAGE_SIZE = 100
 
 # Retry settings (mirrors crossref_client / openalex_client).
@@ -70,7 +70,7 @@ MAX_RETRIES = 1
 RETRY_BASE_SECONDS = 10.0
 
 
-def _extract_year(date_str: Optional[str]) -> Optional[int]:
+def _extract_year(date_str: str | None) -> int | None:
     """Extract the publication year from an ISO date string (YYYY-MM-DD).
 
     The API returns ``date`` as ``YYYY-MM-DD`` or ``null``. We only need the
@@ -141,7 +141,7 @@ def _parse_sovietrxiv_paper(item: dict) -> Paper:
     is_open_access = bool(has_pdf) if isinstance(has_pdf, bool) else None
 
     # Parse publication_date for the full-date field.
-    pub_date: Optional[date] = None
+    pub_date: date | None = None
     date_str = item.get("date")
     if date_str and isinstance(date_str, str):
         try:
@@ -175,7 +175,7 @@ def _request_with_retry(
     params: dict,
     headers: dict,
     max_retries: int = MAX_RETRIES,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> requests.Response:
     """Make an HTTP GET request with bounded retry on transient HTTP errors.
 
@@ -225,11 +225,11 @@ def search_sovietrxiv(
     *,
     base_url: str = SOVIETRXIV_API_URL,
     max_results: int = 100,
-    api_email: Optional[str] = None,
-    source: Optional[str] = None,
+    api_email: str | None = None,
+    source: str | None = None,
     page_size: int = SOVIETRXIV_PAGE_SIZE,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Search SovietRxiv / RussiaRxiv for papers matching a free-text query.
 
@@ -248,7 +248,7 @@ def search_sovietrxiv(
             (300/min vs 30/min anonymous). Sent as the ``X-API-Email`` header.
         source: Optional source filter (``"chinaxiv"`` or ``"russiarxiv"``).
             When None, searches both sources.
-        page_size: Number of results requested per page (1–100). The final
+        page_size: Number of results requested per page (1-100). The final
             page may request fewer results so the total never exceeds
             max_results.
         session: Optional requests.Session for connection reuse.
@@ -267,7 +267,7 @@ def search_sovietrxiv(
         headers["X-API-Email"] = api_email
 
     try:
-        cursor: Optional[str] = None
+        cursor: str | None = None
         page_num = 0
 
         while len(all_papers) < max_results:

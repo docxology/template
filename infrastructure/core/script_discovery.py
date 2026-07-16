@@ -95,7 +95,8 @@ def discover_analysis_scripts(
             Defaults to ``repo_root / 'projects' / project_name``.
 
     Returns:
-        List of Python script paths from the project's scripts/ directory.
+        Python script paths in ``analysis.scripts`` order when configured,
+        otherwise lexicographic order from the project's scripts directory.
 
     Raises:
         PipelineError: If project scripts directory not found.

@@ -1,0 +1,18 @@
+{
+  "total_papers": 2334,
+  "doi_count": 2260,
+  "preprint_count": 12,
+  "metadata_completeness_mean": 7.25,
+  "duplicate_title_groups": 50,
+  "source_breakdown": {
+    "published": 1553,
+    "europepmc": 511,
+    "publisher": 215,
+    "unknown": 41,
+    "repository": 10,
+    "preprint": 3,
+    "arxiv": 1
+  },
+  "query_route": null,
+  "claim_verification": null
+}

@@ -169,7 +169,7 @@ project_config:
     seed: 42
 
   # Deterministic subsampling for expensive LLM stages (KG + reproducibility).
-  # 
+  #
   # DESIGN RATIONALE: The full bibliography is always complete (every engine,
   # every paper discovered). Subsampling only applies to LLM-gated analysis stages
   # to keep runtime practical for large corpora. The sample is deterministic:

@@ -22,7 +22,7 @@ uv run python scripts/05_inject_variables.py
 This manuscript was generated from a live retrieval run. To reproduce:
 
 ```bash
-# Live search (all 9 engines, max 1000 per engine)
+# Live search (all 10 engines, max 1000 per engine)
 uv run python scripts/01_literature_search.py --query modafinil --max-results 1000 --no-resume
 
 # Analysis pipeline
@@ -48,7 +48,8 @@ Enable engines under `project_config.search.engines`, supply any optional creden
 (Unpaywall email, Semantic Scholar key), and run `scripts/01_literature_search.py`; absent
 engines degrade to skipped sources. The CLI supports per-engine skip flags:
 `--skip-arxiv`, `--skip-s2`, `--skip-openalex`, `--skip-crossref`, `--skip-pubmed`,
-`--skip-sovietrxiv`, `--skip-chinarxiv`, `--skip-europepmc`, `--skip-biorxiv`.
+`--skip-sovietrxiv`, `--skip-chinarxiv`, `--skip-europepmc`, `--skip-biorxiv`,
+`--skip-medrxiv`.
 
 ## Deep Research (Offline Fixture Replay)
 
@@ -79,8 +80,9 @@ Every stage is covered by a no-mocks test suite (real computation and
 `src/`. The suite covers:
 
 - Record models and serialization (deduplication, canonical ID hierarchy)
-- All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with pytest-httpserver integration tests
+- All 10 engine paths (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed,
+  SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv) with pytest-httpserver
+  integration tests
 - Search runner (multi-engine dispatch, relevance filtering, resume/clear, YAML config)
 - Bibliometric analysis (subfield classification, temporal metrics, TF-IDF, NMF, citation
   network)

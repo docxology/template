@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from knowledge_graph.kg_runner import run_knowledge_graph_pipeline
@@ -136,3 +137,38 @@ def test_kg_runner_removes_legacy_checkpoint(
     project_root = Path(__file__).resolve().parents[2]
     run_knowledge_graph_pipeline(args, project_root=project_root)
     assert not legacy.exists()
+
+
+def test_kg_runner_scopes_cached_assertions_to_current_cap(
+    sample_papers: list,
+    tmp_path: Path,
+) -> None:
+    """The cache stays complete while scores and summaries use active candidates only."""
+    corpus = Corpus()
+    for paper in sample_papers:
+        corpus.add(paper)
+    corpus_path = tmp_path / "corpus.jsonl"
+    corpus.save(corpus_path)
+
+    output_dir = tmp_path / "output"
+    data_dir = output_dir / "data"
+    data_dir.mkdir(parents=True)
+    nanopub_path = data_dir / "nanopublications.jsonl"
+    _seed_nanopubs(corpus, nanopub_path)
+    cached_before = nanopub_path.read_text(encoding="utf-8")
+
+    args = argparse.Namespace(
+        corpus=str(corpus_path),
+        output_dir=str(output_dir),
+        config=None,
+        llm_model="gemma3:4b",
+        llm_url="http://127.0.0.1:1",
+        checkpoint_interval=50,
+        clear_assertions=False,
+        max_papers=1,
+    )
+    run_knowledge_graph_pipeline(args, project_root=tmp_path)
+
+    assert nanopub_path.read_text(encoding="utf-8") == cached_before
+    summary = json.loads((data_dir / "assertion_summary.json").read_text(encoding="utf-8"))
+    assert summary["total_assertions"] == 1

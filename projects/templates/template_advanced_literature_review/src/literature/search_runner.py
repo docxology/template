@@ -6,13 +6,16 @@ import argparse
 import json
 import logging
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, TypedDict
+from typing import TypedDict, cast
+
+import requests
 
 from config_loader import load_search_config
 from literature.corpus import Corpus
-from literature.models import Paper
 from literature.engine_dispatch import dispatch_ordered
+from literature.models import Paper
 from literature.query_router import QueryRouter
 
 
@@ -112,7 +115,7 @@ def search_source(
                 }
             )
         return f"{source_name} ({len(papers)} papers, {new_papers} new)"
-    except Exception as exc:  # noqa: BLE001 -- safety net: one engine failing must not abort multi-engine dispatch
+    except (OSError, TypeError, ValueError, requests.RequestException) as exc:
         elapsed = time.monotonic() - t0
         logger.error("  %s search failed after %.1fs: %s", source_name, elapsed, exc)
         if observations is not None:
@@ -185,19 +188,26 @@ def _arxiv_search_fn(
     *,
     fast: bool,
 ) -> Callable[..., list[Paper]]:
-    from literature.arxiv_client import ARXIV_API_URL, DEFAULT_RATE_LIMIT_SECONDS, search_arxiv
+    from literature.arxiv_client import (
+        ARXIV_API_URL,
+        DEFAULT_RATE_LIMIT_SECONDS,
+        search_arxiv,
+    )
 
     url = base_url or ARXIV_API_URL
     delay = _fast_delay() if fast else None
     rate_limit = 0.0 if fast else DEFAULT_RATE_LIMIT_SECONDS
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_arxiv(
-            query,
-            max_results=max_results,
-            base_url=url,
-            rate_limit_seconds=rate_limit,
-            delay_override=delay,
+        return cast(
+            list[Paper],
+            search_arxiv(
+                query,
+                max_results=max_results,
+                base_url=url,
+                rate_limit_seconds=rate_limit,
+                delay_override=delay,
+            ),
         )
 
     return _search
@@ -214,11 +224,14 @@ def _semantic_scholar_search_fn(
     delay = _fast_delay() if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_semantic_scholar(
-            query,
-            max_results=max_results,
-            base_url=url,
-            delay_override=delay,
+        return cast(
+            list[Paper],
+            search_semantic_scholar(
+                query,
+                max_results=max_results,
+                base_url=url,
+                delay_override=delay,
+            ),
         )
 
     return _search
@@ -235,11 +248,14 @@ def _openalex_search_fn(
     delay = _fast_delay() if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_openalex(
-            query,
-            max_results=max_results,
-            base_url=url,
-            delay_override=delay,
+        return cast(
+            list[Paper],
+            search_openalex(
+                query,
+                max_results=max_results,
+                base_url=url,
+                delay_override=delay,
+            ),
         )
 
     return _search
@@ -256,7 +272,10 @@ def _crossref_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_crossref(query, max_results=max_results, base_url=url, delay_override=delay)
+        return cast(
+            list[Paper],
+            search_crossref(query, max_results=max_results, base_url=url, delay_override=delay),
+        )
 
     return _search
 
@@ -267,14 +286,27 @@ def _pubmed_search_fn(
     *,
     fast: bool,
 ) -> Callable[..., list[Paper]]:
-    from literature.pubmed_client import PUBMED_EFETCH_URL, PUBMED_ESEARCH_URL, search_pubmed
+    from literature.pubmed_client import (
+        PUBMED_EFETCH_URL,
+        PUBMED_ESEARCH_URL,
+        search_pubmed,
+    )
 
     es = esearch_url or PUBMED_ESEARCH_URL
     ef = efetch_url or PUBMED_EFETCH_URL
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_pubmed(query, max_results=max_results, esearch_url=es, efetch_url=ef, delay_override=delay)
+        return cast(
+            list[Paper],
+            search_pubmed(
+                query,
+                max_results=max_results,
+                esearch_url=es,
+                efetch_url=ef,
+                delay_override=delay,
+            ),
+        )
 
     return _search
 
@@ -292,13 +324,16 @@ def _sovietrxiv_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_sovietrxiv(
-            query,
-            max_results=max_results,
-            base_url=url,
-            api_email=api_email,
-            source=source,
-            delay_override=delay,
+        return cast(
+            list[Paper],
+            search_sovietrxiv(
+                query,
+                max_results=max_results,
+                base_url=url,
+                api_email=api_email,
+                source=source,
+                delay_override=delay,
+            ),
         )
 
     return _search
@@ -315,7 +350,10 @@ def _europepmc_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_europepmc(query, max_results=max_results, base_url=url, delay_override=delay)
+        return cast(
+            list[Paper],
+            search_europepmc(query, max_results=max_results, base_url=url, delay_override=delay),
+        )
 
     return _search
 
@@ -331,7 +369,10 @@ def _biorxiv_search_fn(
     delay = 0.0 if fast else None
 
     def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return search_biorxiv(query, max_results=max_results, base_url=url, delay_override=delay)
+        return cast(
+            list[Paper],
+            search_biorxiv(query, max_results=max_results, base_url=url, delay_override=delay),
+        )
 
     return _search
 

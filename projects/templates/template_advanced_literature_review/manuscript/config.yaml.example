@@ -1,0 +1,64 @@
+# Copy to config.yaml and replace the example identity and search phases.
+paper:
+  title: "Advanced Multi-Phase Literature Review"
+  subtitle: "Configured research question"
+  version: "0.1.0"
+  date: ""
+authors:
+  - name: "Researcher Name"
+    orcid: ""
+    email: "researcher@example.com"
+    affiliation: "Research Institution"
+    corresponding: true
+publication:
+  status: draft
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: "owner/repository"
+  repository_url: "https://github.com/owner/repository"
+  repository_label: "owner/repository"
+keywords:
+  - "systematic review"
+  - "multi-phase search"
+metadata:
+  license: "CC-BY-4.0"
+  language: "en"
+  repository: "https://github.com/owner/repository"
+llm:
+  reviews:
+    enabled: false
+  translations:
+    enabled: false
+testing:
+  max_test_failures: 0
+analysis:
+  scripts:
+    - 02_meta_analysis_pipeline.py
+    - 04_generate_figures.py
+    - 05_inject_variables.py
+project_config:
+  search:
+    term: "configured topic"
+    query: '"configured topic"'
+    start_year: 2000
+    max_results: 100
+    engines:
+      arxiv: true
+      openalex: true
+  search_phases:
+    phase_1_foundation:
+      name: "Foundation"
+      description: "Foundational work"
+      queries:
+        - '"configured topic"'
+      max_results_per_query: 100
+      engines:
+        arxiv: true
+        openalex: true
+      deterministic_filters:
+        min_year: 2000
+  llm_filters: {}
+  phase_integration:
+    citation_validation:
+      enabled: false

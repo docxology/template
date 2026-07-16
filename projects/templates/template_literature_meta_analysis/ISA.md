@@ -1,53 +1,42 @@
 ---
 project: template_literature_meta_analysis
-task: "Increment 2: ARA-inspired reproducibility-assessment module (arXiv:2605.02651 adoption) + repo-wide literature-research propagation notes"
+task: "Increment 6: comprehensive method, orchestration, documentation, and evidence hardening"
 effort: E5
-phase: complete
-progress: 34/34 (increment 1) + increment 2 below
+phase: building
+progress: "historical increments complete; increment 6 verification pending"
 mode: algorithm
 started: 2026-07-13
-updated: 2026-07-13
-iteration: 2
+updated: 2026-07-15
+iteration: 6
 ---
 
 ## Problem
 
-The `feat/literature-search-engines-upgrade` branch added two new literature-search
-engines (Europe PMC, bioRxiv/medRxiv) to `template_literature_meta_analysis`,
-bringing the roster to 9 (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv) plus a new unified
-bibliography-export script. The core engines are functionally correct (397/397
-tests pass, ruff/mypy clean, 93.69% coverage) but the branch is unfinished at
-the edges: a declarative "composability" module (`engine_dispatch.py`) exists
-but is dead code with a real latent bug, has no dedicated tests, six
-documentation surfaces still describe the pre-upgrade 7-engine/3-engine world,
-the new export-bibliography script is undocumented and unregistered in the
-project's own pipeline-stage manifest, and one necessary test fix sits
-uncommitted.
+The public exemplar accumulated several method-boundary defects across otherwise
+working increments: deterministic sampling did not preserve stable membership;
+persistent caches leaked outside the active sample/cap; bioRxiv and medRxiv were
+described as independent engines but dispatched as one; full-text ingestion could
+persist HTML as PDF; optional producer/consumer stages were ordered incorrectly;
+configuration validation was unwired; and the committed evidence snapshot and
+documentation no longer described the executable contract consistently.
 
 ## Vision
 
-A engineer or agent picking up `template_literature_meta_analysis` next reads
-`src/literature/README.md`, `AGENTS.md`, `SKILL.md`, and the manuscript's
-methods/appendix sections and finds them accurate for all 9 engines and the
-bibliography export step — no stale counts, no missing components, no
-undocumented scripts. `engine_dispatch.py` is either correct-and-tested or
-removed; nothing dead or silently wrong survives. The branch is a clean,
-committed, green unit ready to merge.
+An engineer or agent can retarget the exemplar from one validated config, run
+the deterministic offline DAG, opt into full-text/reproducibility in explicit
+dependency order, and obtain evidence whose candidate counts fully reconcile.
+All ten engine paths have independent toggles/provenance, generated artifacts
+are reproducible, and the public docs and tests describe the same contract.
 
 ## Out of Scope
 
-- No new literature-search engine (a 10th source) is added.
-- No rewrite of `search_runner.py`'s proven per-engine orchestration closures
-  (arxiv/s2/openalex/crossref/pubmed/sovietrxiv/chinarxiv/europepmc/biorxiv) —
-  that is high-blast-radius, low-value churn on working, tested code.
+- No additional provider beyond the ten current engine paths.
+- No live network retrieval or live Ollama extraction in the default pipeline.
 - No changes to the unrelated `infrastructure/search/connectors/` generic
   connector framework (pre-existing, parallel system, out of this branch's
   purpose).
 - No changes to `docs/streams/inferant-stream-019-literature-search.md` (a
   different exemplar project's roadmap doc, not this project).
-- The feature branch is not pushed or merged to `main` — local commits only,
-  pending explicit user go-ahead.
 - Regenerated `output/` manuscript artifacts are not hand-edited; templated
   `{{N_ENGINES}}`/`{{ENGINE_LIST}}` placeholders are left to the existing
   variable-injection pipeline.
@@ -65,23 +54,20 @@ committed, green unit ready to merge.
 
 ## Constraints
 
-- Must not reduce the 90% per-project coverage floor or break the 397 existing
-  literature tests.
-- Must not touch files outside `template_literature_meta_analysis/` (plus its
-  own `ISA.md`) except where a genuine cross-file parity requirement exists.
-- Must not push to `origin` or touch `main` — local branch only.
+- Must not reduce the 90% per-project coverage floor or break existing tests.
+- Must keep the default analysis allowlist offline and deterministic.
+- Must preserve broader persistent caches while restricting each run's scoring
+  and reports to its active sampled/capped candidate set.
 - Any code fix to `engine_dispatch.py` must preserve current production
   behavior of `search_runner.py` exactly (verified via the full existing test
   suite before and after).
 
 ## Goal
 
-All 9 literature-search engines are verified functional (green test suite,
-clean ruff/mypy, ≥90% coverage); `engine_dispatch.py`'s enablement logic is
-either fixed-and-tested to match real production semantics or removed as dead
-code; every documentation surface enumerated in OBSERVE accurately describes
-all 9 engines and the bibliography-export script; the uncommitted test fix and
-all new work are committed on the feature branch with the working tree clean.
+All ten literature-search engine paths, sampling, cache scoping, full-text
+validation, configuration boundaries, reproducibility accounting, optional
+stage ordering, documentation, and tracked evidence pass the public exemplar's
+coverage, lint, type, validation, and regeneration gates.
 
 ## Criteria
 
@@ -446,3 +432,60 @@ demonstrated in the bibliography and full text methods of example project."
 - `pytest tests/` → 1106 passed, coverage 96.37%.
 - `ruff check --no-cache` on all modified files → clean.
 - `mypy --no-incremental` on all modified files → clean.
+
+## Increment 6 — Comprehensive contract hardening (2026-07-15)
+
+This increment supersedes historical fixed-count wording above where the
+shared bioRxiv API had been represented as one combined engine. The current
+public contract is ten independently toggled and provenance-bearing engine
+paths: bioRxiv and medRxiv are distinct.
+
+### Criteria
+
+- [x] ISC-6.1: deterministic sampling selects exactly `ceil(n * fraction)`
+  papers by stable identity hash, independent of input order and corpus growth.
+- [x] ISC-6.2: knowledge-graph and reproducibility persistent caches retain all
+  prior records while scoring/serializing only the active sampled/capped IDs.
+- [x] ISC-6.3: bioRxiv and medRxiv have separate config toggles, CLI skip flags,
+  router/registry entries, dispatch calls, and provenance.
+- [x] ISC-6.4: Unpaywall resolution accepts direct PDF URLs only; downloads
+  reject responses without PDF magic bytes or a compatible media type.
+- [x] ISC-6.5: provider/full-text metrics count realized PDF availability, not
+  DOI-only or metadata-only provenance.
+- [x] ISC-6.6: executable search, knowledge-graph, and reproducibility runners
+  validate their consumed config sections before outputs or external effects.
+- [x] ISC-6.7: reproducibility summaries reconcile every active candidate into
+  scored, failed, unavailable, unparseable, disabled, or explicit unclassified
+  outcomes with machine-readable failure IDs.
+- [x] ISC-6.8: the default analysis allowlist remains offline; the opt-in chain
+  is `11_fulltext_download.py` → `10_reproducibility_assessment.py` →
+  `05_inject_variables.py`.
+- [x] ISC-6.9: live/example config nested keys, all ten toggles, stage order,
+  and scripts 09–11 are covered by executable contract tests.
+- [x] ISC-6.10: the complete project suite passes at ≥90% source coverage with
+  Ruff and mypy clean.
+- [x] ISC-6.11: offline analysis, render, validation, and copy regenerate the
+  tracked evidence snapshot without machine-local paths or raw full text.
+- [x] ISC-6.12: repo-wide generated-doc, confidentiality, and drift guards pass
+  after the snapshot is refreshed.
+
+### Decisions
+
+- Persistent JSONL caches are durable acquisition state, not the authoritative
+  population for each run. Candidate IDs form the boundary for every derived
+  score, trend, TriG export, and summary.
+- The default DAG cannot include network/LLM roles merely because scripts are
+  numbered. Dependencies and opt-in semantics control execution order.
+- A successful HTTP response is not evidence of a PDF. Content validation is a
+  required ingestion boundary before any file is committed as full text.
+
+### Verification
+
+- `uv run pytest tests/ --cov=src --cov-branch --cov-fail-under=90` passed
+  1,132 tests with one intentional skip at 92.05% branch coverage.
+- The offline analysis pipeline completed on the tracked 2,334-record corpus;
+  render, validation, and copy completed, including validation of 22 resolved
+  PDFs without committing the downloaded full-text cache.
+- Strict public drift, generated-document self-checks, confidentiality guards,
+  Ruff, mypy, Bandit, and the repository health aggregate all passed after the
+  evidence snapshot was regenerated.

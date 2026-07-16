@@ -85,17 +85,22 @@ def _request_with_retry(
 
 
 def _parse_unpaywall(data: dict) -> Optional[str]:
-    """Extract the best OA PDF (or landing) URL from an Unpaywall record."""
+    """Extract a direct OA PDF URL from an Unpaywall record.
+
+    Unpaywall's generic ``url`` field may be an HTML landing page. Returning
+    that as a PDF candidate causes the downloader to persist HTML under a
+    ``.pdf`` suffix, so only explicit ``url_for_pdf`` values are accepted.
+    """
     if not isinstance(data, dict):
         return None
     best = data.get("best_oa_location") or {}
     if isinstance(best, dict):
-        url = best.get("url_for_pdf") or best.get("url")
+        url = best.get("url_for_pdf")
         if url:
             return str(url)
     for loc in data.get("oa_locations", []) or []:
         if isinstance(loc, dict):
-            url = loc.get("url_for_pdf") or loc.get("url")
+            url = loc.get("url_for_pdf")
             if url:
                 return str(url)
     return None
@@ -143,6 +148,21 @@ def _safe_filename(canonical_id: str) -> str:
 # same deterministic on-disk filename stem without importing a private name.
 safe_filename = _safe_filename
 
+_PDF_MEDIA_TYPES = {
+    "application/pdf",
+    "application/x-pdf",
+    "application/octet-stream",
+    "binary/octet-stream",
+}
+
+
+def _is_pdf_response(content: object, content_type: str | None) -> bool:
+    """Return whether response bytes and media metadata both permit a PDF."""
+    if not isinstance(content, bytes) or not content.lstrip().startswith(b"%PDF-"):
+        return False
+    media_type = (content_type or "").split(";", 1)[0].strip().lower()
+    return not media_type or media_type in _PDF_MEDIA_TYPES
+
 
 def download_fulltext(
     paper: Paper,
@@ -179,6 +199,15 @@ def download_fulltext(
     tmp_path = out_path.with_suffix(".pdf.part")
     try:
         content = resp.content if hasattr(resp, "content") else resp.read()
+        headers = getattr(resp, "headers", {}) or {}
+        content_type = headers.get("Content-Type") if hasattr(headers, "get") else None
+        if not _is_pdf_response(content, content_type):
+            logger.warning(
+                "Rejected non-PDF response for %s (Content-Type=%r)",
+                paper.canonical_id,
+                content_type,
+            )
+            return None
         tmp_path.write_bytes(content)
         tmp_path.replace(out_path)
     except Exception:  # noqa: BLE001 pragma: no cover -- safety net: I/O failure cleans up and returns None
@@ -197,7 +226,7 @@ def assess_fulltext_availability(papers: list[Paper]) -> dict[str, Any]:
     unknown_oa = sum(1 for p in papers if p.is_open_access is None)
     by_source: dict[str, int] = {}
     for p in papers:
-        if p.full_text_source:
+        if p.pdf_url and p.full_text_source:
             by_source[p.full_text_source] = by_source.get(p.full_text_source, 0) + 1
     return {
         "total": total,

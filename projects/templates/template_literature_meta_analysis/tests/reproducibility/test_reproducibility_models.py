@@ -351,9 +351,7 @@ class TestJSONLSerialization:
 
     def test_file_is_line_delimited(self, tmp_path: Path) -> None:
         """Each workflow graph should occupy exactly one line."""
-        graphs = [
-            build_workflow_graph(f"doi:10.1/line{i}", [_make_node(node_id=f"n{i}")]) for i in range(3)
-        ]
+        graphs = [build_workflow_graph(f"doi:10.1/line{i}", [_make_node(node_id=f"n{i}")]) for i in range(3)]
         filepath = tmp_path / "lines.jsonl"
         lines = serialize_workflow_graphs(graphs)
         filepath.write_text("\n".join(lines) + "\n")

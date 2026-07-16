@@ -79,6 +79,15 @@ class TestLiteratureSearchScript:
             args = mod.parse_args()
         assert args.resume is False
 
+    def test_parse_args_can_skip_biorxiv_and_medrxiv_independently(self):
+        """The shared API has two independently selectable corpus engines."""
+        mod = _load_script_module("literature_search", SCRIPTS_DIR / "01_literature_search.py")
+        with _argv(["01_literature_search.py", "--skip-medrxiv"]):
+            args = mod.parse_args()
+
+        assert args.skip_medrxiv is True
+        assert args.skip_biorxiv is False
+
     def test_resume_loads_existing_corpus(self, sample_papers, tmp_output_dir):
         """Verify --resume loads an existing corpus before searching."""
         from literature.corpus import Corpus
@@ -332,3 +341,95 @@ class TestLiteratureEvaluationScript:
                 mod.main()
 
         assert exc_info.value.code == 1
+
+
+class TestBibliographyExportScript:
+    """Integration tests for 09_export_bibliography.py."""
+
+    def test_main_exports_complete_corpus(self, sample_corpus_path, tmp_path):
+        output_dir = tmp_path / "bibliography"
+        mod = _load_script_module("export_bibliography", SCRIPTS_DIR / "09_export_bibliography.py")
+
+        with _argv(
+            [
+                "09_export_bibliography.py",
+                "--corpus",
+                sample_corpus_path,
+                "--output-dir",
+                str(output_dir),
+            ]
+        ):
+            mod.main()
+
+        bibliography = (output_dir / "bibliography.bib").read_text(encoding="utf-8")
+        assert bibliography.count("@article{") == 3
+
+
+class TestReproducibilityAssessmentScript:
+    """Integration tests for 10_reproducibility_assessment.py."""
+
+    def test_main_degrades_without_fulltext_and_writes_valid_outputs(self, sample_corpus_path, tmp_path):
+        config_path = tmp_path / "config.yaml"
+        config_path.write_text(
+            """
+project_config:
+  fulltext:
+    enabled: false
+    download_dir: artifacts/fulltext
+  sampling:
+    fraction: 1.0
+    seed: 42
+""".strip(),
+            encoding="utf-8",
+        )
+        output_dir = tmp_path / "reproducibility"
+        mod = _load_script_module(
+            "reproducibility_assessment",
+            SCRIPTS_DIR / "10_reproducibility_assessment.py",
+        )
+        mod.PROJECT_ROOT = tmp_path
+
+        with _argv(
+            [
+                "10_reproducibility_assessment.py",
+                "--corpus",
+                sample_corpus_path,
+                "--output-dir",
+                str(output_dir),
+                "--config",
+                str(config_path),
+            ]
+        ):
+            mod.main()
+
+        data_dir = output_dir / "data"
+        assert (data_dir / "workflow_graphs.jsonl").read_text(encoding="utf-8") == ""
+        assert json.loads((data_dir / "reproducibility_scores.json").read_text()) == {}
+        summary = json.loads((data_dir / "reproducibility_summary.json").read_text())
+        assert summary["fulltext_available"] is False
+        assert summary["n_papers_scored"] == 0
+
+
+class TestFulltextDownloadScript:
+    """Integration tests for 11_fulltext_download.py."""
+
+    def test_main_uses_configured_project_relative_download_directory(self, tmp_path):
+        config_path = tmp_path / "config.yaml"
+        config_path.write_text(
+            """
+project_config:
+  fulltext:
+    enabled: false
+    unpaywall_email: ""
+    download_dir: artifacts/custom-fulltext
+""".strip(),
+            encoding="utf-8",
+        )
+        mod = _load_script_module("fulltext_download", SCRIPTS_DIR / "11_fulltext_download.py")
+        mod.PROJECT_ROOT = tmp_path
+
+        with _argv(["11_fulltext_download.py", "--config", str(config_path)]):
+            mod.main()
+
+        assert (tmp_path / "artifacts" / "custom-fulltext").is_dir()
+        assert not (tmp_path / "output" / "fulltext").exists()

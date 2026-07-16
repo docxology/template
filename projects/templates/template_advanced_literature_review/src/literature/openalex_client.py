@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 import random
 import time
-from typing import Optional, Callable
+from collections.abc import Callable
 
 import requests
 
@@ -176,7 +176,7 @@ def _request_with_retry(
     url: str,
     params: dict,
     max_retries: int = MAX_RETRIES,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> requests.Response:
     """Make an HTTP GET request with retry on HTTP errors.
 
@@ -224,8 +224,8 @@ def search_openalex(
     query: str,
     max_results: int = 100,
     base_url: str = OPENALEX_API_URL,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Search OpenAlex for works matching a query.
 
@@ -278,7 +278,10 @@ def search_openalex(
                 )
                 result = response.json()
             except requests.HTTPError as e:
-                logger.warning("OpenAlex search stopped early due to HTTP error (rate limit): %s", e)
+                logger.warning(
+                    "OpenAlex search stopped early due to HTTP error (rate limit): %s",
+                    e,
+                )
                 break
 
             page_papers = [_parse_openalex_work(item) for item in result.get("results", [])]
@@ -314,14 +317,18 @@ def search_openalex(
         if session is None:
             http.close()
 
-    logger.info("OpenAlex search complete: %d total papers for query '%s'", len(all_papers), query[:80])
+    logger.info(
+        "OpenAlex search complete: %d total papers for query '%s'",
+        len(all_papers),
+        query[:80],
+    )
     return all_papers
 
 
 def get_work_by_doi(
     doi: str,
     base_url: str = OPENALEX_API_URL,
-    session: Optional[requests.Session] = None,
+    session: requests.Session | None = None,
 ) -> Paper:
     """Retrieve a single work by its DOI.
 

@@ -19,20 +19,13 @@ authors:
     corresponding: true
 
 publication:
-  doi: "forthcoming"
-  version_doi: "forthcoming"
+  status: draft
+  doi: ""
+  version_doi: ""
   version_record: ""
   github_repository: "docxology/template_advanced_literature_review"
   repository_url: "https://github.com/docxology/template_advanced_literature_review"
   repository_label: "docxology/template_advanced_literature_review"
-  published_artifacts:
-    ipfs_pinata: ""
-    huggingface_hub: ""
-    osf: ""
-    pypi: ""
-    netlify: ""
-    github_pages: ""
-    software_heritage: ""
   journal: ""
   volume: ""
   pages: ""
@@ -77,8 +70,6 @@ analysis:
     - 07_literature_evaluation.py
     - 08_deep_research_dispatch.py
     - 09_export_bibliography.py
-    - 10_reproducibility_assessment.py
-    - 11_fulltext_download.py
     - 05_inject_variables.py
 
 # Advanced Multi-Phase Configuration

@@ -6,7 +6,14 @@ from pathlib import Path
 
 
 from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
-from config_loader import default_config_path, load_kg_config, load_search_config
+from config_loader import (
+    default_config_path,
+    load_fulltext_config,
+    load_kg_config,
+    load_project_config,
+    load_search_config,
+    resolve_fulltext_directory,
+)
 
 
 def test_load_search_config_defaults_when_missing(tmp_path: Path) -> None:
@@ -83,6 +90,49 @@ project_config:
 
 def test_default_config_path_points_at_manuscript() -> None:
     assert default_config_path() == MANUSCRIPT_DIR / "config.yaml"
+
+
+def test_load_project_config_rejects_non_mapping_project_block(tmp_path: Path) -> None:
+    config_path = tmp_path / "config.yaml"
+    config_path.write_text("project_config: []\n", encoding="utf-8")
+    assert load_project_config(config_path) == {}
+
+
+def test_resolve_fulltext_directory_uses_one_project_relative_contract(tmp_path: Path) -> None:
+    config = {"download_dir": "artifacts/fulltext"}
+    resolved, explicit = resolve_fulltext_directory(
+        project_root=tmp_path,
+        fulltext_config=config,
+    )
+    assert resolved == (tmp_path / "artifacts" / "fulltext").resolve()
+    assert explicit is False
+
+    override, explicit = resolve_fulltext_directory(
+        project_root=tmp_path,
+        fulltext_config=config,
+        override="override/fulltext",
+    )
+    assert override == (tmp_path / "override" / "fulltext").resolve()
+    assert explicit is True
+
+
+def test_load_fulltext_config_reads_project_block(tmp_path: Path) -> None:
+    config_path = tmp_path / "config.yaml"
+    config_path.write_text(
+        """
+project_config:
+  fulltext:
+    enabled: true
+    unpaywall_email: test@example.org
+    download_dir: artifacts/fulltext
+""".strip(),
+        encoding="utf-8",
+    )
+    assert load_fulltext_config(config_path) == {
+        "enabled": True,
+        "unpaywall_email": "test@example.org",
+        "download_dir": "artifacts/fulltext",
+    }
 
 
 def test_load_yaml_import_error_returns_empty_dict(tmp_path: Path) -> None:

@@ -3,6 +3,10 @@ output/**/_*.log
 output/**/*.aux
 output/**/*.toc
 output/**/*.vrb
+
+# Local steganography sidecars can contain embedded payloads/key material and
+# are never part of the public redaction-variant evidence matrix.
+output/**/*.ski
 .venv/
 .pytest_cache/
 __pycache__/

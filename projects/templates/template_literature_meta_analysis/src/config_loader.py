@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from collections.abc import Callable
 from importlib import import_module
+from pathlib import Path
 from typing import Any
 
 from config import DEFAULT_ARXIV_QUERIES, DEFAULT_RELEVANCE_KEYWORDS, MANUSCRIPT_DIR
@@ -29,6 +29,18 @@ def _load_yaml(
 def default_config_path() -> Path:
     """Return the canonical manuscript config path."""
     return Path(MANUSCRIPT_DIR / "config.yaml")
+
+
+def load_project_config(config_path: Path | None = None) -> dict[str, Any]:
+    """Return the project-specific configuration mapping.
+
+    Keeping this public boundary here prevents pipeline runners from reaching
+    through the private YAML loader or duplicating the ``project_config``
+    traversal.
+    """
+    data = _load_yaml(config_path or default_config_path())
+    project_config = data.get("project_config", {})
+    return project_config if isinstance(project_config, dict) else {}
 
 
 def load_search_config(config_path: Path | None = None) -> dict[str, Any]:
@@ -123,3 +135,26 @@ def load_fulltext_config(config_path: Path | None = None) -> dict[str, Any]:
         "unpaywall_email": fulltext_cfg.get("unpaywall_email"),
         "download_dir": fulltext_cfg.get("download_dir"),
     }
+
+
+def resolve_fulltext_directory(
+    *,
+    project_root: Path,
+    fulltext_config: dict[str, Any],
+    override: str | Path | None = None,
+) -> tuple[Path, bool]:
+    """Resolve the shared producer/consumer full-text directory.
+
+    Priority is an explicit CLI override, then ``fulltext.download_dir`` from
+    configuration, then the project-local ``output/fulltext`` default. Relative
+    paths are always anchored to *project_root* so producer and consumer cannot
+    silently resolve the same setting against different working directories.
+
+    Returns:
+        The resolved directory and whether the caller supplied an explicit
+        override.
+    """
+    configured = override if override is not None else fulltext_config.get("download_dir")
+    candidate = Path(configured) if configured else Path("output/fulltext")
+    resolved = candidate if candidate.is_absolute() else project_root / candidate
+    return resolved.resolve(), override is not None

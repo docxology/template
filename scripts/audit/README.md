@@ -33,7 +33,8 @@ uv run python scripts/audit/verify_no_mocks.py --inventory
 
 - None of these run in the default pipeline — invoke directly.
 - Bootstrap uses `parents[2]` from `scripts/audit/` to reach repo root.
-- `check_tracked_projects.py` is also run in pre-push and CI hooks.
+- `check_tracked_all.py` is run in pre-push and CI; it applies the project,
+  fonds, rules, and tools confidentiality guards together.
 - The default no-mocks exit 0 means no prohibited framework imports/calls were
   found. CI additionally runs inventory mode with a zero semantic dependency-
   replacement ceiling; environment isolation is reported but permitted.

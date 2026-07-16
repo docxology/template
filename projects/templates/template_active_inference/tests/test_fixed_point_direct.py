@@ -64,22 +64,23 @@ def test_fast_path_returns_existing_paths_when_valid(copied_root: Path) -> None:
 
 
 @pytest.mark.timeout(600)
-def test_stale_artifact_triggers_full_settlement(tmp_path_factory: pytest.TempPathFactory) -> None:
-    stale_root = copy_project_tree(tmp_path_factory.mktemp("fixed_point_stale_tree"))
-    target = stale_root / "output" / "data" / "interop_roundtrip_report.json"
+def test_stale_artifact_triggers_full_settlement(copied_root: Path) -> None:
+    target = copied_root / "output" / "data" / "interop_roundtrip_report.json"
     target.unlink()
-    assert _validate_fixed_point(stale_root) != []
+    assert _validate_fixed_point(copied_root) != []
     # Production default budget: a leg whose floats drift (py3.10) may need a
     # third settlement pass, and an exhausted budget raises instead of degrading.
-    paths = run_semantic_fixed_point(stale_root, require_analysis_outputs=False, max_passes=4)
+    paths = run_semantic_fixed_point(copied_root, require_analysis_outputs=False, max_passes=4)
     assert paths, "settlement must report written artifact paths"
     assert target.is_file(), "the deleted artifact must be regenerated"
-    assert _validate_fixed_point(stale_root) == []
+    assert _validate_fixed_point(copied_root) == []
+    expected = {key: path.resolve() for key, path in _existing_fixed_point_paths(copied_root).items()}
+    assert {key: path.resolve() for key, path in paths.items()} == expected
 
 
 @pytest.mark.timeout(600)
 def test_unfixable_source_defect_raises_instead_of_converging(
-    tmp_path_factory: pytest.TempPathFactory,
+    copied_root: Path,
 ) -> None:
     """Negative control: the fixed point must FAIL, not launder, an unfixable defect.
 
@@ -93,11 +94,11 @@ def test_unfixable_source_defect_raises_instead_of_converging(
     by the saved-vs-live gnn_lint staleness check in
     validate_formal_interop_artifacts.)
     """
-    broken_root = copy_project_tree(tmp_path_factory.mktemp("fixed_point_broken_tree"))
-    gnn_model = broken_root / "gnn" / "si_tmaze.gnn.md"
-    gnn_model.write_text(
-        gnn_model.read_text(encoding="utf-8") + "\nghost_variable=FabricatedOntologyTerm\n",
-        encoding="utf-8",
-    )
-    with pytest.raises(RuntimeError, match="semantic fixed point"):
-        run_semantic_fixed_point(broken_root, require_analysis_outputs=False, max_passes=2)
+    gnn_model = copied_root / "gnn" / "si_tmaze.gnn.md"
+    original = gnn_model.read_bytes()
+    try:
+        gnn_model.write_bytes(original + b"\nghost_variable=FabricatedOntologyTerm\n")
+        with pytest.raises(RuntimeError, match="semantic fixed point cannot repair source contract defects"):
+            run_semantic_fixed_point(copied_root, require_analysis_outputs=False, max_passes=2)
+    finally:
+        gnn_model.write_bytes(original)

@@ -13,7 +13,7 @@ these run in the default `./run.sh` pipeline — invoke them directly when neede
 | `lint_docs.py` | `infrastructure.validation.docs.lint_runner` | Run mermaid + cross-link + consistency linters |
 | `check_module_doc_coverage.py` | `infrastructure.validation.docs.module_coverage` | Fail when a package's `AGENTS.md` omits public modules |
 | `audit_documentation.py` | `infrastructure.validation.docs` | Advisory RedTeam documentation audit |
-| `verify_no_mocks.py` | `infrastructure.validation.output.no_mock_audit` | Enforced lexical mock-framework gate plus advisory semantic-stand-in inventory |
+| `verify_no_mocks.py` | `infrastructure.validation.output.no_mock_audit` | Enforced lexical mock-framework gate plus zero-dependency-replacement semantic inventory |
 | `audit_filepaths.py` | `infrastructure.validation.filepaths` | Repository filepath audit |
 | `check_template_drift.py` | `infrastructure.project.drift` | Exemplar doc/code drift check |
 | `check_tracked_projects.py` | `infrastructure.project.git_guards` | Confidentiality guard (no private projects committed) |
@@ -48,9 +48,9 @@ uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_tracked_projects.py
 uv run python scripts/audit/check_tracked_all.py
 
-# Lexical gate and advisory monkeypatch inventory
+# Lexical gate and enforced semantic inventory
 uv run python scripts/audit/verify_no_mocks.py
-uv run python scripts/audit/verify_no_mocks.py --inventory
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 
 # Advisory audit
 uv run python scripts/audit/audit_documentation.py

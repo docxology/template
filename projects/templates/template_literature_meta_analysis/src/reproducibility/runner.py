@@ -24,7 +24,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from config_loader import load_fulltext_config, load_reproducibility_config
+from config_loader import load_fulltext_config, load_reproducibility_config, resolve_fulltext_directory
+from config_validation import require_valid_config
 from knowledge_graph.llm_config import LLMConfig
 from literature.corpus import Corpus
 from literature.fulltext_download import safe_filename
@@ -72,9 +73,7 @@ def _build_structural_weights(raw: dict[str, Any] | None) -> StructuralWeights:
     return StructuralWeights(**overrides)
 
 
-def _quote_verification_rate(
-    graph: WorkflowGraph, fulltext_dir: Path, fuzzy_threshold: float
-) -> float | None:
+def _quote_verification_rate(graph: WorkflowGraph, fulltext_dir: Path, fuzzy_threshold: float) -> float | None:
     """Fraction of *graph*'s node quotes that verify against the paper's own fulltext.
 
     ``None`` when the paper's fulltext ``.txt`` is not on disk or the graph has
@@ -93,9 +92,7 @@ def _quote_verification_rate(
     return verified / len(graph.nodes)
 
 
-def _score_to_dict(
-    score: ReproducibilityScore, *, quote_verification_rate: float | None
-) -> dict[str, Any]:
+def _score_to_dict(score: ReproducibilityScore, *, quote_verification_rate: float | None) -> dict[str, Any]:
     """Serialize one :class:`ReproducibilityScore` (plus quote-verification) to a dict."""
     return {
         "content_score": score.content_score,
@@ -110,33 +107,17 @@ def _score_to_dict(
     }
 
 
-def _resolve_fulltext_dir(
-    args: argparse.Namespace, fulltext_cfg: dict[str, Any], project_root: Path
-) -> tuple[Path, bool]:
-    """Resolve the fulltext directory and whether it was set explicitly by the caller.
-
-    Priority: ``--fulltext-dir`` CLI flag (explicit) > config's
-    ``fulltext.download_dir`` (resolved relative to *project_root* when not
-    absolute) > the module default (``config.FULLTEXT_DIR``).
-    """
-    if args.fulltext_dir is not None:
-        return Path(args.fulltext_dir), True
-
-    configured = fulltext_cfg.get("download_dir")
-    if configured:
-        candidate = Path(configured)
-        resolved = candidate if candidate.is_absolute() else project_root / candidate
-        return resolved, False
-
-    from config import FULLTEXT_DIR as DEFAULT_FULLTEXT_DIR
-
-    return DEFAULT_FULLTEXT_DIR, False
-
-
 def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path) -> None:
     """Build reproducibility workflow graphs and score them for one corpus."""
     run_logger = logging.getLogger("reproducibility_assessment")
     config_path = Path(args.config) if args.config else project_root / "manuscript" / "config.yaml"
+    if args.config and not config_path.exists():
+        raise FileNotFoundError(f"Configuration file does not exist: {config_path}")
+    if config_path.exists():
+        require_valid_config(
+            config_path,
+            categories=("sampling_config", "reproducibility_config", "fulltext_config"),
+        )
     repro_cfg = load_reproducibility_config(config_path) if config_path.exists() else {}
     fulltext_cfg = load_fulltext_config(config_path) if config_path.exists() else {}
 
@@ -153,6 +134,10 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
         args.llm_model = repro_cfg["llm_model"]
     if repro_cfg.get("llm_url"):
         args.llm_url = repro_cfg["llm_url"]
+    if args.max_papers is not None and args.max_papers < 0:
+        raise ValueError("max_papers must be non-negative")
+    if args.checkpoint_interval < 1:
+        raise ValueError("checkpoint_interval must be positive")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -166,6 +151,7 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     # Deterministic subsampling for the LLM stage.
     from config_loader import _load_yaml
     from literature.sampling import load_sampling_config, sample_papers
+
     raw_cfg = _load_yaml(config_path) if config_path.exists() else {}
     project_cfg = raw_cfg.get("project_config", {})
     fraction, seed = load_sampling_config(project_cfg)
@@ -173,7 +159,10 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
         sampled = sample_papers(papers, fraction=fraction, seed=seed)
         run_logger.info(
             "Subsampling: %d/%d papers (%.0f%%, seed=%d) for reproducibility LLM",
-            len(sampled), len(papers), fraction * 100, seed,
+            len(sampled),
+            len(papers),
+            fraction * 100,
+            seed,
         )
         papers = sampled
 
@@ -181,7 +170,11 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     if args.clear_workflow_graphs and workflow_graphs_path.exists():
         workflow_graphs_path.unlink()
 
-    fulltext_dir, fulltext_dir_explicit = _resolve_fulltext_dir(args, fulltext_cfg, project_root)
+    fulltext_dir, fulltext_dir_explicit = resolve_fulltext_directory(
+        project_root=project_root,
+        fulltext_config=fulltext_cfg,
+        override=Path(args.fulltext_dir) if args.fulltext_dir is not None else None,
+    )
     fulltext_enabled = bool(fulltext_cfg.get("enabled"))
     fulltext_available = fulltext_enabled or fulltext_dir_explicit
 
@@ -199,10 +192,10 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
         model=args.llm_model,
         checkpoint_interval=args.checkpoint_interval,
         max_papers=args.max_papers,
-        temperature=repro_cfg.get("llm_temperature") or 0.1,
-        max_tokens=repro_cfg.get("llm_max_tokens") or 2048,
-        timeout_seconds=repro_cfg.get("llm_timeout") or 120,
-        max_retries=repro_cfg.get("llm_max_retries") or 3,
+        temperature=(repro_cfg["llm_temperature"] if repro_cfg.get("llm_temperature") is not None else 0.1),
+        max_tokens=(repro_cfg["llm_max_tokens"] if repro_cfg.get("llm_max_tokens") is not None else 2048),
+        timeout_seconds=(repro_cfg["llm_timeout"] if repro_cfg.get("llm_timeout") is not None else 120),
+        max_retries=(repro_cfg["llm_max_retries"] if repro_cfg.get("llm_max_retries") is not None else 3),
     )
 
     existing_graphs: list[WorkflowGraph] = (
@@ -213,11 +206,12 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     candidate_papers = papers[: args.max_papers] if args.max_papers is not None else papers
     pending = [p for p in candidate_papers if p.canonical_id not in processed_ids]
 
+    failed_extraction_ids: set[str] = set()
     if existing_graphs and not pending and not args.clear_workflow_graphs:
-        all_graphs = existing_graphs
+        cached_graphs = existing_graphs
         run_logger.info("Skipping LLM extraction — corpus already covered.")
     elif not fulltext_available:
-        all_graphs = existing_graphs
+        cached_graphs = existing_graphs
         if pending:
             run_logger.info(
                 "Skipping LLM extraction for %d pending papers — fulltext unavailable.",
@@ -230,13 +224,18 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
             llm_config.model,
             llm_config.base_url,
         )
-        all_graphs = extract_workflow_graphs_llm(
+        extraction_result = extract_workflow_graphs_llm(
             candidate_papers,
             fulltext_dir,
             llm_config,
             output_path=workflow_graphs_path,
             existing=existing_graphs,
         )
+        cached_graphs = extraction_result.graphs
+        failed_extraction_ids.update(extraction_result.failed_paper_ids)
+
+    candidate_ids = {paper.canonical_id for paper in candidate_papers}
+    active_graphs = [graph for graph in cached_graphs if graph.paper_id in candidate_ids]
 
     # extract_workflow_graphs_llm only flushes to disk when its internal buffer
     # is non-empty (e.g. every pending paper was skipped for missing fulltext),
@@ -244,7 +243,7 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     # all. Ensure a valid (possibly empty) JSONL file always exists so
     # downstream stages never see a missing artifact.
     if not workflow_graphs_path.exists():
-        append_workflow_graphs(all_graphs, workflow_graphs_path)
+        append_workflow_graphs(cached_graphs, workflow_graphs_path)
     print(str(workflow_graphs_path))
 
     content_weights = _build_content_weights(repro_cfg.get("content_weights"))
@@ -256,10 +255,10 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     if fuzzy_quote_threshold is None:
         fuzzy_quote_threshold = _DEFAULT_FUZZY_QUOTE_THRESHOLD
 
-    scores = score_corpus(all_graphs, content_weights=content_weights, structural_weights=structural_weights)
+    scores = score_corpus(active_graphs, content_weights=content_weights, structural_weights=structural_weights)
 
     per_paper_scores: dict[str, dict[str, Any]] = {}
-    for graph in all_graphs:
+    for graph in active_graphs:
         score = scores[graph.paper_id]
         per_paper_scores[graph.paper_id] = _score_to_dict(
             score,
@@ -276,34 +275,58 @@ def run_reproducibility_pipeline(args: argparse.Namespace, *, project_root: Path
     # PDF" (a PDF was downloaded but text extraction failed, so a .pdf exists
     # on disk with no matching .txt). Conflating these would hide a real
     # extraction-pipeline defect behind an availability gap.
-    scored_ids = {g.paper_id for g in all_graphs}
+    scored_ids = {graph.paper_id for graph in active_graphs}
+    failed_extraction_ids.intersection_update(candidate_ids)
     n_skipped_no_fulltext = 0
     n_skipped_unparseable_pdf = 0
+    n_skipped_fulltext_disabled = 0
+    unclassified_ids: list[str] = []
     for paper in candidate_papers:
         if paper.canonical_id in scored_ids:
             continue
+        if paper.canonical_id in failed_extraction_ids:
+            continue
         stem = safe_filename(paper.canonical_id)
         txt_path = fulltext_dir / f"{stem}.txt"
-        if txt_path.is_file():
+        if txt_path.is_file() and not fulltext_available:
+            n_skipped_fulltext_disabled += 1
             continue
         pdf_path = fulltext_dir / f"{stem}.pdf"
-        if pdf_path.is_file():
+        if not txt_path.is_file() and pdf_path.is_file():
             n_skipped_unparseable_pdf += 1
-        else:
+        elif not txt_path.is_file():
             n_skipped_no_fulltext += 1
+        else:
+            unclassified_ids.append(paper.canonical_id)
 
     composite_scores = [s.composite_score for s in scores.values()]
     n_papers_scored = len(composite_scores)
     mean_composite_score = sum(composite_scores) / n_papers_scored if n_papers_scored else 0.0
     n_low_score = sum(1 for value in composite_scores if value < low_score_threshold)
+    candidate_accounting_total = (
+        n_papers_scored
+        + len(failed_extraction_ids)
+        + n_skipped_no_fulltext
+        + n_skipped_unparseable_pdf
+        + n_skipped_fulltext_disabled
+        + len(unclassified_ids)
+    )
 
     summary = {
+        "n_candidate_papers": len(candidate_ids),
         "mean_composite_score": mean_composite_score,
         "n_papers_scored": n_papers_scored,
         "n_low_score": n_low_score,
         "low_score_threshold": low_score_threshold,
         "n_skipped_no_fulltext": n_skipped_no_fulltext,
         "n_skipped_unparseable_pdf": n_skipped_unparseable_pdf,
+        "n_skipped_fulltext_disabled": n_skipped_fulltext_disabled,
+        "n_failed_extraction": len(failed_extraction_ids),
+        "failed_extraction_paper_ids": sorted(failed_extraction_ids),
+        "n_unclassified": len(unclassified_ids),
+        "unclassified_paper_ids": sorted(unclassified_ids),
+        "candidate_accounting_total": candidate_accounting_total,
+        "candidate_accounting_complete": (candidate_accounting_total == len(candidate_ids) and not unclassified_ids),
         "fulltext_available": fulltext_available,
     }
     summary_path = data_dir / "reproducibility_summary.json"

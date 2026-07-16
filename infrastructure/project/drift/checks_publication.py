@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+from typing import cast
 from urllib.parse import urlparse
 
 import yaml
@@ -30,6 +31,13 @@ def _is_http_url(value: str) -> bool:
     return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
 
 
+def _as_mapping(value: object) -> dict[str, object]:
+    """Narrow one YAML value to the mapping shape used by publication checks."""
+    if not isinstance(value, dict):
+        return {}
+    return cast(dict[str, object], value)
+
+
 def check_publication_index_completeness(project_root: Path, report: Report, project: str) -> None:
     """Require complete publication identity for every canonical public template.
 
@@ -39,7 +47,20 @@ def check_publication_index_completeness(project_root: Path, report: Report, pro
     if not _is_canonical_template(project):
         return
 
-    required_files = ("STANDALONE.md", "CITATION.cff", ".zenodo.json", "codemeta.json")
+    config_path = project_root / "manuscript" / "config.yaml"
+    config: dict[str, object] = {}
+    if config_path.is_file():
+        try:
+            config = _load_yaml_mapping(config_path)
+        except yaml.YAMLError:
+            pass
+    publication = _as_mapping(config.get("publication"))
+    publication_status = str(publication.get("status") or "published").strip().lower()
+    is_draft = publication_status in {"draft", "unpublished"}
+
+    required_files: tuple[str, ...] = ("STANDALONE.md",)
+    if not is_draft:
+        required_files += ("CITATION.cff", ".zenodo.json", "codemeta.json")
     for rel_name in required_files:
         if not (project_root / rel_name).is_file():
             report.add(
@@ -68,16 +89,24 @@ def check_publication_index_completeness(project_root: Path, report: Report, pro
                 ),
             )
 
-    config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.is_file():
         return
-    try:
-        config = _load_yaml_mapping(config_path)
-    except yaml.YAMLError:
+    if not config:
         return
-    publication = config.get("publication", {}) if isinstance(config.get("publication"), dict) else {}
-    paper = config.get("paper", {}) if isinstance(config.get("paper"), dict) else {}
-    book = config.get("book", {}) if isinstance(config.get("book"), dict) else {}
+    paper = _as_mapping(config.get("paper"))
+    book = _as_mapping(config.get("book"))
+
+    if is_draft:
+        github_repository = str(publication.get("github_repository") or "").strip()
+        repository_url = str(publication.get("repository_url") or "").strip()
+        if not github_repository and not repository_url.startswith(("https://github.com/", "http://github.com/")):
+            report.add(
+                "ERROR",
+                project,
+                "publication_index_github_missing",
+                f"{_rel(config_path, project_root)} draft must declare its intended GitHub repository",
+            )
+        return
 
     required_values = {
         "publication.doi": _normalize_doi(publication.get("doi")),
@@ -174,8 +203,13 @@ def check_publication_metadata_consistency(project_root: Path, report: Report, p
         return
 
     config = _load_yaml_mapping(config_path)
-    paper = config.get("paper", {}) if isinstance(config.get("paper"), dict) else {}
-    publication = config.get("publication", {}) if isinstance(config.get("publication"), dict) else {}
+    paper = _as_mapping(config.get("paper"))
+    publication = _as_mapping(config.get("publication"))
+    if str(publication.get("status") or "published").strip().lower() in {
+        "draft",
+        "unpublished",
+    }:
+        return
     paper_version = str(paper.get("version", "")).strip()
 
     concept_doi = _normalize_doi(publication.get("doi", ""))
@@ -376,8 +410,8 @@ def check_metadata_export_current(project_root: Path, report: Report, project: s
     )
 
     try:
-        config = _load_yaml_mapping(config_path)
-    except yaml.YAMLError as exc:
+        config = _load_yaml_mapping(config_path, strict=True)
+    except (OSError, yaml.YAMLError) as exc:
         report.add(
             "ERROR",
             project,
@@ -403,9 +437,11 @@ def check_metadata_export_current(project_root: Path, report: Report, project: s
             continue
         try:
             loaded: object = (
-                _load_yaml_mapping(path) if rel_name == "CITATION.cff" else json.loads(path.read_text(encoding="utf-8"))
+                _load_yaml_mapping(path, strict=True)
+                if rel_name == "CITATION.cff"
+                else json.loads(path.read_text(encoding="utf-8"))
             )
-        except (yaml.YAMLError, json.JSONDecodeError) as exc:
+        except (OSError, yaml.YAMLError, json.JSONDecodeError) as exc:
             report.add(
                 "ERROR",
                 project,

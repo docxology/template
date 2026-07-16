@@ -42,8 +42,8 @@ Response shape for one page::
 Pagination: the cursor is a 0-based integer offset advanced by 100 (the
 API's fixed page size) after each request. A page returning fewer than 100
 raw items is the last page. To bound worst-case latency against a query
-whose terms never/rarely match within the default (2013–2099) window, the
-walk hard-stops after ``BIORXIV_MAX_PAGES`` (20) pages — 2000 raw items —
+whose terms never/rarely match within the default (2013-2099) window, the
+walk hard-stops after ``BIORXIV_MAX_PAGES`` (20) pages - 2000 raw items -
 even if fewer than ``max_results`` matches have been found. This is a
 deliberate, documented constraint, not a bug.
 
@@ -58,7 +58,7 @@ API reference: https://api.biorxiv.org
 from __future__ import annotations
 
 import logging
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import requests
 
@@ -88,7 +88,7 @@ BIORXIV_YEAR_MIN = 2013
 BIORXIV_YEAR_MAX = 2099
 
 
-def _extract_year(date_str: Optional[str]) -> Optional[int]:
+def _extract_year(date_str: str | None) -> int | None:
     """Extract the publication year from an ISO date string (YYYY-MM-DD).
 
     Args:
@@ -124,7 +124,7 @@ def _extract_authors(authors_raw: object) -> list[Author]:
     return [Author(name=part.strip()) for part in authors_raw.split(";") if part.strip()]
 
 
-def _build_pdf_url(server: str, doi: Optional[str]) -> Optional[str]:
+def _build_pdf_url(server: str, doi: str | None) -> str | None:
     """Build the conventional bioRxiv/medRxiv full-text PDF URL for a DOI.
 
     Args:
@@ -192,13 +192,13 @@ def search_biorxiv(
     *,
     max_results: int = 100,
     base_url: str = BIORXIV_API_URL,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
     server: str = "biorxiv",
 ) -> list[Paper]:
     """Search bioRxiv/medRxiv for papers matching a free-text query.
 
-    Not true full-text search: walks the default (2013–2099) date window
+    Not true full-text search: walks the default (2013-2099) date window
     page by page (100 raw items per page, cursor-based) and keeps only items
     where every whitespace-split query term appears case-insensitively in
     the concatenated title + abstract. Stops when ``max_results`` matches
@@ -206,7 +206,7 @@ def search_biorxiv(
     items (the last page), or ``BIORXIV_MAX_PAGES`` pages have been walked
     (whichever comes first). Graceful by contract: any network error,
     non-200 status, or malformed payload is logged and the matches collected
-    so far are returned (``[]`` if none) — this function never raises.
+    so far are returned (``[]`` if none) - this function never raises.
 
     Args:
         query: Free-text query. Split on whitespace into required terms;

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 798
+Total documented definitions: 800
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -606,36 +606,38 @@ Total documented definitions: 798
 | 119 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:119`. |
 | 136 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:136`. |
 | 165 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:165`. |
-| 179 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:179`. |
-| 195 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:195`. |
-| 215 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 233 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 179 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 194 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:194`. |
+| 210 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:210`. |
+| 230 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 248 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 16 | `function` | `_load_json` | inventory fallback | Inventory fallback for function `_load_json` defined at `src/roadmap_tracks/formal_interop.py:16`. |
-| 23 | `function` | `_write_json` | inventory fallback | Inventory fallback for function `_write_json` defined at `src/roadmap_tracks/formal_interop.py:23`. |
-| 29 | `function` | `_gnn_paths` | inventory fallback | Inventory fallback for function `_gnn_paths` defined at `src/roadmap_tracks/formal_interop.py:29`. |
-| 33 | `function` | `_model_to_payload` | docstring | Structured, JSON-serializable view of a parsed GNN model (sorted, deterministic). |
-| 55 | `function` | `_model_payload` | inventory fallback | Inventory fallback for function `_model_payload` defined at `src/roadmap_tracks/formal_interop.py:55`. |
-| 59 | `function` | `_payload_to_gnn_text` | docstring | Serialize a model payload back to GNN markdown. |
-| 99 | `function` | `roundtrip_payload_lossless` | docstring | True iff serializing the STRUCTURAL payload to GNN text and re-parsing reproduces it. |
-| 117 | `function` | `build_model_checking_witnesses` | docstring | Build model checking witnesses. |
-| 186 | `function` | `build_gnn_roundtrip_report` | docstring | Build gnn roundtrip report. |
-| 209 | `function` | `build_gnn_lint_report` | docstring | Build gnn lint report. |
-| 282 | `function` | `build_ontology_alias_index` | docstring | Build ontology alias index. |
-| 305 | `function` | `build_ontology_profile_matrix` | docstring | Build ontology profile matrix. |
-| 366 | `function` | `_lean_files` | inventory fallback | Inventory fallback for function `_lean_files` defined at `src/roadmap_tracks/formal_interop.py:366`. |
-| 370 | `function` | `_lean_text` | inventory fallback | Inventory fallback for function `_lean_text` defined at `src/roadmap_tracks/formal_interop.py:370`. |
-| 374 | `function` | `build_lean_theorem_inventory` | docstring | Build lean theorem inventory. |
-| 396 | `function` | `build_lean_graph_world_inventory` | docstring | Build lean graph world inventory. |
-| 438 | `function` | `build_interop_roundtrip_report` | docstring | Build interop roundtrip report. |
-| 464 | `function` | `_leading_tactic` | docstring | First tactic identifier in a proof body (after ``:= by``), skipping blanks/comments. |
-| 476 | `function` | `build_proof_extraction_index` | docstring | Build proof extraction index. |
-| 515 | `function` | `write_formal_interop_artifacts` | docstring | Write formal interop artifacts to the output path. |
-| 555 | `function` | `validate_formal_interop_artifacts` | docstring | Validate formal interop artifacts. |
+| 17 | `function` | `_load_json` | inventory fallback | Inventory fallback for function `_load_json` defined at `src/roadmap_tracks/formal_interop.py:17`. |
+| 24 | `function` | `_write_json` | inventory fallback | Inventory fallback for function `_write_json` defined at `src/roadmap_tracks/formal_interop.py:24`. |
+| 30 | `function` | `_gnn_paths` | inventory fallback | Inventory fallback for function `_gnn_paths` defined at `src/roadmap_tracks/formal_interop.py:30`. |
+| 34 | `function` | `_model_to_payload` | docstring | Structured, JSON-serializable view of a parsed GNN model (sorted, deterministic). |
+| 56 | `function` | `_model_payload` | inventory fallback | Inventory fallback for function `_model_payload` defined at `src/roadmap_tracks/formal_interop.py:56`. |
+| 60 | `function` | `_payload_to_gnn_text` | docstring | Serialize a model payload back to GNN markdown. |
+| 100 | `function` | `roundtrip_payload_lossless` | docstring | True iff serializing the STRUCTURAL payload to GNN text and re-parsing reproduces it. |
+| 118 | `function` | `build_model_checking_witnesses` | docstring | Build model checking witnesses. |
+| 187 | `function` | `build_gnn_roundtrip_report` | docstring | Build gnn roundtrip report. |
+| 210 | `function` | `build_gnn_lint_report` | docstring | Build gnn lint report. |
+| 283 | `function` | `build_ontology_alias_index` | docstring | Build ontology alias index. |
+| 306 | `function` | `build_ontology_profile_matrix` | docstring | Build ontology profile matrix. |
+| 367 | `function` | `_lean_files` | inventory fallback | Inventory fallback for function `_lean_files` defined at `src/roadmap_tracks/formal_interop.py:367`. |
+| 371 | `function` | `_lean_text` | inventory fallback | Inventory fallback for function `_lean_text` defined at `src/roadmap_tracks/formal_interop.py:371`. |
+| 375 | `function` | `build_lean_theorem_inventory` | docstring | Build lean theorem inventory. |
+| 397 | `function` | `build_lean_graph_world_inventory` | docstring | Build lean graph world inventory. |
+| 439 | `function` | `build_interop_roundtrip_report` | docstring | Build interop roundtrip report. |
+| 465 | `function` | `_leading_tactic` | docstring | First tactic identifier in a proof body (after ``:= by``), skipping blanks/comments. |
+| 477 | `function` | `build_proof_extraction_index` | docstring | Build proof extraction index. |
+| 516 | `function` | `_formal_interop_artifact_builders` | docstring | Return the single registry for formal-interoperability output builders. |
+| 548 | `function` | `write_formal_interop_artifacts` | docstring | Write all formal-interop artifacts, or only missing outputs when requested. |
+| 559 | `function` | `validate_formal_interop_artifacts` | docstring | Validate formal interop artifacts. |
 
 ## `src/roadmap_tracks/integration_audit.py`
 

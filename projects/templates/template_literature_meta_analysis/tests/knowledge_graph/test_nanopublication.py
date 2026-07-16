@@ -399,6 +399,8 @@ class TestNanopubRDF:
         assert "hasPublicationInfo" in content
         assert "Nanopublication" in content
         assert "RDF export test" in content
+        assert content.endswith("\n")
+        assert not content.endswith("\n\n")
 
     def test_trig_roundtrip_two_nanopubs(self, tmp_path: Path) -> None:
         """Two nanopubs should both appear in the TriG file."""

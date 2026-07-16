@@ -170,6 +170,17 @@ def test_write_then_validate_formal_interop_roundtrip(copied_root: Path) -> None
     assert validate_formal_interop_artifacts(copied_root) == []
 
 
+def test_missing_only_formal_interop_repair_is_narrow_and_valid(copied_root: Path) -> None:
+    assert write_formal_interop_artifacts(copied_root, missing_only=True) == {}
+    interop = copied_root / "output" / "data" / "interop_roundtrip_report.json"
+    interop.unlink()
+
+    paths = write_formal_interop_artifacts(copied_root, missing_only=True)
+
+    assert paths == {"interop": interop}
+    assert validate_formal_interop_artifacts(copied_root) == []
+
+
 def test_validate_formal_interop_flags_missing_artifacts(tmp_path: Path) -> None:
     issues = validate_formal_interop_artifacts(tmp_path)
     assert any("model_checking_witnesses.json schema mismatch" in issue for issue in issues)

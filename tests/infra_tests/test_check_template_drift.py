@@ -882,6 +882,27 @@ def test_publication_index_completeness_accepts_complete_exemplar(drift_module, 
     assert rep.findings == []
 
 
+def test_publication_index_completeness_accepts_explicit_public_draft(drift_module, tmp_path):
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "manuscript" / "config.yaml").write_text(
+        "paper:\n"
+        "  title: Draft exemplar\n"
+        "  version: '0.1.0'\n"
+        "publication:\n"
+        "  status: draft\n"
+        "  github_repository: 'docxology/template_draft'\n",
+        encoding="utf-8",
+    )
+    (root / "STANDALONE.md").write_text(
+        "# Draft\n\n<!-- BEGIN:PUBLICATION_INDEX -->\ndraft identity\n<!-- END:PUBLICATION_INDEX -->\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_publication_index_completeness(root, rep, "templates/template_draft")
+    drift_module.check_publication_metadata_consistency(root, rep, "templates/template_draft")
+    assert rep.findings == []
+
+
 def test_publication_index_completeness_rejects_bad_mirror_declarations(drift_module, tmp_path):
     root = _scaffold_minimal_project(tmp_path)
     _write_complete_publication_index(root)

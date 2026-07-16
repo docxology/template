@@ -215,6 +215,11 @@ def _escape_latex(text: str) -> str:
     return "".join(_LATEX_SPECIALS.get(ch, ch) for ch in text)
 
 
+def _normalize_field_value(value: str) -> str:
+    """Collapse provider formatting into one whitespace-safe BibTeX field."""
+    return " ".join(value.split())
+
+
 @dataclass
 class BibEntry:
     """A single, minimal BibTeX record (mirrors the shape of
@@ -258,7 +263,8 @@ def render_entry(entry: BibEntry) -> str:
     items = list(entry.fields.items())
     last_index = len(items) - 1
     for i, (name, raw_value) in enumerate(items):
-        formatted = raw_value if name in _VERBATIM_FIELDS else _escape_latex(raw_value)
+        normalized = _normalize_field_value(raw_value)
+        formatted = normalized if name in _VERBATIM_FIELDS else _escape_latex(normalized)
         suffix = "," if i < last_index else ""
         buf.write(f"  {name}={{{formatted}}}{suffix}\n")
     buf.write("}\n")

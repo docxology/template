@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 00:36
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 12:41
 entering extended mode
  %&-line parsing enabled.
-**/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
+**<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
 c/template/projects/templates/template_literature_meta_analysis/output/slides/0
 2b_methods_extraction_slides.tex
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/02
 b_methods_extraction_slides.tex
 LaTeX2e <2025-11-01>
@@ -1134,7 +1134,7 @@ LaTeX Info: Redefining \microtypesetup on input line 3065.
 ) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
-(/Users/hum/Library/texmf/tex/latex/seqsplit/seqsplit.sty
+(<home>/Library/texmf/tex/latex/seqsplit/seqsplit.sty
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
@@ -1148,7 +1148,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/02
 b_methods_extraction_slides.aux)
 \openout1 = `02b_methods_extraction_slides.aux'.
@@ -1510,7 +1510,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/02
 b_methods_extraction_slides.nav) [1
 
@@ -1520,7 +1520,7 @@ b_methods_extraction_slides.nav) [1
 \openout4 = `02b_methods_extraction_slides.vrb'.
 
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/02
 b_methods_extraction_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -1571,7 +1571,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout4 = `02b_methods_extraction_slides.vrb'.
 
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/02
 b_methods_extraction_slides.vrb) [5
 
@@ -1589,7 +1589,7 @@ b_methods_extraction_slides.vrb) [5
 \openout7 = `02b_methods_extraction_slides.snm'.
 
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/02
 b_methods_extraction_slides.aux)
  ***********
@@ -1600,12 +1600,12 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  29249 strings out of 469709
  593535 string characters out of 5466024
- 1138881 words of memory out of 5000000
+ 1138883 words of memory out of 5000000
  57369 multiletter control sequences out of 15000+600000
  631240 words of font info for 70 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  101i,11n,114p,1181b,480s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxo
+Output written on <home>/Documents/GitHub/HumOS/projects/platform/hum-docxo
 logy/repos/public/template/projects/templates/template_literature_meta_analysis
 /output/slides/02b_methods_extraction_slides.pdf (6 pages).

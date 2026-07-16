@@ -131,19 +131,20 @@ literature, and ad-hoc reviews bind no evidence to a reproducible
 pipeline. We present a configurable, reproducible meta-analysis
 framework that takes a single search term and produces a complete
 quantitative portrait of its literature. For this instance the term is
-\textbf{Modafinil}. The pipeline dispatches across 9 literature engines
+\textbf{Modafinil}. The pipeline dispatches across 10 literature engines
 (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, and bioRxiv/medRxiv), each degrading gracefully
-to a skipped source when an API key or the network is unavailable, then
-merges and de-duplicates records by a canonical identifier hierarchy
-(DOI \(>\) arXiv ID \(>\) Semantic Scholar ID \(>\) OpenAlex ID \(>\)
-title digest) into a corpus of \(N = 2334\) records spanning 2000--2026
-(26 years). Records are classified into a configurable 6-bucket subfield
-taxonomy (Clinical Sleep, Cognition, Pharmacology, Psychiatry, Safety,
-and Neuroscience); the largest subfield is \textbf{Clinical Sleep}
-(63.0\% of the classified corpus). The corpus grows at a compound annual
-rate of 5.48\% (mean year-over-year growth 7.8\%, doubling time 9.2
-years), peaking in 2025 with 147 records.
+ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each degrading
+gracefully to a skipped source when an API key or the network is
+unavailable, then merges and de-duplicates records by a canonical
+identifier hierarchy (DOI \(>\) arXiv ID \(>\) Semantic Scholar ID \(>\)
+OpenAlex ID \(>\) title digest) into a corpus of \(N = 2334\) records
+spanning 2000--2026 (26 years). Records are classified into a
+configurable 6-bucket subfield taxonomy (Clinical Sleep, Cognition,
+Pharmacology, Psychiatry, Safety, and Neuroscience); the largest
+subfield is \textbf{Clinical Sleep} (63.0\% of the classified corpus).
+The corpus grows at a compound annual rate of 5.48\% (mean
+year-over-year growth 7.8\%, doubling time 9.2 years), peaking in 2025
+with 147 records.
 
 Non-negative matrix factorization extracts 5 latent topics over a
 500-feature vocabulary, offline deterministic embeddings place every

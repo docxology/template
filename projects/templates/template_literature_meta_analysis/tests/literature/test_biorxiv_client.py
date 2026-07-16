@@ -190,6 +190,7 @@ def test_parse_matching_paper_all_fields() -> None:
     assert paper.venue is None
     assert paper.pdf_url == "https://www.biorxiv.org/content/10.1101/2020.01.01.000001v1.full.pdf"
     assert paper.full_text_source == "biorxiv"
+    assert paper.is_open_access is True
     assert paper.is_preprint is True  # full_text_source="biorxiv" is a preprint hint
 
     assert len(paper.authors) == 2
@@ -201,6 +202,7 @@ def test_parse_paper_medrxiv_server() -> None:
     item = dict(PAPER_MATCHING, server="medrxiv")
     paper = _parse_biorxiv_paper(item, "medrxiv")
     assert paper.full_text_source == "medrxiv"
+    assert paper.is_open_access is True
     assert paper.pdf_url == "https://www.medrxiv.org/content/10.1101/2020.01.01.000001v1.full.pdf"
 
 
@@ -231,9 +233,7 @@ def test_search_biorxiv_single_page_filters_to_matching_only(httpserver: HTTPSer
         "collection": [PAPER_MATCHING, PAPER_NON_MATCHING],
         "messages": [{"status": "ok"}],
     }
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json(page)
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(page)
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=10)
 
@@ -246,9 +246,7 @@ def test_search_biorxiv_single_page_filters_to_matching_only(httpserver: HTTPSer
 
 def test_search_biorxiv_medrxiv_server_hits_correct_path(httpserver: HTTPServer) -> None:
     page = {"collection": [PAPER_MATCHING], "messages": []}
-    httpserver.expect_request(
-        f"/details/medrxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json(page)
+    httpserver.expect_request(f"/details/medrxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(page)
 
     papers = search_biorxiv(
         "active inference",
@@ -261,27 +259,25 @@ def test_search_biorxiv_medrxiv_server_hits_correct_path(httpserver: HTTPServer)
 
 
 def test_search_biorxiv_empty_collection_returns_empty(httpserver: HTTPServer) -> None:
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json({"collection": [], "messages": []})
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(
+        {"collection": [], "messages": []}
+    )
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=10)
     assert papers == []
 
 
 def test_search_biorxiv_malformed_json_returns_empty(httpserver: HTTPServer) -> None:
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_data("not json", content_type="application/json")
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_data(
+        "not json", content_type="application/json"
+    )
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=10)
     assert papers == []
 
 
 def test_search_biorxiv_http_error_returns_empty(httpserver: HTTPServer) -> None:
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_data("", status=500)
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_data("", status=500)
 
     papers = search_biorxiv(
         "active inference",
@@ -304,32 +300,30 @@ def test_search_biorxiv_connection_error_returns_empty() -> None:
 
 
 def test_search_biorxiv_non_dict_payload_stops(httpserver: HTTPServer) -> None:
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json(["not", "a", "dict"])
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(
+        ["not", "a", "dict"]
+    )
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=10)
     assert papers == []
 
 
 def test_search_biorxiv_non_list_collection_stops(httpserver: HTTPServer) -> None:
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json({"collection": "not a list", "messages": []})
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(
+        {"collection": "not a list", "messages": []}
+    )
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=10)
     assert papers == []
 
 
 def test_search_biorxiv_uses_injected_session(httpserver: HTTPServer) -> None:
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json({"collection": [], "messages": []})
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(
+        {"collection": [], "messages": []}
+    )
 
     with requests.Session() as session:
-        papers = search_biorxiv(
-            "active inference", base_url=httpserver.url_for(""), max_results=10, session=session
-        )
+        papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=10, session=session)
     assert papers == []
 
 
@@ -362,12 +356,12 @@ def test_search_biorxiv_paginates_two_pages(httpserver: HTTPServer) -> None:
         }
     ]
 
-    httpserver.expect_ordered_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json({"collection": page_one_items, "messages": []})
-    httpserver.expect_ordered_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/100/json"
-    ).respond_with_json({"collection": page_two_items, "messages": []})
+    httpserver.expect_ordered_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(
+        {"collection": page_one_items, "messages": []}
+    )
+    httpserver.expect_ordered_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/100/json").respond_with_json(
+        {"collection": page_two_items, "messages": []}
+    )
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=200)
 
@@ -390,9 +384,9 @@ def test_search_biorxiv_stops_once_max_results_reached(httpserver: HTTPServer) -
         }
         for i in range(100)
     ]
-    httpserver.expect_request(
-        f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json"
-    ).respond_with_json({"collection": page_items, "messages": []})
+    httpserver.expect_request(f"/details/biorxiv/{2013}-01-01/{2099}-12-31/0/json").respond_with_json(
+        {"collection": page_items, "messages": []}
+    )
 
     papers = search_biorxiv("active inference", base_url=httpserver.url_for(""), max_results=2)
     assert len(papers) == 2

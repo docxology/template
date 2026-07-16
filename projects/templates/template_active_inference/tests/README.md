@@ -31,7 +31,8 @@ computations and fixed seeds rather than mocks.
 - `test_*_direct.py` with `direct_recompute_support.py` — leg-deterministic
   direct coverage of the recompute writers and validator failure branches,
   exercised against isolated project-tree copies so the coverage floor never
-  depends on tracked-snapshot staleness (rules in `AGENTS.md`).
+  depends on tracked-snapshot staleness (rules in `AGENTS.md`). Focused
+  direct-only selections skip the unrelated real-tree gate prewarm.
 
 ## Fast iteration
 
@@ -86,6 +87,13 @@ Runtime is dominated by generated-artifact gates, but the verification script
 runs coverage in separate pytest processes and appends the coverage data into
 one final 90% gate. Use `--monolithic-coverage` only when diagnosing behavior
 that specifically needs the legacy single pytest process.
+
+The fixed-point direct tests share one isolated module copy. Authored GNN
+contract defects fail before generated writers run, while missing formal-interop
+outputs are regenerated through the owning artifact-builder registry and then
+checked against the complete fixed-point validator. Any unresolved issue still
+falls through to the full settlement loop; the fast paths do not bypass global
+output-integrity checks.
 
 Fixture-level performance candidates are the repeated marker variants in
 `test_validate_manuscript_methods_sheaf_layers_negative_markers` and redundant

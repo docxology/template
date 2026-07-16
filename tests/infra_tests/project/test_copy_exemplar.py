@@ -236,8 +236,28 @@ def test_copy_rejects_symlinked_source_files(tmp_path: Path) -> None:
     (source / "README.md").symlink_to(outside)
     dest = tmp_path / "fork"
 
-    with pytest.raises(ValueError, match="refusing to dereference symlink"):
+    with pytest.raises(ValueError, match="refusing to dereference"):
         copy_exemplar(repo_root, "templates/template_code_project", dest, new_name="my_project")
+
+
+def test_copy_materializes_symlinked_public_exemplar_source(tmp_path: Path) -> None:
+    """A tracked public-to-public sharing link exports as regular files."""
+    repo_root = _scaffold_git_repo(tmp_path)
+    source = repo_root / "projects/templates/template_code_project"
+    shared = repo_root / "projects/templates/template_prose_project/src"
+    shared.mkdir(parents=True)
+    (shared / "shared_logic.py").write_text("VALUE = 7\n", encoding="utf-8")
+    (source / "src").mkdir()
+    (source / "src/shared").symlink_to("../../template_prose_project/src")
+    _git("add", "projects/templates/template_code_project/src/shared", cwd=repo_root)
+    _git("add", "projects/templates/template_prose_project/src/shared_logic.py", cwd=repo_root)
+    destination = tmp_path / "fork"
+
+    copy_exemplar(repo_root, "templates/template_code_project", destination)
+
+    copied = destination / "src/shared/shared_logic.py"
+    assert copied.read_text(encoding="utf-8") == "VALUE = 7\n"
+    assert not copied.is_symlink()
 
 
 def test_fallback_walk_excludes_common_ignored_artifacts(tmp_path: Path) -> None:

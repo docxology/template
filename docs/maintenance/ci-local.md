@@ -56,7 +56,9 @@ See [`scripts/shell/ci_local.sh`](../../scripts/shell/ci_local.sh) for the wrapp
 
 ## Configuration
 
-`act` configuration lives in `.actrc` at repo root (created if missing by `ci_local.sh`):
+User-owned `act` configuration may live in `.actrc` at repo root. When it is
+absent, `ci_local.sh` passes these runner mappings directly and does not mutate
+the checkout:
 
 ```
 # Use the medium-sized Linux runner image (closer to GH Actions ubuntu-latest)
@@ -74,7 +76,7 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 
 | CI job | Reproducible via act? | Notes |
 | --- | --- | --- |
-| `lint` (ruff + mypy; also runs `check_tracked_projects.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
+| `lint` (ruff + mypy; also runs the four-pool `check_tracked_all.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
 | `test-infra` (matrix: ubuntu py3.10/3.11/3.12 + macos py3.12) | ✅ Yes (ubuntu legs) | Set `--matrix python-version:3.X`; coverage gate runs inside this job |
 | `test-project` (matrix: per-project × py3.10/3.12) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
 | `security` (bandit + pip-audit) | ✅ Yes | Fully Linux-portable |
@@ -89,31 +91,31 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | `fep-lean` (gauss + lake, conditional) | ✅ Yes | Linux-only, `if: needs.detect.outputs.fep_lean == 'true'`; heavy (60 min timeout) |
 | `setup-hook-windows-smoke` | ❌ No | Runs on `windows-latest` — `act` only reproduces Linux containers; treat the real CI run as source of truth (same caveat as the macOS jobs above) |
 
-## Fallback: pure-Python reproduction
+## Fallback: fail-closed direct commands
 
-If `act` is not available (Docker unavailable, etc.), the major CI checks can be reproduced via the equivalents documented in `CLAUDE.md`:
+If `act` is unavailable, `ci_local.sh` runs a declared subset of direct CI
+commands. The fallback is not presented as full workflow reproduction:
+platform matrices, service containers, and dependency auditing still require
+`act` or GitHub Actions. Unsupported `--job` values exit nonzero instead of
+reporting a vacuous success.
 
 ```bash
-# Lint (CI mirror)
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
-uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
-uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy
+# Inspect the exact fallback lanes without executing them
+./scripts/shell/ci_local.sh --no-act --list
+./scripts/shell/ci_local.sh --no-act --dry-run
 
-# Security
-uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
+# Run one supported lane
+./scripts/shell/ci_local.sh --no-act --job lint
+./scripts/shell/ci_local.sh --no-act --job health
+./scripts/shell/ci_local.sh --no-act --job verify-no-mocks
 
-# Tests
-uv run python scripts/pipeline/stage_01_test.py --project template_code_project
-
-# Pre-commit (all stages)
-pre-commit run --all-files
-pre-commit run --hook-stage pre-push --all-files
-
-# Confidentiality check
-uv run python scripts/audit/check_tracked_projects.py
+# Run every fallback lane; any missing tool or failed command aborts
+./scripts/shell/ci_local.sh --no-act
 ```
 
-This is what `ci_local.sh` falls back to if `act` isn't present.
+The pre-commit lane uses `uv run pre-commit`; it never silently skips a missing
+global executable. Confidentiality uses the full four-pool
+`scripts/audit/check_tracked_all.py` guard.
 
 ## Long-term portability
 
@@ -128,7 +130,9 @@ The act-tested local reproduction means CI portability is **already proved** at 
 
 ## Status
 
-`scripts/shell/ci_local.sh` is created 2026-05-20. The act path is the default; pure-Python fallback covers the case where Docker is unavailable.
+`scripts/shell/ci_local.sh` is created 2026-05-20. The act path is the default;
+the direct-command fallback covers a documented, fail-closed subset when
+Docker is unavailable.
 
 ## Related
 

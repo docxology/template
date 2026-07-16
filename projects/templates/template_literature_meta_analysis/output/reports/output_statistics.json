@@ -1,0 +1,299 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 10,
+      "size_mb": "7.16",
+      "total_size_bytes": 7511629,
+      "largest_files": [
+        {
+          "name": "template_literature_meta_analysis_combined.pdf",
+          "size_mb": "6.90",
+          "path": "pdf/template_literature_meta_analysis_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.09",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.07",
+          "path": "pdf/_combined_manuscript.md"
+        }
+      ],
+      "extensions": {
+        ".pdf": 1,
+        ".md": 1,
+        ".log": 2,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 24,
+      "size_mb": "0.37",
+      "total_size_bytes": 386577,
+      "largest_files": [
+        {
+          "name": "index.html",
+          "size_mb": "0.12",
+          "path": "web/index.html"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.07",
+          "path": "web/_combined_manuscript.md"
+        },
+        {
+          "name": "manuscript__06_appendix_tooling.html",
+          "size_mb": "0.02",
+          "path": "web/manuscript__06_appendix_tooling.html"
+        }
+      ],
+      "extensions": {
+        ".html": 22,
+        ".md": 1,
+        ".ico": 1
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 162,
+      "size_mb": "8.86",
+      "total_size_bytes": 9291158,
+      "largest_files": [
+        {
+          "name": "03c_results_text_analytics_slides.pdf",
+          "size_mb": "3.93",
+          "path": "slides/03c_results_text_analytics_slides.pdf"
+        },
+        {
+          "name": "03a_results_field_overview_slides.pdf",
+          "size_mb": "1.66",
+          "path": "slides/03a_results_field_overview_slides.pdf"
+        },
+        {
+          "name": "03d_results_citation_network_slides.pdf",
+          "size_mb": "1.06",
+          "path": "slides/03d_results_citation_network_slides.pdf"
+        }
+      ],
+      "extensions": {
+        ".nav": 21,
+        ".pdf": 21,
+        ".vrb": 14,
+        ".tex": 22,
+        ".toc": 21,
+        ".log": 21,
+        ".snm": 21,
+        ".aux": 21
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 22,
+      "size_mb": "7.59",
+      "total_size_bytes": 7956777,
+      "largest_files": [
+        {
+          "name": "word_cloud.png",
+          "size_mb": "1.19",
+          "path": "figures/word_cloud.png"
+        },
+        {
+          "name": "citation_network.png",
+          "size_mb": "0.93",
+          "path": "figures/citation_network.png"
+        },
+        {
+          "name": "pca_embeddings.png",
+          "size_mb": "0.89",
+          "path": "figures/pca_embeddings.png"
+        }
+      ],
+      "extensions": {
+        ".png": 21,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 25,
+      "size_mb": "16.53",
+      "total_size_bytes": 17327798,
+      "largest_files": [
+        {
+          "name": "tfidf_data.json",
+          "size_mb": "6.74",
+          "path": "data/tfidf_data.json"
+        },
+        {
+          "name": "corpus.jsonl",
+          "size_mb": "5.10",
+          "path": "data/corpus.jsonl"
+        },
+        {
+          "name": "bibliography.bib",
+          "size_mb": "3.01",
+          "path": "data/bibliography.bib"
+        }
+      ],
+      "extensions": {
+        ".json": 19,
+        ".gml": 1,
+        ".jsonl": 3,
+        ".bib": 1,
+        ".trig": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 6,
+      "size_mb": "0.82",
+      "total_size_bytes": 854682,
+      "largest_files": [
+        {
+          "name": "artifact_manifest.json",
+          "size_mb": "0.73",
+          "path": "reports/artifact_manifest.json"
+        },
+        {
+          "name": "evidence_registry.json",
+          "size_mb": "0.08",
+          "path": "reports/evidence_registry.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        }
+      ],
+      "extensions": {
+        ".json": 4,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "llm": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "logs": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    }
+  },
+  "total_files": 249,
+  "total_size_mb": 41.32139301300049,
+  "largest_files": [
+    {
+      "name": "template_literature_meta_analysis_combined.pdf",
+      "size_mb": "6.90",
+      "category": "pdf",
+      "path": "pdf/template_literature_meta_analysis_combined.pdf"
+    },
+    {
+      "name": "tfidf_data.json",
+      "size_mb": "6.74",
+      "category": "data",
+      "path": "data/tfidf_data.json"
+    },
+    {
+      "name": "corpus.jsonl",
+      "size_mb": "5.10",
+      "category": "data",
+      "path": "data/corpus.jsonl"
+    },
+    {
+      "name": "03c_results_text_analytics_slides.pdf",
+      "size_mb": "3.93",
+      "category": "slides",
+      "path": "slides/03c_results_text_analytics_slides.pdf"
+    },
+    {
+      "name": "bibliography.bib",
+      "size_mb": "3.01",
+      "category": "data",
+      "path": "data/bibliography.bib"
+    },
+    {
+      "name": "03a_results_field_overview_slides.pdf",
+      "size_mb": "1.66",
+      "category": "slides",
+      "path": "slides/03a_results_field_overview_slides.pdf"
+    },
+    {
+      "name": "word_cloud.png",
+      "size_mb": "1.19",
+      "category": "figures",
+      "path": "figures/word_cloud.png"
+    },
+    {
+      "name": "03d_results_citation_network_slides.pdf",
+      "size_mb": "1.06",
+      "category": "slides",
+      "path": "slides/03d_results_citation_network_slides.pdf"
+    },
+    {
+      "name": "citation_network.png",
+      "size_mb": "0.93",
+      "category": "figures",
+      "path": "figures/citation_network.png"
+    },
+    {
+      "name": "pca_embeddings.png",
+      "size_mb": "0.89",
+      "category": "figures",
+      "path": "figures/pca_embeddings.png"
+    }
+  ],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
+  "sizes_by_category": {
+    "pdf": 7.163647651672363,
+    "web": 0.3686685562133789,
+    "slides": 8.860738754272461,
+    "figures": 7.588173866271973,
+    "data": 16.525075912475586,
+    "reports": 0.8150882720947266
+  },
+  "file_counts_by_type": {
+    ".pdf": 22,
+    ".md": 4,
+    ".log": 23,
+    ".aux": 22,
+    ".blg": 1,
+    ".bib": 2,
+    ".tex": 23,
+    ".toc": 22,
+    ".bbl": 1,
+    ".html": 22,
+    ".ico": 1,
+    ".nav": 21,
+    ".vrb": 14,
+    ".snm": 21,
+    ".png": 21,
+    ".json": 24,
+    ".gml": 1,
+    ".jsonl": 3,
+    ".trig": 1
+  }
+}

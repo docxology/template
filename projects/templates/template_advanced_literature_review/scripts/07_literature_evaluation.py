@@ -64,7 +64,13 @@ def main() -> None:
         violations = validate_fixture_honesty(manuscript_dir, corpus_path)
         if violations:
             for v in violations:
-                logger.error("Fixture honesty: %s:%s %s — %s", v.path, v.line, v.reason, v.excerpt)
+                logger.error(
+                    "Fixture honesty: %s:%s %s — %s",
+                    v.path,
+                    v.line,
+                    v.reason,
+                    v.excerpt,
+                )
             sys.exit(1)
         logger.info("Fixture honesty audit passed (%s)", manuscript_dir)
     results = evaluate_corpus(corpus, query=args.query)

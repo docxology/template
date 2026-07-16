@@ -52,6 +52,7 @@ the current public exemplars but does not replace either generated source of tru
 | Exemplar | Shape | Algorithm? | Bibliography | Figures embedded | Tests | Coverage |
 |---|---|---|---|---|---|---|
 | [`templates/template_active_inference/`](templates/template_active_inference/) | Active Inference multi-track (analytical + pymdp + sheaf manuscript + Lean/GNN/ontology) | yes (`src/analytical/*`, `src/simulation/*`) | curated read-only | registry-backed | see canonical facts | see canonical facts |
+| [`templates/template_advanced_literature_review/`](templates/template_advanced_literature_review/) | Advanced multi-phase literature review with phase-aware filtering and offline replay | yes (`src/multi_phase/*`, `src/deep_research/*`) | fixture-backed | registry-backed | see canonical facts | see canonical facts |
 | [`templates/template_autopoiesis/`](templates/template_autopoiesis/) | Combinatoric grammar generating whole runnable child projects from a seed | yes (`src/grammar.py`, `src/expand.py`, `src/materialize.py`) | curated read-only, 5 live-verified | 4 embedded | see canonical facts | see canonical facts |
 | [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) | AutoResearch-centric (plan/evidence/claim/artifact/readiness loop) | yes (`src/loop.py`) | curated read-only (validated, never written) | 0 | see canonical facts | see canonical facts |
 | [`templates/template_autoscientists/`](templates/template_autoscientists/) | AutoScientists coordination-mechanism testbed (champion log + dead-end registry + effect-size ranking + confirmation + reorg) | yes (`src/coordination/*`) | curated read-only | see canonical facts | see canonical facts | see canonical facts |
@@ -137,6 +138,7 @@ Projects under `projects/working/` and `projects/archive/` are non-rendered by d
 graph TD
     subgraph Rendered["Rendered Projects (projects/templates/ + projects/active/)"]
         P0[templates/template_active_inference<br/>Active Inference exemplar · see canonical facts]
+        P_ADV[templates/template_advanced_literature_review<br/>Advanced multi-phase review · see canonical facts]
         P1[templates/template_autoresearch_project<br/>AutoResearch exemplar · see canonical facts]
         P2[templates/template_code_project<br/>Code exemplar · see canonical facts]
         P3[templates/template_prose_project<br/>Prose exemplar · see canonical facts]

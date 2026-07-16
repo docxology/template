@@ -9,12 +9,11 @@ handled gracefully and return an empty result set.
 from __future__ import annotations
 
 import logging
-import xml.etree.ElementTree as ET  # noqa: S405 — used only for type hints / ParseError
-from typing import Callable, Optional
-
-from defusedxml.ElementTree import fromstring as _safe_fromstring
+import xml.etree.ElementTree as ET
+from collections.abc import Callable
 
 import requests
+from defusedxml.ElementTree import fromstring as _safe_fromstring
 
 from literature.http import request_with_retry
 
@@ -32,7 +31,7 @@ RETRY_BASE_SECONDS = 1.0
 EFETCH_BATCH_SIZE = 200
 
 
-def _normalized_element_text(element: Optional[ET.Element]) -> str:
+def _normalized_element_text(element: ET.Element | None) -> str:
     if element is None:
         return ""
     text = "".join(element.itertext())
@@ -64,7 +63,7 @@ def _parse_pubmed_article(xml_element: ET.Element) -> Paper:
         if author_name:
             authors.append(Author(name=author_name))
 
-    year: Optional[int] = None
+    year: int | None = None
     year_text = _normalized_element_text(xml_element.find(".//Article/Journal/JournalIssue/PubDate/Year"))
     if year_text:
         try:
@@ -95,8 +94,8 @@ def search_pubmed(
     esearch_url: str = PUBMED_ESEARCH_URL,
     efetch_url: str = PUBMED_EFETCH_URL,
     max_results: int = 100,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Process search pubmed."""
     http = session or requests.Session()
@@ -159,7 +158,7 @@ def search_pubmed(
             for article in root.findall(".//PubmedArticle"):
                 papers.append(_parse_pubmed_article(article))
         return papers
-    except Exception as exc:  # noqa: BLE001 -- safety net: any engine error degrades to an empty result set
+    except (requests.RequestException, TypeError, ValueError) as exc:
         logger.warning("PubMed search failed for query %r: %s", query, exc)
         return []
     finally:

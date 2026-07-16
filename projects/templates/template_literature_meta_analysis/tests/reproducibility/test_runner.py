@@ -178,9 +178,7 @@ def test_run_reproducibility_pipeline_clear_workflow_graphs_flag(httpserver: HTT
     assert len(graph_data["nodes"]) == 2
 
 
-def test_run_reproducibility_pipeline_fulltext_disabled_logs_warning_and_degrades(
-    tmp_path: Path, caplog
-):
+def test_run_reproducibility_pipeline_fulltext_disabled_logs_warning_and_degrades(tmp_path: Path, caplog):
     """fulltext.enabled=false + no --fulltext-dir -> loud warning, valid empty outputs, no crash."""
     paper = make_paper(doi="10.1/runner-nofulltext", title="Runner No Fulltext Paper")
     corpus_path = _write_corpus(tmp_path, [paper])
@@ -262,9 +260,7 @@ def test_run_reproducibility_pipeline_distinguishes_unparseable_pdf_from_no_full
     assert summary["n_skipped_unparseable_pdf"] == 1
 
 
-def test_run_reproducibility_pipeline_auto_loads_config_and_applies_overrides(
-    httpserver: HTTPServer, tmp_path: Path
-):
+def test_run_reproducibility_pipeline_auto_loads_config_and_applies_overrides(httpserver: HTTPServer, tmp_path: Path):
     """manuscript/config.yaml's reproducibility_assessment + fulltext blocks drive behavior.
 
     Covers: auto-load-without-explicit---config, checkpoint_interval/max_papers/
@@ -364,9 +360,7 @@ def test_run_reproducibility_pipeline_skips_when_corpus_already_covered(tmp_path
     )
     existing_graph = build_workflow_graph(paper.canonical_id, [existing_node])
     workflow_graphs_path = data_dir / "workflow_graphs.jsonl"
-    workflow_graphs_path.write_text(
-        "\n".join(serialize_workflow_graphs([existing_graph])) + "\n", encoding="utf-8"
-    )
+    workflow_graphs_path.write_text("\n".join(serialize_workflow_graphs([existing_graph])) + "\n", encoding="utf-8")
 
     args = _make_args(
         corpus_path=corpus_path,
@@ -387,6 +381,62 @@ def test_run_reproducibility_pipeline_skips_when_corpus_already_covered(tmp_path
     assert summary["n_papers_scored"] == 1
     assert summary["n_skipped_no_fulltext"] == 0
     assert summary["n_skipped_unparseable_pdf"] == 0
+
+
+def test_run_reproducibility_pipeline_scopes_cached_graphs_to_current_cap(tmp_path: Path) -> None:
+    """Cached graphs outside max_papers remain cached but are not scored this run."""
+    paper_a = make_paper(doi="10.1/cached-cap-a", title="Cached Cap A")
+    paper_b = make_paper(doi="10.1/cached-cap-b", title="Cached Cap B")
+    corpus_path = _write_corpus(tmp_path, [paper_a, paper_b])
+
+    from reproducibility.models import (
+        NodeType,
+        WorkflowNode,
+        build_workflow_graph,
+        serialize_workflow_graphs,
+    )
+
+    graphs = []
+    for paper in (paper_a, paper_b):
+        node = WorkflowNode(
+            node_id="n1",
+            node_name="Cached Source",
+            node_type=NodeType.SOURCE,
+            source_quote="Cached source quote.",
+            description="Cached node.",
+            reproducibility_rating=3,
+            paper_id=paper.canonical_id,
+        )
+        graphs.append(build_workflow_graph(paper.canonical_id, [node]))
+
+    output_dir = tmp_path / "output"
+    data_dir = output_dir / "data"
+    data_dir.mkdir(parents=True)
+    cache_path = data_dir / "workflow_graphs.jsonl"
+    cache_path.write_text(
+        "\n".join(serialize_workflow_graphs(graphs)) + "\n",
+        encoding="utf-8",
+    )
+
+    args = _make_args(
+        corpus_path=corpus_path,
+        output_dir=output_dir,
+        fulltext_dir=str(tmp_path / "fulltext"),
+        llm_url="http://127.0.0.1:1",
+        max_papers=1,
+    )
+    run_reproducibility_pipeline(args, project_root=tmp_path)
+
+    persisted_ids = {
+        json.loads(line)["paper_id"] for line in cache_path.read_text(encoding="utf-8").splitlines() if line
+    }
+    assert persisted_ids == {paper_a.canonical_id, paper_b.canonical_id}
+    scores = json.loads((data_dir / "reproducibility_scores.json").read_text(encoding="utf-8"))
+    assert set(scores) == {paper_a.canonical_id}
+    summary = json.loads((data_dir / "reproducibility_summary.json").read_text(encoding="utf-8"))
+    assert summary["n_candidate_papers"] == 1
+    assert summary["n_papers_scored"] == 1
+    assert summary["candidate_accounting_complete"] is True
 
 
 def test_run_reproducibility_pipeline_default_fulltext_dir_when_no_config_at_all(tmp_path: Path):
@@ -411,9 +461,7 @@ def test_run_reproducibility_pipeline_default_fulltext_dir_when_no_config_at_all
     assert summary["n_skipped_no_fulltext"] == 1
 
 
-def test_run_reproducibility_pipeline_extraction_failure_not_double_counted(
-    httpserver: HTTPServer, tmp_path: Path
-):
+def test_run_reproducibility_pipeline_extraction_failure_not_double_counted(httpserver: HTTPServer, tmp_path: Path):
     """A paper WITH fulltext whose LLM extraction fails is not counted as either skip reason."""
     paper = make_paper(doi="10.1/runner-failed-extraction", title="Extraction Fails Paper")
     corpus_path = _write_corpus(tmp_path, [paper])
@@ -427,9 +475,7 @@ def test_run_reproducibility_pipeline_extraction_failure_not_double_counted(
     # Every LLM call returns a 500 -> extract_workflow_nodes exhausts retries -> RuntimeError,
     # which extract_workflow_graphs_llm catches internally (fail_count), never adding this
     # paper's canonical_id to processed_ids and never producing a graph for it.
-    httpserver.expect_request("/api/generate", method="POST").respond_with_data(
-        "Internal Server Error", status=500
-    )
+    httpserver.expect_request("/api/generate", method="POST").respond_with_data("Internal Server Error", status=500)
 
     # llm_max_retries: 1 keeps this test fast (no exponential-backoff sleep
     # between attempts) while still exercising the RuntimeError-is-caught path.
@@ -456,3 +502,7 @@ def test_run_reproducibility_pipeline_extraction_failure_not_double_counted(
     # the extraction attempt itself failed, a third distinct outcome.
     assert summary["n_skipped_no_fulltext"] == 0
     assert summary["n_skipped_unparseable_pdf"] == 0
+    assert summary["n_failed_extraction"] == 1
+    assert summary["failed_extraction_paper_ids"] == [paper.canonical_id]
+    assert summary["candidate_accounting_total"] == 1
+    assert summary["candidate_accounting_complete"] is True

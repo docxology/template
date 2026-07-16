@@ -1,9 +1,14 @@
 ---
 project: humos-template
-task: "Full Repository Hardening and Refactoring Program"
+task: "Iteration 10 - comprehensive repository review, issue closure, and authorized main push"
 effort: E4
-phase: observe
-progress: implementation verification in progress
+phase: verifying
+progress: implementation and local gates complete; final adversarial audit, issue closure, push, and live CI remain
+iteration: 10-comprehensive-review-issue-closure-main-push
+baseline_head_iter10: 75447b6f08e79b7527fb33fb096d4442ce8d094a
+integrated_head_iter10: e17d25ec8
+baseline_origin_main_iter10: 63042c1a23bb787c2f3c755ba4dda4ce8493fe0c
+baseline_dirty_iter10: 195 tracked paths plus 2413 untracked paths and an independently dirty kmyth submodule
 final_head_iter9: 138de2139110af3a563f18d5cfb70cf11509cd94 (external Hermes-Agent commit that absorbed this session's edits — see Decisions)
 iteration: 9-semantic-doc-accuracy-and-active-inference-workflow
 baseline_head_iter9: 1a983de2ddacce2d4674501ea6dee033d950c813
@@ -233,6 +238,90 @@ checks. ISC-270 alone remains open pending a CI run of this branch; the branch i
 not pushed under ISC-271. The previously service-failed Performance job was
 rerun by job ID and passed; Security and Validate Manuscripts remain red only
 on the old `fbddb253` main run because the fixes are intentionally unpushed.
+
+### Iteration 10 Goal
+
+Integrate the preserved literature-methods work with current main, deeply review
+the resulting public repository and all canonical exemplars, close every
+currently validated repository issue, and push the verified integrated result to
+`origin/main` without publishing local-only artifacts or touching the independent
+Kmyth checkout.
+
+### Iteration 10 Criteria
+
+- [x] ISC-277: snapshot the feature branch, `origin/main`, dirty tracked/untracked state, and nested Kmyth status before integration.
+- [x] ISC-278: preserve the 12 feature commits and all dirty user work, then merge current `origin/main` without absorbing Kmyth changes.
+- [x] ISC-279: every new or modified literature method and orchestrator has a direct behavioral test and its stage ordering matches declared dependencies.
+- [x] ISC-280: generated roster, count, coverage-provenance, capability, and documentation surfaces are regenerated from their authoritative definitions.
+- [x] ISC-281: every tracked public `template_*` exemplar passes structural drift and its independently scoped test/coverage contract.
+- [x] ISC-282: CI-scoped Ruff, formatting, mypy, Bandit, no-mocks, regression, infrastructure, confidentiality, generated-artifact, and pre-push gates pass.
+- [x] ISC-283: GitHub issues 37, 38, and 39 are individually probed against current state and closed only when their acceptance condition is evidenced.
+- [x] ISC-284: Anti: scraped full text, local `.ski` sidecars, transient TeX/web outputs, and other unreviewed local build residue are not added to the public commit.
+- [x] ISC-285: Anti: the independent dirty `infrastructure/steganography/kmyth` checkout and ignored local exemplars are neither edited nor committed.
+- [x] ISC-286: a fresh-context adversarial audit reports no unresolved medium/high correctness, security, or developer-experience finding in the final diff.
+- [ ] ISC-287: the reviewed commit reaches `origin/main`, the remote SHA is re-read, and required GitHub checks are observed on that SHA.
+
+### Iteration 10 Test Strategy
+
+Probe changed literature behavior first; then run its full project coverage gate.
+Regenerate coupled artifacts only through their generators. Run strict public
+drift, generated-doc, and confidentiality checks before the full infrastructure,
+regression, lint, typing, security, and pre-push gates. Verify the final committed
+tree again from Git state, then push and inspect the remote SHA and CI checks.
+
+### Iteration 10 Features
+
+- `main-integration`: preserve and integrate current main; satisfies ISC-277..278.
+- `literature-hardening`: audit and repair methods, configuration, and orchestration; satisfies ISC-279.
+- `public-surface-reconciliation`: regenerate docs and verify all exemplars; satisfies ISC-280..282.
+- `issue-closure-and-ship`: adversarial review, issue closure, commit, push, and live CI probe; satisfies ISC-283..287.
+
+### Iteration 10 Decisions
+
+- ISC-271 remains a true historical criterion for the prior hardening program;
+  this iteration has new explicit authorization to push the completed work to
+  `main`, captured by ISC-287.
+- The dirty Kmyth submodule is a separate repository and remains outside the
+  template commit even though it appears in the superproject status.
+- Generated or scraped artifacts are eligible for commit only when already part
+  of the exemplar's declared tracked evidence contract and reproduced by a
+  verified pipeline; presence in the dirty worktree alone is not authorization.
+- The mandatory advisor checkpoint was attempted through `PAI/TOOLS/Inference.ts`
+  but could not run because the local Claude CLI reported `loggedIn: false`.
+  This environment limitation is recorded rather than represented as advice;
+  fresh Cato review plus the complete empirical gates remain the publication
+  evidence.
+
+### Iteration 10 Verification
+
+- ISC-279: the literature suite passed 1,132 tests with one intentional skip and
+  92.05% branch coverage; config, stage-order, network-boundary, sampling,
+  candidate-accounting, and script-contract tests exercise every changed path.
+- ISC-280: public-project, count, architecture, publication-record, skill index,
+  operation, ownership, and coverage-provenance surfaces were regenerated from
+  their source registries; generated-doc self-checks report 24 public exemplars.
+- ISC-281: strict drift passed for all 24 public exemplars, and every exemplar's
+  isolated project suite passed its declared coverage floor. The Active
+  Inference suite passed 706 tests at 90.59% branch coverage in 709.05 seconds,
+  down from the 2,617.35-second baseline.
+- ISC-282: the CI-scoped infrastructure suite passed 8,725 tests (one skip) at
+  82.94% coverage; the regression tier passed 55 tests. Ruff and Ruff format
+  covered 2,684 files, mypy covered 1,483 source files with zero errors, both
+  Bandit sweeps passed, no-mocks found zero semantic replacements, and all 22
+  blocking health checks passed.
+- ISC-284..285: the staged-path audit excludes ignored raw full text, local
+  sidecars and unrelated build residue, and excludes the dirty Kmyth gitlink;
+  only declared, pipeline-regenerated literature evidence is included.
+- ISC-283: issues 37 and 38 were closed only after their acceptance commits
+  (`d17ff9855`, `f6121fdb6`) were verified as ancestors of `origin/main`;
+  issue 39 was closed after merged tip `1155f56d` was verified and remote branch
+  `redteam/sheaf-integrity-hardening` was deleted.
+- ISC-286: the first Cato pass found one medium documentation defect in the
+  advanced exemplar's runnable enrichment order. The command contract was fixed
+  to `11 → 10 → 05`, guarded by a direct test, and the fresh re-audit returned
+  `CLEAN` with no remaining medium/high finding.
+- ISC-287 remains open until the commit is pushed, the remote SHA is re-read,
+  and required GitHub checks are observed on that SHA.
 
 ## Historical iterations 1–3 — Goal
 

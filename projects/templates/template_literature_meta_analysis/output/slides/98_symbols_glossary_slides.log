@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 00:52
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.1)  15 JUL 2026 12:49
 entering extended mode
  %&-line parsing enabled.
-**/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
+**<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/publi
 c/template/projects/templates/template_literature_meta_analysis/output/slides/9
 8_symbols_glossary_slides.tex
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/98
 _symbols_glossary_slides.tex
 LaTeX2e <2025-11-01>
@@ -1213,7 +1213,7 @@ Package caption Info: longtable package is loaded.
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ))
-(/Users/hum/Library/texmf/tex/latex/seqsplit/seqsplit.sty
+(<home>/Library/texmf/tex/latex/seqsplit/seqsplit.sty
 Package: seqsplit 2006/08/07 v0.1 Splitting long sequences (DNA, RNA, proteins,
  etc.) 
 )
@@ -1227,7 +1227,7 @@ Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
 \BKM@id=\count399
 ))
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/98
 _symbols_glossary_slides.aux)
 \openout1 = `98_symbols_glossary_slides.aux'.
@@ -1591,7 +1591,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/98
 _symbols_glossary_slides.nav) [1
 
@@ -1645,7 +1645,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \openout7 = `98_symbols_glossary_slides.snm'.
 
 
-(/Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
+(<home>/Documents/GitHub/HumOS/projects/platform/hum-docxology/repos/public
 /template/projects/templates/template_literature_meta_analysis/output/slides/98
 _symbols_glossary_slides.aux)
  ***********
@@ -1656,12 +1656,12 @@ L3 programming layer <2026-01-19>
 Here is how much of TeX's memory you used:
  30819 strings out of 469709
  621857 string characters out of 5466024
- 1170056 words of memory out of 5000000
+ 1170057 words of memory out of 5000000
  58928 multiletter control sequences out of 15000+600000
  630341 words of font info for 65 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  101i,11n,114p,1178b,697s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on /Users/hum/Documents/GitHub/HumOS/projects/platform/hum-docxo
+Output written on <home>/Documents/GitHub/HumOS/projects/platform/hum-docxo
 logy/repos/public/template/projects/templates/template_literature_meta_analysis
 /output/slides/98_symbols_glossary_slides.pdf (2 pages).

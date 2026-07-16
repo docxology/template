@@ -8,36 +8,16 @@ Tests the complete output copying pipeline:
 - Error handling for missing source files
 """
 
-import importlib.util
 import shutil
-import sys
-from pathlib import Path
 
 import pytest
 
 from infrastructure.core.files.cleanup import clean_final_output_directory, clean_output_directory
-
-# Add repo root to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-# Import the output copying module functions
-# We need to add scripts to path first
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
-
-# Now import the module (avoiding the leading digit in filename)
-
-spec = importlib.util.spec_from_file_location(
-    "copy_outputs",
-    Path(__file__).parent.parent.parent / "scripts" / "05_copy_outputs.py",
+from infrastructure.core.files.operations import copy_final_deliverables
+from infrastructure.validation.output.validator import (
+    validate_copied_outputs,
+    validate_output_structure,
 )
-assert spec is not None
-assert spec.loader is not None
-copy_outputs = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(copy_outputs)
-
-copy_final_deliverables = copy_outputs.copy_final_deliverables
-validate_copied_outputs = copy_outputs.validate_copied_outputs
-validate_output_structure = copy_outputs.validate_output_structure
 
 
 @pytest.fixture

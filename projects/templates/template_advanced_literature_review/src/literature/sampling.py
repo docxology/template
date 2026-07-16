@@ -66,7 +66,7 @@ def sample_papers(papers: list[Paper], *, fraction: float, seed: int) -> list[Pa
         return list(papers)
 
     n = len(papers)
-    target = max(1, int(round(n * fraction)))
+    target = max(1, round(n * fraction))
     if target >= n:
         return list(papers)
 

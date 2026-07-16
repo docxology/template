@@ -20,13 +20,13 @@ The `tests/` directory contains repository-wide tests for infrastructure, integr
 not prove that every dependency is real. Run `--inventory` to classify
 `pytest.monkeypatch` operations. `setenv`, `delenv`, and `chdir` are reported as
 environment isolation, while `setattr`, `setitem`, and their deletion variants
-are conservatively reported as dependency-replacement debt. The inventory is
-advisory until [`TEST-STANDIN-DEBT-1`](../TO-DO.md#test-standin-debt-1--replace-semantic-monkeypatch-stand-ins)
-reaches zero.
+are conservatively reported as dependency-replacement debt. CI and pre-push
+enforce a zero ceiling for dependency replacements; environment isolation is
+reported separately and remains permitted.
 
 ```bash
 uv run python scripts/audit/verify_no_mocks.py
-uv run python scripts/audit/verify_no_mocks.py --inventory
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 ```
 
 ## Current Subtrees

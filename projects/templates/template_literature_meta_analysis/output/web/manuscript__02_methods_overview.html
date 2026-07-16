@@ -214,9 +214,9 @@ scripts.</p>
 <h2 id="pipeline-stages">Pipeline Stages</h2>
 <ol type="1">
 <li><p><strong>Retrieval</strong> (<code>01_literature_search.py</code>)
-— dispatch the configured query across 9 engines (arXiv, OpenAlex,
+— dispatch the configured query across 10 engines (arXiv, OpenAlex,
 Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-and bioRxiv/medRxiv), merge, and de-duplicate into
+bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into
 <code>corpus.jsonl</code>. Each engine is an isolated adapter exposing a
 uniform <code>search(query) -&gt; list[Paper]</code> interface; engines
 that are keyless need no credentials, while Semantic Scholar uses a key
@@ -267,8 +267,8 @@ and hypotheses all come from <code>manuscript/config.yaml</code>.</p>
 queries, relevance keywords, start year, max results, resume/clear
 behaviour</li>
 <li><strong>Engine toggles</strong>: arXiv, OpenAlex, Semantic Scholar,
-Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv
-(each independently enabled or disabled)</li>
+Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and
+medRxiv (each independently enabled or disabled)</li>
 <li><strong>SovietRxiv/ChinaRxiv settings</strong>: optional
 <code>api_email</code> for the polite pool, <code>source</code> filter
 (<code>russiarxiv</code> or <code>chinaxiv</code>)</li>

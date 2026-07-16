@@ -112,7 +112,7 @@ repos:
         verbose: true
 
       - id: pre-push-quick
-        name: generated-artifact guard + lexical mock-framework gate + hook smoke pytest
+        name: generated-artifact guard + strict no-stand-ins policy + hook smoke pytest
         entry: bash
         args:
           - -eo
@@ -124,6 +124,8 @@ repos:
             uv run python scripts/audit/check_tracked_generated_artifacts.py &&
             uv run python scripts/audit/check_tracked_all.py &&
             uv run python scripts/audit/verify_no_mocks.py &&
+            uv run python scripts/audit/verify_no_mocks.py
+            --inventory --max-dependency-replacements 0 &&
             uv run pytest tests/infra_tests/git_hook_smoke/
             -q --maxfail=1 --import-mode=importlib
         language: system
@@ -149,6 +151,10 @@ repos:
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
             uv run python scripts/audit/check_template_drift.py --strict &&
+            uv run python scripts/docgen/api_reference.py --check &&
+            uv run python scripts/docgen/exemplar_roster.py --check &&
+            uv run python scripts/docgen/counts.py --check &&
+            uv run python scripts/docgen/publication_records.py --check &&
             uv run pytest
             tests/infra_tests/test_docs_discovery_consistency.py::test_root_agents_is_public_repo_contract_not_personal_memory
             -q --import-mode=importlib
@@ -259,7 +265,7 @@ repos:
             uv run python scripts/gates/skill_reachability_check.py
         language: system
         pass_filenames: false
-        stages: [pre-commit, manual]
+        stages: [pre-commit, pre-push, manual]
         always_run: true
         verbose: true
 

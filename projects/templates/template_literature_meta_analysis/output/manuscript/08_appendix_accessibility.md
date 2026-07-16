@@ -47,4 +47,4 @@ principles:
 The default corpus is synthetic and labelled as such; the manuscript does not present
 fixture-derived numbers as empirical findings about modafinil. Live findings require
 a real retrieval run with regenerated artifacts — as produced in this instance, which
-retrieved 2334 real records from 9 live engines.
+retrieved 2334 real records from 10 live engines.

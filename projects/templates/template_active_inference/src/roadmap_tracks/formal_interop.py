@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -512,44 +513,47 @@ def build_proof_extraction_index(project_root: Path) -> dict[str, Any]:
     }
 
 
-def write_formal_interop_artifacts(project_root: Path) -> dict[str, Path]:
-    """Write formal interop artifacts to the output path."""
-    root = project_root.resolve()
+def _formal_interop_artifact_builders(
+    root: Path,
+) -> dict[str, tuple[Path, Callable[[Path], dict[str, Any]]]]:
+    """Return the single registry for formal-interoperability output builders."""
     return {
-        "model_checking": _write_json(
+        "model_checking": (
             root / "output" / "reports" / "model_checking_witnesses.json",
-            build_model_checking_witnesses(root),
+            build_model_checking_witnesses,
         ),
-        "interop": _write_json(
-            root / "output" / "data" / "interop_roundtrip_report.json",
-            build_interop_roundtrip_report(root),
-        ),
-        "gnn_roundtrip": _write_json(
-            root / "output" / "data" / "gnn_roundtrip_report.json",
-            build_gnn_roundtrip_report(root),
-        ),
-        "gnn_lint": _write_json(root / "output" / "reports" / "gnn_lint_report.json", build_gnn_lint_report(root)),
-        "ontology_alias": _write_json(
-            root / "output" / "data" / "ontology_alias_index.json",
-            build_ontology_alias_index(root),
-        ),
-        "ontology_profile": _write_json(
+        "interop": (root / "output" / "data" / "interop_roundtrip_report.json", build_interop_roundtrip_report),
+        "gnn_roundtrip": (root / "output" / "data" / "gnn_roundtrip_report.json", build_gnn_roundtrip_report),
+        "gnn_lint": (root / "output" / "reports" / "gnn_lint_report.json", build_gnn_lint_report),
+        "ontology_alias": (root / "output" / "data" / "ontology_alias_index.json", build_ontology_alias_index),
+        "ontology_profile": (
             root / "output" / "data" / "ontology_profile_matrix.json",
-            build_ontology_profile_matrix(root),
+            build_ontology_profile_matrix,
         ),
-        "lean_theorems": _write_json(
+        "lean_theorems": (
             root / "output" / "reports" / "lean_theorem_inventory.json",
-            build_lean_theorem_inventory(root),
+            build_lean_theorem_inventory,
         ),
-        "lean_graph_world": _write_json(
+        "lean_graph_world": (
             root / "output" / "reports" / "lean_graph_world_inventory.json",
-            build_lean_graph_world_inventory(root),
+            build_lean_graph_world_inventory,
         ),
-        "proof_extraction": _write_json(
+        "proof_extraction": (
             root / "output" / "data" / "proof_extraction_index.json",
-            build_proof_extraction_index(root),
+            build_proof_extraction_index,
         ),
     }
+
+
+def write_formal_interop_artifacts(project_root: Path, *, missing_only: bool = False) -> dict[str, Path]:
+    """Write all formal-interop artifacts, or only missing outputs when requested."""
+    root = project_root.resolve()
+    paths: dict[str, Path] = {}
+    for key, (path, builder) in _formal_interop_artifact_builders(root).items():
+        if missing_only and path.is_file():
+            continue
+        paths[key] = _write_json(path, builder(root))
+    return paths
 
 
 def validate_formal_interop_artifacts(project_root: Path) -> list[str]:
@@ -580,7 +584,7 @@ def validate_formal_interop_artifacts(project_root: Path) -> list[str]:
         issues.append("gnn_lint_report.json is stale relative to gnn sources")
     gnn_lint_rows_ok = all_rows(
         gnn_lint,
-        lambda row: (
+        lambda row: bool(
             row.get("ok") is True
             and row.get("shape")
             and row.get("dtype")
@@ -597,7 +601,7 @@ def validate_formal_interop_artifacts(project_root: Path) -> list[str]:
     ontology_profile = _load_json(root / "output" / "data" / "ontology_profile_matrix.json")
     profile_rows_ok = all_rows(
         ontology_profile,
-        lambda row: (
+        lambda row: bool(
             row.get("profile_kind") in {"gnn_variable", "graph_world_model", "toy_benchmark_model"}
             and row.get("model")
             and row.get("variable")

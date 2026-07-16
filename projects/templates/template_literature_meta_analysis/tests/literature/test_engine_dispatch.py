@@ -7,7 +7,7 @@ def _args(**skip_flags: bool) -> argparse.Namespace:
     return argparse.Namespace(**skip_flags)
 
 
-def test_engine_specs_covers_all_nine_engines_in_expected_order() -> None:
+def test_engine_specs_covers_all_ten_engines_in_expected_order() -> None:
     names = tuple(spec.name for spec in ENGINE_SPECS)
     assert names == (
         "arxiv",
@@ -19,6 +19,7 @@ def test_engine_specs_covers_all_nine_engines_in_expected_order() -> None:
         "chinarxiv",
         "europepmc",
         "biorxiv",
+        "medrxiv",
     )
 
 
@@ -96,7 +97,7 @@ def test_engine_enabled_special_engines_still_honor_skip_flag() -> None:
 def test_engine_enabled_special_engines_honor_config_toggle_regression() -> None:
     """Regression: engine_enabled() previously ignored the `engines` config map
     for arxiv/semantic_scholar/openalex, contradicting search_runner.py's real
-    per-engine gating which honors the config toggle for all nine engines."""
+    per-engine gating which honors the config toggle for all ten engines."""
     for name, skip_flag in (
         ("arxiv", "skip_arxiv"),
         ("semantic_scholar", "skip_s2"),

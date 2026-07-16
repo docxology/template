@@ -8,7 +8,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 
 | File | Trigger | Purpose |
 |---|---|---|
-| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **12 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; job-level `hashFiles()` is invalid and was removed; see [`AGENTS.md`](AGENTS.md)) |
+| [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **15 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; job-level `hashFiles()` is invalid and was removed; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
 
@@ -27,7 +27,8 @@ flowchart TB
     LINT --> DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
     VNM --> TI[test-infra<br/>ubuntu × py310–312 + macOS × py312<br/>≥ 60% coverage]
-    VNM --> TP[test-project<br/>9 exemplars × py310/py312 = 18 ubuntu jobs<br/>each ≥ 90% own src/]
+    VNM --> TR[test-regression<br/>claim-binding pins]
+    VNM --> TP[test-project<br/>generated public roster × py310/py312<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
     TI --> PERF[performance<br/>import time ≤ 5 s]
     TP --> PERF

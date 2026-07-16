@@ -1,0 +1,22 @@
+claims:
+  - claim_id: configured-default-search-term
+    kind: string
+    value: exoplanet atmospheres
+    source: projects/templates/template_advanced_literature_review/manuscript/config.yaml project_config.search.term
+    source_tier: project_config
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: configured-search-phase-count
+    kind: number
+    value: 3
+    source: projects/templates/template_advanced_literature_review/manuscript/config.yaml project_config.search_phases
+    source_tier: project_config
+    freshness: active
+    artifact_path: manuscript/config.yaml
+  - claim_id: offline-replay-citation-count
+    kind: number
+    value: 2
+    source: projects/templates/template_advanced_literature_review/src/deep_research/fixtures/recorded_report.json citations
+    source_tier: fixture
+    freshness: active
+    artifact_path: src/deep_research/fixtures/recorded_report.json

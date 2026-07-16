@@ -5,7 +5,7 @@ from __future__ import annotations
 import random
 import time
 from collections.abc import Callable
-from typing import Any, Optional
+from typing import Any
 
 import requests
 
@@ -23,7 +23,7 @@ def request_with_retry(
     headers: dict[str, str] | None = None,
     timeout: float = 30,
     max_retries: int = DEFAULT_MAX_RETRIES,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
     stream: bool = False,
     **kwargs: Any,
 ) -> requests.Response:
@@ -47,13 +47,23 @@ def request_with_retry(
             last_exc = exc
             if attempt >= max_retries:
                 raise
-            sleep_fn(min(30.0, DEFAULT_RETRY_BASE_SECONDS * (2**attempt) + random.uniform(0, 0.5)))
+            sleep_fn(
+                min(
+                    30.0,
+                    DEFAULT_RETRY_BASE_SECONDS * (2**attempt) + random.uniform(0, 0.5),
+                )
+            )
             continue
 
         if response.status_code in RETRYABLE_STATUS:
             if attempt >= max_retries:
                 response.raise_for_status()
-            sleep_fn(min(30.0, DEFAULT_RETRY_BASE_SECONDS * (2**attempt) + random.uniform(0, 0.5)))
+            sleep_fn(
+                min(
+                    30.0,
+                    DEFAULT_RETRY_BASE_SECONDS * (2**attempt) + random.uniform(0, 0.5),
+                )
+            )
             continue
 
         response.raise_for_status()

@@ -302,13 +302,14 @@ rules live in [`AGENTS.md`](AGENTS.md#rendering-pipeline).
 ### No Mocks Policy
 
 Do not introduce `MagicMock`, `mocker.patch`, `unittest.mock`, or another
-mocking framework. The enforced command is a lexical framework gate; it does
-not prove that every dependency is real. Use the advisory inventory to expose
-and migrate existing `monkeypatch.setattr`/`setitem` dependency replacements.
+mocking framework. The lexical command proves prohibited framework syntax is
+absent; the inventory classifies semantic replacements. CI and pre-push enforce
+a zero ceiling for dependency replacements while permitting separately
+classified environment isolation.
 
 ```bash
 uv run python scripts/audit/verify_no_mocks.py
-uv run python scripts/audit/verify_no_mocks.py --inventory
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 ```
 
 **Patterns**:

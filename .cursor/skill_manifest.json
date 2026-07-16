@@ -814,6 +814,24 @@
       "cursor_at": "projects/templates/template_active_inference/.agents/skills/template-active-inference/SKILL.md"
     },
     {
+      "name": "template-advanced-literature-review",
+      "description": "Multi-phase literature-review exemplar with phase-aware retrieval, filtering, provenance, and cross-phase validation.",
+      "path": "projects/templates/template_advanced_literature_review/.agents/skills/template-advanced-literature-review/SKILL.md",
+      "cursor_at": "projects/templates/template_advanced_literature_review/.agents/skills/template-advanced-literature-review/SKILL.md"
+    },
+    {
+      "name": "Advanced Multi-Phase Literature Retrieval",
+      "description": "Operations for phase-aware federated retrieval across ten literature engines, preserving provenance from broad discovery through focused synthesis.",
+      "path": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md",
+      "cursor_at": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md"
+    },
+    {
+      "name": "Advanced Literature Manuscript Injection",
+      "description": "Phase-aware tooling for injecting advanced-review evidence and statistics into Markdown manuscript templates.",
+      "path": "projects/templates/template_advanced_literature_review/src/manuscript/SKILL.md",
+      "cursor_at": "projects/templates/template_advanced_literature_review/src/manuscript/SKILL.md"
+    },
+    {
       "name": "template-autopoiesis",
       "description": "Combinatoric grammar that deterministically generates whole runnable child projects (src/, tests/, scripts/, manuscript/) from a seed — recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
       "path": "projects/templates/template_autopoiesis/.agents/skills/template-autopoiesis/SKILL.md",
@@ -887,7 +905,7 @@
     },
     {
       "name": "Systematic Literature Retrieval",
-      "description": "Operations for federated API querying across OpenAlex, Semantic Scholar, and arXiv.",
+      "description": "Operations for federated API querying across ten literature engines (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, medRxiv).",
       "path": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/literature/SKILL.md"
     },
@@ -896,6 +914,12 @@
       "description": "Tooling for injecting JSON/CSV statistics into Markdown evaluation templates.",
       "path": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md",
       "cursor_at": "projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md"
+    },
+    {
+      "name": "Reproducibility Workflow-Graph Assessment",
+      "description": "LLM-based extraction of per-paper workflow graphs and content/structural reproducibility scoring.",
+      "path": "projects/templates/template_literature_meta_analysis/src/reproducibility/SKILL.md",
+      "cursor_at": "projects/templates/template_literature_meta_analysis/src/reproducibility/SKILL.md"
     },
     {
       "name": "Data Visualization Library",

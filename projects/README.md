@@ -33,12 +33,12 @@ Paths under `projects/` are organized as **typed subfolders** (`templates/`, `ac
 - [`templates/template_autoresearch_project/`](templates/template_autoresearch_project/) — AutoResearch exemplar (deterministic plan/evidence/claim/artifact/readiness loop)
 - [`templates/template_autoscientists/`](templates/template_autoscientists/) — AutoScientists coordination-mechanism testbed
 - [`templates/template_active_inference/`](templates/template_active_inference/) — Active Inference multi-track exemplar (analytical, pymdp, sheaf manuscript, Lean/GNN/ontology)
+- [`templates/template_advanced_literature_review/`](templates/template_advanced_literature_review/) — advanced multi-phase literature-review exemplar with phase provenance and deterministic offline replay
 - [`templates/template_autopoiesis/`](templates/template_autopoiesis/) — combinatoric grammar generating whole runnable child projects (src/tests/scripts/manuscript) from a seed
 - [`templates/template_eda_notebook/`](templates/template_eda_notebook/) — EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs
 - [`templates/template_madlib/`](templates/template_madlib/) — conditional token-injection manuscript generator with QA probes and authoring contract
 - [`templates/template_newspaper/`](templates/template_newspaper/) — newspaper layout/typography exemplar
 - [`templates/template_pitch_deck/`](templates/template_pitch_deck/) — pitch deck / slide deck scaffold exemplar
-- [`templates/template_pitch_deck/`](templates/template_pitch_deck/) — pitch deck / slide deck scaffold
 - [`templates/template_pools_rules_tools/`](templates/template_pools_rules_tools/) — fonds/rules/tools resource-pool integration exemplar
 - [`templates/template_search_project/`](templates/template_search_project/) — literature-search pipeline with auto-populated BibTeX and optional local LLM synthesis
 - [`templates/template_sia/`](templates/template_sia/) — SIA self-improvement harness exemplar
@@ -53,13 +53,16 @@ root `README.md`/`AGENTS.md`) plus a tested forkability contract:
 validation commands and infrastructure dependencies are exemplar-specific; read
 the chosen exemplar's `STANDALONE.md`. This is a public repo: only the public
 canonical exemplars under `templates/` are tracked; every other lifecycle folder
-under `projects/` remains local-only and is blocked by
-`scripts/audit/check_tracked_projects.py` in pre-push + CI. Examples in this
+under `projects/` remains local-only and is blocked by the project constituent
+of `scripts/audit/check_tracked_all.py` in pre-push + CI. Examples in this
 documentation default to
 `projects/templates/template_code_project/` unless a doc explicitly compares
 projects.
 
-**Current** names from `discover_projects()` are listed in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerate after layout changes).
+**Current public CI/documentation names** are listed in
+[`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)
+(regenerate after layout changes). Runtime `discover_projects()` may include
+local private symlinks and is intentionally broader.
 
 ### The permanent exemplars at a glance
 
@@ -73,6 +76,7 @@ projects.
 | [`template_autoresearch_project`](templates/template_autoresearch_project/) | Deterministic AutoResearch loop | yes (`src/loop.py`) | no (read-only validation) | no | see canonical facts | see canonical facts |
 | [`template_autoscientists`](templates/template_autoscientists/) | Coordination-mechanism testbed | yes (`src/coordination/*`) | no (curated) | no | see canonical facts | see canonical facts |
 | [`template_active_inference`](templates/template_active_inference/) | Active Inference multi-track research | yes (multiple tracks) | no (curated) | yes | see canonical facts | see canonical facts |
+| [`template_advanced_literature_review`](templates/template_advanced_literature_review/) | Advanced multi-phase literature review | yes (`src/multi_phase/*`) | fixture-backed | yes | see canonical facts | see canonical facts |
 | [`template_eda_notebook`](templates/template_eda_notebook/) | Exploratory data analysis notebook | yes (`src/eda/*`) | n/a | yes (analysis figures) | see canonical facts | see canonical facts |
 | [`template_formal`](templates/template_formal/) | Strongly-typed multiagent ant-robot colony (ADTs, session types, affine-discipline handles) | yes (`src/template_formal/colony/*`) | no (curated) | yes (2 figures) | see canonical facts | see canonical facts |
 | [`template_madlib`](templates/template_madlib/) | Conditional token-injection manuscript generator | yes (`src/tokens.py`, `src/composition.py`) | no (curated) | token-density figure | see canonical facts | see canonical facts |
@@ -190,6 +194,7 @@ between lifecycle folders instead of committing it here.
 | Directory            | Role                      | Tests | Coverage |
 |----------------------|---------------------------|-------|----------|
 | `templates/template_active_inference/` | Active Inference multi-track exemplar (analytical + pymdp + sheaf manuscript) | see canonical facts | see canonical facts |
+| `templates/template_advanced_literature_review/` | Advanced multi-phase literature-review exemplar with phase provenance and offline replay | see canonical facts | see canonical facts |
 | `templates/template_autopoiesis/` | Combinatoric-grammar project-generation exemplar | see canonical facts | see canonical facts |
 | `templates/template_code_project/`    | Code-centric exemplar (optimization + dashboard) | see canonical facts | see canonical facts |
 | `templates/template_data_descriptor/` | Dataset descriptor/data-paper exemplar | see canonical facts | see canonical facts |
@@ -968,6 +973,7 @@ infrastructure compliance:
 ### 🎯 **Permanent Exemplars**
 
 - **template_active_inference**: Active Inference multi-track exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
+- **template_advanced_literature_review**: Advanced multi-phase literature-review exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autopoiesis**: Combinatoric-grammar project-generation exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoresearch_project**: AutoResearch exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)
 - **template_autoscientists**: AutoScientists coordination exemplar (measured tests/coverage in `docs/_generated/COUNTS.md`)

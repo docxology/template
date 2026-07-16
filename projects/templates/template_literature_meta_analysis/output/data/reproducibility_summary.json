@@ -1,0 +1,9 @@
+{
+  "mean_composite_score": 0.8120576425808606,
+  "n_papers_scored": 109,
+  "n_low_score": 1,
+  "low_score_threshold": 0.4,
+  "n_skipped_no_fulltext": 4,
+  "n_skipped_unparseable_pdf": 0,
+  "fulltext_available": true
+}

@@ -16,7 +16,10 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 
 ## Policy
 
-- **`projects/` is a rotating set** of workspaces. The only path **guaranteed** as the long-term control-positive layout is **`projects/templates/template_code_project/`**. Everything else appears or disappears as maintainers promote or move projects.
+- **Public canonical templates are generated scope.** Their tracked roster is
+  [active_projects.md](active_projects.md); private lifecycle mirrors may appear
+  or disappear locally. Use `projects/templates/template_code_project/` as the
+  default control-positive walkthrough, not as a second roster definition.
 - **[active_projects.md](active_projects.md)** lists the public CI/documentation project scope **at generation time**. Runtime `discover_projects()` may include local-only private symlinks; do not duplicate that local roster in RUN_GUIDE, PAI, security tables, or similar.
 - For walkthroughs, commands, and “see also” paths, use **`projects/templates/template_code_project/`** as the control-positive exemplar unless the doc’s purpose is to compare layouts.
 - Describe other work as folder patterns (`projects/active/{name}/`, `projects/working/{name}/`, `projects/archive/{name}/`) rather than enumerating sibling projects in prose as if permanent.

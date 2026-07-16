@@ -160,7 +160,15 @@ class Corpus:
         papers = self._papers.values()
         total = len(self._papers)
         if total == 0:
-            return {"total": 0, "with_doi": 0, "with_abstract": 0, "with_authors": 0, "with_year": 0, "preprints": 0, "mean_completeness": 0.0}
+            return {
+                "total": 0,
+                "with_doi": 0,
+                "with_abstract": 0,
+                "with_authors": 0,
+                "with_year": 0,
+                "preprints": 0,
+                "mean_completeness": 0.0,
+            }
         with_doi = sum(1 for p in papers if p.doi)
         with_abstract = sum(1 for p in papers if p.abstract and p.abstract.strip())
         with_authors = sum(1 for p in papers if p.authors)

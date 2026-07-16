@@ -42,7 +42,7 @@ review_gates:
   - cross_temporal_consistency
 artifact_expectations:
   - output/data/phase_1_corpus.jsonl
-  - output/data/phase_2_corpus.jsonl  
+  - output/data/phase_2_corpus.jsonl
   - output/data/phase_3_corpus.jsonl
   - output/data/merged_corpus.jsonl
   - output/data/phase_statistics.json
@@ -74,27 +74,4 @@ benchmark_rubric:
       weight: 1.5
     - name: render_success
       weight: 1.0
-llm_prompt_guidance: "Use LLM filtering for abstract content analysis with phase-appropriate methodological criteria; maintain phase attribution in all extractions; validate cross-temporal consistency of knowledge graph assertions."
-phase_configuration:
-  supported_architectures:
-    - three_phase_temporal  # foundation -> development -> current
-    - five_phase_methodological  # theory -> methods -> validation -> application -> synthesis
-    - custom_domain_specific
-  temporal_boundaries:
-    enforce_strict_boundaries: true
-    allow_overlap_windows: false
-    require_methodological_justification: true
-  filtering_pipeline:
-    deterministic_filters:
-      - temporal_boundary
-      - venue_quality
-      - citation_threshold
-      - language_filter
-    llm_filters:
-      - abstract_relevance
-      - methodological_phase_fit
-      - cross_phase_validation_potential
-  cross_validation:
-    hypothesis_consistency_checks: true
-    temporal_trend_validation: true
-    methodological_progression_tracking: true
+llm_prompt_guidance: "Use LLM filtering for phase-appropriate abstract analysis; preserve phase attribution, enforce configured temporal boundaries, and validate cross-temporal consistency of knowledge-graph assertions."

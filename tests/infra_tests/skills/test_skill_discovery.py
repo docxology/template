@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.skills.cli import main as skills_cli_main
 from infrastructure.skills.discovery import (
     DEFAULT_SKILL_SEARCH_ROOTS,
@@ -94,6 +95,21 @@ class TestDiscoverInFixtureRepo:
         assert len(skills) == 1
         assert skills[0].name == "doc-skill"
 
+    def test_unknown_ignored_template_cannot_poison_public_discovery(self, tmp_path: Path) -> None:
+        public = tmp_path / "projects/templates/template_code_project/src/public"
+        ignored = tmp_path / "projects/templates/template_local_only/src/private"
+        public.mkdir(parents=True)
+        ignored.mkdir(parents=True)
+        duplicate = "---\nname: same-name\ndescription: fixture\n---\n"
+        (public / "SKILL.md").write_text(duplicate, encoding="utf-8")
+        (ignored / "SKILL.md").write_text(duplicate, encoding="utf-8")
+
+        skills = discover_skills(tmp_path)
+
+        assert [skill.path_posix for skill in skills] == [
+            "projects/templates/template_code_project/src/public/SKILL.md"
+        ]
+
 
 class TestManifestRoundTrip:
     def test_write_and_check(self, tmp_path: Path) -> None:
@@ -171,6 +187,18 @@ class TestTemplateRepository:
         assert (
             "projects/templates/template_pools_rules_tools/.agents/skills/template-pools-rules-tools/SKILL.md" in paths
         )
+
+    def test_discovered_template_skills_belong_to_public_roster(self) -> None:
+        root = _template_repo_root()
+        skills = discover_skills(root)
+        discovered_projects = {
+            "/".join(skill.relative_path.parts[:3])
+            for skill in skills
+            if skill.relative_path.parts[:2] == ("projects", "templates")
+        }
+        expected_projects = {f"projects/{name}" for name in PUBLIC_PROJECT_NAMES}
+
+        assert discovered_projects == expected_projects
 
     def test_repository_agent_skills_present(self) -> None:
         root = _template_repo_root()

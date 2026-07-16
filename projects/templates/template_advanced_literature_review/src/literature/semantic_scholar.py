@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 import random
 import time
-from typing import Optional, Callable
+from collections.abc import Callable
 
 import requests
 
@@ -97,7 +97,7 @@ def _request_with_retry(
     url: str,
     params: dict,
     max_retries: int = MAX_RETRIES,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> requests.Response:
     """Make an HTTP GET request with retry on 429 rate-limit errors.
 
@@ -146,8 +146,8 @@ def search_semantic_scholar(
     query: str,
     max_results: int = 100,
     base_url: str = S2_API_URL,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Search Semantic Scholar for papers matching a query.
 
@@ -238,14 +238,18 @@ def search_semantic_scholar(
         if session is None:
             http.close()
 
-    logger.info("S2 search complete: %d total papers for query '%s'", len(all_papers), query[:80])
+    logger.info(
+        "S2 search complete: %d total papers for query '%s'",
+        len(all_papers),
+        query[:80],
+    )
     return all_papers
 
 
 def get_paper_details(
     paper_id: str,
     base_url: str = S2_API_URL,
-    session: Optional[requests.Session] = None,
+    session: requests.Session | None = None,
 ) -> Paper:
     """Retrieve detailed metadata for a single paper by ID.
 
@@ -278,7 +282,7 @@ def get_citations(
     paper_id: str,
     max_results: int = 100,
     base_url: str = S2_API_URL,
-    session: Optional[requests.Session] = None,
+    session: requests.Session | None = None,
 ) -> list[Citation]:
     """Retrieve papers that cite the given paper.
 

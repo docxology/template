@@ -25,7 +25,14 @@ class EngineSpec:
     skip_flag: str
     config_key: str
 
-    def enabled(self, args: argparse.Namespace, engines: dict[str, Any], *, fast_api: bool, injected: bool) -> bool:
+    def enabled(
+        self,
+        args: argparse.Namespace,
+        engines: dict[str, Any],
+        *,
+        fast_api: bool,
+        injected: bool,
+    ) -> bool:
         """Process enabled."""
         if getattr(args, self.skip_flag, False):
             return False
@@ -68,7 +75,7 @@ def engine_enabled(
     if spec.name in {"arxiv", "semantic_scholar", "openalex"}:
         if getattr(args, spec.skip_flag, False):
             return False
-        return engines.get(spec.config_key, True)
+        return bool(engines.get(spec.config_key, True))
     return spec.enabled(args, engines, fast_api=fast_api, injected=url_injected)
 
 

@@ -386,5 +386,6 @@ def serialize_nanopubs_to_trig(
         for g in ds.graphs():
             for t in g:
                 combined.get_context(g.identifier).add(t)
-    combined.serialize(destination=str(path), format="trig", encoding="utf-8")
+    serialized = combined.serialize(format="trig", encoding="utf-8")
+    path.write_bytes(serialized.rstrip() + b"\n")
     logger.info("📄 Wrote %d nanopublication(s) in RDF/TriG → %s", len(nanopubs), path)

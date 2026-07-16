@@ -54,7 +54,7 @@ flowchart TB
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
-    VNM --> TP[test-project<br/>per-project: 12 exemplars × py3.10/py3.12 = 24 ubuntu jobs<br/>01_run_tests.py --project per cell]
+    VNM --> TP[test-project<br/>generated public roster × py3.10/py3.12<br/>01_run_tests.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL
@@ -74,7 +74,7 @@ flowchart TB
 
 ### Shared setup — local composite actions
 
-The 12 jobs that need Python all share one local composite action,
+Jobs that need Python share one local composite action,
 [`.github/actions/setup-python-env`](../actions/setup-python-env/action.yml),
 which runs `astral-sh/setup-uv` (with `uv.lock` cache) + `actions/setup-python`.
 The pinned action SHAs and cache config live there once instead of being

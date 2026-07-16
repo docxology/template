@@ -59,9 +59,9 @@ from __future__ import annotations
 import re
 import unicodedata
 from collections import OrderedDict
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
 from io import StringIO
-from typing import Iterable, Iterator
 
 from .corpus import Corpus
 from .models import Paper
@@ -215,6 +215,11 @@ def _escape_latex(text: str) -> str:
     return "".join(_LATEX_SPECIALS.get(ch, ch) for ch in text)
 
 
+def _normalize_field_value(value: str) -> str:
+    """Collapse provider formatting into one whitespace-safe BibTeX field."""
+    return " ".join(value.split())
+
+
 @dataclass
 class BibEntry:
     """A single, minimal BibTeX record (mirrors the shape of
@@ -229,7 +234,7 @@ class BibEntry:
 
     entry_type: str
     citation_key: str
-    fields: "OrderedDict[str, str]" = field(default_factory=OrderedDict)
+    fields: OrderedDict[str, str] = field(default_factory=OrderedDict)
 
     def get(self, name: str, default: str | None = None) -> str | None:
         """Case-insensitive field lookup."""
@@ -258,7 +263,8 @@ def render_entry(entry: BibEntry) -> str:
     items = list(entry.fields.items())
     last_index = len(items) - 1
     for i, (name, raw_value) in enumerate(items):
-        formatted = raw_value if name in _VERBATIM_FIELDS else _escape_latex(raw_value)
+        normalized = _normalize_field_value(raw_value)
+        formatted = normalized if name in _VERBATIM_FIELDS else _escape_latex(normalized)
         suffix = "," if i < last_index else ""
         buf.write(f"  {name}={{{formatted}}}{suffix}\n")
     buf.write("}\n")
@@ -304,7 +310,7 @@ def paper_to_bibentry(paper: Paper, *, used_keys: set[str] | None = None) -> Bib
     )
     citation_key = _disambiguate_key(base_key, used_keys) if used_keys is not None else base_key
 
-    fields: "OrderedDict[str, str]" = OrderedDict()
+    fields: OrderedDict[str, str] = OrderedDict()
     if paper.title:
         fields["title"] = paper.title
     if paper.authors:

@@ -280,6 +280,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | [AGENTS.md](projects/templates/template_code_project/AGENTS.md) | [README.md](projects/templates/template_code_project/README.md) | Code-centric exemplar (canonical, always present) |
 | [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | [AGENTS.md](projects/templates/template_prose_project/AGENTS.md) | [README.md](projects/templates/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
 | [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | [AGENTS.md](projects/templates/template_active_inference/AGENTS.md) | [README.md](projects/templates/template_active_inference/README.md) | Active Inference multi-track exemplar (canonical, always present) |
+| [`projects/templates/template_advanced_literature_review/`](projects/templates/template_advanced_literature_review/) | [AGENTS.md](projects/templates/template_advanced_literature_review/AGENTS.md) | [README.md](projects/templates/template_advanced_literature_review/README.md) | Advanced multi-phase literature-review exemplar with phase provenance and offline replay (canonical, always present) |
 | [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) | [AGENTS.md](projects/templates/template_autopoiesis/AGENTS.md) | [README.md](projects/templates/template_autopoiesis/README.md) | Combinatoric-grammar project-generation exemplar (canonical, always present) |
 | [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | [AGENTS.md](projects/templates/template_autoresearch_project/AGENTS.md) | [README.md](projects/templates/template_autoresearch_project/README.md) | AutoResearch exemplar (canonical, always present) |
 | [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | [AGENTS.md](projects/templates/template_autoscientists/AGENTS.md) | [README.md](projects/templates/template_autoscientists/README.md) | AutoScientists coordination-mechanism testbed exemplar (canonical, always present) |
@@ -757,9 +758,9 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 - combined-union public-project gate (`01_run_tests.py --project-only --all-projects --public-projects`, `DEFAULT_FAIL_UNDER`) : 75% — deliberately lower than the per-project floor because per-project suites only cover their own `src/` while the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project, including rotating private symlinks. Per-project floors remain authoritative.
 - infrastructure/ : 60% minimum
 
-Tests should use real data and computation. The enforced no-mocks command is a
-lexical mock-framework gate; use its advisory `--inventory` mode to see current
-`pytest.monkeypatch` dependency-replacement debt.
+Tests should use real data and computation. The lexical no-mocks gate and the
+semantic inventory are both enforced: dependency replacements must remain at
+zero, while environment/path isolation is classified separately and permitted.
 
 ## Testing Framework
 
@@ -774,7 +775,7 @@ replacement.
 
 ```bash
 uv run python scripts/audit/verify_no_mocks.py
-uv run python scripts/audit/verify_no_mocks.py --inventory
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 ```
 
 This policy ensures:

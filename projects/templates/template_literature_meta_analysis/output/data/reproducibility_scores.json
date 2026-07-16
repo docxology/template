@@ -1,0 +1,2315 @@
+{
+  "doi:10.1016/j.cortex.2026.03.021": {
+    "content_score": 0.33333333333333337,
+    "structural_score": 0.85,
+    "composite_score": 0.5322906474223771,
+    "stage_scores": {
+      "methods": 0.8333333333333333,
+      "experiments": 0.3333333333333333,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 3,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1016/j.drugalcdep.2021.108554": {
+    "content_score": 0.8999999999999999,
+    "structural_score": 1.0,
+    "composite_score": 0.9486832980505138,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1016/j.euroneuro.2012.10.004": {
+    "content_score": 0.6555555555555556,
+    "structural_score": 1.0,
+    "composite_score": 0.8096638534327413,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.7777777777777777,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.expneurol.2024.114969": {
+    "content_score": 0.6380952380952382,
+    "structural_score": 0.85,
+    "composite_score": 0.7364651739090943,
+    "stage_scores": {
+      "methods": 0.7333333333333333,
+      "experiments": 1.0,
+      "sinks": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 11,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1016/j.jpsychires.2021.11.015": {
+    "content_score": 0.8666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9309493362512627,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.7777777777777777,
+      "experiments": 0.5555555555555555,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1016/j.mehy.2023.111230": {
+    "content_score": 0.9333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9660917830792959,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.neuropharm.2006.09.005": {
+    "content_score": 0.85,
+    "structural_score": 1.0,
+    "composite_score": 0.9219544457292888,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.75,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.neuropharm.2019.05.012": {
+    "content_score": 0.6666666666666666,
+    "structural_score": 0.85,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "methods": 0.7777777777777777,
+      "experiments": 0.5555555555555555
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 9,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.6666666666666666
+  },
+  "doi:10.1016/j.pbb.2004.05.005": {
+    "content_score": 0.7499999999999999,
+    "structural_score": 0.85,
+    "composite_score": 0.7984359711335655,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.pbb.2024.173865": {
+    "content_score": 0.8994708994708995,
+    "structural_score": 0.85,
+    "composite_score": 0.8743856497851875,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8148148148148148,
+      "experiments": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 12,
+    "n_edges": 23,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.9166666666666666
+  },
+  "doi:10.1016/j.pnpbp.2018.07.019": {
+    "content_score": 0.7083333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.8416254115301731,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "sinks": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.schres.2011.11.006": {
+    "content_score": 0.5666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.sleep.2019.09.001": {
+    "content_score": 0.8666666666666667,
+    "structural_score": 0.6,
+    "composite_score": 0.7211102550927979,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 0.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/j.smrv.2015.08.007": {
+    "content_score": 0.6666666666666666,
+    "structural_score": 0.85,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "methods": 0.7777777777777777,
+      "experiments": 0.5555555555555555
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1016/j.transproceed.2012.10.033": {
+    "content_score": 0.8888888888888888,
+    "structural_score": 1.0,
+    "composite_score": 0.9428090415820634,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.7777777777777777,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 12,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/s0031-398x(06)70934-1": {
+    "content_score": 0.8166666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9036961141150639,
+    "stage_scores": {
+      "sources": 0.8333333333333333,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/s0270-6644(08)70092-4": {
+    "content_score": 0.8194444444444444,
+    "structural_score": 1.0,
+    "composite_score": 0.9052317076000179,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.7777777777777777,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/s0376-8716(02)00335-6": {
+    "content_score": 0.4111111111111111,
+    "structural_score": 1.0,
+    "composite_score": 0.6411794687223782,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.5555555555555555,
+      "experiments": 1.0,
+      "sinks": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/s0924-977x(07)70191-8": {
+    "content_score": 0.5444444444444444,
+    "structural_score": 1.0,
+    "composite_score": 0.7378647873726218,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.5555555555555555,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/s1388-2457(08)60481-2": {
+    "content_score": 0.5,
+    "structural_score": 1.0,
+    "composite_score": 0.7071067811865476,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.5,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1016/s1570-0232(01)00572-4": {
+    "content_score": 0.9375,
+    "structural_score": 1.0,
+    "composite_score": 0.9682458365518543,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.75,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1017/s0317167100016826": {
+    "content_score": 0.5777777777777777,
+    "structural_score": 0.85,
+    "composite_score": 0.7007932013876212,
+    "stage_scores": {
+      "methods": 0.4444444444444444,
+      "sinks": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 3,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1021/acs.inorgchem.4c03219": {
+    "content_score": 0.8095238095238095,
+    "structural_score": 0.85,
+    "composite_score": 0.8295150620062532,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1024/1661-8157.95.41.1601": {
+    "content_score": 0.8666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9309493362512627,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1038/ncpneuro0134": {
+    "content_score": 0.5666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1038/s41386-020-0680-5": {
+    "content_score": 0.8333333333333334,
+    "structural_score": 0.85,
+    "composite_score": 0.8416254115301732,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1038/sj.bjp.0702893": {
+    "content_score": 0.8888888888888888,
+    "structural_score": 1.0,
+    "composite_score": 0.9428090415820634,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "experiments": 0.611111111111111,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 10,
+    "n_edges": 12,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1046/j.1365-2869.1999.00142.x": {
+    "content_score": 0.763888888888889,
+    "structural_score": 0.85,
+    "composite_score": 0.8057949835755716,
+    "stage_scores": {
+      "methods": 0.75,
+      "experiments": 0.7777777777777777
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 10,
+    "n_edges": 15,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1073/pnas.0705087104": {
+    "content_score": 0.8333333333333334,
+    "structural_score": 0.85,
+    "composite_score": 0.8416254115301732,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1080/08897077.2019.1700584": {
+    "content_score": 0.4523809523809524,
+    "structural_score": 0.85,
+    "composite_score": 0.620099838351704,
+    "stage_scores": {
+      "methods": 0.9166666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 13,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1080/13543784.2026.2634990": {
+    "content_score": 0.5138888888888888,
+    "structural_score": 1.0,
+    "composite_score": 0.7168604389202189,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5555555555555555,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1080/20479700.2022.2054508": {
+    "content_score": 0.5138888888888888,
+    "structural_score": 1.0,
+    "composite_score": 0.7168604389202189,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.5555555555555555,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1093/fampra/cmac060": {
+    "content_score": 0.7,
+    "structural_score": 1.0,
+    "composite_score": 0.8366600265340756,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1093/sleep/17.5.436": {
+    "content_score": 0.9333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9660917830792959,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1093/sleep/29.6.841": {
+    "content_score": 0.6507936507936508,
+    "structural_score": 0.85,
+    "composite_score": 0.7437570861340437,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.5,
+      "experiments": 0.7777777777777777
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.875
+  },
+  "doi:10.1093/sleep/zsad077.1008": {
+    "content_score": 0.7066666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.8406346808612327,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1093/sleepadvances/zpae085": {
+    "content_score": 0.9305555555555556,
+    "structural_score": 1.0,
+    "composite_score": 0.9646530752325188,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.7222222222222222,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 11,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1097/00008877-200203000-00002": {
+    "content_score": 0.6904761904761906,
+    "structural_score": 0.85,
+    "composite_score": 0.7660970969170696,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.25,
+      "experiments": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1097/adm.0000000000001437": {
+    "content_score": 0.9166666666666665,
+    "structural_score": 1.0,
+    "composite_score": 0.957427107756338,
+    "stage_scores": {
+      "sources": 0.8888888888888888,
+      "methods": 0.8333333333333333,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1097/jcp.0000000000001893": {
+    "content_score": 0.9333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9660917830792959,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 1.0,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 3,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1097/ncc.0000000000000349": {
+    "content_score": 0.8222222222222222,
+    "structural_score": 1.0,
+    "composite_score": 0.9067647005823629,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.7777777777777777,
+      "experiments": 0.3333333333333333,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1101/2024.08.08.24311625": {
+    "content_score": 0.4333333333333333,
+    "structural_score": 0.5700000000000001,
+    "composite_score": 0.4969909455915671,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.8333333333333333,
+      "experiments": 0.3333333333333333,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 0.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 0.8
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1111/aphw.12575": {
+    "content_score": 0.8333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9128709291752768,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 1.0,
+      "sinks": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.7142857142857143
+  },
+  "doi:10.1111/dar.12294": {
+    "content_score": 0.9047619047619048,
+    "structural_score": 0.85,
+    "composite_score": 0.8769536014223438,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1111/j.1365-2869.2008.00624.x": {
+    "content_score": 0.7777777777777778,
+    "structural_score": 1.0,
+    "composite_score": 0.8819171036881969,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.8888888888888888,
+      "experiments": 1.0,
+      "sinks": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1111/j.1521-0391.2010.00052.x": {
+    "content_score": 0.8055555555555555,
+    "structural_score": 0.85,
+    "composite_score": 0.8274794391537605,
+    "stage_scores": {
+      "methods": 0.8333333333333333,
+      "experiments": 0.7777777777777778
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1111/jsr.14415": {
+    "content_score": 0.8958333333333331,
+    "structural_score": 1.0,
+    "composite_score": 0.9464847243000455,
+    "stage_scores": {
+      "sources": 0.8333333333333333,
+      "methods": 0.8333333333333333,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1136/bcr-2020-239781": {
+    "content_score": 0.9166666666666666,
+    "structural_score": 0.7999999999999999,
+    "composite_score": 0.8563488385776752,
+    "stage_scores": {
+      "sources": 0.8333333333333333,
+      "methods": 0.8333333333333333,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 0.5,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.5,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1139/jpn.0556": {
+    "content_score": 0.7333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.8563488385776752,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1162/jocn_a_01836": {
+    "content_score": 0.8666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9309493362512627,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.8333333333333333,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1176/ajp.2007.164.4.684": {
+    "content_score": 0.33333333333333337,
+    "structural_score": 1.0,
+    "composite_score": 0.5773502691896258,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 1.0,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1176/appi.ajp.2015.14121582": {
+    "content_score": 0.65,
+    "structural_score": 1.0,
+    "composite_score": 0.806225774829855,
+    "stage_scores": {
+      "sources": 0.3333333333333333,
+      "methods": 0.6,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1176/pn.42.17.0016a": {
+    "content_score": 0.4920634920634921,
+    "structural_score": 0.85,
+    "composite_score": 0.6467255741456095,
+    "stage_scores": {
+      "sources": 0.3333333333333333,
+      "methods": 0.5555555555555555,
+      "experiments": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1177/0269881105048995": {
+    "content_score": 0.8412698412698414,
+    "structural_score": 0.85,
+    "composite_score": 0.8456236545174013,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 0.7777777777777778,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.8333333333333334
+  },
+  "doi:10.1177/08830738040190120701": {
+    "content_score": 0.8253968253968254,
+    "structural_score": 0.85,
+    "composite_score": 0.8376080835255242,
+    "stage_scores": {
+      "methods": 0.8888888888888888,
+      "experiments": 0.5,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1177/1479972316661926": {
+    "content_score": 0.8333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9128709291752768,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1186/1752-1947-8-127": {
+    "content_score": 0.7936507936507937,
+    "structural_score": 0.85,
+    "composite_score": 0.8213423005076352,
+    "stage_scores": {
+      "methods": 0.7222222222222222,
+      "experiments": 0.5555555555555555,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 10,
+    "n_edges": 11,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1186/s12890-019-1041-1": {
+    "content_score": 0.92,
+    "structural_score": 0.85,
+    "composite_score": 0.8843076387773657,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1196/annals.1300.021": {
+    "content_score": 0.3333333333333333,
+    "structural_score": 0.85,
+    "composite_score": 0.5322906474223771,
+    "stage_scores": {
+      "methods": 0.6666666666666666,
+      "experiments": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1212/01.con.0000427209.21177.aa": {
+    "content_score": 0.9333333333333333,
+    "structural_score": 0.5785714285714285,
+    "composite_score": 0.7348469228349533,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333334
+    },
+    "structural_components": {
+      "source_consumption": 0.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 0.8571428571428571
+    },
+    "n_nodes": 7,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1212/wnl.86.16_supplement.s1.004": {
+    "content_score": 0.5666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1371/journal.pbio.3003622": {
+    "content_score": 0.6825396825396826,
+    "structural_score": 0.85,
+    "composite_score": 0.7616815149120597,
+    "stage_scores": {
+      "methods": 0.8333333333333333,
+      "experiments": 0.5555555555555555,
+      "sinks": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 13,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1371/journal.pone.0292745": {
+    "content_score": 0.7291666666666665,
+    "structural_score": 1.0,
+    "composite_score": 0.8539125638299665,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "sinks": 0.5
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1513/annalsats.202006-696fr": {
+    "content_score": 0.8749999999999999,
+    "structural_score": 0.8,
+    "composite_score": 0.8366600265340756,
+    "stage_scores": {
+      "sources": 0.8888888888888888,
+      "methods": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 0.6666666666666666,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.3333333333333333,
+      "cohesion": 0.8888888888888888
+    },
+    "n_nodes": 9,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.15537/1658-3175.8812": {
+    "content_score": 0.9222222222222222,
+    "structural_score": 1.0,
+    "composite_score": 0.9603240193925289,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.7777777777777777,
+      "experiments": 0.8333333333333333,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.20944/preprints202409.2363.v1": {
+    "content_score": 0.8999999999999999,
+    "structural_score": 1.0,
+    "composite_score": 0.9486832980505138,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.8
+  },
+  "doi:10.2147/dddt.s2377": {
+    "content_score": 0.5666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.2147/nss.s53132": {
+    "content_score": 0.7142857142857143,
+    "structural_score": 0.85,
+    "composite_score": 0.7791937224739796,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.6666666666666666,
+      "experiments": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.2165/00128413-200012450-00041": {
+    "content_score": 0.0,
+    "structural_score": 0.0,
+    "composite_score": 0.0,
+    "stage_scores": {},
+    "structural_components": {
+      "source_consumption": 0.0,
+      "sink_production": 0.0,
+      "reference_resolution": 0.0,
+      "path_coverage": 0.0,
+      "cohesion": 0.0
+    },
+    "n_nodes": 0,
+    "n_edges": 0,
+    "n_dangling_references": 0,
+    "quote_verification_rate": null
+  },
+  "doi:10.2165/00128413-200715740-00049": {
+    "content_score": 0.9111111111111111,
+    "structural_score": 1.0,
+    "composite_score": 0.9545214042184236,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5555555555555555,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.16666666666666666
+  },
+  "doi:10.2165/00128415-201113430-00010": {
+    "content_score": 1.0,
+    "structural_score": 0.6,
+    "composite_score": 0.7745966692414834,
+    "stage_scores": {
+      "sources": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 0.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 1,
+    "n_edges": 0,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.2174/1570159x23999250210110914": {
+    "content_score": 0.8333333333333333,
+    "structural_score": 0.85,
+    "composite_score": 0.8416254115301731,
+    "stage_scores": {
+      "methods": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 2,
+    "n_edges": 1,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.22270/jddt.v12i5-s.5634": {
+    "content_score": 0.8333333333333333,
+    "structural_score": 0.85,
+    "composite_score": 0.8416254115301731,
+    "stage_scores": {
+      "methods": 0.8333333333333333,
+      "experiments": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.26226/morressier.5d1a036f57558b317a13ff96": {
+    "content_score": 0.9555555555555555,
+    "structural_score": 1.0,
+    "composite_score": 0.9775252199076786,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.7777777777777777,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.31525/ct1-nct03914118": {
+    "content_score": 0.35555555555555557,
+    "structural_score": 1.0,
+    "composite_score": 0.5962847939999439,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.7777777777777777,
+      "experiments": 1.0,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.3357/asem.2259.2008": {
+    "content_score": 0.9333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9660917830792959,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 9,
+    "n_edges": 11,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.3389/fnbeh.2019.00193": {
+    "content_score": 0.8333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9128709291752768,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.3389/fnsys.2014.00038": {
+    "content_score": 0.711111111111111,
+    "structural_score": 1.0,
+    "composite_score": 0.8432740427115678,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5555555555555555,
+      "experiments": 0.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.3389/fpsyg.2024.1356496": {
+    "content_score": 0.9583333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9789450103725609,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 3,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.3390/biomedicines14061185": {
+    "content_score": 0.8124999999999999,
+    "structural_score": 1.0,
+    "composite_score": 0.9013878188659973,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5,
+      "sinks": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.7142857142857143
+  },
+  "doi:10.3390/jcm11133890": {
+    "content_score": 0.9444444444444444,
+    "structural_score": 1.0,
+    "composite_score": 0.97182531580755,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.7777777777777777,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.3410/f.13148956.14480055": {
+    "content_score": 0.5833333333333334,
+    "structural_score": 1.0,
+    "composite_score": 0.7637626158259734,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.75,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.4088/jcp.09m05950gry": {
+    "content_score": 0.4666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.6831300510639732,
+    "stage_scores": {
+      "sources": 0.3333333333333333,
+      "methods": 0.8333333333333333,
+      "experiments": 1.0,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.4088/jcp.v66n0705": {
+    "content_score": 0.6444444444444444,
+    "structural_score": 1.0,
+    "composite_score": 0.8027729719194864,
+    "stage_scores": {
+      "sources": 0.3333333333333333,
+      "methods": 0.6666666666666666,
+      "experiments": 0.5555555555555555,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 8,
+    "n_edges": 10,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.4103/0253-7176.207319": {
+    "content_score": 0.5952380952380952,
+    "structural_score": 0.725,
+    "composite_score": 0.6569228410153045,
+    "stage_scores": {
+      "sources": 0.5,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 0.5,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 3,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.4172/2153-2435.1000466": {
+    "content_score": 0.8333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9128709291752768,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.8333333333333333,
+      "experiments": 0.3333333333333333,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.5152/npa.2015.7160": {
+    "content_score": 0.9166666666666667,
+    "structural_score": 0.85,
+    "composite_score": 0.8827041784576907,
+    "stage_scores": {
+      "methods": 0.8333333333333333,
+      "experiments": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 3,
+    "n_edges": 3,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.5580/38f": {
+    "content_score": 0.45555555555555555,
+    "structural_score": 1.0,
+    "composite_score": 0.6749485577105528,
+    "stage_scores": {
+      "sources": 0.3333333333333333,
+      "methods": 0.7777777777777777,
+      "experiments": 1.0,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.5664/jcsm.27935": {
+    "content_score": 0.35555555555555557,
+    "structural_score": 1.0,
+    "composite_score": 0.5962847939999439,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.7777777777777778,
+      "experiments": 1.0,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.5665/sleep.5824": {
+    "content_score": 0.8095238095238095,
+    "structural_score": 0.85,
+    "composite_score": 0.8295150620062532,
+    "stage_scores": {
+      "methods": 0.8333333333333333,
+      "experiments": 1.0,
+      "sinks": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.64719/pb.4484": {
+    "content_score": 0.7,
+    "structural_score": 0.6499999999999999,
+    "composite_score": 0.674536878161602,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.75
+    },
+    "structural_components": {
+      "source_consumption": 0.5,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 0.5
+    },
+    "n_nodes": 6,
+    "n_edges": 2,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.7759/cureus.2662": {
+    "content_score": 0.8166666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9036961141150639,
+    "stage_scores": {
+      "sources": 0.8333333333333333,
+      "methods": 0.8333333333333333,
+      "experiments": 1.0,
+      "sinks": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1001/jama.2014.18422": {
+    "content_score": 0.8166666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9036961141150639,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5833333333333333,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.8888888888888888
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 10,
+    "n_edges": 19,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1002/14651858.cd008661": {
+    "content_score": 0.9166666666666665,
+    "structural_score": 1.0,
+    "composite_score": 0.957427107756338,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1002/adsc.201501123": {
+    "content_score": 0.5666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.752772652709081,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1002/brb3.3623/v2/response1": {
+    "content_score": 1.0,
+    "structural_score": 0.85,
+    "composite_score": 0.9219544457292888,
+    "stage_scores": {
+      "methods": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 1,
+    "n_edges": 0,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1002/dta.2142": {
+    "content_score": 0.7142857142857143,
+    "structural_score": 0.85,
+    "composite_score": 0.7791937224739796,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.8333333333333333,
+      "experiments": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1002/jcph.1002": {
+    "content_score": 0.8666666666666667,
+    "structural_score": 1.0,
+    "composite_score": 0.9309493362512627,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 0.6666666666666666,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 5,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1002/npr2.12447": {
+    "content_score": 0.5222222222222221,
+    "structural_score": 1.0,
+    "composite_score": 0.7226494462892933,
+    "stage_scores": {
+      "sources": 0.3333333333333333,
+      "methods": 0.7777777777777777,
+      "experiments": 0.8333333333333333,
+      "sinks": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1002/syn.10127": {
+    "content_score": 0.8333333333333334,
+    "structural_score": 0.85,
+    "composite_score": 0.8416254115301732,
+    "stage_scores": {
+      "methods": 1.0,
+      "experiments": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 2,
+    "n_edges": 1,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1007/978-94-007-6253-4_5": {
+    "content_score": 0.4888888888888889,
+    "structural_score": 1.0,
+    "composite_score": 0.699205898780101,
+    "stage_scores": {
+      "sources": 0.6666666666666666,
+      "methods": 0.7777777777777777,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1007/s00213-004-1926-3": {
+    "content_score": 0.6,
+    "structural_score": 1.0,
+    "composite_score": 0.7745966692414834,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 1.0,
+      "experiments": 0.5,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1007/s00213-013-3232-4": {
+    "content_score": 0.4761904761904762,
+    "structural_score": 0.85,
+    "composite_score": 0.6362090102803518,
+    "stage_scores": {
+      "sources": 0.0,
+      "methods": 0.8333333333333333,
+      "experiments": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1007/s002210000370": {
+    "content_score": 0.7333333333333333,
+    "structural_score": 0.85,
+    "composite_score": 0.7895146188218007,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.3333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 5,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1007/s00604-009-0209-4": {
+    "content_score": 0.8033333333333332,
+    "structural_score": 1.0,
+    "composite_score": 0.8962886439832501,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6,
+      "experiments": 0.6666666666666666,
+      "sinks": 0.8333333333333333
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 9,
+    "n_edges": 9,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1007/s11325-019-01925-0": {
+    "content_score": 0.8111111111111111,
+    "structural_score": 1.0,
+    "composite_score": 0.9006170724070864,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.5,
+      "experiments": 0.5555555555555555,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 7,
+    "n_edges": 7,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1007/s12028-020-00986-4": {
+    "content_score": 0.8333333333333335,
+    "structural_score": 0.85,
+    "composite_score": 0.8416254115301732,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.75,
+      "experiments": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 6,
+    "n_edges": 6,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  },
+  "doi:10.1007/s40265-018-0973-8": {
+    "content_score": 0.5666666666666667,
+    "structural_score": 0.7062499999999999,
+    "composite_score": 0.632620212555158,
+    "stage_scores": {
+      "sources": 0.5,
+      "methods": 0.6666666666666666
+    },
+    "structural_components": {
+      "source_consumption": 0.5,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 0.0,
+      "cohesion": 0.875
+    },
+    "n_nodes": 8,
+    "n_edges": 8,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 1.0
+  },
+  "doi:10.1007/s40278-019-72530-6": {
+    "content_score": 0.9333333333333333,
+    "structural_score": 1.0,
+    "composite_score": 0.9660917830792959,
+    "stage_scores": {
+      "sources": 1.0,
+      "methods": 0.6666666666666666,
+      "experiments": 1.0,
+      "sinks": 1.0
+    },
+    "structural_components": {
+      "source_consumption": 1.0,
+      "sink_production": 1.0,
+      "reference_resolution": 1.0,
+      "path_coverage": 1.0,
+      "cohesion": 1.0
+    },
+    "n_nodes": 4,
+    "n_edges": 4,
+    "n_dangling_references": 0,
+    "quote_verification_rate": 0.0
+  }
+}

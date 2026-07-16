@@ -49,47 +49,14 @@ rosters live in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md) and
   credential-source summary, and local-only path refusal. Acceptance: non-dry-run
   publish refuses any local-only project/resource path and records the exact
   public files to upload. Out of scope: provider API redesign.
-- **SECURITY-ASKOS-PROMOTION-1:** Problem: `projects/ongoing/askos/TODO.md` still lists
-  JWT, policy, redaction, vault, route-handler, MCP, and export-test gaps. Why it
-  matters: those are control-plane risks if AskOS enters active/public/deployed
-  scope. Smallest next step: add an AskOS promotion checklist/gate. Acceptance:
-  AskOS cannot be promoted without closing or explicitly risk-accepting those
-  security TODOs. Out of scope: implementing AskOS auth inside this template pass.
-
-### AI-GATE-PERF-2 — Reduce active-inference gate runtime after correctness
-
-- **Problem:** `template_active_inference` gate tests had a heavy explicit
-  roadmap/sheaf write path whose *first* invocation in a process took ~250s.
-- **Status:** correctness/timeout blocker closed (2026-07-01) — a
-  `pytest_sessionstart` pre-warm hook fixed the cascade; two O(N×M) redundant
-  file-read bottlenecks fixed. Full non-long-running suite passes under the
-  real 120s per-test timeout.
-- **Remaining (open):** the `--durations=20` profiling pass itself (to look
-  for further redundant artifact refreshes beyond the two fixed) and the
-  project-local `MEDIUM-TEST-PERF-1` split (cheap source-only negative
-  controls plus one end-to-end refresh characterization) are still open. This
-  item closed the *correctness/timeout* blocker, not the full perf-tuning
-  scope.
-
-### TEST-STANDIN-DEBT-1 — Replace semantic monkeypatch stand-ins
-
-- **Status:** completed 2026-07-13. The live
-  `uv run python scripts/audit/verify_no_mocks.py --inventory` scan on
-  2026-07-13 measures **0 dependency replacements**, alongside 254
-  environment-isolation operations, 0
-  import-path operations, and 0 other scope operations in the live public test
-  scope.
-- **Why it matters:** replacing internal callables, clients, clocks, or modules
-  can make a test validate a stand-in rather than the production integration
-  even though no prohibited mocking framework is imported.
-- **Enforcement:** CI runs the semantic inventory with a zero ceiling. New
-  dependency replacements fail immediately; environment isolation remains a
-  separately classified, permitted test operation.
-- **Acceptance:**
-  `uv run python scripts/audit/verify_no_mocks.py --inventory --fail-on-dependency-replacement`
-  exits 0 with `dependency_replacement: 0`.
-
----
+- **SECURITY-PRIVATE-PROMOTION-1:** Problem: a private control-plane project may
+  still carry unresolved authentication, authorization, redaction, secret-store,
+  route-handler, MCP, or export-test gaps. Why it matters: those risks become
+  public or operational if that project enters active/public/deployed scope.
+  Smallest next step: add a generic private-project promotion checklist/gate.
+  Acceptance: no private project can be promoted without closing or explicitly
+  risk-accepting its security TODOs. Out of scope: implementing private-project
+  authentication inside this public template pass.
 
 ## Known divergences from `CHANGELOG.md`
 

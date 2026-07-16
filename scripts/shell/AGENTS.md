@@ -2,17 +2,16 @@
 
 ## Purpose
 
-This subdirectory (currently a stub) is the planned home for shell helper
-scripts.  The shell scripts currently live at the root of `scripts/` or in the
-`backup/` subdirectory.
+This subdirectory contains the shared shell helpers and local CI entry point
+used by the repository's root wrappers and maintenance workflows.
 
-## Shell scripts (at scripts/ root)
+## Shell scripts
 
 | Script | Purpose |
 |--------|---------|
 | `bash_utils.sh` | Shared shell helpers for backup/health scripts and integration tests |
 | `shell_bootstrap.sh` | Shared `uv` bootstrap and sandbox env vars; sourced by `run.sh` / `secure_run.sh` |
-| `ci_local.sh` | Local CI reproduction (`act` when available, else pure-Python fallback) |
+| `ci_local.sh` | Local CI reproduction (`act` when available, else a documented fail-closed direct-command subset) |
 | `health-check.sh` | Pre-flight system health check (Python, uv, disk, Docker, repo) |
 | `backup-daily.sh` | Daily rsync backup tier |
 | `backup-weekly.sh` | Weekly rsync backup tier |
@@ -27,6 +26,7 @@ bash scripts/shell/health-check.sh
 
 # Local CI
 bash scripts/shell/ci_local.sh
+bash scripts/shell/ci_local.sh --no-act --dry-run
 
 # Backup
 bash scripts/shell/backup-daily.sh

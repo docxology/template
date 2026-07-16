@@ -7,9 +7,9 @@
 
 - Standalone repository: [docxology/template_advanced_literature_review](https://github.com/docxology/template_advanced_literature_review)
 - Config version: `0.1.0`
-- Stable concept DOI: forthcoming
-- Latest deposited version DOI: forthcoming
-- Additional declared locations: forthcoming
+- Stable concept DOI: n/a
+- Latest deposited version DOI: n/a
+- Additional declared locations: none declared
 - Metadata source: [`manuscript/config.yaml`](manuscript/config.yaml); citation sidecars live at the project root.
 
 Additional locations are config-declared publication evidence; the central index records whether external GitHub and Zenodo checks were refreshed.
@@ -18,7 +18,7 @@ Additional locations are config-declared publication evidence; the central index
 
 ## Purpose
 
-`template_advanced_literature_review` is the canonical **advanced multi-phase literature review** exemplar: iterative search refinement across methodological eras, deterministic + LLM-based filtering, cross-temporal validation, and phase-aware manuscript generation. Features 3 search phases with real corpus data, 11-stage pipeline, and comprehensive knowledge graph synthesis (bundled domain: **exoplanet atmospheric composition**).
+`template_advanced_literature_review` is the canonical **advanced multi-phase literature review** exemplar: iterative search refinement, deterministic and optional LLM filtering, cross-phase validation, and phase-aware manuscript generation. The tracked exoplanet-atmosphere corpus is an evidence snapshot, not an offline fixture or a completeness claim.
 
 ## Copy This When
 
@@ -48,9 +48,9 @@ rsync -a \
 
 ### Core Configuration
 
-- Set the domain and phases in `manuscript/config.yaml` → `project_config.search.phases` with appropriate temporal boundaries and methodological focus for your field.
+- Set the domain and phases in `manuscript/config.yaml` → `project_config.search_phases` with appropriate temporal boundaries and methodological focus for your field.
 - Update the `project_config.search.term`, `query` blocks, `relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions` for the new domain.
-- Configure phase-specific filtering criteria in `project_config.filtering.phases`.
+- Configure each phase's deterministic filters and optional `llm_filters` in `project_config`.
 
 ### Domain Adaptation
 
@@ -60,9 +60,9 @@ rsync -a \
 
 ### Multi-Phase Corpus
 
-- For offline development: Use the existing 3-phase exoplanet corpus (2505 papers) as a structural example.
+- For deterministic downstream development: use the tracked three-phase exoplanet evidence snapshot as a structural example without claiming live freshness.
 - For live deployment: Configure your field's phases and run `uv run python scripts/01_multi_phase_search.py` to build a real corpus.
-- Each phase should target 500-1000 papers with appropriate temporal boundaries and filtering.
+- Choose per-phase result limits from the review protocol rather than a hard-coded target.
 
 ## Validation Commands
 
@@ -71,8 +71,8 @@ From the template repository root after copying into `projects/working/`:
 ```bash
 uv run pytest projects/working/my_advanced_review/tests/ \
   --cov=projects/working/my_advanced_review/src --cov-fail-under=90
-uv run python projects/working/my_advanced_review/scripts/01_multi_phase_search.py --offline
-uv run python projects/working/my_advanced_review/scripts/11_validate_outputs.py
+uv run python projects/working/my_advanced_review/scripts/02_meta_analysis_pipeline.py
+uv run python scripts/pipeline/stage_04_validate.py --project working/my_advanced_review
 ```
 
 For the public exemplar:
@@ -87,9 +87,9 @@ uv run pytest projects/templates/template_advanced_literature_review/tests/ \
 The advanced template extends the single-term approach with:
 
 ### Phase-Based Search Strategy
-- **Foundation Phase**: Early methodological development (typically pre-2010)
-- **Development Phase**: Major technological/theoretical advances (typically 2010-2021) 
-- **Current Phase**: Latest high-precision methods (typically 2022+)
+- **Foundation Phase**: Broad domain retrieval under configured year bounds
+- **Focused Phase**: Technology- or method-specific retrieval
+- **Synthesis Phase**: Phenomenon-specific retrieval and cross-phase validation
 - Each phase has distinct temporal boundaries, search terms, and filtering criteria
 
 ### Advanced Filtering Pipeline
@@ -105,20 +105,20 @@ The advanced template extends the single-term approach with:
 ## Pipeline Stages (11 Total)
 
 1. **Multi-Phase Search** (`01_multi_phase_search.py`): Execute phase-based retrieval with temporal boundaries
-2. **Filter and Classify** (`02_filter_and_classify.py`): Apply deterministic + LLM filtering to each phase
+2. **Meta-Analysis Pipeline** (`02_meta_analysis_pipeline.py`): Run deterministic corpus analysis
 3. **Build Knowledge Graph** (`03_build_knowledge_graph.py`): Extract assertions with phase provenance
 4. **Generate Figures** (`04_generate_figures.py`): Create phase-aware visualizations
 5. **Inject Variables** (`05_inject_variables.py`): Compute phase statistics and cross-temporal metrics
 6. **Fulltext Assessment** (`06_fulltext_assessment.py`): Assess PDF availability across phases
 7. **Literature Evaluation** (`07_literature_evaluation.py`): Quality scoring with phase weighting
-8. **Deep Research Dispatch** (`08_deep_research_dispatch.py`): Phase-specific analysis routing
+8. **Deep Research Dispatch** (`08_deep_research_dispatch.py`): deterministic provider-neutral fixture replay
 9. **Export Bibliography** (`09_export_bibliography.py`): Generate phase-annotated bibliography
 10. **Reproducibility Assessment** (`10_reproducibility_assessment.py`): Cross-phase workflow validation
-11. **Validate Outputs** (`11_validate_outputs.py`): Comprehensive phase integrity checks
+11. **Full-Text Download** (`11_fulltext_download.py`): Explicit network enrichment before stage 10
 
 ## Real Data & Reproducibility
 
-The committed corpus uses **real exoplanet atmospheric composition papers** (2505 papers across 3 phases) with actual DOIs and metadata. This demonstrates genuine multi-phase dynamics but requires proper attribution when citing specific findings. The offline pipeline ensures reproducible results across environments while preserving the ability to refresh with live retrieval.
+The committed corpus is a dated exoplanet-atmosphere evidence snapshot with source metadata and phase provenance. It demonstrates the artifact shape and downstream analysis path; it does not prove retrieval completeness or currentness. Refreshing it is an intentional live-network operation, while stages 02–09 can be rerun deterministically over the snapshot.
 
 ## What You Can Claim
 

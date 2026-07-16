@@ -135,10 +135,10 @@
 De-duplication}\label{retrieval-and-de-duplication}
 
 \begin{frame}[fragile,allowframebreaks]{Retrieval and De-duplication}
-Retrieval dispatches the configured query across 9 independent
+Retrieval dispatches the configured query across 10 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is
-an isolated adapter exposing a uniform
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each
+engine is an isolated adapter exposing a uniform
 \texttt{search(query)\ -\textgreater{}\ list{[}Record{]}} interface;
 engines that are keyless --- arXiv, OpenAlex \breakseq{[@priem2022openalex]},
 Crossref \breakseq{[@hendricks2020crossref]}, PubMed/Entrez

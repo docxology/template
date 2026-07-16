@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Analysis-stage orchestrator (thin dispatcher).
 
-Stage 02. Discovers ``projects/<name>/scripts/*.py`` and runs each in
-lexicographic order via :func:`infrastructure.core.analysis_pipeline.run_analysis_pipeline`.
+Stage 02. Discovers ``projects/<name>/scripts/*.py`` and runs each in the
+configuration-declared order when ``analysis.scripts`` exists, otherwise in
+lexicographic discovery order, via
+:func:`infrastructure.core.analysis_pipeline.run_analysis_pipeline`.
 This file is intentionally thin — all execution logic lives in
 :mod:`infrastructure.core.analysis_pipeline` and
 :mod:`infrastructure.core.script_discovery`.
@@ -65,7 +67,7 @@ def main() -> int:
             return 0
 
         logger.info(
-            "  Running %d analysis script(s) in lexicographic order: %s",
+            "  Running %d analysis script(s) in declared/discovered order: %s",
             len(scripts),
             ", ".join(s.name for s in scripts),
         )

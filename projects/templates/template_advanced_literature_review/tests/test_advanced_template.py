@@ -7,7 +7,6 @@ indirectly via its components.
 
 from __future__ import annotations
 
-import json
 import sys
 import tempfile
 from pathlib import Path
@@ -77,11 +76,7 @@ class TestConfigValidation:
     def test_no_engines_configured(self):
         from config_validation import validate_search_config
 
-        config = {
-            "project_config": {
-                "search": {"term": "test", "query": "test"}
-            }
-        }
+        config = {"project_config": {"search": {"term": "test", "query": "test"}}}
         issues = validate_search_config(config)
         # No engines block means all engines default to enabled
         # So this should not produce a "no engines" issue
@@ -111,33 +106,21 @@ class TestConfigValidation:
     def test_valid_sampling_config(self):
         from config_validation import validate_sampling_config
 
-        config = {
-            "project_config": {
-                "sampling": {"fraction": 0.1, "seed": 42}
-            }
-        }
+        config = {"project_config": {"sampling": {"fraction": 0.1, "seed": 42}}}
         issues = validate_sampling_config(config)
         assert len(issues) == 0
 
     def test_invalid_sampling_fraction(self):
         from config_validation import validate_sampling_config
 
-        config = {
-            "project_config": {
-                "sampling": {"fraction": 1.5, "seed": 42}
-            }
-        }
+        config = {"project_config": {"sampling": {"fraction": 1.5, "seed": 42}}}
         issues = validate_sampling_config(config)
         assert any("fraction" in i for i in issues)
 
     def test_invalid_sampling_seed(self):
         from config_validation import validate_sampling_config
 
-        config = {
-            "project_config": {
-                "sampling": {"fraction": 0.1, "seed": -1}
-            }
-        }
+        config = {"project_config": {"sampling": {"fraction": 0.1, "seed": -1}}}
         issues = validate_sampling_config(config)
         assert any("seed" in i for i in issues)
 
@@ -146,9 +129,7 @@ class TestConfigValidation:
 
         config = {
             "project_config": {
-                "hypothesis_definitions": {
-                    "H1": {"name": "Test", "description": "Test desc", "scope": "test"}
-                }
+                "hypothesis_definitions": {"H1": {"name": "Test", "description": "Test desc", "scope": "test"}}
             }
         }
         issues = validate_hypothesis_config(config)
@@ -157,13 +138,7 @@ class TestConfigValidation:
     def test_missing_hypothesis_fields(self):
         from config_validation import validate_hypothesis_config
 
-        config = {
-            "project_config": {
-                "hypothesis_definitions": {
-                    "H1": {"name": "Test"}
-                }
-            }
-        }
+        config = {"project_config": {"hypothesis_definitions": {"H1": {"name": "Test"}}}}
         issues = validate_hypothesis_config(config)
         assert any("description" in i for i in issues)
         assert any("scope" in i for i in issues)
@@ -197,11 +172,7 @@ class TestConfigValidation:
     def test_invalid_temperature(self):
         from config_validation import validate_llm_config
 
-        config = {
-            "project_config": {
-                "llm_extraction": {"temperature": 3.0}
-            }
-        }
+        config = {"project_config": {"llm_extraction": {"temperature": 3.0}}}
         issues = validate_llm_config(config)
         assert any("temperature" in i for i in issues)
 
@@ -209,19 +180,20 @@ class TestConfigValidation:
         from config_validation import validate_full_config
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            yaml.dump({
-                "project_config": {
-                    "search": {
-                        "term": "test",
-                        "query": "test",
-                        "engines": {"arxiv": True},
-                    },
-                    "sampling": {"fraction": 0.1, "seed": 42},
-                    "hypothesis_definitions": {
-                        "H1": {"name": "T", "description": "D", "scope": "S"}
-                    },
-                }
-            }, f)
+            yaml.dump(
+                {
+                    "project_config": {
+                        "search": {
+                            "term": "test",
+                            "query": "test",
+                            "engines": {"arxiv": True},
+                        },
+                        "sampling": {"fraction": 0.1, "seed": 42},
+                        "hypothesis_definitions": {"H1": {"name": "T", "description": "D", "scope": "S"}},
+                    }
+                },
+                f,
+            )
             config_path = Path(f.name)
 
         results = validate_full_config(config_path)
@@ -283,7 +255,8 @@ class TestDeterministicFilters:
         min_year = 2018
         min_citations = 5
         filtered = [
-            p for p in sample_papers
+            p
+            for p in sample_papers
             if (p.year is None or p.year >= min_year)
             and (p.citation_count is None or p.citation_count >= min_citations)
         ]
@@ -306,7 +279,10 @@ class TestPhaseMetadata:
             "papers_after_deterministic_filters": 80,
             "papers_after_llm_filters": 60,
             "papers_final": 60,
-            "deterministic_filters_applied": {"min_year": 2010, "min_citation_count": 5},
+            "deterministic_filters_applied": {
+                "min_year": 2010,
+                "min_citation_count": 5,
+            },
             "llm_filters_applied": ["study_type"],
             "depends_on": [],
         }
@@ -335,8 +311,18 @@ class TestCorpusCoverage:
     def test_coverage_computation(self):
         """Test that coverage statistics are computed correctly."""
         papers = [
-            {"abstract": "has abstract", "doi": "10.1/test", "arxiv_id": None, "openalex_id": "W1"},
-            {"abstract": "has abstract", "doi": None, "arxiv_id": "2101.1", "openalex_id": None},
+            {
+                "abstract": "has abstract",
+                "doi": "10.1/test",
+                "arxiv_id": None,
+                "openalex_id": "W1",
+            },
+            {
+                "abstract": "has abstract",
+                "doi": None,
+                "arxiv_id": "2101.1",
+                "openalex_id": None,
+            },
             {"abstract": "", "doi": "10.2/test", "arxiv_id": None, "openalex_id": None},
         ]
 
@@ -458,7 +444,10 @@ class TestMultiPhaseConfig:
 
         phases = config["project_config"]["search_phases"]
         assert phases["phase_2_jwst"].get("depends_on") == ["phase_1_foundation"]
-        assert phases["phase_3_molecules"].get("depends_on") == ["phase_1_foundation", "phase_2_jwst"]
+        assert phases["phase_3_molecules"].get("depends_on") == [
+            "phase_1_foundation",
+            "phase_2_jwst",
+        ]
 
     def test_llm_filters_configured(self):
         """Test that LLM filters are configured but disabled for initial run."""
@@ -475,5 +464,16 @@ class TestMultiPhaseConfig:
         assert "molecular_detection_filter" in llm_filters
 
         # All should be disabled (empty apply_to_phases)
-        for f_id, f_config in llm_filters.items():
+        for f_config in llm_filters.values():
             assert f_config.get("apply_to_phases") == []
+
+    def test_documented_enrichment_commands_follow_dependency_order(self):
+        """The copy-paste workflow must download before scoring and reinjection."""
+        agents_text = (_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        enrichment_block = agents_text.split("Full-text download and reproducibility scoring", maxsplit=1)[1]
+
+        download = enrichment_block.index("scripts/11_fulltext_download.py")
+        assessment = enrichment_block.index("scripts/10_reproducibility_assessment.py")
+        reinjection = enrichment_block.index("scripts/05_inject_variables.py")
+
+        assert download < assessment < reinjection

@@ -9,6 +9,12 @@ This file contains LaTeX packages and commands that are automatically included i
 \usepackage{amsfonts}
 \usepackage{amsthm}
 
+% Theorem-like environments expected by the combined-PDF renderer. Define the
+% shared counter before dependent environments so every XeLaTeX pass is clean.
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
 % Document layout
 \usepackage[margin=1.8cm]{geometry}
 \usepackage{float}

@@ -53,14 +53,21 @@ _PROVIDER_PATTERNS: dict[str, tuple[str, ...]] = {
 }
 
 
-def _classify_provider(paper: Paper) -> str:
-    """Classify a paper's full-text provider from its pdf_url and identifiers."""
+def _classify_provider(paper: Paper) -> str | None:
+    """Classify the provider of a directly resolvable PDF, if one exists.
+
+    A DOI or retrieval-engine provenance alone does not identify an available
+    full-text provider. Requiring ``pdf_url`` keeps this metric from counting
+    metadata-only Europe PMC/publisher records as realized provider coverage.
+    """
+    if not paper.pdf_url:
+        return None
     url = (paper.pdf_url or "").lower()
     for provider, patterns in _PROVIDER_PATTERNS.items():
         if any(p in url for p in patterns):
             return provider
     if paper.full_text_source:
-        return paper.full_text_source
+        return str(paper.full_text_source)
     if paper.is_preprint:
         return "preprint"
     if paper.doi:
@@ -69,10 +76,12 @@ def _classify_provider(paper: Paper) -> str:
 
 
 def _provider_breakdown(papers: list[Paper]) -> dict[str, int]:
-    """Count papers by full-text provider classification."""
+    """Count papers with direct PDF URLs by full-text provider."""
     counts: Counter[str] = Counter()
     for paper in papers:
-        counts[_classify_provider(paper)] += 1
+        provider = _classify_provider(paper)
+        if provider is not None:
+            counts[provider] += 1
     return dict(counts.most_common())
 
 
@@ -99,7 +108,8 @@ def assess_corpus(corpus: Corpus) -> dict:
 
     source_counter: Counter[str] = Counter()
     for paper in papers:
-        source_counter[paper.full_text_source or "none"] += 1
+        source = paper.full_text_source if paper.pdf_url else None
+        source_counter[source or "none"] += 1
 
     domain_counter: Counter[str] = Counter()
     for paper in papers:

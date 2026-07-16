@@ -41,3 +41,28 @@ def test_assess_corpus_pdf_domains_and_malformed_urls() -> None:
     domains = report["pdf_domain_breakdown"]
     assert "arxiv.org" in domains or len(domains) >= 1
     assert report["pdf_availability"]["has_pdf_url"] == 2
+
+
+def test_provider_breakdown_excludes_metadata_only_sources() -> None:
+    """Search provenance and DOI presence do not imply a fulltext provider."""
+    corpus = Corpus()
+    corpus.add(
+        Paper(
+            title="Europe PMC metadata only",
+            doi="10.1/metadata",
+            full_text_source="europepmc",
+        )
+    )
+    corpus.add(
+        Paper(
+            title="Direct bioRxiv PDF",
+            doi="10.1/preprint",
+            pdf_url="https://www.biorxiv.org/content/10.1/preprint.full.pdf",
+            full_text_source="biorxiv",
+        )
+    )
+
+    report = assess_corpus(corpus)
+
+    assert report["provider_breakdown"] == {"biorxiv": 1}
+    assert report["fulltext_source_breakdown"] == {"none": 1, "biorxiv": 1}

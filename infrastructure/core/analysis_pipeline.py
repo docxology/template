@@ -1,6 +1,6 @@
 """Analysis-stage pipeline runner.
 
-Executes a project's analysis scripts (the lexicographic list returned by
+Executes a project's analysis scripts (the ordered list returned by
 :func:`infrastructure.core.script_discovery.discover_analysis_scripts`) under
 the standard subprocess contract used by Stage-02:
 
@@ -113,7 +113,8 @@ def run_analysis_pipeline(
     """Execute all analysis scripts in sequence.
 
     Args:
-        scripts: Lexicographic list of script paths (from ``discover_analysis_scripts``).
+        scripts: Configuration-declared or lexicographic-fallback script paths
+            from ``discover_analysis_scripts``.
         repo_root: Repository root.
         project_name: Project name under ``projects/``.
 

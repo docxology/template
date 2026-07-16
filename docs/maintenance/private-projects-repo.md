@@ -76,8 +76,9 @@ cannot be mislinked. Disable auto-sync with `TEMPLATE_SKIP_LINK_SYNC=1`.
 1. **Physical separation** — confidential content lives only in the private repo.
 2. **Symlink boundary** — git refuses to stage content beyond a symbolic link.
 3. **`.gitignore`** — `projects/*` ignored except public exemplars + root docs.
-4. **`scripts/audit/check_tracked_projects.py`** — fails CI/pre-push if anything but
-   public exemplars is tracked under `projects/`.
+4. **`scripts/audit/check_tracked_all.py`** — fails CI/pre-push if anything but
+   the public allowlists is tracked under `projects/`, `fonds/`, `rules`, or
+   `tools/`; its project constituent enforces this lifecycle boundary.
 
 ## Self-versioned projects
 

@@ -25,5 +25,6 @@ Live collected test counts and measured coverage snapshots belong in `../../../d
 | `tests/literature/` | Record models, clients, corpus persistence, search runner, full-text reports |
 | `tests/analysis/` | Bibliometrics, TF-IDF, embeddings, entities, topics, temporal metrics |
 | `tests/knowledge_graph/` | Assertions, hypothesis scoring, RDF/nanopubs, LLM parsing/resume logic |
+| `tests/reproducibility/` | Workflow extraction, persistent-cache/active-scope separation, scoring, reconciled failures |
 | `tests/visualization/` | Headless figure generation and style config |
 | root tests | Config loading, script entry points, manuscript variables |

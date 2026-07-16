@@ -107,34 +107,29 @@ TICK_SIZE = 16
 TITLE_SIZE = 22
 
 __all__ = [
-    # Paths
-    "PROJECT_ROOT",
-    "PROJECT_NAME",
-    "OUTPUT_DIR",
-    "DATA_DIR",
-    "FIGURES_DIR",
     "CORPUS_PATH",
-    "MANUSCRIPT_DIR",
-    # Analysis defaults
-    "DEFAULT_N_TOPICS",
-    "DEFAULT_MAX_FEATURES",
-    "DEFAULT_MIN_YEAR",
-    "DEFAULT_SEED",
-    # Knowledge graph defaults
-    "KG_MIN_YEAR",
+    "DATA_DIR",
+    "DEFAULT_ARXIV_QUERIES",
+    "DEFAULT_CHECKPOINT_INTERVAL",
+    "DEFAULT_DPI",
     "DEFAULT_LLM_MODEL",
     "DEFAULT_LLM_URL",
-    "DEFAULT_CHECKPOINT_INTERVAL",
-    "DEFAULT_REPRO_CHECKPOINT_INTERVAL",
-    "FULLTEXT_DIR",
-    "DEFAULT_ARXIV_QUERIES",
+    "DEFAULT_MAX_FEATURES",
+    "DEFAULT_MIN_YEAR",
+    "DEFAULT_N_TOPICS",
     "DEFAULT_RELEVANCE_KEYWORDS",
-    # Figure defaults
-    "DEFAULT_DPI",
-    # Visualization styling
-    "FIGURE_SIZE",
+    "DEFAULT_REPRO_CHECKPOINT_INTERVAL",
+    "DEFAULT_SEED",
     "DPI",
+    "FIGURES_DIR",
+    "FIGURE_SIZE",
     "FONT_SIZE",
+    "FULLTEXT_DIR",
+    "KG_MIN_YEAR",
+    "MANUSCRIPT_DIR",
+    "OUTPUT_DIR",
+    "PROJECT_NAME",
+    "PROJECT_ROOT",
     "TICK_SIZE",
     "TITLE_SIZE",
 ]

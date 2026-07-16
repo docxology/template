@@ -32,6 +32,7 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
     assert "projects/templates/template_code_project/src/" in analysis.input_artifacts
     assert "projects/templates/template_code_project/scripts/" in analysis.input_artifacts
     assert any("scripts/pipeline/stage_02_analysis.py" in command for command in analysis.verification_commands)
+    assert all("scripts/scripts/" not in command for command in analysis.verification_commands)
 
     render = by_name["PDF Rendering"]
     assert render.depends_on == ("Project Analysis",)
@@ -49,6 +50,25 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
         issue for issue in issues if issue.severity == "error" and issue.code not in generated_output_codes
     ]
     assert unexpected_errors == []
+
+
+def test_plan_emits_only_dispatchable_single_stage_commands(repo_root: Path) -> None:
+    from infrastructure.core.pipeline.stage_registry import known_stage_keys
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    plan = build_methods_orchestration_plan(repo_root, "templates/template_code_project")
+    by_name = {stage.name: stage for stage in plan.stages}
+
+    assert by_name["Clean Output Directories"].verification_commands == ()
+    emitted_keys = {
+        command.rsplit(" --stage ", 1)[1]
+        for stage in plan.stages
+        for command in stage.verification_commands
+        if "scripts/runner/execute_pipeline.py" in command and " --stage " in command
+    }
+    assert emitted_keys
+    assert emitted_keys <= known_stage_keys()
+    assert "clean" not in emitted_keys
 
 
 def test_public_template_projects_have_methods_orchestration_plans(repo_root: Path) -> None:

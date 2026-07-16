@@ -60,7 +60,7 @@ def _classify_provider(paper: Paper) -> str:
         if any(p in url for p in patterns):
             return provider
     if paper.full_text_source:
-        return paper.full_text_source
+        return str(paper.full_text_source)
     if paper.is_preprint:
         return "preprint"
     if paper.doi:
@@ -106,7 +106,7 @@ def assess_corpus(corpus: Corpus) -> dict:
         if paper.pdf_url:
             try:
                 domain_counter[urlparse(paper.pdf_url).netloc] += 1
-            except Exception:  # noqa: BLE001 -- safety net: unparseable URL counts as "unknown" domain
+            except ValueError:
                 domain_counter["unknown"] += 1
 
     def pct(n: int) -> float:

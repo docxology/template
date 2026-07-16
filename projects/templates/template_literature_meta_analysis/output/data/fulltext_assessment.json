@@ -17,8 +17,8 @@
     "percent_with_pdf": 54.6
   },
   "fulltext_source_breakdown": {
-    "none": 1597,
-    "europepmc": 511,
+    "none": 1603,
+    "europepmc": 505,
     "publisher": 215,
     "repository": 10,
     "arxiv": 1
@@ -58,14 +58,12 @@
     "no_fulltext_available": 1059
   },
   "provider_breakdown": {
-    "publisher": 1225,
     "doi": 728,
-    "europepmc": 313,
-    "unknown": 41,
+    "europepmc": 307,
+    "publisher": 214,
     "pubmed_central": 11,
     "repository": 10,
     "biorxiv": 4,
-    "preprint": 1,
     "arxiv": 1
   }
 }

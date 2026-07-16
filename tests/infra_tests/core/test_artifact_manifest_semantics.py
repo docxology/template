@@ -79,10 +79,13 @@ def test_validation_self_reports_are_not_attested_recursively(tmp_path: Path) ->
 def test_current_output_snapshot_rebaselines_without_inventing_stage_provenance(tmp_path: Path) -> None:
     project = tmp_path / "repo" / "projects" / "p"
     artifact = project / "output" / "data" / "result.json"
+    cached_fulltext = project / "output" / "fulltext" / "provider-paper.txt"
     validation_report = project / "output" / "reports" / "validation_report.json"
     artifact.parent.mkdir(parents=True)
+    cached_fulltext.parent.mkdir(parents=True)
     validation_report.parent.mkdir(parents=True)
     artifact.write_text('{"result": 1}\n', encoding="utf-8")
+    cached_fulltext.write_text("provider-controlled full text\n", encoding="utf-8")
     validation_report.write_text('{"summary": {"all_passed": true}}\n', encoding="utf-8")
 
     first = snapshot_current_artifact_manifest(project / "output")

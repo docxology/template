@@ -5,11 +5,11 @@
 # Strategy:
 #   1. If `act` (nektos/act) is available + Docker is running, use it to run the
 #      actual workflow YAML locally.
-#   2. Otherwise, fall back to a pure-Python reproduction of the major CI checks.
+#   2. Otherwise, run an explicit fail-closed subset of direct CI commands.
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$REPO_ROOT"
 
 USAGE=$(cat <<'EOF'
@@ -21,23 +21,29 @@ OPTIONS:
   -j, --job JOB        Run only the named job (forwarded to act)
       --list           List all available jobs and exit
       --dryrun         Show what would execute without running (forwarded to act)
-      --no-act         Skip act even if available; use pure-Python fallback
+      --no-act         Skip act even if available; use direct-command fallback
   -h, --help           Show this help
 
 Examples:
   scripts/shell/ci_local.sh                       # Run full default workflow
   scripts/shell/ci_local.sh -j lint               # Run only the lint job
-  scripts/shell/ci_local.sh -j tests-ubuntu-py311 # Run only one matrix entry
+  scripts/shell/ci_local.sh -j test-infra         # Run an act workflow job
   scripts/shell/ci_local.sh --dryrun              # Show plan without running
-  scripts/shell/ci_local.sh --no-act              # Force pure-Python fallback
+  scripts/shell/ci_local.sh --no-act              # Force direct-command fallback
 
-Pure-Python fallback (when act unavailable) runs:
-  - ruff check + format
-  - mypy (zero-error strict gate across the generated public source scope)
-  - bandit security scan
-  - infra + project pytest with coverage gates
-  - pre-commit hooks (all stages, including pre-push)
-  - confidentiality check (scripts/audit/check_tracked_projects.py)
+Direct-command fallback lanes (when act is unavailable):
+  - lint             CI lint/type/export/generated/confidentiality/module gates
+  - health           blocking static health registry
+  - verify-no-mocks  lexical + zero semantic dependency-replacement policy
+  - security         Bandit MEDIUM+ on the tracked public scope
+  - tests            canonical template project test stage
+  - precommit        all pre-commit and pre-push hooks via uv
+  - confid           scripts/audit/check_tracked_all.py
+
+The fallback is intentionally described as a subset: workflow matrices,
+service containers, dependency auditing, and platform-specific jobs require act
+or GitHub Actions. Unsupported fallback job names fail instead of succeeding
+without running anything.
 EOF
 )
 
@@ -82,25 +88,23 @@ if [[ "$USE_ACT" -eq 1 ]] && command -v act >/dev/null 2>&1; then
   if docker info >/dev/null 2>&1; then
     HAS_ACT=1
   else
-    echo "[ci_local] act is installed but Docker is not running — falling back to pure-Python reproduction." >&2
+    echo "[ci_local] act is installed but Docker is not running — falling back to direct commands." >&2
   fi
-fi
-
-# Ensure .actrc exists with sensible defaults if act is available
-if [[ "$HAS_ACT" -eq 1 ]] && [[ ! -f "$REPO_ROOT/.actrc" ]]; then
-  cat >"$REPO_ROOT/.actrc" <<'ACTRC'
-# Use medium-sized Linux runner images (closer to GH Actions ubuntu-latest)
--P ubuntu-latest=catthehacker/ubuntu:act-latest
--P ubuntu-22.04=catthehacker/ubuntu:act-22.04
--P ubuntu-20.04=catthehacker/ubuntu:act-20.04
-ACTRC
-  echo "[ci_local] Created default .actrc"
 fi
 
 # Path A: use act
 if [[ "$HAS_ACT" -eq 1 ]]; then
+  echo "[ci_local] Repository root: $REPO_ROOT"
   echo "[ci_local] Running via act (Docker)"
   ACT_ARGS=()
+
+  # Avoid mutating the checkout merely by inspecting CI. A user-owned .actrc
+  # still takes precedence; otherwise pass stable runner mappings explicitly.
+  if [[ ! -f "$REPO_ROOT/.actrc" ]]; then
+    ACT_ARGS+=("-P" "ubuntu-latest=catthehacker/ubuntu:act-latest")
+    ACT_ARGS+=("-P" "ubuntu-22.04=catthehacker/ubuntu:act-22.04")
+    ACT_ARGS+=("-P" "ubuntu-20.04=catthehacker/ubuntu:act-20.04")
+  fi
 
   if [[ "$LIST_ONLY" -eq 1 ]]; then
     ACT_ARGS+=("--list")
@@ -115,70 +119,97 @@ if [[ "$HAS_ACT" -eq 1 ]]; then
   exec act "${ACT_ARGS[@]}"
 fi
 
-# Path B: pure-Python fallback
+# Path B: direct-command fallback
+echo "[ci_local] Repository root: $REPO_ROOT"
+
 if [[ "$LIST_ONLY" -eq 1 ]]; then
   cat <<'EOF'
-Pure-Python fallback available steps (act not available):
-  - lint        (ruff check + format)
-  - typecheck   (zero-error mypy strict gate)
-  - security    (bandit)
-  - tests       (infra + project pytest with coverage)
-  - precommit   (all pre-commit stages including pre-push)
-  - confid      (scripts/audit/check_tracked_projects.py)
+Direct-command fallback lanes (act not available):
+  - lint
+  - health
+  - verify-no-mocks
+  - security
+  - tests
+  - precommit
+  - confid
 EOF
   exit 0
 fi
 
+if [[ -n "$JOB" ]]; then
+  case "$JOB" in
+    lint|health|verify-no-mocks|security|tests|precommit|confid) ;;
+    *)
+      echo "[ci_local] Unsupported direct-command fallback lane: $JOB" >&2
+      echo "[ci_local] Use --list to see supported lanes, or run with act for workflow job IDs." >&2
+      exit 2
+      ;;
+  esac
+fi
+
 if [[ "$DRY_RUN" -eq 1 ]]; then
-  echo "[ci_local] DRYRUN — would run pure-Python fallback (lint, typecheck, security, tests, precommit, confid)"
+  if [[ -n "$JOB" ]]; then
+    echo "[ci_local] DRYRUN — would run direct-command fallback lane: $JOB"
+  else
+    echo "[ci_local] DRYRUN — would run direct-command fallback lanes: lint, health, verify-no-mocks, security, tests, precommit, confid"
+  fi
   exit 0
 fi
 
-echo "[ci_local] act unavailable — running pure-Python fallback"
+echo "[ci_local] act unavailable — running direct-command fallback"
 echo
 
-if [[ -z "$JOB" || "$JOB" == "lint" || "$JOB" == "typecheck" ]]; then
+if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
+  echo "[ci_local] === CI lint job ==="
   read -r -a PUBLIC_CI_SOURCE_PATHS <<<"$(uv run python -m infrastructure.project.public_scope source-paths)"
   read -r -a PUBLIC_CI_LINT_PATHS <<<"$(uv run python -m infrastructure.project.public_scope lint-paths)"
-fi
-
-if [[ -z "$JOB" || "$JOB" == "lint" ]]; then
-  echo "[ci_local] === Lint (ruff check + format) ==="
-  uv run ruff check --fix "${PUBLIC_CI_LINT_PATHS[@]}"
-  uv run ruff format "${PUBLIC_CI_LINT_PATHS[@]}"
-fi
-
-if [[ -z "$JOB" || "$JOB" == "typecheck" ]]; then
-  echo "[ci_local] === Type check (mypy) ==="
+  uv run ruff check "${PUBLIC_CI_LINT_PATHS[@]}"
+  uv run ruff format --check "${PUBLIC_CI_LINT_PATHS[@]}"
   uv run python scripts/gates/mypy_ratchet.py "${PUBLIC_CI_SOURCE_PATHS[@]}"
+  uv run python -m infrastructure.skills check-all-exports
+  uv run python -m infrastructure.skills operations-check
+  uv run python scripts/audit/check_tracked_generated_artifacts.py
+  uv run python scripts/audit/check_tracked_all.py
+  uv run python scripts/gates/module_line_count_check.py
+fi
+
+if [[ -z "$JOB" || "$JOB" == "health" ]]; then
+  echo "[ci_local] === Blocking static health registry ==="
+  uv run python -m infrastructure.core.health
+fi
+
+if [[ -z "$JOB" || "$JOB" == "verify-no-mocks" ]]; then
+  echo "[ci_local] === No-mocks and semantic stand-in policy ==="
+  uv run python scripts/audit/verify_no_mocks.py
+  uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 fi
 
 if [[ -z "$JOB" || "$JOB" == "security" ]]; then
-  echo "[ci_local] === Security scan (bandit) ==="
-  uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
+  echo "[ci_local] === Bandit MEDIUM+ (public scope; dependency audit remains act-only) ==="
+  read -r -a PUBLIC_PROJECTS <<<"$(uv run python -m infrastructure.project.public_scope project-names)"
+  SECURITY_TARGETS=(infrastructure/ scripts/)
+  for project in "${PUBLIC_PROJECTS[@]}"; do
+    SECURITY_TARGETS+=("projects/$project/")
+  done
+  uv run bandit -c bandit.yaml -r -ll "${SECURITY_TARGETS[@]}"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "tests" ]]; then
-  echo "[ci_local] === Tests (infra + project) ==="
-  # Try template_code_project first; user can override via $TEMPLATE_CI_PROJECT
-  PROJECT="${TEMPLATE_CI_PROJECT:-template_code_project}"
+  echo "[ci_local] === Canonical project test stage (matrix remains act-only) ==="
+  PROJECT="${TEMPLATE_CI_PROJECT:-templates/template_code_project}"
   uv run python scripts/pipeline/stage_01_test.py --project "$PROJECT"
 fi
 
 if [[ -z "$JOB" || "$JOB" == "precommit" ]]; then
   echo "[ci_local] === Pre-commit (all stages) ==="
-  if command -v pre-commit >/dev/null 2>&1; then
-    pre-commit run --all-files
-    pre-commit run --hook-stage pre-push --all-files
-  else
-    echo "[ci_local] pre-commit not installed; skip. Install: uv pip install pre-commit"
-  fi
+  uv run pre-commit run --all-files
+  uv run pre-commit run --hook-stage pre-push --all-files
 fi
 
 if [[ -z "$JOB" || "$JOB" == "confid" ]]; then
   echo "[ci_local] === Confidentiality check ==="
-  uv run python scripts/audit/check_tracked_projects.py
+  uv run python scripts/audit/check_tracked_all.py
 fi
 
 echo
-echo "[ci_local] All requested checks complete."
+echo "[ci_local] All requested direct-command checks passed."

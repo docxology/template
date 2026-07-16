@@ -1,7 +1,7 @@
 # Retrieval and De-duplication
 
-Retrieval dispatches the configured query across 9 independent literature
-engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). Each engine is an isolated adapter exposing a uniform
+Retrieval dispatches the configured query across 10 independent literature
+engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each engine is an isolated adapter exposing a uniform
 `search(query) -> list[Record]` interface; engines that are keyless — arXiv, OpenAlex
 [@priem2022openalex], Crossref [@hendricks2020crossref], PubMed/Entrez
 [@sayers2022entrez], SovietRxiv / RussiaRxiv, ChinaRxiv, Europe PMC, and bioRxiv/medRxiv —

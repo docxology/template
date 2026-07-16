@@ -1,12 +1,14 @@
 """Discover and parse agent-oriented SKILL.md descriptors in the repository."""
 
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterator, Sequence
 
 import yaml
 
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs.scan_scope import (
     DEFAULT_EXCLUDE_PARTS,
     should_exclude_path,
@@ -35,6 +37,9 @@ DEFAULT_SKILL_SEARCH_ROOTS: tuple[str, ...] = (
 )
 
 _MANIFEST_VERSION = 1
+_PUBLIC_TEMPLATE_NAMES = frozenset(
+    name.removeprefix("templates/") for name in PUBLIC_PROJECT_NAMES if name.startswith("templates/")
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,32 +135,90 @@ def _is_public_root_agent_skill_path(path: Path) -> bool:
     return len(parts) >= 4 and parts[0] == ".agents" and parts[1] == "skills" and parts[-1] == "SKILL.md"
 
 
+def _is_registered_public_template_path(path: Path) -> bool:
+    """Return whether a path under ``projects/templates`` belongs to the public roster.
+
+    The directory is intentionally ignored by Git except for explicitly
+    tracked exemplars. A local ignored template can therefore coexist with the
+    public checkout, but it must not affect the generated skill manifest or
+    make duplicate-name checks fail.
+    """
+    parts = path.parts
+    return not (
+        len(parts) >= 3
+        and parts[0] == "projects"
+        and parts[1] == "templates"
+        and parts[2] not in _PUBLIC_TEMPLATE_NAMES
+    )
+
+
+def _search_bases(repo_root: Path, relative_root: str) -> tuple[Path, ...]:
+    """Expand a configured root into the concrete directories to traverse."""
+    if Path(relative_root).parts == ("projects", "templates"):
+        return tuple((repo_root / "projects" / name).resolve() for name in PUBLIC_PROJECT_NAMES)
+    return ((repo_root / relative_root).resolve(),)
+
+
+def _is_allowed_agent_tree_path(path: Path) -> bool:
+    """Return whether an excluded ``.agents`` subtree is a public skill lane."""
+    parts = path.parts
+    if len(parts) >= 2 and parts[:2] == (".agents", "skills"):
+        return True
+    if len(parts) < 4 or parts[:2] != ("projects", "templates") or parts[3] != ".agents":
+        return False
+    return len(parts) == 4 or parts[4] == "skills"
+
+
+def _iter_skill_files(base: Path, repo_root: Path) -> Iterator[Path]:
+    """Walk a skill root while pruning excluded and non-public subtrees."""
+    for current, dirnames, filenames in os.walk(base):
+        current_path = Path(current)
+        retained_dirs: list[str] = []
+        for dirname in sorted(dirnames):
+            candidate = current_path / dirname
+            try:
+                relative = candidate.relative_to(repo_root)
+            except ValueError:
+                relative = candidate
+            if not _is_registered_public_template_path(relative):
+                continue
+            if should_exclude_path(relative, DEFAULT_EXCLUDE_PARTS) and not _is_allowed_agent_tree_path(relative):
+                continue
+            retained_dirs.append(dirname)
+        dirnames[:] = retained_dirs
+        if "SKILL.md" in filenames:
+            yield current_path / "SKILL.md"
+
+
 def iter_skill_paths(repo_root: Path, roots: Sequence[str]) -> Iterator[Path]:
     """Yield absolute paths to ``SKILL.md`` under each root relative to ``repo_root``."""
     root_resolved = repo_root.resolve()
     for rel in roots:
-        base = (root_resolved / rel).resolve()
-        if not base.is_dir():
-            continue
-        for p in sorted(base.rglob("SKILL.md")):
-            if not p.is_file():
+        for base in _search_bases(root_resolved, rel):
+            if not base.is_dir():
                 continue
-            try:
-                rel_path: Path = p.relative_to(root_resolved)
-            except ValueError:
-                rel_path = p
-            # Skip vendored / tool-managed skill trees (.venv, site-packages,
-            # .claude, unscoped .agents, projects/archive, …) so discovery only
-            # sees tracked public skills. Two narrow `.agents` exceptions are
-            # deliberate: canonical exemplar descriptors and the repository
-            # root `.agents/skills` lane shared by Codex/OpenAI and Hermes.
-            if (
-                should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS)
-                and not _is_public_template_agent_skill_path(rel_path)
-                and not _is_public_root_agent_skill_path(rel_path)
-            ):
-                continue
-            yield p
+            for p in _iter_skill_files(base, root_resolved):
+                if not p.is_file():
+                    continue
+                try:
+                    rel_path: Path = p.relative_to(root_resolved)
+                except ValueError:
+                    rel_path = p
+                if not _is_registered_public_template_path(rel_path):
+                    continue
+                # Skip vendored / tool-managed skill trees (.venv,
+                # site-packages, .claude, unscoped .agents,
+                # projects/archive, …) so discovery only sees tracked public
+                # skills. Two narrow `.agents` exceptions are deliberate:
+                # canonical exemplar descriptors and the repository root
+                # `.agents/skills` lane shared by Codex/OpenAI and Hermes.
+                if (
+                    should_exclude_path(rel_path, DEFAULT_EXCLUDE_PARTS)
+                    and not _is_public_template_agent_skill_path(rel_path)
+                    and not _is_public_root_agent_skill_path(rel_path)
+                ):
+                    continue
+                yield p
 
 
 def _ensure_unique_names(skills: Sequence[SkillDescriptor]) -> None:

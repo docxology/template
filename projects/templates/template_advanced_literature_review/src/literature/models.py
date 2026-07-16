@@ -11,7 +11,6 @@ import hashlib
 import re
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Optional
 
 _DOI_RESOLVER_PREFIX = re.compile(r"^(?:https?://)?(?:dx\.)?doi\.org/", re.IGNORECASE)
 _WHITESPACE_RE = re.compile(r"\s+")
@@ -73,8 +72,8 @@ class Author:
     """
 
     name: str
-    affiliation: Optional[str] = None
-    orcid: Optional[str] = None
+    affiliation: str | None = None
+    orcid: str | None = None
 
 
 @dataclass
@@ -89,7 +88,7 @@ class Citation:
 
     source_id: str
     target_id: str
-    context: Optional[str] = None
+    context: str | None = None
 
 
 @dataclass
@@ -122,19 +121,19 @@ class Paper:
     title: str
     abstract: str = ""
     authors: list[Author] = field(default_factory=list)
-    year: Optional[int] = None
-    doi: Optional[str] = None
-    pmid: Optional[str] = None
-    arxiv_id: Optional[str] = None
-    s2_id: Optional[str] = None
-    openalex_id: Optional[str] = None
-    venue: Optional[str] = None
+    year: int | None = None
+    doi: str | None = None
+    pmid: str | None = None
+    arxiv_id: str | None = None
+    s2_id: str | None = None
+    openalex_id: str | None = None
+    venue: str | None = None
     citation_count: int = 0
     references: list[str] = field(default_factory=list)
-    publication_date: Optional[date] = None
-    pdf_url: Optional[str] = None
-    is_open_access: Optional[bool] = None
-    full_text_source: Optional[str] = None
+    publication_date: date | None = None
+    pdf_url: str | None = None
+    is_open_access: bool | None = None
+    full_text_source: str | None = None
     keywords: list[str] = field(default_factory=list)
 
     @property

@@ -77,7 +77,5 @@ def test_write_active_projects_doc_is_idempotent(tmp_path: Path) -> None:
     first_content = first_path.read_text(encoding="utf-8")
     second_path = write_active_projects_doc(tmp_path)
     second_content = second_path.read_text(encoding="utf-8")
-    # The generated_at timestamp will differ, so just check structure is stable
-    assert "# Public active projects" in first_content
-    assert "# Public active projects" in second_content
+    assert first_content == second_content
     assert first_path == second_path

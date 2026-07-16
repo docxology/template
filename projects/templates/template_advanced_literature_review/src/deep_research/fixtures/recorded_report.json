@@ -1,0 +1,34 @@
+{
+  "provider": "curated-fixture",
+  "job_id": "",
+  "status": "completed",
+  "output_text": "# Deep Research Report: Exoplanet Atmosphere Evidence\n\n## Executive Summary\n\nTransmission and emission spectroscopy provide complementary constraints on atmospheric composition, while clouds and retrieval-model assumptions remain important sources of uncertainty.\n\n## Findings\n\n- Broad wavelength coverage improves abundance constraints.\n- Repeated observations help distinguish instrumental systematics from atmospheric structure.\n\n## Risks\n\n- Selection effects and model dependence can overstate molecular detections.\n",
+  "citations": [
+    {
+      "title": "Early Release Science of the exoplanet WASP-39b with JWST NIRISS",
+      "url": "https://www.nature.com/articles/s41586-022-05674-1",
+      "start_index": null,
+      "end_index": null,
+      "text": null,
+      "metadata": {"journal": "Nature", "year": 2023, "doi": "10.1038/s41586-022-05674-1"}
+    },
+    {
+      "title": "Sulfur dioxide in the mid-infrared transmission spectrum of WASP-39b",
+      "url": "https://www.nature.com/articles/s41586-024-07040-9",
+      "start_index": null,
+      "end_index": null,
+      "text": null,
+      "metadata": {"journal": "Nature", "year": 2024, "doi": "10.1038/s41586-024-07040-9"}
+    }
+  ],
+  "trace": [
+    {"type": "curated_primary_sources"},
+    {"type": "synthetic_demonstration_summary"}
+  ],
+  "raw": {"fixture_scope": "synthetic replay summary with real primary-paper citation metadata"},
+  "request": {
+    "query": "Survey robust evidence and uncertainty in exoplanet atmosphere characterization",
+    "provider": "curated-fixture",
+    "output_format": "markdown"
+  }
+}

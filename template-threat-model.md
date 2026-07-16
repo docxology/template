@@ -45,8 +45,9 @@ The main residual risks are:
 - LLM, rendering, and steganography surfaces intentionally process manuscript
   content and external/local model inputs. They need strong scoping,
   sanitization, and "do not upload private paths" guarantees.
-- `projects/ongoing/askos/TODO.md` is an adjacent high-risk backlog if AskOS is ever
-  promoted into this repository's shipped/public/deployed boundary.
+- Private control-plane projects may carry adjacent high-risk backlogs; their
+  promotion into this repository's shipped/public/deployed boundary requires an
+  explicit security checklist and risk acceptance.
 
 ## Scope And Assumptions
 
@@ -262,14 +263,14 @@ Non-capabilities assumed:
    - Gap: governance, not code: add required review, generated CODEOWNERS parity,
      and periodic ownership-map review for sensitive tags.
 
-9. AskOS promotion without closing auth/export policy gaps.
-   - Path: `projects/ongoing/askos` becomes active/public/deployed while TODO gaps remain
-     for JWT verification, policy evaluation, redaction, vault, route tests, and
-     MCP tests.
-   - Current controls: AskOS appears adjacent/local in this analysis, not the
+9. Private control-plane promotion without closing auth/export policy gaps.
+   - Path: a private project becomes active/public/deployed while TODO gaps
+     remain for identity verification, policy evaluation, redaction,
+     secret-store, route, and protocol tests.
+   - Current controls: private projects remain adjacent/local, outside the
      public template security boundary.
    - Gap: promotion blocker should require closing or explicitly risk-accepting
-     those AskOS security TODOs.
+     those project-specific security TODOs.
 
 ## Threat Register
 
@@ -277,7 +278,7 @@ Non-capabilities assumed:
 | --- | --- | --- | --- | --- | --- | --- |
 | TM-001 | Private/local project names or content leak into public docs/manifests/published artifacts | Medium | Critical | Critical | `docs/maintenance/review-remediation-2026-07.md:123`, `git_guards.py:122`, `public_scope.py:19` | Add tracked/public-scope invariant tests for every discovery and manifest generator; keep R2-style regression close to affected code |
 | TM-002 | Real publish/deposit uploads wrong payload or local-only files | Medium | High | High | `publish_project_release.py:104`, `archive_publication.py:66`, `_adapter_http.py:39` | Require redacted payload manifest and local-only path refusal before any non-dry-run publish |
-| TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `credentials.py:64`, `publish_project_release.py:47`, `projects/ongoing/askos/TODO.md:22` | Add reusable secret-redaction helper to publish receipts/logging and test token-shaped URL redaction |
+| TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `credentials.py:64`, `publish_project_release.py:47` | Add reusable secret-redaction helper to publish receipts/logging and test token-shaped URL redaction |
 | TM-004 | CI/release workflow modified to weaken security gates or run with excess permissions | Medium | High | High | `.github/workflows/ci.yml:14`, `.github/workflows/release.yml:13`, `.pre-commit-config.yaml:115` | Protect workflow files through CODEOWNERS and branch protection; audit `permissions` deltas in CI |
 | TM-005 | Dependency/action supply chain compromise | Medium | High | High | `.github/workflows/ci.yml:45`, `.github/workflows/ci.yml:649`, `bandit.yaml:44` | Keep action pins immutable, keep pip-audit ignore file time-bounded, and require review for lockfile/security config deltas |
 | TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `sanitization.py:37`, `client.py:163`, `client.py:224` | Restrict `query_raw()` to named internal call sites, add tests preventing raw calls on project/manuscript text |
@@ -286,7 +287,7 @@ Non-capabilities assumed:
 | TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS:23`, `public_scope.py:19` | Generate CODEOWNERS project stanza or add a parity test against `PUBLIC_PROJECT_NAMES` |
 | TM-010 | Security-sensitive ownership has bus factor 1 | High | Medium-High | High | `security-analysis/ownership-map/summary.json` | Add formal sensitive-area owner map, required reviews, and periodic ownership-map report |
 | TM-011 | Generated artifacts or oversized outputs are force-added | Low-Medium | High | High | `git_guards.py:102`, `git_guards.py:202`, `.pre-commit-config.yaml:72` | Keep generated-artifact guard required in CI and pre-push; extend patterns when new output roots appear |
-| TM-012 | AskOS auth/policy/export gaps become in-scope without promotion gate | Medium if promoted | Critical | Conditional Critical | `projects/ongoing/askos/TODO.md:26`, `projects/ongoing/askos/TODO.md:35`, `projects/ongoing/askos/TODO.md:46`, `projects/ongoing/askos/TODO.md:177` | Add an AskOS promotion checklist requiring JWT, policy, redaction, vault, route, and MCP test closure before active/public/deployed status |
+| TM-012 | Private control-plane auth/policy/export gaps become in-scope without a promotion gate | Medium if promoted | Critical | Conditional Critical | `TO-DO.md` `SECURITY-PRIVATE-PROMOTION-1` | Add a generic promotion checklist requiring identity, policy, redaction, secret-store, route, and protocol test closure before active/public/deployed status |
 
 ## TODO Scope
 
@@ -386,8 +387,8 @@ Review these paths first for a deep security audit:
 - `infrastructure/rendering/pdf_renderer.py`
 - `infrastructure/rendering/web_renderer.py`
 - `infrastructure/steganography/`
-- `projects/ongoing/askos/TODO.md` if AskOS is promoted into active/public/deployed
-  scope.
+- Each private project's security TODOs before promotion into active/public/deployed
+  scope; do not copy private paths into this public threat model.
 
 ## Quality Check
 

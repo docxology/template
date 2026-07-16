@@ -11,6 +11,7 @@ import datetime
 import json
 import tempfile
 import typing
+from contextlib import suppress
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -221,6 +222,7 @@ class Provenance:
         }
         # Atomic write: write to tmp then rename
         tmp_dir = self._path.parent
+        tmp_path: Path | None = None
         try:
             with tempfile.NamedTemporaryFile(
                 mode="w",
@@ -233,10 +235,9 @@ class Provenance:
                 tmp_path = Path(fh.name)
             tmp_path.replace(self._path)
         except OSError:
-            try:
-                tmp_path.unlink(missing_ok=True)
-            except Exception:
-                pass
+            if tmp_path is not None:
+                with suppress(OSError):
+                    tmp_path.unlink(missing_ok=True)
             raise
 
 

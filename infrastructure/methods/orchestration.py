@@ -7,21 +7,9 @@ import re
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
+from infrastructure.core.pipeline.stage_registry import known_stage_keys
 from infrastructure.methods.models import MethodStage, MethodsIssue, MethodsOrchestrationPlan
 from infrastructure.project.discovery import resolve_project_root
-
-_STAGE_NAME_TO_KEY = {
-    "Clean Output Directories": "clean",
-    "Environment Setup": "setup",
-    "Infrastructure Tests": "infra_tests",
-    "Project Tests": "project_tests",
-    "Project Analysis": "analysis",
-    "PDF Rendering": "render_pdf",
-    "Output Validation": "validate",
-    "LLM Scientific Review": "llm_reviews",
-    "LLM Translations": "llm_translations",
-    "Copy Outputs": "copy",
-}
 
 _METHOD_SECTION_TOKENS = ("method", "methodology", "experimental_setup", "protocol")
 
@@ -211,18 +199,25 @@ def _build_stage(
 
 
 def _stage_verification_commands(stage: StageDefinition, project_name: str) -> tuple[str, ...]:
-    stage_key = _STAGE_NAME_TO_KEY.get(stage.name)
+    """Return only commands that the current repository can dispatch.
+
+    Script-backed stages always have a direct command. Their optional
+    single-stage command is emitted only when the YAML key is registered by
+    the canonical dispatcher. Method-only built-ins, such as ``clean``, have
+    no independent CLI dispatch and therefore intentionally return no command.
+    """
+    stage_key = stage.key
     if stage.script:
+        script_path = stage.script if stage.script.startswith("scripts/") else f"scripts/{stage.script}"
         args = " ".join(stage.args)
         spacer = " " if args else ""
-        commands = [f"uv run python scripts/{stage.script}{spacer}{args} --project {project_name}"]
-        if stage_key:
+        commands = [f"uv run python {script_path}{spacer}{args} --project {project_name}"]
+        if stage_key in known_stage_keys():
             commands.append(
                 f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}"
             )
         return tuple(commands)
-    fallback_key = stage_key or stage.name.lower().replace(" ", "_")
-    return (f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {fallback_key}",)
+    return ()
 
 
 def _validation_commands(project_name: str) -> tuple[str, ...]:

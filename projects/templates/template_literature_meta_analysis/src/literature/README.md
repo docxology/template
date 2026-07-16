@@ -1,8 +1,8 @@
 # Literature Retrieval Module
 
 Multi-source corpus generation for the literature meta-analysis. Retrieves papers from
-nine literature engines (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, bioRxiv/medRxiv), deduplicates by canonical identifier, and
+ten independently toggled engines (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed,
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), deduplicates by canonical identifier, and
 persists to JSONL.
 
 ## Components
@@ -18,7 +18,7 @@ Key fields on `Paper`:
 - `doi, arxiv_id, s2_id, openalex_id` — identifier cascade
 - `citation_count` — used in hypothesis scoring weight `log(1 + citations)`
 - `references: list[str]` — raw reference strings for citation network resolution
-- `pdf_url, is_open_access` — used by full-text ingestion (future Step 2)
+- `pdf_url, is_open_access` — used by the opt-in full-text ingestion stage
 
 ### `corpus.py`
 `Corpus` class: dict-backed collection keyed by `paper.canonical_id`. `add(paper)` merges
@@ -85,7 +85,7 @@ PMC, patents, and preprints). Single-request pagination via `pageSize` (capped a
 - `search_europepmc(query, max_results, base_url, session) -> list[Paper]`
 
 ### `biorxiv_client.py`
-Queries the unified bioRxiv/medRxiv `details/{server}/{interval}/{cursor}/json` endpoint.
+Queries the shared bioRxiv/medRxiv `details/{server}/{interval}/{cursor}/json` endpoint.
 Not free-text search: walks a date window page by page (100/page, cursor-based) and keeps
 only items whose title+abstract match every query term (client-side filter). `server`
 selects `"biorxiv"` or `"medrxiv"`.
@@ -95,12 +95,12 @@ selects `"biorxiv"` or `"medrxiv"`.
 ### `query_router.py`
 Heuristic query router for the multi-backend search runner. Detects academic, industry, and mixed
 queries; prefers preprint engines for preprint-heavy queries; and returns the engine dispatch order
-across all nine engines.
+across all ten engines.
 
 - `QueryRouter.route(query, available_sources) -> QueryRoute`
 
 ### `engine_dispatch.py`
-Declarative engine-enablement registry: `ENGINE_SPECS` enumerates all nine engines (name, CLI
+Declarative engine-enablement registry: `ENGINE_SPECS` enumerates all ten engines (name, CLI
 skip-flag, config-toggle key) as a single source of truth, and `engine_enabled()` evaluates the
 skip-flag / config-toggle / hermetic-injection gating for a given spec. `dispatch_ordered()` is
 the piece actually wired into `search_runner.py` today — it invokes each engine's runner closure
@@ -124,8 +124,10 @@ escapes LaTeX-special characters, and renders the whole corpus to a single `.bib
 ### `fulltext_download.py`
 Full-text resolution, download, and extraction. Resolves open-access PDF URLs via Unpaywall
 (opt-in, `unpaywall_email` config), downloads with retry, extracts plaintext and figures from
-PDFs, and reports coverage/extraction statistics across the corpus. Backs
-`scripts/06_fulltext_assessment.py`.
+PDFs, validates response media and PDF magic bytes before persistence, and
+reports coverage/extraction statistics across the corpus. Backs the opt-in
+producer `scripts/11_fulltext_download.py`; script `06` performs metadata-only
+availability assessment.
 
 - `resolve_fulltext_url(paper, unpaywall_email, base_url, session) -> str | None`
 - `download_fulltext(paper, dest_dir, session) -> Path | None`
@@ -142,7 +144,7 @@ Corpus-level metrics and routing summary helper used by the stage-07 evaluation 
 
 ## Deduplication Strategy
 
-Papers are deduplicated by canonical ID across all nine sources. When the same paper appears
+Papers are deduplicated by canonical ID across all ten sources. When the same paper appears
 from multiple sources (common for preprints that also appear in Semantic Scholar, OpenAlex,
 Crossref, or a biomedical aggregator), `Corpus.add()` retains the version with the highest
 `metadata_completeness` score. The cascade:

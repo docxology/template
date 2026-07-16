@@ -1,11 +1,11 @@
 ---
-name: Manuscript Templating & Injection
-description: Tooling for injecting JSON/CSV statistics into Markdown evaluation templates.
+name: Advanced Literature Manuscript Injection
+description: Phase-aware tooling for injecting advanced-review evidence and statistics into Markdown manuscript templates.
 ---
 
 # Instructions
 
-You are interacting with the `src/manuscript/` templater module. This pipeline binds computed statistical aggregates into the final LaTeX/Markdown scientific deliverables.
+You are interacting with the `src/manuscript/` templater module. This pipeline binds phase-aware retrieval evidence and computed statistical aggregates into the final LaTeX/Markdown scientific deliverables.
 
 ## Agentic Interface (MCP Strategy)
 

@@ -259,12 +259,12 @@ hypotheses frame the evidence landscape.</p></li>
 <p>The pipeline contributes an end-to-end, domain-agnostic workflow:</p>
 <ol type="1">
 <li><p><strong>Multiple-engine retrieval with graceful
-degradation.</strong> Records are gathered from 9 independent engines
+degradation.</strong> Records are gathered from 10 independent engines
 (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, and bioRxiv/medRxiv). An engine with no API key
-or no network reports a <em>skipped</em> status; the run completes from
-whatever engines remain plus a committed offline corpus. Each new
-retrieval persists per-engine outcome and count provenance in
+ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). An engine with no
+API key or no network reports a <em>skipped</em> status; the run
+completes from whatever engines remain plus a committed offline corpus.
+Each new retrieval persists per-engine outcome and count provenance in
 <code>output/data/retrieval_report.json</code>; the merged corpus alone
 is never used to infer which engine supplied a record.</p></li>
 <li><p><strong>Record de-duplication.</strong> Heterogeneous records are

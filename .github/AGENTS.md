@@ -121,7 +121,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. Verifies the req
 ## Local Pre-Push Parity (`.pre-commit-config.yaml`)
 
 The repo ships a [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) with
-**five pre-push hooks** that mirror (or partially mirror) CI gates so pushes
+**seven pre-push hooks** that mirror (or partially mirror) CI gates so pushes
 that would fail CI fail locally first:
 
 | Hook id | Mirrors CI step | Typical runtime |
@@ -130,7 +130,9 @@ that would fail CI fail locally first:
 | `docs-contract-guard` | `check_template_drift.py --strict` + AGENTS personal-memory test | ~5 s |
 | `bandit-quick` | `security` job Bandit step (`-c bandit.yaml -r -ll`) | ~5–30 s |
 | `skills-check` | `infrastructure.skills check` (manifest freshness) | <1 s |
+| `operations-check` | `infrastructure.skills operations-check` (operation-manifest freshness) | <1 s |
 | `all-exports-check` | `infrastructure.skills check-all-exports` (lint job MED5 gate) | <1 s |
+| `skill-reachability-check` | docs-lint skill front-door and index completeness gate | <1 s |
 
 The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
 pre-push, to keep `git commit` fast. A separate manual-stage `bandit-low`

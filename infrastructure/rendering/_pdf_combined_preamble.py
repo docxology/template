@@ -37,12 +37,17 @@ def inject_latex_preamble(
 
     # Surface dropped custom declarations before compiling.  Missing theorem or
     # listings declarations otherwise become opaque LaTeX errors later.
-    required_declarations = (
-        r"\usepackage{listings}",
-        r"\newtheorem{remark}",
-        r"\newtheorem{example}",
-    )
-    missing_declarations = [declaration for declaration in required_declarations if declaration not in preamble_content]
+    required_declarations = {
+        r"\usepackage{listings}": re.compile(r"\\usepackage(?:\[[^\]]*\])?\{listings\}"),
+        r"\newtheorem{theorem}": re.compile(r"\\newtheorem\*?\s*\{theorem\}"),
+        r"\newtheorem{remark}": re.compile(r"\\newtheorem\*?\s*\{remark\}"),
+        r"\newtheorem{example}": re.compile(r"\\newtheorem\*?\s*\{example\}"),
+    }
+    missing_declarations = [
+        declaration
+        for declaration, declaration_pattern in required_declarations.items()
+        if declaration_pattern.search(preamble_content) is None
+    ]
     if missing_declarations:
         logger.warning(
             "Preamble is missing declarations required by manuscript content: %s",
@@ -53,6 +58,7 @@ def inject_latex_preamble(
         )
         declarations = {
             r"\usepackage{listings}": listings_declaration,
+            r"\newtheorem{theorem}": r"\newtheorem{theorem}{Theorem}[section]",
             r"\newtheorem{remark}": r"\newtheorem{remark}[theorem]{Remark}",
             r"\newtheorem{example}": r"\newtheorem{example}[theorem]{Example}",
         }

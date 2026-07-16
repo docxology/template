@@ -562,6 +562,40 @@ class TestInjectLatexPreamble:
         # graphicx should still be added
         assert "\\usepackage{graphicx}" in result
 
+    def test_fallback_theorem_declarations_define_shared_counter_first(self, tmp_path):
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "config.yaml").write_text("paper:\n  title: Test\n")
+
+        tex = "\\documentclass{article}\n\\begin{document}\nHello\n\\end{document}"
+        result = inject_latex_preamble(tex, manuscript_dir)
+
+        theorem = result.index("\\newtheorem{theorem}{Theorem}[section]")
+        remark = result.index("\\newtheorem{remark}[theorem]{Remark}")
+        example = result.index("\\newtheorem{example}[theorem]{Example}")
+        assert theorem < remark < example
+
+    def test_shared_counter_declarations_are_recognised_without_duplicates(self, tmp_path):
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "config.yaml").write_text("paper:\n  title: Test\n")
+        (manuscript_dir / "preamble.md").write_text(
+            "```latex\n"
+            "\\usepackage{listings}\n"
+            "\\newtheorem{theorem}{Theorem}[section]\n"
+            "\\newtheorem{remark}[theorem]{Remark}\n"
+            "\\newtheorem{example}[theorem]{Example}\n"
+            "```\n",
+            encoding="utf-8",
+        )
+
+        tex = "\\documentclass{article}\n\\begin{document}\nHello\n\\end{document}"
+        result = inject_latex_preamble(tex, manuscript_dir)
+
+        assert result.count("\\newtheorem{theorem}") == 1
+        assert result.count("\\newtheorem{remark}") == 1
+        assert result.count("\\newtheorem{example}") == 1
+
     def test_no_begin_document(self, tmp_path):
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()

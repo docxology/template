@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from pathlib import Path
 
 from infrastructure.project.public_scope import public_project_names
 
 
-def render_active_projects_doc(repo_root: Path, generated_at: datetime | None = None) -> str:
+def render_active_projects_doc(repo_root: Path) -> str:
     """Render ``docs/_generated/active_projects.md`` content."""
-    generated_at = generated_at or datetime.now(timezone.utc)
     names = public_project_names(repo_root)
     lines = [
         "# Public active projects",
@@ -30,8 +28,6 @@ def render_active_projects_doc(repo_root: Path, generated_at: datetime | None = 
         "layout examples, default to the stable exemplar "
         "[`projects/templates/template_code_project/`](../../projects/templates/template_code_project/) unless a doc "
         "explicitly compares layouts.",
-        "",
-        f"Generated at (timezone.utc): `{generated_at.isoformat(timespec='seconds')}`",
         "",
         "Current entries:",
         "",

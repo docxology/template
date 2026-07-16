@@ -34,3 +34,24 @@ def test_industry_query_prefers_crossref_and_openalex() -> None:
 
     assert route.query_type == "industry"
     assert route.source_order[:2] == ("crossref", "openalex")
+
+
+def test_all_ten_sources_are_ordered_without_silent_exclusion() -> None:
+    router = QueryRouter()
+    sources = [
+        "arxiv",
+        "semantic_scholar",
+        "openalex",
+        "crossref",
+        "pubmed",
+        "sovietrxiv",
+        "chinarxiv",
+        "europepmc",
+        "biorxiv",
+        "medrxiv",
+    ]
+
+    route = router.route("medRxiv preprint", sources)
+
+    assert set(route.source_order) == set(sources)
+    assert route.source_order.index("medrxiv") < route.source_order.index("sovietrxiv")

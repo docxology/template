@@ -27,6 +27,7 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success  # noqa: E402
+from infrastructure.core.files.serialization import load_yaml_mapping  # noqa: E402
 from infrastructure.research import ResearchWorkflow  # noqa: E402
 
 logger = get_logger(__name__)
@@ -55,14 +56,10 @@ def main() -> int:
     workflow_enabled = False
 
     if config_path.exists():
-        import yaml
-
-        try:
-            cfg = yaml.safe_load(config_path.read_text()) or {}
-            rw = cfg.get("research_workflow", {})
-            workflow_enabled = rw.get("enabled", False)
-        except Exception:
-            pass
+        cfg = load_yaml_mapping(config_path)
+        rw = cfg.get("research_workflow")
+        if isinstance(rw, dict):
+            workflow_enabled = bool(rw.get("enabled", False))
 
     if not workflow_enabled and not args.describe:
         logger.info("research_workflow not enabled in config — skipping")

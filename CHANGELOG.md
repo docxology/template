@@ -74,6 +74,30 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+- ⚡ **Active Inference test settlement is about 73% faster.** Source-invalid
+  GNN cases now fail before generated-artifact settlement, missing formal
+  interoperability artifacts use a registry-driven targeted rebuild, direct
+  tests reuse an isolated project snapshot, and collect-only/direct-only runs
+  skip the unrelated gate prewarm. The full serial project suite fell from
+  2,617.35 seconds to 709.05 seconds (706 passed, 6 deselected, 90.59% branch
+  coverage), while collection fell to 0.73 seconds. This closes
+  `AI-GATE-PERF-2` without weakening the manuscript or fixed-point contracts.
+
+- 🔬 **Literature methods and evidence orchestration are fail-closed.** The
+  ten-engine retrieval registry now treats bioRxiv and medRxiv independently,
+  validates direct-PDF responses, records extraction failures and candidate
+  accounting, scopes active candidates separately from persistent caches, and
+  applies deterministic sampling. Full-text/reproducibility stages have
+  declared dependency ordering and machine-readable provenance; the complete
+  project suite passes with 92.40% line-plus-branch coverage.
+
+- 📚 **Advanced multi-phase literature review registered as the 24th public
+  exemplar.** Its project-owned phase orchestration is separated from thin
+  scripts, tested with real local HTTP/filesystem behavior, documented as an
+  explicit public draft, and measured at 95.57% coverage. Public-scope,
+  publication, skills, roster, and coverage-provenance generators now include
+  the exemplar, including tracked-symlink-aware source hashing.
+
 - 📏 **Deterministic benchmark artifacts in the code exemplar (R10).** Tracked
   benchmark JSON now records reproducible inputs, objective values, checks, and
   policy metadata while keeping environment-dependent wall-clock measurements

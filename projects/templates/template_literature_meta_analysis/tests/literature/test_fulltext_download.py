@@ -87,7 +87,7 @@ def test_resolve_via_unpaywall_best_oa_location(httpserver) -> None:
 def test_resolve_via_unpaywall_falls_back_to_oa_locations(httpserver) -> None:
     payload = {
         "best_oa_location": None,
-        "oa_locations": [{"url": "https://oa.example.org/loc.pdf"}],
+        "oa_locations": [{"url_for_pdf": "https://oa.example.org/loc.pdf"}],
     }
     httpserver.expect_request("/v2/10.5555/modafinil.0001").respond_with_data(
         json.dumps(payload), content_type="application/json"
@@ -99,6 +99,25 @@ def test_resolve_via_unpaywall_falls_back_to_oa_locations(httpserver) -> None:
         delay_override=0,
     )
     assert url == "https://oa.example.org/loc.pdf"
+
+
+def test_resolve_unpaywall_rejects_landing_only_location(httpserver) -> None:
+    payload = {
+        "best_oa_location": {"url": "https://oa.example.org/landing"},
+        "oa_locations": [{"url": "https://oa.example.org/other-landing"}],
+    }
+    httpserver.expect_request("/v2/10.5555/modafinil.0001").respond_with_data(
+        json.dumps(payload), content_type="application/json"
+    )
+
+    url = resolve_fulltext_url(
+        _paper(),
+        unpaywall_email="me@example.org",
+        unpaywall_base_url=httpserver.url_for("/v2/"),
+        delay_override=0,
+    )
+
+    assert url is None
 
 
 def test_resolve_unpaywall_no_oa(httpserver) -> None:
@@ -138,9 +157,9 @@ def test_download_writes_pdf_bytes(httpserver, tmp_path: Path) -> None:
 
 
 def test_download_explicit_url_skips_resolve(httpserver, tmp_path: Path) -> None:
-    httpserver.expect_request("/x.pdf").respond_with_data(b"bytes", content_type="application/pdf")
+    httpserver.expect_request("/x.pdf").respond_with_data(b"%PDF-bytes", content_type="application/pdf")
     out = download_fulltext(_paper(doi=None), tmp_path, url=httpserver.url_for("/x.pdf"), delay_override=0)
-    assert out is not None and out.read_bytes() == b"bytes"
+    assert out is not None and out.read_bytes() == b"%PDF-bytes"
 
 
 def test_download_no_url_returns_none(tmp_path: Path) -> None:
@@ -155,9 +174,25 @@ def test_download_http_error_returns_none(httpserver, tmp_path: Path) -> None:
 
 def test_download_retries_on_transient_then_succeeds(httpserver, tmp_path: Path) -> None:
     httpserver.expect_ordered_request("/r.pdf").respond_with_data("busy", status=503)
-    httpserver.expect_ordered_request("/r.pdf").respond_with_data(b"PDFOK", content_type="application/pdf")
+    httpserver.expect_ordered_request("/r.pdf").respond_with_data(b"%PDF-OK", content_type="application/pdf")
     out = download_fulltext(_paper(pdf_url=httpserver.url_for("/r.pdf")), tmp_path, delay_override=0)
-    assert out is not None and out.read_bytes() == b"PDFOK"
+    assert out is not None and out.read_bytes() == b"%PDF-OK"
+
+
+def test_download_rejects_html_with_http_200(httpserver, tmp_path: Path) -> None:
+    httpserver.expect_request("/landing").respond_with_data(
+        "<html>publisher landing page</html>",
+        content_type="text/html",
+    )
+
+    out = download_fulltext(
+        _paper(pdf_url=httpserver.url_for("/landing")),
+        tmp_path,
+        delay_override=0,
+    )
+
+    assert out is None
+    assert list(tmp_path.glob("*.pdf")) == []
 
 
 class _RaisingSession:
@@ -204,7 +239,7 @@ def test_assess_fulltext_availability_counts() -> None:
     assert stats["not_open_access"] == 1
     assert stats["unknown_open_access"] == 1
     assert stats["pct_with_pdf_url"] == 25.0
-    assert stats["by_source"] == {"repository": 1, "publisher": 1}
+    assert stats["by_source"] == {"repository": 1}
 
 
 def test_assess_empty_corpus() -> None:

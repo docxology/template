@@ -28,7 +28,7 @@ import logging
 import random
 import re
 import time
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import requests
 
@@ -70,7 +70,7 @@ def _strip_jats(raw: str) -> str:
     return " ".join(unescaped.split())
 
 
-def _extract_year(item: dict) -> Optional[int]:
+def _extract_year(item: dict) -> int | None:
     """Extract the publication year from a Crossref work's ``issued`` field.
 
     Crossref encodes dates as ``{"date-parts": [[year, month, day]]}``. The
@@ -128,7 +128,7 @@ def _extract_authors(item: dict) -> list[Author]:
         if not name:
             continue
 
-        affiliation: Optional[str] = None
+        affiliation: str | None = None
         affil_list = entry.get("affiliation")
         if isinstance(affil_list, list) and affil_list:
             first_affil = affil_list[0]
@@ -139,7 +139,7 @@ def _extract_authors(item: dict) -> list[Author]:
     return authors
 
 
-def _first_str(value: object) -> Optional[str]:
+def _first_str(value: object) -> str | None:
     """Return the first non-empty string from a Crossref list-valued field.
 
     Crossref returns ``title`` and ``container-title`` as lists of strings.
@@ -197,7 +197,7 @@ def _request_with_retry(
     url: str,
     params: dict,
     max_retries: int = MAX_RETRIES,
-    delay_override: Optional[Callable[[float], None]] = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> requests.Response:
     """Make an HTTP GET request with bounded retry on transient HTTP errors.
 
@@ -246,10 +246,10 @@ def search_crossref(
     *,
     base_url: str = CROSSREF_API_URL,
     max_results: int = 100,
-    mailto: Optional[str] = None,
+    mailto: str | None = None,
     rows_per_page: int = CROSSREF_PAGE_SIZE,
-    session: Optional[requests.Session] = None,
-    delay_override: Optional[Callable[[float], None]] = None,
+    session: requests.Session | None = None,
+    delay_override: Callable[[float], None] | None = None,
 ) -> list[Paper]:
     """Search Crossref for works matching a free-text query.
 

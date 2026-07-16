@@ -10,12 +10,12 @@ from manuscript.variables.io import count_total_references as _count_total_refer
 from manuscript.variables.io import load_json as _load_json
 
 __all__ = [
-    "compute_variables",
-    "inject_variables",
-    "_latex_number",
     "_count_jsonl_lines",
     "_count_total_references",
-    "_humanize_list",
     "_humanize_key",
+    "_humanize_list",
+    "_latex_number",
     "_load_json",
+    "compute_variables",
+    "inject_variables",
 ]
