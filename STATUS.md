@@ -4,7 +4,7 @@
 >
 > Refresh target: every 6 months. Anything older than **365 days** should be treated as potentially dormant.
 
-**Last updated:** 2026-07-02
+**Last updated:** 2026-07-15
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))
 
 ## Verification ledger
@@ -21,10 +21,10 @@
 | Confidentiality invariant (`scripts/audit/check_tracked_all.py` + `.gitignore` + pre-push + symlink boundary) | 2026-05-21 | Daniel | Umbrella guard composes the project, fonds, rules, and tools allowlists; the hook rejects force-added local lifecycle paths and CI lint blocks merge. Confidential projects remain physically separated in the private sidecar and are symlinked into typed local subfolders — see [docs/maintenance/private-projects-repo.md](docs/maintenance/private-projects-repo.md). | 🟢 physical separation + layered defense |
 | Multi-project discovery (`infrastructure/project/discovery.py`) | 2026-05-20 | Daniel | `discover_projects()` returns public exemplars plus any rotating-active projects; `infrastructure.project.public_scope` filters docs/CI scope into `docs/_generated/active_projects.md` | 🟢 healthy |
 | Secure-run subcommand (`secure_run.sh`, `infrastructure.orchestration secure`) | 2026-05-21 | Daniel | Deterministic `--steganography-only --project template_code_project` smoke completed through `infrastructure.orchestration secure`; AES-256 PDF password behavior covered by `tests/infra_tests/steganography/test_encryption.py` | 🟢 healthy |
-| CI matrix (`.github/workflows/ci.yml`) | 2026-05-20 | Daniel | Ubuntu/macOS × Python 3.10–3.12, Dependabot wired; local reproduction documented in `docs/maintenance/ci-local.md` | 🟢 healthy; Python 3.10 EOL Oct 2026 → drop next refresh |
-| Documentation index (`docs/documentation-index.md`) | 2026-05-20 | Daniel | Authoritative per-file index; `docs/_generated/active_projects.md` is the rotating-project source-of-truth | 🟢 healthy |
-| Skills manifest (`infrastructure/skills/`) | 2026-05-21 | Daniel | `uv run python -m infrastructure.skills write` and `write-index` refreshed `.cursor/skill_manifest.json` and `docs/_generated/skills_index.md` after steganography skill edits | 🟢 healthy |
-| Regression tests (`tests/regression/`) | 2026-07-02 | Daniel (agent session) | All fifteen public exemplars carry source-re-derived regression pins under `tests/regression/projects/` with matching pinned-value JSONs and per-project negative controls: `uv run pytest tests/regression/ --collect-only -q --no-cov` collects 55 tests, `uv run pytest tests/regression/ -q --no-cov` passes together. Not yet wired into a CI job (tracked in [`docs/maintenance/review-remediation-2026-07.md`](docs/maintenance/review-remediation-2026-07.md)). See `docs/maintenance/regression-testing.md` | 🟡 all 15 exemplars pinned locally; CI wiring pending |
+| CI matrix (`.github/workflows/ci.yml`) | 2026-07-15 | Daniel (agent session) | Push run [`29467202577`](https://github.com/docxology/template/actions/runs/29467202577) passed the Ubuntu/macOS infrastructure matrix, Python 3.10/3.12 project matrix for all 24 public exemplars, regression, manuscript, documentation, security, static-health, no-mocks, Actionlint, lint, and type checks. Local parity is documented in `docs/maintenance/ci-local.md`. | 🟢 healthy; Python 3.10 EOL Oct 2026 → drop next refresh |
+| Documentation index and generated docs (`docs/`) | 2026-07-15 | Daniel (agent session) | Documentation lint plus generated roster, counts, coverage provenance, publication records, skills index, and architecture self-checks passed for the authoritative 24-exemplar public scope. | 🟢 healthy |
+| Skills manifest (`infrastructure/skills/`) | 2026-07-15 | Daniel (agent session) | Public-roster-driven skill discovery regenerated `.cursor/skill_manifest.json` and `docs/_generated/skills_index.md`; manifest, reachability, and all-exports gates passed in the 22-gate health sweep and hosted CI. | 🟢 healthy |
+| Regression tests (`tests/regression/`) | 2026-07-15 | Daniel (agent session) | The source-re-derived claim-binding regression tier passed all 55 tests and now runs as an explicit hosted CI job. Public-exemplar structural and coverage contracts are additionally enforced per project. See `docs/maintenance/regression-testing.md`. | 🟢 regression tier wired and green |
 | AutoResearch exemplar (`projects/templates/template_autoresearch_project/`) | 2026-06-13 | Codex | `uv run pytest projects/templates/template_autoresearch_project/tests/ -q` passed 224 tests after adding evidence overview, benchmark-boundary, and source-ledger contract checks | 🟢 healthy |
 
 ## Health legend

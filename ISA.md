@@ -2,11 +2,13 @@
 project: humos-template
 task: "Iteration 10 - comprehensive repository review, issue closure, and authorized main push"
 effort: E4
-phase: verifying
-progress: implementation and local gates complete; final adversarial audit, issue closure, push, and live CI remain
+phase: complete
+progress: implementation, audit, issue closure, main publication, remote SHA verification, and hosted CI complete
 iteration: 10-comprehensive-review-issue-closure-main-push
 baseline_head_iter10: 75447b6f08e79b7527fb33fb096d4442ce8d094a
 integrated_head_iter10: e17d25ec8
+published_head_iter10: 8ed32784088c370ea0cba6a9af0de9392d68d88b
+published_ci_iter10: "CI run 29467202577 attempt 2: success"
 baseline_origin_main_iter10: 63042c1a23bb787c2f3c755ba4dda4ce8493fe0c
 baseline_dirty_iter10: 195 tracked paths plus 2413 untracked paths and an independently dirty kmyth submodule
 final_head_iter9: 138de2139110af3a563f18d5cfb70cf11509cd94 (external Hermes-Agent commit that absorbed this session's edits — see Decisions)
@@ -259,7 +261,7 @@ Kmyth checkout.
 - [x] ISC-284: Anti: scraped full text, local `.ski` sidecars, transient TeX/web outputs, and other unreviewed local build residue are not added to the public commit.
 - [x] ISC-285: Anti: the independent dirty `infrastructure/steganography/kmyth` checkout and ignored local exemplars are neither edited nor committed.
 - [x] ISC-286: a fresh-context adversarial audit reports no unresolved medium/high correctness, security, or developer-experience finding in the final diff.
-- [ ] ISC-287: the reviewed commit reaches `origin/main`, the remote SHA is re-read, and required GitHub checks are observed on that SHA.
+- [x] ISC-287: the reviewed commit reaches `origin/main`, the remote SHA is re-read, and required GitHub checks are observed on that SHA.
 
 ### Iteration 10 Test Strategy
 
@@ -320,8 +322,13 @@ tree again from Git state, then push and inspect the remote SHA and CI checks.
   advanced exemplar's runnable enrichment order. The command contract was fixed
   to `11 → 10 → 05`, guarded by a direct test, and the fresh re-audit returned
   `CLEAN` with no remaining medium/high finding.
-- ISC-287 remains open until the commit is pushed, the remote SHA is re-read,
-  and required GitHub checks are observed on that SHA.
+- ISC-287: reviewed commit `8ed32784088c370ea0cba6a9af0de9392d68d88b`
+  reached `origin/main`; `git ls-remote` returned the same SHA. Hosted CI run
+  `29467202577` completed successfully on attempt 2. The only first-attempt
+  failure was an external `setup-uv` version-manifest fetch in the Python 3.10
+  EDA job before dependency sync; that unchanged job passed on retry, while all
+  repository lint, type, security, documentation, infrastructure, regression,
+  manuscript, health, and public-exemplar jobs passed.
 
 ## Historical iterations 1–3 — Goal
 
