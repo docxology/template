@@ -433,12 +433,12 @@ def _number_to_string(value: int | float) -> str:
     return f"{value:g}"
 
 
-def _number_variants(value: str) -> set[str]:
+def _number_variants(value: str) -> tuple[str, ...]:
     variants = {str(value)}
     try:
         number = float(_canonical_number_token(str(value)).rstrip("%"))
     except ValueError:
-        return variants
+        return (str(value),)
     # Manuscripts commonly report small generated measurements to five or
     # more decimal places.  Preserve the evidence link for those ordinary
     # rounded presentations without requiring authors to duplicate the
@@ -456,7 +456,9 @@ def _number_variants(value: str) -> set[str]:
             variants.add(f"{percent:.{digits}f}".rstrip("0").rstrip(".") + "%")
     if abs(number) > 1:
         variants.add(f"{number / 100:g}")
-    return variants
+    # A set is useful while constructing the bounded presentation variants, but
+    # never expose its hash-dependent iteration order in a persisted registry.
+    return tuple(sorted(variants))
 
 
 def _source_tier_counts(facts: Iterable[EvidenceFact]) -> dict[str, int]:

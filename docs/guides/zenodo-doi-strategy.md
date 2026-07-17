@@ -90,7 +90,10 @@ Reserve-first is for **first releases** only unless `--new-version` is explicitl
 - [ ] `version_doi` and `version_record` reflect the previous latest deposit until this run completes
 - [ ] `CITATION.cff` `doi:` equals `publication.doi`
 - [ ] Combined PDF validates (`uv run python -m infrastructure.validation.cli pdf …`)
-- [ ] Cover page shows concept DOI only
+- [ ] Cover page shows concept DOI only — verify by reading the rendered text,
+      not by trusting `config.yaml` was written before the re-render:
+      `pdftotext -f 1 -l 1 -layout <combined>.pdf - | grep -i "10.5281/zenodo"`
+      (see [Publication runbook § Final verification](publication-runbook.md#final-verification))
 
 ## Drift detection
 

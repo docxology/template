@@ -20,6 +20,7 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 | "Audit methods against pipeline stages and evidence" | [methods-orchestration/SKILL.md](methods-orchestration/SKILL.md) |
 | "Triple-check every manuscript claim before arXiv" | [manuscript-claim-verification/SKILL.md](manuscript-claim-verification/SKILL.md) |
 | "Prove double-run reproducibility before Zenodo" | [reproducibility-audit/SKILL.md](reproducibility-audit/SKILL.md) |
+| "Publication-readiness sign-off across tests, evidence, and renders" | [publication-audit/SKILL.md](publication-audit/SKILL.md) |
 | "Audit [[FIG:]] and labels.yaml" | [manuscript-cross-references/SKILL.md](manuscript-cross-references/SKILL.md) |
 | "Scaffold new project + manuscript from brief" | [manuscript-creation/SKILL.md](manuscript-creation/SKILL.md) |
 | "Add tests, no mocks" | [test-creation/SKILL.md](test-creation/SKILL.md) |
@@ -64,6 +65,7 @@ Say what you need in natural language — no slash commands or copy-paste blocks
 | [validation-quality/](validation-quality/SKILL.md) | Validation CLI and gates |
 | [comprehensive-assessment/](comprehensive-assessment/SKILL.md) | Wide audit |
 | [reproducibility-audit/](reproducibility-audit/SKILL.md) | Determinism before release |
+| [publication-audit/](publication-audit/SKILL.md) | Publication-readiness sign-off |
 | [pipeline-debugging/](pipeline-debugging/SKILL.md) | DAG stage triage |
 | [agentic-use/](agentic-use/SKILL.md) | Skill inventory, routing, and external companion/reference review, including Steward OS, AutoResearch CLI, and LEANN |
 

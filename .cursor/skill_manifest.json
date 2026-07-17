@@ -504,6 +504,29 @@
       }
     },
     {
+      "name": "template-publication-audit",
+      "description": "End-to-end publication-readiness audit for public template exemplars — tests,\nno-mocks, methods contracts, claims, evidence, figures, references, rendered\noutputs, and deterministic regeneration. USE WHEN preparing a template or\nproject for release, DOI deposit, peer review, or a publication sign-off.\n",
+      "path": "docs/prompts/publication-audit/SKILL.md",
+      "cursor_at": "docs/prompts/publication-audit/SKILL.md",
+      "metadata": {
+        "version": "1.0.0",
+        "last_updated": "2026-07-17",
+        "status": "active",
+        "data_access_level": "verified_only",
+        "task_type": "open-ended",
+        "modes": [
+          "deterministic-gate",
+          "editorial-review"
+        ],
+        "related_skills": [
+          "template-comprehensive-assessment",
+          "template-reproducibility-audit",
+          "template-methods-orchestration",
+          "template-manuscript-claim-verification"
+        ]
+      }
+    },
+    {
       "name": "template-refactoring",
       "description": "Clean-break refactors with migration for the Research Project Template — move logic to src/,\nsplit modules, rename APIs with test updates. USE WHEN restructuring code, extracting\nmodules, removing duplication, or migration without behavior change.\n",
       "path": "docs/prompts/refactoring/SKILL.md",
@@ -806,6 +829,12 @@
       "description": "Skill for the validation infrastructure module providing PDF validation, markdown validation, output integrity checks, link verification, documentation audits, issue categorization, and repository scanning. Use when validating research outputs, checking document quality, running audits, or verifying cross-references.",
       "path": "infrastructure/validation/SKILL.md",
       "cursor_at": "infrastructure/validation/SKILL.md"
+    },
+    {
+      "name": "publication-readiness-audit",
+      "description": "Use when auditing public research exemplars for deterministic publication readiness across tests, methods, evidence, artifacts, figures, manuscript sources, and generated outputs.",
+      "path": "infrastructure/validation/publication/SKILL.md",
+      "cursor_at": "infrastructure/validation/publication/SKILL.md"
     },
     {
       "name": "template-active-inference",

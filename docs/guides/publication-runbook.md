@@ -225,21 +225,51 @@ The archival stage defaults to dry-run unless `--commit` is present.
 
 ## Final verification
 
-After any real publication run:
+`status_report.py --check` and `publication_records.py --refresh-external` verify
+different things — run both, they are not substitutes for each other. `--check`
+only asks "does the committed README block match what `config.yaml` currently
+says" (fully offline, deterministic — catches a stale block, not a fabricated
+claim). `--refresh-external` and `--verify-reachability` are the two commands
+that actually leave the machine and ask GitHub/Zenodo whether the record is
+real:
 
 ```bash
 PROJECT=templates/template_code_project
 
+# Offline: README publishing-status block matches config.yaml
 uv run python -m infrastructure.publishing.status_report \
   --project "projects/$PROJECT" --check
+
+# Live: refreshes the repo-wide DOI/GitHub matrix from the real GitHub REST API
+# (repo + latest release) and the Zenodo Records API — the same class of check
+# a manual `gh release view` + `curl https://zenodo.org/api/records/<id>` does.
 uv run python scripts/docgen/publication_records.py --refresh-external
+
+# Live, opt-in, display-only: HEAD-probes the public GitHub repo URL (not the
+# rate-limited API) and the DOI resolver for THIS project's own config, and
+# prints (never commits) a downgrade for any identifier that 404s/410s. Exists
+# specifically because the offline --check trusts a non-empty DOI/repo field
+# blindly — a private or deleted repo still reads "published" without this.
+uv run python -m infrastructure.publishing.status_report \
+  --project "projects/$PROJECT" --verify-reachability
+
 uv run python scripts/audit/check_template_drift.py --strict
 ```
 
-Then manually open the GitHub release, Zenodo record, and any optional mirror
-URLs recorded in `publication.published_artifacts`. The committed source of
-truth is the project `publication` block plus generated status/report files, not
-the machine-specific credential state.
+**Confirm the DOI actually landed on the rendered PDF cover** — `publication.doi`
+being set in config is not proof the PDF was re-rendered after the write. Read
+the real page text, don't trust the pipeline exit code:
+
+```bash
+pdftotext -f 1 -l 1 -layout \
+  "output/$PROJECT/pdf/$(basename "$PROJECT")_combined.pdf" - | grep -i "10.5281/zenodo"
+```
+
+Then manually open the GitHub release, the Zenodo record page (confirm
+`state`/`submitted` in the API JSON, not just that the URL loads), and any
+optional mirror URLs recorded in `publication.published_artifacts`. The
+committed source of truth is the project `publication` block plus generated
+status/report files, not the machine-specific credential state.
 
 ## Deep dives
 

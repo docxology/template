@@ -27,6 +27,7 @@ Discovered by `infrastructure.skills` via root `docs/prompts` in `DEFAULT_SKILL_
 | [`validation-quality/`](validation-quality/SKILL.md) | `template-validation-quality` | Validation CLI / gates |
 | [`comprehensive-assessment/`](comprehensive-assessment/SKILL.md) | `template-comprehensive-assessment` | Full checkout audit |
 | [`reproducibility-audit/`](reproducibility-audit/SKILL.md) | `template-reproducibility-audit` | Determinism before release |
+| [`publication-audit/`](publication-audit/SKILL.md) | `template-publication-audit` | Publication-readiness sign-off |
 | [`pipeline-debugging/`](pipeline-debugging/SKILL.md) | `template-pipeline-debugging` | DAG stage triage |
 | [`manuscript-creation/`](manuscript-creation/SKILL.md) | `template-manuscript-creation` | Manuscript + project scaffold |
 | [`manuscript-cross-references/`](manuscript-cross-references/SKILL.md) | `template-manuscript-cross-references` | Registry/token cross-refs |

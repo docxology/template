@@ -5,13 +5,14 @@ Thin orchestrator wrapping infrastructure.validation module functionality.
 
 import argparse
 import json
+import logging
 from collections.abc import Sequence
 from pathlib import Path
 
 from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
-
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.validation.integrity.checks import verify_output_integrity
 from infrastructure.validation.integrity.link_validator import LinkValidator
@@ -22,6 +23,12 @@ from infrastructure.validation.evidence_registry import (
     unsupported_citation_tokens,
     unsupported_number_tokens,
     validate_text_against_registry,
+)
+from infrastructure.validation.publication import (
+    build_publication_audit,
+    format_publication_audit_json,
+    format_publication_audit_markdown,
+    validate_publication_audit,
 )
 
 logger = get_logger(__name__)
@@ -267,6 +274,27 @@ def validate_prose_quality_command(args: argparse.Namespace) -> None:
     raise SystemExit(1 if report.has_flags and args.fail_on_flags else 0)
 
 
+def publication_audit_command(args: argparse.Namespace) -> None:
+    """Run the deterministic public-exemplar publication audit."""
+    repo_root = Path(args.repo_root).resolve()
+    projects = [args.project] if args.project else list(PUBLIC_PROJECT_NAMES)
+    logging.getLogger("infrastructure.core.pipeline.dag").setLevel(logging.WARNING)
+    report = build_publication_audit(repo_root, projects, rendered=args.rendered)
+    rendered = (
+        format_publication_audit_json(report) if args.format == "json" else format_publication_audit_markdown(report)
+    )
+    if args.output:
+        output = Path(args.output)
+        if not output.is_absolute():
+            output = repo_root / output
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        logger.info("Publication audit written to %s", output)
+    else:
+        print(rendered, end="")
+    raise SystemExit(validate_publication_audit(report, strict=args.strict))
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Construct the validation CLI argument parser.
 
@@ -345,6 +373,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="Exit non-zero when any AI-writing flag is raised (advisory by default)",
     )
     prose_parser.set_defaults(func=validate_prose_quality_command)
+
+    publication_parser = subparsers.add_parser(
+        "publication-audit",
+        help="Audit public exemplars for deterministic publication readiness",
+    )
+    publication_parser.add_argument("--repo-root", default=".", help="Repository root")
+    publication_parser.add_argument("--project", help="Qualified project name under projects/")
+    publication_parser.add_argument(
+        "--rendered",
+        action="store_true",
+        help="Require and validate generated publication outputs and reports",
+    )
+    publication_parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Also exit non-zero when review_required findings are present",
+    )
+    publication_parser.add_argument("--format", choices=("markdown", "json"), default="markdown")
+    publication_parser.add_argument("--output", help="Write the report to a file instead of stdout")
+    publication_parser.set_defaults(func=publication_audit_command)
 
     # Schema introspection (additive; emits the whole CLI's JSON parameter contract)
     schema_parser = subparsers.add_parser(

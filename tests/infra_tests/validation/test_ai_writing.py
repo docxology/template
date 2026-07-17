@@ -77,6 +77,11 @@ class TestAnalyzeProse:
         # Em-dashes inside the fenced code block must not count.
         assert report.em_dash_count == 0
 
+    def test_markdown_comments_are_stripped(self):
+        text = "Visible prose is retained. <!-- FIGURE: plot.png --> More prose follows."
+        report = analyze_prose(text)
+        assert report.em_dash_count == 0
+
     def test_thresholds_are_tunable(self):
         strict = ProseQualityThresholds(ai_term_per_1k_max=0.1)
         report = analyze_prose(AI_PROSE, thresholds=strict)

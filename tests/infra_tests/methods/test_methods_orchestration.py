@@ -218,6 +218,49 @@ def test_methods_cli_outputs_json_and_markdown(repo_root: Path) -> None:
     assert "Validation" in markdown_result.stdout
 
 
+def test_validation_skips_generated_artifacts_when_not_required(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+
+    plan = build_methods_orchestration_plan(tmp_path, "template_test")
+    issues = validate_methods_orchestration_plan(plan, repo_root=tmp_path, require_generated_artifacts=False)
+    codes = {issue.code for issue in issues}
+
+    assert "METHODS.ARTIFACT_MANIFEST_MISSING" not in codes
+    assert "METHODS.EVIDENCE_REGISTRY_MISSING" not in codes
+
+
+def test_build_plan_prefers_methods_pipeline_yaml(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(
+        project / "methods_pipeline.yaml",
+        """
+stages:
+  - name: Custom Stage
+    script: projects/template_test/scripts/custom.py
+    tags: [core]
+    contract:
+      input_artifacts: ["projects/template_test/src/"]
+      output_artifacts: ["projects/template_test/output/data/custom.json"]
+      definition_of_done: "Custom stage completes."
+      failure_code: CUSTOM_FAILED
+""",
+    )
+
+    plan = build_methods_orchestration_plan(tmp_path, "template_test")
+
+    assert plan.pipeline_source.as_posix() == "projects/template_test/methods_pipeline.yaml"
+    assert [stage.name for stage in plan.stages] == ["Custom Stage"]
+    assert plan.stages[0].verification_commands == ("uv run python projects/template_test/scripts/custom.py",)
+
+
 def _write_minimal_repo(repo_root: Path) -> None:
     pipeline_dir = repo_root / "infrastructure" / "core" / "pipeline"
     pipeline_dir.mkdir(parents=True)
@@ -226,7 +269,7 @@ def _write_minimal_repo(repo_root: Path) -> None:
         """
 stages:
   - name: Project Analysis
-    script: 02_run_analysis.py
+    script: scripts/pipeline/stage_02_analysis.py
     tags: [core]
     contract:
       input_artifacts: ["projects/{project}/src/", "projects/{project}/scripts/"]

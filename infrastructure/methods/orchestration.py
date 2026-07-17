@@ -11,6 +11,19 @@ from infrastructure.core.pipeline.stage_registry import known_stage_keys
 from infrastructure.methods.models import MethodStage, MethodsIssue, MethodsOrchestrationPlan
 from infrastructure.project.discovery import resolve_project_root
 
+_STAGE_NAME_TO_KEY = {
+    "Clean Output Directories": "clean",
+    "Environment Setup": "setup",
+    "Infrastructure Tests": "infra_tests",
+    "Project Tests": "project_tests",
+    "Project Analysis": "analysis",
+    "PDF Rendering": "render_pdf",
+    "Output Validation": "validate",
+    "LLM Scientific Review": "llm_reviews",
+    "LLM Translations": "llm_translations",
+    "Copy Outputs": "copy",
+}
+
 _METHOD_SECTION_TOKENS = ("method", "methodology", "experimental_setup", "protocol")
 
 # A manuscript file is a method section if its *filename* carries a method token
@@ -68,8 +81,15 @@ def validate_methods_orchestration_plan(
     plan: MethodsOrchestrationPlan,
     *,
     repo_root: Path | str = ".",
+    require_generated_artifacts: bool = True,
 ) -> tuple[MethodsIssue, ...]:
-    """Validate that the methods plan has the publication-critical surfaces."""
+    """Validate methods surfaces and, optionally, generated evidence reports.
+
+    Source-only publication audits validate the declared stage contracts without
+    requiring ignored build outputs. Rendered audits pass
+    ``require_generated_artifacts=True`` to make the manifest and evidence
+    registry deterministic blocking requirements.
+    """
     root = Path(repo_root).resolve()
     issues: list[MethodsIssue] = []
     if not plan.stages:
@@ -92,22 +112,23 @@ def validate_methods_orchestration_plan(
                 "Add a methods section or rename the section file to include methods/methodology.",
             )
         )
-    _validate_json_object(
-        root,
-        plan.artifact_manifest,
-        missing_code="METHODS.ARTIFACT_MANIFEST_MISSING",
-        invalid_code="METHODS.ARTIFACT_MANIFEST_INVALID",
-        label="artifact manifest",
-        issues=issues,
-    )
-    _validate_json_object(
-        root,
-        plan.evidence_registry,
-        missing_code="METHODS.EVIDENCE_REGISTRY_MISSING",
-        invalid_code="METHODS.EVIDENCE_REGISTRY_INVALID",
-        label="evidence registry",
-        issues=issues,
-    )
+    if require_generated_artifacts:
+        _validate_json_object(
+            root,
+            plan.artifact_manifest,
+            missing_code="METHODS.ARTIFACT_MANIFEST_MISSING",
+            invalid_code="METHODS.ARTIFACT_MANIFEST_INVALID",
+            label="artifact manifest",
+            issues=issues,
+        )
+        _validate_json_object(
+            root,
+            plan.evidence_registry,
+            missing_code="METHODS.EVIDENCE_REGISTRY_MISSING",
+            invalid_code="METHODS.EVIDENCE_REGISTRY_INVALID",
+            label="evidence registry",
+            issues=issues,
+        )
     for stage in plan.stages:
         if not stage.definition_of_done.strip():
             issues.append(
@@ -199,24 +220,20 @@ def _build_stage(
 
 
 def _stage_verification_commands(stage: StageDefinition, project_name: str) -> tuple[str, ...]:
-    """Return only commands that the current repository can dispatch.
-
-    Script-backed stages always have a direct command. Their optional
-    single-stage command is emitted only when the YAML key is registered by
-    the canonical dispatcher. Method-only built-ins, such as ``clean``, have
-    no independent CLI dispatch and therefore intentionally return no command.
-    """
-    stage_key = stage.key
+    stage_key = _STAGE_NAME_TO_KEY.get(stage.name)
     if stage.script:
-        script_path = stage.script if stage.script.startswith("scripts/") else f"scripts/{stage.script}"
         args = " ".join(stage.args)
         spacer = " " if args else ""
-        commands = [f"uv run python {script_path}{spacer}{args} --project {project_name}"]
-        if stage_key in known_stage_keys():
+        script_path = stage.script.replace("{project}", project_name)
+        project_arg = "" if script_path.startswith("projects/") else f" --project {project_name}"
+        commands = [f"uv run python {script_path}{spacer}{args}{project_arg}"]
+        if stage_key:
             commands.append(
                 f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}"
             )
         return tuple(commands)
+    if stage_key and stage_key in known_stage_keys():
+        return (f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}",)
     return ()
 
 
@@ -236,6 +253,9 @@ def _resolve_project_root(root: Path, project_name: str, *, projects_dir: str) -
 
 
 def _pipeline_source(root: Path, project_root: Path) -> Path:
+    methods_pipeline = project_root / "methods_pipeline.yaml"
+    if methods_pipeline.exists():
+        return methods_pipeline
     project_pipeline = project_root / "pipeline.yaml"
     if project_pipeline.exists():
         return project_pipeline

@@ -134,6 +134,18 @@ that would fail CI fail locally first:
 | `all-exports-check` | `infrastructure.skills check-all-exports` (lint job MED5 gate) | <1 s |
 | `skill-reachability-check` | docs-lint skill front-door and index completeness gate | <1 s |
 
+The lint job also runs the deterministic source-only publication audit across
+the generated public roster:
+
+```bash
+uv run python -m infrastructure.validation.cli publication-audit --strict --format json
+```
+
+For release sign-off, add `--rendered` after running each exemplar's canonical
+pipeline; that mode makes artifact manifests, evidence registries, and figure
+registries blocking requirements. Subjective editorial findings remain
+`review_required` and are reported without weakening deterministic failures.
+
 The lint hooks (`ruff-ci`, `mypy-ci`) run on the **pre-commit** stage, not
 pre-push, to keep `git commit` fast. A separate manual-stage `bandit-low`
 hook provides a stricter LOW+MEDIUM+HIGH sweep against `bandit.yaml`'s

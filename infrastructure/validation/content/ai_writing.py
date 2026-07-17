@@ -144,6 +144,7 @@ class ProseQualityReport:
 
 _WORD_RE = re.compile(r"[A-Za-z0-9']+")
 _SENTENCE_SPLIT_RE = re.compile(r"[.!?]+(?:\s+|$)")
+_HTML_COMMENT_RE = re.compile(r"<!--[\s\S]*?-->")
 # Unicode em-dash/horizontal-bar, plus the ASCII double-hyphen "--" in either
 # spaced ("a -- b") or tight ("a--b") form, but never the "---" Markdown rule.
 _EM_DASH_RE = re.compile(r"—|―|(?<!-)--(?!-)")
@@ -198,6 +199,11 @@ def analyze_prose(
     """
     thresholds = thresholds or ProseQualityThresholds()
     clean = strip_code_and_math(text) if strip_markdown else text
+    # HTML comments carry figure labels and generator metadata, not prose. Strip
+    # them before counting punctuation so ``<!-- ... -->`` is not mistaken for
+    # an author's ASCII em dash.
+    if strip_markdown:
+        clean = _HTML_COMMENT_RE.sub("", clean)
     clean_lower = clean.lower()
 
     words = _count_words(clean)

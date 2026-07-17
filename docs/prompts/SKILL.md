@@ -57,6 +57,7 @@ When intent is clear, open the matching child `SKILL.md` directly. When ambiguou
 | Methods, methodology, stage contracts, artifact/evidence wiring | [methods-orchestration/SKILL.md](methods-orchestration/SKILL.md) |
 | Pipeline stage failed, stuck, or flaky | [pipeline-debugging/SKILL.md](pipeline-debugging/SKILL.md) |
 | Regenerate-from-clean / determinism / double-run diff | [reproducibility-audit/SKILL.md](reproducibility-audit/SKILL.md) |
+| Publication-readiness sign-off across tests, evidence, methods, artifacts, and renders | [publication-audit/SKILL.md](publication-audit/SKILL.md) |
 | Triple-check every manuscript claim; pre-submission | [manuscript-claim-verification/SKILL.md](manuscript-claim-verification/SKILL.md) |
 | `[[FIG:]]` / `labels.yaml` registry audit | [manuscript-cross-references/SKILL.md](manuscript-cross-references/SKILL.md) |
 | New manuscript + project from research brief | [manuscript-creation/SKILL.md](manuscript-creation/SKILL.md) |

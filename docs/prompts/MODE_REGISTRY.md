@@ -56,6 +56,7 @@ without copying ARS prompt content, schemas, or scripts.
 | `template-comprehensive-assessment` | `full-audit` | validation, claim verification, reproducibility |
 | `template-pipeline-debugging` | `stage-triage`, `resume` | validation or reproducibility |
 | `template-reproducibility-audit` | `double-run`, `release-readiness` | claim verification |
+| `template-publication-audit` | `deterministic-gate`, `editorial-review` | comprehensive assessment, reproducibility audit, methods orchestration |
 | `template-manuscript-claim-verification` | `claim-inventory`, `pre-submission`, `reference-existence` | academic paper or validation |
 | `template-manuscript-cross-references` | `registry-audit` | validation |
 | `template-manuscript-creation` | `scaffold`, `from-brief` | academic paper |

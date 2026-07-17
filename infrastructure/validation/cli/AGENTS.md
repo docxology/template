@@ -22,6 +22,22 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 | `prerender` | `validate_prerender_command`     | Strict source-markdown gate: pitfalls + undefined citations            |
 | `integrity` | `verify_integrity_command`       | Cross-reference and file-integrity check on an output directory        |
 | `links`     | `validate_links_command`         | Scan markdown link targets repo-wide and emit a broken-link report     |
+| `evidence`  | `validate_evidence_command`      | Validate manuscript claims against the project evidence registry     |
+| `prose-quality` | `validate_prose_quality_command` | Scan prose for AI-writing fingerprints (advisory by default)     |
+| `publication-audit` | `publication_audit_command` | Audit public exemplars for publication readiness (optional `--rendered`, `--strict`) |
+
+### `publication-audit`
+
+Deterministic publication-readiness gate for public exemplars. Defaults to every
+project in `PUBLIC_PROJECT_NAMES` when `--project` is omitted.
+
+```bash
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project templates/template_code_project --strict --rendered --format json
+```
+
+Exit codes: `0` when no blocking findings (and no `review_required` findings when
+`--strict` is set); non-zero otherwise.
 
 ### `prerender`
 

@@ -16,6 +16,35 @@ from infrastructure.rendering._pdf_combined_transmission import (
 logger = get_logger(__name__)
 
 
+_REFERENCE_SECTION_RE = re.compile(
+    r"\\(?:sub)?section\*?\{[^}]*\breferences\b[^}]*\}",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+
+
+def _has_explicit_reference_section(tex_content: str) -> bool:
+    """Return whether the manuscript already supplies a references heading."""
+
+    return bool(_REFERENCE_SECTION_RE.search(tex_content))
+
+
+def _inline_bibsection_prefix() -> str:
+    """Suppress natbib's automatic bibliography heading when prose already supplies one."""
+    return "\\providecommand{\\bibsection}{}\n\\renewcommand{\\bibsection}{}\n\n"
+
+
+def _bibliography_insertion(replacement: str, *, inline: bool) -> str:
+    """Build the LaTeX insertion, preserving an explicit references section."""
+
+    if inline:
+        # natbib calls ``\\bibsection`` to emit its automatic heading.  The
+        # manuscript's explicit references section is the authoritative title
+        # in this mode, so suppress the duplicate while retaining the normal
+        # bibliography environment and its citation behavior.
+        return f"\n\n{_inline_bibsection_prefix()}{replacement}\n"
+    return f"\n\n\\clearpage\n\n{replacement}\n"
+
+
 def discover_manuscript_bib_paths(manuscript_dir: Path) -> list[Path]:
     """Return sorted ``*.bib`` paths beside the manuscript (multi-database projects)."""
     return sorted(manuscript_dir.glob("*.bib"))
@@ -28,7 +57,7 @@ def inject_bibliography(
     *,
     before_end_transmission: bool = False,
 ) -> str:
-    """Ensure bibliography starts on a new page; set ``\\bibliography{stems}``.
+    """Inject ``\\bibliography{stems}`` with a clean heading/layout contract.
 
     ``bib_stems`` is a comma-separated list of database names without ``.bib``
     (e.g. ``references`` or ``references,references_deep``).
@@ -46,7 +75,8 @@ def inject_bibliography(
         return tex_content
 
     replacement = r"\bibliography{" + bib_stems + "}"
-    insertion = f"\n\n\\clearpage\n\n{replacement}\n"
+    inline_bibliography = _has_explicit_reference_section(tex_content)
+    insertion = _bibliography_insertion(replacement, inline=inline_bibliography)
 
     if before_end_transmission:
         end_idx = tex_content.find(_TRANSMISSION_END_BOOKEND_MARKER)
@@ -87,15 +117,21 @@ def inject_bibliography(
         )
         idx = tex_content.find(bib_marker)
         before = tex_content[max(0, idx - 80) : idx]
-        if "\\clearpage" not in before:
+        if inline_bibliography:
+            if "\\renewcommand{\\bibsection}" not in before:
+                tex_content = tex_content[:idx] + _inline_bibsection_prefix() + tex_content[idx:]
+        elif "\\clearpage" not in before:
             tex_content = tex_content[:idx] + "\\clearpage\n\n" + tex_content[idx:]
             logger.info("✓ Inserted \\clearpage before \\bibliography{...}")
         return tex_content
 
     end_doc_idx = tex_content.rfind("\\end{document}")
     if end_doc_idx > 0:
-        tex_content = tex_content[:end_doc_idx] + f"\n\n\\clearpage\n\n{replacement}\n" + tex_content[end_doc_idx:]
-        logger.info("✓ Inserted \\clearpage and \\bibliography{...} before \\end{document}")
+        tex_content = tex_content[:end_doc_idx] + insertion + tex_content[end_doc_idx:]
+        if inline_bibliography:
+            logger.info("✓ Inserted inline \\bibliography{...} after explicit references section")
+        else:
+            logger.info("✓ Inserted \\clearpage and \\bibliography{...} before \\end{document}")
     else:
         logger.warning("⚠️  Could not find \\end{document} to insert bibliography")
     return tex_content

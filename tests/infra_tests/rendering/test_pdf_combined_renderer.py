@@ -414,6 +414,13 @@ class TestPostprocessLatex:
 
 
 class TestInjectBibliography:
+    def test_explicit_references_section_keeps_bibliography_with_its_heading(self):
+        tex = "\\section{References: The Sources Behind the Golden Thread}\nReader-facing note.\n\\end{document}"
+        result = inject_bibliography(tex, bib_exists=True)
+        assert "\\clearpage" not in result
+        assert "\\renewcommand{\\bibsection}{}" in result
+        assert result.index("Reader-facing note.") < result.index("\\bibliography{references}")
+
     def test_existing_bibliography_with_clearpage(self):
         tex = "Content\n\\clearpage\n\\bibliography{references}\n\\end{document}"
         result = inject_bibliography(tex, bib_exists=True)
