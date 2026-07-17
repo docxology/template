@@ -421,6 +421,23 @@ class TestLoadHypothesesFromConfig:
         assert isinstance(result, list)
         assert len(result) > 0
 
+    def test_explicit_project_hypothesis_id_overrides_legacy_ordinal(self, tmp_path) -> None:
+        """Project-owned IDs prevent legacy domain labels from leaking into outputs."""
+        config = tmp_path / "config.yaml"
+        config.write_text(
+            "project_config:\n"
+            "  hypothesis_definitions:\n"
+            "    H1:\n"
+            "      id: JWST_CHARACTERIZATION\n"
+            "      name: JWST Atmospheric Characterization\n"
+            "      description: Reported evidence\n"
+        )
+        from knowledge_graph.hypothesis import load_hypotheses_from_config
+
+        result = load_hypotheses_from_config(config)
+
+        assert result[0].hypothesis_id == "JWST_CHARACTERIZATION"
+
 
 class TestConfigKeyToId:
     """Validate the _config_key_to_id mapping helper."""

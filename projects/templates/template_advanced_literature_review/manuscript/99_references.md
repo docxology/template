@@ -1,6 +1,11 @@
 # References
 
-The bibliography is generated automatically during PDF compilation from `references.bib`. All citation keys used in the manuscript (e.g., `\citep{friston2010free}`) resolve to entries below; unused entries have been pruned. Pandoc's `--natbib` flag injects `\usepackage{natbib}` and `\bibliographystyle{plainnat}`, so neither directive appears in this section or in `preamble.md`.
+The bibliography is generated automatically during PDF compilation from `references.bib`.
+Every citation key used in the manuscript has a matching bibliography entry, and the
+checked-in bibliography contains only sources required by the manuscript sections.
+Pandoc's `--natbib` flag injects `\usepackage{natbib}` and
+`\bibliographystyle{plainnat}`, so neither directive appears in this section or in
+`preamble.md`.
 
 \bibliography{references}
 

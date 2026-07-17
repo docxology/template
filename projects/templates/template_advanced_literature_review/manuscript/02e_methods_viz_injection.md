@@ -26,17 +26,17 @@ parameters, and SHA-256 hash, binding the visual output to the exact pipeline ru
 The manuscript itself is generated, not hand-maintained. A variable computation step
 reads the configuration and the pipeline outputs and emits a flat table of named values;
 an injection step substitutes each named placeholder in these Markdown sections with its
-computed value before rendering. Because the substitution is total — an unresolved
-placeholder is a hard error, not a silent gap — every number in the rendered document is
+computed value before rendering. Because the substitution is total, an unresolved
+placeholder is a hard error rather than a silent gap. Every number in the rendered document is
 guaranteed to trace to a committed artifact. Re-running the pipeline after a
 configuration change re-computes the values and re-targets the prose automatically.
 
 The injection system computes variables from seven sources:
 
-1. `manuscript/config.yaml` — search term, engine roster, subfield taxonomy, hypotheses
-2. `corpus.jsonl` — corpus size
-3. `temporal_analysis.json` — year range, CAGR, peak year, doubling time
-4. `citation_network.json` — edges, nodes, density, communities, PageRank, hubs
-5. `subfield_classification.json` — per-bucket counts and percentages
-6. `assertion_summary.json` — assertion counts and directions
-7. `hypothesis_scores.json` — per-hypothesis evidence scores
+1. `manuscript/config.yaml`: search term, engine roster, subfield taxonomy, hypotheses
+2. `corpus.jsonl`: corpus size
+3. `temporal_analysis.json`: year range, CAGR, peak year, doubling time
+4. `citation_network.json`: edges, nodes, density, communities, PageRank, hubs
+5. `subfield_classification.json`: per-bucket counts and percentages
+6. `assertion_summary.json`: assertion counts and directions
+7. `hypothesis_scores.json`: per-hypothesis evidence scores

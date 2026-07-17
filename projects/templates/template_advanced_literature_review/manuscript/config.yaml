@@ -1,13 +1,12 @@
-# Advanced Multi-Phase Literature Review Configuration
+# Reproducible Multi-Phase Literature-Review Pipeline Configuration
 #
-# This template supports multi-phrase search with filtering phases, building complex
-# literature reviews through iterative query refinement and LLM-based attribute 
-# classification. Each phase can discover new papers and apply both deterministic
-# (year, venue, citation count) and LLM-based (abstract content analysis) filters.
+# This public exemplar demonstrates a configured, reproducible literature-review
+# pipeline. Its bundled corpus is synthetic; live retrieval, full-text assessment,
+# and optional model-backed classification remain explicit, separately gated modes.
 
 paper:
-  title: "Multi-Phase Systematic Review of Exoplanet Atmospheric Composition"
-  subtitle: "Advanced Search Phases, LLM Filtering, and Cross-Method Validation"
+  title: "A Reproducible Multi-Phase Literature-Review Pipeline for Exoplanet Atmospheres"
+  subtitle: "Synthetic Fixture Exemplar with Source-Aware Retrieval and Optional LLM Analysis"
   version: "0.1.0"
   date: "" # Auto-generated
 
@@ -20,6 +19,7 @@ authors:
 
 publication:
   status: draft
+  doi_status: "forthcoming"
   doi: ""
   version_doi: ""
   version_record: ""
@@ -33,7 +33,8 @@ publication:
 
 keywords:
   - "exoplanet atmospheres"
-  - "systematic review"
+  - "literature review pipeline"
+  - "systematic-review reporting"
   - "multi-phase search"
   - "LLM filtering"
   - "James Webb Space Telescope"
@@ -190,7 +191,7 @@ project_config:
         - other: Doesn't fit the above categories
 
         Abstract: {abstract}
-        
+
         Return only the category name (observational/theoretical/review/other).
       apply_to_phases: []  # Disabled for initial run
       keep_categories: ["observational", "theoretical"]
@@ -207,7 +208,7 @@ project_config:
         - JWST data reduction or calibration
 
         Abstract: {abstract}
-        
+
         Return "yes" if the paper analyzes JWST data, "no" if it doesn't.
       apply_to_phases: []  # Disabled for initial run
       keep_values: ["yes"]
@@ -216,7 +217,7 @@ project_config:
       name: "Molecular Detection Focus"
       description: "Identify papers focused on detecting atmospheric molecules"
       prompt: |
-        Is this paper primarily focused on detecting, measuring, or analyzing specific 
+        Is this paper primarily focused on detecting, measuring, or analyzing specific
         atmospheric molecules in exoplanet atmospheres? Look for:
         - Spectroscopic detection of molecules (H2O, CO2, CH4, etc.)
         - Abundance measurements or constraints
@@ -224,7 +225,7 @@ project_config:
         - Chemical composition analysis
 
         Abstract: {abstract}
-        
+
         Return "yes" if focused on molecular detection/analysis, "no" otherwise.
       apply_to_phases: []  # Disabled for initial run
       keep_values: ["yes"]
@@ -310,23 +311,27 @@ project_config:
   # Multi-phase hypothesis definitions
   hypothesis_definitions:
     H1:
+      id: "JWST_CHARACTERIZATION"
       name: "JWST Atmospheric Characterization"
-      description: "JWST enables unprecedented precision in exoplanet atmospheric characterization compared to previous instruments"
+      description: "What evidence is retained for atmospheric characterization using JWST observations?"
       scope: "observational"
       relevant_phases: ["phase_1_foundation", "phase_2_jwst"]
     H2:
+      id: "MOLECULAR_DIVERSITY"
       name: "Molecular Diversity Detection"
-      description: "Multiple atmospheric molecules can be reliably detected in hot Jupiter atmospheres"
+      description: "Which molecular species and measurement contexts are represented in the retained corpus?"
       scope: "chemical"
       relevant_phases: ["phase_3_molecules"]
     H3:
+      id: "CROSS_METHOD_CONSISTENCY"
       name: "Cross-Method Consistency"
-      description: "Different observational methods (transit, emission, phase curves) yield consistent atmospheric properties"
+      description: "How do the configured observational methods overlap within the retained corpus?"
       scope: "methodological"
       relevant_phases: ["phase_1_foundation", "phase_2_jwst", "phase_3_molecules"]
     H4:
+      id: "MODEL_OBSERVATION_AGREEMENT"
       name: "Theoretical-Observational Agreement"
-      description: "Theoretical atmospheric models accurately predict observed spectroscopic features"
+      description: "What configured evidence links theoretical models and observations, if any?"
       scope: "theoretical"
       relevant_phases: ["phase_1_foundation"]
 

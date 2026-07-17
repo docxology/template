@@ -41,19 +41,24 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
         variables["TOTAL_ASSERTIONS_RAW"] = "0"
 
     scores = ctx.load_json("hypothesis_scores.json")
-    if scores:
+    assertion_count = 0
+    if assertion:
+        raw_count = assertion.get("total_assertions", 0)
+        assertion_count = raw_count if isinstance(raw_count, int) else 0
+    scores_are_measured = bool(scores) and assertion_count > 0
+    if scores_are_measured:
         for hid, score_val in scores.items():
             if isinstance(score_val, (int, float)):
                 variables[f"{hid}_SCORE"] = f"{score_val:+.2f}"
             elif isinstance(score_val, dict):
                 variables[f"{hid}_SCORE"] = f"{score_val.get('score', 0):+.2f}"
     else:
-        logger.info("hypothesis_scores.json not found; score variables skipped")
+        logger.info("hypothesis scores are unmeasured; score variables remain pending")
 
     hyp_defs = ctx.cfg.get("project_config", {}).get("hypothesis_definitions", {}) or {}
     variables["N_HYPOTHESES"] = str(len(hyp_defs))
     score_lookup: dict[str, float] = {}
-    if scores:
+    if scores_are_measured:
         for hid, sv in scores.items():
             if isinstance(sv, (int, float)):
                 score_lookup[hid] = float(sv)
@@ -67,9 +72,9 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
             """Process config key to hypothesis id."""
             return key
 
-    def score_for(hid: str, hname: str) -> str:
+    def score_for(hid: str, hname: str, explicit_id: str = "") -> str:
         """Process score for."""
-        mapped = config_key_to_hypothesis_id(hid, hname)
+        mapped = explicit_id or config_key_to_hypothesis_id(hid, hname)
         for key in (hid, mapped, hname, hname.upper().replace(" ", "_")):
             if key in score_lookup:
                 return f"{score_lookup[key]:+.2f}"
@@ -83,8 +88,9 @@ def extract_hypotheses(ctx: ExtractContext) -> dict[str, str]:
     for hid, hdef in hyp_defs.items():
         hname = str((hdef or {}).get("name", hid)) if isinstance(hdef, dict) else str(hdef)
         hscope = str((hdef or {}).get("scope", "")) if isinstance(hdef, dict) else ""
+        explicit_id = str((hdef or {}).get("id", "")) if isinstance(hdef, dict) else ""
         hyp_list_parts.append(f"{hid} {hname}")
-        hyp_table.append(f"| {hid} | {hname} | {hscope} | {score_for(hid, hname)} |")
+        hyp_table.append(f"| {hid} | {hname} | {hscope} | {score_for(hid, hname, explicit_id)} |")
     variables["HYPOTHESIS_LIST"] = "; ".join(hyp_list_parts)
     variables["HYPOTHESIS_TABLE"] = "\n".join(hyp_table)
     return variables

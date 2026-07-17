@@ -33,14 +33,21 @@ def extract_reproducibility(ctx: ExtractContext) -> dict[str, str]:
     variables: dict[str, str] = {}
     summary = ctx.load_json("reproducibility_summary.json")
     if summary:
-        variables["REPRODUCIBILITY_MEAN_SCORE"] = f"{summary.get('mean_composite_score', 0.0):.3f}"
-        variables["REPRODUCIBILITY_N_PAPERS_SCORED"] = str(summary.get("n_papers_scored", 0))
+        mean_score = f"{summary.get('mean_composite_score', 0.0):.3f}"
+        scored_count = str(summary.get("n_papers_scored", 0))
+        variables["REPRODUCIBILITY_MEAN_SCORE"] = mean_score
+        variables["REPRODUCIBILITY_N_PAPERS_SCORED"] = scored_count
+        # Preserve the shorter names used by the multi-phase results section.
+        variables["REPRO_MEAN_SCORE"] = mean_score
+        variables["REPRO_PAPERS_SCORED"] = scored_count
         variables["REPRODUCIBILITY_LOW_SCORE_COUNT"] = str(summary.get("n_low_score", 0))
         low_score_threshold = summary.get("low_score_threshold", _DEFAULT_LOW_SCORE_THRESHOLD)
     else:
         logger.info("reproducibility_summary.json not found; reproducibility variables skipped")
         variables["REPRODUCIBILITY_MEAN_SCORE"] = "pending"
         variables["REPRODUCIBILITY_N_PAPERS_SCORED"] = "0"
+        variables["REPRO_MEAN_SCORE"] = "pending"
+        variables["REPRO_PAPERS_SCORED"] = "0"
         variables["REPRODUCIBILITY_LOW_SCORE_COUNT"] = "0"
         low_score_threshold = _DEFAULT_LOW_SCORE_THRESHOLD
 

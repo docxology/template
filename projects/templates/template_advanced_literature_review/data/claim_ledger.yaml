@@ -20,3 +20,24 @@ claims:
     source_tier: fixture
     freshness: active
     artifact_path: src/deep_research/fixtures/recorded_report.json
+  - claim_id: crossref-page-size
+    kind: number
+    value: 1000
+    source: src/literature/crossref_client.py default page-size contract
+    source_tier: method
+    freshness: active
+    artifact_path: src/literature/crossref_client.py
+  - claim_id: evidence-score-lower-bound
+    kind: number
+    value: -1
+    source: manuscript/02d_methods_knowledge_graph.md evidence-score definition
+    source_tier: method
+    freshness: active
+    artifact_path: manuscript/02d_methods_knowledge_graph.md
+  - claim_id: figure-label-font-size
+    kind: number
+    value: 16
+    source: manuscript/02e_methods_viz_injection.md centralized figure style contract
+    source_tier: method
+    freshness: active
+    artifact_path: manuscript/02e_methods_viz_injection.md

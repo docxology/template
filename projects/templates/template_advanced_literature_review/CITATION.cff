@@ -1,0 +1,24 @@
+authors:
+- affiliation: Active Inference Institute
+  family-names: Friedman
+  given-names: Daniel Ari
+  orcid: 0000-0001-6232-9096
+cff-version: 1.2.0
+date-released: '2026-07-17'
+keywords:
+- exoplanet atmospheres
+- literature review pipeline
+- systematic-review reporting
+- multi-phase search
+- LLM filtering
+- James Webb Space Telescope
+- atmospheric composition
+- transit spectroscopy
+- bibliometrics
+- cross-validation
+license: CC-BY-4.0
+message: If you use this software, please cite it using the metadata from this file.
+repository-code: https://github.com/docxology/template
+title: A Reproducible Multi-Phase Literature-Review Pipeline for Exoplanet Atmospheres
+type: software
+version: 0.1.0

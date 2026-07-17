@@ -123,7 +123,7 @@ The committed corpus is a dated exoplanet-atmosphere evidence snapshot with sour
 ## What You Can Claim
 
 - **Methodological patterns**: Cross-phase validation of search and filtering strategies
-- **Temporal dynamics**: Evolution of research focus across defined methodological eras  
+- **Temporal dynamics**: Evolution of research focus across defined methodological eras
 - **Knowledge synthesis**: Aggregated insights from phase-aware knowledge graph analysis
 - **Pipeline effectiveness**: Demonstrated capability for complex multi-phase literature synthesis
 

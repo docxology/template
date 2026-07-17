@@ -23,9 +23,11 @@ _EMPIRICAL_PHRASES = (
     re.compile(r"\bempirical(?:ly)?\b", re.I),
 )
 
-_HARDCODED_DOMAIN = re.compile(r"\bmodafinil literature\b", re.I)
+_HARDCODED_DOMAIN = re.compile(r"\bexoplanet atmospheres? literature\b", re.I)
 
-_NEGATIVE_CONTROL = "Our empirical findings confirm that modafinil literature demonstrates universal efficacy."
+_NEGATIVE_CONTROL = (
+    "Our empirical findings confirm that exoplanet atmosphere literature demonstrates universal efficacy."
+)
 
 
 def validate_fixture_honesty(

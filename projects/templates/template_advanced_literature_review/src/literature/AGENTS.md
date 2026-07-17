@@ -4,7 +4,8 @@
 
 Retrieval clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv/ChinaRxiv,
 Europe PMC, bioRxiv/medRxiv), query routing, corpus management, and data models.
-Orchestration lives in `literature/search_runner.py` (called from `scripts/01_literature_search.py`).
+Orchestration lives in `literature/search_runner.py` (called from the numbered
+retrieval adapters, including `scripts/01_multi_phase_search.py`).
 `run_literature_search(..., arxiv_base_url=..., semantic_scholar_base_url=..., openalex_base_url=..., crossref_base_url=..., pubmed_esearch_url=..., pubmed_efetch_url=..., sovietrxiv_base_url=..., chinarxiv_base_url=..., europepmc_base_url=..., biorxiv_base_url=...)`
 accepts injectable API roots for `pytest-httpserver` integration tests without changing production defaults.
 `query_router.py` routes queries across engines and toggles preprint preference.

@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/docs/api_glossary.md",
-      "sha256": "f9b574d6fc939f2eea1b67588f4c968d192a496b20f74b82202d54998ab2555d",
-      "size_bytes": 8558,
+      "sha256": "e8a1b4f2c546d995d4296247b82d831c2bad9906d4d5465d6cc8319bef6e496b",
+      "size_bytes": 8683,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -192,7 +192,7 @@
     {
       "contract_match": true,
       "path": "output/figures/stability_analysis.png",
-      "sha256": "1e42d3b3df747d6f2da12e3cad891e8b5fe7d70bcdb8e224997e9b22cae0d31e",
+      "sha256": "beef40730dafd8c9255ad6e425777cb461ffd7ac566bc60321a3ff673e76049e",
       "size_bytes": 194019,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

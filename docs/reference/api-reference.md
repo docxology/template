@@ -738,10 +738,10 @@ Render a methods orchestration plan as Markdown.
 *function — defined in `infrastructure.methods.orchestration`*
 
 ```python
-validate_methods_orchestration_plan(plan: MethodsOrchestrationPlan, *, repo_root: Path | str='.') -> tuple[MethodsIssue, ...]
+validate_methods_orchestration_plan(plan: MethodsOrchestrationPlan, *, repo_root: Path | str='.', require_generated_artifacts: bool=True) -> tuple[MethodsIssue, ...]
 ```
 
-Validate that the methods plan has the publication-critical surfaces.
+Validate methods surfaces and, optionally, generated evidence reports.
 
 ## Package: `infrastructure.orchestration`
 

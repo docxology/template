@@ -11,13 +11,12 @@ Package (`variables/`: `compute.py`, `context.py`, `formatters.py`, `inject.py`,
 - **Always multiply by 100 for percentages**: `CAGR_PCT` = `cagr * 100`. The raw `cagr` from
   `temporal_analysis.json` is a decimal fraction (e.g., 0.1699 for 16.99%). Never output
   the fraction directly as CAGR_PCT — it would render as "0.17%" in the manuscript.
-- **H1–H8 aliases are order-dependent**: The mapping from config keys such as H1/H2 to scorer IDs must match `knowledge_graph.hypothesis.config_key_to_hypothesis_id`. If hypothesis key mapping changes, update both files together.
+- **Hypothesis identifiers are configuration-owned**: Score variables and `HYPOTHESIS_TABLE` use the configured hypothesis IDs; update the configuration, claim ledger, and evidence registry together when the review questions change.
 - **Infrastructure fallback**: The try/except import of `get_logger` is intentional. Do not
   remove it — the module must work both inside the template monorepo and standalone.
-- **Silent fallback values**: When a JSON file is missing, `compute_variables` returns an
-  empty string for that variable rather than raising. This means a missing file produces
-  blank text in the manuscript rather than a hard failure. Always check that all expected
-  JSON files exist in `output/data/` before running Stage 5.
+- **Explicit fallback values**: When a JSON file is missing, extractors emit `pending`, `0`,
+  or a header-only table as appropriate. A missing artifact must remain visible in the
+  generated manuscript and validation report; it must not be silently presented as a result.
 - **LaTeX number formatting**: `_latex_number(n)` formats positive integers with `{,}` thousand
   separators for LaTeX (e.g., `2{,}795`). Negative numbers and floats are not handled — keep
   all counts non-negative.

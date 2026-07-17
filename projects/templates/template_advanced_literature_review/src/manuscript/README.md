@@ -1,7 +1,7 @@
 # Manuscript Template Engine
 
 Variable computation and injection for the literature meta-analysis manuscript.
-Reads pipeline output JSONs and produces a `dict[str, str]` of 127+ template variables
+Reads pipeline output JSONs and produces a `dict[str, str]` of registered template variables
 that `scripts/05_inject_variables.py` substitutes into `{{VAR}}` placeholders in every
 `manuscript/*.md` file, writing rendered copies to `output/manuscript/`.
 
@@ -19,19 +19,15 @@ Reads from `output_dir/` (or `output_dir/data/`):
 | `temporal_analysis.json` | `YEAR_START`, `YEAR_END`, `PEAK_YEAR`, `PEAK_YEAR_PUBS`, `CAGR_PCT`, `MEAN_YOY_GROWTH_PCT`, `DOUBLING_TIME` |
 | `subfield_classification.json` | `A1_COUNT`, `A2_COUNT`, `B_COUNT`, `C1–C5_COUNT`, `*_PCT` per subfield |
 | `citation_network.json` | `CITATION_EDGES`, `CITATION_COMPONENTS`, `CITATION_DENSITY_PCT`, `MEAN_IN_DEGREE`, `CITATION_RESOLUTION_PCT`, `CITATION_TOTAL_REFS` |
-| `hypothesis_scores.json` | `H1–H8_SCORE`, `H1–H8_SUPPORT`, `H1–H8_NEUTRAL`, `H1–H8_CONTRADICT`, `H1–H8_TOTAL` |
+| `hypothesis_scores.json` + `config.yaml` | configuration-keyed `*_SCORE` values and `HYPOTHESIS_TABLE` |
 | `assertion_summary.json` | `TOTAL_ASSERTIONS`, `TOTAL_SUPPORT`, `TOTAL_NEUTRAL`, `TOTAL_CONTRADICT` |
 | `tfidf_data.json` | `NUM_VOCAB_FEATURES`, `NUM_TOPICS` |
 | `output/figures/` | `NUM_FIGURES` |
 
-Hypothesis short aliases H1–H8 map to full IDs. This project's `manuscript/config.yaml`
-`hypothesis_definitions` only names H1–H6 (modafinil-specific: Wakefulness Efficacy,
-Cognitive Enhancement, Low Abuse Liability, Dopaminergic Mechanism, Off-label Psychiatric
-Utility, Tolerability); H7/H8 fall back to the domain-neutral `STANDARD_HYPOTHESES` IDs in
-`knowledge_graph.hypothesis` whenever a config doesn't define them:
-```
-H5=SCALABILITY       H6=CLINICAL_UTILITY H7=BIOLOGICAL_BASIS       H8=DOMAIN_GENERALIZATION
-```
+Hypothesis identifiers are configuration-owned. The bundled instance defines four
+phase-aware exoplanet-atmosphere questions. Forks must update the configuration, claim
+ledger, and evidence registry together; no hypothesis names are hard-coded in the
+variable package.
 
 All numeric variables are formatted as strings ready for LaTeX insertion:
 - Integers ≥ 1000: thousand-separated (e.g. `"2,795"`)

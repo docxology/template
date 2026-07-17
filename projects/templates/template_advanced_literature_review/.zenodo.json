@@ -1,0 +1,26 @@
+{
+  "creators": [
+    {
+      "affiliation": "Active Inference Institute",
+      "name": "Friedman, Daniel Ari",
+      "orcid": "0000-0001-6232-9096"
+    }
+  ],
+  "description": "Source code for a reproducible multi-phase literature-review pipeline for exoplanet atmospheres (2026).",
+  "keywords": [
+    "exoplanet atmospheres",
+    "literature review pipeline",
+    "systematic-review reporting",
+    "multi-phase search",
+    "LLM filtering",
+    "James Webb Space Telescope",
+    "atmospheric composition",
+    "transit spectroscopy",
+    "bibliometrics",
+    "cross-validation"
+  ],
+  "license": "CC-BY-4.0",
+  "title": "A Reproducible Multi-Phase Literature-Review Pipeline for Exoplanet Atmospheres",
+  "upload_type": "software",
+  "version": "0.1.0"
+}

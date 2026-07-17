@@ -39,10 +39,16 @@ This file contains LaTeX packages and commands that are automatically included i
 
 % Figure caption formatting
 \usepackage{caption}
-\usepackage{subcaption}
 
 % Algorithm typesetting
 \usepackage[ruled,vlined]{algorithm2e}
+
+% The manuscript uses these environments in the technical appendix.  Define the
+% parent counter before the subordinate environments so XeLaTeX has no hidden
+% preamble dependency.
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
 
 % Custom commands for domain notation
 \newcommand{\FEP}{\textsc{fep}}

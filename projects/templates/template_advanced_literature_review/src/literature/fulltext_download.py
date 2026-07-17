@@ -30,6 +30,7 @@ than raising.
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import time
@@ -404,3 +405,39 @@ def assess_fulltext_extraction(corpus: Corpus, fulltext_dir: Path) -> dict[str, 
         "without_extracted_figures": total - with_figures,
         "percent_with_extracted_figures": round(100.0 * with_figures / total, 1) if total else 0.0,
     }
+
+
+def run_download_workflow(
+    corpus_path: Path,
+    output_dir: Path,
+    *,
+    enabled: bool,
+    unpaywall_email: str = "",
+    max_papers: int | None = None,
+) -> Path | None:
+    """Run the opt-in download workflow and write its extraction report.
+
+    The numbered script owns only argument parsing and logging; all corpus I/O,
+    download iteration, and report persistence live in this source-layer
+    function so callers can test the same behavior without importing a script.
+    ``None`` indicates the explicit disabled/no-op path.
+    """
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    if not enabled:
+        return None
+
+    corpus = Corpus.load(Path(corpus_path))
+    papers = corpus.papers if max_papers is None else corpus.papers[:max_papers]
+    for paper in papers:
+        download_and_extract_fulltext(
+            paper,
+            output_dir,
+            unpaywall_email=unpaywall_email,
+        )
+
+    extraction_report = assess_fulltext_extraction(corpus, output_dir)
+    report_path = output_dir.parent / "data" / "fulltext_extraction.json"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(extraction_report, indent=2) + "\n", encoding="utf-8")
+    return report_path

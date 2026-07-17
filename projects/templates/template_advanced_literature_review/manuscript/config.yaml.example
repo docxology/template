@@ -1,7 +1,7 @@
 # Copy to config.yaml and replace the example identity and search phases.
 paper:
-  title: "Advanced Multi-Phase Literature Review"
-  subtitle: "Configured research question"
+  title: "A Reproducible Multi-Phase Literature-Review Pipeline"
+  subtitle: "Configured research question and evidence boundary"
   version: "0.1.0"
   date: ""
 authors:
@@ -12,6 +12,7 @@ authors:
     corresponding: true
 publication:
   status: draft
+  doi_status: "forthcoming"
   doi: ""
   version_doi: ""
   version_record: ""
@@ -19,7 +20,8 @@ publication:
   repository_url: "https://github.com/owner/repository"
   repository_label: "owner/repository"
 keywords:
-  - "systematic review"
+  - "literature review pipeline"
+  - "systematic-review reporting"
   - "multi-phase search"
 metadata:
   license: "CC-BY-4.0"

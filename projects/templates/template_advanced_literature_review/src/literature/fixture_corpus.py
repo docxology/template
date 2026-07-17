@@ -2,7 +2,7 @@
 
 The template ships an offline, idempotent default run, which requires a committed
 seed corpus so the pipeline produces identical artifacts with no network access.
-This module builds that corpus for a configured term (default "modafinil") as
+This module builds that corpus for a configured term (default "exoplanet atmospheres") as
 **clearly-synthetic** records:
 
 * DOIs use the reserved ``10.5555/`` test prefix (never a real DOI).
@@ -28,107 +28,107 @@ from literature.corpus import Corpus
 from literature.models import Author, Paper
 
 DEFAULT_SEED = 42
-DEFAULT_TERM = "modafinil"
+DEFAULT_TERM = "exoplanet atmospheres"
 DEFAULT_N = 80
 
-# Subfield -> (title fragments, abstract sentences). Domain content for the default
-# term; a different term would supply its own fragments via config in a live run.
+# Subfield -> (title fragments, abstract sentences). These are synthetic records
+# for pipeline validation, never evidence of an empirical literature.
 TOPICS: dict[str, dict[str, list[str]]] = {
-    "clinical_sleep": {
+    "atmospheric_modeling": {
         "titles": [
-            "Modafinil for excessive daytime sleepiness in narcolepsy",
-            "Armodafinil in shift-work disorder: a randomized trial",
-            "Modafinil as adjunct therapy in obstructive sleep apnea",
-            "Wakefulness outcomes with modafinil in idiopathic hypersomnia",
+            "Forward models for exoplanet atmospheric spectra",
+            "Radiative transfer in cloudy exoplanet atmospheres",
+            "Retrieval priors for atmospheric composition",
+            "Climate models of irradiated exoplanets",
         ],
         "sentences": [
-            "Modafinil significantly reduced excessive daytime sleepiness versus placebo.",
-            "Patients with narcolepsy showed improved maintenance of wakefulness.",
-            "Shift-work disorder symptoms improved on the Epworth Sleepiness Scale.",
-            "Sleep-onset latency increased during the multiple sleep latency test.",
+            "Forward models connect atmospheric composition to synthetic transmission spectra.",
+            "Cloud opacity changes the retrieved abundance of atmospheric species.",
+            "Radiative transfer assumptions affect uncertainty in exoplanet retrievals.",
+            "Climate simulations explore temperature structure in irradiated atmospheres.",
         ],
     },
-    "cognition": {
+    "observational_methods": {
         "titles": [
-            "Modafinil and working memory under sleep deprivation",
-            "Cognitive enhancement effects of modafinil in healthy adults",
-            "Attention and vigilance after modafinil administration",
-            "Executive function and psychomotor speed with modafinil",
+            "Transit spectroscopy of exoplanet atmospheres",
+            "Instrument systematics in exoplanet observations",
+            "Photometric monitoring of transiting exoplanets",
+            "High-resolution spectroscopy for atmospheric studies",
         ],
         "sentences": [
-            "Modafinil improved working memory accuracy in sleep-deprived participants.",
-            "Sustained attention and vigilance increased relative to placebo.",
-            "Effects on executive function were modest in well-rested subjects.",
-            "Psychomotor vigilance task lapses decreased after dosing.",
+            "Transit spectroscopy constrains atmospheric scale height and composition.",
+            "Instrument systematics are modelled alongside astrophysical signals.",
+            "Photometric light curves provide repeatable observations of transiting planets.",
+            "High-resolution spectra separate planetary and stellar contributions.",
         ],
     },
-    "pharmacology": {
+    "molecular_detection": {
         "titles": [
-            "Pharmacokinetics of modafinil and its enantiomers",
-            "Dopamine transporter occupancy by modafinil",
-            "Mechanism of action of modafinil revisited",
-            "CYP3A4 metabolism and half-life of modafinil",
+            "Water-vapour signatures in exoplanet atmospheres",
+            "Carbon dioxide detection in a transiting exoplanet",
+            "Methane constraints from transmission spectra",
+            "Sodium and potassium lines in hot Jupiter atmospheres",
         ],
         "sentences": [
-            "Modafinil inhibits the dopamine transporter increasing extracellular dopamine.",
-            "Plasma half-life supports once-daily dosing in most patients.",
-            "Bioavailability and metabolism were characterized in healthy volunteers.",
-            "The mechanism of action involves multiple monoaminergic systems.",
+            "Water vapour signatures are evaluated against competing opacity sources.",
+            "Carbon dioxide abundance is constrained by simulated and observed spectra.",
+            "Methane retrievals depend on spectral coverage and prior assumptions.",
+            "Alkali-metal lines provide diagnostics of temperature and atmospheric pressure.",
         ],
     },
-    "psychiatry": {
+    "jwst_instrumentation": {
         "titles": [
-            "Modafinil augmentation in major depressive disorder",
-            "Modafinil for fatigue in multiple sclerosis",
-            "Adjunctive modafinil in schizophrenia: cognition and negative symptoms",
-            "Modafinil in adult ADHD: a controlled study",
+            "JWST NIRSpec observations of exoplanet atmospheres",
+            "MIRI spectroscopy and thermal emission from exoplanets",
+            "NIRCam transit photometry for atmospheric characterization",
+            "Calibration of JWST exoplanet transmission spectra",
         ],
         "sentences": [
-            "Adjunctive modafinil reduced fatigue and improved residual symptoms.",
-            "Negative symptoms and cognition showed small improvements.",
-            "Depression severity decreased on augmentation versus placebo.",
-            "Tolerability was acceptable across psychiatric populations.",
+            "JWST spectra extend wavelength coverage for atmospheric characterization.",
+            "Thermal emission measurements constrain dayside temperature structure.",
+            "NIRCam photometry is combined with transit observations and retrieval models.",
+            "Calibration choices are reported as uncertainty sources in JWST analyses.",
         ],
     },
-    "safety": {
+    "retrieval_statistics": {
         "titles": [
-            "Abuse potential of modafinil relative to classical stimulants",
-            "Adverse-event profile of long-term modafinil use",
-            "Modafinil and serious skin reactions: a safety review",
-            "Dependence and tolerability of modafinil",
+            "Uncertainty quantification for atmospheric retrievals",
+            "Benchmarking exoplanet atmospheric inference pipelines",
+            "Bayesian model comparison for molecular detections",
+            "Reproducibility of exoplanet spectral analyses",
         ],
         "sentences": [
-            "Modafinil showed lower abuse potential than amphetamine in human studies.",
-            "The most common adverse effects were headache and nausea.",
-            "Rare serious cutaneous reactions prompted regulatory warnings.",
-            "No evidence of physical dependence emerged over the study period.",
+            "Uncertainty intervals quantify the effect of noise and model misspecification.",
+            "Benchmark datasets compare retrieval accuracy across analysis pipelines.",
+            "Bayesian model comparison tests competing molecular explanations.",
+            "Reproducibility checks record data, code, and configuration dependencies.",
         ],
     },
-    "neuroscience": {
+    "comparative_planetology": {
         "titles": [
-            "Orexin signaling and the wake-promoting action of modafinil",
-            "Functional MRI of modafinil effects on prefrontal cortex",
-            "Hypothalamic mechanisms of modafinil-induced wakefulness",
-            "EEG correlates of modafinil-induced alertness",
+            "Comparative atmospheric composition across exoplanet populations",
+            "Metallicity and temperature trends in giant exoplanets",
+            "Population-level analysis of transmission spectra",
+            "Atmospheric diversity across stellar irradiation regimes",
         ],
         "sentences": [
-            "Modafinil activated orexinergic neurons in the hypothalamus.",
-            "Functional imaging showed increased prefrontal activation during tasks.",
-            "Histaminergic tone contributed to wake promotion.",
-            "EEG showed reduced theta power consistent with increased alertness.",
+            "Comparative analysis separates population trends from target-specific effects.",
+            "Metallicity and temperature covariates explain part of the observed variation.",
+            "Population studies require harmonized preprocessing and uncertainty reporting.",
+            "Atmospheric diversity is evaluated across stellar irradiation regimes.",
         ],
     },
 }
 
 VENUES = [
-    "Sleep",
-    "Journal of Clinical Psychopharmacology",
-    "Neuropsychopharmacology",
-    "Psychopharmacology",
-    "CNS Drugs",
-    "Journal of Clinical Sleep Medicine",
-    "Biological Psychiatry",
-    "European Neuropsychopharmacology",
+    "The Astrophysical Journal",
+    "Astronomy and Astrophysics",
+    "Monthly Notices of the Royal Astronomical Society",
+    "Nature Astronomy",
+    "The Astronomical Journal",
+    "Publications of the Astronomical Society of the Pacific",
+    "Icarus",
+    "Research Notes of the AAS",
 ]
 GIVEN = ["A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "J.", "K.", "L.", "M."]
 FAMILY = [

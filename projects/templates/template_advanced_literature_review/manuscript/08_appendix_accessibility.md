@@ -19,7 +19,7 @@ orphaned or stale figures. The configuration hash and artifact inventory bind th
 to the exact pipeline run that produced it. The provenance chain is:
 
 1. `manuscript/config.yaml` defines the search term, engines, taxonomy, and hypotheses
-2. `scripts/01_literature_search.py` retrieves records → `corpus.jsonl`
+2. `scripts/01_multi_phase_search.py` retrieves or fixtures records → `corpus.jsonl`
 3. `scripts/02_meta_analysis_pipeline.py` analyses the corpus → `*.json` data files
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
 5. `scripts/05_inject_variables.py` computes variables from data files → manuscript text
@@ -45,6 +45,5 @@ principles:
 ## Honesty
 
 The default corpus is synthetic and labelled as such; the manuscript does not present
-fixture-derived numbers as empirical findings about {{SEARCH_TERM}}. Live findings require
-a real retrieval run with regenerated artifacts — as produced in this instance, which
-retrieved {{CORPUS_SIZE}} real records from {{N_ENGINES}} live engines.
+fixture-derived numbers as empirical findings about {{SEARCH_TERM}}. Live findings
+require a real retrieval run with regenerated artifacts and source-level provenance.

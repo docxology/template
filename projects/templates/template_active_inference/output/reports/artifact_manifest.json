@@ -57,8 +57,8 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_contract_index.json",
-      "sha256": "548d19da38b28bb62d129ede46153f9471d3a08a25dc13559874a3c27b495652",
-      "size_bytes": 105663,
+      "sha256": "a143627eb7c2e2f7c0ecccafb45d17c471a50d64c62bc9cea0d018651f6ca174",
+      "size_bytes": 105659,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -66,7 +66,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "013a6aa3e0c356dd80e287fa470c000a20d5d729d41adcf87a83c4286c0dd00a",
+      "sha256": "2c802ec2d57cf1a5fc8c5be6ed3784edfac5764aaf4c6ecd2d6655b000e04a54",
       "size_bytes": 171999,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -147,8 +147,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "d19a75b7303494a63277faa4d1a1ef44bf9b9f829d3bfc5d50fca2021d52f5dc",
-      "size_bytes": 8634,
+      "sha256": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
+      "size_bytes": 8635,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -705,8 +705,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/00_00_transmission_begin.md",
-      "sha256": "6a3a1f1c580efc6c24f237f4e1b55a67f87d99a0d34d1ebab4a3c83d63dc38cf",
-      "size_bytes": 1517,
+      "sha256": "ce6d0daa0a0fa2a6905ae0d8dc0bd2d37ff06da354c59577db0a93f7554d8eb5",
+      "size_bytes": 1518,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -849,8 +849,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/99_zz_transmission_end.md",
-      "sha256": "b3779d5e30783e0134569b8ed3c789b2c12af3ee27ebb13ba99b8146929c8bc5",
-      "size_bytes": 509,
+      "sha256": "f8893588e6be1026af7c43db726262816a3e3ae10951634ec57800bda3521931",
+      "size_bytes": 510,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1092,7 +1092,7 @@
     {
       "contract_match": true,
       "path": "output/reports/release_attestation.json",
-      "sha256": "107bd27b597ea671069a751276fbaa8dc237a96a633f656daece6db66f9d6276",
+      "sha256": "c3407116f9638f9bea6250e32a0a2d1f0f04a03287efe134d3f007b1ec298765",
       "size_bytes": 1687,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1101,8 +1101,8 @@
     {
       "contract_match": true,
       "path": "output/reports/release_bundle_manifest.json",
-      "sha256": "e6c9d4feb09ff43899ebe6943dcf47aed7917c61c85cf968cffbac1fbcad773c",
-      "size_bytes": 31021,
+      "sha256": "85d2b138bd2b916376179b18d78ecea99a1a251177a381c9bcd71420b3d8ff89",
+      "size_bytes": 31018,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1119,7 +1119,7 @@
     {
       "contract_match": true,
       "path": "output/reports/replay_matrix.json",
-      "sha256": "d31a4dc9b4c90749ccfda7a2ba8956f6f5a15819fdd5e72fb12a2535e492f1d5",
+      "sha256": "4e10dabd014eb03eba227306b9da3494153b02e6154e304d0829038d0f354040",
       "size_bytes": 27403,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

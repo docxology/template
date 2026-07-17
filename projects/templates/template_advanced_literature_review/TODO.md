@@ -16,7 +16,7 @@ Live test counts and coverage snapshots belong in `../../../docs/_generated/COUN
 
 ## Integrity and template-status gaps
 
-- Keep the multi-phase corpus clearly marked with real DOI sources and proper attribution in README, manuscript, and generated-output prose.
+- Keep the offline corpus clearly marked as synthetic; live DOI sources require source-tier provenance and attribution in README, manuscript, and generated-output prose.
 - Ensure phase provenance is maintained throughout the pipeline: every generated artifact should trace back to contributing phases.
 - Keep `data/subfield_defaults_exoplanet.yaml` tied to project-local configuration, not borrowed from sibling exemplars.
 
@@ -45,10 +45,10 @@ The open work below should add tests or validators before promoting new claim su
 
 ## Ordered improvement ladder
 
-1. Preserve multi-phase corpus integrity with proper attribution and real DOI sources.
+1. Preserve multi-phase corpus integrity with explicit fixture/live classification and source provenance.
 2. Add focused validators for phase boundary enforcement and cross-phase consistency checks.
 3. Expand LLM filtering calibration with domain-specific positive/negative controls.
-4. Implement comprehensive phase provenance tracking across all pipeline stages.
+4. Complete phase provenance tracking across all pipeline stages.
 5. Document advanced multi-phase patterns for replication in other domains.
 6. Refresh generated docs after any multi-phase surface changes.
 

@@ -839,6 +839,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/release/swh_repo_url.txt",
+      "sha256": "dbd0975ded30725d27ef871f676ea96fcde528d8e0c2d410ecde3a48977353bf",
+      "size_bytes": 59,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/upload_receipts.json",
+      "sha256": "af8288d19b48ac2692b02508495773fb5addb2bf5f9a483bf53a46e410d0a7c0",
+      "size_bytes": 2004,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/autoresearch_evidence_overview.md",
       "sha256": "8460fe5ab473bdd599f051168a921a8c5c185671bf3f10bb36cd0f32ca747dfa",
       "size_bytes": 1136,

@@ -1,10 +1,11 @@
 # Optional Knowledge-Graph Layer
 
 An optional, **LLM-gated** stage lifts the corpus from bibliometrics to hypothesis-level
-evidence. For each record, a local language model (Ollama, default model `gemma3:4b`)
-extracts structured *assertions* — each encoding a direction (supports / contradicts /
-neutral), a confidence score, and a short natural-language justification — against the
-{{N_HYPOTHESES}} hypotheses declared in configuration. Assertions are serialized as
+evidence. For each eligible record, a local language model (Ollama, default model
+`gemma3:4b`) extracts structured *assertions*. Each assertion encodes a direction
+(supports, contradicts, or neutral), a confidence score, and a short natural-language
+justification against one of the {{N_HYPOTHESES}} hypotheses declared in configuration.
+Assertions are serialized as
 RDF-compatible nanopublications [@kuhn2016decentralized] and scored by a
 citation-weighted evidence function.
 
@@ -38,11 +39,10 @@ discards previous results for a fresh start.
 
 ## Gating and Defaults
 
-This stage is optional and gated by language-model availability. With no language
-model configured, the hypothesis evidence scores read *pending*; with Ollama configured
-(as in this instance, with {{TOTAL_ASSERTIONS}} assertions extracted), scores are populated
-from citation-weighted assertion extraction. The hypotheses themselves — their names and
-scope — come from configuration and are reported regardless of whether the scoring stage
-has run.
+This stage is optional and gated by language-model availability. With no language model
+configured, the hypothesis evidence scores read *pending*. When Ollama is explicitly
+configured and the extraction stage completes, scores are populated from the recorded,
+citation-weighted assertions. The hypotheses themselves, including their names and
+scope, come from configuration and are reported regardless of whether scoring has run.
 
 The hypotheses explored in this instance are: {{HYPOTHESIS_LIST}}.

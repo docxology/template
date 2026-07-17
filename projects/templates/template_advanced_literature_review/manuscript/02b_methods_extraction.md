@@ -20,7 +20,7 @@ download, so the offline default still reports coverage. For this run:
   no full-text source available.
 
 The identifier coverage for this corpus is: {{DOI_COUNT}} DOIs, {{OPENALEX_ID_COUNT}}
-OpenAlex IDs, and {{ARXIV_ID_COUNT}} arXiv IDs. DOI coverage dominates, enabling robust
+OpenAlex IDs, and {{ARXIV_ID_COUNT}} arXiv IDs. DOI coverage dominates and supports
 cross-engine de-duplication.
 
 ## Language and Entity Extraction
@@ -29,8 +29,8 @@ Titles, abstracts, and (when present) full text are tokenized and reduced to key
 and named entities by offline, dependency-light extractors — no mandatory LLM.
 Term-frequency statistics drive a TF-IDF representation over a {{NUM_VOCAB_FEATURES}}-feature
 vocabulary. The most frequent terms in the corpus are: {{TOP_VOCAB_TERMS}}. These terms
-reflect the clinical, pharmacological, and cognitive vocabulary characteristic of the
-{{SEARCH_TERM}} literature.
+reflect the configured domain and the records retained by the retrieval and filtering
+policy; fixture-derived terms are not evidence about the live field.
 
 ## Embeddings
 

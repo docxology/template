@@ -4,55 +4,45 @@
 
 ### Foundation Phase (Phase 1)
 
-The foundational search identified {{PHASE_1_PAPERS}} papers covering the broad
-landscape of exoplanet atmospheric research. This corpus spans the full range
-of methodological approaches: transit spectroscopy, emission spectroscopy,
-phase curve analysis, and direct imaging. The earliest papers in this phase
-establish the theoretical framework for atmospheric retrieval, while recent
-work demonstrates increasingly sophisticated multi-wavelength analyses.
+The configured foundation phase retained {{PHASE_1_PAPERS}} records after its search,
+filtering, and de-duplication rules. Its taxonomy includes transit spectroscopy,
+emission spectroscopy, phase-curve analysis, and direct imaging. These labels describe
+the configured retrieval design; the synthetic fixture cannot establish how widely
+those approaches occur in the published literature.
 
 ### JWST Phase (Phase 2)
 
-Phase 2 captured {{PHASE_2_PAPERS}} papers specifically related to JWST
-observations. The year filter (≥2020) reflects the JWST mission timeline,
-capturing pre-launch calibration studies, early-release science programs, and
-post-launch discovery papers. This phase shows the field's rapid evolution
-driven by JWST's unprecedented infrared sensitivity and spectral resolution.
+Phase 2 retained {{PHASE_2_PAPERS}} records under the JWST-oriented queries and the
+configured year filter (≥2020). The boundary is intended to include pre-launch
+calibration work and post-launch observations. It is a design choice, not evidence
+that the phase is exhaustive or that any instrument caused a change in the field.
 
 ### Molecular Detection Phase (Phase 3)
 
-Phase 3 identified {{PHASE_3_PAPERS}} papers focused on specific atmospheric
-molecule detections. The five query groups target the most commonly detected
-atmospheric species: H₂O (water vapor), CO₂ (carbon dioxide), CH₄ (methane),
-H₂S (hydrogen sulfide), and Na/K (sodium/potassium). This phase reveals the
-increasing molecular diversity detectable in exoplanet atmospheres.
+Phase 3 retained {{PHASE_3_PAPERS}} records under five configured molecule-oriented
+query groups: H₂O, CO₂, CH₄, H₂S, and Na/K. The query groups operationalize the review
+question; they do not assert that these are the most commonly detected species or that
+the fixture establishes a scientific trend.
 
 ## Knowledge Graph Results
 
-The LLM-based knowledge graph extraction identified **{{TOTAL_ASSERTIONS}}**
-evidence assertions from the sampled subset of papers. These assertions were
-scored against four domain hypotheses:
+The optional knowledge-graph stage reports **{{TOTAL_ASSERTIONS}}** assertions from
+the eligible sample. The configuration-derived hypothesis table is the authoritative
+mapping from review question to score:
 
-| Hypothesis | Score | Interpretation |
-|------------|-------|----------------|
-| Primary Efficacy | {{H1_SCORE}} | Strong evidence supporting JWST's characterization capabilities |
-| Optimal Performance | {{H2_SCORE}} | Moderate evidence for molecular diversity detection |
-| Mechanistic Basis | {{H3_SCORE}} | Weak evidence for theoretical-observational agreement |
-| Process Model | {{H4_SCORE}} | Strong evidence for cross-method consistency |
+{{HYPOTHESIS_TABLE}}
 
-The strongest support was found for **Primary Efficacy** ({{H1_SCORE}}),
-confirming that JWST enables unprecedented precision in exoplanet atmospheric
-characterization. The weakest support was for **Mechanistic Basis**
-({{H3_SCORE}}), suggesting that theoretical models and observations may diverge
-in specific spectral predictions.
+The configured scores are descriptive evidence summaries, not calibrated probabilities,
+causal effects, or conclusions about instrument performance. The table should be read
+together with the claim ledger and source-tier metadata. A fixture run cannot establish
+whether models and observations agree in the broader literature.
 
 ## Citation Network Analysis
 
 The combined corpus contains **{{CITATION_EDGES}}** citation relationships
 across **{{CITATION_NODES}}** papers, with a network density of
-{{PHASE_CITATION_DENSITY}}%. The high citation density indicates a tightly
-connected research community with strong interdependencies between
-observational and theoretical work.
+{{CITATION_DENSITY_PCT}}%. This is a descriptive statistic for the retained
+corpus; it does not establish a field-wide citation structure or community claim.
 
 ## Reproducibility Assessment
 

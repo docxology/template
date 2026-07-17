@@ -1,0 +1,141 @@
+# Project-specific methods map. This file is read by the methods audit; the
+# repository runtime pipeline remains the canonical renderer/orchestrator.
+stages:
+  - name: Multi-Phase Retrieval
+    key: retrieval
+    script: "projects/{project}/scripts/01_multi_phase_search.py"
+    method: phase-aware retrieval and deduplication
+    tags: [science, deterministic]
+    contract:
+      gate: literature_retrieval
+      input_artifacts: ["projects/{project}/manuscript/config.yaml"]
+      output_artifacts:
+        - "projects/{project}/output/data/combined_corpus.jsonl"
+        - "projects/{project}/output/data/phase_metadata.json"
+      definition_of_done: "Each configured phase writes a provenance-bearing corpus and the merged corpus is deduplicated deterministically."
+      failure_code: ARL_RETRIEVAL_FAILED
+  - name: Corpus Analysis
+    key: analysis
+    script: "projects/{project}/scripts/02_meta_analysis_pipeline.py"
+    method: phase-aware bibliometrics, text analytics, and citation analysis
+    depends_on: [Multi-Phase Retrieval]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/combined_corpus.jsonl"]
+      output_artifacts:
+        - "projects/{project}/output/data/descriptive_stats.json"
+        - "projects/{project}/output/data/subfield_classification.json"
+        - "projects/{project}/output/data/tfidf_data.json"
+        - "projects/{project}/output/data/topics.json"
+        - "projects/{project}/output/data/temporal_analysis.json"
+        - "projects/{project}/output/data/citation_network.json"
+      definition_of_done: "Deterministic analysis outputs are produced from the declared corpus with the configured seed."
+      failure_code: ARL_ANALYSIS_FAILED
+  - name: Knowledge Graph
+    key: knowledge_graph
+    script: "projects/{project}/scripts/03_build_knowledge_graph.py"
+    method: phase-aware assertion extraction and graph scoring
+    depends_on: [Corpus Analysis]
+    tags: [science, optional-llm]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/combined_corpus.jsonl"]
+      output_artifacts:
+        - "projects/{project}/output/data/assertion_summary.json"
+        - "projects/{project}/output/data/hypothesis_scores.json"
+      definition_of_done: "Graph artifacts either contain source-linked assertions or explicitly record that optional extraction was skipped."
+      failure_code: ARL_KNOWLEDGE_GRAPH_FAILED
+  - name: Figure Generation
+    key: figures
+    script: "projects/{project}/scripts/04_generate_figures.py"
+    method: deterministic publication figure generation
+    depends_on: [Corpus Analysis, Knowledge Graph]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/temporal_analysis.json", "projects/{project}/output/data/citation_network.json"]
+      output_artifacts: ["projects/{project}/output/figures/figure_registry.json"]
+      definition_of_done: "Every generated figure is registered with a label, caption, source stage, and existing file."
+      failure_code: ARL_FIGURES_FAILED
+  - name: Manuscript Hydration
+    key: variables
+    script: "projects/{project}/scripts/05_inject_variables.py"
+    method: deterministic manuscript variable injection
+    depends_on: [Figure Generation]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/"]
+      output_artifacts: ["projects/{project}/output/manuscript/"]
+      definition_of_done: "All required manuscript variables resolve and source Markdown remains unchanged."
+      failure_code: ARL_VARIABLES_FAILED
+  - name: Full-Text Assessment
+    key: fulltext_assessment
+    script: "projects/{project}/scripts/06_fulltext_assessment.py"
+    method: full-text availability and provenance assessment
+    depends_on: [Multi-Phase Retrieval]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/combined_corpus.jsonl"]
+      output_artifacts: ["projects/{project}/output/data/fulltext_assessment.json"]
+      definition_of_done: "Availability and provider classifications are recorded without downloading network content by default."
+      failure_code: ARL_FULLTEXT_ASSESSMENT_FAILED
+  - name: Literature Evaluation
+    key: evaluation
+    script: "projects/{project}/scripts/07_literature_evaluation.py"
+    method: corpus quality and retrieval evaluation
+    depends_on: [Corpus Analysis]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/combined_corpus.jsonl"]
+      output_artifacts: ["projects/{project}/output/data/literature_evaluation.json"]
+      definition_of_done: "Evaluation reports include retrieval counts, duplicate handling, and phase coverage."
+      failure_code: ARL_EVALUATION_FAILED
+  - name: Research Dispatch
+    key: deep_research
+    script: "projects/{project}/scripts/08_deep_research_dispatch.py"
+    method: optional configured research dispatch
+    depends_on: [Literature Evaluation]
+    tags: [optional-network]
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/config.yaml"]
+      output_artifacts: ["projects/{project}/output/data/deep_research_replay.json"]
+      definition_of_done: "The configured dispatch completes or records an explicit, reproducible skip."
+      failure_code: ARL_RESEARCH_DISPATCH_FAILED
+  - name: Bibliography Export
+    key: bibliography
+    script: "projects/{project}/scripts/09_export_bibliography.py"
+    method: deterministic bibliography export
+    depends_on: [Multi-Phase Retrieval]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/combined_corpus.jsonl"]
+      output_artifacts: ["projects/{project}/output/data/bibliography.bib"]
+      definition_of_done: "Bibliography entries are deduplicated and traceable to corpus identifiers."
+      failure_code: ARL_BIBLIOGRAPHY_FAILED
+  - name: Reproducibility Assessment
+    key: reproducibility
+    script: "projects/{project}/scripts/10_reproducibility_assessment.py"
+    method: reproducibility and workflow-graph assessment
+    depends_on: [Literature Evaluation]
+    tags: [deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/output/data/combined_corpus.jsonl"]
+      output_artifacts:
+        - "projects/{project}/output/data/reproducibility_summary.json"
+        - "projects/{project}/output/data/reproducibility_scores.json"
+        - "projects/{project}/output/data/workflow_graphs.jsonl"
+      definition_of_done: "Reproducibility scores and skipped optional inputs are recorded with stable configuration."
+      failure_code: ARL_REPRODUCIBILITY_FAILED
+  - name: Publication Validation
+    key: publication_validation
+    script: "projects/{project}/scripts/11_validate_outputs.py"
+    method: publication artifact, evidence, figure, and manuscript validation
+    depends_on: [Manuscript Hydration, Full-Text Assessment, Research Dispatch, Bibliography Export, Reproducibility Assessment]
+    tags: [publication, deterministic]
+    contract:
+      input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/"]
+      output_artifacts:
+        - "projects/{project}/output/reports/artifact_manifest.json"
+        - "projects/{project}/output/reports/evidence_registry.json"
+        - "projects/{project}/output/reports/validation_report.json"
+        - "projects/{project}/output/reports/validation_report.md"
+      definition_of_done: "All generated evidence and publication surfaces validate, with deterministic failures surfaced before rendering."
+      failure_code: ARL_PUBLICATION_VALIDATION_FAILED

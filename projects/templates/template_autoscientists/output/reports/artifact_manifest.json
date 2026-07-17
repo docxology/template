@@ -119,6 +119,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/release/swh_repo_url.txt",
+      "sha256": "dd43fc68cfd7169af170be6b606364c130d81782524216aa2895ce598e1074c1",
+      "size_bytes": 53,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/upload_receipts.json",
+      "sha256": "cbe4b0dfb4dee31d1bfcd15cfed9e3b7e25723f1882be19b103cdf79e481dc7d",
+      "size_bytes": 1968,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/lessons.jsonl",
       "sha256": "b9d17002ca916584e59b700baf10ae70aa7144ee4ed03bcf47adb9ee9aecdc41",
       "size_bytes": 6091,

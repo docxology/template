@@ -76,11 +76,11 @@ DEFAULT_REPRO_CHECKPOINT_INTERVAL = 50
 # ("output/fulltext") when no config file / no override is present.
 FULLTEXT_DIR = OUTPUT_DIR / "fulltext"
 
-# Literature search defaults (01_literature_search.py).
+# Literature search defaults (01_multi_phase_search.py).
 #
 # This template is DOMAIN-AGNOSTIC: the live search term, per-engine queries, and
 # relevance keywords are supplied by ``manuscript/config.yaml`` (bundled default:
-# "modafinil"). These module-level fallbacks are intentionally EMPTY so that no
+# "exoplanet atmospheres"). These module-level fallbacks are intentionally EMPTY so that no
 # domain term is hardcoded in source — the config file is the single source of
 # truth for what to search. ``config_loader`` falls back to these only when no
 # config file is present, in which case the caller must pass queries explicitly.

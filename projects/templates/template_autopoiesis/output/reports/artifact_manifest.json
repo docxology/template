@@ -722,6 +722,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/data/publication_ledger.json",
+      "sha256": "105c6c00b713467e4ab87e135635cc9b7adc68f2af473c8bae13ad0481777a28",
+      "size_bytes": 923,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/data/test_coverage_summary.json",
       "sha256": "d3a3231f84f05d558c7f1349c2d5d262e0c56e574352ec39b64f7ba08d6e3f6c",
       "size_bytes": 50,

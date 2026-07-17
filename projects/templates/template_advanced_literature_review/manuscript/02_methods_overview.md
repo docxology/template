@@ -1,66 +1,50 @@
 # Methods Overview
 
-The pipeline is a sequence of deterministic stages, each reading the previous stage's
-committed artifacts and writing its own. Business logic lives in tested `src/` modules;
-the numbered `scripts/` are thin orchestrators that wire I/O, configuration loading,
-logging, and stage sequencing. The architecture follows the thin orchestrator pattern:
-no computational logic resides in scripts.
+The project is an eleven-stage, file-system-backed pipeline. `methods_pipeline.yaml`
+is the executable contract: each stage names its method, dependencies, inputs, outputs,
+definition of done, and stable failure code. Business logic lives in tested `src/`
+modules; numbered scripts only perform bootstrapping, argument parsing, orchestration,
+and boundary I/O.
 
-## Pipeline Stages
+## Pipeline stages
 
-1. **Retrieval** (`01_literature_search.py`) — dispatch the configured query across
-   {{N_ENGINES}} engines ({{ENGINE_LIST}}), merge, and de-duplicate into `corpus.jsonl`.
-   Each engine is an isolated adapter exposing a uniform `search(query) -> list[Paper]`
-   interface; engines that are keyless need no credentials, while Semantic Scholar uses
-   a key when present. SovietRxiv and ChinaRxiv share a unified API with an optional
-   `X-API-Email` header for the polite rate-limit pool (300/min vs 30/min anonymous).
+1. **Multi-phase retrieval** (`01_multi_phase_search.py`) acquires records or runs the
+   labelled offline fixture, applies configured filters, de-duplicates identifiers, and
+   writes phase corpora plus `phase_metadata.json`.
+2. **Corpus analysis** (`02_meta_analysis_pipeline.py`) computes subfields, temporal
+   trends, TF-IDF/topics, and citation-network artifacts.
+3. **Knowledge graph construction** (`03_build_knowledge_graph.py`) optionally extracts
+   assertions and phase-aware hypothesis evidence; disabled or unmeasured LLM outputs
+   remain explicitly pending.
+4. **Visualization** (`04_generate_figures.py`) renders figures from analysis artifacts
+   and records source paths, hashes, captions, and alt text in the figure registry.
+5. **Manuscript hydration** (`05_inject_variables.py`) computes variables from outputs
+   and writes rendered Markdown without changing source sections.
+6. **Full-text assessment** (`06_fulltext_assessment.py`) records abstract, open-access,
+   and PDF availability; downloading is opt-in and network-gated.
+7. **Literature evaluation** (`07_literature_evaluation.py`) applies configured quality
+   and fixture-honesty checks.
+8. **Research dispatch** (`08_deep_research_dispatch.py`) replays a recorded report by
+   default and exposes live provider dispatch only as an explicit opt-in.
+9. **Bibliography export** (`09_export_bibliography.py`) writes a deterministic
+   bibliography from the retained corpus and source references.
+10. **Reproducibility assessment** (`10_reproducibility_assessment.py`) records workflow
+    and source-consumption evidence.
+11. **Publication validation** (`11_validate_outputs.py`) validates artifact, evidence,
+    figure, and report contracts before the shared publication audit runs.
 
-2. **Meta-analysis** (`02_meta_analysis_pipeline.py`) — subfield classification, temporal
-   metrics, TF-IDF, non-negative matrix factorization topics, and the citation network.
-   This stage reads `corpus.jsonl` and emits `subfield_classification.json`,
-   `temporal_analysis.json`, `tfidf_data.json`, `topics.json`, `citation_network.json`,
-   and `citation_graph.gml`.
+## Reproducibility model
 
-3. **Knowledge graph** (`03_build_knowledge_graph.py`, optional/LLM-gated) — extract
-   assertions and score the {{N_HYPOTHESES}} configured hypotheses. Outputs
-   `nanopublications.jsonl`, `hypothesis_scores.json`, and `assertion_summary.json`.
+The offline path uses a deterministic synthetic fixture with reserved identifiers and
+generated authors. It is useful for CI and structural testing only; it is never a
+substitute for a representative live review. A live run must preserve the retrieval
+report, engine status, source identifiers, configuration, and claim classifications.
+Seeds and timestamp-free serializers are used where the pipeline supports exact replay.
 
-4. **Figures** (`04_generate_figures.py`) — render {{NUM_FIGURES}} publication-ready
-   visualizations from the analysis JSON outputs. All figures use a colourblind-safe
-   palette (Wong 2011), high-contrast labels at $\geq 16$pt, and a headless matplotlib
-   backend (Agg).
+## Configuration surface
 
-5. **Injection** (`05_inject_variables.py`) — compute manuscript variables from the
-   artifacts above and substitute them into these Markdown sections. An unresolved
-   placeholder is a hard error, not a silent gap.
-
-6. **Fulltext assessment** (`06_fulltext_assessment.py`) — report abstract coverage
-   ({{ABSTRACT_COVERAGE_PCT}}\%), open-access status ({{OA_PCT}}\%), and PDF availability
-   ({{PDF_AVAIL_PCT}}\%) across the corpus.
-
-## Reproducibility Model
-
-The system runs **offline and deterministically** by default: a committed synthetic
-seed corpus drives every stage with fixed seeds (seed = 42 for NMF, SVD, and graph
-layouts), so re-running produces byte-identical outputs. A live run with engines
-enabled and credentials supplied replaces the seed corpus with real records — as in
-this instance, which retrieved {{CORPUS_SIZE}} live records. The template is
-domain-agnostic: the search term, query, keyword set, subfield taxonomy, and hypotheses
-all come from `manuscript/config.yaml`.
-
-## Configuration Surface
-
-A single `manuscript/config.yaml` controls:
-
-- **Search parameters**: term, query string, per-engine queries, relevance keywords,
-  start year, max results, resume/clear behaviour
-- **Engine toggles**: arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv, Europe PMC, bioRxiv/medRxiv (each independently enabled or disabled)
-- **SovietRxiv/ChinaRxiv settings**: optional `api_email` for the polite pool, `source`
-  filter (`russiarxiv` or `chinaxiv`)
-- **Full-text download**: opt-in Unpaywall resolution with `unpaywall_email`
-- **Embeddings**: method (`tfidf_svd` or `transformer`), dimensionality, max features
-- **Knowledge graph**: checkpoint interval, LLM model, base URL, temperature, max tokens
-- **Hypothesis definitions**: {{N_HYPOTHESES}} named hypotheses with scope labels
-- **Subfield taxonomy**: {{N_SUBFIELDS}} buckets, each with a keyword list
-- **Paper metadata**: title, authors, DOI, keywords, license, repository URL
+`manuscript/config.yaml` owns search terms, engines, phase boundaries, filters, sampling
+seeds, full-text policy, embedding settings, knowledge-graph settings, hypotheses, and
+subfield taxonomy. `domain_profile.yaml` owns package and gate expectations;
+`experiment_plan.yaml` records the review design; `data/claim_ledger.yaml` records the
+provenance tier and fixture/synthetic status of manuscript-facing claims.

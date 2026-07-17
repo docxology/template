@@ -49,14 +49,13 @@ high-precision spectroscopic observations.
 **Dependencies:** Builds on Phase 1 foundational papers.
 
 **Results:** {{PHASE_2_PAPERS}} papers after deterministic filtering. This phase
-targets the rapidly growing JWST observational literature, with many papers
-reporting first-light detections and atmospheric characterizations that were
-impossible with previous instruments.
+targets records associated with JWST-era observations and analysis. Any claim about
+instrumental capability or scientific findings requires live, source-backed review.
 
 ### Phase 3: Molecular Detection Studies
 
 **Objective:** Identify papers focused on detecting and analyzing specific
-atmospheric molecules (H₂O, CO₂, CH₄, H₂S, Na, K) in exoplanet atmospheres.
+atmospheric molecules (H₂O, CO₂, CH₄, H₂S, Na, K) in the configured domain.
 
 **Queries:**
 1. `"water vapor" AND "exoplanet" AND ("detection" OR "abundance")`
@@ -85,14 +84,15 @@ discovered in multiple phases are tracked with full provenance, enabling
 analysis of papers that span multiple research paradigms.
 
 ### Citation Validation
-Cross-phase citation analysis reveals that {{CROSS_PHASE_CITATION_RATE}}% of
-later-phase papers cite foundational work from Phase 1, demonstrating strong
-methodological coherence across the field.
+Cross-phase citation analysis records that {{CROSS_PHASE_CITATION_RATE}}% of
+later-phase papers cite foundational work from Phase 1. This is a descriptive
+connection statistic for the retained corpus; it does not establish methodological
+coherence across the field.
 
 ### Combined Corpus
 The deduplicated combined corpus contains {{CORPUS_SIZE}} unique papers spanning
-{{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years), providing a comprehensive
-multi-phase portrait of exoplanet atmospheric composition research.
+{{YEAR_START}}--{{YEAR_END}} ({{YEAR_SPAN}} years). It provides a multi-phase
+description of the retained retrieval slice, not a comprehensive account of the field.
 
 ## LLM-Based Content Filtering
 

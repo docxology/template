@@ -7,9 +7,9 @@ graph (built and analyzed with NetworkX [@hagberg2008exploring]) of {{CITATION_N
 nodes and {{CITATION_EDGES}} edges across {{CITATION_COMPONENTS}} connected components,
 with a graph density of {{CITATION_DENSITY_PCT}}\% and a mean in-degree of
 {{MEAN_IN_DEGREE}}. Of {{CITATION_TOTAL_REFS}} total outgoing references,
-{{CITATION_RESOLUTION_PCT}}\% resolve to another record inside the corpus — a resolution
-rate that reflects how self-contained the retrieved slice of the literature is rather
-than the underlying citation density of any single work.
+{{CITATION_RESOLUTION_PCT}}\% resolve to another record inside the corpus. This
+resolution rate describes how self-contained the retrieved slice is; it is not an
+estimate of the underlying citation density of any individual work.
 
 The citation network has {{CITATION_COMMUNITIES}} communities (detected by modularity
 optimization), a maximum in-degree of {{CITATION_MAX_IN_DEGREE}} (the most-cited paper
@@ -35,23 +35,24 @@ floating-point non-associativity of the underlying iterative solvers.
 
 {{TOP_HUBS_TABLE}}
 
-The most influential paper by PageRank (DOI {{TOP_PAGERANK_DOI}}) is a foundational work
-that anchors the citation structure — its high authority score confirms it is frequently
-cited by other corpus members. Hub papers, which cite many other corpus members, serve as
-integrative reviews or meta-analyses that connect disparate threads of the literature.
+The highest-ranked paper by PageRank (DOI {{TOP_PAGERANK_DOI}}) is a central node in the
+retained citation graph. Its score indicates relative centrality within this graph, not
+scientific importance or causal influence. Hub papers cite many corpus members and may
+connect threads of the retrieved literature, but their role should be checked against
+their source type and content.
 
 <!-- FIGURE: citation_network.png -->
-![Citation network for {{SEARCH_TERM_TITLE}}. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership ({{CITATION_COMMUNITIES}} communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../output/figures/citation_network.png "Citation Network"){{#fig:citation_network}}
+![Citation network for {{SEARCH_TERM_TITLE}}. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership ({{CITATION_COMMUNITIES}} communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility.](../output/figures/citation_network.png "Citation Network"){#fig:citation_network}
 
 <!-- FIGURE: degree_distribution.png -->
-![Degree distribution for the {{SEARCH_TERM_TITLE}} citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../output/figures/degree_distribution.png "Degree Distribution"){{#fig:degree_distribution}}
+![Degree distribution for the {{SEARCH_TERM_TITLE}} citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks.](../output/figures/degree_distribution.png "Degree Distribution"){#fig:degree_distribution}
 
 The heavy-tailed degree distribution is characteristic of citation networks: a small
 number of highly-cited papers anchor the structure, while the long tail of low-degree
 nodes represents newer or peripheral works. The low graph density
-({{CITATION_DENSITY_PCT}}\%) reflects the sparsity of intra-corpus citation links —
-most papers cite works outside the retrieved slice, which is expected for a
-max-results-capped retrieval.
+({{CITATION_DENSITY_PCT}}\%) reflects the sparsity of intra-corpus citation links.
+Many papers may cite works outside the retrieved slice, especially under a capped
+retrieval design.
 
 ## Advanced Network Metrics
 
@@ -70,7 +71,7 @@ studies (low in-degree).
 
 {{TOP_BETWEENNESS_TABLE}}
 
-Papers with high betweenness centrality serve as bridges between different topical
-communities in the citation network — their removal would fragment the graph into
-disconnected components. These bridging papers are often review articles or
-methodological papers that connect disparate research threads.
+Papers with high betweenness centrality occupy shortest paths between communities in
+the retained graph. Removing one may alter connectivity, but that graph operation does
+not by itself establish that the paper is a review or methodological bridge in the
+scientific field. Source-type and content review are required for that interpretation.
