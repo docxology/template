@@ -64,6 +64,7 @@ class ArchivalRun:
     receipts: tuple[ArchivalReceipt, ...]
     started_utc: str
     finished_utc: str
+    preflight: dict[str, object] | None = None
 
     @property
     def all_ok(self) -> bool:
@@ -85,6 +86,7 @@ class ArchivalRun:
             "started_utc": self.started_utc,
             "finished_utc": self.finished_utc,
             "all_ok": self.all_ok,
+            "preflight": self.preflight,
             "receipts": [asdict(r) for r in self.receipts],
         }
 

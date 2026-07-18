@@ -42,6 +42,7 @@ flowchart TB
 | `output/manuscript_report.json` | `run_prose_pipeline.py` (calls `infrastructure.prose.write_report`) | `y_generate_prose_figures.py`, `z_generate_manuscript_variables.py` |
 | `output/checks.json` | `run_prose_pipeline.py` (`pipeline.run_prose_pipeline` writes `[CheckResult.to_dict()]`) | CI gates, `review_report.md` builder |
 | `output/review_report.md` | `run_prose_pipeline.py` (`src.report.write_review_report`) | humans |
+| `output/evidence_summary.json` | `run_prose_pipeline.py` (`src.pipeline.build_evidence_summary`) | downstream diagnostics; never publication approval |
 | `output/run_summary.json` | `run_prose_pipeline.py` | downstream tooling |
 | `output/data/manuscript_variables.json` | `z_generate_manuscript_variables.py` | rendering (substituted into markdown) |
 | `output/figures/*.png` | `y_generate_prose_figures.py` | manuscript via `infrastructure.documentation.FigureManager` |

@@ -23,6 +23,8 @@ from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
+__all__ = ["PDFValidationError", "extract_text_from_pdf", "validate_pdf_rendering"]
+
 
 def extract_text_from_pdf(pdf_path: Path) -> str:
     """

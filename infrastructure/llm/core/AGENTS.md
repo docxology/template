@@ -17,6 +17,7 @@ flowchart TB
     CORE --> CFG[config.py<br/>OllamaClientConfig ·<br/>GenerationOptions · ResponseMode]
     CORE --> CTX[context.py<br/>ConversationContext]
     CORE --> LOGP[log_preview.py<br/>Safe log previews]
+    CORE --> BYPASS[bypass.py<br/>Named raw/sanitization bypass policy]
     CORE --> PRIV[_prompt_availability.py · _text_utils.py]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -24,12 +25,18 @@ flowchart TB
     classDef priv fill:#7c2d12,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class CORE d
-    class CLIENT,SAVER,SAN,CFG,CTX,LOGP code
+    class CLIENT,SAVER,SAN,CFG,CTX,LOGP,BYPASS code
     class MIXINS,PRIV priv
     class META doc
 ```
 
 ## Key Components
+
+### `bypass.py`
+
+Defines the named-caller allowlist and fail-closed checks for raw queries and
+sanitization opt-outs. Callers must supply a stable module name and a human-
+readable reason; project/manuscript content must not use these paths implicitly.
 
 ### `LLMClient` (`client.py` + mixins)
 

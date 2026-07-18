@@ -3,8 +3,8 @@
 These tests build a synthetic two-project tree under ``tmp_path`` and exercise
 ``run_per_project_pytest`` end-to-end with real ``pytest`` subprocesses — no
 mocks. They cover the contract documented in the docstring: per-project loop,
-combined coverage gate, ``--cov-append`` accumulation, and a single
-``COVERAGE_FILE`` traced across every project.
+combined coverage gate, isolated per-project coverage files, and a final
+union that cannot inherit the enclosing test process's ``COVERAGE_FILE``.
 """
 
 from __future__ import annotations
@@ -168,11 +168,11 @@ def test_run_per_project_pytest_one_failing(synthetic_repo: Path) -> None:
 
 
 def test_coverage_accumulates_across_projects(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """``--cov-append`` should make the second project add to the first's traces.
+    """The final union contains traces from every isolated project run.
 
     We run the suite once with both projects and verify that the combined
     coverage file references files from *both* projects' ``src/`` trees —
-    proving ``--cov-append`` was honoured for the second project.
+    proving the post-run combine step was honoured for the second project.
     """
     # See test_run_per_project_pytest_all_passing for the same reasoning:
     # an outer pipeline run may pin COVERAGE_FILE to a host path and
@@ -201,8 +201,21 @@ def test_coverage_accumulates_across_projects(synthetic_repo: Path, monkeypatch:
     measured = list(data.measured_files())
     assert any("mod_alpha" in f for f in measured), f"Coverage missing alpha traces; measured={measured}"
     assert any("mod_beta" in f for f in measured), (
-        f"Coverage missing beta traces (--cov-append did not accumulate); measured={measured}"
+        f"Coverage missing beta traces (isolated union did not accumulate); measured={measured}"
     )
+
+
+def test_inherited_coverage_file_cannot_contaminate_union(
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A parent pytest-cov file is not reused by the public-project union."""
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    inherited = synthetic_repo / ".coverage.infra"
+    monkeypatch.setenv("COVERAGE_FILE", str(inherited))
+
+    assert run_per_project_pytest(synthetic_repo, projects=["alpha"], fail_under=1, timeout=60) == 0
+    assert (synthetic_repo / DEFAULT_COVERAGE_FILE).is_file()
+    assert not inherited.exists()
 
 
 def test_skip_projects_excludes_named_project(synthetic_repo: Path) -> None:

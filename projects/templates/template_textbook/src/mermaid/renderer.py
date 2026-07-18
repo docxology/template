@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import signal
 import shutil
 import subprocess  # nosec B404
 from dataclasses import dataclass
@@ -45,16 +47,47 @@ class MermaidRenderer:
 
         png_path = self.output_dir / f"{name}.png"
         try:  # pragma: no cover - exercised only where mmdc is installed
-            subprocess.run(  # nosec B603
-                ["mmdc", "-i", str(mmd_path), "-o", str(png_path)],
-                check=True,
-                capture_output=True,
-                timeout=120,
-            )
+            _run_mmdc(["mmdc", "-i", str(mmd_path), "-o", str(png_path)], timeout=120)
         except (subprocess.SubprocessError, OSError) as exc:  # pragma: no cover
             logger.warning("mmdc failed for %s (%s); using .mmd fallback", name, exc)
             return RenderResult(name=name, path=mmd_path, rendered_png=False)
         return RenderResult(name=name, path=png_path, rendered_png=True)
+
+
+def _run_mmdc(args: list[str], *, timeout: int) -> None:
+    """Run Mermaid CLI and reap browser descendants if it times out."""
+    process = subprocess.Popen(  # nosec B603
+        args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
+    try:
+        stdout, stderr = process.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        if os.name == "posix":
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        else:  # pragma: no cover - Windows-only fallback
+            process.terminate()
+        try:
+            process.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            if os.name == "posix":
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            else:  # pragma: no cover - Windows-only fallback
+                process.kill()
+        process.communicate()
+        raise
+
+    if process.returncode:
+        raise subprocess.CalledProcessError(process.returncode, args, output=stdout, stderr=stderr)
 
 
 __all__ = ["MermaidRenderer", "RenderResult", "mmdc_available"]

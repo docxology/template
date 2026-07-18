@@ -281,6 +281,60 @@
     },
     {
       "contract_match": true,
+      "path": "output/release/swh_repo_url.txt",
+      "sha256": "8fed513956e7f844cd7ceaaced25122b4217f313d7fb363d9858577ab527487c",
+      "size_bytes": 52,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/upload_receipts.json",
+      "sha256": "a9d8bfc1fb2993a302cecf66a4dd4232484e6191536c028dfd333e83fee79634",
+      "size_bytes": 1962,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release_bundle/Friedman_2026_Domain_ecd8519f.pdf",
+      "sha256": "ecd8519fc2a9a674bd8a4cf89f96122af76529c913e32bf880a7c842da08771a",
+      "size_bytes": 144305,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release_bundle/RELEASE_RECEIPT.json",
+      "sha256": "997905598980ba979685136c4207a00c308987ebb684ae964ce7c1561a22ccc6",
+      "size_bytes": 954,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release_bundle/manifest.json",
+      "sha256": "99c6be757cc69c56a70edaf2e7e97d7c4b7e7be7106d8b90f02c8870d97e90fc",
+      "size_bytes": 8066,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release_bundle/publication_metadata.json",
+      "sha256": "3358ad5d4efd1b2c979bdfeda1e1bb73c57ce384bc09e1e13c7ae3a989838d8c",
+      "size_bytes": 7216,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/gate_report.json",
       "sha256": "10cd956047d23836f72115700041aeac2758eddf6694c493fd0685d8eca63ebb",
       "size_bytes": 54,

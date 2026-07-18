@@ -4,10 +4,15 @@ Thin orchestrator wrapping infrastructure.validation module functionality.
 """
 
 import argparse
+import contextlib
+import io
 import json
 import logging
+import os
+import sys
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Iterator
 
 from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.exceptions import RenderingError
@@ -32,6 +37,21 @@ from infrastructure.validation.publication import (
 )
 
 logger = get_logger(__name__)
+
+
+@contextlib.contextmanager
+def _suppress_stdout_fd() -> Iterator[None]:
+    """Temporarily silence stdout, including already-bound logging handlers."""
+    sys.stdout.flush()
+    saved_stdout_fd = os.dup(1)
+    try:
+        with open(os.devnull, "w", encoding="utf-8") as devnull:
+            os.dup2(devnull.fileno(), 1)
+            yield
+    finally:
+        sys.stdout.flush()
+        os.dup2(saved_stdout_fd, 1)
+        os.close(saved_stdout_fd)
 
 
 def validate_pdf_command(args: argparse.Namespace) -> None:
@@ -279,7 +299,11 @@ def publication_audit_command(args: argparse.Namespace) -> None:
     repo_root = Path(args.repo_root).resolve()
     projects = [args.project] if args.project else list(PUBLIC_PROJECT_NAMES)
     logging.getLogger("infrastructure.core.pipeline.dag").setLevel(logging.WARNING)
-    report = build_publication_audit(repo_root, projects, rendered=args.rendered)
+    if args.format == "json":
+        with _suppress_stdout_fd(), contextlib.redirect_stdout(io.StringIO()):
+            report = build_publication_audit(repo_root, projects, rendered=args.rendered)
+    else:
+        report = build_publication_audit(repo_root, projects, rendered=args.rendered)
     rendered = (
         format_publication_audit_json(report) if args.format == "json" else format_publication_audit_markdown(report)
     )
@@ -379,7 +403,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Audit public exemplars for deterministic publication readiness",
     )
     publication_parser.add_argument("--repo-root", default=".", help="Repository root")
-    publication_parser.add_argument("--project", help="Qualified project name under projects/")
+    project_group = publication_parser.add_mutually_exclusive_group()
+    project_group.add_argument("--project", help="Qualified project name under projects/")
+    project_group.add_argument(
+        "--all-public",
+        action="store_true",
+        help="Audit every project in PUBLIC_PROJECT_NAMES",
+    )
     publication_parser.add_argument(
         "--rendered",
         action="store_true",

@@ -51,8 +51,10 @@ Forward-only backlog for the modular, fillable book-length manuscript scaffold
   before treating Stage 04 as warning-free.
 - Add or document a stable final artifact-manifest refresh path for
   single-stage analysis, render, and copy checks.
-- Keep a single timeout, cwd, and error policy for the optional external Mermaid
-  `mmdc` renderer boundary, and document its fallback path.
+- **Shipped:** the optional external Mermaid `mmdc` boundary uses a bounded
+  timeout, isolated process group, descendant cleanup, and a deterministic
+  `.mmd` fallback; keep the policy synchronized with infrastructure Mermaid
+  renderers.
 
 ## Ordered improvement ladder
 

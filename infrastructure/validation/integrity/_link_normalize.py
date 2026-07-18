@@ -10,6 +10,8 @@ _PROJECT_BUCKETS: frozenset[str] = frozenset(
 )
 _SCOPED_RESOURCE_ROOTS: frozenset[str] = frozenset({"projects", "fonds", "rules", "tools"})
 
+__all__ = ["_get_actual_project_names", "_is_real_path_item", "_resolve_template_path"]
+
 
 @lru_cache(maxsize=32)
 def _get_actual_project_names_cached(repo_root_key: str) -> tuple[str, ...]:

@@ -34,6 +34,7 @@ import re
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
@@ -80,12 +81,16 @@ class HealthReport:
     Attributes:
         results: Per-gate results in execution order.
         passed: ``True`` iff every gate in ``results`` passed.
-        total_elapsed_ms: Sum of per-gate ``elapsed_ms`` values.
+        total_elapsed_ms: Sum of per-gate ``elapsed_ms`` values. This is useful
+            for capacity profiling but is not the user-visible wall time when
+            gates run concurrently.
+        wall_elapsed_ms: Wall-clock duration for the complete sweep.
     """
 
     results: list[GateResult]
     passed: bool
     total_elapsed_ms: float
+    wall_elapsed_ms: float
 
 
 # ---------------------------------------------------------------------------
@@ -384,6 +389,7 @@ def run_health_checks(
     *,
     gates: Sequence[str] | None = None,
     json_output: bool = False,
+    workers: int | None = None,
 ) -> HealthReport:
     """Run every configured gate (or a subset) and aggregate results.
 
@@ -394,12 +400,18 @@ def run_health_checks(
             gate in :data:`GATE_NAMES`. Unknown names raise ``ValueError``.
         json_output: Reserved for symmetry with the CLI; the report is
             always returned as a typed object regardless.
+        workers: Maximum number of independent gate subprocesses. ``None``
+            uses four workers for the full local sweep, or one worker for a
+            single-gate subset. Passing ``1`` retains the serial diagnostic
+            mode. Values below one raise ``ValueError``.
 
     Returns:
         :class:`HealthReport` aggregating per-gate results.
     """
 
     del json_output  # CLI-only; the dataclass is the canonical artefact.
+    if workers is not None and workers < 1:
+        raise ValueError("workers must be at least 1")
     specs = build_gate_specs(repo_root)
     if gates is not None:
         wanted = list(gates)
@@ -417,16 +429,29 @@ def run_health_checks(
             key=lambda spec: order[spec[0]],
         )
 
-    results: list[GateResult] = []
-    for name, argv in specs:
-        results.append(_run_single_gate(name, argv, repo_root))
+    selected_workers = workers if workers is not None else (4 if len(specs) > 1 else 1)
+    start = time.perf_counter()
+    if selected_workers == 1 or len(specs) == 1:
+        results = [_run_single_gate(name, argv, repo_root) for name, argv in specs]
+    else:
+        # Gates are subprocess boundaries and do not share mutable Python
+        # state. A bounded thread pool overlaps their I/O while preserving
+        # the canonical registry order through ``executor.map``.
+        with ThreadPoolExecutor(max_workers=min(selected_workers, len(specs))) as executor:
+            results = list(
+                executor.map(
+                    lambda spec: _run_single_gate(spec[0], spec[1], repo_root),
+                    specs,
+                )
+            )
 
     total_ms = sum(r.elapsed_ms for r in results)
+    wall_ms = (time.perf_counter() - start) * 1000.0
     # ``specs`` is non-empty for the default registry and empty explicit
     # subsets are rejected above. Keep the aggregate fail-closed if that
     # invariant is ever broken by a future registry change.
     overall = bool(results) and all(r.passed for r in results)
-    return HealthReport(results=results, passed=overall, total_elapsed_ms=total_ms)
+    return HealthReport(results=results, passed=overall, total_elapsed_ms=total_ms, wall_elapsed_ms=wall_ms)
 
 
 # ---------------------------------------------------------------------------
@@ -496,7 +521,10 @@ def format_report_table(report: HealthReport, *, color: bool = True) -> str:
     overall = "PASS" if report.passed else "FAIL"
     overall_colored = colorize(overall, _ANSI_GREEN if report.passed else _ANSI_RED)
     total_s = report.total_elapsed_ms / 1000.0
-    lines.append(f"Overall: {overall_colored}  ({total_s:.2f}s total, {len(report.results)} gates)")
+    wall_s = report.wall_elapsed_ms / 1000.0
+    lines.append(
+        f"Overall: {overall_colored}  ({wall_s:.2f}s wall, {total_s:.2f}s gate-time, {len(report.results)} gates)"
+    )
     return "\n".join(lines)
 
 
@@ -506,6 +534,7 @@ def _report_to_dict(report: HealthReport) -> dict[str, object]:
     return {
         "passed": report.passed,
         "total_elapsed_ms": report.total_elapsed_ms,
+        "wall_elapsed_ms": report.wall_elapsed_ms,
         "results": [asdict(r) for r in report.results],
     }
 
@@ -550,6 +579,12 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Disable ANSI colour even when stdout is a TTY.",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=None,
+        help=("Maximum concurrent gate subprocesses (default: 4 for a full sweep; use 1 for serial diagnostics)."),
+    )
     return parser
 
 
@@ -565,7 +600,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         gates = [g.strip() for g in args.gates.split(",") if g.strip()]
 
     try:
-        report = run_health_checks(repo_root, gates=gates)
+        report = run_health_checks(repo_root, gates=gates, workers=args.workers)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

@@ -38,6 +38,8 @@ dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-httpserver>=1.0.8",
+    "pypdf>=6.12.0",
+    "reportlab>=4.0.0",
 ]
 # Optional real-transformer embeddings upgrade (not required for the deterministic
 # offline default, which uses hashing/TF-IDF -> SVD).

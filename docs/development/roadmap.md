@@ -5,17 +5,17 @@ infrastructure. Architecture details:
 [`architecture.md`](../core/architecture.md) and
 [`workflow.md`](../core/workflow.md).
 
-**Last verified:** 2026-07-05 (package and latest published release at
-`v3.5.1`, tagged 2026-06-26; `v3.5.0` tagged the same day). Measured metrics defer to
+**Last verified:** 2026-07-17. The current root package/release boundary is
+documented in [`release-boundary.md`](../maintenance/release-boundary.md);
+measured metrics defer to
 [`TO-DO.md`](../../TO-DO.md) and
 [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)
 unless this file is re-measured.
 
-> **v3.5.0 / v3.5.1 note:** `pyproject.toml` and the git tag history confirm
-> both releases shipped, but `CHANGELOG.md` has not yet been updated with
-> versioned entries for them (its `## [Unreleased]` section is the closest
-> available detail as of this check). Treat the `v3.4.0` entry below as the
-> last fully itemized release until `CHANGELOG.md` is reconciled.
+> **Release-boundary note:** the current checkout is unreleased relative to the
+> `[Unreleased]` notes. The root package/tag boundary is `3.5.1`/`v3.5.1`; the
+> separately published standalone `v1.0.1` entry is not treated as the root
+> package's next release. See [`release-boundary.md`](../maintenance/release-boundary.md).
 
 ## Completed Releases
 
@@ -154,18 +154,10 @@ and **Major**.
 ### Next (open backlog)
 
 The authoritative open backlog lives in [`TO-DO.md`](../../TO-DO.md). Current
-themes are verifier-first maintenance items:
-
-- **Active-inference semantic fixed point** (`AI-SEMANTIC-FIXPOINT-1`): finish
-  the variable-generation and composed sheaf/roadmap cluster before expanding
-  scientific scope.
-- **Active-inference gate runtime** (`AI-GATE-PERF-2`): reduce redundant slow
-  refreshes only after the semantic fixed-point and negative controls are green.
-- **AutoResearch report and benchmark ergonomics** (`AR-REPORT-ERGONOMICS-1`,
-  `AR-BENCHMARK-ERGONOMICS-1`): clarify reviewer-facing evidence and benchmark
-  boundaries before adding new evidence types.
-- **AutoResearch source-ledger contract** (`AR-SOURCE-LEDGER-2`): promote
-  claim/source drift checks into project-local gates.
+themes are verifier-first maintenance items: generated-source reconciliation,
+combined public coverage isolation, publication safety, hostile-input handling,
+runtime support, and faster
+deterministic feedback.
 
 ### Next Generation (vision)
 
@@ -184,11 +176,11 @@ themes are verifier-first maintenance items:
 Use [`TO-DO.md`](../../TO-DO.md) as the authoritative backlog and live snapshot.
 The current open top items are:
 
-- `AI-SEMANTIC-FIXPOINT-1`
-- `AI-GATE-PERF-2`
-- `AR-REPORT-ERGONOMICS-1`
-- `AR-BENCHMARK-ERGONOMICS-1`
-- `AR-SOURCE-LEDGER-2`
+- `SECURITY-OWNERSHIP-1`
+- `SECURITY-PRIVATE-PROMOTION-1`
+- `COVERAGE-BASELINE-1`
+- `RUNTIME-SUPPORT-1`
+- `CI-ERGONOMICS-1`
 
 Shipped and not re-tracked here: the GitHub supply-chain hygiene set
 (`GH-PIN-1`, `GH-ACTIONLINT-1`, `GH-AUTOMERGE-1`), `LOG-CLEAN-1`,

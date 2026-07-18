@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.exceptions import MetadataError
@@ -50,7 +51,7 @@ class PublicationReleaseContext:
     prior_doi: str | None
 
 
-def _license_from_config(config: dict) -> str:
+def _license_from_config(config: dict[str, Any]) -> str:
     metadata_block = config.get("metadata") or {}
     if isinstance(metadata_block, dict) and metadata_block.get("license"):
         return str(metadata_block["license"])
@@ -60,7 +61,7 @@ def _license_from_config(config: dict) -> str:
     return "CC-BY-4.0"
 
 
-def _author_records_from_config(config: dict) -> tuple[list[str], list[AuthorRecord]]:
+def _author_records_from_config(config: dict[str, Any]) -> tuple[list[str], list[AuthorRecord]]:
     authors: list[str] = []
     records: list[AuthorRecord] = []
     raw_authors = config.get("authors") or []
@@ -122,7 +123,7 @@ def _read_abstract_plaintext(abstract_path: Path, *, variables_path: Path | None
     return render_abstract_plaintext(abstract_path, variables_path=variables_path)
 
 
-def _prior_doi_from_config(config: dict) -> str | None:
+def _prior_doi_from_config(config: dict[str, Any]) -> str | None:
     publication = config.get("publication") or {}
     if not isinstance(publication, dict):
         return None
@@ -132,7 +133,7 @@ def _prior_doi_from_config(config: dict) -> str | None:
 
 
 def publication_metadata_from_config_dict(
-    config: dict,
+    config: dict[str, Any],
     config_path: Path,
     *,
     abstract_path: Path | None = None,

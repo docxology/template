@@ -73,6 +73,14 @@ def test_render_single_element_array(tmp_path):
     assert path.exists()
 
 
+def test_render_empty_array_uses_explicit_empty_summary(tmp_path):
+    out = tmp_path / "empty.png"
+    path = render_primitive_figure("empty_arr", np.array([]), out)
+
+    assert path.exists()
+    assert "mean = n/a" in "\n".join(_scalar_summary_lines(np.array([])))
+
+
 def test_render_multi_element_array_plots(tmp_path):
     """A plain array with >1 elements takes the line-plot branch, not the summary branch."""
     out = tmp_path / "plotted.png"

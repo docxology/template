@@ -3,6 +3,7 @@
   "files": 8,
   "total_words": 1742,
   "all_passed": true,
+  "evidence_summary_path": "<home>/Documents/GitHub/template/projects/templates/template_prose_project/output/evidence_summary.json",
   "checks": [
     {
       "name": "grade_level_in_band",

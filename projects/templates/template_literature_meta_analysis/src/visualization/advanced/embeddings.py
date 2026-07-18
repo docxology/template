@@ -67,7 +67,7 @@ def plot_pca_embeddings(
     if feature_names and n_loading_arrows > 0:
         loadings = pca.components_.T
         magnitude = np.sqrt(loadings[:, 0] ** 2 + loadings[:, 1] ** 2)
-        top_idx = np.argsort(magnitude)[::-1][:n_loading_arrows]
+        top_idx = _spaced_loading_indices(loadings, magnitude, n_loading_arrows)
         scale = max(abs(coords).max(), 1.0) * 0.7
         for idx in top_idx:
             dx, dy = loadings[idx] * scale
@@ -95,6 +95,19 @@ def plot_pca_embeddings(
     fig.savefig(output_path, dpi=VIZ_CONFIG["dpi"], bbox_inches="tight")
     plt.close(fig)
     return output_path
+
+
+def _spaced_loading_indices(loadings: np.ndarray, magnitude: np.ndarray, limit: int) -> list[int]:
+    """Return top loading indices while avoiding overlapping label clusters."""
+    ordered = np.argsort(magnitude)[::-1]
+    selected: list[int] = []
+    min_distance = max(float(np.percentile(magnitude, 75)) * 0.9, 0.05)
+    for idx in ordered:
+        if len(selected) >= limit:
+            break
+        if all(float(np.linalg.norm(loadings[idx] - loadings[prev])) >= min_distance for prev in selected):
+            selected.append(int(idx))
+    return selected
 
 
 def plot_term_heatmap(

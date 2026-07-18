@@ -39,9 +39,11 @@ Forward-only integrity backlog for the pitch-deck generation exemplar.
 
 ## Test and validator gaps
 
-- No property-based (hypothesis) tests yet for `filter_deck_for_budget` invariants (e.g. "short slide count ≤ medium ≤ long" is true by construction from authored content, not proven generatively).
+- **Shipped:** deterministic generated-sequence tests prove budget filtering is
+  prefix-preserving and non-mutating across boundary and oversized decks.
 - `mermaid_figure.py`'s real-render tests are skipped when `mmdc` is absent; CI coverage of that path depends on the runner having mermaid-cli installed.
-- No fuzz/property test yet for `token_resolution.find_tokens` against adversarial `{{`-heavy input beyond the hand-written cases in `test_token_resolution.py`.
+- **Shipped:** generated adversarial uppercase token sequences assert complete
+  resolution without leaked braces.
 
 ## Ordered improvement ladder
 

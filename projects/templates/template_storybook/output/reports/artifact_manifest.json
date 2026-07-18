@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/data/storybook_manifest.json",
-      "sha256": "8a4a45169f018f91f9723b636117fa97138b7325e0374a24acff92a040f8f2d6",
-      "size_bytes": 5058,
+      "sha256": "7ee46a9f7bcec703d232c2654fa299b1f062625461fc7b927b1d269cff974db7",
+      "size_bytes": 5355,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -120,8 +120,8 @@
     {
       "contract_match": true,
       "path": "output/figures/storybook_pages/02_square_house.png",
-      "sha256": "40130842b8daaf2d021ac4110be9ad6e4346b57c6d3412de396e8b6fe8c0454b",
-      "size_bytes": 72158,
+      "sha256": "d41025307f1e9276ab675ba79a4fa40a7365618c070eff04d91851c7cd386e56",
+      "size_bytes": 72351,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -129,8 +129,8 @@
     {
       "contract_match": true,
       "path": "output/figures/storybook_pages/03_pointed_house.png",
-      "sha256": "88a3b1cd2b5c36087d722edab44912b36990954c7501acb3dc34fe1b3432c49b",
-      "size_bytes": 121253,
+      "sha256": "1eeb50e5f73f6c0b41a802a612240fc558ec4feacd627ffbf9b52cabf8f631a5",
+      "size_bytes": 121334,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -138,8 +138,8 @@
     {
       "contract_match": true,
       "path": "output/figures/storybook_pages/04_valley_symbol.png",
-      "sha256": "b0f7fabad17294eea4bc20839c9857cc23310a6e064a8014e8087e08dc9e6777",
-      "size_bytes": 98468,
+      "sha256": "0a622c842d35e6f2f360c872e4a4a3e0882145446ccf665658b3ab5ec83c7bef",
+      "size_bytes": 98415,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -165,8 +165,8 @@
     {
       "contract_match": true,
       "path": "output/figures/storybook_pages/07_mirror_families.png",
-      "sha256": "4fcfddd91ea41cf36bf17927d1671fb944a68ccad6b02909240ca355a1fba51d",
-      "size_bytes": 70913,
+      "sha256": "36bcb78d67b00340b3293a1c615746ed0b00b723070e2e5a4db730181f0359a5",
+      "size_bytes": 70798,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -219,8 +219,8 @@
     {
       "contract_match": true,
       "path": "output/figures/storybook_pages/13_shared_home.png",
-      "sha256": "fb21b34e0d8e779134c9bb6dc9f12c32d0532bb33969dcf0769e823a0614e529",
-      "size_bytes": 133941,
+      "sha256": "a3b67fafcb1217af27e1d66cea21557fb5b9518dce7a59f6f64cbc7f761de2a2",
+      "size_bytes": 134055,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -282,8 +282,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/the-shape-between.pdf",
-      "sha256": "7207a569c1fef768f1342bf2301eb9a80f6b557ba71ff87e968c3b01e72438f4",
-      "size_bytes": 1492876,
+      "sha256": "939c9e93a15728dbe0a328ff04fd21cb3a0dd3c6d0277151040d2c7990436f5a",
+      "size_bytes": 1492679,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

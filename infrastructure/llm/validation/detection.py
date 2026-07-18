@@ -5,7 +5,7 @@ and section/paragraph deduplication (deduplicate_sections).
 """
 
 import re
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.validation.similarity import (
@@ -162,7 +162,7 @@ def _deduplicate_paragraphs(
         return text
 
     original_length = len(text)
-    seen_content: dict[str, dict] = {}
+    seen_content: dict[str, dict[str, Any]] = {}
     result_paragraphs = []
     removed_count = 0
 
@@ -257,7 +257,7 @@ def deduplicate_sections(
         return _deduplicate_paragraphs(text, max_repetitions, similarity_threshold, min_content_preservation)
 
     # Track seen sections with semantic similarity
-    seen_sections: dict[str, dict] = {}  # key -> {"count": int, "text": str}
+    seen_sections: dict[str, dict[str, Any]] = {}  # key -> {"count": int, "text": str}
     result_parts = []
     removed_count = 0
 

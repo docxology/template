@@ -17,7 +17,7 @@ Source directory for the paper: all `.md` sections, `config.yaml`, `preamble.md`
 | `02c_methods_bibliometrics.md` | Stage 2: bibliometric analysis (TF-IDF, topic modeling, citation networks) |
 | `02d_methods_knowledge_graph.md` | Stage 3: nanopublications, RDF schema, citation-weighted scoring |
 | `02e_methods_viz_injection.md` | Stages 4–5: visualization pipeline and variable injection |
-| `03_results_hypothesis.md` | Eight hypothesis scores, evidence composition, temporal trends |
+| `03_results_hypothesis.md` | Configuration-derived hypothesis scores, evidence composition, temporal trends |
 | `03a_results_field_overview.md` | Corpus summary, domain distribution, growth dynamics (RQ1/RQ2) |
 | `03b_results_subfields.md` | Detailed characterization of the configured subfields |
 | `03c_results_text_analytics.md` | NMF topic modeling, vocabulary analysis, document embeddings |
@@ -42,7 +42,7 @@ Manuscript source files use double-brace placeholders of the form `{{<NAME>}}` w
 - `subfield_classification.json` → configuration-keyed subfield counts and percentages
 - `citation_network.json` → `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}`, `{{CITATION_RESOLUTION_PCT}}`
 - `assertion_summary.json` → `{{TOTAL_ASSERTIONS}}`, `{{ASSERTION_SUPPORT_PCT}}`, `{{ASSERTION_CONTRADICT_PCT}}`
-- `hypothesis_scores.json` + `config.yaml` → configuration-keyed scores such as `{{PRIMARY_EFFICACY_SCORE}}`; the rendered `{{HYPOTHESIS_TABLE}}` is the authoritative hypothesis view
+- `hypothesis_scores.json` + `config.yaml` -> configuration-keyed scores; the rendered `{{HYPOTHESIS_TABLE}}` is the authoritative hypothesis view
 - `topics.json` → `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}`
 - `reproducibility_summary.json` + `reproducibility_scores.json` → `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}`, `{{REPRODUCIBILITY_TABLE}}`
 - `output/figures/` → `{{NUM_FIGURES}}` (counted from the generated figure files; never hard-coded)

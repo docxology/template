@@ -131,8 +131,10 @@ def load_hypotheses_from_config(config_path: Path) -> list[Hypothesis]:
     for h_key, h_def in hyp_defs.items():
         name = h_def.get("name", h_key)
         description = h_def.get("description", "")
-        # Map H1..H8 keys to hypothesis_id format
-        hyp_id = _config_key_to_id(h_key, name)
+        # Prefer an explicit project-owned ID. Legacy H1..H8 ordinal mapping
+        # remains the fallback for older configurations and fixtures.
+        explicit_id = h_def.get("id") if isinstance(h_def, dict) else None
+        hyp_id = str(explicit_id).strip() if explicit_id else _config_key_to_id(h_key, name)
         hypotheses.append(Hypothesis(hyp_id, name, description))
 
     logger.info(

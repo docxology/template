@@ -69,7 +69,29 @@ _EXPORTS: dict[str, tuple[str, str]] = {
     "TelemetryConfig": ("infrastructure.core.telemetry", "TelemetryConfig"),
 }
 
-__all__ = sorted(_EXPORTS)
+__all__ = [
+    "PipelineConfig",
+    "PipelineExecutor",
+    "stage_label",
+    "MultiProjectConfig",
+    "MultiProjectOrchestrator",
+    "MultiProjectResult",
+    "format_multi_project_outcome_lines",
+    "format_multi_project_detailed_report",
+    "PerformanceMetrics",
+    "PerformanceMonitor",
+    "StagePerformanceTracker",
+    "get_system_resources",
+    "generate_pipeline_summary",
+    "PipelineControlConfig",
+    "PipelineStageResult",
+    "StageContract",
+    "StageHooks",
+    "StagePolicy",
+    "StageSpec",
+    "TelemetryCollector",
+    "TelemetryConfig",
+]
 
 
 def __getattr__(name: str) -> Any:

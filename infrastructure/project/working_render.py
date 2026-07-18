@@ -9,7 +9,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from infrastructure.core.files.pdf_locator import find_combined_pdf as locate_combined_pdf
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.validation.content.pdf_validator import validate_pdf_rendering
 

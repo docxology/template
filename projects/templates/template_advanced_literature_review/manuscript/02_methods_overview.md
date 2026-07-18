@@ -10,7 +10,8 @@ and boundary I/O.
 
 1. **Multi-phase retrieval** (`01_multi_phase_search.py`) acquires records or runs the
    labelled offline fixture, applies configured filters, de-duplicates identifiers, and
-   writes phase corpora plus `phase_metadata.json`.
+   writes phase corpora plus `phase_metadata.json` and the
+   `phase_artifact_manifest.json` phase-to-artifact provenance map.
 2. **Corpus analysis** (`02_meta_analysis_pipeline.py`) computes subfields, temporal
    trends, TF-IDF/topics, and citation-network artifacts.
 3. **Knowledge graph construction** (`03_build_knowledge_graph.py`) optionally extracts

@@ -25,6 +25,8 @@ from infrastructure.publishing.http_constants import REQUEST_TIMEOUT
 from .config import ZenodoConfig
 from .models import DepositionResult
 
+__all__ = ["REQUEST_TIMEOUT", "ZenodoClient"]
+
 
 class ZenodoClient:
     """Client for the Zenodo Deposit REST API."""

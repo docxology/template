@@ -58,7 +58,7 @@ class _WorkMetadata:
 
 
 def build_citation_cff(
-    config: dict,
+    config: dict[str, Any],
     *,
     repo_url: str | None = None,
     released_date: str | None = None,
@@ -103,7 +103,7 @@ def build_citation_cff(
 
 
 def build_codemeta(
-    config: dict,
+    config: dict[str, Any],
     *,
     repo_url: str | None = None,
     released_date: str | None = None,
@@ -142,7 +142,7 @@ def build_codemeta(
 
 
 def build_codemeta_json(
-    config: dict,
+    config: dict[str, Any],
     *,
     repo_url: str | None = None,
     released_date: str | None = None,
@@ -160,7 +160,7 @@ def build_codemeta_json(
     return _json_dumps(build_codemeta(config, repo_url=repo_url, released_date=released_date))
 
 
-def build_zenodo(config: dict) -> dict[str, Any]:
+def build_zenodo(config: dict[str, Any]) -> dict[str, Any]:
     """Build Zenodo deposition metadata from a parsed config mapping.
 
     Args:
@@ -199,7 +199,7 @@ def build_zenodo(config: dict) -> dict[str, Any]:
     return zenodo
 
 
-def build_zenodo_json(config: dict) -> str:
+def build_zenodo_json(config: dict[str, Any]) -> str:
     """Build the serialized ``.zenodo.json`` payload.
 
     Args:
@@ -212,7 +212,7 @@ def build_zenodo_json(config: dict) -> str:
 
 
 def write_metadata_files(
-    config: dict,
+    config: dict[str, Any],
     out_dir: Path,
     *,
     repo_url: str | None = None,
@@ -281,7 +281,7 @@ def write_metadata_for_config_path(
     )
 
 
-def _work_metadata(config: dict) -> _WorkMetadata:
+def _work_metadata(config: dict[str, Any]) -> _WorkMetadata:
     """Resolve paper fields first, then fall back field-by-field to ``book``."""
     paper = _mapping(config.get("paper"))
     book = _mapping(config.get("book"))
@@ -292,7 +292,7 @@ def _work_metadata(config: dict) -> _WorkMetadata:
     )
 
 
-def _authors_from_config(config: dict) -> list[_ParsedAuthor]:
+def _authors_from_config(config: dict[str, Any]) -> list[_ParsedAuthor]:
     # Deliberately parse the config mapping directly here instead of importing sibling private helpers.
     raw_authors = config.get("authors")
     authors: list[_ParsedAuthor] = []
@@ -378,7 +378,7 @@ def _split_name(name: str) -> tuple[str, str]:
     return " ".join(tokens[:-1]), tokens[-1]
 
 
-def _resolve_repo_url(config: dict) -> str | None:
+def _resolve_repo_url(config: dict[str, Any]) -> str | None:
     publication = _mapping(config.get("publication"))
     return normalized_repository_url(publication)
 
@@ -404,7 +404,7 @@ def _resolve_released_date(configured_date: object, released_date: str | None) -
     return date.today().isoformat()
 
 
-def _license_from_config(config: dict) -> str:
+def _license_from_config(config: dict[str, Any]) -> str:
     metadata = _mapping(config.get("metadata"))
     metadata_license = _string_or_none(metadata.get("license"))
     if metadata_license:
@@ -416,7 +416,7 @@ def _license_from_config(config: dict) -> str:
     return "CC-BY-4.0"
 
 
-def _keywords_from_config(config: dict) -> list[str]:
+def _keywords_from_config(config: dict[str, Any]) -> list[str]:
     raw_keywords = config.get("keywords")
     if not isinstance(raw_keywords, list):
         return []

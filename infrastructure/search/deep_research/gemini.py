@@ -89,7 +89,7 @@ class GeminiDeepResearchProvider:
         """Return True if the service is available (credentials present)."""
         return bool(self.options.api_key)
 
-    def _client(self):
+    def _client(self) -> Any:
         try:
             from google import genai
         except ImportError as exc:  # pragma: no cover - exercised only when optional SDK is absent

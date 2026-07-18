@@ -3,8 +3,8 @@
     {
       "contract_match": true,
       "path": "output/data/assertion_summary.json",
-      "sha256": "35f3350bff6c8d0e9d2059c401d6b58930cd30bb88563a7ec47ea486ce0ff0f4",
-      "size_bytes": 72,
+      "sha256": "0b09296025d9513ebb83e33810304a4a23f2696da01a3bfe93a92372d738256f",
+      "size_bytes": 630,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/data/hypothesis_scores.json",
-      "sha256": "d72351b392addee41da5dc0a431dda2080068f218c744b114600f4f05b700794",
-      "size_bytes": 160,
+      "sha256": "35751b17d8cf75c5c1d263a4f40f1cfd5307e1fbad204fe49f66d5897b641634",
+      "size_bytes": 234,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -102,8 +102,8 @@
     {
       "contract_match": true,
       "path": "output/data/hypothesis_trends.json",
-      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "size_bytes": 2,
+      "sha256": "4b254e320bb15c77615a10d7a6a6558f70f9dce640ae5cc26d56d664db1f1d73",
+      "size_bytes": 2585,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

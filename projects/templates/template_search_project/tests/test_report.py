@@ -7,6 +7,7 @@ from pathlib import Path
 from infrastructure.search.literature import Paper, SearchQuery, SearchResult
 
 from src.report import write_reading_report
+from src.report import validate_fixture_claim_boundary
 from src.synthesis import SynthesisResult
 
 
@@ -114,3 +115,18 @@ def test_report_handles_year_filter(tmp_path: Path):
     text = out.read_text(encoding="utf-8")
     assert "Year filter" in text
     assert "2010" in text and "2024" in text
+
+
+def test_fixture_scope_adds_explicit_claim_boundary(tmp_path: Path):
+    out = write_reading_report(
+        tmp_path / "fixture.md",
+        search_result=_result_with_papers(),
+        citation_keys={},
+        fixture_only=True,
+    )
+    assert "bundled deterministic offline fixture" in out.read_text(encoding="utf-8")
+
+
+def test_fixture_claim_validator_rejects_empirical_assertion():
+    violations = validate_fixture_claim_boundary(["This study found a reliable effect."])
+    assert violations == ["This study found"]

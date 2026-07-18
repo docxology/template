@@ -11,7 +11,7 @@ explicit handoff items for a human editor or domain reviewer.
 
 ```bash
 uv run python -m infrastructure.validation.cli publication-audit \
-  --strict --rendered --format markdown
+  --all-public --strict --rendered --format markdown
 ```
 
 The audit is read-only. Fix the producer or source contract, regenerate, and

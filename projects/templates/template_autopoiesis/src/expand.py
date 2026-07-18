@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Optional
 
 from .common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
-from .grammar import Grammar
+from .grammar import Grammar, GrammarError
 
 SCHEMA_VERSION = "autopoiesis/spec/1"
 _UNIT_SEP = "\x1f"
@@ -81,6 +81,11 @@ def expand(grammar: Grammar, seed: Optional[int] = None) -> Spec:
 
     If *seed* is provided it overrides grammar.seed for this expansion.
     """
+    try:
+        grammar.slot("primitive_domain")
+    except KeyError as exc:
+        raise GrammarError("Grammar must define a primitive_domain slot before expansion") from exc
+
     effective_seed = grammar.seed if seed is None else seed
     selections: list[tuple[str, str]] = []
     primitive_domain = ""
@@ -91,12 +96,6 @@ def expand(grammar: Grammar, seed: Optional[int] = None) -> Spec:
         selections.append((slot.name, chosen))
         if slot.name == "primitive_domain":
             primitive_domain = chosen
-
-    # If no primitive_domain slot exists, fall back to first known domain
-    if not primitive_domain:
-        from .grammar import KNOWN_DOMAINS
-
-        primitive_domain = KNOWN_DOMAINS[0]
 
     return Spec(
         schema_version=SCHEMA_VERSION,

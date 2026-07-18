@@ -134,7 +134,11 @@ class TestQueryRawLogging:
         client = LLMClient(config=config)
 
         with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
-            client.query_raw("Test prompt")
+            client.query_raw(
+                "Test prompt",
+                bypass_caller="tests.infra_tests.llm",
+                bypass_reason="offline/local-server coverage of the raw protocol",
+            )
 
             # query_raw logs "Added raw query to context" and then sends the request
             assert "Added raw query to context" in caplog.text or "Sending request to Ollama" in caplog.text
@@ -154,7 +158,11 @@ class TestQueryRawLogging:
         client = LLMClient(config=config)
 
         with caplog.at_level("DEBUG", logger="infrastructure.llm.core.client"):
-            client.query_raw("Test prompt")
+            client.query_raw(
+                "Test prompt",
+                bypass_caller="tests.infra_tests.llm",
+                bypass_reason="offline/local-server coverage of the raw protocol",
+            )
 
             assert "Sending request to Ollama" in caplog.text
 

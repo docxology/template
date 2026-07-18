@@ -14,6 +14,9 @@ rewrite generated outputs.
   work without turning subjective judgment into a fake binary proof.
 - Serialization is timestamp-free so reports can participate in reproducibility
   comparisons.
+- `models.py` defines the typed finding/report contract used by the audit
+  orchestrator; keep its status and diagnostic fields stable for downstream
+  JSON consumers.
 
 ## Commands
 

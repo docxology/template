@@ -143,6 +143,8 @@ After the run, look in `output/`:
 * `manuscript_report.json` — raw `ManuscriptReport`.
 * `checks.json` — list of `CheckResult` (one per configured check).
 * `review_report.md` — the human-readable review.
+* `evidence_summary.json` — versioned diagnostic-only evidence separated into
+  readability, citations, bibliography, structure, and quality flags.
 * `figures/{section_word_counts,readability_metrics,citation_density}.png`.
 * `data/manuscript_variables.json` — substitution variables for the abstract.
 * `run_summary.json` — one-line metadata.

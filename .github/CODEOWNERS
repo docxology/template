@@ -54,9 +54,9 @@
 /projects/templates/template_textbook/ @docxology
 /projects/templates/template_pitch_deck/ @docxology
 # Sensitive areas (derived from sensitive-ownership.yaml).
-/infrastructure/steganography/ @docxology
-/infrastructure/publishing/ @docxology
-/scripts/publish/ @docxology
-/.github/workflows/ @docxology
-/rules/templates/*/strong/ @docxology
+/infrastructure/steganography/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
+/infrastructure/publishing/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
+/scripts/publish/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
+/.github/workflows/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
+/rules/templates/*/strong/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
 # END GENERATED PUBLIC/SENSITIVE OWNERS

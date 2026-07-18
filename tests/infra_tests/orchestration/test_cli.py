@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -12,6 +13,7 @@ import pytest
 from infrastructure.orchestration.cli import (
     _cmd_list_projects,
     _cmd_menu,
+    _cmd_promotion_check,
     _default_project_name,
     _resolve_repo_root,
     build_parser,
@@ -68,6 +70,66 @@ def test_build_parser_recognizes_secure_validate_kmyth() -> None:
     ns = parser.parse_args(["secure", "--validate-kmyth"])
     assert ns.command == "secure"
     assert ns.validate_kmyth is True
+
+
+def test_build_parser_recognizes_promotion_check(tmp_path: Path) -> None:
+    parser = build_parser()
+    attestation = tmp_path / "promotion.yaml"
+    ns = parser.parse_args(["promotion-check", "--attestation", str(attestation)])
+    assert ns.command == "promotion-check"
+    assert ns.attestation == attestation
+
+
+def test_promotion_check_validates_real_attestation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    attestation = tmp_path / "promotion.yaml"
+    attestation.write_text(
+        """
+promotion:
+  project: working/example
+  source_commit: abc123
+  identity_verified: true
+  authorization_verified: true
+  redaction_reviewed: true
+  secrets_externalized: true
+  routes_reviewed: true
+  mcp_boundaries_reviewed: true
+  export_tests_passed: true
+  risk_acceptance: null
+  reviewer: maintainer
+""".lstrip(),
+        encoding="utf-8",
+    )
+    parser = build_parser()
+    ns = parser.parse_args(["promotion-check", "--attestation", str(attestation)])
+    assert _cmd_promotion_check(ns) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["approved"] is True
+    assert payload["project"] == "working/example"
+
+
+def test_main_promotion_check_refuses_incomplete_attestation(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    attestation = tmp_path / "promotion.yaml"
+    attestation.write_text(
+        """
+promotion:
+  project: working/example
+  source_commit: abc123
+  identity_verified: false
+  authorization_verified: true
+  redaction_reviewed: true
+  secrets_externalized: true
+  routes_reviewed: true
+  mcp_boundaries_reviewed: true
+  export_tests_passed: true
+  risk_acceptance: null
+  reviewer: maintainer
+""".lstrip(),
+        encoding="utf-8",
+    )
+    assert main(["promotion-check", "--attestation", str(attestation)]) == 1
+    assert "incomplete promotion attestation" in capsys.readouterr().err
 
 
 def test_build_parser_unknown_subcommand_raises() -> None:

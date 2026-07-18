@@ -11,6 +11,7 @@ renderers without owning validation policy or project analysis.
 | Area | Files | Role |
 | --- | --- | --- |
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
+| Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
 | Format renderers | `slides_renderer.py`, `web_renderer.py`, `_web_postprocess.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `mermaid_figure.py` | Slides, HTML orchestration and deterministic HTML post-processing, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py` | Section ordering, substitutions, resolved manuscript trees. |

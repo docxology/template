@@ -17,7 +17,9 @@ about template status, validation depth, and forkability.
 ## Integrity and template-status gaps
 
 - Keep editorial metrics framed as diagnostics, not publication approval.
-- Add a generated evidence summary that separates readability, citation density, bibliography consistency, and structural outline results.
+- **Shipped:** `output/evidence_summary.json` separates readability, citation
+  density, bibliography consistency, structural outline results, and quality
+  flags under a versioned diagnostic-only schema.
 - Keep prose pipeline orchestration thin over `src/` and `infrastructure/prose`.
 
 ## Configurable-surface gaps

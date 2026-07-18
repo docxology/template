@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.publishing.upload_runner import (
     CORE_UPLOADERS,
     UploadTargets,
@@ -107,6 +109,57 @@ def test_run_uploads_commit_mode_label(tmp_path: Path) -> None:
     run = run_uploads(_targets(tmp_path), jobs={}, commit=True, env={})
     assert run.mode == "REAL UPLOAD"
     assert run.ok  # vacuously true with no jobs
+
+
+def test_run_uploads_preflight_blocks_invalid_payload_before_provider(tmp_path: Path) -> None:
+    project = tmp_path / "projects/templates/template_code_project"
+    (project / "output/pdf").mkdir(parents=True)
+    pdf = project / "output/pdf/paper.pdf"
+    pdf.write_bytes(b"%PDF-1.4 minimal")
+    targets = UploadTargets(
+        project_root=project,
+        pdf=tmp_path / "outside.pdf",
+        web_dir=project / "output/web",
+        hf_repo_id="owner/repo",
+        github_repo="owner/repo",
+        osf_title="Title",
+        repo_root=tmp_path,
+        project_name="templates/template_code_project",
+    )
+    called = False
+
+    def provider(_targets, _commit, _env):  # noqa: ANN001
+        nonlocal called
+        called = True
+        return {"status": "ok"}
+
+    with pytest.raises(ValueError, match="outside canonical project tree"):
+        run_uploads(targets, jobs={"provider": provider}, commit=True, env={})
+    assert called is False
+
+
+def test_run_uploads_records_redacted_preflight_manifest(tmp_path: Path) -> None:
+    project = tmp_path / "projects/templates/template_code_project"
+    pdf_dir = project / "output/pdf"
+    pdf_dir.mkdir(parents=True)
+    pdf = pdf_dir / "paper.pdf"
+    pdf.write_bytes(b"%PDF-1.4 minimal")
+    targets = UploadTargets(
+        project_root=project,
+        pdf=pdf,
+        web_dir=project / "output/web",
+        hf_repo_id="owner/repo",
+        github_repo="owner/repo",
+        osf_title="Title",
+        repo_root=tmp_path,
+        project_name="templates/template_code_project",
+    )
+
+    run = run_uploads(targets, jobs={}, commit=True, env={"GITHUB_TOKEN": "secret-token"})
+
+    assert run.preflight is not None
+    assert run.preflight["credential_sources"] == {}
+    assert "secret-token" not in str(run.preflight)
 
 
 def test_real_pinata_uploader_dry_run_no_network(tmp_path: Path) -> None:

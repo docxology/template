@@ -11,7 +11,7 @@ tags: [exemplar, literature, systematic-review, multi-phase]
 
 Load this project-scoped skill when working inside
 `projects/templates/template_advanced_literature_review/` or forking it into a
-new phased systematic review.
+new phased literature-review pipeline.
 
 ## When to Use
 

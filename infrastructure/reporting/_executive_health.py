@@ -15,19 +15,19 @@ logger = get_logger(__name__)
 # Data-driven tier tables for health score calculation.
 # Each entry: (min_value, score, grade, reason_template).
 # Evaluated top-to-bottom; first matching tier wins.
-_COVERAGE_TIERS = [
+_COVERAGE_TIERS: list[tuple[int, int, str, str]] = [
     (90, 40, "A", "Excellent coverage ≥90%"),
     (80, 30, "B", "Good coverage ≥80%"),
     (70, 20, "C", "Adequate coverage ≥70%"),
     (0, 0, "F", "Poor coverage <70%"),
 ]
-_WORD_TIERS = [
+_WORD_TIERS: list[tuple[int, int, str, str]] = [
     (2000, 20, "A", "Comprehensive manuscript ({} words)"),
     (1000, 15, "B", "Good manuscript ({} words)"),
     (500, 10, "C", "Basic manuscript ({} words)"),
     (0, 0, "F", "Insufficient manuscript ({} words)"),
 ]
-_OUTPUT_TIERS = [
+_OUTPUT_TIERS: list[tuple[int, int, str, str]] = [
     (10, 10, "A", "Rich outputs ({} files)"),
     (5, 7, "B", "Good outputs ({} files)"),
     (2, 4, "C", "Basic outputs ({} files)"),
@@ -42,7 +42,7 @@ _GRADE_TIERS = [
 ]
 
 
-def _score_tier(tiers: list[tuple], value: float, label: str | None = None) -> dict[str, Any]:
+def _score_tier(tiers: list[tuple[int, int, str, str]], value: float, label: str | None = None) -> dict[str, Any]:
     """Return the factor dict for the first tier whose threshold the value meets.
 
     All tier tables must include a catch-all entry at threshold 0 so this

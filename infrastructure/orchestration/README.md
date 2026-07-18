@@ -8,7 +8,15 @@ Non-interactive (example):
 
 ```bash
 uv run python -m infrastructure.orchestration --help
+
+# Read-only private-project promotion gate
+uv run python -m infrastructure.orchestration promotion-check \
+  --attestation /path/to/private-project/promotion.yaml
 ```
+
+`promotion-check` validates the offline identity, authorization, redaction,
+secret-storage, route, MCP-boundary, and export-test attestation. It never
+authenticates, moves, or publishes private content.
 
 Automated coverage for this package lives under `tests/infra_tests/orchestration/`.
 

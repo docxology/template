@@ -59,6 +59,9 @@ flowchart TB
   the JSON report; no project-specific knowledge embedded.
 * `src/report.py::write_review_report` — single function that takes a
   `ManuscriptReport` + `CheckResult`s and writes markdown.
+* `src/pipeline::build_evidence_summary` — writes the machine-readable,
+  diagnostic-only evidence summary; it must not be interpreted as publication
+  approval.
 * `domain_profile.yaml` and `experiment_plan.yaml` — declarative advisory
   overlays for review gates, source policy, artifact expectations, benchmark
   rubric weights, validation conditions, primary metric, baseline, and ablation.

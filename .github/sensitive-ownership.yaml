@@ -1,16 +1,16 @@
 sensitive_areas:
   - path: /infrastructure/steganography/
     owners: ["@docxology"]
-    exception: null
+    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
   - path: /infrastructure/publishing/
     owners: ["@docxology"]
-    exception: null
+    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
   - path: /scripts/publish/
     owners: ["@docxology"]
-    exception: null
+    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
   - path: /.github/workflows/
     owners: ["@docxology"]
-    exception: null
+    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
   - path: /rules/templates/*/strong/
     owners: ["@docxology"]
-    exception: null
+    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."

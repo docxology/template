@@ -65,6 +65,7 @@ testing:
 
 analysis:
   scripts:
+    - 01b_fixture_phase_replay.py
     - 02_meta_analysis_pipeline.py
     - 04_generate_figures.py
     - 06_fulltext_assessment.py

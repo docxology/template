@@ -233,11 +233,11 @@ def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -
     # must appear as --with arguments.
     assert "--with" in cmd
     with_values = [cmd[i + 1] for i, c in enumerate(cmd) if c == "--with"]
-    assert "pytest" in with_values
-    assert "pytest-cov" in with_values
-    assert "pytest-timeout" in with_values
-    assert "pytest-xdist" in with_values
-    assert "pytest-benchmark" in with_values
+    assert any(value == "pytest" or value.startswith("pytest==") for value in with_values)
+    assert any(value == "pytest-cov" or value.startswith("pytest-cov==") for value in with_values)
+    assert any(value == "pytest-timeout" or value.startswith("pytest-timeout==") for value in with_values)
+    assert any(value == "pytest-xdist" or value.startswith("pytest-xdist==") for value in with_values)
+    assert any(value == "pytest-benchmark" or value.startswith("pytest-benchmark==") for value in with_values)
     assert f"coverage=={version('coverage')}" in with_values
 
 

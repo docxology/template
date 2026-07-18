@@ -24,7 +24,8 @@ from infrastructure.core.errors import (
     PIPELINE_STAGES_INCOMPLETE,
     PROJECTS_INCOMPLETE,
 )
-from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor
+from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.core.pipeline.multi_project import (
     MultiProjectConfig,
     MultiProjectOrchestrator,

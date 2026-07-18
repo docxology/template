@@ -6,6 +6,8 @@ import argparse
 import json
 from pathlib import Path
 
+import pytest
+
 from src.config import EnrichmentConfig, LLMConfig, ProjectConfig, ReportConfig, SearchConfig
 from src.search_pipeline_cli import run_search_pipeline_cli
 
@@ -47,6 +49,10 @@ def test_offline_smoke_writes_expected_artifacts(tmp_path: Path, capsys):
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     assert summary["papers"] >= 1
     assert summary["llm_used"] is False
+    assert summary["evidence_scope"] == "bundled_deterministic_fixture"
+    assert "not empirical literature findings" in (tmp_path / "output" / "reading_report.md").read_text(
+        encoding="utf-8"
+    )
 
     captured = capsys.readouterr()
     assert str(tmp_path / "manuscript" / "references.bib") in captured.out
@@ -113,3 +119,16 @@ def test_llm_enabled_runs_real_synthesis_stage_with_offline_stub(tmp_path: Path)
     corpus_synthesis_path = llm_dir / "synthesis.md"
     assert corpus_synthesis_path.exists()
     assert "stub-synthesis-for:" in corpus_synthesis_path.read_text(encoding="utf-8")
+
+
+def test_fixture_scope_rejects_empirical_synthesis_language(tmp_path: Path):
+    corpus = tmp_path / "corpus.json"
+    corpus.write_text(BUNDLED_CORPUS.read_text(encoding="utf-8"), encoding="utf-8")
+    config = _make_config()
+    config.llm.enabled = True
+
+    def llm_builder(**kwargs):
+        return lambda prompt: "This study found a reliable empirical effect."
+
+    with pytest.raises(ValueError, match="empirical claim language"):
+        run_search_pipeline_cli(_args(corpus=str(corpus), no_llm=False), tmp_path, config, llm_builder=llm_builder)

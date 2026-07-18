@@ -2,6 +2,8 @@
 
 **Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"{{CONFIG_QUERY}}"* against {{CONFIG_SOURCES}}, returned {{RESULT_NUM_PAPERS}} deduplicated paper(s) ({{RESULT_WITH_DOI}} carrying a DOI, {{RESULT_WITH_ABSTRACT}} carrying an abstract); the per-source breakdown is {{RESULT_PER_SOURCE}} and recorded backend errors are {{RESULT_ERRORS}}. The deep-search workflow ([@sec:deep_search]) covered {{DEEP_KEYWORD_COUNT}} keyword(s) — *{{DEEP_KEYWORDS_JOINED}}* — drawn from {{DEEP_SOURCES}}, producing {{DEEP_UNIQUE_PAPERS}} unique paper(s) after cross-keyword deduplication.
 
+When `sources: [local]` is used, this section reports fixture execution only. It must not be read as a claim about empirical literature coverage; a live-provider run requires source-level provenance and a separately reviewed claim boundary.
+
 The diagnostic figures generated for this run are catalogued in [@sec:methodology]: [@fig:papers_per_source] surfaces per-backend coverage, [@fig:year_histogram] surfaces the temporal distribution, and [@fig:score_distribution] surfaces the relevance-score profile. The full determinism contract for each stage is itemised in [@tbl:determinism] of [@sec:reproducibility].
 
 ## Interpreting the run snapshot

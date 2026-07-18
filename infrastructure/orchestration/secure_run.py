@@ -39,7 +39,7 @@ class SecureRunOptions:
     validate_kmyth: bool = False
 
 
-def _load_steganography():  # pragma: no cover - import indirection
+def _load_steganography() -> tuple[Any, Any]:  # pragma: no cover - import indirection
     """Lazy import to keep the orchestration package import-light.
 
     The steganography module pulls in ``reportlab`` / ``qrcode``; we don't
@@ -128,7 +128,7 @@ def apply_steganography_to_project(
     repo_root: Path,
     project_qualified_name: str,
     *,
-    processor_factory=None,
+    processor_factory: Any = None,
 ) -> int:
     """Apply steganography to all PDFs in a single project.
 
@@ -205,8 +205,8 @@ def run_secure_pipeline(
     repo_root: Path,
     options: SecureRunOptions,
     *,
-    runner_cls=PipelineRunner,
-    processor_factory=None,
+    runner_cls: Any = PipelineRunner,
+    processor_factory: Any = None,
 ) -> int:
     """Run the secure pipeline.
 

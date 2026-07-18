@@ -10,6 +10,8 @@ This template must stay honest about fixture replay versus live subprocess runs.
   [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here):
   `uv run pytest projects/templates/template_sia/tests/ --cov=projects/templates/template_sia/src --cov-fail-under=90`
 - Default loop execution replays recorded fixtures; `--live-sia` is bounded but does not apply code mutations.
+- The `requires_ollama` project marker is excluded by default so the local
+  coverage gate cannot accidentally import or contact the live LLM bridge.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
 - Style + type gates over public source paths:
   `uv run python -m infrastructure.project.public_scope source-paths` piped to ruff and mypy.
@@ -21,7 +23,9 @@ This template must stay honest about fixture replay versus live subprocess runs.
 ## Integrity and template-status gaps
 
 - Keep fixture replay as the default validated behavior.
-- Add a run-summary artifact that distinguishes fixture generations, live subprocess execution, and unapplied feedback notes.
+- **Shipped:** `run_summary.json` distinguishes fixture replay from live
+  subprocess execution and records whether later-generation feedback was
+  applied or only recorded.
 - Keep target-agent mutation out of the public exemplar until sandboxing, diff review, and rollback contracts exist.
 
 ## Configurable-surface gaps
@@ -38,9 +42,9 @@ This template must stay honest about fixture replay versus live subprocess runs.
 
 - Keep negative controls (invalid run_summary payload, empty train CSV, all
   `validate_task_dir` failure modes) and metric edge cases as the suite grows.
-- Register the remaining illustrative manuscript threshold numbers (`85%`, `90%`)
-  as configured facts, or rewrite them as qualitative defaults, before treating
-  Stage 04 as warning-free.
+- **Shipped:** stale claim-ledger artifact paths were corrected to the current
+  run-summary, task-data, and reference-agent locations; Stage 04 now checks
+  those paths fail-closed.
 
 ## Ordered improvement ladder
 

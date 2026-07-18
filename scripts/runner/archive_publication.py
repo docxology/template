@@ -94,14 +94,20 @@ def main(argv: list[str] | None = None) -> int:
             providers.append(IPFSWeb3StorageProvider(credentials.web3_storage_token))
 
     receipts_out = bundle_dir / "ARCHIVAL_RECEIPTS.json"
-    # For Software Heritage, point at the repo root so .git/config is read.
-    archive_target = repo_root if any(isinstance(p, SoftwareHeritageProvider) for p in providers) else bundle_dir
+    credential_sources = {
+        "zenodo": "environment" if credentials.zenodo_token else "missing",
+        "pinata": "environment" if credentials.pinata_jwt else "missing",
+        "web3storage": "environment" if credentials.web3_storage_token else "missing",
+    }
 
     run = archive_publication(
-        archive_target,
+        bundle_dir,
         providers=providers,
         dry_run=not args.commit,
         output_receipts_path=receipts_out,
+        repo_root=repo_root,
+        project_name=args.project,
+        credential_sources=credential_sources,
     )
 
     print(json.dumps(run.to_dict(), indent=2, sort_keys=True))

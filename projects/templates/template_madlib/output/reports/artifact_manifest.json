@@ -326,6 +326,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/release/swh_repo_url.txt",
+      "sha256": "4d05954661eb90905c7d233ec0859b511b690f75145b1191cf7efb14db3457fd",
+      "size_bytes": 45,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/upload_receipts.json",
+      "sha256": "b1f5141e9cb78118ac09ae49ee782e38f8eb515079d226a3d62ab7b6c4bd3653",
+      "size_bytes": 1920,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/configured_field_summary.md",
       "sha256": "770400a252819018e52c15ea536857c3081d5b6b0f3a09de48a82018a89454ca",
       "size_bytes": 1529,

@@ -12,11 +12,31 @@ from infrastructure.validation.evidence_registry import (
     EvidenceFact,
     VerifiedEvidenceRegistry,
     build_project_evidence_registry,
+    missing_evidence_source_paths,
     unsupported_citation_tokens,
     unsupported_number_tokens,
     validate_text_against_registry,
     write_evidence_registry_report,
 )
+
+
+def test_missing_evidence_source_paths_detects_stale_local_claim_reference(tmp_path: Path) -> None:
+    registry = VerifiedEvidenceRegistry(
+        [EvidenceFact(kind="number", value="3", source="claims.yaml", source_path="output/data/missing.json")]
+    )
+
+    assert missing_evidence_source_paths(tmp_path, registry) == ("output/data/missing.json",)
+
+
+def test_missing_evidence_source_paths_accepts_existing_local_file(tmp_path: Path) -> None:
+    source = tmp_path / "output" / "data" / "result.json"
+    source.parent.mkdir(parents=True)
+    source.write_text("{}", encoding="utf-8")
+    registry = VerifiedEvidenceRegistry(
+        [EvidenceFact(kind="number", value="3", source="claims.yaml", source_path="output/data/result.json")]
+    )
+
+    assert missing_evidence_source_paths(tmp_path, registry) == ()
 
 
 def test_registry_validates_supported_numbers_and_citations() -> None:

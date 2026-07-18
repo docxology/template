@@ -28,6 +28,7 @@ from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
+    missing_evidence_source_paths,
     validate_text_against_registry,
     write_evidence_registry_report,
 )
@@ -216,6 +217,8 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
     write_evidence_registry_report(project_root / "output", registry)
     error_issues: list[str] = []
     warning_issues: list[str] = []
+    for source_path in missing_evidence_source_paths(project_root, registry):
+        error_issues.append(f"missing evidence source path: {source_path}")
     for path in markdown_files:
         text = path.read_text(encoding="utf-8")
         strict_file = any(token in path.name.lower() for token in ("claim", "ledger", "results", "table", "caption"))

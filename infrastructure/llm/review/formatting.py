@@ -4,6 +4,7 @@ Builds markdown content for review headers, combined reviews, and metadata.
 """
 
 from pathlib import Path
+from typing import Any
 
 from infrastructure.llm.core.config import OllamaClientConfig
 from infrastructure.llm.review.metrics import ReviewMetrics, SessionMetrics
@@ -181,7 +182,7 @@ def _build_review_metadata(
     pdf_path: Path,
     session_metrics: SessionMetrics,
     timestamp: str,
-) -> dict:
+) -> dict[str, Any]:
     """Build the review metadata dictionary.
 
     Args:

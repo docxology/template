@@ -38,6 +38,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/evidence_summary.json",
+      "sha256": "fd490a45fce3af136cba0a247f27077ad390f6d7edbb20910eed5c7977aa5d5a",
+      "size_bytes": 1873,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/figures/citation_density.png",
       "sha256": "f5494b9de4eb553acb39736dc7e0497a3c625ba0f4f46ff9e73abbde323581fc",
       "size_bytes": 100433,
@@ -290,6 +299,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/release/swh_repo_url.txt",
+      "sha256": "8e7d942b264f4d5fc5cdd3e8b18fe798260bb63984c0e5b3472574259d3acbb1",
+      "size_bytes": 52,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/upload_receipts.json",
+      "sha256": "ad2a663391c5a15755a1154d4364fb0def12d51f108766b458a8547e0c901b51",
+      "size_bytes": 1962,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/lessons.jsonl",
       "sha256": "32de66129eccccbfbac1137ea45bfbd0d4e7afe80cac28a975bcbd8a8789630c",
       "size_bytes": 604,
@@ -408,8 +435,8 @@
     {
       "contract_match": true,
       "path": "output/run_summary.json",
-      "sha256": "094873073fad6b9eb8f0686a999bca521cc28537ebda35f76f4451e25ff6a5e6",
-      "size_bytes": 1295,
+      "sha256": "3dd30025a37525026a46d0db9c3f864189064a8d3798883899b794b3ce6e2758",
+      "size_bytes": 1429,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

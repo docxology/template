@@ -169,7 +169,7 @@ jobs:
       # disposable/ignored. Release jobs and local sign-off add --rendered to
       # require artifact manifests, evidence registries, and figure bindings.
       - name: Publication audit — all public exemplars
-        run: uv run python -m infrastructure.validation.cli publication-audit --strict --format json
+        run: uv run python -m infrastructure.validation.cli publication-audit --all-public --strict --format json
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the

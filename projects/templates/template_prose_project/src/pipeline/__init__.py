@@ -32,10 +32,61 @@ from .checks import (
 __all__ = [
     "CHECK_REGISTRY",
     "CheckResult",
+    "EVIDENCE_SUMMARY_SCHEMA_VERSION",
     "ProseRunArtifacts",
+    "build_evidence_summary",
     "run_configured_checks",
     "run_prose_pipeline",
 ]
+
+EVIDENCE_SUMMARY_SCHEMA_VERSION = "template-prose/evidence-summary/1"
+
+
+def build_evidence_summary(
+    manuscript_report: ManuscriptReportLike,
+    checks: list[CheckResult],
+) -> dict[str, object]:
+    """Build a machine-readable diagnostic summary without publication claims.
+
+    The summary deliberately keeps readability, citations, bibliography, and
+    structure separate. It is evidence about the configured review run, not an
+    approval or quality certification.
+    """
+    files = manuscript_report.files
+    quality = {
+        "long_sentence_count": sum(f.quality.long_sentence_count for f in files),
+        "passive_count": sum(f.quality.passive_count for f in files),
+        "hedge_count": sum(f.quality.hedge_count for f in files),
+    }
+    structure = {
+        "files_with_h1": sum(f.structure.has_h1 for f in files),
+        "files_with_skipped_levels": sum(f.structure.has_skipped_level for f in files),
+        "heading_count": sum(len(f.structure.headings) for f in files),
+    }
+    bibliography = next((check.details for check in checks if check.name == "bibliography_consistency"), {})
+    citation_count = sum(f.quality.citation_count for f in files)
+    citations = {
+        "unique_keys": len(manuscript_report.citation_keys),
+        "citation_count": citation_count,
+        "density_per_1000": round(1000.0 * citation_count / max(1, manuscript_report.total_words), 2),
+    }
+    return {
+        "schema_version": EVIDENCE_SUMMARY_SCHEMA_VERSION,
+        "status": "pass" if all(check.passed for check in checks) else "fail",
+        "diagnostic_only": True,
+        "metrics": {
+            "readability": {
+                "avg_flesch_reading_ease": manuscript_report.avg_flesch_reading_ease,
+                "avg_flesch_kincaid_grade": manuscript_report.avg_flesch_kincaid_grade,
+                "avg_gunning_fog": manuscript_report.avg_gunning_fog,
+            },
+            "citations": citations,
+            "bibliography": bibliography,
+            "structure": structure,
+            "quality_flags": quality,
+        },
+        "checks": [check.to_dict() for check in checks],
+    }
 
 
 @dataclass
@@ -54,6 +105,7 @@ class ProseRunArtifacts:
 
     manuscript_report: ManuscriptReportLike
     report_path: Path | None = None
+    evidence_summary_path: Path | None = None
     checks: list[CheckResult] = field(default_factory=list)
     all_passed: bool = True
 
@@ -73,6 +125,7 @@ class ProseRunArtifacts:
             "all_passed": self.all_passed,
             "total_words": self.total_words,
             "report_path": str(self.report_path) if self.report_path else None,
+            "evidence_summary_path": str(self.evidence_summary_path) if self.evidence_summary_path else None,
             "checks": [c.to_dict() for c in self.checks],
             "manuscript": self.manuscript_report.to_dict(),
         }
@@ -91,6 +144,7 @@ def run_prose_pipeline(
     checks = run_configured_checks(manuscript_report, config, bib_path=bib_path)
     all_passed = all(c.passed for c in checks)
     report_path: Path | None = None
+    evidence_summary_path: Path | None = None
     if write_outputs:
         report_path = (root / "output" / "manuscript_report.json").resolve()
         report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -106,9 +160,16 @@ def run_prose_pipeline(
             encoding="utf-8",
         )
 
+        evidence_summary_path = (root / "output" / "evidence_summary.json").resolve()
+        evidence_summary_path.write_text(
+            json.dumps(build_evidence_summary(manuscript_report, checks), indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+
     return ProseRunArtifacts(
         manuscript_report=manuscript_report,
         report_path=report_path,
         checks=checks,
         all_passed=all_passed,
+        evidence_summary_path=evidence_summary_path,
     )

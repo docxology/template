@@ -25,7 +25,9 @@ pythonpath = ["../..", ".", "src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short --strict-markers"
+# The Ollama path is explicitly opt-in; default project gates must remain
+# credential- and service-free even when the marker is present.
+addopts = "-v --tb=short --strict-markers -m 'not requires_ollama'"
 markers = [
     "requires_ollama: needs local Ollama daemon",
 ]

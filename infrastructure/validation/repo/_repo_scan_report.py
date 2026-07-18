@@ -3,6 +3,7 @@
 from collections import defaultdict
 from datetime import datetime
 
+from infrastructure.validation.docs.models import CompletenessGap, ScanAccuracyIssue
 from infrastructure.validation.repo.models import RepoScanResults
 
 
@@ -22,7 +23,7 @@ def build_repo_scan_report(results: RepoScanResults) -> str:
         "",
     ]
 
-    by_category: dict[str, list] = defaultdict(list)
+    by_category: dict[str, list[ScanAccuracyIssue]] = defaultdict(list)
     for issue in results.accuracy_issues:
         by_category[issue.category].append(issue)
 
@@ -43,7 +44,7 @@ def build_repo_scan_report(results: RepoScanResults) -> str:
 
     lines.extend(["## Completeness Gaps", ""])
 
-    by_gap_cat: dict[str, list] = defaultdict(list)
+    by_gap_cat: dict[str, list[CompletenessGap]] = defaultdict(list)
     for gap in results.completeness_gaps:
         by_gap_cat[gap.category].append(gap)
 

@@ -11,6 +11,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.security import subprocess_options
 import infrastructure.rendering._web_postprocess as web_postprocess
 
 logger = get_logger(__name__)
@@ -57,9 +58,17 @@ class WebRenderer:
     }
     _THEOREM_BLOCK_RE = re.compile(
         r"\\begin\{(theorem|lemma|proposition|corollary|definition)\}"
-        r"(?:\[([^\]]*)\])?[ \t]*\n(.*?)\n\\end\{\1\}",
+        r"(?:\[([^\]]*)\])?"
+        r"(?:[ \t]*\\label\{([^}]*)\})?[ \t]*\n(.*?)\n\\end\{\1\}",
         re.DOTALL,
     )
+    # Theorem-body-only cleanups (see _clean_theorem_body). Pandoc's markdown
+    # reader treats ``\texttt{...}`` as raw inline LaTeX (dropped by the HTML
+    # writer) and does not enable ``tex_math_single_backslash``, so ``\(...\)``
+    # math degrades to bare parens. Applied ONLY inside theorem bodies.
+    _THEOREM_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]*)\}")
+    _THEOREM_INLINE_MATH_RE = re.compile(r"\\\((.+?)\\\)", re.DOTALL)
+    _THEOREM_DISPLAY_MATH_RE = re.compile(r"\\\[(.+?)\\\]", re.DOTALL)
 
     def __init__(self, config: RenderingConfig):
         """Initialize the web renderer with configuration."""
@@ -71,6 +80,9 @@ class WebRenderer:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         output_file = self._output_file_for_source(source_file)
+        profile = self.config.security()
+        profile.validate_output(output_file)
+        profile.validate_source(source_file)
 
         # Apply the same web-only markdown pass used for the combined build so
         # per-section HTML resolves Pandoc ``[@key]`` citations and raw-LaTeX
@@ -102,7 +114,7 @@ class WebRenderer:
         logger.info(f"Generating HTML from {source_file}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
             if output_file.exists():
                 self._harden_mathjax_script(output_file)
                 self._embed_favicon(output_file)
@@ -170,6 +182,10 @@ class WebRenderer:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         output_file = output_dir / "index.html"
+        profile = self.config.security()
+        profile.validate_output(output_file)
+        for source_file in source_files:
+            profile.validate_source(source_file)
 
         # Remove existing output file to ensure fresh generation
         if output_file.exists():
@@ -239,7 +255,7 @@ class WebRenderer:
         logger.debug(f"Combined markdown file: {combined_md}")
 
         try:
-            subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=600)
+            subprocess.run(cmd, check=True, capture_output=True, text=True, **subprocess_options(profile, 600))
         except subprocess.CalledProcessError as e:
             error_msg = "Failed to convert markdown to HTML"
             all_output = ""
@@ -493,21 +509,72 @@ class WebRenderer:
         theorem / lemma / proposition / corollary / definition) becomes a Pandoc
         fenced Div ``::: {.theorem-box .<env>}`` led by a bold ``**Theorem N**``
         label (the optional name follows, with its math left outside the bold so it
-        renders). The environments share one running counter so the web numbers
-        match the PDF's shared-counter convention. The PDF path never sees this —
-        it consumes the original ``\\begin{theorem}`` against the LaTeX preamble.
+        renders). A same-line ``\\label{...}`` after the name (the standard amsthm
+        idiom) is consumed and becomes the Div's anchor id. The environments share
+        one running counter so the web numbers match the PDF's shared-counter
+        convention. The PDF path never sees this — it consumes the original
+        ``\\begin{theorem}`` against the LaTeX preamble.
+
+        Theorem bodies are additionally cleaned via ``_clean_theorem_body`` so
+        content that pandoc's HTML path would otherwise drop or degrade survives:
+        ``\\texttt{X}`` becomes a markdown code span (``\\_`` unescaped) and
+        ``\\(...\\)`` / ``\\[...\\]`` math delimiters become ``$...$`` /
+        ``$$...$$`` so the HTML+MathJax path renders them. ``\\label{eq:...}``
+        lines and ``\\ref{...}`` are left to the existing downstream passes.
+
+        Known limitation (web-only, cosmetic): other raw-LaTeX macros inside
+        theorem bodies (e.g. ``\\emph{...}``, custom preamble macros) still pass
+        through pandoc's raw-inline-LaTeX drop; the PDF surface is unaffected.
         """
         counter = {"n": 0}
 
         def _replace(match: re.Match[str]) -> str:
-            env, name, body = match.group(1), match.group(2), match.group(3)
+            env, name, anchor, body = (
+                match.group(1),
+                match.group(2),
+                match.group(3),
+                match.group(4),
+            )
             counter["n"] += 1
             label = f"**{cls._THEOREM_ENVS[env]} {counter['n']}**"
             if name and name.strip():
                 label += f" ({name.strip()})"
-            return f"\n\n::: {{.theorem-box .{env}}}\n{label}. {body.strip()}\n:::\n\n"
+            attrs = f".theorem-box .{env}"
+            if anchor and anchor.strip():
+                attrs += f" #{anchor.strip()}"
+            body = cls._clean_theorem_body(body.strip())
+            return f"\n\n::: {{{attrs}}}\n{label}. {body}\n:::\n\n"
 
         return cls._THEOREM_BLOCK_RE.sub(_replace, content)
+
+    @classmethod
+    def _clean_theorem_body(cls, body: str) -> str:
+        """Make a theorem-Div body survive pandoc's HTML path (web-only).
+
+        Conservative, theorem-body-scoped rewrites only:
+
+        - ``\\texttt{X}`` → markdown code span `` `X` `` with ``\\_`` unescaped,
+          so filenames like ``expected_free_energy.py`` surface instead of
+          vanishing with the raw-LaTeX drop.
+        - ``\\(...\\)`` → ``$...$`` and ``\\[...\\]`` → ``$$...$$`` so pandoc's
+          HTML+MathJax pipeline renders the math instead of degrading it.
+
+        ``\\label{...}`` / ``\\ref{...}`` are deliberately untouched — the
+        existing raw-span and crossref passes own those.
+        """
+        body = cls._THEOREM_TEXTTT_RE.sub(
+            lambda m: "`" + m.group(1).replace(r"\_", "_") + "`",
+            body,
+        )
+        body = cls._THEOREM_DISPLAY_MATH_RE.sub(
+            lambda m: f"$${m.group(1).strip()}$$",
+            body,
+        )
+        body = cls._THEOREM_INLINE_MATH_RE.sub(
+            lambda m: f"${m.group(1).strip()}$",
+            body,
+        )
+        return body
 
     @classmethod
     def _render_pandoc_citations(cls, content: str, *, preserve_crossrefs: bool = True) -> str:

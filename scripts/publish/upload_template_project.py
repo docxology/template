@@ -80,6 +80,8 @@ def _resolve_targets(name: str) -> UploadTargets:
         # Reuse an existing OSF node when the caller exports OSF_NODE_ID, so a
         # re-run updates that node instead of creating a duplicate.
         osf_node_id=os.environ.get("OSF_NODE_ID") or None,
+        repo_root=REPO,
+        project_name=f"templates/{name}",
     )
 
 
@@ -122,6 +124,7 @@ def main() -> int:
     payload = {
         "project": args.project,
         "mode": run.mode,
+        "preflight": run.preflight,
         "timestamp_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "results": run.results,
     }

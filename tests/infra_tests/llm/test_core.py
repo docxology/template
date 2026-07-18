@@ -9,7 +9,7 @@ Tests LLMClient functionality using real data (No Mocks Policy):
 import pytest
 import requests
 
-from infrastructure.core.exceptions import LLMConnectionError, LLMError
+from infrastructure.core.exceptions import LLMConnectionError, LLMError, SecurityError
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig
 from infrastructure.llm.core.context import ConversationContext
@@ -55,6 +55,14 @@ class TestLLMClientInitialization:
         client = LLMClient(default_config)
         assert isinstance(client.context, ConversationContext)
         assert client.context.max_tokens == default_config.context_window
+
+    def test_unallowlisted_bypasses_fail_closed(self, default_config):
+        """Raw and unsanitized paths require an explicitly registered caller."""
+        client = LLMClient(default_config)
+        with pytest.raises(SecurityError, match="Unallowlisted sanitization"):
+            client.query("project content", sanitize=False, bypass_caller="unknown", bypass_reason="not approved")
+        with pytest.raises(SecurityError, match="Unallowlisted raw-query"):
+            client.query_raw("project content", bypass_caller="unknown", bypass_reason="not approved")
 
 
 class TestSystemPromptInjection:
@@ -341,7 +349,11 @@ class TestLLMClientWithOllama:
         client = LLMClient(config)
 
         with safe_network_test("Ollama"):
-            response = client.query_raw("Complete: Hello")
+            response = client.query_raw(
+                "Complete: Hello",
+                bypass_caller="tests.infra_tests.llm",
+                bypass_reason="offline/local-server coverage of the raw protocol",
+            )
             assert response is not None
             assert len(response) > 0
 
@@ -747,7 +759,11 @@ class TestLLMQueryModesIntegration:
     def test_query_raw(self):
         """Test raw query mode."""
         client = _ready_small_model_client(auto_inject_system_prompt=False)
-        result = client.query_raw("Complete: Hello")
+        result = client.query_raw(
+            "Complete: Hello",
+            bypass_caller="tests.infra_tests.llm",
+            bypass_reason="offline/local-server coverage of the raw protocol",
+        )
 
         assert result is not None
         assert len(result) > 0

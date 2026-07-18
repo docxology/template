@@ -57,6 +57,20 @@ uv run python scripts/pipeline/stage_03_render.py --project working/<name>
 uv run python scripts/maintenance/rerender_working_pdfs.py --project <name>
 ```
 
+Before a private project is moved into `active/`, a public exemplar set, or a
+deployment/archive transport, the sidecar operator must validate its promotion
+record at the orchestration boundary:
+
+```bash
+uv run python -m infrastructure.orchestration promotion-check \
+  --attestation /path/to/private-project/promotion.yaml
+```
+
+This is a read-only, offline gate. It does not authenticate, move, render, or
+publish a project; the sidecar's administrator-controlled move remains a
+separate action and must use the same attestation result. Incomplete records
+fail unless they carry an explicit, unexpired risk acceptance.
+
 Default discovery still scans the public exemplars under `projects/templates/`
 and any optional `projects/active/` hot-seat entries. It does not run all
 `working/` or `archive/` projects.

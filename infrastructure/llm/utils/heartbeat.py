@@ -7,6 +7,7 @@ provide progress updates, and warn about potential hangs.
 import logging
 import threading
 import time
+from types import TracebackType
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -228,6 +229,11 @@ class StreamHeartbeatMonitor:
         self.start_monitoring()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Context manager exit."""
         self.stop_monitoring()

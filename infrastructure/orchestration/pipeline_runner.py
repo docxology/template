@@ -16,12 +16,9 @@ from pathlib import Path
 from typing import Any, Callable, TextIO
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pipeline import (
-    MultiProjectConfig,
-    MultiProjectOrchestrator,
-    PipelineConfig,
-    PipelineExecutor,
-)
+from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.pipeline.multi_project import MultiProjectConfig, MultiProjectOrchestrator
+from infrastructure.core.pipeline.types import PipelineConfig
 from infrastructure.core.pipeline.incremental import IncrementalConfig
 from infrastructure.core.pipeline.multi_project import format_multi_project_outcome_lines
 from infrastructure.orchestration.menu import STAGE_NAMES

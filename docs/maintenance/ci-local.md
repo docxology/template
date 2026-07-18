@@ -113,6 +113,11 @@ reporting a vacuous success.
 ./scripts/shell/ci_local.sh --no-act
 ```
 
+The health lane overlaps independent subprocess gates with a bounded default
+worker pool. For a reproducible serial diagnostic run, use the underlying
+command directly with `--workers 1`; its machine-readable report includes both
+aggregate gate time and whole-sweep wall time.
+
 The pre-commit lane uses `uv run pre-commit`; it never silently skips a missing
 global executable. Confidentiality uses the full four-pool
 `scripts/audit/check_tracked_all.py` guard.

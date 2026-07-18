@@ -79,7 +79,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Unified repository health check entry point (`uv run python -m infrastructure.core.health`)
 - Aggregates every per-CLI quality gate (mypy, ruff, ruff-format, bandit, no-mocks, `__all__` audit, docs-lint, stage-table & api-reference idempotence, architecture-overview presence) into a single typed `HealthReport`
 - Subprocess-only orchestrator — exit code is the sole pass/fail signal; stdout/stderr captured for diagnostics only
-- `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`
+- `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`, and bounded `--workers` concurrency (`1` keeps serial diagnostics)
 - Public API: `GateResult`, `HealthReport`, `GATE_NAMES`, `build_gate_specs`, `run_health_checks`, `format_report_table`, `main`
 
 **agent_memory.py**
@@ -94,7 +94,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - ``build_pytest_marker_expression(...)`` returns one ``pytest -m`` string for subprocess runners (`pipeline_test_runner`, ``run_per_project_pytest``) so benchmarks and slow/Ollama-gated tests stay opt-in outside defaults.
 
 **pytest_orchestration.py**
-- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Project subprocesses inject pytest/pytest-cov/pytest-timeout and pin `coverage==<workspace coverage version>` so `--cov-append` writes a single readable SQLite trace across mixed project environments. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
+- Canonical Stage-01 / union-gate pytest subprocess policy: discovery logging, isolated coverage datafile pinning, declared project ``fail_under``, and project-suite guards. Each project subprocess injects pytest/pytest-cov/pytest-timeout and pins `coverage==<workspace coverage version>` to its own readable SQLite trace; the runner combines those files only after all project floors pass, preventing parent-suite coverage contamination. Consumed by ``infrastructure.reporting.pipeline_test_runner`` and ``infrastructure.core.test_runner``.
 - ``resolve_xdist_args(parallel=None) -> list[str]`` centralizes **opt-in** pytest-xdist parallelism. Parallel argv uses work-stealing distribution and disables pytest-benchmark timing under xdist; project subprocesses inject both plugins. Resolution order: explicit ``parallel`` arg → ``PYTEST_XDIST_WORKERS`` env var → serial. ``0``/``1``/``none``/``off``/unparseable collapse to serial (one xdist worker is pure overhead). Threaded through ``build_union_pytest_command(..., parallel=...)``, ``run_per_project_pytest(..., parallel=...)``, and ``pipeline_test_runner`` (infra + project + ``execute_test_pipeline``), surfaced as the ``-n/--parallel`` flag on ``scripts/01_run_tests.py`` and ``scripts/pipeline/stage_01_test.py``. Default stays **serial** to preserve the load-contention safety documented in the root ``CLAUDE.md`` Testing section; coverage is unaffected because pytest-cov combines per-worker data before the datafile is written. Mirrors the ``MULTI_PROJECT_MAX_WORKERS`` opt-in convention of ``infrastructure.core.pipeline.multi_project_parallel``.
 
 **analysis_pipeline.py**

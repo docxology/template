@@ -27,6 +27,7 @@ from literature.models import Paper
 from literature.search_runner import run_literature_search
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PHASE_ARTIFACT_MANIFEST_SCHEMA = "advanced-literature-review/phase-artifact-manifest/1"
 
 logger = logging.getLogger(__name__)
 
@@ -177,9 +178,14 @@ class MultiPhaseSearchRunner:
             return papers
 
         filtered = []
-        from tqdm import tqdm
+        try:
+            from tqdm import tqdm
+        except ImportError:
+            iterator = papers
+        else:
+            iterator = tqdm(papers, desc=f"LLM filtering {phase_id}")
 
-        for paper in tqdm(papers, desc=f"LLM filtering {phase_id}"):
+        for paper in iterator:
             keep_paper = True
             llm_results: dict[str, str] = {}
 
@@ -428,8 +434,108 @@ class MultiPhaseSearchRunner:
 
         return overlap_matrix
 
+    def validate_phase_configuration(self) -> dict[str, Any]:
+        """Validate phase IDs, dependency order, queries, and year bounds."""
+        phase_ids = list(self.search_phases)
+        known = set(phase_ids)
+        issues: list[dict[str, str]] = []
+        for index, (phase_id, raw_config) in enumerate(self.search_phases.items()):
+            config = raw_config if isinstance(raw_config, dict) else {}
+            if "queries" not in config:
+                issues.append({"phase": phase_id, "code": "missing_queries", "message": "phase has no queries"})
+            filters = config.get("deterministic_filters", {})
+            if isinstance(filters, dict):
+                min_year = filters.get("min_year")
+                max_year = filters.get("max_year")
+                if min_year is not None and max_year is not None and int(min_year) > int(max_year):
+                    issues.append(
+                        {
+                            "phase": phase_id,
+                            "code": "invalid_year_bounds",
+                            "message": f"min_year {min_year} is greater than max_year {max_year}",
+                        }
+                    )
+            dependencies = config.get("depends_on", [])
+            if not isinstance(dependencies, list):
+                dependencies = [dependencies]
+            for dependency in dependencies:
+                if dependency not in known:
+                    issues.append(
+                        {
+                            "phase": phase_id,
+                            "code": "unknown_dependency",
+                            "message": f"depends_on references unknown phase {dependency!r}",
+                        }
+                    )
+                elif dependency == phase_id:
+                    issues.append(
+                        {"phase": phase_id, "code": "self_dependency", "message": "phase cannot depend on itself"}
+                    )
+                elif phase_ids.index(dependency) >= index:
+                    issues.append(
+                        {
+                            "phase": phase_id,
+                            "code": "dependency_order",
+                            "message": f"dependency {dependency!r} must be declared before this phase",
+                        }
+                    )
+        return {
+            "schema_version": "advanced-literature-review/phase-validation/1",
+            "status": "pass" if not issues else "fail",
+            "phase_order": phase_ids,
+            "issues": issues,
+        }
+
+    def _ensure_valid_phase_configuration(self) -> dict[str, Any]:
+        """Return the phase validation report or fail before any search work."""
+        report = self.validate_phase_configuration()
+        if report["status"] != "pass":
+            raise ValueError(f"Invalid phase configuration: {report['issues']}")
+        return report
+
+    def _write_phase_artifact_manifest(
+        self,
+        output_dir: Path,
+        *,
+        phase_ids: list[str],
+        execution_mode: str,
+    ) -> None:
+        """Record which phases contributed to every phase-level artifact."""
+        all_phases = list(phase_ids)
+        artifacts = [
+            {
+                "path": f"{phase_id}_corpus.jsonl",
+                "phases": [phase_id],
+                "paper_count": sum(
+                    1 for phased in self.all_phased_papers.values() if phase_id in phased.phases_found_in
+                ),
+            }
+            for phase_id in phase_ids
+        ]
+        artifacts.extend(
+            [
+                {
+                    "path": "combined_corpus.jsonl",
+                    "phases": all_phases,
+                    "paper_count": len(self.all_phased_papers),
+                },
+                {"path": "phase_metadata.json", "phases": all_phases},
+                {"path": "phase_validation_report.json", "phases": all_phases},
+            ]
+        )
+        manifest = {
+            "schema_version": PHASE_ARTIFACT_MANIFEST_SCHEMA,
+            "execution_mode": execution_mode,
+            "phase_order": all_phases,
+            "artifacts": artifacts,
+        }
+        (output_dir / "phase_artifact_manifest.json").write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+
     def run(self, specific_phase: str | None = None) -> None:
         """Run the multi-phase search pipeline."""
+        phase_validation = self._ensure_valid_phase_configuration()
         if specific_phase:
             if specific_phase not in self.search_phases:
                 raise ValueError(f"Phase '{specific_phase}' not found in configuration")
@@ -467,6 +573,7 @@ class MultiPhaseSearchRunner:
 
         # Save phase metadata
         metadata_summary = {
+            "phase_validation": phase_validation,
             "phases": {pid: asdict(meta) for pid, meta in self.phase_metadata.items()},
             "citation_validation": citation_validation,
             "total_papers": len(all_paper_list),
@@ -477,6 +584,10 @@ class MultiPhaseSearchRunner:
         metadata_path = output_dir / "phase_metadata.json"
         with open(metadata_path, "w") as f:
             json.dump(metadata_summary, f, indent=2)
+        (output_dir / "phase_validation_report.json").write_text(
+            json.dumps(phase_validation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        self._write_phase_artifact_manifest(output_dir, phase_ids=phases_to_run, execution_mode="live")
         logger.info(f"Saved phase metadata to {metadata_path}")
 
         # Print summary
@@ -489,6 +600,109 @@ class MultiPhaseSearchRunner:
             )
         print(f"  Total unique papers: {len(all_paper_list)}")
         print(f"  Combined corpus: {combined_path}")
+
+    def replay_fixture(self, corpus_path: Path) -> None:
+        """Build phase artifacts from the committed corpus without network access.
+
+        The public exemplar keeps a deterministic corpus snapshot so the normal
+        pipeline can exercise phase-aware provenance without depending on live
+        providers.  Phase one is the broad control set; later phases retain
+        papers whose title or abstract contains at least one configured query
+        term.  The replay intentionally records zeroed timing fields so the
+        resulting artifacts are stable across runs.
+        """
+        phase_validation = self._ensure_valid_phase_configuration()
+        corpus = Corpus.load(corpus_path)
+        self.phase_metadata.clear()
+        self.all_phased_papers.clear()
+
+        phases = list(self.search_phases.items())
+        for index, (phase_id, phase_config) in enumerate(phases):
+            queries = [str(query) for query in phase_config.get("queries", [])]
+            if index == 0:
+                selected = list(corpus.papers)
+            else:
+                terms = _fixture_terms(queries)
+                selected = [
+                    paper
+                    for paper in corpus.papers
+                    if any(term in f"{paper.title} {paper.abstract}".lower() for term in terms)
+                ]
+                if not selected:
+                    # An empty phase is valid, but keeping the phase metadata
+                    # explicit makes downstream variable extraction complete.
+                    selected = []
+
+            filtered = self.apply_deterministic_filters(selected, phase_config.get("deterministic_filters", {}))
+            self._record_phase_papers(filtered, phase_id)
+            self.phase_metadata[phase_id] = PhaseMetadata(
+                phase_id=phase_id,
+                name=phase_config.get("name", phase_id),
+                description=phase_config.get("description", ""),
+                start_time=0.0,
+                end_time=0.0,
+                queries_executed=queries,
+                papers_discovered=len(selected),
+                papers_after_deterministic_filters=len(filtered),
+                papers_after_llm_filters=len(filtered),
+                papers_final=len(filtered),
+                deterministic_filters_applied=phase_config.get("deterministic_filters", {}),
+                depends_on=phase_config.get("depends_on", []),
+            )
+
+        output_dir = self.output_dir
+        output_dir.mkdir(parents=True, exist_ok=True)
+        phase_sets = {
+            phase_id: [phased.paper for phased in self.all_phased_papers.values() if phase_id in phased.phases_found_in]
+            for phase_id in self.phase_metadata
+        }
+        for phase_id, papers in phase_sets.items():
+            Corpus(papers=papers).save(output_dir / f"{phase_id}_corpus.jsonl")
+
+        combined = [phased.paper for phased in self.all_phased_papers.values()]
+        Corpus(papers=combined).save(output_dir / "combined_corpus.jsonl")
+        metadata_summary = {
+            "replay_mode": "fixture",
+            "source_corpus": corpus_path.name,
+            "phase_validation": phase_validation,
+            "phases": {phase_id: asdict(meta) for phase_id, meta in self.phase_metadata.items()},
+            "citation_validation": self.validate_cross_phase_citations(),
+            "total_papers": len(combined),
+            "total_unique_papers": len(self.all_phased_papers),
+            "phase_overlap": self._calculate_phase_overlap(),
+        }
+        (output_dir / "phase_metadata.json").write_text(
+            json.dumps(metadata_summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (output_dir / "phase_validation_report.json").write_text(
+            json.dumps(phase_validation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        self._write_phase_artifact_manifest(output_dir, phase_ids=list(self.phase_metadata), execution_mode="fixture")
+
+
+def _fixture_terms(queries: list[str]) -> list[str]:
+    """Extract stable, meaningful terms from configured fixture queries."""
+    stop_words = {
+        "and",
+        "or",
+        "the",
+        "with",
+        "from",
+        "into",
+        "data",
+        "study",
+        "studies",
+        "paper",
+        "papers",
+    }
+    terms: set[str] = set()
+    for query in queries:
+        normalized = query.lower().replace('"', " ").replace("(", " ").replace(")", " ")
+        for token in normalized.split():
+            token = token.strip(".,:;[]{}")
+            if len(token) >= 4 and token not in stop_words:
+                terms.add(token)
+    return sorted(terms)
 
 
 def main() -> None:  # pragma: no cover - exercised through the thin CLI script

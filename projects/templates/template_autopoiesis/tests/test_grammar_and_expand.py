@@ -149,6 +149,27 @@ def test_parse_grammar_bad_type_raises():
         parse_grammar("not a dict")
 
 
+@pytest.mark.parametrize(
+    "block",
+    [
+        {"seed": 1, "slots": "primitive_domain", "deps": []},
+        {"seed": 1, "slots": [{"name": "primitive_domain", "options": "optimization"}], "deps": []},
+        {"seed": 1, "slots": [{"name": "primitive_domain", "options": [1]}], "deps": []},
+        {"seed": 1, "slots": [{"name": "primitive_domain", "options": ["optimization"]}], "deps": "logging"},
+    ],
+)
+def test_parse_grammar_rejects_under_specified_shapes(block):
+    with pytest.raises(GrammarError):
+        parse_grammar(block)
+
+
+def test_expand_rejects_grammar_without_primitive_domain():
+    grammar = parse_grammar({"seed": 1, "slots": [{"name": "other", "options": ["value"]}], "deps": []})
+
+    with pytest.raises(GrammarError, match="primitive_domain"):
+        expand(grammar)
+
+
 def test_parse_grammar_no_slots_raises():
     with pytest.raises(GrammarError):
         parse_grammar({"seed": 1, "slots": []})

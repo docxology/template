@@ -16,9 +16,10 @@ import os
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 # A single uploader: (targets, commit, env) -> receipt dict.
-Uploader = Callable[["UploadTargets", bool, Mapping[str, str]], dict]
+Uploader = Callable[["UploadTargets", bool, Mapping[str, str]], dict[str, Any]]
 
 
 @dataclass(frozen=True)
@@ -35,9 +36,13 @@ class UploadTargets:
     # When set, OSF deposits reuse this existing node instead of creating a new
     # one on every ``--commit`` run (idempotency). Left None → create-new.
     osf_node_id: str | None = None
+    # Publication safety context. Production CLIs must provide both values;
+    # unit callers that exercise provider behavior in isolation may omit them.
+    repo_root: Path | None = None
+    project_name: str | None = None
 
 
-def upload_pinata(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_pinata(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload pinata to the remote service."""
     from infrastructure.publishing.archival.providers import IPFSPinataProvider
 
@@ -45,7 +50,7 @@ def upload_pinata(targets: UploadTargets, commit: bool, env: Mapping[str, str]) 
     return {"status": receipt.status, "cid": receipt.identifier, "url": receipt.url, "error": receipt.error}
 
 
-def upload_huggingface(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_huggingface(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload huggingface to the remote service."""
     from infrastructure.publishing.huggingface import HuggingFaceConfig, HuggingFaceHubAdapter
 
@@ -54,7 +59,7 @@ def upload_huggingface(targets: UploadTargets, commit: bool, env: Mapping[str, s
     return {"status": receipt.status, "url": receipt.url, "commit_url": receipt.commit_url, "error": receipt.error}
 
 
-def upload_osf(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_osf(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload osf to the remote service."""
     from infrastructure.publishing.osf import OSFAdapter, OSFConfig
 
@@ -63,7 +68,7 @@ def upload_osf(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> 
     return {"status": receipt.status, "node_id": receipt.node_id, "url": receipt.url, "error": receipt.error}
 
 
-def upload_testpypi(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_testpypi(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload testpypi to the remote service."""
     from infrastructure.publishing.pypi import run_pypi_release
 
@@ -77,7 +82,7 @@ def upload_testpypi(targets: UploadTargets, commit: bool, env: Mapping[str, str]
     }
 
 
-def upload_github(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_github(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload github to the remote service."""
     from infrastructure.publishing.github import create_github_release
 
@@ -99,7 +104,7 @@ def upload_github(targets: UploadTargets, commit: bool, env: Mapping[str, str]) 
     return {"status": "ok", "url": url, "repo": repo, "tag": tag}
 
 
-def _deploy_static(targets: UploadTargets, hosting: str, commit: bool) -> dict:
+def _deploy_static(targets: UploadTargets, hosting: str, commit: bool) -> dict[str, Any]:
     from infrastructure.publishing.static_site import (
         CloudflarePagesAdapter,
         NetlifyAdapter,
@@ -121,17 +126,17 @@ def _deploy_static(targets: UploadTargets, hosting: str, commit: bool) -> dict:
     return {"status": receipt.status, "url": receipt.url, "error": receipt.error}
 
 
-def upload_netlify(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_netlify(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload netlify to the remote service."""
     return _deploy_static(targets, "netlify", commit)
 
 
-def upload_cloudflare(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_cloudflare(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload cloudflare to the remote service."""
     return _deploy_static(targets, "cloudflare", commit)
 
 
-def upload_github_pages(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict:
+def upload_github_pages(targets: UploadTargets, commit: bool, env: Mapping[str, str]) -> dict[str, Any]:
     """Upload github pages to the remote service."""
     from infrastructure.publishing.static_site import GitHubPagesAdapter, SiteDeployConfig, SiteHosting
 
@@ -184,7 +189,8 @@ class UploadRun:
     """Result of a batch upload run."""
 
     mode: str
-    results: dict[str, dict] = field(default_factory=dict)
+    results: dict[str, dict[str, Any]] = field(default_factory=dict)
+    preflight: dict[str, object] | None = None
 
     @property
     def ok(self) -> bool:
@@ -202,9 +208,45 @@ def run_uploads(
     """Run each uploader, capturing per-platform errors without aborting the batch."""
     environ = env if env is not None else os.environ
     run = UploadRun(mode="REAL UPLOAD" if commit else "DRY-RUN")
+    if (targets.repo_root is None) != (targets.project_name is None):
+        raise ValueError("upload safety context requires both repo_root and project_name")
+    if targets.repo_root is not None and targets.project_name is not None:
+        from infrastructure.publishing.preflight import publishing_preflight
+
+        payload_paths = [targets.pdf]
+        static_jobs = {"netlify", "cloudflare", "github_pages"}
+        if static_jobs.intersection(jobs):
+            if not targets.web_dir.is_dir():
+                raise ValueError(f"publishing web payload directory does not exist: {targets.web_dir}")
+            payload_paths.extend(path for path in sorted(targets.web_dir.rglob("*")) if path.is_file())
+
+        credential_keys = {
+            "github": "GITHUB_TOKEN",
+            "cloudflare": "CLOUDFLARE_API_TOKEN",
+            "github_pages": "GITHUB_TOKEN",
+            "huggingface": "HF_TOKEN",
+            "netlify": "NETLIFY_AUTH_TOKEN",
+            "osf": "OSF_TOKEN",
+            "pinata": "PINATA_JWT",
+            "testpypi": "TESTPYPI_TOKEN",
+        }
+        credential_sources = {
+            name: "environment" if environ.get(credential_keys[name]) else "missing"
+            for name in sorted(set(jobs).intersection(credential_keys))
+        }
+        run.preflight = publishing_preflight(
+            targets.repo_root,
+            targets.project_name,
+            payload_paths,
+            credential_sources,
+        )
     for name, fn in jobs.items():
         try:
             run.results[name] = fn(targets, commit, environ)
         except Exception as exc:  # noqa: BLE001 — report, never abort the batch
-            run.results[name] = {"status": "error", "error": f"{type(exc).__name__}: {exc}"}
+            message = str(exc)
+            for secret in set(environ.values()):
+                if secret and len(secret) >= 4:
+                    message = message.replace(secret, "[REDACTED]")
+            run.results[name] = {"status": "error", "error": f"{type(exc).__name__}: {message}"}
     return run

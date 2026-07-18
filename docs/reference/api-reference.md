@@ -760,7 +760,7 @@ Build the top-level argparse parser.
 *function — defined in `infrastructure.orchestration.cli`*
 
 ```python
-main(argv: Sequence[str] | None=None, *, runner_factory=PipelineRunner, secure_runner=run_secure_pipeline, interactive_runner=_interactive) -> int
+main(argv: Sequence[str] | None=None, *, runner_factory: Any=PipelineRunner, secure_runner: Any=run_secure_pipeline, interactive_runner: Any=_interactive) -> int
 ```
 
 Entry point. Returns process exit code.
@@ -798,7 +798,7 @@ Return a deterministic menu string for the given current project.
 *function — defined in `infrastructure.orchestration.secure_run`*
 
 ```python
-run_secure_pipeline(repo_root: Path, options: SecureRunOptions, *, runner_cls=PipelineRunner, processor_factory=None) -> int
+run_secure_pipeline(repo_root: Path, options: SecureRunOptions, *, runner_cls: Any=PipelineRunner, processor_factory: Any=None) -> int
 ```
 
 Run the secure pipeline.
@@ -905,6 +905,10 @@ get_project_metadata(project_dir: Path) -> dict[str, Any]
 
 Extract metadata from project configuration files.
 
+### `load_promotion_attestation`
+
+*symbol — defined in `infrastructure.project`*
+
 ### `plan_copy`
 
 *symbol — defined in `infrastructure.project`*
@@ -928,6 +932,10 @@ class ProjectInfo
 ```
 
 Information about a discovered project.
+
+### `PromotionAttestation`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `public_ci_lint_paths`
 
@@ -986,6 +994,10 @@ validate_project_structure(project_dir: Path) -> tuple[bool, str]
 ```
 
 Validate that project has required directory structure.
+
+### `validate_promotion_attestation`
+
+*symbol — defined in `infrastructure.project`*
 
 ### `verify_codegraph_scope_payload`
 
@@ -1520,7 +1532,7 @@ Aggregate result of an ``archive_publication`` call.
 *function — defined in `infrastructure.publishing.archival.orchestrate`*
 
 ```python
-archive_publication(bundle: Path, *, providers: list[ArchivalProvider], dry_run: bool=True, output_receipts_path: Path | None=None) -> ArchivalRun
+archive_publication(bundle: Path, *, providers: list[ArchivalProvider], dry_run: bool=True, output_receipts_path: Path | None=None, repo_root: Path | None=None, project_name: str | None=None, credential_sources: Mapping[str, str] | None=None) -> ArchivalRun
 ```
 
 Mirror a publication bundle to N independent archival targets.

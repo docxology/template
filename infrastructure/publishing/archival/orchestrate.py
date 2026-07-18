@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Mapping
 from pathlib import Path
 
 from .models import (
@@ -80,6 +81,9 @@ def archive_publication(
     providers: list[ArchivalProvider],
     dry_run: bool = True,
     output_receipts_path: Path | None = None,
+    repo_root: Path | None = None,
+    project_name: str | None = None,
+    credential_sources: Mapping[str, str] | None = None,
 ) -> ArchivalRun:
     """Mirror a publication bundle to N independent archival targets.
 
@@ -95,6 +99,21 @@ def archive_publication(
     if not bundle.exists():
         raise ArchivalError(f"Bundle path does not exist: {bundle}")
 
+    preflight: dict[str, object] | None = None
+    if (repo_root is None) != (project_name is None):
+        raise ArchivalError("archival safety context requires both repo_root and project_name")
+    if repo_root is not None and project_name is not None:
+        from infrastructure.publishing.preflight import publishing_preflight
+
+        payload = [bundle] if bundle.is_file() else [path for path in sorted(bundle.rglob("*")) if path.is_file()]
+        preflight = publishing_preflight(
+            repo_root,
+            project_name,
+            payload,
+            credential_sources or {},
+            payload_root=repo_root / "output" / project_name,
+        )
+
     started = _now_utc_iso()
     receipts = tuple(provider.deposit(bundle, dry_run=dry_run) for provider in providers)
     finished = _now_utc_iso()
@@ -104,6 +123,7 @@ def archive_publication(
         receipts=receipts,
         started_utc=started,
         finished_utc=finished,
+        preflight=preflight,
     )
 
     if output_receipts_path is not None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from infrastructure.prose import analyze_files
@@ -66,6 +67,12 @@ class TestRunProsePipeline:
         assert artifacts.total_words > 0
         assert (root / "output" / "manuscript_report.json").exists()
         assert (root / "output" / "checks.json").exists()
+        summary_path = root / "output" / "evidence_summary.json"
+        assert summary_path.exists()
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        assert summary["schema_version"] == "template-prose/evidence-summary/1"
+        assert summary["diagnostic_only"] is True
+        assert set(summary["metrics"]) == {"readability", "citations", "bibliography", "structure", "quality_flags"}
 
     def test_grade_level_out_of_band_fails(self, tmp_path: Path):
         files = {"00_abstract.md": "# Abstract\n\nShort plain text.\n"}
@@ -205,6 +212,7 @@ class TestRunProsePipeline:
         )
         artifacts = run_prose_pipeline_with_analysis(config, project_root=root, write_outputs=False)
         assert artifacts.report_path is None
+        assert artifacts.evidence_summary_path is None
         assert not (root / "output").exists()
 
     def test_unused_bib_fails_when_strict(self, tmp_path: Path):

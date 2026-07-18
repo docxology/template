@@ -15,6 +15,21 @@ from infrastructure.validation.integrity.link_skip_policy import should_validate
 
 logger = get_logger(__name__)
 
+__all__ = [
+    "LinkCheckResult",
+    "_get_actual_project_names",
+    "_is_real_path_item",
+    "_resolve_template_path",
+    "_should_validate_path",
+    "_validate_import_path",
+    "check_file_reference",
+    "extract_code_blocks",
+    "extract_links",
+    "validate_directory_structures",
+    "validate_file_paths_in_code",
+    "validate_placeholder_consistency",
+]
+
 
 class LinkCheckResult(TypedDict):
     """Represents a single link check result from the link checker."""

@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from literature.corpus import Corpus
 from literature.models import Paper
 from multi_phase.search import (
     LLMFilterEngine,
@@ -216,6 +217,31 @@ def test_runner_initialization(config_path: Path, tmp_path: Path) -> None:
     assert runner.output_dir == output_dir.resolve()
 
 
+def test_phase_configuration_validation_rejects_invalid_temporal_bounds(tmp_path: Path) -> None:
+    config_path = tmp_path / "invalid.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "project_config": {
+                    "search_phases": {
+                        "phase_a": {
+                            "queries": ["first"],
+                            "deterministic_filters": {"min_year": 2025, "max_year": 2020},
+                        }
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    runner = MultiPhaseSearchRunner(config_path, output_dir=tmp_path / "output")
+    report = runner.validate_phase_configuration()
+    assert report["status"] == "fail"
+    assert report["issues"][0]["code"] == "invalid_year_bounds"
+    with pytest.raises(ValueError, match="Invalid phase configuration"):
+        runner.replay_fixture(tmp_path / "missing.jsonl")
+
+
 def test_llm_phase_filter_records_retained_provenance(
     config_path: Path,
     llm_server: str,
@@ -385,6 +411,52 @@ def test_phase_pipeline_writes_phase_provenance(tmp_path: Path) -> None:
     assert (output_dir / "phase_1_corpus.jsonl").is_file()
     metadata = json.loads((output_dir / "phase_metadata.json").read_text(encoding="utf-8"))
     assert metadata["phases"]["phase_1"]["papers_final"] == 0
+    manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["execution_mode"] == "live"
+    assert {entry["path"] for entry in manifest["artifacts"]} >= {
+        "phase_1_corpus.jsonl",
+        "combined_corpus.jsonl",
+        "phase_metadata.json",
+    }
+
+
+def test_fixture_replay_writes_deterministic_phase_artifacts(tmp_path: Path) -> None:
+    config = {
+        "project_config": {
+            "search_phases": {
+                "phase_1": {"name": "Broad", "queries": ["all papers"], "engines": {}},
+                "phase_2": {
+                    "name": "Focused",
+                    "queries": ['"focused" AND "exoplanet"'],
+                    "engines": {},
+                    "deterministic_filters": {"min_year": 2020},
+                },
+            }
+        }
+    }
+    config_path = tmp_path / "config.yaml"
+    config_path.write_text(yaml.safe_dump(config), encoding="utf-8")
+    corpus_path = tmp_path / "corpus.jsonl"
+    papers = [
+        Paper(title="Broad exoplanet paper", abstract="A focused atmosphere study", year=2022),
+        Paper(title="Older focused paper", abstract="exoplanet context", year=2019),
+    ]
+    Corpus(papers=papers).save(corpus_path)
+    output_dir = tmp_path / "results"
+    runner = MultiPhaseSearchRunner(config_path, output_dir=output_dir)
+
+    runner.replay_fixture(corpus_path)
+
+    metadata = json.loads((output_dir / "phase_metadata.json").read_text(encoding="utf-8"))
+    assert metadata["replay_mode"] == "fixture"
+    assert metadata["phases"]["phase_1"]["papers_final"] == 2
+    assert metadata["phases"]["phase_2"]["papers_final"] == 1
+    assert metadata["phases"]["phase_1"]["start_time"] == 0.0
+    assert (output_dir / "combined_corpus.jsonl").is_file()
+    assert (output_dir / "phase_2_corpus.jsonl").is_file()
+    manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["execution_mode"] == "fixture"
+    assert manifest["phase_order"] == ["phase_1", "phase_2"]
 
 
 def test_unknown_phase_fails_before_network(config_path: Path, tmp_path: Path) -> None:

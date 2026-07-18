@@ -15,6 +15,16 @@ from literature.corpus import Corpus
 from literature.models import Paper
 from literature.engine_dispatch import dispatch_ordered
 from literature.query_router import QueryRouter
+from literature.search_engines import (
+    arxiv_search_fn as _arxiv_search_fn,
+    biorxiv_search_fn as _biorxiv_search_fn,
+    crossref_search_fn as _crossref_search_fn,
+    europepmc_search_fn as _europepmc_search_fn,
+    openalex_search_fn as _openalex_search_fn,
+    pubmed_search_fn as _pubmed_search_fn,
+    semantic_scholar_search_fn as _semantic_scholar_search_fn,
+    sovietrxiv_search_fn as _sovietrxiv_search_fn,
+)
 
 
 class RetrievalObservation(TypedDict, total=False):
@@ -175,183 +185,6 @@ def apply_relevance_filter(
             pre_filter,
             norm_keywords,
         )
-
-
-def _fast_delay() -> Callable[[float], None]:
-    return lambda _seconds: None
-
-
-def _arxiv_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-) -> Callable[..., list[Paper]]:
-    from literature.arxiv_client import ARXIV_API_URL, DEFAULT_RATE_LIMIT_SECONDS, search_arxiv
-
-    url = base_url or ARXIV_API_URL
-    delay = _fast_delay() if fast else None
-    rate_limit = 0.0 if fast else DEFAULT_RATE_LIMIT_SECONDS
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(
-            search_arxiv(
-                query,
-                max_results=max_results,
-                base_url=url,
-                rate_limit_seconds=rate_limit,
-                delay_override=delay,
-            )
-        )
-
-    return _search
-
-
-def _semantic_scholar_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-) -> Callable[..., list[Paper]]:
-    from literature.semantic_scholar import S2_API_URL, search_semantic_scholar
-
-    url = base_url or S2_API_URL
-    delay = _fast_delay() if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(
-            search_semantic_scholar(
-                query,
-                max_results=max_results,
-                base_url=url,
-                delay_override=delay,
-            )
-        )
-
-    return _search
-
-
-def _openalex_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-) -> Callable[..., list[Paper]]:
-    from literature.openalex_client import OPENALEX_API_URL, search_openalex
-
-    url = base_url or OPENALEX_API_URL
-    delay = _fast_delay() if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(
-            search_openalex(
-                query,
-                max_results=max_results,
-                base_url=url,
-                delay_override=delay,
-            )
-        )
-
-    return _search
-
-
-def _crossref_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-) -> Callable[..., list[Paper]]:
-    from literature.crossref_client import CROSSREF_API_URL, search_crossref
-
-    url = base_url or CROSSREF_API_URL
-    delay = 0.0 if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(search_crossref(query, max_results=max_results, base_url=url, delay_override=delay))
-
-    return _search
-
-
-def _pubmed_search_fn(
-    esearch_url: str | None,
-    efetch_url: str | None,
-    *,
-    fast: bool,
-) -> Callable[..., list[Paper]]:
-    from literature.pubmed_client import PUBMED_EFETCH_URL, PUBMED_ESEARCH_URL, search_pubmed
-
-    es = esearch_url or PUBMED_ESEARCH_URL
-    ef = efetch_url or PUBMED_EFETCH_URL
-    delay = 0.0 if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(search_pubmed(query, max_results=max_results, esearch_url=es, efetch_url=ef, delay_override=delay))
-
-    return _search
-
-
-def _sovietrxiv_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-    api_email: str | None = None,
-    source: str | None = None,
-) -> Callable[..., list[Paper]]:
-    from literature.sovietrxiv_client import SOVIETRXIV_API_URL, search_sovietrxiv
-
-    url = base_url or SOVIETRXIV_API_URL
-    delay = 0.0 if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(
-            search_sovietrxiv(
-                query,
-                max_results=max_results,
-                base_url=url,
-                api_email=api_email,
-                source=source,
-                delay_override=delay,
-            )
-        )
-
-    return _search
-
-
-def _europepmc_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-) -> Callable[..., list[Paper]]:
-    from literature.europepmc_client import EUROPEPMC_API_URL, search_europepmc
-
-    url = base_url or EUROPEPMC_API_URL
-    delay = 0.0 if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(search_europepmc(query, max_results=max_results, base_url=url, delay_override=delay))
-
-    return _search
-
-
-def _biorxiv_search_fn(
-    base_url: str | None,
-    *,
-    fast: bool,
-    server: str = "biorxiv",
-) -> Callable[..., list[Paper]]:
-    from literature.biorxiv_client import BIORXIV_API_URL, search_biorxiv
-
-    url = base_url or BIORXIV_API_URL
-    delay = 0.0 if fast else None
-
-    def _search(query: str, max_results: int = 100) -> list[Paper]:
-        return list(
-            search_biorxiv(
-                query,
-                max_results=max_results,
-                base_url=url,
-                delay_override=delay,
-                server=server,
-            )
-        )
-
-    return _search
 
 
 def run_literature_search(

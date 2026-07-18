@@ -12,8 +12,8 @@
     {
       "contract_match": true,
       "path": "output/figures/analysis_dag.png",
-      "sha256": "ee8771c25d123da867113ab82f3c7ffb46fa433f828b002e335afa1e2e7e8588",
-      "size_bytes": 52493,
+      "sha256": "9b9b25a6a71c1ba940e42a68624af9377b191a9527c97f61e225944352b90b48",
+      "size_bytes": 58900,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -21,8 +21,8 @@
     {
       "contract_match": true,
       "path": "output/figures/deviation_timeline.png",
-      "sha256": "3bb567a183363947c196cb564cc28a4d21bfbcb8ca34e7e22599c6288a86d859",
-      "size_bytes": 41480,
+      "sha256": "fcac1b58a867351ff6fe980de3d672b2af8ddfa66372b25f231e7641beeeb5f1",
+      "size_bytes": 43677,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -39,8 +39,8 @@
     {
       "contract_match": true,
       "path": "output/figures/hypothesis_map.png",
-      "sha256": "cc4b3900a8bef4debbccb74a30c91bdfdc12162994aaa96be3e2f364c4e0d64c",
-      "size_bytes": 45722,
+      "sha256": "f6efe2620574e4bfd685819854c707bd52ca7cae771e43ee6cf9c07a15c3ac45",
+      "size_bytes": 47210,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -48,8 +48,8 @@
     {
       "contract_match": true,
       "path": "output/figures/permutation_result.png",
-      "sha256": "6f4693704ffa6ddcb4817d8d2273adb6ffd0f044d78261bf4458376f8531f81f",
-      "size_bytes": 64290,
+      "sha256": "110491e55602995a84fcc88918ff6afce20a36bb6cd44eddf6d9afe21637c7a5",
+      "size_bytes": 65960,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

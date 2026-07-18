@@ -72,16 +72,24 @@ DISCOVERY_PATTERNS: tuple[str, ...] = (
 def test_runner_dependency_specs() -> tuple[str, ...]:
     """Return ``uv --with`` specs for project-level pytest subprocesses.
 
-    The multi-project runner appends every project's traces into one coverage
-    SQLite database. Mixing project environments with different ``coverage``
-    versions can leave that shared file unreadable by later subprocesses, so
-    pin ``coverage`` to the workspace version that launched the orchestrator.
+    Pin the complete runner toolchain to the workspace versions. A project
+    subprocess must not silently resolve a newer pytest/plugin combination
+    than the orchestrator's tested environment: pytest 9.1's temporary-path
+    behavior, for example, can invalidate long-running project fixtures even
+    when the same suite passes under the workspace version. The multi-project
+    runner also appends every project's traces into one coverage SQLite
+    database, so coverage is pinned to the workspace version for a compatible
+    data format.
     """
-    deps = list(TEST_RUNNER_BASE_DEPS)
-    try:
-        deps.append(f"coverage=={version('coverage')}")
-    except PackageNotFoundError:
-        logger.warning("coverage package not found; project test subprocesses will not pin coverage")
+    deps: list[str] = []
+    for package in (*TEST_RUNNER_BASE_DEPS, "coverage"):
+        try:
+            deps.append(f"{package}=={version(package)}")
+        except PackageNotFoundError:
+            if package == "coverage":
+                logger.warning("coverage package not found; project test subprocesses will not pin coverage")
+            else:
+                deps.append(package)
     return tuple(deps)
 
 
@@ -387,13 +395,15 @@ def build_union_pytest_command(
     marker_expr: str | None,
     timeout: int,
     parallel: str | int | None = None,
+    fail_under: int | None = None,
 ) -> list[str]:
     """Build argv for one project in a multi-project combined-coverage run.
 
     When *parallel* (or the ``PYTEST_XDIST_WORKERS`` env var) requests it, the
     per-project pytest invocation is parallelized with pytest-xdist. pytest-cov
-    combines per-worker coverage data before the shared datafile is written, so
-    the ``--cov-append`` union across projects is unaffected.
+    combines per-worker coverage data before that project's isolated datafile
+    is written. The runner combines those files only after all project floors
+    have been evaluated.
     """
     resolved_root = project_root.resolve()
     src_dir = resolved_root / "src"
@@ -417,6 +427,8 @@ def build_union_pytest_command(
     ]
     if marker_expr:
         pytest_args.extend(["-m", marker_expr])
+    if fail_under is not None:
+        pytest_args.append(f"--cov-fail-under={fail_under}")
     if not is_first:
         pytest_args.append("--cov-append")
     pytest_args.extend(resolve_xdist_args(parallel))

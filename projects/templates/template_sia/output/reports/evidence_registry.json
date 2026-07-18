@@ -147,11 +147,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:23:56+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml project_config.sia.max_generations default",
       "source_field": "max-generations",
-      "source_path": "output/data/sia_loop_result.json",
+      "source_path": "output/runs/run_1/run_summary.json",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -159,11 +159,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/src/fixtures/recorded_generations/ fixture generation count",
       "source_field": "fixture-replay-gens",
-      "source_path": "output/data/sia_loop_result.json",
+      "source_path": "output/runs/run_1/run_summary.json",
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
@@ -315,11 +315,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:23:56+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml project_config.sia.max_generations default (numeric variant)",
       "source_field": "max-generations",
-      "source_path": "output/data/sia_loop_result.json",
+      "source_path": "output/runs/run_1/run_summary.json",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -327,11 +327,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/src/fixtures/recorded_generations/ fixture generation count (numeric variant)",
       "source_field": "fixture-replay-gens",
-      "source_path": "output/data/sia_loop_result.json",
+      "source_path": "output/runs/run_1/run_summary.json",
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
@@ -351,11 +351,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/tasks/mini_classify/public/ public train fraction",
       "source_field": "public-train-split",
-      "source_path": "tasks/mini_classify/public/data.csv",
+      "source_path": "tasks/mini_classify/data/public/train.csv",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -371,19 +371,19 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "70%"
+      "value": "70"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/tasks/mini_classify/public/ public train fraction (numeric variant)",
       "source_field": "public-train-split",
-      "source_path": "tasks/mini_classify/public/data.csv",
+      "source_path": "tasks/mini_classify/data/public/train.csv",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
-      "value": "70%"
+      "value": "70"
     },
     {
       "active": true,
@@ -395,19 +395,19 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "70"
+      "value": "70%"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/tasks/mini_classify/public/ public train fraction (numeric variant)",
       "source_field": "public-train-split",
-      "source_path": "tasks/mini_classify/public/data.csv",
+      "source_path": "tasks/mini_classify/data/public/train.csv",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
-      "value": "70"
+      "value": "70%"
     },
     {
       "active": true,
@@ -627,11 +627,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/tasks/mini_classify/ task binary classification",
       "source_field": "task-classes",
-      "source_path": "tasks/mini_classify/public/data.csv",
+      "source_path": "tasks/mini_classify/data/public/train.csv",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -855,11 +855,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:45+00:00",
       "kind": "number",
       "source": "projects/templates/template_sia/tasks/mini_classify/ task binary classification (numeric variant)",
       "source_field": "task-classes",
-      "source_path": "tasks/mini_classify/public/data.csv",
+      "source_path": "tasks/mini_classify/data/public/train.csv",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -935,7 +935,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "50%"
+      "value": "50"
     },
     {
       "active": true,
@@ -947,7 +947,7 @@
       "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
-      "value": "50%"
+      "value": "50"
     },
     {
       "active": true,
@@ -959,7 +959,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "50"
+      "value": "50%"
     },
     {
       "active": true,
@@ -971,7 +971,7 @@
       "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
-      "value": "50"
+      "value": "50%"
     },
     {
       "active": true,
@@ -1031,7 +1031,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "30%"
+      "value": "30"
     },
     {
       "active": true,
@@ -1043,7 +1043,7 @@
       "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
-      "value": "30%"
+      "value": "30"
     },
     {
       "active": true,
@@ -1055,7 +1055,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "30"
+      "value": "30%"
     },
     {
       "active": true,
@@ -1067,7 +1067,7 @@
       "source_tier": "claim_ledger",
       "stale": false,
       "tolerance": 0.0,
-      "value": "30"
+      "value": "30%"
     },
     {
       "active": true,
@@ -1092,54 +1092,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.25"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[7].value (numeric variant)",
-      "source_field": "$.claims[7].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "25%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
-      "kind": "number",
-      "source": "src/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD (numeric variant)",
-      "source_field": "fixture-generation-3-threshold",
-      "source_path": "src/fixtures/recorded_generations/gen_3/target_agent.py",
-      "source_tier": "claim_ledger",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "25%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[7].value (numeric variant)",
-      "source_field": "$.claims[7].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "25"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
-      "kind": "number",
-      "source": "src/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD (numeric variant)",
-      "source_field": "fixture-generation-3-threshold",
-      "source_path": "src/fixtures/recorded_generations/gen_3/target_agent.py",
-      "source_tier": "claim_ledger",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "25"
     },
     {
       "active": true,
@@ -1200,6 +1152,54 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.2"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-13T18:59:32+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[7].value (numeric variant)",
+      "source_field": "$.claims[7].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "25"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-13T18:59:32+00:00",
+      "kind": "number",
+      "source": "src/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD (numeric variant)",
+      "source_field": "fixture-generation-3-threshold",
+      "source_path": "src/fixtures/recorded_generations/gen_3/target_agent.py",
+      "source_tier": "claim_ledger",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "25"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-13T18:59:32+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[7].value (numeric variant)",
+      "source_field": "$.claims[7].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "25%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-13T18:59:32+00:00",
+      "kind": "number",
+      "source": "src/fixtures/recorded_generations/gen_3/target_agent.py THRESHOLD (numeric variant)",
+      "source_field": "fixture-generation-3-threshold",
+      "source_path": "src/fixtures/recorded_generations/gen_3/target_agent.py",
+      "source_tier": "claim_ledger",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "25%"
     },
     {
       "active": true,
@@ -1959,7 +1959,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:23:56+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.project_config.sia.run_id (numeric variant)",
       "source_field": "$.project_config.sia.run_id",
@@ -1967,11 +1967,11 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pause_recommendations.json:$.recommendations[1].score (numeric variant)",
       "source_field": "$.recommendations[1].score",
@@ -1979,11 +1979,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pause_recommendations.json:$.recommendations[2].score (numeric variant)",
       "source_field": "$.recommendations[2].score",
@@ -1991,11 +1991,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pause_recommendations.json:$.recommendations[3].score (numeric variant)",
       "source_field": "$.recommendations[3].score",
@@ -2003,11 +2003,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..md (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..md",
@@ -2015,11 +2015,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:09+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..aux (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..aux",
@@ -2027,11 +2027,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..blg (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..blg",
@@ -2039,11 +2039,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..bib (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..bib",
@@ -2051,11 +2051,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..pdf (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..pdf",
@@ -2063,11 +2063,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..tex (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..tex",
@@ -2075,11 +2075,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..toc (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..toc",
@@ -2087,11 +2087,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..bbl (numeric variant)",
       "source_field": "$.output_statistics.directories.pdf.extensions..bbl",
@@ -2099,11 +2099,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.web.extensions..md (numeric variant)",
       "source_field": "$.output_statistics.directories.web.extensions..md",
@@ -2111,11 +2111,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.data.file_count (numeric variant)",
       "source_field": "$.output_statistics.directories.data.file_count",
@@ -2123,11 +2123,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.data.extensions..json (numeric variant)",
       "source_field": "$.output_statistics.directories.data.extensions..json",
@@ -2135,11 +2135,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.reports.extensions..jsonl (numeric variant)",
       "source_field": "$.output_statistics.directories.reports.extensions..jsonl",
@@ -2147,11 +2147,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.logs.file_count (numeric variant)",
       "source_field": "$.output_statistics.directories.logs.file_count",
@@ -2159,11 +2159,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.directories.logs.extensions..log (numeric variant)",
       "source_field": "$.output_statistics.directories.logs.extensions..log",
@@ -2171,11 +2171,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..aux (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..aux",
@@ -2183,11 +2183,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..blg (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..blg",
@@ -2195,11 +2195,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..bib (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..bib",
@@ -2207,11 +2207,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..pdf (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..pdf",
@@ -2219,11 +2219,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..tex (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..tex",
@@ -2231,11 +2231,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..toc (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..toc",
@@ -2243,11 +2243,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..bbl (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..bbl",
@@ -2255,11 +2255,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..jsonl (numeric variant)",
       "source_field": "$.output_statistics.file_counts_by_type..jsonl",
@@ -2267,11 +2267,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..md (numeric variant)",
       "source_field": "$.directories.pdf.extensions..md",
@@ -2279,11 +2279,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..aux (numeric variant)",
       "source_field": "$.directories.pdf.extensions..aux",
@@ -2291,11 +2291,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..blg (numeric variant)",
       "source_field": "$.directories.pdf.extensions..blg",
@@ -2303,11 +2303,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..bib (numeric variant)",
       "source_field": "$.directories.pdf.extensions..bib",
@@ -2315,11 +2315,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..pdf (numeric variant)",
       "source_field": "$.directories.pdf.extensions..pdf",
@@ -2327,11 +2327,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..tex (numeric variant)",
       "source_field": "$.directories.pdf.extensions..tex",
@@ -2339,11 +2339,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..toc (numeric variant)",
       "source_field": "$.directories.pdf.extensions..toc",
@@ -2351,11 +2351,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..bbl (numeric variant)",
       "source_field": "$.directories.pdf.extensions..bbl",
@@ -2363,11 +2363,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.web.extensions..md (numeric variant)",
       "source_field": "$.directories.web.extensions..md",
@@ -2375,11 +2375,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.figures.extensions..json (numeric variant)",
       "source_field": "$.directories.figures.extensions..json",
@@ -2387,11 +2387,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.reports.extensions..jsonl (numeric variant)",
       "source_field": "$.directories.reports.extensions..jsonl",
@@ -2399,11 +2399,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-13T18:59:32+00:00",
+      "checked_at": "2026-07-18T03:15:26+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.reports.extensions..html (numeric variant)",
       "source_field": "$.directories.reports.extensions..html",
@@ -2411,7 +2411,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     }
   ],
   "schema": "template-evidence-registry-report-v1",

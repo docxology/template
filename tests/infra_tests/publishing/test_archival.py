@@ -287,3 +287,21 @@ def test_archive_publication_zero_providers(bundle_dir: Path) -> None:
     run = archive_publication(bundle_dir, providers=[], dry_run=True)
     assert run.receipts == ()
     assert run.all_ok  # vacuously true
+
+
+def test_archive_publication_refuses_local_only_project_before_provider(tmp_path: Path) -> None:
+    project = tmp_path / "projects/working/private"
+    project.mkdir(parents=True)
+    output = tmp_path / "output/working/private/executable_bundle"
+    output.mkdir(parents=True)
+    (output / "paper.pdf").write_bytes(b"%PDF-1.4 private")
+
+    with pytest.raises(ValueError, match="local-only"):
+        archive_publication(
+            output,
+            providers=[ZenodoProvider(token="should-not-be-used")],
+            dry_run=False,
+            repo_root=tmp_path,
+            project_name="working/private",
+            credential_sources={"zenodo": "environment"},
+        )

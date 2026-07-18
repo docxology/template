@@ -40,6 +40,7 @@ import socket
 import struct
 import threading
 import time
+from collections.abc import Callable
 
 # Global flag: set to True after a flush (CMD_INIT) resets the TPM.
 # The data handler checks this to decide whether to send TPM2_Startup.
@@ -68,7 +69,7 @@ SWTPM_INIT_FLAG_DELETE_VOLATILE = 1
 
 def handle_ctrl_client(
     client_sock: socket.socket,
-    client_addr: tuple,
+    client_addr: tuple[str, int],
     swtpm_ctrl_host: str,
     swtpm_ctrl_port: int,
 ) -> None:
@@ -150,7 +151,7 @@ def handle_ctrl_client(
 
 def handle_data_client(
     client_sock: socket.socket,
-    client_addr: tuple,
+    client_addr: tuple[str, int],
     swtpm_data_host: str,
     swtpm_data_port: int,
     swtpm_ctrl_host: str = "127.0.0.1",
@@ -314,7 +315,7 @@ def recv_exactly(sock: socket.socket, n: int) -> bytes | None:
 def serve(
     host: str,
     port: int,
-    handler,
+    handler: Callable[..., None],
     swtpm_host: str,
     swtpm_port: int,
     label: str,

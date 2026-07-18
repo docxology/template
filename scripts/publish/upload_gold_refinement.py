@@ -53,6 +53,8 @@ TARGETS = UploadTargets(
     github_repo="docxology/template_gold_refinement",
     osf_title="Refinement of Gold: A Metallurgical Analogy for Scientific Manuscript Composition",
     site_id="template-gold-refinement",
+    repo_root=REPO,
+    project_name="templates/template_gold_refinement",
 )
 
 
@@ -96,6 +98,7 @@ def main() -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "mode": run.mode,
+        "preflight": run.preflight,
         "timestamp_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "results": run.results,
     }

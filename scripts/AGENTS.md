@@ -81,7 +81,9 @@ shims where noted in each subpackage's `AGENTS.md`.
 > architecture-overview) can be invoked together via
 > `uv run python -m infrastructure.core.health`. The module lives in
 > `infrastructure/core/health.py`; this directory remains the
-> per-gate entry point. Add `--json` to feed CI artefacts.
+> per-gate entry point. Independent gates run with bounded concurrency by
+> default; use `--workers 1` for serial diagnostics and `--json` for CI
+> artefacts.
 
 ## Stage Mapping
 
@@ -146,7 +148,7 @@ orchestrator:
 | Script invocation | Delegates to | Notes |
 | --- | --- | --- |
 | `01_run_tests.py` | `infrastructure.reporting.pipeline_test_runner.execute_test_pipeline` | Default path: infra-then-project for one selected project. |
-| `01_run_tests.py --project-only --all-projects` | `infrastructure.core.test_runner.run_per_project_pytest` | One pytest process per discovered project (avoids `tests/conftest.py` plugin-name collision), `--cov-append` accumulation, combined union `coverage report --fail-under=75` (`DEFAULT_FAIL_UNDER`). Add `--public-projects` for the public release/all-project lane; it restricts the loop to `infrastructure.project.public_scope`, so local rotating symlinks do not affect public-repo validation. CI `test-project` instead runs one isolated matrix job per public exemplar. **`./run.sh --all-projects --pipeline`** still runs the **per-project 90%** gate inside each project's own pytest invocation; the **75% union** gate applies only via this orchestrator path. |
+| `01_run_tests.py --project-only --all-projects` | `infrastructure.core.test_runner.run_per_project_pytest` | One pytest process and isolated coverage datafile per discovered project (avoids `tests/conftest.py` plugin-name collision and parent coverage contamination), followed by a combined union `coverage report --fail-under=75` (`DEFAULT_FAIL_UNDER`). Add `--public-projects` for the public release/all-project lane; it restricts the loop to `infrastructure.project.public_scope`, so local rotating symlinks do not affect public-repo validation. CI `test-project` instead runs one isolated matrix job per public exemplar. **`./run.sh --all-projects --pipeline`** still runs the **per-project 90%** gate inside each project's own pytest invocation; the **75% union** gate applies only via this orchestrator path. |
 | `02_run_analysis.py` | `infrastructure.core.runtime._python_env.build_analysis_script_cmd_and_env` | |
 | `03_render_pdf.py` | `infrastructure.rendering.pipeline` | |
 | `04_validate_output.py` | `infrastructure.validation.cli` | |

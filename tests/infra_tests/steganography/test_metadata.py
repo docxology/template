@@ -7,11 +7,34 @@ from pathlib import Path
 import pytest
 
 from infrastructure.steganography.config import DocumentMetadata
-from infrastructure.steganography.metadata import build_document_metadata, build_xmp_packet
+from infrastructure.steganography.metadata import (
+    build_document_metadata,
+    build_xmp_packet,
+    classify_publication_metadata,
+)
 from tests.infra_tests.steganography.conftest import has_pypdf
 
 
 class TestMetadata:
+    def test_publication_metadata_classifier_allows_public_fields(self):
+        result = classify_publication_metadata({"/Title": "Public paper", "/Author": "Author"})
+        assert result == {
+            "status": "pass",
+            "keys": ["/Author", "/Title"],
+            "issues": [],
+        }
+
+    def test_publication_metadata_classifier_rejects_recipient_and_secret_values(self):
+        result = classify_publication_metadata(
+            {
+                "/RecipientID": "reviewer-1",
+                "/Title": "token=must-not-leak",
+            }
+        )
+        assert result["status"] == "fail"
+        assert any("unexpected metadata key" in issue for issue in result["issues"])
+        assert any("credential-like value" in issue for issue in result["issues"])
+
     def test_build_document_metadata(self):
         from infrastructure.steganography.config import DocumentMetadata
         from infrastructure.steganography.metadata import build_document_metadata

@@ -7,6 +7,7 @@ construction with review-specific configuration.
 import os
 import shutil
 import time
+from typing import Any, TYPE_CHECKING
 
 from infrastructure.core.logging.utils import (
     get_logger,
@@ -32,8 +33,13 @@ from infrastructure.llm.utils.ollama import (
 
 from infrastructure.llm.core._prompt_availability import PROMPT_SYSTEM_AVAILABLE
 
+if TYPE_CHECKING:
+    from infrastructure.llm.prompts.loader import get_default_loader
+else:
+    get_default_loader: Any
+
 if PROMPT_SYSTEM_AVAILABLE:
-    from infrastructure.llm.core._prompt_availability import get_default_loader
+    from infrastructure.llm.prompts.loader import get_default_loader
 
 logger = get_logger(__name__)
 

@@ -4,9 +4,16 @@ Centralises the try/except-at-import pattern so it only runs once.
 Import from here instead of duplicating the try/except block.
 """
 
+from typing import Any
+
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
+
+get_default_loader: Any
+PromptComposer: Any
+
+__all__ = ["PROMPT_COMPOSER_AVAILABLE", "PROMPT_SYSTEM_AVAILABLE", "get_default_loader", "PromptComposer"]
 
 try:
     from infrastructure.llm.prompts.composer import PromptComposer  # noqa: F401

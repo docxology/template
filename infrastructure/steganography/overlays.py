@@ -8,6 +8,7 @@ document-ID stamps.
 
 import io
 from dataclasses import dataclass
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -32,7 +33,7 @@ class FooterConfig:
 # ── Lazy imports ─────────────────────────────────────────────────────────
 
 
-def _get_reportlab():
+def _get_reportlab() -> tuple[Any, Any, Any]:
     """Lazily import reportlab components."""
     try:
         from reportlab.lib.pagesizes import letter

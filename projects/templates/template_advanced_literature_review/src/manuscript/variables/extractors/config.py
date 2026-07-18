@@ -38,7 +38,8 @@ def extract_config_tokens(ctx: ExtractContext) -> dict[str, str]:
         "sovietrxiv": "SovietRxiv",
         "chinarxiv": "ChinaRxiv",
         "europepmc": "Europe PMC",
-        "biorxiv": "bioRxiv/medRxiv",
+        "biorxiv": "bioRxiv",
+        "medrxiv": "medRxiv",
     }
 
     # Only include enabled engines, fallback to all if none specified

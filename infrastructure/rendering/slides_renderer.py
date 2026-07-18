@@ -44,6 +44,7 @@ from infrastructure.rendering.latex_texttt import (
     make_long_texttt_breakable,
     make_pandoc_reference_tokens_breakable,
 )
+from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
 
@@ -89,6 +90,9 @@ class SlidesRenderer:
 
         output_ext = "pdf" if output_format == "beamer" else "html"
         output_file = output_dir / f"{source_file.stem}_slides.{output_ext}"
+        profile = self.config.security()
+        profile.validate_output(output_file)
+        profile.validate_source(source_file)
 
         # For beamer, we need to handle figure paths specially
         if output_format == "beamer":
@@ -114,7 +118,13 @@ class SlidesRenderer:
         logger.info(f"Generating reveal.js slides from {source_file}")
 
         try:
-            self._process_runner(cmd, check=True, capture_output=True, text=True, timeout=600)
+            self._process_runner(
+                cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+                **subprocess_options(self.config.security(), 600),
+            )
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -184,7 +194,13 @@ class SlidesRenderer:
 
         try:
             # Convert markdown to LaTeX
-            self._process_runner(cmd, check=True, capture_output=True, text=True, timeout=600)
+            self._process_runner(
+                cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+                **subprocess_options(self.config.security(), 600),
+            )
 
             # Read LaTeX content and fix figure paths
             tex_content = temp_tex.read_text(encoding="utf-8")

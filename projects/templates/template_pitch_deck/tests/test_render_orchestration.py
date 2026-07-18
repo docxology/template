@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import logging
+import random
 from pathlib import Path
 
 import pytest
 import yaml
 from pypdf import PdfReader
+from infrastructure.rendering.slide_deck import Slide
 
 from paths import locate_repo_root, project_root
 from render_orchestration import (
@@ -196,3 +198,42 @@ def test_rendered_output_actually_reflects_token_value_not_a_cached_default(tmp_
     assert "999999" not in real_text
     assert "999999" in flipped_text
     assert real_text != flipped_text
+
+
+@pytest.mark.parametrize("slide_count", (0, 1, 11, 12, 38, 39, 58, 59, 80))
+def test_budget_filter_is_prefix_preserving_and_non_mutating(slide_count):
+    from infrastructure.rendering.slide_deck import DeckContent, SlideBudget, filter_deck_for_budget
+
+    rng = random.Random(slide_count)
+    original = tuple(
+        Slide(
+            title=f"generated-{index}",
+            bullets=tuple(f"bullet-{rng.randrange(1000)}" for _ in range(index % 5)),
+            kind=("content", "diagram", "stat", "quote", "section")[index % 5],
+        )
+        for index in range(slide_count)
+    )
+    deck = DeckContent(title="Property deck", slides=original)
+    for budget in SlideBudget:
+        filtered = filter_deck_for_budget(deck, budget)
+        assert filtered.slides == original[: budget.max_slides]
+        assert deck.slides == original
+
+
+@pytest.mark.parametrize(
+    "names",
+    (
+        (),
+        ("A",),
+        ("A", "B", "TOKEN_123"),
+        tuple(f"TOKEN_{index}" for index in range(12)),
+    ),
+)
+def test_token_resolution_handles_adversarial_uppercase_token_sequences(names):
+    from token_resolution import resolve_tokens
+
+    source = " ".join(f"{{{{{name}}}}}" for name in names)
+    values = {name: f"value-{index}" for index, name in enumerate(names)}
+    resolved = resolve_tokens(source, values)
+    assert "{{" not in resolved
+    assert all(value in resolved for value in values.values())

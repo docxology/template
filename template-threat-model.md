@@ -1,6 +1,6 @@
 # Template Repository Threat Model
 
-Generated: 2026-07-09
+Generated: 2026-07-17
 
 Scope: `docxology/template` style public research-project template checkout at
 `/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/template`.
@@ -34,14 +34,16 @@ The main residual risks are:
 - Sensitive areas have a bus factor of 1 across every queried category. The
   ownership map found no orphaned sensitive code, but all sensitive tags are
   historically controlled by one owner.
-- `TO-DO.md` was stale about R1/R2/R7; the detailed remediation file shows those
-  shipped and R10 is the remaining repo-wide review item.
-- `.github/CODEOWNERS` has a default catch-all, but its explicit
-  `projects/templates/*` roster has drifted from the current
+- The root `TO-DO.md` is now future-only; shipped remediation history remains in
+  the dated review record and historical release notes.
+- `.github/CODEOWNERS` has a default catch-all and its explicit
+  `projects/templates/*` roster is generated/parity-checked against the current
   `PUBLIC_PROJECT_NAMES` list.
 - Publication, archival, and upload tools accept real credentials from env or
-  local config; dry-run defaults lower risk, but payload/path preflight should be
-  made explicit before real deposits.
+  local config; dry-run defaults lower risk, and the shared payload/metadata
+  preflight now runs before provider invocation. Hostile rendering and the
+  offline promotion validator are shipped; private-sidecar promotion wiring
+  and external ownership enforcement remain open.
 - LLM, rendering, and steganography surfaces intentionally process manuscript
   content and external/local model inputs. They need strong scoping,
   sanitization, and "do not upload private paths" guarantees.
@@ -204,16 +206,19 @@ Non-capabilities assumed:
      paths.
    - Current controls: git guards, public roster, generated-artifact guard.
    - Gap: every new discovery surface must prove it intersects public/tracked
-     paths. Root TODO had stale R2 status, which indicates this risk needs an
-     explicit regression, even though detailed remediation says R2 shipped.
+     paths. The current regression suite covers the public-scope and generated
+     artifact boundaries; every new discovery or manifest surface still needs
+     the same invariant.
 
 2. Accidental real publication of wrong payload.
    - Path: maintainer runs a publish/archive/upload command with credentials and
      `--commit` or non-dry-run options against a bundle containing private or
      stale generated files.
    - Current controls: dry-run defaults and provider-specific token checks.
-   - Gap: real publish mode should emit and validate a redacted payload manifest
-     and refuse local-only paths.
+   - Current status: archive and upload dispatch now require the shared exact
+     payload/credential-source preflight before provider invocation; the full
+     offline publishing suite covers local-only paths, duplicates, metadata
+     secrets, and invalid payloads.
 
 3. CI/release supply-chain downgrade.
    - Path: alter workflow permissions, action pins, installer URLs, audit ignore
@@ -228,8 +233,9 @@ Non-capabilities assumed:
      to reveal hidden repo context, secrets, or local paths.
    - Current controls: sanitization is default in `LLMClient.query()` and
      `stream_query()`.
-   - Gap: `query_raw()` bypasses context, system prompt injection, and
-     sanitization by design; callers must be narrow and documented.
+   - Current status: the allowlist is fail-closed for named callers, every
+     source bypass is inventoried, and the offline LLM suite covers refusal and
+     approved boundary paths.
 
 5. Rendering toolchain abuse.
    - Path: malicious Markdown/LaTeX/SVG/Mermaid/HTML content triggers a Pandoc,
@@ -237,31 +243,36 @@ Non-capabilities assumed:
      unsafe HTML.
    - Current controls: list-based subprocess calls, timeouts, HTML hardening and
      path normalization.
-   - Gap: hostile inputs should be rendered in a sandbox or minimal container,
-     especially for external submissions.
+   - Current status: the explicit untrusted-render profile isolates environment,
+     credentials, time, and output roots; active-content/file-inclusion fixtures
+     fail before tool invocation and process-group timeout cleanup is tested.
 
 6. Provenance metadata privacy failure.
    - Path: per-recipient or project identifiers are embedded into PDFs and later
      distributed beyond intended scope, or recipient keys are committed.
    - Current controls: existing steganography threat model says no tracking on
      open and keys stay outside the repo.
-   - Gap: publication preflight should classify embedded metadata and fail if it
-     contains recipient secrets or unexpected identifiers.
+   - Current status: publication preflight classifies embedded metadata and
+     refuses credential-like values before provider invocation; secure-render
+     and publication negative tests cover the refusal paths.
 
 7. CODEOWNERS drift hides review intent.
    - Path: new templates are added to `PUBLIC_PROJECT_NAMES`; default `*` still
      covers them, but explicit project ownership lines do not communicate the
      intended review owner.
    - Current controls: `.github/CODEOWNERS:6` catch-all.
-   - Gap: explicit roster parity with `PUBLIC_PROJECT_NAMES` is not enforced.
+   - Current status: generated roster parity is enforced by the CODEOWNERS
+     generator and its regression gate; external branch protection remains an
+     administrator-owned control.
 
 8. Single-maintainer sensitive-area concentration.
    - Path: all sensitive categories are historically owned by one person, so a
      compromised account or unavailable maintainer can alter high-risk surfaces
      without independent code-history counterweight.
    - Current controls: public CI and local gates.
-   - Gap: governance, not code: add required review, generated CODEOWNERS parity,
-     and periodic ownership-map review for sensitive tags.
+   - Gap: governance, not code: external branch protection must require the
+     Regression Tier and sensitive-area review; the sole-owner exceptions are
+     documented in the ownership map.
 
 9. Private control-plane promotion without closing auth/export policy gaps.
    - Path: a private project becomes active/public/deployed while TODO gaps
@@ -276,51 +287,25 @@ Non-capabilities assumed:
 
 | ID | Threat | Likelihood | Impact | Severity | Evidence | Recommended mitigation |
 | --- | --- | --- | --- | --- | --- | --- |
-| TM-001 | Private/local project names or content leak into public docs/manifests/published artifacts | Medium | Critical | Critical | `docs/maintenance/review-remediation-2026-07.md:123`, `git_guards.py:122`, `public_scope.py:19` | Add tracked/public-scope invariant tests for every discovery and manifest generator; keep R2-style regression close to affected code |
-| TM-002 | Real publish/deposit uploads wrong payload or local-only files | Medium | High | High | `publish_project_release.py:104`, `archive_publication.py:66`, `_adapter_http.py:39` | Require redacted payload manifest and local-only path refusal before any non-dry-run publish |
+| TM-001 | Private/local project names or content leak into public docs/manifests/published artifacts | Medium | Critical | Critical | `git_guards.py:122`, `public_scope.py:19`, `scripts/audit/check_tracked_all.py` | Keep tracked/public-scope invariant tests close to every discovery and manifest generator; active follow-up is tracked in `TO-DO.md` |
+| TM-002 | Real publish/deposit uploads wrong payload or local-only files | Medium | High | High | `publish_project_release.py:104`, `archive_publication.py:66`, `_adapter_http.py:39` | Keep the shared redacted payload/metadata preflight mandatory before every non-dry-run provider invocation |
 | TM-003 | Credential value or credentialed URL leaks in logs, receipts, config display, or generated reports | Low-Medium | High | High | `credentials.py:64`, `publish_project_release.py:47` | Add reusable secret-redaction helper to publish receipts/logging and test token-shaped URL redaction |
 | TM-004 | CI/release workflow modified to weaken security gates or run with excess permissions | Medium | High | High | `.github/workflows/ci.yml:14`, `.github/workflows/release.yml:13`, `.pre-commit-config.yaml:115` | Protect workflow files through CODEOWNERS and branch protection; audit `permissions` deltas in CI |
 | TM-005 | Dependency/action supply chain compromise | Medium | High | High | `.github/workflows/ci.yml:45`, `.github/workflows/ci.yml:649`, `bandit.yaml:44` | Keep action pins immutable, keep pip-audit ignore file time-bounded, and require review for lockfile/security config deltas |
-| TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `sanitization.py:37`, `client.py:163`, `client.py:224` | Restrict `query_raw()` to named internal call sites, add tests preventing raw calls on project/manuscript text |
-| TM-007 | Rendering hostile manuscripts causes local file disclosure, command execution, unsafe HTML, or denial of service | Medium | High | High | `pdf_renderer.py:117`, `pdf_renderer.py:131`, `web_renderer.py:160` | Run hostile/untrusted rendering in a sandbox/container and add malicious fixture tests for file inclusion and long-running inputs |
-| TM-008 | Provenance/watermark metadata leaks recipient/operator identifiers or keys | Low-Medium | High | High | `THREAT_MODEL.md:66`, `encryption.py:50`, `core.py:128` | Add metadata classification preflight and fail publish when recipient secrets or unexpected identifiers appear |
-| TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS:23`, `public_scope.py:19` | Generate CODEOWNERS project stanza or add a parity test against `PUBLIC_PROJECT_NAMES` |
-| TM-010 | Security-sensitive ownership has bus factor 1 | High | Medium-High | High | `security-analysis/ownership-map/summary.json` | Add formal sensitive-area owner map, required reviews, and periodic ownership-map report |
+| TM-006 | LLM prompt injection or raw-query misuse leaks hidden context/private content | Medium | High | High | `sanitization.py:37`, `client.py:163`, `client.py:224`, `core/bypass.py` | Keep `query_raw()` and sanitization opt-outs restricted to named callers, and expand offline tests preventing raw calls on project/manuscript text |
+| TM-007 | Rendering hostile manuscripts causes local file disclosure, command execution, unsafe HTML, or denial of service | Medium | High | High | `pdf_renderer.py:117`, `pdf_renderer.py:131`, `web_renderer.py:160`, `rendering/security.py` | Keep hostile inputs on the untrusted render profile with process, environment, path, and timeout isolation |
+| TM-008 | Provenance/watermark metadata leaks recipient/operator identifiers or keys | Low-Medium | High | High | `THREAT_MODEL.md:66`, `encryption.py:50`, `core.py:128`, `publishing/preflight.py` | Keep metadata classification in publication preflight and preserve its secure-render/publish negative coverage |
+| TM-009 | CODEOWNERS explicit project roster drifts from public roster | High | Medium | Medium | `.github/CODEOWNERS:23`, `public_scope.py:19`, `tests/infra_tests/project/test_codeowners_parity.py` | Keep generated CODEOWNERS project stanza and parity test in the release gate |
+| TM-010 | Security-sensitive ownership has bus factor 1 | High | Medium-High | High | `.github/sensitive-ownership.yaml`, `docs/security/ownership-and-promotion.md` | Maintain sole-owner exceptions, required Regression Tier review, and external branch-protection acceptance |
 | TM-011 | Generated artifacts or oversized outputs are force-added | Low-Medium | High | High | `git_guards.py:102`, `git_guards.py:202`, `.pre-commit-config.yaml:72` | Keep generated-artifact guard required in CI and pre-push; extend patterns when new output roots appear |
 | TM-012 | Private control-plane auth/policy/export gaps become in-scope without a promotion gate | Medium if promoted | Critical | Conditional Critical | `TO-DO.md` `SECURITY-PRIVATE-PROMOTION-1` | Add a generic promotion checklist requiring identity, policy, redaction, secret-store, route, and protocol test closure before active/public/deployed status |
 
 ## TODO Scope
 
-Current root TODO correction:
-
-- `TO-DO.md` identified R1/R2/R7 as highest leverage open items.
-- `docs/maintenance/review-remediation-2026-07.md:51` says R1/R2 were shipped
-  in the second pass.
-- `docs/maintenance/review-remediation-2026-07.md:77` says R7 shipped in the
-  third pass.
-- `docs/maintenance/review-remediation-2026-07.md:118` says R10 is the only
-  genuinely open repo-wide review item in that list.
-
-Security-scoped active backlog should therefore prioritize:
-
-1. SECURITY-OWNERSHIP-1: define explicit sensitive-area ownership and review
-   requirements for CI/CD, credentials, publishing, guards, rendering, LLM/search,
-   and provenance/crypto.
-2. SECURITY-CODEOWNERS-1: enforce parity between `.github/CODEOWNERS` and
-   `PUBLIC_PROJECT_NAMES`, or deliberately replace explicit template lines with a
-   generated/wildcard policy.
-3. SECURITY-PUBLISH-1: add a publish/archive/upload preflight that emits a
-   redacted payload manifest, redacted credential-source summary, and local-only
-   path refusal before commit mode.
-4. SECURITY-LLM-RAW-1: inventory `query_raw()` and sanitization opt-out call
-   sites; require named justification and tests for any user/project-content path.
-5. SECURITY-RENDER-SANDBOX-1: document and test a hostile-input rendering mode
-   that runs Pandoc/LaTeX/browser conversions under a narrower sandbox.
-6. SECURITY-STEG-METADATA-1: add metadata classification before publish to avoid
-   accidental per-recipient/operator identifier disclosure.
-7. SECURITY-ASKOS-PROMOTION-1: block AskOS promotion into active/public/deployed
-   scope until JWT, policy, redaction, vault, route, and MCP TODOs are closed or
-   explicitly risk-accepted.
+The active security backlog is maintained in [`TO-DO.md`](TO-DO.md). Current
+cross-cutting entries are `SECURITY-OWNERSHIP-1` and
+`SECURITY-PRIVATE-PROMOTION-1`; publication, LLM, hostile-render, and metadata
+preflight controls are shipped and are not repeated as backlog items.
 
 ## Ownership Map Summary
 

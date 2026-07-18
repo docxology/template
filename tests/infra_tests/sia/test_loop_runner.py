@@ -87,7 +87,10 @@ def test_run_sia_loop_fixture_replay(tmp_path: Path) -> None:
     assert context_text.count("## Generation 3") == 1
     payload = json.loads(summary.read_text(encoding="utf-8"))
     assert payload["task_dir"] == "tasks/mini"
+    assert payload["execution_mode"] == "fixture_replay"
+    assert payload["feedback_policy"]["later_generations"] == "fixture_applied"
     assert payload["generations"][0]["gen_dir"] == "output/runs/run_1/gen_1"
+    assert payload["generations"][1]["feedback_applied"] is True
     assert str(tmp_path) not in summary.read_text(encoding="utf-8")
 
     run_sia_loop(config)
@@ -127,6 +130,8 @@ def test_fixture_replay_needs_no_fixtures_dir_for_live(tmp_path: Path) -> None:
     assert len(artifacts) == 2
     summary = json.loads((output / "runs" / "run_1" / "run_summary.json").read_text(encoding="utf-8"))
     assert summary.get("live") is True
+    assert summary["execution_mode"] == "live_subprocess"
+    assert summary["feedback_policy"]["later_generations"] == "recorded_not_applied"
 
 
 def test_live_mode_does_not_mutate_target_code_across_generations(tmp_path: Path) -> None:

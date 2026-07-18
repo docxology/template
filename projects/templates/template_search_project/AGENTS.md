@@ -122,7 +122,10 @@ uv run pytest projects/templates/template_search_project/tests/ -v
 ```
 
 All tests run offline: `LocalBackend` against real temp files,
-deterministic LLM callable, real subprocess where needed.
+deterministic LLM callable, real subprocess where needed. The committed
+`data/corpus.json` is a deterministic fixture, not empirical evidence; the
+standard report writes a fixture-scope notice and rejects high-confidence
+empirical assertion language in fixture-backed synthesis.
 
 ## How this project differs from `template_code_project`
 

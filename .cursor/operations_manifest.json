@@ -152,7 +152,29 @@
           "help": "Alias for describe-pipeline"
         }
       ],
-      "exports": [],
+      "exports": [
+        "PipelineConfig",
+        "PipelineExecutor",
+        "stage_label",
+        "MultiProjectConfig",
+        "MultiProjectOrchestrator",
+        "MultiProjectResult",
+        "format_multi_project_outcome_lines",
+        "format_multi_project_detailed_report",
+        "PerformanceMetrics",
+        "PerformanceMonitor",
+        "StagePerformanceTracker",
+        "get_system_resources",
+        "generate_pipeline_summary",
+        "PipelineControlConfig",
+        "PipelineStageResult",
+        "StageContract",
+        "StageHooks",
+        "StagePolicy",
+        "StageSpec",
+        "TelemetryCollector",
+        "TelemetryConfig"
+      ],
       "effect": "read_only"
     },
     {
@@ -324,6 +346,10 @@
         {
           "name": "link-projects",
           "help": "Symlink private lifecycle projects into local mirrors."
+        },
+        {
+          "name": "promotion-check",
+          "help": "Validate a private-project promotion attestation without moving or publishing anything."
         },
         {
           "name": "schema",

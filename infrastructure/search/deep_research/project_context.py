@@ -8,7 +8,8 @@ from typing import Iterable
 
 from infrastructure.search.deep_research.models import DeepResearchRequest
 from infrastructure.search.deep_research.prompting import build_research_instructions
-from infrastructure.validation.content.pdf_validator import PDFValidationError, extract_text_from_pdf
+from infrastructure.core.exceptions import PDFValidationError
+from infrastructure.validation.content.pdf_validator import extract_text_from_pdf
 
 TEXT_EXTENSIONS = {".md", ".markdown", ".txt", ".json", ".yaml", ".yml", ".toml", ".csv", ".log", ".bib"}
 DEFAULT_CONTEXT_FILES = ("README.md", "AGENTS.md", "manuscript/config.yaml", "manuscript/config.yml")

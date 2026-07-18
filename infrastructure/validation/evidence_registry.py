@@ -188,6 +188,29 @@ def build_project_evidence_registry(project_root: Path) -> VerifiedEvidenceRegis
     return registry
 
 
+def missing_evidence_source_paths(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+) -> tuple[str, ...]:
+    """Return declared local evidence paths that no longer resolve on disk."""
+    missing: set[str] = set()
+    root = project_root.resolve()
+    for fact in registry.facts():
+        source_path = fact.source_path.strip()
+        if not source_path:
+            continue
+        candidate = Path(source_path)
+        resolved = candidate.resolve() if candidate.is_absolute() else (root / candidate).resolve()
+        try:
+            resolved.relative_to(root)
+        except ValueError:
+            missing.add(source_path)
+            continue
+        if not resolved.is_file():
+            missing.add(source_path)
+    return tuple(sorted(missing))
+
+
 def validate_text_against_registry(
     text: str,
     registry: VerifiedEvidenceRegistry,

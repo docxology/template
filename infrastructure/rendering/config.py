@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering.security import RenderSecurityProfile
 
 logger = get_logger(__name__)
 
@@ -36,6 +38,11 @@ class RenderingConfig:
     # Format specific
     slide_theme: str = "metropolis"
     web_theme: str = "simple"
+
+    # Trusted local rendering remains the default. Callers handling external
+    # submissions must opt into ``untrusted`` and provide a temporary root.
+    security_profile: str = "trusted-local"
+    untrusted_temp_root: str | None = None
 
     # Format on/off toggles. PDF/HTML/Slides default True (existing behavior);
     # DOCX/EPUB default False (opt-in — preserves current pipelines untouched).
@@ -89,6 +96,8 @@ class RenderingConfig:
             "TEMPLATE_DIR": "template_dir",
             "SLIDE_THEME": "slide_theme",
             "WEB_THEME": "web_theme",
+            "RENDER_SECURITY_PROFILE": "security_profile",
+            "RENDER_UNTRUSTED_TEMP_ROOT": "untrusted_temp_root",
         }
 
         for env_var, config_key in env_mappings.items():
@@ -157,3 +166,10 @@ class RenderingConfig:
         from dataclasses import replace
 
         return replace(base, **overrides)
+
+    def security(self) -> RenderSecurityProfile:
+        """Return the configured renderer subprocess security profile."""
+        return RenderSecurityProfile(
+            name=self.security_profile,
+            temp_root=Path(self.untrusted_temp_root) if self.untrusted_temp_root else None,
+        )

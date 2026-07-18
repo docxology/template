@@ -1,6 +1,6 @@
 """Multi-phase literature review variable extraction.
 
-Extracts template variables specific to multi-phase systematic reviews.
+Extracts template variables specific to multi-phase literature-review pipelines.
 """
 
 from __future__ import annotations

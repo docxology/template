@@ -20,6 +20,7 @@ from typing import Final
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
+from infrastructure.rendering.security import run_isolated_subprocess
 
 logger = get_logger(__name__)
 
@@ -449,14 +450,7 @@ def _render_mermaid(
     try:
         # Intentionally convert every mmdc execution failure into a documented
         # caller-side fallback so combined PDF rendering can continue.
-        completed = subprocess.run(
-            cmd,
-            capture_output=True,
-            check=False,
-            env=env,
-            text=True,
-            timeout=90,
-        )
+        completed = run_isolated_subprocess(cmd, env=env, timeout=90)
     except subprocess.TimeoutExpired as exc:
         raise RenderingError(f"mmdc timed out while rendering {stem}") from exc
     except OSError as exc:

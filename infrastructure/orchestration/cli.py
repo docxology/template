@@ -16,10 +16,12 @@ All subcommands return an integer exit code.
 """
 
 import argparse
+import json
 import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Any, Callable
 
 from infrastructure.core.cli_scaffold import emit_schema
 from infrastructure.core.project_paths import find_repo_root
@@ -50,6 +52,7 @@ from infrastructure.orchestration.link_sync import (
     print_link_sync_results,
 )
 from infrastructure.project.linking import sync_private_project_links
+from infrastructure.project.promotion import load_promotion_attestation
 
 
 def _default_repo_root() -> Path:
@@ -211,6 +214,15 @@ def build_parser() -> argparse.ArgumentParser:
     link.add_argument("--dry-run", action="store_true", help="Report without changing anything.")
     link.add_argument("--no-prune", action="store_true", help="Keep stale managed links.")
 
+    # 'promotion-check' is deliberately read-only. The private sidecar owns
+    # lifecycle moves; this command makes the attestation validator available
+    # at the same orchestration boundary without authenticating or publishing.
+    promotion = sub.add_parser(
+        "promotion-check",
+        help="Validate a private-project promotion attestation without moving or publishing anything.",
+    )
+    promotion.add_argument("--attestation", type=Path, required=True, help="Offline promotion attestation YAML.")
+
     # 'schema' subcommand — print this CLI's parameter schema as JSON and exit.
     sub.add_parser("schema", help="Print this CLI's parameter schema as JSON and exit.")
 
@@ -245,6 +257,13 @@ def _cmd_link_projects(ns: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_promotion_check(ns: argparse.Namespace) -> int:
+    """Validate one promotion record and emit a secret-free decision."""
+    result = load_promotion_attestation(ns.attestation)
+    print(json.dumps(result.to_dict(), sort_keys=True))
+    return 0
+
+
 def _default_project_name(names: list[str]) -> str:
     """Pick the canonical template project when present, else the first name.
 
@@ -264,7 +283,7 @@ def _default_project_name(names: list[str]) -> str:
     return names[0]
 
 
-def _cmd_pipeline(ns: argparse.Namespace, *, runner_factory=PipelineRunner) -> int:
+def _cmd_pipeline(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner) -> int:
     repo_root = _resolve_repo_root(ns)
     runner = runner_factory(repo_root=repo_root)
     if ns.all_projects:
@@ -302,7 +321,7 @@ def _cmd_pipeline(ns: argparse.Namespace, *, runner_factory=PipelineRunner) -> i
     )
 
 
-def _cmd_multi(ns: argparse.Namespace, *, runner_factory=PipelineRunner) -> int:
+def _cmd_multi(ns: argparse.Namespace, *, runner_factory: Any = PipelineRunner) -> int:
     repo_root = _resolve_repo_root(ns)
     runner = runner_factory(repo_root=repo_root)
     return int(
@@ -316,7 +335,7 @@ def _cmd_multi(ns: argparse.Namespace, *, runner_factory=PipelineRunner) -> int:
     )
 
 
-def _cmd_secure(ns: argparse.Namespace, *, secure_runner=run_secure_pipeline) -> int:
+def _cmd_secure(ns: argparse.Namespace, *, secure_runner: Any = run_secure_pipeline) -> int:
     repo_root = _resolve_repo_root(ns)
     # --deterministic is honoured by infrastructure.steganography.config at
     # call time (not import time), so setting the env var here propagates
@@ -358,9 +377,9 @@ def _cmd_list_projects(ns: argparse.Namespace) -> int:
 def _interactive(
     repo_root: Path,
     *,
-    reader=input,
+    reader: Callable[[], str] = input,
     runner: PipelineRunner | None = None,
-    stage_runner=None,
+    stage_runner: Any = None,
 ) -> int:
     """Run the interactive menu loop.
 
@@ -440,7 +459,7 @@ def _dispatch_menu_key(
     repo_root: Path,
     runner: PipelineRunner,
     *,
-    stage_runner=None,
+    stage_runner: Any = None,
 ) -> int:
     """Dispatch a single menu key (used by the interactive loop).
 
@@ -470,9 +489,9 @@ def _dispatch_menu_key(
 def main(
     argv: Sequence[str] | None = None,
     *,
-    runner_factory=PipelineRunner,
-    secure_runner=run_secure_pipeline,
-    interactive_runner=_interactive,
+    runner_factory: Any = PipelineRunner,
+    secure_runner: Any = run_secure_pipeline,
+    interactive_runner: Any = _interactive,
 ) -> int:
     """Entry point. Returns process exit code."""
     parser = build_parser()
@@ -486,7 +505,7 @@ def main(
     # Auto-sync the private repo's lifecycle projects into local symlink
     # mirrors. The explicit `link-projects` command does its own sync, so skip
     # it here.
-    if ns.command != "link-projects":
+    if ns.command not in {"link-projects", "promotion-check"}:
         _maybe_sync_links(_resolve_repo_root(ns))
 
     if ns.command is None:
@@ -500,6 +519,7 @@ def main(
         "menu": _cmd_menu,
         "list-projects": _cmd_list_projects,
         "link-projects": _cmd_link_projects,
+        "promotion-check": _cmd_promotion_check,
     }
     try:
         return dispatch[ns.command](ns)

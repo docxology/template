@@ -68,8 +68,8 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # --project-only --include-slow` (699 passed). Collected count from
     # --collect-only in the project env.
     ExemplarSnapshot("template_active_inference", "93.55 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "93.50 %"),
-    ExemplarSnapshot("template_autopoiesis", "96.41 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "92.48 %"),
+    ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "92.81 %"),
     ExemplarSnapshot("template_autoscientists", "99.60 %"),
     ExemplarSnapshot("template_code_project", "98.78 %"),
@@ -81,19 +81,19 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_madlib", "93.96 %"),
     ExemplarSnapshot("template_methods_paper", "99.01 %"),
     ExemplarSnapshot("template_newspaper", "99.81 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.70 %"),
+    ExemplarSnapshot("template_pitch_deck", "97.73 %"),
     ExemplarSnapshot("template_pools_rules_tools", "95.52 %"),
-    ExemplarSnapshot("template_prose_project", "100.00 %"),
+    ExemplarSnapshot("template_prose_project", "99.57 %"),
     # Union of two independent 2026-07-10 coverage-debt closures (both real
     # no-mock suites over visuals.py, written in parallel sessions): 95 tests,
     # 99.05 % — was 55.91 % when the 1500-line kmyth/TPM module landed with 7.
     ExemplarSnapshot("template_redacted_report", "98.83 %"),
     ExemplarSnapshot("template_registered_report", "96.37 %"),
-    ExemplarSnapshot("template_search_project", "95.13 %"),
-    ExemplarSnapshot("template_sia", "97.16 %"),
+    ExemplarSnapshot("template_search_project", "96.40 %"),
+    ExemplarSnapshot("template_sia", "99.69 %"),
     ExemplarSnapshot("template_storybook", "93.92 %"),
     ExemplarSnapshot("template_template", "99.37 %"),
-    ExemplarSnapshot("template_textbook", "96.73 %"),
+    ExemplarSnapshot("template_textbook", "97.66 %"),
 )
 
 
@@ -231,29 +231,62 @@ def exemplar_source_hash(repo_root: Path, name: str) -> str:
         check=False,
     )
     if tracked.returncode == 0:
-        files = sorted(repo_root / relative for relative in tracked.stdout.splitlines())
+        files = sorted((repo_root / relative, repo_root / relative) for relative in tracked.stdout.splitlines())
     else:
         # Unit callers may supply a temporary non-Git tree. Production
         # repositories always take the tracked-file branch above so ignored
         # build metadata cannot contaminate cross-platform provenance.
         files = sorted(
-            path
+            (path, path)
             for root_name in ("src", "tests")
             for path in (project_root / root_name).rglob("*")
             if path.is_file() and "__pycache__" not in path.parts
         )
-    for path in files:
+    for logical_path, physical_path in files:
         # Git records directory symlinks as a path without a trailing slash.
         # The advanced literature exemplar intentionally reuses sibling source
-        # directories, so skip those directory entries and hash their tracked
-        # regular-file children instead.
-        if not path.is_file():
+        # directories, so hash the in-repository target files under the symlink's
+        # logical project path.
+        if physical_path.is_symlink() and physical_path.is_dir():
+            for child_logical, child_physical in _tracked_symlink_children(repo_root, logical_path, physical_path):
+                digest.update(child_logical.relative_to(project_root).as_posix().encode("utf-8"))
+                digest.update(b"\0")
+                digest.update(child_physical.read_bytes())
+                digest.update(b"\0")
             continue
-        digest.update(path.relative_to(project_root).as_posix().encode("utf-8"))
+        if not physical_path.is_file():
+            continue
+        digest.update(logical_path.relative_to(project_root).as_posix().encode("utf-8"))
         digest.update(b"\0")
-        digest.update(path.read_bytes())
+        digest.update(physical_path.read_bytes())
         digest.update(b"\0")
     return digest.hexdigest()
+
+
+def _tracked_symlink_children(repo_root: Path, logical_path: Path, symlink_path: Path) -> list[tuple[Path, Path]]:
+    """Return tracked regular files reached through an in-repository directory symlink."""
+    repo_root = repo_root.resolve()
+    target_root = symlink_path.resolve()
+    try:
+        target_rel = target_root.relative_to(repo_root).as_posix()
+    except ValueError:
+        return []
+    tracked = subprocess.run(  # noqa: S603 - fixed git command and repo-local path
+        ["git", "ls-files", "--", target_rel],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if tracked.returncode == 0:
+        physical_files = sorted((repo_root / relative).resolve() for relative in tracked.stdout.splitlines())
+    else:
+        physical_files = sorted(path for path in target_root.rglob("*") if path.is_file())
+    return [
+        (logical_path / physical.relative_to(target_root), physical)
+        for physical in physical_files
+        if physical.is_file()
+    ]
 
 
 def build_coverage_provenance(repo_root: Path) -> dict[str, object]:

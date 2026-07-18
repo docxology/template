@@ -5,39 +5,39 @@ claims:
     source: projects/templates/template_autoscientists/src/dead_ends.py DeadEndRegistry default threshold
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/ablation_results.json
+    artifact_path: output/data/ablation.json
   - claim_id: confirmation-noise-seeds
     kind: number
     value: 5
     source: projects/templates/template_autoscientists/src/confirmation.py confirm_improvement default seeds
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/ablation_results.json
+    artifact_path: output/data/ablation.json
   - claim_id: stagnation-window
     kind: number
     value: 10
     source: projects/templates/template_autoscientists/src/stagnation.py StagnationDetector default window
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/ablation_results.json
+    artifact_path: output/data/ablation.json
   - claim_id: team-count
     kind: number
     value: 3
     source: projects/templates/template_autoscientists/src/search.py SearchConfig default team count
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/ablation_results.json
+    artifact_path: output/data/ablation.json
   - claim_id: redundancy-baseline
     kind: number
     value: 36
     source: projects/templates/template_autoscientists/manuscript/03_results.md redundant probes without dead-end registry
     source_tier: generated_metric
     freshness: active
-    artifact_path: output/data/ablation_results.json
+    artifact_path: output/data/ablation.json
   - claim_id: redundancy-with-registry
     kind: number
     value: 0
     source: projects/templates/template_autoscientists/manuscript/03_results.md redundant probes with dead-end registry
     source_tier: generated_metric
     freshness: active
-    artifact_path: output/data/ablation_results.json
+    artifact_path: output/data/ablation.json

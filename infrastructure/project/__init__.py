@@ -57,6 +57,11 @@ if TYPE_CHECKING:
         smoke_exported_exemplar,
         smoke_public_exemplars,
     )
+    from infrastructure.project.promotion import (
+        PromotionAttestation,
+        load_promotion_attestation,
+        validate_promotion_attestation,
+    )
 
 _PUBLIC_SCOPE_EXPORTS = {
     "PUBLIC_PROJECT_NAMES",
@@ -85,6 +90,11 @@ _EXPORT_SMOKE_EXPORTS = {
     "smoke_exported_exemplar",
     "smoke_public_exemplars",
 }
+_PROMOTION_EXPORTS = {
+    "PromotionAttestation",
+    "load_promotion_attestation",
+    "validate_promotion_attestation",
+}
 
 
 def __getattr__(name: str) -> Any:
@@ -109,6 +119,11 @@ def __getattr__(name: str) -> Any:
 
         export_smoke = import_module("infrastructure.project.export_smoke")
         return getattr(export_smoke, name)
+    if name in _PROMOTION_EXPORTS:
+        from importlib import import_module
+
+        promotion = import_module("infrastructure.project.promotion")
+        return getattr(promotion, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
@@ -119,6 +134,7 @@ __all__ = [
     "CopyResult",
     "ExportManifest",
     "ExportSmokeResult",
+    "PromotionAttestation",
     "build_codegraph_files_command",
     "build_codegraph_init_command",
     "build_scope_check_command",
@@ -134,10 +150,12 @@ __all__ = [
     "public_ci_lint_paths",
     "public_project_infos",
     "public_project_names",
+    "load_promotion_attestation",
     "resolve_project_root",
     "run_project_setup_hook",
     "smoke_exported_exemplar",
     "smoke_public_exemplars",
     "validate_project_structure",
+    "validate_promotion_attestation",
     "verify_codegraph_scope_payload",
 ]

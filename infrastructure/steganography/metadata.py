@@ -4,6 +4,8 @@ Populates the PDF Info dictionary and embeds XMP metadata packets with
 document provenance, hash values, timestamps, and encrypted payloads.
 """
 
+import re
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -19,8 +21,50 @@ logger = get_logger(__name__)
 __all__ = [
     "build_document_metadata",
     "build_xmp_packet",
+    "classify_publication_metadata",
     "inject_pdf_metadata",
 ]
+
+_PUBLIC_METADATA_KEYS = frozenset(
+    {
+        "/Author",
+        "/CreationDate",
+        "/Creator",
+        "/DocumentID",
+        "/Hash_SHA256",
+        "/Hash_SHA512",
+        "/Keywords",
+        "/ModDate",
+        "/Producer",
+        "/Subject",
+        "/SteganographyTimestamp",
+        "/Title",
+    }
+)
+_SECRET_VALUE = re.compile(
+    r"(?i)(?:begin\s+(?:rsa|ec|openssh)?\s*private\s*key|(?:api|access|auth|bearer|secret|token|password)\s*[:=]|gh[pousr]_[A-Za-z0-9_-]{8,}|sk-[A-Za-z0-9_-]{8,})"
+)
+_SENSITIVE_KEY = re.compile(r"(?i)(?:key|secret|token|password|recipient|operator|credential)")
+
+
+def classify_publication_metadata(metadata: Mapping[str, object]) -> dict[str, object]:
+    """Classify PDF metadata without returning sensitive values."""
+    issues: list[str] = []
+    keys = sorted(str(key) for key in metadata)
+    for key, raw_value in metadata.items():
+        key_text = str(key)
+        value = str(raw_value)
+        if key_text not in _PUBLIC_METADATA_KEYS:
+            issues.append(f"unexpected metadata key: {key_text}")
+        if _SENSITIVE_KEY.search(key_text) and key_text not in {"/DocumentID", "/Hash_SHA256", "/Hash_SHA512"}:
+            issues.append(f"sensitive metadata key: {key_text}")
+        if _SECRET_VALUE.search(value):
+            issues.append(f"credential-like value in metadata key: {key_text}")
+    return {
+        "status": "fail" if issues else "pass",
+        "keys": keys,
+        "issues": sorted(set(issues)),
+    }
 
 
 def inject_pdf_metadata(

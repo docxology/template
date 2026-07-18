@@ -15,10 +15,10 @@ A reproducibility template that claims to make science *reproducible* needs to b
 
 ## The contract this directory creates
 
-> **Current state:** as of 2026-07-02, all fifteen public exemplars carry real,
-> source-re-derived regression pins under `tests/regression/projects/` plus
-> matching pinned-value ledgers under `tests/regression/pinned_values/`. 55 tests
-> collect together (`uv run pytest tests/regression/ --collect-only -q`). The
+> **Historical baseline:** the 2026-07-02 review recorded fifteen public
+> exemplars and 55 collected tests. The roster now rotates independently and
+> current counts must be derived from the generated scope and the command
+> below. The
 > broader per-figure/per-table contract below remains the target for deepening
 > each exemplar's tier.
 >

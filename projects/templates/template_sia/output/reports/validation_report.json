@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-13T18:59:32Z",
+  "timestamp": "2026-07-18T03:15:45Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -15,11 +15,11 @@
     "detailed_validation": {
       "structure": {
         "valid": true,
-        "issues": [],
-        "missing_files": [],
-        "suspicious_sizes": [
-          "slides/ directory is empty"
+        "issues": [
+          "Missing directory: slides/"
         ],
+        "missing_files": [],
+        "suspicious_sizes": [],
         "warnings": [],
         "directory_structure": {
           "combined_pdf": {
@@ -42,10 +42,9 @@
             "optional": false
           },
           "slides": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": false
           },
           "figures": {
@@ -65,22 +64,20 @@
           "reports": {
             "exists": true,
             "files": 27,
-            "size_mb": 0.15,
+            "size_mb": 0.16,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "logs": {
@@ -106,10 +103,9 @@
           "largest_file": "index.html"
         },
         "slides": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "figures": {
           "exists": true,
@@ -126,20 +122,18 @@
         "reports": {
           "exists": true,
           "file_count": 27,
-          "size_mb": "0.15",
+          "size_mb": "0.16",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "llm": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
@@ -151,21 +145,20 @@
       "file_counts": {
         "pdf": 11,
         "web": 9,
-        "slides": 0,
         "figures": 5,
         "data": 2,
         "reports": 27,
-        "simulations": 0,
-        "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 0.651158332824707,
+      "total_size_mb": 0.6615934371948242,
       "issues_by_severity": {
         "critical": [],
-        "warning": [],
-        "info": [
-          "slides/ directory is empty"
-        ]
+        "warning": [
+          "Directory 'slides/' missing or empty",
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty"
+        ],
+        "info": []
       },
       "recommendations": []
     },

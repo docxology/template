@@ -121,7 +121,7 @@ class ErrorEntry:
 class ErrorAggregator:
     """Aggregate and categorize errors from pipeline execution."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize empty error aggregator."""
         self.errors: list[ErrorEntry] = []
         self.warnings: list[ErrorEntry] = []

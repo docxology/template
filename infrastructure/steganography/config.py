@@ -232,7 +232,7 @@ class SteganographyConfig:
     overlay_mode: str = "text"  # 'text' | 'qr' | 'none'
     overlay_text: str = "CONFIDENTIAL"
     overlay_opacity: float = 0.08
-    overlay_color_rgb: tuple = (128, 128, 128)
+    overlay_color_rgb: tuple[int, int, int] = (128, 128, 128)
     overlay_font_size: int = 60
     overlay_repeat_count: int = 5
     overlay_qr_data: str | None = None  # custom data for QR mode

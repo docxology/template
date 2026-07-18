@@ -138,7 +138,7 @@ The lint job also runs the deterministic source-only publication audit across
 the generated public roster:
 
 ```bash
-uv run python -m infrastructure.validation.cli publication-audit --strict --format json
+uv run python -m infrastructure.validation.cli publication-audit --all-public --strict --format json
 ```
 
 For release sign-off, add `--rendered` after running each exemplar's canonical
@@ -192,6 +192,13 @@ required_status_checks:
 required_pull_request_reviews:
   required_approving_review_count: 1
 ```
+
+Branch protection is an external GitHub control and must also require the
+`Regression Tier (claim-binding pins)` check. Changes under the sensitive
+workflow/configuration paths listed in [`sensitive-ownership.yaml`](sensitive-ownership.yaml)
+must receive the generated CODEOWNERS review. The current single-maintainer
+exceptions are documented in that policy file; they are risk disclosures, not
+permission to bypass the required status checks or sensitive-area review.
 
 ## Issue Templates
 

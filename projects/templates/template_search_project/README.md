@@ -163,6 +163,11 @@ they are **CI-safe / offline by default** so a fresh clone can render the
 manuscript with no network and no Ollama server. Switching to live search
 or enabling the LLM stage is a one-line edit (see [`docs/quickstart.md`](docs/quickstart.md)).
 
+The committed `data/corpus.json` is a deterministic workflow fixture. Reports
+generated from the default local source carry an explicit fixture-scope notice;
+their paper counts and summaries are not empirical literature findings. Use a
+live provider source and retain its provenance before making substantive claims.
+
 ### `project_config.search:` (single-query pipeline)
 
 | Key | Default | Meaning |

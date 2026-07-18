@@ -29,7 +29,7 @@ Upstream CI is **`name: CI`** in [`.github/workflows/ci.yml`](../../../.github/w
 High-signal behavioral anchors:
 
 1. **`test-infra`** — `uv sync --group rendering --group monitoring`; Ubuntu + macOS × Python 3.10–3.12; **≥ 60 %** on `infrastructure/`. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
-2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.12, and invokes `scripts/pipeline/stage_01_test.py --project <name> --project-only --include-slow`. Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run or `--cov-append` in current CI.
+2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.12, and invokes `scripts/pipeline/stage_01_test.py --project <name> --project-only --include-slow`. Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run in current CI.
 3. **`fep-lean`** — Runs **only when** the `detect` job reports `needs.detect.outputs.fep_lean == 'true'`. The workflow deliberately avoids job-level `hashFiles()` because that context is invalid in a job `if:`.
 4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)
 
@@ -73,7 +73,7 @@ jobs:
 
 ## Automated Testing
 
-This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). CI runs each public exemplar in its own matrix job; the local `scripts/pipeline/stage_01_test.py --project-only --all-projects` path is the one that merges project coverage with `--cov-append`. Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
+This template separates **Layer 1** (`tests/infra_tests/` → `--cov=infrastructure`) from **Layer 2** (per-project `projects/<name>/tests/`). CI runs each public exemplar in its own matrix job; the local `scripts/pipeline/stage_01_test.py --project-only --all-projects` path runs each project with an isolated coverage datafile and combines the results after all project gates pass. Patterns below are generic; parity with Actions is [.github/workflows/README.md](../../../.github/workflows/README.md) “Reproduce CI locally”.
 
 ### Test Execution
 
@@ -112,7 +112,7 @@ For a single-package layout, **`pytest-cov`** can enforce gates directly:
     --cov-fail-under=90
 ```
 
-**This repo** uses isolated per-project CI jobs for public exemplars. The local all-project orchestrator aggregates multiple `projects/<name>/src` trees (`--cov-append` + combined union `coverage report --fail-under=75`) for release-style sweeps. Per-project standalone gates remain **90%**. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
+**This repo** uses isolated per-project CI jobs for public exemplars. The local all-project orchestrator runs each project in its own subprocess/datafile, then combines the files and applies the combined-union `coverage report --fail-under=75` gate for release-style sweeps. Per-project standalone gates remain **90%**. See [.github/workflows/AGENTS.md](../../../.github/workflows/AGENTS.md).
 
 ### Test Matrix
 

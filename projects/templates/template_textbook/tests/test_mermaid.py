@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
+
 import pytest
 
 from mermaid import diagrams
-from mermaid.renderer import MermaidRenderer, RenderResult, mmdc_available
+from mermaid.renderer import MermaidRenderer, RenderResult, _run_mmdc, mmdc_available
 
 
 def test_load_specs_from_default_file():
@@ -256,6 +259,13 @@ def test_all_spec_names_are_unique():
     specs = diagrams.load_specs()
     names = [s["name"] for s in specs]
     assert len(names) == len(set(names)), "duplicate spec names in diagram_specs.yaml"
+
+
+@pytest.mark.skipif(os.name != "posix", reason="process groups differ on Windows")
+def test_mmdc_timeout_reaps_descendant_processes():
+    """The Mermaid timeout boundary must clean up browser-like descendants."""
+    with pytest.raises(subprocess.TimeoutExpired):
+        _run_mmdc(["/bin/sh", "-c", "sleep 30"], timeout=1)
 
 
 def test_load_specs_with_custom_path(tmp_path):

@@ -9,6 +9,24 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Security and release-boundary hardening
+
+- Added an offline private-project promotion attestation validator with
+  fail-closed identity, authorization, redaction, secret-storage, route, MCP,
+  export-test, and expiring risk-acceptance checks.
+- Extended the explicit untrusted rendering profile with hostile-content
+  rejection, credential-free environments, bounded process-group cleanup, and
+  temporary-root output validation.
+- Completed the shared publication preflight, LLM bypass allowlist, and
+  provenance-metadata classifier gates across archive/upload/provider paths;
+  default verification remains offline and credential-free.
+- Documented the root `3.5.1`/`v3.5.1` release boundary and the current
+  unreleased state without creating a release or changing external settings.
+- Added the read-only orchestration `promotion-check` command so private-sidecar
+  promotion records are validated at the same boundary as lifecycle linking.
+- Added fail-closed evidence-source-path validation; stale SIA and AutoScientists
+  claim-ledger paths were corrected through their generated validation lanes.
+
 ### Added
 
 - 📝 **Comprehensive docstring coverage.** A deep audit found 1218 public
@@ -73,6 +91,11 @@ not to the contents of any specific workspace.
   list, review.
 
 ### Changed
+
+- ⚡ **Health feedback is bounded and concurrent.** Independent repository gates
+  now run through a four-worker subprocess pool while preserving canonical
+  result order; `--workers 1` retains serial diagnostics, and JSON reports
+  distinguish aggregate gate time from wall time.
 
 - ⚡ **Active Inference test settlement is about 73% faster.** Source-invalid
   GNN cases now fail before generated-artifact settlement, missing formal

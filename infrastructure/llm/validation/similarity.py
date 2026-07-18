@@ -75,7 +75,7 @@ def _tf_cosine_similarity(text1: str, text2: str) -> float:
 def _sequence_similarity(text1: str, text2: str) -> float:
     """Calculate sequence-based similarity using n-gram overlap."""
 
-    def get_ngrams(text: str, n: int = 3):
+    def get_ngrams(text: str, n: int = 3) -> list[str]:
         """Get n-grams from text."""
         words = text.split()
         return [" ".join(words[i : i + n]) for i in range(len(words) - n + 1)]

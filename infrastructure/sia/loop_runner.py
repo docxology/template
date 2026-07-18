@@ -77,6 +77,8 @@ def run_sia_loop(config: RunConfig) -> list[GenerationArtifacts]:
             improvement=gen_dir / "improvement.md" if generation > 1 else None,
             results=gen_dir / "results.json" if evaluation else None,
             evaluation=evaluation,
+            source_mode="live_subprocess" if config.live else "fixture_replay",
+            feedback_applied=(not config.live and generation > 1),
         )
         append_generation(
             state.context_path,
@@ -242,6 +244,12 @@ def _write_run_summary(state: GenerationState, artifacts: list[GenerationArtifac
     payload = {
         "run_id": state.config.run_id,
         "live": state.config.live,
+        "execution_mode": "live_subprocess" if state.config.live else "fixture_replay",
+        "feedback_policy": {
+            "generation_one": "none",
+            "later_generations": "recorded_not_applied" if state.config.live else "fixture_applied",
+            "live_mutation_enabled": False,
+        },
         "max_generations": state.config.max_generations,
         "task_dir": _portable_path(state.layout.task_dir, project_root),
         "generations": [item.to_dict(relative_to=project_root) for item in artifacts],

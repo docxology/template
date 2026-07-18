@@ -13,4 +13,6 @@ The motivating concern is *reproducibility*: a query at time $t_0$ should produc
 
 **Run snapshot.** With the bundled `manuscript/config.yaml`, the most recent pipeline execution evaluated the query *"{{CONFIG_QUERY}}"* against {{CONFIG_SOURCES}}, returned {{RESULT_NUM_PAPERS}} deduplicated paper(s) ({{RESULT_WITH_DOI}} carrying a DOI, {{RESULT_WITH_ABSTRACT}} carrying an abstract), and recorded backend errors: {{RESULT_ERRORS}}. Resolve ``{{…}}`` tokens by running `scripts/z_generate_manuscript_variables.py` after `run_search_pipeline.py`; the script writes `output/data/manuscript_variables.json` and resolved markdown under `output/manuscript/`, which the PDF-rendering stage prefers when present.
 
+**Claim boundary.** The committed `data/corpus.json` and the default local-source run are deterministic workflow fixtures. Their counts, summaries, and generated bibliography exercise the pipeline contract; they are not empirical findings about the literature.
+
 **Keywords:** literature search, BibTeX automation, reproducible research, local LLM synthesis, scientific infrastructure

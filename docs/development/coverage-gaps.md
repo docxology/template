@@ -4,18 +4,20 @@ This document tracks infrastructure test coverage gaps by Layer-1 module. The
 global infrastructure gate remains 60%; the rows below are targets and notes,
 not new CI gates.
 
-**Last verified:** 2026-06-27
+**Last verified:** 2026-07-17
 
 **Coverage oracle:** full infrastructure gate:
 
 ```bash
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
+  --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
+  --timeout=120 -m 'not requires_ollama'
 ```
 
-**Overall infrastructure coverage:** 83.54% (gate: >= 60%)
-**Tests:** 7385 passed; 1 existing NumPy overflow warning in the scientific
-stability edge-case test.
-**Total statements measured:** 41,264
+**Overall infrastructure coverage:** 83.05% (gate: >= 60%)
+**Tests:** 8797 passed, 1 skipped, 51 deselected; 1 existing NumPy overflow
+warning in the scientific stability edge-case test.
+**Total statements measured:** 51,096
 
 The sorted module rows were taken from:
 
@@ -32,8 +34,9 @@ directory and carries `README.md` plus `AGENTS.md` but no skill-routing surface.
 Ignored/generated directories such as `infrastructure/.benchmarks/` and
 `infrastructure/__pycache__/` are not module packages.
 
-No `SKILL.md` files changed in this pass, so no skill-manifest regeneration was
-required.
+The publication validation and advanced-literature skill surfaces changed in
+this pass; the generated skill/index checks are therefore part of the release
+gate rather than an assumption that routing metadata is unchanged.
 
 ## Target Categories
 
@@ -69,22 +72,22 @@ user-visible command behavior, not line-chasing through dispatch glue.
 | --- | ---: | --- |
 | `project/workspace.py` | 51.11% | Added malformed pyproject, no-table, and missing-`uv` tests; next target is subprocess coverage for init/repair flows. |
 | `publishing/transmission_page_check.py` | 58.04% | Add negative fixtures for incomplete transmission pages and malformed publication metadata. |
-| `rendering/docx_renderer.py` | 58.43% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring DOCX generation. |
-| `rendering/epub_renderer.py` | 58.43% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring EPUB generation. |
-| `rendering/_pipeline_summary.py` | 59.36% | Add branch coverage for warning aggregation, skipped outputs, and empty-stage summaries. |
-| `documentation/publication_records.py` | 59.87% | Add fixtures for incomplete records, DOI/repository label variants, and malformed YAML. |
+| `rendering/docx_renderer.py` | 59.79% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring DOCX generation. |
+| `rendering/epub_renderer.py` | 63.92% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring EPUB generation. |
+| `rendering/_pipeline_summary.py` | 46.83% | Add branch coverage for warning aggregation, skipped outputs, and empty-stage summaries. |
+| `documentation/publication_records.py` | 74.06% | Add fixtures for incomplete records, DOI/repository label variants, and malformed YAML. |
 
 ### Optional-Tool And Gated Rows
 
 | Module | Coverage | Gate / fallback target |
 | --- | ---: | --- |
 | `llm/review/pipeline_runner.py` | 12.88% | LLM review orchestration; default suite should cover offline/fallback summaries, live LLM remains gated. |
-| `sia/live_llm.py` | 35.48% | Optional Ollama feedback path; keep offline stub/failure handling in default tests. |
-| `llm/review/ollama_setup.py` | 50.94% | Ollama setup path; cover missing binary/server and actionable install-message branches. |
+| `sia/live_llm.py` | 25.81% | Optional Ollama feedback path; keep offline failure handling in default tests. |
+| `llm/review/ollama_setup.py` | 51.52% | Ollama setup path; cover missing binary/server and actionable install-message branches. |
 | `search/deep_research/gemini.py` | 51.02% | External API backend; default target is config validation and missing-credential behavior. |
-| `validation/security_gate.py` | 53.85% | Added missing-tool and severity aggregation tests; next target is parser coverage for each configured scanner output. |
-| `llm/utils/server.py` | 55.69% | Server lifecycle path; default target is unavailable-server diagnostics and timeout handling. |
-| `validation/docs/lint_runner.py` | 56.93% | Subprocess/tool-gated docs runner; cover missing `mmdc`/Chrome fallbacks and failed-tool aggregation. |
+| `validation/security_gate.py` | 54.47% | Added missing-tool and severity aggregation tests; next target is parser coverage for each configured scanner output. |
+| `llm/utils/server.py` | 57.79% | Server lifecycle path; default target is unavailable-server diagnostics and timeout handling. |
+| `validation/docs/lint_runner.py` | 57.97% | Subprocess/tool-gated docs runner; cover missing `mmdc`/Chrome fallbacks and failed-tool aggregation. |
 | `search/deep_research/openai.py` | 56.99% | External API backend; default target is missing-key, timeout, and malformed-response handling. |
 
 ## Recently Added Module Tests (2026-06-27)
@@ -152,7 +155,7 @@ no `*_coverage.py`, `*_full.py`, or duplicate supplement files were introduced.
 
 ## Coverage Gates
 
-- **Infrastructure:** >= 60% (current 83.54%).
+- **Infrastructure:** >= 60% (current 83.05%).
 - **Projects:** >= 90% per project, with rotating-project exceptions documented
   in CI and project-local `AGENTS.md` files.
 - **Per-module targets:** documented here only; they are not CI gates.

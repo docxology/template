@@ -94,10 +94,10 @@ def plot_cooccurrence_matrix(
 
     term_doc_freq: dict[str, int] = {}
     for tokens in documents:
-        for token in set(tokens):
+        for token in sorted(set(tokens)):
             term_doc_freq[token] = term_doc_freq.get(token, 0) + 1
 
-    top_terms = sorted(term_doc_freq.keys(), key=lambda t: -term_doc_freq[t])[:n_terms]
+    top_terms = sorted(term_doc_freq, key=lambda t: (-term_doc_freq[t], t))[:n_terms]
     term_idx = {t: i for i, t in enumerate(top_terms)}
     n = len(top_terms)
     if n < 2:
@@ -108,7 +108,7 @@ def plot_cooccurrence_matrix(
 
     cooc = np.zeros((n, n), dtype=np.float64)
     for tokens in documents:
-        present = [t for t in set(tokens) if t in term_idx]
+        present = sorted((t for t in set(tokens) if t in term_idx), key=term_idx.__getitem__)
         for i_term in range(len(present)):
             for j_term in range(i_term + 1, len(present)):
                 a, b = term_idx[present[i_term]], term_idx[present[j_term]]

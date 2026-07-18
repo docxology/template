@@ -154,7 +154,13 @@ def _stream_with_heartbeat(
         tokens_generated = 0
         start_gen_time = time.time()
         try:
-            for chunk in client.stream_query(prompt, options=options, sanitize=False):
+            for chunk in client.stream_query(
+                prompt,
+                options=options,
+                sanitize=False,
+                bypass_caller="infrastructure.llm.review.generation",
+                bypass_reason="review prompt contains trusted technical notation that trips generic sanitization",
+            ):
                 response_chunks.append(chunk)
                 tokens_generated += len(chunk.split())
                 progress.set(tokens_generated)
@@ -171,7 +177,13 @@ def _stream_with_heartbeat(
     except Exception as e:  # noqa: BLE001 — intentional: fallback to blocking query on any stream failure
         logger.warning(f"Streaming query failed, falling back to blocking query: {type(e).__name__}: {e}")
         try:
-            return client.query(prompt, options=options, sanitize=False)
+            return client.query(
+                prompt,
+                options=options,
+                sanitize=False,
+                bypass_caller="infrastructure.llm.review.generation",
+                bypass_reason="review prompt contains trusted technical notation that trips generic sanitization",
+            )
         except Exception as block_err:
             raise block_err from e
 

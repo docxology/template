@@ -34,6 +34,7 @@ from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_ma
 from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
+from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
 
@@ -89,6 +90,7 @@ class PDFRenderer:
         For this implementation, we focus on LaTeX compilation.
         """
         if source_file.suffix == ".tex":
+            self.config.security().validate_source(source_file)
             return compile_latex(
                 source_file,
                 Path(self.config.pdf_dir),
@@ -121,6 +123,9 @@ class PDFRenderer:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         output_file = output_dir / (output_name or f"{source_file.stem}.pdf")
+        profile = self.config.security()
+        profile.validate_output(output_file)
+        profile.validate_source(source_file)
 
         # Build resource paths to help pandoc find figures
         resource_paths = []
@@ -167,7 +172,7 @@ class PDFRenderer:
                     check=True,
                     capture_output=True,
                     text=True,
-                    timeout=timeout,
+                    **subprocess_options(profile, timeout),
                 )
                 return output_file
             except subprocess.CalledProcessError as e:
@@ -217,6 +222,10 @@ class PDFRenderer:
 
         project_basename = Path(project_name).name
         output_file = output_dir / f"{project_basename}_combined.pdf"
+        profile = self.config.security()
+        for source_file in source_files:
+            profile.validate_source(source_file)
+        profile.validate_output(output_file)
 
         # Remove existing output file to ensure fresh compilation
         if output_file.exists():

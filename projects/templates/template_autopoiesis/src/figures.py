@@ -18,8 +18,7 @@ def _first_plottable_array(result: Any) -> Optional[np.ndarray]:
         return result.ravel()
     if isinstance(result, (list, tuple)) and result:
         arr = np.array(result, dtype=float)
-        if arr.ndim >= 1:
-            return arr.ravel()
+        return arr.ravel()
     return None
 
 
@@ -28,7 +27,8 @@ def _scalar_summary_lines(result: Any) -> list[str]:
     if isinstance(result, (int, float, complex)):
         return [f"value = {result:.6g}"]
     if isinstance(result, np.ndarray):
-        return [f"shape = {result.shape}", f"mean = {float(result.mean()):.6g}"]
+        mean = "n/a" if result.size == 0 else f"{float(result.mean()):.6g}"
+        return [f"shape = {result.shape}", f"mean = {mean}"]
     if isinstance(result, dict):
         return [f"{k} = {v!r}" for k, v in list(result.items())[:4]]
     return [repr(result)[:80]]

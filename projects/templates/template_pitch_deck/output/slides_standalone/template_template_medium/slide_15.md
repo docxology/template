@@ -2,7 +2,7 @@
 
 *Slide 15 of 37 — template_template pitch, medium deck — kind: `content`*
 
-- 90% project-coverage floor and a no-mocks testing policy apply to this project exactly as they do to the 23 other exemplars.
+- 90% project-coverage floor and a no-mocks testing policy apply to this project exactly as they do to the 24 other exemplars.
 - Every pipeline run either passes its own gate or fails loudly — there is no partial-credit reporting path.
 
 ---

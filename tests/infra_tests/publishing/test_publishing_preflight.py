@@ -67,3 +67,10 @@ def test_preflight_refuses_untrusted_credential_label_that_could_leak_a_secret(t
             [pdf],
             {"ghp_secret_material_must_not_be_logged": "environment"},
         )
+
+
+def test_preflight_refuses_invalid_pdf_signature(tmp_path: Path) -> None:
+    _project, pdf = _public_project(tmp_path)
+    pdf.write_bytes(b"not a pdf")
+    with pytest.raises(ValueError, match="not a PDF"):
+        publishing_preflight(tmp_path, "templates/template_code_project", [pdf], {})

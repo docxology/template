@@ -16,6 +16,7 @@ from infrastructure.core.exceptions import LLMConnectionError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.llm.core._connection import _ConnectionMixin
 from infrastructure.llm.core._structured_queries import _StructuredQueryMixin
+from infrastructure.llm.core.bypass import require_raw_query_bypass, require_sanitization_bypass
 from infrastructure.llm.core.config import GenerationOptions, OllamaClientConfig, ResponseMode
 from infrastructure.llm.core.context import ConversationContext, MessageDict
 from infrastructure.llm.core.sanitization import sanitize_llm_input
@@ -127,6 +128,9 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         reset_context: bool = False,
         options: GenerationOptions | None = None,
         sanitize: bool = True,
+        *,
+        bypass_caller: str | None = None,
+        bypass_reason: str | None = None,
     ) -> str:
         """Send a query to the LLM with context management.
 
@@ -162,6 +166,8 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
 
         if sanitize:
             prompt = sanitize_llm_input(prompt)
+        else:
+            require_sanitization_bypass(bypass_caller, bypass_reason)
         self.context.add_message("user", prompt)
 
         try:
@@ -220,6 +226,9 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         model: str | None = None,
         options: GenerationOptions | None = None,
         add_to_context: bool = False,
+        *,
+        bypass_caller: str | None = None,
+        bypass_reason: str | None = None,
     ) -> str:
         """Send a raw prompt without system prompt or instructions.
 
@@ -246,6 +255,7 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         Example:
             >>> response = client.query_raw("Complete: The quick brown fox")
         """
+        require_raw_query_bypass(bypass_caller, bypass_reason)
         model_name = model or self.config.default_model
 
         # Emit audit event so the sanitization bypass is traceable in SecurityMonitor.
@@ -306,6 +316,9 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
         log_progress: bool = True,
         retries: int = 1,
         sanitize: bool = True,
+        *,
+        bypass_caller: str | None = None,
+        bypass_reason: str | None = None,
     ) -> Iterator[str]:
         """Stream response from LLM with comprehensive logging and error recovery.
 
@@ -334,6 +347,8 @@ class LLMClient(_ConnectionMixin, _StructuredQueryMixin):
 
         if sanitize:
             prompt = sanitize_llm_input(prompt)
+        else:
+            require_sanitization_bypass(bypass_caller, bypass_reason)
         yield from stream_query_impl(
             config=self.config,
             context=self.context,

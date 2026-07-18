@@ -26,11 +26,9 @@ falsifiable honesty manifest.
   (`autopoiesis:` block) and all generation logic in `src/`
   (`grammar.py`, `expand.py`, `materialize.py`, `realize.py`, `sealing.py`,
   `verify.py`, `honesty.py`) — scripts stay thin orchestrators.
-- Collapse the two parallel manuscript-emission paths: `src/emit_templates.py`
-  is independently tested but unused in production, while
-  `materialize.py::_emit_manuscript` carries its own inline stub logic. Wire
-  `_emit_manuscript` through `emit_templates.emit_all()` or remove one
-  implementation so a forker inherits a single tested path.
+- **Shipped:** materialization now consumes `src/emit_templates.py::emit_all`
+  for every child-facing analysis, test, project, and manuscript file, so the
+  standalone emitter and generated child cannot drift silently.
 - Keep provenance recompute-based: verification must re-derive the tree hash
   from disk at check time and never trust a recorded manifest hash.
 
@@ -66,21 +64,16 @@ falsifiable honesty manifest.
 
 ## Test and validator gaps
 
-- Close the residual partial-branch gap at `src/figures.py:21->23`.
-- Add a negative-control test that a malformed or under-specified
-  `autopoiesis:` grammar block is rejected at expand time, not silently
-  materialized.
+- **Shipped:** figure fallback handling now has no redundant list-shape branch
+  and explicitly labels empty-array summaries; malformed and under-specified
+  grammar shapes fail before expansion with real negative controls.
 - Strengthen the mutation meta-gate (`tests/test_meta_teeth.py`) with an
   additional stubbed-kernel case per domain, so green-by-construction theater
   cannot slip through as new domains are added.
 
 ## Ordered improvement ladder
 
-1. Wire `materialize.py::_emit_manuscript` through `emit_templates.emit_all()`
-   (or delete the unused implementation) so one tested emission path remains.
-2. Close the `figures.py:21->23` partial branch and add the malformed-grammar
-   negative control.
-3. Extend the mutation meta-gate coverage across all domains and kernels.
-4. Add grammar-extension docs and the archetype-selection filter to the
+1. Extend the mutation meta-gate coverage across all domains and kernels.
+2. Add grammar-extension docs and the archetype-selection filter to the
    configurable surface.
-5. Finish `SPEC.md` Phase 10 and re-sync it with the shipped grammar.
+3. Finish `SPEC.md` Phase 10 and re-sync it with the shipped grammar.

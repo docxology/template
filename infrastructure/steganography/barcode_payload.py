@@ -8,6 +8,7 @@ Part of the infrastructure steganography layer (Layer 1).
 
 from collections.abc import Sequence
 from datetime import datetime, timezone
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.steganography.config import resolve_build_timestamp
@@ -92,10 +93,10 @@ def build_metadata_qr_text(
     title: str = "",
     authors: list[str] | None = None,
     document_id: str = "",
-    **_kwargs,
+    **_kwargs: Any,
 ) -> str:
     """Build compact metadata for the metadata QR code (<=100 chars)."""
-    parts = []
+    parts: list[str] = []
     if title:
         parts.append(title[:40])
     if document_id:
@@ -109,7 +110,7 @@ def build_metadata_qr_text(
 def build_citation_qr_text(
     title: str = "",
     authors: list[str] | None = None,
-    **_kwargs,
+    **_kwargs: Any,
 ) -> str:
     """Build a compact citation string (<=100 chars)."""
     author = authors[0] if authors else "Unknown"
@@ -122,7 +123,7 @@ def build_mailto_qr_text(
     title: str = "",
     authors: list[str] | None = None,
     author_emails: Sequence[str | None] | None = None,
-    **_kwargs,
+    **_kwargs: Any,
 ) -> str:
     """Build a proper mailto: URI that opens an email draft.
 
@@ -145,13 +146,13 @@ def build_mailto_qr_text(
 def build_integrity_qr_text(
     document_id: str = "",
     hashes: dict[str, str] | None = None,
-    **_kwargs,
+    **_kwargs: Any,
 ) -> str:
     """Build a compact integrity hash for the integrity QR (<=100 chars).
 
     Shows the SHA256 of the compiled PDF binary file, avoiding colon prefixes.
     """
-    parts = []
+    parts: list[str] = []
     if hashes and "sha256" in hashes:
         parts.append(f"SHA-256 {hashes['sha256'][:24]}...")
     if document_id:

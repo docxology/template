@@ -59,7 +59,7 @@ def _report_suite_success(
     suite_name: str,
     results: Mapping[str, Any],
     threshold: float,
-    report: dict,
+    report: dict[str, Any],
 ) -> None:
     """Log success details for a test suite."""
     passed = results.get("passed", 0)
@@ -86,7 +86,7 @@ def report_results(
     project_exit: int,
     infra_results: Mapping[str, Any],
     project_results: Mapping[str, Any],
-    report: dict,
+    report: dict[str, Any],
     project_name: str = "project",
 ) -> None:
     """Report comprehensive test execution results with detailed breakdowns."""

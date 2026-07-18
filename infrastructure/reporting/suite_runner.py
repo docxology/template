@@ -88,10 +88,10 @@ def _passes_quiet_filter(char: str, line: str, quiet: bool) -> bool:
     return False
 
 
-def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -> tuple[int, str, str]:
+def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict[str, str], quiet: bool) -> tuple[int, str, str]:
     """Run pytest streaming output to console while capturing logs for reporting."""
     stdout_buf: list[str] = []
-    recent_lines: collections.deque = collections.deque(maxlen=10)
+    recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
     process = subprocess.Popen(
         cmd,

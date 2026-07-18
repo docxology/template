@@ -199,6 +199,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 13 archival providers
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/shell/ci_local.sh`)
+- **[maintenance/release-boundary.md](maintenance/release-boundary.md)** - Root package, tag, changelog, and GitHub release boundary
 - **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 12 executable bundle design (file predates the Ebook/Metadata stage insertion; kept its original name)
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
@@ -333,6 +334,7 @@ directories).
 - **[security/hashing_and_manifests.md](security/hashing_and_manifests.md)** - SHA-256/512 hashing and manifests
 - **[security/secure_execution.md](security/secure_execution.md)** - `secure_run.sh` orchestration and threat model
 - **[security/literature-fetch-security.md](security/literature-fetch-security.md)** - Security for literature fetching
+- **[security/ownership-and-promotion.md](security/ownership-and-promotion.md)** - Sensitive ownership exceptions, required reviews, and private-project promotion attestation
 
 ---
 

@@ -68,11 +68,8 @@ from .interactive_dashboard import (
 
 # Optional imports: _dashboard_matplotlib requires matplotlib/plotly which may not be installed
 try:
-    from ._dashboard_matplotlib import (
-        generate_all_dashboards,
-        generate_matplotlib_dashboard,
-        generate_plotly_dashboard,
-    )
+    from ._dashboard_matplotlib import generate_all_dashboards, generate_plotly_dashboard
+    from ._dashboard_charts import generate_matplotlib_dashboard
 
     DASHBOARD_AVAILABLE = True
 except ImportError:

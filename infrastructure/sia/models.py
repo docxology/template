@@ -90,6 +90,8 @@ class GenerationArtifacts:
     improvement: Path | None
     results: Path | None
     evaluation: EvaluationResult | None
+    source_mode: str = "fixture_replay"
+    feedback_applied: bool = False
 
     def to_dict(self, *, relative_to: Path | None = None) -> dict[str, Any]:
         """Serialize artifact metadata."""
@@ -101,6 +103,8 @@ class GenerationArtifacts:
             "improvement": _portable_path(self.improvement, relative_to) if self.improvement else "",
             "results": _portable_path(self.results, relative_to) if self.results else "",
             "evaluation": self.evaluation.to_dict() if self.evaluation else None,
+            "source_mode": self.source_mode,
+            "feedback_applied": self.feedback_applied,
         }
 
 

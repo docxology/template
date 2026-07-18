@@ -83,12 +83,20 @@ def test_publication_audit_cli_exposes_rendered_and_format_flags() -> None:
     assert args.format == "json"
 
 
+def test_publication_audit_cli_exposes_all_public_selection() -> None:
+    args = build_parser().parse_args(["publication-audit", "--all-public"])
+
+    assert args.all_public is True
+    assert args.project is None
+
+
 def test_publication_audit_json_stream_is_machine_readable(capsys: pytest.CaptureFixture[str]) -> None:
     args = build_parser().parse_args(
         [
             "publication-audit",
             "--project",
             "templates/template_advanced_literature_review",
+            "--rendered",
             "--format",
             "json",
         ]

@@ -12,8 +12,8 @@
     {
       "contract_match": true,
       "path": "output/data/render_report.json",
-      "sha256": "73e75a5c30b63515f0511d78f475254d5e47ab6e3084e37386c636b84096739b",
-      "size_bytes": 165,
+      "sha256": "98eccfed5644c5590d25c5511a2f1bf567f33fd48d38df81d3baeb4135d423f7",
+      "size_bytes": 115,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -75,7 +75,7 @@
     {
       "contract_match": true,
       "path": "output/figures/crab_landings.png",
-      "sha256": "557546816226c16f5c021821f6ce586b4db9569c0c20d21fa235f9441992283c",
+      "sha256": "2aae1ca07a028302022062cd474c067887dbf8f03c8ae3140d24665bff694945",
       "size_bytes": 41751,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -120,7 +120,7 @@
     {
       "contract_match": true,
       "path": "output/figures/tides.png",
-      "sha256": "d7c019f42a2f148e0ce0b6b095b6e813f6e1a98b4a9d1c8d40b96d67a552481d",
+      "sha256": "3ab6137c42bec2ed142bdeebfe3ed907640f00101781ee1c29a439c287c3ba81",
       "size_bytes": 35572,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -129,7 +129,7 @@
     {
       "contract_match": true,
       "path": "output/figures/weather_7day.png",
-      "sha256": "8d57499dd2d8c04829879b81f93b8db271e6eaaf02cc7a19135b9a2d7cfdcb58",
+      "sha256": "e245b685e807d026e3901a5d408db0c3838b008c4a6d7d68d02442bd50c8ef36",
       "size_bytes": 47000,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -192,8 +192,26 @@
     {
       "contract_match": true,
       "path": "output/pdf/the-triplicate.pdf",
-      "sha256": "c312f5dbe3eab6ef2fa246e3e553994fdb8e1e4d090196137817ff2dc2404079",
-      "size_bytes": 479405,
+      "sha256": "96653e9ef42bf568968a1489dcea33c2ed7a3bab5c571672ac78556bf570511c",
+      "size_bytes": 479392,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/swh_repo_url.txt",
+      "sha256": "551451a86815cc57d0ac35dae8a22164fc5092f32f1fd9ad844acb5e818fd0b9",
+      "size_bytes": 48,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/release/upload_receipts.json",
+      "sha256": "ce0b8daca15d91e7c78f44da62258e2631159910beda44de8efbff666b931c42",
+      "size_bytes": 1938,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -273,8 +291,8 @@
     {
       "contract_match": true,
       "path": "output/reports/render_summary.txt",
-      "sha256": "93ce5719055af0d0e62a70eaf590bf28fcd8fbfc5ae0c18262df8bee867e22a2",
-      "size_bytes": 206,
+      "sha256": "4c224ec7c4673b44e5708facfa7adfc5b69c38c5434aa066056027d6c2d9c4fb",
+      "size_bytes": 156,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

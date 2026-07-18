@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.runtime.env_deps import check_dependencies, install_missing_packages
@@ -82,7 +83,7 @@ def validate_project_discovery(
     repo_root: Path,
     project_name: str,
     *,
-    project_discoverer: Callable[[Path], list] | None = None,
+    project_discoverer: Callable[[Path], list[Any]] | None = None,
 ) -> bool:
     """Validate project discovery."""
     from infrastructure.core.project_paths import resolve_project_root

@@ -30,9 +30,10 @@ file.
 
 ## Integrity and template-status gaps
 
-- Keep the bundled `data/corpus.json` clearly marked as a synthetic,
-  deterministic fixture in README, manuscript prose, and generated reports —
-  never phrase its contents as a real literature finding.
+- The bundled `data/corpus.json` is marked as a deterministic fixture in
+  README, AGENTS, manuscript prose, and generated reports; fixture-backed
+  synthesis is rejected when it uses high-confidence empirical assertion
+  language. Keep this boundary intact when adding claim templates.
 - Keep manuscript numbers (`RESULT_NUM_PAPERS`, `RESULT_WITH_ABSTRACT`,
   `RESULT_WITH_DOI`, etc.) sourced only from `output/run_summary.json` and
   `output/data/manuscript_variables.json`, never hand-typed.
@@ -62,8 +63,9 @@ file.
   the report generator further.
 - Add a negative control before widening retrieval-coverage claims beyond
   the bundled offline corpus.
-- Add a fixture-honesty check that fails if `data/corpus.json`-derived
-  results are phrased as empirical literature findings in generated prose.
+- **Shipped:** fixture-honesty validation and an explicit `evidence_scope` in
+  `output/run_summary.json`; extend the allowlisted assertion vocabulary only
+  with a focused negative-control test.
 - Keep the byte-identical-across-reruns test
   (`tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns`)
   in sync as new pipeline stages are added.

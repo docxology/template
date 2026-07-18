@@ -3,8 +3,17 @@
     {
       "contract_match": true,
       "path": "output/data/release_ledger.json",
-      "sha256": "7516dbd32b6b9c7ccdbdf111cee227fe9923e0d2ff1596ebc755146846845f46",
-      "size_bytes": 10597,
+      "sha256": "17f4f303e2ccb68d6eb84ff9612f37ce3c686c3c953b85c1f8ef4f5c349797ef",
+      "size_bytes": 10932,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/dev/.DS_Store",
+      "sha256": "b17a0126bde4a58b91d2cb782966ce04d95d4a9b1520eae877040fa48c8532a8",
+      "size_bytes": 6148,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -12,8 +21,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black.hashes.json",
-      "sha256": "7beb9997a1a74ce909c0ee53dd1b95bdf8386bcd98f096a95681995828bab365",
-      "size_bytes": 545,
+      "sha256": "1e21aa7cfaa3a0d3b36f632fe43f89a89b407ae8af46ccb085cad6aa64368e13",
+      "size_bytes": 544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -21,8 +30,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black.pdf",
-      "sha256": "eefc5c2a975809de15cdbee326e7041b174f4741c834a4f577c233285570ebd6",
-      "size_bytes": 21543,
+      "sha256": "3128a32c830aeb2121f5767674788d0c62b3f0d750fb5e7680b4cc27aa3ecfd7",
+      "size_bytes": 21504,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -30,8 +39,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black_steganography.pdf",
-      "sha256": "5700beb3373dbdc82557d7bf175482ea9408dd7d60e30b845c07e73bc43dec03",
-      "size_bytes": 110902,
+      "sha256": "8d0bf9aef1dcda6bb82d8bf45390b3ce4fe8dce256600955bf63d9cd65bdd975",
+      "size_bytes": 145846,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -39,8 +48,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_blur.hashes.json",
-      "sha256": "371a84eea873f7d48f4c6319dcb4e2f6213b40f990d9782f65ef46b36b3ec2ce",
-      "size_bytes": 544,
+      "sha256": "972a9383964cd649ede9ceb3d36001e0c861162e561e4cf7e7173b25e12237ba",
+      "size_bytes": 543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -48,8 +57,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_blur.pdf",
-      "sha256": "a348573763f967742b9ef068483e68e31b381f3d41eae8b6c7d5bf980684ff0b",
-      "size_bytes": 36626,
+      "sha256": "457db039378bbff5c4aa8f0451ed622dc4fa700aa8f5a83347a1ab0778f4dc45",
+      "size_bytes": 36502,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -57,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_blur_steganography.pdf",
-      "sha256": "4964e9799f6c79fff646b83c8301c8b22c8e0a67d483ad9f1ada39ae887b8018",
-      "size_bytes": 218786,
+      "sha256": "2779a7a8da8728f7108501dcd61ca0cca99144ff65ed545a1ca0f0cd528ef3aa",
+      "size_bytes": 253233,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -66,8 +75,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_gray.hashes.json",
-      "sha256": "6e736ea0d43c42b70d41a973aa479ab8bcce9cd5a587172c3c357d14c1b87815",
-      "size_bytes": 544,
+      "sha256": "ced460d766debeaf3457d20d7b0719949af2ba35622eee2f5dce085844845340",
+      "size_bytes": 543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -75,8 +84,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_gray.pdf",
-      "sha256": "6762242191bdc0ddc717c04b7374d8320397acc1cf3c89e36b321c925c2f884f",
-      "size_bytes": 21632,
+      "sha256": "19ee19dd5ec44ebbe79513ae4e3583c3d035bd2b80a95cd471f0ec1259acde4b",
+      "size_bytes": 21592,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -84,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_gray_steganography.pdf",
-      "sha256": "a4bb2cd1255db5698f9206ffb4bc7ae11303be0fcc15327cd4b834425642c186",
-      "size_bytes": 111054,
+      "sha256": "829993a9065834b69592c976017fd5fbb6229bc61d7d37d7453cccd840282e02",
+      "size_bytes": 146064,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -93,8 +102,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_white.hashes.json",
-      "sha256": "4644a757b0d0b1364734d9732f256e65fc81674a6d5b1ef5de11c9151d5fb028",
-      "size_bytes": 545,
+      "sha256": "2782c427177c96cfc8566c515261b38082473b51368fd2d10608b5e1407b62cc",
+      "size_bytes": 544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -102,8 +111,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_white.pdf",
-      "sha256": "e8c9802b1a38c8abed2b08fefa8143d4be7fcfc910f25926edbcb823b3446410",
-      "size_bytes": 21568,
+      "sha256": "2c7d3b8b8b54d475cf4213d284571b065461cec197e3f7b593867a629d5648dc",
+      "size_bytes": 21530,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -111,8 +120,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_white_steganography.pdf",
-      "sha256": "d93c15a99fba663ef737b8c27b54d891eeddc03070c87c399904588b3d152b37",
-      "size_bytes": 110902,
+      "sha256": "ea9b89e0cd2910b15b2ab78e69a9eb38ef2a984412e2ecc1bdbddadc03765317",
+      "size_bytes": 146116,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -120,8 +129,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_black.hashes.json",
-      "sha256": "de1d490c4f854899f89deb0961af53a6eeb7611e46f7f20391aef7a889ee8205",
-      "size_bytes": 541,
+      "sha256": "9da4f56efbaad0069ac6e33e3b485a370303138394ef930afbcea51def70c2ef",
+      "size_bytes": 540,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -129,8 +138,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_black.pdf",
-      "sha256": "94aaeae63f3797b67250aae8dbe1ef708be8aaad6edcbe7a20befcc4a9c9a572",
-      "size_bytes": 21968,
+      "sha256": "5a7465a51371ae670487079bb5b6d4705ab61fe10e2def4c107c19ea23f0a590",
+      "size_bytes": 21930,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -138,8 +147,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_black_steganography.pdf",
-      "sha256": "caab7cae33e11291a694df2c871564ee978196715ab078bfc3f8a0871c50ad10",
-      "size_bytes": 113688,
+      "sha256": "a92d2ddcbb3b1693b5d61097c104f796cfce754364b82373025641c2b119eb8f",
+      "size_bytes": 149460,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -147,8 +156,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_blur.hashes.json",
-      "sha256": "528d238b96661c5e78be282362ef0e9d0f41456c490b7895a030f834f9bc3e03",
-      "size_bytes": 540,
+      "sha256": "aedc2e4a059cd6d9c5139b3baeb5fc003d129b4ebaa9a30a1e72edbaa56c789d",
+      "size_bytes": 539,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -156,8 +165,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_blur.pdf",
-      "sha256": "08840bd1da5a1424e3183bdf4a822ca9ffb46cacf00d25b2f9ba1f9092d45d68",
-      "size_bytes": 36935,
+      "sha256": "8b8a5d665d482f4dd98ed3c3742ab573d7b8441c3445b1cdd3b8201d25e19518",
+      "size_bytes": 36807,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -165,8 +174,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_blur_steganography.pdf",
-      "sha256": "668785ba1b6dca2f4907fd04ad33d3d2fd7eed522992df1f76dc7fce9652c93d",
-      "size_bytes": 221643,
+      "sha256": "1a18a8c8040a38105723df14be01c0bde9d5f820699382dd455fde3654d0b6a2",
+      "size_bytes": 255928,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -174,8 +183,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_gray.hashes.json",
-      "sha256": "ae5e21d5ff573de615d05f4974d4c6f4d749dfd82f487e38a0ed06bc848fa882",
-      "size_bytes": 540,
+      "sha256": "7d94f8eeeb77ab058cda1564dec3c8c11c95a6c9a329a7c32a24ced974f969f2",
+      "size_bytes": 539,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -183,8 +192,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_gray.pdf",
-      "sha256": "8017aa20de229014ba689060af56de4daee80c19d4b5de0a0c795bbc591b91ec",
-      "size_bytes": 22001,
+      "sha256": "538c136f17c01eb2748b055d2214d44438b92385b398dce36fc21bf9aeb6e146",
+      "size_bytes": 21965,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -192,8 +201,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_gray_steganography.pdf",
-      "sha256": "03076c36af909a4c36f4358877f2f807e63c6e41bb4d3402847d00012b2cc6bc",
-      "size_bytes": 113849,
+      "sha256": "95da8f857462df3e2a2195e335c833c50e208a7ff614e4419ea49196ad02e348",
+      "size_bytes": 148991,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -201,8 +210,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_white.hashes.json",
-      "sha256": "25b09bdfa0c8d402c27713bbae8dc813837c936f36c05c739b07ff6593de9b08",
-      "size_bytes": 541,
+      "sha256": "90597143a2b010ed8636bf199ef155a7a8149e8e5933e0532003056d6864d742",
+      "size_bytes": 540,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -210,8 +219,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_white.pdf",
-      "sha256": "f6482f62cee0e013b8400fab446899be928ad1f4bfc81cf8647a993f7f4ad3f5",
-      "size_bytes": 21961,
+      "sha256": "9dc2d3a5bde0946afbfd9a47473f1eaa8d4c12f7604224ce7076f2968908f23e",
+      "size_bytes": 21923,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -219,8 +228,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_white_steganography.pdf",
-      "sha256": "266ddbdc9e7a9427ddaf676d36ea62af57d3cc3e4d71578b5f0488dfb898454d",
-      "size_bytes": 113687,
+      "sha256": "fc7bd3eeb1360e68ceceb558531c83320164e22d2a704e2ca0b4fe2a3239bf1f",
+      "size_bytes": 148493,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -228,8 +237,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_black.hashes.json",
-      "sha256": "ea4346262ec7ade9a327bf9dce5e7dbcb75f9e7d7aa8f629d255da503fa0909d",
-      "size_bytes": 544,
+      "sha256": "36a65b44201f95413e61fca725c80692bf668dbe341797cfb1cae9a26feb6346",
+      "size_bytes": 543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -237,8 +246,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_black.pdf",
-      "sha256": "ba37e46faac981efa0c979d030e7ec07a455f3fb189f31076296c671b17045ca",
-      "size_bytes": 21626,
+      "sha256": "e00ccf0e511eb00d0274684df6cc644eb2c72a99d0e53d65432e8dec51c63d37",
+      "size_bytes": 21593,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -246,8 +255,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_black_steganography.pdf",
-      "sha256": "51ba957a664eb506f5f088ffc0be93cdaa5a409bf6f56af67b4a4a603dcf1ec5",
-      "size_bytes": 111612,
+      "sha256": "a58b512ad3eeb4f374a8a497d7f6cf131c4ecace0012e3d2f23c44b929e46061",
+      "size_bytes": 146502,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -255,8 +264,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_blur.hashes.json",
-      "sha256": "b3a986f0e4feb439d4c937b1d813d03ac8afeb43f5cf0aee056799af617308f0",
-      "size_bytes": 543,
+      "sha256": "5c377a99c0497b507d1e1df69f85ac6d97b314eb77be0e159d82a99775a7cd39",
+      "size_bytes": 542,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -264,8 +273,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_blur.pdf",
-      "sha256": "dfb9abf616e27b6760787b2ebc79322224f30d9a861f1fc25b8fa15f03be7cc8",
-      "size_bytes": 36681,
+      "sha256": "9708a215da7e41f52cc953e4e26dec1783a4df751417463102e1593d20eeef43",
+      "size_bytes": 36552,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -273,8 +282,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_blur_steganography.pdf",
-      "sha256": "844c0761de539468acb67a1e6164503d599bd586c83971d0d28c1fa9f3f3c23b",
-      "size_bytes": 219533,
+      "sha256": "4e327792a17eb157ff77fd774fb474a8f94c04f4ed7bddec4936534be819f73b",
+      "size_bytes": 253806,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -282,8 +291,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_gray.hashes.json",
-      "sha256": "7a2390c6c4847f43fbe008fa0779ca97330443cc20ae7985e1de1b41e1b398f6",
-      "size_bytes": 543,
+      "sha256": "a6adeb12f41dfcdd9c1a9e17452550a1e7c03145e1288784b6e43ae43bf0284c",
+      "size_bytes": 542,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -291,8 +300,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_gray.pdf",
-      "sha256": "e8242c459cb2e1a592bb7814fd90f4d5723b298975625112a32c91e1fd52761d",
-      "size_bytes": 21645,
+      "sha256": "e2c58e7761f8eb82e5968b244e5db2f5a604356f4500c91476546deb02464920",
+      "size_bytes": 21610,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -300,8 +309,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_gray_steganography.pdf",
-      "sha256": "75fe081a4b63e52b5b99e9eda06af577730092c60179f71af277fbe82967f76c",
-      "size_bytes": 111779,
+      "sha256": "460a1815cf406aca1fbe4ce1d8766a842fb905515c13b35800d1134eb95a6dfd",
+      "size_bytes": 146909,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -309,8 +318,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_white.hashes.json",
-      "sha256": "d0b68ca799e4ca51f4d28ea0decc9c6e980ef3b414b40fd79b3b94b8704326b8",
-      "size_bytes": 544,
+      "sha256": "572d19ce406cee12a6726d88cd0add530cd1bb48cb17dbcc5c2281001dba214b",
+      "size_bytes": 543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -318,8 +327,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_white.pdf",
-      "sha256": "f6287c83d8fc95ec5a803768190ad8ea0dd448ec0a85e5cfaa7221022077e82c",
-      "size_bytes": 21606,
+      "sha256": "45f6d635d8ed7457e22f39f2309c38f93f81603cc4e05a3c6983bbb1c81a9f73",
+      "size_bytes": 21574,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -327,8 +336,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_white_steganography.pdf",
-      "sha256": "f518f39ef0f1659b21689f3df122d6d5293bb81125bd4198b2b1007497e1a213",
-      "size_bytes": 111613,
+      "sha256": "4f4e683b96fd6be6496dd0a40dd4425a410f8afa144cba688c8da89ba11a518f",
+      "size_bytes": 146587,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -336,7 +345,7 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/variant_matrix.json",
-      "sha256": "3dafe0fca1ef0c2146ce9b5af0dfb5d19261439ba8ee41fd7cb99d2aaf06550b",
+      "sha256": "222ce47200591d578a37d6d7a1a8cc7dc4bb7334d695207186f9c02c2108c19f",
       "size_bytes": 30418,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -345,8 +354,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_black.hashes.json",
-      "sha256": "6052d78deebfd57386e3fe9e4cf8e08c7e5ebabf05ed86b64d5db3bc1bd93ca5",
-      "size_bytes": 545,
+      "sha256": "6e501b119ddbaac1c8368eb94a7b20c695024bcf63934608fc3b6c3ef8e58733",
+      "size_bytes": 544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -354,8 +363,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_black.pdf",
-      "sha256": "a00c5f843cfc992b09c51c0f08d5e74d1f2acbf2a3648b537da995a425c383fd",
-      "size_bytes": 21404,
+      "sha256": "c7715c46ef8ff62cee9f9f98085cae04f68e6852a99169b80281d0013afa421e",
+      "size_bytes": 21364,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -363,8 +372,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_black_steganography.pdf",
-      "sha256": "391e1889739d6900cfb12270217b1ee80837ee4fb067e6f8c3ac2f56d03d3041",
-      "size_bytes": 110673,
+      "sha256": "d0accb40b812b99dde39af703168d0d76a353e0a54c4694b2c9ac7390c45dc70",
+      "size_bytes": 146013,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -372,8 +381,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_blur.hashes.json",
-      "sha256": "7f23ae90ab81e059478264e480d359320ce9f86abcf034db3a339609f5df5260",
-      "size_bytes": 544,
+      "sha256": "2aa7c5bc7921d9b4d6cb380f60051192fe83d78de8de411556e5c135ecd8c8c5",
+      "size_bytes": 543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -381,8 +390,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_blur.pdf",
-      "sha256": "2b9f0d10b90e2ecf8f9ed268a4b5cd560f6443de357e4644ddd8db11aa6e720e",
-      "size_bytes": 36445,
+      "sha256": "8d50bb51bc5107a5e3592625943628ba465e3ef493d2dc52beed9f0b5b28375e",
+      "size_bytes": 36315,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -390,8 +399,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_blur_steganography.pdf",
-      "sha256": "a1321eab0e8a1f2ebcc98518f52546c4a5c3e53dbad039a01c3a7b4cb561225a",
-      "size_bytes": 218617,
+      "sha256": "5ef2ecc30f0e3a00095d7bcafa4a81f8dc4120803cbdbf3fe685873b9501148a",
+      "size_bytes": 253280,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -399,8 +408,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_gray.hashes.json",
-      "sha256": "a52d8d1b2476c9ed21e4cb7fec813f1791f49ef8a7c8d9e42110fd6eeba46634",
-      "size_bytes": 544,
+      "sha256": "ee728f676e54b3748731f54525e49f6ea15e38217f003f9bae164c66cced5b7e",
+      "size_bytes": 543,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -408,8 +417,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_gray.pdf",
-      "sha256": "1353140c84ab21ef19220682c868531a5eaf5b608ec5bc771f9dbf576d746fc8",
-      "size_bytes": 21444,
+      "sha256": "dd82cece00a4a4ef515f6bd45fe5099fb5b40bb31864ee005fdb58ad4ec970d0",
+      "size_bytes": 21404,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -417,8 +426,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_gray_steganography.pdf",
-      "sha256": "c1f5734567125a9088d01522f4bd6a1322f14aed054ec4674ecf08f90272be20",
-      "size_bytes": 110826,
+      "sha256": "33063543cea646b86b7397b038dec97976482208b7a54b894f6ef8d2eb0dd4ca",
+      "size_bytes": 146082,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -426,8 +435,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_white.hashes.json",
-      "sha256": "98035b270cfa699a0a0950f42b86fb587a803adefbc816a9ef3966fd78846871",
-      "size_bytes": 545,
+      "sha256": "5c0c94afe02e7879d018199fd09fb062cd5ed62aeec53fe9d50fe19749559f4c",
+      "size_bytes": 544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -435,8 +444,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_white.pdf",
-      "sha256": "ed566ea3148c7fcdd7bcaef00072368db40ed8127abe7376f84ed6dfac57483c",
-      "size_bytes": 21339,
+      "sha256": "6e8bdb1832ee3d514953269040dbac08547db340f35818c0d5f9541016b85d1a",
+      "size_bytes": 21298,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -444,8 +453,8 @@
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_white_steganography.pdf",
-      "sha256": "c7b60070ddc7220ef8b651da4ffb9ca523173b144b0d52a9cc8c4a0072ff6731",
-      "size_bytes": 110673,
+      "sha256": "1b32dd82d8a648b50a618b54f5807f1a72a32c64445b8fac477247453dc1bde9",
+      "size_bytes": 145425,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -579,7 +588,7 @@
     {
       "contract_match": true,
       "path": "output/reports/redaction_audit.json",
-      "sha256": "0df44ebe972bbe03134bb64d82e3e8206cbf3d9f66651876d4e55f4c2e8eb1de",
+      "sha256": "f71e36616eccfcb6eb70f51956777a14c985fce14b3537419f7a75f2513fc766",
       "size_bytes": 4806,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

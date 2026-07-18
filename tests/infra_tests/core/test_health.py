@@ -167,6 +167,20 @@ class TestSubsetSelection:
         assert isinstance(report, HealthReport)
         assert [r.name for r in report.results] == ["no-mocks"]
 
+    def test_parallel_subset_preserves_requested_order(self) -> None:
+        report = run_health_checks(
+            REPO_ROOT,
+            gates=["semantic-standins", "no-mocks"],
+            workers=2,
+        )
+        assert report.passed is True
+        assert [result.name for result in report.results] == ["semantic-standins", "no-mocks"]
+        assert report.wall_elapsed_ms > 0
+
+    def test_workers_must_be_positive(self) -> None:
+        with pytest.raises(ValueError, match="workers must be at least 1"):
+            run_health_checks(REPO_ROOT, gates=["no-mocks"], workers=0)
+
     def test_unknown_gate_raises(self) -> None:
         with pytest.raises(ValueError, match="unknown gate"):
             run_health_checks(REPO_ROOT, gates=["does-not-exist"])
@@ -223,6 +237,7 @@ class TestCLI:
         assert payload["results"][0]["name"] == "no-mocks"
         assert "elapsed_ms" in payload["results"][0]
         assert isinstance(payload["total_elapsed_ms"], (int, float))
+        assert isinstance(payload["wall_elapsed_ms"], (int, float))
 
     def test_unknown_gate_exits_non_zero(self) -> None:
         proc = _run_module_cli("--gates=not-a-gate")

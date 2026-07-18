@@ -1,4 +1,4 @@
-"""Per-project pytest runner with combined coverage gate.
+"""Per-project pytest runner with isolated combined coverage gates.
 
 Two ``projects/<name>/tests/conftest.py`` files cannot live in the same
 ``pytest`` process: pytest registers conftest plugins by directory-derived
@@ -6,8 +6,8 @@ name, so a second conftest with the same basename collides with the first
     # Prevent duplicate module registration when conftest plugins overlap.
 ``.github/workflows/ci.yml`` was an open-coded bash loop that invoked
 ``pytest`` once per ``projects/<name>/tests/`` directory, accumulating
-coverage with ``--cov-append`` and gating the combined coverage with
-``coverage report --fail-under=<N>`` at the end.
+coverage in one process per project, then combining those isolated files and
+gating the union with ``coverage report --fail-under=<N>`` at the end.
 
 This module lifts that loop into a single Python entry point so CI and
 local runs share one implementation:
@@ -24,11 +24,10 @@ The runner:
   which has its own dedicated CI job),
 * invokes a real ``pytest`` subprocess **per project** so conftest
   plugins never collide,
-* uses ``--cov=projects/<name>/src`` per project and ``--cov-append``
-  for every project after the first,
-* honours ``COVERAGE_FILE`` from the environment (or sets it from
-  ``coverage_file``) so all per-project runs write to the same combined
-  coverage data file,
+* uses ``--cov=projects/<name>/src`` per project and an isolated coverage
+  datafile for every subprocess,
+* combines those per-project files only after all subprocesses exit, so an
+  inherited infrastructure ``COVERAGE_FILE`` cannot contaminate the union,
 * runs ``coverage report --fail-under=<fail_under>`` at the end and
   returns ``0`` only when **every** per-project pytest exited cleanly
   **and** the combined coverage gate passes.
@@ -51,7 +50,7 @@ from infrastructure.core.logging.utils import (
 from infrastructure.core.pytest_orchestration import (
     build_union_pytest_command,
     make_coverage_subprocess_env,
-    resolve_coverage_file,
+    project_declared_coverage_floor,
 )
 from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.runtime._python_env import get_python_command
@@ -63,6 +62,7 @@ logger = get_logger(__name__)
 
 DEFAULT_SKIP_PROJECTS: tuple[str, ...] = ()
 DEFAULT_COVERAGE_FILE: str = ".coverage.project"
+DEFAULT_PROJECT_FAIL_UNDER: int = 90
 # Combined-union floor for the multi-project run (`--project-only
 # --all-projects`). This is deliberately distinct from — and lower than —
 # the per-project standalone floor (90%, which exemplar projects meet:
@@ -183,6 +183,40 @@ def _run_combined_coverage_gate(
         return 1
 
 
+def _combine_project_coverage(
+    repo_root: Path,
+    combined_file: Path,
+    project_files: Sequence[Path],
+    env: dict[str, str],
+) -> int:
+    """Combine isolated project coverage files into *combined_file*."""
+    existing = [path for path in project_files if path.is_file()]
+    if not existing:
+        logger.error("No isolated project coverage files were produced")
+        return 1
+    log_substep(f"Combining {len(existing)} isolated project coverage file(s)", logger)
+    cmd = get_python_command() + [
+        "-m",
+        "coverage",
+        "combine",
+        f"--data-file={combined_file}",
+        *[str(path) for path in existing],
+    ]
+    combine_env = dict(env)
+    combine_env["COVERAGE_FILE"] = str(combined_file)
+    try:
+        completed = subprocess.run(  # nosec B603
+            cmd,
+            cwd=str(repo_root),
+            env=combine_env,
+            check=False,
+        )
+        return int(completed.returncode)
+    except (OSError, subprocess.SubprocessError) as exc:
+        logger.error("coverage combine invocation failed: %s", exc)
+        return 1
+
+
 def run_per_project_pytest(
     repo_root: Path,
     *,
@@ -205,8 +239,9 @@ def run_per_project_pytest(
         skip_projects: Project names to skip even if discovered. When ``None``,
             projects with ``[tool.template] skip_combined_pytest = true`` in
             ``pyproject.toml`` are skipped automatically.
-        coverage_file: Path to the combined coverage data file. Used only
-            when the ``COVERAGE_FILE`` environment variable is unset.
+        coverage_file: Path to the combined coverage data file. Ambient
+            ``COVERAGE_FILE`` is deliberately ignored so an enclosing
+            infrastructure coverage run cannot contaminate this union.
             Default: ``".coverage.project"``.
         fail_under: Minimum combined coverage percentage required by the
             final ``coverage report`` gate.
@@ -243,9 +278,10 @@ def run_per_project_pytest(
 
     resolved_markers = DEFAULT_MARKER_EXPR if marker_expr is None else marker_expr or None
 
-    coverage_file_value = resolve_coverage_file(coverage_file)
-    # Reset combined coverage data file before the first project runs.
-    cf_path = Path(coverage_file_value)
+    # Use the caller's explicit path, never an inherited COVERAGE_FILE. The
+    # parent process may itself be running under pytest-cov with
+    # ``.coverage.infra``; reusing that file would silently mix suites.
+    cf_path = Path(coverage_file)
     if not cf_path.is_absolute():
         cf_path = repo_root / cf_path
     if cf_path.exists():
@@ -255,7 +291,8 @@ def run_per_project_pytest(
         except OSError as exc:  # pragma: no cover - filesystem oddity
             logger.warning("Could not remove stale coverage file %s: %s", cf_path, exc)
 
-    env = make_coverage_subprocess_env(str(cf_path), repo_root)
+    project_coverage_files: list[Path] = []
+    base_env = make_coverage_subprocess_env(str(cf_path), repo_root)
 
     logger.info("Will run %d project(s):", len(pairs))
     for name, project_root, tests_dir in pairs:
@@ -263,6 +300,17 @@ def run_per_project_pytest(
 
     overall_exit = 0
     for index, (project_name, project_root, tests_dir) in enumerate(pairs):
+        safe_name = project_name.replace("/", "_").replace("\\", "_")
+        project_coverage_file = cf_path.with_name(f"{cf_path.name}.{index:02d}-{safe_name}")
+        project_coverage_files.append(project_coverage_file)
+        if project_coverage_file.exists():
+            try:
+                project_coverage_file.unlink()
+            except OSError as exc:  # pragma: no cover - filesystem oddity
+                logger.warning("Could not remove stale project coverage file %s: %s", project_coverage_file, exc)
+        project_env = make_coverage_subprocess_env(str(project_coverage_file), repo_root)
+        project_env["PYTHONPATH"] = base_env.get("PYTHONPATH", "")
+        project_floor = project_declared_coverage_floor(project_root) or DEFAULT_PROJECT_FAIL_UNDER
         cmd = build_union_pytest_command(
             repo_root,
             project_root,
@@ -271,15 +319,20 @@ def run_per_project_pytest(
             marker_expr=resolved_markers,
             timeout=timeout,
             parallel=parallel,
+            fail_under=project_floor,
         )
-        rc = _run_pytest_for_project(cmd, repo_root, env, project_name)
+        rc = _run_pytest_for_project(cmd, repo_root, project_env, project_name)
         if rc == 0:
             log_success(f"Project '{project_name}' tests passed", logger)
         else:
             logger.error("Project '%s' tests failed (exit=%d)", project_name, rc)
             overall_exit = rc or overall_exit or 1
 
-    cov_rc = _run_combined_coverage_gate(repo_root, env, fail_under)
+    combine_rc = _combine_project_coverage(repo_root, cf_path, project_coverage_files, base_env)
+    if combine_rc != 0:
+        overall_exit = overall_exit or combine_rc
+    final_env = make_coverage_subprocess_env(str(cf_path), repo_root)
+    cov_rc = _run_combined_coverage_gate(repo_root, final_env, fail_under)
     if cov_rc == 0:
         log_success(f"Combined coverage gate passed (>= {fail_under}%)", logger)
     else:
@@ -293,6 +346,7 @@ __all__ = [
     "DEFAULT_COVERAGE_FILE",
     "DEFAULT_FAIL_UNDER",
     "DEFAULT_MARKER_EXPR",
+    "DEFAULT_PROJECT_FAIL_UNDER",
     "DEFAULT_SKIP_PROJECTS",
     "DEFAULT_TIMEOUT",
     "discover_skip_combined_pytest_projects",

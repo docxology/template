@@ -7,6 +7,7 @@ Part of the infrastructure steganography layer (Layer 1).
 """
 
 import io
+from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
 
@@ -15,7 +16,7 @@ logger = get_logger(__name__)
 # ── Lazy imports ─────────────────────────────────────────────────────────
 
 
-def _get_qrcode():
+def _get_qrcode() -> Any:
     try:
         import qrcode
 
@@ -26,7 +27,7 @@ def _get_qrcode():
         ) from e
 
 
-def _get_barcode():
+def _get_barcode() -> Any:
     try:
         import barcode
 
@@ -38,7 +39,7 @@ def _get_barcode():
         ) from e
 
 
-def _get_reportlab():
+def _get_reportlab() -> tuple[Any, Any, Any, Any]:
     try:
         from reportlab.lib.units import inch, mm
         from reportlab.pdfgen import canvas as rl_canvas
