@@ -1246,6 +1246,7 @@ def test_project_src_boundary_respects_layer_contract(drift_module, tmp_path):
     assert not any(f.rule == "src_infrastructure_import" for f in rep.findings)
 
 
+@pytest.mark.timeout(300)
 def test_end_to_end_run_on_live_exemplars_is_clean(drift_module):
     """Final smoke: the actual checked-in exemplars must be clean.
 
