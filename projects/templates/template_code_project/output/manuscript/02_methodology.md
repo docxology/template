@@ -68,7 +68,7 @@ The most critical aspect of the project's methodology is its validation framewor
 
 ### Stopping rule and reporting
 
-`gradient_descent()` terminates when $\|\nabla f(x_k)\|$ falls below `experiment.tolerance` or when $k$ reaches `experiment.max_iterations`. The boolean `converged` in exported CSV rows distinguishes these outcomes. Downstream, `scripts/z_generate_manuscript_variables.py` aggregates the CSV into `RESULT_*` placeholders so tables and prose cannot drift from the last analysis run.
+`gradient_descent()` terminates when $\|\nabla f(x_k)\|$ falls below `experiment.tolerance`, when $k$ reaches `experiment.max_iterations`, or when an objective, gradient, or update becomes non-finite. The boolean `converged` plus `termination_reason` in exported CSV rows distinguish these outcomes. A non-finite candidate is rejected before it enters `objective_history`, preserving the last finite state for reproducible reporting. Downstream, `scripts/z_generate_manuscript_variables.py` aggregates the CSV into `RESULT_*` placeholders so tables and prose cannot drift from the last analysis run.
 
 ### Figure generation contract
 

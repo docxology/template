@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -274,7 +288,7 @@ runs satisfied <code>gradient_descent()</code> convergence
 class="math inline">\(\alpha = 1.0\)</span>)</li>
 <li>Largest recorded iteration count: 1000 (at <span
 class="math inline">\(\alpha = 0.01\)</span>)</li>
-<li>Mean iterations across all rows: 372</li>
+<li>Mean iterations across all rows: 351</li>
 </ul>
 <h3 id="numerical-stability">Numerical Stability</h3>
 <p>Stability score from

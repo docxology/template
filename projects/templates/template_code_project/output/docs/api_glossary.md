@@ -54,7 +54,7 @@
 | `invariants` | `trajectory_invariants` | function | ``simulate_trajectory`` is monotone for every stable step size. |
 | `manuscript_variables` | `generate_variables` | function | Generate all manuscript variables from config and analysis outputs. |
 | `manuscript_variables` | `save_variables` | function | Persist *variables* as JSON for downstream rendering and debugging. |
-| `optimizer` | `OptimizationResult` | class | Result container from gradient_descent. |
+| `optimizer` | `OptimizationResult` | class | Result container from :func:`gradient_descent`. |
 | `optimizer` | `compute_gradient` | function | Compute ∇f(x) = A x - b for the quadratic objective. A defaults to identity, b to ones. |
 | `optimizer` | `gradient_descent` | function | Run gradient descent: x_{k+1} = x_k - α ∇f(x_k) until convergence or max_iterations. |
 | `optimizer` | `make_quadratic_problem` | function | Create paired (objective, gradient) callables for a quadratic problem. |

@@ -19,7 +19,7 @@ Paths in the table are relative to `projects/templates/template_code_project/`.
 | `output/figures/algorithm_complexity.png` | O(·) complexity visual | `src/figures/scientific.py::generate_complexity_visualization()` | 4 — Run Analysis |
 | `output/figures/performance_benchmark.png` | Benchmark dimensions vs deterministic work proxy and iterations | `src/figures/scientific.py::generate_benchmark_visualization()` | 4 — Run Analysis |
 | `output/figures/stability_analysis.png` | Stability heat map | `src/figures/scientific.py::generate_stability_visualization()` | 4 — Run Analysis |
-| `output/data/optimization_results.csv` | Per-step-size results table | `save_optimization_results()` in `src/analysis/` | 4 — Run Analysis |
+| `output/data/optimization_results.csv` | Per-step-size results table including vector solution and termination reason | `save_optimization_results()` in `src/analysis/` | 4 — Run Analysis |
 | `output/data/manuscript_variables.json` | `{TOKEN: value}` substitution map | `scripts/z_generate_manuscript_variables.py` (calls `src/manuscript_variables.py::generate_variables`) | 4 — Run Analysis (post-stage) |
 | `output/reports/stability_analysis.json` | Stability assessment numbers | `run_stability_analysis()` in `src/analysis/` | 4 — Run Analysis |
 | `output/reports/performance_benchmark.json` | Byte-stable benchmark inputs, objective outputs, checks, and timing policy | `run_performance_benchmarking()` in `src/analysis/` | 4 — Run Analysis |

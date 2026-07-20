@@ -201,6 +201,7 @@ class OptimizationResult:
     converged: bool               # Whether algorithm converged
     gradient_norm: float          # Final gradient norm
     objective_history: Optional[list[float]] = None  # Objective values per iteration
+    termination_reason: str = "unknown"  # converged, max_iterations, or non_finite
 ```
 
 #### quadratic_function (function)

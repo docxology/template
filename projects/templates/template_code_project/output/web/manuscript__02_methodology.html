@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -331,11 +345,14 @@ to treating the project as build-green.</li>
 <h3 id="stopping-rule-and-reporting">Stopping rule and reporting</h3>
 <p><code>gradient_descent()</code> terminates when <span
 class="math inline">\(\|\nabla f(x_k)\|\)</span> falls below
-<code>experiment.tolerance</code> or when <span
+<code>experiment.tolerance</code>, when <span
 class="math inline">\(k\)</span> reaches
-<code>experiment.max_iterations</code>. The boolean
-<code>converged</code> in exported CSV rows distinguishes these
-outcomes. Downstream,
+<code>experiment.max_iterations</code>, or when an objective, gradient,
+or update becomes non-finite. The boolean <code>converged</code> plus
+<code>termination_reason</code> in exported CSV rows distinguish these
+outcomes. A non-finite candidate is rejected before it enters
+<code>objective_history</code>, preserving the last finite state for
+reproducible reporting. Downstream,
 <code>scripts/z_generate_manuscript_variables.py</code> aggregates the
 CSV into <code>RESULT_*</code> placeholders so tables and prose cannot
 drift from the last analysis run.</p>

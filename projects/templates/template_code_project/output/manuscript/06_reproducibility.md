@@ -34,7 +34,7 @@ Within the configured grid, **4** of **6** runs satisfied `gradient_descent()` c
 - Non-convergent or hit-iteration-cap step sizes: 0.01, 2.5
 - Smallest recorded iteration count: 1 (at $\alpha = 1.0$)
 - Largest recorded iteration count: 1000 (at $\alpha = 0.01$)
-- Mean iterations across all rows: 372
+- Mean iterations across all rows: 351
 
 ### Numerical Stability
 

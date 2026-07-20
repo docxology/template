@@ -307,9 +307,13 @@ during the infrastructure build phase.
 \begin{block}{Stopping rule and reporting}
 \protect\phantomsection\label{stopping-rule-and-reporting}
 \breaktt{gradient\_descent()} terminates when \(\|\nabla f(x_k)\|\) falls
-below \breaktt{experiment.tolerance} or when \(k\) reaches
-\breaktt{experiment.max\_iterations}. The boolean \texttt{converged} in
-exported CSV rows distinguishes these outcomes. Downstream,
+below \breaktt{experiment.tolerance}, when \(k\) reaches
+\breaktt{experiment.max\_iterations}, or when an objective, gradient, or
+update becomes non-finite. The boolean \texttt{converged} plus
+\breaktt{termination\_reason} in exported CSV rows distinguish these
+outcomes. A non-finite candidate is rejected before it enters
+\breaktt{objective\_history}, preserving the last finite state for
+reproducible reporting. Downstream,
 \breaktt{scripts/z\_generate\_manuscript\_variables.py} aggregates the
 CSV into \texttt{RESULT\_*} placeholders so tables and prose cannot
 drift from the last analysis run.

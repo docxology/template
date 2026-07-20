@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T22:37:13Z",
+  "timestamp": "2026-07-20T15:59:54Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -22,41 +22,41 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 2.06,
+            "size_mb": 2.04,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 11,
-            "size_mb": 2.31,
+            "size_mb": 3.45,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
             "files": 12,
-            "size_mb": 0.24,
+            "size_mb": 0.25,
             "readable": true,
             "optional": false
           },
           "slides": {
             "exists": true,
             "files": 73,
-            "size_mb": 2.91,
+            "size_mb": 2.92,
             "readable": true,
             "optional": false
           },
           "figures": {
             "exists": true,
             "files": 10,
-            "size_mb": 1.96,
+            "size_mb": 1.97,
             "readable": true,
             "optional": false
           },
           "data": {
             "exists": true,
             "files": 5,
-            "size_mb": 0.18,
+            "size_mb": 0.17,
             "readable": true,
             "optional": false
           },
@@ -68,17 +68,15 @@
             "optional": false
           },
           "simulations": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "logs": {
@@ -94,31 +92,31 @@
         "pdf": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "2.31",
+          "size_mb": "3.45",
           "largest_file": "template_code_project_combined.pdf"
         },
         "web": {
           "exists": true,
           "file_count": 12,
-          "size_mb": "0.24",
+          "size_mb": "0.25",
           "largest_file": "index.html"
         },
         "slides": {
           "exists": true,
           "file_count": 73,
-          "size_mb": "2.91",
+          "size_mb": "2.92",
           "largest_file": "03_results_slides.pdf"
         },
         "figures": {
           "exists": true,
           "file_count": 10,
-          "size_mb": "1.96",
+          "size_mb": "1.97",
           "largest_file": "algorithm_complexity.png"
         },
         "data": {
           "exists": true,
           "file_count": 5,
-          "size_mb": "0.18",
+          "size_mb": "0.17",
           "largest_file": "dashboard_payload.json"
         },
         "reports": {
@@ -128,16 +126,14 @@
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "llm": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
@@ -153,29 +149,30 @@
         "figures": 10,
         "data": 5,
         "reports": 27,
-        "simulations": 0,
-        "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 7.7681884765625,
+      "total_size_mb": 8.9345703125,
       "issues_by_severity": {
         "critical": [],
-        "warning": [],
+        "warning": [
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty"
+        ],
         "info": []
       },
       "recommendations": []
     },
     "pdf": {
       "files": 11,
-      "size_mb": 2.310741424560547
+      "size_mb": 3.446286201477051
     },
     "figures": {
       "files": 10,
-      "size_mb": 1.9592304229736328
+      "size_mb": 1.9693365097045898
     },
     "data": {
       "files": 5,
-      "size_mb": 0.17676162719726562
+      "size_mb": 0.17467308044433594
     }
   },
   "summary": {

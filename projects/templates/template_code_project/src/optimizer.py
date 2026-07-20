@@ -18,7 +18,14 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class OptimizationResult:
-    """Result container from gradient_descent."""
+    """Result container from :func:`gradient_descent`.
+
+    ``termination_reason`` makes an intentional non-convergent run
+    distinguishable from a numerical blow-up.  The optimizer keeps the last
+    finite iterate when an objective, gradient, or update becomes non-finite,
+    so downstream CSV and manuscript generation never has to serialize an
+    ``inf``/``nan`` state.
+    """
 
     solution: np.ndarray
     objective_value: float
@@ -26,6 +33,50 @@ class OptimizationResult:
     converged: bool
     gradient_norm: float
     objective_history: list[float] | None = None
+    termination_reason: str = "unknown"
+
+
+def _objective_value(objective_func: Callable[[np.ndarray], float], x: np.ndarray) -> float:
+    """Evaluate an objective and require a scalar numeric return value."""
+    try:
+        value = np.asarray(objective_func(x), dtype=float)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("objective_func must return a numeric scalar") from exc
+    if value.ndim != 0:
+        raise ValueError(f"objective_func must return a scalar, got shape {value.shape}")
+    return float(value)
+
+
+def _gradient_value(
+    gradient_func: Callable[[np.ndarray], np.ndarray],
+    x: np.ndarray,
+) -> np.ndarray:
+    """Evaluate a gradient and require the same one-dimensional shape as ``x``."""
+    try:
+        gradient = np.asarray(gradient_func(x), dtype=float)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("gradient_func must return a numeric array") from exc
+    if gradient.shape != x.shape:
+        raise ValueError(f"gradient_func must return shape {x.shape}, got {gradient.shape}")
+    return gradient
+
+
+def _finite_l2_norm(values: np.ndarray) -> float:
+    """Compute an L2 norm without squaring a large value before scaling.
+
+    ``numpy.linalg.norm`` can overflow for a one-element vector that is still
+    finite (because it squares before taking the square root).  Returning the
+    largest representable float preserves a finite diagnostic for the caller;
+    the optimizer will still classify the associated update as non-convergent.
+    """
+    if not np.all(np.isfinite(values)):
+        return float(np.inf)
+    scale = float(np.max(np.abs(values)))
+    if scale == 0.0:
+        return 0.0
+    normalized = np.abs(values) / scale
+    norm = scale * float(np.sqrt(np.sum(normalized * normalized)))
+    return norm if np.isfinite(norm) else float(np.finfo(float).max)
 
 
 def _validate_quadratic_inputs(
@@ -42,6 +93,10 @@ def _validate_quadratic_inputs(
         ValueError: If A or b shapes are incompatible with x.
     """
     x = np.asarray(x, dtype=float)
+    if x.ndim != 1:
+        raise ValueError(f"x must be a 1-D array, got shape {x.shape}")
+    if x.size == 0:
+        raise ValueError("x must not be empty")
     n = len(x)
 
     if A is None:
@@ -55,7 +110,7 @@ def _validate_quadratic_inputs(
         b = np.ones(n)
     else:
         b = np.asarray(b, dtype=float)
-        if len(b) != n:
+        if b.ndim != 1 or len(b) != n:
             raise ValueError(f"b must be length {n}, got {len(b)}")
 
     return x, A, b
@@ -105,14 +160,16 @@ def gradient_descent(
 
     Raises:
         ValueError: If step_size, max_iterations, or tolerance are non-positive, or
-                    if initial_point is not a 1-D array
+                    if initial_point is not a finite 1-D array, or if either callback
+                    returns a non-scalar/mismatched result. A non-finite state reached
+                    during iteration is returned as ``termination_reason="non_finite"``.
     """
     # Input validation
-    if step_size <= 0:
+    if not np.isfinite(step_size) or step_size <= 0:
         raise ValueError(f"step_size must be positive, got {step_size}")
-    if max_iterations <= 0:
+    if not isinstance(max_iterations, (int, np.integer)) or max_iterations <= 0:
         raise ValueError(f"max_iterations must be positive, got {max_iterations}")
-    if tolerance <= 0:
+    if not np.isfinite(tolerance) or tolerance <= 0:
         raise ValueError(f"tolerance must be positive, got {tolerance}")
 
     x = np.asarray(initial_point, dtype=float)
@@ -120,39 +177,69 @@ def gradient_descent(
         raise ValueError(f"initial_point must be 1-D array, got shape {x.shape}")
     if x.size == 0:
         raise ValueError("initial_point must not be empty")
+    if not np.all(np.isfinite(x)):
+        raise ValueError(f"initial_point must contain only finite values, got {x}")
 
     iteration = 0
     converged = False
-    objective_history = [objective_func(x)]  # Track initial objective value
+    termination_reason = "max_iterations"
+    initial_objective = _objective_value(objective_func, x)
+    if not np.isfinite(initial_objective):
+        raise ValueError(f"objective_func must return a finite scalar at initial_point, got {initial_objective}")
+    objective_history = [initial_objective]  # Track initial objective value
 
     logger.debug(f"Starting gradient descent with x0={x}, step_size={step_size}")
 
     while iteration < max_iterations:
-        grad = gradient_func(x)
-        grad_norm = np.linalg.norm(grad)
+        grad = _gradient_value(gradient_func, x)
+        grad_norm = _finite_l2_norm(grad)
+
+        if not np.isfinite(grad_norm):
+            termination_reason = "non_finite"
+            logger.warning("Stopping gradient descent at iteration %d: non-finite gradient", iteration)
+            break
 
         if verbose and iteration % 100 == 0:
-            obj_val = objective_func(x)
+            obj_val = objective_history[-1]
             logger.info(f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}")
 
         if grad_norm < tolerance:
             converged = True
+            termination_reason = "converged"
             logger.debug(f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}")
             break
 
         # Update: x = x - step_size * ∇f(x)
-        x = x - step_size * grad
+        candidate = x - step_size * grad
+        if not np.all(np.isfinite(candidate)):
+            termination_reason = "non_finite"
+            logger.warning("Stopping gradient descent at iteration %d: non-finite update", iteration)
+            break
+
+        candidate_objective = _objective_value(objective_func, candidate)
+        if not np.isfinite(candidate_objective):
+            termination_reason = "non_finite"
+            logger.warning("Stopping gradient descent at iteration %d: non-finite objective", iteration + 1)
+            break
+
+        x = candidate
         iteration += 1
 
         # Track objective value after each update
-        objective_history.append(objective_func(x))
+        objective_history.append(candidate_objective)
 
-    final_obj_value = objective_func(x)
-    final_grad_norm = np.linalg.norm(gradient_func(x))
+    final_obj_value = objective_history[-1]
+    final_grad = _gradient_value(gradient_func, x)
+    final_grad_norm = _finite_l2_norm(final_grad)
 
     if converged:
         logger.debug(
             f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}"  # noqa: E501
+        )
+    elif termination_reason == "non_finite":
+        logger.debug(
+            f"Gradient descent stopped at the last finite state after {iteration} iterations, "
+            f"final f(x)={final_obj_value:.6f}"
         )
     else:
         logger.debug(
@@ -166,6 +253,7 @@ def gradient_descent(
         converged=converged,
         gradient_norm=float(final_grad_norm),
         objective_history=objective_history,
+        termination_reason=termination_reason,
     )
 
 

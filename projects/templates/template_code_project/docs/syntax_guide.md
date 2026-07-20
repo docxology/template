@@ -104,7 +104,7 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 | `{{RESULT_AVG_ITERATIONS}}` | Mean iterations across all step sizes | Yes |
 | `{{RESULT_BEST_STEP_SIZE}}` | Step size achieving minimum iterations | Yes |
 | `{{RESULT_NUM_CONVERGED}}` | Count of step sizes with `converged=True` | Yes |
-| `{{RESULT_TABLE_ROWS}}` | Formatted markdown table rows for `03_results.md` | Yes |
+| `{{RESULT_TABLE_ROWS}}` | Formatted markdown table rows for `03_results.md`, including vector-safe solutions and termination reasons | Yes |
 | `{{RESULT_CONVERGENCE_FACTORS}}` | Formatted convergence factor table | Yes |
 
 **ARTIFACT_* — Counts of generated files**

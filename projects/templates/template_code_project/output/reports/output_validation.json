@@ -1,7 +1,7 @@
 {
   "integrity_check": {
-    "total_files": 17,
-    "integrity_passed": 17,
+    "total_files": 44,
+    "integrity_passed": 44,
     "issues_found": 0,
     "warnings": 1,
     "recommendations": 1

@@ -302,6 +302,7 @@ class OptimizationResult:
         converged: bool - Whether convergence criteria were met
         gradient_norm: float - Final gradient norm
         objective_history: Optional[list[float]] - Objective values at each iteration
+        termination_reason: str - ``converged``, ``max_iterations``, or ``non_finite``
     """
 ```
 

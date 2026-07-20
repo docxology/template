@@ -179,6 +179,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -246,10 +260,10 @@ is retained only as a runtime diagnostic because host load and hardware
 make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 id="computational-environment">Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.12.13</li>
+<li><strong>Python</strong>: 3.13.11</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-07-12T04:04:24Z</li>
+<li><strong>Generated</strong>: 2026-07-20T15:59:12Z</li>
 </ul>
 <h2 id="pipeline-ordering">Pipeline ordering</h2>
 <p>Typical <code>template_code_project</code> analysis order (see

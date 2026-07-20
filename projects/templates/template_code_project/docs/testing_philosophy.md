@@ -12,7 +12,7 @@ If you ever feel the urge to mock something in a test for `src/`, treat it as a 
 
 | File | Role |
 | --- | --- |
-| `test_optimizer.py` | Pure math: `quadratic_function`, `gradient_descent`, `make_quadratic_problem`, `simulate_trajectory` |
+| `test_optimizer.py` | Pure math: `quadratic_function`, `gradient_descent`, `make_quadratic_problem`, `simulate_trajectory`, and finite-state termination |
 | `test_experiment_config.py` | `load_experiment_config()` and `ExperimentConfig` defaults |
 | `test_analysis_integration.py` | Convergence runs, stability/benchmark reports, publishing, validation, `main()` smoke |
 | `test_analysis_coverage.py` | Analysis orchestration branches: validation errors/issues, `main()` paths, citations, publishing, register_figure |

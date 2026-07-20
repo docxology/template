@@ -3,8 +3,8 @@ Optimization Exemplar — Interactive Convergence Suite
 Live gradient-descent diagnostics on the configurable quadratic f(x) = (1/2) x^T A x − b^T x. Defaults read from manuscript/config.yaml; every knob is CLI-overridable.
 
 project:           template_code_project
-generated:         2026-07-08T02:12:22Z
-git rev:           d7cdc5d5
+generated:         2026-07-20T15:59:00Z
+git rev:           49363649b
 panels:            5
 controls:          2
 invariants:        22

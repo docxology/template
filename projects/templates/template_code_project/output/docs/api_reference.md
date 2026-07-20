@@ -15,6 +15,7 @@ Container for optimization algorithm results.
 - `converged`: True if gradient norm fell below tolerance
 - `gradient_norm`: Final L2 norm of the gradient vector
 - `objective_history`: List of objective function values during optimization
+- `termination_reason`: One of `converged`, `max_iterations`, or `non_finite`
 
 ## Functions
 
@@ -28,4 +29,5 @@ Compute analytical gradient of quadratic function ∇f(x) = A x - b.
 
 ### gradient_descent(initial_point, objective_func, gradient_func, ...)
 
-Perform gradient descent optimization with fixed step size.
+Perform gradient descent optimization with fixed step size. Non-finite
+candidate states are rejected and reported as `termination_reason="non_finite"`.

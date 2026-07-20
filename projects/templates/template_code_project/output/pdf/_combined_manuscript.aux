@@ -39,9 +39,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Reader's guide to the manuscript}{5}{subsection.2.5}\protected@file@percent }
 \newlabel{readers-guide-to-the-manuscript}{{2.5}{5}{Reader's guide to the manuscript}{subsection.2.5}{}}
 \newlabel{readers-guide-to-the-manuscript@cref}{{[subsection][5][2]2.5}{[1][5][]5}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Why a quadratic model}{6}{subsection.2.6}\protected@file@percent }
-\newlabel{why-a-quadratic-model}{{2.6}{6}{Why a quadratic model}{subsection.2.6}{}}
-\newlabel{why-a-quadratic-model@cref}{{[subsection][6][2]2.6}{[1][5][]6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Why a quadratic model}{5}{subsection.2.6}\protected@file@percent }
+\newlabel{why-a-quadratic-model}{{2.6}{5}{Why a quadratic model}{subsection.2.6}{}}
+\newlabel{why-a-quadratic-model@cref}{{[subsection][6][2]2.6}{[1][5][]5}{}{}{}}
 \citation{bertsekas1999nonlinear}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Methodology}{7}{section.3}\protected@file@percent }
 \newlabel{sec:methodology}{{3}{7}{Methodology}{section.3}{}}
@@ -101,11 +101,12 @@
 \newlabel{step-size-sensitivity-analysis}{{4.1.2}{9}{Step Size Sensitivity Analysis}{subsubsection.4.1.2}{}}
 \newlabel{step-size-sensitivity-analysis@cref}{{[subsubsection][2][4,1]4.1.2}{[1][9][]9}{}{}{}}
 \gdef \LT@ii {\LT@entry 
-    {1}{118.02477pt}\LT@entry 
-    {1}{131.49956pt}\LT@entry 
-    {1}{138.91772pt}\LT@entry 
-    {1}{101.6004pt}\LT@entry 
-    {1}{88.12561pt}}
+    {1}{98.54552pt}\LT@entry 
+    {1}{110.71257pt}\LT@entry 
+    {1}{116.87173pt}\LT@entry 
+    {1}{86.04431pt}\LT@entry 
+    {1}{79.87724pt}\LT@entry 
+    {1}{86.21138pt}}
 \citation{nesterov2013gradient}
 \citation{polyak1964some}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sensitivity sweep produced by \breaktt {generate\_step\_size\_sensitivity\_plot()} over an independent dense grid \(\mitalpha \in [0.005, 0.4]\) (10 points), distinct from the discrete \breaktt {experiment.step\_sizes} used elsewhere in this section. Left: iterations to convergence on log--log axes --- the curve drops sharply from 500 iterations at the smallest \(\mitalpha \) (the \texttt {max\_iterations} cap in this sub-experiment) to 37 iterations at \(\mitalpha =0.4\), illustrating the geometric speedup as \(\mitrho (\mitalpha )=|1-\mitalpha |\) shrinks. Right: final \(f(x)\) versus \(\mitalpha \) with horizontal reference lines at \(f(x_0)=0\) (initial) and \(f(x^\ast )=-0.5\) (analytic optimum); every \(\mitalpha \) in this stable window lands on the optimum.}}{10}{figure.caption.9}\protected@file@percent }
@@ -114,9 +115,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Quantitative Results}{10}{subsection.4.2}\protected@file@percent }
 \newlabel{quantitative-results}{{4.2}{10}{Quantitative Results}{subsection.4.2}{}}
 \newlabel{quantitative-results@cref}{{[subsection][2][4]4.2}{[1][9][]10}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\max } = 1000\), and the \texttt {converged} flag from \breaktt {gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\). Rows marked ``No'' either hit the iteration cap before meeting the gradient tolerance (small \(\mitalpha \)) or correspond to unstable dynamics when \(|1-\mitalpha | \geq 1\).}}{10}{table.1}\protected@file@percent }
-\newlabel{tbl:opt_results}{{1}{10}{Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\max } = 1000\), and the \protect \texttt {converged} flag from \protect \breaktt {gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\). Rows marked ``No'' either hit the iteration cap before meeting the gradient tolerance (small \(\alpha \)) or correspond to unstable dynamics when \(|1-\alpha | \geq 1\)}{table.1}{}}
-\newlabel{tbl:opt_results@cref}{{[table][1][]1}{[1][10][]10}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\max } = 1000\), the \texttt {converged} flag from \breaktt {gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\), and its structured termination reason. A \texttt {non\_finite} row stops before an overflowing update is serialized and retains the last finite iterate.}}{10}{table.1}\protected@file@percent }
+\newlabel{tbl:opt_results}{{1}{10}{Gradient descent outcomes per configured step size: state at termination, iteration count capped by \(N_{\max } = 1000\), the \protect \texttt {converged} flag from \protect \breaktt {gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\), and its structured termination reason. A \protect \texttt {non\_finite} row stops before an overflowing update is serialized and retains the last finite iterate}{table.1}{}}
+\newlabel{tbl:opt_results@cref}{{[table][1][]1}{[1][9][]10}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Convergence Rate Analysis}{10}{subsection.4.3}\protected@file@percent }
 \newlabel{convergence-rate-analysis}{{4.3}{10}{Convergence Rate Analysis}{subsection.4.3}{}}
 \newlabel{convergence-rate-analysis@cref}{{[subsection][3][4]4.3}{[1][10][]10}{}{}{}}
@@ -213,9 +214,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Future Extensions}{16}{subsection.5.5}\protected@file@percent }
 \newlabel{future-extensions}{{5.5}{16}{Future Extensions}{subsection.5.5}{}}
 \newlabel{future-extensions@cref}{{[subsection][5][5]5.5}{[1][16][]16}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Final Assessment}{17}{subsection.5.6}\protected@file@percent }
-\newlabel{final-assessment}{{5.6}{17}{Final Assessment}{subsection.5.6}{}}
-\newlabel{final-assessment@cref}{{[subsection][6][5]5.6}{[1][16][]17}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Final Assessment}{16}{subsection.5.6}\protected@file@percent }
+\newlabel{final-assessment}{{5.6}{16}{Final Assessment}{subsection.5.6}{}}
+\newlabel{final-assessment@cref}{{[subsection][6][5]5.6}{[1][16][]16}{}{}{}}
 \gdef \LT@iii {\LT@entry 
     {1}{303.9735pt}\LT@entry 
     {1}{274.18651pt}}
@@ -309,7 +310,7 @@
 \bibcite{nocedal2006numerical}{{6}{2006}{{Nocedal and Wright}}{{}}}
 \bibcite{peng2011reproducible}{{7}{2011}{{Peng}}{{}}}
 \bibcite{polyak1964some}{{8}{1964}{{Polyak}}{{}}}
-\newlabel{end-of-transmission}{{9}{25}{END OF TRANSMISSION}{section*.16}{}}
+\newlabel{end-of-transmission}{{9}{25}{END OF TRANSMISSION}{section*.15}{}}
 \newlabel{end-of-transmission@cref}{{[section][9][]9}{[1][25][]25}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Integrity QR strip}}{25}{figure.caption.17}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Integrity QR strip}}{25}{figure.caption.16}\protected@file@percent }
 \gdef \@abspage@last{25}

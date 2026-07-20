@@ -68,7 +68,14 @@ def _make_minimal_project(tmp_path: Path, *, with_results: bool = True) -> Path:
         with (data_dir / "optimization_results.csv").open("w", newline="") as f:
             writer = csv.DictWriter(
                 f,
-                fieldnames=["step_size", "solution", "objective_value", "iterations", "converged"],
+                fieldnames=[
+                    "step_size",
+                    "solution",
+                    "objective_value",
+                    "iterations",
+                    "converged",
+                    "termination_reason",
+                ],
             )
             writer.writeheader()
             writer.writerows(
@@ -93,6 +100,7 @@ def _result_row(step_size: str, *, iterations: str, converged: str = "True") -> 
         "objective_value": "-4.0",
         "iterations": iterations,
         "converged": converged,
+        "termination_reason": "converged" if converged == "True" else "max_iterations",
     }
 
 
@@ -164,7 +172,25 @@ def test_result_derived_values(tmp_path):
     assert v["RESULT_MIN_ITERATIONS"] == "1"
     assert v["RESULT_MAX_ITERATIONS"] == "50"
     assert v["RESULT_BEST_STEP_SIZE"] == "1.0"
-    assert v["RESULT_TABLE_ROWS"] != "| N/A | N/A | N/A | N/A | N/A |"
+    assert v["RESULT_TABLE_ROWS"] != "| N/A | N/A | N/A | N/A | N/A | N/A |"
+
+
+def test_vector_solution_rows_are_rendered_without_scalar_coercion(tmp_path):
+    """Hydration accepts the semicolon-delimited n-D solution CSV format."""
+    rows = [
+        {
+            "step_size": "0.1",
+            "solution": "1.0;2.0",
+            "objective_value": "-1.5",
+            "iterations": "12",
+            "converged": "True",
+            "termination_reason": "converged",
+        }
+    ]
+    root = _make_project_with_rows(tmp_path, rows)
+    variables = generate_variables(root)
+
+    assert "[1.0000, 2.0000]" in variables["RESULT_TABLE_ROWS"]
 
 
 def test_stability_derived(tmp_path):
@@ -180,7 +206,7 @@ def test_fallback_sentinels_when_no_results(tmp_path):
     v = generate_variables(root)
 
     assert v["RESULT_NUM_CONVERGED"] == "N/A"
-    assert v["RESULT_TABLE_ROWS"] == "| N/A | N/A | N/A | N/A | N/A |"
+    assert v["RESULT_TABLE_ROWS"] == "| N/A | N/A | N/A | N/A | N/A | N/A |"
     assert v["RESULT_CONVERGENCE_FACTORS"] == "- No data available"
     assert v["STABILITY_SCORE"] == "0.00"
 
@@ -234,7 +260,14 @@ def _make_project_with_rows(tmp_path: Path, rows: list[dict]) -> Path:
     with (data_dir / "optimization_results.csv").open("w", newline="") as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=["step_size", "solution", "objective_value", "iterations", "converged"],
+            fieldnames=[
+                "step_size",
+                "solution",
+                "objective_value",
+                "iterations",
+                "converged",
+                "termination_reason",
+            ],
         )
         writer.writeheader()
         for row in rows:

@@ -76,6 +76,8 @@ class TestSaveOptimizationResults:
         path = save_optimization_results(results)
         text = path.read_text()
         assert "1.000000;2.000000" in text
+        assert "termination_reason" in text.splitlines()[0]
+        assert text.rstrip().endswith(",unknown")
 
 
 class TestScientificAnalysis:

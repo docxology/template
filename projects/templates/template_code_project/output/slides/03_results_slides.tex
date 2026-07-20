@@ -249,18 +249,19 @@ below are injected at render time from that CSV
 \breaktt{scripts/z\_generate\_manuscript\_variables.py}).
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2113}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2254}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2394}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1690}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1549}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1786}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1905}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2024}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1310}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1548}}@{}}
 \caption{Gradient descent outcomes per configured step size: state at
-termination, iteration count capped by \(N_{\max} = 1000\), and the
+termination, iteration count capped by \(N_{\max} = 1000\), the
 \protect\texttt{converged} flag from
-\protect\breaktt{gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\).
-Rows marked ``No'' either hit the iteration cap before meeting the
-gradient tolerance (small \(\alpha\)) or correspond to unstable dynamics
-when \(|1-\alpha| \geq 1\).}\label{tbl:opt_results}\tabularnewline
+\protect\breaktt{gradient\_descent()} using \(\|\nabla f\| < 10^{-8}\),
+and its structured termination reason. A \protect\texttt{non\_finite}
+row stops before an overflowing update is serialized and retains the
+last finite iterate.}\label{tbl:opt_results}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Step Size (α)
@@ -272,6 +273,8 @@ Objective Value
 Iterations
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Converged
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Termination
 \end{minipage} \\
 \midrule\noalign{}
 \endfirsthead
@@ -286,17 +289,21 @@ Objective Value
 Iterations
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Converged
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Termination
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
-0.01 & 1.0000 & -0.5000 & 1000 & No \\
-0.10 & 1.0000 & -0.5000 & 175 & Yes \\
-0.50 & 1.0000 & -0.5000 & 27 & Yes \\
-1.00 & 1.0000 & -0.5000 & 1 & Yes \\
-1.50 & 1.0000 & -0.5000 & 27 & Yes \\
+0.01 & 1.0000 & -0.5000 & 1000 & No & max\_iterations \\
+0.10 & 1.0000 & -0.5000 & 175 & Yes & converged \\
+0.50 & 1.0000 & -0.5000 & 27 & Yes & converged \\
+1.00 & 1.0000 & -0.5000 & 1 & Yes & converged \\
+1.50 & 1.0000 & -0.5000 & 27 & Yes & converged \\
 2.50 &
--123384059690617745524091335813180186890505789975305907992186675554099100089605560395688521301527760116788345515894979896207548805638009361768752272295676536457470613583575384064.0000
-& inf & 1000 & No \\
+-18027808360396904929014313133756094602021490593623455934143098782085898358268968910321926429082931340564236187769460640748166785144621899661251320903368704.0000
+&
+162500937139598269661779749391931612290431672893591152510335296183621559147095059174363943753278426469403184325060604037672721111493697147195103358138591980698705733738747223639633375614563987655337958785982898164996799665358767974385539800466556596391365426397418791309924510722911320257856182821332197572608.0000
+& 876 & No & non\_finite \\
 \bottomrule\noalign{}
 \end{longtable}
 \end{frame}
@@ -529,7 +536,7 @@ optimization problems:
   gradients
 \item
   \textbf{Convergence}: Fastest at \(\alpha = 1.0\) (1 iteration),
-  average 372 iterations
+  average 351 iterations
 \item
   \textbf{Scalability}: Memory-efficient implementation suitable for
   high-dimensional problems
@@ -601,7 +608,7 @@ runs):}
 \item
   Largest iteration count recorded: 1000
 \item
-  Mean iterations across rows in \breakseq{[@tbl:opt\_results]}: 372
+  Mean iterations across rows in \breakseq{[@tbl:opt\_results]}: 351
 \end{itemize}
 
 \textbf{Numerical Accuracy:}

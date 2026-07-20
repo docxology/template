@@ -1,35 +1,31 @@
 {
   "checks": {
-    "all_sizes_timed": true,
+    "all_sizes_evaluated": true,
     "deterministic_objective": true,
     "finite_objective_values": true,
-    "non_negative_timings": true
+    "repeat_budget_completed": true
   },
-  "markdown": "| Project | Passed | Score | Issues |\n| --- | --- | ---: | --- |\n| template_code_project | yes | 4/4 |  |\n",
+  "markdown": "| Project | Passed | Score | Failed checks | Issues |\n| --- | --- | ---: | --- | --- |\n| template_code_project | yes | 4/4 |  |  |\n",
   "measurements": [
     {
-      "best_seconds": 2.91600008495152e-06,
       "calls": 50,
       "input_size": 2,
       "objective_value": 0.9117486404772013,
       "repeats": 50
     },
     {
-      "best_seconds": 2.9579969123005867e-06,
       "calls": 50,
       "input_size": 4,
       "objective_value": -0.3031355335295678,
       "repeats": 50
     },
     {
-      "best_seconds": 2.91600008495152e-06,
       "calls": 50,
       "input_size": 8,
       "objective_value": 5.29140623278203,
       "repeats": 50
     },
     {
-      "best_seconds": 3.0420051189139485e-06,
       "calls": 50,
       "input_size": 16,
       "objective_value": 8.045886520850104,
@@ -40,20 +36,22 @@
   "project": "template_code_project",
   "rubric": {
     "dimensions": [
-      "all_sizes_timed",
+      "all_sizes_evaluated",
       "finite_objective_values",
-      "non_negative_timings",
+      "repeat_budget_completed",
       "deterministic_objective"
     ],
     "failed_dimensions": [],
     "max_score": 4.0,
     "name": "code-project-benchmark",
     "passed_dimensions": [
-      "all_sizes_timed",
+      "all_sizes_evaluated",
       "finite_objective_values",
-      "non_negative_timings",
+      "repeat_budget_completed",
       "deterministic_objective"
     ],
     "score": 4.0
-  }
+  },
+  "schema_version": "template_code_project/benchmark_rubric/v2",
+  "timing_policy": "Wall-clock measurements are environment-dependent runtime diagnostics and are intentionally omitted from tracked benchmark artifacts."
 }

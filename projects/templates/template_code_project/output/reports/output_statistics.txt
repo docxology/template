@@ -5,23 +5,27 @@ OUTPUT STATISTICS REPORT
 Output Directory: output
 
 Total Files: 139
-Total Size: 7.77 MB
+Total Size: 8.93 MB
 
 Files by Category:
-  • pdf: 11 files (2.31 MB)
-  • web: 12 files (0.24 MB)
-  • slides: 73 files (2.91 MB)
-  • figures: 10 files (1.96 MB)
-  • data: 5 files (0.18 MB)
+  • pdf: 11 files (3.45 MB)
+  • web: 12 files (0.25 MB)
+  • slides: 73 files (2.92 MB)
+  • figures: 10 files (1.97 MB)
+  • data: 5 files (0.17 MB)
   • reports: 27 files (0.17 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
-  • template_code_project_combined.pdf: 2.06 MB (pdf)
-  • 03_results_slides.pdf: 1.93 MB (slides)
-  • algorithm_complexity.png: 0.81 MB (figures)
-  • convergence_rate_comparison.png: 0.29 MB (figures)
-  • step_size_sensitivity.png: 0.24 MB (figures)
+  • template_code_project_combined.pdf: 2.04 MB (pdf)
+  • 03_results_slides.pdf: 1.94 MB (slides)
+  • _combined_manuscript.log: 0.90 MB (pdf)
+  • algorithm_complexity.png: 0.82 MB (figures)
+  • _latex_stdout.log: 0.33 MB (pdf)
+
+Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
 
 File Types:
   • .json: 23 file(s)

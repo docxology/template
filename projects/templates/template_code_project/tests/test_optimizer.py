@@ -71,6 +71,16 @@ class TestQuadraticFunction:
         with pytest.raises(ValueError, match="b must be length 2"):
             quadratic_function(x, b=b)
 
+    def test_non_vector_input_is_rejected(self):
+        """Quadratic helpers require a one-dimensional optimization state."""
+        with pytest.raises(ValueError, match="x must be a 1-D array"):
+            quadratic_function(np.array([[1.0]]))
+
+    def test_non_vector_b_is_rejected(self):
+        """The linear term must be a vector, not a nested array."""
+        with pytest.raises(ValueError, match="b must be length 1"):
+            quadratic_function(np.array([1.0]), b=np.array([[1.0]]))
+
     def test_zero_input(self):
         """Test quadratic function with zero input."""
         x = np.array([0.0])
@@ -304,6 +314,9 @@ class TestGradientDescent:
         with pytest.raises(ValueError, match="step_size must be positive"):
             gradient_descent(np.array([0.0]), dummy_obj, dummy_grad, step_size=0.0)
 
+        with pytest.raises(ValueError, match="step_size must be positive"):
+            gradient_descent(np.array([0.0]), dummy_obj, dummy_grad, step_size=np.inf)
+
         # Test invalid max_iterations
         with pytest.raises(ValueError, match="max_iterations must be positive"):
             gradient_descent(np.array([0.0]), dummy_obj, dummy_grad, max_iterations=0)
@@ -317,6 +330,9 @@ class TestGradientDescent:
 
         with pytest.raises(ValueError, match="tolerance must be positive"):
             gradient_descent(np.array([0.0]), dummy_obj, dummy_grad, tolerance=-1e-6)
+
+        with pytest.raises(ValueError, match="tolerance must be positive"):
+            gradient_descent(np.array([0.0]), dummy_obj, dummy_grad, tolerance=np.nan)
 
     def test_invalid_initial_point(self):
         """Test error handling for invalid initial point."""
@@ -334,6 +350,9 @@ class TestGradientDescent:
         # Test empty array
         with pytest.raises(ValueError, match="initial_point must not be empty"):
             gradient_descent(np.array([]), dummy_obj, dummy_grad)
+
+        with pytest.raises(ValueError, match="initial_point must contain only finite values"):
+            gradient_descent(np.array([np.nan]), dummy_obj, dummy_grad)
 
     def test_gradient_descent_performance(self):
         """Test gradient descent performance characteristics."""
@@ -467,10 +486,7 @@ class TestGradientDescent:
         np.testing.assert_allclose(result.solution, [0.8])
 
     def test_nan_gradient_terminates_at_cap(self):
-        """A pathological grad_func returning NaN does not satisfy the
-        tolerance check (NaN < tol is False) and so the loop runs to the
-        max_iterations cap without raising. Documents the current contract:
-        sanitisation is the caller's responsibility."""
+        """A non-finite gradient produces an explicit non-convergent result."""
 
         def obj_func(x):
             return 0.0
@@ -487,8 +503,65 @@ class TestGradientDescent:
             tolerance=1e-6,
         )
         assert not result.converged
-        assert result.iterations == 5
-        assert np.isnan(result.gradient_norm) or np.isnan(result.solution[0])
+        assert result.iterations == 0
+        assert result.termination_reason == "non_finite"
+        assert np.isinf(result.gradient_norm)
+        assert np.isfinite(result.solution[0])
+        assert result.objective_history == [0.0]
+
+    def test_gradient_shape_mismatch_is_rejected(self):
+        """Gradient callbacks must preserve the shape of the optimization state."""
+
+        def obj_func(_x):
+            return 0.0
+
+        def grad_func(_x):
+            return np.array([0.0, 0.0])
+
+        with pytest.raises(ValueError, match=r"gradient_func must return shape \(1,\), got \(2,\)"):
+            gradient_descent(np.array([0.0]), obj_func, grad_func)
+
+    def test_non_finite_objective_stops_before_recording_bad_state(self):
+        """An overflowing candidate is not written into the objective history."""
+
+        def obj_func(x):
+            return 0.0 if x[0] >= 0.0 else np.inf
+
+        def grad_func(_x):
+            return np.array([1.0])
+
+        result = gradient_descent(
+            np.array([0.0]),
+            obj_func,
+            grad_func,
+            step_size=2.0,
+            max_iterations=5,
+        )
+
+        assert result.termination_reason == "non_finite"
+        assert result.iterations == 0
+        assert result.objective_history == [0.0]
+        assert np.isfinite(result.objective_value)
+
+    def test_overflowing_divergence_is_bounded_and_reported(self):
+        """Divergence ends at the last finite iterate instead of serializing inf."""
+        obj_func, grad_func = make_quadratic_problem(np.array([[1.0]]), np.array([1.0]))
+
+        result = gradient_descent(
+            np.array([0.5]),
+            obj_func,
+            grad_func,
+            step_size=2.5,
+            max_iterations=1000,
+            tolerance=1e-8,
+        )
+
+        assert not result.converged
+        assert result.termination_reason == "non_finite"
+        assert result.iterations < 1000
+        assert np.all(np.isfinite(result.solution))
+        assert np.isfinite(result.objective_value)
+        assert all(np.isfinite(value) for value in result.objective_history or [])
 
     def test_verbose_logging_does_not_affect_result(self):
         """Test verbose=True path (covers the iteration % 100 log branch)."""

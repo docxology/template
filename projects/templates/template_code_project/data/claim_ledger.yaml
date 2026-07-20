@@ -5,7 +5,7 @@ claims:
     source: projects/templates/template_code_project/src/viz_config.py plotting defaults (dpi)
     source_tier: project_source
     freshness: active
-    artifact_path: output/figures/
+    artifact_path: output/figures/convergence_plot.png
   - claim_id: step-size-sensitivity-cap
     kind: number
     value: 500

@@ -5,6 +5,7 @@
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Theoretical Bounds and Empirical Performance in Quadratic Minimization" />
   <title>Convergence Analysis of Gradient Descent Optimization</title>
   <style>
     /* Default styles provided by pandoc.
@@ -264,6 +265,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -288,11 +303,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -423,7 +433,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -432,7 +444,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -442,8 +459,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -1174,11 +1201,14 @@ class="header-section-number">3.4.3</span> Stopping rule and
 reporting</h3>
 <p><code>gradient_descent()</code> terminates when <span
 class="math inline">\(\|\nabla f(x_k)\|\)</span> falls below
-<code>experiment.tolerance</code> or when <span
+<code>experiment.tolerance</code>, when <span
 class="math inline">\(k\)</span> reaches
-<code>experiment.max_iterations</code>. The boolean
-<code>converged</code> in exported CSV rows distinguishes these
-outcomes. Downstream,
+<code>experiment.max_iterations</code>, or when an objective, gradient,
+or update becomes non-finite. The boolean <code>converged</code> plus
+<code>termination_reason</code> in exported CSV rows distinguish these
+outcomes. A non-finite candidate is rejected before it enters
+<code>objective_history</code>, preserving the last finite state for
+reproducible reporting. Downstream,
 <code>scripts/z_generate_manuscript_variables.py</code> aggregates the
 CSV into <code>RESULT_*</code> placeholders so tables and prose cannot
 drift from the last analysis run.</p>
@@ -1308,21 +1338,21 @@ follow <code>experiment.step_sizes</code> in <code>config.yaml</code>;
 the body rows below are injected at render time from that CSV
 (<code>RESULT_TABLE_ROWS</code> in
 <code>scripts/z_generate_manuscript_variables.py</code>).</p>
-<table id="tbl:opt_results">
+<table id="tbl:opt_results" style="width:100%;">
 <caption>Table 1: Gradient descent outcomes per configured step size:
 state at termination, iteration count capped by <span
-class="math inline">\(N_{\max} = 1000\)</span>, and the
+class="math inline">\(N_{\max} = 1000\)</span>, the
 <code>converged</code> flag from <code>gradient_descent()</code> using
-<span class="math inline">\(\|\nabla f\| &lt; 10^{-8}\)</span>. Rows
-marked “No” either hit the iteration cap before meeting the gradient
-tolerance (small <span class="math inline">\(\alpha\)</span>) or
-correspond to unstable dynamics when <span
-class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
+<span class="math inline">\(\|\nabla f\| &lt; 10^{-8}\)</span>, and its
+structured termination reason. A <code>non_finite</code> row stops
+before an overflowing update is serialized and retains the last finite
+iterate.</caption>
 <colgroup>
-<col style="width: 21%" />
-<col style="width: 22%" />
-<col style="width: 23%" />
-<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 20%" />
+<col style="width: 14%" />
+<col style="width: 13%" />
 <col style="width: 15%" />
 </colgroup>
 <thead>
@@ -1332,6 +1362,7 @@ class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
 <th>Objective Value</th>
 <th>Iterations</th>
 <th>Converged</th>
+<th>Termination</th>
 </tr>
 </thead>
 <tbody>
@@ -1341,6 +1372,7 @@ class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
 <td>-0.5000</td>
 <td>1000</td>
 <td>No</td>
+<td>max_iterations</td>
 </tr>
 <tr>
 <td>0.10</td>
@@ -1348,6 +1380,7 @@ class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
 <td>-0.5000</td>
 <td>175</td>
 <td>Yes</td>
+<td>converged</td>
 </tr>
 <tr>
 <td>0.50</td>
@@ -1355,6 +1388,7 @@ class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
 <td>-0.5000</td>
 <td>27</td>
 <td>Yes</td>
+<td>converged</td>
 </tr>
 <tr>
 <td>1.00</td>
@@ -1362,6 +1396,7 @@ class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
 <td>-0.5000</td>
 <td>1</td>
 <td>Yes</td>
+<td>converged</td>
 </tr>
 <tr>
 <td>1.50</td>
@@ -1369,13 +1404,15 @@ class="math inline">\(|1-\alpha| \geq 1\)</span>.</caption>
 <td>-0.5000</td>
 <td>27</td>
 <td>Yes</td>
+<td>converged</td>
 </tr>
 <tr>
 <td>2.50</td>
-<td>-123384059690617745524091335813180186890505789975305907992186675554099100089605560395688521301527760116788345515894979896207548805638009361768752272295676536457470613583575384064.0000</td>
-<td>inf</td>
-<td>1000</td>
+<td>-18027808360396904929014313133756094602021490593623455934143098782085898358268968910321926429082931340564236187769460640748166785144621899661251320903368704.0000</td>
+<td>162500937139598269661779749391931612290431672893591152510335296183621559147095059174363943753278426469403184325060604037672721111493697147195103358138591980698705733738747223639633375614563987655337958785982898164996799665358767974385539800466556596391365426397418791309924510722911320257856182821332197572608.0000</td>
+<td>876</td>
 <td>No</td>
+<td>non_finite</td>
 </tr>
 </tbody>
 </table>
@@ -1607,7 +1644,7 @@ computation</li>
 class="math inline">\(O(d)\)</span> for storing variables and
 gradients</li>
 <li><strong>Convergence</strong>: Fastest at <span
-class="math inline">\(\alpha = 1.0\)</span> (1 iteration), average 372
+class="math inline">\(\alpha = 1.0\)</span> (1 iteration), average 351
 iterations</li>
 <li><strong>Scalability</strong>: Memory-efficient implementation
 suitable for high-dimensional problems</li>
@@ -1679,7 +1716,7 @@ non-converged runs):</strong></p>
 <li>Smallest iteration count recorded: 1</li>
 <li>Largest iteration count recorded: 1000</li>
 <li>Mean iterations across rows in tbl. <a
-href="#tbl:opt_results">1</a>: 372</li>
+href="#tbl:opt_results">1</a>: 351</li>
 </ul>
 <p><strong>Numerical Accuracy:</strong></p>
 <ul>
@@ -1914,10 +1951,10 @@ make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.12.13</li>
+<li><strong>Python</strong>: 3.13.11</li>
 <li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-07-12T04:04:24Z</li>
+<li><strong>Generated</strong>: 2026-07-20T15:59:12Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2081,7 +2118,7 @@ runs satisfied <code>gradient_descent()</code> convergence
 class="math inline">\(\alpha = 1.0\)</span>)</li>
 <li>Largest recorded iteration count: 1000 (at <span
 class="math inline">\(\alpha = 0.01\)</span>)</li>
-<li>Mean iterations across all rows: 372</li>
+<li>Mean iterations across all rows: 351</li>
 </ul>
 <h3 data-number="7.3.2" id="numerical-stability"><span
 class="header-section-number">7.3.2</span> Numerical Stability</h3>

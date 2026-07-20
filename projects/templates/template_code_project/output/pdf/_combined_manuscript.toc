@@ -6,7 +6,7 @@
 \contentsline {subsection}{\numberline {2.3}Algorithm Overview}{5}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}Exemplar Implementation Goals}{5}{subsection.2.4}%
 \contentsline {subsection}{\numberline {2.5}Reader's guide to the manuscript}{5}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Why a quadratic model}{6}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.6}Why a quadratic model}{5}{subsection.2.6}%
 \contentsline {section}{\numberline {3}Methodology}{7}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Algorithm Implementation}{7}{subsection.3.1}%
 \contentsline {subsubsection}{\numberline {3.1.1}Gradient Descent Algorithm}{7}{subsubsection.3.1.1}%
@@ -50,7 +50,7 @@
 \contentsline {subsection}{\numberline {5.3}Research Pipeline Validation}{16}{subsection.5.3}%
 \contentsline {subsection}{\numberline {5.4}Key Insights}{16}{subsection.5.4}%
 \contentsline {subsection}{\numberline {5.5}Future Extensions}{16}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}Final Assessment}{17}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.6}Final Assessment}{16}{subsection.5.6}%
 \contentsline {section}{\numberline {6}Experimental Setup}{18}{section.6}%
 \contentsline {subsection}{\numberline {6.1}Problem Definition}{18}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}Parameter Space}{18}{subsection.6.2}%

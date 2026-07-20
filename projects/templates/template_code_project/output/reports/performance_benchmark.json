@@ -1,8 +1,32 @@
 {
+  "checks": {
+    "all_inputs_evaluated": true,
+    "all_objective_values_finite": true
+  },
+  "diagnostic_iterations_per_input": 50,
   "function_name": "quadratic_function",
-  "execution_time": 1.907773333333333e-06,
-  "memory_usage": null,
-  "iterations": 50,
-  "result_summary": "Avg time: 0.000002s",
-  "timestamp": "2026-07-11 19:44:19"
+  "input_count": 3,
+  "observations": [
+    {
+      "input": [
+        0.0
+      ],
+      "objective_value": 0.0
+    },
+    {
+      "input": [
+        5.0
+      ],
+      "objective_value": 7.5
+    },
+    {
+      "input": [
+        20.0
+      ],
+      "objective_value": 180.0
+    }
+  ],
+  "result_summary": "3 deterministic objective evaluations; runtime timing omitted from tracked artifact",
+  "schema_version": "template_code_project/performance_benchmark/v2",
+  "timing_policy": "Wall-clock timing and memory measurements are environment-dependent runtime diagnostics and are intentionally omitted from this tracked artifact."
 }

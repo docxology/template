@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 34976,
+  "fact_count": 34468,
   "freshness_warnings": [],
   "kind_counts": {
     "artifact": 172,
     "citation": 9,
     "equation": 18,
     "figure": 29,
-    "number": 34727,
+    "number": 34219,
     "section": 18,
     "table": 3
   },
-  "omitted_fact_count": 34776,
+  "omitted_fact_count": 34268,
   "sample_facts": [
     {
       "active": true,
@@ -51,11 +51,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-20T15:57:59+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/viz_config.py plotting defaults (dpi)",
       "source_field": "figure-export-dpi",
-      "source_path": "output/figures/",
+      "source_path": "output/figures/convergence_plot.png",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -387,6 +387,30 @@
     },
     {
       "active": true,
+      "checked_at": "2026-07-20T15:55:17+00:00",
+      "kind": "number",
+      "source": "output/reports/performance_benchmark.json:$.input_count",
+      "source_field": "$.input_count",
+      "source_path": "output/reports/performance_benchmark.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "3"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-20T15:55:17+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..log",
+      "source_field": "$.directories.pdf.extensions..log",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "3"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T04:08:16+00:00",
       "kind": "number",
       "source": "output/reports/telemetry.json:$.stages[2].stage_num",
@@ -411,11 +435,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-20T15:57:59+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/viz_config.py plotting defaults (dpi) (numeric variant)",
       "source_field": "figure-export-dpi",
-      "source_path": "output/figures/",
+      "source_path": "output/figures/convergence_plot.png",
       "source_tier": "project_source",
       "stale": false,
       "tolerance": 0.0,
@@ -884,6 +908,18 @@
       "source": "output/data/dashboard_payload.json:$.controls[1].max",
       "source_field": "$.controls[1].max",
       "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "5"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-20T15:55:17+00:00",
+      "kind": "number",
+      "source": "output/reports/performance_benchmark.json:$.observations[1].input[0]",
+      "source_field": "$.observations[1].input[0]",
+      "source_path": "output/reports/performance_benchmark.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -2376,42 +2412,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.05"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/dashboard_payload.json:$.payload.trajectories.2.5000.iterations[5] (numeric variant)",
-      "source_field": "$.payload.trajectories.2.5000.iterations[5]",
-      "source_path": "output/data/dashboard_payload.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.05"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.alphas[1] (numeric variant)",
-      "source_field": "$.payload.alpha_sweep.alphas[1]",
-      "source_path": "output/data/dashboard_payload.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.05"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/dashboard_payload.json:$.payload.landscape.x[199] (numeric variant)",
-      "source_field": "$.payload.landscape.x[199]",
-      "source_path": "output/data/dashboard_payload.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.05"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
@@ -2419,7 +2419,7 @@
     "artifact": 240,
     "bibliography": 9,
     "configuration": 115,
-    "generated_metric": 34598,
+    "generated_metric": 34090,
     "manuscript_claim": 6,
     "project_source": 8
   }
