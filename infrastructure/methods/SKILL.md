@@ -11,6 +11,8 @@ Use this package when adding or auditing repo-wide research-methods wiring.
 
 ```python
 from infrastructure.methods import (
+    audit_methods_projects,
+    audit_public_methods,
     build_methods_orchestration_plan,
     render_methods_orchestration_markdown,
     validate_methods_orchestration_plan,
@@ -21,7 +23,8 @@ from infrastructure.methods import (
 
 ```bash
 uv run python -m infrastructure.methods plan --project templates/template_code_project --format markdown
-uv run python -m infrastructure.methods plan --project templates/template_code_project --format json --check
+uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json
+uv run python -m infrastructure.methods plan --all-public --artifact-mode rendered --format json
 ```
 
 ## Boundaries

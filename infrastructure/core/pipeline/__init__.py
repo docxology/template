@@ -12,6 +12,13 @@ from importlib import import_module
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from infrastructure.core.pipeline.definition import (
+        PipelinePurpose,
+        PipelineSource,
+        PipelineSourceOrigin,
+        PipelineSourceResolutionError,
+        resolve_pipeline_source,
+    )
     from infrastructure.core.pipeline.dag import stage_label
     from infrastructure.core.pipeline.executor import PipelineExecutor
     from infrastructure.core.pipeline.multi_project import (
@@ -40,6 +47,14 @@ if TYPE_CHECKING:
     from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
 
 _EXPORTS: dict[str, tuple[str, str]] = {
+    "PipelinePurpose": ("infrastructure.core.pipeline.definition", "PipelinePurpose"),
+    "PipelineSource": ("infrastructure.core.pipeline.definition", "PipelineSource"),
+    "PipelineSourceOrigin": ("infrastructure.core.pipeline.definition", "PipelineSourceOrigin"),
+    "PipelineSourceResolutionError": (
+        "infrastructure.core.pipeline.definition",
+        "PipelineSourceResolutionError",
+    ),
+    "resolve_pipeline_source": ("infrastructure.core.pipeline.definition", "resolve_pipeline_source"),
     "PipelineConfig": ("infrastructure.core.pipeline.types", "PipelineConfig"),
     "PipelineExecutor": ("infrastructure.core.pipeline.executor", "PipelineExecutor"),
     "stage_label": ("infrastructure.core.pipeline.dag", "stage_label"),
@@ -70,6 +85,11 @@ _EXPORTS: dict[str, tuple[str, str]] = {
 }
 
 __all__ = [
+    "PipelinePurpose",
+    "PipelineSource",
+    "PipelineSourceOrigin",
+    "PipelineSourceResolutionError",
+    "resolve_pipeline_source",
     "PipelineConfig",
     "PipelineExecutor",
     "stage_label",

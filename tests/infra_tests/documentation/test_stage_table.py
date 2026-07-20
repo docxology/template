@@ -13,6 +13,7 @@ import pytest
 from infrastructure.documentation.stage_table import (
     build_stage_table,
     inject_stage_table,
+    refresh_stage_tables,
 )
 
 
@@ -205,3 +206,35 @@ class TestDefaultStageTableTargets:
         from infrastructure.documentation.stage_table import DEFAULT_STAGE_TABLE_TARGETS
 
         assert "CLAUDE.md" in DEFAULT_STAGE_TABLE_TARGETS
+
+
+def test_refresh_stage_tables_previews_and_writes_real_targets(synthetic_yaml: Path, tmp_path: Path) -> None:
+    target = tmp_path / "README.md"
+    target.write_text(
+        "# Pipeline\n\n<!-- BEGIN:STAGE_TABLE -->\nold\n<!-- END:STAGE_TABLE -->\n",
+        encoding="utf-8",
+    )
+
+    preview = refresh_stage_tables(
+        tmp_path,
+        targets=["README.md"],
+        yaml_path=synthetic_yaml,
+    )
+    assert preview.changed == (target,)
+    assert "old" in target.read_text(encoding="utf-8")
+
+    written = refresh_stage_tables(
+        tmp_path,
+        targets=["README.md"],
+        yaml_path=synthetic_yaml,
+        write=True,
+    )
+    assert written.changed == (target,)
+    assert "Clean Output Directories" in target.read_text(encoding="utf-8")
+
+    stable = refresh_stage_tables(
+        tmp_path,
+        targets=["README.md"],
+        yaml_path=synthetic_yaml,
+    )
+    assert stable.unchanged == (target,)

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.pipeline.hitl import HitlController
+from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,7 @@ class PipelineArgs:
     resume: bool = False
     core_only: bool = False
     incremental: bool = False
+    pipeline_path: str | None = None
     stage: str | None = None
     hitl_mode: str = "full-auto"
     hitl_command: str | None = None
@@ -32,7 +34,11 @@ def handle_hitl_command(args: PipelineArgs, repo_root: Path) -> int:
     output_dir = repo_root / "projects" / args.project / "output"
     from infrastructure.core.pipeline.control import load_pipeline_control_config
 
-    default_yaml = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+    default_yaml = resolve_pipeline_source(
+        repo_root,
+        explicit_path=args.pipeline_path,
+        purpose=PipelinePurpose.EXECUTION,
+    ).path
     project_yaml = repo_root / "projects" / args.project / "pipeline.yaml"
     control = load_pipeline_control_config(
         default_yaml if default_yaml.exists() else None,

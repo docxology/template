@@ -28,15 +28,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
-import shutil
 import subprocess
 import sys
-import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.core.project_pyproject import project_declares_dev_extra
+from infrastructure.core.pytest_orchestration import build_project_pytest_command
+from infrastructure.core.runtime.environment import get_subprocess_env
 from infrastructure.project.public_scope import public_project_names
 
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
@@ -129,18 +129,21 @@ def _collected_count(repo_root: Path, rel_path: str) -> int:
 def _exemplar_collected_count(repo_root: Path, name: str) -> int:
     """Collect an exemplar in its own declared environment."""
     project_root = repo_root / "projects" / "templates" / name
-    uv = shutil.which("uv")
-    if uv is None:
-        raise RuntimeError("uv is required to derive isolated exemplar collection totals")
-    environment = dict(os.environ)
+    environment = get_subprocess_env()
     existing_pythonpath = environment.get("PYTHONPATH")
     environment["PYTHONPATH"] = (
         f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
     )
-    command = [uv, "run", "--project", str(project_root)]
-    if project_declares_dev_extra(project_root):
-        command.extend(["--extra", "dev"])
-    command.extend(["pytest", "tests/", "--collect-only", "-q", "--no-cov"])
+    # Use the canonical project-test command builder. In particular, invoke
+    # pytest as ``python -m pytest`` instead of selecting a project-local
+    # console-script wrapper. Console scripts embed an absolute interpreter
+    # path and survive checkout moves, while the resolved interpreter remains
+    # usable; routing through the module therefore makes counts derivation
+    # relocation-safe without deleting or repairing a user environment.
+    command = build_project_pytest_command(
+        project_root,
+        ["tests/", "--collect-only", "-q", "--no-cov"],
+    )
     proc = subprocess.run(  # noqa: S603 - resolved uv executable, fixed arguments
         command,
         cwd=project_root,

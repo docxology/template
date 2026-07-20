@@ -16,6 +16,7 @@ class TestStageRows:
     def test_default_pipeline_has_sixteen_declared_stages(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML)
         assert len(rows) == 16
+        assert rows[0]["key"] == "clean"
         names = [r["name"] for r in rows]
         assert names[0] == "Clean Output Directories"
         assert "LLM Scientific Review" in names
@@ -39,7 +40,7 @@ class TestStageRows:
     def test_rows_expose_contract_fields(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML)
         first = rows[0]
-        assert set(["order", "name", "runner", "tags", "optional", "definition_of_done"]).issubset(first)
+        assert set(["order", "key", "name", "runner", "tags", "optional", "definition_of_done"]).issubset(first)
 
     def test_synthetic_yaml(self, tmp_path: Path) -> None:
         yaml_path = tmp_path / "pipeline.yaml"

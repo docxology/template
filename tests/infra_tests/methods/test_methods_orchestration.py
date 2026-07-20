@@ -52,14 +52,13 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
     assert unexpected_errors == []
 
 
-def test_plan_emits_only_dispatchable_single_stage_commands(repo_root: Path) -> None:
-    from infrastructure.core.pipeline.stage_registry import known_stage_keys
+def test_plan_emits_project_dag_single_stage_commands(repo_root: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan
 
     plan = build_methods_orchestration_plan(repo_root, "templates/template_code_project")
     by_name = {stage.name: stage for stage in plan.stages}
 
-    assert by_name["Clean Output Directories"].verification_commands == ()
+    assert by_name["Clean Output Directories"].key == "clean"
     emitted_keys = {
         command.rsplit(" --stage ", 1)[1]
         for stage in plan.stages
@@ -67,8 +66,19 @@ def test_plan_emits_only_dispatchable_single_stage_commands(repo_root: Path) -> 
         if "scripts/runner/execute_pipeline.py" in command and " --stage " in command
     }
     assert emitted_keys
-    assert emitted_keys <= known_stage_keys()
-    assert "clean" not in emitted_keys
+    assert emitted_keys <= {stage.key for stage in plan.stages}
+    assert "clean" in emitted_keys
+
+
+def test_all_public_source_audit_has_typed_aggregate(repo_root: Path) -> None:
+    from infrastructure.methods import MethodsAuditReport, audit_public_methods
+
+    report = audit_public_methods(repo_root, artifact_mode="source")
+
+    assert isinstance(report, MethodsAuditReport)
+    assert len(report.projects) == len(PUBLIC_PROJECT_NAMES)
+    assert report.passed
+    assert report.to_dict()["artifact_mode"] == "source"
 
 
 def test_public_template_projects_have_methods_orchestration_plans(repo_root: Path) -> None:

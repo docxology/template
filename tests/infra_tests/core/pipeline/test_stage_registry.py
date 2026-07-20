@@ -8,6 +8,7 @@ import pytest
 from infrastructure.core.pipeline.stage_registry import (
     MENU_KEY_TO_STAGE,
     STAGE_DISPATCH,
+    resolve_stage_definition,
     script_argv_for_stage,
 )
 from infrastructure.core.pipeline.dag import PipelineDAG
@@ -59,3 +60,15 @@ def test_single_stage_routes_match_pipeline_yaml() -> None:
         dispatch = STAGE_DISPATCH[stage.key]
         assert dispatch.script == stage.script
         assert dispatch.args == tuple(stage.args)
+
+
+def test_stage_identity_resolves_keys_and_compatible_display_names() -> None:
+    yaml_path = Path(__file__).resolve().parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
+    dag = PipelineDAG.from_yaml(yaml_path)
+
+    by_key = resolve_stage_definition(dag, "render_pdf")
+    by_name = resolve_stage_definition(dag, "PDF Rendering")
+    by_normalized_name = resolve_stage_definition(dag, "pdf_rendering")
+
+    assert by_key is by_name is by_normalized_name
+    assert by_key.key == "render_pdf"

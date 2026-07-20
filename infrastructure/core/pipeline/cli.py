@@ -31,6 +31,11 @@ from typing import Any, Iterator
 from infrastructure.core.cli_scaffold import add_schema_flag, emit_schema
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.dag import PipelineDAG
+from infrastructure.core.pipeline.definition import (
+    PipelinePurpose,
+    PipelineSourceResolutionError,
+    resolve_pipeline_source,
+)
 
 logger = get_logger(__name__)
 
@@ -69,17 +74,18 @@ __all__ = [
 
 def _resolve_yaml(args: argparse.Namespace) -> Path:
     """Resolve which pipeline.yaml to read: explicit --yaml, then --project override, then default."""
-    explicit_yaml = getattr(args, "yaml", None)
-    if isinstance(explicit_yaml, (str, Path)):
-        return Path(explicit_yaml).expanduser().resolve()
+    raw_repo_root = getattr(args, "repo_root", ".")
+    repo_root = Path(raw_repo_root) if isinstance(raw_repo_root, (str, Path)) else Path(".")
     project = getattr(args, "project", None)
+    project_root = None
     if isinstance(project, str) and project:
-        raw_repo_root = getattr(args, "repo_root", ".")
-        repo_root = Path(raw_repo_root) if isinstance(raw_repo_root, (str, Path)) else Path(".")
-        project_yaml = repo_root.resolve() / "projects" / project / "pipeline.yaml"
-        if project_yaml.is_file():
-            return project_yaml
-    return DEFAULT_PIPELINE_YAML
+        project_root = repo_root.resolve() / "projects" / project
+    return resolve_pipeline_source(
+        repo_root,
+        project_root,
+        explicit_path=getattr(args, "yaml", None),
+        purpose=PipelinePurpose.EXECUTION,
+    ).path
 
 
 def stage_rows(
@@ -112,6 +118,7 @@ def stage_rows(
         rows.append(
             {
                 "order": order,
+                "key": stage.key,
                 "name": stage.name,
                 "runner": stage.script or (f"method:{stage.method}" if stage.method else None),
                 "script": stage.script,
@@ -131,7 +138,11 @@ def stage_rows(
 
 def describe_pipeline(args: argparse.Namespace) -> int:
     """Emit the derived stage catalog as JSON or a human-readable table."""
-    yaml_path = _resolve_yaml(args)
+    try:
+        yaml_path = _resolve_yaml(args)
+    except PipelineSourceResolutionError as exc:
+        logger.error("%s", exc)
+        return 1
     if not yaml_path.is_file():
         logger.error("pipeline.yaml not found: %s", yaml_path)
         return 1

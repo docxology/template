@@ -23,6 +23,7 @@ numeric prefixes used by the canonical script filenames under
 explicitly so historical pitfalls are not re-introduced.
 """
 
+from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
@@ -54,6 +55,48 @@ _DEFAULT_FAILURE_MODES: dict[str, str] = {
 
 
 _PIPELINE_YAML_REL = "infrastructure/core/pipeline/pipeline.yaml"
+
+
+@dataclass(frozen=True)
+class StageTableRefreshResult:
+    """Deterministic stage-table refresh outcome."""
+
+    changed: tuple[Path, ...]
+    unchanged: tuple[Path, ...]
+    write: bool
+
+
+def refresh_stage_tables(
+    repo_root: Path,
+    *,
+    targets: tuple[str | Path, ...] | list[str | Path] | None = None,
+    yaml_path: Path | None = None,
+    write: bool = False,
+) -> StageTableRefreshResult:
+    """Render and optionally update every requested stage-table document."""
+    source = yaml_path or repo_root / _PIPELINE_YAML_REL
+    changed: list[Path] = []
+    unchanged: list[Path] = []
+    for raw_target in targets or list(DEFAULT_STAGE_TABLE_TARGETS):
+        relative = Path(raw_target)
+        target = relative if relative.is_absolute() else repo_root / relative
+        if not target.exists():
+            raise FileNotFoundError(f"Markdown target not found: {target}")
+        target_rel = target.relative_to(repo_root) if target.is_relative_to(repo_root) else target
+        table = build_stage_table(source, target_rel_to_repo=target_rel, repo_root=repo_root)
+        if write:
+            changed_now = inject_stage_table(target, table)
+        else:
+            current = target.read_text(encoding="utf-8")
+            proposed = inject_between_markers(
+                current,
+                "<!-- BEGIN:STAGE_TABLE -->",
+                "<!-- END:STAGE_TABLE -->",
+                table,
+            )
+            changed_now = proposed != current
+        (changed if changed_now else unchanged).append(target)
+    return StageTableRefreshResult(tuple(changed), tuple(unchanged), write)
 
 
 def _stage_table_caption(yaml_link: str) -> str:
@@ -221,4 +264,10 @@ def inject_stage_table(
     return True
 
 
-__all__ = ["DEFAULT_STAGE_TABLE_TARGETS", "build_stage_table", "inject_stage_table"]
+__all__ = [
+    "DEFAULT_STAGE_TABLE_TARGETS",
+    "StageTableRefreshResult",
+    "build_stage_table",
+    "inject_stage_table",
+    "refresh_stage_tables",
+]

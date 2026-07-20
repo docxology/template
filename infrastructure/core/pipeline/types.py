@@ -113,6 +113,7 @@ class PipelineConfig:
     hitl_mode: str = "full-auto"
     control: PipelineControlConfig = field(default_factory=PipelineControlConfig)
     incremental: "IncrementalConfig" = field(default_factory=lambda: _default_incremental_config())
+    pipeline_path: Path | None = None
     total_stages: int = 10
 
     @property

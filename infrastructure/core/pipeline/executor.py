@@ -33,6 +33,7 @@ from infrastructure.core.pipeline.types import (
     StageSpec,
 )
 from infrastructure.core.pipeline._stage_execution import execute_stage
+from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
 from infrastructure.core.telemetry import TelemetryCollector, TelemetryConfig
 
 logger = get_logger(__name__)
@@ -103,24 +104,35 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
     def _resolve_pipeline_yaml(self) -> Path:
         """Return the pipeline YAML path to use: project-specific if it exists, else default."""
-        project_yaml = Path(self.config.project_dir) / "pipeline.yaml"
-        return project_yaml if project_yaml.exists() else self._default_pipeline_yaml()
+        return resolve_pipeline_source(
+            self.config.repo_root,
+            self.config.project_dir,
+            explicit_path=self.config.pipeline_path,
+            purpose=PipelinePurpose.EXECUTION,
+        ).path
 
     def _default_pipeline_yaml(self) -> Path:
         """Return the repository DAG, or the identical installed package data."""
-        repository_yaml = Path(self.config.repo_root) / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
-        return repository_yaml if repository_yaml.exists() else Path(__file__).with_name("pipeline.yaml")
+        return resolve_pipeline_source(
+            self.config.repo_root,
+            purpose=PipelinePurpose.EXECUTION,
+        ).path
 
     def _project_pipeline_yaml(self) -> Path:
         return Path(self.config.project_dir) / "pipeline.yaml"
 
     def _resolve_control_config(self) -> PipelineControlConfig:
         """Resolve advisory control config from YAML plus explicit config."""
-        default_yaml = self._default_pipeline_yaml()
-        project_yaml = self._project_pipeline_yaml()
+        if self.config.pipeline_path is not None:
+            default_yaml = self._resolve_pipeline_yaml()
+            project_yaml: Path | None = None
+        else:
+            default_yaml = self._default_pipeline_yaml()
+            candidate_project_yaml = self._project_pipeline_yaml()
+            project_yaml = candidate_project_yaml if candidate_project_yaml.exists() else None
         loaded = load_pipeline_control_config(
             default_yaml if default_yaml.exists() else None,
-            project_yaml=project_yaml if project_yaml.exists() else None,
+            project_yaml=project_yaml,
             cli_hitl_mode=self.config.hitl_mode,
         )
         if self.config.control != type(self.config.control)():
@@ -181,6 +193,17 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         self._merge_plugin_stages_into_dag(dag)
         return dag.to_stage_specs(self)
+
+    def preview_stage_names(self, *, include_llm: bool, skip_clean: bool | None = None) -> tuple[str, ...]:
+        """Return the exact filtered project/plugin execution order without running it."""
+        effective_skip_clean = not self.config.clean if skip_clean is None else skip_clean
+        return tuple(
+            stage.name
+            for stage in self._build_stage_list(
+                include_llm=include_llm,
+                skip_clean=effective_skip_clean,
+            )
+        )
 
     # -- Plugin-stage integration (DEFAULT-OFF) ------------------------------
 

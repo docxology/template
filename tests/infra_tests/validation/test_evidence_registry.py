@@ -255,6 +255,9 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     (project / "output" / "reports" / "validation_report.json").write_text(
         '{"unsupported_claim": 999}', encoding="utf-8"
     )
+    (project / "output" / "reports" / "validation_report.md").write_text(
+        "# Validation\n\nUnsupported claim: 999.\n", encoding="utf-8"
+    )
 
     registry = build_project_evidence_registry(project)
 
@@ -264,6 +267,8 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     assert registry.has("number", "85%")
     assert registry.has("number", "80")
     assert not registry.has("number", "999")
+    assert not registry.has("artifact", "output/reports/validation_report.json")
+    assert not registry.has("artifact", "output/reports/validation_report.md")
     assert {fact.source_tier for fact in registry.lookup("number", "0.85")} == {"generated_metric"}
     assert {fact.source_path for fact in registry.lookup("number", "3.10")} == {"pyproject.toml"}
 

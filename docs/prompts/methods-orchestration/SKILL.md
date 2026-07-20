@@ -33,7 +33,7 @@ metadata:
 
 ## Workflow
 
-1. **Build the plan** - run `infrastructure.methods` for the target project(s).
+1. **Build the plan** - run `infrastructure.methods` for one project or `--all-public`.
 2. **Check surfaces** - manuscript methods files, `pipeline.yaml` stage
    contracts, artifact manifest, evidence registry, and validation commands.
 3. **Repair source layers** - update `src/`, thin scripts, manuscript source, or
@@ -48,6 +48,8 @@ metadata:
 ```bash
 uv run python -m infrastructure.methods plan --project <project> --format markdown
 uv run python -m infrastructure.methods plan --project <project> --format json --check
+uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json
+uv run python -m infrastructure.methods plan --all-public --artifact-mode rendered --format json
 uv run python scripts/runner/execute_pipeline.py --project <project> --core-only
 uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .
 uv run pytest tests/infra_tests/methods -q

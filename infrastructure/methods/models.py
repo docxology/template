@@ -22,10 +22,12 @@ class MethodStage:
     definition_of_done: str
     failure_code: str
     verification_commands: tuple[str, ...]
+    key: str = ""
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
         return {
+            "key": self.key,
             "name": self.name,
             "order": self.order,
             "depends_on": list(self.depends_on),
@@ -53,10 +55,14 @@ class MethodsOrchestrationPlan:
     evidence_registry: Path
     stages: tuple[MethodStage, ...]
     validation_commands: tuple[str, ...]
+    schema_version: str = "1.0"
+    artifact_mode: str = "rendered"
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
         return {
+            "schema_version": self.schema_version,
+            "artifact_mode": self.artifact_mode,
             "project_name": self.project_name,
             "project_root": self.project_root.as_posix(),
             "pipeline_source": self.pipeline_source.as_posix(),
@@ -86,4 +92,60 @@ class MethodsIssue:
             "message": self.message,
             "path": self.path,
             "suggestion": self.suggestion,
+        }
+
+
+@dataclass(frozen=True)
+class MethodsProjectAudit:
+    """Methods audit result for one project."""
+
+    plan: MethodsOrchestrationPlan
+    issues: tuple[MethodsIssue, ...]
+
+    @property
+    def passed(self) -> bool:
+        """Return whether the project has no blocking issues."""
+        return not any(issue.severity == "error" for issue in self.issues)
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize to a JSON-safe mapping."""
+        payload = self.plan.to_dict()
+        payload["issues"] = [issue.to_dict() for issue in self.issues]
+        payload["passed"] = self.passed
+        return payload
+
+
+@dataclass(frozen=True)
+class MethodsAuditReport:
+    """Aggregate methods audit across one or more projects."""
+
+    projects: tuple[MethodsProjectAudit, ...]
+    artifact_mode: str = "rendered"
+    schema_version: str = "1.0"
+
+    @property
+    def error_count(self) -> int:
+        """Return the number of blocking validation issues."""
+        return sum(issue.severity == "error" for project in self.projects for issue in project.issues)
+
+    @property
+    def warning_count(self) -> int:
+        """Return the number of non-blocking warnings."""
+        return sum(issue.severity == "warning" for project in self.projects for issue in project.issues)
+
+    @property
+    def passed(self) -> bool:
+        """Return whether every audited project passed."""
+        return self.error_count == 0
+
+    def to_dict(self) -> dict[str, object]:
+        """Serialize the complete audit without dropping plan fields."""
+        return {
+            "schema_version": self.schema_version,
+            "artifact_mode": self.artifact_mode,
+            "passed": self.passed,
+            "project_count": len(self.projects),
+            "error_count": self.error_count,
+            "warning_count": self.warning_count,
+            "projects": [project.to_dict() for project in self.projects],
         }

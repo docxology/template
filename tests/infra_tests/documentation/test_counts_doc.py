@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import venv
 from pathlib import Path
 
 import pytest
@@ -200,3 +201,25 @@ def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
 def test_exemplar_collection_uses_declared_dev_dependencies() -> None:
     count = _exemplar_collected_count(_repo_root(), "template_literature_meta_analysis")
     assert count > 0
+
+
+def test_exemplar_collection_injects_runner_when_project_venv_lacks_pytest() -> None:
+    count = _exemplar_collected_count(_repo_root(), "template_autoresearch_project")
+    assert count > 0
+
+
+def test_exemplar_collection_ignores_stale_relocated_pytest_wrapper(tmp_path: Path) -> None:
+    """Collection uses the resolved interpreter, never an absolute console wrapper."""
+    project = tmp_path / "projects" / "templates" / "moved_project"
+    tests = project / "tests"
+    tests.mkdir(parents=True)
+    (tests / "test_moved.py").write_text("def test_moved():\n    assert True\n", encoding="utf-8")
+
+    venv.EnvBuilder(with_pip=False, system_site_packages=True).create(project / ".venv")
+    wrapper = project / ".venv" / "bin" / "pytest"
+    stale_contents = b"#!/checkout/that/no/longer/exists/.venv/bin/python\n"
+    wrapper.write_bytes(stale_contents)
+    wrapper.chmod(0o755)
+
+    assert _exemplar_collected_count(tmp_path, "moved_project") == 1
+    assert wrapper.read_bytes() == stale_contents

@@ -17,6 +17,7 @@ registries.
 
 ```bash
 uv run python -m infrastructure.methods plan --project <project> --format json --check
+uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json
 ```
 
 Keep edits in source layers. Generated output is evidence, not the fix target.

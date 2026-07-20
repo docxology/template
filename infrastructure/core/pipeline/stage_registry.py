@@ -13,6 +13,8 @@ from typing import Final
 
 import yaml
 
+from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
+
 __all__ = [
     "MENU_KEY_TO_STAGE",
     "STAGE_DISPATCH",
@@ -20,6 +22,7 @@ __all__ = [
     "known_stage_keys",
     "normalize_stage_key",
     "script_argv_for_stage",
+    "resolve_stage_definition",
 ]
 
 
@@ -102,3 +105,23 @@ def script_argv_for_stage(stage: str) -> tuple[str, ...]:
         raise SystemExit(f"Unknown stage '{stage}'. Valid: {valid}")
     dispatch = STAGE_DISPATCH[key]
     return (dispatch.script, *dispatch.args)
+
+
+def resolve_stage_definition(dag: PipelineDAG, stage: str) -> StageDefinition:
+    """Resolve a DAG stage by stable key or compatible canonical display name."""
+    token = normalize_stage_key(stage)
+    by_key = {definition.key: definition for definition in dag.stages if definition.key}
+    if token in by_key:
+        return by_key[token]
+
+    by_name = {definition.name.strip().lower(): definition for definition in dag.stages}
+    if token in by_name:
+        return by_name[token]
+    normalized_names = {
+        definition.name.strip().lower().replace(" ", "_").replace("-", "_"): definition for definition in dag.stages
+    }
+    if token in normalized_names:
+        return normalized_names[token]
+
+    valid = sorted({*(key for key in by_key if key), *by_name})
+    raise SystemExit(f"Unknown stage '{stage}'. Valid: {', '.join(valid)}")

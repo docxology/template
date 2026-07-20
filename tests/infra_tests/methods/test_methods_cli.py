@@ -74,8 +74,8 @@ stages:
     return project
 
 
-def test_main_plan_json_returns_zero_and_valid_json(tmp_path: Path) -> None:
-    """main(['plan', ...]) with --format json returns 0 and prints valid JSON with 'stages'."""
+def test_main_plan_json_returns_validation_error_and_valid_json(tmp_path: Path) -> None:
+    """A rendered plan still prints JSON while returning the standard validation code."""
     _write_minimal_repo(tmp_path)
     buffer = io.StringIO()
     with contextlib.redirect_stdout(buffer):
@@ -90,7 +90,7 @@ def test_main_plan_json_returns_zero_and_valid_json(tmp_path: Path) -> None:
                 "json",
             ]
         )
-    assert code == 0
+    assert code == 1
     payload = json.loads(buffer.getvalue())
     assert "stages" in payload
     assert payload["project_name"] == "template_test"
@@ -98,8 +98,8 @@ def test_main_plan_json_returns_zero_and_valid_json(tmp_path: Path) -> None:
     assert len(payload["stages"]) > 0
 
 
-def test_main_plan_markdown_returns_zero_and_prints_markdown(tmp_path: Path) -> None:
-    """main(['plan', ...]) with default format returns 0 and prints markdown output."""
+def test_main_plan_markdown_returns_validation_error_and_prints_markdown(tmp_path: Path) -> None:
+    """A rendered plan still prints Markdown while returning the standard validation code."""
     _write_minimal_repo(tmp_path)
     buffer = io.StringIO()
     with contextlib.redirect_stdout(buffer):
@@ -112,7 +112,7 @@ def test_main_plan_markdown_returns_zero_and_prints_markdown(tmp_path: Path) -> 
                 str(tmp_path),
             ]
         )
-    assert code == 0
+    assert code == 1
     output = buffer.getvalue()
     assert "# Methods orchestration: template_test" in output
     assert "## Stage Contracts" in output
@@ -138,6 +138,24 @@ def test_main_plan_with_check_flag_on_scaffold_returns_zero(tmp_path: Path) -> N
         )
     # The scaffold has no method section and no artifact manifest, so --check
     # should return 1 (there ARE error-severity issues).
+    assert code == 1
+
+
+def test_main_plan_validation_error_is_one_without_check(tmp_path: Path) -> None:
+    _write_minimal_repo(tmp_path)
+
+    code = main(
+        [
+            "plan",
+            "--project",
+            "template_test",
+            "--repo-root",
+            str(tmp_path),
+            "--format",
+            "json",
+        ]
+    )
+
     assert code == 1
 
 
@@ -178,3 +196,27 @@ def test_main_plan_json_on_real_exemplar() -> None:
     payload = json.loads(buffer.getvalue())
     assert "stages" in payload
     assert payload["project_name"] == "templates/template_code_project"
+
+
+def test_main_all_public_source_audit_returns_aggregate_json() -> None:
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        code = main(
+            [
+                "plan",
+                "--all-public",
+                "--artifact-mode",
+                "source",
+                "--repo-root",
+                str(REPO_ROOT),
+                "--format",
+                "json",
+                "--check",
+            ]
+        )
+
+    assert code == 0
+    payload = json.loads(buffer.getvalue())
+    assert payload["project_count"] == 24
+    assert payload["artifact_mode"] == "source"
+    assert payload["passed"] is True

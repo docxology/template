@@ -345,7 +345,12 @@ def normalize_pytest_args_for_project(project_root: Path, pytest_args: list[str]
     return normalized
 
 
-def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> list[str]:
+def build_project_pytest_command(
+    project_root: Path,
+    pytest_args: list[str],
+    *,
+    inject_runner_dependencies: bool = True,
+) -> list[str]:
     """Return argv for a project pytest suite using project-local deps when declared.
 
     Projects with ``pyproject.toml`` run via ``uv run --directory`` so pinned
@@ -354,12 +359,12 @@ def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> 
 
     Test-runner packages (pytest plus coverage, timeout, xdist, and benchmark
     plugins) are
-    injected via ``--with`` so they are always available in the project's
-    ephemeral env even when the project's own ``pyproject.toml`` does not declare
-    them. Without this, projects that only declare scientific deps (numpy /
-    matplotlib) would fail with ``--timeout=120 unrecognized argument`` (exit=4)
-    because the project venv is created on-demand by ``uv run --directory`` and
-    contains only the project's own deps — not the workspace dev group.
+    By default, test-runner packages are injected via ``--with`` so they are
+    always available in the project's ephemeral env even when the project's own
+    ``pyproject.toml`` does not declare them. Collection-only callers that use a
+    declared project test environment may set ``inject_runner_dependencies`` to
+    ``False`` to avoid resolving a redundant overlay; interpreter resolution and
+    the relocation-safe ``python -m pytest`` invocation remain shared.
     """
     pyproject = project_root / "pyproject.toml"
     uv_path = shutil.which("uv")
@@ -369,8 +374,9 @@ def build_project_pytest_command(project_root: Path, pytest_args: list[str]) -> 
         # Inject test-runner deps so they are always available regardless of
         # what the project itself declares (thin projects declare only runtime
         # deps; pytest/cov/timeout stay in the workspace dev group).
-        for dependency_spec in test_runner_dependency_specs():
-            cmd.extend(["--with", dependency_spec])
+        if inject_runner_dependencies:
+            for dependency_spec in test_runner_dependency_specs():
+                cmd.extend(["--with", dependency_spec])
         if project_declares_dev_extra(resolved_root):
             cmd.extend(["--extra", "dev"])
         cmd.extend(

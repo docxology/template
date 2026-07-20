@@ -270,14 +270,6 @@ class PipelineDAG:
 
     def _resolve_stage_func(self, stage: StageDefinition, executor: Any) -> Callable[[], bool]:
         """Build a zero-arg callable for a stage definition."""
-        if stage.method:
-            method = getattr(executor, stage.method, None)
-            if method is None:
-                raise ValueError(
-                    f"Stage '{stage.name}' references method '{stage.method}' but executor has no such method"
-                )
-            return cast(Callable[[], bool], method)
-
         if stage.script:
             # Build a closure over the script + args
             script = stage.script
@@ -292,6 +284,14 @@ class PipelineDAG:
                 return bool(executor._run_script(_script, *_args, allow_skip_code=_allow_skip))
 
             return _run
+
+        if stage.method:
+            method = getattr(executor, stage.method, None)
+            if method is None:
+                raise ValueError(
+                    f"Stage '{stage.name}' references method '{stage.method}' but executor has no such method"
+                )
+            return cast(Callable[[], bool], method)
 
         raise ValueError(f"Stage '{stage.name}' must define either 'script' or 'method'")
 
@@ -341,14 +341,20 @@ def stage_label(stage_name: str, project_name: str = "project", repo_root: Path 
     if repo_root is None:
         return f"{stage_name} stage"
 
-    candidates = [
-        repo_root / "projects" / project_name / "pipeline.yaml",
-        repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml",
-    ]
+    from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
+
+    candidates: list[Path] = []
     try:
+        project_source = resolve_pipeline_source(
+            repo_root,
+            repo_root / "projects" / project_name,
+            purpose=PipelinePurpose.EXECUTION,
+        ).path
+        candidates.append(project_source)
+        default_source = resolve_pipeline_source(repo_root, purpose=PipelinePurpose.EXECUTION).path
+        if default_source not in candidates:
+            candidates.append(default_source)
         for yaml_path in candidates:
-            if not yaml_path.exists():
-                continue
             dag = PipelineDAG.from_yaml(yaml_path)
             names = [s.name for s in dag.stages]
             total = len(names)

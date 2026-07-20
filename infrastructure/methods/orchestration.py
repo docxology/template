@@ -7,22 +7,16 @@ import re
 from pathlib import Path
 
 from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
-from infrastructure.core.pipeline.stage_registry import known_stage_keys
-from infrastructure.methods.models import MethodStage, MethodsIssue, MethodsOrchestrationPlan
+from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
+from infrastructure.methods.models import (
+    MethodStage,
+    MethodsAuditReport,
+    MethodsIssue,
+    MethodsOrchestrationPlan,
+    MethodsProjectAudit,
+)
 from infrastructure.project.discovery import resolve_project_root
-
-_STAGE_NAME_TO_KEY = {
-    "Clean Output Directories": "clean",
-    "Environment Setup": "setup",
-    "Infrastructure Tests": "infra_tests",
-    "Project Tests": "project_tests",
-    "Project Analysis": "analysis",
-    "PDF Rendering": "render_pdf",
-    "Output Validation": "validate",
-    "LLM Scientific Review": "llm_reviews",
-    "LLM Translations": "llm_translations",
-    "Copy Outputs": "copy",
-}
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 _METHOD_SECTION_TOKENS = ("method", "methodology", "experimental_setup", "protocol")
 
@@ -41,6 +35,8 @@ def build_methods_orchestration_plan(
     project_name: str,
     *,
     projects_dir: str = "projects",
+    pipeline_path: Path | str | None = None,
+    artifact_mode: str = "rendered",
 ) -> MethodsOrchestrationPlan:
     """Build a deterministic methods orchestration plan for a project.
 
@@ -51,7 +47,14 @@ def build_methods_orchestration_plan(
     root = Path(repo_root).resolve()
     project_root_abs = _resolve_project_root(root, project_name, projects_dir=projects_dir)
     project_root = _relative_to(project_root_abs, root)
-    pipeline_source_abs = _pipeline_source(root, project_root_abs)
+    if artifact_mode not in {"source", "rendered"}:
+        raise ValueError(f"Unknown artifact mode: {artifact_mode}")
+    pipeline_source_abs = resolve_pipeline_source(
+        root,
+        project_root_abs,
+        explicit_path=pipeline_path,
+        purpose=PipelinePurpose.METHODS,
+    ).path
     dag = PipelineDAG.from_yaml(pipeline_source_abs)
 
     stages = tuple(
@@ -74,6 +77,7 @@ def build_methods_orchestration_plan(
         evidence_registry=evidence_registry,
         stages=stages,
         validation_commands=_validation_commands(project_name),
+        artifact_mode=artifact_mode,
     )
 
 
@@ -81,7 +85,7 @@ def validate_methods_orchestration_plan(
     plan: MethodsOrchestrationPlan,
     *,
     repo_root: Path | str = ".",
-    require_generated_artifacts: bool = True,
+    require_generated_artifacts: bool | None = None,
 ) -> tuple[MethodsIssue, ...]:
     """Validate methods surfaces and, optionally, generated evidence reports.
 
@@ -91,6 +95,8 @@ def validate_methods_orchestration_plan(
     registry deterministic blocking requirements.
     """
     root = Path(repo_root).resolve()
+    if require_generated_artifacts is None:
+        require_generated_artifacts = plan.artifact_mode == "rendered"
     issues: list[MethodsIssue] = []
     if not plan.stages:
         issues.append(
@@ -130,6 +136,16 @@ def validate_methods_orchestration_plan(
             issues=issues,
         )
     for stage in plan.stages:
+        if not stage.key:
+            issues.append(
+                _issue(
+                    "warning",
+                    "METHODS.STAGE_KEY_MISSING",
+                    f"stage lacks stable key identity: {stage.name}",
+                    plan.pipeline_source.as_posix(),
+                    "Declare a stable key while retaining the human-readable stage name.",
+                )
+            )
         if not stage.definition_of_done.strip():
             issues.append(
                 _issue(
@@ -153,6 +169,40 @@ def validate_methods_orchestration_plan(
     return tuple(issues)
 
 
+def audit_methods_projects(
+    repo_root: Path | str,
+    projects: tuple[str, ...] | list[str],
+    *,
+    artifact_mode: str = "rendered",
+    projects_dir: str = "projects",
+) -> MethodsAuditReport:
+    """Build and validate deterministic methods plans for many projects."""
+    audited: list[MethodsProjectAudit] = []
+    for project_name in projects:
+        plan = build_methods_orchestration_plan(
+            repo_root,
+            project_name,
+            projects_dir=projects_dir,
+            artifact_mode=artifact_mode,
+        )
+        issues = validate_methods_orchestration_plan(plan, repo_root=repo_root)
+        audited.append(MethodsProjectAudit(plan=plan, issues=issues))
+    return MethodsAuditReport(projects=tuple(audited), artifact_mode=artifact_mode)
+
+
+def audit_public_methods(
+    repo_root: Path | str,
+    *,
+    artifact_mode: str = "rendered",
+) -> MethodsAuditReport:
+    """Audit the canonical public exemplar roster."""
+    return audit_methods_projects(
+        repo_root,
+        list(PUBLIC_PROJECT_NAMES),
+        artifact_mode=artifact_mode,
+    )
+
+
 def render_methods_orchestration_markdown(plan: MethodsOrchestrationPlan) -> str:
     """Render a methods orchestration plan as Markdown."""
     lines = [
@@ -162,6 +212,8 @@ def render_methods_orchestration_markdown(plan: MethodsOrchestrationPlan) -> str
         "",
         f"- Project root: `{plan.project_root.as_posix()}`",
         f"- Pipeline source: `{plan.pipeline_source.as_posix()}`",
+        f"- Schema version: `{plan.schema_version}`",
+        f"- Artifact mode: `{plan.artifact_mode}`",
         f"- Artifact manifest: `{plan.artifact_manifest.as_posix()}`",
         f"- Evidence registry: `{plan.evidence_registry.as_posix()}`",
         "- Manuscript method sections:",
@@ -175,8 +227,8 @@ def render_methods_orchestration_markdown(plan: MethodsOrchestrationPlan) -> str
             "",
             "## Stage Contracts",
             "",
-            "| # | Stage | Gate | Inputs | Outputs | Verification |",
-            "| ---: | --- | --- | --- | --- | --- |",
+            "| # | Key | Stage | Gate | Inputs | Outputs | Verification |",
+            "| ---: | --- | --- | --- | --- | --- | --- |",
         ]
     )
     for stage in plan.stages:
@@ -184,7 +236,8 @@ def render_methods_orchestration_markdown(plan: MethodsOrchestrationPlan) -> str
         inputs = "<br>".join(f"`{item}`" for item in stage.input_artifacts) or "-"
         outputs = "<br>".join(f"`{item}`" for item in stage.output_artifacts) or "-"
         commands = "<br>".join(f"`{command}`" for command in stage.verification_commands) or "-"
-        lines.append(f"| {stage.order} | {stage.name} | {gate} | {inputs} | {outputs} | {commands} |")
+        key = f"`{stage.key}`" if stage.key else "-"
+        lines.append(f"| {stage.order} | {key} | {stage.name} | {gate} | {inputs} | {outputs} | {commands} |")
     lines.extend(
         [
             "",
@@ -204,6 +257,7 @@ def _build_stage(
 ) -> MethodStage:
     contract = stage.contract
     return MethodStage(
+        key=stage.key or "",
         name=stage.name,
         order=order,
         depends_on=tuple(stage.depends_on),
@@ -220,7 +274,7 @@ def _build_stage(
 
 
 def _stage_verification_commands(stage: StageDefinition, project_name: str) -> tuple[str, ...]:
-    stage_key = _STAGE_NAME_TO_KEY.get(stage.name)
+    stage_key = stage.key
     if stage.script:
         args = " ".join(stage.args)
         spacer = " " if args else ""
@@ -232,7 +286,7 @@ def _stage_verification_commands(stage: StageDefinition, project_name: str) -> t
                 f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}"
             )
         return tuple(commands)
-    if stage_key and stage_key in known_stage_keys():
+    if stage_key:
         return (f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}",)
     return ()
 
@@ -250,16 +304,6 @@ def _resolve_project_root(root: Path, project_name: str, *, projects_dir: str) -
     if candidate.exists() or projects_dir != "projects":
         return candidate.resolve()
     return resolve_project_root(root, project_name)
-
-
-def _pipeline_source(root: Path, project_root: Path) -> Path:
-    methods_pipeline = project_root / "methods_pipeline.yaml"
-    if methods_pipeline.exists():
-        return methods_pipeline
-    project_pipeline = project_root / "pipeline.yaml"
-    if project_pipeline.exists():
-        return project_pipeline
-    return root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
 
 
 def _discover_method_sections(project_root: Path, repo_root: Path) -> tuple[str, ...]:

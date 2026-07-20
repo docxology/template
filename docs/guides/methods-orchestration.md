@@ -9,7 +9,7 @@ inspectable before publication.
 
 | Surface | Source |
 | --- | --- |
-| Pipeline stages | `infrastructure/core/pipeline/pipeline.yaml` or `projects/<name>/pipeline.yaml` |
+| Pipeline stages | canonical resolver: explicit path → project methods/pipeline → repository/package definition |
 | Stage inputs and outputs | each stage `contract:` block |
 | Manuscript methods prose | `projects/<name>/manuscript/*method*.md` |
 | Evidence links | `projects/<name>/output/reports/evidence_registry.json` |
@@ -30,6 +30,19 @@ surfaces:
 ```bash
 uv run python -m infrastructure.methods plan --project templates/template_code_project --format json --check
 ```
+
+Audit all 24 public exemplars at the source or rendered boundary:
+
+```bash
+uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json
+uv run python -m infrastructure.methods plan --all-public --artifact-mode rendered --format json
+```
+
+`--project` and `--all-public` are mutually exclusive. Rendered mode is the
+default. Every plan carries `schema_version` and `artifact_mode`; every stage
+carries its stable execution `key` while retaining its historical display
+name. Exit codes are `0` clean/warnings, `1` validation errors, and `2` invalid
+invocation/configuration.
 
 Run the focused tests:
 

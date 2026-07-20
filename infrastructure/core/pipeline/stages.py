@@ -26,6 +26,33 @@ if TYPE_CHECKING:
 logger = get_logger(__name__)
 
 
+def resolve_pipeline_script_path(repo_root: Path, script_name: str) -> Path:
+    """Resolve canonical/project script paths and legacy bare filenames."""
+    relative = Path(script_name)
+    if relative.is_absolute():
+        return relative
+    if relative.parts and relative.parts[0] in {"projects", "scripts"}:
+        return repo_root / relative
+    return repo_root / "scripts" / relative
+
+
+def build_stage_subprocess_env(repo_root: Path, project_dir: Path) -> dict[str, str]:
+    """Build the shared environment for full-pipeline and single-stage scripts."""
+    env = get_subprocess_env()
+    env.setdefault("MPLBACKEND", "Agg")
+    env.setdefault("PYTHONIOENCODING", "utf-8")
+    env.setdefault("PROJECT_ROOT", str(repo_root))
+    project_src = project_dir / "src"
+    pythonpath_parts = [str(repo_root), str(repo_root / "infrastructure"), str(project_dir)]
+    if project_src.exists():
+        pythonpath_parts.append(str(project_src))
+    existing = env.get("PYTHONPATH")
+    if existing:
+        pythonpath_parts.append(existing)
+    env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
+    return env
+
+
 class PipelineStageMixin(ABC):
     """Mixin providing individual pipeline stage runner methods.
 
@@ -98,27 +125,7 @@ class PipelineStageMixin(ABC):
         Extends the base uv-compatible env with project-specific PYTHONPATH entries
         so that stage scripts can import from infrastructure/ and project src/.
         """
-        env = get_subprocess_env()
-        env.setdefault("MPLBACKEND", "Agg")
-        env.setdefault("PYTHONIOENCODING", "utf-8")
-        env.setdefault("PROJECT_ROOT", str(self.config.repo_root))
-
-        project_src = self.config.project_dir / "src"
-        pythonpath_parts = [
-            str(self.config.repo_root),
-            str(self.config.repo_root / "infrastructure"),
-            # Project root so analysis scripts can ``from src.<pkg> import ...``
-            # (``src`` resolved as a package). Without this, scripts that do not
-            # self-bootstrap sys.path fail with ``No module named 'src'``.
-            str(self.config.project_dir),
-        ]
-        if project_src.exists():
-            pythonpath_parts.append(str(project_src))
-        existing = env.get("PYTHONPATH")
-        if existing:
-            pythonpath_parts.append(existing)
-        env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
-        return env
+        return build_stage_subprocess_env(self.config.repo_root, self.config.project_dir)
 
     def _run_script(self, script_name: str, *args: str, allow_skip_code: bool = False) -> bool:
         """Run a script with given arguments.
@@ -132,13 +139,7 @@ class PipelineStageMixin(ABC):
         Returns:
             True if script succeeded (or skipped gracefully if allow_skip_code=True), False otherwise
         """
-        relative = Path(script_name)
-        if relative.is_absolute():
-            script_path = relative
-        elif relative.parts and relative.parts[0] == "scripts":
-            script_path = self.config.repo_root / relative
-        else:
-            script_path = self.config.repo_root / "scripts" / relative
+        script_path = resolve_pipeline_script_path(self.config.repo_root, script_name)
 
         cmd = get_python_command() + [str(script_path)] + list(args)
         logger.debug(f"Running: {' '.join(cmd)}")

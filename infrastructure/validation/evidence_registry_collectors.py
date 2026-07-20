@@ -40,6 +40,7 @@ _CONTROL_REPORT_NAMES = frozenset(
         "evidence_registry_full.json",
         "figure_registry.json",
         "validation_report.json",
+        "validation_report.md",
     }
 )
 
@@ -328,6 +329,8 @@ def _register_output_artifacts(project_root: Path, registry: VerifiedEvidenceReg
         return
     for artifact in output_dir.rglob("*"):
         if artifact.is_file():
+            if artifact.name in _CONTROL_REPORT_NAMES:
+                continue
             relative = _relative_to_project(artifact, project_root)
             registry.add(
                 EvidenceFact(kind="artifact", value=str(relative), source="filesystem", source_path=str(relative))

@@ -241,6 +241,25 @@ def test_build_project_pytest_command_injects_test_runner_deps(tmp_path: Path) -
     assert f"coverage=={version('coverage')}" in with_values
 
 
+def test_build_project_pytest_command_can_reuse_declared_runner_environment(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "declared-runner"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        '[project]\nname = "declared-runner"\n\n[project.optional-dependencies]\ndev = ["pytest"]\n',
+        encoding="utf-8",
+    )
+
+    cmd = build_project_pytest_command(
+        project,
+        ["tests/", "--collect-only"],
+        inject_runner_dependencies=False,
+    )
+
+    assert "--with" not in cmd
+    assert cmd[-5:] == ["python", "-m", "pytest", "tests/", "--collect-only"]
+    assert "--extra" in cmd and "dev" in cmd
+
+
 def test_build_union_pytest_command_uses_qualified_cov_path(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     project = repo / "projects" / "templates" / "demo"

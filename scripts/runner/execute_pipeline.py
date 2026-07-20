@@ -39,6 +39,7 @@ def execute_pipeline(
     hitl_mode: str = "full-auto",
     incremental: bool = False,
     *,
+    pipeline_path: Path | None = None,
     executor_factory: Callable[[PipelineConfig], Any] = PipelineExecutor,
     interpreter_validator: Callable[[], object] = validate_interpreter,
     report_writer: Callable[..., None] | None = None,
@@ -54,6 +55,7 @@ def execute_pipeline(
             resume=resume,
             hitl_mode=hitl_mode,
             incremental=IncrementalConfig(enabled=incremental),
+            pipeline_path=pipeline_path,
         )
         executor = executor_factory(config)
         results = executor.execute_core_pipeline() if core_only else executor.execute_full_pipeline()
@@ -117,6 +119,11 @@ def main() -> int:
         # Derived from the registry so this help and the dispatch table cannot diverge.
         help="Run a single stage and exit (%s)" % ", ".join(sorted(known_stage_keys())),
     )
+    parser.add_argument(
+        "--pipeline-yaml",
+        type=Path,
+        help="Explicit pipeline definition; takes precedence over project and repository defaults.",
+    )
 
     raw_args = parser.parse_args()
     args = PipelineArgs(
@@ -126,6 +133,7 @@ def main() -> int:
         resume=raw_args.resume,
         core_only=raw_args.core_only,
         incremental=raw_args.incremental,
+        pipeline_path=str(raw_args.pipeline_yaml) if raw_args.pipeline_yaml is not None else None,
         stage=raw_args.stage,
         hitl_mode=raw_args.hitl_mode,
         hitl_command=raw_args.hitl_command,
@@ -136,7 +144,12 @@ def main() -> int:
 
     log_header(f"Pipeline: {args.project}", logger)
     if args.stage:
-        return execute_single_stage(args.stage, args.project, repo_root)
+        return execute_single_stage(
+            args.stage,
+            args.project,
+            repo_root,
+            pipeline_path=args.pipeline_path,
+        )
     if args.hitl_command:
         return handle_hitl_command(args, repo_root)
 
@@ -149,6 +162,7 @@ def main() -> int:
         core_only=args.core_only,
         hitl_mode=args.hitl_mode,
         incremental=args.incremental,
+        pipeline_path=Path(args.pipeline_path) if args.pipeline_path is not None else None,
     )
     if result == 0:
         log_success(f"Pipeline complete: {args.project}", logger)

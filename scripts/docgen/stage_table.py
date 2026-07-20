@@ -34,8 +34,7 @@ from infrastructure.core.logging.utils import (  # noqa: E402
 )
 from infrastructure.documentation.stage_table import (  # noqa: E402
     DEFAULT_STAGE_TABLE_TARGETS,
-    build_stage_table,
-    inject_stage_table,
+    refresh_stage_tables,
 )
 
 logger = get_logger(__name__)
@@ -68,34 +67,22 @@ def main(argv: list[str] | None = None) -> int:
 
     repo_root = Path(__file__).resolve().parents[2]
     yaml_path = args.yaml or (repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml")
-    targets = [Path(t) for t in (args.targets or DEFAULT_STAGE_TABLE_TARGETS)]
+    targets: list[str | Path] = [Path(t) for t in (args.targets or DEFAULT_STAGE_TABLE_TARGETS)]
 
-    changed: list[Path] = []
-    unchanged: list[Path] = []
-
-    for rel in targets:
-        target = rel if rel.is_absolute() else repo_root / rel
-        if not target.exists():
-            logger.error(f"Target not found: {target}")
-            return 1
-        # Render with a target-specific relative URL so the caption link works.
-        rel_to_repo = target.relative_to(repo_root) if not rel.is_absolute() else target
-        table = build_stage_table(yaml_path, target_rel_to_repo=rel_to_repo, repo_root=repo_root)
-        if args.write:
-            if inject_stage_table(target, table):
-                changed.append(target)
-            else:
-                unchanged.append(target)
-        else:
-            current = target.read_text(encoding="utf-8")
-            from infrastructure.documentation.glossary_gen import inject_between_markers
-
-            new = inject_between_markers(current, "<!-- BEGIN:STAGE_TABLE -->", "<!-- END:STAGE_TABLE -->", table)
-            (changed if new != current else unchanged).append(target)
+    try:
+        result = refresh_stage_tables(
+            repo_root,
+            targets=targets,
+            yaml_path=yaml_path,
+            write=args.write,
+        )
+    except (FileNotFoundError, OSError, ValueError) as exc:
+        logger.error("Stage-table generation failed: %s", exc)
+        return 1
 
     verb = "Updated" if args.write else "Would update"
-    log_success(f"{verb} {len(changed)}; up-to-date {len(unchanged)}", logger)
-    for p in changed:
+    log_success(f"{verb} {len(result.changed)}; up-to-date {len(result.unchanged)}", logger)
+    for p in result.changed:
         logger.info(f"  CHANGE: {p.relative_to(repo_root)}")
     return 0
 

@@ -22,8 +22,8 @@ algorithms or project analysis logic here.
 
 | File | Role |
 | --- | --- |
-| `models.py` | Dataclasses for stages, plans, and validation issues. |
-| `orchestration.py` | Plan builder, validator, and Markdown renderer. |
+| `models.py` | Dataclasses for keyed stages, versioned plans, per-project audits, aggregate reports, and issues. |
+| `orchestration.py` | Single/batch plan builders, validator, and Markdown renderer using the canonical pipeline-source resolver. |
 | `cli.py` | `python -m infrastructure.methods plan` command. |
 | `__main__.py` | Module entry point. |
 
@@ -32,12 +32,14 @@ algorithms or project analysis logic here.
 - Preserve the thin-orchestrator pattern: scripts run stages; this package maps
   contracts and validation surfaces.
 - Keep paths repo-relative in public payloads so generated reports are stable.
-- When a project ships `methods_pipeline.yaml`, that file overrides
-  `pipeline.yaml` and the repository default pipeline for plan discovery.
-- `validate_methods_orchestration_plan(..., require_generated_artifacts=True)`
-  (default) treats missing artifact manifests and evidence registries as
-  publication-blocking errors. Source-only publication audits pass
-  `require_generated_artifacts=False`.
+- Methods source precedence is explicit path, project `methods_pipeline.yaml`,
+  project `pipeline.yaml`, repository definition, then installed package data.
+- Rendered mode treats missing artifact manifests and evidence registries as
+  publication-blocking errors. Source mode validates authoring contracts only.
+- Stage `key` is execution identity; human-readable names and name-based
+  dependency declarations remain display/telemetry values.
+- CLI exits `0` for clean/warnings, `1` for validation errors, and `2` for
+  invalid invocation/configuration.
 - Stage `script` values must already be repo-relative paths (`scripts/...` or
   `projects/...`); verification commands expand `{project}` only.
 
