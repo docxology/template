@@ -3,10 +3,39 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 from typing import Mapping, Sequence, cast
 
+from infrastructure.core.config.loader import load_config
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+_GITHUB_REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+
+
+def _normalize_github_repository(value: object, *, source: str) -> str:
+    """Return a canonical GitHub ``owner/repo`` slug or fail closed."""
+    if not isinstance(value, str):
+        raise ValueError(f"{source} GitHub repository must be an owner/repo string")
+    slug = value.strip()
+    prefix = "https://github.com/"
+    if slug.lower().startswith(prefix):
+        slug = slug[len(prefix) :]
+    slug = slug.removesuffix(".git").strip("/")
+    if not _GITHUB_REPOSITORY.fullmatch(slug):
+        raise ValueError(f"{source} GitHub repository must be an owner/repo slug")
+    return slug.lower()
+
+
+def _declared_github_repository(project_root: Path) -> str:
+    """Read the state-changing GitHub target from manuscript configuration."""
+    config_path = project_root / "manuscript" / "config.yaml"
+    config = load_config(config_path)
+    publication = config.get("publication") if isinstance(config, Mapping) else None
+    declared = publication.get("github_repository") if isinstance(publication, Mapping) else None
+    if declared is None:
+        raise ValueError("manuscript config must declare publication.github_repository before a GitHub release")
+    return _normalize_github_repository(declared, source="configured")
 
 
 def publishing_preflight(
@@ -16,6 +45,7 @@ def publishing_preflight(
     credential_sources: Mapping[str, str],
     *,
     payload_root: Path | None = None,
+    github_repository: str | None = None,
 ) -> dict[str, object]:
     """Validate a public payload and return a redacted, exact manifest.
 
@@ -84,11 +114,25 @@ def publishing_preflight(
         raise ValueError("credential source summary contains an unsupported credential name")
     if any(source not in allowed_sources for source in redacted_sources.values()):
         raise ValueError("credential source summary contains an unsupported value")
+    github_required = redacted_sources.get("github") not in (None, "not-required")
+    targets: dict[str, str] = {}
+    if github_required:
+        requested_repository = _normalize_github_repository(github_repository, source="requested")
+        declared_repository = _declared_github_repository(project_root)
+        if requested_repository != declared_repository:
+            raise ValueError(
+                "requested GitHub repository does not match "
+                f"publication.github_repository: {requested_repository} != {declared_repository}"
+            )
+        targets["github"] = declared_repository
+    elif github_repository is not None:
+        raise ValueError("GitHub repository target was supplied while GitHub publishing is not required")
     return {
         "project": project_name,
         "payload_root": root_label,
         "payload": manifest,
         "credential_sources": redacted_sources,
+        "targets": targets,
     }
 
 

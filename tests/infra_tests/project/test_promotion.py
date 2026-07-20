@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
+import yaml
 
 from infrastructure.project.promotion import load_promotion_attestation, main, validate_promotion_attestation
 
@@ -56,7 +58,7 @@ def test_risk_acceptance_can_cover_incomplete_checks() -> None:
     assert result.risk_acceptance is not None
 
 
-@pytest.mark.parametrize("project", ["/private/project", "working/../project"])
+@pytest.mark.parametrize("project", ["/private/project", "working/../project", "private_example"])
 def test_project_path_escape_is_rejected(project: str) -> None:
     with pytest.raises(ValueError, match="qualified"):
         validate_promotion_attestation(_payload(project=project))
@@ -85,3 +87,32 @@ def test_yaml_loader_and_cli_emit_secret_free_json(tmp_path: Path, capsys: pytes
     result = json.loads(output)
     assert result["approved"] is True
     assert "password" not in output.lower()
+
+
+def test_explicit_attestation_command_uses_deterministic_audit_date(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    path = tmp_path / "promotion.yaml"
+    payload = _payload(
+        export_tests_passed=False,
+        risk_acceptance={"owner": "owner", "rationale": "bounded", "expiry": "2026-07-20"},
+    )
+    path.write_text(yaml.safe_dump(payload), encoding="utf-8")
+
+    assert main(["attestation", str(path), "--as-of", "2026-07-20"]) == 0
+    assert json.loads(capsys.readouterr().out)["approved"] is True
+    assert main(["attestation", str(path), "--as-of", "2026-07-21"]) == 1
+    assert "must not be in the past" in capsys.readouterr().out
+
+    assert load_promotion_attestation(path, as_of=date(2026, 7, 20)).approved
+
+
+def test_package_cli_rejects_bare_promotion_project(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    path = tmp_path / "promotion.yaml"
+    path.write_text(yaml.safe_dump(_payload(project="private_example")), encoding="utf-8")
+
+    assert main(["attestation", str(path), "--as-of", "2026-07-20"]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["approved"] is False
+    assert "qualified" in payload["error"]

@@ -102,7 +102,7 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 ## Release Workflow (`release.yml`)
 
-Triggered on `v*.*.*` tag push or `workflow_dispatch`. Verifies the requested tag exists, writes a git-log excerpt to the release body (`generate_release_notes: false`), and uses `softprops/action-gh-release@v3.0.0`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
+Triggered on `v*.*.*` tag push or `workflow_dispatch`. The workflow resolves the tag before checkout, checks out that exact ref, proves `HEAD` matches the dereferenced tag commit, and runs the root release contract before building. It writes a git-log excerpt to the release body (`generate_release_notes: false`) and uses `softprops/action-gh-release@v3.0.2`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
 Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 

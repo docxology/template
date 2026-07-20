@@ -7,9 +7,13 @@ import os
 import shutil
 import subprocess
 import tempfile
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
+
+try:
+    import tomllib
+except ImportError:  # Python 3.10 compatibility
+    import tomli as tomllib  # type: ignore[no-redef]
 
 from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES

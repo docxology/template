@@ -8,11 +8,23 @@ import pytest
 from infrastructure.publishing.preflight import publishing_preflight
 
 
-def _public_project(tmp_path: Path) -> tuple[Path, Path]:
+def _public_project(
+    tmp_path: Path,
+    *,
+    github_repository: str | None = "docxology/template_code_project",
+) -> tuple[Path, Path]:
     project = tmp_path / "projects/templates/template_code_project"
     pdf = project / "output/pdf/template_code_project_combined.pdf"
     pdf.parent.mkdir(parents=True)
     pdf.write_bytes(b"%PDF-1.7\n")
+    config = project / "manuscript/config.yaml"
+    config.parent.mkdir(parents=True)
+    publication = (
+        f'publication:\n  github_repository: "{github_repository}"\n'
+        if github_repository is not None
+        else "publication: {}\n"
+    )
+    config.write_text(publication, encoding="utf-8")
     return project, pdf
 
 
@@ -23,6 +35,7 @@ def test_preflight_emits_exact_payload_and_redacted_sources(tmp_path: Path) -> N
         "templates/template_code_project",
         [pdf],
         {"github": "environment", "zenodo": "cli"},
+        github_repository="docxology/template_code_project",
     )
     assert result["payload"] == [
         {
@@ -32,6 +45,7 @@ def test_preflight_emits_exact_payload_and_redacted_sources(tmp_path: Path) -> N
         }
     ]
     assert result["credential_sources"] == {"github": "environment", "zenodo": "cli"}
+    assert result["targets"] == {"github": "docxology/template_code_project"}
 
 
 def test_preflight_refuses_local_only_project(tmp_path: Path) -> None:
@@ -74,3 +88,60 @@ def test_preflight_refuses_invalid_pdf_signature(tmp_path: Path) -> None:
     pdf.write_bytes(b"not a pdf")
     with pytest.raises(ValueError, match="not a PDF"):
         publishing_preflight(tmp_path, "templates/template_code_project", [pdf], {})
+
+
+def test_preflight_refuses_repository_target_collision(tmp_path: Path) -> None:
+    """A project release cannot be deposited into the root template repository."""
+    _project, pdf = _public_project(tmp_path, github_repository="docxology/template_code_project")
+
+    with pytest.raises(ValueError, match="does not match publication.github_repository"):
+        publishing_preflight(
+            tmp_path,
+            "templates/template_code_project",
+            [pdf],
+            {"github": "environment"},
+            github_repository="docxology/template",
+        )
+
+
+def test_preflight_requires_declared_repository_for_github_release(tmp_path: Path) -> None:
+    _project, pdf = _public_project(tmp_path, github_repository=None)
+
+    with pytest.raises(ValueError, match="must declare publication.github_repository"):
+        publishing_preflight(
+            tmp_path,
+            "templates/template_code_project",
+            [pdf],
+            {"github": "environment"},
+            github_repository="docxology/template_code_project",
+        )
+
+
+@pytest.mark.parametrize(
+    "repository",
+    ["docxology", "docxology/template/extra", "https://example.com/docxology/template_code_project"],
+)
+def test_preflight_refuses_malformed_requested_repository(tmp_path: Path, repository: str) -> None:
+    _project, pdf = _public_project(tmp_path)
+
+    with pytest.raises(ValueError, match="owner/repo"):
+        publishing_preflight(
+            tmp_path,
+            "templates/template_code_project",
+            [pdf],
+            {"github": "cli"},
+            github_repository=repository,
+        )
+
+
+def test_preflight_does_not_require_github_target_when_skipped(tmp_path: Path) -> None:
+    _project, pdf = _public_project(tmp_path, github_repository=None)
+
+    result = publishing_preflight(
+        tmp_path,
+        "templates/template_code_project",
+        [pdf],
+        {"github": "not-required", "zenodo": "environment"},
+    )
+
+    assert result["targets"] == {}

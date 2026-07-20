@@ -1,16 +1,41 @@
 sensitive_areas:
+  # This public repository currently has one named maintainer. The exception is
+  # explicit rather than presenting bus factor 1 as two-party review. CI and a
+  # recorded independent adversarial review are required compensating controls
+  # until a second accountable owner joins the repository.
   - path: /infrastructure/steganography/
     owners: ["@docxology"]
-    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
+    exception: &sole_owner "sole maintainer; require green blocking CI and recorded independent adversarial review"
   - path: /infrastructure/publishing/
     owners: ["@docxology"]
-    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
+    exception: *sole_owner
   - path: /scripts/publish/
     owners: ["@docxology"]
-    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
+    exception: *sole_owner
   - path: /.github/workflows/
     owners: ["@docxology"]
-    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
+    exception: *sole_owner
   - path: /rules/templates/*/strong/
     owners: ["@docxology"]
-    exception: "Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge."
+    exception: *sole_owner
+  - path: /infrastructure/core/credentials.py
+    owners: ["@docxology"]
+    exception: *sole_owner
+  - path: /infrastructure/project/git_guards.py
+    owners: ["@docxology"]
+    exception: *sole_owner
+  - path: /scripts/audit/check_tracked_all.py
+    owners: ["@docxology"]
+    exception: *sole_owner
+  - path: /infrastructure/rendering/
+    owners: ["@docxology"]
+    exception: *sole_owner
+  - path: /infrastructure/llm/
+    owners: ["@docxology"]
+    exception: *sole_owner
+  - path: /infrastructure/search/
+    owners: ["@docxology"]
+    exception: *sole_owner
+  - path: /infrastructure/provenance/
+    owners: ["@docxology"]
+    exception: *sole_owner

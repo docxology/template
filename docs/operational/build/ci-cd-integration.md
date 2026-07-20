@@ -28,7 +28,7 @@ Upstream CI is **`name: CI`** in [`.github/workflows/ci.yml`](../../../.github/w
 
 High-signal behavioral anchors:
 
-1. **`test-infra`** — `uv sync`; Ubuntu + macOS × Python 3.10–3.12; **≥ 60 %** on `infrastructure/`. The default groups include the deterministic public-exemplar dependencies. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
+1. **`test-infra`** — `uv sync`; Ubuntu × Python 3.10–3.13 plus a macOS 3.12 smoke; **≥ 60 %** on `infrastructure/`. The default groups include the deterministic public-exemplar dependencies. pytest uses **`continue-on-error: true` on macOS**; treat **Ubuntu matrix legs as the authoritative merge gate**.
 2. **`test-project`** — Adds `--group discopy`. Runs one matrix job per public exemplar from [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml), across Python 3.10 and 3.12, and invokes `scripts/pipeline/stage_01_test.py --project <name> --project-only --include-slow`. Each job enforces that exemplar's own **≥ 90%** `src/` coverage floor; there is no combined-union project coverage run in current CI.
 3. **`fep-lean`** — Runs **only when** the `detect` job reports `needs.detect.outputs.fep_lean == 'true'`. The workflow deliberately avoids job-level `hashFiles()` because that context is invalid in a job `if:`.
 4. **Manual CI runs** — `workflow_dispatch` on **CI has no workflow inputs**. (The **`release`** workflow differs: **`workflow_dispatch`** expects a **`tag`** input.)

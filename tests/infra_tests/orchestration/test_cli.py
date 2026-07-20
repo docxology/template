@@ -132,6 +132,30 @@ promotion:
     assert "incomplete promotion attestation" in capsys.readouterr().err
 
 
+def test_main_promotion_check_refuses_bare_project(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    attestation = tmp_path / "promotion.yaml"
+    attestation.write_text(
+        """
+promotion:
+  project: example
+  source_commit: abc123
+  identity_verified: true
+  authorization_verified: true
+  redaction_reviewed: true
+  secrets_externalized: true
+  routes_reviewed: true
+  mcp_boundaries_reviewed: true
+  export_tests_passed: true
+  risk_acceptance: null
+  reviewer: maintainer
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    assert main(["promotion-check", "--attestation", str(attestation)]) == 1
+    assert "qualified" in capsys.readouterr().err
+
+
 def test_build_parser_unknown_subcommand_raises() -> None:
     parser = build_parser()
     with pytest.raises(SystemExit):

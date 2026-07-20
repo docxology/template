@@ -23,6 +23,7 @@ def render_generated_rules(repo_root: Path) -> str:
     lines = [BEGIN, "# Public exemplars (derived from PUBLIC_PROJECT_NAMES)."]
     lines.extend(f"/projects/{name}/ @docxology" for name in PUBLIC_PROJECT_NAMES)
     lines.append("# Sensitive areas (derived from sensitive-ownership.yaml).")
+    seen_paths: set[str] = set()
     for area in areas:
         if not isinstance(area, dict):
             raise ValueError("sensitive area entries must be mappings")
@@ -31,14 +32,21 @@ def render_generated_rules(repo_root: Path) -> str:
         exception = area.get("exception")
         if not isinstance(path, str) or not path.startswith("/"):
             raise ValueError("sensitive area paths must be absolute CODEOWNERS patterns")
+        if path in seen_paths:
+            raise ValueError(f"sensitive area paths must be unique: {path}")
+        seen_paths.add(path)
         if (
             not isinstance(owners, list)
             or not owners
             or not all(isinstance(owner, str) and owner.startswith("@") for owner in owners)
         ):
             raise ValueError(f"sensitive area must declare owners: {path}")
+        if len(set(owners)) != len(owners):
+            raise ValueError(f"sensitive area owners must be unique: {path}")
         if exception not in (None, "") and not isinstance(exception, str):
             raise ValueError(f"sensitive area exception must be text or null: {path}")
+        if len(owners) < 2 and not (isinstance(exception, str) and exception.strip()):
+            raise ValueError(f"single-owner sensitive area must document a sole-owner exception: {path}")
         suffix = f"  # exception: {exception}" if exception else ""
         lines.append(f"{path} {' '.join(owners)}{suffix}")
     lines.append(END)

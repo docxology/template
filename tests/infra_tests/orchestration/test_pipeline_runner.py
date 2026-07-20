@@ -121,6 +121,25 @@ def test_run_returns_failure_when_stage_unsuccessful(fake_repo: Path) -> None:
     assert rc == 1
 
 
+def test_run_banners_use_executor_project_and_plugin_plan(fake_repo: Path) -> None:
+    class _ProjectPlanExecutor(_StubExecutor):
+        def preview_stage_names(self, *, include_llm: bool) -> tuple[str, ...]:
+            assert include_llm
+            return ("Project Override", "Plugin Verification")
+
+    runner = PipelineRunner(
+        repo_root=fake_repo,
+        stream=io.StringIO(),
+        executor_factory=_ProjectPlanExecutor,
+    )
+
+    assert runner.run(PipelineInvocation(project="template_code_project")) == 0
+    transcript = runner.stream.getvalue()
+    assert "[1/2] Project Override" in transcript
+    assert "[2/2] Plugin Verification" in transcript
+    assert "Environment Setup" not in transcript
+
+
 # --- Multi-project ---------------------------------------------------------
 
 

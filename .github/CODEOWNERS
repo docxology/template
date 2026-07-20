@@ -54,9 +54,16 @@
 /projects/templates/template_textbook/ @docxology
 /projects/templates/template_pitch_deck/ @docxology
 # Sensitive areas (derived from sensitive-ownership.yaml).
-/infrastructure/steganography/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
-/infrastructure/publishing/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
-/scripts/publish/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
-/.github/workflows/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
-/rules/templates/*/strong/ @docxology  # exception: Sole-owner exception: no second maintainer is currently available; require Regression Tier and explicit sensitive-area review before merge.
+/infrastructure/steganography/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/publishing/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/scripts/publish/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/.github/workflows/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/rules/templates/*/strong/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/core/credentials.py @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/project/git_guards.py @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/scripts/audit/check_tracked_all.py @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/rendering/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/llm/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/search/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
+/infrastructure/provenance/ @docxology  # exception: sole maintainer; require green blocking CI and recorded independent adversarial review
 # END GENERATED PUBLIC/SENSITIVE OWNERS

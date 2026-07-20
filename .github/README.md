@@ -7,7 +7,7 @@
 Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 
 [![CI](https://github.com/docxology/template/actions/workflows/ci.yml/badge.svg)](https://github.com/docxology/template/actions/workflows/ci.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
 [![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
@@ -871,7 +871,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 5 | `health` | `lint` | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
 | 6 | `verify-no-mocks` | `lint` | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements |
 | 7 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
-| 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12 + macOS × Py 3.12 (4 blocking cells), `--cov-fail-under=60` |
+| 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12/3.13 + macOS × Py 3.12 (5 blocking cells), `--cov-fail-under=60` |
 | 9 | `test-regression` | `verify-no-mocks` | always | Claim-binding numerical regression tier |
 | 10 | `test-project` | `verify-no-mocks`, `detect-projects` | always | Generated public-exemplar matrix × {py3.10, py3.12}; each project enforces its own ≥90 floor |
 | 11 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
@@ -972,7 +972,7 @@ pre-commit run --hook-stage pre-push --all-files
 ```text
 Required status checks:
   Lint & Type Check
-  Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12)
+  Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12/3.13)
   Infra Tests (macos-latest, Python 3.12)
   # test-project expands from docs/_generated/active_projects.md:
   # one check per public exemplar × {py3.10, py3.12}. Examples:

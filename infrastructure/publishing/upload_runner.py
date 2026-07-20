@@ -207,9 +207,12 @@ def run_uploads(
 ) -> UploadRun:
     """Run each uploader, capturing per-platform errors without aborting the batch."""
     environ = env if env is not None else os.environ
+    provider_env = dict(environ)
     run = UploadRun(mode="REAL UPLOAD" if commit else "DRY-RUN")
     if (targets.repo_root is None) != (targets.project_name is None):
         raise ValueError("upload safety context requires both repo_root and project_name")
+    if commit and targets.repo_root is None:
+        raise ValueError("real uploads require repo_root and project_name safety context")
     if targets.repo_root is not None and targets.project_name is not None:
         from infrastructure.publishing.preflight import publishing_preflight
 
@@ -223,29 +226,38 @@ def run_uploads(
         credential_keys = {
             "github": "GITHUB_TOKEN",
             "cloudflare": "CLOUDFLARE_API_TOKEN",
-            "github_pages": "GITHUB_TOKEN",
             "huggingface": "HF_TOKEN",
             "netlify": "NETLIFY_AUTH_TOKEN",
             "osf": "OSF_TOKEN",
             "pinata": "PINATA_JWT",
             "testpypi": "TESTPYPI_TOKEN",
         }
-        credential_sources = {
-            name: "environment" if environ.get(credential_keys[name]) else "missing"
-            for name in sorted(set(jobs).intersection(credential_keys))
-        }
+        credential_sources: dict[str, str] = {}
+        for job_name in sorted(jobs):
+            credential_name = "github" if job_name == "github_pages" else job_name
+            credential_key = credential_keys.get(credential_name)
+            if credential_key is not None:
+                credential_sources[credential_name] = "environment" if environ.get(credential_key) else "missing"
+        github_jobs = {"github", "github_pages"}
+        effective_github_repository = (
+            environ.get("GITHUB_REPO", targets.github_repo) if github_jobs.intersection(jobs) else None
+        )
         run.preflight = publishing_preflight(
             targets.repo_root,
             targets.project_name,
             payload_paths,
             credential_sources,
+            github_repository=effective_github_repository,
         )
+        preflight_targets = run.preflight.get("targets")
+        if isinstance(preflight_targets, Mapping) and isinstance(preflight_targets.get("github"), str):
+            provider_env["GITHUB_REPO"] = preflight_targets["github"]
     for name, fn in jobs.items():
         try:
-            run.results[name] = fn(targets, commit, environ)
+            run.results[name] = fn(targets, commit, provider_env)
         except Exception as exc:  # noqa: BLE001 — report, never abort the batch
             message = str(exc)
-            for secret in set(environ.values()):
+            for secret in set(provider_env.values()):
                 if secret and len(secret) >= 4:
                     message = message.replace(secret, "[REDACTED]")
             run.results[name] = {"status": "error", "error": f"{type(exc).__name__}: {message}"}

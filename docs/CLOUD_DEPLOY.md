@@ -282,7 +282,7 @@ The canonical headless configuration is [`.github/workflows/ci.yml`](../.github/
 - run: uv run pytest tests/infra_tests/ # runs tests
 ```
 
-This workflow runs on Ubuntu and macOS (ubuntu-latest + macos-latest) across Python 3.10–3.12. See [.github/workflows/ci.yml](../.github/workflows/ci.yml) for the full matrix and job definitions.
+This workflow runs infrastructure tests on Ubuntu across Python 3.10–3.13 and on macOS with Python 3.12. See [.github/workflows/ci.yml](../.github/workflows/ci.yml) for the full matrix and job definitions.
 
 ---
 

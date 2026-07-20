@@ -52,7 +52,7 @@ flowchart TB
     LINT --> SEC[security]
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
-    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
+    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>generated public roster × py3.10/py3.12<br/>01_run_tests.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
@@ -134,7 +134,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, plus an `include:` of `macos-latest` × `3.12` (4 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.12 cell, so only the 3.12 smoke runs there.
+- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, plus an `include:` of `macos-latest` × `3.12` (5 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.12 cell, so only the 3.12 smoke runs there.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
@@ -240,10 +240,11 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 
 Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 
-1. Verifies the requested tag exists in the checkout
-2. Generates a commit-based changelog excerpt since the previous tag
-3. Creates a GitHub Release using `softprops/action-gh-release@v3.0.0` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
-4. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
+1. Resolves the requested tag before checkout and checks out that exact ref
+2. Proves `HEAD` equals the dereferenced tag commit and runs the root release contract before building
+3. Generates a commit-based changelog excerpt since the previous tag
+4. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
+5. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
 
 Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 

@@ -37,6 +37,30 @@ def _targets(tmp_path: Path) -> UploadTargets:
     )
 
 
+def _safety_targets(tmp_path: Path, *, github_repo: str = "owner/repo") -> UploadTargets:
+    project = tmp_path / "projects/templates/template_code_project"
+    pdf = project / "output/pdf/paper.pdf"
+    pdf.parent.mkdir(parents=True)
+    pdf.write_bytes(b"%PDF-1.4 minimal")
+    (project / "output/web").mkdir(parents=True)
+    manuscript = project / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "config.yaml").write_text(
+        f'publication:\n  github_repository: "{github_repo}"\n',
+        encoding="utf-8",
+    )
+    return UploadTargets(
+        project_root=project,
+        pdf=pdf,
+        web_dir=project / "output/web",
+        hf_repo_id="owner/repo",
+        github_repo=github_repo,
+        osf_title="Title",
+        repo_root=tmp_path,
+        project_name="templates/template_code_project",
+    )
+
+
 def test_upload_osf_threads_node_id_for_idempotency(tmp_path: Path) -> None:
     # With osf_node_id set, the dry-run deposit targets that existing node
     # (idempotent re-run) rather than proposing to create a new one.
@@ -106,9 +130,8 @@ def test_run_uploads_captures_errors_without_aborting(tmp_path: Path) -> None:
 
 
 def test_run_uploads_commit_mode_label(tmp_path: Path) -> None:
-    run = run_uploads(_targets(tmp_path), jobs={}, commit=True, env={})
-    assert run.mode == "REAL UPLOAD"
-    assert run.ok  # vacuously true with no jobs
+    with pytest.raises(ValueError, match="real uploads require repo_root and project_name"):
+        run_uploads(_targets(tmp_path), jobs={}, commit=True, env={})
 
 
 def test_run_uploads_preflight_blocks_invalid_payload_before_provider(tmp_path: Path) -> None:
@@ -160,6 +183,55 @@ def test_run_uploads_records_redacted_preflight_manifest(tmp_path: Path) -> None
     assert run.preflight is not None
     assert run.preflight["credential_sources"] == {}
     assert "secret-token" not in str(run.preflight)
+
+
+def test_run_uploads_github_preflight_binds_effective_target(tmp_path: Path) -> None:
+    targets = _safety_targets(tmp_path)
+
+    def provider(_targets, _commit, provider_env):  # noqa: ANN001
+        return {"status": "dry-run", "repo": provider_env["GITHUB_REPO"]}
+
+    run = run_uploads(
+        targets,
+        jobs={"github": provider},
+        commit=False,
+        env={"GITHUB_TOKEN": "secret", "GITHUB_REPO": "https://github.com/OWNER/Repo.git"},
+    )
+
+    assert run.preflight is not None
+    assert run.preflight["targets"] == {"github": "owner/repo"}
+    assert run.preflight["credential_sources"] == {"github": "environment"}
+    assert run.results["github"]["repo"] == "owner/repo"
+
+
+def test_run_uploads_github_pages_uses_github_credential_contract(tmp_path: Path) -> None:
+    targets = _safety_targets(tmp_path)
+
+    def provider(_targets, _commit, _env):  # noqa: ANN001
+        return {"status": "dry-run"}
+
+    run = run_uploads(
+        targets,
+        jobs={"github_pages": provider},
+        commit=False,
+        env={"GITHUB_TOKEN": "secret", "GITHUB_REPO": "owner/repo"},
+    )
+
+    assert run.preflight is not None
+    assert run.preflight["targets"] == {"github": "owner/repo"}
+    assert run.preflight["credential_sources"] == {"github": "environment"}
+
+
+def test_run_uploads_rejects_github_override_outside_declared_target(tmp_path: Path) -> None:
+    targets = _safety_targets(tmp_path)
+
+    with pytest.raises(ValueError, match="does not match publication.github_repository"):
+        run_uploads(
+            targets,
+            jobs={"github": lambda *_args: {"status": "dry-run"}},
+            commit=False,
+            env={"GITHUB_TOKEN": "secret", "GITHUB_REPO": "other/repo"},
+        )
 
 
 def test_real_pinata_uploader_dry_run_no_network(tmp_path: Path) -> None:

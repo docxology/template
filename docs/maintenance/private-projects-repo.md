@@ -64,12 +64,21 @@ record at the orchestration boundary:
 ```bash
 uv run python -m infrastructure.orchestration promotion-check \
   --attestation /path/to/private-project/promotion.yaml
+uv run python -m infrastructure.project.promotion candidate \
+  --project-root /path/to/private-project \
+  --attestation /path/to/private-project/promotion-security.yaml \
+  --as-of 2026-07-20 --json
 ```
 
-This is a read-only, offline gate. It does not authenticate, move, render, or
-publish a project; the sidecar's administrator-controlled move remains a
-separate action and must use the same attestation result. Incomplete records
-fail unless they carry an explicit, unexpired risk acceptance.
+The first command retains the orchestration-boundary attestation check. The
+explicit `candidate` command scans the checkout and validates its richer
+candidate-security record. The `evaluate_promotion_candidate(...)` Python API
+composes both typed reports when given the expected qualified `project_name`;
+it also binds `source_commit` to the candidate Git `HEAD` and rejects
+uncommitted source changes outside the two attestation files. All are read-only and offline: none authenticates, moves, renders,
+or publishes a project. The sidecar's administrator-controlled move remains a
+separate action and must use the same result. Incomplete records fail unless
+they carry an explicit, unexpired risk acceptance.
 
 Default discovery still scans the public exemplars under `projects/templates/`
 and any optional `projects/active/` hot-seat entries. It does not run all

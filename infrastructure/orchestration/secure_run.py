@@ -17,7 +17,8 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.orchestration.discovery import validate_project_slug
+from infrastructure.core.files.serialization import load_yaml_mapping
+from infrastructure.orchestration.discovery import resolve_project_info, validate_project_slug
 from infrastructure.orchestration.pipeline_runner import (
     PipelineInvocation,
     PipelineRunner,
@@ -59,21 +60,8 @@ def _load_project_config(project_path: Path) -> dict[str, Any]:
 
 
 def _load_yaml_mapping(path: Path) -> dict[str, Any]:
-    """Load a YAML mapping from *path*, returning ``{}`` when absent/invalid."""
-    if not path.exists():
-        return {}
-    try:
-        import yaml  # local import — yaml is already a project dep
-
-        with path.open("r", encoding="utf-8") as fh:
-            data = yaml.safe_load(fh) or {}
-    except Exception as exc:  # noqa: BLE001
-        logger.warning("Failed to read %s: %s", path, exc)
-        return {}
-    if not isinstance(data, dict):
-        logger.warning("Ignoring non-mapping YAML config: %s", path)
-        return {}
-    return data
+    """Compatibility wrapper over the shared tolerant YAML loader."""
+    return load_yaml_mapping(path)
 
 
 def _load_repo_secure_config(repo_root: Path) -> dict[str, Any]:
@@ -98,11 +86,10 @@ def validate_kmyth_for_secure_run(repo_root: Path, project_qualified_name: str |
     """Validate optional Kmyth availability for the secure-run configuration."""
     project_config: dict[str, Any] = {}
     if project_qualified_name is not None:
-        validated = validate_project_slug(project_qualified_name, repo_root)
-        projects = discover_projects(repo_root)
-        project = next((p for p in projects if p.qualified_name == validated), None)
-        if project is None:
-            logger.error("Unknown project: %s", validated)
+        try:
+            project = resolve_project_info(project_qualified_name, repo_root)
+        except ValueError:
+            logger.error("Unknown project: %s", project_qualified_name)
             return 1
         project_config = _load_project_config(project.path)
 
@@ -142,12 +129,9 @@ def apply_steganography_to_project(
     Returns:
         ``0`` on success, ``1`` on failure, ``2`` if no PDFs were found.
     """
-    projects = discover_projects(repo_root)
-    project = next(
-        (p for p in projects if p.qualified_name == project_qualified_name),
-        None,
-    )
-    if project is None:
+    try:
+        project = resolve_project_info(project_qualified_name, repo_root)
+    except ValueError:
         logger.error("Unknown project: %s", project_qualified_name)
         return 1
 

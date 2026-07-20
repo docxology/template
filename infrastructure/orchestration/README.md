@@ -18,6 +18,14 @@ uv run python -m infrastructure.orchestration promotion-check \
 secret-storage, route, MCP-boundary, and export-test attestation. It never
 authenticates, moves, or publishes private content.
 
+For the composable candidate scan and deterministic aggregate report, use:
+
+```bash
+uv run python -m infrastructure.project.promotion candidate \
+  --project-root /path/to/candidate --attestation /path/to/promotion-security.yaml \
+  --as-of 2026-07-20 --json
+```
+
 Automated coverage for this package lives under `tests/infra_tests/orchestration/`.
 
 ## See also

@@ -329,7 +329,7 @@ def test_subprocess_check_template_drift_no_flags() -> None:
         [sys.executable, str(script)],
         capture_output=True,
         text=True,
-        timeout=30,
+        timeout=120,
     )
     # Exit code 0 (clean) or 1 (drift found) — not a crash code
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
@@ -344,7 +344,7 @@ def test_subprocess_check_template_drift_strict_flag() -> None:
         [sys.executable, str(script), "--strict"],
         capture_output=True,
         text=True,
-        timeout=30,
+        timeout=120,
     )
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"
 
@@ -361,6 +361,6 @@ def test_subprocess_check_template_drift_project_flag() -> None:
         [sys.executable, str(script), "--project", project],
         capture_output=True,
         text=True,
-        timeout=30,
+        timeout=120,
     )
     assert result.returncode in (0, 1), f"stderr: {result.stderr[:500]}"

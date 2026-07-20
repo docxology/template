@@ -14,15 +14,19 @@ The `infrastructure/project/` module provides project discovery, validation, and
 - `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
 - `validate_project_structure(project_dir)` - Validate required directories exist
 
-### Private Promotion Attestation (`promotion.py`)
+### Private Promotion Contracts (`promotion/`)
 
 - `validate_promotion_attestation(payload)` - Validate identity, authorization,
   redaction, secret-storage, route, MCP-boundary, and export-test evidence
   without authenticating or accessing a private project.
 - `load_promotion_attestation(path)` - Load the same contract from an offline
   YAML fixture or private-project change record.
-- `python -m infrastructure.project.promotion <attestation.yaml>` - Emit a
-  secret-free JSON decision for an offline promotion gate.
+- `python -m infrastructure.project.promotion <attestation.yaml>` - Retained
+  positional form for a secret-free offline attestation decision.
+- `python -m infrastructure.project.promotion attestation <path> --as-of YYYY-MM-DD`
+  - Explicit, deterministic attestation validation.
+- `python -m infrastructure.project.promotion candidate --project-root <path>`
+  - Candidate security scan plus composite promotion decision.
 
 ### Project Metadata (`metadata.py`)
 

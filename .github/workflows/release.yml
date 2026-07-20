@@ -25,17 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          fetch-depth: 0  # Full history for changelog generation
-
-      - uses: ./.github/actions/setup-python-env
-
-      - name: Build and validate Python distributions
-        run: |
-          uv build
-          uvx twine check dist/*
-
       - name: Determine tag name
         id: tag
         env:
@@ -49,7 +38,12 @@ jobs:
             echo "name=$REF_NAME" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Verify tag exists
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0  # Full history for changelog generation
+          ref: ${{ steps.tag.outputs.name }}
+
+      - name: Verify checkout is the requested tag
         env:
           TAG: ${{ steps.tag.outputs.name }}
         run: |
@@ -58,6 +52,24 @@ jobs:
             echo "Tag '$TAG' does not exist in this checkout. Push the tag first or choose an existing tag."
             exit 1
           fi
+          EXPECTED=$(git rev-parse "refs/tags/$TAG^{commit}")
+          ACTUAL=$(git rev-parse HEAD)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Checked-out commit '$ACTUAL' does not match requested tag '$TAG' at '$EXPECTED'."
+            exit 1
+          fi
+
+      - uses: ./.github/actions/setup-python-env
+
+      - name: Verify root package release contract
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+        run: uv run python -m infrastructure.publishing.root_release_contract --tag "$TAG"
+
+      - name: Build and validate Python distributions
+        run: |
+          uv build
+          uvx twine check dist/*
 
       - name: Generate changelog excerpt
         id: changelog

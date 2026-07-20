@@ -27,6 +27,7 @@ from infrastructure.project.discovery import (
     resolve_project_root,
 )
 from infrastructure.project.project_info import ProjectInfo
+from infrastructure.project.project_info import build_project_info
 
 
 def discover_qualified_names(repo_root: Path) -> list[str]:
@@ -100,6 +101,18 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
         available = sorted(p.qualified_name for p in projects)
         raise ValueError(f"project {slug!r} not found. Available: {', '.join(available) or '(none)'}")
     return resolved
+
+
+def resolve_project_info(slug: str, repo_root: Path) -> ProjectInfo:
+    """Resolve a validated rendered or qualified lifecycle project once."""
+    qualified_name = validate_project_slug(slug, repo_root)
+    for project in discover_projects(repo_root):
+        if project.qualified_name == qualified_name:
+            return project
+
+    project_root = resolve_project_root(repo_root, qualified_name)
+    program, separator, _name = qualified_name.rpartition("/")
+    return build_project_info(project_root, program=program if separator else "")
 
 
 def select_project_interactive(

@@ -91,16 +91,6 @@ class PipelineRunner:
             layout=invocation.log_layout,
         )
 
-        total = len(STAGE_NAMES)
-        which = "core pipeline" if invocation.core_only else "full pipeline"
-        self._emit(f"=== {which.upper()} === project={invocation.project}")
-        for idx, name in enumerate(STAGE_NAMES, start=1):
-            if invocation.core_only and name.startswith("LLM "):
-                continue
-            if invocation.skip_infra and name == "Infrastructure Tests":
-                continue
-            self._banner(idx, total, name, invocation.project)
-
         config = PipelineConfig(
             project_name=invocation.project,
             repo_root=self.repo_root,
@@ -110,6 +100,23 @@ class PipelineRunner:
             incremental=IncrementalConfig(enabled=invocation.incremental),
         )
         executor = self.executor_factory(config)
+        preview = getattr(executor, "preview_stage_names", None)
+        if callable(preview):
+            stage_names = tuple(preview(include_llm=not invocation.core_only))
+        else:
+            # Compatibility for third-party executor factories that predate the
+            # preview contract. The canonical executor always takes the branch above.
+            stage_names = tuple(
+                name
+                for name in STAGE_NAMES
+                if not (invocation.core_only and name.startswith("LLM "))
+                and not (invocation.skip_infra and name == "Infrastructure Tests")
+            )
+
+        which = "core pipeline" if invocation.core_only else "full pipeline"
+        self._emit(f"=== {which.upper()} === project={invocation.project}")
+        for idx, name in enumerate(stage_names, start=1):
+            self._banner(idx, len(stage_names), name, invocation.project)
 
         try:
             if invocation.core_only:

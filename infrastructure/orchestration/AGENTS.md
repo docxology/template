@@ -10,7 +10,10 @@ This package coordinates existing Layer-1 modules (`infrastructure.core.pipeline
 
 | File | Role |
 | --- | --- |
-| `cli.py` | Argument parser and `main()` entry wired from `__main__.py`. Bare invocation runs `_interactive()` — prints a choice prompt each turn and passes `writer=sys.stdout` into `select_project_interactive`. |
+| `cli.py` | Backward-compatible facade retaining `build_parser()` and `main()`. |
+| `parser.py` | Pure argparse construction for non-interactive commands. |
+| `commands.py` | Non-interactive command handlers and dispatch table. |
+| `interactive.py` | TTY-only menu loop and project prompting. |
 | `discovery.py` | `validate_project_slug`, `select_project_interactive`, `discover_qualified_names` — wraps `discover_projects()`. When `writer` is set, the picker lists projects and prints `Choice [index / a=all / q=quit]: ` before reading input. |
 | `menu.py` | `MENU_OPTIONS`, `render_menu`, `_menu_row` — deterministic, ANSI-free menu text. Framing and section rules use ASCII (`+`, `=`, `-`, `|`) for TTY compatibility; option rows stay column-aligned. [`tests/infra_tests/orchestration/test_menu.py`](../../tests/infra_tests/orchestration/test_menu.py) asserts stable legend substrings and each `_menu_row` line. Used by `_interactive` and the `menu` subcommand. |
 | `pipeline_runner.py` | `PipelineRunner` — thin adapter over `PipelineExecutor`. |

@@ -108,6 +108,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.project,
                 [combined_pdf, repo_root / "projects" / args.project / "manuscript/config.yaml"],
                 credential_sources,
+                github_repository=None if args.skip_github else github_repo,
             )
         except ValueError as exc:
             logger.error("Publishing preflight failed: %s", exc)
