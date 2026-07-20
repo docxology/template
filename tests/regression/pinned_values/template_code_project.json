@@ -38,9 +38,9 @@
       "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
     },
     "opt_results_mean_iterations_rounded": {
-      "commit": "b85f2753",
-      "date": "2026-06-13",
-      "reason": "Rounded mean iteration count reported in the computational performance paragraph.",
+      "commit": "f9f0f3f7e",
+      "date": "2026-07-20",
+      "reason": "Updated after finite-state termination prevents the unstable row from running to the old iteration cap.",
       "script": "PYTHONPATH=projects/templates/template_code_project uv run python - <<'PY' ... run_convergence_experiment(...)"
     },
     "opt_results_num_converged": {
@@ -108,13 +108,13 @@
   "opt_results_mean_iterations_rounded": {
     "manuscript_section": "manuscript/03_results.md / Computational Performance",
     "claim_text": "Convergence: Fastest at alpha = {{RESULT_BEST_STEP_SIZE}} ({{RESULT_MIN_ITERATIONS}} iteration), average {{RESULT_AVG_ITERATIONS}} iterations",
-    "value": 372,
+    "value": 351,
     "abs_tolerance": 0,
     "verifier_function": "src.analysis.experiments.run_convergence_experiment",
     "verifier_args": {"source": "projects/templates/template_code_project/manuscript/config.yaml"},
-    "pinned_on": "2026-06-13",
+    "pinned_on": "2026-07-20",
     "pinned_by": "Codex",
-    "pinned_at_commit": "b85f2753"
+    "pinned_at_commit": "f9f0f3f7e"
   },
   "opt_results_num_converged": {
     "manuscript_section": "manuscript/03_results.md / Solution Accuracy",

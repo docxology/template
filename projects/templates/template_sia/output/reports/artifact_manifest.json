@@ -318,8 +318,8 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
-      "sha256": "4cc678fc0076df19d95780ead4b87c0b2c38939b4264f023b33b3bcd67c981c8",
-      "size_bytes": 611,
+      "sha256": "77ec89161c0d602101eeadfb661a075b56c9294b9ab3ade60f31051eeff10237",
+      "size_bytes": 605,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -327,7 +327,7 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.md",
-      "sha256": "b3863e07923c7b821c41ed38e4f9782a1e77bc6f014e6d6b4dc2c78269e137f5",
+      "sha256": "f9e647c282eadf921abef8439c4f28ef14eba1595404fdede0cfd56ab8bc8af3",
       "size_bytes": 290,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

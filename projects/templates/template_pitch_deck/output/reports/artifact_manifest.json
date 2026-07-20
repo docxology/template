@@ -138,7 +138,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_template_pitch_long.pdf",
-      "sha256": "eab312560d315c00b36c7542c95eeec29be1bdf1a071158a7b512938243b61ac",
+      "sha256": "a29940c9162b89dc11c0e51b13bd6c27dc88e67daee8ccf918df5d5654750bc0",
       "size_bytes": 646612,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -147,7 +147,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_template_pitch_medium.pdf",
-      "sha256": "b554f60a027727e25bc4d47e71230c19ae20b2783f3ae21a288345c70886fb45",
+      "sha256": "cac05e6c503d803a9009eeeca4fd9df760b6e3e55fd2659e878aae990eee9c1b",
       "size_bytes": 557885,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
-      "sha256": "639b039d3b3785b7e9993f05660167235a89ee05d5783bec72a1745af2ccf374",
+      "sha256": "b11657bbc894327548d575b6ed63dc014bfbed2b7526b3a6f9e5d26d5f3564df",
       "size_bytes": 616,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -318,7 +318,7 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.md",
-      "sha256": "8aa2f1a560937599480a6c6c7e8f10c10f1a5115dea4bc370acff1acb438bc4a",
+      "sha256": "19d09501ac8b6df09526d637d05aedbe96422dad674cc0ded9ecadb4a475305f",
       "size_bytes": 293,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -723,7 +723,7 @@
     {
       "contract_match": true,
       "path": "output/slides_standalone/template_template_long/slide_45.md",
-      "sha256": "20380be14e2f6799c4c24bcd9697ee5023e0b78651a241fd7978239f6cccb013",
+      "sha256": "5fa87ce579cd722763ce18a3df4251bb05ca2908ded8d26fec58cd9297d8b561",
       "size_bytes": 1414,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1101,7 +1101,7 @@
     {
       "contract_match": true,
       "path": "output/slides_standalone/template_template_medium/slide_31.md",
-      "sha256": "bd9828a3ab1b23c3872ed1acf45c6fe2fe9e83cabdb35def4b9b9d4f2b123dfc",
+      "sha256": "f482808d6a2fd3534a0652d9ca7eb184c0065d42022064f7ac53a66652f3ed90",
       "size_bytes": 1424,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

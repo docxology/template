@@ -151,13 +151,28 @@ global executable. Confidentiality uses the full four-pool
 The `public-readiness` lane is the deterministic local matrix for all entries
 in `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`. It invokes one
 pytest process per exemplar, emits PASS/FAIL/SKIP records, and fails closed on
-missing exemplars. Use `uv run python scripts/gates/public_readiness.py --json`
-when another tool needs the report. Ollama tests are a separate opt-in lane:
+missing exemplars. Its project-local uv environments are pinned to Python
+3.12, and JSON reports record that baseline. Use
+`uv run python scripts/gates/public_readiness.py --json` when another tool
+needs the report. Ollama tests are a separate opt-in lane:
 
 ```bash
 uv run python scripts/gates/public_readiness.py \
   --include-ollama-tests --allow-skips --json
 ```
+
+The matrix deliberately regenerates each exemplar's tracked test-result report.
+Before a strict rendered publication audit, rebaseline those intentional output
+changes and then audit again:
+
+```bash
+uv run python scripts/maintenance/refresh_artifact_manifests.py --all-public
+uv run python -m infrastructure.validation.cli publication-audit \
+  --all-public --strict --rendered --format json
+```
+
+The refresh records a `current-output-snapshot`; it does not fabricate
+stage-level provenance for the test subprocesses.
 
 ## Long-term portability
 

@@ -18,7 +18,8 @@ from infrastructure.core.pytest_orchestration import (
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
-PUBLIC_READINESS_SCHEMA = "template-public-readiness-v1"
+PUBLIC_READINESS_SCHEMA = "template-public-readiness-v2"
+PUBLIC_READINESS_PYTHON = "3.12"
 DEFAULT_TIMEOUT_SECONDS = 1200
 PUBLIC_READINESS_STATUSES = frozenset({"pass", "fail", "skip"})
 _OUTPUT_TAIL_LIMIT = 4000
@@ -74,6 +75,7 @@ class PublicReadinessReport:
         """Serialize the report for CI and local tooling."""
         return {
             "schema_version": PUBLIC_READINESS_SCHEMA,
+            "python_version": PUBLIC_READINESS_PYTHON,
             "expected_projects": list(self.expected_projects),
             "profile": self.profile,
             "project_workers": self.project_workers,
@@ -143,6 +145,9 @@ def run_public_readiness(
             # subprocesses already write canonical reports under each exemplar;
             # this lane should not additionally pollute the repository root.
             env["COVERAGE_FILE"] = str(Path(temp_dir) / ".coverage")
+            # Pin the interpreter used by nested ``uv run`` project commands
+            # so readiness evidence remains reproducible across macOS hosts.
+            env["UV_PYTHON"] = PUBLIC_READINESS_PYTHON
             commands[project] = command
             tasks.append(
                 ProjectTestTask(
@@ -203,6 +208,7 @@ def format_public_readiness(report: PublicReadinessReport) -> str:
 
 __all__ = [
     "DEFAULT_TIMEOUT_SECONDS",
+    "PUBLIC_READINESS_PYTHON",
     "PUBLIC_READINESS_SCHEMA",
     "PUBLIC_READINESS_STATUSES",
     "PublicReadinessReport",
