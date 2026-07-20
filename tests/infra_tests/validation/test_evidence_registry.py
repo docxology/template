@@ -145,6 +145,30 @@ def test_registry_ignores_pandoc_widths_and_numbers_in_cited_bibliography_rows()
     assert report.errors == []
 
 
+def test_registry_ignores_structural_table_figure_and_pipeline_ordinals() -> None:
+    text = """
+# Results
+Table 6 summarizes the result.
+Figure 8 shows the workflow.
+| artifact | stage |
+| fulltext_assessment.json | 06 |
+| measured value | 999 |
+"""
+
+    report = validate_text_against_registry(text, VerifiedEvidenceRegistry())
+
+    assert [issue.value for issue in report.errors] == ["999"]
+
+
+def test_registry_does_not_ignore_non_padded_numeric_table_claims() -> None:
+    report = validate_text_against_registry(
+        "# Results\n| metric | value |\n| accuracy | 6 |\n",
+        VerifiedEvidenceRegistry(),
+    )
+
+    assert [issue.value for issue in report.errors] == ["6"]
+
+
 def test_build_project_registry_collects_variables_bibtex_figures_and_data(tmp_path: Path) -> None:
     project = tmp_path / "project"
     (project / "output" / "data").mkdir(parents=True)

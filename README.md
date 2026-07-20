@@ -16,7 +16,7 @@
 Just cloned the repo? Do this:
 
 1. `git clone <this-repo> && cd template`
-2. `uv sync` (installs deps via uv)
+2. `uv sync` (installs the root environment, including deterministic dependencies for all public template exemplars)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
@@ -32,6 +32,10 @@ For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-s
 <a id="migration-from-quadmath"></a>
 
 **Local hooks:** After `uv sync`, run `pre-commit install` and `pre-commit install --hook-type pre-push` to mirror Ruff, mypy, Bandit, and smoke tests locally (see [`.pre-commit-config.yaml`](.pre-commit-config.yaml)).
+
+**Strict Mermaid/PDF checks:** Run `npm ci` at the repository root and add
+`node_modules/.bin` to `PATH`; the pinned Mermaid CLI and the existing Chrome
+resolver are then used by documentation and rendering gates.
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.
 

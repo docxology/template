@@ -59,7 +59,8 @@ stages always see a fresh review):
 * `scripts/run_prose_pipeline.py` writes `output/manuscript_report.json`
   (the raw `ManuscriptReport`), `output/checks.json` (the list of check
   results), `output/review_report.md` (the human-readable review report),
-  and `output/run_summary.json` (one-line metadata).
+  `output/evidence_summary.json` (versioned diagnostic-only evidence), and
+  `output/run_summary.json` (one-line metadata).
 * `scripts/y_generate_prose_figures.py` reads `manuscript_report.json`
   and writes `output/figures/{section_word_counts,readability_metrics,citation_density}.png`.
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`

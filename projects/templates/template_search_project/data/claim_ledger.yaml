@@ -34,3 +34,10 @@ claims:
     source_tier: project_source
     freshness: active
     artifact_path: manuscript/config.yaml
+  - claim_id: corpus-synthesis-max-clusters
+    kind: number
+    value: 7
+    source: src/synthesis.py PROMPT_CORPUS thematic-cluster upper bound
+    source_tier: project_source
+    freshness: active
+    artifact_path: src/synthesis.py

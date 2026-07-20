@@ -157,7 +157,9 @@ built with `mmdc`, which requires a pinned `chrome-headless-shell`. Install
 it once (CI provisions it automatically; a fresh clone does not):
 
 ```bash
-npx --yes puppeteer browsers install chrome-headless-shell
+npm ci
+npx --no-install puppeteer browsers install chrome-headless-shell
+export PATH="$PWD/node_modules/.bin:$PATH"
 ```
 
 Without it the **PDF Rendering** stage fails while per-section slides still

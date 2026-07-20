@@ -16,9 +16,9 @@
       "script": "PYTHONPATH=projects/templates/template_prose_project:projects/templates/template_prose_project/src:. uv run python -c 'from infrastructure.prose import analyze_manuscript; from src.config import load_project_config; from src.manuscript_variables import compute_variables; c=load_project_config(\"projects/templates/template_prose_project/manuscript/config.yaml\"); r=analyze_manuscript(\"projects/templates/template_prose_project/manuscript\", long_sentence_threshold=c.prose.long_sentence_threshold); print(compute_variables(config_title=c.title, manuscript_report=r.to_dict()).files_analysed)'"
     },
     "abstract_total_words": {
-      "commit": "64f665eb",
-      "date": "2026-07-01",
-      "reason": "Total word count aggregated across the committed manuscript by analyze_manuscript; substituted into the abstract Run snapshot as {{TOTAL_WORDS}} and used as the citation-density check denominator.",
+      "commit": "82039f1ec",
+      "date": "2026-07-19",
+      "reason": "Re-derived after the canonical prose pipeline regenerated the tracked manuscript outputs; the source manuscript now contains 1745 words and the abstract Run snapshot is hydrated from that report.",
       "script": "same analyze_manuscript + compute_variables call as abstract_files_analysed; field .total_words"
     },
     "abstract_total_sentences": {
@@ -28,9 +28,9 @@
       "script": "same analyze_manuscript + compute_variables call as abstract_files_analysed; field .total_sentences"
     },
     "abstract_avg_grade_level": {
-      "commit": "64f665eb",
-      "date": "2026-07-01",
-      "reason": "Weighted-average Flesch-Kincaid grade level over the committed manuscript; substituted into the abstract Run snapshot as {{AVG_GRADE_LEVEL}} and gated by the grade_level_in_band check (target band 10.0-18.0).",
+      "commit": "82039f1ec",
+      "date": "2026-07-19",
+      "reason": "Re-derived after the canonical prose pipeline regenerated the tracked manuscript outputs; the weighted-average Flesch-Kincaid grade level is now 15.97 and remains inside the configured 10.0-18.0 band.",
       "script": "same analyze_manuscript + compute_variables call as abstract_files_analysed; field .avg_grade_level"
     },
     "abstract_citation_count": {
@@ -60,13 +60,13 @@
   "abstract_total_words": {
     "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
     "claim_text": "... totalling {{TOTAL_WORDS}} words across {{TOTAL_SENTENCES}} sentence(s) ...",
-    "value": 1742,
+    "value": 1745,
     "abs_tolerance": 0,
     "verifier_function": "infrastructure.prose.analyze_manuscript",
     "verifier_args": {"source": "projects/templates/template_prose_project/manuscript/"},
-    "pinned_on": "2026-07-01",
-    "pinned_by": "Marcus Webb (Engineer)",
-    "pinned_at_commit": "64f665eb"
+    "pinned_on": "2026-07-19",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "82039f1ec"
   },
   "abstract_total_sentences": {
     "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
@@ -82,13 +82,13 @@
   "abstract_avg_grade_level": {
     "manuscript_section": "manuscript/00_abstract.md / Run snapshot",
     "claim_text": "Average Flesch-Kincaid grade level is {{AVG_GRADE_LEVEL}}; ...",
-    "value": 15.93,
+    "value": 15.97,
     "abs_tolerance": 0.01,
     "verifier_function": "infrastructure.prose.analyze_manuscript",
     "verifier_args": {"source": "projects/templates/template_prose_project/manuscript/"},
-    "pinned_on": "2026-07-01",
-    "pinned_by": "Marcus Webb (Engineer)",
-    "pinned_at_commit": "64f665eb"
+    "pinned_on": "2026-07-19",
+    "pinned_by": "Codex",
+    "pinned_at_commit": "82039f1ec"
   },
   "abstract_citation_count": {
     "manuscript_section": "manuscript/00_abstract.md / Run snapshot",

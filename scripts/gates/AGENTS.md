@@ -14,6 +14,7 @@ Optional gate scripts for Hermes-plugin workflows and advisory checks. **None of
 | `security_scan.py` | `infrastructure.validation.security_gate.run_security_scan` | Security scanning (bandit, safety, pip-audit) |
 | `plugin_export_check.py` | `infrastructure.validation.plugin_export.run_plugin_export_check` | Hermes plugin export verification (opt-in) |
 | `exemplar_export_smoke.py` | `infrastructure.project.export_smoke.smoke_public_exemplars` | Clean-install and import-smoke every public exemplar export (acceptance/release gate) |
+| `public_readiness.py` | `infrastructure.project.public_readiness.run_public_readiness` | Isolated deterministic test readiness matrix for every public exemplar |
 
 ## Usage
 
@@ -29,6 +30,8 @@ uv run python scripts/gates/gate_cache.py   # Hermes-only; requires HERMES_HOME
 # for one. Mirrors `python -m infrastructure.methods plan --check`.
 uv run python scripts/gates/methods_plan_check.py
 uv run python scripts/gates/methods_plan_check.py --project templates/template_code_project
+uv run python scripts/gates/public_readiness.py --json
+uv run python scripts/gates/public_readiness.py --include-ollama-tests --allow-skips
 ```
 
 ## See also

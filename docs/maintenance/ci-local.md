@@ -17,6 +17,13 @@ This guide documents the **`act`-based local reproduction path**, which decouple
 ## Prerequisites
 
 ```bash
+# Python and all deterministic public-exemplar dependencies
+uv sync
+
+# Pinned Mermaid CLI used by strict documentation and PDF checks
+npm ci
+export PATH="$PWD/node_modules/.bin:$PATH"
+
 # macOS / Linux
 brew install act           # or: curl https://raw.githubusercontent.com/nektos/act/master/install.sh | bash
 
@@ -35,6 +42,9 @@ docker info >/dev/null     # should succeed
 ./scripts/shell/ci_local.sh -j test-infra
 ./scripts/shell/ci_local.sh -j test-project
 ./scripts/shell/ci_local.sh -j security
+
+# Run every canonical public exemplar in isolated subprocesses
+./scripts/shell/ci_local.sh --no-act -j public-readiness
 
 # Dry-run (show what would execute without running)
 ./scripts/shell/ci_local.sh --dryrun
@@ -121,6 +131,17 @@ aggregate gate time and whole-sweep wall time.
 The pre-commit lane uses `uv run pre-commit`; it never silently skips a missing
 global executable. Confidentiality uses the full four-pool
 `scripts/audit/check_tracked_all.py` guard.
+
+The `public-readiness` lane is the deterministic local matrix for all entries
+in `infrastructure.project.public_scope.PUBLIC_PROJECT_NAMES`. It invokes one
+pytest process per exemplar, emits PASS/FAIL/SKIP records, and fails closed on
+missing exemplars. Use `uv run python scripts/gates/public_readiness.py --json`
+when another tool needs the report. Ollama tests are a separate opt-in lane:
+
+```bash
+uv run python scripts/gates/public_readiness.py \
+  --include-ollama-tests --allow-skips --json
+```
 
 ## Long-term portability
 

@@ -11,15 +11,6 @@
     },
     {
       "contract_match": true,
-      "path": "output/dev/.DS_Store",
-      "sha256": "b17a0126bde4a58b91d2cb782966ce04d95d4a9b1520eae877040fa48c8532a8",
-      "size_bytes": 6148,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black.hashes.json",
       "sha256": "1e21aa7cfaa3a0d3b36f632fe43f89a89b407ae8af46ccb085cad6aa64368e13",
       "size_bytes": 544,
@@ -615,8 +606,8 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
-      "sha256": "5bf09403ce2ee0f41601e12a546e1cfe49e42ad66d0de2fdb3af2b3d12dccbfb",
-      "size_bytes": 612,
+      "sha256": "bd27691672ecb799406823e3ab6ae0d7f645fce2ed4e847d0d6ddc450a6b6c67",
+      "size_bytes": 613,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -624,8 +615,8 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.md",
-      "sha256": "ea8f71ecebadbea838cbd44ee0b2b8c6a00995e27808dd19cf8556517152baec",
-      "size_bytes": 290,
+      "sha256": "f78dd9cbd61d19026eb0a9116eebb469cbd4216ab53eed3064ed66ce0c01fbf2",
+      "size_bytes": 293,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

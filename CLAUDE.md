@@ -29,7 +29,7 @@ This is a research project template with a test-driven development workflow, aut
 | Project pipeline tests | `uv run python scripts/pipeline/stage_01_test.py --project {name}` |
 | Full infrastructure gate | `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full` |
 | Single test | `uv run pytest path/to/test.py::test_function -v` |
-| Install deps | `uv sync` (root `default-groups`: `dev`, `rendering`, `discopy`, `steganography`; add `--group monitoring` to mirror CI extras) |
+| Install deps | `uv sync` (root `default-groups` includes `public-exemplars`, covering all deterministic public-project dependencies; live research/publishing groups remain opt-in) |
 | Editor Python | `.venv/bin/python` after `uv sync` (see `.vscode/settings.json`) |
 | Public CI source paths | `uv run python -m infrastructure.project.public_scope source-paths` |
 | Ruff (CI scope) | `uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff check --fix && uv run python -m infrastructure.project.public_scope source-paths \| xargs uv run ruff format` |

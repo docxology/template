@@ -29,8 +29,9 @@ variable stages always see a fresh review):
   \breaktt{output/manuscript\_report.json} (the raw
   \breaktt{ManuscriptReport}), \breaktt{output/checks.json} (the list of
   check results), \breaktt{output/review\_report.md} (the human-readable
-  review report), and \breaktt{output/run\_summary.json} (one-line
-  metadata).
+  review report), \breaktt{output/evidence\_summary.json} (versioned
+  diagnostic-only evidence), and \breaktt{output/run\_summary.json}
+  (one-line metadata).
 \item
   \breaktt{scripts/y\_generate\_prose\_figures.py} reads
   \breaktt{manuscript\_report.json} and writes

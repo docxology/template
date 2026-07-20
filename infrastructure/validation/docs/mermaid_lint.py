@@ -376,10 +376,10 @@ def validate_blocks(
     mmdc_bin = mmdc_path or shutil.which("mmdc")
     if not mmdc_bin or not Path(mmdc_bin).exists():
         raise RuntimeError(
-            "mmdc (mermaid-cli) is not on PATH. Install with: "
-            "`npm install -g @mermaid-js/mermaid-cli` and ensure a Chrome/Chromium "
-            "binary is reachable via CHROME_EXECUTABLE_PATH or `puppeteer browsers "
-            "install chrome-headless-shell`."
+            "mmdc (mermaid-cli) is not on PATH. From the repository root, run "
+            '`npm ci` and `export PATH="$PWD/node_modules/.bin:$PATH"`; ensure a Chrome/Chromium '
+            "binary is reachable via CHROME_EXECUTABLE_PATH or run "
+            "`npx --no-install puppeteer browsers install chrome-headless-shell`."
         )
     chrome_resolved = _resolve_chrome(chrome_path)
     failures: list[ValidationFailure] = []

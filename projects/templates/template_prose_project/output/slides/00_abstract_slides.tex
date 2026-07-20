@@ -104,6 +104,9 @@
 \providecommand{\citeyear}[1]{#1}
 \providecommand{\cref}[1]{\texttt{\detokenize{#1}}}
 \providecommand{\Cref}[1]{\texttt{\detokenize{#1}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -146,10 +149,10 @@ writes a deterministic markdown review report alongside three figures
 \breaktt{manuscript\_report.json} suitable for CI artefacts.
 
 \textbf{Run snapshot.} The current configuration analyses 8 file(s)
-totalling 1742 words across 86 sentence(s) and 64 paragraph(s). Average
-Flesch-Kincaid grade level is 15.93; average Gunning Fog index is 16.69;
+totalling 1745 words across 86 sentence(s) and 64 paragraph(s). Average
+Flesch-Kincaid grade level is 15.97; average Gunning Fog index is 16.73;
 the manuscript references 6 unique citation key(s); the longest section
-is 413 words and the shortest is 17. These numbers are auto-substituted
+is 416 words and the shortest is 17. These numbers are auto-substituted
 by \breaktt{scripts/z\_generate\_manuscript\_variables.py} after every
 run, so the abstract tracks the JSON outputs in \texttt{output/}.
 

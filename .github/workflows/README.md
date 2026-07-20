@@ -74,7 +74,9 @@ uv run pytest tests/infra_tests/ \
   --cov=infrastructure --cov-datafile=.coverage.infra --cov-fail-under=60 \
   -m "not requires_ollama"
 
-uv sync --group rendering --group monitoring --group discopy
+uv sync
+npm ci
+export PATH="$PWD/node_modules/.bin:$PATH"
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 

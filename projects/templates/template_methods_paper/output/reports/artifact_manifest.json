@@ -344,6 +344,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "21466166556fb60011712c8e156ed92a39b54ac2a79b46a44e27fe7877347895",
+      "size_bytes": 608,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "bb89ceaccccef2d8e892c9c92ab0a44da16ee6b92ce8f1532c12206053759fe3",
+      "size_bytes": 290,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/trust_chain_report.json",
       "sha256": "f51a330910d0efd5421599a386ae13f86749c595d69c31385e403cfb76aceb7c",
       "size_bytes": 44,

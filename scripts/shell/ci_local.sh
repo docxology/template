@@ -39,6 +39,7 @@ Direct-command fallback lanes (when act is unavailable):
   - tests            canonical template project test stage
   - precommit        all pre-commit and pre-push hooks via uv
   - confid           scripts/audit/check_tracked_all.py
+  - public-readiness all 24 public exemplar tests in isolated subprocesses
 
 The fallback is intentionally described as a subset: workflow matrices,
 service containers, dependency auditing, and platform-specific jobs require act
@@ -132,13 +133,14 @@ Direct-command fallback lanes (act not available):
   - tests
   - precommit
   - confid
+  - public-readiness
 EOF
   exit 0
 fi
 
 if [[ -n "$JOB" ]]; then
   case "$JOB" in
-    lint|health|verify-no-mocks|security|tests|precommit|confid) ;;
+    lint|health|verify-no-mocks|security|tests|precommit|confid|public-readiness) ;;
     *)
       echo "[ci_local] Unsupported direct-command fallback lane: $JOB" >&2
       echo "[ci_local] Use --list to see supported lanes, or run with act for workflow job IDs." >&2
@@ -151,7 +153,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
   if [[ -n "$JOB" ]]; then
     echo "[ci_local] DRYRUN — would run direct-command fallback lane: $JOB"
   else
-    echo "[ci_local] DRYRUN — would run direct-command fallback lanes: lint, health, verify-no-mocks, security, tests, precommit, confid"
+    echo "[ci_local] DRYRUN — would run direct-command fallback lanes: lint, health, verify-no-mocks, security, tests, precommit, confid, public-readiness"
   fi
   exit 0
 fi
@@ -209,6 +211,11 @@ fi
 if [[ -z "$JOB" || "$JOB" == "confid" ]]; then
   echo "[ci_local] === Confidentiality check ==="
   uv run python scripts/audit/check_tracked_all.py
+fi
+
+if [[ -z "$JOB" || "$JOB" == "public-readiness" ]]; then
+  echo "[ci_local] === Public exemplar readiness matrix ==="
+  uv run python scripts/gates/public_readiness.py
 fi
 
 echo

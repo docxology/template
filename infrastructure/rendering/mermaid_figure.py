@@ -49,8 +49,8 @@ def render_mermaid_png(
     mmdc = executable_resolver("mmdc")
     if mmdc is None:
         raise RenderingError(
-            "mmdc (mermaid-cli) not found on PATH. Install it (e.g. `npm install -g @mermaid-js/mermaid-cli`) "
-            "to render Mermaid diagrams to PNG."
+            "mmdc (mermaid-cli) not found on PATH. From the repository root, run "
+            '`npm ci` and `export PATH="$PWD/node_modules/.bin:$PATH"` to render Mermaid diagrams to PNG.'
         )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

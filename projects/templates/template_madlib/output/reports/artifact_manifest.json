@@ -371,6 +371,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "09fcda1452640affd221a3f0846519a6fb0f387213ac2900811ee45e1ef12257",
+      "size_bytes": 613,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "71d471d4c1c9db7662e5aa8e1b6b7ef10b38b93ce83319f589a2043b7b96349a",
+      "size_bytes": 293,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
       "sha256": "04ac20b6fd8a503a0db34db9253ff7319d49a3190dd1340b814173f282c448d6",
       "size_bytes": 10926,

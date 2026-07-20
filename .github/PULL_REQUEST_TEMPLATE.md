@@ -13,7 +13,9 @@ Link to any relevant issues using 'Closes #123' syntax.
 ### Local development (mirror CI)
 
 ```bash
-uv sync --group rendering --group monitoring --group discopy
+uv sync
+npm ci
+export PATH="$PWD/node_modules/.bin:$PATH"
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format --check
 uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy

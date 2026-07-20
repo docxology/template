@@ -2,6 +2,7 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \documentclass[
+  english,
 ]{article}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
@@ -100,6 +101,14 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -147,10 +156,14 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
+  pdftitle={Editorial Quality at Scale: A Reproducible Prose-Review Pipeline},
+  pdfauthor={Daniel Ari Friedman},
+  pdflang={en},
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
-\author{}
+\title{Editorial Quality at Scale: A Reproducible Prose-Review Pipeline}
+\author{Daniel Ari Friedman}
 \date{}
 
 \IfFileExists{seqsplit.sty}{\usepackage{seqsplit}}{\newcommand{\seqsplit}[1]{#1}}
@@ -195,8 +208,12 @@
 
 % Optional: code listings (uncomment if any section embeds non-fenced code blocks)
 % \usepackage{listings}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
 
 \begin{document}
+\maketitle
 
 \thispagestyle{empty}
 \setlength{\parskip}{0pt}
@@ -257,7 +274,7 @@ SHA-512 & pending \\
 
 \begin{figure}
 \centering
-\includegraphics[width=0.98\linewidth,height=0.50\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
+\includegraphics[width=0.98\linewidth,height=0.5\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
 \caption{Integrity QR strip}
 \end{figure}
 
@@ -265,7 +282,7 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.35\linewidth,height=0.50\textheight,keepaspectratio,alt={Publication pairing flow}]{../figures/transmission_pairing.png}
+\includegraphics[width=0.35\linewidth,height=0.5\textheight,keepaspectratio,alt={Publication pairing flow}]{../figures/transmission_pairing.png}
 \caption{Publication pairing flow}
 \end{figure}
 
@@ -274,24 +291,6 @@ Structured manifest: \breaktt{../data/transmission\_manifest.json}
 
 \end{samepage}
 \newpage
-
-\begin{titlepage}
-\centering
-\vspace*{2cm}
-{\LARGE\bfseries Editorial Quality at Scale: A Reproducible Prose-Review Pipeline\par}
-\vspace{0.75em}
-{\large Readability, structural, and citation-density gating for research manuscripts\par}
-\vfill
-\makeatletter
-{\@author\par}
-\vspace{1em}
-{\@date\par}
-\makeatother
-\vfill
-\end{titlepage}
-\thispagestyle{empty}
-\newpage
-
 \tableofcontents
 \newpage
 
@@ -323,10 +322,10 @@ writes a deterministic markdown review report alongside three figures
 \breaktt{manuscript\_report.json} suitable for CI artefacts.
 
 \textbf{Run snapshot.} The current configuration analyses 8 file(s)
-totalling 1742 words across 86 sentence(s) and 64 paragraph(s). Average
-Flesch-Kincaid grade level is 15.93; average Gunning Fog index is 16.69;
+totalling 1745 words across 86 sentence(s) and 64 paragraph(s). Average
+Flesch-Kincaid grade level is 15.97; average Gunning Fog index is 16.73;
 the manuscript references 6 unique citation key(s); the longest section
-is 413 words and the shortest is 17. These numbers are auto-substituted
+is 416 words and the shortest is 17. These numbers are auto-substituted
 by \breaktt{scripts/z\_generate\_manuscript\_variables.py} after every
 run, so the abstract tracks the JSON outputs in \texttt{output/}.
 
@@ -525,8 +524,9 @@ variable stages always see a fresh review):
   \breaktt{output/manuscript\_report.json} (the raw
   \breaktt{ManuscriptReport}), \breaktt{output/checks.json} (the list of
   check results), \breaktt{output/review\_report.md} (the human-readable
-  review report), and \breaktt{output/run\_summary.json} (one-line
-  metadata).
+  review report), \breaktt{output/evidence\_summary.json} (versioned
+  diagnostic-only evidence), and \breaktt{output/run\_summary.json}
+  (one-line metadata).
 \item
   \breaktt{scripts/y\_generate\_prose\_figures.py} reads
   \breaktt{manuscript\_report.json} and writes
@@ -698,31 +698,7 @@ This section documents the artefacts produced by the prose-review run.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart TB
-    P[projects/templates/template_prose_project/]
-    P --> M[manuscript/]
-    P --> OUT["output/<br/>tracked public artifacts · regenerable"]
-
-    M --> M_CFG["config.yaml<br/>single source of truth"]
-    M --> M_PRE["preamble.md<br/>LaTeX preamble"]
-    M --> M_SEC["00_abstract → 04_conclusion ·<br/>05_pipeline_internals · 06_reproducibility"]
-    M --> M_BIB["references.bib<br/>read-only · validated by pipeline"]
-
-    OUT --> O_REP["manuscript_report.json<br/>ManuscriptReport JSON"]
-    OUT --> O_CK["checks.json<br/>list of CheckResult"]
-    OUT --> O_RR["review_report.md<br/>final markdown report"]
-    OUT --> O_DATA[data/manuscript_variables.json]
-    OUT --> O_FIG["figures/<br/>section_word_counts.png ·<br/>readability_metrics.png ·<br/>citation_density.png"]
-    OUT --> O_RS[run_summary.json]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
-    class P,M,OUT d
-    class M_CFG,M_PRE,M_SEC,M_BIB src
-    class O_REP,O_CK,O_RR,O_DATA,O_FIG,O_RS gen
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0001_2bd3f746e2eb.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -730,70 +706,7 @@ flowchart TB
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-classDiagram
-    class ManuscriptReport {
-        +list~FileReport~ files
-        +int total_words
-        +int total_sentences
-        +int total_paragraphs
-        +float avg_flesch_reading_ease
-        +float avg_flesch_kincaid_grade
-        +float avg_gunning_fog
-        +list~str~ citation_keys
-    }
-
-    class FileReport {
-        +str name
-        +ProseMetrics metrics
-        +StructureReport structure
-        +QualityReport quality
-    }
-
-    class ProseMetrics {
-        +int word_count
-        +int sentence_count
-        +int paragraph_count
-        +float flesch_reading_ease
-        +float flesch_kincaid_grade
-        +float gunning_fog
-    }
-
-    class StructureReport {
-        +list~Heading~ headings
-        +list~Section~ sections
-        +int max_depth
-        +bool has_h1
-        +bool has_skipped_level
-    }
-
-    class QualityReport {
-        +int passive_count
-        +int hedge_count
-        +int citation_count
-        +int long_sentence_count
-        +float citation_density_per_1000
-    }
-
-    class CheckResult {
-        +str name
-        +bool passed
-        +str message
-    }
-
-    class ProseRunArtifacts {
-        +ManuscriptReport manuscript_report
-        +list~CheckResult~ checks
-        +bool all_passed
-    }
-
-    ManuscriptReport --> "*" FileReport
-    FileReport --> ProseMetrics
-    FileReport --> StructureReport
-    FileReport --> QualityReport
-    ProseRunArtifacts --> ManuscriptReport
-    ProseRunArtifacts --> "*" CheckResult
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -917,7 +830,8 @@ To validate that \texttt{references.bib} is syntactically clean:
 
 
 
-\clearpage
+\providecommand{\bibsection}{}
+\renewcommand{\bibsection}{}
 
 \bibliography{references}
 % transmission-end-bookend
@@ -936,7 +850,7 @@ SHA-256 \texttt{290d21b10bd5…} \texorpdfstring{\ensuremath{\cdot}}{.} pairing 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.88\linewidth,height=0.50\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
+\includegraphics[width=0.88\linewidth,height=0.5\textheight,keepaspectratio,alt={Integrity QR strip}]{../figures/transmission_integrity_strip.png}
 \caption{Integrity QR strip}
 \end{figure}
 

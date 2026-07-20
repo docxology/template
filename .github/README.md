@@ -946,7 +946,9 @@ uv run python -m infrastructure.project.public_scope source-paths | xargs uv run
 
 # Tests (skip Ollama-requiring tests)
 uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv sync --group rendering --group monitoring --group discopy
+uv sync
+npm ci
+export PATH="$PWD/node_modules/.bin:$PATH"
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 
 # Security (mirror CI)

@@ -18,6 +18,7 @@ publication:
   version_record: "https://zenodo.org/records/20932047"
   year: "2026"
   github_repository: "docxology/template_prose_project"
+  repository_url: "https://github.com/docxology/template_prose_project"
   published_artifacts:
     ipfs_pinata: "https://gateway.pinata.cloud/ipfs/QmXXUgas1amP7Pd9rRoTdJQiNUzBqKQ4r3Jf85aaGEnjz4"
     huggingface_hub: "https://huggingface.co/datasets/ActiveInference/template_prose_project"

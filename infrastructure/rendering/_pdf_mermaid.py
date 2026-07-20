@@ -106,7 +106,7 @@ def replace_inline_mermaid(
         if mmdc is None:
             raise RenderingError(
                 "Mermaid CLI 'mmdc' is required to render inline Mermaid diagrams for PDF output. "
-                "Install @mermaid-js/mermaid-cli and rerun the PDF render."
+                "From the repository root, run `npm ci` and add `node_modules/.bin` to PATH, then rerun the PDF render."
             )
         try:
             png_path = _render_mermaid(

@@ -308,7 +308,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --group rendering --group monitoring
+        run: uv sync --group public-exemplars
 
       - name: Fix macOS socket.getfqdn timeout
         if: runner.os == 'macOS'
@@ -387,7 +387,7 @@ jobs:
           python-version: "3.12"
 
       - name: Sync dependencies (dev + optional test groups)
-        run: uv sync --group rendering --group monitoring
+        run: uv sync --group public-exemplars
 
       # The claim-binding regression tier re-derives every pinned manuscript
       # number from source and fails if a value drifts. Run serial (no -n auto):
@@ -432,9 +432,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Sync dependencies (dev + optional test groups)
-        # `scientific` (scipy/pandas/rdflib/wordcloud/scikit-learn) + `llm` (requests)
-        # are required by template_literature_meta_analysis's project test suite.
-        run: uv sync --group rendering --group monitoring --group discopy --group scientific --group llm --group active-inference
+        # `public-exemplars` is the single deterministic dependency contract
+        # for every canonical public project, including scientific, literature,
+        # PPTX, and monitoring dependencies.
+        run: uv sync --group public-exemplars
 
       # 01_run_tests.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the

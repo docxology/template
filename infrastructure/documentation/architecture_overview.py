@@ -265,8 +265,8 @@ def render_architecture_svg(repo_root: Path, output_path: Path) -> Path:
     mmdc_bin = shutil.which("mmdc")
     if mmdc_bin is None:
         raise RuntimeError(
-            "mmdc (mermaid-cli) not found on PATH. Install with "
-            "`npm install -g @mermaid-js/mermaid-cli` or `brew install mermaid-cli`."
+            "mmdc (mermaid-cli) not found on PATH. From the repository root, run "
+            '`npm ci` and `export PATH="$PWD/node_modules/.bin:$PATH"`.'
         )
 
     # Write a Puppeteer config that points at the system Chrome so mmdc does

@@ -41,3 +41,17 @@ claims:
     source_tier: method
     freshness: active
     artifact_path: manuscript/02e_methods_viz_injection.md
+  - claim_id: visualization-palette-size
+    kind: number
+    value: 8
+    source: src/visualization/style.py VIZ_CONFIG.palette length
+    source_tier: method
+    freshness: active
+    artifact_path: src/visualization/style.py
+  - claim_id: literature-engine-client-count
+    kind: number
+    value: 9
+    source: src/literature/engine_dispatch.py ENGINE_SPECS length
+    source_tier: method
+    freshness: active
+    artifact_path: src/literature/engine_dispatch.py

@@ -96,7 +96,6 @@ def test_publication_audit_json_stream_is_machine_readable(capsys: pytest.Captur
             "publication-audit",
             "--project",
             "templates/template_advanced_literature_review",
-            "--rendered",
             "--format",
             "json",
         ]

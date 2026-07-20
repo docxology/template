@@ -108,6 +108,7 @@ The Core module provides fundamental foundation utilities used across the entire
 **coverage_policy.py**
 - Coverage-plugin capability probe with no reporting imports (Layer 1)
 - `check_cov_datafile_support() -> bool` — True when the installed pytest-cov supports the `--cov-datafile` flag
+- `PYTEST_HELP_PROBE_TIMEOUT_SECONDS` — bounded 30-second startup budget; it is deliberately longer than the ordinary test timeout because xdist workers can contend during pytest import on macOS
 
 **determinism.py**
 - Build-time reproducibility resolution around the `SOURCE_DATE_EPOCH` standard; precedence is an already-set `SOURCE_DATE_EPOCH` env var, then deterministic mode (author-date epoch of `HEAD` via git), then wall clock

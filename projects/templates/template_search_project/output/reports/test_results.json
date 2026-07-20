@@ -1,65 +1,46 @@
 {
-  "timestamp": "2026-07-01T07:49:03.999146",
-  "infrastructure": {
-    "passed": 7943,
-    "failed": 7,
-    "skipped": 2,
-    "total": 7952,
-    "warnings": 2,
-    "exit_code": 1,
-    "discovery_count": 8038,
-    "collection_errors": 0,
-    "execution_phases": {
-      "setup": 837.03,
-      "execution": 837.03
-    },
-    "test_categories": {},
-    "coverage_percent": 84.5711614053923,
-    "failed_tests": [
-      {
-        "test": "test_stability.py",
-        "error_type": "RuntimeWarning",
-        "error_message": "overflow encountered in exp",
-        "traceback": []
-      }
-    ]
-  },
+  "timestamp": "2026-07-20T00:29:58.299836",
+  "infrastructure": {},
   "project": {
-    "passed": 292,
-    "failed": 2,
+    "passed": 304,
+    "failed": 0,
     "skipped": 2,
-    "total": 296,
+    "total": 306,
     "warnings": 0,
-    "exit_code": 1,
-    "discovery_count": 296,
+    "exit_code": 0,
+    "discovery_count": 306,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 10.1,
-      "collection": 10.1,
-      "execution": 10.1
+      "setup": 11.74,
+      "collection": 11.74,
+      "execution": 11.74
     },
     "test_categories": {},
-    "coverage_percent": 95.1,
+    "coverage_percent": 96.4,
     "failed_tests": [
       {
-        "test": "tests/test_llm_runtime.py::test_build_llm_callable_returns_callable_when_infra_importable",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
+        "test": "tests/test_readme_config_consistency.py::test_readme_documented_default_matches_loader[llm-context_window-llm.context_window-`131072`]",
+        "error_type": "TimeoutError",
+        "error_message": "Test timed out (increase timeout or optimize test)"
       },
       {
-        "test": "tests/test_llm_runtime.py::test_returned_callable_signature_is_str_to_str",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
+        "test": "tests/test_readme_config_consistency.py::test_readme_documented_default_matches_loader[llm-long_max_tokens-llm.long_max_tokens-`16384`]",
+        "error_type": "TimeoutError",
+        "error_message": "Test timed out (increase timeout or optimize test)"
+      },
+      {
+        "test": "tests/test_readme_config_consistency.py::test_readme_documented_default_matches_loader[llm-max_input_length-llm.max_input_length-`600000`]",
+        "error_type": "TimeoutError",
+        "error_message": "Test timed out (increase timeout or optimize test)"
       }
     ]
   },
   "summary": {
-    "total_passed": 8235,
-    "total_failed": 9,
-    "total_skipped": 4,
-    "total_tests": 8248,
-    "all_passed": false,
-    "infrastructure_coverage": 84.5711614053923,
-    "project_coverage": 95.1
+    "total_passed": 304,
+    "total_failed": 0,
+    "total_skipped": 2,
+    "total_tests": 306,
+    "all_passed": true,
+    "project_coverage": 96.4
   }
 }

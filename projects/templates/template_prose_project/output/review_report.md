@@ -1,15 +1,15 @@
 # Editorial Quality at Scale: A Reproducible Prose-Review Pipeline
 
-_Files:_ **8** · _words:_ **1742** · _sentences:_ **86** · _paragraphs:_ **64**
+_Files:_ **8** · _words:_ **1745** · _sentences:_ **86** · _paragraphs:_ **64**
 
-_Avg FRE:_ 19.46 · _avg FKGL:_ 15.93 · _avg Gunning Fog:_ 16.69 · _unique citation keys:_ 6
+_Avg FRE:_ 19.19 · _avg FKGL:_ 15.97 · _avg Gunning Fog:_ 16.73 · _unique citation keys:_ 6
 
 ## Checks ✅
 
 | Check | Result | Detail |
 |---|---|---|
-| `grade_level_in_band` | ✅ | avg FKGL = 15.93 (target 10.0–18.0) |
-| `citation_density_above_floor` | ✅ | density = 4.59/1000 words (min 0.0) |
+| `grade_level_in_band` | ✅ | avg FKGL = 15.97 (target 10.0–18.0) |
+| `citation_density_above_floor` | ✅ | density = 4.58/1000 words (min 0.0) |
 | `no_skipped_heading_levels` | ✅ | 0 file(s) with skipped levels |
 | `every_file_has_h1` | ✅ | 0 file(s) missing H1 |
 | `bibliography_consistency` | ✅ | 6 cited / 6 in bib · 0 missing · 0 unused |
@@ -20,7 +20,7 @@ _Avg FRE:_ 19.46 · _avg FKGL:_ 15.93 · _avg Gunning Fog:_ 16.69 · _unique cit
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | `00_abstract.md` | 249 | 10 | 0.47 | 19.38 | 20.4 | 0 | 0 | 1 |
 | `01_introduction.md` | 258 | 9 | 2.96 | 19.97 | 21.08 | 3 | 0 | 1 |
-| `02_methodology.md` | 413 | 26 | 38.51 | 11.83 | 12.84 | 3 | 0 | 3 |
+| `02_methodology.md` | 416 | 26 | 37.26 | 12.04 | 13.03 | 3 | 0 | 3 |
 | `03_results.md` | 319 | 15 | 36.74 | 13.42 | 14.78 | 1 | 0 | 4 |
 | `04_conclusion.md` | 191 | 8 | 0.11 | 19.17 | 19.6 | 0 | 0 | 1 |
 | `05_pipeline_internals.md` | 17 | 3 | 11.98 | 13.0 | 14.03 | 0 | 0 | 0 |

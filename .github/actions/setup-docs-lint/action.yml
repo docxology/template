@@ -16,13 +16,17 @@ runs:
         path: ~/.cache/puppeteer
         key: puppeteer-chrome-headless-shell-${{ runner.os }}-v1
 
-    - name: Install mermaid-cli
+    - name: Install pinned repository documentation tooling
       shell: bash
-      run: npm install -g @mermaid-js/mermaid-cli
+      working-directory: ${{ github.workspace }}
+      run: |
+        npm ci --ignore-scripts --no-audit --no-fund
+        echo "${{ github.workspace }}/node_modules/.bin" >> "$GITHUB_PATH"
 
     - name: Install chrome-headless-shell for puppeteer
       shell: bash
-      run: npx --yes puppeteer browsers install chrome-headless-shell
+      working-directory: ${{ github.workspace }}
+      run: npx --no-install puppeteer browsers install chrome-headless-shell
 
     - name: Locate chrome-headless-shell binary
       shell: bash
@@ -35,3 +39,8 @@ runs:
         fi
         echo "CHROME_EXECUTABLE_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
         echo "Resolved chrome at: $CHROME_PATH"
+
+    - name: Verify pinned Mermaid CLI
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: npx --no-install mmdc --version

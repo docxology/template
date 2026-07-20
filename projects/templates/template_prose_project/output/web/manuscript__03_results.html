@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <p>After running <code>scripts/run_prose_pipeline.py</code> with the
 bundled <code>manuscript/config.yaml</code> and the manuscript described
@@ -234,13 +238,13 @@ starts with an H1.</li>
 </ul>
 <p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
 2011 palette) [wong2011points], 300 dpi, and PNG-only for archival
-stability. They are referenced in <span class="citation"
-data-cites="sec:pipeline_internals">[@sec:pipeline_internals]</span>
-where we walk through the on-disk artefact set in full.</p>
+stability. They are referenced in [sec:pipeline_internals] where we walk
+through the on-disk artefact set in full.</p>
 <p>The full pass/fail summary lands in
 <code>output/review_report.md</code>, which is itself a Markdown file
 rendered alongside the manuscript by Pandoc — i.e. the project reports
 on itself in the same compilation step that produces the manuscript
 PDF.</p>
+</main>
 </body>
 </html>

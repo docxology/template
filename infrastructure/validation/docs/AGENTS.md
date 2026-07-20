@@ -99,10 +99,13 @@ in order: an explicit path argument, `CHROME_EXECUTABLE_PATH`, a `chrome-headles
 under `~/.cache/puppeteer/`, then macOS system Chrome. **If none of these resolve — or the
 puppeteer cache is missing its pinned browser — every diagram fails (exit 124 timeouts or
 "Could not find Chrome"), which reads as a lint failure but is an environment defect.**
-Provision the headless shell once per machine:
+From the repository root, install the pinned local CLI and provision the
+headless shell once per machine:
 
 ```bash
-npx -y @puppeteer/browsers install chrome-headless-shell --path ~/.cache/puppeteer
+npm ci
+export PATH="$PWD/node_modules/.bin:$PATH"
+npx --no-install puppeteer browsers install chrome-headless-shell
 ```
 
 System GUI Chrome works as a fallback but can hang under `--no-sandbox` batch rendering;

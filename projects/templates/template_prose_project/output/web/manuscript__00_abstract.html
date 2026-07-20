@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:abstract">Abstract</h1>
 <p>This paper documents <code>template_prose_project</code>, the
 prose-focused exemplar of the <a
@@ -199,10 +203,10 @@ three figures (per-file word counts, readability metrics, citation
 density) and a JSON <code>manuscript_report.json</code> suitable for CI
 artefacts.</p>
 <p><strong>Run snapshot.</strong> The current configuration analyses 8
-file(s) totalling 1742 words across 86 sentence(s) and 64 paragraph(s).
-Average Flesch-Kincaid grade level is 15.93; average Gunning Fog index
-is 16.69; the manuscript references 6 unique citation key(s); the
-longest section is 413 words and the shortest is 17. These numbers are
+file(s) totalling 1745 words across 86 sentence(s) and 64 paragraph(s).
+Average Flesch-Kincaid grade level is 15.97; average Gunning Fog index
+is 16.73; the manuscript references 6 unique citation key(s); the
+longest section is 416 words and the shortest is 17. These numbers are
 auto-substituted by
 <code>scripts/z_generate_manuscript_variables.py</code> after every run,
 so the abstract tracks the JSON outputs in <code>output/</code>.</p>
@@ -214,5 +218,6 @@ configurable</em> exemplar
 to the bibliography and the manuscript pipeline.</p>
 <p><strong>Keywords:</strong> prose analysis, readability, editorial
 review, reproducible manuscript review, scientific infrastructure</p>
+</main>
 </body>
 </html>

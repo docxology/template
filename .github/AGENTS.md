@@ -220,7 +220,7 @@ uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run r
 
 # Run tests locally (mirror CI)
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv sync --group rendering --group monitoring --group discopy
+uv sync --group public-exemplars
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 

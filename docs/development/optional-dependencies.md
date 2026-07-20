@@ -1,8 +1,10 @@
 # Optional Dependencies & Capability Matrix
 
 This template is modular: the core pipeline (tests, analysis, PDF rendering of the
-default path) runs without any optional external tools, and several capabilities
-layer on top only when an optional dependency is installed. This page documents
+default path) runs without research-network or publishing clients, and several
+capabilities layer on top only when an optional dependency is installed. The
+default `public-exemplars` group is the deterministic exception: it covers the
+runtime surface needed to test every canonical public exemplar. This page documents
 **which optional dependency gates which tests and features**, **how the gate
 behaves when the dependency is missing** (skip vs. fail-loud), **how to opt out**,
 and **how to install** each one.

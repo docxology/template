@@ -63,9 +63,9 @@ Structured manifest: `../data/transmission_manifest.json`
 
 This paper documents `template_prose_project`, the prose-focused exemplar of the [Research Project Template](https://github.com/docxology/template). It pairs the template's two-layer architecture with the [prose analysis infrastructure](https://github.com/docxology/template/tree/main/infrastructure/prose) (readability metrics, structural outline, editorial quality flags) and the [reference validation infrastructure](https://github.com/docxology/template/tree/main/infrastructure/reference) (BibTeX validation), demonstrating that **rigorous editorial review can be expressed as a configurable, deterministic pipeline** with no novel domain algorithm of its own.
 
-A single `manuscript/config.yaml` defines target grade-level bands, citation-density floors, structural rules (every section has an H1, no heading levels skipped), and bibliography-consistency policy. The pipeline reads the manuscript, runs the prose analysers, cross-checks every `[key]` citation against `manuscript/references.bib`, evaluates the configured checks, and writes a deterministic markdown review report alongside three figures (per-file word counts, readability metrics, citation density) and a JSON `manuscript_report.json` suitable for CI artefacts.
+A single `manuscript/config.yaml` defines target grade-level bands, citation-density floors, structural rules (every section has an H1, no heading levels skipped), and bibliography-consistency policy. The pipeline reads the manuscript, runs the prose analysers, cross-checks every `[@key]` citation against `manuscript/references.bib`, evaluates the configured checks, and writes a deterministic markdown review report alongside three figures (per-file word counts, readability metrics, citation density) and a JSON `manuscript_report.json` suitable for CI artefacts.
 
-**Run snapshot.** The current configuration analyses 8 file(s) totalling 1742 words across 86 sentence(s) and 64 paragraph(s). Average Flesch-Kincaid grade level is 15.93; average Gunning Fog index is 16.69; the manuscript references 6 unique citation key(s); the longest section is 413 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
+**Run snapshot.** The current configuration analyses 8 file(s) totalling 1745 words across 86 sentence(s) and 64 paragraph(s). Average Flesch-Kincaid grade level is 15.97; average Gunning Fog index is 16.73; the manuscript references 6 unique citation key(s); the longest section is 416 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
 
 The contribution is methodological and architectural: a *generic, reusable* prose-quality module (`infrastructure/prose/`) that any project in the template can opt into, plus a *minimal, configurable* exemplar (`projects/templates/template_prose_project/`) that wires it to the bibliography and the manuscript pipeline.
 
@@ -79,7 +79,7 @@ The contribution is methodological and architectural: a *generic, reusable* pros
 
 # Introduction {#sec:introduction}
 
-Editorial review is one of the longest-lived bottlenecks in scientific writing — and an obvious target for the kind of *reproducible computational workflow* advocated by [peng2011reproducible]. A working draft accumulates structural drift (skipped heading levels, sections that have grown to 2,000 words while their siblings sit at 200), readability drift (a once-clean introduction now reads at the Gunning Fog level of a legal contract [gunning1952technique]), and citation drift (`[key]` references that no longer exist in `references.bib`, or bibliography entries that nobody actually cites). The traditional remedy — a senior co-author re-reading the manuscript with [strunk2000elements] in hand — is slow, non-reproducible, and impossible to apply continuously.
+Editorial review is one of the longest-lived bottlenecks in scientific writing — and an obvious target for the kind of *reproducible computational workflow* advocated by [@peng2011reproducible]. A working draft accumulates structural drift (skipped heading levels, sections that have grown to 2,000 words while their siblings sit at 200), readability drift (a once-clean introduction now reads at the Gunning Fog level of a legal contract [@gunning1952technique]), and citation drift (`[@key]` references that no longer exist in `references.bib`, or bibliography entries that nobody actually cites). The traditional remedy — a senior co-author re-reading the manuscript with [@strunk2000elements] in hand — is slow, non-reproducible, and impossible to apply continuously.
 
 `template_prose_project` exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**. This project carries no novel research contribution of its own; its purpose is to show how to compose existing template infrastructure into a complete, reproducible editorial workflow.
 
@@ -105,11 +105,11 @@ The pipeline runs in five stages, each a pure function in the project's `src/` m
 
 For each file, three analysers run in parallel:
 
-* **Metrics** (`infrastructure.prose.analysis.metrics`) — word, sentence, paragraph, syllable counts; average words per sentence; average syllables per word; complex-word fraction; Flesch Reading Ease [flesch1948new]; Flesch-Kincaid Grade Level [kincaid1975derivation]; Gunning Fog Index [gunning1952technique]. The implementations are textbook formulae over a vowel-group syllable heuristic; they're good enough for a writer-facing signal, not for linguistic research.
+* **Metrics** (`infrastructure.prose.analysis.metrics`) — word, sentence, paragraph, syllable counts; average words per sentence; average syllables per word; complex-word fraction; Flesch Reading Ease [@flesch1948new]; Flesch-Kincaid Grade Level [@kincaid1975derivation]; Gunning Fog Index [@gunning1952technique]. The implementations are textbook formulae over a vowel-group syllable heuristic; they're good enough for a writer-facing signal, not for linguistic research.
 
 * **Structure** (`infrastructure.prose.analysis.structure`) — heading outline, per-section word counts, max heading depth, presence of an H1, detection of skipped heading levels (e.g. an H1 followed directly by an H3).
 
-* **Quality** (`infrastructure.prose.analysis.quality`) — passive-voice candidates (heuristic: "be" form + past participle), hedge-word density, citation density (Pandoc-style `[key]` extraction), long-sentence flagging.
+* **Quality** (`infrastructure.prose.analysis.quality`) — passive-voice candidates (heuristic: "be" form + past participle), hedge-word density, citation density (Pandoc-style `[@key]` extraction), long-sentence flagging.
 
 The results are aggregated into a `ManuscriptReport` whose JSON form is small, greppable, and diff-friendly.
 
@@ -119,7 +119,7 @@ Every cited key is matched against the BibTeX file at `bibliography.references_p
 
 | Setting | Effect |
 |---|---|
-| `fail_on_missing: true` | Any cited `[key]` that does not exist in the bib fails the check. |
+| `fail_on_missing: true` | Any cited `[@key]` that does not exist in the bib fails the check. |
 | `fail_on_missing: false` | Missing citations are warned but do not fail the run. |
 | `fail_on_unused: true` | Bib entries that are never cited fail the check. |
 | `fail_on_unused: false` | Unused entries are warned but do not fail. |
@@ -154,7 +154,8 @@ stages always see a fresh review):
 * `scripts/run_prose_pipeline.py` writes `output/manuscript_report.json`
   (the raw `ManuscriptReport`), `output/checks.json` (the list of check
   results), `output/review_report.md` (the human-readable review report),
-  and `output/run_summary.json` (one-line metadata).
+  `output/evidence_summary.json` (versioned diagnostic-only evidence), and
+  `output/run_summary.json` (one-line metadata).
 * `scripts/y_generate_prose_figures.py` reads `manuscript_report.json`
   and writes `../figures/{section_word_counts,readability_metrics,citation_density}.png`.
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
@@ -190,9 +191,9 @@ The pass/fail status of each configured check is recorded in `output/checks.json
 * **`citation_density_above_floor`** — citations per 1000 words must meet `prose.citation_density_min_per_1000`. The bundled config sets the floor to `0.0` (disabled) so the run is green out of the box; researchers should raise it to match the publication target.
 * **`no_skipped_heading_levels`** — every file in this manuscript uses contiguous heading levels.
 * **`every_file_has_h1`** — every prose file starts with an H1.
-* **`bibliography_consistency`** — every `[key]` in the prose resolves against `manuscript/references.bib`.
+* **`bibliography_consistency`** — every `[@key]` in the prose resolves against `manuscript/references.bib`.
 
-The figures in `../figures/` are colour-blind-safe (Wong 2011 palette) [wong2011points], 300 dpi, and PNG-only for archival stability. They are referenced in [@sec:pipeline_internals] where we walk through the on-disk artefact set in full.
+The figures in `../figures/` are colour-blind-safe (Wong 2011 palette) [@wong2011points], 300 dpi, and PNG-only for archival stability. They are referenced in [@sec:pipeline_internals] where we walk through the on-disk artefact set in full.
 
 The full pass/fail summary lands in `output/review_report.md`, which is itself a Markdown file rendered alongside the manuscript by Pandoc — i.e. the project reports on itself in the same compilation step that produces the manuscript PDF.
 
@@ -332,7 +333,7 @@ classDiagram
 
 # Reproducibility {#sec:reproducibility}
 
-The bundled `manuscript/config.yaml` is configured for the **strict reproducibility** discipline advocated for computational science by [peng2011reproducible]:
+The bundled `manuscript/config.yaml` is configured for the **strict reproducibility** discipline advocated for computational science by [@peng2011reproducible]:
 
 1. **No network calls.** All analysis is local: prose metrics, structure, quality flags, and bibliography validation are computed from in-repo files only.
 2. **Deterministic outputs.** `compute_metrics`, `analyze_structure`, and `analyze_quality` are pure functions over their input strings. The same manuscript text + the same `config.yaml` produces byte-identical JSON artefacts (modulo timestamp metadata in any caches the project later adds).
@@ -373,9 +374,9 @@ The diff should be empty. If it is not, the pipeline has acquired non-determinis
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
-This project does not auto-generate the bibliography — it **validates** that every `[key]` cited in the prose has a matching entry, via [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md). The check policy is configured under `bibliography:` in [`config.yaml`](config.yaml).
+This project does not auto-generate the bibliography — it **validates** that every `[@key]` cited in the prose has a matching entry, via [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md). The check policy is configured under `bibliography:` in [`config.yaml`](config.yaml).
 
 To validate that `references.bib` is syntactically clean:
 

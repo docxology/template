@@ -1,10 +1,10 @@
 {
-  "total_words": 1742,
+  "total_words": 1745,
   "total_sentences": 86,
   "total_paragraphs": 64,
-  "avg_flesch_reading_ease": 19.46,
-  "avg_flesch_kincaid_grade": 15.93,
-  "avg_gunning_fog": 16.69,
+  "avg_flesch_reading_ease": 19.19,
+  "avg_flesch_kincaid_grade": 15.97,
+  "avg_gunning_fog": 16.73,
   "citation_keys": [
     "peng2011reproducible",
     "gunning1952technique",
@@ -138,21 +138,21 @@
     {
       "name": "02_methodology.md",
       "metrics": {
-        "char_count": 3050,
-        "word_count": 413,
+        "char_count": 3091,
+        "word_count": 416,
         "sentence_count": 26,
         "paragraph_count": 23,
-        "syllable_count": 743,
-        "avg_words_per_sentence": 15.885,
-        "avg_syllables_per_word": 1.799,
-        "complex_word_count": 67,
-        "complex_word_fraction": 0.162,
-        "flesch_reading_ease": 38.51,
-        "flesch_kincaid_grade": 11.83,
-        "gunning_fog": 12.84
+        "syllable_count": 754,
+        "avg_words_per_sentence": 16.0,
+        "avg_syllables_per_word": 1.812,
+        "complex_word_count": 69,
+        "complex_word_fraction": 0.166,
+        "flesch_reading_ease": 37.26,
+        "flesch_kincaid_grade": 12.04,
+        "gunning_fog": 13.03
       },
       "structure": {
-        "total_words": 579,
+        "total_words": 586,
         "max_depth": 2,
         "has_h1": true,
         "has_skipped_level": false,
@@ -223,19 +223,19 @@
             "level": 2,
             "title": "Render",
             "line": 46,
-            "word_count": 173
+            "word_count": 180
           }
         ]
       },
       "quality": {
-        "word_count": 413,
+        "word_count": 416,
         "passive_count": 3,
         "hedge_count": 0,
         "citation_count": 3,
         "long_sentence_count": 6,
-        "passive_density_per_1000": 7.26,
+        "passive_density_per_1000": 7.21,
         "hedge_density_per_1000": 0.0,
-        "citation_density_per_1000": 7.26,
+        "citation_density_per_1000": 7.21,
         "citation_keys": [
           "flesch1948new",
           "kincaid1975derivation",
@@ -253,7 +253,7 @@
           "The implementations are textbook formulae over a vowel-group syllable heuristic; they're good enough for a writer-facing signal, not for linguistic research.\n\n* **Structure** () — heading outline, per-section word counts, max heading depth, presence of an H1, detection of skipped heading levels (e.g. an H1 followed directly by an H3).\n\n* **Quality** () — passive-voice candidates (heuristic: \"be\" form + past participle), hedge-word density, citation density (Pandoc-style  extraction), long-sentence flagging.",
           "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block.",
           "Each check produces a ; the run's  flag is the conjunction.\n\n## Render\n\n writes a markdown file with:\n\n* Top-line counts (files, words, sentences, paragraphs, averages).\n* A pass/fail table for every check.\n* Per-file metrics table (word count, sentence count, FRE, FKGL, Fog, citations, hedges, passives).\n* Heading outline per file.\n* Quality-flag callouts (long sentences, passive candidates, hedges) per file.",
-          "Three orchestrators run in lexicographic order (so the figure and variable\nstages always see a fresh review):\n\n*  writes \n  (the raw ),  (the list of check\n  results),  (the human-readable review report),\n  and  (one-line metadata).\n*  reads \n  and writes .\n*  reads \n  +  and writes \n  along with a resolved manuscript tree under .\n*  is **not** modified by this pipeline — the prose project does not generate citations, only validates them."
+          "Three orchestrators run in lexicographic order (so the figure and variable\nstages always see a fresh review):\n\n*  writes \n  (the raw ),  (the list of check\n  results),  (the human-readable review report),\n   (versioned diagnostic-only evidence), and\n   (one-line metadata).\n*  reads \n  and writes .\n*  reads \n  +  and writes \n  along with a resolved manuscript tree under .\n*  is **not** modified by this pipeline — the prose project does not generate citations, only validates them."
         ]
       }
     },

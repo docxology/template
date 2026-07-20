@@ -397,6 +397,8 @@ _LATEX_NUMERIC_SUBSCRIPT_RE = re.compile(r"(?<![A-Za-z0-9_:])([A-Za-z])_(?:\{\d+
 _PANDOC_CITATION_BLOCK_RE = re.compile(r"\[(@[^\]]+)\]")
 _CITATION_LOCATOR_RE = re.compile(r",\s*(?:pp?\.|chap\.|sec\.)\s*\d+(?:\s*[–-]\s*\d+)?", re.IGNORECASE)
 _ORDERED_LIST_PREFIX_RE = re.compile(r"^\s*\d{1,4}[.)]\s+")
+_STRUCTURAL_ORDINAL_RE = re.compile(r"\b(?:table|figure|fig\.|tbl\.)\s+\d+\b", re.IGNORECASE)
+_PIPELINE_STAGE_CELL_RE = re.compile(r"(?<=\|)\s*0\d{1,2}(?=\s*\|)")
 _STRICT_HEADINGS = frozenset({"abstract", "results", "evaluation", "findings", "experiments", "analysis"})
 _LENIENT_HEADINGS = frozenset({"introduction", "background", "related work", "discussion", "conclusion"})
 _ALWAYS_ALLOWED_NUMBERS = frozenset({"0", "1", "2", "3", "4", "5", "10", "100"})
@@ -433,6 +435,11 @@ def _strip_nonclaim_markdown(text: str) -> str:
         lambda match: f"[{_CITATION_LOCATOR_RE.sub('', match.group(1))}]",
         stripped,
     )
+    stripped = _STRUCTURAL_ORDINAL_RE.sub("", stripped)
+    # Artifact inventories use zero-padded stage numbers as structural IDs
+    # (for example ``| fulltext_assessment.json | 06 |``), not quantitative
+    # manuscript claims.  Keep ordinary numeric table cells fully validated.
+    stripped = _PIPELINE_STAGE_CELL_RE.sub("|", stripped)
     return _ORDERED_LIST_PREFIX_RE.sub("", stripped)
 
 

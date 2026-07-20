@@ -1190,6 +1190,24 @@
     },
     {
       "contract_match": true,
+      "path": "output/reports/test_results.json",
+      "sha256": "f063b021c5073d2cfd278cb0b18a2a317bd4ba6590511e7eeafe13d434e1cd90",
+      "size_bytes": 619,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/test_results.md",
+      "sha256": "d087dce5cf536600a6a476ad2d5bd43eb50c0dbb8ffb29ab84f28aadc82c94d7",
+      "size_bytes": 293,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/visualization_quality_audit.json",
       "sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
       "size_bytes": 39680,

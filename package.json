@@ -1,0 +1,8 @@
+{
+  "name": "research-project-template-tooling",
+  "private": true,
+  "description": "Pinned repository tooling for documentation validation",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "11.16.0"
+  }
+}

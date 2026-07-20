@@ -71,7 +71,7 @@ dev = [
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
 package = false  # This is not a distributable package
-default-groups = ["dev", "rendering", "discopy", "steganography"]
+default-groups = ["dev", "rendering", "discopy", "steganography", "active-inference", "public-exemplars"]
 
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
@@ -539,10 +539,14 @@ The `[tool.uv]` section supports a `default-groups` key that controls which depe
 
 ```toml
 [tool.uv]
-default-groups = ["dev", "rendering", "discopy", "steganography"]
+default-groups = ["dev", "rendering", "discopy", "steganography", "active-inference", "public-exemplars"]
 ```
 
-`monitoring` (which carries `psutil`) is **not** in `default-groups` — it's opt-in via `uv sync --group monitoring`, used to mirror CI extras locally. Without any `default-groups` entry at all, `uv sync` only installs the base `dependencies`.
+The `public-exemplars` group includes the deterministic scientific, monitoring,
+LLM-client, and PPTX dependencies needed to collect and run every canonical
+public exemplar. Network retrieval, credentialed model calls, publishing, and
+other heavyweight lanes remain explicitly opt-in. Without any
+`default-groups` entry at all, `uv sync` only installs the base `dependencies`.
 
 > **Important:** Projects with their own `.venv` (e.g., `projects/templates/template_code_project/.venv`) do NOT inherit root-level dependencies. Infrastructure code that runs inside project-local venvs must use resilient import patterns:
 

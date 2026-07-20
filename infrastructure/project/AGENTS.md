@@ -58,6 +58,17 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `smoke_public_exemplars(...)` - apply the same isolated contract to the canonical public roster.
 - Thin gate: `uv run python scripts/gates/exemplar_export_smoke.py` (use repeated `--project` for a focused run).
 
+### Public Readiness (`public_readiness.py`)
+
+- `run_public_readiness(repo_root)` runs one isolated `stage_01_test.py`
+  subprocess for every `PUBLIC_PROJECT_NAMES` entry and records stable
+  PASS/FAIL/SKIP results.
+- The gate fails closed when a public exemplar is absent. Private symlinked
+  lifecycle projects are never included.
+- Use `scripts/gates/public_readiness.py --json` for machine-readable output;
+  `--include-ollama-tests --allow-skips` is reserved for the optional service
+  lane.
+
 ### Domain Profile (`domain_profile.py`)
 
 - `load_domain_profile(project_root, *, default_profile="generic")` - load a project's optional domain profile (validators, render tracks, defaults)

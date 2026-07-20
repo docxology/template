@@ -96,10 +96,10 @@ def run_mermaid_lint(repo_root: Path, *, quiet: bool) -> list[ValidationFailure]
         logger.info("mermaid: discovered %d blocks", len(blocks))
     if not mmdc_available():
         raise RuntimeError(
-            "mmdc (mermaid-cli) not on PATH. Install with "
-            "`npm install -g @mermaid-js/mermaid-cli` and provide a Chrome binary "
+            "mmdc (mermaid-cli) not on PATH. From the repository root, run "
+            '`npm ci` and `export PATH="$PWD/node_modules/.bin:$PATH"`; provide a Chrome binary '
             "(set CHROME_EXECUTABLE_PATH or run "
-            "`npx puppeteer browsers install chrome-headless-shell`)."
+            "`npx --no-install puppeteer browsers install chrome-headless-shell`)."
         )
     return validate_blocks(blocks)
 

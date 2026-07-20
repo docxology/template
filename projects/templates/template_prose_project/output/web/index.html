@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Readability, structural, and citation-density gating for research manuscripts" />
   <title>Editorial Quality at Scale: A Reproducible Prose-Review
 Pipeline</title>
   <style>
@@ -238,17 +240,52 @@ Pipeline</title>
     code span.va { color: #19177c; } /* Variable */
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <script data-template-mathjax-config>
 window.MathJax = window.MathJax || {};
 window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -267,11 +304,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -287,34 +319,61 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -346,6 +405,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -353,7 +417,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -369,17 +433,24 @@ img {
 }
 
 a {
-  color: red;
-  text-decoration: none;
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -389,14 +460,32 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
-  color: red;
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -414,7 +503,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -422,11 +511,13 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Editorial Quality at Scale: A Reproducible
 Prose-Review Pipeline</h1>
 <p class="subtitle">Readability, structural, and citation-density gating
 for research manuscripts</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -474,6 +565,7 @@ class="toc-section-number">7.2</span> Determinism guarantees</a></li>
 class="toc-section-number">8</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <p><strong>State:</strong> published</p>
 <p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
 URL)</p>
@@ -537,14 +629,14 @@ confirm they resolve to this release pairing.</li>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
 <img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" />
-<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+<figcaption>Publication pairing flow</figcaption>
 </figure>
 <p><strong>Stego:</strong> off | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
@@ -568,17 +660,17 @@ own.</p>
 grade-level bands, citation-density floors, structural rules (every
 section has an H1, no heading levels skipped), and
 bibliography-consistency policy. The pipeline reads the manuscript, runs
-the prose analysers, cross-checks every <code>[key]</code> citation
+the prose analysers, cross-checks every <code>[@key]</code> citation
 against <code>manuscript/references.bib</code>, evaluates the configured
 checks, and writes a deterministic markdown review report alongside
 three figures (per-file word counts, readability metrics, citation
 density) and a JSON <code>manuscript_report.json</code> suitable for CI
 artefacts.</p>
 <p><strong>Run snapshot.</strong> The current configuration analyses 8
-file(s) totalling 1742 words across 86 sentence(s) and 64 paragraph(s).
-Average Flesch-Kincaid grade level is 15.93; average Gunning Fog index
-is 16.69; the manuscript references 6 unique citation key(s); the
-longest section is 413 words and the shortest is 17. These numbers are
+file(s) totalling 1745 words across 86 sentence(s) and 64 paragraph(s).
+Average Flesch-Kincaid grade level is 15.97; average Gunning Fog index
+is 16.73; the manuscript references 6 unique citation key(s); the
+longest section is 416 words and the shortest is 17. These numbers are
 auto-substituted by
 <code>scripts/z_generate_manuscript_variables.py</code> after every run,
 so the abstract tracks the JSON outputs in <code>output/</code>.</p>
@@ -595,17 +687,22 @@ review, reproducible manuscript review, scientific infrastructure</p>
 class="header-section-number">2</span> Introduction</h1>
 <p>Editorial review is one of the longest-lived bottlenecks in
 scientific writing — and an obvious target for the kind of
-<em>reproducible computational workflow</em> advocated by
-[peng2011reproducible]. A working draft accumulates structural drift
-(skipped heading levels, sections that have grown to 2,000 words while
-their siblings sit at 200), readability drift (a once-clean introduction
-now reads at the Gunning Fog level of a legal contract
-[gunning1952technique]), and citation drift (<code>[key]</code>
-references that no longer exist in <code>references.bib</code>, or
-bibliography entries that nobody actually cites). The traditional remedy
-— a senior co-author re-reading the manuscript with [strunk2000elements]
-in hand — is slow, non-reproducible, and impossible to apply
-continuously.</p>
+<em>reproducible computational workflow</em> advocated by <span
+class="citation" data-cites="peng2011reproducible">(<a
+href="#ref-peng2011reproducible" role="doc-biblioref">Peng
+2011</a>)</span>. A working draft accumulates structural drift (skipped
+heading levels, sections that have grown to 2,000 words while their
+siblings sit at 200), readability drift (a once-clean introduction now
+reads at the Gunning Fog level of a legal contract <span
+class="citation" data-cites="gunning1952technique">(<a
+href="#ref-gunning1952technique" role="doc-biblioref">Gunning
+1952</a>)</span>), and citation drift (<code>[@key]</code> references
+that no longer exist in <code>references.bib</code>, or bibliography
+entries that nobody actually cites). The traditional remedy — a senior
+co-author re-reading the manuscript with <span class="citation"
+data-cites="strunk2000elements">(<a href="#ref-strunk2000elements"
+role="doc-biblioref">Strunk and White 2000</a>)</span> in hand — is
+slow, non-reproducible, and impossible to apply continuously.</p>
 <p><code>template_prose_project</code> exists to demonstrate that the
 editorial-review pass can be expressed as a <strong>deterministic,
 configurable, infrastructure-backed pipeline</strong>. This project
@@ -653,11 +750,17 @@ class="header-section-number">3.2</span> Analyse</h2>
 <li><p><strong>Metrics</strong>
 (<code>infrastructure.prose.analysis.metrics</code>) — word, sentence,
 paragraph, syllable counts; average words per sentence; average
-syllables per word; complex-word fraction; Flesch Reading Ease
-[flesch1948new]; Flesch-Kincaid Grade Level [kincaid1975derivation];
-Gunning Fog Index [gunning1952technique]. The implementations are
-textbook formulae over a vowel-group syllable heuristic; they’re good
-enough for a writer-facing signal, not for linguistic research.</p></li>
+syllables per word; complex-word fraction; Flesch Reading Ease <span
+class="citation" data-cites="flesch1948new">(<a
+href="#ref-flesch1948new" role="doc-biblioref">Flesch 1948</a>)</span>;
+Flesch-Kincaid Grade Level <span class="citation"
+data-cites="kincaid1975derivation">(<a href="#ref-kincaid1975derivation"
+role="doc-biblioref">Kincaid et al. 1975</a>)</span>; Gunning Fog Index
+<span class="citation" data-cites="gunning1952technique">(<a
+href="#ref-gunning1952technique" role="doc-biblioref">Gunning
+1952</a>)</span>. The implementations are textbook formulae over a
+vowel-group syllable heuristic; they’re good enough for a writer-facing
+signal, not for linguistic research.</p></li>
 <li><p><strong>Structure</strong>
 (<code>infrastructure.prose.analysis.structure</code>) — heading
 outline, per-section word counts, max heading depth, presence of an H1,
@@ -666,7 +769,7 @@ H3).</p></li>
 <li><p><strong>Quality</strong>
 (<code>infrastructure.prose.analysis.quality</code>) — passive-voice
 candidates (heuristic: “be” form + past participle), hedge-word density,
-citation density (Pandoc-style <code>[key]</code> extraction),
+citation density (Pandoc-style <code>[@key]</code> extraction),
 long-sentence flagging.</p></li>
 </ul>
 <p>The results are aggregated into a <code>ManuscriptReport</code> whose
@@ -690,7 +793,7 @@ behaviours via <code>config.yaml</code>:</p>
 <tbody>
 <tr>
 <td><code>fail_on_missing: true</code></td>
-<td>Any cited <code>[key]</code> that does not exist in the bib fails
+<td>Any cited <code>[@key]</code> that does not exist in the bib fails
 the check.</td>
 </tr>
 <tr>
@@ -752,8 +855,9 @@ variable stages always see a fresh review):</p>
 <code>output/manuscript_report.json</code> (the raw
 <code>ManuscriptReport</code>), <code>output/checks.json</code> (the
 list of check results), <code>output/review_report.md</code> (the
-human-readable review report), and <code>output/run_summary.json</code>
-(one-line metadata).</li>
+human-readable review report), <code>output/evidence_summary.json</code>
+(versioned diagnostic-only evidence), and
+<code>output/run_summary.json</code> (one-line metadata).</li>
 <li><code>scripts/y_generate_prose_figures.py</code> reads
 <code>manuscript_report.json</code> and writes
 <code>../figures/{section_word_counts,readability_metrics,citation_density}.png</code>.</li>
@@ -824,14 +928,15 @@ in this manuscript uses contiguous heading levels.</li>
 <li><strong><code>every_file_has_h1</code></strong> — every prose file
 starts with an H1.</li>
 <li><strong><code>bibliography_consistency</code></strong> — every
-<code>[key]</code> in the prose resolves against
+<code>[@key]</code> in the prose resolves against
 <code>manuscript/references.bib</code>.</li>
 </ul>
 <p>The figures in <code>../figures/</code> are colour-blind-safe (Wong
-2011 palette) [wong2011points], 300 dpi, and PNG-only for archival
-stability. They are referenced in sec. <a
-href="#sec:pipeline_internals">6</a> where we walk through the on-disk
-artefact set in full.</p>
+2011 palette) <span class="citation" data-cites="wong2011points">(<a
+href="#ref-wong2011points" role="doc-biblioref">Wong 2011</a>)</span>,
+300 dpi, and PNG-only for archival stability. They are referenced in
+sec. <a href="#sec:pipeline_internals">6</a> where we walk through the
+on-disk artefact set in full.</p>
 <p>The full pass/fail summary lands in
 <code>output/review_report.md</code>, which is itself a Markdown file
 rendered alongside the manuscript by Pandoc — i.e. the project reports
@@ -976,7 +1081,9 @@ class="header-section-number">6.1</span> Data structures</h2>
 class="header-section-number">7</span> Reproducibility</h1>
 <p>The bundled <code>manuscript/config.yaml</code> is configured for the
 <strong>strict reproducibility</strong> discipline advocated for
-computational science by [peng2011reproducible]:</p>
+computational science by <span class="citation"
+data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>)</span>:</p>
 <ol type="1">
 <li><strong>No network calls.</strong> All analysis is local: prose
 metrics, structure, quality flags, and bibliography validation are
@@ -1068,12 +1175,12 @@ class="header-section-number">8</span> References</h1>
 <p>Bibliography lives in <a
 href="references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
-<code>--natbib</code>, so every <code>[key]</code> citation in the
+<code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate
 <code>\cite{}</code>/<code>\citep{}</code>/<code>\citet{}</code> LaTeX
 command and resolved against the bib file.</p>
 <p>This project does not auto-generate the bibliography — it
-<strong>validates</strong> that every <code>[key]</code> cited in the
+<strong>validates</strong> that every <code>[@key]</code> cited in the
 prose has a matching entry, via <a
 href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>.
 The check policy is configured under <code>bibliography:</code> in <a
@@ -1090,10 +1197,44 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p><strong>Prior:</strong> <code>v0.4.1</code> ·
 <code>10.5281/zenodo.20417104</code> · <code>b59313ea…</code></p>
 <!-- END OF TRANSMISSION -->
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-flesch1948new" class="csl-entry" role="listitem">
+Flesch, Rudolf. 1948. <span>“A New Readability Yardstick.”</span>
+<em>Journal of Applied Psychology</em> 32 (3): 221–33. <a
+href="https://doi.org/10.1037/h0057532">https://doi.org/10.1037/h0057532</a>.
+</div>
+<div id="ref-gunning1952technique" class="csl-entry" role="listitem">
+Gunning, Robert. 1952. <em>The Technique of Clear Writing</em>.
+McGraw-Hill.
+</div>
+<div id="ref-kincaid1975derivation" class="csl-entry" role="listitem">
+Kincaid, J Peter, Robert P Fishburne, Richard L Rogers, and Brad S
+Chissom. 1975. <span>“Derivation of New Readability Formulas (Automated
+Readability Index, Fog Count and Flesch Reading Ease Formula) for Navy
+Enlisted Personnel.”</span> <em>Naval Technical Training Command
+Research Branch Report</em>, nos. 8-75.
+</div>
+<div id="ref-peng2011reproducible" class="csl-entry" role="listitem">
+Peng, Roger D. 2011. <span>“Reproducible Research in Computational
+Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
+href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
+</div>
+<div id="ref-strunk2000elements" class="csl-entry" role="listitem">
+Strunk, William, and E. B. White. 2000. <em>The Elements of Style</em>.
+4th ed. Allyn &amp; Bacon.
+</div>
+<div id="ref-wong2011points" class="csl-entry" role="listitem">
+Wong, Bang. 2011. <span>“Points of View: Color Blindness.”</span>
+<em>Nature Methods</em> 8 (6): 441. <a
+href="https://doi.org/10.1038/nmeth.1618">https://doi.org/10.1038/nmeth.1618</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

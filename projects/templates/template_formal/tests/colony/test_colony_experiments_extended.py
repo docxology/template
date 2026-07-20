@@ -158,14 +158,16 @@ _BASE_KWARGS: dict[str, object] = {
 """The same calibrated baseline ``test_colony_convergence_statistics.py``
 binds its >0.8 Wilson-lower-bound claim to."""
 
-_WALL_CLOCK_BUDGET_SECONDS = 180.0
-"""Generous soft budget covering all experiments combined (measured locally:
+_CPU_TIME_BUDGET_SECONDS = 180.0
+"""Generous process-CPU budget covering each experiment batch (measured locally:
 decay sweep ~24s, real-vs-null N=150+150 ~9s, heterogeneity sweep ~16s,
 zero-deposit real mechanism N=150 ~13s, capped low-decay ablation (2 points
 x n=60) ~8s, sensed-concentration-cap dose-response sweep (7 points x n=60)
 ~26s -- comfortably under 100s combined on this machine). A budget several
-multiples above the measured cost avoids CI flakiness on a slower runner
-while still catching a genuine order-of-magnitude performance regression."""
+multiples above the measured cost avoids scheduler-related false failures on
+a loaded runner while still catching a genuine order-of-magnitude CPU
+performance regression. The measured wall-clock duration remains useful in
+the diagnostic print, but is intentionally not the acceptance predicate."""
 
 
 # ==========================================================================
@@ -185,7 +187,8 @@ while still catching a genuine order-of-magnitude performance regression."""
 def decay_sweep_points(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("decay_sweep")
     kwargs = {k: v for k, v in _BASE_KWARGS.items() if k != "decay"}
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     points = run_parameter_sweep(
         kwargs,
         param_name="decay",
@@ -194,21 +197,22 @@ def decay_sweep_points(tmp_path_factory):  # type: ignore[no-untyped-def]
         seed_base=0,
         db_dir=db_dir,
     )
-    elapsed = time.perf_counter() - start
-    return points, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return points, wall_elapsed, cpu_elapsed
 
 
-def test_decay_sweep_wall_clock_stays_within_budget(decay_sweep_points) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = decay_sweep_points
-    print(f"\ndecay sweep (6 points x n=60) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+def test_decay_sweep_cpu_time_stays_within_budget(decay_sweep_points) -> None:  # type: ignore[no-untyped-def]
+    _, wall_elapsed, cpu_elapsed = decay_sweep_points
+    print(f"\ndecay sweep (6 points x n=60) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s")
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_decay_sweep_real_numbers_match_the_calibrated_run(decay_sweep_points) -> None:  # type: ignore[no-untyped-def]
     """Regression guard: pins the exact ``successes`` count this module
     measured at each real decay value (fully deterministic given the fixed
     seed sequence -- these are not approximate)."""
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     by_value = {round(point.value, 2): point for point in points}
     print("\ndecay sweep:")
     for value in sorted(by_value):
@@ -230,7 +234,7 @@ def test_decay_sweep_is_not_monotonic_a_low_decay_regime_never_converges(decay_s
     never reaches sustained consensus (rate == 0.0, Wilson upper bound well
     below the >0.8 threshold the main statistical test clears at
     decay=0.46) -- a real, mechanistic floor, not statistical noise."""
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     by_value = {round(point.value, 2): point for point in points}
     assert by_value[0.1].rate == 0.0
     assert by_value[0.3].rate == 0.0
@@ -246,7 +250,7 @@ def test_decay_sweep_shows_a_plateau_then_a_measurable_decline_at_the_extreme(de
     were monotonically non-decreasing in decay, decay=1.0 could not score
     below decay=0.6/0.8 -- it does, so H0 (monotonic) is rejected for this
     configuration."""
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     by_value = {round(point.value, 2): point for point in points}
     assert by_value[0.6].rate == 1.0
     assert by_value[0.8].rate == 1.0
@@ -274,7 +278,7 @@ def test_decay_dip_fisher_pvalue_is_derived_from_this_sweeps_own_fixture(decay_s
     experiment: if the sweep's real numbers ever change, THIS assertion is
     what breaks, not a silently-stale sibling test in a different file.
     """
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     by_value = {round(point.value, 2): point for point in points}
     p = fisher_exact_test_two_sided(by_value[0.6].successes, by_value[0.6].n, by_value[1.0].successes, by_value[1.0].n)
     print(f"\ndecay dip fisher p-value (derived from decay_sweep_points): {p!r}")
@@ -305,15 +309,18 @@ _REAL_VS_NULL_SEED_BASE = 0
 @pytest.fixture(scope="module")
 def real_vs_null_results(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("real_vs_null")
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     real_outcomes = []
     for i in range(_REAL_VS_NULL_N):
         config = ColonyTrialConfig(seed=_REAL_VS_NULL_SEED_BASE + i, **_BASE_KWARGS)  # type: ignore[arg-type]
         result = run_colony_trial(config, db_dir)
         real_outcomes.append(result.converged)
-    real_elapsed = time.perf_counter() - start
+    real_wall_elapsed = time.perf_counter() - start_wall
+    real_cpu_elapsed = time.process_time() - start_cpu
 
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     null_outcomes = []
     for i in range(_REAL_VS_NULL_N):
         null_config = NullModelTrialConfig(
@@ -321,21 +328,27 @@ def real_vs_null_results(tmp_path_factory):  # type: ignore[no-untyped-def]
         )
         null_result = run_null_model_trial(null_config)
         null_outcomes.append(null_result.converged)
-    null_elapsed = time.perf_counter() - start
+    null_wall_elapsed = time.perf_counter() - start_wall
+    null_cpu_elapsed = time.process_time() - start_cpu
 
-    return real_outcomes, null_outcomes, real_elapsed + null_elapsed
+    return (
+        real_outcomes,
+        null_outcomes,
+        real_wall_elapsed + null_wall_elapsed,
+        real_cpu_elapsed + null_cpu_elapsed,
+    )
 
 
-def test_real_vs_null_wall_clock_stays_within_budget(real_vs_null_results) -> None:  # type: ignore[no-untyped-def]
-    _, _, elapsed = real_vs_null_results
-    print(f"\nreal-vs-null (N={_REAL_VS_NULL_N} each) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+def test_real_vs_null_cpu_time_stays_within_budget(real_vs_null_results) -> None:  # type: ignore[no-untyped-def]
+    _, _, wall_elapsed, cpu_elapsed = real_vs_null_results
+    print(f"\nreal-vs-null (N={_REAL_VS_NULL_N} each) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s")
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_real_mechanism_outperforms_the_null_model_with_nonoverlapping_wilson_intervals(
     real_vs_null_results,
 ) -> None:  # type: ignore[no-untyped-def]
-    real_outcomes, null_outcomes, _ = real_vs_null_results
+    real_outcomes, null_outcomes, _, _ = real_vs_null_results
     real_successes = sum(1 for outcome in real_outcomes if outcome)
     null_successes = sum(1 for outcome in null_outcomes if outcome)
     real_rate = convergence_rate(real_outcomes)
@@ -394,7 +407,8 @@ _HETEROGENEITY_N = 60
 def heterogeneity_sweep_results(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("heterogeneity_sweep")
     base_kwargs = {k: v for k, v in _BASE_KWARGS.items() if k != "preference_mean_range"}
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     outcomes_by_name: dict[str, list[bool]] = {}
     for name, mean_range in _HETEROGENEITY_WIDTHS.items():
         outcomes: list[bool] = []
@@ -403,18 +417,21 @@ def heterogeneity_sweep_results(tmp_path_factory):  # type: ignore[no-untyped-de
             result = run_colony_trial(config, db_dir / name)
             outcomes.append(result.converged)
         outcomes_by_name[name] = outcomes
-    elapsed = time.perf_counter() - start
-    return outcomes_by_name, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return outcomes_by_name, wall_elapsed, cpu_elapsed
 
 
-def test_heterogeneity_sweep_wall_clock_stays_within_budget(heterogeneity_sweep_results) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = heterogeneity_sweep_results
-    print(f"\nheterogeneity sweep (4 widths x n={_HETEROGENEITY_N}) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+def test_heterogeneity_sweep_cpu_time_stays_within_budget(heterogeneity_sweep_results) -> None:  # type: ignore[no-untyped-def]
+    _, wall_elapsed, cpu_elapsed = heterogeneity_sweep_results
+    print(
+        f"\nheterogeneity sweep (4 widths x n={_HETEROGENEITY_N}) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s"
+    )
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_heterogeneity_sweep_real_numbers_match_the_calibrated_run(heterogeneity_sweep_results) -> None:  # type: ignore[no-untyped-def]
-    outcomes_by_name, _ = heterogeneity_sweep_results
+    outcomes_by_name, _, _ = heterogeneity_sweep_results
     print("\nheterogeneity sweep:")
     rates = {}
     for name, mean_range in _HETEROGENEITY_WIDTHS.items():
@@ -442,7 +459,7 @@ def test_heterogeneity_sweep_convergence_rate_decreases_monotonically_with_width
     """The core falsifiable claim: strictly more heterogeneous configurations
     converge strictly less often, at every step of the sweep -- a genuine
     monotonic-decrease shape, not merely "the extremes differ"."""
-    outcomes_by_name, _ = heterogeneity_sweep_results
+    outcomes_by_name, _, _ = heterogeneity_sweep_results
     rates = {name: convergence_rate(outcomes_by_name[name]) for name in ("tight", "medium", "wide", "very_wide")}
     assert rates["tight"] > rates["medium"] > rates["wide"] > rates["very_wide"]
     assert rates["tight"] == 1.0
@@ -458,7 +475,7 @@ def test_heterogeneity_sweep_medium_condition_matches_the_main_statistical_test(
     rate (56/60 = 0.9333) is consistent with that test's N=150 rate
     (140/150 = 0.9333, coincidentally the same fraction), not a
     contradictory measurement of the same underlying configuration."""
-    outcomes_by_name, _ = heterogeneity_sweep_results
+    outcomes_by_name, _, _ = heterogeneity_sweep_results
     rate = convergence_rate(outcomes_by_name["medium"])
     assert rate == pytest.approx(0.9333, abs=0.01)
 
@@ -496,7 +513,7 @@ def test_heterogeneity_sweep_medium_condition_matches_the_main_statistical_test(
 def test_cochran_armitage_finds_a_strong_positive_trend_across_the_full_decay_sweep(
     decay_sweep_points,
 ) -> None:  # type: ignore[no-untyped-def]
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     ordered = sorted(points, key=lambda point: point.value)
     ns = [point.n for point in ordered]
     successes = [point.successes for point in ordered]
@@ -521,7 +538,7 @@ def test_cochran_armitage_positive_decay_trend_does_not_erase_the_local_nonmonot
     counts still show 1.00 (56/60) scoring below 0.60/0.80 (60/60). A future
     reader must not read the significant CA Z as having overturned the
     dip."""
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     by_value = {round(point.value, 2): point for point in points}
     # The overall trend is significant and positive...
     ordered = sorted(points, key=lambda point: point.value)
@@ -556,7 +573,7 @@ def test_fisher_exact_on_the_decay_dip_is_computed_from_the_sweep_fixture_not_a_
     not against a hand-typed cross-file literal. If the sweep's real counts
     ever change, this test fails -- exactly the coupling Finding 2 asked for.
     """
-    points, _ = decay_sweep_points
+    points, _, _ = decay_sweep_points
     by_value = {round(point.value, 2): point for point in points}
     # The two 100%-plateau points the manuscript names, and the top-end dip.
     plateau_060 = by_value[0.6]
@@ -584,7 +601,7 @@ def test_fisher_exact_on_the_decay_dip_is_computed_from_the_sweep_fixture_not_a_
 def test_cochran_armitage_finds_a_strong_negative_trend_across_the_full_heterogeneity_sweep(
     heterogeneity_sweep_results,
 ) -> None:  # type: ignore[no-untyped-def]
-    outcomes_by_name, _ = heterogeneity_sweep_results
+    outcomes_by_name, _, _ = heterogeneity_sweep_results
     ordered_names = ("tight", "medium", "wide", "very_wide")
     ns = [len(outcomes_by_name[name]) for name in ordered_names]
     successes = [sum(1 for outcome in outcomes_by_name[name] if outcome) for name in ordered_names]
@@ -628,7 +645,8 @@ _HETEROGENEITY_REPLICATION_SEED_BASE = 7000
 def heterogeneity_sweep_results_seed7000(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("heterogeneity_sweep_seed7000")
     base_kwargs = {k: v for k, v in _BASE_KWARGS.items() if k != "preference_mean_range"}
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     outcomes_by_name: dict[str, list[bool]] = {}
     for name, mean_range in _HETEROGENEITY_WIDTHS.items():
         outcomes: list[bool] = []
@@ -641,16 +659,20 @@ def heterogeneity_sweep_results_seed7000(tmp_path_factory):  # type: ignore[no-u
             result = run_colony_trial(config, db_dir / name)
             outcomes.append(result.converged)
         outcomes_by_name[name] = outcomes
-    elapsed = time.perf_counter() - start
-    return outcomes_by_name, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return outcomes_by_name, wall_elapsed, cpu_elapsed
 
 
-def test_heterogeneity_replication_wall_clock_stays_within_budget(
+def test_heterogeneity_replication_cpu_time_stays_within_budget(
     heterogeneity_sweep_results_seed7000,
 ) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = heterogeneity_sweep_results_seed7000
-    print(f"\nheterogeneity replication (seed_base=7000, 4 widths x n={_HETEROGENEITY_N}) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+    _, wall_elapsed, cpu_elapsed = heterogeneity_sweep_results_seed7000
+    print(
+        f"\nheterogeneity replication (seed_base=7000, 4 widths x n={_HETEROGENEITY_N}) "
+        f"wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s"
+    )
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_heterogeneity_replication_at_seed7000_reproduces_the_exact_counts(
@@ -661,7 +683,7 @@ def test_heterogeneity_replication_at_seed7000_reproduces_the_exact_counts(
     before pinning: tight 60/60, medium 54/60, wide 14/60, very_wide 5/60 --
     different counts from the seed_base=0 run, as expected for a different
     seed block, but the same qualitative shape)."""
-    outcomes_by_name, _ = heterogeneity_sweep_results_seed7000
+    outcomes_by_name, _, _ = heterogeneity_sweep_results_seed7000
     print("\nheterogeneity replication (seed_base=7000):")
     for name in ("tight", "medium", "wide", "very_wide"):
         outcomes = outcomes_by_name[name]
@@ -681,7 +703,7 @@ def test_heterogeneity_strict_ordering_replicates_at_a_disjoint_seed_base(
     reproduces at seed_base=7000, a seed block sharing zero seeds with the
     seed_base=0 sweep -- rejecting H0 (that the ordering was a seed-block
     coincidence)."""
-    outcomes_by_name, _ = heterogeneity_sweep_results_seed7000
+    outcomes_by_name, _, _ = heterogeneity_sweep_results_seed7000
     rates = {name: convergence_rate(outcomes_by_name[name]) for name in ("tight", "medium", "wide", "very_wide")}
     assert rates["tight"] > rates["medium"] > rates["wide"] > rates["very_wide"]
     assert rates["tight"] == 1.0
@@ -719,7 +741,8 @@ _DECAY_REPLICATION_SEED_BASE = 1000
 def decay_sweep_points_seed1000(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("decay_sweep_seed1000")
     kwargs = {k: v for k, v in _BASE_KWARGS.items() if k != "decay"}
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     points = run_parameter_sweep(
         kwargs,
         param_name="decay",
@@ -728,14 +751,17 @@ def decay_sweep_points_seed1000(tmp_path_factory):  # type: ignore[no-untyped-de
         seed_base=_DECAY_REPLICATION_SEED_BASE,
         db_dir=db_dir,
     )
-    elapsed = time.perf_counter() - start
-    return points, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return points, wall_elapsed, cpu_elapsed
 
 
-def test_decay_replication_wall_clock_stays_within_budget(decay_sweep_points_seed1000) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = decay_sweep_points_seed1000
-    print(f"\ndecay replication (seed_base=1000, 6 points x n=60) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+def test_decay_replication_cpu_time_stays_within_budget(decay_sweep_points_seed1000) -> None:  # type: ignore[no-untyped-def]
+    _, wall_elapsed, cpu_elapsed = decay_sweep_points_seed1000
+    print(
+        f"\ndecay replication (seed_base=1000, 6 points x n=60) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s"
+    )
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_decay_replication_at_seed1000_reproduces_the_exact_counts(
@@ -747,7 +773,7 @@ def test_decay_replication_at_seed1000_reproduces_the_exact_counts(
     {0.10,0.30,0.46,0.60,0.80,1.00} -- different exact counts from the
     seed_base=0 run's {0,0,56,60,60,56}, as expected for a different seed
     block, but the same qualitative shape)."""
-    points, _ = decay_sweep_points_seed1000
+    points, _, _ = decay_sweep_points_seed1000
     by_value = {round(point.value, 2): point for point in points}
     print("\ndecay replication (seed_base=1000):")
     for value in sorted(by_value):
@@ -773,7 +799,7 @@ def test_decay_threshold_then_plateau_then_decline_shape_replicates_at_a_disjoin
     seed_base=0 sweep -- rejecting H0 (that the shape was a seed-block
     coincidence). The exact decline magnitude is NOT claimed to reproduce
     (53/60 here vs. 56/60 at seed_base=0); only the qualitative shape is."""
-    points, _ = decay_sweep_points_seed1000
+    points, _, _ = decay_sweep_points_seed1000
     by_value = {round(point.value, 2): point for point in points}
     # Low-decay floor: essentially never converges.
     assert by_value[0.1].rate == 0.0
@@ -826,20 +852,22 @@ _ZERO_DEPOSIT_KWARGS: dict[str, object] = {
 @pytest.fixture(scope="module")
 def zero_deposit_real_results(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("zero_deposit_real")
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     outcomes = []
     for i in range(_REAL_VS_NULL_N):
         config = ColonyTrialConfig(seed=_REAL_VS_NULL_SEED_BASE + i, **_ZERO_DEPOSIT_KWARGS)  # type: ignore[arg-type]
         result = run_colony_trial(config, db_dir)
         outcomes.append(result.converged)
-    elapsed = time.perf_counter() - start
-    return outcomes, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return outcomes, wall_elapsed, cpu_elapsed
 
 
-def test_zero_deposit_wall_clock_stays_within_budget(zero_deposit_real_results) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = zero_deposit_real_results
-    print(f"\nzero-deposit real mechanism (N={_REAL_VS_NULL_N}) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+def test_zero_deposit_cpu_time_stays_within_budget(zero_deposit_real_results) -> None:  # type: ignore[no-untyped-def]
+    _, wall_elapsed, cpu_elapsed = zero_deposit_real_results
+    print(f"\nzero-deposit real mechanism (N={_REAL_VS_NULL_N}) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s")
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_zero_deposit_config_constructs_without_error_and_never_deposits() -> None:
@@ -874,8 +902,8 @@ def test_zero_deposit_real_mechanism_does_not_beat_the_null_model_closing_the_st
     requiring a different causal story (e.g. some residual bias in the
     decision rule unrelated to stigmergy) -- it did not happen here, and
     this test pins that outcome as a regression guard."""
-    zero_deposit_outcomes, _ = zero_deposit_real_results
-    _, null_outcomes, _ = real_vs_null_results
+    zero_deposit_outcomes, _, _ = zero_deposit_real_results
+    _, null_outcomes, _, _ = real_vs_null_results
     zero_deposit_successes = sum(1 for outcome in zero_deposit_outcomes if outcome)
     null_successes = sum(1 for outcome in null_outcomes if outcome)
     zero_deposit_rate = convergence_rate(zero_deposit_outcomes)
@@ -921,8 +949,8 @@ def test_zero_deposit_collapse_relative_to_the_full_mechanism_implicates_the_dep
     that the pheromone/stigmergic channel specifically, not some other
     property of the decision loop, drives the real mechanism's advantage
     over chance."""
-    zero_deposit_outcomes, _ = zero_deposit_real_results
-    real_outcomes, _, _ = real_vs_null_results
+    zero_deposit_outcomes, _, _ = zero_deposit_real_results
+    real_outcomes, _, _, _ = real_vs_null_results
     zero_deposit_successes = sum(1 for outcome in zero_deposit_outcomes if outcome)
     real_successes = sum(1 for outcome in real_outcomes if outcome)
     zero_lower, zero_upper = wilson_score_interval(zero_deposit_successes, _REAL_VS_NULL_N, confidence=0.95)
@@ -996,7 +1024,8 @@ def capped_low_decay_points(tmp_path_factory):  # type: ignore[no-untyped-def]
     db_dir = tmp_path_factory.mktemp("capped_low_decay")
     kwargs = {k: v for k, v in _BASE_KWARGS.items() if k != "decay"}
     kwargs["sensed_concentration_cap"] = _SENSED_CONCENTRATION_CAP
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     points = run_parameter_sweep(
         kwargs,
         param_name="decay",
@@ -1005,14 +1034,15 @@ def capped_low_decay_points(tmp_path_factory):  # type: ignore[no-untyped-def]
         seed_base=0,
         db_dir=db_dir,
     )
-    elapsed = time.perf_counter() - start
-    return points, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return points, wall_elapsed, cpu_elapsed
 
 
-def test_capped_low_decay_wall_clock_stays_within_budget(capped_low_decay_points) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = capped_low_decay_points
-    print(f"\ncapped low-decay ablation (2 points x n=60) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+def test_capped_low_decay_cpu_time_stays_within_budget(capped_low_decay_points) -> None:  # type: ignore[no-untyped-def]
+    _, wall_elapsed, cpu_elapsed = capped_low_decay_points
+    print(f"\ncapped low-decay ablation (2 points x n=60) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s")
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_sensed_concentration_cap_rejects_nonpositive_values() -> None:
@@ -1052,9 +1082,9 @@ def test_capping_sensed_concentration_recovers_convergence_at_low_decay(
     nothing else about decay, sensing noise, preferences, or the decision
     rule, is enough to flip the outcome from near-certain non-convergence to
     near-certain convergence."""
-    capped_points, _ = capped_low_decay_points
+    capped_points, _, _ = capped_low_decay_points
     capped_by_value = {round(point.value, 2): point for point in capped_points}
-    uncapped_points, _ = decay_sweep_points
+    uncapped_points, _, _ = decay_sweep_points
     uncapped_by_value = {round(point.value, 2): point for point in uncapped_points}
     print("\ncapped (cap=13.0) vs uncapped low-decay comparison:")
     for value in (0.1, 0.3):
@@ -1142,7 +1172,8 @@ def extreme_positive_control_results(tmp_path_factory):  # type: ignore[no-untyp
     control) and the new zero-deposit condition, both at
     ``decay=0.97``/``sensing_noise_std=4.0``, ``n=50``, ``seed_base=0``."""
     db_dir = tmp_path_factory.mktemp("extreme_positive_control")
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     full_outcomes = []
     for i in range(_EXTREME_POSITIVE_CONTROL_N):
         config = ColonyTrialConfig(
@@ -1161,16 +1192,18 @@ def extreme_positive_control_results(tmp_path_factory):  # type: ignore[no-untyp
         )
         result = run_colony_trial(config, db_dir)
         zero_deposit_outcomes.append(result.converged)
-    elapsed = time.perf_counter() - start
-    return full_outcomes, zero_deposit_outcomes, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return full_outcomes, zero_deposit_outcomes, wall_elapsed, cpu_elapsed
 
 
-def test_extreme_positive_control_wall_clock_stays_within_budget(extreme_positive_control_results) -> None:  # type: ignore[no-untyped-def]
-    _, _, elapsed = extreme_positive_control_results
+def test_extreme_positive_control_cpu_time_stays_within_budget(extreme_positive_control_results) -> None:  # type: ignore[no-untyped-def]
+    _, _, wall_elapsed, cpu_elapsed = extreme_positive_control_results
     print(
-        f"\nextreme positive-control comparison (n={_EXTREME_POSITIVE_CONTROL_N} x 2 conditions) wall-clock: {elapsed:.2f}s"
+        f"\nextreme positive-control comparison (n={_EXTREME_POSITIVE_CONTROL_N} x 2 conditions) "
+        f"wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s"
     )
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_extreme_full_mechanism_reproduces_the_sibling_positive_control_wilson_upper_below_half(
@@ -1185,7 +1218,7 @@ def test_extreme_full_mechanism_reproduces_the_sibling_positive_control_wilson_u
     0.5) -- confirming this module's independent re-computation lands on
     the same real, deterministic trace that test already pins, before this
     module adds a new comparison against it."""
-    full_outcomes, _, _ = extreme_positive_control_results
+    full_outcomes, _, _, _ = extreme_positive_control_results
     full_successes = sum(1 for outcome in full_outcomes if outcome)
     full_rate = convergence_rate(full_outcomes)
     full_lower, full_upper = wilson_score_interval(full_successes, _EXTREME_POSITIVE_CONTROL_N, confidence=0.95)
@@ -1255,7 +1288,7 @@ def test_extreme_zero_deposit_pheromone_channel_still_contributes_under_severe_d
     the deposit/stigmergic channel specifically retains any measurable
     contribution once both are already this severe, and the real answer is
     yes, narrowly."""
-    full_outcomes, zero_deposit_outcomes, _ = extreme_positive_control_results
+    full_outcomes, zero_deposit_outcomes, _, _ = extreme_positive_control_results
     full_successes = sum(1 for outcome in full_outcomes if outcome)
     zero_successes = sum(1 for outcome in zero_deposit_outcomes if outcome)
     full_rate = convergence_rate(full_outcomes)
@@ -1345,7 +1378,8 @@ def sensed_concentration_cap_dose_response_points(tmp_path_factory):  # type: ig
     db_dir = tmp_path_factory.mktemp("cap_dose_response")
     kwargs = {k: v for k, v in _BASE_KWARGS.items() if k != "decay"}
     kwargs["decay"] = _CAP_DOSE_RESPONSE_DECAY
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     points = run_parameter_sweep(
         kwargs,
         param_name="sensed_concentration_cap",
@@ -1354,16 +1388,20 @@ def sensed_concentration_cap_dose_response_points(tmp_path_factory):  # type: ig
         seed_base=_CAP_DOSE_RESPONSE_SEED_BASE,
         db_dir=db_dir,
     )
-    elapsed = time.perf_counter() - start
-    return points, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return points, wall_elapsed, cpu_elapsed
 
 
-def test_cap_dose_response_wall_clock_stays_within_budget(
+def test_cap_dose_response_cpu_time_stays_within_budget(
     sensed_concentration_cap_dose_response_points,
 ) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = sensed_concentration_cap_dose_response_points
-    print(f"\nsensed_concentration_cap dose-response sweep (7 points x n=60) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+    _, wall_elapsed, cpu_elapsed = sensed_concentration_cap_dose_response_points
+    print(
+        f"\nsensed_concentration_cap dose-response sweep (7 points x n=60) "
+        f"wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s"
+    )
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_cap_dose_response_real_numbers_pin_the_exact_counts(
@@ -1372,7 +1410,7 @@ def test_cap_dose_response_real_numbers_pin_the_exact_counts(
     """Regression guard: pins the exact, fully-deterministic ``successes``
     count this module measured at each real cap value (independently
     reproduced twice, bit-for-bit identical, before being pinned here)."""
-    points, _ = sensed_concentration_cap_dose_response_points
+    points, _, _ = sensed_concentration_cap_dose_response_points
     by_value = {round(point.value, 2): point for point in points}
     print("\nsensed_concentration_cap dose-response sweep (decay=0.10, n=60 per point):")
     for value in sorted(by_value):
@@ -1399,7 +1437,7 @@ def test_cap_dose_response_is_monotonically_non_increasing_h0_rejected(
     anywhere), not merely "the extremes differ". A single interior reversal
     (a higher cap scoring a HIGHER rate than a lower cap) would falsify
     this test."""
-    points, _ = sensed_concentration_cap_dose_response_points
+    points, _, _ = sensed_concentration_cap_dose_response_points
     ordered = sorted(points, key=lambda point: point.value)
     rates = [point.rate for point in ordered]
     for earlier, later in zip(rates, rates[1:]):
@@ -1428,7 +1466,7 @@ def test_cap_dose_response_transition_completes_well_before_the_informal_fadeout
     decline), a full 2.0 cap units before the informally-named cap=20.0
     fade-out point. cap=20.0 is not where the fade-out happens; it merely
     re-confirms a floor already reached two units earlier."""
-    points, _ = sensed_concentration_cap_dose_response_points
+    points, _, _ = sensed_concentration_cap_dose_response_points
     by_value = {round(point.value, 2): point for point in points}
     plateau_rate = by_value[13.0].rate
     floor_rate = by_value[20.0].rate
@@ -1460,9 +1498,9 @@ def test_cap_dose_response_cap13_point_matches_experiment_h_already_gated_single
     approached from two different sweep axes -- they must agree exactly,
     not merely approximately, since both replay the identical seed
     sequence against the identical configuration."""
-    dose_points, _ = sensed_concentration_cap_dose_response_points
+    dose_points, _, _ = sensed_concentration_cap_dose_response_points
     dose_by_value = {round(point.value, 2): point for point in dose_points}
-    capped_points, _ = capped_low_decay_points
+    capped_points, _, _ = capped_low_decay_points
     capped_by_value = {round(point.value, 2): point for point in capped_points}
     print(
         f"\ncap=13.0 cross-check: dose-response sweep successes={dose_by_value[13.0].successes}/"
@@ -1484,9 +1522,9 @@ def test_cap_dose_response_cap20_point_matches_the_uncapped_baseline_exactly(
     ``decay_sweep_points`` fixture -- both ``seed_base=0``, ``n=60``, same
     every other input -- must reproduce the EXACT SAME successes count, not
     merely a similar one."""
-    dose_points, _ = sensed_concentration_cap_dose_response_points
+    dose_points, _, _ = sensed_concentration_cap_dose_response_points
     dose_by_value = {round(point.value, 2): point for point in dose_points}
-    uncapped_points, _ = decay_sweep_points
+    uncapped_points, _, _ = decay_sweep_points
     uncapped_by_value = {round(point.value, 2): point for point in uncapped_points}
     assert dose_by_value[20.0].successes == uncapped_by_value[0.1].successes == 0
 
@@ -1498,7 +1536,7 @@ def test_cap_dose_response_cochran_armitage_confirms_the_overall_trend(
     the pairwise/monotonicity checks above -- the same
     ``cochran_armitage_trend_test`` Experiment (d) applies to the decay and
     heterogeneity sweeps, reused here rather than duplicated."""
-    points, _ = sensed_concentration_cap_dose_response_points
+    points, _, _ = sensed_concentration_cap_dose_response_points
     ordered = sorted(points, key=lambda point: point.value)
     ns = [point.n for point in ordered]
     successes = [point.successes for point in ordered]
@@ -1522,7 +1560,7 @@ def test_cap_dose_response_fisher_plateau_vs_floor_is_significant(
     point (cap=13.0, Experiment (h)'s own already-gated value) versus the
     floor point (cap=20.0) on a two-sided Fisher's exact test -- the same
     small-sample test this file uses elsewhere for boundary comparisons."""
-    points, _ = sensed_concentration_cap_dose_response_points
+    points, _, _ = sensed_concentration_cap_dose_response_points
     by_value = {round(point.value, 2): point for point in points}
     plateau = by_value[13.0]
     floor = by_value[20.0]
@@ -1606,7 +1644,8 @@ def null_model_results_seed7000(tmp_path_factory):  # type: ignore[no-untyped-de
     ``heterogeneity_sweep_results_seed7000`` already uses for the real
     mechanism, so the real-vs-null comparison at that seed base is
     genuinely apples-to-apples rather than mixing seed blocks."""
-    start = time.perf_counter()
+    start_wall = time.perf_counter()
+    start_cpu = time.process_time()
     null_outcomes = []
     for i in range(_REAL_VS_NULL_N):
         null_config = NullModelTrialConfig(
@@ -1617,16 +1656,17 @@ def null_model_results_seed7000(tmp_path_factory):  # type: ignore[no-untyped-de
         )
         null_result = run_null_model_trial(null_config)
         null_outcomes.append(null_result.converged)
-    elapsed = time.perf_counter() - start
-    return null_outcomes, elapsed
+    wall_elapsed = time.perf_counter() - start_wall
+    cpu_elapsed = time.process_time() - start_cpu
+    return null_outcomes, wall_elapsed, cpu_elapsed
 
 
-def test_very_wide_vs_null_wall_clock_stays_within_budget(
+def test_very_wide_vs_null_cpu_time_stays_within_budget(
     null_model_results_seed7000,
 ) -> None:  # type: ignore[no-untyped-def]
-    _, elapsed = null_model_results_seed7000
-    print(f"\nnull model at seed_base=7000 (N={_REAL_VS_NULL_N}) wall-clock: {elapsed:.2f}s")
-    assert elapsed < _WALL_CLOCK_BUDGET_SECONDS
+    _, wall_elapsed, cpu_elapsed = null_model_results_seed7000
+    print(f"\nnull model at seed_base=7000 (N={_REAL_VS_NULL_N}) wall-clock={wall_elapsed:.2f}s cpu={cpu_elapsed:.2f}s")
+    assert cpu_elapsed < _CPU_TIME_BUDGET_SECONDS
 
 
 def test_null_model_seed7000_reproduces_a_near_zero_rate_like_seed0(
@@ -1639,7 +1679,7 @@ def test_null_model_seed7000_reproduces_a_near_zero_rate_like_seed0(
     more extreme near-zero rate than seed_base=0's 1/150, both consistent
     with "the null model rarely converges by chance alone", Experiment B's
     own characterization)."""
-    null_outcomes, _ = null_model_results_seed7000
+    null_outcomes, _, _ = null_model_results_seed7000
     null_successes = sum(1 for outcome in null_outcomes if outcome)
     print(f"\nnull model (seed_base=7000): successes={null_successes}/{_REAL_VS_NULL_N}")
     assert null_successes == 0
@@ -1662,8 +1702,8 @@ def test_very_wide_at_seed0_does_not_clear_the_null_model_baseline(
     seed_base=7000 test's docstring and the manuscript's honesty-hedges
     passage for the full account of why this experiment reports BOTH
     seed bases rather than picking whichever one tells a cleaner story."""
-    outcomes_by_name, _ = heterogeneity_sweep_results
-    _, null_outcomes, _ = real_vs_null_results
+    outcomes_by_name, _, _ = heterogeneity_sweep_results
+    _, null_outcomes, _, _ = real_vs_null_results
     very_wide_successes = sum(1 for outcome in outcomes_by_name["very_wide"] if outcome)
     null_successes = sum(1 for outcome in null_outcomes if outcome)
     vw_lower, vw_upper = wilson_score_interval(very_wide_successes, _HETEROGENEITY_N, confidence=0.95)
@@ -1724,8 +1764,8 @@ def test_very_wide_at_seed7000_does_clear_the_null_model_baseline(
     single stable answer across the two seed bases tested; more seed bases
     would be needed to say whether seed_base=0 or seed_base=7000 is closer
     to the "typical" case, and that is explicitly NOT claimed here."""
-    outcomes_by_name, _ = heterogeneity_sweep_results_seed7000
-    null_outcomes, _ = null_model_results_seed7000
+    outcomes_by_name, _, _ = heterogeneity_sweep_results_seed7000
+    null_outcomes, _, _ = null_model_results_seed7000
     very_wide_successes = sum(1 for outcome in outcomes_by_name["very_wide"] if outcome)
     null_successes = sum(1 for outcome in null_outcomes if outcome)
     vw_lower, vw_upper = wilson_score_interval(very_wide_successes, _HETEROGENEITY_N, confidence=0.95)

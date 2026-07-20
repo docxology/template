@@ -46,8 +46,10 @@ def run_manuscript_preflight(manuscript_dir: Path) -> tuple[bool, str]:
             "The combined-PDF render stage uses mmdc (mermaid-cli) for inline mermaid",
             "blocks; mmdc needs a pinned chrome-headless-shell in ~/.cache/puppeteer/.",
             "",
-            "One-time install (reversible):",
-            "  npx --yes puppeteer browsers install chrome-headless-shell",
+            "From the repository root, install the pinned local tooling (reversible):",
+            "  npm ci",
+            '  export PATH="$PWD/node_modules/.bin:$PATH"',
+            "  npx --no-install puppeteer browsers install chrome-headless-shell",
             "",
         ]
     )

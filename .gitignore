@@ -45,6 +45,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Node tooling cache for the pinned Mermaid documentation CLI
+node_modules/
+
 # Credentials (keep examples, ignore actual credentials)
 test_credentials.yaml
 
@@ -107,6 +110,10 @@ output/*
 *.temp
 *.bak
 *.backup
+
+# Local-only sibling checkout link used by the desktop workspace. It is not a
+# public project path and must never enter the repository's tracked scope.
+/working
 
 # Test artifacts
 invalid/
@@ -207,6 +214,9 @@ projects/templates/*/**/coverage_*.xml
 projects/templates/*/**/.DS_Store
 projects/templates/*/output/playwright/
 projects/templates/*/output/pdf/_pages.txt
+# XeLaTeX captures stdout here during local rendering; it is a disposable
+# machine-specific build log, not canonical publication evidence.
+projects/templates/*/output/pdf/_latex_stdout.log
 
 # fonds/: only public template fonds under fonds/templates/ are tracked.
 fonds/*

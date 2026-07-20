@@ -66,7 +66,7 @@ This paper documents `template_prose_project`, the prose-focused exemplar of the
 
 A single `manuscript/config.yaml` defines target grade-level bands, citation-density floors, structural rules (every section has an H1, no heading levels skipped), and bibliography-consistency policy. The pipeline reads the manuscript, runs the prose analysers, cross-checks every `[@key]` citation against `manuscript/references.bib`, evaluates the configured checks, and writes a deterministic markdown review report alongside three figures (per-file word counts, readability metrics, citation density) and a JSON `manuscript_report.json` suitable for CI artefacts.
 
-**Run snapshot.** The current configuration analyses 8 file(s) totalling 1742 words across 86 sentence(s) and 64 paragraph(s). Average Flesch-Kincaid grade level is 15.93; average Gunning Fog index is 16.69; the manuscript references 6 unique citation key(s); the longest section is 413 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
+**Run snapshot.** The current configuration analyses 8 file(s) totalling 1745 words across 86 sentence(s) and 64 paragraph(s). Average Flesch-Kincaid grade level is 15.97; average Gunning Fog index is 16.73; the manuscript references 6 unique citation key(s); the longest section is 416 words and the shortest is 17. These numbers are auto-substituted by `scripts/z_generate_manuscript_variables.py` after every run, so the abstract tracks the JSON outputs in `output/`.
 
 The contribution is methodological and architectural: a *generic, reusable* prose-quality module (`infrastructure/prose/`) that any project in the template can opt into, plus a *minimal, configurable* exemplar (`projects/templates/template_prose_project/`) that wires it to the bibliography and the manuscript pipeline.
 
@@ -157,7 +157,8 @@ stages always see a fresh review):
 * `scripts/run_prose_pipeline.py` writes `output/manuscript_report.json`
   (the raw `ManuscriptReport`), `output/checks.json` (the list of check
   results), `output/review_report.md` (the human-readable review report),
-  and `output/run_summary.json` (one-line metadata).
+  `output/evidence_summary.json` (versioned diagnostic-only evidence), and
+  `output/run_summary.json` (one-line metadata).
 * `scripts/y_generate_prose_figures.py` reads `manuscript_report.json`
   and writes `../figures/{section_word_counts,readability_metrics,citation_density}.png`.
 * `scripts/z_generate_manuscript_variables.py` reads `manuscript_report.json`
@@ -240,31 +241,7 @@ This section documents the artefacts produced by the prose-review run.
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-flowchart TB
-    P[projects/templates/template_prose_project/]
-    P --> M[manuscript/]
-    P --> OUT["output/<br/>tracked public artifacts · regenerable"]
-
-    M --> M_CFG["config.yaml<br/>single source of truth"]
-    M --> M_PRE["preamble.md<br/>LaTeX preamble"]
-    M --> M_SEC["00_abstract → 04_conclusion ·<br/>05_pipeline_internals · 06_reproducibility"]
-    M --> M_BIB["references.bib<br/>read-only · validated by pipeline"]
-
-    OUT --> O_REP["manuscript_report.json<br/>ManuscriptReport JSON"]
-    OUT --> O_CK["checks.json<br/>list of CheckResult"]
-    OUT --> O_RR["review_report.md<br/>final markdown report"]
-    OUT --> O_DATA[data/manuscript_variables.json]
-    OUT --> O_FIG["figures/<br/>section_word_counts.png ·<br/>readability_metrics.png ·<br/>citation_density.png"]
-    OUT --> O_RS[run_summary.json]
-
-    classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    classDef src fill:#1e3a8a,stroke:#0f172a,color:#fff
-    classDef gen fill:#0f766e,stroke:#0f172a,color:#fff
-    class P,M,OUT d
-    class M_CFG,M_PRE,M_SEC,M_BIB src
-    class O_REP,O_CK,O_RR,O_DATA,O_FIG,O_RS gen
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0001_2bd3f746e2eb.png}
 \caption{Mermaid diagram}
 \end{figure}
 
@@ -274,70 +251,7 @@ flowchart TB
 
 \begin{figure}[htbp]
 \centering
-\begin{verbatim}
-classDiagram
-    class ManuscriptReport {
-        +list~FileReport~ files
-        +int total_words
-        +int total_sentences
-        +int total_paragraphs
-        +float avg_flesch_reading_ease
-        +float avg_flesch_kincaid_grade
-        +float avg_gunning_fog
-        +list~str~ citation_keys
-    }
-
-    class FileReport {
-        +str name
-        +ProseMetrics metrics
-        +StructureReport structure
-        +QualityReport quality
-    }
-
-    class ProseMetrics {
-        +int word_count
-        +int sentence_count
-        +int paragraph_count
-        +float flesch_reading_ease
-        +float flesch_kincaid_grade
-        +float gunning_fog
-    }
-
-    class StructureReport {
-        +list~Heading~ headings
-        +list~Section~ sections
-        +int max_depth
-        +bool has_h1
-        +bool has_skipped_level
-    }
-
-    class QualityReport {
-        +int passive_count
-        +int hedge_count
-        +int citation_count
-        +int long_sentence_count
-        +float citation_density_per_1000
-    }
-
-    class CheckResult {
-        +str name
-        +bool passed
-        +str message
-    }
-
-    class ProseRunArtifacts {
-        +ManuscriptReport manuscript_report
-        +list~CheckResult~ checks
-        +bool all_passed
-    }
-
-    ManuscriptReport --> "*" FileReport
-    FileReport --> ProseMetrics
-    FileReport --> StructureReport
-    FileReport --> QualityReport
-    ProseRunArtifacts --> ManuscriptReport
-    ProseRunArtifacts --> "*" CheckResult
-\end{verbatim}
+\includegraphics[width=0.82\linewidth,height=4.2in,keepaspectratio]{../figures/mermaid_inline/inline_mermaid_0002_e1277c0f292c.png}
 \caption{Mermaid diagram}
 \end{figure}
 

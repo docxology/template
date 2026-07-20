@@ -143,13 +143,13 @@ behaviorally equivalent to the dedicated documentation job.
 #### 4b. Regression Tier — claim-binding pins (`test-regression`)
 
 - **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
-- **Sync:** `uv sync --group rendering --group monitoring`.
+- **Sync:** `uv sync --group public-exemplars`.
 - **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
 - **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job.
 
 #### 5. Project Tests (`test-project`)
 
-- **Sync:** `uv sync --group rendering --group monitoring --group discopy` — same packages as a fresh local `uv sync` at the repo root for DisCoPy string-diagram tests: root **`default-groups`** are `dev`, `rendering`, and **`discopy`**, so `uv sync` already installs **DisCoPy**; this job adds **monitoring** (not in `default-groups`). **Hypothesis** comes from the **dev** group (parametric tests), not from `discopy` (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
+- **Sync:** `uv sync --group public-exemplars` — the same deterministic dependency union as a fresh local `uv sync`, including the DisCoPy, monitoring, scientific, LLM-client, and PPTX groups used by the public roster. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
 - **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × each public exemplar in [`../../docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) (`templates/template_*`) = **24 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
@@ -187,8 +187,8 @@ behaviorally equivalent to the dedicated documentation job.
 - **Depends on:** `lint`
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
-  - `mmdc` (mermaid-cli) — `npm install -g @mermaid-js/mermaid-cli`
-  - `chrome-headless-shell` — `npx puppeteer browsers install chrome-headless-shell`, exported via `CHROME_EXECUTABLE_PATH`
+  - `mmdc` (mermaid-cli) — pinned in the root `package.json`; run `npm ci`
+  - `chrome-headless-shell` — `npx --no-install puppeteer browsers install chrome-headless-shell`, exported via `CHROME_EXECUTABLE_PATH`
 - **Linters (thin orchestrator [`scripts/audit/lint_docs.py`](../../scripts/audit/lint_docs.py)):**
   1. **Mermaid** — every fenced \`\`\`mermaid block in `docs/`, `infrastructure/`, `.github/`, `scripts/`, and root `*.md` is rendered with the real `mmdc` binary. Failure exits non-zero.
   2. **Cross-links** — every relative Markdown link must resolve on disk; fenced and inline-code spans are skipped.
@@ -264,11 +264,9 @@ COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
   --cov-fail-under=60 \
   -m "not requires_ollama"
 
-# Reproduce project tests locally (matrix job ignores fep_lean). Root `default-groups` include
-# `discopy` and `rendering`; CI also installs `monitoring` — use:
-#   uv sync --group monitoring
-# or full explicit parity: uv sync --group rendering --group monitoring --group discopy
-uv sync --group rendering --group monitoring --group discopy
+# Reproduce project tests locally (matrix job ignores fep_lean). The root
+# default groups include the deterministic public-exemplar dependency union.
+uv sync
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml
 

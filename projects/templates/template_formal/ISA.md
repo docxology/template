@@ -222,6 +222,7 @@ Ship a complete, self-contained, registered public template `template_formal` un
 - [x] ISC-119: The README, standalone fork guide, and project skill must document the same `MYPYPATH`-qualified authoritative mypy command and current 26-source-file oracle result. A project synchronization test must fail if any surface reintroduces the unsafe bare command or stale source-file count.
 - [x] ISC-120: `scripts/02_run_analysis.py` must be a genuinely thin entrypoint: sweep configuration, statistical aggregation, JSON serialization, required-figure checks, and figure-registry construction live in a tested `src/template_formal/colony/analysis.py` service. The script may resolve the project root, call that service once, and print returned artifact paths; the module-line gate must no longer warn on the script.
 - [x] ISC-121: Every runtime typing import must honor the project's declared Python 3.10 floor. Types introduced in newer standard-library `typing` releases, including `Self`, must come from a declared compatibility backport, and the Python 3.10 project matrix must collect and execute the real suite rather than failing during import.
+- [x] ISC-122: Performance-regression guards for the real colony experiments must measure process CPU time rather than scheduler-sensitive wall-clock time. They must retain a generous upper bound that catches order-of-magnitude computational regressions, while a loaded host or concurrent test process must not turn an otherwise deterministic experiment into a false failure. Human-readable output may report wall-clock context separately, but the acceptance predicate must be based on CPU time.
 
 ## Test Strategy
 
@@ -702,3 +703,11 @@ Coverage (round 17, cumulative): 120/120 ISC groups passed, 120/120 artifact-bac
 - Coverage phase: the same real Python 3.10 environment passed the 90% floor with **95.29%** line+branch coverage; the existing Python 3.12 evidence remains separately documented.
 
 Coverage (round 18, cumulative): 121/121 ISC groups passed, 121/121 artifact-backed (0 `[DEFERRED-VERIFY]`).
+
+**Round 19 (scheduler-robust performance guards, 2026-07-19):** ISC-122 added and verified after the public-exemplar readiness lane exposed a false failure in the extended colony experiment module: a deterministic pinned-result suite failed only because a loaded host stretched one wall-clock batch beyond its soft limit. The experiment fixtures now retain wall-clock measurements for diagnostics but gate performance on process CPU time, preserving detection of actual order-of-magnitude computational regressions without coupling scientific result validity to scheduler contention. All fixture consumers were updated to the explicit timing tuple, so statistical counts remain pinned and provenance remains unambiguous.
+
+- Focused timing/replication lane: **11 passed**; CPU-time guards and the seed-1000 exact-count replication passed.
+- Authoritative formal project gate: **278/278 passed**, **95.29%** source coverage (90% required), including all extended experiments, negative controls, and mypy oracles.
+- Repository infrastructure gate after provenance refresh: **8,796 passed, 8 skipped**, **83.27%** coverage (60% required); the optional skips remain service/network exclusions.
+
+Coverage (round 19, cumulative): 122/122 ISC groups passed, 122/122 artifact-backed (0 `[DEFERRED-VERIFY]`).

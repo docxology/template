@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.core.coverage_policy import PYTEST_HELP_PROBE_TIMEOUT_SECONDS
 from infrastructure.reporting.coverage_parser import (
     MIN_VALID_COVERAGE_FILE_BYTES,
     _parse_coverage_json,
@@ -230,7 +231,7 @@ class TestCheckCovDatafileSupport:
             ["python", "-m", "pytest", "--help"],
             capture_output=True,
             text=True,
-            timeout=10,
+            timeout=PYTEST_HELP_PROBE_TIMEOUT_SECONDS,
         )
         expected = "--cov-datafile" in result.stdout
         assert check_cov_datafile_support() == expected

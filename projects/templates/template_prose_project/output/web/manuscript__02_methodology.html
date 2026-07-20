@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc 3.10" />
@@ -173,8 +173,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology</h1>
 <p>The pipeline runs in five stages, each a pure function in the
 project’s <code>src/</code> modules; the orchestrator script in
@@ -289,8 +293,9 @@ variable stages always see a fresh review):</p>
 <code>output/manuscript_report.json</code> (the raw
 <code>ManuscriptReport</code>), <code>output/checks.json</code> (the
 list of check results), <code>output/review_report.md</code> (the
-human-readable review report), and <code>output/run_summary.json</code>
-(one-line metadata).</li>
+human-readable review report), <code>output/evidence_summary.json</code>
+(versioned diagnostic-only evidence), and
+<code>output/run_summary.json</code> (one-line metadata).</li>
 <li><code>scripts/y_generate_prose_figures.py</code> reads
 <code>manuscript_report.json</code> and writes
 <code>../figures/{section_word_counts,readability_metrics,citation_density}.png</code>.</li>
@@ -305,5 +310,6 @@ manuscript tree under <code>output/manuscript/</code>.</li>
 modified by this pipeline — the prose project does not generate
 citations, only validates them.</li>
 </ul>
+</main>
 </body>
 </html>
