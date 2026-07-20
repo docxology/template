@@ -28,6 +28,7 @@ is not a TTY.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -46,6 +47,7 @@ __all__ = [
     "HealthReport",
     "GATE_NAMES",
     "build_gate_specs",
+    "gate_spec_sha256",
     "run_health_checks",
     "format_report_table",
     "main",
@@ -91,6 +93,11 @@ class HealthReport:
     passed: bool
     total_elapsed_ms: float
     wall_elapsed_ms: float
+    schema_version: int = 1
+    workers: int = 1
+    repo_commit: str | None = None
+    clean_checkout: bool | None = None
+    gate_spec_sha256: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -274,6 +281,18 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
             "publication-records",
             ["uv", "run", "python", "scripts/docgen/publication_records.py", "--check"],
         ),
+        (
+            "methods-plan",
+            [
+                "uv",
+                "run",
+                "python",
+                "scripts/gates/methods_plan_check.py",
+                "--all-public",
+                "--artifact-mode",
+                "source",
+            ],
+        ),
         ("architecture-overview", arch_overview_argv),
         (
             "module-line-count",
@@ -291,6 +310,39 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
 # tests). Generated once at import time from a sentinel ``Path(".")`` —
 # the names do not depend on the repo root.
 GATE_NAMES: tuple[str, ...] = tuple(name for name, _ in build_gate_specs(Path(".")))
+
+
+def gate_spec_sha256(specs: Sequence[tuple[str, Sequence[str]]]) -> str:
+    """Return a content digest binding gate names to exact argv contracts."""
+
+    payload = [(name, list(argv)) for name, argv in specs]
+    encoded = json.dumps(payload, separators=(",", ":"), ensure_ascii=True).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _repository_state(repo_root: Path) -> tuple[str | None, bool | None]:
+    """Return current commit and cleanliness, or unknown outside a Git checkout."""
+
+    commit = subprocess.run(  # noqa: S603 - fixed git executable and argv.
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    status = subprocess.run(  # noqa: S603 - fixed git executable and argv.
+        ["git", "status", "--porcelain", "--untracked-files=normal"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if commit.returncode != 0 or status.returncode != 0:
+        return None, None
+    return commit.stdout.strip(), not bool(status.stdout.strip())
+
 
 # ---------------------------------------------------------------------------
 # Special-case post-processing
@@ -430,6 +482,8 @@ def run_health_checks(
         )
 
     selected_workers = workers if workers is not None else (4 if len(specs) > 1 else 1)
+    spec_digest = gate_spec_sha256(specs)
+    commit_before, clean_before = _repository_state(repo_root)
     start = time.perf_counter()
     if selected_workers == 1 or len(specs) == 1:
         results = [_run_single_gate(name, argv, repo_root) for name, argv in specs]
@@ -447,11 +501,21 @@ def run_health_checks(
 
     total_ms = sum(r.elapsed_ms for r in results)
     wall_ms = (time.perf_counter() - start) * 1000.0
+    commit_after, clean_after = _repository_state(repo_root)
     # ``specs`` is non-empty for the default registry and empty explicit
     # subsets are rejected above. Keep the aggregate fail-closed if that
     # invariant is ever broken by a future registry change.
     overall = bool(results) and all(r.passed for r in results)
-    return HealthReport(results=results, passed=overall, total_elapsed_ms=total_ms, wall_elapsed_ms=wall_ms)
+    return HealthReport(
+        results=results,
+        passed=overall,
+        total_elapsed_ms=total_ms,
+        wall_elapsed_ms=wall_ms,
+        workers=selected_workers,
+        repo_commit=commit_before if commit_before == commit_after else None,
+        clean_checkout=(clean_before is True and clean_after is True),
+        gate_spec_sha256=spec_digest,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -532,7 +596,12 @@ def _report_to_dict(report: HealthReport) -> dict[str, object]:
     """Convert ``HealthReport`` to a JSON-serialisable dict."""
 
     return {
+        "schema_version": report.schema_version,
         "passed": report.passed,
+        "workers": report.workers,
+        "repo_commit": report.repo_commit,
+        "clean_checkout": report.clean_checkout,
+        "gate_spec_sha256": report.gate_spec_sha256,
         "total_elapsed_ms": report.total_elapsed_ms,
         "wall_elapsed_ms": report.wall_elapsed_ms,
         "results": [asdict(r) for r in report.results],

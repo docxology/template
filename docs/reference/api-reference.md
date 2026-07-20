@@ -683,15 +683,45 @@ Validate LLM response content based on the response mode.
 
 ## Package: `infrastructure.methods`
 
+### `audit_methods_projects`
+
+*function — defined in `infrastructure.methods.orchestration`*
+
+```python
+audit_methods_projects(repo_root: Path | str, projects: tuple[str, ...] | list[str], *, artifact_mode: str='rendered', projects_dir: str='projects') -> MethodsAuditReport
+```
+
+Build and validate deterministic methods plans for many projects.
+
+### `audit_public_methods`
+
+*function — defined in `infrastructure.methods.orchestration`*
+
+```python
+audit_public_methods(repo_root: Path | str, *, artifact_mode: str='rendered') -> MethodsAuditReport
+```
+
+Audit the canonical public exemplar roster.
+
 ### `build_methods_orchestration_plan`
 
 *function — defined in `infrastructure.methods.orchestration`*
 
 ```python
-build_methods_orchestration_plan(repo_root: Path | str, project_name: str, *, projects_dir: str='projects') -> MethodsOrchestrationPlan
+build_methods_orchestration_plan(repo_root: Path | str, project_name: str, *, projects_dir: str='projects', pipeline_path: Path | str | None=None, artifact_mode: str='rendered') -> MethodsOrchestrationPlan
 ```
 
 Build a deterministic methods orchestration plan for a project.
+
+### `MethodsAuditReport`
+
+*class — defined in `infrastructure.methods.models`*
+
+```python
+class MethodsAuditReport
+```
+
+Aggregate methods audit across one or more projects.
 
 ### `MethodsIssue`
 
@@ -712,6 +742,16 @@ class MethodsOrchestrationPlan
 ```
 
 Repository-derived methods orchestration plan for one project.
+
+### `MethodsProjectAudit`
+
+*class — defined in `infrastructure.methods.models`*
+
+```python
+class MethodsProjectAudit
+```
+
+Methods audit result for one project.
 
 ### `MethodStage`
 
@@ -738,7 +778,7 @@ Render a methods orchestration plan as Markdown.
 *function — defined in `infrastructure.methods.orchestration`*
 
 ```python
-validate_methods_orchestration_plan(plan: MethodsOrchestrationPlan, *, repo_root: Path | str='.', require_generated_artifacts: bool=True) -> tuple[MethodsIssue, ...]
+validate_methods_orchestration_plan(plan: MethodsOrchestrationPlan, *, repo_root: Path | str='.', require_generated_artifacts: bool | None=None) -> tuple[MethodsIssue, ...]
 ```
 
 Validate methods surfaces and, optionally, generated evidence reports.
@@ -747,23 +787,23 @@ Validate methods surfaces and, optionally, generated evidence reports.
 
 ### `build_parser`
 
-*function — defined in `infrastructure.orchestration.cli`*
+*function — defined in `infrastructure.orchestration.parser`*
 
 ```python
 build_parser() -> argparse.ArgumentParser
 ```
 
-Build the top-level argparse parser.
+Build the compatible top-level orchestration parser.
 
 ### `main`
 
 *function — defined in `infrastructure.orchestration.cli`*
 
 ```python
-main(argv: Sequence[str] | None=None, *, runner_factory: Any=PipelineRunner, secure_runner: Any=run_secure_pipeline, interactive_runner: Any=_interactive) -> int
+main(argv: Sequence[str] | None=None, *, runner_factory: Any=PipelineRunner, secure_runner: Any=run_secure_pipeline, interactive_runner: Any=interactive) -> int
 ```
 
-Entry point. Returns process exit code.
+Parse, dispatch, and return a stable process exit code.
 
 ### `MENU_OPTIONS`
 

@@ -19,7 +19,7 @@ Check these before running anything. The pipeline will fail at specific, known s
 pandoc --version        # need 2.x or 3.x
 xelatex --version       # need any version
 uv --version            # need 0.4.x or later
-python3 --version       # 3.10–3.12; managed by uv, not required on PATH  # noqa: docs-lint
+python3 --version       # 3.10–3.13; managed by uv, not required on PATH  # noqa: docs-lint
 pre-commit --version    # installed via uv; check after uv sync
 ```
 

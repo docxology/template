@@ -154,6 +154,7 @@ projects/templates/template_advanced_literature_review/output/data/*
 !projects/templates/template_advanced_literature_review/output/reports/
 projects/templates/template_advanced_literature_review/output/reports/*
 !projects/templates/template_advanced_literature_review/output/reports/artifact_manifest.json
+!projects/templates/template_advanced_literature_review/output/reports/evidence_registry.json
 projects/templates/template_advanced_literature_review/.venv/
 projects/templates/template_advanced_literature_review/.pytest_cache/
 projects/templates/template_advanced_literature_review/.ruff_cache/

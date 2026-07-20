@@ -66,7 +66,7 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 
 | | |
 | --- | --- |
-| **Contract** | Matrix testing across Python versions (currently 3.10–3.12) on Ubuntu and macOS; coverage gates; linting; security scanning; doc-tree integrity checks. |
+| **Contract** | Infrastructure matrix testing across Python 3.10–3.13 on Ubuntu plus a Python 3.12 macOS smoke; coverage gates; linting; security scanning; doc-tree integrity checks. |
 | **Current implementation** | GitHub Actions (`.github/workflows/ci.yml`). |
 | **Local reproduction** | `act` (nektos) — see [`ci-local.md`](ci-local.md). |
 | **Migration path** | If GitHub Actions is succeeded (or free-tier compresses to the point of unusability): (a) keep workflow YAML as the documentation of intent; (b) port to the successor (Forgejo Actions consumes the same YAML format; GitLab CI is a YAML rewrite; sovereign-cloud successors vary); (c) the local-reproduction path via `act` is the **portability hedge** — if you can run CI locally via act, you can move CI anywhere. |

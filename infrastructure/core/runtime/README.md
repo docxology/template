@@ -10,6 +10,8 @@ Environment, checkpoint, retry, profiling, and dependency helpers.
 - `checkpoint.py`
 - `environment.py`
 - `env_deps.py`
+- `setup_checks.py`
+- `python_compatibility.py`
 - `eta.py`
 - `function_profiler.py`
 - `health_check.py`

@@ -238,6 +238,11 @@ class TestCLI:
         assert "elapsed_ms" in payload["results"][0]
         assert isinstance(payload["total_elapsed_ms"], (int, float))
         assert isinstance(payload["wall_elapsed_ms"], (int, float))
+        assert payload["schema_version"] == 1
+        assert payload["workers"] == 1
+        assert payload["repo_commit"]
+        assert isinstance(payload["clean_checkout"], bool)
+        assert len(payload["gate_spec_sha256"]) == 64
 
     def test_unknown_gate_exits_non_zero(self) -> None:
         proc = _run_module_cli("--gates=not-a-gate")

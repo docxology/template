@@ -10,11 +10,13 @@ Pipeline gate scripts for template.
 - `exemplar_export_smoke.py` — Exports each public exemplar to a clean temporary tree, installs its locked project environment, and imports every top-level `src` target.
 - `pip_audit_ignore_policy.py` — Requires accountable metadata on every dependency-audit exemption.
 - `plugin_export_check` — Verifies plugin exports
-- `methods_plan_check` — Validates the methods-orchestration contract (stage definition-of-done, manuscript methods section, artifact-manifest / evidence-registry surfaces) per project. **Opt-in: NOT wired into the default pipeline or CI.**
+- `methods_plan_check` — Validates source or rendered methods contracts for one project or all public exemplars. Source mode runs in unified health; rendered mode is an explicit publication gate.
+- `check_private_project_promotion.py` — Candidate security scan and composite private-promotion gate, with the historical script entrypoint retained.
 
 ```bash
-# Opt-in methods-plan gate (all public exemplars, or one --project)
-uv run python scripts/gates/methods_plan_check.py
+# Methods gates (all public exemplars, or one --project)
+uv run python scripts/gates/methods_plan_check.py --all-public --artifact-mode source
+uv run python scripts/gates/methods_plan_check.py --all-public --artifact-mode rendered
 uv run python scripts/gates/methods_plan_check.py --project templates/template_code_project
 ```
 

@@ -92,6 +92,18 @@ not to the contents of any specific workspace.
 
 ### Changed
 
+- 🐍 **Runtime support decision and Python 3.13 readiness.** The package keeps
+  Python 3.10 as its compatibility floor through the 3.6.x minor line; dropping
+  it requires an explicit breaking release. Ubuntu infrastructure CI now adds
+  Python 3.13, and a static public-source audit rejects Python 3.11+ syntax or
+  standard-library APIs that lack a Python 3.10 fallback.
+
+- 🧩 **Composable pipeline and methods contracts.** Pipeline-source precedence,
+  stable stage keys, project/custom single-stage dispatch, batch source/rendered
+  methods audits, deterministic evidence generation, modular orchestration, and
+  explicit promotion subcommands now share typed infrastructure services while
+  retaining compatibility entrypoints.
+
 - ⚡ **Health feedback is bounded and concurrent.** Independent repository gates
   now run through a four-worker subprocess pool while preserving canonical
   result order; `--workers 1` retains serial diagnostics, and JSON reports
@@ -589,6 +601,27 @@ not to the contents of any specific workspace.
   `>=6.12.0` (clears CVE-2026-48155 / CVE-2026-48156) and `cryptography` to
   `>=48.0.1` (clears GHSA-537c-gmf6-5ccf). `pip-audit` reports no known
   vulnerabilities; pip `PYSEC-2026-196` remains the single documented ignore.
+
+## [3.5.1] — 2026-06-26
+
+### Changed
+
+- Bumped the root `template-research-project` distribution from 3.5.0 to
+  3.5.1 and published the matching `v3.5.1` root release. This patch contained
+  no additional functional change beyond the version alignment.
+
+## [3.5.0] — 2026-06-26
+
+### Added
+
+- Added the agent-facing capability and operation discovery surfaces shipped
+  between `v3.4.0` and `v3.5.0`, together with their generated documentation and
+  manifest checks.
+
+### Changed
+
+- Consolidated the public-exemplar, publishing-metadata, rendering, security,
+  and CI hardening accumulated since `v3.4.0` into the 3.5.0 root release.
 
 ## [3.4.0] — 2026-06-12
 

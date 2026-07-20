@@ -280,7 +280,7 @@ jobs:
           --timeout=120
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.12)
+# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.13)
 # ─────────────────────────────────────────────────────────────────────────────
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
@@ -292,11 +292,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # ubuntu covers all three Python versions; macOS runs only the 3.12
+        # ubuntu covers all four Python versions; macOS runs only the 3.12
         # smoke (macOS legs are ~10x cost and rarely surface OS-specific project
         # breakage beyond what the 3.12 cell catches).
         os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
         include:
           - os: macos-latest
             python-version: "3.12"

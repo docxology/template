@@ -43,6 +43,9 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
 - Publication, LLM-boundary, hostile-render, and provenance-metadata controls
   are now shipped and covered by offline negative tests; ownership and private-
   sidecar promotion governance follow-ups remain externally dependent.
+- Python 3.10 remains the declared floor through the 3.6.x minor line; Python
+  3.13 now has an infrastructure readiness lane. The breaking-release rule is
+  recorded in [`docs/maintenance/python-runtime-support.md`](docs/maintenance/python-runtime-support.md).
 
 ## Active backlog
 
@@ -105,23 +108,6 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   -m 'not requires_ollama'`, plus every public-project coverage report.
 - **Out of scope:** coverage theater, mocks/fakes, lowering thresholds, or
   treating live-provider execution as default evidence.
-
-### RUNTIME-SUPPORT-1 - Prepare Python lifecycle transition
-
-- **Problem:** Python 3.10 remains in the supported matrix while its lifecycle
-  endpoint approaches; support claims must change coherently.
-- **Why it matters:** a partial runtime transition strands contributors with
-  mismatched locks, CI cells, package metadata, and documentation.
-- **Smallest next step:** decide the supported floor before the 3.10 EOL,
-  document the decision, and update `requires-python`, CI, locks, contributor
-  docs, and release notes as one change.
-- **Acceptance:** every supported-version CI cell and project gate passes with
-  no stale version claims or lock drift.
-- **Command/evidence:** run the complete CI matrix and each public-project gate
-  after the version-floor change; check all lockfiles and `requires-python`
-  declarations in the same diff.
-- **Out of scope:** dropping a Python version without an explicit release
-  boundary or supporting an untested interpreter.
 
 ### CI-ERGONOMICS-1 - Reduce local gate latency
 

@@ -4,7 +4,7 @@
 
 ## Why this guide exists
 
-The repo's CI matrix (Ubuntu/macOS × Python 3.10–3.12) runs on GitHub Actions free-tier minutes. macOS minutes cost 10× Linux. GitHub's free-tier policy has tightened twice since 2020. On a multi-decade horizon, **the inability to reproduce CI locally is a vendor-lock-in risk** — if the free tier compresses, the project either pays or moves CI providers.
+The repo's infrastructure CI matrix (Ubuntu × Python 3.10–3.13 plus a macOS 3.12 smoke) runs on GitHub Actions free-tier minutes. macOS minutes cost 10× Linux. GitHub's free-tier policy has tightened twice since 2020. On a multi-decade horizon, **the inability to reproduce CI locally is a vendor-lock-in risk** — if the free tier compresses, the project either pays or moves CI providers.
 
 This guide documents the **`act`-based local reproduction path**, which decouples the workflow YAML (the documentation of intent) from the GitHub Actions runtime (the current implementation).
 
@@ -87,7 +87,7 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | CI job | Reproducible via act? | Notes |
 | --- | --- | --- |
 | `lint` (ruff + mypy; also runs the four-pool `check_tracked_all.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
-| `test-infra` (matrix: ubuntu py3.10/3.11/3.12 + macos py3.12) | ✅ Yes (ubuntu legs) | Set `--matrix python-version:3.X`; coverage gate runs inside this job |
+| `test-infra` (matrix: ubuntu py3.10/3.11/3.12/3.13 + macos py3.12) | ✅ Yes (ubuntu legs) | Set `--matrix python-version:3.X`; coverage gate runs inside this job |
 | `test-project` (matrix: per-project × py3.10/3.12) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
 | `security` (bandit + pip-audit) | ✅ Yes | Fully Linux-portable |
 | `docs-lint` | ✅ Yes | Markdown lint, doc-tree integrity |
@@ -127,6 +127,22 @@ The health lane overlaps independent subprocess gates with a bounded default
 worker pool. For a reproducible serial diagnostic run, use the underlying
 command directly with `--workers 1`; its machine-readable report includes both
 aggregate gate time and whole-sweep wall time.
+
+To close a health-latency change, run the owning benchmark command from a clean
+checkout. It executes both modes itself and writes the fail-closed manifest:
+
+```bash
+uv run python scripts/maintenance/benchmark_health.py \
+  --parallel-workers 4 \
+  --output /tmp/health-benchmark.json
+```
+
+Each owned health result records its worker count, commit, clean-tree state,
+report digest, and a SHA-256 digest of the exact gate argv/threshold registry.
+Caller-supplied reports cannot produce acceptance. The manifest passes only
+when both executions match the current clean checkout and gate digest, both
+modes run and pass the complete canonical registry in the same order, and
+parallel wall time improves by at least 25%.
 
 The pre-commit lane uses `uv run pre-commit`; it never silently skips a missing
 global executable. Confidentiality uses the full four-pool

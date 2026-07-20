@@ -2,6 +2,11 @@
 
 Foundation utilities: exceptions, logging, and configuration.
 
+Repository health is exposed through `infrastructure.core.health`; clean-checkout
+serial/parallel benchmark evidence is validated by
+`infrastructure.core.health_benchmark` and the thin
+`scripts/maintenance/benchmark_health.py` entrypoint.
+
 ## Quick Start
 
 ```python

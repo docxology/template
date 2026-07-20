@@ -67,12 +67,13 @@ DEFAULT_OPERATION_SEARCH_ROOTS: tuple[str, ...] = ("infrastructure",)
 # Effect tier for the capability surface.
 Effect = Literal["read_only", "mutating"]
 
-# Explicit allowlist of dotted module paths whose CLIs mutate external state or
-# incur cost (network publishing / uploads / paid API calls). Everything else is
+# Explicit allowlist of dotted module paths whose CLIs write state, mutate
+# external systems, or incur cost. Everything else is
 # treated as ``read_only``. Kept deliberately small and hand-maintained — an
 # agent surface may refuse these unless a caller explicitly opts in.
 MUTATING_OPERATIONS: frozenset[str] = frozenset(
     {
+        "infrastructure.core.health_benchmark",  # writes the requested evidence manifest
         "infrastructure.publishing",  # DOI / Zenodo / arXiv publish + archival CLIs
         "infrastructure.search.deep_research",  # PAID deep-research dispatch
         "infrastructure.skills",  # manifests plus user-level runtime links + backups
@@ -219,8 +220,15 @@ def _module_dotted_path(repo_root: Path, module_file: Path) -> str:
 def _cli_source_for(package_dir: Path) -> Path:
     """Pick the source file that best describes a package's CLI.
 
-    Prefer ``cli.py`` (where parsers/handlers live), fall back to ``__main__.py``.
+    Prefer a dedicated ``parser.py`` after orchestration has been split into
+    parser/handler/interaction modules, then ``cli.py``, then ``__main__.py``.
+    This keeps the generated operation manifest derived from the declarative
+    command registry instead of losing subcommands when ``cli.py`` becomes a
+    compatibility facade.
     """
+    parser_py = package_dir / "parser.py"
+    if parser_py.is_file():
+        return parser_py
     cli_py = package_dir / "cli.py"
     if cli_py.is_file():
         return cli_py

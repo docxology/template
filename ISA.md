@@ -1,10 +1,16 @@
 ---
 project: humos-template
-task: "Iteration 10 - comprehensive repository review, issue closure, and authorized main push"
+task: "Iteration 11 - close remaining evidence-backed improvements and publish main"
 effort: E4
-phase: complete
-progress: implementation, audit, issue closure, main publication, remote SHA verification, and hosted CI complete
-iteration: 10-comprehensive-review-issue-closure-main-push
+phase: building
+progress: "1/34 current-iteration criteria verified; composable-package program in execution"
+iteration: 11-all-improvements-main-push
+baseline_head_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
+baseline_origin_main_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
+baseline_worktree_composable_program: "18 tracked modifications plus 28 untracked paths; three protective stashes; independently dirty nested Kmyth checkout"
+baseline_head_iter11: 52db06f43b383444cd274cf582a0038f307383b9
+baseline_origin_main_iter11: 52db06f43b383444cd274cf582a0038f307383b9
+baseline_ci_iter11: "CI run 29468755285: success"
 baseline_head_iter10: 75447b6f08e79b7527fb33fb096d4442ce8d094a
 integrated_head_iter10: e17d25ec8
 published_head_iter10: 8ed32784088c370ea0cba6a9af0de9392d68d88b
@@ -27,7 +33,7 @@ baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
 iteration: 5-multi-lens-review-plans-fixes
 mode: algorithm
 started: 2026-07-02
-updated: 2026-07-13
+updated: 2026-07-20T09:39:36-07:00
 ---
 
 # ISA — HumOS Template Package: Agentic Operability
@@ -329,6 +335,93 @@ tree again from Git state, then push and inspect the remote SHA and CI checks.
   EDA job before dependency sync; that unchanged job passed on retry, while all
   repository lint, type, security, documentation, infrastructure, regression,
   manuscript, health, and public-exemplar jobs passed.
+
+### Iteration 11 Goal
+
+Probe every remaining active backlog and stale verification claim against the
+current public repository, implement every safe evidence-backed improvement,
+reconcile all coupled code/test/documentation surfaces, and publish the verified
+result to `origin/main` without changing repository-admin policy or absorbing
+local-only work.
+
+### Iteration 11 Criteria
+
+- [x] ISC-288: `git status`, local HEAD, `origin/main`, and the latest hosted CI conclusion are captured before edits.
+- [ ] ISC-289: every root active-backlog item is probed against its named current artifact and classified as shipped, actionable, or externally blocked.
+- [ ] ISC-290: historical ISC-270 is reconciled with a successful hosted CI run on the commit that satisfied it.
+- [ ] ISC-291: a repository test fails when any public exemplar lacks intended CODEOWNERS coverage.
+- [ ] ISC-292: every sensitive ownership category has either two named reviewers or an explicit sole-owner exception in the public policy artifact.
+- [ ] ISC-293: focused tests prove non-dry-run publication rejects local-only inputs and emits a redacted exact-payload preflight.
+- [ ] ISC-294: a generic private-project promotion gate rejects unresolved security work unless an explicit risk acceptance is recorded.
+- [ ] ISC-295: package version, latest release, changelog state, and release-readiness documentation agree with live artifacts.
+- [ ] ISC-296: `TO-DO.md`, `STATUS.md`, and the current ISA contain no stale shipped/backlog or verification claims found by this pass.
+- [ ] ISC-297: affected focused suites and the repository-wide blocking health command pass on the final tracked diff.
+- [ ] ISC-298: a fresh-context cross-vendor audit reports no unresolved medium/high correctness, security, or developer-experience finding.
+- [ ] ISC-299: Anti: the dirty Kmyth checkout, protective stashes, and untracked generated outputs are absent from every staged commit.
+- [ ] ISC-300: the reviewed commits reach `origin/main`, the remote SHA is re-read, and hosted CI succeeds on the final SHA.
+- [ ] ISC-301: every pipeline consumer resolves an explicit, methods-specific, project, repository, or installed pipeline source through one typed precedence contract covered by characterization tests.
+- [ ] ISC-302: every canonical stage has a stable command key, while historical display names, name-based dependencies, and the `tests`/`executive_report` aliases remain compatible.
+- [ ] ISC-303: single-stage execution runs default, project-override, custom-script, and built-in-method stages through the selected project DAG with deterministic exit codes.
+- [ ] ISC-304: methods plans expose additive schema, artifact-mode, and stage-key fields without removing or changing existing serialized fields.
+- [ ] ISC-305: the methods CLI audits either one project or all public exemplars in source or rendered mode and returns exit `0` for clean/warnings, `1` for validation errors, and argparse exit `2` for invalid invocation.
+- [ ] ISC-306: all 24 public exemplars pass source-contract and rendered-evidence methods audits, including a pipeline-generated advanced-literature evidence registry.
+- [ ] ISC-307: counts and project-test collection succeed after checkout relocation despite a stale absolute project pytest wrapper, without deleting or rewriting the project environment.
+- [ ] ISC-308: root orchestration parser, handlers, and interactive UI are modular while all existing imports, flags, prompt order, transcripts, and exit codes remain compatible.
+- [ ] ISC-309: orchestration stage banners and totals derive from the actual filtered project DAG, including project overrides and plugin stages.
+- [ ] ISC-310: secure orchestration resolves projects and layered configuration through shared services rather than private duplicate loaders.
+- [ ] ISC-311: the six named fat-script responsibilities live in owning infrastructure modules and the scripts remain thin entrypoints under the strict drift audit.
+- [ ] ISC-312: promotion attestation, candidate scanning, and composite evaluation are separately testable, deterministic with an injected `as_of`, and reachable through compatible legacy and explicit CLI forms.
+- [ ] ISC-313: CODEOWNERS, sensitive ownership policy, publication preflight, and root release contract agree with their generated or tested public contracts.
+- [ ] ISC-314: stage tables, API reference, operations, skills, roster, counts, architecture overview, methods guidance, `TO-DO.md`, `STATUS.md`, and `[Unreleased]` changelog are current on the final tree.
+- [ ] ISC-315: Python 3.10 remains supported, Python 3.13 is exercised for readiness, and no unguarded 3.11+ syntax or standard-library API enters the supported surface.
+- [ ] ISC-316: current meaningful first-party and offline-failure coverage targets gain real-file or real-subprocess tests without mocks, lowered thresholds, or live-provider requirements.
+- [ ] ISC-317: the blocking health sweep passes every registered gate and clean-checkout benchmark evidence proves at least 25% wall-time improvement without skipped gates or changed thresholds.
+- [ ] ISC-318: the uncached infrastructure suite, configured typing, security/docs/export gates, every public project at its declared coverage floor, and the isolated union gate pass on the final commit.
+- [ ] ISC-319: Forge implementation review, advisor checkpoint, and fresh Cato audit leave no unresolved medium/high correctness, security, compatibility, or developer-experience finding.
+- [ ] ISC-320: Anti: no public import, shell entrypoint, CLI flag, JSON field, diagnostic code, generated-document path, confidentiality boundary, or coverage threshold is removed or weakened.
+- [ ] ISC-321: phase commits are independently reproducible, rebased normally onto current `origin/main`, pushed without force, and confirmed by exact remote SHA plus hosted CI success.
+
+### Iteration 11 Test Strategy
+
+Use direct read-only probes for GitHub policy and release state, negative-control
+tests for each security gate, and generator checks for registered documentation.
+Run affected suites before the 22-gate repository health command. Audit the final
+diff in a fresh context, stage only reviewed tracked paths, push normally, then
+verify remote SHA parity and the complete hosted CI matrix.
+
+For the composable-package extension, first capture compatibility behavior in
+real-I/O characterization tests. Verify portability with a temporary relocated
+project carrying a stale absolute pytest wrapper. Probe source and rendered
+methods modes across the authoritative public roster, then run focused suites
+after each phase, the uncached infrastructure coverage suite at integration
+boundaries, one project suite per process, the isolated union coverage gate,
+the complete health registry, and a clean-checkout before/after benchmark.
+
+### Iteration 11 Features
+
+- `backlog-truth`: probe and reconcile every active backlog and historical open criterion; satisfies ISC-289..290 and ISC-295..296.
+- `security-boundaries`: complete or prove ownership, CODEOWNERS, publishing, and private-promotion gates; satisfies ISC-291..294.
+- `repository-proof`: run local acceptance, adversarial review, selective staging, main publication, and hosted verification; satisfies ISC-297..300.
+- `portable-execution`: consolidate project interpreter/test command construction and relocation behavior; satisfies ISC-307 and ISC-317.
+- `pipeline-contract`: centralize pipeline-source and stage-identity resolution plus project-aware single-stage execution; satisfies ISC-301..303 and ISC-309.
+- `methods-audit`: make methods plans typed, batchable, and complete in source/rendered modes; satisfies ISC-304..306.
+- `orchestration-modules`: separate parsing, command effects, interaction, secure config, and thin scripts; satisfies ISC-308..311.
+- `promotion-governance`: separate promotion contracts and reconcile public security/release ownership surfaces; satisfies ISC-312..313.
+- `documentation-and-runtime`: regenerate registered docs, close meaningful coverage gaps, retain 3.10, and prove 3.13 readiness; satisfies ISC-314..318.
+- `verified-publication`: run Forge/advisor/Cato review, preserve compatibility and local-only state, phase commits, rebase, push, and hosted verification; satisfies ISC-319..321.
+
+### Iteration 11 Decisions
+
+- 2026-07-15 20:35: repository-admin mutations such as changing branch protection remain outside the authority implied by “push to main”; current policy is inspected and any exact external action is reported rather than silently changed.
+- 2026-07-15 20:35: the local Claude advisor is logged out, so its failed checkpoint is recorded and Forge plus a fresh cross-vendor audit provide the independent review path.
+- 2026-07-15 20:35: current hosted CI on baseline `52db06f43` is accepted as the full-suite baseline; local work begins with artifact-specific probes rather than immediately repeating the already-green matrix.
+- 2026-07-20 09:39: refined: the approved composable-package program extends Iteration 11 with ISC-301..321 rather than creating a competing ISA iteration; stable historical IDs and the existing release/security criteria remain authoritative.
+- 2026-07-20 09:39: preserve public compatibility additively, retain Python 3.10 while adding 3.13 readiness, land under `[Unreleased]`, and create no version tag or GitHub release.
+- 2026-07-20 09:39: phase commits may contain only their implementation plus tests and generated registered consumers; no commit may depend on later unstaged code to pass.
+
+### Iteration 11 Verification
+
+- ISC-288: Bash and GitHub probes reported local HEAD and `origin/main` both at `52db06f43b383444cd274cf582a0038f307383b9`, zero divergence, only the pre-existing dirty Kmyth checkout plus untracked generated outputs, no open GitHub issues, and successful CI run `29468755285` on that SHA.
 
 ## Historical iterations 1–3 — Goal
 

@@ -77,6 +77,22 @@ class TestDiscoverOperations:
         assert ops[0].purpose == "Bar entry."
         assert ops[0].exports == ()
 
+    def test_prefers_declarative_parser_module(self, tmp_path: Path) -> None:
+        _make_fake_cli_package(tmp_path)
+        pkg = tmp_path / "infrastructure" / "foo"
+        (pkg / "parser.py").write_text(
+            '"""Declarative Foo command registry."""\n'
+            "def build_parser(sub):\n"
+            "    sub.add_parser('from-parser', help='Canonical command')\n",
+            encoding="utf-8",
+        )
+
+        op = discover_operations(tmp_path)[0]
+
+        assert op.source_path == "infrastructure/foo/parser.py"
+        assert op.purpose == "Declarative Foo command registry."
+        assert [(item.name, item.help) for item in op.subcommands] == [("from-parser", "Canonical command")]
+
     def test_discovers_single_file_module_with_main_guard(self, tmp_path: Path) -> None:
         # A single-file CLI in a directory that is NOT itself an invocable package.
         pkg = tmp_path / "infrastructure" / "reporting"
@@ -117,8 +133,9 @@ class TestDiscoverOperations:
         assert [o.module for o in ops] == ["infrastructure.foo"]
 
     def test_mutating_effect_tier_from_allowlist(self, tmp_path: Path) -> None:
-        mutating_leaf = sorted(MUTATING_OPERATIONS)[0].split(".")[-1]
-        pkg = tmp_path / "infrastructure" / mutating_leaf
+        dotted = "infrastructure.publishing"
+        assert dotted in MUTATING_OPERATIONS
+        pkg = tmp_path.joinpath(*dotted.split("."))
         pkg.mkdir(parents=True)
         (pkg / "__init__.py").write_text("\n", encoding="utf-8")
         (pkg / "__main__.py").write_text("\n", encoding="utf-8")
@@ -199,6 +216,7 @@ class TestAgainstLiveRepo:
         # The publish/upload CLI is tiered mutating; a plain read-only CLI is not.
         assert by_module["infrastructure.publishing"].effect == "mutating"
         assert by_module["infrastructure.skills"].effect == "mutating"
+        assert by_module["infrastructure.core.health_benchmark"].effect == "mutating"
         assert by_module["infrastructure.core.health"].effect == "read_only"
 
     def test_cli_list_json_round_trips(self, capsys) -> None:

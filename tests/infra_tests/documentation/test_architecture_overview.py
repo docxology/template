@@ -117,6 +117,12 @@ def test_build_architecture_mermaid_is_alphabetically_sorted(tmp_path: Path) -> 
     assert bar_idx < foo_idx, "expected 'bar' to render before 'foo' (alphabetical)"
 
 
+def test_build_architecture_mermaid_is_byte_deterministic(tmp_path: Path) -> None:
+    _make_fake_repo(tmp_path)
+
+    assert build_architecture_mermaid(tmp_path) == build_architecture_mermaid(tmp_path)
+
+
 def test_build_architecture_mermaid_handles_empty_projects(tmp_path: Path) -> None:
     """Skeleton with no projects/ dir should still produce a valid diagram."""
     foo_pkg = tmp_path / "infrastructure" / "foo"

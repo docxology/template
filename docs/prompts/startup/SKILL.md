@@ -96,7 +96,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
-**Gate:** Exit 0, no errors → continue. On failure: check Python 3.10–3.12 is available and re-run.
+**Gate:** Exit 0, no errors → continue. On failure: check a supported Python 3.10–3.13 interpreter is available and re-run.
 
 ---
 

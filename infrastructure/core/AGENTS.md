@@ -82,6 +82,11 @@ The Core module provides fundamental foundation utilities used across the entire
 - `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`, and bounded `--workers` concurrency (`1` keeps serial diagnostics)
 - Public API: `GateResult`, `HealthReport`, `GATE_NAMES`, `build_gate_specs`, `run_health_checks`, `format_report_table`, `main`
 
+**health_benchmark.py**
+- Validates serial and parallel health JSON reports from the same clean checkout
+- Fails closed unless commit, clean-tree state, worker count, and exact gate-argv digest match; both runs execute the complete canonical gate registry, pass, and improve wall time by the declared threshold
+- Public API: `HealthRunSummary`, `HealthBenchmarkManifest`, `HealthBenchmarkError`, `load_health_report`, `build_health_benchmark_manifest`, `main`
+
 **agent_memory.py**
 - Load/save gitignored continual-learning agent memory at `.cursor/hooks/state/continual-learning-memory.json`
 - Schema example (tracked): `.cursor/hooks/state/continual-learning-memory.example.json` — see [`.cursor/hooks/state/README.md`](../../.cursor/hooks/state/README.md)

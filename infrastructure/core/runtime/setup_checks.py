@@ -8,9 +8,44 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.core.runtime.env_deps import check_dependencies, install_missing_packages
+from infrastructure.core.files.coverage_cleanup import clean_coverage_files
+from infrastructure.core.project_paths import resolve_project_root
+from infrastructure.core.runtime.env_deps import (
+    check_build_tools,
+    check_dependencies,
+    install_missing_packages,
+)
+from infrastructure.core.runtime.environment import (
+    check_python_version,
+    set_environment_variables,
+    setup_directories,
+    verify_source_structure,
+)
 
 logger = get_logger(__name__)
+
+
+def run_environment_setup_checks(repo_root: Path, project_name: str) -> list[tuple[str, bool]]:
+    """Run the canonical Stage 00 check registry and capture every outcome."""
+    clean_coverage_files(repo_root, scope_dir=resolve_project_root(repo_root, project_name))
+    checks: tuple[tuple[str, Callable[[], bool]], ...] = (
+        ("Python version", check_python_version),
+        ("Dependencies", lambda: sync_workspace_dependencies(repo_root)),
+        ("Build tools", check_build_tools),
+        ("Directory structure", lambda: setup_directories(repo_root, project_name)),
+        ("Source structure", lambda: verify_source_structure(repo_root, project_name)),
+        ("Project discovery", lambda: validate_project_discovery(repo_root, project_name)),
+        ("Environment variables", lambda: set_environment_variables(repo_root)),
+        ("Project setup_hook (optional)", lambda: run_optional_setup_hook(repo_root, project_name)),
+    )
+    results: list[tuple[str, bool]] = []
+    for check_name, check_fn in checks:
+        try:
+            results.append((check_name, bool(check_fn())))
+        except Exception as exc:  # noqa: BLE001 - one failed check must not hide the remaining evidence
+            logger.error("Error during %s: %s", check_name, exc)
+            results.append((check_name, False))
+    return results
 
 
 def aggregate_check_results(
