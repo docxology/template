@@ -15,10 +15,12 @@ from newspaper.content import (
     Story,
     _parse_ad,
     _parse_block,
+    _parse_box,
     _parse_body,
     _parse_figure,
     _parse_item,
     _parse_page,
+    _parse_story,
     load_edition,
 )
 
@@ -43,6 +45,19 @@ def test_page_validates_template_and_columns() -> None:
         Page(number=1, template="origami")
     with pytest.raises(ValueError):
         Page(number=1, columns=0)
+    with pytest.raises(ValueError, match="page number"):
+        Page(number=0)
+
+
+def test_edition_rejects_duplicate_page_numbers() -> None:
+    with pytest.raises(ValueError, match="duplicate page number"):
+        Edition(
+            nameplate="T",
+            city="C",
+            state="S",
+            date="D",
+            pages=[Page(number=1), Page(number=1)],
+        )
 
 
 def test_edition_page_count() -> None:
@@ -87,6 +102,24 @@ def test_parse_block_non_str_non_dict_raises() -> None:
     """
     with pytest.raises(ValueError, match="cannot parse body block"):
         _parse_block(42)  # integer is neither str nor dict
+
+
+def test_parse_story_requires_mapping_and_headline() -> None:
+    with pytest.raises(ValueError, match="story must be a mapping"):
+        _parse_story("not-a-story")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="story requires a 'headline'"):
+        _parse_story({})
+
+
+def test_parse_box_requires_mapping_and_discriminator() -> None:
+    with pytest.raises(ValueError, match="box item must be a mapping"):
+        _parse_box("not-a-box")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="box requires a 'box'"):
+        _parse_box({})
+    with pytest.raises(ValueError, match="'items' must be a list"):
+        _parse_box({"box": "generic", "items": "not-a-list"})
+    with pytest.raises(ValueError, match="'columns' must be a list"):
+        _parse_box({"box": "table", "columns": "not-a-list"})
 
 
 # ---------------------------------------------------------------------------
@@ -163,6 +196,8 @@ def test_parse_item_dispatch() -> None:
     assert isinstance(_parse_item({"figure": {"path": "p.png"}}), Figure)
     with pytest.raises(ValueError):
         _parse_item({"mystery": 1})
+    with pytest.raises(ValueError, match="page item must be a mapping"):
+        _parse_item("not-an-item")  # type: ignore[arg-type]
 
 
 def test_parse_item_dispatches_ad_with_all_fields() -> None:
@@ -210,6 +245,11 @@ def test_parse_page_missing_number_raises() -> None:
         _parse_page({"template": "standard", "main": []})
 
 
+def test_parse_page_requires_mapping() -> None:
+    with pytest.raises(ValueError, match="page must be a mapping"):
+        _parse_page("not-a-page")  # type: ignore[arg-type]
+
+
 def test_parse_page_non_integer_number_raises() -> None:
     with pytest.raises(ValueError):
         _parse_page({"number": "one", "main": []})
@@ -225,6 +265,22 @@ def test_parse_page_rail_enabled_key() -> None:
     page = _parse_page({"number": 2, "rail_enabled": True, "main": []})
     assert page.rail is True
     assert page.rail_items == []
+
+
+def test_parse_page_rejects_non_list_content_sections() -> None:
+    with pytest.raises(ValueError, match="'rail' must be a list"):
+        _parse_page({"number": 1, "rail": "not-a-list", "main": []})
+    with pytest.raises(ValueError, match="'main' must be a list"):
+        _parse_page({"number": 1, "main": "not-a-list"})
+    with pytest.raises(ValueError, match="'lead' must be a mapping"):
+        _parse_page({"number": 1, "lead": "not-a-story", "main": []})
+
+
+def test_parse_box_rejects_non_list_table_fields() -> None:
+    with pytest.raises(ValueError, match="'rows' must be a list"):
+        _parse_item({"box": "table", "rows": "not-a-list"})
+    with pytest.raises(ValueError, match="row 0 must be a list"):
+        _parse_item({"box": "table", "rows": ["not-a-row"]})
 
 
 # ---------------------------------------------------------------------------
@@ -283,6 +339,55 @@ def test_load_edition_missing_page_file_raises(tmp_path) -> None:
     }
     (tmp_path / "edition.yaml").write_text(yaml.dump(manifest), encoding="utf-8")
     with pytest.raises(FileNotFoundError, match="ghost.yaml"):
+        load_edition(tmp_path)
+
+
+def test_load_edition_rejects_page_path_escape(tmp_path) -> None:
+    """Manifest entries cannot read page YAML outside content/pages/."""
+    manifest = {
+        "masthead": {"nameplate": "X", "city": "Y", "state": "Z", "date": "D"},
+        "pages": ["../outside.yaml"],
+    }
+    (tmp_path / "edition.yaml").write_text(yaml.dump(manifest), encoding="utf-8")
+    (tmp_path / "outside.yaml").write_text("number: 1\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="inside the content/pages directory"):
+        load_edition(tmp_path)
+
+
+def test_load_edition_rejects_non_string_page_reference(tmp_path) -> None:
+    manifest = {
+        "masthead": {"nameplate": "X", "city": "Y", "state": "Z", "date": "D"},
+        "pages": [1],
+    }
+    (tmp_path / "edition.yaml").write_text(yaml.dump(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="page filenames must be non-empty strings"):
+        load_edition(tmp_path)
+
+
+def test_load_edition_rejects_duplicate_manifest_page_file(tmp_path) -> None:
+    manifest = {
+        "masthead": {"nameplate": "X", "city": "Y", "state": "Z", "date": "D"},
+        "pages": ["p1.yaml", "./p1.yaml"],
+    }
+    (tmp_path / "edition.yaml").write_text(yaml.dump(manifest), encoding="utf-8")
+    pages_dir = tmp_path / "pages"
+    pages_dir.mkdir()
+    (pages_dir / "p1.yaml").write_text("number: 1\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate page file"):
+        load_edition(tmp_path)
+
+
+def test_load_edition_rejects_duplicate_page_number(tmp_path) -> None:
+    manifest = {
+        "masthead": {"nameplate": "X", "city": "Y", "state": "Z", "date": "D"},
+        "pages": ["p1.yaml", "p2.yaml"],
+    }
+    (tmp_path / "edition.yaml").write_text(yaml.dump(manifest), encoding="utf-8")
+    pages_dir = tmp_path / "pages"
+    pages_dir.mkdir()
+    (pages_dir / "p1.yaml").write_text("number: 1\n", encoding="utf-8")
+    (pages_dir / "p2.yaml").write_text("number: 1\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate page number"):
         load_edition(tmp_path)
 
 

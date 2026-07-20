@@ -26,7 +26,7 @@ claims:
     source: projects/templates/template_newspaper/src/newspaper/figures.py generate_all
     source_tier: project_source
     freshness: active
-    artifact_path: output/figures/
+    artifact_path: output/reports/output_statistics.json
   - claim_id: founding-year
     kind: number
     value: 1879
@@ -36,8 +36,8 @@ claims:
     artifact_path: content/edition.yaml
   - claim_id: test-coverage-percent
     kind: number
-    value: 99.81
-    source: pytest --cov=newspaper run 2026-06-25 (136 tests; see TODO.md)
+    value: 99.70
+    source: pytest --cov=newspaper run 2026-07-20 (150 tests; stage_01_test.py)
     source_tier: project_source
     freshness: active
-    artifact_path: tests/
+    artifact_path: output/reports/test_results.json

@@ -153,6 +153,8 @@ class Page:
     main_items: list[Story | Box | Figure | Ad] = field(default_factory=list)
 
     def __post_init__(self) -> None:
+        if self.number < 1:
+            raise ValueError(f"page number must be >= 1, got {self.number}")
         if self.template not in VALID_TEMPLATES:
             raise ValueError(
                 f"page {self.number}: unknown template {self.template!r}; allowed: {sorted(VALID_TEMPLATES)}"
@@ -177,6 +179,20 @@ class Edition:
     edition_label: str = ""
     weather_strip: str = ""
     pages: list[Page] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        """Reject duplicate folios before rendering can overwrite evidence.
+
+        The empty edition remains constructible for renderer smoke tests, but
+        every page in a non-empty edition must have a unique positive number.
+        Duplicate folios are otherwise especially dangerous: ``RenderResult``
+        stores oversets by page number, so a later duplicate could hide the
+        earlier page's failure in machine-readable evidence.
+        """
+        numbers = [page.number for page in self.pages]
+        if len(numbers) != len(set(numbers)):
+            duplicates = sorted({number for number in numbers if numbers.count(number) > 1})
+            raise ValueError(f"duplicate page number(s): {duplicates}")
 
     @property
     def page_count(self) -> int:
@@ -235,6 +251,10 @@ def _parse_figure(raw: Any) -> Figure | None:
 
 
 def _parse_story(raw: dict[str, Any]) -> Story:
+    if not isinstance(raw, dict):
+        raise ValueError(f"story must be a mapping, got {type(raw).__name__}")
+    if "headline" not in raw:
+        raise ValueError(f"story requires a 'headline' field; got keys {sorted(raw)}")
     return Story(
         headline=str(raw["headline"]),
         kicker=str(raw.get("kicker", "")),
@@ -250,12 +270,32 @@ def _parse_story(raw: dict[str, Any]) -> Story:
 
 
 def _parse_box(raw: dict[str, Any]) -> Box:
+    if not isinstance(raw, dict):
+        raise ValueError(f"box item must be a mapping, got {type(raw).__name__}")
+    if "box" not in raw:
+        raise ValueError(f"box requires a 'box' field; got keys {sorted(raw)}")
+
+    items_raw = raw.get("items")
+    if items_raw is not None and not isinstance(items_raw, list):
+        raise ValueError(f"box 'items' must be a list, got {type(items_raw).__name__}")
+    columns_raw = raw.get("columns")
+    if columns_raw is not None and not isinstance(columns_raw, list):
+        raise ValueError(f"box 'columns' must be a list, got {type(columns_raw).__name__}")
+    rows_raw = raw.get("rows")
+    if rows_raw is not None and not isinstance(rows_raw, list):
+        raise ValueError(f"box 'rows' must be a list, got {type(rows_raw).__name__}")
+    rows: list[list[str]] = []
+    for index, row in enumerate(rows_raw or []):
+        if not isinstance(row, list):
+            raise ValueError(f"box row {index} must be a list, got {type(row).__name__}")
+        rows.append([str(cell) for cell in row])
+
     return Box(
         kind=str(raw["box"]),
         title=str(raw.get("title", "")),
-        items=[str(x) for x in (raw.get("items") or [])],
-        rows=[[str(c) for c in row] for row in (raw.get("rows") or [])],
-        columns=[str(c) for c in (raw.get("columns") or [])],
+        items=[str(x) for x in (items_raw or [])],
+        rows=rows,
+        columns=[str(c) for c in (columns_raw or [])],
         body=_parse_body(raw.get("body")),
         footnote=str(raw.get("footnote", "")),
     )
@@ -287,6 +327,8 @@ def _parse_ad(raw: Any) -> Ad:
 
 def _parse_item(raw: dict[str, Any]) -> Story | Box | Figure | Ad:
     """Dispatch a main/rail item by its discriminator key."""
+    if not isinstance(raw, dict):
+        raise ValueError(f"page item must be a mapping, got {type(raw).__name__}")
     if "ad" in raw:
         return _parse_ad(raw["ad"])
     if "box" in raw:
@@ -301,21 +343,30 @@ def _parse_item(raw: dict[str, Any]) -> Story | Box | Figure | Ad:
 
 
 def _parse_page(raw: dict[str, Any]) -> Page:
+    if not isinstance(raw, dict):
+        raise ValueError(f"page must be a mapping, got {type(raw).__name__}")
     lead_raw = raw.get("lead")
-    lead = _parse_story(lead_raw) if isinstance(lead_raw, dict) else None
+    if lead_raw is not None and not isinstance(lead_raw, dict):
+        raise ValueError(f"page 'lead' must be a mapping, got {type(lead_raw).__name__}")
+    lead = _parse_story(lead_raw) if lead_raw is not None else None
     if lead is not None:
         lead.level = "lead"
 
     rail_items: list[Box | Story | Ad] = []
     rail_raw = raw.get("rail")
-    rail_list = rail_raw if isinstance(rail_raw, list) else []
+    if rail_raw is not None and not isinstance(rail_raw, list):
+        raise ValueError(f"page 'rail' must be a list, got {type(rail_raw).__name__}")
+    rail_list = rail_raw or []
     for item in rail_list:
         parsed = _parse_item(item)
         if isinstance(parsed, Figure):
             raise ValueError(f"page {raw.get('number')}: figures are not allowed in the rail")
         rail_items.append(parsed)
 
-    main_items: list[Story | Box | Figure | Ad] = [_parse_item(it) for it in (raw.get("main") or [])]
+    main_raw = raw.get("main")
+    if main_raw is not None and not isinstance(main_raw, list):
+        raise ValueError(f"page 'main' must be a list, got {type(main_raw).__name__}")
+    main_items: list[Story | Box | Figure | Ad] = [_parse_item(it) for it in (main_raw or [])]
 
     if "number" not in raw:
         raise ValueError("page requires a 'number' field")
@@ -358,14 +409,30 @@ def load_edition(content_dir: Path | str) -> Edition:
         raise ValueError("edition manifest 'pages' must be a non-empty list of page filenames")
 
     pages: list[Page] = []
+    pages_dir = content_dir / "pages"
+    pages_root = pages_dir.resolve()
+    seen_files: set[Path] = set()
     for fname in page_files:
-        page_path = content_dir / "pages" / str(fname)
-        if not page_path.exists():
-            raise FileNotFoundError(f"page file referenced by manifest not found: {page_path}")
+        if not isinstance(fname, str) or not fname.strip():
+            raise ValueError(f"edition manifest page filenames must be non-empty strings, got {fname!r}")
+        requested_path = pages_dir / fname
+        page_path = requested_path.resolve()
+        try:
+            page_path.relative_to(pages_root)
+        except ValueError as exc:
+            raise ValueError(f"page file {fname!r} must resolve inside the content/pages directory") from exc
+        if page_path in seen_files:
+            raise ValueError(f"duplicate page file in manifest: {fname!r}")
+        seen_files.add(page_path)
+        if not page_path.is_file():
+            raise FileNotFoundError(f"page file referenced by manifest not found: {requested_path}")
         raw = yaml.safe_load(page_path.read_text(encoding="utf-8")) or {}
         if not isinstance(raw, dict):
             raise ValueError(f"{page_path} must be a YAML mapping at the top level")
-        pages.append(_parse_page(raw))
+        page = _parse_page(raw)
+        if any(existing.number == page.number for existing in pages):
+            raise ValueError(f"duplicate page number in manifest: {page.number}")
+        pages.append(page)
 
     return Edition(
         nameplate=str(masthead["nameplate"]),

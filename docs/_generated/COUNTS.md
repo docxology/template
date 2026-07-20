@@ -134,7 +134,7 @@ Result: **441** project-scope infrastructure tests collected and **702** publish
 | `template_literature_meta_analysis` | 1160 | 96.77 % |
 | `template_madlib` | 148 | 93.96 % |
 | `template_methods_paper` | 90 | 99.01 % |
-| `template_newspaper` | 140 | 99.81 % |
+| `template_newspaper` | 150 | 99.70 % |
 | `template_pitch_deck` | 125 | 97.73 % |
 | `template_pools_rules_tools` | 261 | 95.52 % |
 | `template_prose_project` | 120 | 99.57 % |

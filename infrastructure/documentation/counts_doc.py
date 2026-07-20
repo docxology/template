@@ -80,7 +80,9 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_literature_meta_analysis", "96.77 %"),
     ExemplarSnapshot("template_madlib", "93.96 %"),
     ExemplarSnapshot("template_methods_paper", "99.01 %"),
-    ExemplarSnapshot("template_newspaper", "99.81 %"),
+    # Reverified 2026-07-20 after strict manifest/page-loader hardening:
+    # 150 tests, 99.70 % line+branch coverage in the project lane.
+    ExemplarSnapshot("template_newspaper", "99.70 %"),
     ExemplarSnapshot("template_pitch_deck", "97.73 %"),
     ExemplarSnapshot("template_pools_rules_tools", "95.52 %"),
     ExemplarSnapshot("template_prose_project", "99.57 %"),

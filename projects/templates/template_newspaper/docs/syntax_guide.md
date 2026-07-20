@@ -40,6 +40,11 @@ pages:                            # ordered list of page files (print order)
   # ...
 ```
 
+Page filenames must be non-empty relative paths that resolve inside
+`content/pages/`; the loader rejects absolute paths, `..` escapes, symlinked
+files outside that directory, duplicate file references, and missing files.
+The page numbers in the referenced files must be unique positive integers.
+
 ## `content/pages/<name>.yaml`
 
 ```yaml
@@ -172,4 +177,7 @@ silently shrunk. A missing `sponsor` or an unknown `border` is a `ValueError`.
 | figure in `rail` | `figures are not allowed in the rail` |
 | `ad:` without `sponsor` | `ad requires a 'sponsor' field; got keys [...]` |
 | `border: glow` | `unknown ad border 'glow'; allowed: [...]` |
+| `main:` or `rail:` with a scalar value | `page 'main'/'rail' must be a list, got ...` |
+| duplicate folio number | `duplicate page number ...` |
+| page path outside `content/pages/` | `must resolve inside the content/pages directory` |
 | missing page file | `page file referenced by manifest not found: ...` |

@@ -4,29 +4,33 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 111
-Total Size: 1.47 MB
+Total Files: 113
+Total Size: 1.52 MB
 
 Files by Category:
-  • pdf: 11 files (0.60 MB)
-  • web: 8 files (0.06 MB)
+  • pdf: 12 files (0.61 MB)
+  • web: 9 files (0.07 MB)
   • slides: 49 files (0.52 MB)
   • figures: 13 files (0.17 MB)
   • data: 2 files (0.00 MB)
-  • reports: 27 files (0.13 MB)
+  • reports: 27 files (0.16 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
   • the-triplicate.pdf: 0.46 MB (pdf)
+  • evidence_registry.json: 0.08 MB (reports)
   • template_newspaper_combined.pdf: 0.06 MB (pdf)
   • 99_references_slides.log: 0.06 MB (slides)
   • 02_engine_architecture_slides.log: 0.06 MB (slides)
-  • 03_typography_and_figures_slides.log: 0.06 MB (slides)
+
+Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
 
 File Types:
   • .json: 18 file(s)
   • .png: 13 file(s)
-  • .log: 9 file(s)
+  • .log: 10 file(s)
   • .tex: 8 file(s)
   • .pdf: 8 file(s)
   • .html: 8 file(s)

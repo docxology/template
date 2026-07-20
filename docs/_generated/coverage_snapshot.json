@@ -54,8 +54,8 @@
       "source_hash": "af11041fe0735b6bf776226931dd52a23b9055740d0beda37511907ad201509f"
     },
     "template_newspaper": {
-      "coverage_pct": "99.81 %",
-      "source_hash": "671bf4d34af294df0cf8e985ee2da9f3bcaaec307cf6e08254eb151ccbac8170"
+      "coverage_pct": "99.70 %",
+      "source_hash": "5f38d363a223e655b87a00ef2aa74a17781ddfc36a5c576c3e52efc8a2ac8c62"
     },
     "template_pitch_deck": {
       "coverage_pct": "97.73 %",
@@ -99,5 +99,5 @@
     }
   },
   "schema_version": 2,
-  "source_commit": "e362fcb2f247bacf5a5ca926e67b97bb8d00fbd5"
+  "source_commit": "eb35218e38eab4d31869eaec9fc71af0a5a5028c"
 }

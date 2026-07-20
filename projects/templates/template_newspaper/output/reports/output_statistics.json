@@ -2,9 +2,9 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "0.60",
-      "total_size_bytes": 624883,
+      "file_count": 12,
+      "size_mb": "0.61",
+      "total_size_bytes": 635848,
       "largest_files": [
         {
           "name": "the-triplicate.pdf",
@@ -24,7 +24,7 @@
       ],
       "extensions": {
         ".md": 1,
-        ".log": 2,
+        ".log": 3,
         ".aux": 1,
         ".blg": 1,
         ".bib": 1,
@@ -36,9 +36,9 @@
     },
     "web": {
       "exists": true,
-      "file_count": 8,
-      "size_mb": "0.06",
-      "total_size_bytes": 65648,
+      "file_count": 9,
+      "size_mb": "0.07",
+      "total_size_bytes": 70641,
       "largest_files": [
         {
           "name": "index.html",
@@ -58,6 +58,7 @@
       ],
       "extensions": {
         ".md": 1,
+        ".ico": 1,
         ".html": 7
       }
     },
@@ -65,7 +66,7 @@
       "exists": true,
       "file_count": 49,
       "size_mb": "0.52",
-      "total_size_bytes": 541345,
+      "total_size_bytes": 542883,
       "largest_files": [
         {
           "name": "99_references_slides.log",
@@ -124,7 +125,7 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "0.00",
-      "total_size_bytes": 1150,
+      "total_size_bytes": 1076,
       "largest_files": [
         {
           "name": "publication_ledger.json",
@@ -144,17 +145,17 @@
     "reports": {
       "exists": true,
       "file_count": 27,
-      "size_mb": "0.13",
-      "total_size_bytes": 135527,
+      "size_mb": "0.16",
+      "total_size_bytes": 166161,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.05",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.01",
+          "size_mb": "0.02",
           "path": "reports/artifact_manifest.json"
         },
         {
@@ -172,26 +173,22 @@
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 158,
+      "total_size_bytes": 134,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -204,14 +201,20 @@
       }
     }
   },
-  "total_files": 111,
-  "total_size_mb": 1.4740314483642578,
+  "total_files": 113,
+  "total_size_mb": 1.5198383331298828,
   "largest_files": [
     {
       "name": "the-triplicate.pdf",
       "size_mb": "0.46",
       "category": "pdf",
       "path": "pdf/the-triplicate.pdf"
+    },
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
     },
     {
       "name": "template_newspaper_combined.pdf",
@@ -244,12 +247,6 @@
       "path": "pdf/_combined_manuscript.log"
     },
     {
-      "name": "evidence_registry.json",
-      "size_mb": "0.05",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
-    },
-    {
       "name": "weather_7day.png",
       "size_mb": "0.04",
       "category": "figures",
@@ -268,21 +265,22 @@
       "path": "figures/tides.png"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 0.5959348678588867,
-    "web": 0.0626068115234375,
-    "slides": 0.5162668228149414,
+    "pdf": 0.6063919067382812,
+    "web": 0.0673685073852539,
+    "slides": 0.5177335739135742,
     "figures": 0.16872692108154297,
-    "data": 0.0010967254638671875,
-    "reports": 0.12924861907958984,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.0001506805419921875
+    "data": 0.001026153564453125,
+    "reports": 0.1584634780883789,
+    "logs": 0.0001277923583984375
   },
   "file_counts_by_type": {
     ".md": 7,
-    ".log": 9,
+    ".log": 10,
     ".aux": 7,
     ".blg": 1,
     ".bib": 1,
@@ -290,6 +288,7 @@
     ".toc": 7,
     ".pdf": 8,
     ".bbl": 1,
+    ".ico": 1,
     ".html": 8,
     ".nav": 6,
     ".vrb": 6,
