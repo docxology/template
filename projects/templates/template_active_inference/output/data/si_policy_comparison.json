@@ -93,7 +93,7 @@
           "q_pi_entropy": 0.5528846613,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
+          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
         },
         {
           "step": 1,
@@ -107,7 +107,7 @@
           "q_pi_entropy": 0.692372767,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
+          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
         }
       ],
       "policy_posterior_available_count": 2,
@@ -116,7 +116,7 @@
       "expected_free_energy_values": [],
       "expected_free_energy_available": false,
       "expected_free_energy_fallback_reasons": [
-        "agent.infer_policies unavailable; used expected-utility fallback"
+        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
       ]
     },
     {
@@ -226,7 +226,7 @@
           "q_pi_entropy": 0.5528846613,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
+          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
         },
         {
           "step": 1,
@@ -240,7 +240,7 @@
           "q_pi_entropy": 0.692372767,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
+          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
         },
         {
           "step": 2,
@@ -254,7 +254,7 @@
           "q_pi_entropy": 0.5528846613,
           "q_pi_normalized": true,
           "selected_policy": 0,
-          "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback"
+          "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
         }
       ],
       "policy_posterior_available_count": 3,
@@ -263,7 +263,7 @@
       "expected_free_energy_values": [],
       "expected_free_energy_available": false,
       "expected_free_energy_fallback_reasons": [
-        "agent.infer_policies unavailable; used expected-utility fallback"
+        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
       ]
     }
   ],

@@ -12,6 +12,7 @@
     "81eb061f43b7bfd7"
   ],
   "construction_count": 4,
+  "inference_step_count": 10,
   "known_warning_count": 4,
   "ok": true,
   "phase_count": 20,
@@ -26,9 +27,10 @@
     {
       "config_hash": "81eb061f43b7bfd7",
       "context": "si_tmaze:state_inference:h2:s0",
-      "evidence": "runtime diagnostic record was emitted for an inference-mode agent",
+      "evidence": "inference rollout steps were recorded",
       "ok": true,
-      "phase": "inference"
+      "phase": "inference",
+      "step_count": 2
     },
     {
       "backend_flags": {
@@ -43,9 +45,11 @@
     },
     {
       "context": "si_tmaze:state_inference:h2:s0",
-      "evidence": "runtime construction did not require fallback; policy fallback rows are in si artifacts",
+      "evidence": "no policy fallback was observed",
+      "fallback_count": 0,
       "fallback_observed": false,
       "fallback_reason": "none",
+      "fallback_reasons": [],
       "ok": true,
       "phase": "fallback"
     },
@@ -67,9 +71,10 @@
     {
       "config_hash": "4e8521408cb18644",
       "context": "si_tmaze:policy_inference:h2:s0",
-      "evidence": "runtime diagnostic record was emitted for an inference-mode agent",
+      "evidence": "inference rollout steps were recorded",
       "ok": true,
-      "phase": "inference"
+      "phase": "inference",
+      "step_count": 2
     },
     {
       "backend_flags": {
@@ -84,9 +89,13 @@
     },
     {
       "context": "si_tmaze:policy_inference:h2:s0",
-      "evidence": "runtime construction did not require fallback; policy fallback rows are in si artifacts",
-      "fallback_observed": false,
-      "fallback_reason": "none",
+      "evidence": "policy fallback was observed and explicitly recorded",
+      "fallback_count": 2,
+      "fallback_observed": true,
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "fallback_reasons": [
+        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+      ],
       "ok": true,
       "phase": "fallback"
     },
@@ -108,9 +117,10 @@
     {
       "config_hash": "0b46afb976bc0639",
       "context": "si_tmaze:state_inference:h3:s0",
-      "evidence": "runtime diagnostic record was emitted for an inference-mode agent",
+      "evidence": "inference rollout steps were recorded",
       "ok": true,
-      "phase": "inference"
+      "phase": "inference",
+      "step_count": 3
     },
     {
       "backend_flags": {
@@ -125,9 +135,11 @@
     },
     {
       "context": "si_tmaze:state_inference:h3:s0",
-      "evidence": "runtime construction did not require fallback; policy fallback rows are in si artifacts",
+      "evidence": "no policy fallback was observed",
+      "fallback_count": 0,
       "fallback_observed": false,
       "fallback_reason": "none",
+      "fallback_reasons": [],
       "ok": true,
       "phase": "fallback"
     },
@@ -149,9 +161,10 @@
     {
       "config_hash": "6c0410672bf58ef6",
       "context": "si_tmaze:policy_inference:h3:s0",
-      "evidence": "runtime diagnostic record was emitted for an inference-mode agent",
+      "evidence": "inference rollout steps were recorded",
       "ok": true,
-      "phase": "inference"
+      "phase": "inference",
+      "step_count": 3
     },
     {
       "backend_flags": {
@@ -166,9 +179,13 @@
     },
     {
       "context": "si_tmaze:policy_inference:h3:s0",
-      "evidence": "runtime construction did not require fallback; policy fallback rows are in si artifacts",
-      "fallback_observed": false,
-      "fallback_reason": "none",
+      "evidence": "policy fallback was observed and explicitly recorded",
+      "fallback_count": 3,
+      "fallback_observed": true,
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
+      "fallback_reasons": [
+        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+      ],
       "ok": true,
       "phase": "fallback"
     },
@@ -188,6 +205,11 @@
     "inference",
     "warning"
   ],
+  "policy_fallback_count": 5,
+  "policy_fallback_reasons": [
+    "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+  ],
+  "policy_posterior_available_count": 5,
   "records": [
     {
       "backend_flags": {
@@ -197,6 +219,8 @@
       },
       "config_hash": "81eb061f43b7bfd7",
       "context": "si_tmaze:state_inference:h2:s0",
+      "inference_mode": "state_inference",
+      "inference_step_count": 2,
       "known_warning_count": 1,
       "known_warnings": [
         {
@@ -205,6 +229,9 @@
           "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
         }
       ],
+      "policy_fallback_count": 0,
+      "policy_fallback_reasons": [],
+      "policy_posterior_available_count": 0,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
@@ -221,6 +248,8 @@
       },
       "config_hash": "4e8521408cb18644",
       "context": "si_tmaze:policy_inference:h2:s0",
+      "inference_mode": "policy_inference",
+      "inference_step_count": 2,
       "known_warning_count": 1,
       "known_warnings": [
         {
@@ -229,6 +258,11 @@
           "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
         }
       ],
+      "policy_fallback_count": 2,
+      "policy_fallback_reasons": [
+        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+      ],
+      "policy_posterior_available_count": 2,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
@@ -245,6 +279,8 @@
       },
       "config_hash": "0b46afb976bc0639",
       "context": "si_tmaze:state_inference:h3:s0",
+      "inference_mode": "state_inference",
+      "inference_step_count": 3,
       "known_warning_count": 1,
       "known_warnings": [
         {
@@ -253,6 +289,9 @@
           "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
         }
       ],
+      "policy_fallback_count": 0,
+      "policy_fallback_reasons": [],
+      "policy_posterior_available_count": 0,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {
@@ -269,6 +308,8 @@
       },
       "config_hash": "6c0410672bf58ef6",
       "context": "si_tmaze:policy_inference:h3:s0",
+      "inference_mode": "policy_inference",
+      "inference_step_count": 3,
       "known_warning_count": 1,
       "known_warnings": [
         {
@@ -277,6 +318,11 @@
           "message": "A JAX array is being set as static! This can result in unexpected behavior and is usually a mistake to do."
         }
       ],
+      "policy_fallback_count": 3,
+      "policy_fallback_reasons": [
+        "agent.infer_policies unavailable (ValueError); used expected-utility fallback"
+      ],
+      "policy_posterior_available_count": 3,
       "unexpected_warning_count": 0,
       "unexpected_warnings": [],
       "versions": {

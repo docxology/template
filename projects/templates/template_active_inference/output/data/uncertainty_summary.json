@@ -104,7 +104,7 @@
       ],
       "distribution_sum": 1.0,
       "entropy": 0.5528846613282445,
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "id": "policy_2",
       "normalized": true,
       "posterior": [
@@ -123,7 +123,7 @@
       ],
       "distribution_sum": 1.0,
       "entropy": 0.6923727669519839,
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "id": "policy_3",
       "normalized": true,
       "posterior": [
@@ -193,7 +193,7 @@
       ],
       "distribution_sum": 1.0,
       "entropy": 0.5528846613282445,
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "id": "policy_7",
       "normalized": true,
       "posterior": [
@@ -212,7 +212,7 @@
       ],
       "distribution_sum": 1.0,
       "entropy": 0.6923727669519839,
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "id": "policy_8",
       "normalized": true,
       "posterior": [
@@ -231,7 +231,7 @@
       ],
       "distribution_sum": 1.0,
       "entropy": 0.5528846613282445,
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "id": "policy_9",
       "normalized": true,
       "posterior": [

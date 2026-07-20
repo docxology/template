@@ -2,10 +2,12 @@ import json
 import subprocess
 import sys
 
+import numpy as np
 import pytest
 
 from simulation.logging_utils import RunLogger
 from simulation.pymdp_config import apply_pymdp_overrides, load_pymdp_config
+from simulation.si_loop import sample_next_state, sample_observation
 from simulation.si_runner import pymdp_available, run_and_persist, run_si_tmaze, write_si_artifacts
 from simulation.tmaze_model import build_tmaze_generative_model
 
@@ -21,6 +23,22 @@ def test_tmaze_model_uses_config_likelihood(project_root) -> None:
     cfg = apply_pymdp_overrides(load_pymdp_config(project_root), horizon=2)
     model = build_tmaze_generative_model(cfg)
     assert float(model["A"][0][0, 0]) == pytest.approx(cfg.tmaze.likelihood_diag)
+
+
+def test_sampling_rejects_zero_mass_transition_and_observation() -> None:
+    rng = np.random.default_rng(0)
+    with pytest.raises(ValueError, match="transition probabilities"):
+        sample_next_state(rng, np.zeros((2, 2, 2)), state=0, action=0)
+    with pytest.raises(ValueError, match="observation probabilities"):
+        sample_observation(rng, np.zeros((2, 2)), state=0)
+
+
+def test_sampling_rejects_non_finite_probability() -> None:
+    rng = np.random.default_rng(0)
+    transition = np.zeros((2, 2, 2))
+    transition[:, 0, 0] = [np.nan, 1.0]
+    with pytest.raises(ValueError, match="transition probabilities"):
+        sample_next_state(rng, transition, state=0, action=0)
 
 
 @pytest.mark.requires_pymdp
@@ -64,6 +82,8 @@ def test_policy_inference_mode(project_root) -> None:
     result = run_si_tmaze(project_root, config=cfg)
     assert result.mode == "policy_inference"
     assert len(result.actions) == 2
+    assert result.runtime_diagnostics["inference_step_count"] == 2
+    assert result.runtime_diagnostics["policy_fallback_count"] >= 0
 
 
 def test_simulate_cli_help(project_root) -> None:

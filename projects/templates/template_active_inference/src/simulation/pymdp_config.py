@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal
@@ -67,6 +68,10 @@ class PymdpConfig:
         """Process policy len."""
         return self.horizon
 
+    def __post_init__(self) -> None:
+        """Reject configurations the minimal two-state harness cannot execute."""
+        validate_pymdp_config(self)
+
 
 def _coerce_mode(value: Any) -> SimulationMode:
     mode = str(value or "state_inference")
@@ -75,6 +80,54 @@ def _coerce_mode(value: Any) -> SimulationMode:
     if mode == "policy_inference":
         return "policy_inference"
     raise ValueError(f"unsupported pymdp mode: {mode!r}")
+
+
+def validate_pymdp_config(config: PymdpConfig) -> None:
+    """Validate dimensions, numeric domains, and safe local output paths.
+
+    The shipped generative model is intentionally a two-state, two-observation,
+    two-action pedagogical T-maze. Failing at configuration load makes that
+    boundary explicit instead of allowing malformed matrices or NaNs to escape
+    into a stochastic rollout.
+    """
+    for name, value in (("horizon", config.horizon), ("steps", config.steps)):
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            raise ValueError(f"{name} must be a positive integer, got {value!r}")
+
+    dimensions = {
+        "num_states": config.tmaze.num_states,
+        "num_obs": config.tmaze.num_obs,
+        "num_actions": config.tmaze.num_actions,
+    }
+    unsupported = {name: value for name, value in dimensions.items() if value != 2}
+    if unsupported:
+        raise ValueError(f"minimal T-maze requires num_states=num_obs=num_actions=2; unsupported values: {unsupported}")
+
+    if not math.isfinite(config.tmaze.likelihood_diag) or not 0.0 <= config.tmaze.likelihood_diag <= 1.0:
+        raise ValueError("tmaze.likelihood_diag must be finite and between 0 and 1")
+    if not math.isfinite(config.tmaze.preference_goal):
+        raise ValueError("tmaze.preference_goal must be finite")
+    if config.mode not in ("state_inference", "policy_inference"):
+        raise ValueError(f"unsupported pymdp mode: {config.mode!r}")
+    if not config.agent.inference_algo.strip():
+        raise ValueError("agent.inference_algo must not be empty")
+    if not config.agent.action_selection.strip():
+        raise ValueError("agent.action_selection must not be empty")
+
+    log_path = Path(config.logging.path)
+    if not config.logging.path.strip() or log_path.is_absolute() or ".." in log_path.parts:
+        raise ValueError("logging.path must be a non-empty relative path without '..'")
+
+    if not config.comparison.horizons or any(
+        isinstance(value, bool) or not isinstance(value, int) or value <= 0 for value in config.comparison.horizons
+    ):
+        raise ValueError("comparison.horizons must contain positive integers")
+    if not config.comparison.seeds:
+        raise ValueError("comparison.seeds must contain at least one seed")
+    if not config.comparison.modes or any(
+        mode not in ("state_inference", "policy_inference") for mode in config.comparison.modes
+    ):
+        raise ValueError("comparison.modes must contain supported pymdp modes")
 
 
 def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:
@@ -160,6 +213,7 @@ def apply_pymdp_overrides(
         updated = replace(updated, mode=mode)
     if logging_enabled is not None:
         updated = replace(updated, logging=replace(updated.logging, enabled=logging_enabled))
+    validate_pymdp_config(updated)
     return updated
 
 

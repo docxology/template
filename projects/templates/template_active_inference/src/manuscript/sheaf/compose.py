@@ -195,7 +195,11 @@ def compose_all_sections(
         content = prefix + compose_section(section, root, registry=registry, options=opts, issues=issues)
         prev_imrad = section.imrad
         target = out_dir / section.output_name
-        target.write_text(content, encoding="utf-8")
+        # Keep generated Markdown compatible with repository-wide formatting
+        # hooks.  Some final track bodies intentionally have inconsistent
+        # trailing newlines; normalize the composed page boundary so
+        # rerendering is stable and diff-clean.
+        target.write_text(f"{content.rstrip()}\n", encoding="utf-8")
         written.append(target)
     emit_coverage_artifacts(root)
     return ComposeResult(paths=written, issues=issues)

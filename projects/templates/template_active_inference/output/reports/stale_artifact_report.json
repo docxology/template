@@ -76,7 +76,7 @@
       "artifact": "output/data/pymdp_policy_posterior_grid.json",
       "exists": true,
       "fresh": true,
-      "sha256": "c4f2911f2b8477aa642198b249f444f890646d0f9a109ca1795c36ab012ac05d"
+      "sha256": "028d5c1f73348612a004e3256d4b00fefa3a04b1c453977b905523e49d9249c8"
     },
     {
       "artifact": "output/data/sheaf_coverage_matrix.json",
@@ -88,7 +88,7 @@
       "artifact": "output/data/si_efe_terms.json",
       "exists": true,
       "fresh": true,
-      "sha256": "2b389ab27228f2f44a43d56733941e43e47463c6e2ebb97715aef7dfc51af936"
+      "sha256": "96f864f030a3e6ce95987296dced5887df3d3c347d911618a3c79a91ecd4e105"
     },
     {
       "artifact": "output/data/si_graph_world_summary.json",
@@ -118,7 +118,7 @@
       "artifact": "output/data/si_policy_comparison.json",
       "exists": true,
       "fresh": true,
-      "sha256": "84c2d6c1ee8200eecd17ef664a8a9fccd670abf4320e467bf6a754eb6cd3e030"
+      "sha256": "616188c134ccbbad4affdffb091377ff2d4940e681183ff617f8324d806d1f21"
     },
     {
       "artifact": "output/data/si_policy_grid.json",
@@ -244,13 +244,13 @@
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
       "exists": true,
       "fresh": true,
-      "sha256": "35caed4ed4032ce46e5e8f6d00ecfcd0bdf0bd4dc0e633059484df307bb01b75"
+      "sha256": "04238557fa15b65fe42c07d24a5aed424911b064ad3811ddaae7a10deb0fdb10"
     },
     {
       "artifact": "output/reports/reproducibility_replay.json",
       "exists": true,
       "fresh": true,
-      "sha256": "faf8c07ec7a573175e1d326a2db2702ae774954d98b56b6fb73b21e1f538497e"
+      "sha256": "8775039aa7485cb28c2cef36b212acf879c10a7c2d65a77ce5795e652c50bc69"
     },
     {
       "artifact": "output/reports/si_invariants.json",

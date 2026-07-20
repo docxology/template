@@ -29,6 +29,7 @@ def test_compose_writes_markdown_sections(tmp_path: Path) -> None:
     text = (out / "06_methods_pymdp.md").read_text(encoding="utf-8")
     assert "pymdp simulation harness" in text
     assert "sheaf-track:pymdp" in text
+    assert all(path.read_bytes().endswith(b"\n") for path in result.paths)
 
 
 def test_discussion_ontology_renders_labels_not_raw_yaml() -> None:

@@ -23,6 +23,7 @@ from simulation.si_belief import (
     state_inference_next_obs,
 )
 from simulation.tmaze_model import (
+    TMazeSpec,
     build_tmaze_generative_model,
     spec_from_config,
 )
@@ -70,6 +71,27 @@ def test_pymdp_config_rejects_invalid_mode(tmp_path: Path) -> None:
     bad = tmp_path / "pymdp.yaml"
     bad.write_text("mode: invalid_mode\n", encoding="utf-8")
     with pytest.raises(ValueError, match="unsupported pymdp mode"):
+        load_pymdp_config(tmp_path, config_path=bad)
+
+
+@pytest.mark.parametrize(
+    ("contents", "message"),
+    [
+        ("horizon: 0\n", "horizon must be a positive integer"),
+        ("steps: -1\n", "steps must be a positive integer"),
+        ("tmaze:\n  num_states: 3\n", "minimal T-maze requires"),
+        ("tmaze:\n  likelihood_diag: 1.5\n", "likelihood_diag"),
+        ("logging:\n  path: ../outside.json\n", "logging.path"),
+    ],
+)
+def test_pymdp_config_rejects_unsafe_or_unsupported_values(
+    tmp_path: Path,
+    contents: str,
+    message: str,
+) -> None:
+    bad = tmp_path / "pymdp.yaml"
+    bad.write_text(contents, encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
         load_pymdp_config(tmp_path, config_path=bad)
 
 
@@ -136,6 +158,11 @@ def test_build_tmaze_model_from_pymdp_config() -> None:
     assert "A" in model and "B" in model and "C" in model and "D" in model
     # Policy len comes from config.horizon.
     assert model["policy_len"] == cfg.horizon
+
+
+def test_tmaze_model_rejects_unsupported_direct_spec() -> None:
+    with pytest.raises(ValueError, match="minimal T-maze requires"):
+        build_tmaze_generative_model(TMazeSpec(num_states=3))
 
 
 def test_spec_from_config_maps_fields() -> None:

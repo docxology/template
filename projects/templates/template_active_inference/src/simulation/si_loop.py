@@ -54,21 +54,38 @@ class SIRunResult:
     runtime_diagnostics: dict[str, Any] = field(default_factory=dict)
 
 
+def _normalise_sampling_distribution(values: np.ndarray, *, label: str) -> np.ndarray:
+    """Return a finite non-negative probability vector or fail closed."""
+    probs = np.asarray(values, dtype=np.float64).reshape(-1)
+    if probs.size == 0 or not np.all(np.isfinite(probs)):
+        raise ValueError(f"{label} probabilities must be finite and non-empty")
+    if np.any(probs < 0.0):
+        raise ValueError(f"{label} probabilities must be non-negative")
+    total = float(probs.sum())
+    if total <= 0.0:
+        raise ValueError(f"{label} probabilities must have positive mass")
+    return probs / total
+
+
 def sample_next_state(rng: np.random.Generator, b: np.ndarray, state: int, action: int) -> int:
     """Process sample next state."""
-    probs = np.asarray(b[:, state, action], dtype=np.float64)
-    probs = np.clip(probs, 0.0, None)
-    if probs.sum() <= 0:
-        return state
-    probs /= probs.sum()
+    transition = np.asarray(b, dtype=np.float64)
+    if transition.ndim != 3:
+        raise ValueError(f"transition model must be 3-dimensional, got shape {transition.shape}")
+    if not 0 <= state < transition.shape[1] or not 0 <= action < transition.shape[2]:
+        raise IndexError(f"state/action index out of range: state={state}, action={action}")
+    probs = _normalise_sampling_distribution(transition[:, state, action], label="transition")
     return int(rng.choice(probs.size, p=probs))
 
 
 def sample_observation(rng: np.random.Generator, a: np.ndarray, state: int) -> int:
     """Process sample observation."""
-    probs = np.asarray(a[:, state], dtype=np.float64)
-    probs = np.clip(probs, 0.0, None)
-    probs /= probs.sum()
+    likelihood = np.asarray(a, dtype=np.float64)
+    if likelihood.ndim != 2:
+        raise ValueError(f"observation model must be 2-dimensional, got shape {likelihood.shape}")
+    if not 0 <= state < likelihood.shape[1]:
+        raise IndexError(f"state index out of range: state={state}")
+    probs = _normalise_sampling_distribution(likelihood[:, state], label="observation")
     return int(rng.choice(probs.size, p=probs))
 
 
@@ -198,6 +215,25 @@ def run_si_tmaze(
             ctx["policy_posterior_available"] = policy_evidence.get("posterior_available") is True
 
     goal_reached = bool(observations and observations[-1] == goal_obs)
+    fallback_reasons = sorted(
+        {
+            str(step["fallback_reason"])
+            for step in trace_steps
+            if step.get("fallback_reason") and step.get("policy_method") == "expected_utility_fallback"
+        }
+    )
+    runtime_diagnostics = {
+        **runtime_diagnostics,
+        "inference_mode": cfg.mode,
+        "inference_step_count": n_steps,
+        "policy_fallback_count": sum(
+            1 for step in trace_steps if step.get("policy_method") == "expected_utility_fallback"
+        ),
+        "policy_fallback_reasons": fallback_reasons,
+        "policy_posterior_available_count": sum(
+            1 for step in trace_steps if step.get("policy_posterior_available") is True
+        ),
+    }
     return SIRunResult(
         steps=n_steps,
         policy_len=spec.policy_len,

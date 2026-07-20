@@ -7,11 +7,15 @@ import numpy as np
 
 def marginal_state_belief(qs: list) -> np.ndarray:
     """Process marginal state belief."""
+    if not qs:
+        raise ValueError("state belief must contain at least one factor")
     q = np.asarray(qs[0], dtype=np.float64)
     q = np.squeeze(q)
     if q.ndim == 2:
         q = q[-1]
     q = q.reshape(-1)
+    if q.size == 0 or not np.all(np.isfinite(q)):
+        raise ValueError("state belief must contain finite values")
     q = np.clip(q, 1e-12, None)
     normalized: np.ndarray = q / q.sum()
     return normalized

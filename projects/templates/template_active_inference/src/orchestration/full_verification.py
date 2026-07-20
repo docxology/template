@@ -70,7 +70,10 @@ def _coverage_command(modules: list[str], *, append: bool, final: bool) -> list[
     if final:
         cmd.extend(["--cov-report=term-missing", "--cov-fail-under=90", "--durations=20"])
     else:
-        cmd.append("--cov-report=")
+        # The project TOML sets fail_under=90 for the aggregate suite. A
+        # partial chunk is intentionally below that threshold; enforce it only
+        # on the final append pass.
+        cmd.extend(["--cov-report=", "--cov-fail-under=0"])
     return cmd
 
 
@@ -114,21 +117,30 @@ def run_verification(
 ) -> None:
     """Run verification."""
     preflight = [
-        ("Run analytical sweep", ["uv", "run", "python", "scripts/run_analytical_sweep.py"]),
-        ("Compute analysis statistics", ["uv", "run", "python", "scripts/compute_statistics.py"]),
         ("Compose manuscript sections", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
         (
             "Validate compose contracts",
             ["uv", "run", "python", "scripts/compose_manuscript.py", "--validate-only", "--strict"],
         ),
-        ("Generate manuscript variables", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
+        ("Run analytical sweep", ["uv", "run", "python", "scripts/run_analytical_sweep.py"]),
+        ("Simulate SI T-maze", ["uv", "run", "python", "scripts/simulate_si_tmaze.py"]),
+        ("Simulate SI graph-world", ["uv", "run", "python", "scripts/simulate_si_graph_world.py"]),
+        ("Compute analysis statistics", ["uv", "run", "python", "scripts/compute_statistics.py"]),
         ("Render registered figures", ["uv", "run", "python", "scripts/generate_figures.py"]),
+        ("Render belief animation", ["uv", "run", "python", "scripts/render_animation.py"]),
+        ("Generate validation spine", ["uv", "run", "python", "scripts/generate_validation_spine.py"]),
+        ("Generate toy sweep tracks", ["uv", "run", "python", "scripts/generate_toy_sweep_tracks.py"]),
+        ("Generate formal interop tracks", ["uv", "run", "python", "scripts/generate_formal_interop_tracks.py"]),
+        ("Generate integration audit", ["uv", "run", "python", "scripts/generate_integration_audit.py"]),
+        ("Generate canonical sheaf tracks", ["uv", "run", "python", "scripts/generate_sheaf_tracks.py"]),
+        ("Generate manuscript variables", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
         ("Settle post-figure fixed point", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
         ("Final compose before output gate", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
         ("Settle post-compose fixed point", ["uv", "run", "python", "scripts/z_generate_manuscript_variables.py"]),
         ("Settled final compose before output gate", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
         ("Validate generated outputs", ["uv", "run", "python", "scripts/validate_outputs.py"]),
         ("Check documentation contract", ["uv", "run", "python", "scripts/check_documentation_contract.py", "--check"]),
+        ("Generate method inventory", ["uv", "run", "python", "scripts/generate_method_inventory.py"]),
         ("Check method inventory", ["uv", "run", "python", "scripts/generate_method_inventory.py", "--check"]),
     ]
     for label, cmd in preflight:

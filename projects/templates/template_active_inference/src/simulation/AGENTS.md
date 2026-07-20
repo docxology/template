@@ -20,6 +20,17 @@ invariants.
 
 - Runs must be reproducible: fixed seed, fixed horizon/policy depth, stable JSON
   key order where artifacts are compared by gates.
+- `pymdp_config.py` fails closed on non-positive horizons/steps, non-finite
+  probabilities, unsafe log paths, and dimensions outside the deliberately
+  minimal 2-state/2-observation/2-action T-maze boundary.
+- Sampling validates every transition and observation column before passing it
+  to NumPy; invalid or zero-mass distributions are errors, never silent
+  stay-in-place transitions or NaN probabilities.
+- Policy inference validates finite, non-negative posteriors and aligned EFE
+  vectors. When the installed pymdp surface lacks `infer_policies`, the
+  expected-utility fallback is explicitly recorded in both step evidence and
+  runtime diagnostics rather than being represented as successful pymdp policy
+  inference.
 - Keep `pymdp.yaml` and `pymdp_config.py` in sync; manuscript variables expose
   `pymdp_mode` and `pymdp_config_hash`.
 - `si_runner.py` is the public facade. Keep heavy loop, policy, belief, and

@@ -63,11 +63,11 @@ class ExemplarSnapshot:
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # template_active_inference coverage is re-derived in its OWN environment
     # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
-    # cannot exercise): measured 2026-07-11 via
+    # cannot exercise): measured 2026-07-20 via
     # `stage_01_test.py --project templates/template_active_inference
-    # --project-only --include-slow` (699 passed). Collected count from
-    # --collect-only in the project env.
-    ExemplarSnapshot("template_active_inference", "93.55 %"),
+    # --project-only --include-slow` (717 passed, 6 deselected; 90.30 %).
+    # Collected count from --collect-only in the project env.
+    ExemplarSnapshot("template_active_inference", "90.30 %"),
     ExemplarSnapshot("template_advanced_literature_review", "92.48 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "92.81 %"),

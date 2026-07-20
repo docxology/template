@@ -18,6 +18,7 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
+import pytest
 
 from simulation.si_policy import select_policy_action
 
@@ -74,32 +75,28 @@ def test_posterior_path_returns_normalized_evidence_with_efe() -> None:
     assert abs(evidence["q_pi_sum"] - 1.0) <= 1e-9
 
 
-def test_posterior_path_zero_sum_forces_unnormalized_and_no_efe() -> None:
-    """A degenerate all-zero posterior with ``neg_efe=None`` forces both flags False."""
+def test_posterior_path_rejects_zero_sum_and_missing_efe() -> None:
+    """A degenerate posterior must fail closed instead of becoming evidence."""
     agent = _PosteriorAgent(q_pi=np.array([0.0, 0.0]), neg_efe=None, action=1)
     qs = [np.array([0.5, 0.5])]
-    action, method, efe, policy_idx, evidence = select_policy_action(agent, qs, b=_B, c=_C, rng=_RNG)
-    assert method == "infer_policies"
-    assert action == 1
-    # forcing-false control for the q_pi_normalized/expected_free_energy_available asserts above
-    assert evidence["q_pi_normalized"] is False
-    assert evidence["expected_free_energy_available"] is False
-    assert evidence["expected_free_energy_values"] == []
-    assert efe is None
-    assert evidence["selected_policy_expected_free_energy"] is None
-    assert evidence["efe_source"] == "pymdp_infer_policies_without_efe"
-    assert evidence["q_pi_entropy"] == 0.0
+    with pytest.raises(ValueError, match="positive mass"):
+        select_policy_action(agent, qs, b=_B, c=_C, rng=_RNG)
 
 
 def test_posterior_path_efe_available_but_index_out_of_range_is_none() -> None:
-    """EFE list present but shorter than the selected policy index -> efe None, flag True."""
+    """EFE evidence must be aligned with the policy posterior."""
     agent = _PosteriorAgent(q_pi=np.array([0.2, 0.8]), neg_efe=np.array([-5.0]), action=0)
     qs = [np.array([0.5, 0.5])]
-    _, _, efe, policy_idx, evidence = select_policy_action(agent, qs, b=_B, c=_C, rng=_RNG)
-    assert policy_idx == 1
-    assert evidence["expected_free_energy_available"] is True  # non-empty efe list
-    assert efe is None  # selected index 1 is past the single-element efe list
-    assert evidence["selected_policy_expected_free_energy"] is None
+    with pytest.raises(ValueError, match="length must match"):
+        select_policy_action(agent, qs, b=_B, c=_C, rng=_RNG)
+
+
+def test_posterior_path_rejects_negative_or_non_finite_weights() -> None:
+    qs = [np.array([0.5, 0.5])]
+    for q_pi in (np.array([1.0, -1.0]), np.array([np.nan, 1.0])):
+        agent = _PosteriorAgent(q_pi=q_pi, neg_efe=None, action=0)
+        with pytest.raises(ValueError, match="policy posterior"):
+            select_policy_action(agent, qs, b=_B, c=_C, rng=_RNG)
 
 
 def test_fallback_path_uses_expected_utility_when_infer_policies_raises() -> None:

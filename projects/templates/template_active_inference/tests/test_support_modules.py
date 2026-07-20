@@ -102,6 +102,15 @@ def test_full_verification_run_raises_on_failure(tmp_path: Path) -> None:
         )
 
 
+def test_coverage_command_defers_threshold_until_final_chunk() -> None:
+    partial = full_verification._coverage_command(["tests/test_one.py"], append=False, final=False)
+    final = full_verification._coverage_command(["tests/test_two.py"], append=True, final=True)
+
+    assert "--cov-fail-under=0" in partial
+    assert "--cov-fail-under=90" not in partial
+    assert "--cov-fail-under=90" in final
+
+
 def test_run_verification_skip_chunks_orders_preflight_and_postflight(tmp_path: Path) -> None:
     calls: list[tuple[str, list[str]]] = []
     full_verification.run_verification(
@@ -111,7 +120,10 @@ def test_run_verification_skip_chunks_orders_preflight_and_postflight(tmp_path: 
     )
 
     labels = [label for label, _ in calls]
-    assert labels[0] == "Run analytical sweep"
+    assert labels[0] == "Compose manuscript sections"
+    assert "Simulate SI T-maze" in labels
+    assert "Generate validation spine" in labels
+    assert "Generate canonical sheaf tracks" in labels
     assert "Focused contract and infrastructure checks" not in labels
     assert "Full suite coverage pass" not in labels
     assert "Coverage pass: Focused contract and infrastructure checks" in labels

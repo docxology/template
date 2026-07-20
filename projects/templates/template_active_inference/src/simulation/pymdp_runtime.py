@@ -106,6 +106,9 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
     phase_rows: list[dict[str, Any]] = []
     for index, record in enumerate(records):
         context = str(record.get("context") or f"record_{index}")
+        inference_step_count = int(record.get("inference_step_count", 1) or 0)
+        fallback_count = int(record.get("policy_fallback_count", 0) or 0)
+        fallback_reasons = [str(reason) for reason in record.get("policy_fallback_reasons", []) or []]
         phase_rows.extend(
             [
                 {
@@ -118,9 +121,10 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
                 {
                     "context": context,
                     "phase": "inference",
-                    "ok": True,
+                    "ok": inference_step_count > 0,
                     "config_hash": record.get("config_hash", ""),
-                    "evidence": "runtime diagnostic record was emitted for an inference-mode agent",
+                    "step_count": inference_step_count,
+                    "evidence": "inference rollout steps were recorded",
                 },
                 {
                     "context": context,
@@ -133,9 +137,15 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
                     "context": context,
                     "phase": "fallback",
                     "ok": True,
-                    "fallback_observed": False,
-                    "fallback_reason": "none",
-                    "evidence": "runtime construction did not require fallback; policy fallback rows are in si artifacts",
+                    "fallback_observed": fallback_count > 0,
+                    "fallback_count": fallback_count,
+                    "fallback_reasons": fallback_reasons,
+                    "fallback_reason": fallback_reasons[0] if fallback_reasons else "none",
+                    "evidence": (
+                        "policy fallback was observed and explicitly recorded"
+                        if fallback_count > 0
+                        else "no policy fallback was observed"
+                    ),
                 },
             ]
         )
@@ -184,6 +194,14 @@ def build_runtime_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any]:
         "backend_flags": backend_flags,
         "known_warning_count": known_count,
         "unexpected_warning_count": unexpected_count,
+        "inference_step_count": sum(int(record.get("inference_step_count", 1) or 0) for record in records),
+        "policy_fallback_count": sum(int(record.get("policy_fallback_count", 0) or 0) for record in records),
+        "policy_fallback_reasons": sorted(
+            {str(reason) for record in records for reason in record.get("policy_fallback_reasons", []) or []}
+        ),
+        "policy_posterior_available_count": sum(
+            int(record.get("policy_posterior_available_count", 0) or 0) for record in records
+        ),
         "ok": bool(records) and unexpected_count == 0,
     }
 
@@ -212,6 +230,12 @@ def validate_runtime_diagnostics(project_root: Path) -> list[str]:
         issues.append("pymdp_runtime_diagnostics.json schema mismatch")
     if int(payload.get("construction_count", 0) or 0) < 1:
         issues.append("pymdp_runtime_diagnostics.json records no agent constructions")
+    inference_steps = int(payload.get("inference_step_count", 0) or 0)
+    fallback_count = int(payload.get("policy_fallback_count", 0) or 0)
+    if inference_steps < 1:
+        issues.append("pymdp_runtime_diagnostics.json records no inference steps")
+    if fallback_count < 0 or fallback_count > inference_steps:
+        issues.append("pymdp_runtime_diagnostics.json has an invalid policy fallback count")
     if int(payload.get("unexpected_warning_count", 0) or 0) != 0:
         issues.append("pymdp_runtime_diagnostics.json captured unexpected warning")
     if not payload.get("config_hashes"):

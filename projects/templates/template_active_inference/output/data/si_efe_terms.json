@@ -12,7 +12,7 @@
       "terms_available": false
     },
     {
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "horizon": 2,
       "mode": "policy_inference",
       "run_index": 1,
@@ -30,7 +30,7 @@
       "terms_available": false
     },
     {
-      "fallback_reason": "agent.infer_policies unavailable; used expected-utility fallback",
+      "fallback_reason": "agent.infer_policies unavailable (ValueError); used expected-utility fallback",
       "horizon": 3,
       "mode": "policy_inference",
       "run_index": 3,

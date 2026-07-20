@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 800
+Total documented definitions: 805
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -576,8 +576,8 @@ Total documented definitions: 800
 | 21 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:21`. |
 | 59 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:59`. |
 | 66 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:66`. |
-| 77 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:77`. |
-| 108 | `function` | `run_verification` | docstring | Run verification. |
+| 80 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:80`. |
+| 111 | `function` | `run_verification` | docstring | Run verification. |
 
 ## `src/orchestration/pipeline_manifest.py`
 
@@ -1049,20 +1049,22 @@ Total documented definitions: 800
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 17 | `class` | `TMazeConfig` | docstring | Data container for TMazeConfig. |
-| 28 | `class` | `AgentConfig` | docstring | Data container for AgentConfig. |
-| 36 | `class` | `LoggingConfig` | docstring | Data container for LoggingConfig. |
-| 44 | `class` | `ComparisonConfig` | docstring | Data container for ComparisonConfig. |
-| 53 | `class` | `PymdpConfig` | docstring | Data container for PymdpConfig. |
-| 66 | `function` | `PymdpConfig.policy_len` | docstring | Process policy len. |
-| 71 | `function` | `_coerce_mode` | inventory fallback | Inventory fallback for function `_coerce_mode` defined at `src/simulation/pymdp_config.py:71`. |
-| 80 | `function` | `_parse_raw` | inventory fallback | Inventory fallback for function `_parse_raw` defined at `src/simulation/pymdp_config.py:80`. |
-| 119 | `function` | `default_pymdp_config` | docstring | Process default pymdp config. |
-| 124 | `function` | `pymdp_config_path` | docstring | Process pymdp config path. |
-| 129 | `function` | `load_pymdp_config` | docstring | Load pymdp config from a file. |
-| 142 | `function` | `apply_pymdp_overrides` | docstring | Process apply pymdp overrides. |
-| 166 | `function` | `config_snapshot` | docstring | Process config snapshot. |
-| 197 | `function` | `config_hash` | docstring | Process config hash. |
+| 18 | `class` | `TMazeConfig` | docstring | Data container for TMazeConfig. |
+| 29 | `class` | `AgentConfig` | docstring | Data container for AgentConfig. |
+| 37 | `class` | `LoggingConfig` | docstring | Data container for LoggingConfig. |
+| 45 | `class` | `ComparisonConfig` | docstring | Data container for ComparisonConfig. |
+| 54 | `class` | `PymdpConfig` | docstring | Data container for PymdpConfig. |
+| 67 | `function` | `PymdpConfig.policy_len` | docstring | Process policy len. |
+| 71 | `function` | `PymdpConfig.__post_init__` | docstring | Reject configurations the minimal two-state harness cannot execute. |
+| 76 | `function` | `_coerce_mode` | inventory fallback | Inventory fallback for function `_coerce_mode` defined at `src/simulation/pymdp_config.py:76`. |
+| 85 | `function` | `validate_pymdp_config` | docstring | Validate dimensions, numeric domains, and safe local output paths. |
+| 133 | `function` | `_parse_raw` | inventory fallback | Inventory fallback for function `_parse_raw` defined at `src/simulation/pymdp_config.py:133`. |
+| 172 | `function` | `default_pymdp_config` | docstring | Process default pymdp config. |
+| 177 | `function` | `pymdp_config_path` | docstring | Process pymdp config path. |
+| 182 | `function` | `load_pymdp_config` | docstring | Load pymdp config from a file. |
+| 195 | `function` | `apply_pymdp_overrides` | docstring | Process apply pymdp overrides. |
+| 220 | `function` | `config_snapshot` | docstring | Process config snapshot. |
+| 251 | `function` | `config_hash` | docstring | Process config hash. |
 
 ## `src/simulation/pymdp_runtime.py`
 
@@ -1074,8 +1076,8 @@ Total documented definitions: 800
 | 43 | `function` | `_warning_record` | inventory fallback | Inventory fallback for function `_warning_record` defined at `src/simulation/pymdp_runtime.py:43`. |
 | 52 | `function` | `construct_agent_with_diagnostics` | docstring | Construct ``pymdp.Agent`` while capturing the one audited JAX warning. |
 | 100 | `function` | `build_runtime_diagnostics` | docstring | Build runtime diagnostics. |
-| 191 | `function` | `write_runtime_diagnostics` | docstring | Write runtime diagnostics to the output path. |
-| 203 | `function` | `validate_runtime_diagnostics` | docstring | Validate runtime diagnostics. |
+| 209 | `function` | `write_runtime_diagnostics` | docstring | Write runtime diagnostics to the output path. |
+| 221 | `function` | `validate_runtime_diagnostics` | docstring | Validate runtime diagnostics. |
 
 ## `src/simulation/si_artifacts.py`
 
@@ -1092,10 +1094,10 @@ Total documented definitions: 800
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 8 | `function` | `marginal_state_belief` | docstring | Process marginal state belief. |
-| 20 | `function` | `belief_entropy` | docstring | Process belief entropy. |
-| 26 | `function` | `qs_marginal_state1` | docstring | Process qs marginal state1. |
-| 34 | `function` | `state_inference_action` | docstring | Process state inference action. |
-| 39 | `function` | `state_inference_next_obs` | docstring | Process state inference next obs. |
+| 24 | `function` | `belief_entropy` | docstring | Process belief entropy. |
+| 30 | `function` | `qs_marginal_state1` | docstring | Process qs marginal state1. |
+| 38 | `function` | `state_inference_action` | docstring | Process state inference action. |
+| 43 | `function` | `state_inference_next_obs` | docstring | Process state inference next obs. |
 
 ## `src/simulation/si_loop.py`
 
@@ -1103,15 +1105,18 @@ Total documented definitions: 800
 | ---: | --- | --- | --- | --- |
 | 29 | `function` | `pymdp_available` | docstring | Process pymdp available. |
 | 40 | `class` | `SIRunResult` | docstring | Data container for SIRunResult. |
-| 57 | `function` | `sample_next_state` | docstring | Process sample next state. |
-| 67 | `function` | `sample_observation` | docstring | Process sample observation. |
-| 75 | `function` | `run_si_tmaze` | docstring | Run state or policy inference on the minimal T-maze harness. |
+| 57 | `function` | `_normalise_sampling_distribution` | docstring | Return a finite non-negative probability vector or fail closed. |
+| 70 | `function` | `sample_next_state` | docstring | Process sample next state. |
+| 81 | `function` | `sample_observation` | docstring | Process sample observation. |
+| 92 | `function` | `run_si_tmaze` | docstring | Run state or policy inference on the minimal T-maze harness. |
 
 ## `src/simulation/si_policy.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 21 | `function` | `select_policy_action` | docstring | Return action, method label, selected EFE, selected policy index, and policy evidence. |
+| 21 | `function` | `_normalise_policy_posterior` | docstring | Validate and normalize a pymdp policy posterior. |
+| 34 | `function` | `_expected_utility_fallback` | docstring | Select an action from one-step expected utility when pymdp lacks policy inference. |
+| 90 | `function` | `select_policy_action` | docstring | Return action, method label, selected EFE, selected policy index, and policy evidence. |
 
 ## `src/simulation/statistics.py`
 
@@ -1126,9 +1131,9 @@ Total documented definitions: 800
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 14 | `class` | `TMazeSpec` | docstring | Data container for TMazeSpec. |
-| 26 | `function` | `spec_from_config` | docstring | Process spec from config. |
-| 40 | `function` | `build_tmaze_generative_model` | docstring | Return A, B, C, D for a 2-state start/goal POMDP (single factor). |
+| 15 | `class` | `TMazeSpec` | docstring | Data container for TMazeSpec. |
+| 27 | `function` | `spec_from_config` | docstring | Process spec from config. |
+| 41 | `function` | `build_tmaze_generative_model` | docstring | Return A, B, C, D for a 2-state start/goal POMDP (single factor). |
 
 ## `src/validation_spine/artifacts.py`
 
