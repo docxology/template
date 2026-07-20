@@ -398,7 +398,13 @@ def execute_test_pipeline(
         )
 
     if run_project:
-        report = generate_test_report(infra_results, project_results, repo_root, include_coverage_details=True)
+        report = generate_test_report(
+            infra_results,
+            project_results,
+            repo_root,
+            include_coverage_details=True,
+            include_infrastructure_coverage=run_infra,
+        )
         output_dir = resolve_project_root(repo_root, project_name) / "output" / "reports"
         save_test_report_to_files(report, output_dir)
         report_results(infra_exit, project_exit, infra_results, project_results, report, project_name)

@@ -21,8 +21,15 @@ def generate_test_report(
     project_results: Mapping[str, Any],
     repo_root: Path,
     include_coverage_details: bool = True,
+    include_infrastructure_coverage: bool = True,
 ) -> dict[str, Any]:
-    """Generate structured test report from infrastructure and project test results."""
+    """Generate structured test report from infrastructure and project test results.
+
+    ``coverage_infra.json`` is repository-scoped, so a project-only run can
+    otherwise accidentally ingest stale infrastructure coverage left by an
+    earlier command. Callers should set ``include_infrastructure_coverage``
+    according to the phases executed for the current report.
+    """
     report: dict[str, Any] = {
         "timestamp": datetime.now().isoformat(),
         "infrastructure": infra_results,
@@ -47,10 +54,11 @@ def generate_test_report(
         coverage_details = {}
 
         # Try to read infrastructure coverage details
-        infra_coverage_json = repo_root / "coverage_infra.json"
-        infra_coverage = parse_coverage_json(infra_coverage_json)
-        if infra_coverage:
-            coverage_details["infrastructure"] = infra_coverage
+        if include_infrastructure_coverage:
+            infra_coverage_json = repo_root / "coverage_infra.json"
+            infra_coverage = parse_coverage_json(infra_coverage_json)
+            if infra_coverage:
+                coverage_details["infrastructure"] = infra_coverage
 
         # Try to read project coverage details
         project_coverage_json = repo_root / "coverage_project.json"

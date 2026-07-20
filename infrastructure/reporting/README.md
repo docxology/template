@@ -255,6 +255,12 @@ saved_files = save_validation_report(validation_results, Path("output/reports"))
 - `generate_test_report()` - Generate test results report
 - `save_validation_report()` - Save validation report
 
+Project-only test stages exclude repository-level infrastructure coverage from
+their detailed report, even when a previous infrastructure run left
+`coverage_infra.json` behind. This keeps each exemplar's report scoped to the
+phases executed for that report; combined runs may opt into both coverage
+sections.
+
 Validation JSON and Markdown use the same caller-supplied timestamp. When it is
 absent, `SOURCE_DATE_EPOCH` (or deterministic mode) controls both; otherwise the
 canonical build-time resolver preserves the normal wall-clock behavior.

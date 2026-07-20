@@ -56,6 +56,47 @@ class TestGenerateTestReport:
         report = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
         assert "coverage_details" not in report
 
+    def test_project_only_report_ignores_stale_infrastructure_coverage(self, tmp_path):
+        """Project-only reports must not ingest a prior infra coverage run."""
+        coverage = {
+            "files": {
+                "infrastructure/stale.py": {
+                    "executed_lines": [1],
+                    "missing_lines": [2],
+                    "excluded_lines": [],
+                },
+            },
+        }
+        (tmp_path / "coverage_infra.json").write_text(json.dumps(coverage))
+        (tmp_path / "coverage_project.json").write_text(json.dumps(coverage))
+
+        report = generate_test_report(
+            {},
+            {},
+            tmp_path,
+            include_coverage_details=True,
+            include_infrastructure_coverage=False,
+        )
+
+        assert report["coverage_details"] == {
+            "project": {
+                "overall_coverage": 50.0,
+                "total_executed": 1,
+                "total_missing": 1,
+                "total_excluded": 0,
+                "total_lines": 2,
+                "file_coverage": {
+                    "infrastructure/stale.py": {
+                        "coverage_percent": 50.0,
+                        "executed_lines": 1,
+                        "missing_lines": 1,
+                        "excluded_lines": 0,
+                        "total_lines": 2,
+                    },
+                },
+            },
+        }
+
     def test_missing_coverage_files_no_error(self, tmp_path):
         report = generate_test_report({}, {}, tmp_path, include_coverage_details=True)
         # Should not have coverage_details if files don't exist
