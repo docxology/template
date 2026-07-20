@@ -198,11 +198,13 @@ def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
     assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 2
 
 
+@pytest.mark.timeout(300)
 def test_exemplar_collection_uses_declared_dev_dependencies() -> None:
     count = _exemplar_collected_count(_repo_root(), "template_literature_meta_analysis")
     assert count > 0
 
 
+@pytest.mark.timeout(300)
 def test_exemplar_collection_injects_runner_when_project_venv_lacks_pytest() -> None:
     count = _exemplar_collected_count(_repo_root(), "template_autoresearch_project")
     assert count > 0

@@ -151,6 +151,7 @@ def _exemplar_collected_count(repo_root: Path, name: str) -> int:
         capture_output=True,
         text=True,
         check=False,
+        timeout=300,
     )
     if proc.returncode != 0:
         raise RuntimeError(
