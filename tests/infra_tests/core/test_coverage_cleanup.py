@@ -35,6 +35,17 @@ class TestCleanCoverageFiles:
         assert result is True
         assert not json_file.exists()
 
+    def test_preserves_tracked_coverage_provenance(self, tmp_path):
+        """Cleanup must not delete the tracked source-derived coverage snapshot."""
+        provenance = tmp_path / "docs" / "_generated" / "coverage_snapshot.json"
+        provenance.parent.mkdir(parents=True)
+        provenance.write_text("{}")
+
+        result = clean_coverage_files(tmp_path)
+
+        assert result is True
+        assert provenance.exists()
+
     def test_custom_patterns(self, tmp_path):
         """Test that custom patterns are respected."""
         keep_file = tmp_path / ".coverage"

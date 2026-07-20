@@ -13,6 +13,8 @@ from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
+_TRACKED_COVERAGE_PROVENANCE = Path("docs/_generated/coverage_snapshot.json")
+
 
 def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, scope_dir: Path | None = None) -> bool:
     """Clean coverage database files to prevent corruption.
@@ -48,6 +50,7 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
 
     search_root = scope_dir if scope_dir is not None else repo_root
     active_coverage = _active_coverage_file()
+    protected_paths = {(repo_root / _TRACKED_COVERAGE_PROVENANCE).resolve()}
 
     logger.info("Cleaning coverage database files...")
 
@@ -55,6 +58,9 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
         """Attempt to remove a file; return (removed_label, locked_label)."""
         if active_coverage is not None and _belongs_to_coverage_family(file_path, active_coverage):
             logger.debug(f"  Preserved active coverage data: {label}")
+            return None, None
+        if file_path.resolve() in protected_paths:
+            logger.debug("  Preserved tracked coverage provenance: %s", label)
             return None, None
         try:
             file_path.unlink()
