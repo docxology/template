@@ -13,6 +13,12 @@ single source of truth: [`manuscript/config.yaml`](manuscript/config.yaml). To
 grow the book you edit that file, then run a thin orchestrator that materialises
 the missing stub files in the correct shape.
 
+The config boundary is validated before filesystem work begins. `units:` wins
+over the legacy `parts:` alias even when explicitly empty; part directories and
+chapter/intro filenames must be relative, portable, single-level Markdown paths;
+path traversal, absolute paths, malformed entries, and duplicate source paths
+fail the gate rather than being interpreted by a scaffold or renderer.
+
 ## When to use this template
 
 Use this template for **book-length manuscripts**: parts → chapters → labs →

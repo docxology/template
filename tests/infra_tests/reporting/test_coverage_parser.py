@@ -103,6 +103,11 @@ class TestParseFailuresTimeout:
         output = "tests/test_slow.py::test_slow_op FAILED\nmore context\nmore context\npytest_timeout: Timeout >10s\n"
         assert len(_parse_failures_timeout(output)) >= 1
 
+    def test_timeout_text_after_passing_test_is_not_a_failure(self):
+        """Plugin timeout text must not turn a passing test into a false failure."""
+        output = "tests/test_fast.py::test_ok PASSED\npytest_timeout: configured\n"
+        assert _parse_failures_timeout(output) == []
+
     def test_no_timeout(self):
         assert _parse_failures_timeout("tests passed fine") == []
 

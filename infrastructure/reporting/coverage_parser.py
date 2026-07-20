@@ -117,7 +117,11 @@ def _parse_failures_timeout(combined_output: str) -> list[FailedTestInfo]:
     for i, line in enumerate(lines):
         if "timeout" in line.lower() or "pytest_timeout" in line.lower():
             for j in range(max(0, i - 3), i):
-                if "::" in lines[j] and ("PASSED" in lines[j] or "FAILED" in lines[j]):
+                # A passing test can be followed by timeout-related plugin
+                # output (configuration, warnings, or another test's context).
+                # Only a nearby explicit FAILED status is evidence that this
+                # timeout belongs in the failed-test ledger.
+                if "::" in lines[j] and "FAILED" in lines[j]:
                     m = re.search(r"([^\s]+)\s+(?:PASSED|FAILED)", lines[j])
                     if m:
                         failed_tests.append(
@@ -127,6 +131,7 @@ def _parse_failures_timeout(combined_output: str) -> list[FailedTestInfo]:
                                 "error_message": "Test timed out (increase timeout or optimize test)",
                             }
                         )
+                        break
     return failed_tests
 
 

@@ -144,7 +144,7 @@ Result: **441** project-scope infrastructure tests collected and **702** publish
 | `template_sia` | 67 | 99.69 % |
 | `template_storybook` | 15 | 93.92 % |
 | `template_template` | 139 | 99.37 % |
-| `template_textbook` | 182 | 97.66 % |
+| `template_textbook` | 191 | 97.66 % |
 
 Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). After changing project `src/` or tests, rerun that project's coverage gate and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when source hashes no longer match. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 

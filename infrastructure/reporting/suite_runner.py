@@ -268,6 +268,12 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
         test_results["coverage_percent"] = coverage_pct
 
     failed_tests = extract_failed_tests(stdout_text, stderr_text)
+    # The parser is intentionally conservative, but a zero-exit pytest run is
+    # the final source of truth for the result ledger. Never persist diagnostic
+    # text as failed tests when pytest reports no failures; stale entries make
+    # generated evidence internally contradictory.
+    if exit_code == 0 and test_results.get("failed", 0) == 0:
+        failed_tests = []
     test_results["failed_tests"] = failed_tests
 
     warning_count = stdout_text.count(" warning") + stderr_text.count(" warning")

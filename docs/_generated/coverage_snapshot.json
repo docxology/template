@@ -95,9 +95,9 @@
     },
     "template_textbook": {
       "coverage_pct": "97.66 %",
-      "source_hash": "8d0ebd093f8e12ff729679674652fa61a49164f6250ad305c27ccb7cddc6d3c3"
+      "source_hash": "74f21267d09d21f72429b19d0c5f2c8008e477b1bc734c6a1c429e65eda5be12"
     }
   },
   "schema_version": 2,
-  "source_commit": "2d1a2c50b87c7333cacfd01ddada67837c953eba"
+  "source_commit": "e362fcb2f247bacf5a5ca926e67b97bb8d00fbd5"
 }

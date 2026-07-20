@@ -17,15 +17,16 @@ pattern for any new script.
 | `generate_diagrams.py` | `mermaid.diagrams.generate_all_diagrams` | `output/figures/mermaid/` |
 | `analysis.py` | `textbook.analysis` | `output/data/` (JSON with both parameters and results) |
 | `scaffold_chapter.py` | `textbook.content`, `textbook.config.iter_chapters` / `iter_unit_intros`, `textbook_io.write_text_atomic` | stub `.md` files under `manuscript/` |
-| `audit_textbook_quality.py` | `textbook.audit.run_manuscript_audit` | stdout gate (strict by default; `--lenient` optional) |
+| `audit_textbook_quality.py` | `textbook.audit.run_manuscript_audit` | stdout gate (structural by default; intentional stubs allowed; `--require-complete` for filled forks; `--lenient` optional) |
 
 ## Conventions
 
 - Print every produced path to stdout so the pipeline can collect a manifest.
 - Keep figures/data deterministic — fixed seeds, headless matplotlib (`MPLBACKEND=Agg`).
-- `audit_textbook_quality.py` is a real gate: strict by default (missing declared
-  files and orphan part markdown fail). Pass `--lenient` only when intentionally
-  auditing partial trees.
+- `audit_textbook_quality.py` is a real gate: the default mode requires declared
+  files and rejects orphan part markdown while allowing the exemplar's
+  intentional stub markers. Pass `--require-complete` for a filled-manuscript
+  gate; pass `--lenient` only when intentionally auditing partial trees.
 - `scaffold_chapter.py` must not overwrite authored files unless `--force`.
 
 ## Do not touch

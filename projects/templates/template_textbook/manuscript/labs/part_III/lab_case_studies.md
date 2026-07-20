@@ -23,9 +23,9 @@ chapter's numbers (group means $2.20$, $3.50$, $4.95$; fitted slope $\approx
    `textbook.models.descriptive_statistics`.
 3. Encode dose as $0, 1, 2$ and fit a line with `textbook.models.linear_fit`.
    Confirm slope $\approx 1.375$, intercept $\approx 2.175$, $R^2 \approx 0.999$.
-4. Add a hypothetical fourth condition (dose $3$) with a *saturating* response —
-   say a mean of $5.3$ rather than the linear prediction of $6.3$ — refit, and
-   compare the new slope and $R^2$.
+4. Add a hypothetical fourth condition (dose `3`) with a *saturating* response —
+   use the fixture value `5.3` rather than the line's `6.3` prediction — refit,
+   and compare the new slope and $R^2$.
 
 ## Analysis
 

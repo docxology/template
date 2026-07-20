@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-20T00:29:58.299836",
+  "timestamp": "2026-07-20T08:23:02.376091",
   "infrastructure": {},
   "project": {
     "passed": 304,
@@ -11,29 +11,13 @@
     "discovery_count": 306,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 11.74,
-      "collection": 11.74,
-      "execution": 11.74
+      "setup": 8.32,
+      "collection": 8.32,
+      "execution": 8.32
     },
     "test_categories": {},
     "coverage_percent": 96.4,
-    "failed_tests": [
-      {
-        "test": "tests/test_readme_config_consistency.py::test_readme_documented_default_matches_loader[llm-context_window-llm.context_window-`131072`]",
-        "error_type": "TimeoutError",
-        "error_message": "Test timed out (increase timeout or optimize test)"
-      },
-      {
-        "test": "tests/test_readme_config_consistency.py::test_readme_documented_default_matches_loader[llm-long_max_tokens-llm.long_max_tokens-`16384`]",
-        "error_type": "TimeoutError",
-        "error_message": "Test timed out (increase timeout or optimize test)"
-      },
-      {
-        "test": "tests/test_readme_config_consistency.py::test_readme_documented_default_matches_loader[llm-max_input_length-llm.max_input_length-`600000`]",
-        "error_type": "TimeoutError",
-        "error_message": "Test timed out (increase timeout or optimize test)"
-      }
-    ]
+    "failed_tests": []
   },
   "summary": {
     "total_passed": 304,

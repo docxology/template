@@ -14,6 +14,7 @@ from textbook.config import (
     iter_chapters,
     iter_unit_intros,
     load_config,
+    unit_blocks,
     validate_config,
 )
 
@@ -144,6 +145,60 @@ def test_iter_chapters_accepts_units_key():
     }
     chapters = iter_chapters(config)
     assert len(chapters) == 1 and chapters[0].part_id == "u"
+
+
+def test_unit_blocks_explicit_empty_units_do_not_fall_back_to_parts():
+    """The canonical ``units`` key wins even when deliberately empty."""
+    assert unit_blocks({"units": [], "parts": [{"id": "legacy"}]}) == []
+
+
+@pytest.mark.parametrize(
+    "field,value,needle",
+    [
+        ("directory", "../../outside", "path traversal"),
+        ("directory", "/absolute/outside", "must be relative"),
+        ("directory", "part\\I", "path traversal"),
+        ("file", "nested/chapter.md", "single filename"),
+        ("file", "chapter.txt", "must end with .md"),
+    ],
+)
+def test_validate_config_rejects_unsafe_or_nonportable_paths(field, value, needle):
+    """Declared manuscript paths stay relative and within their part."""
+    part = {
+        "id": "part_I",
+        "title": "Fundamentals",
+        "directory": "part_I",
+        "chapters": [{"file": "chapter.md", "title": "Chapter"}],
+    }
+    if field == "directory":
+        part["directory"] = value
+    else:
+        part["chapters"][0]["file"] = value
+    issues = validate_config({"book": {"title": "t"}, "units": [part]})
+    assert any(needle in issue for issue in issues), issues
+
+
+def test_validate_config_rejects_duplicate_paths_across_parts():
+    """Different part IDs cannot silently map to the same source file."""
+    config = {
+        "book": {"title": "t"},
+        "units": [
+            {"id": "one", "title": "One", "directory": "shared", "chapters": [{"file": "same.md", "title": "A"}]},
+            {"id": "two", "title": "Two", "directory": "shared", "chapters": [{"file": "same.md", "title": "B"}]},
+        ],
+    }
+    assert any("duplicate chapter file/path" in issue for issue in validate_config(config))
+
+
+def test_validate_config_handles_malformed_entries_without_raising():
+    """The quality gate reports malformed YAML instead of crashing in iteration."""
+    config = {
+        "book": {"title": "t"},
+        "units": ["not a mapping", {"id": "part", "title": "P", "chapters": ["not a mapping"]}],
+    }
+    issues = validate_config(config)
+    assert any("must be a mapping" in issue for issue in issues)
+    assert iter_chapters(config) == []
 
 
 def test_validate_config_chapter_without_file():

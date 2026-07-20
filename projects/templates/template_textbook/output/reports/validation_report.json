@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T21:58:36Z",
+  "timestamp": "2026-07-20T15:24:20Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -15,22 +15,22 @@
     "detailed_validation": {
       "structure": {
         "valid": true,
-        "issues": [],
-        "missing_files": [],
-        "suspicious_sizes": [
-          "slides/ directory is empty"
+        "issues": [
+          "Missing directory: slides/"
         ],
+        "missing_files": [],
+        "suspicious_sizes": [],
         "warnings": [],
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 1.07,
+            "size_mb": 0.9,
             "readable": true
           },
           "pdf": {
             "exists": true,
             "files": 11,
-            "size_mb": 1.55,
+            "size_mb": 1.37,
             "readable": true,
             "optional": false
           },
@@ -42,10 +42,9 @@
             "optional": false
           },
           "slides": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": false
           },
           "figures": {
@@ -65,22 +64,20 @@
           "reports": {
             "exists": true,
             "files": 26,
-            "size_mb": 0.31,
+            "size_mb": 0.3,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "logs": {
@@ -96,7 +93,7 @@
         "pdf": {
           "exists": true,
           "file_count": 11,
-          "size_mb": "1.55",
+          "size_mb": "1.37",
           "largest_file": "template_textbook_combined.pdf"
         },
         "web": {
@@ -106,10 +103,9 @@
           "largest_file": "index.html"
         },
         "slides": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "figures": {
           "exists": true,
@@ -126,20 +122,18 @@
         "reports": {
           "exists": true,
           "file_count": 26,
-          "size_mb": "0.31",
+          "size_mb": "0.30",
           "largest_file": "evidence_registry.json"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "llm": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
@@ -151,27 +145,26 @@
       "file_counts": {
         "pdf": 11,
         "web": 52,
-        "slides": 0,
         "figures": 96,
         "data": 2,
         "reports": 26,
-        "simulations": 0,
-        "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 4.3288068771362305,
+      "total_size_mb": 4.1424760818481445,
       "issues_by_severity": {
         "critical": [],
-        "warning": [],
-        "info": [
-          "slides/ directory is empty"
-        ]
+        "warning": [
+          "Directory 'slides/' missing or empty",
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty"
+        ],
+        "info": []
       },
       "recommendations": []
     },
     "pdf": {
       "files": 11,
-      "size_mb": 1.5494775772094727
+      "size_mb": 1.3742561340332031
     },
     "figures": {
       "files": 17,
@@ -179,7 +172,7 @@
     },
     "data": {
       "files": 2,
-      "size_mb": 0.0029058456420898438
+      "size_mb": 0.0027980804443359375
     }
   },
   "summary": {

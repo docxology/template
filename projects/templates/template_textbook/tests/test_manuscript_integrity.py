@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 
 import pytest
+import yaml
 from infrastructure.validation.content import validate_images
 from infrastructure.validation.content.diagnostic_codes import MarkdownCode
 
@@ -26,6 +27,14 @@ UNIT_INTROS = iter_unit_intros(CONFIG)
 
 def test_config_is_valid():
     assert validate_config(CONFIG) == []
+
+
+def test_claim_ledger_structural_counts_match_config():
+    """Declared structural facts cannot drift from the config source of truth."""
+    ledger = yaml.safe_load((MANUSCRIPT.parent / "data" / "claim_ledger.yaml").read_text(encoding="utf-8"))
+    claims = {claim["claim_id"]: claim["value"] for claim in ledger["claims"]}
+    assert claims["chapter-count"] == len(CHAPTERS)
+    assert claims["part-count"] == len(CONFIG["units"])
 
 
 def test_all_unit_intros_exist_and_validate():

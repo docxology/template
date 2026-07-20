@@ -249,6 +249,17 @@ class TestRunTestSuite:
         assert exit_code == 0
         assert isinstance(results, dict)
 
+    def test_passing_suite_clears_timeout_parser_false_positives(self, tmp_path):
+        """A green run cannot persist diagnostic timeout text as failures."""
+        config = self._make_config(
+            tmp_path,
+            cmd=["bash", "-c", "printf 'tests/test_ok.py::test_ok PASSED\\npytest_timeout: configured\\n1 passed\\n'"],
+        )
+        exit_code, results = run_test_suite(config)
+        assert exit_code == 0
+        assert results["failed"] == 0
+        assert results["failed_tests"] == []
+
     def test_run_suite_with_failing_command(self, tmp_path):
         """Test running suite with a failing command."""
         config = self._make_config(tmp_path, cmd=["false"])

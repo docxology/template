@@ -32,6 +32,26 @@ MAX_LATEX_PASSES = 4
 MAX_CONSECUTIVE_FAILURES = 2
 
 
+def _normalize_latex_log(path: Path) -> None:
+    """Normalize compiler log whitespace before it becomes a tracked artifact.
+
+    TeX distributions occasionally emit diagnostics with a space immediately
+    before the newline.  That is harmless to the compiler but makes generated
+    logs fail repository whitespace gates and needlessly churns publication
+    diffs.  Keep the complete diagnostic content while removing only trailing
+    horizontal whitespace and preserving a final newline.
+    """
+    if not path.exists():
+        return
+    try:
+        content = path.read_text(encoding="utf-8", errors="replace")
+        normalized = "".join(f"{line.rstrip()}\n" for line in content.splitlines())
+        if normalized != content:
+            path.write_text(normalized, encoding="utf-8")
+    except OSError as exc:
+        logger.debug("LaTeX log normalization skipped for %s: %s", path, exc)
+
+
 def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
     """Remove stale auxiliary files from previous compilation runs."""
     for ext in STALE_AUX_EXTENSIONS:
@@ -63,6 +83,8 @@ def _run_latex_pass(
             env=deterministic_subprocess_env(repo_root=output_dir),
         )
 
+    _normalize_latex_log(latex_stdout_log)
+    _normalize_latex_log(output_dir / f"{tex_stem}.log")
     repair_truncated_aux(aux_file)
     return result
 
@@ -151,6 +173,8 @@ def _recover_invalid_pdf(output_dir: Path, cmd: list[str], temp_pdf: Path, combi
             cwd=str(output_dir),
             timeout=(8 if os.environ.get("PYTEST_CURRENT_TEST") else 600),
         )
+    _normalize_latex_log(latex_stdout_log)
+    _normalize_latex_log(output_dir / f"{combined_tex.stem}.log")
 
     if not validate_pdf_structure(temp_pdf):
         logger.warning("PDF still invalid after recovery pass. Best-effort output.")

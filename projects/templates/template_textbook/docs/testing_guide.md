@@ -93,6 +93,11 @@ checks every declared chapter exists and passes the contract, confirms each
 lab + question file is present, and prints a per-chapter stub-count / word-count
 progress table.
 
+Config validation is intentionally defensive: explicit `units:` takes precedence
+over `parts:`, and unsafe or duplicate manuscript paths fail before the audit
+walks the tree. The default audit is structural and allows the fillable
+exemplar's stubs; `--require-complete` is the separate zero-stub gate.
+
 ```bash
 uv run python scripts/audit_textbook_quality.py
 uv run python scripts/audit_textbook_quality.py --lenient

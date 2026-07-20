@@ -8,7 +8,7 @@ claims:
     artifact_path: manuscript/config.yaml
   - claim_id: part-count
     kind: number
-    value: 3
+    value: 4
     source: projects/templates/template_textbook/manuscript/config.yaml declared part count
     source_tier: project_source
     freshness: active

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any
 
 import yaml
@@ -80,9 +81,10 @@ def unit_blocks(config: dict[str, Any]) -> list[dict[str, Any]]:
     this template uses "Part" as the human-facing term, so ``parts`` is accepted
     as an alias. ``units`` wins if both are present.
     """
-    blocks = config.get("units")
-    if not blocks:
-        blocks = config.get("parts")
+    # Presence, rather than truthiness, is significant here: an author who
+    # explicitly declares ``units: []`` must not silently fall back to a stale
+    # legacy ``parts:`` block elsewhere in the file.
+    blocks = config["units"] if "units" in config else config.get("parts")
     return blocks if isinstance(blocks, list) else []
 
 
@@ -90,9 +92,17 @@ def iter_chapters(config: dict[str, Any], *, include_disabled: bool = False) -> 
     """Flatten ``units -> chapters`` into an ordered list of :class:`ChapterRef`."""
     chapters: list[ChapterRef] = []
     for part in unit_blocks(config):
+        if not isinstance(part, dict):
+            continue
         part_id = part.get("id", "")
-        directory = part.get("directory", part_id)
-        for chapter in part.get("chapters", []):
+        directory_value = part.get("directory", part_id)
+        directory = directory_value if isinstance(directory_value, str) else ""
+        chapter_entries = part.get("chapters", [])
+        if not isinstance(chapter_entries, list):
+            continue
+        for chapter in chapter_entries:
+            if not isinstance(chapter, dict) or not isinstance(chapter.get("file"), str):
+                continue
             enabled = bool(chapter.get("enabled", True))
             if not enabled and not include_disabled:
                 continue
@@ -114,11 +124,14 @@ def iter_unit_intros(config: dict[str, Any]) -> list[UnitIntroRef]:
     """Return declared unit introduction files from ``units`` blocks."""
     intros: list[UnitIntroRef] = []
     for part in unit_blocks(config):
+        if not isinstance(part, dict):
+            continue
         intro_file = part.get("intro_file")
         if not intro_file:
             continue
         part_id = part.get("id", "")
-        directory = part.get("directory", part_id)
+        directory_value = part.get("directory", part_id)
+        directory = directory_value if isinstance(directory_value, str) else ""
         intros.append(
             UnitIntroRef(
                 part_id=part_id,
@@ -155,35 +168,83 @@ def validate_config(config: dict[str, Any]) -> list[str]:
         return issues
 
     seen_ids: set[str] = set()
-    seen_files: set[tuple[str, str]] = set()
+    seen_paths: set[tuple[str, str]] = set()
+    seen_intro_paths: set[tuple[str, str]] = set()
     for index, part in enumerate(parts):
+        if not isinstance(part, dict):
+            issues.append(f"units[{index}] must be a mapping")
+            continue
         pid = part.get("id")
         if not pid:
             issues.append(f"units[{index}] missing id")
+            continue
+        if not isinstance(pid, str):
+            issues.append(f"units[{index}] id must be a string")
             continue
         if pid in seen_ids:
             issues.append(f"duplicate part id: {pid}")
         seen_ids.add(pid)
         if not part.get("title"):
             issues.append(f"part {pid} missing title")
+        directory = part.get("directory", pid)
+        issues.extend(_validate_relative_path(directory, f"part {pid} directory", directory_only=True))
         chapters = part.get("chapters")
         if not isinstance(chapters, list) or not chapters:
             issues.append(f"part {pid} has no chapters")
             continue
-        for chapter in chapters:
+        intro_file = part.get("intro_file")
+        if intro_file is not None:
+            issues.extend(_validate_relative_path(intro_file, f"part {pid} intro_file", markdown=True))
+            if isinstance(directory, str) and isinstance(intro_file, str):
+                intro_key = (directory, intro_file)
+                if intro_key in seen_intro_paths:
+                    issues.append(f"duplicate unit intro path: {directory}/{intro_file}")
+                seen_intro_paths.add(intro_key)
+
+        for chapter_index, chapter in enumerate(chapters):
+            if not isinstance(chapter, dict):
+                issues.append(f"part {pid} chapter {chapter_index} must be a mapping")
+                continue
             file = chapter.get("file")
             if not file:
                 issues.append(f"part {pid} has a chapter with no file")
                 continue
-            key = (pid, file)
-            if key in seen_files:
-                issues.append(f"duplicate chapter file in {pid}: {file}")
-            seen_files.add(key)
+            issues.extend(_validate_relative_path(file, f"chapter {pid}/{file}", markdown=True))
+            if isinstance(directory, str) and isinstance(file, str):
+                key = (directory, file)
+                if key in seen_paths:
+                    issues.append(f"duplicate chapter file/path: {directory}/{file}")
+                seen_paths.add(key)
             if not chapter.get("title"):
                 issues.append(f"chapter {pid}/{file} missing title")
-        intro_file = part.get("intro_file")
-        if intro_file is not None and not str(intro_file).endswith(".md"):
-            issues.append(f"part {pid} intro_file must end with .md")
+    return issues
+
+
+def _validate_relative_path(
+    value: Any, field: str, *, markdown: bool = False, directory_only: bool = False
+) -> list[str]:
+    """Validate a config path before it is joined to the manuscript root.
+
+    Config paths are author-controlled data but are later used by scaffolding,
+    audits, and render discovery. Keep them portable and confined to their
+    declared part: reject absolute paths, Windows separators, traversal, and
+    nested filenames that would bypass the orphan-file checks.
+    """
+    if not isinstance(value, str) or not value.strip():
+        return [f"{field} must be a non-empty relative path"]
+
+    issues: list[str] = []
+    path = PurePosixPath(value)
+    if value.startswith(("/", "\\")) or path.is_absolute():
+        issues.append(f"{field} must be relative")
+    if "\\" in value or any(part == ".." for part in path.parts):
+        issues.append(f"{field} must not contain path traversal")
+    if directory_only and path.name != value:
+        issues.append(f"{field} must be a single directory name")
+    if not directory_only and path.name != value:
+        issues.append(f"{field} must be a single filename")
+    if markdown and not value.endswith(".md"):
+        issues.append(f"{field} must end with .md")
     return issues
 
 

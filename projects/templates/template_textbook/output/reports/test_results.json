@@ -1,46 +1,30 @@
 {
-  "timestamp": "2026-07-20T00:31:43.205634",
+  "timestamp": "2026-07-20T08:24:11.892705",
   "infrastructure": {},
   "project": {
-    "passed": 182,
+    "passed": 191,
     "failed": 0,
     "skipped": 0,
-    "total": 182,
+    "total": 191,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 182,
+    "discovery_count": 191,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 14.66,
-      "collection": 14.66,
-      "execution": 14.66
+      "setup": 9.88,
+      "collection": 9.88,
+      "execution": 9.88
     },
     "test_categories": {},
-    "coverage_percent": 97.51,
-    "failed_tests": [
-      {
-        "test": "tests/test_mermaid.py::test_build_quadrant_no_points",
-        "error_type": "TimeoutError",
-        "error_message": "Test timed out (increase timeout or optimize test)"
-      },
-      {
-        "test": "tests/test_mermaid.py::test_build_journey_empty",
-        "error_type": "TimeoutError",
-        "error_message": "Test timed out (increase timeout or optimize test)"
-      },
-      {
-        "test": "tests/test_mermaid.py::test_all_spec_names_are_unique",
-        "error_type": "TimeoutError",
-        "error_message": "Test timed out (increase timeout or optimize test)"
-      }
-    ]
+    "coverage_percent": 96.72,
+    "failed_tests": []
   },
   "summary": {
-    "total_passed": 182,
+    "total_passed": 191,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 182,
+    "total_tests": 191,
     "all_passed": true,
-    "project_coverage": 97.51
+    "project_coverage": 96.72
   }
 }

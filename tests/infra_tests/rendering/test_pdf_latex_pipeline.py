@@ -8,12 +8,25 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering._pdf_latex_pipeline import LATEX_CMD_OPTIONS, _check_fatal_error
+from infrastructure.rendering._pdf_latex_pipeline import (
+    LATEX_CMD_OPTIONS,
+    _check_fatal_error,
+    _normalize_latex_log,
+)
 
 
 def test_latex_command_disables_shell_escape() -> None:
     assert "-shell-escape" not in LATEX_CMD_OPTIONS
     assert "-no-shell-escape" in LATEX_CMD_OPTIONS
+
+
+def test_latex_log_normalization_preserves_diagnostics_without_trailing_space(tmp_path: Path) -> None:
+    log = tmp_path / "latex.log"
+    log.write_text("warning with space  \n\nfinal diagnostic\t\n", encoding="utf-8")
+
+    _normalize_latex_log(log)
+
+    assert log.read_text(encoding="utf-8") == "warning with space\n\nfinal diagnostic\n"
 
 
 def test_latex_pass_nonzero_exit_fails_even_with_partial_pdf(tmp_path: Path) -> None:

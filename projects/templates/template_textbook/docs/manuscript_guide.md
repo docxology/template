@@ -39,6 +39,12 @@ Each chapter `<stem>.md` has a matching lab
 from the parent chapter title by [`src/textbook/toc.py`](../src/textbook/toc.py)
 — the config lists only file names.
 
+Config path safety is part of the contract: `units:` takes precedence over the
+legacy `parts:` alias, and declared part directories plus chapter/intro files
+must be relative, portable, single-level paths ending in `.md`. Traversal,
+absolute paths, malformed mappings, and duplicate source paths are rejected by
+`textbook.config.validate_config` before scaffolding or auditing begins.
+
 ## The per-chapter contract
 
 Every chapter must carry the elements below. They are enforced by
