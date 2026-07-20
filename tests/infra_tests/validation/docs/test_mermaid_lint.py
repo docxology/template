@@ -17,6 +17,7 @@ from infrastructure.validation.docs.mermaid_lint import (
     ValidationFailure,
     find_mermaid_blocks,
     mmdc_available,
+    resolve_mmdc_executable,
     validate_blocks,
 )
 
@@ -93,6 +94,15 @@ def test_validate_blocks_raises_when_mmdc_missing(tmp_path: Path, monkeypatch: p
     assert blocks
     with pytest.raises(RuntimeError, match="mmdc"):
         validate_blocks(blocks, mmdc_path="/nonexistent/path/to/mmdc")
+
+
+def test_resolve_mmdc_executable_finds_repository_local_install(tmp_path: Path) -> None:
+    local_mmdc = tmp_path / "node_modules" / ".bin" / "mmdc"
+    local_mmdc.parent.mkdir(parents=True)
+    local_mmdc.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    local_mmdc.chmod(0o755)
+
+    assert resolve_mmdc_executable(tmp_path) == str(local_mmdc)
 
 
 @pytest.mark.skipif(not mmdc_available(), reason="mmdc (mermaid-cli) not installed")

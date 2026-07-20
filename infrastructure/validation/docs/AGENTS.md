@@ -88,8 +88,8 @@ reduces subprocess churn; a repo-wide total timeout caps wall time on large doc 
 | Environment variable | Default | Purpose |
 | --- | --- | --- |
 | `TEMPLATE_MERMAID_LINT_TIMEOUT` | `30` | Per-file `mmdc` timeout (seconds) |
-| `TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT` | `120` | Total budget across all files in one lint run |
-| `TEMPLATE_MERMAID_LINT_BATCH_SIZE` | `20` | Max diagrams per batch `mmdc` invocation |
+| `TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT` | `300` | Total budget across all files in one lint run |
+| `TEMPLATE_MERMAID_LINT_BATCH_SIZE` | `10` | Max diagrams per batch `mmdc` invocation |
 | `CHROME_EXECUTABLE_PATH` | unset | Explicit Chrome/Chromium binary for puppeteer (overrides detection) |
 
 ### Browser provisioning (required for `mmdc`)
@@ -104,6 +104,8 @@ headless shell once per machine:
 
 ```bash
 npm ci
+# The Python gate auto-discovers this repository-local binary; export PATH for
+# direct `mmdc` invocations as well.
 export PATH="$PWD/node_modules/.bin:$PATH"
 npx --no-install puppeteer browsers install chrome-headless-shell
 ```

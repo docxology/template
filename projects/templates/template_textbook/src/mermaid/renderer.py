@@ -24,9 +24,21 @@ class RenderResult:
     rendered_png: bool  # True if mmdc produced a PNG; False if .mmd fallback
 
 
+def _resolve_mmdc() -> str | None:
+    """Resolve ``mmdc`` from PATH or a repository-local Node install."""
+    candidate = shutil.which("mmdc")
+    if candidate:
+        return candidate
+    for parent in Path(__file__).resolve().parents:
+        local_candidate = parent / "node_modules" / ".bin" / "mmdc"
+        if local_candidate.exists():
+            return str(local_candidate)
+    return None
+
+
 def mmdc_available() -> bool:
-    """Return True when the Mermaid CLI (``mmdc``) is on PATH."""
-    return shutil.which("mmdc") is not None
+    """Return True when the Mermaid CLI is on PATH or locally installed."""
+    return _resolve_mmdc() is not None
 
 
 class MermaidRenderer:
@@ -41,13 +53,14 @@ class MermaidRenderer:
         mmd_path = self.output_dir / f"{name}.mmd"
         write_text_atomic(mmd_path, source)
 
-        if not mmdc_available():
+        mmdc_bin = _resolve_mmdc()
+        if mmdc_bin is None:
             logger.info("mmdc not found; wrote source fallback %s", mmd_path)
             return RenderResult(name=name, path=mmd_path, rendered_png=False)
 
         png_path = self.output_dir / f"{name}.png"
         try:  # pragma: no cover - exercised only where mmdc is installed
-            _run_mmdc(["mmdc", "-i", str(mmd_path), "-o", str(png_path)], timeout=120)
+            _run_mmdc([mmdc_bin, "-i", str(mmd_path), "-o", str(png_path)], timeout=120)
         except (subprocess.SubprocessError, OSError) as exc:  # pragma: no cover
             logger.warning("mmdc failed for %s (%s); using .mmd fallback", name, exc)
             return RenderResult(name=name, path=mmd_path, rendered_png=False)

@@ -21,7 +21,7 @@ back out via the markers ``Last refreshed count: **N**`` and
 
 Per-exemplar collection totals are derived live with ``pytest --collect-only``.
 Coverage remains a separately labelled measured snapshot because recomputing all
-23 coverage gates during every documentation check would be prohibitively slow.
+24 coverage gates during every documentation check would be prohibitively slow.
 """
 
 from __future__ import annotations
@@ -45,10 +45,10 @@ COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-07-17"
+GENERATED_DATE = "2026-07-20"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-17"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-20"
 
 
 @dataclass(frozen=True)
@@ -71,32 +71,31 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_active_inference", "90.30 %"),
     ExemplarSnapshot("template_advanced_literature_review", "92.48 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
-    ExemplarSnapshot("template_autoresearch_project", "92.81 %"),
-    ExemplarSnapshot("template_autoscientists", "99.60 %"),
-    ExemplarSnapshot("template_code_project", "98.78 %"),
-    ExemplarSnapshot("template_data_descriptor", "99.13 %"),
-    ExemplarSnapshot("template_eda_notebook", "100.00 %"),
-    ExemplarSnapshot("template_formal", "96.03 %"),
-    ExemplarSnapshot("template_gold_refinement", "97.55 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "96.77 %"),
-    ExemplarSnapshot("template_madlib", "93.96 %"),
+    ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
+    ExemplarSnapshot("template_autoscientists", "99.28 %"),
+    ExemplarSnapshot("template_code_project", "96.98 %"),
+    ExemplarSnapshot("template_data_descriptor", "98.75 %"),
+    ExemplarSnapshot("template_eda_notebook", "98.97 %"),
+    ExemplarSnapshot("template_formal", "95.29 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.64 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "94.29 %"),
+    ExemplarSnapshot("template_madlib", "99.67 %"),
     ExemplarSnapshot("template_methods_paper", "99.01 %"),
     # Reverified 2026-07-20 after strict manifest/page-loader hardening:
     # 150 tests, 99.70 % line+branch coverage in the project lane.
     ExemplarSnapshot("template_newspaper", "99.70 %"),
     ExemplarSnapshot("template_pitch_deck", "97.73 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "95.52 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "94.88 %"),
     ExemplarSnapshot("template_prose_project", "99.57 %"),
-    # Union of two independent 2026-07-10 coverage-debt closures (both real
-    # no-mock suites over visuals.py, written in parallel sessions): 95 tests,
-    # 99.05 % — was 55.91 % when the 1500-line kmyth/TPM module landed with 7.
-    ExemplarSnapshot("template_redacted_report", "98.83 %"),
-    ExemplarSnapshot("template_registered_report", "96.37 %"),
+    # Reverified 2026-07-20 in the Python 3.12 public-readiness matrix:
+    # 113 tests, 97.53 % line+branch coverage.
+    ExemplarSnapshot("template_redacted_report", "97.53 %"),
+    ExemplarSnapshot("template_registered_report", "96.42 %"),
     ExemplarSnapshot("template_search_project", "96.40 %"),
     ExemplarSnapshot("template_sia", "99.69 %"),
-    ExemplarSnapshot("template_storybook", "93.92 %"),
-    ExemplarSnapshot("template_template", "99.37 %"),
-    ExemplarSnapshot("template_textbook", "97.66 %"),
+    ExemplarSnapshot("template_storybook", "95.07 %"),
+    ExemplarSnapshot("template_template", "99.14 %"),
+    ExemplarSnapshot("template_textbook", "96.61 %"),
 )
 
 
@@ -488,7 +487,7 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage was re-derived in its project-local environment — see note below):
 
 {_exemplar_table(facts.exemplar_tests)}
 

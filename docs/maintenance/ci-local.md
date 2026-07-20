@@ -22,6 +22,8 @@ uv sync
 
 # Pinned Mermaid CLI used by strict documentation and PDF checks
 npm ci
+# Python gates auto-discover node_modules/.bin/mmdc; add it to PATH only for
+# direct mmdc invocations:
 export PATH="$PWD/node_modules/.bin:$PATH"
 
 # macOS / Linux

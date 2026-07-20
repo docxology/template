@@ -78,9 +78,25 @@ class ValidationFailure:
         )
 
 
-def mmdc_available(mmdc_path: str | None = None) -> bool:
-    """Return True iff a `mmdc` binary appears to be on PATH (or at *mmdc_path*)."""
-    candidate = mmdc_path or shutil.which("mmdc")
+def resolve_mmdc_executable(repo_root: Path | None = None) -> str | None:
+    """Return the pinned Mermaid CLI from PATH or the repository-local install.
+
+    CI adds ``node_modules/.bin`` to ``PATH`` explicitly. Local commands are
+    easier to reproduce when the Python gate also recognizes the documented
+    repository-local install, even when a caller has not exported that PATH
+    entry in its current shell.
+    """
+    candidate = shutil.which("mmdc")
+    if candidate and Path(candidate).exists():
+        return candidate
+    root = (repo_root or Path.cwd()).resolve()
+    local_candidate = root / "node_modules" / ".bin" / "mmdc"
+    return str(local_candidate) if local_candidate.exists() else None
+
+
+def mmdc_available(mmdc_path: str | None = None, repo_root: Path | None = None) -> bool:
+    """Return True iff ``mmdc`` is available at an explicit, PATH, or local path."""
+    candidate = mmdc_path or resolve_mmdc_executable(repo_root)
     return bool(candidate and Path(candidate).exists())
 
 
@@ -373,11 +389,12 @@ def validate_blocks(
     """
     if not blocks:
         return []
-    mmdc_bin = mmdc_path or shutil.which("mmdc")
+    mmdc_bin = mmdc_path or resolve_mmdc_executable()
     if not mmdc_bin or not Path(mmdc_bin).exists():
         raise RuntimeError(
-            "mmdc (mermaid-cli) is not on PATH. From the repository root, run "
-            '`npm ci` and `export PATH="$PWD/node_modules/.bin:$PATH"`; ensure a Chrome/Chromium '
+            "mmdc (mermaid-cli) is unavailable. From the repository root, run "
+            "`npm ci`; the Python gate auto-discovers `node_modules/.bin/mmdc` "
+            "(prepend that directory to PATH for direct `mmdc` calls); ensure a Chrome/Chromium "
             "binary is reachable via CHROME_EXECUTABLE_PATH or run "
             "`npx --no-install puppeteer browsers install chrome-headless-shell`."
         )
@@ -508,5 +525,6 @@ __all__ = [
     "ValidationFailure",
     "find_mermaid_blocks",
     "mmdc_available",
+    "resolve_mmdc_executable",
     "validate_blocks",
 ]

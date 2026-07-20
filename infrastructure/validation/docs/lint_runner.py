@@ -27,7 +27,7 @@ from infrastructure.validation.docs.doc_pair_lint import DocPairIssue, find_doc_
 from infrastructure.validation.docs.mermaid_lint import (
     ValidationFailure,
     find_mermaid_blocks,
-    mmdc_available,
+    resolve_mmdc_executable,
     validate_blocks,
 )
 
@@ -94,14 +94,16 @@ def run_mermaid_lint(repo_root: Path, *, quiet: bool) -> list[ValidationFailure]
     blocks = find_mermaid_blocks(doc_roots(repo_root))
     if not quiet:
         logger.info("mermaid: discovered %d blocks", len(blocks))
-    if not mmdc_available():
+    mmdc_bin = resolve_mmdc_executable(repo_root)
+    if not mmdc_bin:
         raise RuntimeError(
-            "mmdc (mermaid-cli) not on PATH. From the repository root, run "
-            '`npm ci` and `export PATH="$PWD/node_modules/.bin:$PATH"`; provide a Chrome binary '
+            "mmdc (mermaid-cli) is unavailable. From the repository root, run "
+            "`npm ci`; the Python gate auto-discovers `node_modules/.bin/mmdc` "
+            "(prepend that directory to PATH for direct `mmdc` calls); provide a Chrome binary "
             "(set CHROME_EXECUTABLE_PATH or run "
             "`npx --no-install puppeteer browsers install chrome-headless-shell`)."
         )
-    return validate_blocks(blocks)
+    return validate_blocks(blocks, mmdc_path=mmdc_bin)
 
 
 def run_links_lint(repo_root: Path, *, quiet: bool) -> list[BrokenLink]:

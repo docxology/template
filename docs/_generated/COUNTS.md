@@ -117,34 +117,34 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **466** project-scope infrastructure tests collected and **717** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated 2026-07-17; `template_active_inference` coverage preserved from its 2026-06-05 project-local gate run — see note below):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated 2026-07-20; `template_active_inference` coverage was re-derived in its project-local environment — see note below):
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
 | `template_active_inference` | 726 | 90.30 % |
 | `template_advanced_literature_review` | 77 | 92.48 % |
 | `template_autopoiesis` | 512 | 97.84 % |
-| `template_autoresearch_project` | 370 | 92.81 % |
-| `template_autoscientists` | 115 | 99.60 % |
-| `template_code_project` | 242 | 98.78 % |
-| `template_data_descriptor` | 40 | 99.13 % |
-| `template_eda_notebook` | 66 | 100.00 % |
-| `template_formal` | 278 | 96.03 % |
-| `template_gold_refinement` | 328 | 97.55 % |
-| `template_literature_meta_analysis` | 1160 | 96.77 % |
-| `template_madlib` | 148 | 93.96 % |
+| `template_autoresearch_project` | 370 | 96.46 % |
+| `template_autoscientists` | 115 | 99.28 % |
+| `template_code_project` | 242 | 96.98 % |
+| `template_data_descriptor` | 40 | 98.75 % |
+| `template_eda_notebook` | 66 | 98.97 % |
+| `template_formal` | 278 | 95.29 % |
+| `template_gold_refinement` | 328 | 92.64 % |
+| `template_literature_meta_analysis` | 1160 | 94.29 % |
+| `template_madlib` | 148 | 99.67 % |
 | `template_methods_paper` | 90 | 99.01 % |
 | `template_newspaper` | 150 | 99.70 % |
 | `template_pitch_deck` | 125 | 97.73 % |
-| `template_pools_rules_tools` | 261 | 95.52 % |
+| `template_pools_rules_tools` | 261 | 94.88 % |
 | `template_prose_project` | 120 | 99.57 % |
-| `template_redacted_report` | 113 | 98.83 % |
-| `template_registered_report` | 34 | 96.37 % |
+| `template_redacted_report` | 113 | 97.53 % |
+| `template_registered_report` | 34 | 96.42 % |
 | `template_search_project` | 306 | 96.40 % |
 | `template_sia` | 67 | 99.69 % |
-| `template_storybook` | 15 | 93.92 % |
-| `template_template` | 139 | 99.37 % |
-| `template_textbook` | 191 | 97.66 % |
+| `template_storybook` | 15 | 95.07 % |
+| `template_template` | 139 | 99.14 % |
+| `template_textbook` | 192 | 96.61 % |
 
 Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). After changing project `src/` or tests, rerun that project's coverage gate and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when source hashes no longer match. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 

@@ -1,30 +1,30 @@
 {
-  "timestamp": "2026-07-20T10:48:38.165035",
+  "timestamp": "2026-07-20T11:14:19.489238",
   "infrastructure": {},
   "project": {
-    "passed": 191,
+    "passed": 192,
     "failed": 0,
     "skipped": 0,
-    "total": 191,
+    "total": 192,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 191,
+    "discovery_count": 192,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 11.28,
-      "collection": 11.28,
-      "execution": 11.28
+      "setup": 11.02,
+      "collection": 11.02,
+      "execution": 11.02
     },
     "test_categories": {},
-    "coverage_percent": 96.72,
+    "coverage_percent": 96.61,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 191,
+    "total_passed": 192,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 191,
+    "total_tests": 192,
     "all_passed": true,
-    "project_coverage": 96.72
+    "project_coverage": 96.61
   }
 }

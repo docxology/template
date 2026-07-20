@@ -14,7 +14,7 @@ provides an interactive menu with options 1 (infrastructure) and 2 (project).
 
 Exit codes:
     0: All required tests passed
-    1: Project tests failed (infrastructure failures are logged but non-fatal)
+    1: Infrastructure or project tests failed
 """
 
 from __future__ import annotations
@@ -48,10 +48,11 @@ def main() -> int:
     """Execute test suite orchestration.
 
     Runs both infrastructure and project tests in sequence.
-    Infrastructure test failures are reported but don't fail the pipeline.
+    Infrastructure and project test failures are reported and fail the pipeline.
 
     Returns:
-        Exit code (0=project tests passed, 1=project tests failed)
+        Exit code (0=all requested phases passed, 1=an infrastructure or project
+        phase failed)
     """
     import argparse
 
