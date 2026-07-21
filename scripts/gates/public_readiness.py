@@ -7,6 +7,7 @@ import argparse
 import json
 from pathlib import Path
 
+from infrastructure.core.pytest_orchestration import TEST_PROFILE_NAMES, parse_project_workers
 from infrastructure.project.public_readiness import (
     DEFAULT_TIMEOUT_SECONDS,
     format_public_readiness,
@@ -25,11 +26,26 @@ def _positive_int(raw: str) -> int:
     return value
 
 
+def _project_workers(raw: str) -> int:
+    """Parse the outer project-matrix worker count."""
+    try:
+        return parse_project_workers(raw)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from exc
+
+
 def main(argv: list[str] | None = None) -> int:
     """Execute the public readiness gate."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--timeout", type=_positive_int, default=DEFAULT_TIMEOUT_SECONDS)
+    parser.add_argument("--profile", choices=TEST_PROFILE_NAMES, default="release")
+    parser.add_argument(
+        "--project-workers",
+        type=_project_workers,
+        default=1,
+        help="Bounded outer project concurrency; use 'serial' for one worker.",
+    )
     parser.add_argument(
         "--include-ollama-tests",
         action="store_true",
@@ -47,6 +63,8 @@ def main(argv: list[str] | None = None) -> int:
         args.repo_root,
         timeout_seconds=args.timeout,
         include_ollama_tests=args.include_ollama_tests,
+        profile=args.profile,
+        project_workers=args.project_workers,
     )
     if args.json:
         print(json.dumps(report.to_dict(), indent=2, sort_keys=True))

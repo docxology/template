@@ -18,6 +18,8 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 def test_public_readiness_fails_closed_when_expected_roster_is_absent(tmp_path: Path) -> None:
     report = run_public_readiness(tmp_path)
 
+    assert report.profile == "release"
+    assert report.project_workers == 1
     assert report.counts == {"fail": len(PUBLIC_PROJECT_NAMES), "pass": 0, "skip": 0}
     assert report.missing_projects == tuple(sorted(PUBLIC_PROJECT_NAMES))
     assert report.exit_code() == 1
@@ -60,3 +62,18 @@ def test_public_readiness_rejects_non_positive_timeout(tmp_path: Path) -> None:
 def test_public_readiness_cli_rejects_non_positive_timeout() -> None:
     with pytest.raises(SystemExit, match="2"):
         public_readiness_main(["--timeout", "0"])
+
+
+def test_public_readiness_cli_rejects_non_positive_project_workers() -> None:
+    with pytest.raises(SystemExit, match="2"):
+        public_readiness_main(["--project-workers", "0"])
+
+
+def test_public_readiness_serializes_profile_and_worker_metadata() -> None:
+    result = PublicReadinessResult("templates/example", "pass", 0, 0.1, ())
+    report = PublicReadinessReport((result,), (result.project,), profile="quick", project_workers=2)
+
+    payload = report.to_dict()
+
+    assert payload["profile"] == "quick"
+    assert payload["project_workers"] == 2

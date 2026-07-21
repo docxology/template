@@ -10,8 +10,14 @@ not new CI gates.
 
 ```bash
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
+  -n auto --dist worksteal --benchmark-disable \
   --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
-  --timeout=120 -m 'not requires_ollama'
+  --durations=10 \
+  -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
+  --timeout=120
+
+The uncached serial diagnostic oracle uses the same command with the xdist
+flags removed; it is the comparison baseline for performance claims.
 ```
 
 **Overall infrastructure coverage:** 83.05% (gate: >= 60%)

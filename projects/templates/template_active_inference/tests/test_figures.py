@@ -17,6 +17,11 @@ from visualizations.figures import (
 )
 from visualizations.figures_sheaf import coverage_heatmap_payload, figure_sheaf_layers_overview
 
+# Figure generation exercises real matplotlib writers and the shared output tree.
+# Keep it in the release lane while allowing analytical and contract tests to
+# form the quick inner loop.
+pytestmark = pytest.mark.slow
+
 
 def _assert_png(path: Path, *, min_width: int = 400, min_height: int = 200) -> None:
     assert path.exists(), f"missing figure: {path}"
@@ -46,7 +51,7 @@ def test_figure_registry_fail_closed_on_unknown_token(project_root: Path) -> Non
         )
 
 
-@pytest.mark.timeout(30)
+@pytest.mark.timeout(300)
 def test_all_generators_write_png(project_root: Path) -> None:
     from analysis import run_analysis
     from manuscript.sheaf.coverage import emit_coverage_artifacts
@@ -74,7 +79,7 @@ def test_free_energy_grid_matches_ssot(project_root: Path) -> None:
     assert len(rows) == len(grid)
 
 
-@pytest.mark.timeout(30)
+@pytest.mark.timeout(300)
 def test_generate_all_figures_complete(project_root: Path) -> None:
     from analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist

@@ -50,17 +50,22 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="record source hashes after rerunning every changed coverage gate",
     )
+    parser.add_argument(
+        "--project-workers",
+        default="serial",
+        help="bounded public-exemplar collection concurrency; use 'serial' or a positive integer",
+    )
     args = parser.parse_args(argv)
 
     if args.check:
-        in_sync, message = check_counts_doc(REPO_ROOT)
+        in_sync, message = check_counts_doc(REPO_ROOT, project_workers=args.project_workers)
         print(message)
         return 0 if in_sync else 1
 
     if args.refresh_coverage_provenance:
         provenance = write_coverage_provenance(REPO_ROOT)
         print(str(provenance.relative_to(REPO_ROOT)))
-    written = write_counts_doc(REPO_ROOT)
+    written = write_counts_doc(REPO_ROOT, project_workers=args.project_workers)
     print(str(written.relative_to(REPO_ROOT)) if written.is_relative_to(REPO_ROOT) else str(written))
     return 0
 

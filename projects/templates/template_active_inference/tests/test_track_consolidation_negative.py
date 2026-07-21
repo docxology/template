@@ -24,7 +24,7 @@ from track_consolidation_support import (
     _write,
 )
 
-pytestmark = [pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.slow, pytest.mark.timeout(600)]
 
 
 @pytest.mark.long_running

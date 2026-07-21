@@ -63,6 +63,26 @@ uv run python scripts/pipeline/stage_01_test.py
 uv run pytest tests/
 ```
 
+### Typed Test Profiles
+
+The orchestrators share one additive profile registry:
+
+- `quick` is the deterministic unit/contract loop; it excludes slow,
+  long-running, network, service, and benchmark lanes.
+- `release` includes deterministic slow tests and existing coverage floors, but
+  excludes long-running and live-service lanes.
+- `exhaustive` adds long-running tests; live services and benchmarks remain
+  explicit opt-ins.
+
+```bash
+uv run python scripts/pipeline/stage_01_test.py --profile quick
+uv run python scripts/pipeline/stage_01_test.py --project-only --profile release
+uv run python scripts/pipeline/stage_01_test.py --project-only --profile exhaustive
+```
+
+Legacy `--include-slow`, `--include-long-running`, `--include-ollama-tests`,
+and `--include-bench` flags remain additive for compatibility.
+
 ### Running Slow Tests
 
 To include slow tests when needed:

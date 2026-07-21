@@ -9,6 +9,7 @@ union that cannot inherit the enclosing test process's ``COVERAGE_FILE``.
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -23,6 +24,7 @@ from infrastructure.core.test_runner import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+pytestmark = pytest.mark.timeout(120)
 
 
 def _write_project(
@@ -31,6 +33,9 @@ def _write_project(
     *,
     fail: bool = False,
     extra_module: str | None = None,
+    sleep_seconds: float = 0.0,
+    marker_file: Path | None = None,
+    order_log: Path | None = None,
 ) -> None:
     """Create ``projects/<name>/`` with ``src/`` and ``tests/`` directories.
 
@@ -60,6 +65,8 @@ def _write_project(
 
     (tests_dir / "__init__.py").write_text("")
     expected = "42" if not fail else "999"
+    marker_path = str(marker_file) if marker_file is not None else None
+    order_log_path = str(order_log) if order_log is not None else None
     (tests_dir / "conftest.py").write_text(
         dedent(
             f"""
@@ -81,10 +88,23 @@ def _write_project(
     (tests_dir / "test_basic.py").write_text(
         dedent(
             f"""
+            import time
+            from pathlib import Path
+
             from {module_name} import value
+
+            MARKER_PATH = {marker_path!r}
+            ORDER_LOG_PATH = {order_log_path!r}
 
 
             def test_value() -> None:
+                if {sleep_seconds!r}:
+                    time.sleep({sleep_seconds!r})
+                if MARKER_PATH:
+                    Path(MARKER_PATH).write_text({name!r}, encoding="utf-8")
+                if ORDER_LOG_PATH:
+                    with Path(ORDER_LOG_PATH).open("a", encoding="utf-8") as handle:
+                        handle.write({name!r} + "\\n")
                 assert value() == {expected}
             """
         ).lstrip()
@@ -167,6 +187,22 @@ def test_run_per_project_pytest_one_failing(synthetic_repo: Path) -> None:
     assert rc != 0
 
 
+def test_run_per_project_pytest_continues_after_failure(synthetic_repo: Path) -> None:
+    order_log = synthetic_repo / "order.log"
+    _write_project(synthetic_repo, "alpha", fail=True, extra_module="mod_alpha", order_log=order_log)
+    _write_project(synthetic_repo, "beta", fail=False, extra_module="mod_beta", order_log=order_log)
+
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha", "beta"],
+        fail_under=1,
+        timeout=60,
+    )
+
+    assert rc != 0
+    assert order_log.read_text(encoding="utf-8").splitlines() == ["alpha", "beta"]
+
+
 def test_coverage_accumulates_across_projects(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """The final union contains traces from every isolated project run.
 
@@ -245,6 +281,79 @@ def test_skip_projects_excludes_named_project(synthetic_repo: Path) -> None:
     )
 
 
+def test_discovered_project_roster_is_sorted_by_qualified_name(synthetic_repo: Path) -> None:
+    order_log = synthetic_repo / "discovered-order.log"
+    _write_project(
+        synthetic_repo,
+        "templates/beta",
+        fail=False,
+        extra_module="mod_beta",
+        order_log=order_log,
+    )
+    _write_project(
+        synthetic_repo,
+        "templates/alpha",
+        fail=False,
+        extra_module="mod_alpha",
+        order_log=order_log,
+    )
+
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        fail_under=1,
+        timeout=60,
+    )
+
+    assert rc == 0
+    assert order_log.read_text(encoding="utf-8").splitlines() == [
+        "templates/alpha",
+        "templates/beta",
+    ]
+
+
+def test_run_per_project_pytest_continues_after_timeout(synthetic_repo: Path) -> None:
+    marker_file = synthetic_repo / "beta-ran.txt"
+    _write_project(
+        synthetic_repo,
+        "slowpoke",
+        fail=False,
+        extra_module="mod_slowpoke",
+        sleep_seconds=10.0,
+    )
+    _write_project(
+        synthetic_repo,
+        "beta",
+        fail=False,
+        extra_module="mod_beta",
+        marker_file=marker_file,
+    )
+
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["slowpoke", "beta"],
+        fail_under=1,
+        timeout=60,
+        subprocess_timeout_seconds=5,
+    )
+
+    assert rc != 0
+    assert marker_file.read_text(encoding="utf-8") == "beta"
+
+
+def test_run_per_project_pytest_rejects_nested_outer_and_inner_concurrency(synthetic_repo: Path) -> None:
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+
+    with pytest.raises(ValueError, match="--project-workers=2"):
+        run_per_project_pytest(
+            synthetic_repo,
+            projects=["alpha"],
+            fail_under=1,
+            timeout=60,
+            project_workers=2,
+            parallel="auto",
+        )
+
+
 def test_explicit_missing_project_fails_closed(synthetic_repo: Path) -> None:
     assert run_per_project_pytest(synthetic_repo, projects=["missing"], fail_under=100) == 1
 
@@ -294,6 +403,8 @@ def test_stage01_public_projects_flag_is_documented_in_help() -> None:
 
     assert proc.returncode == 0
     assert "--public-projects" in proc.stdout
+    assert "--profile" in proc.stdout
+    assert "--project-workers" in proc.stdout
 
 
 def test_stage01_parallel_flag_is_documented_in_help() -> None:
@@ -325,3 +436,82 @@ def test_stage01_public_projects_requires_all_projects_mode() -> None:
 
     assert proc.returncode != 0
     assert "--public-projects requires --project-only --all-projects" in proc.stderr
+
+
+def test_stage01_invalid_profile_is_rejected() -> None:
+    proc = subprocess.run(  # noqa: S603
+        [sys.executable, "scripts/pipeline/stage_01_test.py", "--profile", "bogus"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode != 0
+    assert "invalid choice" in proc.stderr
+
+
+def test_stage01_invalid_project_workers_is_rejected() -> None:
+    proc = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "scripts/pipeline/stage_01_test.py",
+            "--project-only",
+            "--all-projects",
+            "--project-workers",
+            "0",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode != 0
+    assert "project-workers" in proc.stderr
+
+
+def test_stage01_project_workers_requires_all_projects_mode() -> None:
+    proc = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "scripts/pipeline/stage_01_test.py",
+            "--project-workers",
+            "2",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode != 0
+    assert "--project-workers requires --project-only --all-projects" in proc.stderr
+
+
+def test_stage01_rejects_hidden_nested_concurrency_from_env() -> None:
+    env = os.environ.copy()
+    env["PYTEST_XDIST_WORKERS"] = "2"
+    proc = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "scripts/pipeline/stage_01_test.py",
+            "--project-only",
+            "--all-projects",
+            "--project-workers",
+            "2",
+        ],
+        cwd=REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode != 0
+    assert "--project-workers=2" in proc.stderr
+    assert "PYTEST_XDIST_WORKERS" in proc.stderr

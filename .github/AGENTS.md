@@ -219,8 +219,14 @@ See [`ISSUE_TEMPLATE/AGENTS.md`](ISSUE_TEMPLATE/AGENTS.md) for local editing rul
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 
-# Run tests locally (mirror CI)
-COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
+# Run tests locally (mirror the exact fast CI lane)
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
+  -n auto --dist worksteal --benchmark-disable \
+  --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
+  --durations=10 \
+  -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
+  --timeout=120
+# Uncached serial diagnostic oracle: remove the xdist flags above.
 uv sync --group public-exemplars
 COVERAGE_FILE=.coverage.project uv run python scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects --non-strict --include-slow
 uv run coverage xml -o coverage-project.xml

@@ -103,17 +103,20 @@ uv run python scripts/pipeline/stage_01_test.py --project {project_name}
 # suites and the --all-projects union gate; coverage is combined per-worker first.
 uv run python scripts/pipeline/stage_01_test.py --project {project_name} -n auto
 
-# Infrastructure tests only (60% coverage minimum)
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
+# Infrastructure tests only (60% coverage minimum; exact fast CI lane)
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
+  -n auto --dist worksteal --benchmark-disable \
+  --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
+  --durations=10 \
+  -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
+  --timeout=120
 
-# Faster infra run: parallelize across cores with pytest-xdist (CI uses -n auto).
-# The suite is parallel-safe (per-test tmp_path + random-port httpserver);
-# pytest-cov combines per-worker data before the coverage gate.
-# On loaded dev machines (resident Ollama/LLM server, many cores) -n auto can
-# trip the wall-clock timeouts of real LaTeX/subprocess tests nondeterministically;
-# drop to a fixed worker count (e.g. -n 6) — failures that vanish serially are
-# load contention, not code defects.
-uv run pytest tests/infra_tests/ -n auto --cov=infrastructure --cov-fail-under=60
+# Uncached serial diagnostic oracle (same selection, with the xdist flags removed).
+COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
+  --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
+  --durations=10 \
+  -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
+  --timeout=120
 
 # Project tests only (90% coverage minimum)
 uv run pytest projects/{project_name}/tests/ --cov=projects/{project_name}/src --cov-fail-under=90

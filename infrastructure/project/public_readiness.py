@@ -4,13 +4,18 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess  # nosec B404 - fixed repository-local argv, no shell
 import sys
 import tempfile
-import time
+from contextlib import ExitStack
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.pytest_orchestration import (
+    TestProfileName,
+    parse_project_workers,
+    resolve_test_profile,
+)
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_READINESS_SCHEMA = "template-public-readiness-v1"
@@ -37,6 +42,8 @@ class PublicReadinessReport:
 
     results: tuple[PublicReadinessResult, ...]
     expected_projects: tuple[str, ...]
+    profile: TestProfileName = "release"
+    project_workers: int = 1
 
     @property
     def counts(self) -> dict[str, int]:
@@ -68,6 +75,8 @@ class PublicReadinessReport:
         return {
             "schema_version": PUBLIC_READINESS_SCHEMA,
             "expected_projects": list(self.expected_projects),
+            "profile": self.profile,
+            "project_workers": self.project_workers,
             "counts": self.counts,
             "missing_projects": list(self.missing_projects),
             "results": [asdict(result) for result in self.results],
@@ -79,10 +88,20 @@ def run_public_readiness(
     *,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
     include_ollama_tests: bool = False,
+    profile: TestProfileName = "release",
+    project_workers: str | int | None = None,
 ) -> PublicReadinessReport:
-    """Run one isolated project-test subprocess for every public exemplar."""
+    """Run one isolated project-test subprocess for every public exemplar.
+
+    The readiness lane defaults to the deterministic ``release`` profile,
+    retaining the historical slow-test coverage while excluding long-running
+    and live-service tests. ``project_workers`` controls only the outer
+    project matrix; nested pytest-xdist is not introduced by this gate.
+    """
     if timeout_seconds <= 0:
         raise ValueError("timeout_seconds must be positive")
+    resolved_profile = resolve_test_profile(profile, include_ollama_tests=include_ollama_tests)
+    workers = parse_project_workers(project_workers)
     root = repo_root.resolve()
     expected = tuple(sorted(PUBLIC_PROJECT_NAMES))
     # The public roster is already qualified under ``projects/templates``;
@@ -98,79 +117,84 @@ def run_public_readiness(
     }
     results: list[PublicReadinessResult] = []
 
-    for project in expected:
-        if project not in present:
+    with ExitStack() as stack:
+        tasks: list[ProjectTestTask] = []
+        commands: dict[str, tuple[str, ...]] = {}
+        for index, project in enumerate(expected):
+            if project not in present:
+                continue
+            safe_name = project.replace("/", "_")
+            command: tuple[str, ...] = (
+                sys.executable,
+                str(root / "scripts" / "pipeline" / "stage_01_test.py"),
+                "--project",
+                project,
+                "--project-only",
+                "--profile",
+                resolved_profile.name,
+            )
+            if include_ollama_tests:
+                command += ("--include-ollama-tests",)
+            temp_dir = stack.enter_context(
+                tempfile.TemporaryDirectory(prefix=f"template-public-readiness-{safe_name}-")
+            )
+            env = os.environ.copy()
+            # Keep coverage scratch space outside the checkout. The project
+            # subprocesses already write canonical reports under each exemplar;
+            # this lane should not additionally pollute the repository root.
+            env["COVERAGE_FILE"] = str(Path(temp_dir) / ".coverage")
+            commands[project] = command
+            tasks.append(
+                ProjectTestTask(
+                    index=index,
+                    project_name=project,
+                    command=command,
+                    cwd=root,
+                    env=env,
+                    timeout_seconds=timeout_seconds,
+                    capture_output=True,
+                )
+            )
+
+        matrix_results = {result.project_name: result for result in run_project_test_matrix(tasks, workers=workers)}
+        for project in expected:
+            if project not in present:
+                results.append(
+                    PublicReadinessResult(
+                        project=project,
+                        status="fail",
+                        returncode=None,
+                        duration_seconds=0.0,
+                        command=(),
+                        output_tail="Public project is missing from the checkout.",
+                    )
+                )
+                continue
+            result = matrix_results[project]
+            returncode = result.returncode
+            status = "pass" if returncode == 0 else "skip" if returncode == 2 else "fail"
+            output = result.output_tail or result.detail
             results.append(
                 PublicReadinessResult(
                     project=project,
-                    status="fail",
-                    returncode=None,
-                    duration_seconds=0.0,
-                    command=(),
-                    output_tail="Public project is missing from the checkout.",
+                    status=status,
+                    returncode=returncode,
+                    duration_seconds=result.duration_seconds,
+                    command=commands[project],
+                    output_tail=output[-_OUTPUT_TAIL_LIMIT:],
                 )
             )
-            continue
 
-        safe_name = project.replace("/", "_")
-        command: tuple[str, ...] = (
-            sys.executable,
-            str(root / "scripts" / "pipeline" / "stage_01_test.py"),
-            "--project",
-            project,
-            "--project-only",
-            "--include-slow",
-        )
-        if include_ollama_tests:
-            command += ("--include-ollama-tests",)
-        env = os.environ.copy()
-        # Keep coverage scratch space outside the checkout.  The project test
-        # subprocesses already write their canonical reports under each
-        # exemplar; the readiness lane should not additionally pollute the
-        # repository root with hidden temporary directories.
-        with tempfile.TemporaryDirectory(prefix=f"template-public-readiness-{safe_name}-") as temp_dir:
-            env["COVERAGE_FILE"] = str(Path(temp_dir) / ".coverage")
-            started = time.monotonic()
-            try:
-                completed = subprocess.run(  # nosec B603 - fixed argv, no shell
-                    list(command),
-                    cwd=root,
-                    env=env,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout_seconds,
-                    check=False,
-                )
-                returncode = int(completed.returncode)
-                status = "pass" if returncode == 0 else "skip" if returncode == 2 else "fail"
-                output = f"{completed.stdout}\n{completed.stderr}".strip()
-            except subprocess.TimeoutExpired as exc:
-                returncode = 124
-                status = "fail"
-                output = f"Timed out after {timeout_seconds}s: {exc}"
-            except OSError as exc:
-                returncode = 1
-                status = "fail"
-                output = f"Could not start test subprocess: {exc}"
-            duration = time.monotonic() - started
-        results.append(
-            PublicReadinessResult(
-                project=project,
-                status=status,
-                returncode=returncode,
-                duration_seconds=round(duration, 3),
-                command=command,
-                output_tail=output[-_OUTPUT_TAIL_LIMIT:],
-            )
-        )
-
-    return PublicReadinessReport(tuple(results), expected)
+    return PublicReadinessReport(tuple(results), expected, profile=resolved_profile.name, project_workers=workers)
 
 
 def format_public_readiness(report: PublicReadinessReport) -> str:
     """Format a compact human-readable readiness summary."""
     lines = [
-        f"Public readiness: {len(report.results)} expected exemplar(s)",
+        (
+            f"Public readiness: {len(report.results)} expected exemplar(s) "
+            f"[{report.profile}, workers={report.project_workers}]"
+        ),
         *(f"{result.status.upper():4} {result.project} ({result.duration_seconds:.1f}s)" for result in report.results),
         f"Counts: {json.dumps(report.counts, sort_keys=True)}",
     ]

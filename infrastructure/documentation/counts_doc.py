@@ -35,7 +35,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-from infrastructure.core.pytest_orchestration import build_project_pytest_command
+from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.pytest_orchestration import build_project_pytest_command, parse_project_workers
 from infrastructure.core.runtime.environment import get_subprocess_env
 from infrastructure.project.public_scope import public_project_names
 
@@ -164,6 +165,53 @@ def _exemplar_collected_count(repo_root: Path, name: str) -> int:
     return int(match.group("count"))
 
 
+def _collect_exemplar_counts(
+    repo_root: Path,
+    qualified_projects: tuple[str, ...],
+    *,
+    project_workers: str | int | None = None,
+) -> dict[str, int]:
+    """Collect public exemplars through the bounded shared project matrix."""
+    workers = parse_project_workers(project_workers)
+    tasks: list[ProjectTestTask] = []
+    for index, qualified_name in enumerate(qualified_projects):
+        project_root = repo_root / "projects" / qualified_name
+        environment = get_subprocess_env()
+        existing_pythonpath = environment.get("PYTHONPATH")
+        environment["PYTHONPATH"] = (
+            f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
+        )
+        tasks.append(
+            ProjectTestTask(
+                index=index,
+                project_name=qualified_name,
+                command=tuple(
+                    build_project_pytest_command(
+                        project_root,
+                        ["tests/", "--collect-only", "-q", "--no-cov"],
+                    )
+                ),
+                cwd=project_root,
+                env=environment,
+                timeout_seconds=300,
+                capture_output=True,
+            )
+        )
+
+    counts: dict[str, int] = {}
+    for result in run_project_test_matrix(tasks, workers=workers):
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"could not collect exemplar {result.project_name} (exit {result.returncode}):\n"
+                f"{result.detail}\n{result.output_tail}"
+            )
+        match = re.search(r"(?P<count>\d+) tests? collected", result.output_tail)
+        if not match:
+            raise RuntimeError(f"could not parse collected count for {result.project_name}:\n{result.output_tail}")
+        counts[result.project_name.split("/")[-1]] = int(match.group("count"))
+    return {name: counts[name] for name in sorted(counts)}
+
+
 def project_test_count(repo_root: Path) -> int:
     """Project-scope infrastructure test collection total."""
     return _collected_count(repo_root, "tests/infra_tests/project/")
@@ -192,16 +240,17 @@ class CountsFacts:
     exemplar_tests: dict[str, int]
 
 
-def collect_facts(repo_root: Path) -> CountsFacts:
+def collect_facts(repo_root: Path, *, project_workers: str | int | None = None) -> CountsFacts:
     """Derive every volatile literal COUNTS.md pins from the live tree."""
-    public_projects = [name.split("/")[-1] for name in public_project_names(repo_root)]
+    qualified_projects = tuple(sorted(public_project_names(repo_root)))
+    public_projects = [name.split("/")[-1] for name in qualified_projects]
     return CountsFacts(
         public_projects=public_projects,
         packages=infrastructure_packages(repo_root),
         infra_py_count=tracked_infra_python_count(repo_root),
         project_tests=project_test_count(repo_root),
         publishing_tests=publishing_test_count(repo_root),
-        exemplar_tests={name: _exemplar_collected_count(repo_root, name) for name in public_projects},
+        exemplar_tests=_collect_exemplar_counts(repo_root, qualified_projects, project_workers=project_workers),
     )
 
 
@@ -542,23 +591,27 @@ def write_counts_doc(
     out_path: Path | None = None,
     *,
     facts: CountsFacts | None = None,
+    project_workers: str | int | None = None,
 ) -> Path:
     """Render and write COUNTS.md; returns the written path."""
     validate_coverage_provenance(repo_root)
     target = out_path if out_path is not None else repo_root / DOC_RELATIVE_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(render_counts_doc(facts or collect_facts(repo_root)), encoding="utf-8")
+    target.write_text(
+        render_counts_doc(facts or collect_facts(repo_root, project_workers=project_workers)),
+        encoding="utf-8",
+    )
     return target
 
 
-def check_counts_doc(repo_root: Path) -> tuple[bool, str]:
+def check_counts_doc(repo_root: Path, *, project_workers: str | int | None = None) -> tuple[bool, str]:
     """Return (in_sync, message) comparing on-disk COUNTS.md with a fresh render."""
     try:
         validate_coverage_provenance(repo_root)
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:
         return False, f"STALE coverage provenance: {exc}"
     doc_path = repo_root / DOC_RELATIVE_PATH
-    rendered = render_counts_doc(collect_facts(repo_root))
+    rendered = render_counts_doc(collect_facts(repo_root, project_workers=project_workers))
     on_disk = doc_path.read_text(encoding="utf-8") if doc_path.is_file() else ""
     if rendered == on_disk:
         return True, "COUNTS.md: OK (in sync with live tree)"

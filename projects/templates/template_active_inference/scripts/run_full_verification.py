@@ -25,12 +25,21 @@ def main() -> int:
         action="store_true",
         help="Use the legacy single pytest coverage process instead of chunked coverage subprocesses.",
     )
+    parser.add_argument(
+        "--profile",
+        choices=("quick", "release", "exhaustive"),
+        default=None,
+        help=(
+            "Optionally select a typed pytest profile. Omitted preserves the historical full-verification selection."
+        ),
+    )
     args = parser.parse_args()
     try:
         run_verification(
             PROJECT_ROOT,
             skip_chunks=args.skip_chunks,
             monolithic_coverage=args.monolithic_coverage,
+            profile=args.profile,
         )
     except RuntimeError as exc:
         print(f"\nERROR: {exc}")

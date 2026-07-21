@@ -42,10 +42,17 @@ Install the dev extras (adds `pytest-xdist` for parallelism) once:
 uv sync --extra dev
 ```
 
-Skip the heavy end-to-end gate families while iterating on a change:
+Run the quick deterministic inner loop while iterating on a change:
 
 ```bash
-uv run pytest tests/ -m "not long_running" -q
+uv run python -m pytest tests/ -m "not slow and not long_running" -q
+```
+
+The release profile retains every `slow` test while excluding only explicit
+live-service and `long_running` lanes:
+
+```bash
+uv run python -m pytest tests/ -m "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance and not long_running" -q
 ```
 
 Analytical-track modules hold no shared project state, so they are safe to run

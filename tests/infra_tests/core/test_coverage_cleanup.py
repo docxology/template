@@ -99,3 +99,30 @@ class TestCleanCoverageFiles:
 
         assert result is True
         assert not stray_coverage.exists()
+
+    def test_preserves_active_absolute_coverage_family(self, tmp_path, monkeypatch):
+        """Outer pytest-cov data and xdist shards survive nested cleanup."""
+        active = tmp_path / ".coverage.infra"
+        shard = tmp_path / ".coverage.infra.worker.123"
+        stale = tmp_path / ".coverage.project"
+        for path in (active, shard, stale):
+            path.write_text("coverage data", encoding="utf-8")
+        monkeypatch.setenv("COVERAGE_FILE", str(active))
+
+        assert clean_coverage_files(tmp_path) is True
+        assert active.exists()
+        assert shard.exists()
+        assert not stale.exists()
+
+    def test_preserves_active_relative_coverage_family(self, tmp_path, monkeypatch):
+        """Relative COVERAGE_FILE follows coverage.py's current-directory rule."""
+        active = tmp_path / ".coverage.infra"
+        active.write_text("coverage data", encoding="utf-8")
+        stale = tmp_path / ".coverage.project"
+        stale.write_text("stale data", encoding="utf-8")
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setenv("COVERAGE_FILE", ".coverage.infra")
+
+        assert clean_coverage_files(tmp_path) is True
+        assert active.exists()
+        assert not stale.exists()

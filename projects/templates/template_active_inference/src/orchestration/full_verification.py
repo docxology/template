@@ -2,16 +2,94 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shlex
 import subprocess
 import time
 from collections.abc import Callable
 from pathlib import Path
+from typing import Literal
+
+VerificationProfile = Literal["quick", "release", "exhaustive"]
 
 
 def _relative_test_path(project_root: Path, path: Path) -> str:
     return str(path.relative_to(project_root))
+
+
+_REFRESHABLE_GENERATORS = frozenset(
+    {
+        "compose_manuscript.py",
+        "z_generate_manuscript_variables.py",
+        "generate_figures.py",
+        "generate_method_inventory.py",
+    }
+)
+_FINGERPRINT_EXCLUDED_PARTS = frozenset({".git", ".pytest_cache", ".venv", "htmlcov", "__pycache__"})
+
+
+def _project_state_fingerprint(project_root: Path) -> str:
+    """Return a deterministic source/output fingerprint for refresh caching.
+
+    The fingerprint intentionally includes both inputs and generated contract
+    outputs. A refresh is skipped only when the exact same generator already
+    observed this byte state after a successful run, so a downstream producer
+    changing any contract artifact naturally invalidates the cache.
+    """
+    digest = hashlib.sha256()
+    for path in sorted(project_root.rglob("*")):
+        if not path.is_file() or _FINGERPRINT_EXCLUDED_PARTS.intersection(path.parts):
+            continue
+        if path.name.startswith(".coverage"):
+            continue
+        relative = path.relative_to(project_root).as_posix()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        try:
+            digest.update(path.read_bytes())
+        except OSError:
+            # A concurrently written disposable output will be reflected by
+            # the next fingerprint; never turn cache bookkeeping into a gate.
+            continue
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def _generator_name(command: list[str]) -> str | None:
+    """Return the refreshable script name in a command, if any."""
+    if "--check" in command:
+        return None
+    for part in command:
+        name = Path(part).name
+        if name in _REFRESHABLE_GENERATORS:
+            return name
+    return None
+
+
+class _RefreshCache:
+    """In-run fixed-point cache for idempotent generator commands."""
+
+    def __init__(self) -> None:
+        self._last_outputs: dict[str, str] = {}
+
+    def run(
+        self,
+        project_root: Path,
+        command: list[str],
+        label: str,
+        command_runner: Callable[..., None],
+    ) -> None:
+        generator = _generator_name(command)
+        if generator is None:
+            command_runner(project_root, command, label)
+            return
+        before = _project_state_fingerprint(project_root)
+        if self._last_outputs.get(generator) == before:
+            print(f"\n==> {label}\n    fixed point unchanged; skipped {generator}")
+            return
+        command_runner(project_root, command, label)
+        self._last_outputs[generator] = _project_state_fingerprint(project_root)
 
 
 def _all_test_modules(project_root: Path) -> list[str]:
@@ -63,8 +141,39 @@ def _coverage_test_groups(project_root: Path) -> list[tuple[str, list[str]]]:
     return [*chunks, ("Remaining active-inference tests", remaining)]
 
 
-def _coverage_command(modules: list[str], *, append: bool, final: bool) -> list[str]:
+def _profile_marker_args(profile: VerificationProfile | None) -> list[str]:
+    """Return additive pytest selection args for a named verification profile."""
+    if profile is None:
+        return []
+    if profile == "quick":
+        expression = (
+            "not slow and not long_running and not requires_ollama and not requires_docker "
+            "and not network and not bench and not benchmark and not performance"
+        )
+    elif profile == "release":
+        expression = (
+            "not long_running and not requires_ollama and not requires_docker and not network "
+            "and not bench and not benchmark and not performance"
+        )
+    elif profile == "exhaustive":
+        expression = (
+            "not requires_ollama and not requires_docker and not network "
+            "and not bench and not benchmark and not performance"
+        )
+    else:  # pragma: no cover - Literal callers are validated by the CLI
+        raise ValueError(f"unknown verification profile: {profile}")
+    return ["-m", expression]
+
+
+def _coverage_command(
+    modules: list[str],
+    *,
+    append: bool,
+    final: bool,
+    profile: VerificationProfile | None = None,
+) -> list[str]:
     cmd = ["uv", "run", "pytest", *modules, "--cov=src", "-q"]
+    cmd.extend(_profile_marker_args(profile))
     if append:
         cmd.append("--cov-append")
     if final:
@@ -113,9 +222,12 @@ def run_verification(
     *,
     skip_chunks: bool = False,
     monolithic_coverage: bool = False,
+    profile: VerificationProfile | None = None,
     command_runner: Callable[..., None] = _run,
 ) -> None:
-    """Run verification."""
+    """Run verification, optionally applying a typed pytest profile."""
+    refresh_cache = _RefreshCache()
+    profile_args = _profile_marker_args(profile)
     preflight = [
         ("Compose manuscript sections", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
         (
@@ -144,11 +256,11 @@ def run_verification(
         ("Check method inventory", ["uv", "run", "python", "scripts/generate_method_inventory.py", "--check"]),
     ]
     for label, cmd in preflight:
-        command_runner(project_root, cmd, label)
+        refresh_cache.run(project_root, cmd, label, command_runner)
 
     if not skip_chunks:
         for label, modules in _chunked_test_groups(project_root):
-            command_runner(project_root, ["uv", "run", "pytest", *modules, "-q"], label)
+            command_runner(project_root, ["uv", "run", "pytest", *modules, *profile_args, "-q"], label)
 
     postflight = [
         ("Pre-coverage compose refresh", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
@@ -175,10 +287,10 @@ def run_verification(
         ),
     ]
     for label, cmd in postflight:
-        command_runner(project_root, cmd, label)
+        refresh_cache.run(project_root, cmd, label, command_runner)
 
     if monolithic_coverage:
-        command_runner(
+        refresh_cache.run(
             project_root,
             [
                 "uv",
@@ -186,24 +298,28 @@ def run_verification(
                 "pytest",
                 "tests/",
                 "--cov=src",
+                *profile_args,
                 "--cov-fail-under=90",
                 "--durations=20",
                 "-q",
                 "--maxfail=1",
             ],
             "Full suite coverage pass",
+            command_runner,
         )
     else:
         coverage_groups = [(label, modules) for label, modules in _coverage_test_groups(project_root) if modules]
         for index, (label, modules) in enumerate(coverage_groups):
-            command_runner(
+            refresh_cache.run(
                 project_root,
                 _coverage_command(
                     modules,
                     append=index > 0,
                     final=index == len(coverage_groups) - 1,
+                    profile=profile,
                 ),
                 f"Coverage pass: {label}",
+                command_runner,
             )
 
     final_refresh = [
@@ -231,4 +347,4 @@ def run_verification(
         ),
     ]
     for label, cmd in final_refresh:
-        command_runner(project_root, cmd, label)
+        refresh_cache.run(project_root, cmd, label, command_runner)

@@ -121,6 +121,7 @@ def test_run_logger_records_skips_blank_lines(tmp_path: Path) -> None:
 
 
 @pytest.mark.requires_pymdp
+@pytest.mark.slow
 def test_simulation_invariants_after_run(project_root: Path) -> None:
     if not pymdp_available():
         pytest.skip("pymdp not installed")
@@ -133,6 +134,7 @@ def test_simulation_invariants_after_run(project_root: Path) -> None:
 
 
 @pytest.mark.requires_pymdp
+@pytest.mark.slow
 def test_validate_outputs_gate_checks(project_root: Path) -> None:
     from gates.validation import validate_outputs
     from gate_support import ensure_gate_artifacts, refresh_output_gate_contracts

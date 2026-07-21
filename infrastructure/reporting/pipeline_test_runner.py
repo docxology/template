@@ -16,12 +16,14 @@ from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.files.project_lock import project_output_lock
 from infrastructure.core.logging.utils import get_logger, log_header, log_substep, log_success
-from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.pytest_orchestration import (
+    DEFAULT_TEST_PROFILE,
     INFRASTRUCTURE_TEST_SCOPES,
     InfrastructureTestScope,
     TestSuiteResults,
+    TestProfileName,
     apply_coverage_datafile,
+    build_profile_marker_expression,
     build_project_pytest_command,
     build_pythonpath,
     enforce_project_suite_guards,
@@ -29,6 +31,7 @@ from infrastructure.core.pytest_orchestration import (
     parse_test_discovery_timeout,
     prepend_uv_to_path,
     project_declared_coverage_floor,
+    resolve_test_profile,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
     resolve_xdist_args,
@@ -55,6 +58,9 @@ def run_infrastructure_tests(
     strict: bool = True,
     scope: InfrastructureTestScope = "full",
     parallel: str | int | None = None,
+    *,
+    profile: TestProfileName = DEFAULT_TEST_PROFILE,
+    include_long_running: bool = False,
 ) -> tuple[int, TestSuiteResults]:
     """Execute infrastructure test suite with coverage.
 
@@ -85,16 +91,19 @@ def run_infrastructure_tests(
     else:
         logger.info("Coverage target: N/A for pipeline-smoke scope")
 
+    selection = resolve_test_profile(
+        profile,
+        include_slow=include_slow,
+        include_long_running=include_long_running,
+        include_ollama_tests=include_ollama_tests,
+        include_bench=include_bench,
+    )
     cmd = resolve_test_python(repo_root / ".venv")
     cmd += ["-m", "pytest"]
     cmd.extend(resolve_infrastructure_test_paths(repo_root, scope))
     if full_scope:
         cmd.append("--cov=infrastructure")
-    infra_marker = build_pytest_marker_expression(
-        skip_requires_ollama=not include_ollama_tests,
-        skip_slow=not include_slow,
-        skip_bench=not include_bench,
-    )
+    infra_marker = build_profile_marker_expression(selection)
     if infra_marker:
         cmd.extend(["-m", infra_marker])
     cmd.extend(resolve_xdist_args(parallel))
@@ -170,6 +179,8 @@ def run_project_tests(
     strict: bool = True,
     include_ollama_tests: bool = False,
     parallel: str | int | None = None,
+    *,
+    profile: TestProfileName = DEFAULT_TEST_PROFILE,
 ) -> tuple[int, TestSuiteResults]:
     """Execute the project test suite under the per-project output lock.
 
@@ -184,6 +195,7 @@ def run_project_tests(
             repo_root,
             project_name,
             quiet=quiet,
+            profile=profile,
             include_slow=include_slow,
             include_long_running=include_long_running,
             include_bench=include_bench,
@@ -203,6 +215,8 @@ def _run_project_tests_impl(
     strict: bool = True,
     include_ollama_tests: bool = False,
     parallel: str | int | None = None,
+    *,
+    profile: TestProfileName = DEFAULT_TEST_PROFILE,
 ) -> tuple[int, TestSuiteResults]:
     """Execute project test suite with coverage (assumes the output lock is held)."""
     start_time = time.time()
@@ -254,12 +268,14 @@ def _run_project_tests_impl(
     # multi-project CI path (``--all-projects --public-projects``). They require a
     # live Ollama daemon plus the ``llm`` dependency group and are run separately
     # with ``--include-ollama-tests`` / ``pytest -m requires_ollama``.
-    project_marker = build_pytest_marker_expression(
-        skip_requires_ollama=not include_ollama_tests,
-        skip_slow=not include_slow,
-        skip_bench=not include_bench,
-        skip_long_running=not include_long_running,
+    selection = resolve_test_profile(
+        profile,
+        include_slow=include_slow,
+        include_long_running=include_long_running,
+        include_ollama_tests=include_ollama_tests,
+        include_bench=include_bench,
     )
+    project_marker = build_profile_marker_expression(selection)
     if project_marker:
         cmd.extend(["-m", project_marker])
     cmd.extend(resolve_xdist_args(parallel))
@@ -331,6 +347,9 @@ def execute_test_pipeline(
     strict: bool,
     infra_scope: InfrastructureTestScope = "full",
     parallel: str | int | None = None,
+    *,
+    profile: TestProfileName = DEFAULT_TEST_PROFILE,
+    include_bench: bool = False,
 ) -> int:
     """Run full test orchestration.
 
@@ -351,8 +370,11 @@ def execute_test_pipeline(
             repo_root,
             project_name,
             quiet,
-            include_slow,
-            include_ollama_tests,
+            profile=profile,
+            include_slow=include_slow,
+            include_long_running=include_long_running,
+            include_ollama_tests=include_ollama_tests,
+            include_bench=include_bench,
             strict=strict,
             scope=infra_scope,
             parallel=parallel,
@@ -366,8 +388,10 @@ def execute_test_pipeline(
             repo_root,
             project_name,
             quiet,
-            include_slow,
+            profile=profile,
+            include_slow=include_slow,
             include_long_running=include_long_running,
+            include_bench=include_bench,
             strict=strict,
             include_ollama_tests=include_ollama_tests,
             parallel=parallel,

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 805
+Total documented definitions: 811
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -571,13 +571,19 @@ Total documented definitions: 805
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 13 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:13`. |
-| 17 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:17`. |
-| 21 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:21`. |
-| 59 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:59`. |
-| 66 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:66`. |
-| 80 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:80`. |
-| 111 | `function` | `run_verification` | docstring | Run verification. |
+| 17 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:17`. |
+| 32 | `function` | `_project_state_fingerprint` | docstring | Return a deterministic source/output fingerprint for refresh caching. |
+| 59 | `function` | `_generator_name` | docstring | Return the refreshable script name in a command, if any. |
+| 70 | `class` | `_RefreshCache` | docstring | In-run fixed-point cache for idempotent generator commands. |
+| 73 | `function` | `_RefreshCache.__init__` | inventory fallback | Inventory fallback for function `_RefreshCache.__init__` defined at `src/orchestration/full_verification.py:73`. |
+| 76 | `function` | `_RefreshCache.run` | inventory fallback | Inventory fallback for function `_RefreshCache.run` defined at `src/orchestration/full_verification.py:76`. |
+| 95 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:95`. |
+| 99 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:99`. |
+| 137 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:137`. |
+| 144 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
+| 168 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:168`. |
+| 189 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:189`. |
+| 220 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
 
 ## `src/orchestration/pipeline_manifest.py`
 

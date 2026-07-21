@@ -5,6 +5,7 @@ that can become corrupted during parallel test execution.
 Extracted from file_cleanup.py for file-size health.
 """
 
+import os
 from pathlib import Path
 
 from infrastructure.core.files.serialization import relative_or_self
@@ -32,6 +33,8 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
             (observed in practice: a project's own passing test run reported
             "Total coverage: 0.00%" because a sibling project's pipeline
             invocation had just unlinked its mid-write ``.coverage.project``).
+            The active ``COVERAGE_FILE`` and its parallel-worker shards are
+            always preserved, even when they match a cleanup pattern.
 
     Returns:
         True if cleanup successful, False otherwise
@@ -44,11 +47,15 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
         ]
 
     search_root = scope_dir if scope_dir is not None else repo_root
+    active_coverage = _active_coverage_file()
 
     logger.info("Cleaning coverage database files...")
 
     def _remove_file(file_path: Path, label: str) -> tuple[str | None, str | None]:
         """Attempt to remove a file; return (removed_label, locked_label)."""
+        if active_coverage is not None and _belongs_to_coverage_family(file_path, active_coverage):
+            logger.debug(f"  Preserved active coverage data: {label}")
+            return None, None
         try:
             file_path.unlink()
             logger.debug(f"  Removed: {label}")
@@ -99,3 +106,22 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
     except OSError as e:
         logger.error(f"Failed to clean coverage database files: {e}", exc_info=True)
         return False
+
+
+def _active_coverage_file() -> Path | None:
+    """Resolve the enclosing coverage database selected by coverage.py."""
+
+    value = os.environ.get("COVERAGE_FILE")
+    if not value:
+        return None
+    path = Path(value).expanduser()
+    return (path if path.is_absolute() else Path.cwd() / path).resolve()
+
+
+def _belongs_to_coverage_family(candidate: Path, active: Path) -> bool:
+    """Return whether *candidate* is the active database or an xdist shard."""
+
+    resolved = candidate.resolve()
+    return resolved.parent == active.parent and (
+        resolved.name == active.name or resolved.name.startswith(f"{active.name}.")
+    )

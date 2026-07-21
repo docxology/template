@@ -37,6 +37,7 @@ skip list, marker expression) is configurable, and all subprocess work
 happens via real ``subprocess.run`` calls — no mocking.
 """
 
+from dataclasses import dataclass
 import subprocess  # nosec B404
 from pathlib import Path
 from typing import Sequence
@@ -47,12 +48,17 @@ from infrastructure.core.logging.utils import (
     log_substep,
     log_success,
 )
+from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
 from infrastructure.core.pytest_orchestration import (
+    DEFAULT_TEST_PROFILE,
+    TestProfileName,
+    build_profile_marker_expression,
     build_union_pytest_command,
     make_coverage_subprocess_env,
     project_declared_coverage_floor,
+    resolve_test_profile,
+    validate_project_matrix_concurrency,
 )
-from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.runtime._python_env import get_python_command
 from infrastructure.core.project_paths import resolve_project_root
 from infrastructure.project.discovery import discover_projects
@@ -74,15 +80,37 @@ DEFAULT_PROJECT_FAIL_UNDER: int = 90
 # union gate at the measured public-project level rather than confuse it with
 # per-project 90% floors, which remain the real quality gate.
 DEFAULT_FAIL_UNDER: int = 75
-_DEFAULT_MARKER = build_pytest_marker_expression(
-    skip_requires_ollama=True,
-    skip_slow=True,
-    skip_bench=True,
-)
+DEFAULT_SUBPROCESS_TIMEOUT_SECONDS: int = 1800
+_DEFAULT_MARKER = build_profile_marker_expression(resolve_test_profile(DEFAULT_TEST_PROFILE))
 if _DEFAULT_MARKER is None:  # pragma: no cover - defensive
     raise RuntimeError("default pytest marker expression must not be empty")
 DEFAULT_MARKER_EXPR: str = _DEFAULT_MARKER
 DEFAULT_TIMEOUT: int = 120
+
+
+@dataclass(frozen=True)
+class ProjectPytestSpec:
+    """One isolated project test subprocess within the union run."""
+
+    index: int
+    project_name: str
+    project_root: Path
+    tests_dir: Path
+    coverage_file: Path
+    cmd: list[str]
+    env: dict[str, str]
+
+
+@dataclass(frozen=True)
+class ProjectPytestResult:
+    """Outcome of one isolated project test subprocess."""
+
+    index: int
+    project_name: str
+    exit_code: int
+    coverage_file: Path
+    timed_out: bool = False
+    detail: str = ""
 
 
 def discover_skip_combined_pytest_projects(repo_root: Path) -> tuple[str, ...]:
@@ -91,7 +119,7 @@ def discover_skip_combined_pytest_projects(repo_root: Path) -> tuple[str, ...]:
     for info in discover_projects(repo_root):
         flags = get_project_metadata(info.path).get("template_flags", {})
         if flags.get("skip_combined_pytest"):
-            skipped.append(info.name)
+            skipped.append(info.qualified_name)
     return tuple(sorted(skipped))
 
 
@@ -113,18 +141,20 @@ def _discover_project_test_dirs(
     if projects is None:
         for info in discover_projects(repo_root):
             tests_dir = info.path / "tests"
-            if info.name in skip_set:
-                logger.info("Skipping project '%s' (in skip_projects)", info.name)
+            qualified_name = info.qualified_name
+            if qualified_name in skip_set or info.name in skip_set:
+                logger.info("Skipping project '%s' (in skip_projects)", qualified_name)
                 continue
             if not _contains_tests(tests_dir):
-                logger.warning("Discovered project '%s' has no runnable test files at %s", info.name, tests_dir)
+                logger.warning("Discovered project '%s' has no runnable test files at %s", qualified_name, tests_dir)
                 continue
-            pairs.append((info.name, info.path, tests_dir))
+            pairs.append((qualified_name, info.path, tests_dir))
+        pairs.sort(key=lambda item: item[0])
     else:
         for name in projects:
             project_root = resolve_project_root(repo_root, name)
             tests_dir = project_root / "tests"
-            if name in skip_set:
+            if name in skip_set or Path(name).name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", name)
                 continue
             if not _contains_tests(tests_dir):
@@ -140,26 +170,38 @@ def _contains_tests(tests_dir: Path) -> bool:
     return tests_dir.is_dir() and any(tests_dir.rglob("test_*.py"))
 
 
-def _run_pytest_for_project(
-    cmd: list[str],
+def _execute_project_pytest_matrix(
     repo_root: Path,
-    env: dict[str, str],
-    project_name: str,
-) -> int:
-    """Execute pytest for one project and return its exit code."""
-    log_substep(f"Running pytest for project '{project_name}'", logger)
-    logger.info("    cmd: %s", " ".join(cmd))
-    try:
-        completed = subprocess.run(  # nosec B603
-            cmd,
-            cwd=str(repo_root),
-            env=env,
-            check=False,
+    specs: Sequence[ProjectPytestSpec],
+    *,
+    project_workers: int,
+    subprocess_timeout_seconds: int,
+) -> list[ProjectPytestResult]:
+    """Run the shared bounded project matrix and adapt its result contract."""
+    tasks = tuple(
+        ProjectTestTask(
+            index=spec.index,
+            project_name=spec.project_name,
+            command=tuple(spec.cmd),
+            cwd=repo_root,
+            env=spec.env,
+            timeout_seconds=subprocess_timeout_seconds,
         )
-        return int(completed.returncode)
-    except (OSError, subprocess.SubprocessError) as exc:
-        logger.error("pytest invocation failed for '%s': %s", project_name, exc)
-        return 1
+        for spec in specs
+    )
+    results = run_project_test_matrix(tasks, workers=project_workers)
+    coverage_by_index = {spec.index: spec.coverage_file for spec in specs}
+    return [
+        ProjectPytestResult(
+            index=result.index,
+            project_name=result.project_name,
+            exit_code=result.returncode,
+            coverage_file=coverage_by_index[result.index],
+            timed_out=result.timed_out,
+            detail=result.detail,
+        )
+        for result in results
+    ]
 
 
 def _run_combined_coverage_gate(
@@ -222,10 +264,17 @@ def run_per_project_pytest(
     *,
     projects: Sequence[str] | None = None,
     skip_projects: Sequence[str] | None = None,
+    profile: TestProfileName = DEFAULT_TEST_PROFILE,
+    include_slow: bool = False,
+    include_long_running: bool = False,
+    include_ollama_tests: bool = False,
+    include_bench: bool = False,
     coverage_file: str = DEFAULT_COVERAGE_FILE,
     fail_under: int = DEFAULT_FAIL_UNDER,
     marker_expr: str | None = None,
     timeout: int = DEFAULT_TIMEOUT,
+    project_workers: str | int | None = None,
+    subprocess_timeout_seconds: int = DEFAULT_SUBPROCESS_TIMEOUT_SECONDS,
     parallel: str | int | None = None,
     allow_empty: bool = False,
 ) -> int:
@@ -263,9 +312,14 @@ def run_per_project_pytest(
     """
     log_header("Per-project pytest runner", logger)
 
+    if subprocess_timeout_seconds <= 0:
+        raise ValueError("subprocess_timeout_seconds must be positive")
+
     effective_skip = (
         tuple(skip_projects) if skip_projects is not None else discover_skip_combined_pytest_projects(repo_root)
     )
+
+    outer_workers = validate_project_matrix_concurrency(project_workers, parallel)
 
     pairs = _discover_project_test_dirs(repo_root, projects, effective_skip)
     if not pairs:
@@ -276,7 +330,19 @@ def run_per_project_pytest(
         logger.error("%s", message)
         return 1
 
-    resolved_markers = DEFAULT_MARKER_EXPR if marker_expr is None else marker_expr or None
+    resolved_markers = marker_expr
+    if resolved_markers is None:
+        resolved_markers = build_profile_marker_expression(
+            resolve_test_profile(
+                profile,
+                include_slow=include_slow,
+                include_long_running=include_long_running,
+                include_ollama_tests=include_ollama_tests,
+                include_bench=include_bench,
+            )
+        )
+    elif resolved_markers == "":
+        resolved_markers = None
 
     # Use the caller's explicit path, never an inherited COVERAGE_FILE. The
     # parent process may itself be running under pytest-cov with
@@ -297,12 +363,12 @@ def run_per_project_pytest(
     logger.info("Will run %d project(s):", len(pairs))
     for name, project_root, tests_dir in pairs:
         logger.info("  - %s (%s)", name, tests_dir)
+    logger.info("Outer project workers: %d", outer_workers)
 
-    overall_exit = 0
+    specs: list[ProjectPytestSpec] = []
     for index, (project_name, project_root, tests_dir) in enumerate(pairs):
         safe_name = project_name.replace("/", "_").replace("\\", "_")
         project_coverage_file = cf_path.with_name(f"{cf_path.name}.{index:02d}-{safe_name}")
-        project_coverage_files.append(project_coverage_file)
         if project_coverage_file.exists():
             try:
                 project_coverage_file.unlink()
@@ -321,12 +387,46 @@ def run_per_project_pytest(
             parallel=parallel,
             fail_under=project_floor,
         )
-        rc = _run_pytest_for_project(cmd, repo_root, project_env, project_name)
-        if rc == 0:
-            log_success(f"Project '{project_name}' tests passed", logger)
+        specs.append(
+            ProjectPytestSpec(
+                index=index,
+                project_name=project_name,
+                project_root=project_root,
+                tests_dir=tests_dir,
+                coverage_file=project_coverage_file,
+                cmd=cmd,
+                env=project_env,
+            )
+        )
+
+    results = _execute_project_pytest_matrix(
+        repo_root,
+        specs,
+        project_workers=outer_workers,
+        subprocess_timeout_seconds=subprocess_timeout_seconds,
+    )
+    overall_exit = 0
+    if len(results) != len(specs):
+        logger.error("Project test matrix returned %d result(s) for %d project(s)", len(results), len(specs))
+        overall_exit = 1
+
+    for result in results:
+        project_coverage_files.append(result.coverage_file)
+        if result.exit_code == 0:
+            log_success(f"Project '{result.project_name}' tests passed", logger)
+        elif result.timed_out:
+            logger.error("Project '%s' tests timed out (%s)", result.project_name, result.detail)
+            overall_exit = 1
         else:
-            logger.error("Project '%s' tests failed (exit=%d)", project_name, rc)
-            overall_exit = rc or overall_exit or 1
+            logger.error("Project '%s' tests failed (exit=%d)", result.project_name, result.exit_code)
+            overall_exit = result.exit_code or overall_exit or 1
+        if result.exit_code == 0 and not result.coverage_file.is_file():
+            logger.error(
+                "Project '%s' reported success but did not produce isolated coverage file %s",
+                result.project_name,
+                result.coverage_file,
+            )
+            overall_exit = 1
 
     combine_rc = _combine_project_coverage(repo_root, cf_path, project_coverage_files, base_env)
     if combine_rc != 0:
@@ -348,6 +448,7 @@ __all__ = [
     "DEFAULT_MARKER_EXPR",
     "DEFAULT_PROJECT_FAIL_UNDER",
     "DEFAULT_SKIP_PROJECTS",
+    "DEFAULT_SUBPROCESS_TIMEOUT_SECONDS",
     "DEFAULT_TIMEOUT",
     "discover_skip_combined_pytest_projects",
     "run_per_project_pytest",

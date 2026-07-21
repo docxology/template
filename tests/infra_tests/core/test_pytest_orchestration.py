@@ -14,19 +14,26 @@ from textwrap import dedent
 import pytest
 
 from infrastructure.core.pytest_orchestration import (
+    DEFAULT_TEST_PROFILE,
     ENV_XDIST_WORKERS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
+    TEST_PROFILE_NAMES,
     build_project_pytest_command,
+    build_profile_marker_expression,
     build_union_pytest_command,
     enforce_project_suite_guards,
     log_discovered_tests,
     parse_discovery_count,
+    parse_project_workers,
     project_declared_coverage_floor,
     project_has_test_files,
     resolve_coverage_file,
+    resolve_test_profile,
+    resolve_xdist_worker_config,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
     resolve_xdist_args,
+    validate_project_matrix_concurrency,
 )
 
 
@@ -92,10 +99,99 @@ def test_resolve_coverage_file_default_when_env_unset(monkeypatch: pytest.Monkey
     assert resolve_coverage_file(".coverage.union") == ".coverage.union"
 
 
+def test_test_profile_registry_names_are_stable() -> None:
+    assert DEFAULT_TEST_PROFILE == "quick"
+    assert TEST_PROFILE_NAMES == ("quick", "release", "exhaustive")
+
+
+def test_quick_profile_matches_current_default_lane() -> None:
+    profile = resolve_test_profile("quick")
+    assert profile.include_slow is False
+    assert profile.include_long_running is False
+    assert profile.include_ollama_tests is False
+    assert profile.include_bench is False
+    assert build_profile_marker_expression(profile) == (
+        "not requires_ollama and not requires_docker and not network and not slow "
+        "and not bench and not benchmark and not performance and not long_running "
+        "and not private_project and not external_fixture"
+    )
+
+
+def test_release_profile_includes_slow_but_keeps_opt_in_surfaces_bounded() -> None:
+    profile = resolve_test_profile("release")
+    assert profile.include_slow is True
+    assert profile.include_long_running is False
+    assert profile.include_ollama_tests is False
+    assert profile.include_bench is False
+    assert build_profile_marker_expression(profile) == (
+        "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance "
+        "and not long_running and not private_project and not external_fixture"
+    )
+
+
+def test_exhaustive_profile_includes_long_running_but_keeps_live_services_opt_in() -> None:
+    profile = resolve_test_profile("exhaustive")
+    assert profile.include_slow is True
+    assert profile.include_long_running is True
+    assert profile.include_ollama_tests is False
+    assert profile.include_bench is False
+    assert build_profile_marker_expression(profile) == (
+        "not requires_ollama and not requires_docker and not network and not bench and not benchmark and not performance "
+        "and not private_project and not external_fixture"
+    )
+
+
+def test_legacy_flags_add_to_selected_profile() -> None:
+    profile = resolve_test_profile("quick", include_slow=True, include_long_running=True)
+    assert profile.include_slow is True
+    assert profile.include_long_running is True
+    assert profile.include_ollama_tests is False
+    assert profile.include_bench is False
+
+
+def test_unknown_profile_fails_with_available_choices() -> None:
+    with pytest.raises(ValueError, match="quick, release, exhaustive"):
+        resolve_test_profile("unknown")  # type: ignore[arg-type]
+
+
 def test_parse_discovery_count_variants() -> None:
     assert parse_discovery_count("collected 42 items") == 42
     assert parse_discovery_count("============== 7 tests collected ==============") == 7
     assert parse_discovery_count("no tests here") is None
+
+
+def test_parse_project_workers_accepts_serial_and_positive_ints() -> None:
+    assert parse_project_workers() == 1
+    assert parse_project_workers("serial") == 1
+    assert parse_project_workers(1) == 1
+    assert parse_project_workers("3") == 3
+
+
+@pytest.mark.parametrize("raw", [0, -1, "0", "auto", "nonsense", True])
+def test_parse_project_workers_rejects_invalid_values(raw: object) -> None:
+    with pytest.raises(ValueError, match="project-workers"):
+        parse_project_workers(raw)  # type: ignore[arg-type]
+
+
+def test_validate_project_matrix_concurrency_rejects_nested_parallel_argument() -> None:
+    with pytest.raises(ValueError, match="--project-workers=2"):
+        validate_project_matrix_concurrency(2, "auto", strict_parallel=True)
+
+
+def test_validate_project_matrix_concurrency_rejects_hidden_xdist_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(ENV_XDIST_WORKERS, "3")
+    with pytest.raises(ValueError, match=ENV_XDIST_WORKERS):
+        validate_project_matrix_concurrency(2, None)
+
+
+def test_validate_project_matrix_concurrency_allows_outer_serial_with_xdist(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(ENV_XDIST_WORKERS, "auto")
+    assert validate_project_matrix_concurrency("serial", None) == 1
+
+
+def test_resolve_xdist_worker_config_strict_argument_validation() -> None:
+    with pytest.raises(ValueError, match="--parallel"):
+        resolve_xdist_worker_config("oops", strict=True)
 
 
 def test_discovery_with_parallel_execution_command_does_not_run_tests(tmp_path: Path) -> None:

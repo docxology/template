@@ -30,7 +30,13 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_live_resource_usage, log_substep
-from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
+from infrastructure.core.pytest_orchestration import (
+    DEFAULT_TEST_PROFILE,
+    TEST_PROFILE_NAMES,
+    resolve_test_profile,
+    resolve_xdist_worker_config,
+    validate_project_matrix_concurrency,
+)
 from infrastructure.core.test_runner import run_per_project_pytest
 from infrastructure.reporting.pipeline_test_runner import INFRASTRUCTURE_TEST_SCOPES, execute_test_pipeline
 
@@ -73,6 +79,17 @@ def main() -> int:
         help="Allow configured test-failure tolerances (not recommended for CI)",
     )
     parser.add_argument(
+        "--profile",
+        choices=TEST_PROFILE_NAMES,
+        default=DEFAULT_TEST_PROFILE,
+        help=(
+            "Central test profile. 'quick' is the bounded default lane; "
+            "'release' includes slow tests for public/release validation; "
+            "'exhaustive' adds long-running tests; live services and "
+            "benchmarks remain explicit opt-ins."
+        ),
+    )
+    parser.add_argument(
         "--include-slow",
         action="store_true",
         help="Include slow tests (normally skipped for faster execution)",
@@ -111,6 +128,11 @@ def main() -> int:
         help="Include Ollama-dependent tests (requires Ollama server running)",
     )
     parser.add_argument(
+        "--include-bench",
+        action="store_true",
+        help="Include benchmark/performance-marked tests",
+    )
+    parser.add_argument(
         "--all-projects",
         action="store_true",
         help=(
@@ -128,6 +150,15 @@ def main() -> int:
             "per-project loop to infrastructure.project.public_scope. Use this "
             "for public-repo release validation in checkouts that also symlink "
             "private or rotating local projects."
+        ),
+    )
+    parser.add_argument(
+        "--project-workers",
+        metavar="WORKERS",
+        default=None,
+        help=(
+            "Outer project-matrix worker count for --project-only --all-projects. "
+            "Use 'serial' or a positive integer. Default is serial."
         ),
     )
     parser.add_argument(
@@ -149,6 +180,24 @@ def main() -> int:
         parser.error("--infra-only and --project-only cannot be used together")
     if args.public_projects and not (args.project_only and args.all_projects):
         parser.error("--public-projects requires --project-only --all-projects")
+    if args.project_workers is not None and not (args.project_only and args.all_projects):
+        parser.error("--project-workers requires --project-only --all-projects")
+    try:
+        resolve_test_profile(
+            args.profile,
+            include_slow=args.include_slow,
+            include_long_running=args.include_long_running,
+            include_ollama_tests=args.include_ollama_tests,
+            include_bench=args.include_bench,
+        )
+        resolve_xdist_worker_config(args.parallel, strict=args.parallel is not None)
+        validate_project_matrix_concurrency(
+            args.project_workers,
+            args.parallel,
+            strict_parallel=args.parallel is not None,
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
 
     quiet = args.quiet
 
@@ -193,12 +242,6 @@ def main() -> int:
     # (one pytest process per project, combined coverage gate at end).
     # This is the local mirror of the bash loop in .github/workflows/ci.yml.
     if args.project_only and args.all_projects:
-        marker_expr = build_pytest_marker_expression(
-            skip_requires_ollama=not args.include_ollama_tests,
-            skip_slow=not args.include_slow,
-            skip_bench=True,
-            skip_long_running=not args.include_long_running,
-        )
         projects = None
         if args.public_projects:
             from infrastructure.project.public_scope import public_project_names
@@ -211,7 +254,12 @@ def main() -> int:
         exit_code = run_per_project_pytest(
             repo_root,
             projects=projects,
-            marker_expr=marker_expr,
+            profile=args.profile,
+            include_slow=args.include_slow,
+            include_long_running=args.include_long_running,
+            include_ollama_tests=args.include_ollama_tests,
+            include_bench=args.include_bench,
+            project_workers=args.project_workers,
             parallel=args.parallel,
         )
         log_live_resource_usage("Test stage end", logger)
@@ -223,8 +271,10 @@ def main() -> int:
         run_infra=run_infra,
         run_project=run_project,
         quiet=quiet,
+        profile=args.profile,
         include_slow=args.include_slow,
         include_long_running=args.include_long_running,
+        include_bench=args.include_bench,
         include_ollama_tests=args.include_ollama_tests,
         strict=strict,
         infra_scope=args.infra_scope,

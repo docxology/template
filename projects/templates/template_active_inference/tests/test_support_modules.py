@@ -111,6 +111,19 @@ def test_coverage_command_defers_threshold_until_final_chunk() -> None:
     assert "--cov-fail-under=90" in final
 
 
+def test_profile_args_are_additive_and_keep_live_services_opt_in() -> None:
+    quick = full_verification._profile_marker_args("quick")
+    release = full_verification._profile_marker_args("release")
+    exhaustive = full_verification._profile_marker_args("exhaustive")
+
+    assert quick[0] == release[0] == exhaustive[0] == "-m"
+    assert "not slow" in quick[1]
+    assert "not slow" not in release[1]
+    assert "not long_running" in release[1]
+    assert "not long_running" not in exhaustive[1]
+    assert all("not requires_ollama" in expression[1] for expression in (quick, release, exhaustive))
+
+
 def test_run_verification_skip_chunks_orders_preflight_and_postflight(tmp_path: Path) -> None:
     calls: list[tuple[str, list[str]]] = []
     full_verification.run_verification(
@@ -167,3 +180,36 @@ def test_run_verification_includes_chunked_sheaf_modules(tmp_path: Path) -> None
     assert "Gate and manuscript-focused checks" in chunks
     roadmap_cmd = chunks["Roadmap and sheaf consolidation checks"]
     assert str(sheaf_path.relative_to(tmp_path)) in roadmap_cmd
+
+
+def test_refresh_cache_skips_an_unchanged_generator_fixed_point(tmp_path: Path) -> None:
+    calls: list[str] = []
+    cache = full_verification._RefreshCache()
+    command = ["uv", "run", "python", "scripts", "compose_manuscript.py"]
+
+    def run(_root: Path, _cmd: list[str], label: str) -> None:
+        calls.append(label)
+
+    cache.run(tmp_path, command, "first", run)
+    cache.run(tmp_path, command, "second", run)
+
+    assert calls == ["first"]
+
+
+def test_refresh_cache_invalidates_after_a_generator_input_or_output_changes(tmp_path: Path) -> None:
+    calls: list[str] = []
+    cache = full_verification._RefreshCache()
+    command = ["uv", "run", "python", "scripts", "z_generate_manuscript_variables.py"]
+
+    def run(root: Path, _cmd: list[str], label: str) -> None:
+        calls.append(label)
+        target = root / "output" / "data" / "variables.json"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(str(len(calls)), encoding="utf-8")
+
+    cache.run(tmp_path, command, "first", run)
+    (tmp_path / "input.txt").write_text("changed", encoding="utf-8")
+    cache.run(tmp_path, command, "second", run)
+    cache.run(tmp_path, command, "third", run)
+
+    assert calls == ["first", "second"]

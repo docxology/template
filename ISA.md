@@ -380,6 +380,12 @@ local-only work.
 - [ ] ISC-319: Forge implementation review, advisor checkpoint, and fresh Cato audit leave no unresolved medium/high correctness, security, compatibility, or developer-experience finding.
 - [ ] ISC-320: Anti: no public import, shell entrypoint, CLI flag, JSON field, diagnostic code, generated-document path, confidentiality boundary, or coverage threshold is removed or weakened.
 - [ ] ISC-321: phase commits are independently reproducible, rebased normally onto current `origin/main`, pushed without force, and confirmed by exact remote SHA plus hosted CI success.
+- [ ] ISC-322: typed `quick`/`release`/`exhaustive` profiles have one canonical registry, preserve legacy include-flags additively, and keep live services and benchmarks explicit opt-ins.
+- [ ] ISC-323: coverage cleanup preserves the active `COVERAGE_FILE` database and every xdist shard, while the exact CI infrastructure selection records at least 60% coverage.
+- [ ] ISC-324: the shared project-test matrix enforces bounded outer workers, per-project timeout/failure isolation, canonical result ordering, and fail-closed rejection of nested project and xdist concurrency.
+- [ ] ISC-325: public readiness and count collection expose additive profile/worker metadata, use relocation-safe `python -m pytest`, fail closed on missing projects/errors, and produce byte-identical serial/parallel rendered counts.
+- [ ] ISC-326: Active Inference marks real rendering/full-refresh paths as slow, retains one end-to-end characterization per contract family, and uses a deterministic generator fixed-point fingerprint cache without weakening its 90% release floor.
+- [ ] ISC-327: a committed clean-checkout performance manifest records commands, commit, clean state, platform, Python, worker counts, selected/deselected totals, coverage, hashes, and all required improvement thresholds.
 
 ### Iteration 11 Test Strategy
 

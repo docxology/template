@@ -11,12 +11,14 @@ import os
 import re
 import shutil
 import subprocess
+from dataclasses import dataclass
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, Mapping, TypedDict
 
 from infrastructure.core.coverage_policy import check_cov_datafile_support
 from infrastructure.core.logging.utils import get_logger, log_substep, log_success
+from infrastructure.core.pytest_marker_exprs import build_pytest_marker_expression
 from infrastructure.core.project_pyproject import (
     project_declared_coverage_floor,
     project_declares_dev_extra,
@@ -27,8 +29,12 @@ from infrastructure.core.runtime.environment import get_python_command, resolve_
 logger = get_logger(__name__)
 
 InfrastructureTestScope = Literal["full", "pipeline-smoke"]
+TestProfileName = Literal["quick", "release", "exhaustive"]
+XdistWorkers = Literal["auto"] | int
 
 INFRASTRUCTURE_TEST_SCOPES: tuple[InfrastructureTestScope, ...] = ("full", "pipeline-smoke")
+TEST_PROFILE_NAMES: tuple[TestProfileName, ...] = ("quick", "release", "exhaustive")
+DEFAULT_TEST_PROFILE: TestProfileName = "quick"
 
 TEST_RUNNER_BASE_DEPS: tuple[str, ...] = (
     "pytest",
@@ -67,6 +73,52 @@ DISCOVERY_PATTERNS: tuple[str, ...] = (
     r"(\d+)\s+tests?\s+found",
     r"=+\s+(\d+)\s+tests?\s+collected",
 )
+
+
+@dataclass(frozen=True)
+class TestProfileSpec:
+    """Typed reusable test-profile semantics shared across runners."""
+
+    name: TestProfileName
+    include_slow: bool
+    include_long_running: bool
+    include_ollama_tests: bool
+    include_bench: bool
+
+
+@dataclass(frozen=True)
+class XdistWorkerConfig:
+    """Validated per-project pytest-xdist request."""
+
+    workers: XdistWorkers
+    source: Literal["argument", "environment"]
+    raw_value: str | int
+
+
+TEST_PROFILE_REGISTRY: dict[TestProfileName, TestProfileSpec] = {
+    "quick": TestProfileSpec(
+        name="quick",
+        include_slow=False,
+        include_long_running=False,
+        include_ollama_tests=False,
+        include_bench=False,
+    ),
+    "release": TestProfileSpec(
+        name="release",
+        include_slow=True,
+        include_long_running=False,
+        include_ollama_tests=False,
+        include_bench=False,
+    ),
+    "exhaustive": TestProfileSpec(
+        name="exhaustive",
+        include_slow=True,
+        include_long_running=True,
+        # Live services remain explicit opt-in even for exhaustive runs.
+        include_ollama_tests=False,
+        include_bench=False,
+    ),
+}
 
 
 def test_runner_dependency_specs() -> tuple[str, ...]:
@@ -110,7 +162,141 @@ class TestSuiteResults(TypedDict, total=False):
     failed_tests: list[dict[str, str]]
 
 
-def resolve_xdist_args(parallel: str | int | None = None) -> list[str]:
+def resolve_test_profile(
+    profile: TestProfileName = DEFAULT_TEST_PROFILE,
+    *,
+    include_slow: bool = False,
+    include_long_running: bool = False,
+    include_ollama_tests: bool = False,
+    include_bench: bool = False,
+) -> TestProfileSpec:
+    """Resolve profile semantics plus additive legacy include-flags."""
+    if not isinstance(profile, str) or profile not in TEST_PROFILE_NAMES:
+        choices = ", ".join(TEST_PROFILE_NAMES)
+        raise ValueError(f"Unknown test profile {profile!r}; choose one of: {choices}")
+    base = TEST_PROFILE_REGISTRY[profile]
+    return TestProfileSpec(
+        name=base.name,
+        include_slow=base.include_slow or include_slow,
+        include_long_running=base.include_long_running or include_long_running,
+        include_ollama_tests=base.include_ollama_tests or include_ollama_tests,
+        include_bench=base.include_bench or include_bench,
+    )
+
+
+def build_profile_marker_expression(profile: TestProfileSpec) -> str | None:
+    """Build the canonical pytest marker expression for a resolved profile."""
+    return build_pytest_marker_expression(
+        skip_requires_ollama=not profile.include_ollama_tests,
+        skip_slow=not profile.include_slow,
+        skip_bench=not profile.include_bench,
+        skip_long_running=not profile.include_long_running,
+    )
+
+
+def parse_project_workers(project_workers: str | int | None = None) -> int:
+    """Return the bounded outer project-matrix worker count."""
+    if project_workers is None:
+        return 1
+    if isinstance(project_workers, bool):
+        raise ValueError("Invalid --project-workers value: use 'serial' or a positive integer")
+    if isinstance(project_workers, int):
+        if project_workers < 1:
+            raise ValueError(f"Invalid --project-workers value {project_workers!r}: use 'serial' or a positive integer")
+        return project_workers
+
+    value = str(project_workers).strip().lower()
+    if value == "serial":
+        return 1
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError(
+            f"Invalid --project-workers value {project_workers!r}: use 'serial' or a positive integer"
+        ) from exc
+    if parsed < 1:
+        raise ValueError(f"Invalid --project-workers value {project_workers!r}: use 'serial' or a positive integer")
+    return parsed
+
+
+def resolve_xdist_worker_config(
+    parallel: str | int | None = None,
+    *,
+    env: Mapping[str, str] | None = None,
+    strict: bool = False,
+) -> XdistWorkerConfig | None:
+    """Return validated pytest-xdist worker config, or ``None`` for serial."""
+    source: Literal["argument", "environment"] = "argument"
+    raw: str | int | None = parallel
+    if raw is None:
+        source = "environment"
+        source_env = os.environ if env is None else env
+        raw = source_env.get(ENV_XDIST_WORKERS)
+    if raw is None:
+        return None
+    if isinstance(raw, bool):
+        message = (
+            f"Invalid pytest-xdist worker value {raw!r} from "
+            f"{'--parallel' if source == 'argument' else ENV_XDIST_WORKERS}: "
+            "use 'auto', 'serial', or a positive integer"
+        )
+        if strict:
+            raise ValueError(message)
+        logger.warning("%s; running tests serially", message)
+        return None
+
+    value = str(raw).strip().lower()
+    if value in _XDIST_SERIAL_TOKENS:
+        return None
+    if value == "auto":
+        return XdistWorkerConfig(workers="auto", source=source, raw_value=raw)
+
+    try:
+        workers = int(value)
+    except ValueError:
+        message = (
+            f"Invalid pytest-xdist worker value {raw!r} from "
+            f"{'--parallel' if source == 'argument' else ENV_XDIST_WORKERS}: "
+            "use 'auto', 'serial', or a positive integer"
+        )
+        if strict:
+            raise ValueError(message)
+        logger.warning("%s; running tests serially", message)
+        return None
+    if workers <= 1:
+        return None
+    return XdistWorkerConfig(workers=workers, source=source, raw_value=raw)
+
+
+def validate_project_matrix_concurrency(
+    project_workers: str | int | None,
+    parallel: str | int | None,
+    *,
+    env: Mapping[str, str] | None = None,
+    strict_parallel: bool = False,
+) -> int:
+    """Reject nested outer-project concurrency plus inner per-project xdist."""
+    outer_workers = parse_project_workers(project_workers)
+    xdist_config = resolve_xdist_worker_config(parallel, env=env, strict=strict_parallel)
+    if outer_workers > 1 and xdist_config is not None:
+        inner_control = "--parallel"
+        if xdist_config.source == "environment":
+            inner_control = ENV_XDIST_WORKERS
+        raise ValueError(
+            "Nested test concurrency is not supported: "
+            f"--project-workers={outer_workers} cannot be combined with "
+            f"{inner_control}={xdist_config.raw_value!r}. "
+            "Use either outer project concurrency or per-project pytest-xdist, not both."
+        )
+    return outer_workers
+
+
+def resolve_xdist_args(
+    parallel: str | int | None = None,
+    *,
+    env: Mapping[str, str] | None = None,
+    strict: bool = False,
+) -> list[str]:
     """Return safe pytest-xdist argv for requested parallelism, or ``[]``.
 
     Parallelism is **opt-in**: the default is serial. This preserves the
@@ -129,28 +315,12 @@ def resolve_xdist_args(parallel: str | int | None = None) -> list[str]:
           unparseable → ``[]`` (serial). A single worker is pure xdist
           overhead, so it collapses to serial rather than spawning one worker.
     """
-    raw: str | int | None = parallel
-    if raw is None:
-        raw = os.environ.get(ENV_XDIST_WORKERS)
-    if raw is None:
+    config = resolve_xdist_worker_config(parallel, env=env, strict=strict)
+    if config is None:
         return []
-    value = str(raw).strip().lower()
-    if value in _XDIST_SERIAL_TOKENS:
-        return []
-    if value == "auto":
-        workers_value = "auto"
-    else:
-        try:
-            workers = int(value)
-        except ValueError:
-            logger.warning("Ignoring invalid %s=%r; running tests serially", ENV_XDIST_WORKERS, raw)
-            return []
-        if workers <= 1:
-            return []
-        workers_value = str(workers)
     return [
         "-n",
-        workers_value,
+        str(config.workers),
         "--dist",
         XDIST_DISTRIBUTION,
         "--benchmark-disable",
@@ -481,13 +651,20 @@ def enforce_project_suite_guards(
 
 
 __all__ = [
+    "DEFAULT_TEST_PROFILE",
     "DISCOVERY_PATTERNS",
     "ENV_XDIST_WORKERS",
     "INFRASTRUCTURE_TEST_SCOPES",
     "InfrastructureTestScope",
     "PIPELINE_SMOKE_INFRA_TEST_PATHS",
+    "TEST_PROFILE_NAMES",
+    "TEST_PROFILE_REGISTRY",
+    "TestProfileName",
+    "TestProfileSpec",
     "TestSuiteResults",
     "XDIST_DISTRIBUTION",
+    "XdistWorkerConfig",
+    "build_profile_marker_expression",
     "build_project_pytest_command",
     "build_union_pytest_command",
     "build_pythonpath",
@@ -495,14 +672,18 @@ __all__ = [
     "log_discovered_tests",
     "make_coverage_subprocess_env",
     "parse_discovery_count",
+    "parse_project_workers",
     "parse_test_discovery_timeout",
     "prepend_uv_to_path",
     "project_declared_coverage_floor",
     "project_has_test_files",
     "resolve_coverage_file",
+    "resolve_test_profile",
     "resolve_project_cov_config",
     "resolve_infrastructure_test_paths",
     "resolve_project_test_python",
     "resolve_xdist_args",
+    "resolve_xdist_worker_config",
     "test_runner_dependency_specs",
+    "validate_project_matrix_concurrency",
 ]
