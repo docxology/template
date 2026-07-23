@@ -33,7 +33,9 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 
 ## Test and validator gaps
 
-- Add a small raster contrast audit for direct text overlays.
+- Add a small raster contrast audit for direct text overlays. **Shipped:**
+  `tests/test_contrast_audit.py` implements WCAG 2.1 contrast-ratio checks
+  using real pixel math on rendered storybook pages.
 
 ## Ordered improvement ladder
 
