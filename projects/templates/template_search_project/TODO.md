@@ -56,11 +56,12 @@ file.
 
 ## Test and validator gaps
 
-- `src/review_report.py` sits exactly at the 90% coverage floor (20
-  uncovered lines: 58-65, 87-109, 129-130, 172, 281, 326, 330) — any further
-  change to that module without added tests will drop the project below the
-  gate. Add coverage for its remaining untested branches before extending
-  the report generator further.
+- `src/review_report.py` was at the 90% coverage floor — 10 additional
+  no-mock tests added in `tests/test_review_report_additional.py` covering
+  `_subprocess_env`, `ensure_review_summary` subprocess paths,
+  `collect_infra_imports` SyntaxError handling, `_bs`, no-infra-imports
+  branch, and stage skipped/disabled/not-materialised statuses. The module
+  now sits comfortably above the gate.
 - Add a negative control before widening retrieval-coverage claims beyond
   the bundled offline corpus.
 - **Shipped:** fixture-honesty validation and an explicit `evidence_scope` in
