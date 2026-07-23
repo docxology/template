@@ -148,9 +148,12 @@ current public scope.
   lint and security checks even when independent inputs are unchanged.
 - **Why it matters:** slow feedback encourages skipped gates and makes release
   verification less repeatable.
-- **Progress (2026-07-23):** health benchmark running in background (expecting
-  ≥25% improvement). The 4-worker implementation previously reduced wall time
-  from 104.45s serial to 70.02s parallel for the same 22 gates.
+- **Progress (2026-07-23):** health benchmark on clean checkout at
+  `30f2bfc` shows **47.32% improvement** (144.2s serial → 76.0s parallel,
+  4 workers, 24 gates, acceptance=PASS). This exceeds the 25% threshold.
+  The ruff/ruff-format gates now use the project-pinned version instead of
+  the latest unpinned release, eliminating version-mismatch formatting
+  failures.
 - **Smallest next step:** capture the benchmark result from
   ``output/health-benchmark.json`` once the background process completes.
 - **Acceptance:** clean-checkout local health time falls by at least 25% in a
