@@ -37,7 +37,7 @@ about template status, validation depth, and forkability.
 - Keep negative controls for skipped heading levels, citation-density
   regressions, and missing bibliography entries as the suite grows.
 - Add report-schema tests before downstream docs depend on new report fields.
-- Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks.
+- Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks. **Documented:** `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` serves this role.
 
 ## Ordered improvement ladder
 

@@ -50,7 +50,10 @@ confirmation band, reorganization).
   warning-free.
 - Add a stable final artifact-manifest refresh path for single-stage
   analysis/render/copy checks, or document that only full `PipelineExecutor`
-  runs are manifest-authoritative.
+  runs are manifest-authoritative. **Documented:**
+  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  provides the stable refresh path for single-stage runs; full
+  `PipelineExecutor` runs remain the only source of per-stage provenance.
 - Add a validator for stale live-Hermes transcripts if live transcript fixtures
   are ever checked in.
 - **Shipped:** the shared evidence registry now fails validation when a

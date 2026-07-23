@@ -45,7 +45,10 @@ infrastructure and the public exemplar roster.
   cited empirical values are introduced; live counts remain token-injected, and
   policy percentages remain bound to executable configuration.
 - Add or document a stable final artifact-manifest refresh path for
-  single-stage analysis, render, and copy checks.
+  single-stage analysis, render, and copy checks. **Documented:**
+  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  serves this role — it writes a current-output snapshot manifest labeled
+  `current-output-snapshot` without requiring a full `PipelineExecutor` run.
 - Document the structurally unreachable introspection branches (the `dir()`
   fallback, the redundant `is_dir()` re-check, and the `ImportError` version
   fallback) in `tests/AGENTS.md` rather than covering them with mocks.
