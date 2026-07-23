@@ -48,7 +48,9 @@ class ExaHttpClient(Protocol):
         json: Any,
         headers: dict[str, str],
         timeout: float,
-    ) -> ExaResponse: ...  # pragma: no cover - protocol declaration
+    ) -> ExaResponse:
+        """Send a POST request with a JSON body and return an :class:`ExaResponse`."""
+        ...  # pragma: no cover - protocol declaration
 
 
 class UrllibExaHttpClient:

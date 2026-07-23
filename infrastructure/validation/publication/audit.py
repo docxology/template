@@ -75,6 +75,7 @@ def _finding(
 
 
 def check_project_presence(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Yield a finding if the declared public project directory is missing from the checkout."""
     if ctx.project_root.is_dir():
         return
     yield _finding(
@@ -89,6 +90,7 @@ def check_project_presence(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_project_skill(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Yield a finding if the project's routable ``SKILL.md`` bundle is absent."""
     skill_name = ctx.project.removeprefix("templates/").replace("_", "-")
     skill_path = ctx.project_root / ".agents" / "skills" / skill_name / "SKILL.md"
     if skill_path.exists():
@@ -105,6 +107,7 @@ def check_project_skill(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_drift(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Run template-drift checks for the project and yield findings (skipped unless ``include_drift``)."""
     if not ctx.include_drift:
         return
     drift = run_drift_checks(ctx.repo_root, [ctx.project], include_repo_checks=False)
@@ -123,6 +126,7 @@ def check_drift(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_no_mocks(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Run the no-mock enforcement scan over the project ``tests`` directory and yield findings."""
     tests_dir = ctx.project_root / "tests"
     if not tests_dir.is_dir():
         return
@@ -139,6 +143,7 @@ def check_no_mocks(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_methods(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Build and validate the methods orchestration plan, yielding findings for any issues."""
     try:
         plan = build_methods_orchestration_plan(ctx.repo_root, ctx.project)
         methods_issues = validate_methods_orchestration_plan(
@@ -172,6 +177,7 @@ def check_methods(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_evidence(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Validate manuscript Markdown against the project evidence registry and yield review findings."""
     manuscript_dir = ctx.project_root / "manuscript"
     if not manuscript_dir.is_dir():
         return
@@ -198,6 +204,7 @@ def check_evidence(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_rendered_output_dir(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Yield a finding if the rendered ``output`` directory is missing for the project."""
     if (ctx.project_root / "output").is_dir():
         return
     yield _finding(
@@ -212,6 +219,7 @@ def check_rendered_output_dir(ctx: AuditContext) -> Iterable[PublicationFinding]
 
 
 def check_render_reports(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Yield a finding for each required generated publication report that is missing."""
     for relative in _REQUIRED_RENDER_REPORTS:
         if (ctx.project_root / relative).is_file():
             continue
@@ -227,6 +235,7 @@ def check_render_reports(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_artifact_manifest(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Read and validate the artifact manifest, yielding findings for parse errors or drift."""
     manifest_path = ctx.project_root / "output" / "reports" / "artifact_manifest.json"
     if not manifest_path.is_file():
         return
@@ -257,6 +266,7 @@ def check_artifact_manifest(ctx: AuditContext) -> Iterable[PublicationFinding]:
 
 
 def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Validate the figure registry against manuscript sources and yield findings."""
     figure_path = ctx.project_root / "output" / "figures" / "figure_registry.json"
     manuscript_dir = ctx.project_root / "manuscript"
     if not figure_path.exists():

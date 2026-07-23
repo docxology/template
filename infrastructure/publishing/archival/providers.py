@@ -51,7 +51,9 @@ class ArchivalProvider(Protocol):
 
     """Deposit a payload to the archival service."""
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt: ...
+    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+        """Deposit a bundle to the archival service, returning a receipt."""
+        ...
 
 
 # ---------------------------------------------------------------------------
@@ -78,6 +80,7 @@ class ZenodoProvider:
         *,
         base_url: str = "https://zenodo.org/api",
     ) -> None:
+        """Initialize the Zenodo provider with an API token and base URL."""
         self._token = token
         self._base_url = base_url.rstrip("/")
 
@@ -163,6 +166,7 @@ class IPFSPinataProvider:
         session: Any | None = None,
         timeout: float = 30.0,
     ) -> None:
+        """Initialize the Pinata provider with a JWT and optional session/timeout."""
         self._jwt = jwt
         self._base_url = base_url.rstrip("/")
         self._session_arg = session  # None → lazily created on first network call
@@ -252,6 +256,7 @@ class IPFSWeb3StorageProvider:
         session: Any | None = None,
         timeout: float = 30.0,
     ) -> None:
+        """Initialize the Web3.Storage provider with a token and optional session/timeout."""
         self._token = token
         self._base_url = base_url.rstrip("/")
         self._session_arg = session
@@ -352,6 +357,7 @@ class SoftwareHeritageProvider:
         session: Any | None = None,
         timeout: float = 30.0,
     ) -> None:
+        """Initialize the Software Heritage provider with API base and optional session."""
         self._base_url = base_url.rstrip("/")
         self._session_arg = session
         self._timeout = timeout

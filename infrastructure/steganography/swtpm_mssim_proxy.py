@@ -340,6 +340,7 @@ def serve(
 
 
 def main() -> int:
+    """Parse CLI arguments and start the mssim-to-swtpm proxy servers."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--proxy-host", default="127.0.0.1")
     parser.add_argument("--proxy-data-port", type=int, default=2321)

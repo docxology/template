@@ -68,6 +68,7 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
     """Refuse to follow redirects so a 3xx surfaces as the probe result."""
 
     def redirect_request(self, *args: object, **kwargs: object) -> None:
+        """Suppress all redirects so a 3xx surfaces as the probe result."""
         return None
 
 

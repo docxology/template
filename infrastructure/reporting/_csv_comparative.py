@@ -19,7 +19,8 @@ logger = get_logger(__name__)
 class RowWriter(Protocol):
     """Structural type implemented by ``csv.writer`` instances."""
 
-    def writerow(self, row: Iterable[Any], /) -> Any: ...
+    def writerow(self, row: Iterable[Any], /) -> Any:
+        """Write a single row of values to the CSV output."""
 
 
 def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:

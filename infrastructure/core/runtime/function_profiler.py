@@ -215,6 +215,8 @@ def monitor_performance(
     """Decorator for monitoring function performance via the global CodeProfiler."""
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        """Wrap ``func`` so each call is profiled via the global CodeProfiler."""
+
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             """Inner wrapper function that applies the cross-cutting concern."""

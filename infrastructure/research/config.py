@@ -26,6 +26,7 @@ class ResearchWorkflowConfig:
     source_path: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize config to a JSON-safe dictionary."""
         return {
             "enabled": self.enabled,
             "active_stage": self.active_stage,

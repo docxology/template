@@ -390,6 +390,7 @@ def _build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     def add_common(child: argparse.ArgumentParser) -> None:
+        """Add shared --repo-root, --home, and --json flags to a subparser."""
         child.add_argument("--repo-root", type=Path, default=Path("."))
         child.add_argument("--home", type=Path, default=Path.home())
         child.add_argument("--json", action="store_true", help="Print machine-readable JSON")

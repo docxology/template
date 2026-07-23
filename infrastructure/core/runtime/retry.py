@@ -60,6 +60,8 @@ def retry_with_backoff(
     """
 
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
+        """Wrap ``func`` so calls retry on specified exceptions with backoff."""
+
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
             """Inner wrapper function that applies the cross-cutting concern."""

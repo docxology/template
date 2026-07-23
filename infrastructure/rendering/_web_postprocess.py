@@ -80,6 +80,12 @@ SHARED_DESIGN_TOKENS_CSS = """:root {
 
 
 def write_if_changed(path: Path, content: str) -> None:
+    """Write ``content`` to ``path`` only when it differs from the current file content.
+
+    Writes via a temporary file and atomic ``replace`` so the output is never
+    left in a partially-written state. No-op when the content is unchanged,
+    preserving mtime and avoiding spurious diffs.
+    """
     if content == path.read_text(encoding="utf-8"):
         return
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -101,6 +107,7 @@ def normalize_figure_paths(content: str) -> str:
 
 
 def normalize_figure_paths_in_file(html_file: Path) -> None:
+    """Rewrite manuscript figure paths in ``html_file`` for the ``output/web`` layout, in place."""
     content = html_file.read_text(encoding="utf-8")
     write_if_changed(html_file, normalize_figure_paths(content))
 
@@ -147,6 +154,13 @@ def replace_figure_alts(content: str) -> str:
 
 
 def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
+    """Apply accessibility enhancements to ``html_file`` in place.
+
+    Sets the ``<html lang>`` attribute when missing, removes ``aria-hidden``
+    from ``<figcaption>`` elements, replaces figure alt text with concise
+    captions, wraps body content in a ``<main>`` landmark with a skip link,
+    and writes the result only if the content changed.
+    """
     content = html_file.read_text(encoding="utf-8")
     if not re.search(r"<html\b[^>]*\blang=", content, flags=re.IGNORECASE):
         content = re.sub(
@@ -189,6 +203,7 @@ def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
 
 
 def add_responsive_image_variants(html_file: Path) -> None:
+    """Wrap images with available ``_mobile`` companion files in ``<picture>`` responsive sources, in place."""
     content = html_file.read_text(encoding="utf-8")
 
     def _image(match: re.Match[str]) -> str:
@@ -211,6 +226,7 @@ def add_responsive_image_variants(html_file: Path) -> None:
 
 
 def harden_mathjax_script(html_file: Path) -> None:
+    """Add SRI integrity and crossorigin attributes to the MathJax CDN script tag and inject the config script."""
     content = html_file.read_text(encoding="utf-8")
     if MATHJAX_URL not in content:
         return
@@ -229,6 +245,7 @@ def harden_mathjax_script(html_file: Path) -> None:
 
 
 def embed_favicon(html_file: Path) -> None:
+    """Insert a marked ``<link>`` favicon reference before ``</head>`` in ``html_file`` if absent."""
     content = html_file.read_text(encoding="utf-8")
     if _FAVICON_MARKER in content:
         return
@@ -239,6 +256,7 @@ def embed_favicon(html_file: Path) -> None:
 
 
 def write_favicon_file(output_dir: Path) -> None:
+    """Write the embedded ``favicon.ico`` file into ``output_dir``, logging a warning on failure."""
     try:
         (output_dir / "favicon.ico").write_bytes(_FAVICON_ICO)
     except OSError as exc:

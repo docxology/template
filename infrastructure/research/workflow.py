@@ -47,6 +47,7 @@ class ResearchStage:
     order: int = 0
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the stage to a JSON-safe dictionary."""
         return {
             "name": self.name,
             "label": self.label,
@@ -160,6 +161,7 @@ class ResearchWorkflow:
     STAGE_NAMES = ("scope", "survey", "hypothesise", "experiment", "validate", "review", "write")
 
     def __init__(self, stages: list[ResearchStage] | None = None) -> None:
+        """Initialize the workflow, defaulting to the built-in seven stages."""
         if stages is not None:
             self._stages = {s.name: s for s in stages}
         else:

@@ -35,7 +35,9 @@ class HttpClient(Protocol):
         params: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
         timeout: float = 10.0,
-    ) -> HttpResponse: ...  # pragma: no cover
+    ) -> HttpResponse:
+        """Send a GET request and return an :class:`HttpResponse`."""
+        ...  # pragma: no cover
 
     def get_bytes(
         self,
@@ -44,7 +46,9 @@ class HttpClient(Protocol):
         params: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
         timeout: float = 10.0,
-    ) -> bytes: ...  # pragma: no cover
+    ) -> bytes:
+        """Send a GET request and return the raw response bytes."""
+        ...  # pragma: no cover
 
     def post(
         self,
@@ -54,7 +58,9 @@ class HttpClient(Protocol):
         data: bytes | str | None = None,
         headers: dict[str, str] | None = None,
         timeout: float = 30.0,
-    ) -> HttpResponse: ...  # pragma: no cover
+    ) -> HttpResponse:
+        """Send a POST request and return an :class:`HttpResponse`."""
+        ...  # pragma: no cover
 
 
 class UrllibHttpClient:

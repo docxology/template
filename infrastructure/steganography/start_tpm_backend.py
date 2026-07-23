@@ -235,6 +235,7 @@ def start() -> int:
 
 
 def main() -> int:
+    """Parse CLI arguments and dispatch to start, stop, or check."""
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
     group.add_argument("action", nargs="?", default="start", choices=["start", "stop", "check"])

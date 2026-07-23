@@ -345,6 +345,7 @@ def _expand_public_symlinks(repo_root: Path, source_root: Path, files: tuple[Pat
     expanded: set[Path] = set()
 
     def visit(relative: Path, source: Path, ancestors: frozenset[Path]) -> None:
+        """Recursively expand a path, dereferencing public directory symlinks."""
         if not source.is_symlink():
             expanded.add(relative)
             return

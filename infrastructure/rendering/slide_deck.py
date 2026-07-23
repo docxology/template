@@ -98,22 +98,27 @@ class DeckTheme:
 
     @property
     def black_c(self) -> colors.Color:
+        """Return the theme's black color as a ReportLab ``colors.Color``."""
         return colors.HexColor(self.black)
 
     @property
     def white_c(self) -> colors.Color:
+        """Return the theme's white color as a ReportLab ``colors.Color``."""
         return colors.HexColor(self.white)
 
     @property
     def highlight_1_c(self) -> colors.Color:
+        """Return the first highlight color as a ReportLab ``colors.Color``."""
         return colors.HexColor(self.highlight_1)
 
     @property
     def highlight_2_c(self) -> colors.Color:
+        """Return the second highlight color as a ReportLab ``colors.Color``."""
         return colors.HexColor(self.highlight_2)
 
     @property
     def highlight_3_c(self) -> colors.Color:
+        """Return the third highlight color as a ReportLab ``colors.Color``."""
         return colors.HexColor(self.highlight_3)
 
 
@@ -202,6 +207,7 @@ class SlideBudget(Enum):
 
     @property
     def max_slides(self) -> int:
+        """Return the maximum slide count for this deck budget."""
         return self.value
 
 

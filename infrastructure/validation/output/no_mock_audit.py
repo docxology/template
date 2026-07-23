@@ -67,15 +67,18 @@ class LexicalAuditReport:
 
     @property
     def status(self) -> str:
+        """Return the gate status: ``"scan_error"`` if errors occurred, else ``"fail"`` or ``"pass"``."""
         if self.errors:
             return "scan_error"
         return "fail" if self.violations else "pass"
 
     @property
     def exit_code(self) -> int:
+        """Return ``SUCCESS`` (0) when the gate passes, otherwise ``FAILURE`` (1)."""
         return SUCCESS if self.status == "pass" else FAILURE
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the lexical audit report as a deterministic JSON-serializable dict."""
         return {
             "schema_version": 1,
             "mode": "lexical_mock_framework_gate",
@@ -103,6 +106,7 @@ class StandInInventoryReport:
 
     @property
     def counts(self) -> dict[str, int]:
+        """Return per-category stand-in counts plus a ``"total"`` entry."""
         counts = {category.value: 0 for category in _CATEGORY_ORDER}
         for use in self.uses:
             counts[use.category.value] += 1
@@ -111,6 +115,7 @@ class StandInInventoryReport:
 
     @property
     def status(self) -> str:
+        """Return ``"scan_error"``, ``"fail"``/``"advisory_debt"`` (if replacement debt), or ``"clear"``."""
         if self.errors:
             return "scan_error"
         dependency_replacements = self.counts[StandInCategory.dependency_replacement.value]
@@ -120,9 +125,11 @@ class StandInInventoryReport:
 
     @property
     def exit_code(self) -> int:
+        """Return ``FAILURE`` (1) on scan errors or enforced failures, else ``SUCCESS`` (0)."""
         return FAILURE if self.status in {"scan_error", "fail"} else SUCCESS
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the semantic stand-in inventory as a deterministic JSON-serializable dict."""
         return {
             "schema_version": 1,
             "mode": "semantic_standin_inventory",

@@ -20,10 +20,14 @@ class StandalonePublicationRecord(Protocol):
     published_artifacts: tuple[tuple[str, str], ...]
 
     @property
-    def github_display_label(self) -> str: ...
+    def github_display_label(self) -> str:
+        """Human-readable label for the GitHub repository link."""
+        ...
 
     @property
-    def github_display_url(self) -> str: ...
+    def github_display_url(self) -> str:
+        """Absolute HTTPS URL of the GitHub repository."""
+        ...
 
 
 def _link(label: str, url: str) -> str:
