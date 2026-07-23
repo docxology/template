@@ -13,7 +13,7 @@ measured metrics defer to
 unless this file is re-measured.
 
 > **Release-boundary note:** the current checkout is unreleased relative to the
-> `[Unreleased]` notes. The root package/tag boundary is `3.5.1`/`v3.5.1`; the
+> `[Unreleased]` notes. The root package/tag boundary is `3.6.0`/`v3.6.0`; the
 > separately published standalone `v1.0.1` entry is not treated as the root
 > package's next release. See [`release-boundary.md`](../maintenance/release-boundary.md).
 
