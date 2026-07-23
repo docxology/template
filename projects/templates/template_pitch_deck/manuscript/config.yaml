@@ -87,3 +87,5 @@ publication:
   version_doi: "10.5281/zenodo.21281510"
   version_record: "https://zenodo.org/records/21281510"
   github_repository: "docxology/template-pitch-deck"
+  repository_url: "https://github.com/docxology/template-pitch-deck"
+  repository_label: "docxology/template-pitch-deck"
