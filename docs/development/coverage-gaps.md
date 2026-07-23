@@ -80,14 +80,19 @@ user-visible command behavior, not line-chasing through dispatch glue.
 
 ### First-Party Logic Below 60%
 
-| Module | Coverage | Target note |
-| --- | ---: | --- |
-| `project/workspace.py` | 51.11% | Added malformed pyproject, no-table, and missing-`uv` tests; next target is subprocess coverage for init/repair flows. |
-| `publishing/transmission_page_check.py` | 58.04% | Add negative fixtures for incomplete transmission pages and malformed publication metadata. |
-| `rendering/docx_renderer.py` | 59.79% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring DOCX generation. |
-| `rendering/epub_renderer.py` | 63.92% | Cover missing Pandoc, missing manuscript, and output-path branches without requiring EPUB generation. |
-| `rendering/_pipeline_summary.py` | 46.83% | Add branch coverage for warning aggregation, skipped outputs, and empty-stage summaries. |
-| `documentation/publication_records.py` | 74.06% | Add fixtures for incomplete records, DOI/repository label variants, and malformed YAML. |
+All previously-below-60% first-party modules now have meaningful no-mock
+coverage from the 2026-07-22 COVERAGE-BASELINE-1 wave (145 new tests).
+The modules below are the remaining lower-coverage rows above the 60% gate
+that still have concrete branch gaps to close.
+
+| Module | Previous coverage | Tests added | Test file |
+| --- | ---: | ---: | --- |
+| `project/workspace.py` | 51.11% | +15 | `tests/infra_tests/project/test_workspace_additional.py` |
+| `publishing/transmission_page_check.py` | 58.04% | +15 | `tests/infra_tests/publishing/test_transmission_page_check_additional.py` |
+| `rendering/docx_renderer.py` | 59.79% | +10 | `tests/infra_tests/rendering/test_docx_renderer_additional.py` |
+| `rendering/_pipeline_summary.py` | 46.83% | +30 | `tests/infra_tests/rendering/test_pipeline_summary_additional.py` |
+| `rendering/epub_renderer.py` | 63.92% | +10 | `tests/infra_tests/rendering/test_epub_renderer_additional.py` |
+| `documentation/publication_records.py` | 74.06% | +45 | `tests/infra_tests/documentation/test_publication_records_additional.py` |
 
 ### Optional-Tool And Gated Rows
 
