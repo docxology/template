@@ -153,11 +153,11 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
         ("mypy", ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *public_targets]),
         (
             "ruff",
-            ["uvx", "ruff", "check", *lint_targets],
+            ["uv", "run", "ruff", "check", *lint_targets],
         ),
         (
             "ruff-format",
-            ["uvx", "ruff", "format", "--check", *lint_targets],
+            ["uv", "run", "ruff", "format", "--check", *lint_targets],
         ),
         (
             "bandit",
