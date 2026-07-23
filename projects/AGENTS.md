@@ -115,10 +115,10 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 
 - **Discovered** by `infrastructure.project.discovery.discover_projects()` with qualified names `templates/<name>` and `active/<name>`
 - **Listed** in `run.sh` interactive menu
-- **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
-- **Rendered** by `03_render_pdf.py` with independent manuscript processing
-- **Validated** by `04_validate_output.py`
-- **Copied** to `output/<subfolder>/{name}/` by `05_copy_outputs.py`
+- **Executed** by all pipeline scripts (`scripts/pipeline/stage_01_test.py`, `scripts/pipeline/stage_02_analysis.py`, etc.)
+- **Rendered** by `scripts/pipeline/stage_03_render.py` with independent manuscript processing
+- **Validated** by `scripts/pipeline/stage_04_validate.py`
+- **Copied** to `output/<subfolder>/{name}/` by `scripts/pipeline/stage_05_copy.py`
 
 Private lifecycle projects normally live in an external private repository. The simplified sidecar uses `working/` and `archive/` by default: `working/*` is symlinked into `projects/working/`, and `archive/*` into `projects/archive/`, for explicit targeted work. Optional legacy `active/*`, `published/*`, and `other/*` are still recognized if present; optional `active/*` is symlinked into `projects/active/` before discovery/rendering. Preview with
 `uv run python -m infrastructure.orchestration link-projects --dry-run`;

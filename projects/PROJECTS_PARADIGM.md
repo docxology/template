@@ -534,7 +534,7 @@ Rendered projects are discovered and executed by infrastructure:
 
 - **Discovered** by `infrastructure.project.discovery.discover_projects()`
 - **Listed** in `run.sh` interactive menu
-- **Executed** by pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
+- **Executed** by pipeline scripts (`scripts/pipeline/stage_01_test.py`, `scripts/pipeline/stage_02_analysis.py`, etc.)
 - **Outputs** generated in `projects/<subfolder>/{name}/output/` and `output/<subfolder>/{name}/`
 
 `projects/templates/` is the permanent public exemplar set. `projects/active/`

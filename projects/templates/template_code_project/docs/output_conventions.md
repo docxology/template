@@ -104,7 +104,7 @@ To add a new figure or data product:
 | output/figures/convergence_plot.png | Gradient descent trajectories | generate_convergence_plot() | 1 |
 | output/data/optimization_results.csv | Per-step-size results table | save_optimization_results() | 1 |
 | output/manuscript/03_results.md | Resolved results section | z_generate_manuscript_variables.py | 2 |
-| output/pdf/template_code_project_combined.pdf | Final publication PDF | 03_render_pdf.py | 3 |
+| output/pdf/template_code_project_combined.pdf | Final publication PDF | scripts/pipeline/stage_03_render.py | 3 |
 ```
 
 ## Troubleshooting

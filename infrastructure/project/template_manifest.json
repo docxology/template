@@ -150,7 +150,7 @@
       "qualified_name": "templates/template_search_project",
       "title": "template_search_project",
       "use_when": "Use this template for **literature-review and evidence-synthesis pipelines**: multi-backend search (arXiv, Crossref, local corpora, optional Paperclip), deduplication, BibTeX generation, and LLM-assisted per-paper and corpus-level synthesis.",
-      "test_file_count": 24,
+      "test_file_count": 25,
       "coverage_floor": 90
     },
     {
@@ -166,7 +166,7 @@
       "qualified_name": "templates/template_storybook",
       "title": "The Shape Between - `template_storybook`",
       "use_when": "Use this template when you need **full-page illustrated PDF storytelling**: picture-book pages, symbolic scenes, character-generation methods, page-level orchestrators, and deterministic raster art assembled into a print-ready PDF.",
-      "test_file_count": 2,
+      "test_file_count": 3,
       "coverage_floor": 90
     },
     {
@@ -174,7 +174,7 @@
       "qualified_name": "templates/template_template",
       "title": "Template: Meta-Research Project",
       "use_when": "Use this template when your research subject is **the repository itself** — programmatic introspection of architecture, pipeline DAGs, module inventories, and security layers, rendered as a manuscript whose every metric is computed live (autopoietic: the paper regenerates itself from the code it describes).",
-      "test_file_count": 7,
+      "test_file_count": 8,
       "coverage_floor": 90
     },
     {

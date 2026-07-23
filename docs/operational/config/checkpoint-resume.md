@@ -30,7 +30,7 @@ Checkpoints are automatically saved after each successful stage:
   "checkpoint_time": 1701234600.12,
   "stage_results": [
     {
-      "name": "00_setup_environment",
+      "name": "stage_00_setup",
       "exit_code": 0,
       "duration": 1.5,
       "timestamp": "2024-01-01 12:00:00",

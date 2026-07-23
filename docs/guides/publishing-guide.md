@@ -680,7 +680,7 @@ uv run python -m infrastructure.publishing.archival_cli \
   --providers zenodo software_heritage ipfs_pinata ipfs_web3storage
 ```
 
-Note: `08_executable_bundle.py` and `09_archive_publication.py` look up
+Note: `scripts/runner/bundle_executable.py` and `scripts/runner/archive_publication.py` look up
 `projects/<project>` and `output/<project>/...` directly (they do not
 auto-qualify a bare exemplar name the way the `python -m
 infrastructure.orchestration` CLI does) — pass the qualified slug
