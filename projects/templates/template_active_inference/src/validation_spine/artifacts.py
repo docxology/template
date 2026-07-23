@@ -337,7 +337,7 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
         {
             "id": "stale_provenance_hash",
             "gate": "validate_outputs.artifact_provenance_schema",
-            "mutation": "replace a saved artifact sha256 with a fake digest",
+            "mutation": "replace a saved artifact sha256 with a forged digest",
             "expected_failure": True,
             "test": "tests/test_validation_spine.py::test_validation_spine_rejects_stale_provenance_hash",
         },

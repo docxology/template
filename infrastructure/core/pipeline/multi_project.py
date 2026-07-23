@@ -271,7 +271,7 @@ class MultiProjectOrchestrator:
                 project_results[project_name] = []
 
         # Executive reporting is handled by the dedicated pipeline stage
-        # (07_generate_executive_report.py), which runs as part of the stage executor.
+        # (scripts/pipeline/stage_07_executive_report.py), which runs as part of the stage executor.
 
         total_duration = time.time() - start_time
 
@@ -302,14 +302,14 @@ class MultiProjectOrchestrator:
             fallback_project = self.config.projects[0].qualified_name if self.config.projects else "project"
 
             # Create a config just to run infra tests
-            dummy_config = PipelineConfig(
+            infra_config = PipelineConfig(
                 project_name=fallback_project,
                 repo_root=self.config.repo_root,
                 skip_infra=False,
                 skip_llm=True,
             )
 
-            executor = PipelineExecutor(dummy_config)
+            executor = PipelineExecutor(infra_config)
 
             # Run only the infrastructure tests stage
             success = executor.run_infrastructure_tests()

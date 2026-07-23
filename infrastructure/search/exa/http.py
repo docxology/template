@@ -3,7 +3,7 @@
 Mirrors the design of :mod:`infrastructure.search.literature.http_client` (a
 structural :class:`ExaHttpClient` Protocol plus a stdlib implementation) but is
 kept Exa-local so the two search interfaces share no imports. Tests inject a
-fake transport or point :class:`UrllibExaHttpClient` at a ``pytest-httpserver``
+stub transport or point :class:`UrllibExaHttpClient` at a ``pytest-httpserver``
 URL — no mocking framework, per the repository's no-mocks policy.
 """
 

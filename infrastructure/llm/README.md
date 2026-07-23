@@ -56,7 +56,7 @@ graph TD
     end
 
     subgraph Integration["Integration Points"]
-        PIPELINE[Pipeline Scripts<br/>06_llm_review.py]
+        PIPELINE[Pipeline Scripts<br/>stage_06_llm_review.py]
         PROJECTS[Project Scripts<br/>Analysis workflows]
     end
 

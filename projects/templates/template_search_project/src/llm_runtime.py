@@ -49,7 +49,7 @@ def build_llm_callable(
 
     Returning ``None`` is the documented signal that the LLM stack is
     genuinely unreachable — the caller is expected to skip its
-    synthesis stage rather than emit a fake "(LLM unavailable)" string
+    synthesis stage rather than emit a stub "(LLM unavailable)" string
     into the archive.
 
     Args:
