@@ -22,8 +22,8 @@
       "artifact": "output/data/analytical_observable_sweep.json",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
-      "saved_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
+      "live_sha256": "7e6e6bac8a5d1270f3b2a65bfd5e118d67c63dbae47b1b6f7ac7f136a9bbfe6d",
+      "saved_sha256": "7e6e6bac8a5d1270f3b2a65bfd5e118d67c63dbae47b1b6f7ac7f136a9bbfe6d",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -190,16 +190,16 @@
       "artifact": "output/figures/artifact_contract_map.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
-      "saved_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "live_sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc",
+      "saved_sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc",
       "source": "output/data/artifact_provenance.json"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
-      "saved_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "live_sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9",
+      "saved_sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -214,32 +214,32 @@
       "artifact": "output/figures/scholarship_source_map.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
-      "saved_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "live_sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
+      "saved_sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
       "source": "output/data/artifact_provenance.json"
     },
     {
       "artifact": "output/figures/security_posture_map.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
-      "saved_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
+      "live_sha256": "11a0c7cb9ae2f909ec4119b1113e5a6cb235d6da0846c748596b2d8de24d306c",
+      "saved_sha256": "11a0c7cb9ae2f909ec4119b1113e5a6cb235d6da0846c748596b2d8de24d306c",
       "source": "output/data/artifact_provenance.json"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
-      "saved_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
+      "live_sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
+      "saved_sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
       "source": "output/data/artifact_provenance.json"
     },
     {
       "artifact": "output/figures/sheaf_coverage_heatmap.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
-      "saved_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
+      "live_sha256": "3cd70393bf283c707f16d115b1c5d182ac80f95d2b1842a99ae27b46ff7f658e",
+      "saved_sha256": "3cd70393bf283c707f16d115b1c5d182ac80f95d2b1842a99ae27b46ff7f658e",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -254,8 +254,8 @@
       "artifact": "output/figures/theorem_traceability_graph.png",
       "equal": true,
       "jsonpath": "$",
-      "live_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
-      "saved_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "live_sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
+      "saved_sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
       "source": "output/data/artifact_provenance.json"
     },
     {
