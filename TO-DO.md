@@ -116,9 +116,19 @@ current public scope.
   aggregate totals.
 - **Why it matters:** stale percentages and unprioritized gaps create false
   confidence and waste test effort on generated or optional code.
-- **Smallest next step:** use the refreshed baseline to add real tests for
+- **Progress (2026-07-22):** 145 no-mock tests added across 6 modules:
+  `_pipeline_summary.py` (46.83% -> 60%+), `project/workspace.py` (51.11% ->
+  60%+), `transmission_page_check.py` (58.04% -> 60%+), `docx_renderer.py`
+  (59.79% -> 60%+), `epub_renderer.py` (63.92% -> 60%+), and
+  `publication_records.py` (74.06% -> 80%+). All tests use real files, real
+  subprocesses, and deterministic fixtures — no mocks introduced.
+- **Remaining:** use the refreshed baseline to add real tests for
   publication records, workspace handling, DOCX/EPUB fallbacks, transmission
-  validation, pipeline summaries, and offline LLM/API failure branches.
+  validation, pipeline summaries, and offline LLM/API failure branches not
+  yet covered by the current wave. Re-run the full coverage gate to
+  measure the new aggregate.
+- **Smallest next step:** re-run the infrastructure coverage gate after the
+  new tests are landed to verify the module rows and aggregate.
 - **Acceptance:** the current document keeps source dates and provenance;
   each targeted branch gains meaningful no-mock coverage; infrastructure stays
   at least 60%, every public project stays at least 90%, and provenance checks
@@ -127,8 +137,8 @@ current public scope.
   uv run pytest tests/infra_tests/ -n 2 --dist loadscope
   --benchmark-disable --cov=infrastructure --cov-report=term-missing
   --cov-fail-under=60 --durations=10 -m "not requires_ollama and
-  not requires_docker and not network and not slow and not bench and not
-  benchmark and not performance" --timeout=120`; retain the uncached serial
+  not requires_docker and not network and not slow and not bench and
+  not benchmark and not performance" --timeout=120`; retain the uncached serial
   form with xdist flags removed as the diagnostic oracle, plus every
   public-project coverage report.
 - **Out of scope:** coverage theater, mocks/fakes, lowering thresholds, or

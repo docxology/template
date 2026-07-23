@@ -50,7 +50,10 @@ Forward-only backlog for the modular, fillable book-length manuscript scaffold
   constants as configured facts, or mark them as documentation-only examples,
   before treating Stage 04 as warning-free.
 - Add or document a stable final artifact-manifest refresh path for
-  single-stage analysis, render, and copy checks.
+  single-stage analysis, render, and copy checks. **Documented:**
+  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  serves this role — it writes a current-output snapshot manifest labeled
+  `current-output-snapshot` without requiring a full `PipelineExecutor` run.
 - **Shipped:** the optional external Mermaid `mmdc` boundary uses a bounded
   timeout, isolated process group, descendant cleanup, and a deterministic
   `.mmd` fallback; keep the policy synchronized with infrastructure Mermaid

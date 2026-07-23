@@ -20,7 +20,7 @@ thin-orchestrator control-positive path for code-centric research projects.
 - Keep this exemplar as the smallest reliable control-positive path for code-centric research projects.
 - Keep dashboard, API docs, figures, and manuscript variables generated from source, not hand-maintained output snapshots.
 - Add a project-local output validation script only if it checks artifacts beyond the generic Stage 04 validators.
-- Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks.
+- Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks. **Documented:** `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` serves this role.
 
 ## Configurable-surface gaps
 

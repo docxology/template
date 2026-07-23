@@ -32,7 +32,7 @@ configurable, and honestly bounded as a template.
 
 ## Test and validator gaps
 
-- Register or suppress documentation-only README numbers in the evidence pass, and add a stable final artifact-manifest refresh path for single-stage checks.
+- Register or suppress documentation-only README numbers in the evidence pass, and add a stable final artifact-manifest refresh path for single-stage checks. **Documented:** `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` provides the stable refresh path.
 - Keep the platform-only `typography.py` fallback branch documented rather than mock-covered; revisit only if the no-mocks policy or the CI font matrix changes.
 
 ## Ordered improvement ladder
