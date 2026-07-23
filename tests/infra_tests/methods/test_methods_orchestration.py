@@ -149,7 +149,7 @@ def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> Non
     )
 
 
-def test_validation_reports_missing_method_section(tmp_path: Path) -> None:
+def test_validation_rejects_missing_method_section(tmp_path: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 
     _write_minimal_repo(tmp_path)
@@ -160,6 +160,40 @@ def test_validation_reports_missing_method_section(tmp_path: Path) -> None:
     assert any(issue.code == "METHODS.METHOD_SECTION_MISSING" for issue in issues)
     assert any(issue.code == "METHODS.ARTIFACT_MANIFEST_MISSING" for issue in issues)
     assert any(issue.code == "METHODS.EVIDENCE_REGISTRY_MISSING" for issue in issues)
+
+
+def test_bare_project_name_resolves_scripts_in_templates_dir(repo_root: Path) -> None:
+    """A bare project name (without ``templates/`` prefix) must resolve stage
+    scripts and artifact paths to the correct ``projects/templates/<name>/``
+    directory — same result as the qualified form."""
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    bare = build_methods_orchestration_plan(
+        repo_root, "template_advanced_literature_review", artifact_mode="source"
+    )
+    qualified = build_methods_orchestration_plan(
+        repo_root, "templates/template_advanced_literature_review", artifact_mode="source"
+    )
+
+    # Both forms should expand stage scripts to the same paths
+    for bare_stage, qualified_stage in zip(bare.stages, qualified.stages):
+        assert bare_stage.script == qualified_stage.script, (
+            f"Script mismatch for stage {bare_stage.name}: "
+            f"bare={bare_stage.script!r} vs qualified={qualified_stage.script!r}"
+        )
+        assert bare_stage.input_artifacts == qualified_stage.input_artifacts
+        assert bare_stage.output_artifacts == qualified_stage.output_artifacts
+
+    # Both must validate without script-missing errors
+    bare_issues = validate_methods_orchestration_plan(bare, repo_root=repo_root)
+    qualified_issues = validate_methods_orchestration_plan(qualified, repo_root=repo_root)
+    bare_error_codes = {i.code for i in bare_issues if i.severity == "error"}
+    qualified_error_codes = {i.code for i in qualified_issues if i.severity == "error"}
+    assert bare_error_codes == qualified_error_codes, (
+        f"Bare name errors {bare_error_codes} differ from qualified {qualified_error_codes}"
+    )
+    assert "METHODS.STAGE_SCRIPT_MISSING" not in bare_error_codes
+    assert "METHODS.VERIFICATION_SCRIPT_MISSING" not in bare_error_codes
 
 
 def test_validation_rejects_malformed_or_empty_evidence_json(tmp_path: Path) -> None:

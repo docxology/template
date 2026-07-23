@@ -66,10 +66,16 @@ def build_methods_orchestration_plan(
     dag = PipelineDAG.from_yaml(pipeline_source_abs)
     sorted_stage_definitions = dag.sorted_stages()
 
+    # Compute the project key for ``{project}`` expansion: the path after
+    # ``projects/`` so bare names like ``template_advanced_literature_review``
+    # expand to ``templates/template_advanced_literature_review``.
+    project_key = _project_expansion_key(project_name, project_root_abs, root)
+
     stages = tuple(
         _build_stage(
             stage,
             order=index,
+            project_key=project_key,
             project_name=project_name,
         )
         for index, stage in enumerate(sorted_stage_definitions, start=1)
@@ -85,7 +91,7 @@ def build_methods_orchestration_plan(
         artifact_manifest=artifact_manifest,
         evidence_registry=evidence_registry,
         stages=stages,
-        validation_commands=_validation_commands(project_name),
+        validation_commands=_validation_commands(project_name, project_key),
         dropped_dependency_edges=tuple(dag.dropped_dependency_edges),
         artifact_mode=artifact_mode,
     )
@@ -319,7 +325,8 @@ def _build_stage(
     stage: StageDefinition,
     *,
     order: int,
-    project_name: str,
+    project_key: str,
+    project_name: str = "",
 ) -> MethodStage:
     contract = stage.contract
     method = stage.method or (f"Execute the declared script for {stage.name}." if stage.script else "")
@@ -330,41 +337,43 @@ def _build_stage(
         depends_on=tuple(stage.depends_on),
         tags=tuple(stage.tags),
         gate=contract.gate or "",
-        script=_expand_artifact(stage.script or "", project_name),
+        script=_expand_artifact(stage.script or "", project_key),
         method=method,
         executor_method=(stage.method or "") if not stage.script else "",
         allow_skip=stage.allow_skip,
-        input_artifacts=tuple(_expand_artifact(item, project_name) for item in contract.input_artifacts),
-        output_artifacts=tuple(_expand_artifact(item, project_name) for item in contract.output_artifacts),
+        input_artifacts=tuple(_expand_artifact(item, project_key) for item in contract.input_artifacts),
+        output_artifacts=tuple(_expand_artifact(item, project_key) for item in contract.output_artifacts),
         definition_of_done=contract.definition_of_done,
         failure_code=contract.failure_code,
-        verification_commands=_stage_verification_commands(stage, project_name),
+        verification_commands=_stage_verification_commands(stage, project_key, project_name),
     )
 
 
-def _stage_verification_commands(stage: StageDefinition, project_name: str) -> tuple[str, ...]:
+def _stage_verification_commands(stage: StageDefinition, project_key: str, project_name: str = "") -> tuple[str, ...]:
     stage_key = stage.key
     if stage.script:
         args = " ".join(stage.args)
         spacer = " " if args else ""
-        script_path = stage.script.replace("{project}", project_name)
-        project_arg = "" if "--project" in stage.args else f" --project {project_name}"
+        script_path = stage.script.replace("{project}", project_key)
+        resolved_name = project_name or project_key
+        project_arg = "" if "--project" in stage.args else f" --project {resolved_name}"
         commands = [f"uv run python {script_path}{spacer}{args}{project_arg}"]
         if stage_key:
             commands.append(
-                f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}"
+                f"uv run python scripts/runner/execute_pipeline.py --project {resolved_name} --stage {stage_key}"
             )
         return tuple(commands)
     if stage_key:
-        return (f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --stage {stage_key}",)
+        resolved_name = project_name or project_key
+        return (f"uv run python scripts/runner/execute_pipeline.py --project {resolved_name} --stage {stage_key}",)
     return ()
 
 
-def _validation_commands(project_name: str) -> tuple[str, ...]:
+def _validation_commands(project_name: str, project_root_key: str) -> tuple[str, ...]:
     return (
         f"uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only",
-        f"uv run python -m infrastructure.validation.cli prerender projects/{project_name}/manuscript --repo-root .",
-        f"uv run python -m infrastructure.validation.cli integrity projects/{project_name}/output",
+        f"uv run python -m infrastructure.validation.cli prerender {project_root_key}/manuscript --repo-root .",
+        f"uv run python -m infrastructure.validation.cli integrity {project_root_key}/output",
     )
 
 
@@ -394,8 +403,38 @@ def _discover_method_sections(project_root: Path, repo_root: Path) -> tuple[str,
     return tuple(sections)
 
 
-def _expand_artifact(value: str, project_name: str) -> str:
-    return value.replace("{project}", project_name)
+def _expand_artifact(value: str, project_key: str) -> str:
+    return value.replace("{project}", project_key)
+
+
+def _project_expansion_key(
+    project_name: str,
+    project_root: Path,
+    repo_root: Path | None = None,
+) -> str:
+    """Compute the ``{project}`` expansion key that is the part after ``projects/``.
+
+    When *project_name* already carries a qualified prefix (e.g.
+    ``templates/template_code_project``) it is used directly.  Otherwise the
+    key is derived from *project_root* relative to the ``projects/``
+    directory, so bare names like ``template_advanced_literature_review``
+    expand to ``templates/template_advanced_literature_review``.
+    """
+    if "/" in project_name:
+        return project_name
+    # Try to use the canonical ``projects/`` prefix for standard layouts.
+    if repo_root is not None:
+        try:
+            rel = project_root.resolve().relative_to((repo_root / "projects").resolve())
+            return rel.as_posix()
+        except ValueError:
+            pass
+        try:
+            rel = project_root.resolve().relative_to(repo_root.resolve())
+            return rel.as_posix()
+        except ValueError:
+            pass
+    return project_root.as_posix()
 
 
 def _relative_to(path: Path, root: Path) -> Path:

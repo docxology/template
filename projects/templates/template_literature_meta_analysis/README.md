@@ -29,8 +29,10 @@ Typical uses:
   problem.
 
 Reach for a sibling exemplar instead when your claims trace to *your own code/data*
-(`template_code_project`), to a prose argument (`template_prose_project`), or to a
-deterministic AutoResearch loop (`template_autoresearch_project`).
+(`template_code_project`), to a prose argument (`template_prose_project`), to a
+deterministic AutoResearch loop (`template_autoresearch_project`), or to a
+**multi-phase review** with distinct retrieval phases and cross-phase provenance
+(`template_advanced_literature_review`).
 
 ## Publication and rendering
 
