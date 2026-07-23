@@ -263,7 +263,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "63dace1c578aaae1dd71b7b257dfc3ec304e6327a251f7fd7945710383f48ac0",
+      "source_sha256": "e1d28ef8b7971970a41cdc8b5f61dfd6bd1cc9b745af401c2f3321f6c24260a0",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -302,7 +302,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "dc432bc49599a48eec5c69fbdfe265fb79aadb5ab3611745d95345fbf66d8f8d",
+      "source_sha256": "4a58e0469a3a59c408fad5ac252d1c98ddff19591db1e305a907eda67e304caa",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2686,7 +2686,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "2478f42934612a2b7f3a960fbcadea298fe977c4cb3edee1196363c7cd4b0d93",
+      "source_sha256": "c7b7678cd7ec0971e5d5c285611467dd53e96379d019e6605ac8ba2a5b3e2dc8",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2725,7 +2725,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "24257555a0a28b2895d55e9085ea13d9a52caf09da1bc94242a6a8024303d5a3",
+      "source_sha256": "4edb7603f6227d346d9d4e27eb7f1fd11c19f9f55fa8891ab19f289d4cbd2d72",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2803,7 +2803,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "3125e624e07f3c6ddcd4f5baf634322d7e4afebc68dbc04fb3bc4e3fc26567ea",
+      "source_sha256": "43f94e05e25128661fa53f7b1bfcb1fb10913f2388cf209de428c07d3b1702bf",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"

@@ -457,7 +457,7 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
-        "output/data/artifact_contract_index.json": "63dace1c578aaae1dd71b7b257dfc3ec304e6327a251f7fd7945710383f48ac0",
+        "output/data/artifact_contract_index.json": "e1d28ef8b7971970a41cdc8b5f61dfd6bd1cc9b745af401c2f3321f6c24260a0",
         "output/data/evidence_field_index.json": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
         "output/data/proof_dependency_graph.json": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
         "output/data/scholarship_source_matrix.json": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
@@ -473,8 +473,8 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "2478f42934612a2b7f3a960fbcadea298fe977c4cb3edee1196363c7cd4b0d93",
-        "output/reports/release_bundle_manifest.json": "24257555a0a28b2895d55e9085ea13d9a52caf09da1bc94242a6a8024303d5a3",
+        "output/reports/release_attestation.json": "c7b7678cd7ec0971e5d5c285611467dd53e96379d019e6605ac8ba2a5b3e2dc8",
+        "output/reports/release_bundle_manifest.json": "4edb7603f6227d346d9d4e27eb7f1fd11c19f9f55fa8891ab19f289d4cbd2d72",
         "output/reports/security_posture_audit.json": "0835e7f58e46fdac4e4cb14fdb234a37dd6d550757774b2822cb697d6eeb35a4",
         "output/reports/sheaf_render_log.json": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0"
       },

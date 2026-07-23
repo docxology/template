@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 38,
-  "bundle_hash": "8276b5148241ec0858d0e448f1f3e8e6bcbf8d10ebcd4418358994aa63224c8b",
+  "bundle_hash": "92ed9aa69e74f9999befaeed8b3262a4dcdd5534b34a6d239d67e06edd9dab51",
   "copied_output_parity": {
     "all_copied_outputs_match": true,
     "all_copied_outputs_match_or_deferred": true,
@@ -45,7 +45,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "c8d471afd4299fe48de775545f13b877788cdf5949087f217c60b8a05f4a2db8",
+        "source_sha256": "6484db66b1ac33befd24cf0e3cb38b16c92c8eec62ac9b7bce191ae9c2db5122",
         "status": "deferred"
       },
       {
@@ -57,7 +57,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "917008727f75eb78dcb8c38d6b285f3758c887b3dc4184462f2d4015a1144b1b",
+        "source_sha256": "cb2191b9dbb947e2185a5467358d9b67f84eddb77a3c59a61e9de657deef1e05",
         "status": "deferred"
       },
       {
@@ -213,7 +213,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "63dace1c578aaae1dd71b7b257dfc3ec304e6327a251f7fd7945710383f48ac0",
+        "source_sha256": "e1d28ef8b7971970a41cdc8b5f61dfd6bd1cc9b745af401c2f3321f6c24260a0",
         "status": "deferred"
       },
       {
@@ -465,7 +465,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "2478f42934612a2b7f3a960fbcadea298fe977c4cb3edee1196363c7cd4b0d93",
+        "source_sha256": "c7b7678cd7ec0971e5d5c285611467dd53e96379d019e6605ac8ba2a5b3e2dc8",
         "status": "deferred"
       }
     ]
@@ -490,14 +490,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c8d471afd4299fe48de775545f13b877788cdf5949087f217c60b8a05f4a2db8"
+      "source_sha256": "6484db66b1ac33befd24cf0e3cb38b16c92c8eec62ac9b7bce191ae9c2db5122"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "917008727f75eb78dcb8c38d6b285f3758c887b3dc4184462f2d4015a1144b1b"
+      "source_sha256": "cb2191b9dbb947e2185a5467358d9b67f84eddb77a3c59a61e9de657deef1e05"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -588,7 +588,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "63dace1c578aaae1dd71b7b257dfc3ec304e6327a251f7fd7945710383f48ac0"
+      "source_sha256": "e1d28ef8b7971970a41cdc8b5f61dfd6bd1cc9b745af401c2f3321f6c24260a0"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -735,7 +735,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "2478f42934612a2b7f3a960fbcadea298fe977c4cb3edee1196363c7cd4b0d93"
+      "source_sha256": "c7b7678cd7ec0971e5d5c285611467dd53e96379d019e6605ac8ba2a5b3e2dc8"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",
