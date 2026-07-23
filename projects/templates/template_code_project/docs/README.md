@@ -85,7 +85,7 @@ covers the full workflow.
 **Prerequisites to know before referencing the render path:** combined-PDF
 rendering of any ```mermaid``` block needs `chrome-headless-shell`
 (`npx --yes puppeteer browsers install chrome-headless-shell`); the per-project
-test gate is the **direct** command below (a green `01_run_tests.py` exit with
+test gate is the **direct** command below (a green `scripts/pipeline/stage_01_test.py` exit with
 0 collected tests is not a pass). Both are detailed in
 [`troubleshooting.md`](troubleshooting.md) and [`rendering_pipeline.md`](rendering_pipeline.md).
 

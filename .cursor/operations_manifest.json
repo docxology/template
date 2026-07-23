@@ -602,7 +602,7 @@
         "validate_publication_readiness",
         "generate_publication_metrics",
         "create_repository_metadata",
-        "calculate_complexity_score",
+        "calculate_metadata_complexity_score",
         "publish_to_zenodo",
         "prepare_arxiv_submission",
         "create_github_release",

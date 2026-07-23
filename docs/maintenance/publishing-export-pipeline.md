@@ -108,8 +108,8 @@ uv run python scripts/pipeline/stage_12_metadata.py --project templates/<name>
 ```
 
 (Stage 12 Executable Bundle and Stage 13 Archival Publication — tagged
-`bundle` and `archival` — are the separate `08_executable_bundle.py` /
-`09_archive_publication.py` scripts; see
+`bundle` and `archival` — are the separate `scripts/runner/bundle_executable.py` /
+`scripts/runner/archive_publication.py` scripts; see
 [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) and
 [`archival-targets.md`](archival-targets.md).)
 

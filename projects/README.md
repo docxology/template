@@ -160,7 +160,7 @@ Projects under `projects/templates/` (the tracked exemplars) and `projects/activ
 
 - **Discovered** by `infrastructure.project.discovery.discover_projects()` with qualified names `templates/<name>` and `active/<name>`
 - **Listed** in `run.sh` interactive menu for selection
-- **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
+- **Executed** by all pipeline scripts (`scripts/pipeline/stage_01_test.py`, `scripts/pipeline/stage_02_analysis.py`, etc.)
 - **Rendered** independently with project-specific manuscripts
 - **Outputs** organized in `projects/<subfolder>/{name}/output/` and `output/<subfolder>/{name}/`
 
@@ -576,8 +576,8 @@ Each project must have:
 
 Optional but recommended:
 
-- `scripts/` - Analysis scripts (discovered by `02_run_analysis.py`)
-- `manuscript/` - Manuscript markdown files (rendered by `03_render_pdf.py`)
+- `scripts/` - Analysis scripts (discovered by `scripts/pipeline/stage_02_analysis.py`)
+- `manuscript/` - Manuscript markdown files (rendered by `scripts/pipeline/stage_03_render.py`)
 - `pyproject.toml` - Project configuration
 - `README.md` - Project documentation
 
@@ -600,7 +600,7 @@ Generated during pipeline execution:
 
 ### Final Directory: `output/{name}/`
 
-Copied by `05_copy_outputs.py`:
+Copied by `scripts/pipeline/stage_05_copy.py`:
 
 - Same structure as working directory
 - All project outputs in one place

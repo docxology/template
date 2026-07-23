@@ -98,7 +98,7 @@ Mermaid (`manuscript/05_pipeline_internals.md`), so combined-PDF rendering
 needs `chrome-headless-shell`
 (`npx --yes puppeteer browsers install chrome-headless-shell`); the
 authoritative test gate is the **direct** command below (a green
-`01_run_tests.py` exit with 0 collected tests is not a pass). See
+`scripts/pipeline/stage_01_test.py` exit with 0 collected tests is not a pass). See
 [`troubleshooting.md`](troubleshooting.md) and
 [`rendering_pipeline.md`](rendering_pipeline.md).
 

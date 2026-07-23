@@ -56,7 +56,7 @@ environment variables:
 
 `TelemetryCollector.finalize()` writes
 `projects/{name}/output/reports/telemetry.json` (and the matching
-`output/{name}/reports/telemetry.json` once `05_copy_outputs` has run).
+`output/{name}/reports/telemetry.json` once `scripts/pipeline/stage_05_copy.py` has run).
 Without rotation those files would accumulate one report per run and
 nothing else. Before each write, the collector calls
 `infrastructure.core.telemetry.retention.rotate(reports_dir, keep=N)`

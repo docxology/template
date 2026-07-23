@@ -1,6 +1,6 @@
 """Tests for executive report generation script (Stage 10).
 
-Integration tests for the 07_generate_executive_report.py orchestrator.
+Integration tests for the scripts/pipeline/stage_07_executive_report.py orchestrator.
 """
 
 import json
@@ -76,24 +76,21 @@ class TestExecutiveReportScript:
 
     def test_script_exists(self):
         """Test that the script file exists."""
-        # Resolve path relative to repository root
         repo_root = Path(__file__).parent.parent.parent
-        script_path = repo_root / "scripts" / "07_generate_executive_report.py"
+        script_path = repo_root / "scripts" / "pipeline" / "stage_07_executive_report.py"
         assert script_path.exists()
 
     def test_script_imports(self):
         """Test that the script can be imported."""
-        # Add scripts to path
         repo_root = Path(__file__).parent.parent.parent
-        scripts_path = repo_root / "scripts"
+        scripts_path = repo_root / "scripts" / "pipeline"
         sys.path.insert(0, str(scripts_path))
 
         try:
-            # Import the module (will execute module-level code but not main())
             import importlib.util
 
             spec = importlib.util.spec_from_file_location(
-                "exec_report", scripts_path / "07_generate_executive_report.py"
+                "exec_report", scripts_path / "stage_07_executive_report.py"
             )
             module = importlib.util.module_from_spec(spec)
 
@@ -109,16 +106,15 @@ class TestExecutiveReportScript:
 
     def test_verify_project_completion(self, sample_project_structure):
         """Test project completion verification."""
-        # Import verify function
         repo_root = Path(__file__).parent.parent.parent
-        scripts_path = repo_root / "scripts"
+        scripts_path = repo_root / "scripts" / "pipeline"
         sys.path.insert(0, str(scripts_path))
 
         try:
             import importlib.util
 
             spec = importlib.util.spec_from_file_location(
-                "exec_report", scripts_path / "07_generate_executive_report.py"
+                "exec_report", scripts_path / "stage_07_executive_report.py"
             )
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
@@ -141,7 +137,7 @@ class TestScriptIntegration:
     def test_script_execution_help(self):
         """Test script execution with --help flag."""
         repo_root = Path(__file__).parent.parent.parent
-        script_path = repo_root / "scripts" / "07_generate_executive_report.py"
+        script_path = repo_root / "scripts" / "pipeline" / "stage_07_executive_report.py"
 
         result = subprocess.run([sys.executable, str(script_path), "--help"], capture_output=True, text=True)
 
@@ -159,14 +155,14 @@ class TestErrorHandling:
         (tmp_path / "projects").mkdir()
 
         repo_root = Path(__file__).parent.parent.parent
-        scripts_path = repo_root / "scripts"
+        scripts_path = repo_root / "scripts" / "pipeline"
         sys.path.insert(0, str(scripts_path))
 
         try:
             import importlib.util
 
             spec = importlib.util.spec_from_file_location(
-                "exec_report", scripts_path / "07_generate_executive_report.py"
+                "exec_report", scripts_path / "stage_07_executive_report.py"
             )
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
