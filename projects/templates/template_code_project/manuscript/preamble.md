@@ -23,7 +23,7 @@ This file contains LaTeX packages and commands that are automatically injected i
 \usepackage{array}
 
 % Algorithm typesetting (for pseudocode in §2 Methodology)
-\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\IfFileExists{algorithm2e.sty}{\usepackage[ruled,vlined,linesnumbered]{algorithm2e}}{}
 
 % Code listings
 \usepackage{listings}

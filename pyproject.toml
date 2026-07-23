@@ -18,7 +18,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "research-project-template"
-version = "3.5.1"
+version = "3.6.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"

@@ -41,7 +41,7 @@ This file contains LaTeX packages and commands that are automatically included i
 \usepackage{caption}
 
 % Algorithm typesetting
-\usepackage[ruled,vlined]{algorithm2e}
+\IfFileExists{algorithm2e.sty}{\usepackage[ruled,vlined]{algorithm2e}}{}
 
 % The manuscript uses these environments in the technical appendix.  Define the
 % parent counter before the subordinate environments so XeLaTeX has no hidden

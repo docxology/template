@@ -32,7 +32,7 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
 - Roadmap, status, contribution-map, regression-testing, and threat-model
   surfaces were reconciled against the current generated facts and active IDs;
   historical changelog entries remain unchanged.
-- The root release boundary is explicit: package/tag `3.5.1`/`v3.5.1` is the
+- The root release boundary is explicit: package/tag `3.6.0`/`v3.6.0` is the
   last root release, the current checkout remains `[Unreleased]`, and the
   separately published standalone `v1.0.1` release is not treated as root
   changelog parity. See [`docs/maintenance/release-boundary.md`](docs/maintenance/release-boundary.md).

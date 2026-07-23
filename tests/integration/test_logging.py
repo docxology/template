@@ -25,7 +25,7 @@ class TestBashLogging:
     @pytest.fixture
     def bash_utils_path(self, repo_root):
         """Get the path to bash_utils.sh script."""
-        return repo_root / "scripts" / "bash_utils.sh"
+        return repo_root / "scripts" / "shell" / "bash_utils.sh"
 
     def run_bash_command(self, command, cwd=None, env=None):
         """Run a bash command and capture output."""

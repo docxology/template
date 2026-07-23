@@ -28,6 +28,8 @@ publication:
   version_doi: "10.5281/zenodo.21298886"
   version_record: "https://zenodo.org/records/21298886"
   github_repository: "docxology/template_formal"
+  repository_url: "https://github.com/docxology/template_formal"
+  repository_label: "docxology/template_formal"
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
