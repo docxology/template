@@ -108,21 +108,6 @@ behavior; use tiny local fixtures instead.
   and the validator reports a blocking issue for self-approval.
 - **Out of scope:** building an external review workflow.
 
-### AR-SOURCE-FRESHNESS-1 - Keep the source ledger fresh offline
-
-- **Status:** shipped in this pass. `scripts/check_source_ledger.py` prints
-  source-tier counts and checked-age buckets offline, and source-ledger tests
-  fail on future dates, invalid tiers, non-HTTPS URLs, and missing ledger
-  BibTeX/manuscript coverage.
-
-### AR-LOOP-PHASES-1 - Declarative pre-extrinsic phase table
-
-- **Status:** shipped. `PRE_EXTRINSIC_PHASES` in `src/loop_phases.py` owns
-  payload refresh, visuals, and settlement pass 2; duplicate schema/research-object
-  manifest writes removed from `loop.py`; edge tests split to
-  `tests/test_edge_{config,ledger,loop,gates}.py`; scripts share
-  `scripts/_bootstrap.py`.
-
 ### AR-MODULE-WATCH-1 - Keep split modules below drift thresholds
 
 - **Problem:** future table, diagnostics, or ML additions can re-create the large
@@ -134,6 +119,13 @@ behavior; use tiny local fixtures instead.
 - **Acceptance:** `uv run python scripts/audit/check_template_drift.py --strict`
   stays clean for the exemplar.
 - **Out of scope:** splitting modules preemptively when they are still coherent.
+
+### Shipped
+
+`AR-SOURCE-FRESHNESS-1` (source-ledger freshness gate) and `AR-LOOP-PHASES-1`
+(declarative pre-extrinsic phase table) are shipped and closed. The medium rows
+`AR-REPORT-ERGONOMICS-1`, `AR-BENCHMARK-ERGONOMICS-1`, and `AR-SOURCE-LEDGER-2`
+are also implemented.
 
 ## Medium
 

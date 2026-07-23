@@ -175,6 +175,12 @@ def _import_violations(tree: ast.AST) -> set[int]:
                 )
 
     def dynamic_module(call: ast.Call) -> str | None:
+        """Return the module name of a dynamic import call, or None.
+
+        Recognises ``__import__``, ``importlib.import_module``, and any
+        user-defined alias of ``import_module`` collected during the AST
+        walk.
+        """
         function = call.func
         is_import = isinstance(function, ast.Name) and function.id in {
             "__import__",

@@ -35,6 +35,15 @@ def _rendering_options(config: dict[str, Any] | None) -> dict[str, Any]:
         rendering = {}
 
     def fraction(name: str, default: float) -> str:
+        """Return a validated fraction string from the rendering config.
+
+        Args:
+            name: The config key for the fraction value.
+            default: Fallback value if the key is missing or invalid.
+
+        Returns:
+            A short decimal string clamped to ``(0, 1]``.
+        """
         raw = rendering.get(name, default)
         try:
             value = float(raw)

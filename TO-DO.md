@@ -116,29 +116,27 @@ current public scope.
   aggregate totals.
 - **Why it matters:** stale percentages and unprioritized gaps create false
   confidence and waste test effort on generated or optional code.
-- **Progress (2026-07-22):** 145 no-mock tests added across 6 modules:
-  `_pipeline_summary.py` (46.83% -> 60%+), `project/workspace.py` (51.11% ->
-  60%+), `transmission_page_check.py` (58.04% -> 60%+), `docx_renderer.py`
-  (59.79% -> 60%+), `epub_renderer.py` (63.92% -> 60%+), and
-  `publication_records.py` (74.06% -> 80%+). All tests use real files, real
-  subprocesses, and deterministic fixtures — no mocks introduced.
-- **Remaining:** use the refreshed baseline to add real tests for
-  publication records, workspace handling, DOCX/EPUB fallbacks, transmission
-  validation, pipeline summaries, and offline LLM/API failure branches not
-  yet covered by the current wave. Re-run the full coverage gate to
-  measure the new aggregate.
+- **Progress (2026-07-23):** 145 no-mock tests added across 6 modules
+  (from 2026-07-22), plus 3 remaining public-function docstrings added to
+  infrastructure modules. Infrastructure docstring coverage now zero-gap for
+  public functions.
+- **Remaining:** re-run the full infrastructure coverage gate (times out at 5
+  minutes — run on a clean checkout with ``--benchmark-disable`` and reduced
+  parallelism). Use the refreshed baseline to add real tests for publication
+  records, workspace handling, DOCX/EPUB fallbacks, transmission validation,
+  pipeline summaries, and offline LLM/API failure branches.
 - **Smallest next step:** re-run the infrastructure coverage gate after the
   new tests are landed to verify the module rows and aggregate.
 - **Acceptance:** the current document keeps source dates and provenance;
   each targeted branch gains meaningful no-mock coverage; infrastructure stays
   at least 60%, every public project stays at least 90%, and provenance checks
   pass.
-- **Command/evidence:** the safe local coverage lane is `COVERAGE_FILE=.coverage.infra
+- **Command/evidence:** the safe local coverage lane is ``COVERAGE_FILE=.coverage.infra
   uv run pytest tests/infra_tests/ -n 2 --dist loadscope
   --benchmark-disable --cov=infrastructure --cov-report=term-missing
   --cov-fail-under=60 --durations=10 -m "not requires_ollama and
   not requires_docker and not network and not slow and not bench and
-  not benchmark and not performance" --timeout=120`; retain the uncached serial
+  not benchmark and not performance" --timeout=120``; retain the uncached serial
   form with xdist flags removed as the diagnostic oracle, plus every
   public-project coverage report.
 - **Out of scope:** coverage theater, mocks/fakes, lowering thresholds, or
@@ -150,13 +148,16 @@ current public scope.
   lint and security checks even when independent inputs are unchanged.
 - **Why it matters:** slow feedback encourages skipped gates and makes release
   verification less repeatable.
-- **Smallest next step:** repeat the measured serial/parallel comparison from a
-  clean checkout after this change is landed, retaining the result manifest.
+- **Progress (2026-07-23):** health benchmark running in background (expecting
+  ≥25% improvement). The 4-worker implementation previously reduced wall time
+  from 104.45s serial to 70.02s parallel for the same 22 gates.
+- **Smallest next step:** capture the benchmark result from
+  ``output/health-benchmark.json`` once the background process completes.
 - **Acceptance:** clean-checkout local health time falls by at least 25% in a
   reproducible benchmark, with every existing gate still executed and no
   changed threshold or skipped failure.
-- **Command/evidence:** capture before/after timings for the health command on a
-  clean checkout and compare the result manifest to prove every gate ran.
+- **Command/evidence:** ``uv run python scripts/maintenance/benchmark_health.py
+  --output output/health-benchmark.json --minimum-improvement 25``
 - **Out of scope:** weakening gates, hiding warnings, or introducing a required
   service dependency for local verification.
 

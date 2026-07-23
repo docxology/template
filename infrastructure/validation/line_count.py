@@ -24,6 +24,12 @@ class LineCountRatchet:
     expires_on: date
 
     def permits(self, line_count: int, *, today: date | None = None) -> bool:
+        """Return True if *line_count* is within the ratchet ceiling on *today*.
+
+        The ratchet expires on its ``expires_on`` date and may only move
+        downward — once a line exceeds the ceiling or the deadline passes,
+        the ratchet is no longer valid.
+        """
         effective_today = today or date.today()
         return effective_today <= self.expires_on and line_count <= self.max_lines
 
