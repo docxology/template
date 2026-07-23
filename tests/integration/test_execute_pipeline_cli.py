@@ -16,7 +16,7 @@ def repo_root() -> Path:
 
 
 def test_execute_pipeline_help_includes_stage(repo_root: Path) -> None:
-    script = repo_root / "scripts" / "execute_pipeline.py"
+    script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", str(script), "--help"],
         cwd=str(repo_root),
@@ -30,7 +30,7 @@ def test_execute_pipeline_help_includes_stage(repo_root: Path) -> None:
 
 
 def test_execute_pipeline_unknown_stage_is_error(repo_root: Path) -> None:
-    script = repo_root / "scripts" / "execute_pipeline.py"
+    script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", str(script), "--project", "project", "--stage", "not_a_stage"],
         cwd=str(repo_root),
@@ -45,7 +45,7 @@ def test_execute_pipeline_unknown_stage_is_error(repo_root: Path) -> None:
 
 def test_execute_pipeline_missing_project_is_error(repo_root: Path) -> None:
     """Invoking without --project should produce a non-zero exit or usage message."""
-    script = repo_root / "scripts" / "execute_pipeline.py"
+    script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", str(script)],
         cwd=str(repo_root),
@@ -60,7 +60,7 @@ def test_execute_pipeline_missing_project_is_error(repo_root: Path) -> None:
 
 def test_execute_pipeline_help_mentions_core_only(repo_root: Path) -> None:
     """--core-only flag must be documented in help text."""
-    script = repo_root / "scripts" / "execute_pipeline.py"
+    script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", str(script), "--help"],
         cwd=str(repo_root),
@@ -74,7 +74,7 @@ def test_execute_pipeline_help_mentions_core_only(repo_root: Path) -> None:
 
 def test_execute_pipeline_script_is_importable(repo_root: Path) -> None:
     """The pipeline script must compile cleanly (no syntax errors)."""
-    script = repo_root / "scripts" / "execute_pipeline.py"
+    script = repo_root / "scripts" / "runner" / "execute_pipeline.py"
     result = subprocess.run(
         ["python3", "-m", "py_compile", str(script)],
         cwd=str(repo_root),

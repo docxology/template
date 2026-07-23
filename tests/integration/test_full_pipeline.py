@@ -84,7 +84,7 @@ class TestFullPipelineStructuredLogs:
         result = subprocess.run(
             [
                 sys.executable,
-                str(ROOT / "scripts" / "execute_pipeline.py"),
+                str(ROOT / "scripts" / "runner" / "execute_pipeline.py"),
                 "--project",
                 "test_project",
                 "--skip-infra",
@@ -122,7 +122,7 @@ class TestFullPipelineStructuredLogs:
         result = subprocess.run(
             [
                 sys.executable,
-                str(ROOT / "scripts" / "execute_pipeline.py"),
+                str(ROOT / "scripts" / "runner" / "execute_pipeline.py"),
                 "--project",
                 "test_project",
                 "--skip-infra",
