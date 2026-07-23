@@ -65,7 +65,6 @@ def test_performance_benchmarking():
     """Test performance benchmarking functionality."""
     from infrastructure.scientific.benchmarking import (
         benchmark_function,
-        generate_performance_report,
         format_benchmark_report,
         BenchmarkResult,
     )
@@ -77,10 +76,10 @@ def test_performance_benchmarking():
     assert result.iterations == 100
 
     # Generate performance report from results list
-    report = generate_performance_report([result])
+    report = format_benchmark_report([result])
     assert 'Performance Analysis Report' in report
 
-    # format_benchmark_report produces the same Markdown output
+    # The formatter produces deterministic Markdown output
     formatted = format_benchmark_report([result])
     assert 'Performance Analysis Report' in formatted
 ```

@@ -30,7 +30,7 @@ sets `package = false`; there are no `console_scripts`). Conventions an adopting
 CLI should follow (see `infrastructure/core/cli_scaffold.py`):
 
 - `main(argv: Sequence[str] | None = None) -> int` — headless-invocable, returns
-  an exit code (see `scripts/exit_codes.py` for the shared `ExitCode` enum).
+  an exit code (see `scripts/runner/exit_codes.py` for the shared `ExitCode` enum).
 - Shared flags: `--repo-root`, `--project`, `--format {json,table}`, `--verbose`.
 - `--schema` — emit the command's JSON parameter contract (via
   `cli_scaffold.parser_schema`), the per-command counterpart to the operation
@@ -85,7 +85,7 @@ reachable through this surface too.
 Run it:
 
 ```bash
-uv run python -m infrastructure.mcp_server      # or: uv run python scripts/mcp_server_template.py
+uv run python -m infrastructure.mcp_server      # or: uv run python scripts/runner/mcp_server_template.py
 ```
 
 The conformance matrix is exercised against the pure handler and a real stdio

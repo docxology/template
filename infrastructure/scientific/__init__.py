@@ -21,7 +21,6 @@ from infrastructure.scientific.benchmarking import (
     BenchmarkResult,
     benchmark_function,
     format_benchmark_report,
-    generate_performance_report,
 )
 
 # Import confirmation functions
@@ -43,5 +42,4 @@ __all__ = [
     # Benchmarking
     "benchmark_function",
     "format_benchmark_report",
-    "generate_performance_report",
 ]

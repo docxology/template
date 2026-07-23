@@ -157,12 +157,7 @@ class TestCountPipelineStages:
         assert len(stages) >= 5, f"Expected ≥5 stages, got {len(stages)}"
 
     def test_stages_are_sequential(self):
-        """Numbers must never regress; the root ``scripts/`` directory legitimately
-        reuses a numeric prefix across alternate/opt-in stage scripts (e.g.
-        ``08_connector_search.py`` and ``08_executable_bundle.py`` are different,
-        independently-tagged pipeline stages that happen to share "08" — see
-        ``infrastructure/core/pipeline/pipeline.yaml``), so strictly-increasing
-        is not the real invariant. Non-decreasing (filename sort order) is."""
+        """Canonical pipeline stage numbers must never regress."""
         stages = count_pipeline_stages(REPO_ROOT / "scripts")
         numbers = [s.number for s in stages]
         for i in range(1, len(numbers)):
@@ -250,7 +245,8 @@ class TestEnumerateNumberedScripts:
         stages = enumerate_numbered_scripts(REPO_ROOT / "scripts")
         assert stages
         for stage in stages:
-            assert stage.script_name[:2].isdigit()
+            assert stage.script_name.startswith("stage_")
+            assert stage.script_name[6:8].isdigit()
 
 
 class TestAnalyzeCoverageConfig:

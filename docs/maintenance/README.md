@@ -19,7 +19,7 @@
 | [`software-heritage-archival.md`](software-heritage-archival.md) | Which docxology public repos are submitted to Software Heritage "Save code now", and how to finish/verify | 2026-06-27 |
 | [`publishing-readiness.md`](publishing-readiness.md) | Per-platform assessment of what can be uploaded today vs. what needs a token, across the full publishing surface | 2026-06-27 |
 | [`publishing-export-pipeline.md`](publishing-export-pipeline.md) | Two-repo publication workflow design: `template/` → `docxology/publishing` marketplace listing | 2026-07-02 |
-| [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Adversarial-review remediation plan (43 findings confirmed, 3 refuted) — design/multi-step items not yet closed | 2026-07-02 |
+| [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Historical adversarial-review remediation record (43 findings confirmed, 3 refuted); repository code items shipped, with external branch-protection administration tracked separately | 2026-07-02 |
 
 ## The thesis these guides share
 

@@ -30,13 +30,13 @@ stages:
     failure_mode: soft fail
 
   - name: Environment Setup
-    script: 00_setup_environment.py
+    script: scripts/pipeline/stage_00_setup.py
     depends_on: [Clean Output Directories]
     tags: [core]
     failure_mode: hard fail
 
   - name: LLM Translations
-    script: 06_llm_review.py
+    script: scripts/pipeline/stage_06_llm_review.py
     args: [--translations-only]
     allow_skip: true
     tags: [llm]
@@ -72,7 +72,7 @@ class TestBuildStageTable:
 
     def test_script_cell_includes_args(self, synthetic_yaml: Path) -> None:
         table = build_stage_table(synthetic_yaml)
-        assert "`06_llm_review.py --translations-only`" in table
+        assert "`scripts/pipeline/stage_06_llm_review.py --translations-only`" in table
 
     def test_failure_mode_passes_through(self, synthetic_yaml: Path) -> None:
         table = build_stage_table(synthetic_yaml)

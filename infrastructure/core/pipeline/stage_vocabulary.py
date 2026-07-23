@@ -29,13 +29,13 @@ _STAGE_ALIAS_TO_CANONICAL: dict[str, str] = {
 }
 
 _SCRIPT_TO_CANONICAL: dict[str, str] = {
-    "00_setup_environment.py": "Environment Setup",
-    "01_run_tests.py": "Project Tests",
-    "02_run_analysis.py": "Project Analysis",
-    "03_render_pdf.py": "PDF Rendering",
-    "04_validate_output.py": "Output Validation",
-    "05_copy_outputs.py": "Copy Outputs",
-    "06_llm_review.py": "LLM Scientific Review",
+    "stage_00_setup.py": "Environment Setup",
+    "stage_01_test.py": "Project Tests",
+    "stage_02_analysis.py": "Project Analysis",
+    "stage_03_render.py": "PDF Rendering",
+    "stage_04_validate.py": "Output Validation",
+    "stage_05_copy.py": "Copy Outputs",
+    "stage_06_llm_review.py": "LLM Scientific Review",
 }
 
 

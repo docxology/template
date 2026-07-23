@@ -109,8 +109,8 @@ def hash_segment(pdf_sha256: str, *, length: int = _HASH_PREFIX_LEN) -> str:
     return (clean + "0" * length)[:length]
 
 
-def legacy_deposit_filename(project_name: str) -> str:
-    """Return the legacy ``{project}_combined.pdf`` upload name."""
+def fallback_deposit_filename(project_name: str) -> str:
+    """Return the conventional ``{project}_combined.pdf`` fallback name."""
     return f"{project_name}_combined.pdf"
 
 
@@ -126,8 +126,8 @@ def build_deposit_filename(
 ) -> str:
     """Build ``{Author}_{Year}_{Topic}_{Hash8}.pdf`` for deposit uploads.
 
-    When ``deposit_filename.enabled`` is false, returns the legacy combined name.
-    Falls back to the legacy name when author or topic segments sanitize to empty.
+    When ``deposit_filename.enabled`` is false, returns the fallback combined name.
+    Falls back to the fallback name when author or topic segments sanitize to empty.
     """
     if publish_context is not None:
         config = publish_context.deposit_filename_config
@@ -136,7 +136,7 @@ def build_deposit_filename(
         config = deposit_filename_config or {}
 
     if config.get("enabled") is False:
-        return legacy_deposit_filename(project_name)
+        return fallback_deposit_filename(project_name)
 
     topic_override = config.get("topic")
     override_text = str(topic_override).strip() if topic_override else None
@@ -147,13 +147,13 @@ def build_deposit_filename(
     digest = hash_segment(pdf_sha256)
 
     if not author or not topic:
-        return legacy_deposit_filename(project_name)
+        return fallback_deposit_filename(project_name)
 
     basename = f"{author}_{year}_{topic}_{digest}"
     if len(basename) > _MAX_BASENAME:
         allowed_topic = _MAX_BASENAME - len(f"{author}_{year}_{digest}_")
         if allowed_topic < 1:
-            return legacy_deposit_filename(project_name)
+            return fallback_deposit_filename(project_name)
         topic = topic[:allowed_topic]
         basename = f"{author}_{year}_{topic}_{digest}"
 

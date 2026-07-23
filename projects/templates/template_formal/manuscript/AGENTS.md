@@ -46,9 +46,9 @@ Project-level layer contract: [`../AGENTS.md`](../AGENTS.md).
    `99_references.md`'s prose.
 3. **Figure additions.** Only two figures exist
    (`{#fig:demo-convergence}`, `{#fig:convergence-tick-distribution}`), both
-   written by `scripts/02_run_analysis.py` to `../output/figures/`. A new
+   written by `scripts/pipeline/stage_02_analysis.py` to `../output/figures/`. A new
    figure needs: a generator in `src/template_formal/colony/visualization.py`,
-   a call site in `scripts/02_run_analysis.py`, a Pandoc image line with a
+   a call site in `scripts/pipeline/stage_02_analysis.py`, a Pandoc image line with a
    `{#fig:label}` anchor in `05_results_discussion.md`, and a row added to
    `README.md`'s file inventory table here.
 4. **`config.yaml` vs `config.yaml.example`.** `config.yaml` is the real,
@@ -67,7 +67,7 @@ Project-level layer contract: [`../AGENTS.md`](../AGENTS.md).
 
 ```bash
 # 1. Regenerate figures + data (writes ../output/figures, ../output/data)
-uv run python projects/templates/template_formal/scripts/02_run_analysis.py
+uv run python projects/templates/template_formal/scripts/pipeline/stage_02_analysis.py
 
 # 2. Validate markdown before spending a full PDF compile
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_formal/manuscript/

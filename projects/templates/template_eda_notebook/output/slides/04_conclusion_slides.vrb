@@ -1,8 +1,0 @@
-\frametitle{Final assessment}
-\protect\phantomsection\label{final-assessment}
-The \breaktt{template\_eda\_notebook} tree is the canonical reference for
-how an exploratory notebook, a thin analysis script, a tested library,
-and a manuscript stay synchronized across rebuilds. The pipeline
-produced the figures referenced in \breakseq{[@sec:results]}, wrote
-\breaktt{output/data/summary\_statistics.csv}, and rendered this markdown
-together with \texttt{config.yaml} into PDF.

@@ -20,12 +20,15 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   regenerated from source. Its fixture phase replay is now part of the normal
   project analysis sequence; live retrieval remains an explicit opt-in path.
 - Generated checks for counts, coverage provenance, exemplar roster, and
-  publication records were refreshed on 2026-07-17.
-- The full public matrix is green: 24/24 projects pass their local coverage
-  floors, and the isolated union reports 38,008 statements at 94.85% against
-  the 75% combined gate.
-- `uv run mypy --strict infrastructure` now passes with zero errors across 695
-  source files; the relaxed public-scope ratchet remains a separate gate.
+  publication records were refreshed on 2026-07-22.
+- Public release evidence covers all 24 canonical exemplars: the initial
+  release matrix passed 23/24, then the corrected `template_template` lane
+  passed 139 tests at 99.14% and the corrected `template_active_inference`
+  lane passed 720 tests at 90.33%. The one-shot matrix was not rerun after
+  output pruning; treat the per-project release lanes as the current evidence
+  boundary.
+- Configured mypy passes with zero errors across 1,470 source files; the
+  public-scope ratchet remains a separate gate.
 - Roadmap, status, contribution-map, regression-testing, and threat-model
   surfaces were reconciled against the current generated facts and active IDs;
   historical changelog entries remain unchanged.
@@ -46,6 +49,23 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
 - Python 3.10 remains the declared floor through the 3.6.x minor line; Python
   3.13 now has an infrastructure readiness lane. The breaking-release rule is
   recorded in [`docs/maintenance/python-runtime-support.md`](docs/maintenance/python-runtime-support.md).
+
+## TODO scope (2026-07-22)
+
+The root backlog is limited to the four cross-cutting items below:
+`SECURITY-OWNERSHIP-1`, `SECURITY-PRIVATE-PROMOTION-1`,
+`COVERAGE-BASELINE-1`, and `CI-ERGONOMICS-1`. All remain explicitly scoped in
+the active backlog; only the clean-checkout benchmark can close locally, while
+ownership, private promotion, and meaningful coverage work retain their
+external or follow-up boundaries.
+
+Each of the 24 canonical `template_*` exemplars has its own `TODO.md` for
+project-local improvements. Those local ladders are deliberately not copied
+into the root backlog. The `template_textbook` `TODO:`/`STUB` markers are
+intentional authoring placeholders governed by that exemplar's authoring
+contract, not unresolved repository infrastructure work. Generated reports,
+virtual environments, and historical documents are not TODO sources for the
+current public scope.
 
 ## Active backlog
 
@@ -103,8 +123,8 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   each targeted branch gains meaningful no-mock coverage; infrastructure stays
   at least 60%, every public project stays at least 90%, and provenance checks
   pass.
-- **Command/evidence:** the exact fast lane is `COVERAGE_FILE=.coverage.infra
-  uv run pytest tests/infra_tests/ -n auto --dist worksteal
+- **Command/evidence:** the safe local coverage lane is `COVERAGE_FILE=.coverage.infra
+  uv run pytest tests/infra_tests/ -n 2 --dist loadscope
   --benchmark-disable --cov=infrastructure --cov-report=term-missing
   --cov-fail-under=60 --durations=10 -m "not requires_ollama and
   not requires_docker and not network and not slow and not bench and not

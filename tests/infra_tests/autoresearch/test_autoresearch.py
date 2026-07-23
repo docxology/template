@@ -18,7 +18,7 @@ def _write_repo_scaffold(tmp_path: Path) -> Path:
         """
 stages:
   - name: Environment Setup
-    script: 00_setup_environment.py
+    script: scripts/pipeline/stage_00_setup.py
     contract:
       input_artifacts: ["projects/{project}/"]
       output_artifacts: ["projects/{project}/output/"]
@@ -26,7 +26,7 @@ stages:
       failure_code: "ENVIRONMENT_SETUP_FAILED"
       retry_policy: 0
   - name: Project Analysis
-    script: 02_run_analysis.py
+    script: scripts/pipeline/stage_02_analysis.py
     depends_on: [Environment Setup]
     contract:
       input_artifacts: ["projects/{project}/src/"]
@@ -36,7 +36,7 @@ stages:
       retry_policy: 0
       gate: "experiment_method_design"
   - name: Output Validation
-    script: 04_validate_output.py
+    script: scripts/pipeline/stage_04_validate.py
     depends_on: [Project Analysis]
     contract:
       input_artifacts: ["projects/{project}/output/"]

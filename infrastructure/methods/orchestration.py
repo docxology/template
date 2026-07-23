@@ -4,10 +4,18 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
 from pathlib import Path
+from pathlib import PurePosixPath
 
+from infrastructure.core.pipeline.artifacts import (
+    ArtifactManifest,
+    ArtifactManifestEntry,
+    validate_artifact_manifest,
+)
 from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
+from infrastructure.core.pipeline.executor import PipelineExecutor
 from infrastructure.methods.models import (
     MethodStage,
     MethodsAuditReport,
@@ -56,6 +64,7 @@ def build_methods_orchestration_plan(
         purpose=PipelinePurpose.METHODS,
     ).path
     dag = PipelineDAG.from_yaml(pipeline_source_abs)
+    sorted_stage_definitions = dag.sorted_stages()
 
     stages = tuple(
         _build_stage(
@@ -63,7 +72,7 @@ def build_methods_orchestration_plan(
             order=index,
             project_name=project_name,
         )
-        for index, stage in enumerate(dag.sorted_stages(), start=1)
+        for index, stage in enumerate(sorted_stage_definitions, start=1)
     )
     artifact_manifest = project_root / "output" / "reports" / "artifact_manifest.json"
     evidence_registry = project_root / "output" / "reports" / "evidence_registry.json"
@@ -77,6 +86,7 @@ def build_methods_orchestration_plan(
         evidence_registry=evidence_registry,
         stages=stages,
         validation_commands=_validation_commands(project_name),
+        dropped_dependency_edges=tuple(dag.dropped_dependency_edges),
         artifact_mode=artifact_mode,
     )
 
@@ -98,6 +108,38 @@ def validate_methods_orchestration_plan(
     if require_generated_artifacts is None:
         require_generated_artifacts = plan.artifact_mode == "rendered"
     issues: list[MethodsIssue] = []
+    project_root = _resolve_plan_path(root, plan.project_root)
+    pipeline_source = _resolve_plan_path(root, plan.pipeline_source)
+    if not project_root.is_dir():
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.PROJECT_ROOT_MISSING",
+                f"project root is missing: {plan.project_root.as_posix()}",
+                plan.project_root.as_posix(),
+                "Resolve the project through the canonical projects directory before auditing methods.",
+            )
+        )
+    if not pipeline_source.is_file():
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.PIPELINE_SOURCE_MISSING",
+                f"pipeline source is missing: {plan.pipeline_source.as_posix()}",
+                plan.pipeline_source.as_posix(),
+                "Declare a readable pipeline YAML source for the methods plan.",
+            )
+        )
+    for stage_name, dependency in plan.dropped_dependency_edges:
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.PIPELINE_DEPENDENCY_ORPHANED",
+                f"stage {stage_name!r} depends on missing stage {dependency!r}",
+                plan.pipeline_source.as_posix(),
+                "Restore the dependency or remove the stage from the filtered pipeline explicitly.",
+            )
+        )
     if not plan.stages:
         issues.append(
             _issue(
@@ -119,12 +161,10 @@ def validate_methods_orchestration_plan(
             )
         )
     if require_generated_artifacts:
-        _validate_json_object(
+        _validate_artifact_manifest(
             root,
             plan.artifact_manifest,
-            missing_code="METHODS.ARTIFACT_MANIFEST_MISSING",
-            invalid_code="METHODS.ARTIFACT_MANIFEST_INVALID",
-            label="artifact manifest",
+            project_root=project_root,
             issues=issues,
         )
         _validate_json_object(
@@ -139,11 +179,35 @@ def validate_methods_orchestration_plan(
         if not stage.key:
             issues.append(
                 _issue(
-                    "warning",
+                    "error",
                     "METHODS.STAGE_KEY_MISSING",
                     f"stage lacks stable key identity: {stage.name}",
                     plan.pipeline_source.as_posix(),
                     "Declare a stable key while retaining the human-readable stage name.",
+                )
+            )
+        if not stage.script and not stage.executor_method:
+            issues.append(
+                _issue(
+                    "error",
+                    "METHODS.STAGE_EXECUTOR_MISSING",
+                    f"stage has neither a script nor an executor method: {stage.name}",
+                    plan.pipeline_source.as_posix(),
+                    "Declare exactly one executable stage entrypoint.",
+                )
+            )
+        if stage.executor_method:
+            _validate_executor_method(plan, stage, issues)
+        if stage.script:
+            _validate_stage_script(root, plan, stage, issues)
+        if not stage.failure_code.strip():
+            issues.append(
+                _issue(
+                    "error",
+                    "METHODS.STAGE_FAILURE_CODE_MISSING",
+                    f"stage lacks failure_code: {stage.name}",
+                    plan.pipeline_source.as_posix(),
+                    "Assign a stable failure code so downstream reports can classify the failure.",
                 )
             )
         if not stage.definition_of_done.strip():
@@ -159,13 +223,15 @@ def validate_methods_orchestration_plan(
         if not stage.output_artifacts:
             issues.append(
                 _issue(
-                    "warning",
+                    "error",
                     "METHODS.STAGE_OUTPUTS_MISSING",
                     f"stage lacks output_artifacts: {stage.name}",
                     plan.pipeline_source.as_posix(),
                     "Declare output artifacts so methods claims can be traced.",
                 )
             )
+        _validate_artifact_paths(plan, stage, root, issues)
+        _validate_verification_commands(plan, stage, root, issues)
     return tuple(issues)
 
 
@@ -256,6 +322,7 @@ def _build_stage(
     project_name: str,
 ) -> MethodStage:
     contract = stage.contract
+    method = stage.method or (f"Execute the declared script for {stage.name}." if stage.script else "")
     return MethodStage(
         key=stage.key or "",
         name=stage.name,
@@ -263,8 +330,10 @@ def _build_stage(
         depends_on=tuple(stage.depends_on),
         tags=tuple(stage.tags),
         gate=contract.gate or "",
-        script=stage.script or "",
-        method=stage.method or "",
+        script=_expand_artifact(stage.script or "", project_name),
+        method=method,
+        executor_method=(stage.method or "") if not stage.script else "",
+        allow_skip=stage.allow_skip,
         input_artifacts=tuple(_expand_artifact(item, project_name) for item in contract.input_artifacts),
         output_artifacts=tuple(_expand_artifact(item, project_name) for item in contract.output_artifacts),
         definition_of_done=contract.definition_of_done,
@@ -279,7 +348,7 @@ def _stage_verification_commands(stage: StageDefinition, project_name: str) -> t
         args = " ".join(stage.args)
         spacer = " " if args else ""
         script_path = stage.script.replace("{project}", project_name)
-        project_arg = "" if script_path.startswith("projects/") else f" --project {project_name}"
+        project_arg = "" if "--project" in stage.args else f" --project {project_name}"
         commands = [f"uv run python {script_path}{spacer}{args}{project_arg}"]
         if stage_key:
             commands.append(
@@ -336,6 +405,159 @@ def _relative_to(path: Path, root: Path) -> Path:
         return path
 
 
+def _resolve_plan_path(root: Path, path: Path) -> Path:
+    """Resolve a plan path without allowing it to escape the repository."""
+    candidate = path if path.is_absolute() else root / path
+    return candidate.resolve(strict=False)
+
+
+def _validate_stage_script(
+    root: Path,
+    plan: MethodsOrchestrationPlan,
+    stage: MethodStage,
+    issues: list[MethodsIssue],
+) -> None:
+    """Validate a declared stage script and its repository containment."""
+    script = Path(stage.script)
+    if script.is_absolute() or ".." in script.parts:
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.STAGE_SCRIPT_OUTSIDE_REPOSITORY",
+                f"stage script is not repository-relative: {stage.script}",
+                plan.pipeline_source.as_posix(),
+                "Use a repository-relative script path without parent traversal.",
+            )
+        )
+        return
+
+    resolved = (root / script).resolve(strict=False)
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.STAGE_SCRIPT_OUTSIDE_REPOSITORY",
+                f"stage script escapes repository root: {stage.script}",
+                plan.pipeline_source.as_posix(),
+                "Keep stage scripts inside the repository or use a declared executor method.",
+            )
+        )
+        return
+    if not resolved.is_file():
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.STAGE_SCRIPT_MISSING",
+                f"stage script does not exist: {stage.script}",
+                plan.pipeline_source.as_posix(),
+                "Add the script or correct the pipeline declaration.",
+            )
+        )
+
+
+def _validate_executor_method(
+    plan: MethodsOrchestrationPlan,
+    stage: MethodStage,
+    issues: list[MethodsIssue],
+) -> None:
+    """Verify built-in executor methods against the actual executor class."""
+    if not hasattr(PipelineExecutor, stage.executor_method):
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.STAGE_EXECUTOR_METHOD_MISSING",
+                f"stage references missing executor method: {stage.executor_method}",
+                plan.pipeline_source.as_posix(),
+                "Use a method implemented by PipelineExecutor/PipelineStageMixin or declare a script.",
+            )
+        )
+
+
+def _validate_artifact_paths(
+    plan: MethodsOrchestrationPlan,
+    stage: MethodStage,
+    root: Path,
+    issues: list[MethodsIssue],
+) -> None:
+    """Reject unsafe artifact declarations before any filesystem probing."""
+    for kind, paths in (("input", stage.input_artifacts), ("output", stage.output_artifacts)):
+        for value in paths:
+            normalized = PurePosixPath(value)
+            if normalized.is_absolute() or ".." in normalized.parts:
+                issues.append(
+                    _issue(
+                        "error",
+                        "METHODS.ARTIFACT_PATH_UNSAFE",
+                        f"{kind} artifact path is absolute or traverses parents: {value}",
+                        plan.pipeline_source.as_posix(),
+                        "Use repository-relative artifact paths rooted inside the project or output tree.",
+                    )
+                )
+                continue
+            resolved = (root / Path(value)).resolve(strict=False)
+            try:
+                resolved.relative_to(root)
+            except ValueError:
+                issues.append(
+                    _issue(
+                        "error",
+                        "METHODS.ARTIFACT_PATH_OUTSIDE_REPOSITORY",
+                        f"{kind} artifact path escapes the repository: {value}",
+                        plan.pipeline_source.as_posix(),
+                        "Keep artifact declarations inside the repository boundary.",
+                    )
+                )
+
+
+def _validate_verification_commands(
+    plan: MethodsOrchestrationPlan,
+    stage: MethodStage,
+    root: Path,
+    issues: list[MethodsIssue],
+) -> None:
+    """Check generated commands for a resolvable Python script entrypoint."""
+    for command in stage.verification_commands:
+        try:
+            argv = shlex.split(command)
+        except ValueError as exc:
+            issues.append(
+                _issue(
+                    "error",
+                    "METHODS.VERIFICATION_COMMAND_INVALID",
+                    f"verification command cannot be parsed: {exc}",
+                    plan.pipeline_source.as_posix(),
+                    "Generate argv-safe commands from structured stage metadata.",
+                )
+            )
+            continue
+        script_index = next((index for index, token in enumerate(argv) if token.endswith(".py")), None)
+        if script_index is None:
+            continue
+        script_path = Path(argv[script_index])
+        if script_path.is_absolute() or not (root / script_path).is_file():
+            issues.append(
+                _issue(
+                    "error",
+                    "METHODS.VERIFICATION_SCRIPT_MISSING",
+                    f"verification command references a missing script: {script_path}",
+                    plan.pipeline_source.as_posix(),
+                    "Compile verification commands from the same resolved script path as the stage.",
+                )
+            )
+        if stage.script and stage.script.startswith("projects/") and "--project" not in argv:
+            issues.append(
+                _issue(
+                    "warning",
+                    "METHODS.PROJECT_CONTEXT_IMPLICIT",
+                    f"project-local verification command relies on the script default project: {command}",
+                    plan.pipeline_source.as_posix(),
+                    "Migrate the project entrypoint to the shared --project argument contract.",
+                )
+            )
+
+
 def _validate_json_object(
     root: Path,
     path: Path,
@@ -374,6 +596,101 @@ def _validate_json_object(
             "Regenerate the report from the core pipeline before publication.",
         )
     )
+
+
+def _validate_artifact_manifest(
+    root: Path,
+    path: Path,
+    *,
+    project_root: Path,
+    issues: list[MethodsIssue],
+) -> None:
+    """Validate artifact JSON structure, hashes, and current file provenance."""
+    absolute = root / path
+    if not absolute.exists():
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.ARTIFACT_MANIFEST_MISSING",
+                f"required methods evidence file is missing: {path.as_posix()}",
+                path.as_posix(),
+                "Run the core pipeline or refresh output reports before publication.",
+            )
+        )
+        return
+    try:
+        payload = json.loads(absolute.read_text(encoding="utf-8"))
+        manifest = _artifact_manifest_from_payload(payload)
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.ARTIFACT_MANIFEST_INVALID",
+                f"artifact manifest is not valid structured evidence: {exc}",
+                path.as_posix(),
+                "Regenerate the report through the shared artifact-manifest writer.",
+            )
+        )
+        return
+    if not manifest.entries:
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.ARTIFACT_MANIFEST_INVALID",
+                "artifact manifest must contain at least one artifact entry",
+                path.as_posix(),
+                "Run a rendering or analysis stage that produces a real output artifact.",
+            )
+        )
+        return
+    for manifest_issue in validate_artifact_manifest(manifest, project_dir=project_root).issues:
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.ARTIFACT_MANIFEST_DRIFT",
+                manifest_issue,
+                path.as_posix(),
+                "Regenerate the artifact manifest together with the current output tree.",
+            )
+        )
+
+    stage_names = {entry.stage_name for entry in manifest.entries if entry.stage_num > 0}
+    if not stage_names:
+        issues.append(
+            _issue(
+                "warning",
+                "METHODS.STAGE_PROVENANCE_UNAVAILABLE",
+                "artifact manifest is an integrity snapshot, not stage-level provenance",
+                path.as_posix(),
+                "Run the canonical PipelineExecutor stages to produce per-stage artifact manifests.",
+            )
+        )
+
+
+def _artifact_manifest_from_payload(payload: object) -> ArtifactManifest:
+    """Parse the shared artifact-manifest schema without accepting loose JSON."""
+    if not isinstance(payload, dict):
+        raise ValueError("artifact manifest must contain a mapping")
+    raw_entries = payload.get("entries")
+    raw_issues = payload.get("issues", [])
+    if not isinstance(raw_entries, list) or not isinstance(raw_issues, list):
+        raise ValueError("artifact manifest entries/issues must be lists")
+    entries: list[ArtifactManifestEntry] = []
+    for raw_entry in raw_entries:
+        if not isinstance(raw_entry, dict):
+            raise ValueError("artifact manifest entry must contain a mapping")
+        entries.append(
+            ArtifactManifestEntry(
+                path=str(raw_entry.get("path", "")),
+                size_bytes=int(raw_entry.get("size_bytes", 0) or 0),
+                sha256=str(raw_entry.get("sha256", "")),
+                stage_num=int(raw_entry.get("stage_num", 0) or 0),
+                stage_name=str(raw_entry.get("stage_name", "")),
+                contract_match=bool(raw_entry.get("contract_match", False)),
+                timestamp=str(raw_entry.get("timestamp", "")),
+            )
+        )
+    return ArtifactManifest(entries=tuple(entries), issues=tuple(str(issue) for issue in raw_issues))
 
 
 def _issue(severity: str, code: str, message: str, path: str, suggestion: str) -> MethodsIssue:

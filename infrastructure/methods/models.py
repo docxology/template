@@ -23,6 +23,8 @@ class MethodStage:
     failure_code: str
     verification_commands: tuple[str, ...]
     key: str = ""
+    executor_method: str = ""
+    allow_skip: bool = False
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
@@ -40,6 +42,8 @@ class MethodStage:
             "definition_of_done": self.definition_of_done,
             "failure_code": self.failure_code,
             "verification_commands": list(self.verification_commands),
+            "executor_method": self.executor_method,
+            "allow_skip": self.allow_skip,
         }
 
 
@@ -55,6 +59,7 @@ class MethodsOrchestrationPlan:
     evidence_registry: Path
     stages: tuple[MethodStage, ...]
     validation_commands: tuple[str, ...]
+    dropped_dependency_edges: tuple[tuple[str, str], ...] = ()
     schema_version: str = "1.0"
     artifact_mode: str = "rendered"
 
@@ -71,6 +76,7 @@ class MethodsOrchestrationPlan:
             "evidence_registry": self.evidence_registry.as_posix(),
             "stages": [stage.to_dict() for stage in self.stages],
             "validation_commands": list(self.validation_commands),
+            "dropped_dependency_edges": [list(edge) for edge in self.dropped_dependency_edges],
         }
 
 

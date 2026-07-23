@@ -61,7 +61,4 @@ def prevalidate_for_render(
     )
 
 
-# Backward-compatible alias used by rendering and CLI docs.
-prevalidate_source_markdown = prevalidate_for_render
-
-__all__ = ["prevalidate_for_render", "prevalidate_source_markdown"]
+__all__ = ["prevalidate_for_render"]

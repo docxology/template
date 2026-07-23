@@ -7,7 +7,7 @@ member is an `Agent` that owns exactly one real, on-disk SQLite database
 and one in-process, fault-injectable protocol endpoint; no agent ever
 touches another agent's storage or network state. The implementation lives
 under `projects/templates/template_formal/src/template_formal/`; the demo
-pipeline is orchestrated by `scripts/02_run_analysis.py`.
+pipeline is orchestrated by `scripts/pipeline/stage_02_analysis.py`.
 
 The paper's central claim is methodological, not a typing-features
 showcase: static typing's honest value in Python is edit-time/CI-time error

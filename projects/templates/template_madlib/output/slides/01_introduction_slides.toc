@@ -1,1 +1,0 @@
-\beamer@sectionintoc {1}{Introduction: Lexicon as Data and Manuscript as Build Artifact}{1}{0}{1}

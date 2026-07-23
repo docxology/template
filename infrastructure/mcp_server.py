@@ -26,7 +26,7 @@ Tools exposed:
 Run it::
 
     uv run python -m infrastructure.mcp_server          # serve on stdio
-    uv run python scripts/mcp_server_template.py         # thin launcher
+    uv run python scripts/runner/mcp_server_template.py         # thin launcher
 
 It is intentionally NOT wired into the default pipeline or CI — it is an
 opt-in agent-facing surface. See ``docs/architecture/capability-surfaces.md``.

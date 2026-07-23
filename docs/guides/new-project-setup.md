@@ -118,7 +118,7 @@ if SRC not in sys.path:
     sys.path.insert(0, SRC)
 ```
 
-> **Lesson learned**: Omitting `conftest.py` causes `ModuleNotFoundError: No module named '<package>'` when running tests via `pytest` or the pipeline's `01_run_tests.py`. The pipeline's test runner adds `src/` via `PYTHONPATH`, but pytest's collection phase happens before that can take effect for direct `pytest` invocations.
+> **Lesson learned**: Omitting `conftest.py` causes `ModuleNotFoundError: No module named '<package>'` when running tests via `pytest` or the pipeline's `scripts/pipeline/stage_01_test.py`. The pipeline's test runner adds `src/` via `PYTHONPATH`, but pytest's collection phase happens before that can take effect for direct `pytest` invocations.
 
 ### Optional `scripts/setup_hook.py` — **cross-platform bootstrap**
 
@@ -238,7 +238,7 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 **Symptom**: Pipeline stage fails immediately with `ImportError`.
 
-**Example**: `02_run_analysis.py` imported `format_error_with_suggestions` from `infrastructure.core.logging.logging_utils`, but this symbol was never defined.
+**Example**: `scripts/pipeline/stage_02_analysis.py` imported `format_error_with_suggestions` from `infrastructure.core.logging.logging_utils`, but this symbol was never defined.
 
 **Prevention**:
 

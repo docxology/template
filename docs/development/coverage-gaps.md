@@ -4,13 +4,13 @@ This document tracks infrastructure test coverage gaps by Layer-1 module. The
 global infrastructure gate remains 60%; the rows below are targets and notes,
 not new CI gates.
 
-**Last verified:** 2026-07-17
+**Last verified:** 2026-07-22
 
 **Coverage oracle:** full infrastructure gate:
 
 ```bash
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
-  -n auto --dist worksteal --benchmark-disable \
+  -n 2 --dist loadscope --benchmark-disable \
   --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
   --durations=10 \
   -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
@@ -20,10 +20,16 @@ The uncached serial diagnostic oracle uses the same command with the xdist
 flags removed; it is the comparison baseline for performance claims.
 ```
 
-**Overall infrastructure coverage:** 83.05% (gate: >= 60%)
-**Tests:** 8797 passed, 1 skipped, 51 deselected; 1 existing NumPy overflow
-warning in the scientific stability edge-case test.
-**Total statements measured:** 51,096
+**Overall infrastructure coverage:** 83.38% (gate: >= 60%)
+**Tests:** 9066 passed; 1 existing NumPy overflow warning in the scientific
+stability edge-case test.
+**Total statements measured:** 52,607
+
+The 2026-07-22 uncached local run used two macOS xdist workers with
+`--dist loadscope` and completed in 554.50 seconds. Higher-worker coverage is
+rejected on macOS by the shared runner guard because the prior work-stealing
+lane reproduced worker-replacement failures; Linux retains explicit higher
+worker opt-in.
 
 The sorted module rows were taken from:
 
@@ -114,12 +120,12 @@ deterministic local paths — no mocks introduced.
 | `project/working_render.py` | 46.67% | 90.33% | +25 | `tests/infra_tests/project/test_working_render.py` |
 
 Scripts audit (43/49 clean thin orchestrators): six violations identified — two embed
-non-trivial algorithms in scripts (`generate_api_reference_doc.py` package discovery,
-`06_llm_review.py` stage-label resolution); two inline data-shaping logic that belongs
+non-trivial algorithms in scripts (`scripts/docgen/api_reference.py` package discovery,
+`scripts/pipeline/stage_06_llm_review.py` stage-label resolution); two inline data-shaping logic that belongs
 in infrastructure (`audit_filepaths.py` statistics formatting, `verify_no_mocks.py`
 scan-root resolution); one embeds a mini-test-runner loop duplicating infrastructure
-aggregation (`00_setup_environment.py`); one hardcodes a canonical configuration list
-(`generate_stage_table_doc.py`). No hardcoded external URLs found.
+aggregation (`scripts/pipeline/stage_00_setup.py`); one hardcodes a canonical configuration list
+(`scripts/docgen/stage_table.py`). No hardcoded external URLs found.
 
 Parity notes: `infrastructure/docker/` has partial coverage via
 `tests/infra_tests/rendering/test_dockerfile_gen.py` (no dedicated `tests/infra_tests/docker/`
@@ -161,7 +167,7 @@ no `*_coverage.py`, `*_full.py`, or duplicate supplement files were introduced.
 
 ## Coverage Gates
 
-- **Infrastructure:** >= 60% (current 83.05%).
+- **Infrastructure:** >= 60% (current 83.38%).
 - **Projects:** >= 90% per project, with rotating-project exceptions documented
   in CI and project-local `AGENTS.md` files.
 - **Per-module targets:** documented here only; they are not CI gates.

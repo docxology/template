@@ -372,7 +372,7 @@ dependencies = [
 
 ### ⚠️ Root Venv Dependency Coverage (Critical Rule)
 
-Each project in `projects/` may have its own `pyproject.toml` listing extra dependencies. However, **analysis scripts run with the root `.venv`** (via `02_run_analysis.py`) unless the project has a local `.venv/` directory.
+Each project in `projects/` may have its own `pyproject.toml` listing extra dependencies. However, **analysis scripts run with the root `.venv`** (via `scripts/pipeline/stage_02_analysis.py`) unless the project has a local `.venv/` directory.
 
 **The rule:** If `projects/<name>/.venv` does **not** exist, all packages in `projects/<name>/pyproject.toml#dependencies` must **also** be declared in the root `pyproject.toml`.
 
@@ -402,7 +402,7 @@ print('All OK')
 
 **Fix:** Add missing packages to root `pyproject.toml`'s core `dependencies`, then `uv sync`.
 
-**Venv selection logic in `02_run_analysis.py`:**
+**Venv selection logic in `scripts/pipeline/stage_02_analysis.py`:**
 
 ```text
 project has .venv/ + uv available  →  uv run --directory project/ python script.py

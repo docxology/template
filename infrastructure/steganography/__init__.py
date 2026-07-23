@@ -35,7 +35,6 @@ from infrastructure.steganography.config import (
 from infrastructure.steganography.core import (
     SteganographyProcessor,
     embed_steganography,
-    process_pdf,
 )
 from infrastructure.steganography.kmyth_adapter import (
     KmythAvailability,
@@ -51,7 +50,6 @@ __all__ = [
     "SteganographyConfig",
     "SteganographyProcessor",
     "embed_steganography",
-    "process_pdf",
     "resolve_build_timestamp",
     "KmythAvailability",
     "KmythCommandError",

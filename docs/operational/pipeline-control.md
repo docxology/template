@@ -167,17 +167,20 @@ a project intentionally wants a nonzero recommendation to create a HITL pause.
 
 ## Artifact Manifests
 
-After each successful completed stage, the executor writes a stage manifest
-under `projects/{project}/output/.pipeline/artifacts/` and refreshes
+After each successful completed stage, the executor writes a local stage
+manifest under `projects/{project}/output/.pipeline/artifacts/` and refreshes
 `projects/{project}/output/reports/artifact_manifest.json`. Entries include
 path, size, SHA256, producing stage, contract match status, and timestamp.
 
 Validation reports missing declared outputs, changed hashes, and undeclared
-artifacts. Logs, HITL state, caches, and `.pipeline` metadata are ignored.
+artifacts. Logs, HITL state, caches, and `.pipeline` metadata are ignored. The
+stable `artifact_manifest.json` is the publication-facing integrity record;
+the local stage manifests and their timestamps are not public evidence.
 
 ## Snapshots
 
-Each completed stage writes a snapshot under `output/reports/snapshots/` with
+Each completed stage may write a local snapshot under
+`output/reports/snapshots/` with
 the artifact manifest hash, artifact hashes, validation summary, evidence count,
 stage number, stage name, and timestamp. Compare snapshots or output
 directories with:
@@ -186,6 +189,7 @@ directories with:
 uv run python -m infrastructure.core.pipeline.snapshot compare <left> <right> --output-dir projects/templates/template_code_project/output
 ```
 
+Snapshots are diagnostic state and are ignored by the public checkout.
 Comparison reports are written as `snapshot_compare.json` and
 `snapshot_compare.md` when `--output-dir` is supplied. Snapshot comparison does
 not fork or run project branches.

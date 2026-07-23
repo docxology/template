@@ -62,7 +62,7 @@ def test_validation_cli_help_returns_zero() -> None:
 def test_check_tracked_all_returns_zero_on_clean_repo() -> None:
     repo = _repo_root()
     proc = subprocess.run(
-        [sys.executable, str(repo / "scripts" / "check_tracked_all.py")],
+        [sys.executable, str(repo / "scripts" / "audit" / "check_tracked_all.py")],
         cwd=repo,
         capture_output=True,
         text=True,

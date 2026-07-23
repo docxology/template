@@ -54,7 +54,7 @@ flowchart TB
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
-    VNM --> TP[test-project<br/>generated public roster × py3.10/py3.12<br/>01_run_tests.py --project per cell]
+    VNM --> TP[test-project<br/>generated public roster × py3.10/py3.12<br/>stage_01_test.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL

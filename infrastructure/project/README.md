@@ -135,6 +135,18 @@ link target (`working/*` → `projects/working/*`, `archive/*` → `projects/arc
 optional `active/`/`published/`/`other/`). Root override: `TEMPLATE_PRIVATE_PROJECTS_ROOT`
 or `.private_projects_root`.
 
+### Public Capability Inventory (`public_capabilities.py`)
+
+The capability inventory is a static, repository-local preflight for every
+canonical public exemplar. It checks the required forkable project structure
+and records each declared pytest skip as an optional capability, fixture, or
+declared-condition contract. Run it with:
+
+```bash
+uv run python scripts/gates/public_capabilities.py
+uv run python scripts/gates/public_capabilities.py --json
+```
+
 ### Roster, Domain Profile, and Experiment Plan
 
 - `exemplar_roster.py` — `collect_entries(repo_root)` builds `ExemplarEntry`

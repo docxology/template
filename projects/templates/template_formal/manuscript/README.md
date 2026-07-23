@@ -38,7 +38,7 @@ these files directly.
 
 Only two figures are referenced in the whole manuscript — both in
 `05_results_discussion.md`, both pointing at
-`../output/figures/*.png` written by `scripts/02_run_analysis.py`
+`../output/figures/*.png` written by `scripts/pipeline/stage_02_analysis.py`
 (`{#fig:demo-convergence}`, `{#fig:convergence-tick-distribution}`). There is
 no per-figure generator inventory table here because the figure count is
 this small and stable; if you add a third figure, add its row to this table.
@@ -46,7 +46,7 @@ this small and stable; if you add a third figure, add its row to this table.
 ## Render pipeline
 
 ```
-scripts/pipeline/stage_02_analysis.py   # runs projects/templates/template_formal/scripts/02_run_analysis.py
+scripts/pipeline/stage_02_analysis.py   # runs projects/templates/template_formal/scripts/pipeline/stage_02_analysis.py
                                          #   -> writes output/figures/*.png + output/data/*.json
 scripts/pipeline/stage_03_render.py     # Pandoc: manuscript/*.md + config.yaml + preamble.md + references.bib
                                          #   -> output/templates/template_formal/pdf/*_combined.pdf

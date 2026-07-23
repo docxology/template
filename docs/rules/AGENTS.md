@@ -80,7 +80,7 @@ The template provides **two pipeline orchestrators** with different scope:
 
 - **Use for**: Core or full pipeline, programmatic execution (`--core-only` skips LLM stages)
 - **Stages**: Default **core** run is **eight** executor stages (clean outputs, setup, infrastructure tests, project tests, analysis, PDF rendering, validation, copy outputs). With `--skip-infra`, infrastructure tests are omitted (seven stages). Full pipeline adds LLM review and translations before copy; see [`executor.py`](../../infrastructure/core/pipeline/executor.py) (`PipelineExecutor._build_stage_list`).
-- **Features**: Checkpoint/resume; delegates to numbered scripts `scripts/pipeline/stage_NN_*.py`–`scripts/05_*.py` plus optional `06`/`07` where applicable
+- **Features**: Checkpoint/resume; delegates to canonical `scripts/pipeline/stage_NN_*.py` entrypoints, including optional LLM, bundle, archival, science, and provenance stages where applicable
 - **When to use**: Automated environments, CI/CD, or when you want explicit flags instead of the menu
 
 ## Quick Start

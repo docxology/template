@@ -39,12 +39,19 @@ def test_public_readiness_does_not_execute_a_symlinked_public_path(tmp_path: Pat
 
 
 def test_public_readiness_fails_on_skips_unless_the_optional_lane_allows_them() -> None:
-    result = PublicReadinessResult("templates/example", "skip", 2, 0.1, ())
+    result = PublicReadinessResult("templates/example", "skip", 2, 0.1, (), reason_code="OPTIONAL_TOOL_MISSING")
     report = PublicReadinessReport((result,), (result.project,))
 
     assert report.counts == {"fail": 0, "pass": 0, "skip": 1}
     assert report.exit_code() == 1
     assert report.exit_code(allow_skips=True) == 0
+
+
+def test_public_readiness_treats_unmarked_exit_two_as_failure() -> None:
+    result = PublicReadinessResult("templates/example", "fail", 2, 0.1, (), reason_code="SUBPROCESS_EXIT_2")
+    report = PublicReadinessReport((result,), (result.project,))
+
+    assert report.exit_code(allow_skips=True) == 1
 
 
 def test_public_readiness_fails_closed_on_unknown_status() -> None:

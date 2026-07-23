@@ -13,7 +13,7 @@ Exit codes:
     0: Setup succeeded (environment ready for downstream stages)
     1: Setup failed (missing Python version, dependencies, or build tools)
 
-These map to ``scripts.exit_codes.ExitCode`` (SUCCESS=0 / FAILURE=1).
+These map to ``scripts.runner.exit_codes.ExitCode`` (SUCCESS=0 / FAILURE=1).
 """
 
 from __future__ import annotations

@@ -11,6 +11,7 @@ states which surfaces are wired into unified health or remain explicit.
 |--------|--------------|---------|
 | `gate_cache.py` | `infrastructure.core.cache_gate.run_cache_gate` | Hermes cache validation (requires `HERMES_HOME`; opt-in) |
 | `methods_plan_check.py` | `infrastructure.methods.audit_methods_projects` | All-public or single-project source/rendered methods audit. Source mode runs in unified health; rendered mode remains an explicit publication gate. |
+| `public_capabilities.py` | `infrastructure.project.public_capabilities.audit_public_capabilities` | Static structural and skip-contract inventory for every canonical public exemplar. |
 | `check_private_project_promotion.py` | `infrastructure.project.promotion.main` | Compatibility entrypoint for candidate security scanning and composite promotion evaluation. |
 | `module_line_count_check.py` | `infrastructure.validation.line_count.scan_infrastructure_and_scripts`, `scan_project_scripts` | Line-count gate: infra/scripts warn ≥800 fail ≥950; project scripts warn ≥150 fail ≥250 |
 | `security_scan.py` | `infrastructure.validation.security_gate.run_security_scan` | Security scanning (bandit, safety, pip-audit) |
@@ -30,6 +31,7 @@ uv run python scripts/gates/gate_cache.py   # Hermes-only; requires HERMES_HOME
 uv run python scripts/gates/methods_plan_check.py --all-public --artifact-mode source
 uv run python scripts/gates/methods_plan_check.py --all-public --artifact-mode rendered
 uv run python scripts/gates/methods_plan_check.py --project templates/template_code_project
+uv run python scripts/gates/public_capabilities.py
 uv run python scripts/gates/check_private_project_promotion.py --project-root /path/to/candidate
 uv run python scripts/gates/public_readiness.py --json
 uv run python scripts/gates/public_readiness.py --include-ollama-tests --allow-skips

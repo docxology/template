@@ -8,7 +8,6 @@ from infrastructure.publishing._metadata_extraction import (
     validate_doi,
 )
 from infrastructure.publishing._metadata_reporting import (
-    calculate_complexity_score,
     calculate_metadata_complexity_score,
     create_academic_profile_data,
     create_repository_metadata,
@@ -17,7 +16,6 @@ from infrastructure.publishing._metadata_reporting import (
 )
 
 __all__ = [
-    "calculate_complexity_score",
     "calculate_metadata_complexity_score",
     "create_academic_profile_data",
     "create_repository_metadata",

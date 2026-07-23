@@ -14,10 +14,7 @@ from infrastructure.validation.output.no_mock_audit import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-WRAPPERS = (
-    REPO_ROOT / "scripts" / "verify_no_mocks.py",
-    REPO_ROOT / "scripts" / "audit" / "verify_no_mocks.py",
-)
+CANONICAL_SCRIPT = REPO_ROOT / "scripts" / "audit" / "verify_no_mocks.py"
 
 
 def _make_repo(tmp_path: Path, source: str) -> Path:
@@ -133,34 +130,30 @@ def test_missing_required_tests_directory_fails_closed(tmp_path: Path) -> None:
     assert inventory.exit_code == 1
 
 
-def test_both_script_paths_delegate_to_identical_infrastructure_cli(
+def test_canonical_script_delegates_to_infrastructure_cli(
     tmp_path: Path,
 ) -> None:
     repo_root = _make_repo(
         tmp_path,
         "def test_env(monkeypatch):\n    monkeypatch.setenv('KEY', 'value')\n",
     )
-    results = [
-        subprocess.run(
-            [
-                sys.executable,
-                str(wrapper),
-                "--inventory",
-                "--json",
-                "--repo-root",
-                str(repo_root),
-            ],
-            cwd=REPO_ROOT,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
-        for wrapper in WRAPPERS
-    ]
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(CANONICAL_SCRIPT),
+            "--inventory",
+            "--json",
+            "--repo-root",
+            str(repo_root),
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
 
-    assert [result.returncode for result in results] == [0, 0]
-    assert results[0].stdout == results[1].stdout
-    assert results[0].stderr == results[1].stderr == ""
-    report = json.loads(results[0].stdout)
+    assert result.returncode == 0
+    assert result.stderr == ""
+    report = json.loads(result.stdout)
     assert report["counts"]["environment_isolation"] == 1

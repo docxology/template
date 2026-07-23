@@ -32,7 +32,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 `pipeline.yaml` is the only full-pipeline stage plan. Temporary repositories
 and installed wheels resolve the packaged copy of that same file; there is no
 hard-coded Python fallback plan. Root numbered scripts and
-`scripts/execute_pipeline.py` are compatibility wrappers over the canonical
+`scripts/runner/execute_pipeline.py` are compatibility wrappers over the canonical
 `scripts/pipeline/` and `scripts/runner/` implementations.
 
 After intentionally regenerating outputs outside `PipelineExecutor`, refresh

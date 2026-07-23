@@ -2,12 +2,9 @@
 
 Generic orchestrators for the research pipeline, organized by subpackage:
 
-Canonical advanced stages include `pipeline/stage_08_connector_search.py`,
-`pipeline/stage_09_provenance_record.py`, and
-`pipeline/stage_09_archive_publication.py`; root numbered files are compatibility
-wrappers for the canonical stage implementations.
-Those wrappers are `08_connector_search.py`, `09_provenance_record.py`, and
-`09_archive_publication.py`.
+All repository-wide entry points live in the role-specific subpackages below.
+There are no root-level duplicate entry points; use the canonical path shown in
+each table and in the generated stage documentation.
 
 | Subpackage | Role |
 | --- | --- |
@@ -19,9 +16,6 @@ Those wrappers are `08_connector_search.py`, `09_provenance_record.py`, and
 | [`publish/`](publish/) | Release and publishing helpers |
 | [`gates/`](gates/) | Opt-in quality gates |
 | [`maintenance/`](maintenance/) | Workspace and local maintenance tools |
-
-Root-level `scripts/NN_*.py` and `scripts/generate_*.py` remain as backward-compatible
-shims where present; prefer subpackage paths in docs and new automation.
 
 ## Entry Points
 
@@ -55,7 +49,7 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 | 06 | `pipeline/stage_06_llm_review.py` | Generate LLM reviews or translations when Ollama is available |
 | 07 | `pipeline/stage_07_executive_report.py` | Build multi-project executive summaries and dashboards |
 
-`runner/execute_pipeline.py` also supports single-stage execution with keys such as `setup`, `tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`.
+`runner/execute_pipeline.py` also supports single-stage execution with keys such as `setup`, `infra_tests`, `project_tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`.
 
 ## Key Files
 
@@ -108,7 +102,7 @@ See [`docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin
 ## Notes
 
 - Project-specific analysis scripts belong in `projects/{name}/scripts/`.
-- The root scripts stay generic and work with any active project discovered from `projects/`.
+- The subpackage scripts stay generic and work with any active project discovered from `projects/`.
 - Use `uv run` for direct Python entry points (`runner/execute_pipeline.py`, `runner/execute_multi_project.py`, `pipeline/stage_07_executive_report.py`).
 - `run.sh` and `secure_run.sh` are thin bootstrap shells: they source `shell/shell_bootstrap.sh`, then `exec uv run python -m infrastructure.orchestration` (menu, pipeline, and secure subcommands live in Python). Bare `./run.sh` relies on `uv run` to sync the workspace; pipeline-flag invocations also run `uv sync` when `.venv` is missing.
 

@@ -37,7 +37,7 @@ figures), `nullmodel.py` (structurally-isolated random-choice baseline),
   with a calculator, not merely "matches what `scipy` would say."
 - `demo.py`/`visualization.py` hold real simulation-runner and figure logic
   precisely *because* the thin-orchestrator rule forbids it in `scripts/` —
-  do not migrate logic back into a `scripts/02_run_analysis.py`-style
+  do not migrate logic back into a `scripts/pipeline/stage_02_analysis.py`-style
   orchestrator (ISC-78).
 - `analysis.py` owns the publication-facing combination of the demo, sweep,
   statistical summary, required figures, and registry. The corresponding

@@ -16,7 +16,7 @@ The Research Project Template follows a **thin orchestrator pattern** where all 
 ```mermaid
 flowchart TB
     UI["User Interface<br/>run.sh / secure_run.sh → infrastructure.orchestration"]
-    ORCH["Orchestration Layer<br/>scripts/pipeline/stage_NN_*.py … scripts/07_*.py → infrastructure<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
+    ORCH["Orchestration Layer<br/>scripts/pipeline/stage_NN_*.py → infrastructure<br/>projects/&lt;name&gt;/scripts/*.py → projects/&lt;name&gt;/src/"]
     LOGIC["Business Logic<br/>infrastructure/ (reusable) + projects/&lt;name&gt;/src/ (custom)"]
 
     UI -- delegates to --> ORCH
@@ -42,7 +42,7 @@ flowchart TB
 
 **Layer 2: Stage Scripts (Thin Orchestrators)**
 
-- **`scripts/pipeline/stage_NN_*.py`–`scripts/09_*.py`**: Import from `infrastructure/` for business logic (numbered entry points; script numbers are not pipeline stage indices — `00`–`05` cover the core stages, `06_llm_review.py` backs the two `[llm]` stages, `07_generate_executive_report.py` runs in multi-project mode, and `08_executable_bundle.py`/`09_archive_publication.py` back the opt-in `[bundle]`/`[archival]` stages 10-11, which are declared in `pipeline.yaml` but excluded from default runs)
+- **`scripts/pipeline/stage_NN_*.py`**: Import from `infrastructure/` for business logic. These canonical filenames are thin stage orchestrators; their numeric prefixes identify the stage implementation, while pipeline-position indices remain defined by `pipeline.yaml`.
 - **`projects/{name}/scripts/*.py`**: Import from `projects/{name}/src/` for business logic
 - **Purpose**: Stage-specific coordination and I/O handling
 
@@ -231,14 +231,14 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
   -- INDIVIDUAL STAGES - one script per key --------------------------------
 
-   0  | Environment Setup              | 00_setup_environment.py
-   1  | Run Tests                      | 01_run_tests.py (infra + project)
-   2  | Run Analysis                   | 02_run_analysis.py
-   3  | Render PDF                     | 03_render_pdf.py
-   4  | Validate Output                | 04_validate_output.py
-   5  | Copy Outputs                   | 05_copy_outputs.py
-   6  | LLM Review                     | 06_llm_review.py reviews (Ollama)
-   7  | LLM Translations               | 06_llm_review.py translations (Ollama)
+   0  | Environment Setup              | stage_00_setup.py
+   1  | Run Tests                      | stage_01_test.py (infra + project)
+   2  | Run Analysis                   | stage_02_analysis.py
+   3  | Render PDF                     | stage_03_render.py
+   4  | Validate Output                | stage_04_validate.py
+   5  | Copy Outputs                   | stage_05_copy.py
+   6  | LLM Review                     | stage_06_llm_review.py (Ollama)
+   7  | LLM Translations               | stage_06_llm_review.py (Ollama)
 
   -- ORCHESTRATION - full DAG, current project -----------------------------
 
@@ -411,7 +411,7 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 **Features**:
 
 - **Eight** DAG stages by default: clean → setup → infrastructure tests → project tests → analysis → PDF → validation → copy. Omit infrastructure tests with `--skip-infra` (**seven** stages).
-- No LLM-tagged stages (`06_llm_review.py` / `07_generate_executive_report.py` are not part of `--core-only`; `07` is for multi-project executive reporting)
+- No LLM-tagged stages (`scripts/pipeline/stage_06_llm_review.py` / `scripts/pipeline/stage_07_executive_report.py` are not part of `--core-only`; the executive stage is for multi-project reporting)
 - No LLM dependencies required for `--core-only`
 - Suitable for automated environments
 - Checkpoint/resume support: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --resume`
@@ -447,16 +447,16 @@ The table above lists pipeline-position indices (0-based, as the executor sees t
 
 | Script | Purpose |
 |--------|---------|
-| `00_setup_environment.py` | Environment setup & validation |
-| `01_run_tests.py` | Run test suite (infrastructure + project) |
-| `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
-| `03_render_pdf.py` | PDF rendering orchestration |
-| `04_validate_output.py` | Output validation & reporting |
-| `05_copy_outputs.py` | Copy final deliverables to `output/` |
-| `06_llm_review.py` | LLM manuscript review & translations (optional, requires Ollama) |
-| `07_generate_executive_report.py` | Executive summaries & dashboards (multi-project only) |
+| `scripts/pipeline/stage_00_setup.py` | Environment setup & validation |
+| `scripts/pipeline/stage_01_test.py` | Run test suite (infrastructure + project) |
+| `scripts/pipeline/stage_02_analysis.py` | Discover & run `projects/{name}/scripts/` |
+| `scripts/pipeline/stage_03_render.py` | PDF rendering orchestration |
+| `scripts/pipeline/stage_04_validate.py` | Output validation & reporting |
+| `scripts/pipeline/stage_05_copy.py` | Copy final deliverables to `output/` |
+| `scripts/pipeline/stage_06_llm_review.py` | LLM manuscript review & translations (optional, requires Ollama) |
+| `scripts/pipeline/stage_07_executive_report.py` | Executive summaries & dashboards (multi-project only) |
 
-`--core-only` runs the executor stages through copy outputs and does **not** run `06` or `07`; those are optional or multi-project entry points.
+`--core-only` runs the executor stages through copy outputs and does **not** run the optional LLM/executive stages.
 
 ## Entry Point Comparison
 

@@ -34,7 +34,7 @@ from infrastructure.scientific import (
     benchmark_function,
     BenchmarkResult,
     format_benchmark_report,
-    generate_performance_report,
+    format_benchmark_report,
 )
 
 # Benchmark a function across multiple inputs
@@ -50,7 +50,7 @@ print(result.iterations, result.result_summary, result.timestamp)
 
 # Generate Markdown reports
 md_report = format_benchmark_report([result])
-perf_report = generate_performance_report([result])
+perf_report = format_benchmark_report([result])
 ```
 
 ## Improvement Confirmation (`confirmation.py`)

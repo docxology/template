@@ -8,7 +8,7 @@ with layered security and steganographic techniques.
 
 | File | Purpose |
 |------|---------|
-| `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography`, `process_pdf`, `resolve_build_timestamp` |
+| `__init__.py` | Public API: `SteganographyProcessor`, `SteganographyConfig`, `embed_steganography`, `resolve_build_timestamp` |
 | `config.py` | `SteganographyConfig` dataclass with per-technique toggles |
 | `core.py` | `SteganographyProcessor` orchestrator class |
 | `overlays.py` | Diagonal watermark + footer + invisible text overlays (reportlab) |
@@ -88,11 +88,11 @@ steganography:
 ### Python API
 
 ```python
-from infrastructure.steganography import process_pdf, SteganographyConfig
+from infrastructure.steganography import embed_steganography, SteganographyConfig
 from pathlib import Path
 
 # Quick — all techniques enabled
-process_pdf(Path("paper.pdf"))
+embed_steganography(Path("paper.pdf"))
 
 # Configurable
 config = SteganographyConfig(
@@ -103,7 +103,7 @@ config = SteganographyConfig(
     hashing_enabled=True,
     encryption_enabled=False,
 )
-process_pdf(Path("paper.pdf"), config=config, title="My Paper")
+embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
 ```
 
 ## Techniques

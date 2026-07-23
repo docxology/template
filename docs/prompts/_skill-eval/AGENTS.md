@@ -22,7 +22,7 @@ Synthetic benchmark for template workflow skills: keyword/heuristic grader, harn
 
 ## Stage naming
 
-Eval expectations and skills use **canonical stage labels** from [`infrastructure/core/pipeline/pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml) via [`stage_vocabulary.py`](../../../infrastructure/core/pipeline/stage_vocabulary.py) — e.g. **Project Analysis**, not numeric stage indices. Script entrypoints (`02_run_analysis.py`) are valid aliases.
+Eval expectations and skills use **canonical stage labels** from [`infrastructure/core/pipeline/pipeline.yaml`](../../../infrastructure/core/pipeline/pipeline.yaml) via [`stage_vocabulary.py`](../../../infrastructure/core/pipeline/stage_vocabulary.py) — e.g. **Project Analysis**, not numeric stage indices. Script entrypoints use the canonical `scripts/pipeline/stage_NN_*.py` paths; removed root wrappers are not aliases.
 
 ## Recommended workflows
 

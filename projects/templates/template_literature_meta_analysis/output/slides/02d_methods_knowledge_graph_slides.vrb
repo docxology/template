@@ -1,9 +1,0 @@
-\frametitle{Incremental Extraction}
-\protect\phantomsection\label{incremental-extraction}
-Assertion extraction is \textbf{incremental and resumable}: assertions
-are appended to \breaktt{nanopublications.jsonl} at configurable
-checkpoint intervals (default: 50 papers). On restart, already-processed
-papers are skipped automatically, so a long extraction run that is
-interrupted can resume without re-processing. The
-\breaktt{-\/-clear-assertions} flag discards previous results for a fresh
-start.

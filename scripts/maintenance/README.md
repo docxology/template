@@ -2,7 +2,7 @@
 
 Operator and repository-maintenance scripts for the template. These are thin
 orchestrators that delegate to `infrastructure/` modules. They are **not** part
-of the numbered build pipeline (`scripts/00_*.py`–`10_*.py`) and **not**
+of the canonical build pipeline (`scripts/pipeline/stage_*.py`) and **not**
 validation gates (those live in [`scripts/gates/`](../gates/)).
 
 ## Scripts
@@ -18,8 +18,9 @@ validation gates (those live in [`scripts/gates/`](../gates/)).
 | `batch_cogsec_improve.py` | `infrastructure.core.source_improve` | Batch source-improvement orchestrator |
 | `setup_pre_commit.py` | (subprocess) | Install / refresh the pre-commit hook set |
 | `codegraph_local.py` | `infrastructure.project.codegraph` | Local CodeGraph index helper commands (optional, not a CI dependency) |
-| `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts` | Rebaseline integrity manifests after intentional targeted renders; records `current-output-snapshot`, not stage provenance |
+| `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts` | Rebaseline integrity manifests after intentional targeted renders; records `current-output-snapshot`, not stage provenance, and methods audits report that distinction |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Run serial/parallel clean-checkout health and write an acceptance manifest |
+| `benchmark_tests.py` | `infrastructure.core.test_performance` | Run matched serial/parallel evidence for the infrastructure or public quick test lane |
 
 ## Running
 

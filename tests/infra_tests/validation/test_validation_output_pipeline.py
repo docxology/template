@@ -219,7 +219,7 @@ def test_validate_project_design_includes_autoresearch_when_configured(tmp_path,
         """
 stages:
   - name: Output Validation
-    script: 04_validate_output.py
+    script: scripts/pipeline/stage_04_validate.py
     contract:
       output_artifacts: ["projects/{project}/output/reports/"]
       definition_of_done: "Report written."

@@ -17,8 +17,7 @@ from infrastructure.search.connectors.http import ConnectorHttpClient
 from infrastructure.search.connectors.stage import main as connector_stage_main
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPT = REPO_ROOT / "scripts" / "08_connector_search.py"
-STAGE_SCRIPT = REPO_ROOT / "scripts" / "pipeline" / "stage_08_connector_search.py"
+SCRIPT = REPO_ROOT / "scripts" / "pipeline" / "stage_08_connector_search.py"
 
 ARXIV_ATOM = """\
 <?xml version="1.0" encoding="UTF-8"?>
@@ -68,20 +67,18 @@ class TestScriptImports:
         assert "ok" in result.stdout
 
     def test_script_exists(self) -> None:
-        """Both the pipeline entrypoint and its stage bootstrap exist."""
+        """The canonical pipeline entrypoint exists."""
         assert SCRIPT.exists(), f"Script not found at {SCRIPT}"
-        assert STAGE_SCRIPT.exists(), f"Script not found at {STAGE_SCRIPT}"
 
     def test_script_is_python(self) -> None:
         """The script is a valid Python file (no syntax errors)."""
-        for script in (SCRIPT, STAGE_SCRIPT):
-            result = subprocess.run(
-                [sys.executable, "-m", "py_compile", str(script)],
-                capture_output=True,
-                text=True,
-                timeout=15,
-            )
-            assert result.returncode == 0, f"Syntax error in {script}: {result.stderr}"
+        result = subprocess.run(
+            [sys.executable, "-m", "py_compile", str(SCRIPT)],
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        assert result.returncode == 0, f"Syntax error in {SCRIPT}: {result.stderr}"
 
 
 # ---------------------------------------------------------------------------

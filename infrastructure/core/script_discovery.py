@@ -158,12 +158,12 @@ def discover_orchestrators(repo_root: Path) -> list[Path]:
         raise PipelineError("Scripts directory not found", context={"expected_path": str(scripts_dir)})
 
     orchestrators = [
-        scripts_dir / "00_setup_environment.py",
-        scripts_dir / "01_run_tests.py",
-        scripts_dir / "02_run_analysis.py",
-        scripts_dir / "03_render_pdf.py",
-        scripts_dir / "04_validate_output.py",
-        scripts_dir / "05_copy_outputs.py",
+        scripts_dir / "pipeline" / "stage_00_setup.py",
+        scripts_dir / "pipeline" / "stage_01_test.py",
+        scripts_dir / "pipeline" / "stage_02_analysis.py",
+        scripts_dir / "pipeline" / "stage_03_render.py",
+        scripts_dir / "pipeline" / "stage_04_validate.py",
+        scripts_dir / "pipeline" / "stage_05_copy.py",
     ]
 
     available = [s for s in orchestrators if s.exists()]

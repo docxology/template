@@ -201,6 +201,8 @@ flowchart TD
 | **logging/progress.py** | Advanced progress logging utilities | `calculate_eta()`, `log_with_spinner()`, `StreamingProgress` |
 | **logging/formatters.py** | Specialized logging formatters | `JSONFormatter`, `TemplateFormatter` |
 | **runtime/function_profiler.py** | Function-level profiling and memory snapshots | `CodeProfiler`, `monitor_performance()`, `profile_memory_usage()` |
+| **pytest_orchestration.py** | Test profiles, coverage-safe subprocess commands, and bounded worker policy | `resolve_xdist_args()`, `parse_project_workers()`, `validate_project_matrix_concurrency()` |
+| **test_performance.py** | Owned serial/parallel test-lane evidence | `run_test_benchmark()`, `build_test_performance_manifest()` |
 | **config/cli.py** | Configuration command-line interface | `main()` |
 
 ### Module Dependencies

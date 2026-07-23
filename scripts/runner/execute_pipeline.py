@@ -23,7 +23,7 @@ from infrastructure.core.pipeline.single_stage import execute_single_stage
 from infrastructure.core.pipeline.stage_registry import known_stage_keys
 from infrastructure.core.runtime.environment import validate_interpreter
 
-# Re-export for tests importing from scripts.execute_pipeline
+# Public imports for callers using the canonical runner module.
 __all__ = ["PipelineArgs", "handle_hitl_command", "execute_pipeline", "execute_single_stage", "main"]
 
 logger = get_logger(__name__)

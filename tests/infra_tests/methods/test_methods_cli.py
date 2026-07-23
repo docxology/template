@@ -58,7 +58,7 @@ def _write_minimal_repo(repo_root: Path) -> Path:
         """
 stages:
   - name: Project Analysis
-    script: 02_run_analysis.py
+    script: scripts/pipeline/stage_02_analysis.py
     tags: [core]
     contract:
       input_artifacts: ["projects/{project}/src/", "projects/{project}/scripts/"]

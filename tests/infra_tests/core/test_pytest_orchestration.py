@@ -18,6 +18,7 @@ from infrastructure.core.pytest_orchestration import (
     ENV_XDIST_WORKERS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
     TEST_PROFILE_NAMES,
+    XDIST_DISTRIBUTION,
     build_project_pytest_command,
     build_profile_marker_expression,
     build_union_pytest_command,
@@ -33,6 +34,7 @@ from infrastructure.core.pytest_orchestration import (
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
     resolve_xdist_args,
+    validate_coverage_parallel,
     validate_project_matrix_concurrency,
 )
 
@@ -160,14 +162,15 @@ def test_parse_discovery_count_variants() -> None:
     assert parse_discovery_count("no tests here") is None
 
 
-def test_parse_project_workers_accepts_serial_and_positive_ints() -> None:
+def test_parse_project_workers_accepts_auto_serial_and_positive_ints() -> None:
     assert parse_project_workers() == 1
     assert parse_project_workers("serial") == 1
     assert parse_project_workers(1) == 1
     assert parse_project_workers("3") == 3
+    assert parse_project_workers("auto", env={"TEMPLATE_PROJECT_WORKERS": "3"}) == 3
 
 
-@pytest.mark.parametrize("raw", [0, -1, "0", "auto", "nonsense", True])
+@pytest.mark.parametrize("raw", [0, -1, "0", "nonsense", True])
 def test_parse_project_workers_rejects_invalid_values(raw: object) -> None:
     with pytest.raises(ValueError, match="project-workers"):
         parse_project_workers(raw)  # type: ignore[arg-type]
@@ -192,6 +195,20 @@ def test_validate_project_matrix_concurrency_allows_outer_serial_with_xdist(monk
 def test_resolve_xdist_worker_config_strict_argument_validation() -> None:
     with pytest.raises(ValueError, match="--parallel"):
         resolve_xdist_worker_config("oops", strict=True)
+
+
+def test_validate_coverage_parallel_rejects_unstable_macos_worker_count() -> None:
+    with pytest.raises(ValueError, match="limited to 2 workers"):
+        validate_coverage_parallel(4, platform_name="Darwin")
+
+
+def test_validate_coverage_parallel_rejects_macos_auto() -> None:
+    with pytest.raises(ValueError, match="use --parallel 2"):
+        validate_coverage_parallel("auto", platform_name="Darwin")
+
+
+def test_validate_coverage_parallel_allows_linux_worker_count() -> None:
+    validate_coverage_parallel(4, platform_name="Linux")
 
 
 def test_discovery_with_parallel_execution_command_does_not_run_tests(tmp_path: Path) -> None:
@@ -407,7 +424,7 @@ def test_resolve_xdist_args_auto(monkeypatch: pytest.MonkeyPatch) -> None:
         "-n",
         "auto",
         "--dist",
-        "worksteal",
+        XDIST_DISTRIBUTION,
         "--benchmark-disable",
     ]
 
@@ -418,14 +435,14 @@ def test_resolve_xdist_args_positive_int(monkeypatch: pytest.MonkeyPatch) -> Non
         "-n",
         "6",
         "--dist",
-        "worksteal",
+        XDIST_DISTRIBUTION,
         "--benchmark-disable",
     ]
     assert resolve_xdist_args("4") == [
         "-n",
         "4",
         "--dist",
-        "worksteal",
+        XDIST_DISTRIBUTION,
         "--benchmark-disable",
     ]
 
@@ -437,7 +454,7 @@ def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> Non
         "-n",
         "auto",
         "--dist",
-        "worksteal",
+        XDIST_DISTRIBUTION,
         "--benchmark-disable",
     ]
     monkeypatch.setenv(ENV_XDIST_WORKERS, "3")
@@ -445,7 +462,7 @@ def test_resolve_xdist_args_env_fallback(monkeypatch: pytest.MonkeyPatch) -> Non
         "-n",
         "3",
         "--dist",
-        "worksteal",
+        XDIST_DISTRIBUTION,
         "--benchmark-disable",
     ]
 
@@ -458,7 +475,7 @@ def test_resolve_xdist_args_explicit_overrides_env(monkeypatch: pytest.MonkeyPat
         "-n",
         "8",
         "--dist",
-        "worksteal",
+        XDIST_DISTRIBUTION,
         "--benchmark-disable",
     ]
 
@@ -503,10 +520,10 @@ def test_build_union_pytest_command_injects_xdist_when_parallel(tmp_path: Path) 
     )
     joined = " ".join(cmd_auto)
     assert "-n auto" in joined
-    assert "--dist worksteal" in joined
+    assert f"--dist {XDIST_DISTRIBUTION}" in joined
     assert "--benchmark-disable" in cmd_auto
 
     cmd_n = build_union_pytest_command(repo, project, tests, is_first=True, marker_expr=None, timeout=30, parallel=4)
     assert "-n" in cmd_n and "4" in cmd_n
-    assert "--dist" in cmd_n and "worksteal" in cmd_n
+    assert "--dist" in cmd_n and XDIST_DISTRIBUTION in cmd_n
     assert "--benchmark-disable" in cmd_n

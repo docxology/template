@@ -345,15 +345,16 @@ def discover_projects(repo_root: Path, *, public_only: bool = True) -> list[Proj
 
 
 def enumerate_numbered_scripts(scripts_dir: Path) -> list[PipelineStage]:
-    """Enumerate numbered pipeline scripts in the root ``scripts/`` directory."""
+    """Enumerate numbered pipeline scripts from canonical ``scripts/pipeline/``."""
     if not scripts_dir.is_dir():
         logger.warning(f"Scripts directory not found: {scripts_dir}")
         return []
 
-    pattern = re.compile(r"^(\d{2})_(.+)\.py$")
+    pipeline_dir = scripts_dir / "pipeline" if (scripts_dir / "pipeline").is_dir() else scripts_dir
+    pattern = re.compile(r"^stage_(\d{2})_(.+)\.py$")
     stages: list[PipelineStage] = []
 
-    for script in sorted(scripts_dir.iterdir()):
+    for script in sorted(pipeline_dir.iterdir()):
         match = pattern.match(script.name)
         if match:
             stage_num = int(match.group(1))

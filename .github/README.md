@@ -434,15 +434,15 @@ flowchart TD
 
     subgraph Processing["⚙️ 10-Stage DAG Pipeline"]
         STAGE0["Stage 0 — Clean<br/>(built-in / executor)"]
-        STAGE1["Stage 1 — Setup<br/>00_setup_environment.py"]
-        STAGE2["Stage 2 — Infra smoke<br/>01_run_tests.py --infra-scope pipeline-smoke"]
-        STAGE3["Stage 3 — Project tests<br/>01_run_tests.py --project-only"]
-        STAGE4["Stage 4 — Analysis<br/>02_run_analysis.py"]
-        STAGE5["Stage 5 — Render PDF<br/>03_render_pdf.py"]
-        STAGE6["Stage 6 — Validate<br/>04_validate_output.py"]
-        STAGE7["Stage 7 — LLM reviews<br/>06_llm_review.py --reviews-only"]
-        STAGE8["Stage 8 — LLM translations<br/>06_llm_review.py --translations-only"]
-        STAGE9["Stage 9 — Copy outputs<br/>05_copy_outputs.py"]
+        STAGE1["Stage 1 — Setup<br/>scripts/pipeline/stage_00_setup.py"]
+        STAGE2["Stage 2 — Infra smoke<br/>scripts/pipeline/stage_01_test.py --infra-scope pipeline-smoke"]
+        STAGE3["Stage 3 — Project tests<br/>scripts/pipeline/stage_01_test.py --project-only"]
+        STAGE4["Stage 4 — Analysis<br/>scripts/pipeline/stage_02_analysis.py"]
+        STAGE5["Stage 5 — Render PDF<br/>scripts/pipeline/stage_03_render.py"]
+        STAGE6["Stage 6 — Validate<br/>scripts/pipeline/stage_04_validate.py"]
+        STAGE7["Stage 7 — LLM reviews<br/>scripts/pipeline/stage_06_llm_review.py --reviews-only"]
+        STAGE8["Stage 8 — LLM translations<br/>scripts/pipeline/stage_06_llm_review.py --translations-only"]
+        STAGE9["Stage 9 — Copy outputs<br/>scripts/pipeline/stage_05_copy.py"]
     end
 
     subgraph Output["📤 Generated Outputs"]
@@ -481,7 +481,7 @@ flowchart TD
     class Output output
 ```
 
-Stage indices **0–9** are pipeline positions; they **do not** match `scripts/NN_*.py` numeric prefixes (e.g. stage 2 uses `01_run_tests.py`). The table below is authoritative.
+Stage indices **0–9** are pipeline positions; they **do not** match the `stage_NN_*.py` implementation prefixes. The table below is authoritative.
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
@@ -916,7 +916,7 @@ flowchart TB
     TP --> PC
 ```
 
-See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-audit` ignore file, `bandit.yaml`, `01_run_tests.py`).
+See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-audit` ignore file, `bandit.yaml`, `stage_01_test.py`).
 
 ### Quality Gates
 

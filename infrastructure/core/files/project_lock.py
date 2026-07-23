@@ -14,7 +14,7 @@ serialize instead of racing. Key properties:
   description; the kernel releases it automatically if the holding process
   dies, so a crashed run can never deadlock later runs.
 * **Cross-process re-entrant.** The pipeline executor holds the lock for an
-  entire run and spawns its test stage (``01_run_tests.py``) as a subprocess
+  entire run and spawns its test stage (``scripts/pipeline/stage_01_test.py``) as a subprocess
   that *also* asks for the lock. To avoid the child blocking on a lock its
   parent already holds, the holder exports an environment marker that
   descendant processes inherit and honor as a no-op acquisition.

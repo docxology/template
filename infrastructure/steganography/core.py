@@ -477,7 +477,3 @@ def embed_steganography(
         keywords=keywords,
         author_emails=author_emails,
     )
-
-
-# Backwards-compatibility alias
-process_pdf = embed_steganography

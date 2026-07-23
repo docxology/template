@@ -27,7 +27,7 @@ from infrastructure.rendering._pdf_combined_pandoc import (
 from infrastructure.rendering._pdf_combined_preamble import inject_latex_preamble
 from infrastructure.rendering._pdf_combined_prevalidate import (
     prevalidate_markdown,
-    prevalidate_source_markdown,
+    prevalidate_for_render,
     verify_figure_references,
 )
 
@@ -42,7 +42,7 @@ __all__ = [
     "postprocess_latex",
     "preprocess_combined_markdown",
     "prevalidate_markdown",
-    "prevalidate_source_markdown",
+    "prevalidate_for_render",
     "run_pandoc_conversion",
     "substitute_manuscript_var_placeholders",
     "verify_figure_references",

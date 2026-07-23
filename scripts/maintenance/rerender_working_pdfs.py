@@ -63,7 +63,7 @@ def main() -> int:
         start = time.time()
         render_cmd = [
             sys.executable,
-            str(repo / "scripts" / "03_render_pdf.py"),
+            str(repo / "scripts" / "pipeline" / "stage_03_render.py"),
             "--project",
             name,
         ]
@@ -79,7 +79,7 @@ def main() -> int:
             continue
 
         copy = subprocess.run(  # nosec B603
-            [sys.executable, str(repo / "scripts" / "05_copy_outputs.py"), "--project", name],
+            [sys.executable, str(repo / "scripts" / "pipeline" / "stage_05_copy.py"), "--project", name],
             cwd=str(repo),
             check=False,
         )

@@ -32,6 +32,7 @@ def bootstrap_project(*, include_infrastructure: bool = False) -> Path:
         Project root directory (parent of ``scripts/``).
     """
     root = Path(__file__).resolve().parent.parent
+    _consume_project_argument(root)
     src = root / "src"
     src_text = str(src)
     if src_text not in sys.path:
@@ -41,3 +42,25 @@ def bootstrap_project(*, include_infrastructure: bool = False) -> Path:
         if repo_text not in sys.path:
             sys.path.insert(0, repo_text)
     return root
+
+
+def _consume_project_argument(project_root: Path) -> None:
+    """Validate and remove the shared ``--project`` context argument.
+
+    Project-local scripts historically inferred their root from ``__file__``.
+    The repository methods contract now passes an explicit qualified project
+    name to every stage command, so these wrappers accept that argument while
+    retaining their existing script-specific argparse surfaces.
+    """
+    try:
+        index = sys.argv.index("--project")
+    except ValueError:
+        return
+    if index + 1 >= len(sys.argv):
+        raise SystemExit("--project requires a qualified project name")
+    supplied = Path(sys.argv[index + 1]).name
+    if supplied != project_root.name:
+        raise SystemExit(
+            f"this project-local entrypoint only supports {project_root.name!r}; received {sys.argv[index + 1]!r}"
+        )
+    del sys.argv[index : index + 2]

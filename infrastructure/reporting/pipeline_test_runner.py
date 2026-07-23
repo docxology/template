@@ -34,6 +34,7 @@ from infrastructure.core.pytest_orchestration import (
     resolve_test_profile,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
+    validate_coverage_parallel,
     resolve_xdist_args,
 )
 from infrastructure.core.runtime.environment import resolve_test_python
@@ -69,6 +70,8 @@ def run_infrastructure_tests(
     """
     if scope not in INFRASTRUCTURE_TEST_SCOPES:
         raise ValueError(f"Unknown infrastructure test scope: {scope}")
+    if scope == "full":
+        validate_coverage_parallel(parallel)
     start_time = time.time()
     project_root = resolve_project_root(repo_root, project_name)
 

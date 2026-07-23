@@ -16,7 +16,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 2. **CLI Interface** (`infrastructure/validation/cli/main.py`): Command-line interface
 3. **Orchestrator** (`scripts/pipeline/stage_04_validate.py`): Pipeline integration
 4. **Tests** ([`tests/infra_tests/validation/test_pdf_validator.py`](../../tests/infra_tests/validation/test_pdf_validator.py)): coverage with data
-5. **Integration** (`scripts/runner/execute_pipeline.py`): validation stage after render (see [RUN_GUIDE.md](../RUN_GUIDE.md); script `04_validate_output.py` maps to pipeline “validate”)
+5. **Integration** (`scripts/runner/execute_pipeline.py`): validation stage after render (see [RUN_GUIDE.md](../RUN_GUIDE.md); script `scripts/pipeline/stage_04_validate.py` maps to pipeline “validate”)
 
 ## Components
 
@@ -65,7 +65,7 @@ uv run python -m infrastructure.validation.cli markdown projects/{name}/manuscri
 
 #### Automated Validation
 
-The core pipeline runs validation after PDF render via `04_validate_output.py`:
+The core pipeline runs validation after PDF render via `scripts/pipeline/stage_04_validate.py`:
 
 ```bash
 # Full core pipeline (includes validation after render)
@@ -75,7 +75,7 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ./run.sh
 ```
 
-`04_validate_output.py` alone does **not** clean or re-render; it checks existing artifacts under `projects/{name}/output/` (and related paths) for the given `--project`.
+`scripts/pipeline/stage_04_validate.py` alone does **not** clean or re-render; it checks existing artifacts under `projects/{name}/output/` (and related paths) for the given `--project`.
 
 **Note**: Run validation before release builds. To iterate quickly you can run individual stages (e.g. `scripts/pipeline/stage_03_render.py`) directly without the full pipeline.
 

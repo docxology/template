@@ -354,9 +354,9 @@ def ensure_setmathfont(preamble: str, math_font: str = "latinmodern-math.otf") -
 | `_pdf_combined_prevalidate.py` | Figure reference checks, markdown/citation hard gate |
 | `_pdf_combined_transmission.py` | Transmission bookend TOC relocation helpers |
 
-### prevalidate_source_markdown (function — `_pdf_combined_prevalidate.py`)
+### prevalidate_for_render (function — `_pdf_combined_prevalidate.py`)
 ```python
-def prevalidate_source_markdown(
+def prevalidate_for_render(
     source: Path | list[Path] | list[str],
     repo_root: Path | None = None,
     bib_file: str | Path | list[str | Path] | None = None,
@@ -392,7 +392,7 @@ def fix_starred_section_nameref_labels(tex_content: str) -> tuple[str, int]:
 
 ### Per-format preamble & gate coverage
 
-| Renderer | `extract_preamble` / `ensure_setmathfont` | `prevalidate_source_markdown` | Lua filters |
+| Renderer | `extract_preamble` / `ensure_setmathfont` | `prevalidate_for_render` | Lua filters |
 |----------|-------------------------------------------|-------------------------------|-------------|
 | `PDFRenderer.render_combined` (xelatex)    | ✅ full preamble via `inject_latex_preamble` | ✅ runs before Pandoc | — |
 | `SlidesRenderer.render` (Beamer)           | ✅ math fonts only via `extract_math_font_preamble` (`-H _slides_math_header.tex`) | ❌ single-section scope | ✅ `_beamer_allowframebreaks.lua` |

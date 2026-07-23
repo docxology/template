@@ -41,7 +41,14 @@ uv run python -m infrastructure.methods plan --all-public --artifact-mode render
 `--project` and `--all-public` are mutually exclusive. Rendered mode is the
 default. Every plan carries `schema_version` and `artifact_mode`; every stage
 carries its stable execution `key` while retaining its historical display
-name. Exit codes are `0` clean/warnings, `1` validation errors, and `2` invalid
+name. The validator also checks DAG orphan edges, executable script paths,
+built-in executor method names, failure codes, artifact-path containment,
+verification-command script resolution, and current artifact-manifest hashes.
+Project-local stage commands receive explicit `--project` context. A rendered
+artifact manifest produced by `refresh_artifact_manifests.py` is an integrity
+snapshot, not stage provenance; the audit reports that distinction as a warning
+until per-stage manifests are produced by `PipelineExecutor`. Exit codes are
+`0` clean/warnings, `1` validation errors, and `2` invalid
 invocation/configuration.
 
 Run the focused tests:
@@ -56,6 +63,9 @@ uv run pytest tests/infra_tests/methods -q
 - Keep `projects/<name>/scripts/` as thin orchestrators.
 - Declare stage inputs, outputs, gates, and `definition_of_done` in
   `pipeline.yaml`.
+- Assign every stage a stable `key`, executable `script` or executor `method`,
+  failure code, and at least one output artifact.
+- Keep artifact paths repository-relative and free of parent traversal.
 - Explain the method in manuscript source files, not generated `output/`.
 - Refresh pipeline outputs before treating artifact manifests or evidence
   registries as current.
@@ -66,9 +76,12 @@ A project is not methods-ready when any of these are missing:
 
 - manuscript methods/methodology section
 - artifact manifest
+- artifact manifest hashes match the current output tree
 - evidence registry
 - stage `definition_of_done`
 - declared stage output artifacts
+- executable stage script and verification command
+- no orphaned dependency edges
 
 Use this gate alongside claim verification, reproducibility audit, and PDF
 validation.

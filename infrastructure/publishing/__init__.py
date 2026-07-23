@@ -28,7 +28,7 @@ from .citations import (
     generate_citations_markdown,
 )
 from .metadata import (
-    calculate_complexity_score,
+    calculate_metadata_complexity_score,
     create_academic_profile_data,
     create_repository_metadata,
     extract_publication_metadata,
@@ -98,7 +98,7 @@ __all__ = [
     "validate_publication_readiness",
     "generate_publication_metrics",
     "create_repository_metadata",
-    "calculate_complexity_score",
+    "calculate_metadata_complexity_score",
     # Dissemination — core
     "publish_to_zenodo",
     "prepare_arxiv_submission",

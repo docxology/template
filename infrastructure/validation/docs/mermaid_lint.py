@@ -79,19 +79,19 @@ class ValidationFailure:
 
 
 def resolve_mmdc_executable(repo_root: Path | None = None) -> str | None:
-    """Return the pinned Mermaid CLI from PATH or the repository-local install.
+    """Return the repository-local Mermaid CLI before any global fallback.
 
-    CI adds ``node_modules/.bin`` to ``PATH`` explicitly. Local commands are
-    easier to reproduce when the Python gate also recognizes the documented
-    repository-local install, even when a caller has not exported that PATH
-    entry in its current shell.
+    The repository-local install is authoritative because a global binary can
+    silently use a different Mermaid CLI version than the lockfile. CI may add
+    ``node_modules/.bin`` to ``PATH`` explicitly, but local commands remain
+    reproducible even when that PATH entry is absent.
     """
-    candidate = shutil.which("mmdc")
-    if candidate and Path(candidate).exists():
-        return candidate
     root = (repo_root or Path.cwd()).resolve()
     local_candidate = root / "node_modules" / ".bin" / "mmdc"
-    return str(local_candidate) if local_candidate.exists() else None
+    if local_candidate.is_file():
+        return str(local_candidate)
+    candidate = shutil.which("mmdc")
+    return candidate if candidate and Path(candidate).is_file() else None
 
 
 def mmdc_available(mmdc_path: str | None = None, repo_root: Path | None = None) -> bool:

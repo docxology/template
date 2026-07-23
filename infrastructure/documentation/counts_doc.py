@@ -45,10 +45,10 @@ COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-07-20"
+GENERATED_DATE = "2026-07-22"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-20"
+EXEMPLAR_SNAPSHOT_DATE = "2026-07-22"
 
 
 @dataclass(frozen=True)
@@ -66,9 +66,9 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
     # cannot exercise): measured 2026-07-20 via
     # `stage_01_test.py --project templates/template_active_inference
-    # --project-only --include-slow` (717 passed, 6 deselected; 90.30 %).
+    # --project-only --include-slow` (720 passed, 6 deselected; 90.33 %).
     # Collected count from --collect-only in the project env.
-    ExemplarSnapshot("template_active_inference", "90.30 %"),
+    ExemplarSnapshot("template_active_inference", "90.33 %"),
     ExemplarSnapshot("template_advanced_literature_review", "92.48 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.46 %"),

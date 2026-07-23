@@ -63,13 +63,22 @@ Learned sections into root `AGENTS.md`. Schema:
 [`.cursor/hooks/state/continual-learning-memory.example.json`](.cursor/hooks/state/continual-learning-memory.example.json).
 Load/save helpers: `infrastructure.core.agent_memory`.
 
+**Public output hygiene:** Canonical public exemplars may track deterministic
+publication evidence and release contracts under `projects/templates/<name>/output/`:
+final PDFs, figures, analysis data, hydrated manuscripts, and stable
+validation/publication registries. Runtime checkpoints, `.pipeline/` state,
+logs, telemetry, stage snapshots, pipeline reports, and LaTeX/slide build
+intermediates are local-only and ignored. Recreate them through the canonical
+pipeline when diagnosing or rendering; do not publish them as exemplar
+evidence.
+
 ## Template authoring & operational notes
 
 Generic, Layer-1 facts for working in this repository.
 
 - **Manuscript variables are injected, not hand-authored.** Per-project metrics, counts, and variables come from `output/data/manuscript_variables.json` at render time. For `template_code_project`, the default pipeline calls `generate_variables(..., require_analysis_outputs=True)` via `scripts/z_generate_manuscript_variables.py` and fails when `output/data/optimization_results.csv` is absent; pass `--allow-draft` only for intentional early drafts. PDF Publishing Information reads `publication.doi`, optional `publication.repository_url`, and `publication.repository_label` from `projects/{name}/manuscript/config.yaml` via `infrastructure/rendering/_pdf_latex_helpers.py`.
 - **Validation & rendering pitfalls.** Content-validation diagnostics use stable dotted IDs from `infrastructure/validation/content/diagnostic_codes.py` (`MarkdownCode`, `BibtexCode`); every new `DiagnosticEvent` must pass `code=…`, and renaming an existing code is a breaking change for downstream `jq`/`rg` filters. Fast manuscript pre-flight: `uv run python -m infrastructure.validation.cli prerender projects/<project>/manuscript --repo-root .`. Multi-pass PDF rendering continues when pass 1 wrote output despite recoverable `Missing $` errors so later passes resolve forward references. Mermaid: unquoted `//` line comments; stadium nodes `[/label/]` close with `/]`; combined-PDF Mermaid via Chrome headless or `mmdc`, else verbatim figure fallback. `FIGURE_WIDTH_*` values must be bare fractions (e.g. `0.9`); the alt-text comment belongs before `\begin{figure}`; prefer inline `$...$` over `\(...\)` in Markdown list items.
-- **Entry points & gates.** `run.sh` and `secure_run.sh` source only [`scripts/shell/shell_bootstrap.sh`](scripts/shell/shell_bootstrap.sh); menu and argparse live in `infrastructure.orchestration`. [`scripts/shell/bash_utils.sh`](scripts/shell/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Exemplar doc/code drift: `scripts/audit/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` on `PUBLIC_PROJECT_NAMES` (`--project`, `--strict`). Layer 1 module size: `scripts/gates/module_line_count_check.py` and `uv run python -m infrastructure.core.health` (`module-line-count`). Opt-in gates under `scripts/gates/` report `status: "skipped"` under `skipped_tools` when tools are missing. `bandit.yaml` `exclude_dirs` skips rotating/private trees so CI stays strict on `infrastructure/`, `scripts/`, and public exemplars.
+- **Entry points & gates.** `run.sh` and `secure_run.sh` source only [`scripts/shell/shell_bootstrap.sh`](scripts/shell/shell_bootstrap.sh); menu and argparse live in `infrastructure.orchestration`. [`scripts/shell/bash_utils.sh`](scripts/shell/bash_utils.sh) serves backup/health scripts and tests, not pipeline entrypoints. Exemplar doc/code drift: `scripts/audit/check_template_drift.py` → `infrastructure.project.drift.run_drift_checks()` on `PUBLIC_PROJECT_NAMES` (`--project`, `--strict`). Layer 1 module size: `scripts/gates/module_line_count_check.py` and `uv run python -m infrastructure.core.health` (`module-line-count`). The health registry also runs the executable methods contract and `scripts/gates/public_capabilities.py` across the canonical public roster. Opt-in gates under `scripts/gates/` report `status: "skipped"` under `skipped_tools` when tools are missing. `bandit.yaml` `exclude_dirs` skips rotating/private trees so CI stays strict on `infrastructure/`, `scripts/`, and public exemplars.
 
 ## Confidentiality invariant (this is a PUBLIC repo)
 
@@ -182,7 +191,7 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 
 - **Discovered** by `infrastructure.project.discovery.discover_projects()` with qualified names `templates/<name>` and `active/<name>`
 - **Listed** in `run.sh` interactive menu
-- **Executed** by all pipeline scripts (`01_run_tests.py`, `02_run_analysis.py`, etc.)
+- **Executed** by the canonical pipeline stages under `scripts/pipeline/` (for example, `stage_01_test.py` and `stage_02_analysis.py`)
 - **Outputs** generated in `projects/<subfolder>/{name}/output/` and copied to `output/<subfolder>/{name}/`
 
 ### Non-Rendered Projects (`working/`, `ongoing/`, `archive/`, optional legacy mirrors)
@@ -357,7 +366,7 @@ flowchart TB
     CUR --> C_FILES[.cursorrules · .cursorignore · README.md]
 
     SCR --> S_DOCS[AGENTS.md · README.md]
-    SCR --> S_STAGES[00_setup_environment.py<br/>01_run_tests.py<br/>02_run_analysis.py<br/>03_render_pdf.py<br/>04_validate_output.py<br/>05_copy_outputs.py]
+    SCR --> S_STAGES[scripts/pipeline/stage_00_setup.py<br/>stage_01_test.py<br/>stage_02_analysis.py<br/>stage_03_render.py<br/>stage_04_validate.py<br/>stage_05_copy.py]
 
     TS --> T_FILES[AGENTS.md · README.md · test_*.py]
 
@@ -755,7 +764,7 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 **Requirements**:
 
 - projects/{name}/src/ : 90% minimum (per-project standalone gate; exemplars meet it)
-- combined-union public-project gate (`01_run_tests.py --project-only --all-projects --public-projects`, `DEFAULT_FAIL_UNDER`) : 75% — deliberately lower than the per-project floor because per-project suites only cover their own `src/` while the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project, including rotating private symlinks. Per-project floors remain authoritative.
+- combined-union public-project gate (`scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects`, `DEFAULT_FAIL_UNDER`) : 75% — deliberately lower than the per-project floor because per-project suites only cover their own `src/` while the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project, including rotating private symlinks. Per-project floors remain authoritative.
 - infrastructure/ : 60% minimum
 
 Tests should use real data and computation. The lexical no-mocks gate and the

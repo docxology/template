@@ -273,6 +273,21 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     assert {fact.source_path for fact in registry.lookup("number", "3.10")} == {"pyproject.toml"}
 
 
+def test_build_project_registry_bounds_raw_json_arrays_but_keeps_scalar_summaries(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    data = project / "output" / "data"
+    data.mkdir(parents=True)
+    (data / "matrix.json").write_text(
+        json.dumps({"summary": {"feature_count": 500}, "matrix": [[index] for index in range(300)]}),
+        encoding="utf-8",
+    )
+
+    registry = build_project_evidence_registry(project)
+
+    assert registry.has("number", "500")
+    assert not registry.has("number", "299")
+
+
 def test_build_project_registry_collects_manuscript_asset_tables(tmp_path: Path) -> None:
     project = tmp_path / "project"
     assets = project / "manuscript" / "assets" / "data"

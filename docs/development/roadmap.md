@@ -179,7 +179,6 @@ The current open top items are:
 - `SECURITY-OWNERSHIP-1`
 - `SECURITY-PRIVATE-PROMOTION-1`
 - `COVERAGE-BASELINE-1`
-- `RUNTIME-SUPPORT-1`
 - `CI-ERGONOMICS-1`
 
 Shipped and not re-tracked here: the GitHub supply-chain hygiene set

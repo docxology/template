@@ -9,7 +9,6 @@ import json
 
 from infrastructure.publishing._metadata_reporting import (
     _classify_publication_type,
-    calculate_complexity_score,
     calculate_metadata_complexity_score,
     create_academic_profile_data,
     create_repository_metadata,
@@ -209,12 +208,6 @@ class TestCalculateMetadataComplexityScore:
         meta = _make_metadata(journal=None, conference="ICML 2025")
         score = calculate_metadata_complexity_score(meta)
         assert score > 0
-
-
-class TestCalculateComplexityScore:
-    def test_alias(self):
-        meta = _make_metadata()
-        assert calculate_complexity_score(meta) == calculate_metadata_complexity_score(meta)
 
 
 class TestGeneratePublicationMetrics:

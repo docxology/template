@@ -29,14 +29,14 @@ _SECTION_BAR_WIDTH = 76
 
 # Canonical menu options. Each tuple is (key, label, description).
 MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (
-    ("0", "Environment Setup", "00_setup_environment.py"),
-    ("1", "Run Tests", "01_run_tests.py (infra + project)"),
-    ("2", "Run Analysis", "02_run_analysis.py"),
-    ("3", "Render PDF", "03_render_pdf.py"),
-    ("4", "Validate Output", "04_validate_output.py"),
-    ("5", "Copy Outputs", "05_copy_outputs.py"),
-    ("6", "LLM Review", "06_llm_review.py reviews (Ollama)"),
-    ("7", "LLM Translations", "06_llm_review.py translations (Ollama)"),
+    ("0", "Environment Setup", "stage_00_setup.py"),
+    ("1", "Run Tests", "stage_01_test.py (infra + project)"),
+    ("2", "Run Analysis", "stage_02_analysis.py"),
+    ("3", "Render PDF", "stage_03_render.py"),
+    ("4", "Validate Output", "stage_04_validate.py"),
+    ("5", "Copy Outputs", "stage_05_copy.py"),
+    ("6", "LLM Review", "stage_06_llm_review.py reviews (Ollama)"),
+    ("7", "LLM Translations", "stage_06_llm_review.py translations (Ollama)"),
     ("8", "Core Pipeline", "current project · infra on · LLM off · 8 stages"),
     ("9", "Full Pipeline", "current project · infra on · LLM on · 10 stages"),
     ("f", "Full Pipeline (fast)", "current project · skip infra · LLM on"),

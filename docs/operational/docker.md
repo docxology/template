@@ -110,5 +110,5 @@ Ensure you activated the **`dev`** profile (`--profile dev`). Services are gated
 
 ## Additional notes
 
-- The Dockerfile is a single-stage `python:3.12-slim` build that installs `uv`, a full LaTeX distribution (`texlive-latex-base`, `-recommended`, `-extra`, `texlive-fonts-recommended`, `texlive-fonts-extra`, `texlive-xetex`), and then `pyproject.toml` dependencies — PDF rendering (`03_render_pdf.py`) works inside the container without adding any TeX tooling yourself.
+- The Dockerfile is a single-stage `python:3.12-slim` build that installs `uv`, a full LaTeX distribution (`texlive-latex-base`, `-recommended`, `-extra`, `texlive-fonts-recommended`, `texlive-fonts-extra`, `texlive-xetex`), and then `pyproject.toml` dependencies — PDF rendering (`scripts/pipeline/stage_03_render.py`) works inside the container without adding any TeX tooling yourself.
 - See also [`docs/CLOUD_DEPLOY.md`](../CLOUD_DEPLOY.md) § Docker and [`docs/modules/guides/docker-module.md`](../modules/guides/docker-module.md).

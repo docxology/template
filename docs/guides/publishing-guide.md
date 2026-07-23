@@ -290,7 +290,7 @@ uploads that DOI-bearing PDF to the same draft before publishing. The older
 one-pass flow still exists for already-published `--new-version` releases and
 for cases where a pre-DOI deposited PDF is acceptable.
 
-**Outputs:** `output/{project}/release_bundle/` (`Author_Year_Topic_hash8.pdf` by default — see [Deposit upload filename](#deposit-upload-filename); legacy `{project}_combined.pdf` when disabled), `publication_metadata.json`, `manifest.json`, `RELEASE_RECEIPT.json`.
+**Outputs:** `output/{project}/release_bundle/` (`Author_Year_Topic_hash8.pdf` by default — see [Deposit upload filename](#deposit-upload-filename); fallback `{project}_combined.pdf` when disabled), `publication_metadata.json`, `manifest.json`, `RELEASE_RECEIPT.json`.
 
 Programmatic API: `infrastructure.publishing.release_workflow.run_release_workflow`.
 
@@ -370,11 +370,14 @@ For a first standalone exemplar release, use `--reserve-doi-first` instead of
 `manuscript/config.yaml`, `CITATION.cff`, `.zenodo.json`, generated publication
 records, and any release-note docs.
 
-Public exemplars also track their rendered outputs. In the root monorepo, keep
-both `projects/templates/<name>/output/` and the copied
+Public exemplars also track their deterministic rendered evidence. In the root
+monorepo, keep both `projects/templates/<name>/output/` and the copied
 `output/templates/<name>/` tree in git when files stay below the 50 MB public
-output ceiling. The generated-artifact guard still blocks private project
-outputs and oversized public output files. In the standalone
+output ceiling. Retain final PDFs, figures, analysis data, hydrated
+manuscripts, and stable release/validation registries; omit runtime state,
+logs, telemetry, snapshots, and renderer intermediates. The generated-artifact
+guard still blocks private project outputs and oversized public output files.
+In the standalone
 `docxology/template_*` repository, sync the same project-local `output/` tree
 so the GitHub source mirror, GitHub release, and Zenodo record all point to the
 same rendered state.
@@ -571,7 +574,7 @@ Year precedence matches `year_segment()` in `infrastructure/publishing/deposit_f
 
 Set `publication.deposit_filename.enabled: false` to keep `{project}_combined.pdf` on platforms. `RELEASE_RECEIPT.json` records both `deposit_filename` and `source_pdf_name`.
 
-**Zenodo new-version uploads:** `publish_new_version_to_zenodo()` clears inherited draft files before uploading the bundle PDF. New-version drafts copy prior files from the parent record; without cleanup, published records can list both legacy names (e.g. v2.1.0 listed `template_code_project_combined.pdf` and `Author_2026_Convergence_b591a0ce.pdf`). The next `--new-version` publish after this fix deposits only the current `deposit_filename`. Already-published Zenodo versions cannot be edited retroactively.
+**Zenodo new-version uploads:** `publish_new_version_to_zenodo()` clears inherited draft files before uploading the bundle PDF. New-version drafts copy prior files from the parent record; without cleanup, published records can list both fallback names (e.g. v2.1.0 listed `template_code_project_combined.pdf` and `Author_2026_Convergence_b591a0ce.pdf`). The next `--new-version` publish after this fix deposits only the current `deposit_filename`. Already-published Zenodo versions cannot be edited retroactively.
 
 ### Config file reference (`manuscript/config.yaml`)
 

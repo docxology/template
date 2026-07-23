@@ -182,7 +182,7 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (unless disabled), environment setup, infrastructure tests (unless `--skip-infra`), project tests, analysis, PDF rendering, output validation, then copy outputs. That path is driven by scripts **`00`–`05`** (tests use **`01`**, which runs infrastructure + project suites).
 
-**Full** pipeline (for example `./run.sh --pipeline` without `--core-only`) adds LLM review and translations (`06_llm_review.py`) before copy. **`07_generate_executive_report.py`** is for multi-project / executive reporting, not the default single-project stage list.
+**Full** pipeline (for example `./run.sh --pipeline` without `--core-only`) adds LLM review and translations (`scripts/pipeline/stage_06_llm_review.py`) before copy. **`scripts/pipeline/stage_07_executive_report.py`** is for multi-project / executive reporting, not the default single-project stage list.
 
 ### Canonical stage table (generated)
 

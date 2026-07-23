@@ -6,7 +6,7 @@ from infrastructure.publishing.deposit_filename import (
     DepositPublishContext,
     author_segment,
     build_deposit_filename,
-    legacy_deposit_filename,
+    fallback_deposit_filename,
     topic_segment,
     year_segment,
 )
@@ -100,7 +100,7 @@ class TestDepositFilename:
                 authors_config=[],
             ),
         )
-        assert name == legacy_deposit_filename("template_code_project")
+        assert name == fallback_deposit_filename("template_code_project")
 
     def test_unicode_author_and_title_folding(self) -> None:
         metadata = PublicationMetadata(

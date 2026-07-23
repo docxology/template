@@ -107,7 +107,7 @@ Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. It resolves the 
 | Mock-framework lexical gate | zero prohibited imports/calls (`--inventory` debt remains advisory) |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage (per-project standalone) | ≥ 90% |
-| Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% via local `01_run_tests.py --project-only --all-projects --public-projects` (CI `test-project` enforces per-exemplar 90% only) |
+| Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% via local `scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects` (CI `test-project` enforces per-exemplar 90% only) |
 | pip-audit | zero known vulns not listed in `.github/pip-audit-ignore.txt` |
 | Bandit MEDIUM+ (`-c bandit.yaml`) | zero findings |
 | Mermaid diagrams render under `mmdc` | zero failures |
@@ -219,9 +219,9 @@ See [`ISSUE_TEMPLATE/AGENTS.md`](ISSUE_TEMPLATE/AGENTS.md) for local editing rul
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff check --fix
 uv run python -m infrastructure.project.public_scope lint-paths | xargs uv run ruff format
 
-# Run tests locally (mirror the exact fast CI lane)
+# Run tests locally (safe macOS coverage lane; CI uses auto on Linux)
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
-  -n auto --dist worksteal --benchmark-disable \
+  -n 2 --dist loadscope --benchmark-disable \
   --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
   --durations=10 \
   -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \

@@ -221,8 +221,8 @@ entrypoints:
     def test_project_doc_script_path_falls_back_to_repo_root(self, tmp_path):
         project_root = tmp_path / "projects" / "templates" / "template_demo"
         project_root.mkdir(parents=True)
-        (tmp_path / "scripts").mkdir()
-        (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
+        (tmp_path / "scripts" / "pipeline").mkdir(parents=True)
+        (tmp_path / "scripts" / "pipeline" / "stage_03_render.py").write_text("")
         md_file = project_root / "README.md"
         content = "```bash\nuv run python scripts/pipeline/stage_03_render.py --project template_demo\n```"
 
@@ -232,8 +232,8 @@ entrypoints:
 
     def test_aggregate_projects_docs_use_repo_root_scripts(self, tmp_path):
         (tmp_path / "projects").mkdir()
-        (tmp_path / "scripts").mkdir()
-        (tmp_path / "scripts" / "03_render_pdf.py").write_text("")
+        (tmp_path / "scripts" / "pipeline").mkdir(parents=True)
+        (tmp_path / "scripts" / "pipeline" / "stage_03_render.py").write_text("")
         md_file = tmp_path / "projects" / "README.md"
         content = "```bash\nuv run python scripts/pipeline/stage_03_render.py --project template_demo\n```"
 

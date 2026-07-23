@@ -238,7 +238,7 @@ def test_driver_from_dir_writes_valid_markdown(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     cmd = [
         sys.executable,
-        str(repo_root / "scripts" / "generate_coverage_history.py"),
+        str(repo_root / "scripts" / "docgen" / "coverage_history.py"),
         f"--from-dir={artefacts}",
         "--days=7",
         f"--output={out_path}",
@@ -268,7 +268,7 @@ def test_driver_from_dir_is_idempotent(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     base_cmd = [
         sys.executable,
-        str(repo_root / "scripts" / "generate_coverage_history.py"),
+        str(repo_root / "scripts" / "docgen" / "coverage_history.py"),
         f"--from-dir={artefacts}",
         "--days=7",
     ]

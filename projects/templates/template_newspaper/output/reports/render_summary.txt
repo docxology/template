@@ -1,5 +1,0 @@
-The Triplicate — render summary
-========================================
-pages:        12
-all_pages_fit: True
-output:       output/pdf/the-triplicate.pdf

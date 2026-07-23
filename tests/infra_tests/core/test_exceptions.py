@@ -160,10 +160,10 @@ class TestBuildErrors:
         """Test PipelineError."""
         error = PipelineError(
             "Stage failed",
-            context={"stage": "02_run_analysis", "failed_scripts": ["script1.py"]},
+            context={"stage": "Project Analysis", "failed_scripts": ["script1.py"]},
         )
         assert isinstance(error, BuildError)
-        assert error.context["stage"] == "02_run_analysis"
+        assert error.context["stage"] == "Project Analysis"
 
 
 class TestFileOperationErrors:

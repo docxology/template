@@ -70,7 +70,7 @@ Key discoveries from multi-project development are documented in:
 
 ### ⚠️ Critical Rule: Root Venv Must Include All Project Dependencies
 
-If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/` directory**, every package listed in that `pyproject.toml#dependencies` must also appear in the **root** `pyproject.toml`. Analysis scripts (`02_run_analysis.py`) run under the root venv in this case.
+If a project in `projects/<name>/` has its own `pyproject.toml` but **no `.venv/` directory**, every package listed in that `pyproject.toml#dependencies` must also appear in the **root** `pyproject.toml`. Project-local analysis scripts run under the root venv through `scripts/pipeline/stage_02_analysis.py` in this case.
 
 **Symptom when violated:** `❌ <project>: 4 stages, 7.7s` — Stage 4 (Analysis) fails silently in < 1s. No import error surfaces in the console.
 

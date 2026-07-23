@@ -218,6 +218,39 @@ projects/templates/*/output/pdf/_pages.txt
 # XeLaTeX captures stdout here during local rendering; it is a disposable
 # machine-specific build log, not canonical publication evidence.
 projects/templates/*/output/pdf/_latex_stdout.log
+# Runtime state, pipeline snapshots, and stage logs are local diagnostics, not
+# public exemplar evidence. Keep them out of future commits even though the
+# exemplar directories themselves are intentionally tracked.
+projects/templates/*/output/.checkpoints/
+projects/templates/*/output/.pipeline/
+projects/templates/*/output/logs/
+projects/templates/*/output/reports/snapshots/
+projects/templates/*/output/reports/lessons.jsonl
+projects/templates/*/output/reports/lessons.md
+projects/templates/*/output/reports/log_summary.txt
+projects/templates/*/output/reports/next_run_context.md
+projects/templates/*/output/reports/pause_recommendations.json
+projects/templates/*/output/reports/pipeline_report.html
+projects/templates/*/output/reports/pipeline_report.json
+projects/templates/*/output/reports/pipeline_report.md
+projects/templates/*/output/reports/render_summary.txt
+projects/templates/*/output/reports/telemetry.json
+projects/templates/*/output/reports/telemetry.txt
+# PDF and slide source/intermediate files are reproducible build products.
+# Keep final PDF deliverables; source manuscripts and references remain in
+# manuscript/ and are the canonical authoring surface.
+projects/templates/*/output/pdf/_combined_manuscript.*
+projects/templates/*/output/pdf/references*.bib
+projects/templates/*/output/slides/**/*.aux
+projects/templates/*/output/slides/**/*.bbl
+projects/templates/*/output/slides/**/*.blg
+projects/templates/*/output/slides/**/*.log
+projects/templates/*/output/slides/**/*.nav
+projects/templates/*/output/slides/**/*.out
+projects/templates/*/output/slides/**/*.snm
+projects/templates/*/output/slides/**/*.tex
+projects/templates/*/output/slides/**/*.toc
+projects/templates/*/output/slides/**/*.vrb
 
 # fonds/: only public template fonds under fonds/templates/ are tracked.
 fonds/*

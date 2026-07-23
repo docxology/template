@@ -18,7 +18,8 @@ from tests._support.projects import make_project, write_doc  # noqa: E402
 _VALID_PIPELINE = """
 stages:
   - name: Project Analysis
-    script: 02_run_analysis.py
+    key: analysis
+    script: projects/{project}/scripts/pipeline/stage_02_analysis.py
     tags: [core]
     contract:
       input_artifacts: ["projects/{project}/src/", "projects/{project}/scripts/"]
@@ -39,9 +40,25 @@ def test_gate_passes_for_fully_specified_project(tmp_path: Path) -> None:
     """A project with a methods section + present evidence files exits 0."""
     _write_pipeline(tmp_path)
     project = make_project(tmp_path, "template_test", with_manuscript=True, with_scripts=True)
+    write_doc(
+        project / "scripts" / "pipeline" / "stage_02_analysis.py",
+        "print('synthetic analysis')\n",
+    )
+    write_doc(tmp_path / "scripts" / "runner" / "execute_pipeline.py", "print('synthetic runner')\n")
     write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nWe did X.\n")
+    artifact = project / "output" / "data" / "result.csv"
+    write_doc(artifact, "result\n1\n")
     reports = project / "output" / "reports"
-    write_doc(reports / "artifact_manifest.json", '{"entries": []}\n')
+    from infrastructure.core.pipeline.artifacts import compute_sha256
+
+    write_doc(
+        reports / "artifact_manifest.json",
+        (
+            '{"entries": [{"contract_match": true, "path": "output/data/result.csv", '
+            f'"sha256": "{compute_sha256(artifact)}", "size_bytes": {artifact.stat().st_size}, '
+            '"stage_name": "Project Analysis", "stage_num": 1}], "issues": []}\n'
+        ),
+    )
     write_doc(reports / "evidence_registry.json", '{"claims": []}\n')
 
     exit_code = gate_main(["--repo-root", str(tmp_path), "--project", "template_test"])

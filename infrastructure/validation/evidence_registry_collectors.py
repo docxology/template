@@ -43,6 +43,12 @@ _CONTROL_REPORT_NAMES = frozenset(
         "validation_report.md",
     }
 )
+# Raw matrices, token arrays, and corpus-like JSON lists are data artifacts, not
+# manuscript-facing scalar evidence. Walking every numeric leaf in those
+# structures multiplies each value into rounded variants and can turn a fast
+# publication audit into an unbounded scan. Projects should expose scalar
+# summaries, CSV tables, or explicit claim ledgers for values used in prose.
+_MAX_EVIDENCE_JSON_LIST_ITEMS = 256
 
 
 def register_all_project_facts(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
@@ -361,6 +367,8 @@ def _walk_json(payload: Any, prefix: str = "$") -> Iterable[tuple[str, Any]]:
             yield from _walk_json(value, f"{prefix}.{key}")
         return
     if isinstance(payload, list):
+        if len(payload) > _MAX_EVIDENCE_JSON_LIST_ITEMS:
+            return
         for index, value in enumerate(payload):
             yield from _walk_json(value, f"{prefix}[{index}]")
         return

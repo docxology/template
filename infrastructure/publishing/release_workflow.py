@@ -306,7 +306,7 @@ def default_render_fn(repo_root: Path, project_name: str) -> int:
         "uv",
         "run",
         "python",
-        str(repo_root / "scripts" / "03_render_pdf.py"),
+        str(repo_root / "scripts" / "pipeline" / "stage_03_render.py"),
         "--project",
         project_name,
     ]

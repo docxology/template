@@ -179,6 +179,69 @@ def test_validation_rejects_malformed_or_empty_evidence_json(tmp_path: Path) -> 
     assert "METHODS.EVIDENCE_REGISTRY_INVALID" in codes
 
 
+def test_validation_rejects_artifact_manifest_hash_drift(tmp_path: Path) -> None:
+    from infrastructure.core.pipeline.artifacts import compute_sha256
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    artifact = project / "output" / "data" / "result.csv"
+    write_doc(artifact, "before\n")
+    reports = project / "output" / "reports"
+    write_doc(
+        reports / "artifact_manifest.json",
+        json.dumps(
+            {
+                "entries": [
+                    {
+                        "path": "output/data/result.csv",
+                        "size_bytes": artifact.stat().st_size,
+                        "sha256": compute_sha256(artifact),
+                        "stage_num": 1,
+                        "stage_name": "Project Analysis",
+                        "contract_match": True,
+                    }
+                ],
+                "issues": [],
+            }
+        ),
+    )
+    write_doc(reports / "evidence_registry.json", '{"claims": []}\n')
+    write_doc(artifact, "after\n")
+
+    plan = build_methods_orchestration_plan(tmp_path, "template_test")
+    codes = {issue.code for issue in validate_methods_orchestration_plan(plan, repo_root=tmp_path)}
+
+    assert "METHODS.ARTIFACT_MANIFEST_DRIFT" in codes
+
+
+def test_validation_rejects_unknown_builtin_executor_method(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    write_doc(
+        project / "methods_pipeline.yaml",
+        """
+stages:
+  - name: Unknown Builtin
+    key: unknown_builtin
+    method: _does_not_exist
+    contract:
+      output_artifacts: ["projects/{project}/output/data/result.csv"]
+      definition_of_done: "The stage completes."
+      failure_code: UNKNOWN_BUILTIN
+""",
+    )
+
+    plan = build_methods_orchestration_plan(tmp_path, "template_test", artifact_mode="source")
+    codes = {issue.code for issue in validate_methods_orchestration_plan(plan, repo_root=tmp_path)}
+
+    assert "METHODS.STAGE_EXECUTOR_METHOD_MISSING" in codes
+
+
 def test_methods_cli_outputs_json_and_markdown(repo_root: Path) -> None:
     json_result = subprocess.run(
         [
@@ -243,6 +306,35 @@ def test_validation_skips_generated_artifacts_when_not_required(tmp_path: Path) 
     assert "METHODS.EVIDENCE_REGISTRY_MISSING" not in codes
 
 
+def test_validation_rejects_orphaned_dependencies_and_missing_scripts(tmp_path: Path) -> None:
+    from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
+
+    _write_minimal_repo(tmp_path)
+    project = tmp_path / "projects" / "template_test"
+    write_doc(project / "manuscript" / "02_methodology.md", "# Methodology\n\nMeasured procedure.\n")
+    pipeline = tmp_path / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+    write_doc(
+        pipeline,
+        """
+stages:
+  - name: Missing Script
+    key: missing_script
+    script: scripts/does_not_exist.py
+    depends_on: [Removed Stage]
+    contract:
+      output_artifacts: ["projects/{project}/output/data/result.json"]
+      definition_of_done: Writes a result.
+      failure_code: MISSING_SCRIPT
+""",
+    )
+
+    plan = build_methods_orchestration_plan(tmp_path, "template_test", artifact_mode="source")
+    codes = {issue.code for issue in validate_methods_orchestration_plan(plan, repo_root=tmp_path)}
+
+    assert "METHODS.PIPELINE_DEPENDENCY_ORPHANED" in codes
+    assert "METHODS.STAGE_SCRIPT_MISSING" in codes
+
+
 def test_build_plan_prefers_methods_pipeline_yaml(tmp_path: Path) -> None:
     from infrastructure.methods import build_methods_orchestration_plan
 
@@ -268,7 +360,9 @@ stages:
 
     assert plan.pipeline_source.as_posix() == "projects/template_test/methods_pipeline.yaml"
     assert [stage.name for stage in plan.stages] == ["Custom Stage"]
-    assert plan.stages[0].verification_commands == ("uv run python projects/template_test/scripts/custom.py",)
+    assert plan.stages[0].verification_commands == (
+        "uv run python projects/template_test/scripts/custom.py --project template_test",
+    )
 
 
 def _write_minimal_repo(repo_root: Path) -> None:

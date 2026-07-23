@@ -810,7 +810,7 @@ Parse, dispatch, and return a stable process exit code.
 *constant — defined in `infrastructure.orchestration.menu`*
 
 ```python
-MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', '00_setup_environment.py'), ('1', 'Run Tests', '0...
+MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (('0', 'Environment Setup', 'stage_00_setup.py'), ('1', 'Run Tests', 'stage_0...
 ```
 
 ### `PipelineRunner`
@@ -1587,15 +1587,15 @@ build_dist(project_root: Path, *, dist_dir: Path | None=None, clean: bool=True) 
 
 Build wheel + sdist using ``uv build``.
 
-### `calculate_complexity_score`
+### `calculate_metadata_complexity_score`
 
 *function — defined in `infrastructure.publishing._metadata_reporting`*
 
 ```python
-calculate_complexity_score(metadata: PublicationMetadata) -> int
+calculate_metadata_complexity_score(metadata: PublicationMetadata) -> int
 ```
 
-Backwards-compatible alias — prefer ``calculate_metadata_complexity_score``.
+Calculate a complexity score for the publication.
 
 ### `check_dist`
 
@@ -2703,16 +2703,6 @@ format_benchmark_report(benchmark_results: list[BenchmarkResult]) -> str
 
 Format a Markdown performance analysis report from benchmark results.
 
-### `generate_performance_report`
-
-*function — defined in `infrastructure.scientific.benchmarking`*
-
-```python
-generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str
-```
-
-Generate a performance analysis report.
-
 ### `StabilityTest`
 
 *class — defined in `infrastructure.scientific.stability`*
@@ -3272,14 +3262,6 @@ class KmythUnavailableError(KmythError)
 ```
 
 Raised when Kmyth is requested but usable tools are unavailable.
-
-### `process_pdf`
-
-*constant — defined in `infrastructure.steganography.core`*
-
-```python
-process_pdf = embed_steganography
-```
 
 ### `resolve_build_timestamp`
 

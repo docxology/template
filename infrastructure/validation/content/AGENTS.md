@@ -34,7 +34,7 @@ LaTeX/pandoc warnings.
   `NON_RENDERED_MANUSCRIPT_FILES`
 - `validator_citations.py` - `validate_citations`: every `[@key]` resolves in
   the manuscript `*.bib` union (ERROR, `BIBTEX.UNDEFINED_KEY`)
-- `prerender.py` - `prevalidate_for_render` (alias `prevalidate_source_markdown`):
+- `prerender.py` - `prevalidate_for_render`:
   hard-gates a combined-PDF render by raising `RenderingError` when pitfall or
   citation blockers are found before Pandoc/xelatex runs
 

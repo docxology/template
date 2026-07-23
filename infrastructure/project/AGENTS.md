@@ -66,12 +66,21 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 
 - `run_public_readiness(repo_root)` runs one isolated `stage_01_test.py`
   subprocess for every `PUBLIC_PROJECT_NAMES` entry and records stable
-  PASS/FAIL/SKIP results.
+  PASS/FAIL/SKIP results. Exit code 2 is a failure unless the subprocess emits
+  an explicit `PUBLIC_READINESS_SKIP:<reason>` marker.
 - The gate fails closed when a public exemplar is absent. Private symlinked
   lifecycle projects are never included.
 - Use `scripts/gates/public_readiness.py --json` for machine-readable output;
   `--include-ollama-tests --allow-skips` is reserved for the optional service
   lane.
+
+### Public Capability Inventory (`public_capabilities.py`)
+
+- `audit_public_capability(repo_root, project)` checks required exemplar
+  structure, source/test/script presence, and statically declared skip reasons.
+- `audit_public_capabilities(repo_root)` audits the authoritative public roster.
+- Thin gate: `uv run python scripts/gates/public_capabilities.py`; it is also
+  part of the unified health registry.
 
 ### Domain Profile (`domain_profile.py`)
 
@@ -186,7 +195,7 @@ Backward-compatible: a project without `setup_hook.yaml` behaves exactly as befo
 | `PROJECT_SETUP_HOOK_TIMEOUT_SEC` | Global default timeout (s). Manifest `timeout_sec` overrides. | `3600` |
 | `PROJECT_SETUP_HOOK_DRY_RUN` | If truthy (`1`/`true`/`yes`/`on`), preflight runs and the resolved invocation is logged, but the hook is **not** executed. Returns `True`. | unset |
 
-**Failure-mode summary** (used by `00_setup_environment.py`):
+**Failure-mode summary** (used by `scripts/pipeline/stage_00_setup.py`):
 
 | Condition | `run_project_setup_hook` returns |
 | --- | --- |
@@ -231,7 +240,7 @@ A valid project **must** have:
 ### Optional Directories
 
 Recommended but not required:
-- `scripts/` - Analysis scripts (discovered by `02_run_analysis.py`)
+- `scripts/` - Project-local analysis scripts (discovered by `scripts/pipeline/stage_02_analysis.py`)
 - `manuscript/` - Research manuscript markdown files
 - `output/` - Generated outputs (created automatically)
 
@@ -335,7 +344,7 @@ print(f"Authors: {', '.join(metadata['authors'])}")
 
 ## Integration with Pipeline
 
-### Script Discovery (02_run_analysis.py)
+### Script Discovery (`scripts/pipeline/stage_02_analysis.py`)
 
 ```python
 from infrastructure.project import discover_projects
@@ -350,7 +359,7 @@ project_root = repo_root / "projects" / project_name
 scripts = discover_analysis_scripts(project_root)
 ```
 
-### Test Execution (01_run_tests.py)
+### Test Execution (`scripts/pipeline/stage_01_test.py`)
 
 ```python
 from infrastructure.project import validate_project_structure

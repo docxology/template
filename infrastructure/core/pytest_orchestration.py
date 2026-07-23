@@ -8,6 +8,7 @@ coverage datafile policy, and project-floor resolution to this module.
 from __future__ import annotations
 
 import os
+import platform
 import re
 import shutil
 import subprocess
@@ -49,7 +50,16 @@ TEST_RUNNER_BASE_DEPS: tuple[str, ...] = (
 # opt-in ``MULTI_PROJECT_MAX_WORKERS`` convention used by the cross-project
 # parallel runner (``infrastructure.core.pipeline.multi_project_parallel``).
 ENV_XDIST_WORKERS: str = "PYTEST_XDIST_WORKERS"
-XDIST_DISTRIBUTION: str = "worksteal"
+ENV_PROJECT_MATRIX_WORKERS: str = "TEMPLATE_PROJECT_WORKERS"
+DEFAULT_PROJECT_MATRIX_MAX_WORKERS: int = 4
+MACOS_COVERAGE_XDIST_MAX_WORKERS: int = 2
+# ``worksteal`` maximizes scheduler throughput, but it also concentrates
+# subprocess-heavy tests from unrelated modules onto the same worker at the
+# same time.  That caused intermittent worker replacement on the supported
+# developer platform even when the affected tests passed serially.  Scope
+# affinity keeps each module's subprocess lifecycle together and gives the
+# fast lane a deterministic resource boundary.
+XDIST_DISTRIBUTION: str = "loadscope"
 
 # Values that mean "run serially" regardless of source (arg or env).
 _XDIST_SERIAL_TOKENS: frozenset[str] = frozenset({"", "0", "1", "none", "serial", "off"})
@@ -194,28 +204,56 @@ def build_profile_marker_expression(profile: TestProfileSpec) -> str | None:
     )
 
 
-def parse_project_workers(project_workers: str | int | None = None) -> int:
+def resolve_project_matrix_workers(*, env: Mapping[str, str] | None = None) -> int:
+    """Resolve the bounded adaptive worker count for public project matrices."""
+    source_env = os.environ if env is None else env
+    configured = source_env.get(ENV_PROJECT_MATRIX_WORKERS)
+    if configured:
+        try:
+            value = int(configured)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid {ENV_PROJECT_MATRIX_WORKERS} value {configured!r}: use a positive integer"
+            ) from exc
+        if value < 1:
+            raise ValueError(f"Invalid {ENV_PROJECT_MATRIX_WORKERS} value {configured!r}: use a positive integer")
+        return value
+    cpu_count = os.cpu_count() or 1
+    return max(1, min(DEFAULT_PROJECT_MATRIX_MAX_WORKERS, cpu_count - 1 or 1))
+
+
+def parse_project_workers(
+    project_workers: str | int | None = None,
+    *,
+    env: Mapping[str, str] | None = None,
+) -> int:
     """Return the bounded outer project-matrix worker count."""
     if project_workers is None:
         return 1
     if isinstance(project_workers, bool):
-        raise ValueError("Invalid --project-workers value: use 'serial' or a positive integer")
+        raise ValueError("Invalid --project-workers value: use 'auto', 'serial', or a positive integer")
     if isinstance(project_workers, int):
         if project_workers < 1:
-            raise ValueError(f"Invalid --project-workers value {project_workers!r}: use 'serial' or a positive integer")
+            raise ValueError(
+                f"Invalid --project-workers value {project_workers!r}: use 'auto', 'serial', or a positive integer"
+            )
         return project_workers
 
     value = str(project_workers).strip().lower()
+    if value == "auto":
+        return resolve_project_matrix_workers(env=env)
     if value == "serial":
         return 1
     try:
         parsed = int(value)
     except ValueError as exc:
         raise ValueError(
-            f"Invalid --project-workers value {project_workers!r}: use 'serial' or a positive integer"
+            f"Invalid --project-workers value {project_workers!r}: use 'auto', 'serial', or a positive integer"
         ) from exc
     if parsed < 1:
-        raise ValueError(f"Invalid --project-workers value {project_workers!r}: use 'serial' or a positive integer")
+        raise ValueError(
+            f"Invalid --project-workers value {project_workers!r}: use 'auto', 'serial', or a positive integer"
+        )
     return parsed
 
 
@@ -266,6 +304,32 @@ def resolve_xdist_worker_config(
     if workers <= 1:
         return None
     return XdistWorkerConfig(workers=workers, source=source, raw_value=raw)
+
+
+def validate_coverage_parallel(
+    parallel: str | int | None = None,
+    *,
+    env: Mapping[str, str] | None = None,
+    platform_name: str | None = None,
+) -> None:
+    """Reject known-unsafe high-worker coverage runs on macOS.
+
+    Coverage-bearing xdist runs are materially more resource-sensitive than
+    no-coverage smoke runs. The supported macOS lane has a reproducible worker
+    replacement failure above two workers, so fail early with a deterministic
+    remediation instead of allowing an opaque scheduler crash.
+    """
+    if (platform_name or platform.system()) != "Darwin":
+        return
+    config = resolve_xdist_worker_config(parallel, env=env, strict=True)
+    if config is None:
+        return
+    if config.workers == "auto" or config.workers > MACOS_COVERAGE_XDIST_MAX_WORKERS:
+        raise ValueError(
+            "coverage-bearing pytest-xdist on macOS is limited to "
+            f"{MACOS_COVERAGE_XDIST_MAX_WORKERS} workers for scheduler stability; "
+            "use --parallel 2 or serial for the full coverage lane"
+        )
 
 
 def validate_project_matrix_concurrency(
@@ -652,8 +716,11 @@ def enforce_project_suite_guards(
 
 __all__ = [
     "DEFAULT_TEST_PROFILE",
+    "DEFAULT_PROJECT_MATRIX_MAX_WORKERS",
+    "MACOS_COVERAGE_XDIST_MAX_WORKERS",
     "DISCOVERY_PATTERNS",
     "ENV_XDIST_WORKERS",
+    "ENV_PROJECT_MATRIX_WORKERS",
     "INFRASTRUCTURE_TEST_SCOPES",
     "InfrastructureTestScope",
     "PIPELINE_SMOKE_INFRA_TEST_PATHS",
@@ -673,6 +740,8 @@ __all__ = [
     "make_coverage_subprocess_env",
     "parse_discovery_count",
     "parse_project_workers",
+    "resolve_project_matrix_workers",
+    "validate_coverage_parallel",
     "parse_test_discovery_timeout",
     "prepend_uv_to_path",
     "project_declared_coverage_floor",

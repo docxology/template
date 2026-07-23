@@ -22,6 +22,7 @@ PUBLIC_READINESS_SCHEMA = "template-public-readiness-v2"
 PUBLIC_READINESS_PYTHON = "3.12"
 DEFAULT_TIMEOUT_SECONDS = 1200
 PUBLIC_READINESS_STATUSES = frozenset({"pass", "fail", "skip"})
+PUBLIC_READINESS_SKIP_PREFIX = "PUBLIC_READINESS_SKIP:"
 _OUTPUT_TAIL_LIMIT = 4000
 
 
@@ -35,6 +36,7 @@ class PublicReadinessResult:
     duration_seconds: float
     command: tuple[str, ...]
     output_tail: str = ""
+    reason_code: str = ""
 
 
 @dataclass(frozen=True)
@@ -177,8 +179,20 @@ def run_public_readiness(
                 continue
             result = matrix_results[project]
             returncode = result.returncode
-            status = "pass" if returncode == 0 else "skip" if returncode == 2 else "fail"
             output = result.output_tail or result.detail
+            skip_reason = _explicit_skip_reason(output) if returncode != 0 else None
+            if returncode == 0:
+                status = "pass"
+                reason_code = "PASS"
+            elif skip_reason is not None:
+                status = "skip"
+                reason_code = skip_reason
+            else:
+                # Pytest exit code 2 is an interrupt/collection/usage failure,
+                # not a legitimate optional capability skip. Only an explicit
+                # machine-readable skip marker may enter the skip lane.
+                status = "fail"
+                reason_code = f"SUBPROCESS_EXIT_{returncode}"
             results.append(
                 PublicReadinessResult(
                     project=project,
@@ -187,6 +201,7 @@ def run_public_readiness(
                     duration_seconds=result.duration_seconds,
                     command=commands[project],
                     output_tail=output[-_OUTPUT_TAIL_LIMIT:],
+                    reason_code=reason_code,
                 )
             )
 
@@ -200,7 +215,11 @@ def format_public_readiness(report: PublicReadinessReport) -> str:
             f"Public readiness: {len(report.results)} expected exemplar(s) "
             f"[{report.profile}, workers={report.project_workers}]"
         ),
-        *(f"{result.status.upper():4} {result.project} ({result.duration_seconds:.1f}s)" for result in report.results),
+        *(
+            f"{result.status.upper():4} {result.project} ({result.duration_seconds:.1f}s)"
+            + (f" [{result.reason_code}]" if result.reason_code else "")
+            for result in report.results
+        ),
         f"Counts: {json.dumps(report.counts, sort_keys=True)}",
     ]
     return "\n".join(lines)
@@ -211,8 +230,18 @@ __all__ = [
     "PUBLIC_READINESS_PYTHON",
     "PUBLIC_READINESS_SCHEMA",
     "PUBLIC_READINESS_STATUSES",
+    "PUBLIC_READINESS_SKIP_PREFIX",
     "PublicReadinessReport",
     "PublicReadinessResult",
     "format_public_readiness",
     "run_public_readiness",
 ]
+
+
+def _explicit_skip_reason(output: str) -> str | None:
+    """Extract an intentional public-readiness skip marker from subprocess output."""
+    for line in output.splitlines():
+        if line.startswith(PUBLIC_READINESS_SKIP_PREFIX):
+            reason = line.removeprefix(PUBLIC_READINESS_SKIP_PREFIX).strip()
+            return reason or "EXPLICIT_SKIP"
+    return None

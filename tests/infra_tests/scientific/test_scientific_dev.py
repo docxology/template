@@ -12,7 +12,7 @@ from infrastructure.scientific import (
     BenchmarkResult,
     benchmark_function,
     check_numerical_stability,
-    generate_performance_report,
+    format_benchmark_report,
 )
 from infrastructure.scientific.stability import StabilityTest
 
@@ -84,7 +84,7 @@ class TestBenchmarking:
 class TestPerformanceReporting:
     """Test performance report generation."""
 
-    def test_generate_performance_report(self):
+    def test_format_benchmark_report(self):
         """Test generation of performance analysis report."""
 
         results = [
@@ -93,7 +93,7 @@ class TestPerformanceReporting:
             BenchmarkResult("func3", 0.005, 15.2, 100, {}, "Medium function", "2024-01-01 10:00:02"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Performance Analysis Report" in report
         assert "func1" in report
@@ -135,7 +135,7 @@ class TestEdgeCases:
 class TestPerformanceRecommendations:
     """Test performance report recommendations (covers lines 459-467)."""
 
-    def test_generate_performance_report_slow_functions(self):
+    def test_format_benchmark_report_slow_functions(self):
         """Test performance report with slow functions (lines 459-461)."""
 
         results = [
@@ -155,13 +155,13 @@ class TestPerformanceRecommendations:
             BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-01 10:00:02"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Performance Optimization" in report
         assert "slow_func" in report
         assert "Consider optimizing" in report
 
-    def test_generate_performance_report_memory_intensive(self):
+    def test_format_benchmark_report_memory_intensive(self):
         """Test performance report with memory-intensive functions (lines 463-467)."""
 
         results = [
@@ -181,13 +181,13 @@ class TestPerformanceRecommendations:
             BenchmarkResult("normal_func", 0.01, 10.0, 100, {}, "Normal", "2024-01-01 10:00:02"),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Memory Optimization" in report
         assert "memory_hog" in report
         assert "Review memory usage" in report
 
-    def test_generate_performance_report_both_issues(self):
+    def test_format_benchmark_report_both_issues(self):
         """Test performance report with both slow and memory-intensive functions."""
 
         results = [
@@ -202,7 +202,7 @@ class TestPerformanceRecommendations:
             ),
         ]
 
-        report = generate_performance_report(results)
+        report = format_benchmark_report(results)
 
         assert "Performance Optimization" in report
         assert "Memory Optimization" in report

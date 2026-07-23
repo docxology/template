@@ -324,7 +324,7 @@ def test_exit_code_no_findings_returns_0() -> None:
 def test_subprocess_check_template_drift_no_flags() -> None:
     """check_template_drift script runs with no flags and exits without crashing."""
     repo_root = Path(__file__).resolve().parents[3]
-    script = repo_root / "scripts" / "check_template_drift.py"
+    script = repo_root / "scripts" / "audit" / "check_template_drift.py"
     result = subprocess.run(
         [sys.executable, str(script)],
         capture_output=True,
@@ -339,7 +339,7 @@ def test_subprocess_check_template_drift_no_flags() -> None:
 def test_subprocess_check_template_drift_strict_flag() -> None:
     """check_template_drift script runs with --strict flag and exits without crashing."""
     repo_root = Path(__file__).resolve().parents[3]
-    script = repo_root / "scripts" / "check_template_drift.py"
+    script = repo_root / "scripts" / "audit" / "check_template_drift.py"
     result = subprocess.run(
         [sys.executable, str(script), "--strict"],
         capture_output=True,
@@ -355,7 +355,7 @@ def test_subprocess_check_template_drift_project_flag() -> None:
     from infrastructure.project.drift.runner import DEFAULT_PROJECT_NAMES
 
     repo_root = Path(__file__).resolve().parents[3]
-    script = repo_root / "scripts" / "check_template_drift.py"
+    script = repo_root / "scripts" / "audit" / "check_template_drift.py"
     project = DEFAULT_PROJECT_NAMES[0]
     result = subprocess.run(
         [sys.executable, str(script), "--project", project],

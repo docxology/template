@@ -109,7 +109,7 @@ Adjust spacing if you run **`uv run python scripts/runner/execute_pipeline.py --
 | Hardened copies | `projects/<name>/output/pdf/*_steganography.pdf` |
 | Hash manifests | `projects/<name>/output/pdf/*.hashes.json` |
 
-The copy stage also mirrors deliverables under **`output/<name>/`** (see [05_copy_outputs.py](../../scripts/pipeline/stage_05_copy.py)); if PDFs were only under `output/<name>/`, the stego processor’s fallback search can still find them — but the script’s **printed** locations center `projects/<name>/output/pdf/`.
+The copy stage also mirrors deliverables under **`output/<name>/`** (see [stage_05_copy.py](../../scripts/pipeline/stage_05_copy.py)); if PDFs were only under `output/<name>/`, the stego processor’s fallback search can still find them — but the script’s **printed** locations center `projects/<name>/output/pdf/`.
 
 **Interactive beats**
 

@@ -29,6 +29,23 @@ not to the contents of any specific workspace.
 
 ### Added
 
+- 🧹 **Clean-break script and API consolidation.** Removed obsolete root
+  orchestration wrappers and legacy package aliases; active documentation,
+  tests, and generated API references now use the canonical paths only.
+  Historical references remain non-executable and explicitly labeled.
+
+- 🧭 **Executable methods and public-exemplar contracts.** Methods plans now
+  preserve stable stage keys, validate real scripts and built-in executor
+  methods, verify artifact-manifest hashes against the current output tree, and
+  distinguish integrity snapshots from stage provenance. The public capability
+  gate inventories the canonical exemplar structure and declared skip reasons.
+
+- ⚡ **Bounded test feedback and owned performance evidence.** Quick public
+  project matrices use bounded outer workers, inner xdist uses scope affinity,
+  macOS full-coverage lanes reject unstable worker counts above two, and the
+  serial/parallel benchmark runs in a disposable clean worktree with
+  fail-closed checkout provenance.
+
 - 📝 **Comprehensive docstring coverage.** A deep audit found 1218 public
   functions/classes across infrastructure/ and all 18 template exemplars
   missing docstrings. 1214 docstrings were added (360+ across infrastructure/
@@ -155,7 +172,7 @@ not to the contents of any specific workspace.
   (9 tests, no mocks). ruff + mypy clean; `lint_docs.py` stays green.
 
 - ⚡ **Opt-in parallelism for the local test orchestrator.** The Stage-01
-  runners (`scripts/01_run_tests.py`, `scripts/pipeline/stage_01_test.py`)
+  runner (`scripts/pipeline/stage_01_test.py`)
   gained a `-n/--parallel WORKERS` flag (`auto` or an integer), also honoured
   via the `PYTEST_XDIST_WORKERS` env var. Previously only CI wired
   `pytest-xdist -n auto` (infra job); the local orchestrator ran strictly
@@ -243,7 +260,7 @@ not to the contents of any specific workspace.
   its reproducibility bundle per the R9 pattern). Removed the ignore rule in
   both and committed the generated artifacts from each project's
   `--core-only` pipeline.
-- **Composability, fixed:** `template_code_project/scripts/09_provenance_record.py`
+- **Composability, fixed:** `template_code_project/scripts/pipeline/stage_09_provenance_record.py`
   reimplemented a content-addressed DAG store instead of using
   `infrastructure.provenance`; rewritten to call `Provenance`/`RunNode`
   (confirmed unintentional via `git log` — both old copies trace to the same

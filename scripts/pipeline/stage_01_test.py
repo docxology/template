@@ -159,7 +159,8 @@ def main() -> int:
         default=None,
         help=(
             "Outer project-matrix worker count for --project-only --all-projects. "
-            "Use 'serial' or a positive integer. Default is serial."
+            "Use 'auto', 'serial', or a positive integer. Quick all-projects runs "
+            "default to bounded auto parallelism; release lanes remain serial unless set."
         ),
     )
     parser.add_argument(
@@ -183,6 +184,10 @@ def main() -> int:
         parser.error("--public-projects requires --project-only --all-projects")
     if args.project_workers is not None and not (args.project_only and args.all_projects):
         parser.error("--project-workers requires --project-only --all-projects")
+    effective_project_workers = args.project_workers
+    if args.project_only and args.all_projects and effective_project_workers is None and args.profile == "quick":
+        effective_project_workers = "auto"
+
     try:
         resolve_test_profile(
             args.profile,
@@ -193,7 +198,7 @@ def main() -> int:
         )
         resolve_xdist_worker_config(args.parallel, strict=args.parallel is not None)
         validate_project_matrix_concurrency(
-            args.project_workers,
+            effective_project_workers,
             args.parallel,
             strict_parallel=args.parallel is not None,
         )
@@ -260,7 +265,7 @@ def main() -> int:
             include_long_running=args.include_long_running,
             include_ollama_tests=args.include_ollama_tests,
             include_bench=args.include_bench,
-            project_workers=args.project_workers,
+            project_workers=effective_project_workers,
             parallel=args.parallel,
         )
         log_live_resource_usage("Test stage end", logger)

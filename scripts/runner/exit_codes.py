@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Canonical exit-code contract for orchestrator scripts.
 
-The numbered pipeline stages and standalone orchestrators in ``scripts/`` have
+The pipeline stages and standalone orchestrators in ``scripts/`` have
 long agreed on an exit-code convention *in prose docstrings* — but the contract
 was never expressed as code, so an agent (or a calling script) had to read each
 docstring to learn what ``2`` means for a given stage. This module names that
@@ -13,15 +13,15 @@ behavior anywhere. It only gives the integers names.
 
 Observed conventions this enum unifies (see the cited docstrings):
 
-* ``00_setup_environment.py`` — ``0`` success, ``1`` failure.
-* ``06_llm_review.py`` — ``0`` success, ``1`` hard failure, ``2`` graceful
+* ``pipeline/stage_00_setup.py`` — ``0`` success, ``1`` failure.
+* ``pipeline/stage_06_llm_review.py`` — ``0`` success, ``1`` hard failure, ``2`` graceful
   skip (Ollama unavailable / no model installed; callers treat as non-fatal).
-* ``publish_project_release.py`` — ``0`` success, ``1`` publish/render failure,
+* ``publish/publish_project_release.py`` — ``0`` success, ``1`` publish/render failure,
   ``2`` missing PDF / credentials / invalid inputs.
 
 Usage::
 
-    from scripts.exit_codes import ExitCode
+    from scripts.runner.exit_codes import ExitCode
 
     if ollama_unavailable:
         return ExitCode.SKIP          # == 2

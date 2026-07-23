@@ -22,7 +22,7 @@ do not re-derive or hand-edit a copy here.
 
 ```mermaid
 graph TD
-    A[scripts/02_run_analysis.py] --> B[src/template_formal/colony/]
+    A[scripts/pipeline/stage_02_analysis.py] --> B[src/template_formal/colony/]
     B --> C[src/template_formal/agent/agent.py]
     C --> D[src/template_formal/storage/]
     C --> E[src/template_formal/protocol/session.py]

@@ -95,7 +95,7 @@ real state, not asserted a priori:
    per-agent state.
 
 ![The deterministic demo colony's real `concentration_history`
-(`scripts/02_run_analysis.py::run_demo_colony`, 3 agents, 2 locations, 5
+(`scripts/pipeline/stage_02_analysis.py::run_demo_colony`, 3 agents, 2 locations, 5
 ticks). Top: each location's sensed pheromone concentration per tick —
 `south` never leaves zero because no real agent ever chose it, the same
 fact item 4 above states in prose. Bottom: `north`'s share of total
@@ -230,7 +230,7 @@ result. Gated by
 in `test_colony_experiments_extended.py`.
 
 ![Convergence-tick distribution from this template's own demo statistics
-sweep (`scripts/02_run_analysis.py::run_statistics_sweep`, $N=40$ trials,
+sweep (`scripts/pipeline/stage_02_analysis.py::run_statistics_sweep`, $N=40$ trials,
 same real, heterogeneous/noisy configuration as the $N=150$ test above,
 just smaller so the demo script stays fast): 37/40 trials converged
 (92.5%). Left: histogram of the real `consensus_tick` at which each

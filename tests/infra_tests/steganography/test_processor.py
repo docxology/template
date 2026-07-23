@@ -1,4 +1,4 @@
-"""Tests for SteganographyProcessor pipeline and process_pdf convenience function."""
+"""Tests for SteganographyProcessor pipeline and embed_steganography convenience function."""
 
 from __future__ import annotations
 
@@ -112,9 +112,9 @@ class TestSteganographyProcessor:
 
 class TestProcessPdfConvenience:
     @pytest.mark.skipif(not (has_pypdf() and has_reportlab()), reason="pypdf and/or reportlab not installed")
-    def test_process_pdf(self, tmp_pdf: Path, tmp_path: Path):
+    def test_embed_steganography(self, tmp_pdf: Path, tmp_path: Path):
         from infrastructure.steganography.config import SteganographyConfig
-        from infrastructure.steganography.core import process_pdf
+        from infrastructure.steganography.core import embed_steganography
 
         config = SteganographyConfig(
             enabled=True,
@@ -125,4 +125,4 @@ class TestProcessPdfConvenience:
             encryption_enabled=False,
         )
         output = tmp_path / "convenience_test.pdf"
-        assert process_pdf(tmp_pdf, output_pdf=output, config=config).exists()
+        assert embed_steganography(tmp_pdf, output_pdf=output, config=config).exists()

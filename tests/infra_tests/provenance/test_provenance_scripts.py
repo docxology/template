@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPT = REPO_ROOT / "scripts" / "09_provenance_record.py"
+SCRIPT = REPO_ROOT / "scripts" / "pipeline" / "stage_09_provenance_record.py"
 
 
 # ---------------------------------------------------------------------------

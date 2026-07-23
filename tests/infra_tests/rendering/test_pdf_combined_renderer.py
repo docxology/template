@@ -15,7 +15,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     inject_bibliography,
     verify_figure_references,
     prevalidate_markdown,
-    prevalidate_source_markdown,
+    prevalidate_for_render,
     inject_latex_preamble,
 )
 
@@ -660,13 +660,13 @@ class TestPrevalidateSourceMarkdown:
     def test_clean_manuscript_passes(self, tmp_path):
         manuscript = self._make_manuscript(tmp_path)
         (manuscript / "01_intro.md").write_text("# Intro\n\nSee [@good_key].\n", encoding="utf-8")
-        prevalidate_source_markdown(manuscript)
+        prevalidate_for_render(manuscript)
 
     def test_undefined_citation_blocks_render(self, tmp_path):
         manuscript = self._make_manuscript(tmp_path)
         (manuscript / "01_intro.md").write_text("# Intro\n\nSee [@missing_key] and [@good_key].\n", encoding="utf-8")
         with pytest.raises(RenderingError) as excinfo:
-            prevalidate_source_markdown(manuscript)
+            prevalidate_for_render(manuscript)
         assert "missing_key" in str(excinfo.value)
         assert "Pre-render validation failed" in str(excinfo.value)
 
@@ -677,7 +677,7 @@ class TestPrevalidateSourceMarkdown:
             encoding="utf-8",
         )
         with pytest.raises(RenderingError) as excinfo:
-            prevalidate_source_markdown(manuscript)
+            prevalidate_for_render(manuscript)
         msg = str(excinfo.value)
         assert "Pre-render validation failed" in msg
         assert "01_intro.md" in msg
@@ -686,7 +686,7 @@ class TestPrevalidateSourceMarkdown:
         manuscript = self._make_manuscript(tmp_path)
         md = manuscript / "01_intro.md"
         md.write_text("Clean text with no citations.\n", encoding="utf-8")
-        prevalidate_source_markdown([md], bib_file=manuscript / "references.bib")
+        prevalidate_for_render([md], bib_file=manuscript / "references.bib")
 
     def test_citation_resolves_with_second_bib_file(self, tmp_path):
         manuscript = tmp_path / "manuscript"
@@ -703,4 +703,4 @@ class TestPrevalidateSourceMarkdown:
             "# Intro\n\nSee [@good_key] and [@deep_only].\n",
             encoding="utf-8",
         )
-        prevalidate_source_markdown(manuscript)
+        prevalidate_for_render(manuscript)

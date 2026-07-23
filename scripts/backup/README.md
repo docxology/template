@@ -6,9 +6,9 @@ This directory is a placeholder for backup-specific scripts. Current backup scri
 
 | Script | Description |
 |--------|-------------|
-| [`../backup-daily.sh`](../backup-daily.sh) | Daily rsync of `~/.template/` to remote host |
-| [`../backup-weekly.sh`](../backup-weekly.sh) | Weekly backup with longer retention |
-| [`../backup-full.sh`](../backup-full.sh) | Full backup of all critical directories |
+| [`../shell/backup-daily.sh`](../shell/backup-daily.sh) | Daily rsync of `~/.template/` to remote host |
+| [`../shell/backup-weekly.sh`](../shell/backup-weekly.sh) | Weekly backup with longer retention |
+| [`../shell/backup-full.sh`](../shell/backup-full.sh) | Full backup of all critical directories |
 
 ## See Also
 

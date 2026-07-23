@@ -78,11 +78,11 @@ print(f"Output: {output}")
 ### Hash Verification
 
 ```python
-from infrastructure.steganography import process_pdf
+from infrastructure.steganography import embed_steganography
 from pathlib import Path
 
 # Process and get hash manifest
-result = process_pdf(Path("paper.pdf"))
+result = embed_steganography(Path("paper.pdf"))
 
 # The .hashes.json manifest contains:
 # {

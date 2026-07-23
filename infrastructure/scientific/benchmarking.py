@@ -171,12 +171,3 @@ def format_benchmark_report(benchmark_results: list[BenchmarkResult]) -> str:
     report.append("")
 
     return "\n".join(report)
-
-
-def generate_performance_report(benchmark_results: list[BenchmarkResult]) -> str:
-    """Generate a performance analysis report.
-
-    This is a convenience wrapper kept for backwards compatibility with earlier
-    scientific-dev APIs and tests.
-    """
-    return format_benchmark_report(benchmark_results)

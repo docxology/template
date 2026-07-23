@@ -39,8 +39,9 @@ uv run python scripts/docgen/counts.py --write
 uv run python scripts/docgen/publication_records.py --check
 ```
 
-Root-level `scripts/generate_*.py` filenames remain as backward-compatible shims
-where present; prefer the paths above in docs and CI.
+The removed root-level `scripts/generate_*.py` wrappers are not part of the
+public interface. Use the canonical paths above in docs, CI, and automation;
+historical references belong only in clearly labeled reports.
 
 ## See also
 

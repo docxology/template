@@ -43,7 +43,7 @@ def test_orchestration_parser_incremental_flag_sets_true() -> None:
 
 def _capture_config(*, incremental: bool):
     """Run ``execute_pipeline`` with a real capture-executor; return the config."""
-    import scripts.execute_pipeline as ep
+    import scripts.runner.execute_pipeline as ep
 
     captured: dict[str, object] = {}
 

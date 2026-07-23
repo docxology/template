@@ -2,15 +2,15 @@
 project: humos-template
 task: "Iteration 11 - close remaining evidence-backed improvements and publish main"
 effort: E4
-phase: building
-progress: "1/34 current-iteration criteria verified; composable-package program in execution"
+phase: verifying
+progress: "Clean-break canonicalization and TODO scoping are implemented; user-directed publication is in progress"
 iteration: 11-all-improvements-main-push
 baseline_head_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_origin_main_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_worktree_composable_program: "18 tracked modifications plus 28 untracked paths; three protective stashes; independently dirty nested Kmyth checkout"
-baseline_head_iter11: 52db06f43b383444cd274cf582a0038f307383b9
-baseline_origin_main_iter11: 52db06f43b383444cd274cf582a0038f307383b9
-baseline_ci_iter11: "CI run 29468755285: success"
+baseline_head_iter11: 28baac5e647744c08c7400afa73ca4f8de6be4b4
+baseline_origin_main_iter11: 28baac5e647744c08c7400afa73ca4f8de6be4b4
+baseline_ci_iter11: "CI run 29828839305: success on pre-publication baseline; final SHA pending"
 baseline_head_iter10: 75447b6f08e79b7527fb33fb096d4442ce8d094a
 integrated_head_iter10: e17d25ec8
 published_head_iter10: 8ed32784088c370ea0cba6a9af0de9392d68d88b
@@ -33,7 +33,7 @@ baseline_head: 890abb6ac3b09bf2ea226b1ee44ceedd7f8ef950 (clean tree)
 iteration: 5-multi-lens-review-plans-fixes
 mode: algorithm
 started: 2026-07-02
-updated: 2026-07-20T09:39:36-07:00
+updated: 2026-07-22
 ---
 
 # ISA — HumOS Template Package: Agentic Operability
@@ -173,8 +173,9 @@ Make the public repository's green signals trustworthy: every blocking static
 gate must fail closed, pipeline routes must resolve one canonical
 implementation, publication metadata and artifacts must have one source of
 truth, standalone exports must include declared public resources, and
-state-changing publication must reject local-only inputs. Preserve compatibility,
-confidentiality, existing ISC identifiers, and externally published state.
+state-changing publication must reject local-only inputs. Keep one canonical
+active surface, preserve confidentiality, existing ISC identifiers, and
+externally published state; historical compatibility is documentation only.
 
 ### Criteria
 
@@ -186,8 +187,8 @@ confidentiality, existing ISC identifiers, and externally published state.
 - [x] ISC-257: blocking static health accurately names and runs confidentiality, generated-artifact, drift, generated-doc, skills, Bandit, and architecture-parity gates without masked exits.
 - [x] ISC-258: module-size ratchets carry per-file ceilings and expiry dates; async functions, methods, and syntax errors fail closed.
 - [x] ISC-259: pipeline YAML owns stable keys and canonical repository-relative scripts; single-stage and full-DAG routes have a parity test.
-- [x] ISC-260: root numbered commands are thin compatibility wrappers over canonical stage entrypoints.
-- [x] ISC-261: importing pipeline types does not load reporting, Matplotlib, NumPy, or Pillow; package-level compatibility exports resolve lazily.
+- [x] ISC-260: canonical stage entrypoints are the only supported executable surface; duplicate root wrappers are absent.
+- [x] ISC-261: importing pipeline types does not load reporting, Matplotlib, NumPy, or Pillow; package exports expose canonical names without legacy aliases.
 - [x] ISC-262: repository URLs use one normalization accessor with explicit URL precedence and GitHub-slug fallback.
 - [x] ISC-263: standalone exemplar exports include declared public cross-root resources by default and record them in a content-addressed manifest; project-only export remains explicit.
 - [x] ISC-264: every public exemplar has a non-empty claim-ledger overlay and stale hard-coded roster prose is removed from authored manuscript text.
@@ -216,8 +217,10 @@ tier, separate public-exemplar test invocations, and clean standalone exports.
 
 - Project-local outputs remain canonical because they preserve standalone
   forkability; top-level copies are disposable release products.
-- Existing CLI names and package-level imports remain available through thin
-  wrappers and lazy aliases during a compatibility window.
+- The public surface is an intentional clean break: obsolete root wrappers,
+  legacy aliases, and duplicate command paths are removed after all canonical
+  consumers and public exemplars are migrated. Historical references are
+  retained only when explicitly labeled and non-executable.
 - External release readiness remains advisory in ordinary CI and is not used to
   authorize deposits or release creation.
 - Private AskOS promotion and GitHub repository administration remain explicit
@@ -360,27 +363,27 @@ local-only work.
 - [ ] ISC-299: Anti: the dirty Kmyth checkout, protective stashes, and untracked generated outputs are absent from every staged commit.
 - [ ] ISC-300: the reviewed commits reach `origin/main`, the remote SHA is re-read, and hosted CI succeeds on the final SHA.
 - [ ] ISC-301: every pipeline consumer resolves an explicit, methods-specific, project, repository, or installed pipeline source through one typed precedence contract covered by characterization tests.
-- [ ] ISC-302: every canonical stage has a stable command key, while historical display names, name-based dependencies, and the `tests`/`executive_report` aliases remain compatible.
+- [ ] ISC-302: every canonical stage has a stable command key; historical display names may remain in labeled records, but active dependencies and commands use canonical keys only and no legacy aliases are required.
 - [ ] ISC-303: single-stage execution runs default, project-override, custom-script, and built-in-method stages through the selected project DAG with deterministic exit codes.
 - [ ] ISC-304: methods plans expose additive schema, artifact-mode, and stage-key fields without removing or changing existing serialized fields.
 - [ ] ISC-305: the methods CLI audits either one project or all public exemplars in source or rendered mode and returns exit `0` for clean/warnings, `1` for validation errors, and argparse exit `2` for invalid invocation.
 - [ ] ISC-306: all 24 public exemplars pass source-contract and rendered-evidence methods audits, including a pipeline-generated advanced-literature evidence registry.
 - [ ] ISC-307: counts and project-test collection succeed after checkout relocation despite a stale absolute project pytest wrapper, without deleting or rewriting the project environment.
-- [ ] ISC-308: root orchestration parser, handlers, and interactive UI are modular while all existing imports, flags, prompt order, transcripts, and exit codes remain compatible.
+- [ ] ISC-308: root orchestration parser, handlers, and interactive UI are modular with one canonical import, flag, prompt, transcript, and exit-code contract; removed legacy wrappers are not supported.
 - [ ] ISC-309: orchestration stage banners and totals derive from the actual filtered project DAG, including project overrides and plugin stages.
 - [ ] ISC-310: secure orchestration resolves projects and layered configuration through shared services rather than private duplicate loaders.
 - [ ] ISC-311: the six named fat-script responsibilities live in owning infrastructure modules and the scripts remain thin entrypoints under the strict drift audit.
-- [ ] ISC-312: promotion attestation, candidate scanning, and composite evaluation are separately testable, deterministic with an injected `as_of`, and reachable through compatible legacy and explicit CLI forms.
+- [ ] ISC-312: promotion attestation, candidate scanning, and composite evaluation are separately testable, deterministic with an injected `as_of`, and reachable through the canonical explicit CLI form.
 - [ ] ISC-313: CODEOWNERS, sensitive ownership policy, publication preflight, and root release contract agree with their generated or tested public contracts.
 - [ ] ISC-314: stage tables, API reference, operations, skills, roster, counts, architecture overview, methods guidance, `TO-DO.md`, `STATUS.md`, and `[Unreleased]` changelog are current on the final tree.
 - [ ] ISC-315: Python 3.10 remains supported, Python 3.13 is exercised for readiness, and no unguarded 3.11+ syntax or standard-library API enters the supported surface.
 - [ ] ISC-316: current meaningful first-party and offline-failure coverage targets gain real-file or real-subprocess tests without mocks, lowered thresholds, or live-provider requirements.
 - [ ] ISC-317: the blocking health sweep passes every registered gate and clean-checkout benchmark evidence proves at least 25% wall-time improvement without skipped gates or changed thresholds.
 - [ ] ISC-318: the uncached infrastructure suite, configured typing, security/docs/export gates, every public project at its declared coverage floor, and the isolated union gate pass on the final commit.
-- [ ] ISC-319: Forge implementation review, advisor checkpoint, and fresh Cato audit leave no unresolved medium/high correctness, security, compatibility, or developer-experience finding.
-- [ ] ISC-320: Anti: no public import, shell entrypoint, CLI flag, JSON field, diagnostic code, generated-document path, confidentiality boundary, or coverage threshold is removed or weakened.
+- [ ] ISC-319: Forge implementation review, advisor checkpoint, and fresh Cato audit leave no unresolved medium/high correctness, security, clean-break, or developer-experience finding.
+- [ ] ISC-320: Anti: no canonical public import, shell entrypoint, CLI flag, JSON field, diagnostic code, generated-document path, confidentiality boundary, or coverage threshold is removed or weakened; intentional legacy-surface removal is documented and tested.
 - [ ] ISC-321: phase commits are independently reproducible, rebased normally onto current `origin/main`, pushed without force, and confirmed by exact remote SHA plus hosted CI success.
-- [ ] ISC-322: typed `quick`/`release`/`exhaustive` profiles have one canonical registry, preserve legacy include-flags additively, and keep live services and benchmarks explicit opt-ins.
+- [ ] ISC-322: typed `quick`/`release`/`exhaustive` profiles have one canonical registry, keep supported current flags explicit, and keep live services and benchmarks explicit opt-ins.
 - [ ] ISC-323: coverage cleanup preserves the active `COVERAGE_FILE` database and every xdist shard, while the exact CI infrastructure selection records at least 60% coverage.
 - [ ] ISC-324: the shared project-test matrix enforces bounded outer workers, per-project timeout/failure isolation, canonical result ordering, and fail-closed rejection of nested project and xdist concurrency.
 - [ ] ISC-325: public readiness and count collection expose additive profile/worker metadata, use relocation-safe `python -m pytest`, fail closed on missing projects/errors, and produce byte-identical serial/parallel rendered counts.
@@ -395,8 +398,8 @@ Run affected suites before the 22-gate repository health command. Audit the fina
 diff in a fresh context, stage only reviewed tracked paths, push normally, then
 verify remote SHA parity and the complete hosted CI matrix.
 
-For the composable-package extension, first capture compatibility behavior in
-real-I/O characterization tests. Verify portability with a temporary relocated
+For the composable-package extension, first capture canonical behavior and
+intentional legacy-surface removals in real-I/O characterization tests. Verify portability with a temporary relocated
 project carrying a stale absolute pytest wrapper. Probe source and rendered
 methods modes across the authoritative public roster, then run focused suites
 after each phase, the uncached infrastructure coverage suite at integration
@@ -414,7 +417,7 @@ the complete health registry, and a clean-checkout before/after benchmark.
 - `orchestration-modules`: separate parsing, command effects, interaction, secure config, and thin scripts; satisfies ISC-308..311.
 - `promotion-governance`: separate promotion contracts and reconcile public security/release ownership surfaces; satisfies ISC-312..313.
 - `documentation-and-runtime`: regenerate registered docs, close meaningful coverage gaps, retain 3.10, and prove 3.13 readiness; satisfies ISC-314..318.
-- `verified-publication`: run Forge/advisor/Cato review, preserve compatibility and local-only state, phase commits, rebase, push, and hosted verification; satisfies ISC-319..321.
+- `verified-publication`: run Forge/advisor/Cato review, preserve local-only state, phase commits, rebase, push, and hosted verification; satisfies ISC-319..321.
 
 ### Iteration 11 Decisions
 
@@ -422,12 +425,14 @@ the complete health registry, and a clean-checkout before/after benchmark.
 - 2026-07-15 20:35: the local Claude advisor is logged out, so its failed checkpoint is recorded and Forge plus a fresh cross-vendor audit provide the independent review path.
 - 2026-07-15 20:35: current hosted CI on baseline `52db06f43` is accepted as the full-suite baseline; local work begins with artifact-specific probes rather than immediately repeating the already-green matrix.
 - 2026-07-20 09:39: refined: the approved composable-package program extends Iteration 11 with ISC-301..321 rather than creating a competing ISA iteration; stable historical IDs and the existing release/security criteria remain authoritative.
-- 2026-07-20 09:39: preserve public compatibility additively, retain Python 3.10 while adding 3.13 readiness, land under `[Unreleased]`, and create no version tag or GitHub release.
+- 2026-07-22: DAF authorized a clean public refactor; canonical consumers and all public `template_*` exemplars are the acceptance boundary, with no legacy compatibility obligation. Retain Python 3.10 while adding 3.13 readiness, land under `[Unreleased]`, and create no version tag or GitHub release.
 - 2026-07-20 09:39: phase commits may contain only their implementation plus tests and generated registered consumers; no commit may depend on later unstaged code to pass.
 
 ### Iteration 11 Verification
 
 - ISC-288: Bash and GitHub probes reported local HEAD and `origin/main` both at `52db06f43b383444cd274cf582a0038f307383b9`, zero divergence, only the pre-existing dirty Kmyth checkout plus untracked generated outputs, no open GitHub issues, and successful CI run `29468755285` on that SHA.
+- 2026-07-22: the canonical migration-focused suite passed 239 tests; configured mypy passed across 1,470 source files. The uncached full infrastructure rerun was intentionally stopped by DAF at 62% to prioritize publication, so it is not final-pass evidence.
+- 2026-07-22: root TODO scope was reconciled to four cross-cutting backlog IDs; every canonical `template_*` exemplar retains its own project-local `TODO.md`, with authoring stubs explicitly separated from repository backlog work.
 
 ## Historical iterations 1–3 — Goal
 
@@ -873,7 +878,7 @@ this session with all repo gates green afterward — no irreversible external ac
 - [x] ISC-5: Anti: No file outside `projects/templates/` becomes git-tracked (probe: check_tracked_projects.py — guard green).
 - [x] ISC-6: Changed/added modules carry mirror partners; all new infra modules have test partners (probe: audit_documentation EXIT=0, no new-file findings).
 - [x] ISC-7: Reconnaissance produced a leverage-ranked, file-anchored, adversarially-verified findings set (probe: workflow 68→32 confirmed).
-- [x] ISC-8: `scripts/exit_codes.py` names the in-force 0/1/2 contract as an IntEnum without changing any return value (probe: import + value asserts).
+- [x] ISC-8: `scripts/runner/exit_codes.py` names the in-force 0/1/2 contract as an IntEnum without changing any return value (probe: import + value asserts).
 - [x] ISC-9: `copy_exemplar/plan_copy/CopyResult` importable from `infrastructure.project` (probe: import).
 - [x] ISC-10: `describe-pipeline --format json` derives 12 stages (10 core-only) from pipeline.yaml with clean stdout (probe: jq).
 - [x] ISC-11: `main(argv) -> int` standardized on rendering + core CLIs (probe: inspect.signature + main([]) == 1).

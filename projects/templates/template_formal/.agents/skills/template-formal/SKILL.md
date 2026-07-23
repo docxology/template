@@ -36,7 +36,7 @@ uv run pytest projects/templates/template_formal/tests --cov=projects/templates/
 MYPYPATH=projects/templates/template_formal/src \
   uv run mypy --strict --explicit-package-bases --namespace-packages \
   projects/templates/template_formal/src
-uv run python projects/templates/template_formal/scripts/02_run_analysis.py
+uv run python projects/templates/template_formal/scripts/pipeline/stage_02_analysis.py
 uv run python scripts/pipeline/stage_03_render.py --project templates/template_formal
 uv run python scripts/pipeline/stage_04_validate.py --project templates/template_formal
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_formal

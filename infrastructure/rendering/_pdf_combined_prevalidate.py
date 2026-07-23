@@ -10,7 +10,6 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_preflight import check_brace_balance
 from infrastructure.validation.content.prerender import (
     prevalidate_for_render,
-    prevalidate_source_markdown,
 )
 
 logger = get_logger(__name__)
@@ -18,7 +17,6 @@ logger = get_logger(__name__)
 __all__ = [
     "prevalidate_for_render",
     "prevalidate_markdown",
-    "prevalidate_source_markdown",
     "verify_figure_references",
 ]
 

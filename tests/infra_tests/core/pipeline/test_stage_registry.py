@@ -41,7 +41,7 @@ def test_unknown_stage_exits() -> None:
 def test_clean_is_not_a_dispatchable_stage() -> None:
     """'clean' is an executor built-in, not a single-stage script.
 
-    Regression: a ``"clean"`` dispatch pointing at 00_setup_environment.py made
+    Regression: a ``"clean"`` dispatch pointing at the setup stage made
     ``--stage clean`` silently run setup and clean nothing.
     """
     assert "clean" not in STAGE_DISPATCH

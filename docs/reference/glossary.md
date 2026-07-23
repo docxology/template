@@ -14,7 +14,7 @@
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: see `pyproject.toml` `[project].version` / the latest git tag for the current package version
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`COUNTS.md`](../_generated/COUNTS.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
-- **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Stage scripts are `scripts/pipeline/stage_NN_*.py`–`scripts/05_*.py` plus `06`/`07` for LLM and executive reporting where used.
+- **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Canonical stage entrypoints live under `scripts/pipeline/stage_NN_*.py`; project-specific scripts remain under each exemplar's `projects/<name>/scripts/` interface.
 
 ---
 

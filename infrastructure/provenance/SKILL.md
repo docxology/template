@@ -23,7 +23,7 @@ from infrastructure.provenance import ArtifactNode, EdgeRelation, Provenance, Ru
 store = Provenance.with_path("output/.provenance")
 
 # Record that a run produced an artifact
-run = RunNode.create("analysis run", command="uv run python 02_run_analysis.py")
+run = RunNode.create("analysis run", command="uv run python scripts/pipeline/stage_02_analysis.py")
 artifact = ArtifactNode.create("results.json", path="output/results.json")
 store.record(run)
 store.record(artifact)

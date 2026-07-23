@@ -6,7 +6,7 @@ Technical guide for `scripts/backup/` — placeholder directory for backup and r
 
 ## Current State
 
-This directory is currently empty. Backup scripts (`backup-daily.sh`, `backup-weekly.sh`, `backup-full.sh`) live in the parent [`scripts/`](../) directory and are documented in [`scripts/AGENTS.md`](../AGENTS.md).
+This directory is currently empty. Backup scripts (`backup-daily.sh`, `backup-weekly.sh`, `backup-full.sh`) live in [`scripts/shell/`](../shell/) and are documented in [`scripts/shell/AGENTS.md`](../shell/AGENTS.md).
 
 This directory exists to provide a future home for backup-specific scripts as they are migrated or added.
 

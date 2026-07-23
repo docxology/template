@@ -293,6 +293,10 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
                 "source",
             ],
         ),
+        (
+            "public-capabilities",
+            ["uv", "run", "python", "scripts/gates/public_capabilities.py"],
+        ),
         ("architecture-overview", arch_overview_argv),
         (
             "module-line-count",

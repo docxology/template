@@ -97,15 +97,26 @@ uv run python scripts/runner/execute_pipeline.py --project {project_name} --core
 # Run all tests (infrastructure + project)
 uv run python scripts/pipeline/stage_01_test.py --project {project_name}
 
-# Opt into parallelism for the local orchestrator (serial by default):
-#   -n auto  → one worker per core;  -n 6 → fixed 6 workers (safer on busy machines)
-# Also honoured via the PYTEST_XDIST_WORKERS env var. Applies to infra + project
-# suites and the --all-projects union gate; coverage is combined per-worker first.
+# Focused project/infrastructure runs are serial unless -n is supplied. The
+# quick all-public project matrix is bounded-parallel by default (at most four
+# outer workers); use --project-workers serial for the diagnostic oracle.
+# -n auto or a fixed -n value controls inner pytest-xdist. Do not combine it
+# with project workers >1. TEMPLATE_PROJECT_WORKERS overrides the bounded auto
+# cap; PYTEST_XDIST_WORKERS controls inner xdist when no -n is supplied.
+uv run python scripts/pipeline/stage_01_test.py \
+  --project-only --all-projects --public-projects --profile quick
+
+# Explicit serial oracle for the same public selection:
+uv run python scripts/pipeline/stage_01_test.py \
+  --project-only --all-projects --public-projects --profile quick \
+  --project-workers serial
+
+# Opt into inner-project parallelism for a focused run:
 uv run python scripts/pipeline/stage_01_test.py --project {project_name} -n auto
 
-# Infrastructure tests only (60% coverage minimum; exact fast CI lane)
+# Infrastructure tests only (60% coverage minimum; safe local coverage lane)
 COVERAGE_FILE=.coverage.infra uv run pytest tests/infra_tests/ \
-  -n auto --dist worksteal --benchmark-disable \
+  -n 2 --dist loadscope --benchmark-disable \
   --cov=infrastructure --cov-report=term-missing --cov-fail-under=60 \
   --durations=10 \
   -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance" \
@@ -128,6 +139,10 @@ uv run pytest tests/infra_tests/test_specific.py -v
 uv run pytest tests/infra_tests/test_specific.py::test_function_name -v
 
 # Coverage files are isolated per suite (.coverage.infra, .coverage.project)
+
+# Owned serial/parallel performance evidence (requires a clean checkout):
+uv run python scripts/maintenance/benchmark_tests.py \
+  --target pipeline-smoke --output /tmp/template-test-performance.json
 ```
 
 ### Development Tools

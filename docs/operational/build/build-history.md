@@ -52,16 +52,16 @@ The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only`
 | Stage | Script | Notes |
 | ----- | ------ | ----- |
 | 0 | built-in clean | pre-step |
-| 1 | `00_setup_environment.py` | Environment setup |
-| 2 | `01_run_tests.py --infra-only` | Infrastructure tests |
-| 3 | `01_run_tests.py --project-only` | Project tests |
-| 4 | `02_run_analysis.py` | Project analysis |
-| 5 | `03_render_pdf.py` | PDF rendering |
-| 6 | `04_validate_output.py` | Output validation |
-| 7 | `06_llm_review.py --reviews-only` | LLM Scientific Review (optional) |
-| 8 | `06_llm_review.py --translations-only` | LLM Translations (optional) |
-| 9 | `05_copy_outputs.py` | Copy deliverables |
-| — | `07_generate_executive_report.py` | Multi-project only (not a numbered DAG stage) |
+| 1 | `scripts/pipeline/stage_00_setup.py` | Environment setup |
+| 2 | `scripts/pipeline/stage_01_test.py --infra-only` | Infrastructure tests |
+| 3 | `scripts/pipeline/stage_01_test.py --project-only` | Project tests |
+| 4 | `scripts/pipeline/stage_02_analysis.py` | Project analysis |
+| 5 | `scripts/pipeline/stage_03_render.py` | PDF rendering |
+| 6 | `scripts/pipeline/stage_04_validate.py` | Output validation |
+| 7 | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | LLM Scientific Review (optional) |
+| 8 | `scripts/pipeline/stage_06_llm_review.py --translations-only` | LLM Translations (optional) |
+| 9 | `scripts/pipeline/stage_05_copy.py` | Copy deliverables |
+| — | `scripts/pipeline/stage_07_executive_report.py` | Multi-project only (not a numbered DAG stage) |
 
 **Usage:**
 

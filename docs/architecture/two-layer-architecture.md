@@ -185,7 +185,7 @@ graph TB
     subgraph L1["LAYER 1: INFRASTRUCTURE<br/>(Build orchestration, validation, document management)"]
         subgraph SCRIPTS["Pipeline Orchestrators"]
             RUN_ALL[execute_pipeline.py<br/>declared DAG pipeline]
-            SCRIPT_LIST[scripts/*.py<br/>- 00_setup_environment.py<br/>- 01_run_tests.py<br/>- 02_run_analysis.py<br/>- 03_render_pdf.py<br/>- 04_validate_output.py<br/>- 05_copy_outputs.py]
+            SCRIPT_LIST[scripts/pipeline/*.py<br/>- stage_00_setup.py<br/>- stage_01_test.py<br/>- stage_02_analysis.py<br/>- stage_03_render.py<br/>- stage_04_validate.py<br/>- stage_05_copy.py]
         end
 
         subgraph INFRA["infrastructure/"]

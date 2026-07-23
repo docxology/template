@@ -318,7 +318,7 @@ def test_hitl_cli_commands_status_guide_and_validate_response(
     response_path = tmp_path / "response.json"
     response_path.write_text('{"action": "guide", "message": "Add a benchmark.", "stage_num": 6}', encoding="utf-8")
 
-    from scripts.execute_pipeline import PipelineArgs, handle_hitl_command
+    from scripts.runner.execute_pipeline import PipelineArgs, handle_hitl_command
 
     status_rc = handle_hitl_command(
         PipelineArgs(project="demo", hitl_command="status"),

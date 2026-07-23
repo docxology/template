@@ -36,7 +36,6 @@ logger = get_logger(__name__)
 SCHEMA_VERSION = "1.0"
 BUNDLE_MANIFEST_NAME = "repro_manifest.json"
 COUNTS_RELPATH = "docs/_generated/COUNTS.md"
-CANONICAL_FACTS_RELPATH = COUNTS_RELPATH  # backward-compatible alias
 
 # Reproduction-input file kinds, in the order they are collected.
 _KIND_LOCKFILE = "lockfile"
@@ -443,7 +442,6 @@ def main(argv: list[str] | None = None) -> int:
 
 __all__ = [
     "BUNDLE_MANIFEST_NAME",
-    "CANONICAL_FACTS_RELPATH",
     "COUNTS_RELPATH",
     "SCHEMA_VERSION",
     "BundleEntry",

@@ -114,7 +114,7 @@ isolated runs of this tree.
 
 ```bash
 # From the repository root — run the demo colony pipeline
-uv run python projects/templates/template_formal/scripts/02_run_analysis.py
+uv run python projects/templates/template_formal/scripts/pipeline/stage_02_analysis.py
 
 # Run tests with coverage
 uv run pytest projects/templates/template_formal/tests/ --cov=projects/templates/template_formal/src --cov-fail-under=90

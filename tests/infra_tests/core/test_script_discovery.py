@@ -22,7 +22,7 @@ class TestDiscoverAnalysisScripts:
         """Test discovering Python scripts in project/scripts/."""
         repo_root = tmp_path / "repo"
         scripts_dir = repo_root / "projects" / "project" / "scripts"
-        scripts_dir.mkdir(parents=True)
+        (scripts_dir / "pipeline").mkdir(parents=True)
 
         # Create some Python scripts
         (scripts_dir / "analysis1.py").write_text("# Script 1")
@@ -217,19 +217,20 @@ class TestDiscoverOrchestrators:
         repo_root = tmp_path / "repo"
         scripts_dir = repo_root / "scripts"
         scripts_dir.mkdir(parents=True)
+        (scripts_dir / "pipeline").mkdir(parents=True)
 
         # Create all expected orchestrators
         orchestrator_names = [
-            "00_setup_environment.py",
-            "01_run_tests.py",
-            "02_run_analysis.py",
-            "03_render_pdf.py",
-            "04_validate_output.py",
-            "05_copy_outputs.py",
+            "stage_00_setup.py",
+            "stage_01_test.py",
+            "stage_02_analysis.py",
+            "stage_03_render.py",
+            "stage_04_validate.py",
+            "stage_05_copy.py",
         ]
 
         for name in orchestrator_names:
-            (scripts_dir / name).write_text(f"# {name}")
+            (scripts_dir / "pipeline" / name).write_text(f"# {name}")
 
         orchestrators = discover_orchestrators(repo_root)
 
@@ -243,8 +244,9 @@ class TestDiscoverOrchestrators:
         scripts_dir.mkdir(parents=True)
 
         # Create only some orchestrators
-        (scripts_dir / "00_setup_environment.py").write_text("# Setup")
-        (scripts_dir / "01_run_tests.py").write_text("# Tests")
+        (scripts_dir / "pipeline").mkdir(parents=True)
+        (scripts_dir / "pipeline" / "stage_00_setup.py").write_text("# Setup")
+        (scripts_dir / "pipeline" / "stage_01_test.py").write_text("# Tests")
         # Don't create the rest
 
         orchestrators = discover_orchestrators(repo_root)
@@ -281,14 +283,15 @@ class TestDiscoverOrchestrators:
         scripts_dir.mkdir(parents=True)
 
         # Create only first and last orchestrators
-        (scripts_dir / "00_setup_environment.py").write_text("# Setup")
-        (scripts_dir / "05_copy_outputs.py").write_text("# Copy")
+        (scripts_dir / "pipeline").mkdir(parents=True)
+        (scripts_dir / "pipeline" / "stage_00_setup.py").write_text("# Setup")
+        (scripts_dir / "pipeline" / "stage_05_copy.py").write_text("# Copy")
 
         orchestrators = discover_orchestrators(repo_root)
 
         assert len(orchestrators) == 2
-        assert orchestrators[0].name == "00_setup_environment.py"
-        assert orchestrators[1].name == "05_copy_outputs.py"
+        assert orchestrators[0].name == "stage_00_setup.py"
+        assert orchestrators[1].name == "stage_05_copy.py"
 
 
 class TestVerifyAnalysisOutputs:
@@ -508,9 +511,9 @@ class TestDiscoverOrchestratorsFromScriptDiscovery:
     def test_discovers_existing_scripts(self, tmp_path):
         """Should find existing orchestrator scripts."""
         scripts_dir = tmp_path / "scripts"
-        scripts_dir.mkdir()
-        (scripts_dir / "00_setup_environment.py").write_text("x")
-        (scripts_dir / "01_run_tests.py").write_text("x")
+        (scripts_dir / "pipeline").mkdir(parents=True)
+        (scripts_dir / "pipeline" / "stage_00_setup.py").write_text("x")
+        (scripts_dir / "pipeline" / "stage_01_test.py").write_text("x")
 
         result = discover_orchestrators(tmp_path)
         assert len(result) == 2
@@ -523,8 +526,8 @@ class TestDiscoverOrchestratorsFromScriptDiscovery:
     def test_warns_about_missing_scripts(self, tmp_path):
         """Should handle partial set of orchestrators."""
         scripts_dir = tmp_path / "scripts"
-        scripts_dir.mkdir()
-        (scripts_dir / "00_setup_environment.py").write_text("x")
+        (scripts_dir / "pipeline").mkdir(parents=True)
+        (scripts_dir / "pipeline" / "stage_00_setup.py").write_text("x")
         result = discover_orchestrators(tmp_path)
         assert len(result) == 1
 

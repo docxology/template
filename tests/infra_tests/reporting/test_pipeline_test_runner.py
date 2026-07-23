@@ -15,6 +15,7 @@ import re
 from infrastructure.core.pytest_orchestration import (
     DISCOVERY_PATTERNS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
+    XDIST_DISTRIBUTION,
     log_discovered_tests,
     parse_test_discovery_timeout,
     resolve_infrastructure_test_paths,
@@ -232,7 +233,7 @@ class TestLogDiscoveredTests:
             "-n",
             "4",
             "--dist",
-            "worksteal",
+            XDIST_DISTRIBUTION,
             "--cov=src",
         ]
 

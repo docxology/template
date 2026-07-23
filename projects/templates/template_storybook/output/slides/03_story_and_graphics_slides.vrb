@@ -1,5 +1,0 @@
-\frametitle{Story and Graphics}
-Every page is rendered as a full-page PNG. Some pages place text
-directly over the illustration with shadowed lettering; others use a
-translucent box when the scene is visually dense. The YAML
-\texttt{overlay\_box} value controls that choice per page.

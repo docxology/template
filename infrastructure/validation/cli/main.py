@@ -115,14 +115,14 @@ def validate_prerender_command(args: argparse.Namespace) -> None:
 
     Mirrors the gate that :func:`PDFRenderer.render_combined` runs before
     Pandoc/xelatex (see
-    ``infrastructure/rendering/_pdf_combined_renderer.py::prevalidate_source_markdown``).
+    ``infrastructure/rendering/_pdf_combined_renderer.py::prevalidate_for_render``).
     Useful as a pre-commit check or interactive verification step.
 
     Exits 0 when the manuscript is render-ready, 1 when any pitfall or
     undefined citation is found.
     """
     # Import from validation leaf — not the rendering package.
-    from infrastructure.validation.content.prerender import prevalidate_source_markdown
+    from infrastructure.validation.content.prerender import prevalidate_for_render
 
     manuscript_dir = Path(args.manuscript_dir)
     if not manuscript_dir.exists():
@@ -134,7 +134,7 @@ def validate_prerender_command(args: argparse.Namespace) -> None:
 
     logger.info(f"Pre-render validation: {manuscript_dir}")
     try:
-        prevalidate_source_markdown(manuscript_dir, repo_root=repo_root, bib_file=bib_file)
+        prevalidate_for_render(manuscript_dir, repo_root=repo_root, bib_file=bib_file)
     except RenderingError as exc:
         for line in str(exc).splitlines():
             logger.error(line)

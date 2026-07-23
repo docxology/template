@@ -357,7 +357,7 @@ class TestPublicationMetrics:
 class TestComplexityScoring:
     """Test complexity score calculation."""
 
-    def test_calculate_complexity_score_simple(self):
+    def test_calculate_metadata_complexity_score_simple(self):
         """Test complexity scoring for simple publication."""
         metadata = publishing.PublicationMetadata(
             title="Simple Title",
@@ -366,11 +366,11 @@ class TestComplexityScoring:
             keywords=["test"],
         )
 
-        score = publishing.calculate_complexity_score(metadata)
+        score = publishing.calculate_metadata_complexity_score(metadata)
 
         assert score < 50  # Should be relatively simple
 
-    def test_calculate_complexity_score_complex(self):
+    def test_calculate_metadata_complexity_score_complex(self):
         """Test complexity scoring for complex publication."""
         metadata = publishing.PublicationMetadata(
             title="A Very Long and Complex Title for Testing Publication Complexity Analysis",
@@ -397,7 +397,7 @@ class TestComplexityScoring:
             publication_date="2024-10-22",
         )
 
-        score = publishing.calculate_complexity_score(metadata)
+        score = publishing.calculate_metadata_complexity_score(metadata)
 
         assert score > 70  # Should be relatively complex
 

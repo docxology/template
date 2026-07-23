@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import runpy
 import subprocess
 from pathlib import Path
 from zipfile import ZipFile
@@ -46,47 +45,56 @@ def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path) -> 
     assert actual_names == expected_names
 
 
-def test_missing_canonical_stage_does_not_run_legacy_root_copy(tmp_path: Path) -> None:
-    """A stale root implementation cannot mask a missing canonical stage."""
+def test_missing_canonical_stage_does_not_run_unrelated_root_copy(tmp_path: Path) -> None:
+    """An unrelated root implementation cannot mask a missing canonical stage."""
     repo_root = tmp_path / "minimal-fork"
     project_dir = repo_root / "projects" / "p" / "output"
     project_dir.mkdir(parents=True)
-    legacy = repo_root / "scripts" / "02_run_analysis.py"
-    legacy.parent.mkdir(parents=True)
-    legacy.write_text("raise SystemExit(0)\n", encoding="utf-8")
+    unrelated = repo_root / "scripts" / "02_run_analysis.py"
+    unrelated.parent.mkdir(parents=True)
+    unrelated.write_text("raise SystemExit(0)\n", encoding="utf-8")
 
     executor = PipelineExecutor(PipelineConfig(project_name="p", repo_root=repo_root))
     assert executor._run_script("scripts/pipeline/stage_02_analysis.py", "--project", "p") is False
 
 
-def test_compatibility_entrypoints_reexport_canonical_implementations() -> None:
-    """Compatibility files remain aliases, not independently drifting CLIs."""
-    from scripts import execute_pipeline as compatibility_pipeline
+def test_canonical_entrypoints_export_their_own_implementations() -> None:
+    """Canonical entrypoints expose the implementation used by the pipeline."""
     from scripts.pipeline.stage_06_llm_review import cli_main as canonical_llm_cli
     from scripts.pipeline.stage_07_executive_report import main as canonical_report_main
     from scripts.runner import execute_pipeline as canonical_pipeline
 
-    assert compatibility_pipeline.execute_pipeline is canonical_pipeline.execute_pipeline
-    assert compatibility_pipeline.execute_single_stage is canonical_pipeline.execute_single_stage
-    assert compatibility_pipeline.handle_hitl_command is canonical_pipeline.handle_hitl_command
-    assert compatibility_pipeline.main is canonical_pipeline.main
+    assert callable(canonical_pipeline.execute_pipeline)
+    assert callable(canonical_pipeline.execute_single_stage)
+    assert callable(canonical_pipeline.handle_hitl_command)
+    assert callable(canonical_pipeline.main)
+    assert callable(canonical_llm_cli)
+    assert callable(canonical_report_main)
 
+
+def test_removed_root_entrypoints_are_absent() -> None:
+    """There is one repository-wide path for each migrated entrypoint."""
     repo_root = Path(__file__).parents[4]
-    llm_wrapper = runpy.run_path(str(repo_root / "scripts/06_llm_review.py"), run_name="compatibility_test")
-    report_wrapper = runpy.run_path(
-        str(repo_root / "scripts/07_generate_executive_report.py"), run_name="compatibility_test"
+    removed = (
+        "scripts/01_run_tests.py",
+        "scripts/02_run_analysis.py",
+        "scripts/06_llm_review.py",
+        "scripts/08_connector_search.py",
+        "scripts/09_provenance_record.py",
+        "scripts/10_research_workflow.py",
+        "scripts/execute_pipeline.py",
+        "scripts/run_matrix.py",
     )
-    assert llm_wrapper["cli_main"] is canonical_llm_cli
-    assert report_wrapper["main"] is canonical_report_main
+    assert all(not (repo_root / relative).exists() for relative in removed)
 
 
-def test_compatibility_entrypoints_remain_directly_executable() -> None:
-    """Consolidation must preserve the documented executable-script surface."""
+def test_canonical_entrypoints_remain_directly_executable() -> None:
+    """Canonical entrypoints remain directly executable after consolidation."""
     repo_root = Path(__file__).parents[4]
     for relative in (
-        "scripts/execute_pipeline.py",
-        "scripts/06_llm_review.py",
-        "scripts/07_generate_executive_report.py",
+        "scripts/runner/execute_pipeline.py",
+        "scripts/pipeline/stage_06_llm_review.py",
+        "scripts/pipeline/stage_07_executive_report.py",
     ):
         script = repo_root / relative
         assert script.stat().st_mode & 0o111, f"{relative} lost its executable bit"

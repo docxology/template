@@ -19,7 +19,7 @@ slides clean rendering of ``\\mid``, ``\\ll``, ``\\gg``, etc. without
 inheriting the rest of the combined-PDF preamble.
 
 The combined-PDF gate
-(:func:`infrastructure.rendering._pdf_combined_renderer.prevalidate_source_markdown`)
+(:func:`infrastructure.rendering._pdf_combined_renderer.prevalidate_for_render`)
 is intentionally *not* invoked here because slides typically render a
 single section in isolation and have a different acceptable-citation
 set than the full manuscript.

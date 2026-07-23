@@ -612,7 +612,7 @@ def test_process_negative():
    open projects/{name}/output/pdf/{name}_combined.pdf
    ```
 
-**Core pipeline** (`--core-only`, default flags): eight executor stages — clean outputs, environment setup, infrastructure tests, project tests, analysis, PDF rendering, output validation, copy outputs. **Not** part of core: LLM stages (`06_llm_review.py`) and cross-project executive reporting (`07_generate_executive_report.py`).
+**Core pipeline** (`--core-only`, default flags): eight executor stages — clean outputs, environment setup, infrastructure tests, project tests, analysis, PDF rendering, output validation, copy outputs. **Not** part of core: LLM stages (`scripts/pipeline/stage_06_llm_review.py`) and cross-project executive reporting (`scripts/pipeline/stage_07_executive_report.py`).
 
 **Total Time**: Varies by project and machine; the sequence above is ordered as in `PipelineExecutor`.
 

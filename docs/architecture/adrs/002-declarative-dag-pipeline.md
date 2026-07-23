@@ -27,45 +27,45 @@ stages:
     method: _run_clean_outputs
     tags: [core, clean]
   - name: Environment Setup
-    script: 00_setup_environment.py
+    script: scripts/pipeline/stage_00_setup.py
     depends_on: [Clean Output Directories]
     tags: [core]
   - name: Infrastructure Tests
-    script: 01_run_tests.py
+    script: scripts/pipeline/stage_01_test.py
     args: [--infra-only, --verbose, --infra-scope, pipeline-smoke]
     depends_on: [Environment Setup]
     tags: [core, tests]
   - name: Project Tests
-    script: 01_run_tests.py
+    script: scripts/pipeline/stage_01_test.py
     args: [--project-only, --verbose]
     depends_on: [Environment Setup]
     tags: [core, tests]
   - name: Project Analysis
-    script: 02_run_analysis.py
+    script: scripts/pipeline/stage_02_analysis.py
     depends_on: [Project Tests]
     tags: [core]
   - name: PDF Rendering
-    script: 03_render_pdf.py
+    script: scripts/pipeline/stage_03_render.py
     depends_on: [Project Analysis]
     tags: [core]
   - name: Output Validation
-    script: 04_validate_output.py
+    script: scripts/pipeline/stage_04_validate.py
     depends_on: [PDF Rendering]
     tags: [core]
   - name: LLM Scientific Review
-    script: 06_llm_review.py
+    script: scripts/pipeline/stage_06_llm_review.py
     args: [--reviews-only]
     allow_skip: true
     depends_on: [Output Validation]
     tags: [llm]
   - name: LLM Translations
-    script: 06_llm_review.py
+    script: scripts/pipeline/stage_06_llm_review.py
     args: [--translations-only]
     allow_skip: true
     depends_on: [Output Validation]
     tags: [llm]
   - name: Copy Outputs
-    script: 05_copy_outputs.py
+    script: scripts/pipeline/stage_05_copy.py
     depends_on: [Output Validation]
     tags: [core]
 ```

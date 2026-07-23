@@ -21,7 +21,7 @@ from infrastructure.rendering._pdf_combined_renderer import (
     postprocess_latex,
     preprocess_combined_markdown,
     prevalidate_markdown,
-    prevalidate_source_markdown,
+    prevalidate_for_render,
     run_pandoc_conversion,
     verify_figure_references,
 )
@@ -269,7 +269,7 @@ class PDFRenderer:
         # Step 2: Pre-validate markdown — first the source set (hard gate
         # for Pandoc-pitfall patterns and undefined citations), then the
         # combined file (brace balance).
-        prevalidate_source_markdown(
+        prevalidate_for_render(
             source_files,
             bib_file=None,
         )
