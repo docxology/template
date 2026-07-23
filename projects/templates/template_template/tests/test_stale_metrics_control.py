@@ -24,9 +24,7 @@ def test_metrics_dict_has_expected_keys() -> None:
         "figure_font_floor_pt",
         "figure_dpi",
     }
-    assert expected_keys.issubset(metrics.keys()), (
-        f"Missing keys: {expected_keys - set(metrics.keys())}"
-    )
+    assert expected_keys.issubset(metrics.keys()), f"Missing keys: {expected_keys - set(metrics.keys())}"
 
 
 def test_metrics_dict_counts_are_positive() -> None:
@@ -69,9 +67,7 @@ def test_generated_metrics_json_matches_live_repo_when_present() -> None:
     ]
     for key in policy_keys:
         if key in generated and key in live:
-            assert generated[key] == live[key], (
-                f"Stale metric {key}: generated={generated[key]}, live={live[key]}"
-            )
+            assert generated[key] == live[key], f"Stale metric {key}: generated={generated[key]}, live={live[key]}"
 
 
 def test_metrics_dict_does_not_contain_private_project_names() -> None:
@@ -81,6 +77,4 @@ def test_metrics_dict_does_not_contain_private_project_names() -> None:
     forbidden_substrings = ["working/", "ongoing/", "archive/", "published/", "active/"]
     metrics_str = json.dumps(metrics)
     for forbidden in forbidden_substrings:
-        assert forbidden not in metrics_str, (
-            f"Private path segment '{forbidden}' found in metrics"
-        )
+        assert forbidden not in metrics_str, f"Private path segment '{forbidden}' found in metrics"

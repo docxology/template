@@ -30,7 +30,7 @@ def _make_pdf(path: Path, pages: int = 1, text: str = "test") -> None:
         # Write enough text per page to produce a file above the 0.01 MB
         # (10.24 KB) threshold used by verify_pdf_outputs
         for j in range(500):
-            pdf.drawString(72, 720 - j, f"{text} p{i+1} L{j} " * 5)
+            pdf.drawString(72, 720 - j, f"{text} p{i + 1} L{j} " * 5)
         pdf.showPage()
     pdf.save()
 
@@ -84,7 +84,7 @@ class TestStrictLatexWarningPolicy:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "config.yaml").write_text(
-            "rendering: \"not a dict\"\n",
+            'rendering: "not a dict"\n',
             encoding="utf-8",
         )
         assert _strict_latex_warning_policy_enabled(tmp_path, manuscript) is False

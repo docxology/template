@@ -63,17 +63,13 @@ def _scaffold_project(
     if repository_url:
         lines.append(f"  repository_url: '{repository_url}'")
     lines.append("")
-    (project_root / "manuscript" / "config.yaml").write_text(
-        "\n".join(lines), encoding="utf-8"
-    )
+    (project_root / "manuscript" / "config.yaml").write_text("\n".join(lines), encoding="utf-8")
     (project_root / "STANDALONE.md").write_text(f"# {name}\n", encoding="utf-8")
     (project_root / "CITATION.cff").write_text(
         f"cff-version: 1.2.0\ntitle: {name}\ndoi: {doi}\nversion: '{version}'\n",
         encoding="utf-8",
     )
-    (project_root / ".zenodo.json").write_text(
-        json.dumps({"title": name, "version": version}), encoding="utf-8"
-    )
+    (project_root / ".zenodo.json").write_text(json.dumps({"title": name, "version": version}), encoding="utf-8")
     (project_root / "codemeta.json").write_text(
         json.dumps({"name": name, "version": version, "identifier": doi}),
         encoding="utf-8",
@@ -129,7 +125,7 @@ class TestUtilityFunctions:
 
     def test_load_json_mapping_non_dict(self, tmp_path: Path) -> None:
         path = tmp_path / "test.json"
-        path.write_text('[1, 2, 3]', encoding="utf-8")
+        path.write_text("[1, 2, 3]", encoding="utf-8")
         assert _load_json_mapping(path) == {}
 
     def test_section_mapping_valid(self) -> None:
@@ -320,9 +316,7 @@ class TestPublicationRecordProperties:
         assert record.github_repo_slug == ""
 
     def test_monorepo_path_detection(self) -> None:
-        record = self._make_record(
-            repository_url="https://github.com/docxology/template/tree/main/projects/test"
-        )
+        record = self._make_record(repository_url="https://github.com/docxology/template/tree/main/projects/test")
         assert record.is_monorepo_publication_path is True
         assert record.monorepo_slug == "docxology/template"
 
@@ -335,9 +329,7 @@ class TestPublicationRecordProperties:
         assert record.github_display_label == "docxology/template"
 
     def test_github_display_label_monorepo(self) -> None:
-        record = self._make_record(
-            repository_url="https://github.com/docxology/template/tree/main/projects/test"
-        )
+        record = self._make_record(repository_url="https://github.com/docxology/template/tree/main/projects/test")
         assert "docxology/template path" in record.github_display_label
 
     def test_github_display_label_empty(self) -> None:
@@ -388,9 +380,7 @@ class TestPublicationRecordProperties:
         assert "unverified" in record.external_status
 
     def test_external_status_monorepo_verified(self) -> None:
-        record = self._make_record(
-            repository_url="https://github.com/docxology/template/tree/main/projects/test"
-        )
+        record = self._make_record(repository_url="https://github.com/docxology/template/tree/main/projects/test")
         refresh_external_records([record])
         assert "verified" in record.external_status or "incomplete" in record.external_status
 

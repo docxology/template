@@ -329,6 +329,9 @@ exclude_lines = [
 target-version = "py310"
 line-length = 120
 
+[tool.ruff.format]
+exclude = ["docs/reference/api-reference.md"]
+
 [tool.ruff.lint]
 select = ["E", "F"]
 ignore = [

@@ -18,6 +18,7 @@ from storybook import render_story_number
 # WCAG 2.1 relative-luminance and contrast helpers (real pixel math, no mocks).
 # ---------------------------------------------------------------------------
 
+
 def _srgb_to_linear(value: float) -> float:
     """Convert a single sRGB channel value [0, 255] to linear light."""
     v = value / 255.0
@@ -107,8 +108,7 @@ def test_overlay_box_text_meets_wcag_aa(isolated_project: Path) -> None:
 
     ratio = contrast_ratio(text_color, bg_color)
     assert ratio >= 4.5, (
-        f"Overlay-box text contrast {ratio:.2f}:1 is below WCAG AA (4.5). "
-        f"text={text_color} bg={bg_color}"
+        f"Overlay-box text contrast {ratio:.2f}:1 is below WCAG AA (4.5). text={text_color} bg={bg_color}"
     )
 
 
@@ -203,8 +203,7 @@ def test_all_overlay_pages_pass_contrast_audit(isolated_project: Path) -> None:
         ratios.append((number, ratio))
 
         assert ratio >= 4.5, (
-            f"Page {number} overlay contrast {ratio:.2f}:1 below WCAG AA (4.5). "
-            f"text={text_color} bg={bg_color}"
+            f"Page {number} overlay contrast {ratio:.2f}:1 below WCAG AA (4.5). text={text_color} bg={bg_color}"
         )
 
     # Sanity: at least one page should exceed AA Large (3.0) comfortably.

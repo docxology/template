@@ -25,6 +25,7 @@ REPO_ROOT = PROJECT_ROOT.parents[2]
 # _subprocess_env (lines 58-65)
 # ---------------------------------------------------------------------------
 
+
 def test_subprocess_env_without_existing_pythonpath(monkeypatch):
     """When PYTHONPATH is unset, _subprocess_env sets it to the template root
     alone (line 64, the ``if p else ""`` False branch).
@@ -52,6 +53,7 @@ def test_subprocess_env_preserves_existing_pythonpath(monkeypatch):
 # ---------------------------------------------------------------------------
 # ensure_review_summary subprocess path (lines 87-109)
 # ---------------------------------------------------------------------------
+
 
 def test_ensure_review_summary_subprocess_writes_summary(tmp_path: Path):
     """When summary.json is absent but scripts/review exists and the subprocess
@@ -98,9 +100,7 @@ def test_ensure_review_summary_subprocess_without_summary(tmp_path: Path):
 
     review_exe = scripts_dir / "review"
     review_exe.write_text(
-        "#!/usr/bin/env python3\n"
-        "print('ran but produced no summary')\n"
-        "import sys; sys.exit(0)\n",
+        "#!/usr/bin/env python3\nprint('ran but produced no summary')\nimport sys; sys.exit(0)\n",
         encoding="utf-8",
     )
     review_exe.chmod(0o755)
@@ -117,6 +117,7 @@ def test_ensure_review_summary_subprocess_without_summary(tmp_path: Path):
 # ---------------------------------------------------------------------------
 # collect_infra_imports SyntaxError handler (lines 129-130)
 # ---------------------------------------------------------------------------
+
 
 def test_collect_infra_imports_skips_syntax_error(tmp_path: Path):
     """A src/*.py file with a SyntaxError is silently skipped (lines 129-130)
@@ -138,6 +139,7 @@ def test_collect_infra_imports_skips_syntax_error(tmp_path: Path):
 # Helper: build an isolated project tree for generate_review_report tests
 # ---------------------------------------------------------------------------
 
+
 def _make_project(tmp_path: Path) -> Path:
     """Create a minimal project tree that generate_review_report can run on.
 
@@ -154,9 +156,7 @@ def _make_project(tmp_path: Path) -> Path:
         "# Agent guide\n\n### Purpose\n\nStuff.\n\n### Layout\n\nMore stuff.\n",
         encoding="utf-8",
     )
-    (project_root / "README.md").write_text(
-        "# Project\n\n## Purpose\n\nStuff.\n", encoding="utf-8"
-    )
+    (project_root / "README.md").write_text("# Project\n\n## Purpose\n\nStuff.\n", encoding="utf-8")
 
     # Manuscript
     (project_root / "manuscript").mkdir()
@@ -164,9 +164,7 @@ def _make_project(tmp_path: Path) -> Path:
         "@article{a2020,\n  title={T},\n}\n@article{b2021,\n  title={U},\n}\n",
         encoding="utf-8",
     )
-    (project_root / "manuscript" / "01_intro.md").write_text(
-        "Intro citing [@a2020] and [@b2021].\n", encoding="utf-8"
-    )
+    (project_root / "manuscript" / "01_intro.md").write_text("Intro citing [@a2020] and [@b2021].\n", encoding="utf-8")
     (project_root / "manuscript" / "99_references.md").write_text("See bib.\n", encoding="utf-8")
 
     # src/ with a real infrastructure import
@@ -184,9 +182,7 @@ def _make_project(tmp_path: Path) -> Path:
 
     # scripts/
     (project_root / "scripts").mkdir()
-    (project_root / "scripts" / "review").write_text(
-        "#!/usr/bin/env python3\n", encoding="utf-8"
-    )
+    (project_root / "scripts" / "review").write_text("#!/usr/bin/env python3\n", encoding="utf-8")
 
     # review_config.yaml
     (project_root / "review_config.yaml").write_text(
@@ -222,6 +218,7 @@ def _make_project(tmp_path: Path) -> Path:
 # generate_review_report: non-empty review_notes (line 172)
 # ---------------------------------------------------------------------------
 
+
 def test_generate_review_report_shows_review_notes_when_nonempty(tmp_path: Path):
     """When ensure_review_summary returns non-empty notes (e.g. missing
     scripts/review), the report header includes a 'Review subprocess notes'
@@ -244,6 +241,7 @@ def test_generate_review_report_shows_review_notes_when_nonempty(tmp_path: Path)
 # generate_review_report: no infrastructure imports (line 281)
 # ---------------------------------------------------------------------------
 
+
 def test_generate_review_report_no_infra_imports(tmp_path: Path):
     """When no src/ module imports infrastructure, section 4 prints
     'Infrastructure imports: none detected' (line 281).
@@ -263,6 +261,7 @@ def test_generate_review_report_no_infra_imports(tmp_path: Path):
 # ---------------------------------------------------------------------------
 # generate_review_report: stage with status="skipped" (line 326)
 # ---------------------------------------------------------------------------
+
 
 def test_generate_review_report_stage_status_skipped(tmp_path: Path):
     """A stage whose JSON data has status='skipped' renders as SKIP in
@@ -284,6 +283,7 @@ def test_generate_review_report_stage_status_skipped(tmp_path: Path):
 # ---------------------------------------------------------------------------
 # generate_review_report: disabled stage with a stage file (line 330)
 # ---------------------------------------------------------------------------
+
 
 def test_generate_review_report_disabled_stage_with_file(tmp_path: Path):
     """A disabled stage (enabled=false) that has a materialised stage file with

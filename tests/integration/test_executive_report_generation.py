@@ -89,9 +89,7 @@ class TestExecutiveReportScript:
         try:
             import importlib.util
 
-            spec = importlib.util.spec_from_file_location(
-                "exec_report", scripts_path / "stage_07_executive_report.py"
-            )
+            spec = importlib.util.spec_from_file_location("exec_report", scripts_path / "stage_07_executive_report.py")
             module = importlib.util.module_from_spec(spec)
 
             # Should not raise import errors
@@ -113,9 +111,7 @@ class TestExecutiveReportScript:
         try:
             import importlib.util
 
-            spec = importlib.util.spec_from_file_location(
-                "exec_report", scripts_path / "stage_07_executive_report.py"
-            )
+            spec = importlib.util.spec_from_file_location("exec_report", scripts_path / "stage_07_executive_report.py")
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
@@ -161,9 +157,7 @@ class TestErrorHandling:
         try:
             import importlib.util
 
-            spec = importlib.util.spec_from_file_location(
-                "exec_report", scripts_path / "stage_07_executive_report.py"
-            )
+            spec = importlib.util.spec_from_file_location("exec_report", scripts_path / "stage_07_executive_report.py")
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 

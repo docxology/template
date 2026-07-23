@@ -168,9 +168,7 @@ def test_bare_project_name_resolves_scripts_in_templates_dir(repo_root: Path) ->
     directory — same result as the qualified form."""
     from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 
-    bare = build_methods_orchestration_plan(
-        repo_root, "template_advanced_literature_review", artifact_mode="source"
-    )
+    bare = build_methods_orchestration_plan(repo_root, "template_advanced_literature_review", artifact_mode="source")
     qualified = build_methods_orchestration_plan(
         repo_root, "templates/template_advanced_literature_review", artifact_mode="source"
     )

@@ -44,6 +44,7 @@ def _run_task(task: ProjectTestTask) -> ProjectTestResult:
 
     def output_tail(stdout: str | bytes | None, stderr: str | bytes | None) -> str:
         """Combine stdout and stderr into a bounded diagnostic tail."""
+
         def as_text(value: str | bytes | None) -> str:
             """Decode bytes to text, returning empty string for None."""
             if value is None:

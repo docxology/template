@@ -122,7 +122,7 @@ def test_show_workspace_status_empty_members(tmp_path: Path, monkeypatch) -> Non
     """Workspace with empty members list returns 0."""
     monkeypatch.chdir(tmp_path)
     (tmp_path / "pyproject.toml").write_text(
-        '[tool.uv.workspace]\nmembers = []\n',
+        "[tool.uv.workspace]\nmembers = []\n",
         encoding="utf-8",
     )
     assert show_workspace_status() == 0
