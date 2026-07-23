@@ -74,6 +74,12 @@ steganography:
   overlay_mode: "text"
   overlay_text: "CONFIDENTIAL"
 
+# Analysis scripts — declare which scripts run in Stage 02 analysis.
+# Non-analysis scripts (preflight, etc.) are excluded from discovery.
+analysis:
+  scripts:
+    - 02_run_analysis.py
+
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
 llm:
   reviews:

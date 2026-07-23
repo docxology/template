@@ -78,6 +78,13 @@ render:
     docx: false
     epub: false
 
+# Analysis scripts — only the actual analysis script runs in Stage 02.
+# 00_setup_environment.py is a preflight check, not an analysis script.
+analysis:
+  scripts:
+    - 02_run_analysis.py
+    - zz_generate_cover_art.py
+
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
 llm:
   reviews:
