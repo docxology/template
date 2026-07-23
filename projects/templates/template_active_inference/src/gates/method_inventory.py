@@ -48,6 +48,11 @@ class _DefinitionVisitor(ast.NodeVisitor):
     """Collect definitions while preserving nested qualified names."""
 
     def __init__(self, rel_path: str) -> None:
+        """Initialize the visitor with a relative path for entry recording.
+
+        Args:
+            rel_path: The project-relative path of the file being visited.
+        """
         self._rel_path = rel_path
         self._stack: list[str] = []
         self.entries: list[MethodEntry] = []
@@ -74,6 +79,7 @@ class _DefinitionVisitor(ast.NodeVisitor):
         self._stack.pop()
 
     def _record(self, node: ast.ClassDef | ast.FunctionDef | ast.AsyncFunctionDef) -> None:
+        """Record a single definition as a :class:`MethodEntry` in ``self.entries``."""
         kind = _definition_kind(node)
         qualname = ".".join([*self._stack, node.name])
         docstring = _first_docstring_line(node)

@@ -71,6 +71,7 @@ class _RefreshCache:
     """In-run fixed-point cache for idempotent generator commands."""
 
     def __init__(self) -> None:
+        """Initialize an empty in-run refresh cache."""
         self._last_outputs: dict[str, str] = {}
 
     def run(
@@ -80,6 +81,13 @@ class _RefreshCache:
         label: str,
         command_runner: Callable[..., None],
     ) -> None:
+        """Run a generator command, skipping it when the project state is unchanged.
+
+        If the command's generator is refreshable and the project fingerprint
+        matches the last observed state for that generator, the command is
+        skipped.  Otherwise the command is executed and the new fingerprint
+        is cached.
+        """
         generator = _generator_name(command)
         if generator is None:
             command_runner(project_root, command, label)

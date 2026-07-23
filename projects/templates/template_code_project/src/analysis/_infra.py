@@ -73,12 +73,21 @@ except ImportError as e:  # pragma: no cover — fallback when infrastructure is
 
 
 def infrastructure_available() -> bool:
+    """Return whether infrastructure modules are available, honoring any context-local override."""
     override = _INFRASTRUCTURE_OVERRIDE.get()
     return INFRASTRUCTURE_AVAILABLE if override is None else override
 
 
 @contextmanager
 def infrastructure_context(available: bool) -> Iterator[None]:
+    """Context manager that temporarily overrides infrastructure availability.
+
+    Args:
+        available: The override value to set within the context block.
+
+    Yields:
+        None while the override is active; restores the previous value on exit.
+    """
     token = _INFRASTRUCTURE_OVERRIDE.set(available)
     try:
         yield

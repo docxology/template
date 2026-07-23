@@ -72,6 +72,13 @@ class LLMFilterEngine:
     """Engine for applying LLM-based content filters to papers."""
 
     def __init__(self, llm_config: dict[str, Any]):
+        """Initialize the LLM filter engine from a config dict.
+
+        Args:
+            llm_config: Configuration with optional keys ``model``,
+                ``base_url``, ``temperature``, ``timeout_seconds``, and
+                ``max_retries``.
+        """
         self.model: str = llm_config.get("model", "gemma3:4b")
         self.base_url: str = llm_config.get("base_url", "http://localhost:11434")
         self.temperature: float = llm_config.get("temperature", 0.1)
@@ -126,6 +133,14 @@ class MultiPhaseSearchRunner:
         project_root: Path = PROJECT_ROOT,
         output_dir: Path | None = None,
     ):
+        """Initialize the multi-phase search runner from a config file.
+
+        Args:
+            config_path: Path to the YAML configuration file.
+            project_root: Root directory of the project.
+            output_dir: Directory for output data; defaults to
+                ``project_root / "output" / "data"``.
+        """
         self.config_path = config_path
         self.project_root = project_root.resolve()
         self.output_dir = output_dir.resolve() if output_dir is not None else self.project_root / "output" / "data"
@@ -163,6 +178,7 @@ class MultiPhaseSearchRunner:
             venue_patterns = [p.lower() for p in filters["venue_patterns"]]
 
             def matches_venue(paper: Paper) -> bool:
+                """Return True if the paper's venue matches any allowed pattern."""
                 if not paper.venue:
                     return True  # No venue = keep (don't penalize missing data)
                 venue_lower = paper.venue.lower()

@@ -26,6 +26,14 @@ class StagnationDetector:
     """Fires when the champion has not improved within ``window`` experiments."""
 
     def __init__(self, window: int = 10) -> None:
+        """Initialize the stagnation detector with a trailing-window size.
+
+        Args:
+            window: Number of recent experiments to check for improvement (must be >= 1).
+
+        Raises:
+            ValueError: If ``window`` < 1.
+        """
         if window < 1:
             raise ValueError("window must be >= 1")
         self.window = window

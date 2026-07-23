@@ -44,6 +44,17 @@ class SyntheticObjective:
         noise_scale: float = 0.02,
         ripple: float = 0.15,
     ) -> None:
+        """Initialize the synthetic objective landscape.
+
+        Args:
+            dimensions: Number of parameter axes (must be >= 1).
+            optimum: The global optimum location; defaults to the origin.
+            noise_scale: Magnitude of the seeded evaluation noise.
+            ripple: Amplitude of the deceptive cosine ripples.
+
+        Raises:
+            ValueError: If ``dimensions`` < 1 or ``optimum`` length mismatches.
+        """
         if dimensions < 1:
             raise ValueError("dimensions must be >= 1")
         if optimum is not None and len(optimum) != dimensions:

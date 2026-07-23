@@ -105,10 +105,14 @@ class GaussianBelief(Protocol):
     """
 
     @property
-    def mean(self) -> float: ...
+    def mean(self) -> float:
+        """The mean (expected value) of this Gaussian belief."""
+        ...
 
     @property
-    def variance(self) -> float: ...
+    def variance(self) -> float:
+        """The variance of this Gaussian belief (must be finite and > 0)."""
+        ...
 
 
 StateT = TypeVar("StateT", bound=GaussianBelief)

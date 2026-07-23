@@ -53,6 +53,14 @@ class DeterministicProposer:
     """
 
     def __init__(self, step: float = 0.5) -> None:
+        """Initialize the deterministic proposer with a fixed step size.
+
+        Args:
+            step: The magnitude of each proposed parameter step (must be > 0).
+
+        Raises:
+            ValueError: If ``step`` is not positive.
+        """
         if step <= 0:
             raise ValueError("step must be positive")
         self.step = step
@@ -88,6 +96,7 @@ class DeterministicProposer:
 
     @staticmethod
     def _last_improving_sign(state: SharedState, axis: int) -> float:
+        """Return the step sign that most recently improved *axis*, or probe toward the origin."""
         for outcome in reversed(state.log):
             if outcome.proposal.axis == axis and outcome.improved:
                 return 1.0 if outcome.proposal.step >= 0 else -1.0
