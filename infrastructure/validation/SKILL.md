@@ -114,9 +114,21 @@ success, issues = validate_figure_registry(
 )
 ```
 
+Pass ``require_accessibility=True`` during an explicit migration or release
+review to require non-empty ``alt`` or ``metadata.alt_text`` for every
+referenced registered figure. The publication CLI exposes the same contract as
+``--require-figure-accessibility``. A manuscript that references figures but
+has no registry fails closed; a manuscript with no figure references does not
+need an empty registry.
+
 Both registry shapes are accepted: ``{"fig:label": {...}, ...}`` (dict, emitted
 by ``FigureManager``) and ``[{"label": "fig:label", ...}, ...]`` (list, emitted
 by project-side scripts that produce a flat manifest).
+
+Evidence registries may name project-relative sources or repository-relative
+shared contracts (for example, a reusable infrastructure module). The
+publication and output validators resolve both forms, require the path to
+exist, and reject paths that escape the repository boundary.
 
 ## Audit Orchestration (`repo/audit_orchestrator.py`)
 

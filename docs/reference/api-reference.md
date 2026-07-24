@@ -3532,7 +3532,7 @@ Validate all project outputs were copied successfully.
 *function — defined in `infrastructure.validation.content.figure_validator`*
 
 ```python
-validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]
+validate_figure_registry(registry_path: Path, manuscript_dir: Path, *, require_accessibility: bool=False) -> tuple[bool, list[str]]
 ```
 
 Validate figure registry against manuscript references.

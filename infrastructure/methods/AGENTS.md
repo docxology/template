@@ -13,6 +13,9 @@ orchestration plan:
   differently-named section file (e.g. `template_template`'s `03a_architecture.md`).
 - `artifact_manifest.json`
 - `evidence_registry.json`
+- `figure_registry.json` when the project publishes generated figures
+- `data/claim_ledger.yaml` when the project declares source-backed claims
+- `experiment_plan.yaml` when the project declares an experiment/review design
 - validation commands that prove the methods surface is current
 
 It is a Layer-1 read-only orchestration contract. Do not put scientific
@@ -40,6 +43,14 @@ algorithms or project analysis logic here.
   dependency declarations remain display/telemetry values.
 - CLI exits `0` for clean/warnings, `1` for validation errors, and `2` for
   invalid invocation/configuration.
+- Expose optional figure, claim-ledger, and experiment-plan paths only when the
+  source file exists; never imply that a missing surface was generated.
+- When a project ships `methods_pipeline.yaml`, that file overrides
+  `pipeline.yaml` and the repository default pipeline for plan discovery.
+- `validate_methods_orchestration_plan(..., require_generated_artifacts=True)`
+  (default) treats missing artifact manifests and evidence registries as
+  publication-blocking errors. Source-only publication audits pass
+  `require_generated_artifacts=False`.
 - Stage `script` values must already be repo-relative paths (`scripts/...` or
   `projects/...`); verification commands expand `{project}` only.
 

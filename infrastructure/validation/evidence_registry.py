@@ -191,22 +191,47 @@ def build_project_evidence_registry(project_root: Path) -> VerifiedEvidenceRegis
 def missing_evidence_source_paths(
     project_root: Path,
     registry: VerifiedEvidenceRegistry,
+    *,
+    repo_root: Path | None = None,
 ) -> tuple[str, ...]:
-    """Return declared local evidence paths that no longer resolve on disk."""
+    """Return declared evidence paths that no longer resolve on disk.
+
+    A source may be project-relative (the normal case) or repository-relative
+    when a public exemplar intentionally claims a shared infrastructure/rules
+    contract.  Both forms remain fail-closed: the resolved path must exist and
+    remain inside the repository boundary when ``repo_root`` is supplied.
+    """
     missing: set[str] = set()
     root = project_root.resolve()
+    repository = (repo_root or project_root).resolve()
+
+    def within_boundary(path: Path) -> bool:
+        """Return whether a resolved source is inside the project or repository."""
+        return any(path == boundary or boundary in path.parents for boundary in (root, repository))
+
     for fact in registry.facts():
         source_path = fact.source_path.strip()
         if not source_path:
             continue
         candidate = Path(source_path)
-        resolved = candidate.resolve() if candidate.is_absolute() else (root / candidate).resolve()
-        try:
-            resolved.relative_to(root)
-        except ValueError:
+        resolved_candidates = (
+            (candidate.resolve(),)
+            if candidate.is_absolute()
+            else ((root / candidate).resolve(), (repository / candidate).resolve())
+        )
+        resolved = next(
+            (path for path in resolved_candidates if path.exists()),
+            resolved_candidates[0],
+        )
+        if not within_boundary(resolved):
             missing.add(source_path)
             continue
-        if not resolved.is_file():
+        # Claim ledgers may intentionally point at a directory such as
+        # ``output/figures/`` when the claim is about a generated collection.
+        # The safety boundary is that the path must resolve inside the project
+        # and exist; file-only enforcement would reject valid collection-level
+        # provenance.
+        if not resolved.exists():
             missing.add(source_path)
     return tuple(sorted(missing))
 

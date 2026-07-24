@@ -62,6 +62,9 @@ class MethodsOrchestrationPlan:
     dropped_dependency_edges: tuple[tuple[str, str], ...] = ()
     schema_version: str = "1.0"
     artifact_mode: str = "rendered"
+    figure_registry: Path | None = None
+    claim_ledger: Path | None = None
+    experiment_plan: Path | None = None
 
     def to_dict(self) -> dict[str, object]:
         """Serialize to a JSON-safe mapping."""
@@ -74,6 +77,9 @@ class MethodsOrchestrationPlan:
             "method_sections": list(self.method_sections),
             "artifact_manifest": self.artifact_manifest.as_posix(),
             "evidence_registry": self.evidence_registry.as_posix(),
+            "figure_registry": self.figure_registry.as_posix() if self.figure_registry else None,
+            "claim_ledger": self.claim_ledger.as_posix() if self.claim_ledger else None,
+            "experiment_plan": self.experiment_plan.as_posix() if self.experiment_plan else None,
             "stages": [stage.to_dict() for stage in self.stages],
             "validation_commands": list(self.validation_commands),
             "dropped_dependency_edges": [list(edge) for edge in self.dropped_dependency_edges],

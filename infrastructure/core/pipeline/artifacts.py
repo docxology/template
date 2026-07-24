@@ -421,6 +421,8 @@ def _stage_manifest_path(output_dir: Path, stage_num: int, stage_name: str) -> P
 
 def _is_ignored_output(path: Path, output_dir: Path) -> bool:
     rel_parts = path.relative_to(output_dir).parts
+    if path.name == "fulltext_inventory.json":
+        return path.name in _IGNORED_OUTPUT_FILENAMES or path.suffix in _IGNORED_OUTPUT_SUFFIXES
     return (
         any(part in _IGNORED_OUTPUT_PARTS for part in rel_parts)
         or path.name in _IGNORED_OUTPUT_FILENAMES

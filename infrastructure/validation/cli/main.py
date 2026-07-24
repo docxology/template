@@ -301,9 +301,19 @@ def publication_audit_command(args: argparse.Namespace) -> None:
     logging.getLogger("infrastructure.core.pipeline.dag").setLevel(logging.WARNING)
     if args.format == "json":
         with _suppress_stdout_fd(), contextlib.redirect_stdout(io.StringIO()):
-            report = build_publication_audit(repo_root, projects, rendered=args.rendered)
+            report = build_publication_audit(
+                repo_root,
+                projects,
+                rendered=args.rendered,
+                require_figure_accessibility=args.require_figure_accessibility,
+            )
     else:
-        report = build_publication_audit(repo_root, projects, rendered=args.rendered)
+        report = build_publication_audit(
+            repo_root,
+            projects,
+            rendered=args.rendered,
+            require_figure_accessibility=args.require_figure_accessibility,
+        )
     rendered = (
         format_publication_audit_json(report) if args.format == "json" else format_publication_audit_markdown(report)
     )
@@ -419,6 +429,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--strict",
         action="store_true",
         help="Also exit non-zero when review_required findings are present",
+    )
+    publication_parser.add_argument(
+        "--require-figure-accessibility",
+        action="store_true",
+        help="Require explicit alt text for every referenced registered figure",
     )
     publication_parser.add_argument("--format", choices=("markdown", "json"), default="markdown")
     publication_parser.add_argument("--output", help="Write the report to a file instead of stdout")

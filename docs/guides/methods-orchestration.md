@@ -14,6 +14,9 @@ inspectable before publication.
 | Manuscript methods prose | `projects/<name>/manuscript/*method*.md` |
 | Evidence links | `projects/<name>/output/reports/evidence_registry.json` |
 | Artifact hashes and stage outputs | `projects/<name>/output/reports/artifact_manifest.json` |
+| Figure provenance | `projects/<name>/output/figures/figure_registry.json` when present |
+| Source-backed claims | `projects/<name>/data/claim_ledger.yaml` when present |
+| Experiment/review design | `projects/<name>/experiment_plan.yaml` when present |
 | Validation commands | `infrastructure.methods` generated plan |
 
 ## Commands
@@ -57,6 +60,20 @@ Run the focused tests:
 uv run pytest tests/infra_tests/methods -q
 ```
 
+For a migration-safe visual accessibility check, require explicit alt text for
+every manuscript-referenced figure during the publication audit:
+
+```bash
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project templates/template_code_project --rendered \
+  --require-figure-accessibility --format markdown
+```
+
+This flag is intentionally opt-in while existing exemplars are migrated. The
+ordinary publication audit still blocks missing registries and unregistered
+references, and it never treats a missing optional figure registry as proof
+that no figures exist.
+
 ## Authoring Rules
 
 - Put project methods logic in `projects/<name>/src/`.
@@ -69,6 +86,8 @@ uv run pytest tests/infra_tests/methods -q
 - Explain the method in manuscript source files, not generated `output/`.
 - Refresh pipeline outputs before treating artifact manifests or evidence
   registries as current.
+- Treat the methods plan as a traceability map: method prose → declared stages
+  → generated figures/claims → evidence and artifact reports → rendered output.
 
 ## Publication Gate
 

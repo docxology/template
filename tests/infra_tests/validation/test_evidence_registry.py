@@ -39,6 +39,66 @@ def test_missing_evidence_source_paths_accepts_existing_local_file(tmp_path: Pat
     assert missing_evidence_source_paths(tmp_path, registry) == ()
 
 
+def test_missing_evidence_source_paths_accepts_existing_local_directory(tmp_path: Path) -> None:
+    """Collection-level provenance may name an existing output directory."""
+    (tmp_path / "output" / "figures").mkdir(parents=True)
+    registry = VerifiedEvidenceRegistry(
+        [
+            EvidenceFact(
+                kind="artifact",
+                value="figures",
+                source="claim ledger",
+                source_path="output/figures/",
+            )
+        ]
+    )
+
+    assert missing_evidence_source_paths(tmp_path, registry) == ()
+
+
+def test_missing_evidence_source_paths_accepts_existing_repository_source(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "templates" / "example"
+    shared = tmp_path / "infrastructure" / "shared.py"
+    project.mkdir(parents=True)
+    shared.parent.mkdir(parents=True)
+    shared.write_text("# shared contract\n", encoding="utf-8")
+    registry = VerifiedEvidenceRegistry(
+        [
+            EvidenceFact(
+                kind="number", value="3", source="infrastructure/shared.py", source_path="infrastructure/shared.py"
+            )
+        ]
+    )
+
+    assert missing_evidence_source_paths(project, registry, repo_root=tmp_path) == ()
+
+
+def test_missing_evidence_source_paths_accepts_project_outside_repository(tmp_path: Path) -> None:
+    """A sidecar project may resolve outside the renderer repository boundary."""
+    project = tmp_path.parent / "private-project"
+    project.mkdir()
+    source = project / "manuscript" / "config.yaml"
+    source.parent.mkdir()
+    source.write_text("paper: {}\n", encoding="utf-8")
+    registry = VerifiedEvidenceRegistry(
+        [EvidenceFact(kind="artifact", value="config", source="config", source_path="manuscript/config.yaml")]
+    )
+
+    assert missing_evidence_source_paths(project, registry, repo_root=tmp_path) == ()
+
+
+def test_missing_evidence_source_paths_rejects_existing_path_outside_repository(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    outside = tmp_path.parent / "outside-evidence.txt"
+    project.mkdir()
+    outside.write_text("secret\n", encoding="utf-8")
+    registry = VerifiedEvidenceRegistry(
+        [EvidenceFact(kind="number", value="3", source="outside", source_path="../../outside-evidence.txt")]
+    )
+
+    assert missing_evidence_source_paths(project, registry, repo_root=tmp_path) == ("../../outside-evidence.txt",)
+
+
 def test_registry_validates_supported_numbers_and_citations() -> None:
     registry = VerifiedEvidenceRegistry()
     registry.add(EvidenceFact(kind="number", value="42", source="metrics.json:answer"))

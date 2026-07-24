@@ -83,6 +83,19 @@ def test_publication_audit_cli_exposes_rendered_and_format_flags() -> None:
     assert args.format == "json"
 
 
+def test_publication_audit_cli_exposes_figure_accessibility_flag() -> None:
+    args = build_parser().parse_args(
+        [
+            "publication-audit",
+            "--project",
+            "templates/template_advanced_literature_review",
+            "--require-figure-accessibility",
+        ]
+    )
+
+    assert args.require_figure_accessibility is True
+
+
 def test_publication_audit_cli_exposes_all_public_selection() -> None:
     args = build_parser().parse_args(["publication-audit", "--all-public"])
 
@@ -174,6 +187,50 @@ stages:
     )
     codes = {finding.diagnostic_code for finding in report.blocking_findings}
     assert "PUBLICATION.RENDER_REPORT_MISSING" in codes
+
+
+def test_publication_audit_flags_missing_figure_registry_for_referenced_figure(tmp_path: Path) -> None:
+    project = make_project(
+        tmp_path,
+        "template_test",
+        program="templates",
+        with_manuscript=True,
+        with_output=True,
+    )
+    write_doc(
+        project / "manuscript" / "03_results.md",
+        "# Results\n\n![Result](../output/figures/result.png){#fig:result}\n",
+    )
+    report = build_publication_audit(
+        tmp_path,
+        ["templates/template_test"],
+        rendered=True,
+        include_drift=False,
+    )
+    codes = {finding.diagnostic_code for finding in report.blocking_findings}
+    assert "PUBLICATION.FIGURE_REGISTRY" in codes
+
+
+def test_publication_audit_flags_missing_evidence_source(tmp_path: Path) -> None:
+    project = make_project(
+        tmp_path,
+        "template_test",
+        program="templates",
+        with_manuscript=True,
+        with_output=True,
+    )
+    write_doc(
+        project / "data" / "claim_ledger.yaml",
+        "claims:\n  - claim_id: missing-source\n    kind: number\n    value: 42\n    artifact_path: missing.json\n",
+    )
+    report = build_publication_audit(
+        tmp_path,
+        ["templates/template_test"],
+        rendered=False,
+        include_drift=False,
+    )
+    codes = {finding.diagnostic_code for finding in report.blocking_findings}
+    assert "PUBLICATION.EVIDENCE_SOURCE_MISSING" in codes
 
 
 def test_publication_audit_findings_sort_deterministically(tmp_path: Path) -> None:

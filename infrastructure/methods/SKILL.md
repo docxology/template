@@ -1,6 +1,6 @@
 ---
 name: infrastructure-methods
-description: Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, and validation commands into one reproducible methods plan.
+description: Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, figures, claim ledgers, experiment plans, and validation commands into one reproducible methods plan.
 ---
 
 # Methods Orchestration
@@ -33,3 +33,6 @@ uv run python -m infrastructure.methods plan --all-public --artifact-mode render
 - No project business logic.
 - No pipeline stage reimplementation.
 - Validation evidence stays in project outputs and existing validation modules.
+- Optional figure registries, claim ledgers, and experiment plans are reported
+  only when their source files exist; missing optional surfaces are rendered as
+  `null`/`not present`, not as fabricated evidence.

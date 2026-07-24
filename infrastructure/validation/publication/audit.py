@@ -14,6 +14,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
+    missing_evidence_source_paths,
     validate_text_against_registry,
 )
 from infrastructure.validation.output.artifacts import read_artifact_manifest
@@ -40,6 +41,7 @@ class AuditContext:
     project_root: Path
     rendered: bool
     include_drift: bool
+    require_figure_accessibility: bool = False
 
 
 def _relative(path: Path, root: Path) -> str:
@@ -182,6 +184,16 @@ def check_evidence(ctx: AuditContext) -> Iterable[PublicationFinding]:
     if not manuscript_dir.is_dir():
         return
     registry = build_project_evidence_registry(ctx.project_root)
+    for source_path in missing_evidence_source_paths(ctx.project_root, registry, repo_root=ctx.repo_root):
+        yield _finding(
+            ctx,
+            path=f"projects/{ctx.project}/output/reports/evidence_registry.json",
+            code="PUBLICATION.EVIDENCE_SOURCE_MISSING",
+            severity="error",
+            status="fail",
+            message=f"evidence registry source path is missing or outside the project: {source_path}",
+            remediation="Regenerate the evidence registry from current project artifacts and remove stale paths.",
+        )
     for markdown_path in sorted(manuscript_dir.glob("*.md")):
         if markdown_path.name in {"AGENTS.md", "README.md", "SYNTAX.md"}:
             continue
@@ -269,9 +281,11 @@ def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
     """Validate the figure registry against manuscript sources and yield findings."""
     figure_path = ctx.project_root / "output" / "figures" / "figure_registry.json"
     manuscript_dir = ctx.project_root / "manuscript"
-    if not figure_path.exists():
-        return
-    figure_ok, figure_issues = validate_figure_registry(figure_path, manuscript_dir)
+    figure_ok, figure_issues = validate_figure_registry(
+        figure_path,
+        manuscript_dir,
+        require_accessibility=ctx.require_figure_accessibility,
+    )
     for figure_issue in figure_issues:
         yield _finding(
             ctx,
@@ -316,6 +330,7 @@ def _audit_project(
     *,
     rendered: bool,
     include_drift: bool,
+    require_figure_accessibility: bool,
 ) -> list[PublicationFinding]:
     project_root = (repo_root / "projects" / project).resolve()
     ctx = AuditContext(
@@ -324,6 +339,7 @@ def _audit_project(
         project_root=project_root,
         rendered=rendered,
         include_drift=include_drift,
+        require_figure_accessibility=require_figure_accessibility,
     )
     findings: list[PublicationFinding] = []
     findings.extend(check_project_presence(ctx))
@@ -343,13 +359,22 @@ def build_publication_audit(
     *,
     rendered: bool = False,
     include_drift: bool = True,
+    require_figure_accessibility: bool = False,
 ) -> PublicationAuditReport:
     """Build a deterministic audit for one or all public projects."""
     root = Path(repo_root).resolve()
     names = tuple(projects) if projects is not None else tuple(PUBLIC_PROJECT_NAMES)
     findings: list[PublicationFinding] = []
     for project in names:
-        findings.extend(_audit_project(root, project, rendered=rendered, include_drift=include_drift))
+        findings.extend(
+            _audit_project(
+                root,
+                project,
+                rendered=rendered,
+                include_drift=include_drift,
+                require_figure_accessibility=require_figure_accessibility,
+            )
+        )
     findings.sort(
         key=lambda finding: (
             finding.project,

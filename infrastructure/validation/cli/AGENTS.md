@@ -24,7 +24,7 @@ module: `python -m infrastructure.validation.cli <subcommand> ...`.
 | `links`     | `validate_links_command`         | Scan markdown link targets repo-wide and emit a broken-link report     |
 | `evidence`  | `validate_evidence_command`      | Validate manuscript claims against the project evidence registry     |
 | `prose-quality` | `validate_prose_quality_command` | Scan prose for AI-writing fingerprints (advisory by default)     |
-| `publication-audit` | `publication_audit_command` | Audit public exemplars for publication readiness (optional `--rendered`, `--strict`) |
+| `publication-audit` | `publication_audit_command` | Audit public exemplars for publication readiness (optional `--rendered`, `--strict`, `--require-figure-accessibility`) |
 
 ### `publication-audit`
 
@@ -35,6 +35,11 @@ project in `PUBLIC_PROJECT_NAMES` when `--project` is omitted.
 uv run python -m infrastructure.validation.cli publication-audit \
   --project templates/template_code_project --strict --rendered --format json
 ```
+
+Add `--require-figure-accessibility` to make explicit alt text mandatory for
+every referenced registered figure. This is an opt-in migration gate; missing
+registries and unregistered references are always blocking when manuscript
+figures are present.
 
 Exit codes: `0` when no blocking findings (and no `review_required` findings when
 `--strict` is set); non-zero otherwise.

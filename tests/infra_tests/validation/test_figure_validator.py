@@ -65,6 +65,43 @@ class TestValidateFigureRegistry:
         assert success is True
         assert len(issues) == 0
 
+    def test_missing_registry_fails_when_manuscript_references_a_figure(self, tmp_path):
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_results.md").write_text("See \\ref{fig:missing}")
+
+        success, issues = validate_figure_registry(tmp_path / "missing.json", manuscript_dir)
+
+        assert success is False
+        assert any("registry not found" in issue.lower() for issue in issues)
+
+    def test_accessibility_mode_requires_alt_text(self, tmp_path):
+        registry_path = tmp_path / "registry.json"
+        registry_path.write_text(
+            json.dumps(
+                {
+                    "fig:example": {
+                        "filename": "example.png",
+                        "caption": "A real figure.",
+                        "generated_by": "tests",
+                    }
+                }
+            )
+        )
+        (tmp_path / "example.png").write_bytes(b"PNG fixture")
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        (manuscript_dir / "01_results.md").write_text("See \\ref{fig:example}")
+
+        success, issues = validate_figure_registry(
+            registry_path,
+            manuscript_dir,
+            require_accessibility=True,
+        )
+
+        assert success is False
+        assert any("alt text" in issue for issue in issues)
+
     def test_validate_invalid_registry_json(self, tmp_path):
         """Test validation with invalid JSON registry."""
         registry_path = tmp_path / "registry.json"

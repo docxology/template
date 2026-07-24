@@ -25,6 +25,9 @@ def test_build_plan_maps_pipeline_contracts_to_methods_surface(repo_root: Path) 
     assert plan.evidence_registry == Path(
         "projects/templates/template_code_project/output/reports/evidence_registry.json"
     )
+    assert plan.figure_registry == Path("projects/templates/template_code_project/output/figures/figure_registry.json")
+    assert plan.claim_ledger == Path("projects/templates/template_code_project/data/claim_ledger.yaml")
+    assert plan.experiment_plan == Path("projects/templates/template_code_project/experiment_plan.yaml")
 
     by_name = {stage.name: stage for stage in plan.stages}
     analysis = by_name["Project Analysis"]
@@ -143,6 +146,9 @@ def test_render_markdown_includes_actions_and_validation(repo_root: Path) -> Non
     assert "Project Analysis" in markdown
     assert "artifact_manifest.json" in markdown
     assert "evidence_registry.json" in markdown
+    assert "figure_registry.json" in markdown
+    assert "claim_ledger.yaml" in markdown
+    assert "experiment_plan.yaml" in markdown
     assert (
         "uv run python scripts/runner/execute_pipeline.py --project template_autoresearch_project --core-only"
         in markdown

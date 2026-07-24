@@ -217,7 +217,7 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
     write_evidence_registry_report(project_root / "output", registry)
     error_issues: list[str] = []
     warning_issues: list[str] = []
-    for source_path in missing_evidence_source_paths(project_root, registry):
+    for source_path in missing_evidence_source_paths(project_root, registry, repo_root=_REPO_ROOT):
         error_issues.append(f"missing evidence source path: {source_path}")
     for path in markdown_files:
         text = path.read_text(encoding="utf-8")

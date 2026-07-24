@@ -80,19 +80,24 @@ def test_current_output_snapshot_rebaselines_without_inventing_stage_provenance(
     project = tmp_path / "repo" / "projects" / "p"
     artifact = project / "output" / "data" / "result.json"
     cached_fulltext = project / "output" / "fulltext" / "provider-paper.txt"
+    fulltext_inventory = project / "output" / "fulltext" / "fulltext_inventory.json"
     validation_report = project / "output" / "reports" / "validation_report.json"
     artifact.parent.mkdir(parents=True)
     cached_fulltext.parent.mkdir(parents=True)
     validation_report.parent.mkdir(parents=True)
     artifact.write_text('{"result": 1}\n', encoding="utf-8")
     cached_fulltext.write_text("provider-controlled full text\n", encoding="utf-8")
+    fulltext_inventory.write_text('{"schema_version": "inventory/1"}\n', encoding="utf-8")
     validation_report.write_text('{"summary": {"all_passed": true}}\n', encoding="utf-8")
 
     first = snapshot_current_artifact_manifest(project / "output")
     second = snapshot_current_artifact_manifest(project / "output")
 
     assert first.to_dict() == second.to_dict()
-    assert [entry.path for entry in first.entries] == ["output/data/result.json"]
+    assert [entry.path for entry in first.entries] == [
+        "output/data/result.json",
+        "output/fulltext/fulltext_inventory.json",
+    ]
     assert first.entries[0].stage_name == "current-output-snapshot"
     assert first.entries[0].timestamp == ""
     assert validate_artifact_manifest(first, project_dir=project).issues == ()

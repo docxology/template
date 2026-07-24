@@ -82,6 +82,9 @@ def build_methods_orchestration_plan(
     )
     artifact_manifest = project_root / "output" / "reports" / "artifact_manifest.json"
     evidence_registry = project_root / "output" / "reports" / "evidence_registry.json"
+    figure_registry = _optional_surface_path(project_root, "output/figures/figure_registry.json")
+    claim_ledger = _optional_surface_path(project_root, "data/claim_ledger.yaml")
+    experiment_plan = _optional_surface_path(project_root, "experiment_plan.yaml")
 
     return MethodsOrchestrationPlan(
         project_name=project_name,
@@ -90,6 +93,9 @@ def build_methods_orchestration_plan(
         method_sections=_discover_method_sections(project_root_abs, root),
         artifact_manifest=artifact_manifest,
         evidence_registry=evidence_registry,
+        figure_registry=figure_registry,
+        claim_ledger=claim_ledger,
+        experiment_plan=experiment_plan,
         stages=stages,
         validation_commands=_validation_commands(project_name, project_key),
         dropped_dependency_edges=tuple(dag.dropped_dependency_edges),
@@ -288,6 +294,9 @@ def render_methods_orchestration_markdown(plan: MethodsOrchestrationPlan) -> str
         f"- Artifact mode: `{plan.artifact_mode}`",
         f"- Artifact manifest: `{plan.artifact_manifest.as_posix()}`",
         f"- Evidence registry: `{plan.evidence_registry.as_posix()}`",
+        f"- Figure registry: `{_format_optional_path(plan.figure_registry)}`",
+        f"- Claim ledger: `{_format_optional_path(plan.claim_ledger)}`",
+        f"- Experiment plan: `{_format_optional_path(plan.experiment_plan)}`",
         "- Manuscript method sections:",
     ]
     if plan.method_sections:
@@ -435,6 +444,17 @@ def _project_expansion_key(
         except ValueError:
             pass
     return project_root.as_posix()
+
+
+def _optional_surface_path(project_root: Path, relative_path: str) -> Path | None:
+    """Return a project-relative surface path only when its source exists."""
+    path = project_root / relative_path
+    return path if path.is_file() else None
+
+
+def _format_optional_path(path: Path | None) -> str:
+    """Render an optional methods surface without inventing a file."""
+    return path.as_posix() if path is not None else "not present"
 
 
 def _relative_to(path: Path, root: Path) -> Path:

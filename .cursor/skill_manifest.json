@@ -700,7 +700,7 @@
     },
     {
       "name": "infrastructure-methods",
-      "description": "Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, and validation commands into one reproducible methods plan.",
+      "description": "Methods orchestration contract builder for template projects. Use when mapping pipeline stages, manuscript methods, artifact manifests, evidence registries, figures, claim ledgers, experiment plans, and validation commands into one reproducible methods plan.",
       "path": "infrastructure/methods/SKILL.md",
       "cursor_at": "infrastructure/methods/SKILL.md"
     },

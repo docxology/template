@@ -112,16 +112,25 @@ def _registry_from_list_shape(items: list[object]) -> dict[str, dict[str, object
     return registered
 
 
-def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+def validate_figure_registry(
+    registry_path: Path,
+    manuscript_dir: Path,
+    *,
+    require_accessibility: bool = False,
+) -> tuple[bool, list[str]]:
     """Validate figure registry against manuscript references.
 
     Checks that all figure references in manuscript markdown files are
     registered in the figure registry. Skips documentation files (AGENTS.md,
-    README.md) when scanning for references.
+    README.md) when scanning for references. When ``require_accessibility`` is
+    true, referenced entries must carry explicit alt text in either the
+    top-level ``alt`` field or ``metadata.alt_text``.
 
     Args:
         registry_path: Path to figure registry JSON file
         manuscript_dir: Path to manuscript directory containing markdown files
+        require_accessibility: Opt-in migration gate for explicit figure alt
+            text. The ordinary reference gate remains backwards compatible.
 
     Returns:
         Tuple of (success, list of issues found):
@@ -149,6 +158,8 @@ def validate_figure_registry(registry_path: Path, manuscript_dir: Path) -> tuple
     registered_labels = set(registered_figures)
     issues = [f"Unregistered figure reference: {ref}" for ref in sorted(referenced_figures - registered_labels)]
     issues.extend(_missing_generated_figure_issues(registry_path, registered_figures, referenced_figures))
+    if require_accessibility:
+        issues.extend(_missing_accessibility_metadata(registered_figures, referenced_figures))
 
     if issues:
         logger.warning(f"  Found {len(issues)} figure issue(s)")
@@ -177,4 +188,21 @@ def _missing_generated_figure_issues(
         figure_path = registry_path.parent / filename
         if not figure_path.exists():
             issues.append(f"Registered generated figure file is missing for {label}: {filename}")
+    return issues
+
+
+def _missing_accessibility_metadata(
+    registered_figures: dict[str, dict[str, object]],
+    referenced_figures: set[str],
+) -> list[str]:
+    """Return issues for referenced figures without explicit alt text."""
+    issues: list[str] = []
+    for label in sorted(referenced_figures & set(registered_figures)):
+        record = registered_figures[label]
+        metadata = record.get("metadata")
+        alt_text = record.get("alt")
+        if not alt_text and isinstance(metadata, dict):
+            alt_text = metadata.get("alt_text")
+        if not isinstance(alt_text, str) or not alt_text.strip():
+            issues.append(f"Referenced figure is missing accessibility alt text: {label}")
     return issues
