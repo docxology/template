@@ -40,7 +40,8 @@ repos:
             output/templates/.*\.png|
             output/templates/.*\.svg|
             output/templates/.*\.pdf|
-            output/templates/.*\.epub
+            output/templates/.*\.epub|
+            projects/templates/template_literature_meta_analysis/output/fulltext/fulltext_inventory\.json
           )
       - id: check-merge-conflict
         name: check-merge-conflict (catch conflict markers)

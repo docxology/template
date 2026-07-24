@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from literature.corpus import Corpus
-from literature.fulltext_assessment import assess_corpus
+from literature.fulltext_assessment import assess_corpus, build_fulltext_inventory
 from literature.models import Paper
 
 
@@ -66,3 +66,35 @@ def test_provider_breakdown_excludes_metadata_only_sources() -> None:
 
     assert report["provider_breakdown"] == {"biorxiv": 1}
     assert report["fulltext_source_breakdown"] == {"none": 1, "biorxiv": 1}
+
+
+def test_fulltext_inventory_separates_declared_license_and_local_checksum(tmp_path) -> None:
+    paper = Paper(
+        title="OA fixture",
+        doi="10.1/oa",
+        pdf_url="https://repository.example/oa.pdf",
+        is_open_access=True,
+        full_text_source="repository",
+        license="cc-by-4.0",
+        license_url="https://creativecommons.org/licenses/by/4.0/",
+    )
+    corpus = Corpus(papers=[paper])
+    inventory_without_file = build_fulltext_inventory(corpus, tmp_path)
+    record = inventory_without_file["records"][0]
+    assert record["license_status"] == "declared"
+    assert record["availability"] == "remote_pdf_declared"
+    assert record["checksum_sha256"] is None
+
+    (tmp_path / "doi_10.1_oa.pdf").write_bytes(b"%PDF-inventory-fixture")
+    inventory = build_fulltext_inventory(corpus, tmp_path)
+    record = inventory["records"][0]
+    assert record["availability"] == "local_pdf"
+    assert record["size_bytes"] == len(b"%PDF-inventory-fixture")
+    assert len(record["checksum_sha256"]) == 64
+    assert inventory["summary"]["local_pdfs"] == 1
+
+
+def test_fulltext_inventory_does_not_infer_license_from_oa(tmp_path) -> None:
+    corpus = Corpus(papers=[Paper(title="OA without license", is_open_access=True, pdf_url="https://x.test/a.pdf")])
+    record = build_fulltext_inventory(corpus, tmp_path)["records"][0]
+    assert record["license_status"] == "unknown"

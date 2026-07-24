@@ -179,6 +179,13 @@ def _parse_crossref_work(item: dict) -> Paper:
 
     url = item.get("URL")
     pdf_url = url if url else None
+    license_url = None
+    raw_licenses = item.get("license")
+    if isinstance(raw_licenses, list):
+        for raw_license in raw_licenses:
+            if isinstance(raw_license, dict) and raw_license.get("URL"):
+                license_url = str(raw_license["URL"])
+                break
 
     return Paper(
         title=title,
@@ -189,6 +196,7 @@ def _parse_crossref_work(item: dict) -> Paper:
         venue=venue,
         citation_count=citation_count,
         pdf_url=pdf_url,
+        license_url=license_url,
     )
 
 

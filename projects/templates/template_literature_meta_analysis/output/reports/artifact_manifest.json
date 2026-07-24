@@ -425,6 +425,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/fulltext/fulltext_inventory.json",
+      "sha256": "f14440e8860526be5436f838e2274077240130d7b0b4b8c003ede40ab7203253",
+      "size_bytes": 875992,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/manuscript/00_abstract.md",
       "sha256": "2ecc76ebea6ef9ffc4c81b9806b12031ab4fe8ef250e4d35fb71102304fdc3dd",
       "size_bytes": 2605,

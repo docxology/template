@@ -83,3 +83,4 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 | `nanopublications.jsonl` | 03 | LLM-extracted assertions (0 in this run) |
 | `hypothesis_scores.json` | 03 | Per-hypothesis evidence scores |
 | `fulltext_assessment.json` | 06 | Abstract/OA/PDF coverage report |
+| `fulltext/fulltext_inventory.json` | 06 | Provider metadata, declared licenses, and local PDF SHA-256 checksums; no license is inferred from OA status |

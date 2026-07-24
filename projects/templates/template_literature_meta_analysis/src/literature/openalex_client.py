@@ -144,6 +144,11 @@ def _parse_openalex_work(data: dict) -> Paper:
         # Landing page URL as fallback (not direct PDF)
         pass
 
+    license_value = best_oa.get("license") or oa_data.get("license")
+    license_name = str(license_value) if license_value else None
+    license_url_value = best_oa.get("license_id") or oa_data.get("license_id")
+    license_url = str(license_url_value) if license_url_value else None
+
     # Determine full_text_source from location type
     if pdf_url:
         source_obj = best_oa.get("source") or {}
@@ -168,6 +173,8 @@ def _parse_openalex_work(data: dict) -> Paper:
         pdf_url=pdf_url,
         is_open_access=is_open_access,
         full_text_source=full_text_source,
+        license=license_name,
+        license_url=license_url,
     )
 
 

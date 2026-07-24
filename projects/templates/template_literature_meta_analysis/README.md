@@ -13,6 +13,11 @@ psychiatric) that exercises every analysis path. Everything runs **offline and
 deterministically** out of the box from a committed synthetic fixture corpus; a live
 networked run swaps in real records.
 
+Full-text provenance has two intentionally separate surfaces: `output/data/fulltext_assessment.json`
+summarizes declared corpus availability, while `output/fulltext/fulltext_inventory.json`
+records provider/license metadata and SHA-256 checksums only for PDFs actually present
+in the local output tree. The inventory never infers a license from an open-access flag.
+
 ## When to use this template
 
 Use it whenever the research object is *a body of literature about a topic* and you

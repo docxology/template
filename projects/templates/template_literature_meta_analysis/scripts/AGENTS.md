@@ -41,7 +41,7 @@ again afterward when those optional artifacts must be reflected in the manuscrip
 | `02` | `corpus.jsonl` | `subfield_classification.json`, `temporal_analysis.json`, `tfidf_data.json`, `topics.json`, `citation_network.json`, `citation_graph.gml` | `01` |
 | `03` | `corpus.jsonl` | `nanopublications.jsonl`, `nanopublications.trig`, `hypothesis_scores.json`, `hypothesis_trends.json`, `assertion_summary.json` | `01`, Ollama (optional) |
 | `04` | All `output/data/*.json`, `citation_graph.gml` | `output/figures/*.png`, `figure_registry.json` | `02`, `03` |
-| `06` | `corpus.jsonl` | `fulltext_assessment.json` | `01` |
+| `06` | `corpus.jsonl` | `fulltext_assessment.json`, `output/fulltext/fulltext_inventory.json` | `01` |
 | `07` | `corpus.jsonl` | `output/data/literature_evaluation.json` | `01` |
 | `08` | provider config | `deep_research_replay.json` | none |
 | `09` | `corpus.jsonl` | `output/data/bibliography.bib` | `01` |
@@ -278,9 +278,10 @@ output/
 │   ├── reproducibility_scores.json    # 10
 │   ├── reproducibility_summary.json   # 10
 │   └── fulltext_extraction.json       # 11
-├── fulltext/                         # 11; configurable
+├── fulltext/                         # 06 inventory + 11 downloads; configurable
 │   ├── *.pdf
 │   ├── *.txt
+│   ├── fulltext_inventory.json       # declared license/provider fields + local PDF SHA-256
 │   └── figures/
 ├── figures/                          # 04
 │   ├── *.png (count computed dynamically from available inputs — see caption registry)

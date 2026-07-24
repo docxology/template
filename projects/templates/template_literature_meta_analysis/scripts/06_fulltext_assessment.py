@@ -19,7 +19,7 @@ bootstrap_project()
 
 from config import CORPUS_PATH as DEFAULT_CORPUS_PATH, DATA_DIR as DEFAULT_DATA_DIR
 from literature.corpus import Corpus
-from literature.fulltext_assessment import assess_corpus
+from literature.fulltext_assessment import assess_corpus, build_fulltext_inventory
 
 
 def parse_args() -> argparse.Namespace:
@@ -57,8 +57,15 @@ def main() -> None:
     output_path = output_dir / "fulltext_assessment.json"
     with open(output_path, "w", encoding="utf-8") as handle:
         json.dump(results, handle, indent=2, ensure_ascii=False)
+    fulltext_dir = output_dir.parent / "fulltext"
+    inventory_path = fulltext_dir / "fulltext_inventory.json"
+    fulltext_dir.mkdir(parents=True, exist_ok=True)
+    inventory = build_fulltext_inventory(corpus, fulltext_dir)
+    with open(inventory_path, "w", encoding="utf-8") as handle:
+        json.dump(inventory, handle, indent=2, ensure_ascii=False, sort_keys=True)
     print(f"\nTotal papers: {results['total_papers']}")
     print(str(output_path))
+    print(str(inventory_path))
 
 
 if __name__ == "__main__":

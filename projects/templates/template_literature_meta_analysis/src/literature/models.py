@@ -115,6 +115,8 @@ class Paper:
         is_open_access: Whether the paper is open access
         full_text_source: Provenance of the full text (e.g., "arxiv",
             "publisher", "repository")
+        license: Machine-readable license identifier when supplied by a provider.
+        license_url: License URL when supplied by a provider.
         keywords: Search-engine or author-supplied subject keywords.
     """
 
@@ -134,6 +136,8 @@ class Paper:
     pdf_url: Optional[str] = None
     is_open_access: Optional[bool] = None
     full_text_source: Optional[str] = None
+    license: Optional[str] = None
+    license_url: Optional[str] = None
     keywords: list[str] = field(default_factory=list)
 
     @property
@@ -268,6 +272,8 @@ class Paper:
             "pdf_url": self.pdf_url,
             "is_open_access": self.is_open_access,
             "full_text_source": self.full_text_source,
+            "license": self.license,
+            "license_url": self.license_url,
             "keywords": self.keywords,
         }
 
@@ -302,5 +308,7 @@ class Paper:
             pdf_url=data.get("pdf_url"),
             is_open_access=data.get("is_open_access"),
             full_text_source=data.get("full_text_source"),
+            license=data.get("license"),
+            license_url=data.get("license_url"),
             keywords=data.get("keywords", []),
         )

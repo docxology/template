@@ -33,10 +33,15 @@ a :class:`~literature.corpus.Corpus`, called from
 from __future__ import annotations
 
 from collections import Counter
+import hashlib
+from pathlib import Path
 from urllib.parse import urlparse
 
 from literature.corpus import Corpus
+from literature.fulltext_download import safe_filename
 from literature.models import Paper
+
+FULLTEXT_INVENTORY_SCHEMA = "literature-meta-analysis/fulltext-inventory/1"
 
 # Known OA providers and their URL patterns for provider classification.
 _PROVIDER_PATTERNS: dict[str, tuple[str, ...]] = {
@@ -156,4 +161,70 @@ def assess_corpus(corpus: Corpus) -> dict:
             "no_fulltext_available": sum(1 for p in papers if not p.pdf_url and not p.arxiv_id),
         },
         "provider_breakdown": _provider_breakdown(papers),
+    }
+
+
+def build_fulltext_inventory(corpus: Corpus, fulltext_dir: Path | None = None) -> dict:
+    """Build provider-aware full-text provenance and local artifact checksums.
+
+    Provider metadata and local artifacts are deliberately separate: an OA flag
+    or URL does not prove that a PDF was downloaded, and a local checksum does
+    not prove a license. License fields are reported only when the source
+    record declared them; they are never inferred from open-access status.
+
+    Args:
+        corpus: Corpus whose records should be inventoried.
+        fulltext_dir: Optional directory containing downloaded ``.pdf`` files.
+            Paths in the result are relative to this directory and therefore do
+            not leak machine-specific absolute paths.
+    """
+    root = Path(fulltext_dir) if fulltext_dir is not None else None
+    records: list[dict[str, object]] = []
+    for paper in sorted(corpus.papers, key=lambda item: item.canonical_id):
+        stem = safe_filename(paper.canonical_id)
+        pdf_path = root / f"{stem}.pdf" if root is not None else None
+        pdf_exists = bool(pdf_path and pdf_path.is_file())
+        checksum: str | None = None
+        size_bytes: int | None = None
+        if pdf_exists and pdf_path is not None:
+            content = pdf_path.read_bytes()
+            checksum = hashlib.sha256(content).hexdigest()
+            size_bytes = len(content)
+        if pdf_exists:
+            availability = "local_pdf"
+        elif paper.pdf_url:
+            availability = "remote_pdf_declared"
+        else:
+            availability = "unavailable"
+        records.append(
+            {
+                "paper_id": paper.canonical_id,
+                "provider": _classify_provider(paper),
+                "pdf_url": paper.pdf_url,
+                "open_access": paper.is_open_access,
+                "license": paper.license,
+                "license_url": paper.license_url,
+                "license_status": "declared" if (paper.license or paper.license_url) else "unknown",
+                "availability": availability,
+                "local_pdf": f"{stem}.pdf" if pdf_exists else None,
+                "size_bytes": size_bytes,
+                "checksum_sha256": checksum,
+            }
+        )
+    return {
+        "schema_version": FULLTEXT_INVENTORY_SCHEMA,
+        "scope": "provider metadata plus local downloaded PDF artifacts",
+        "claim_boundary": (
+            "Open-access status and URLs describe declared availability; only a "
+            "local PDF checksum proves the bytes present in this output tree."
+        ),
+        "fulltext_root": "output/fulltext" if root is not None else None,
+        "summary": {
+            "total_records": len(records),
+            "metadata_pdf_urls": sum(1 for record in records if record["pdf_url"]),
+            "local_pdfs": sum(1 for record in records if record["availability"] == "local_pdf"),
+            "declared_licenses": sum(1 for record in records if record["license_status"] == "declared"),
+            "unknown_licenses": sum(1 for record in records if record["license_status"] == "unknown"),
+        },
+        "records": records,
     }

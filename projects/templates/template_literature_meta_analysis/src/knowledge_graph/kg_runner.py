@@ -25,6 +25,30 @@ from knowledge_graph.nanopublication import (
 from literature.corpus import Corpus
 
 
+def _attach_hypothesis_scores_to_cross_phase_analysis(data_dir: Path, scores: dict, assertion_summary: dict) -> None:
+    """Attach measured hypothesis scores while preserving the search-stage boundary."""
+    analysis_path = data_dir / "cross_phase_analysis.json"
+    if not analysis_path.is_file():
+        return
+    try:
+        analysis = json.loads(analysis_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    if not isinstance(analysis, dict):
+        return
+    analysis["hypothesis_scoring"] = {
+        "status": "measured" if assertion_summary.get("total_assertions", 0) else "no_assertions",
+        "artifact": "hypothesis_scores.json",
+        "scores": scores,
+        "total_assertions": assertion_summary.get("total_assertions", 0),
+        "claim_boundary": (
+            "Scores summarize extracted assertion classifications under the configured "
+            "model and corpus; they do not establish truth or causal support."
+        ),
+    }
+    analysis_path.write_text(json.dumps(analysis, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def _run_llm_extraction(papers, args, nanopub_path, kg_cfg, logger):
     llm_config = LLMConfig(
         base_url=args.llm_url,
@@ -170,14 +194,12 @@ def run_knowledge_graph_pipeline(args: argparse.Namespace, *, project_root: Path
         bucket[assertion.assertion_type] = bucket.get(assertion.assertion_type, 0) + 1
 
     summary_path = data_dir / "assertion_summary.json"
+    assertion_summary = {
+        "total_assertions": len(assertions),
+        "type_counts": type_counts,
+        "per_hypothesis": per_hypothesis,
+    }
     with open(summary_path, "w", encoding="utf-8") as handle:
-        json.dump(
-            {
-                "total_assertions": len(assertions),
-                "type_counts": type_counts,
-                "per_hypothesis": per_hypothesis,
-            },
-            handle,
-            indent=2,
-        )
+        json.dump(assertion_summary, handle, indent=2)
+    _attach_hypothesis_scores_to_cross_phase_analysis(data_dir, scores, assertion_summary)
     print(str(summary_path))

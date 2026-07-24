@@ -23,7 +23,7 @@ Project layout
 # │   ├── workflow_graphs.jsonl
 # │   ├── reproducibility_scores.json
 # │   └── reproducibility_summary.json
-# ├── fulltext/       Downloaded PDFs, extracted .txt, and figures/
+# ├── fulltext/       Downloaded PDFs, extracted .txt, figures/, and inventory
 # ├── figures/        Publication-ready PNG figures
 # └── manuscript/     Rendered markdown with variables injected
 

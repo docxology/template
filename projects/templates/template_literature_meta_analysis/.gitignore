@@ -13,4 +13,5 @@ __pycache__/
 
 # Provider-downloaded full text is a local retrieval cache, not redistributable
 # exemplar evidence. Commit derived assessments and provenance, never raw text.
-output/fulltext/
+output/fulltext/*
+!output/fulltext/fulltext_inventory.json

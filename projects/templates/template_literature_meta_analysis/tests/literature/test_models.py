@@ -379,6 +379,8 @@ class TestPaperSerialization:
             "pdf_url",
             "is_open_access",
             "full_text_source",
+            "license",
+            "license_url",
             "keywords",
         }
         assert set(data.keys()) == expected_keys
@@ -436,16 +438,22 @@ class TestPaperSerialization:
             pdf_url="https://arxiv.org/pdf/2301.12345.pdf",
             is_open_access=True,
             full_text_source="arxiv",
+            license="cc-by-4.0",
+            license_url="https://creativecommons.org/licenses/by/4.0/",
         )
         data = original.to_dict()
         assert data["pdf_url"] == "https://arxiv.org/pdf/2301.12345.pdf"
         assert data["is_open_access"] is True
         assert data["full_text_source"] == "arxiv"
+        assert data["license"] == "cc-by-4.0"
+        assert data["license_url"].endswith("by/4.0/")
 
         restored = Paper.from_dict(data)
         assert restored.pdf_url == original.pdf_url
         assert restored.is_open_access is True
         assert restored.full_text_source == "arxiv"
+        assert restored.license == "cc-by-4.0"
+        assert restored.license_url.endswith("by/4.0/")
 
     def test_from_dict_backward_compatible(self):
         """from_dict handles legacy data without full-text fields."""
