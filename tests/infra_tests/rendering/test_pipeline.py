@@ -538,20 +538,28 @@ def test_render_individual_files_success(tmp_path: Path) -> None:
 
 
 def test_render_individual_files_cleans_stale_web_artifacts(tmp_path: Path) -> None:
-    """Render-only reruns remove obsolete generated HTML before writing current pages."""
+    """Render-only reruns remove obsolete generated HTML before writing current pages.
+
+    Cleanup targets only pages this renderer produces (the combined
+    ``index.html`` and ``{parent}__{stem}.html`` per-section pages) — an
+    unrelated project HTML artifact sitting in the same ``output/web/`` dir
+    (e.g. a project's own ``dashboard.html``) must survive.
+    """
     reporter = DiagnosticReporter(project_name="t", output_dir=tmp_path / "reports", load_existing=False)
     md = tmp_path / "04_discussion.md"
     md.write_text("# Discussion", encoding="utf-8")
     web_dir = tmp_path / "output" / "web"
     web_dir.mkdir(parents=True)
-    stale_html = web_dir / "old-section-name.html"
+    stale_html = web_dir / "manuscript__old_section_name.html"
     stale_index = web_dir / "index.html"
     stale_combined = web_dir / "_combined_manuscript.md"
     preserved_asset = web_dir / "style.css"
+    preserved_dashboard = web_dir / "dashboard.html"
     stale_html.write_text("<html>stale</html>", encoding="utf-8")
     stale_index.write_text("<html>stale index</html>", encoding="utf-8")
     stale_combined.write_text("# stale combined", encoding="utf-8")
     preserved_asset.write_text("body { color: black; }", encoding="utf-8")
+    preserved_dashboard.write_text("<html>dashboard</html>", encoding="utf-8")
     manager = _SuccessRenderManager(
         RenderingConfig(output_dir=str(tmp_path / "output"), web_dir=str(web_dir), enable_html=True),
         tmp_path / "outputs",
@@ -565,6 +573,7 @@ def test_render_individual_files_cleans_stale_web_artifacts(tmp_path: Path) -> N
     assert not stale_index.exists()
     assert not stale_combined.exists()
     assert preserved_asset.is_file()
+    assert preserved_dashboard.is_file()
 
 
 # ---------------------------------------------------------------------------

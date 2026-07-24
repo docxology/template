@@ -19,6 +19,65 @@ local function extract_text_from_inlines(inlines)
   return table.concat(text_parts)
 end
 
+local function clean_caption_text(text)
+  text = text:gsub("\\eqref{[^}]+}", "(Equation)")
+  text = text:gsub("\\ref{[^}]+}", "(Ref)")
+  return text
+end
+
+local function extract_braced_command_content(content, command_name)
+  local prefix = "\\" .. command_name .. "{"
+  local start_pos = content:find(prefix, 1, true)
+  if not start_pos then
+    return nil
+  end
+
+  local content_start = start_pos + #prefix
+  local depth = 1
+
+  for idx = content_start, #content do
+    local ch = content:sub(idx, idx)
+    if ch == "{" then
+      depth = depth + 1
+    elseif ch == "}" then
+      depth = depth - 1
+      if depth == 0 then
+        return content:sub(content_start, idx - 1)
+      end
+    end
+  end
+
+  return nil
+end
+
+local function extract_caption_from_raw(content)
+  local caption_text = extract_braced_command_content(content, "caption")
+  if caption_text then
+    return clean_caption_text(caption_text)
+  end
+  return ""
+end
+
+local function textwidth_to_percent(width_match)
+  if width_match:match("\\textwidth") then
+    local frac = width_match:match("^([%d.]+)\\textwidth$")
+    if frac then
+      local n = tonumber(frac)
+      if n then
+        local pct = n * 100
+        local nearest_int = math.floor(pct + 0.5)
+        if math.abs(pct - nearest_int) < 1e-9 then
+          return string.format("%d%%", nearest_int)
+        end
+        return string.format("%s%%", tostring(pct))
+      end
+    end
+    return "100%"
+  end
+
+  return width_match
+end
+
 -- Para filter to handle figure environments that span a paragraph
 function Para(el)
   local para_content = extract_text_from_inlines(el.content)
@@ -56,14 +115,7 @@ function Para(el)
     end
 
     -- Extract caption text (between \caption{ and the closing })
-    local caption_text = para_content:match("\\caption{([^}]+)}")
-    if caption_text then
-      -- Clean up caption text (remove LaTeX artifacts)
-      caption_text = caption_text:gsub("\\eqref{[^}]+}", "(Equation)")
-      caption_text = caption_text:gsub("\\ref{[^}]+}", "(Ref)")
-    else
-      caption_text = ""
-    end
+    local caption_text = extract_caption_from_raw(para_content)
 
     -- If we found an image, create proper HTML figure
     if img_html then
@@ -160,18 +212,11 @@ function RawInline(elem)
 
     if filename then
       -- Extract width from options if present
-      local width = "100%%"
+      local width = "100%"
       if options then
         local width_match = options:match("width=([^,]+)")
         if width_match then
-          -- Convert LaTeX width to CSS percentage
-          if width_match:match("0%.8\\textwidth") then
-            width = "80%%"
-          elseif width_match:match("0%.9\\textwidth") then
-            width = "90%%"
-          else
-            width = width_match:gsub("\\textwidth", "100%%")
-          end
+          width = textwidth_to_percent(width_match)
         end
       end
 
@@ -183,6 +228,18 @@ function RawInline(elem)
       -- Create HTML img tag
       local img_html = string.format('<img src="%s" alt="%s" style="max-width: %s; height: auto;" class="figure">',
                                    clean_filename, clean_filename:gsub("%.%w+$", ""), width)
+
+      -- Limitation: this per-node filter can only attach a caption when
+      -- \caption{...} is present in the same raw TeX node as \includegraphics.
+      local caption_text = extract_caption_from_raw(content)
+      if caption_text ~= "" then
+        local figure_html = string.format(
+          '<figure class="figure">%s<figcaption>%s</figcaption></figure>',
+          img_html,
+          caption_text
+        )
+        return pandoc.RawInline("html", figure_html)
+      end
 
       -- Return the HTML as raw HTML
       return pandoc.RawInline("html", img_html)
@@ -203,18 +260,11 @@ function RawBlock(elem)
 
     if filename then
       -- Extract width from options if present
-      local width = "100%%"
+      local width = "100%"
       if options then
         local width_match = options:match("width=([^,]+)")
         if width_match then
-          -- Convert LaTeX width to CSS percentage
-          if width_match:match("0%.8\\textwidth") then
-            width = "80%%"
-          elseif width_match:match("0%.9\\textwidth") then
-            width = "90%%"
-          else
-            width = width_match:gsub("\\textwidth", "100%%")
-          end
+          width = textwidth_to_percent(width_match)
         end
       end
 
@@ -223,12 +273,31 @@ function RawBlock(elem)
       clean_filename = clean_filename:gsub("^output/figures/", "../figures/")
       clean_filename = clean_filename:gsub("^figures/", "../figures/")
 
+      local alt_text = clean_filename:gsub("%.%w+$", "")
+      local img_html = string.format(
+        '<img src="%s" alt="%s" style="max-width: %s; height: auto;">',
+        clean_filename,
+        alt_text,
+        width
+      )
+
+      -- Limitation: this per-node filter can only attach a caption when
+      -- \caption{...} is present in the same raw TeX node as \includegraphics.
+      local caption_text = extract_caption_from_raw(content)
+      if caption_text ~= "" then
+        local figure_html = string.format(
+          '<figure class="figure">%s<figcaption>%s</figcaption></figure>',
+          img_html,
+          caption_text
+        )
+        return pandoc.RawBlock("html", figure_html)
+      end
+
       -- Create HTML img tag wrapped in a div
-      local img_html = string.format('<div class="figure"><img src="%s" alt="%s" style="max-width: %s; height: auto;"></div>',
-                                   clean_filename, clean_filename:gsub("%.%w+$", ""), width)
+      local div_html = string.format('<div class="figure">%s</div>', img_html)
 
       -- Return the HTML as raw HTML
-      return pandoc.RawBlock("html", img_html)
+      return pandoc.RawBlock("html", div_html)
     end
   end
 

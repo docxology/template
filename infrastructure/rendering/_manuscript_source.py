@@ -189,13 +189,20 @@ def load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
 
 
 def _clean_stale_web_artifacts(manager: RenderManager) -> None:
-    """Remove generated web artifacts before a fresh per-file HTML render."""
+    """Remove generated web artifacts before a fresh per-file HTML render.
+
+    Only removes files this renderer itself produces (the combined
+    ``index.html`` and per-section ``{parent}__{stem}.html`` pages, per
+    ``WebRenderer._output_file_for_source``) — a blanket ``*.html`` glob would
+    also delete unrelated hand-authored web artifacts (e.g. a project's own
+    ``dashboard.html``) that happen to live in the same ``output/web/`` dir.
+    """
     if not getattr(manager.config, "enable_html", False):
         return
     web_dir = Path(manager.config.web_dir)
     if not web_dir.exists():
         return
-    stale_files = sorted(web_dir.glob("*.html"))
+    stale_files = [path for path in sorted(web_dir.glob("*.html")) if path.name == "index.html" or "__" in path.stem]
     combined_markdown = web_dir / "_combined_manuscript.md"
     if combined_markdown.exists():
         stale_files.append(combined_markdown)

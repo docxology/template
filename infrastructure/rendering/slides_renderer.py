@@ -36,6 +36,11 @@ from infrastructure.rendering._pdf_latex_helpers import (
     extract_math_font_preamble,
     extract_preamble,
 )
+from infrastructure.rendering._slides_crossref import (
+    COMBINED_AUX_BASENAME,
+    parse_aux_label_numbers,
+    resolve_cross_deck_references,
+)
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering.latex_texttt import (
@@ -209,6 +214,8 @@ class SlidesRenderer:
             if figures_dir:
                 tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
+            tex_content = self._resolve_cross_deck_refs(tex_content)
+
             tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
             if texttt_replacements:
                 logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
@@ -293,6 +300,43 @@ class SlidesRenderer:
                     "log_file": str(log_file) if log_file.exists() else None,
                 },
             ) from e
+
+    def _resolve_cross_deck_refs(self, tex_content: str) -> str:
+        """Resolve cross-deck ``\\ref``/``\\eqref`` against the combined PDF's aux.
+
+        Section decks are standalone Beamer builds, so a raw-LaTeX
+        reference to a ``\\label`` defined in a *different* section's deck
+        compiles to "??". The combined manuscript build resolves every
+        label and retains its ``.aux`` next to the combined PDF
+        (``{pdf_dir}/_combined_manuscript.aux``); this pre-pass replaces
+        each cross-deck reference with the literal number that aux
+        recorded — the same number the combined PDF prints. Within-deck
+        references are untouched (Beamer numbers them natively), labels
+        missing from the aux are left as-is and noted in the render log,
+        and a missing aux (e.g. first-ever render, before any combined
+        build) skips the pass entirely. Never fails the slide build.
+        """
+        aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
+        label_numbers = parse_aux_label_numbers(aux_path)
+        if not label_numbers:
+            logger.debug("No combined-manuscript aux label map at %s; cross-deck refs left as-is", aux_path)
+            return tex_content
+
+        tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
+        if replaced:
+            logger.info(
+                "Resolved %d cross-deck reference(s) in slides from %s",
+                replaced,
+                aux_path.name,
+            )
+        if unresolved:
+            logger.warning(
+                "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
+                len(unresolved),
+                aux_path.name,
+                ", ".join(unresolved),
+            )
+        return tex_content
 
     def _maybe_write_math_header(self, manuscript_dir: Path | None, output_dir: Path) -> Path | None:
         """Write a Pandoc ``-H`` header file for Unicode math + citation
