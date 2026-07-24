@@ -7,43 +7,6 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
-## [3.6.0] - 2026-07-23
-
-### Fixed
-
-- **Conditional `algorithm2e` loading in 9 exemplar preambles.** Replaced
-  unconditional `\usepackage[...]{algorithm2e}` with
-  `\IfFileExists{algorithm2e.sty}{...}{}` in
-  `template_advanced_literature_review`, `template_autoscientists`,
-  `template_code_project`, `template_eda_notebook`, `template_formal`,
-  `template_literature_meta_analysis`, `template_madlib`,
-  `template_methods_paper`, and `template_prose_project`. None of these
-  exemplars use algorithm2e environments; the preamble loading caused
-  combined PDF rendering to fail on systems without `texlive-science`
-  installed. This restores full PDF rendering for
-  `template_advanced_literature_review` whose combined manuscript PDF
-  was previously failing.
-
-- **Stale integration test paths.** Fixed 3 integration test files that
-  referenced scripts at their pre-consolidation locations:
-  `tests/integration/test_logging.py` (`scripts/bash_utils.sh` →
-  `scripts/shell/bash_utils.sh`),
-  `tests/integration/test_execute_pipeline_cli.py` and
-  `tests/integration/test_full_pipeline.py`
-  (`scripts/execute_pipeline.py` → `scripts/runner/execute_pipeline.py`).
-  These 38 tests now pass (previously failed silently).
-
-- **Missing `repository_url` in `template_formal` config.** Added
-  `repository_url` and `repository_label` to
-  `projects/templates/template_formal/manuscript/config.yaml`, which
-  previously had only `github_repository`.
-
-### Added
-
-- **`template_advanced_literature_review` standalone GitHub repository.**
-  Created `docxology/template_advanced_literature_review` on GitHub —
-  the last of 24 exemplars to get its standalone repo.
-
 ## [Unreleased]
 
 ### Security and release-boundary hardening
@@ -84,7 +47,7 @@ not to the contents of any specific workspace.
   fail-closed checkout provenance.
 
 - 📝 **Comprehensive docstring coverage.** A deep audit found 1218 public
-  functions/classes across infrastructure/ and all 18 template exemplars
+  functions/classes across infrastructure/ and all 24 template exemplars
   missing docstrings. 1214 docstrings were added (360+ across infrastructure/
   in 107 files, 750+ across template src/ in 200 files, 104 across template
   scripts/ in 95 files, 8 module-level docstrings). Remaining 15 are protocol
@@ -688,6 +651,43 @@ not to the contents of any specific workspace.
   `>=6.12.0` (clears CVE-2026-48155 / CVE-2026-48156) and `cryptography` to
   `>=48.0.1` (clears GHSA-537c-gmf6-5ccf). `pip-audit` reports no known
   vulnerabilities; pip `PYSEC-2026-196` remains the single documented ignore.
+
+## [3.6.0] - 2026-07-23
+
+### Fixed
+
+- **Conditional `algorithm2e` loading in 9 exemplar preambles.** Replaced
+  unconditional `\usepackage[...]{algorithm2e}` with
+  `\IfFileExists{algorithm2e.sty}{...}{}` in
+  `template_advanced_literature_review`, `template_autoscientists`,
+  `template_code_project`, `template_eda_notebook`, `template_formal`,
+  `template_literature_meta_analysis`, `template_madlib`,
+  `template_methods_paper`, and `template_prose_project`. None of these
+  exemplars use algorithm2e environments; the preamble loading caused
+  combined PDF rendering to fail on systems without `texlive-science`
+  installed. This restores full PDF rendering for
+  `template_advanced_literature_review` whose combined manuscript PDF
+  was previously failing.
+
+- **Stale integration test paths.** Fixed 3 integration test files that
+  referenced scripts at their pre-consolidation locations:
+  `tests/integration/test_logging.py` (`scripts/bash_utils.sh` →
+  `scripts/shell/bash_utils.sh`),
+  `tests/integration/test_execute_pipeline_cli.py` and
+  `tests/integration/test_full_pipeline.py`
+  (`scripts/execute_pipeline.py` → `scripts/runner/execute_pipeline.py`).
+  These 38 tests now pass (previously failed silently).
+
+- **Missing `repository_url` in `template_formal` config.** Added
+  `repository_url` and `repository_label` to
+  `projects/templates/template_formal/manuscript/config.yaml`, which
+  previously had only `github_repository`.
+
+### Added
+
+- **`template_advanced_literature_review` standalone GitHub repository.**
+  Created `docxology/template_advanced_literature_review` on GitHub —
+  the last of 24 exemplars to get its standalone repo.
 
 ## [3.5.1] — 2026-06-26
 
