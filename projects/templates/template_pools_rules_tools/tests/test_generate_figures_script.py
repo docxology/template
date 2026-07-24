@@ -54,7 +54,10 @@ def test_generate_assets_writes_registry_for_real_integration_figures(tmp_path: 
         "fig:resilience",
         "fig:pipelineflow",
     }
+    assert all(record["metadata"]["alt_text"] for record in payload["figures"])
     ok, issues = validate_figure_registry(registry, manuscript)
+    assert ok, issues
+    ok, issues = validate_figure_registry(registry, manuscript, require_accessibility=True)
     assert ok, issues
 
 

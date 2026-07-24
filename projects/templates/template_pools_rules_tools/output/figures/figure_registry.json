@@ -4,49 +4,73 @@
       "caption": "Three-layer resource architecture with the integration layer.",
       "filename": "architecture_overview.png",
       "generated_by": "src.figures.generate_architecture_overview",
-      "label": "fig:architecture"
+      "label": "fig:architecture",
+      "metadata": {
+        "alt_text": "Diagram showing fonds, rules, and tools feeding a shared integration layer."
+      }
     },
     {
       "caption": "Runtime counts for discovered fonds, rules, and tools.",
       "filename": "resource_counts.png",
       "generated_by": "src.figures.generate_resource_counts",
-      "label": "fig:counts"
+      "label": "fig:counts",
+      "metadata": {
+        "alt_text": "Bar chart comparing the runtime counts discovered for fonds, rules, and tools."
+      }
     },
     {
       "caption": "Per-resource integration status dashboard.",
       "filename": "status_dashboard.png",
       "generated_by": "src.figures.generate_status_dashboard",
-      "label": "fig:pipeline"
+      "label": "fig:pipeline",
+      "metadata": {
+        "alt_text": "Status dashboard showing pass, partial, or missing state for each resource category."
+      }
     },
     {
       "caption": "Thin-script pipeline from source validation through publication rendering.",
       "filename": "pipeline_flow.png",
       "generated_by": "src.figures.generate_pipeline_flow",
-      "label": "fig:pipelineflow"
+      "label": "fig:pipelineflow",
+      "metadata": {
+        "alt_text": "Left-to-right pipeline from source validation through integration, figure generation, variable hydration, and publication rendering."
+      }
     },
     {
       "caption": "Three-level graceful-degradation design for shared resources.",
       "filename": "resilience_layers.png",
       "generated_by": "src.figures.generate_resilience_layers",
-      "label": "fig:resilience"
+      "label": "fig:resilience",
+      "metadata": {
+        "alt_text": "Layered flow showing resource absence, malformed data, and missing scripts with bounded fallback responses."
+      }
     },
     {
       "caption": "Soft and strong branches of the template rule hierarchy.",
       "filename": "rule_hierarchy.png",
       "generated_by": "src.figures.generate_rule_hierarchy",
-      "label": "fig:rulehier"
+      "label": "fig:rulehier",
+      "metadata": {
+        "alt_text": "Hierarchy diagram separating guidance-oriented soft rules from machine-enforced strong rules."
+      }
     },
     {
       "caption": "Schema taxonomy across bibliography, contacts, and dataset fonds.",
       "filename": "fond_taxonomy.png",
       "generated_by": "src.figures.generate_fond_taxonomy",
-      "label": "fig:taxonomy"
+      "label": "fig:taxonomy",
+      "metadata": {
+        "alt_text": "Taxonomy diagram comparing shared manifest fields and category-specific schemas for three fond types."
+      }
     },
     {
       "caption": "Input, behavior, output, and exit-code contracts for template tools.",
       "filename": "tool_contract.png",
       "generated_by": "src.figures.generate_tool_contract",
-      "label": "fig:toolcontract"
+      "label": "fig:toolcontract",
+      "metadata": {
+        "alt_text": "Contract diagram comparing tool inputs, behavior, outputs, and exit codes."
+      }
     }
   ],
   "schema_version": "template-pools-rules-tools-figure-registry-v1"

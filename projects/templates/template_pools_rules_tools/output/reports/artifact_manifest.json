@@ -30,8 +30,8 @@
     {
       "contract_match": true,
       "path": "output/figures/figure_registry.json",
-      "sha256": "a38837a1b59550ba10415c1026afe56458e3eb8ef2d47ca9d6fa820161afb22c",
-      "size_bytes": 1924,
+      "sha256": "074dea9b77b7405f6fd85c3b7c36996aa7974be3be322f507b4a3cb7215fad95",
+      "size_bytes": 3084,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -66,8 +66,8 @@
     {
       "contract_match": true,
       "path": "output/figures/resource_counts.png",
-      "sha256": "fe3c4acc699729d7c6cd996cd2a515b3d99ed4c2db597514e75b235695aa91fc",
-      "size_bytes": 60738,
+      "sha256": "1bd10cbf7907a78f92878983606a5d15b247f9bfd10b97bb56b77b7e3f6acd9f",
+      "size_bytes": 51071,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -84,8 +84,8 @@
     {
       "contract_match": true,
       "path": "output/figures/status_dashboard.png",
-      "sha256": "f85b327096251e67ea61e95aa898f53f318084b6267cbb61a2d30949e29ffb3d",
-      "size_bytes": 97944,
+      "sha256": "3859ca9c6e603ea137924cdc9454fc70b73286fe0aed3698a8895334d119f591",
+      "size_bytes": 104817,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
