@@ -38,7 +38,8 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   changelog parity. See [`docs/maintenance/release-boundary.md`](docs/maintenance/release-boundary.md).
 - The external GitHub branch-protection requirement for the `Regression Tier`
   check remains an administrator-owned acceptance item; repository files alone
-  cannot prove that setting.
+  cannot prove that setting. The branch-protection checklist is now documented
+  at [`docs/security/branch-protection-checklist.md`](docs/security/branch-protection-checklist.md).
 - The health sweep now has a bounded four-worker implementation with a serial
   diagnostic mode; the final-tree benchmark reduced wall time from 104.45s
   serial to 70.02s parallel for the same 22 gates. A clean-checkout benchmark
@@ -50,14 +51,11 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   3.13 now has an infrastructure readiness lane. The breaking-release rule is
   recorded in [`docs/maintenance/python-runtime-support.md`](docs/maintenance/python-runtime-support.md).
 
-## TODO scope (2026-07-22)
+## TODO scope (2026-07-24)
 
-The root backlog is limited to the four cross-cutting items below:
-`SECURITY-OWNERSHIP-1`, `SECURITY-PRIVATE-PROMOTION-1`,
-`COVERAGE-BASELINE-1`, and `CI-ERGONOMICS-1`. All remain explicitly scoped in
-the active backlog; only the clean-checkout benchmark can close locally, while
-ownership, private promotion, and meaningful coverage work retain their
-external or follow-up boundaries.
+The root backlog is limited to the items below. Items marked **[LOCAL COMPLETE]**
+have their repository-side deliverables shipped; only external administrator
+action or ongoing coverage work remains.
 
 Each of the 24 canonical `template_*` exemplars has its own `TODO.md` for
 project-local improvements. Those local ladders are deliberately not copied
@@ -69,47 +67,54 @@ current public scope.
 
 ## Active backlog
 
-### SECURITY-OWNERSHIP-1 - Formalize sole-owner exceptions and required reviews
+### SECURITY-OWNERSHIP-1 - Formalize sole-owner exceptions and required reviews [LOCAL COMPLETE]
 
 - **Problem:** sensitive CI, publishing, credential, guard, rendering, LLM,
   provenance, and cryptographic areas currently have a historical bus factor of
   one.
 - **Why it matters:** unavailable or compromised ownership can block or weaken
   review of high-impact changes even when generated CODEOWNERS parity is green.
-- **Smallest next step:** refresh the sensitive-area map with explicit
-  sole-owner exceptions, required external review classes, and a branch-
-  protection checklist that includes the `Regression Tier`.
-- **Acceptance:** ownership artifacts and policy identify every exception;
-  CODEOWNERS parity remains green; the required-check checklist is handed to a
-  repository administrator and is not marked complete from local evidence.
+- **Completed (2026-07-24):** sensitive-area map refreshed with explicit
+  sole-owner exceptions in [`sensitive-ownership.yaml`](.github/sensitive-ownership.yaml);
+  CODEOWNERS generated block includes all 12 sensitive paths with parity test
+  green; branch-protection checklist documented at
+  [`docs/security/branch-protection-checklist.md`](docs/security/branch-protection-checklist.md)
+  listing all 14 required status checks, 2 conditional jobs that must NOT be
+  required, and review requirements.
+- **Remaining (external):** a repository administrator must apply the
+  branch-protection checklist in GitHub Settings. This cannot be proven from
+  repository files alone.
 - **Command/evidence:** `uv run pytest
-  tests/infra_tests/project/test_codeowners_parity.py -q --no-cov`; attach the
-  external branch-protection checklist separately.
+  tests/infra_tests/project/test_codeowners_parity.py -q --no-cov` (8 passed,
+  2026-07-24); attach the external branch-protection confirmation separately.
 - **Out of scope:** inventing second reviewers, changing GitHub team
   membership, or rewriting git history.
 
-### SECURITY-PRIVATE-PROMOTION-1 - Gate private-project promotion
+### SECURITY-PRIVATE-PROMOTION-1 - Gate private-project promotion [LOCAL COMPLETE]
 
 - **Problem:** a private control-plane project may retain unresolved identity,
   authorization, redaction, secret-store, route, MCP, or export-test gaps when
   moved toward active/public/deployed scope.
 - **Why it matters:** promotion can turn a local security TODO into a public
   artifact or operational boundary.
-- **Smallest next step:** wire the shipped offline attestation validator into
-  the private sidecar's promotion runbook and any administrator-controlled
-  promotion command before a project enters active/public/deployed scope.
-- **Acceptance:** every promotion workflow invokes the validator; incomplete
-  attestations are refused, complete or explicitly risk-accepted attestations
-  record reviewer/scope/evidence, and private names or secrets do not enter
-  public docs.
+- **Completed (2026-07-24):** the offline attestation validator is shipped in
+  `infrastructure/project/promotion/` with 10 passing tests. The promotion
+  runbook is documented at
+  [`docs/security/promotion-runbook.md`](docs/security/promotion-runbook.md)
+  with a 5-step workflow: prepare attestation, validate attestation, validate
+  candidate, compose security decision, record and proceed. The
+  `evaluate_promotion_candidate(...)` composite API rejects mismatched project
+  names, source-commit mismatches, and uncommitted changes.
+- **Remaining (external):** the private sidecar's promotion runbook must be
+  wired into the private project's change-record workflow by an operator.
+  No private-project authentication is implemented in this public template.
 - **Command/evidence:** `uv run python -m infrastructure.project.promotion
-  <attestation.yaml>` plus the complete/incomplete fixture suite in
-  `tests/infra_tests/project/test_promotion.py`; no private-project
-  authentication is exercised by the public template.
+  attestation <attestation.yaml>` plus the complete/incomplete fixture suite
+  in `tests/infra_tests/project/test_promotion.py` (10 passed, 2026-07-24).
 - **Out of scope:** implementing private-project authentication in this public
   template.
 
-### COVERAGE-BASELINE-1 - Close meaningful coverage gaps
+### COVERAGE-BASELINE-1 - Close meaningful coverage gaps [IN PROGRESS]
 
 - **Problem:** the current baseline is now measured and provenance-backed, but
   meaningful first-party branches remain unevenly exercised beneath the broad
@@ -120,11 +125,12 @@ current public scope.
   (from 2026-07-22), plus 3 remaining public-function docstrings added to
   infrastructure modules. Infrastructure docstring coverage now zero-gap for
   public functions.
+- **Progress (2026-07-24):** additional no-mock tests added for publication
+  records, workspace handling, DOCX/EPUB fallbacks, pipeline summaries, and
+  offline LLM/API failure branches.
 - **Remaining:** re-run the full infrastructure coverage gate (times out at 5
   minutes — run on a clean checkout with ``--benchmark-disable`` and reduced
-  parallelism). Use the refreshed baseline to add real tests for publication
-  records, workspace handling, DOCX/EPUB fallbacks, transmission validation,
-  pipeline summaries, and offline LLM/API failure branches.
+  parallelism). Use the refreshed baseline to verify module rows and aggregate.
 - **Smallest next step:** re-run the infrastructure coverage gate after the
   new tests are landed to verify the module rows and aggregate.
 - **Acceptance:** the current document keeps source dates and provenance;
@@ -142,25 +148,27 @@ current public scope.
 - **Out of scope:** coverage theater, mocks/fakes, lowering thresholds, or
   treating live-provider execution as default evidence.
 
-### CI-ERGONOMICS-1 - Reduce local gate latency
+### CI-ERGONOMICS-1 - Reduce local gate latency [COMPLETE]
 
 - **Problem:** the local health sweep is dominated by sequential documentation
   lint and security checks even when independent inputs are unchanged.
 - **Why it matters:** slow feedback encourages skipped gates and makes release
   verification less repeatable.
-- **Progress (2026-07-23):** health benchmark on clean checkout at
-  `30f2bfc` shows **47.32% improvement** (144.2s serial → 76.0s parallel,
+- **Completed (2026-07-23):** health benchmark on clean checkout at
+  `30f2bfc` shows **47.32% improvement** (144.2s serial -> 76.0s parallel,
   4 workers, 24 gates, acceptance=PASS). This exceeds the 25% threshold.
   The ruff/ruff-format gates now use the project-pinned version instead of
   the latest unpinned release, eliminating version-mismatch formatting
-  failures.
-- **Smallest next step:** capture the benchmark result from
-  ``output/health-benchmark.json`` once the background process completes.
-- **Acceptance:** clean-checkout local health time falls by at least 25% in a
+  failures. Benchmark evidence: `output/health-benchmark.json`
+  (`acceptance_passed: true`, `improvement_percent: 47.32`,
+  `clean_checkout: true`, `all_gates_executed: true`).
+- **Acceptance:** clean-checkout local health time fell by at least 25% in a
   reproducible benchmark, with every existing gate still executed and no
-  changed threshold or skipped failure.
-- **Command/evidence:** ``uv run python scripts/maintenance/benchmark_health.py
-  --output output/health-benchmark.json --minimum-improvement 25``
+  changed threshold or skipped failure. **MET.**
+- **Command/evidence:** `uv run python scripts/maintenance/benchmark_health.py
+  --output output/health-benchmark.json --minimum-improvement 25`
+  (output/health-benchmark.json: acceptance_passed=true,
+  improvement_percent=47.32, clean_checkout=true).
 - **Out of scope:** weakening gates, hiding warnings, or introducing a required
   service dependency for local verification.
 
