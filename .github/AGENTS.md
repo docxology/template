@@ -37,6 +37,7 @@ flowchart TB
     WF --> WF_CI[ci.yml<br/>15 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
+    WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -92,6 +93,10 @@ Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale 
 ### Release Workflow (`workflows/release.yml`)
 
 Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. It resolves the requested tag before checkout, checks out that exact ref, proves `HEAD` matches the dereferenced tag commit, runs the root release contract, and only then builds. The release uses `softprops/action-gh-release@v3.0.2`, writes a short git-log excerpt to `body_path`, and keeps **`generate_release_notes`** off so GitHub does not duplicate the body.
+
+### Dependabot Automerge Workflow (`workflows/dependabot-automerge.yml`)
+
+Triggered by `pull_request_target` on Dependabot PRs only (`github.actor == 'dependabot[bot]'`). Enables GitHub native auto-merge (`gh pr merge --auto --squash`) for `semver-minor` and `semver-patch` updates. Major bumps are left for human review. The workflow never checks out or executes PR HEAD code — it only reads update metadata and calls the GitHub API — so the elevated `pull_request_target` trigger does not expose secrets to untrusted code. Auto-merge must also be enabled in repository settings (Settings → General → "Allow auto-merge").
 
 ## Dependabot (`dependabot.yml`)
 

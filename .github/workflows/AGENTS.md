@@ -13,6 +13,7 @@ flowchart LR
     W --> CI[ci.yml<br/>15 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
+    W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -247,6 +248,15 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 5. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
 
 Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+
+## Dependabot Automerge Workflow (`dependabot-automerge.yml`)
+
+Triggers on `pull_request_target` (opened, reopened, synchronize, ready_for_review) — but only acts when `github.actor == 'dependabot[bot]'`.
+
+1. Fetches Dependabot update metadata via `dependabot/fetch-metadata@v3.1.0`
+2. Enables GitHub native auto-merge (`gh pr merge --auto --squash`) for `semver-minor` and `semver-patch` updates only; major bumps are left for human review
+3. Never checks out or executes PR HEAD code — only reads metadata and calls the GitHub API — so the elevated `pull_request_target` trigger does not expose secrets to untrusted code
+4. Auto-merge must also be enabled in repository settings (Settings → General → "Allow auto-merge")
 
 ---
 

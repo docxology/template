@@ -11,6 +11,7 @@ For Dependabot, issue/PR templates, and the full GitHub integration picture, see
 | [`ci.yml`](ci.yml) | push/PR to `main`, weekly, manual | **15 jobs** (2 conditional via the `detect` job's outputs — `needs.detect.outputs.*`: **`fep-lean`** and **`setup-hook-windows-smoke`**; job-level `hashFiles()` is invalid and was removed; see [`AGENTS.md`](AGENTS.md)) |
 | [`stale.yml`](stale.yml) | Daily 01:00 UTC | Auto-label and close stale issues/PRs |
 | [`release.yml`](release.yml) | `v*.*.*` tag push or manual | Generate GitHub Release with changelog |
+| [`dependabot-automerge.yml`](dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
 ## CI Pipeline (`ci.yml`)
 
