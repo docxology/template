@@ -24,7 +24,7 @@ are not already setting them in config.yaml. -->
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{amsthm}            % theorem/lemma/definition/proof environments
-\usepackage{siunitx}          % \SI{}{} and \num{} dimensioned quantities
+\IfFileExists{siunitx.sty}{\usepackage{siunitx}}{}          % \SI{}{} and \num{} dimensioned quantities (conditional: skip if siunitx.sty absent)
 % Theorem-like environments (optional; chapters may also use portable block quotes).
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}

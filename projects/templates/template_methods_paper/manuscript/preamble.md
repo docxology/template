@@ -31,7 +31,7 @@ This file contains LaTeX packages and commands that are automatically injected i
 % Typography and formatting
 \usepackage{microtype}
 \usepackage{xcolor}
-\usepackage[binary-units]{siunitx}
+\IfFileExists{siunitx.sty}{\usepackage[binary-units]{siunitx}}{}
 
 % Cross-references and citations
 \usepackage{hyperref}
