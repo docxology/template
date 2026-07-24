@@ -13,6 +13,8 @@ Technical specification for the security documentation directory.
 | `secure_execution.md` | `secure_run.sh` orchestration and threat model |
 | `literature-fetch-security.md` | Security considerations for literature fetching |
 | `ownership-and-promotion.md` | Sensitive ownership exceptions, required reviews, and private-project promotion attestation |
+| `branch-protection-checklist.md` | Required GitHub branch-protection settings for `main` |
+| `promotion-runbook.md` | Private-project promotion runbook with attestation validation steps |
 
 ## Key Concepts
 

@@ -14,6 +14,8 @@ The Research Project Template pipelines integrate optional cryptographic hashing
 | [hashing_and_manifests.md](hashing_and_manifests.md) | How cryptographic hashing ensures document provenance integrity |
 | [literature-fetch-security.md](literature-fetch-security.md) | Trust boundaries, threat model, and hardening for `infrastructure/search/literature/` web fetching |
 | [ownership-and-promotion.md](ownership-and-promotion.md) | Sensitive ownership exceptions, required reviews, and private-project promotion attestation |
+| [branch-protection-checklist.md](branch-protection-checklist.md) | Required GitHub branch-protection settings for `main` — administrator action |
+| [promotion-runbook.md](promotion-runbook.md) | Step-by-step guide for promoting a private sidecar project into active/public scope |
 
 ## Quick Start
 

@@ -336,6 +336,8 @@ directories).
 - **[security/secure_execution.md](security/secure_execution.md)** - `secure_run.sh` orchestration and threat model
 - **[security/literature-fetch-security.md](security/literature-fetch-security.md)** - Security for literature fetching
 - **[security/ownership-and-promotion.md](security/ownership-and-promotion.md)** - Sensitive ownership exceptions, required reviews, and private-project promotion attestation
+- **[security/branch-protection-checklist.md](security/branch-protection-checklist.md)** - Required GitHub branch-protection settings for `main` (administrator action)
+- **[security/promotion-runbook.md](security/promotion-runbook.md)** - Step-by-step guide for promoting a private sidecar project into active/public scope
 
 ---
 
