@@ -114,7 +114,7 @@ current public scope.
 - **Out of scope:** implementing private-project authentication in this public
   template.
 
-### COVERAGE-BASELINE-1 - Close meaningful coverage gaps [IN PROGRESS]
+### COVERAGE-BASELINE-1 - Close meaningful coverage gaps [LOCAL COMPLETE]
 
 - **Problem:** the current baseline is now measured and provenance-backed, but
   meaningful first-party branches remain unevenly exercised beneath the broad
