@@ -84,6 +84,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[`rules/reporting.md`](rules/reporting.md)** - Reporting module standards
 - **[`rules/refactoring.md`](rules/refactoring.md)** - Refactoring standards
 - **[`rules/folder_structure.md`](rules/folder_structure.md)** - Folder structure
+- **[`rules/public-output-policy.md`](rules/public-output-policy.md)** - Public output policy and tracking rules
 
 ---
 
@@ -274,6 +275,7 @@ directories).
 - **Live doc linter** — `scripts/audit/lint_docs.py`: `uv run python scripts/audit/lint_docs.py` ([script entrypoint](../scripts/audit/lint_docs.py)) — repo-wide mermaid block validation + cross-link integrity + sibling-doc consistency; replaces the older point-in-time `scripts/audit/audit_filepaths.py` snapshots
 - **Template drift checker** — `scripts/audit/check_template_drift.py`: `uv run python scripts/audit/check_template_drift.py` ([script entrypoint](../scripts/audit/check_template_drift.py)) — 10 per-exemplar detectors + 2 repo-level checks (`check_repo_docs_hardcoded_counts` against `docs/` and the thin-orchestrator `check_repo_scripts`)
 - **Audit replacement note** — dated audit snapshots were retired from public docs; use the live linters above as the canonical reference, or git history for point-in-time reports
+- **[audit/filepath-audit-report.md](audit/filepath-audit-report.md)** — Historical filepath audit report (point-in-time snapshot)
 - **[guides/fork-an-exemplar.md](guides/fork-an-exemplar.md)** - Top-level entry: pick the right exemplar and start a 5-minute fork
 
 ### Configuration & Performance (`operational/config/`)
@@ -361,6 +363,7 @@ directories).
 - **[prompts/infrastructure-module/SKILL.md](prompts/infrastructure-module/SKILL.md)** - Infrastructure modules
 - **[prompts/validation-quality/SKILL.md](prompts/validation-quality/SKILL.md)** - Validation and QA
 - **[prompts/comprehensive-assessment/SKILL.md](prompts/comprehensive-assessment/SKILL.md)** - Assessment and review
+- **[prompts/publication-audit/SKILL.md](prompts/publication-audit/SKILL.md)** - End-to-end publication-readiness audit
 - **[prompts/reproducibility-audit/SKILL.md](prompts/reproducibility-audit/SKILL.md)** - Determinism and regenerate-from-clean audit
 - **[prompts/pipeline-debugging/SKILL.md](prompts/pipeline-debugging/SKILL.md)** - Pipeline DAG-stage failure triage
 - **[prompts/academic-paper/SKILL.md](prompts/academic-paper/SKILL.md)** - Academic paper authoring
