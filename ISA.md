@@ -2,8 +2,8 @@
 project: humos-template
 task: "Iteration 11 - close remaining evidence-backed improvements and publish main"
 effort: E4
-phase: verifying
-progress: "Clean-break canonicalization and TODO scoping are implemented; user-directed publication is in progress"
+phase: complete
+progress: "v3.6.0 published 2026-07-23. This file is a historical archive of iterations 5-11; active work continues on main."
 iteration: 11-all-improvements-main-push
 baseline_head_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
 baseline_origin_main_composable_program: eb35218e38eab4d31869eaec9fc71af0a5a5028c
