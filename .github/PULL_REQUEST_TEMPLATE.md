@@ -41,6 +41,7 @@ See [`.github/AGENTS.md`](../.github/AGENTS.md) for full troubleshooting and sec
 - [ ] **Infrastructure Coverage**: ≥ 60% (as reported by CI)
 - [ ] **Project Coverage**: ≥ 90% (as reported by CI)
 - [ ] **Pipeline Validation**: Full `./run.sh --pipeline` (or specific stages) passed locally.
+- [ ] **Regression tier** (if numerical outputs or claim-binding pins changed): Ran `uv run pytest tests/regression/ -q --no-cov --timeout=120`.
 - [ ] **Skill manifest** (if `infrastructure/**/SKILL.md` changed): Ran `uv run python -m infrastructure.skills write` and included `.cursor/skill_manifest.json` in the PR.
 - [ ] **Docs lint** (if `docs/`, `.github/**/*.md`, or root `*.md` changed): Ran `uv run python scripts/audit/lint_docs.py`.
 - [ ] **API reference** (if `infrastructure/**/__init__.py` `__all__` changed): Ran `uv run python scripts/docgen/api_reference.py --check` (or `--write` and committed output).
