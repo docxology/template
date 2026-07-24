@@ -369,6 +369,12 @@ drift from the last analysis run.</p>
 intentionally name the function and the key parameters (tolerance lines,
 grids, dimensions) so reviewers can navigate from PDF to code without
 inferring hidden defaults.</p>
+<p>The same generator writes explicit <code>metadata.alt_text</code> for
+every registered figure. The alt text states what the visual encodes and
+preserves the boundary between deterministic observations and
+host-dependent diagnostics. Run the opt-in publication migration gate
+with <code>--require-figure-accessibility</code> to verify that every
+referenced figure has this metadata before promotion.</p>
 <h2 id="analysis-pipeline-latex-integration">Analysis Pipeline &amp;
 LaTeX Integration</h2>
 <p>The automated analysis script leverages <a

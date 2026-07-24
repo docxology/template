@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-07-20T12:51:16.392566",
+  "timestamp": "2026-07-23T17:05:33.311599",
   "infrastructure": {},
   "project": {
     "passed": 242,
     "failed": 0,
     "skipped": 0,
     "total": 242,
-    "warnings": 0,
+    "warnings": 9,
     "exit_code": 0,
     "discovery_count": 242,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 19.95,
-      "collection": 19.95,
-      "execution": 19.95
+      "setup": 24.99,
+      "collection": 24.99,
+      "execution": 24.99
     },
     "test_categories": {},
     "coverage_percent": 96.98,

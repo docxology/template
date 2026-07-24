@@ -1,6 +1,6 @@
 {
   "fig:convergence": {
-    "figure_id": "figure_006",
+    "figure_id": "figure_000",
     "filename": "convergence_plot.png",
     "caption": "Gradient descent convergence for different step sizes",
     "label": "fig:convergence",
@@ -8,10 +8,13 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "optimization_analysis.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Objective value over iterations for each declared step size; lower curves indicate faster convergence.",
+      "source": "template_code_project analysis pipeline"
+    }
   },
   "fig:step_sensitivity": {
-    "figure_id": "figure_007",
+    "figure_id": "figure_001",
     "filename": "step_size_sensitivity.png",
     "caption": "Step size sensitivity analysis showing iterations and solution quality",
     "label": "fig:step_sensitivity",
@@ -19,10 +22,13 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "optimization_analysis.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Comparison of convergence iterations and final solution quality across the configured step-size grid.",
+      "source": "template_code_project analysis pipeline"
+    }
   },
   "fig:convergence_rate": {
-    "figure_id": "figure_008",
+    "figure_id": "figure_002",
     "filename": "convergence_rate_comparison.png",
     "caption": "Convergence rate comparison on logarithmic scale",
     "label": "fig:convergence_rate",
@@ -30,10 +36,13 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "optimization_analysis.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Log-scale comparison of convergence error across step sizes, showing the stable and aggressive regimes.",
+      "source": "template_code_project analysis pipeline"
+    }
   },
   "fig:complexity": {
-    "figure_id": "figure_009",
+    "figure_id": "figure_003",
     "filename": "algorithm_complexity.png",
     "caption": "Algorithm complexity visualization with performance metrics",
     "label": "fig:complexity",
@@ -41,10 +50,13 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "optimization_analysis.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Deterministic proxy for optimization work by problem dimension and recorded iteration count.",
+      "source": "template_code_project analysis pipeline"
+    }
   },
   "fig:stability": {
-    "figure_id": "figure_010",
+    "figure_id": "figure_004",
     "filename": "stability_analysis.png",
     "caption": "Numerical stability analysis results and recommendations",
     "label": "fig:stability",
@@ -52,10 +64,13 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "optimization_analysis.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Numerical stability score and recommendations produced by the configured stability checks.",
+      "source": "template_code_project analysis pipeline"
+    }
   },
   "fig:benchmark": {
-    "figure_id": "figure_011",
+    "figure_id": "figure_005",
     "filename": "performance_benchmark.png",
     "caption": "Performance benchmarking results and metrics",
     "label": "fig:benchmark",
@@ -63,6 +78,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "optimization_analysis.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Deterministic objective-evaluation observations; host-dependent wall-clock timing is excluded from the claim.",
+      "source": "template_code_project analysis pipeline"
+    }
   }
 }

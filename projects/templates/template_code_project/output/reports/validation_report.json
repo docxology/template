@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-20T15:59:54Z",
+  "timestamp": "2026-07-24T00:06:28Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -22,20 +22,20 @@
         "directory_structure": {
           "combined_pdf": {
             "exists": true,
-            "size_mb": 2.04,
+            "size_mb": 2.07,
             "readable": true
           },
           "pdf": {
             "exists": true,
-            "files": 11,
-            "size_mb": 3.45,
+            "files": 10,
+            "size_mb": 2.32,
             "readable": true,
             "optional": false
           },
           "web": {
             "exists": true,
-            "files": 12,
-            "size_mb": 0.25,
+            "files": 13,
+            "size_mb": 0.36,
             "readable": true,
             "optional": false
           },
@@ -62,21 +62,23 @@
           },
           "reports": {
             "exists": true,
-            "files": 27,
-            "size_mb": 0.17,
+            "files": 15,
+            "size_mb": 0.05,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "size_mb": 0.0,
+            "readable": true,
             "optional": true
           },
           "logs": {
@@ -91,15 +93,15 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "3.45",
+          "file_count": 10,
+          "size_mb": "2.32",
           "largest_file": "template_code_project_combined.pdf"
         },
         "web": {
           "exists": true,
-          "file_count": 12,
-          "size_mb": "0.25",
-          "largest_file": "index.html"
+          "file_count": 13,
+          "size_mb": "0.36",
+          "largest_file": "dashboard.html"
         },
         "slides": {
           "exists": true,
@@ -121,19 +123,21 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 27,
-          "size_mb": "0.17",
-          "largest_file": "evidence_registry.json"
+          "file_count": 15,
+          "size_mb": "0.05",
+          "largest_file": "artifact_manifest.json"
         },
         "simulations": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "llm": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
-          "size_mb": "0.00"
+          "size_mb": "0.00",
+          "largest_file": null
         },
         "logs": {
           "exists": true,
@@ -143,36 +147,35 @@
         }
       },
       "file_counts": {
-        "pdf": 11,
-        "web": 12,
+        "pdf": 10,
+        "web": 13,
         "slides": 73,
         "figures": 10,
         "data": 5,
-        "reports": 27,
+        "reports": 15,
+        "simulations": 0,
+        "llm": 0,
         "logs": 1
       },
-      "total_size_mb": 8.9345703125,
+      "total_size_mb": 7.799928665161133,
       "issues_by_severity": {
         "critical": [],
-        "warning": [
-          "Directory 'simulations/' missing or empty",
-          "Directory 'llm/' missing or empty"
-        ],
+        "warning": [],
         "info": []
       },
       "recommendations": []
     },
     "pdf": {
-      "files": 11,
-      "size_mb": 3.446286201477051
+      "files": 10,
+      "size_mb": 2.3197097778320312
     },
     "figures": {
       "files": 10,
-      "size_mb": 1.9693365097045898
+      "size_mb": 1.9703922271728516
     },
     "data": {
       "files": 5,
-      "size_mb": 0.17467308044433594
+      "size_mb": 0.17467212677001953
     }
   },
   "summary": {

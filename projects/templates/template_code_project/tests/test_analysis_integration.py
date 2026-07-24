@@ -205,6 +205,8 @@ class TestValidationAndRegistration:
         register_figure()
         registry = tmp_path / "output" / "figures" / "figure_registry.json"
         assert registry.exists()
+        payload = json.loads(registry.read_text(encoding="utf-8"))
+        assert payload["fig:convergence"]["metadata"]["alt_text"]
 
 
 class TestMainPipelineSmoke:

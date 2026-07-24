@@ -378,6 +378,7 @@ class TestRegisterFigure:
         assert registry.exists()
         data = json.loads(registry.read_text())
         assert isinstance(data, dict)
+        assert data["fig:convergence"]["metadata"]["alt_text"]
 
     def test_register_figure_handles_import_error(self, tmp_path: Path):
         from src.analysis import register_figure

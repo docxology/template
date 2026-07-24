@@ -69,6 +69,13 @@ The most critical aspect of the project's methodology is its validation framewor
 
 Each figure in `03_results.md` maps to a generator in `src/figures/` (`generate_convergence_plot`, `generate_step_size_sensitivity_plot`, `generate_convergence_rate_plot`, `generate_complexity_visualization`, `generate_stability_visualization`, `generate_benchmark_visualization`), orchestrated by `src/analysis/` / `scripts/optimization_analysis.py`. Captions in the markdown intentionally name the function and the key parameters (tolerance lines, grids, dimensions) so reviewers can navigate from PDF to code without inferring hidden defaults.
 
+The same generator writes explicit `metadata.alt_text` for every registered
+figure. The alt text states what the visual encodes and preserves the boundary
+between deterministic observations and host-dependent diagnostics. Run the
+opt-in publication migration gate with
+`--require-figure-accessibility` to verify that every referenced figure has
+this metadata before promotion.
+
 ## Analysis Pipeline & LaTeX Integration
 
 The automated analysis script leverages [`infrastructure.core.progress`](https://github.com/docxology/template/blob/main/infrastructure/core/progress.py) (`ProgressBar`, `SubStageProgress`) to orchestrate experiments, collect convergence trajectories, and generate publication-quality visualizations seamlessly.

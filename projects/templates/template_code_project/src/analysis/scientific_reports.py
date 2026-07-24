@@ -270,40 +270,51 @@ def register_figure(*, figure_manager_factory: Any = None) -> None:
         registry_file = _root() / "output" / "figures" / "figure_registry.json"
         fm = manager_factory(registry_file=str(registry_file))
         figures = [
-            ("convergence_plot.png", "Gradient descent convergence for different step sizes", "fig:convergence"),
+            (
+                "convergence_plot.png",
+                "Gradient descent convergence for different step sizes",
+                "fig:convergence",
+                "Objective value over iterations for each declared step size; lower curves indicate faster convergence.",
+            ),
             (
                 "step_size_sensitivity.png",
                 "Step size sensitivity analysis showing iterations and solution quality",
                 "fig:step_sensitivity",
+                "Comparison of convergence iterations and final solution quality across the configured step-size grid.",
             ),
             (
                 "convergence_rate_comparison.png",
                 "Convergence rate comparison on logarithmic scale",
                 "fig:convergence_rate",
+                "Log-scale comparison of convergence error across step sizes, showing the stable and aggressive regimes.",
             ),
             (
                 "algorithm_complexity.png",
                 "Algorithm complexity visualization with performance metrics",
                 "fig:complexity",
+                "Deterministic proxy for optimization work by problem dimension and recorded iteration count.",
             ),
             (
                 "stability_analysis.png",
                 "Numerical stability analysis results and recommendations",
                 "fig:stability",
+                "Numerical stability score and recommendations produced by the configured stability checks.",
             ),
             (
                 "performance_benchmark.png",
                 "Performance benchmarking results and metrics",
                 "fig:benchmark",
+                "Deterministic objective-evaluation observations; host-dependent wall-clock timing is excluded from the claim.",
             ),
         ]
-        for filename, caption, label in figures:
+        for filename, caption, label, alt_text in figures:
             fm.register_figure(
                 filename=filename,
                 caption=caption,
                 label=label,
                 section="Results",
                 generated_by="optimization_analysis.py",
+                metadata={"alt_text": alt_text, "source": "template_code_project analysis pipeline"},
             )
             logger.info("Registered figure with label: %s", label)
     except ImportError as e:

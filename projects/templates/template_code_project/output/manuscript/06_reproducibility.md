@@ -19,10 +19,10 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
-| Publication-quality figures        | 9   |
+| Publication-quality figures        | 8   |
 | Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 19   |
-| **Total artifacts**                | **33** |
+| Analysis reports                   | 9   |
+| **Total artifacts**                | **22** |
 
 ## Numerical Validation Summary
 

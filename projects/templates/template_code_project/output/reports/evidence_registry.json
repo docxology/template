@@ -1,21 +1,21 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 34468,
+  "fact_count": 21181,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 172,
+    "artifact": 157,
     "citation": 9,
     "equation": 18,
-    "figure": 29,
-    "number": 34219,
+    "figure": 28,
+    "number": 20948,
     "section": 18,
     "table": 3
   },
-  "omitted_fact_count": 34268,
+  "omitted_fact_count": 20981,
   "sample_facts": [
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[0].value",
       "source_field": "$.claims[0].value",
@@ -27,31 +27,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[300]",
-      "source_field": "$.0.01.iterations[300]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "300"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[300]",
-      "source_field": "$.2.5.iterations[300]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "300"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-20T15:57:59+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/viz_config.py plotting defaults (dpi)",
       "source_field": "figure-export-dpi",
@@ -63,7 +39,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[0].value (numeric variant)",
       "source_field": "$.claims[0].value",
@@ -75,7 +51,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[2].context.stage_num",
       "source_field": "$.stage_results[2].context.stage_num",
@@ -87,31 +63,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[3]",
-      "source_field": "$.0.01.iterations[3]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[300] (numeric variant)",
-      "source_field": "$.0.01.iterations[300]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.iterations[3]",
       "source_field": "$.0.1.iterations[3]",
@@ -123,7 +75,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.5.iterations[3]",
       "source_field": "$.0.5.iterations[3]",
@@ -135,7 +87,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.5.iterations[3]",
       "source_field": "$.1.5.iterations[3]",
@@ -147,31 +99,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[3]",
-      "source_field": "$.2.5.iterations[3]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[300] (numeric variant)",
-      "source_field": "$.2.5.iterations[300]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.iterations[3]",
       "source_field": "$.payload.trajectories.0.0100.iterations[3]",
@@ -183,7 +111,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.1000.iterations[3]",
       "source_field": "$.payload.trajectories.0.1000.iterations[3]",
@@ -195,7 +123,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.5000.iterations[3]",
       "source_field": "$.payload.trajectories.0.5000.iterations[3]",
@@ -207,7 +135,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.5000.iterations[3]",
       "source_field": "$.payload.trajectories.1.5000.iterations[3]",
@@ -219,7 +147,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.2.5000.iterations[3]",
       "source_field": "$.payload.trajectories.2.5000.iterations[3]",
@@ -231,7 +159,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[149] (numeric variant)",
       "source_field": "$.payload.landscape.x[149]",
@@ -243,7 +171,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[150] (numeric variant)",
       "source_field": "$.payload.landscape.x[150]",
@@ -255,7 +183,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[34] (numeric variant)",
       "source_field": "$.payload.landscape.f[34]",
@@ -267,7 +195,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[165] (numeric variant)",
       "source_field": "$.payload.landscape.f[165]",
@@ -279,7 +207,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].x[3]",
       "source_field": "$.panels[0].traces[0].x[3]",
@@ -291,7 +219,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[1].x[3]",
       "source_field": "$.panels[0].traces[1].x[3]",
@@ -303,7 +231,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[2].x[3]",
       "source_field": "$.panels[0].traces[2].x[3]",
@@ -315,7 +243,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[4].x[3]",
       "source_field": "$.panels[0].traces[4].x[3]",
@@ -327,7 +255,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[5].x[3]",
       "source_field": "$.panels[0].traces[5].x[3]",
@@ -339,7 +267,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[149] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[149]",
@@ -351,7 +279,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[150] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[150]",
@@ -363,7 +291,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[34] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[34]",
@@ -375,7 +303,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[165] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[165]",
@@ -387,7 +315,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-20T15:55:17+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/reports/performance_benchmark.json:$.input_count",
       "source_field": "$.input_count",
@@ -399,35 +327,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-20T15:55:17+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..log",
-      "source_field": "$.directories.pdf.extensions..log",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/reports/telemetry.json:$.stages[2].stage_num",
-      "source_field": "$.stages[2].stage_num",
-      "source_path": "output/reports/telemetry.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/reports/snapshots/stage-03-project-tests.json:$.stage_num",
+      "source": "output/reports/snapshots/stage-03-infrastructure-tests.json:$.stage_num",
       "source_field": "$.stage_num",
-      "source_path": "output/reports/snapshots/stage-03-project-tests.json",
+      "source_path": "output/reports/snapshots/stage-03-infrastructure-tests.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -435,7 +339,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-20T15:57:59+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/viz_config.py plotting defaults (dpi) (numeric variant)",
       "source_field": "figure-export-dpi",
@@ -447,7 +351,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[1].value",
       "source_field": "$.claims[1].value",
@@ -459,31 +363,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[500]",
-      "source_field": "$.0.01.iterations[500]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "500"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[500]",
-      "source_field": "$.2.5.iterations[500]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "500"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/sweeps.py sensitivity_sweep max_iter cap",
       "source_field": "step-size-sensitivity-cap",
@@ -495,7 +375,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[1].value (numeric variant)",
       "source_field": "$.claims[1].value",
@@ -507,7 +387,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.publication.transmission_bookends.max_prior_releases",
       "source_field": "$.publication.transmission_bookends.max_prior_releases",
@@ -519,7 +399,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.stability_starting_points[5]",
       "source_field": "$.experiment.stability_starting_points[5]",
@@ -531,7 +411,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.stability_step_sizes[1] (numeric variant)",
       "source_field": "$.experiment.stability_step_sizes[1]",
@@ -543,7 +423,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.benchmark_dimensions[2]",
       "source_field": "$.experiment.benchmark_dimensions[2]",
@@ -555,7 +435,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[4].context.stage_num",
       "source_field": "$.stage_results[4].context.stage_num",
@@ -567,31 +447,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[5]",
-      "source_field": "$.0.01.iterations[5]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[500] (numeric variant)",
-      "source_field": "$.0.01.iterations[500]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.iterations[5]",
       "source_field": "$.0.1.iterations[5]",
@@ -603,7 +459,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.5.iterations[5]",
       "source_field": "$.0.5.iterations[5]",
@@ -615,7 +471,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.5.iterations[5]",
       "source_field": "$.1.5.iterations[5]",
@@ -627,31 +483,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[5]",
-      "source_field": "$.2.5.iterations[5]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[500] (numeric variant)",
-      "source_field": "$.2.5.iterations[500]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.iterations[5]",
       "source_field": "$.payload.trajectories.0.0100.iterations[5]",
@@ -663,7 +495,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.1000.iterations[5]",
       "source_field": "$.payload.trajectories.0.1000.iterations[5]",
@@ -675,7 +507,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.5000.iterations[5]",
       "source_field": "$.payload.trajectories.0.5000.iterations[5]",
@@ -687,7 +519,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.5000.iterations[5]",
       "source_field": "$.payload.trajectories.1.5000.iterations[5]",
@@ -699,7 +531,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.2.5000.iterations[5]",
       "source_field": "$.payload.trajectories.2.5000.iterations[5]",
@@ -711,7 +543,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[198] (numeric variant)",
       "source_field": "$.payload.landscape.x[198]",
@@ -723,7 +555,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[199]",
       "source_field": "$.payload.landscape.x[199]",
@@ -735,7 +567,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[17] (numeric variant)",
       "source_field": "$.payload.landscape.f[17]",
@@ -747,7 +579,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[182] (numeric variant)",
       "source_field": "$.payload.landscape.f[182]",
@@ -759,7 +591,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].x[5]",
       "source_field": "$.panels[0].traces[0].x[5]",
@@ -771,7 +603,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[1].x[5]",
       "source_field": "$.panels[0].traces[1].x[5]",
@@ -783,7 +615,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[2].x[5]",
       "source_field": "$.panels[0].traces[2].x[5]",
@@ -795,7 +627,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[4].x[5]",
       "source_field": "$.panels[0].traces[4].x[5]",
@@ -807,7 +639,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[5].x[5]",
       "source_field": "$.panels[0].traces[5].x[5]",
@@ -819,7 +651,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[1].traces[0].marker.size",
       "source_field": "$.panels[1].traces[0].marker.size",
@@ -831,7 +663,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].marker.size",
       "source_field": "$.panels[2].traces[0].marker.size",
@@ -843,7 +675,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[198] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[198]",
@@ -855,7 +687,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[199]",
       "source_field": "$.panels[3].traces[0].x[199]",
@@ -867,7 +699,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[17] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[17]",
@@ -879,7 +711,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[182] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[182]",
@@ -891,7 +723,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[2].marker.size",
       "source_field": "$.panels[3].traces[2].marker.size",
@@ -903,7 +735,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.controls[1].max",
       "source_field": "$.controls[1].max",
@@ -915,7 +747,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-20T15:55:17+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/reports/performance_benchmark.json:$.observations[1].input[0]",
       "source_field": "$.observations[1].input[0]",
@@ -927,35 +759,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.directories.data.file_count",
-      "source_field": "$.directories.data.file_count",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/reports/telemetry.json:$.stages[4].stage_num",
-      "source_field": "$.stages[4].stage_num",
-      "source_path": "output/reports/telemetry.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "5"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/reports/snapshots/stage-05-pdf-rendering.json:$.stage_num",
+      "source": "output/reports/snapshots/stage-05-project-analysis.json:$.stage_num",
       "source_field": "$.stage_num",
-      "source_path": "output/reports/snapshots/stage-05-pdf-rendering.json",
+      "source_path": "output/reports/snapshots/stage-05-project-analysis.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -963,7 +771,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/sweeps.py sensitivity_sweep max_iter cap (numeric variant)",
       "source_field": "step-size-sensitivity-cap",
@@ -975,7 +783,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[2].value",
       "source_field": "$.claims[2].value",
@@ -987,7 +795,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/figures/scientific_stability.py stability visualization caption",
       "source_field": "stability-log-lower",
@@ -999,7 +807,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[2].value (numeric variant)",
       "source_field": "$.claims[2].value",
@@ -1011,19 +819,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[6] (numeric variant)",
-      "source_field": "$.0.01.objectives[6]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.06"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[6] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[6]",
@@ -1035,7 +831,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[6] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[6]",
@@ -1047,7 +843,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/figures/scientific_stability.py stability visualization caption (numeric variant)",
       "source_field": "stability-log-lower",
@@ -1059,7 +855,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[3].value",
       "source_field": "$.claims[3].value",
@@ -1071,7 +867,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/manuscript/03_results.md stated precision threshold",
       "source_field": "solution-relative-error-exponent",
@@ -1083,7 +879,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[3].value (numeric variant)",
       "source_field": "$.claims[3].value",
@@ -1095,19 +891,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[4] (numeric variant)",
-      "source_field": "$.0.01.objectives[4]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.04"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[4] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[4]",
@@ -1119,7 +903,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[4] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[4]",
@@ -1131,7 +915,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/manuscript/03_results.md stated precision threshold (numeric variant)",
       "source_field": "solution-relative-error-exponent",
@@ -1143,7 +927,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[4].value",
       "source_field": "$.claims[4].value",
@@ -1155,7 +939,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/figures/scientific_stability.py stability visualization caption",
       "source_field": "stability-log-upper",
@@ -1167,7 +951,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[4].value (numeric variant)",
       "source_field": "$.claims[4].value",
@@ -1179,19 +963,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[10] (numeric variant)",
-      "source_field": "$.0.01.objectives[10]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.09"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[10] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[10]",
@@ -1203,7 +975,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[77] (numeric variant)",
       "source_field": "$.payload.landscape.f[77]",
@@ -1215,7 +987,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[122] (numeric variant)",
       "source_field": "$.payload.landscape.f[122]",
@@ -1227,7 +999,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[10] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[10]",
@@ -1239,7 +1011,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[77] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[77]",
@@ -1251,7 +1023,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[122] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[122]",
@@ -1263,7 +1035,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/src/figures/scientific_stability.py stability visualization caption (numeric variant)",
       "source_field": "stability-log-upper",
@@ -1275,7 +1047,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[5].value",
       "source_field": "$.claims[5].value",
@@ -1287,7 +1059,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.stability_starting_points[1]",
       "source_field": "$.experiment.stability_starting_points[1]",
@@ -1299,7 +1071,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/scripts/optimization_analysis.py dimensional benchmark tolerance",
       "source_field": "benchmark-tolerance-exponent",
@@ -1311,7 +1083,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[5].value (numeric variant)",
       "source_field": "$.claims[5].value",
@@ -1323,7 +1095,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.stability_starting_points[1] (numeric variant)",
       "source_field": "$.experiment.stability_starting_points[1]",
@@ -1335,151 +1107,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[6] (numeric variant)",
-      "source_field": "$.0.01.objectives[6]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[7] (numeric variant)",
-      "source_field": "$.0.01.objectives[7]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[8] (numeric variant)",
-      "source_field": "$.0.01.objectives[8]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[9] (numeric variant)",
-      "source_field": "$.0.01.objectives[9]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[10] (numeric variant)",
-      "source_field": "$.0.01.objectives[10]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[11] (numeric variant)",
-      "source_field": "$.0.01.objectives[11]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[12] (numeric variant)",
-      "source_field": "$.0.01.objectives[12]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[13] (numeric variant)",
-      "source_field": "$.0.01.objectives[13]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[14] (numeric variant)",
-      "source_field": "$.0.01.objectives[14]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[15] (numeric variant)",
-      "source_field": "$.0.01.objectives[15]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[16] (numeric variant)",
-      "source_field": "$.0.01.objectives[16]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.objectives[17] (numeric variant)",
-      "source_field": "$.0.01.objectives[17]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "-0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.objectives[1] (numeric variant)",
       "source_field": "$.0.1.objectives[1]",
@@ -1491,7 +1119,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[6] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[6]",
@@ -1503,7 +1131,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[7] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[7]",
@@ -1515,7 +1143,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[8] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[8]",
@@ -1527,7 +1155,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[9] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[9]",
@@ -1539,7 +1167,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[10] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[10]",
@@ -1551,7 +1179,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[11] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[11]",
@@ -1563,7 +1191,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[12] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[12]",
@@ -1575,7 +1203,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[13] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[13]",
@@ -1587,7 +1215,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[14] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[14]",
@@ -1599,7 +1227,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[15] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[15]",
@@ -1611,7 +1239,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[16] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[16]",
@@ -1623,7 +1251,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.objectives[17] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.objectives[17]",
@@ -1635,7 +1263,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.1000.objectives[1] (numeric variant)",
       "source_field": "$.payload.trajectories.0.1000.objectives[1]",
@@ -1647,7 +1275,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[71] (numeric variant)",
       "source_field": "$.payload.landscape.x[71]",
@@ -1659,7 +1287,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[72] (numeric variant)",
       "source_field": "$.payload.landscape.x[72]",
@@ -1671,7 +1299,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[73] (numeric variant)",
       "source_field": "$.payload.landscape.x[73]",
@@ -1683,7 +1311,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[76] (numeric variant)",
       "source_field": "$.payload.landscape.f[76]",
@@ -1695,7 +1323,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[77] (numeric variant)",
       "source_field": "$.payload.landscape.f[77]",
@@ -1707,7 +1335,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[78] (numeric variant)",
       "source_field": "$.payload.landscape.f[78]",
@@ -1719,7 +1347,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[121] (numeric variant)",
       "source_field": "$.payload.landscape.f[121]",
@@ -1731,7 +1359,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[122] (numeric variant)",
       "source_field": "$.payload.landscape.f[122]",
@@ -1743,7 +1371,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.f[123] (numeric variant)",
       "source_field": "$.payload.landscape.f[123]",
@@ -1755,7 +1383,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[6] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[6]",
@@ -1767,7 +1395,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[7] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[7]",
@@ -1779,7 +1407,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[8] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[8]",
@@ -1791,7 +1419,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[9] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[9]",
@@ -1803,7 +1431,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[10] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[10]",
@@ -1815,7 +1443,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[11] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[11]",
@@ -1827,7 +1455,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[12] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[12]",
@@ -1839,7 +1467,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[13] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[13]",
@@ -1851,7 +1479,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[14] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[14]",
@@ -1863,7 +1491,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[15] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[15]",
@@ -1875,7 +1503,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[16] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[16]",
@@ -1887,7 +1515,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].y[17] (numeric variant)",
       "source_field": "$.panels[0].traces[0].y[17]",
@@ -1899,7 +1527,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[0].traces[1].y[1] (numeric variant)",
       "source_field": "$.panels[0].traces[1].y[1]",
@@ -1911,7 +1539,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[71] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[71]",
@@ -1923,7 +1551,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[72] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[72]",
@@ -1935,7 +1563,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[73] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[73]",
@@ -1947,7 +1575,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[76] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[76]",
@@ -1959,7 +1587,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[77] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[77]",
@@ -1971,7 +1599,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[78] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[78]",
@@ -1983,7 +1611,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[121] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[121]",
@@ -1995,7 +1623,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[122] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[122]",
@@ -2007,7 +1635,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].y[123] (numeric variant)",
       "source_field": "$.panels[3].traces[0].y[123]",
@@ -2019,7 +1647,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/scripts/optimization_analysis.py dimensional benchmark tolerance (numeric variant)",
       "source_field": "benchmark-tolerance-exponent",
@@ -2031,7 +1659,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[6].value",
       "source_field": "$.claims[6].value",
@@ -2043,31 +1671,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[219]",
-      "source_field": "$.0.01.iterations[219]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "219"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[219]",
-      "source_field": "$.2.5.iterations[219]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "219"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/manuscript/03_results.md benchmark caption",
       "source_field": "benchmark-min-iterations",
@@ -2079,7 +1683,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[6].value (numeric variant)",
       "source_field": "$.claims[6].value",
@@ -2091,31 +1695,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[219] (numeric variant)",
-      "source_field": "$.0.01.iterations[219]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "2.19"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[219] (numeric variant)",
-      "source_field": "$.2.5.iterations[219]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "2.19"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.landscape.x[129] (numeric variant)",
       "source_field": "$.payload.landscape.x[129]",
@@ -2127,7 +1707,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[129] (numeric variant)",
       "source_field": "$.panels[3].traces[0].x[129]",
@@ -2139,7 +1719,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/manuscript/03_results.md benchmark caption (numeric variant)",
       "source_field": "benchmark-min-iterations",
@@ -2151,7 +1731,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[7].value",
       "source_field": "$.claims[7].value",
@@ -2163,31 +1743,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[238]",
-      "source_field": "$.0.01.iterations[238]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "238"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[238]",
-      "source_field": "$.2.5.iterations[238]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "238"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/manuscript/03_results.md benchmark caption",
       "source_field": "benchmark-max-iterations",
@@ -2199,7 +1755,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "data/claim_ledger.yaml:$.claims[7].value (numeric variant)",
       "source_field": "$.claims[7].value",
@@ -2211,31 +1767,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[238] (numeric variant)",
-      "source_field": "$.0.01.iterations[238]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "2.38"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[238] (numeric variant)",
-      "source_field": "$.2.5.iterations[238]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "2.38"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "projects/templates/template_code_project/manuscript/03_results.md benchmark caption (numeric variant)",
       "source_field": "benchmark-max-iterations",
@@ -2247,7 +1779,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.publication.transmission_bookends.max_prior_releases (numeric variant)",
       "source_field": "$.publication.transmission_bookends.max_prior_releases",
@@ -2259,7 +1791,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.stability_starting_points[5] (numeric variant)",
       "source_field": "$.experiment.stability_starting_points[5]",
@@ -2271,7 +1803,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.stability_step_sizes[1]",
       "source_field": "$.experiment.stability_step_sizes[1]",
@@ -2283,7 +1815,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.experiment.benchmark_dimensions[2] (numeric variant)",
       "source_field": "$.experiment.benchmark_dimensions[2]",
@@ -2295,7 +1827,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[4].context.stage_num (numeric variant)",
       "source_field": "$.stage_results[4].context.stage_num",
@@ -2307,19 +1839,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.0.01.iterations[5] (numeric variant)",
-      "source_field": "$.0.01.iterations[5]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.05"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.1.iterations[5] (numeric variant)",
       "source_field": "$.0.1.iterations[5]",
@@ -2331,7 +1851,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.0.5.iterations[5] (numeric variant)",
       "source_field": "$.0.5.iterations[5]",
@@ -2343,7 +1863,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/convergence_plot.json:$.1.5.iterations[5] (numeric variant)",
       "source_field": "$.1.5.iterations[5]",
@@ -2355,19 +1875,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
-      "kind": "number",
-      "source": "output/data/convergence_plot.json:$.2.5.iterations[5] (numeric variant)",
-      "source_field": "$.2.5.iterations[5]",
-      "source_path": "output/data/convergence_plot.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.05"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.0100.iterations[5] (numeric variant)",
       "source_field": "$.payload.trajectories.0.0100.iterations[5]",
@@ -2379,7 +1887,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.1000.iterations[5] (numeric variant)",
       "source_field": "$.payload.trajectories.0.1000.iterations[5]",
@@ -2391,7 +1899,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.0.5000.iterations[5] (numeric variant)",
       "source_field": "$.payload.trajectories.0.5000.iterations[5]",
@@ -2403,7 +1911,7 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T04:08:16+00:00",
+      "checked_at": "2026-07-24T00:06:27+00:00",
       "kind": "number",
       "source": "output/data/dashboard_payload.json:$.payload.trajectories.1.5000.iterations[5] (numeric variant)",
       "source_field": "$.payload.trajectories.1.5000.iterations[5]",
@@ -2412,14 +1920,506 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.payload.trajectories.2.5000.iterations[5] (numeric variant)",
+      "source_field": "$.payload.trajectories.2.5000.iterations[5]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.payload.alpha_sweep.alphas[1] (numeric variant)",
+      "source_field": "$.payload.alpha_sweep.alphas[1]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.payload.landscape.x[199] (numeric variant)",
+      "source_field": "$.payload.landscape.x[199]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[0].traces[0].x[5] (numeric variant)",
+      "source_field": "$.panels[0].traces[0].x[5]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[0].traces[1].x[5] (numeric variant)",
+      "source_field": "$.panels[0].traces[1].x[5]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[0].traces[2].x[5] (numeric variant)",
+      "source_field": "$.panels[0].traces[2].x[5]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[0].traces[4].x[5] (numeric variant)",
+      "source_field": "$.panels[0].traces[4].x[5]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[0].traces[5].x[5] (numeric variant)",
+      "source_field": "$.panels[0].traces[5].x[5]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[1].traces[0].x[1] (numeric variant)",
+      "source_field": "$.panels[1].traces[0].x[1]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[1].traces[0].marker.size (numeric variant)",
+      "source_field": "$.panels[1].traces[0].marker.size",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].x[1] (numeric variant)",
+      "source_field": "$.panels[2].traces[0].x[1]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[2].traces[0].marker.size (numeric variant)",
+      "source_field": "$.panels[2].traces[0].marker.size",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[3].traces[0].x[199] (numeric variant)",
+      "source_field": "$.panels[3].traces[0].x[199]",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.panels[3].traces[2].marker.size (numeric variant)",
+      "source_field": "$.panels[3].traces[2].marker.size",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/data/dashboard_payload.json:$.controls[1].max (numeric variant)",
+      "source_field": "$.controls[1].max",
+      "source_path": "output/data/dashboard_payload.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/reports/performance_benchmark.json:$.observations[1].input[0] (numeric variant)",
+      "source_field": "$.observations[1].input[0]",
+      "source_path": "output/reports/performance_benchmark.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/reports/snapshots/stage-05-project-analysis.json:$.stage_num (numeric variant)",
+      "source_field": "$.stage_num",
+      "source_path": "output/reports/snapshots/stage-05-project-analysis.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.05"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.testing.max_test_failures",
+      "source_field": "$.testing.max_test_failures",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.testing.max_infra_test_failures",
+      "source_field": "$.testing.max_infra_test_failures",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.testing.max_project_test_failures",
+      "source_field": "$.testing.max_project_test_failures",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.experiment.step_sizes[0] (numeric variant)",
+      "source_field": "$.experiment.step_sizes[0]",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.experiment.initial_point",
+      "source_field": "$.experiment.initial_point",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.experiment.tolerance (numeric variant)",
+      "source_field": "$.experiment.tolerance",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.experiment.convergence_tolerance (numeric variant)",
+      "source_field": "$.experiment.convergence_tolerance",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.experiment.stability_starting_points[3]",
+      "source_field": "$.experiment.stability_starting_points[3]",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "manuscript/config.yaml:$.experiment.stability_step_sizes[0] (numeric variant)",
+      "source_field": "$.experiment.stability_step_sizes[0]",
+      "source_path": "manuscript/config.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[0].exit_code",
+      "source_field": "$.stage_results[0].exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[0].duration (numeric variant)",
+      "source_field": "$.stage_results[0].duration",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[0].context.exit_code",
+      "source_field": "$.stage_results[0].context.exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[1].exit_code",
+      "source_field": "$.stage_results[1].exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[1].context.exit_code",
+      "source_field": "$.stage_results[1].context.exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[2].exit_code",
+      "source_field": "$.stage_results[2].exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[2].context.exit_code",
+      "source_field": "$.stage_results[2].context.exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[3].exit_code",
+      "source_field": "$.stage_results[3].exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[3].context.exit_code",
+      "source_field": "$.stage_results[3].context.exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[4].exit_code",
+      "source_field": "$.stage_results[4].exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[4].context.exit_code",
+      "source_field": "$.stage_results[4].context.exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[5].exit_code",
+      "source_field": "$.stage_results[5].exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[5].context.exit_code",
+      "source_field": "$.stage_results[5].context.exit_code",
+      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/citations/optimization_metadata.json:$.step_sizes_tested[0] (numeric variant)",
+      "source_field": "$.step_sizes_tested[0]",
+      "source_path": "output/citations/optimization_metadata.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-24T00:06:27+00:00",
+      "kind": "number",
+      "source": "output/citations/optimization_metadata.json:$.convergence_rate (numeric variant)",
+      "source_field": "$.convergence_rate",
+      "source_path": "output/citations/optimization_metadata.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 240,
+    "artifact": 224,
     "bibliography": 9,
     "configuration": 115,
-    "generated_metric": 34090,
+    "generated_metric": 20819,
     "manuscript_claim": 6,
     "project_source": 8
   }
