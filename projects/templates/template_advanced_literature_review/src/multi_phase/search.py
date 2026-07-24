@@ -28,6 +28,7 @@ from literature.search_runner import run_literature_search
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PHASE_ARTIFACT_MANIFEST_SCHEMA = "advanced-literature-review/phase-artifact-manifest/1"
+CROSS_PHASE_ANALYSIS_SCHEMA = "advanced-literature-review/cross-phase-analysis/1"
 
 logger = logging.getLogger(__name__)
 
@@ -403,6 +404,7 @@ class MultiPhaseSearchRunner:
 
             citing_papers = 0
             total_papers = len(phase_papers[phase_id])
+            papers_without_sufficient_citations: list[str] = []
 
             for cid in phase_papers[phase_id]:
                 paper = self.all_phased_papers[cid].paper
@@ -415,16 +417,76 @@ class MultiPhaseSearchRunner:
 
                 if citations_found >= min_citations:
                     citing_papers += 1
+                else:
+                    papers_without_sufficient_citations.append(cid)
 
             validation_results[phase_id] = {
                 "total_papers": total_papers,
                 "papers_with_sufficient_citations": citing_papers,
+                "papers_without_sufficient_citations": sorted(papers_without_sufficient_citations),
                 "citation_rate": citing_papers / total_papers if total_papers > 0 else 0,
                 "min_required_citations": min_citations,
                 "depends_on": depends_on,
             }
 
         return validation_results
+
+    def build_cross_phase_analysis(self, citation_validation: dict[str, Any]) -> dict[str, Any]:
+        """Build deterministic cross-phase evidence without overstating causality.
+
+        The search stage can establish corpus membership, overlap, and configured
+        citation relationships. It cannot establish that a hypothesis is true;
+        claim-level scoring belongs to the knowledge-graph stage. Keeping that
+        boundary explicit prevents a citation-structure diagnostic from being
+        rendered as scientific support.
+        """
+        phase_ids = list(self.phase_metadata) or list(self.search_phases)
+        phase_membership = {
+            phase_id: {
+                "paper_count": sum(
+                    1 for phased in self.all_phased_papers.values() if phase_id in phased.phases_found_in
+                ),
+                "paper_ids": sorted(
+                    cid for cid, phased in self.all_phased_papers.items() if phase_id in phased.phases_found_in
+                ),
+            }
+            for phase_id in phase_ids
+        }
+        configured = bool(citation_validation)
+        citation_status = "not_configured"
+        if configured:
+            citation_status = (
+                "pass"
+                if all(result["papers_without_sufficient_citations"] == [] for result in citation_validation.values())
+                else "review"
+            )
+        return {
+            "schema_version": CROSS_PHASE_ANALYSIS_SCHEMA,
+            "analysis_scope": [
+                "phase membership",
+                "cross-phase overlap",
+                "configured citation sufficiency",
+            ],
+            "claim_boundary": (
+                "Citation structure and phase overlap are provenance diagnostics; "
+                "they do not establish scientific support, replication, or causality."
+            ),
+            "phase_order": phase_ids,
+            "phase_membership": phase_membership,
+            "phase_overlap": self._calculate_phase_overlap(),
+            "citation_validation": {
+                "status": citation_status,
+                "results": citation_validation,
+            },
+            "hypothesis_scoring": {
+                "status": "pending_knowledge_graph",
+                "artifact": "hypothesis_scores.json",
+                "claim_boundary": (
+                    "The knowledge-graph stage may attach configured hypothesis "
+                    "scores after assertion extraction; no score is inferred here."
+                ),
+            },
+        }
 
     def _calculate_phase_overlap(self) -> dict[str, Any]:
         """Calculate overlap statistics between phases."""
@@ -537,6 +599,7 @@ class MultiPhaseSearchRunner:
                 },
                 {"path": "phase_metadata.json", "phases": all_phases},
                 {"path": "phase_validation_report.json", "phases": all_phases},
+                {"path": "cross_phase_analysis.json", "phases": all_phases},
             ]
         )
         manifest = {
@@ -566,6 +629,7 @@ class MultiPhaseSearchRunner:
 
         # Validate cross-phase relationships
         citation_validation = self.validate_cross_phase_citations()
+        cross_phase_analysis = self.build_cross_phase_analysis(citation_validation)
 
         # Save phase-specific corpora
         output_dir = self.output_dir
@@ -602,6 +666,9 @@ class MultiPhaseSearchRunner:
             json.dump(metadata_summary, f, indent=2)
         (output_dir / "phase_validation_report.json").write_text(
             json.dumps(phase_validation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (output_dir / "cross_phase_analysis.json").write_text(
+            json.dumps(cross_phase_analysis, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         self._write_phase_artifact_manifest(output_dir, phase_ids=phases_to_run, execution_mode="live")
         logger.info(f"Saved phase metadata to {metadata_path}")
@@ -677,12 +744,14 @@ class MultiPhaseSearchRunner:
 
         combined = [phased.paper for phased in self.all_phased_papers.values()]
         Corpus(papers=combined).save(output_dir / "combined_corpus.jsonl")
+        citation_validation = self.validate_cross_phase_citations()
+        cross_phase_analysis = self.build_cross_phase_analysis(citation_validation)
         metadata_summary = {
             "replay_mode": "fixture",
             "source_corpus": corpus_path.name,
             "phase_validation": phase_validation,
             "phases": {phase_id: asdict(meta) for phase_id, meta in self.phase_metadata.items()},
-            "citation_validation": self.validate_cross_phase_citations(),
+            "citation_validation": citation_validation,
             "total_papers": len(combined),
             "total_unique_papers": len(self.all_phased_papers),
             "phase_overlap": self._calculate_phase_overlap(),
@@ -692,6 +761,9 @@ class MultiPhaseSearchRunner:
         )
         (output_dir / "phase_validation_report.json").write_text(
             json.dumps(phase_validation, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (output_dir / "cross_phase_analysis.json").write_text(
+            json.dumps(cross_phase_analysis, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         self._write_phase_artifact_manifest(output_dir, phase_ids=list(self.phase_metadata), execution_mode="fixture")
 

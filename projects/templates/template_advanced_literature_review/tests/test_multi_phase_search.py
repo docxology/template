@@ -343,6 +343,17 @@ def test_cross_phase_citation_validation(tmp_path: Path) -> None:
     result = runner.validate_cross_phase_citations()
     assert result["phase_2"]["papers_with_sufficient_citations"] == 1
     assert result["phase_2"]["citation_rate"] == 1
+    assert result["phase_2"]["papers_without_sufficient_citations"] == []
+
+    conflicting = Paper(title="Conflicting follow-up", abstract="Contradictory result")
+    runner.all_phased_papers[conflicting.canonical_id] = PhasedPaper(conflicting, "phase_2")
+    analysis = runner.build_cross_phase_analysis(runner.validate_cross_phase_citations())
+    assert analysis["citation_validation"]["status"] == "review"
+    assert (
+        conflicting.canonical_id
+        in analysis["citation_validation"]["results"]["phase_2"]["papers_without_sufficient_citations"]
+    )
+    assert "do not establish scientific support" in analysis["claim_boundary"]
 
 
 def test_cross_phase_citation_validation_can_be_disabled(config_path: Path, tmp_path: Path) -> None:
@@ -417,7 +428,10 @@ def test_phase_pipeline_writes_phase_provenance(tmp_path: Path) -> None:
         "phase_1_corpus.jsonl",
         "combined_corpus.jsonl",
         "phase_metadata.json",
+        "cross_phase_analysis.json",
     }
+    analysis = json.loads((output_dir / "cross_phase_analysis.json").read_text(encoding="utf-8"))
+    assert analysis["hypothesis_scoring"]["status"] == "pending_knowledge_graph"
 
 
 def test_fixture_replay_writes_deterministic_phase_artifacts(tmp_path: Path) -> None:
@@ -454,6 +468,11 @@ def test_fixture_replay_writes_deterministic_phase_artifacts(tmp_path: Path) -> 
     assert metadata["phases"]["phase_1"]["start_time"] == 0.0
     assert (output_dir / "combined_corpus.jsonl").is_file()
     assert (output_dir / "phase_2_corpus.jsonl").is_file()
+    analysis_path = output_dir / "cross_phase_analysis.json"
+    assert analysis_path.is_file()
+    analysis = json.loads(analysis_path.read_text(encoding="utf-8"))
+    assert analysis["phase_order"] == ["phase_1", "phase_2"]
+    assert analysis["citation_validation"]["status"] == "not_configured"
     manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
     assert manifest["execution_mode"] == "fixture"
     assert manifest["phase_order"] == ["phase_1", "phase_2"]

@@ -67,7 +67,7 @@ uv run python projects/templates/template_advanced_literature_review/scripts/10_
 uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
 ```
 
-Stage 01 (`01_multi_phase_search.py`) is the live/network multi-phase retrieval path with iterative refinement. Use it only when intentionally refreshing the tracked corpus snapshot. Stages 02–09 are the normal deterministic analysis path. Stages 11 and 10 are explicit network/full-text and reproducibility enrichments and must run in that order before rerunning stage 05 variable injection. Stage 01 writes per-phase corpora, `output/data/phase_metadata.json`, and `output/data/phase_artifact_manifest.json`, which records the contributing phase set for each generated corpus/provenance artifact.
+Stage 01 (`01_multi_phase_search.py`) is the live/network multi-phase retrieval path with iterative refinement. Use it only when intentionally refreshing the tracked corpus snapshot. Stages 02–09 are the normal deterministic analysis path. Stages 11 and 10 are explicit network/full-text and reproducibility enrichments and must run in that order before rerunning stage 05 variable injection. Stage 01 writes per-phase corpora, `output/data/phase_metadata.json`, `output/data/cross_phase_analysis.json`, and `output/data/phase_artifact_manifest.json`. The cross-phase artifact reports membership, overlap, and configured citation sufficiency; its claim boundary explicitly excludes scientific support or causal inference. The manifest records the contributing phase set for each generated corpus/provenance artifact.
 
 ## Verification Commands
 

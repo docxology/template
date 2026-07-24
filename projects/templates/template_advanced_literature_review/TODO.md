@@ -21,6 +21,12 @@ Live test counts and coverage snapshots belong in `../../../docs/_generated/COUN
   `output/data/phase_artifact_manifest.json` record the phase order and the
   contributing phase set for every phase corpus, combined corpus, metadata,
   and validation report. Extend the manifest when adding new artifact types.
+- **Shipped in the current lane:** `ARL-CROSS-PHASE-1` now writes
+  `output/data/cross_phase_analysis.json` with deterministic phase membership,
+  overlap, citation sufficiency, conflicting-paper IDs, and an explicit boundary
+  between structural evidence and knowledge-graph hypothesis scores. The
+  knowledge-graph stage attaches scores only when assertion extraction produces
+  them.
 - Keep `data/subfield_defaults_exoplanet.yaml` tied to project-local configuration, not borrowed from sibling exemplars.
 
 ## Configurable-surface gaps
@@ -39,11 +45,12 @@ Live test counts and coverage snapshots belong in `../../../docs/_generated/COUN
 
 The open work below should add tests or validators before promoting new claim surfaces.
 
-|| ID | Track | Future improvement | Proving artifact | Gate |
-|| --- | --- | --- | --- | --- |
-|| `ARL-CROSS-PHASE-1` | Cross-validation | Persist cross-phase hypothesis validation metadata alongside scoring | `output/data/cross_phase_analysis.json` | Cross-phase validation test with conflicting evidence |
-|| `ARL-LLM-FILTER-1` | Filtering | Add calibration fixtures for LLM-based abstract content filtering | calibration fixture bundle | LLM filter tests with known positive/negative examples |
-|| `ARL-PHASE-PROVENANCE-1` | Provenance | Ensure all generated artifacts maintain phase-level provenance | all `output/` artifacts with phase metadata | Provenance audit across full pipeline |
+| ID | Track | Future improvement | Proving artifact | Gate |
+| --- | --- | --- | --- | --- |
+| `ARL-PHASE-VALIDATION-1` | Multi-phase | **Shipped:** reject invalid temporal bounds before search/replay and write the validation report | `output/data/phase_validation_report.json` | `test_phase_configuration_validation_rejects_invalid_temporal_bounds` |
+| `ARL-CROSS-PHASE-1` | Cross-validation | Persist cross-phase hypothesis validation metadata alongside scoring | `output/data/cross_phase_analysis.json` | Cross-phase validation test with conflicting evidence |
+| `ARL-LLM-FILTER-1` | Filtering | Add calibration fixtures for LLM-based abstract content filtering | calibration fixture bundle | LLM filter tests with known positive/negative examples |
+| `ARL-PHASE-PROVENANCE-1` | Provenance | Ensure all generated artifacts maintain phase-level provenance | all `output/` artifacts with phase metadata | Provenance audit across full pipeline |
 
 ## Ordered improvement ladder
 

@@ -60,6 +60,25 @@ def main() -> int:
     if figure_path.exists():
         figure_ok, figure_issues = validate_figure_registry(figure_path, project_root / "manuscript")
 
+    cross_phase_path = output_dir / "data" / "cross_phase_analysis.json"
+    cross_phase_ok = False
+    cross_phase_issues: list[str] = []
+    if cross_phase_path.exists():
+        try:
+            cross_phase = json.loads(cross_phase_path.read_text(encoding="utf-8"))
+            required = {"schema_version", "phase_order", "phase_membership", "citation_validation"}
+            missing = sorted(required.difference(cross_phase)) if isinstance(cross_phase, dict) else sorted(required)
+            if missing:
+                cross_phase_issues.append(f"missing keys: {', '.join(missing)}")
+            elif cross_phase.get("schema_version") != "advanced-literature-review/cross-phase-analysis/1":
+                cross_phase_issues.append("unexpected schema_version")
+            else:
+                cross_phase_ok = True
+        except (OSError, json.JSONDecodeError) as exc:
+            cross_phase_issues.append(f"invalid JSON: {exc}")
+    else:
+        cross_phase_issues.append("cross_phase_analysis.json is missing")
+
     reports_dir = output_dir / "reports"
     payload = {
         "schema_version": "advanced-literature-review-validation-v1",
@@ -68,10 +87,12 @@ def main() -> int:
             "artifact_manifest": manifest_report.valid,
             "evidence_registry": evidence_path.exists(),
             "figure_registry": figure_ok,
+            "cross_phase_analysis": cross_phase_ok,
         },
         "manifest_issues": list(manifest_report.issues),
         "figure_issues": figure_issues,
-        "status": "pass" if manifest_report.valid and figure_ok else "fail",
+        "cross_phase_issues": cross_phase_issues,
+        "status": "pass" if manifest_report.valid and figure_ok and cross_phase_ok else "fail",
     }
     report_path = reports_dir / "validation_report.json"
     report_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")

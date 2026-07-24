@@ -1,0 +1,214 @@
+{
+  "analysis_scope": [
+    "phase membership",
+    "cross-phase overlap",
+    "configured citation sufficiency"
+  ],
+  "citation_validation": {
+    "results": {
+      "phase_2_jwst": {
+        "citation_rate": 0.23529411764705882,
+        "depends_on": [
+          "phase_1_foundation"
+        ],
+        "min_required_citations": 2,
+        "papers_with_sufficient_citations": 4,
+        "papers_without_sufficient_citations": [
+          "doi:10.5555/exoplanet atmospheres.0008",
+          "doi:10.5555/exoplanet atmospheres.0009",
+          "doi:10.5555/exoplanet atmospheres.0010",
+          "doi:10.5555/exoplanet atmospheres.0015",
+          "doi:10.5555/exoplanet atmospheres.0030",
+          "doi:10.5555/exoplanet atmospheres.0034",
+          "doi:10.5555/exoplanet atmospheres.0048",
+          "doi:10.5555/exoplanet atmospheres.0051",
+          "doi:10.5555/exoplanet atmospheres.0054",
+          "doi:10.5555/exoplanet atmospheres.0055",
+          "doi:10.5555/exoplanet atmospheres.0058",
+          "doi:10.5555/exoplanet atmospheres.0063",
+          "doi:10.5555/exoplanet atmospheres.0067"
+        ],
+        "total_papers": 17
+      },
+      "phase_3_molecules": {
+        "citation_rate": 0.5517241379310345,
+        "depends_on": [
+          "phase_1_foundation",
+          "phase_2_jwst"
+        ],
+        "min_required_citations": 2,
+        "papers_with_sufficient_citations": 16,
+        "papers_without_sufficient_citations": [
+          "doi:10.5555/exoplanet atmospheres.0000",
+          "doi:10.5555/exoplanet atmospheres.0004",
+          "doi:10.5555/exoplanet atmospheres.0008",
+          "doi:10.5555/exoplanet atmospheres.0024",
+          "doi:10.5555/exoplanet atmospheres.0041",
+          "doi:10.5555/exoplanet atmospheres.0051",
+          "doi:10.5555/exoplanet atmospheres.0054",
+          "doi:10.5555/exoplanet atmospheres.0055",
+          "doi:10.5555/exoplanet atmospheres.0058",
+          "doi:10.5555/exoplanet atmospheres.0067",
+          "doi:10.5555/exoplanet atmospheres.0069",
+          "doi:10.5555/exoplanet atmospheres.0075",
+          "doi:10.5555/exoplanet atmospheres.0079"
+        ],
+        "total_papers": 29
+      }
+    },
+    "status": "review"
+  },
+  "claim_boundary": "Citation structure and phase overlap are provenance diagnostics; they do not establish scientific support, replication, or causality.",
+  "hypothesis_scoring": {
+    "artifact": "hypothesis_scores.json",
+    "claim_boundary": "The knowledge-graph stage may attach configured hypothesis scores after assertion extraction; no score is inferred here.",
+    "status": "pending_knowledge_graph"
+  },
+  "phase_membership": {
+    "phase_1_foundation": {
+      "paper_count": 46,
+      "paper_ids": [
+        "doi:10.5555/exoplanet atmospheres.0000",
+        "doi:10.5555/exoplanet atmospheres.0004",
+        "doi:10.5555/exoplanet atmospheres.0005",
+        "doi:10.5555/exoplanet atmospheres.0008",
+        "doi:10.5555/exoplanet atmospheres.0009",
+        "doi:10.5555/exoplanet atmospheres.0010",
+        "doi:10.5555/exoplanet atmospheres.0015",
+        "doi:10.5555/exoplanet atmospheres.0016",
+        "doi:10.5555/exoplanet atmospheres.0017",
+        "doi:10.5555/exoplanet atmospheres.0018",
+        "doi:10.5555/exoplanet atmospheres.0021",
+        "doi:10.5555/exoplanet atmospheres.0023",
+        "doi:10.5555/exoplanet atmospheres.0024",
+        "doi:10.5555/exoplanet atmospheres.0025",
+        "doi:10.5555/exoplanet atmospheres.0027",
+        "doi:10.5555/exoplanet atmospheres.0029",
+        "doi:10.5555/exoplanet atmospheres.0030",
+        "doi:10.5555/exoplanet atmospheres.0031",
+        "doi:10.5555/exoplanet atmospheres.0032",
+        "doi:10.5555/exoplanet atmospheres.0034",
+        "doi:10.5555/exoplanet atmospheres.0041",
+        "doi:10.5555/exoplanet atmospheres.0043",
+        "doi:10.5555/exoplanet atmospheres.0044",
+        "doi:10.5555/exoplanet atmospheres.0046",
+        "doi:10.5555/exoplanet atmospheres.0047",
+        "doi:10.5555/exoplanet atmospheres.0048",
+        "doi:10.5555/exoplanet atmospheres.0051",
+        "doi:10.5555/exoplanet atmospheres.0052",
+        "doi:10.5555/exoplanet atmospheres.0053",
+        "doi:10.5555/exoplanet atmospheres.0054",
+        "doi:10.5555/exoplanet atmospheres.0055",
+        "doi:10.5555/exoplanet atmospheres.0056",
+        "doi:10.5555/exoplanet atmospheres.0057",
+        "doi:10.5555/exoplanet atmospheres.0058",
+        "doi:10.5555/exoplanet atmospheres.0062",
+        "doi:10.5555/exoplanet atmospheres.0063",
+        "doi:10.5555/exoplanet atmospheres.0066",
+        "doi:10.5555/exoplanet atmospheres.0067",
+        "doi:10.5555/exoplanet atmospheres.0068",
+        "doi:10.5555/exoplanet atmospheres.0069",
+        "doi:10.5555/exoplanet atmospheres.0073",
+        "doi:10.5555/exoplanet atmospheres.0074",
+        "doi:10.5555/exoplanet atmospheres.0075",
+        "doi:10.5555/exoplanet atmospheres.0077",
+        "doi:10.5555/exoplanet atmospheres.0078",
+        "doi:10.5555/exoplanet atmospheres.0079"
+      ]
+    },
+    "phase_2_jwst": {
+      "paper_count": 17,
+      "paper_ids": [
+        "doi:10.5555/exoplanet atmospheres.0008",
+        "doi:10.5555/exoplanet atmospheres.0009",
+        "doi:10.5555/exoplanet atmospheres.0010",
+        "doi:10.5555/exoplanet atmospheres.0015",
+        "doi:10.5555/exoplanet atmospheres.0021",
+        "doi:10.5555/exoplanet atmospheres.0030",
+        "doi:10.5555/exoplanet atmospheres.0034",
+        "doi:10.5555/exoplanet atmospheres.0043",
+        "doi:10.5555/exoplanet atmospheres.0048",
+        "doi:10.5555/exoplanet atmospheres.0051",
+        "doi:10.5555/exoplanet atmospheres.0054",
+        "doi:10.5555/exoplanet atmospheres.0055",
+        "doi:10.5555/exoplanet atmospheres.0057",
+        "doi:10.5555/exoplanet atmospheres.0058",
+        "doi:10.5555/exoplanet atmospheres.0063",
+        "doi:10.5555/exoplanet atmospheres.0066",
+        "doi:10.5555/exoplanet atmospheres.0067"
+      ]
+    },
+    "phase_3_molecules": {
+      "paper_count": 29,
+      "paper_ids": [
+        "doi:10.5555/exoplanet atmospheres.0000",
+        "doi:10.5555/exoplanet atmospheres.0004",
+        "doi:10.5555/exoplanet atmospheres.0008",
+        "doi:10.5555/exoplanet atmospheres.0010",
+        "doi:10.5555/exoplanet atmospheres.0015",
+        "doi:10.5555/exoplanet atmospheres.0021",
+        "doi:10.5555/exoplanet atmospheres.0024",
+        "doi:10.5555/exoplanet atmospheres.0025",
+        "doi:10.5555/exoplanet atmospheres.0030",
+        "doi:10.5555/exoplanet atmospheres.0031",
+        "doi:10.5555/exoplanet atmospheres.0034",
+        "doi:10.5555/exoplanet atmospheres.0041",
+        "doi:10.5555/exoplanet atmospheres.0043",
+        "doi:10.5555/exoplanet atmospheres.0046",
+        "doi:10.5555/exoplanet atmospheres.0048",
+        "doi:10.5555/exoplanet atmospheres.0051",
+        "doi:10.5555/exoplanet atmospheres.0052",
+        "doi:10.5555/exoplanet atmospheres.0054",
+        "doi:10.5555/exoplanet atmospheres.0055",
+        "doi:10.5555/exoplanet atmospheres.0057",
+        "doi:10.5555/exoplanet atmospheres.0058",
+        "doi:10.5555/exoplanet atmospheres.0066",
+        "doi:10.5555/exoplanet atmospheres.0067",
+        "doi:10.5555/exoplanet atmospheres.0068",
+        "doi:10.5555/exoplanet atmospheres.0069",
+        "doi:10.5555/exoplanet atmospheres.0074",
+        "doi:10.5555/exoplanet atmospheres.0075",
+        "doi:10.5555/exoplanet atmospheres.0077",
+        "doi:10.5555/exoplanet atmospheres.0079"
+      ]
+    }
+  },
+  "phase_order": [
+    "phase_1_foundation",
+    "phase_2_jwst",
+    "phase_3_molecules"
+  ],
+  "phase_overlap": {
+    "phase_1_foundation": {
+      "phase_2_jwst": {
+        "intersection": 17,
+        "jaccard_similarity": 0.3695652173913043
+      },
+      "phase_3_molecules": {
+        "intersection": 29,
+        "jaccard_similarity": 0.6304347826086957
+      }
+    },
+    "phase_2_jwst": {
+      "phase_1_foundation": {
+        "intersection": 17,
+        "jaccard_similarity": 0.3695652173913043
+      },
+      "phase_3_molecules": {
+        "intersection": 15,
+        "jaccard_similarity": 0.4838709677419355
+      }
+    },
+    "phase_3_molecules": {
+      "phase_1_foundation": {
+        "intersection": 29,
+        "jaccard_similarity": 0.6304347826086957
+      },
+      "phase_2_jwst": {
+        "intersection": 15,
+        "jaccard_similarity": 0.4838709677419355
+      }
+    }
+  },
+  "schema_version": "advanced-literature-review/cross-phase-analysis/1"
+}

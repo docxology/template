@@ -11,4 +11,5 @@ deduplication, cross-phase citation checks, and provenance output. Keep
 - LLM filters are optional, fail closed with the `error` label, and use a configurable base URL and timeout.
 - Tests exercise HTTP through a real local server; do not introduce mock frameworks or network dependence.
 - Output paths are injected into `MultiPhaseSearchRunner`; never write relative to the caller's current working directory.
+- `cross_phase_analysis.json` is the structural cross-phase evidence boundary: it records phase membership, overlap, citation sufficiency, and whether knowledge-graph scoring is pending/measured; it must not be described as scientific validation.
 - Keep live retrieval separate from deterministic downstream analysis. A corpus refresh is an intentional network operation.

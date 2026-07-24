@@ -82,4 +82,5 @@ Intermediate and final outputs live under `output/` and are disposable and regen
 | `citation_graph.gml` | 02 | GraphML citation graph |
 | `nanopublications.jsonl` | 03 | LLM-extracted assertions (0 in this run) |
 | `hypothesis_scores.json` | 03 | Per-hypothesis evidence scores |
+| `cross_phase_analysis.json` | 01 / 03 | Phase membership, overlap, citation sufficiency, and explicit hypothesis-score claim boundary |
 | `fulltext_assessment.json` | 06 | Abstract/OA/PDF coverage report |
