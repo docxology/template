@@ -11,7 +11,7 @@ Pipelines · Manuscripts · Cryptographic Provenance · AI-Agent Collaboration
 [![uv](https://img.shields.io/badge/package%20manager-uv-purple?logo=astral)](https://docs.astral.sh/uv/)
 [![Ruff](https://img.shields.io/badge/linter-ruff-orange?logo=ruff)](https://docs.astral.sh/ruff/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green)](../LICENSE)
-[![Version](https://img.shields.io/badge/version-3.5.1-informational)](../pyproject.toml)
+[![Version](https://img.shields.io/badge/version-3.6.0-informational)](../pyproject.toml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19139090.svg)](https://doi.org/10.5281/zenodo.19139090)
 
 > **📄 Published**: [*A template/ approach to Reproducible Generative Research: Architecture and Ergonomics from Configuration through Publication*](https://zenodo.org/records/19139090) — DOI: [10.5281/zenodo.19139090](https://doi.org/10.5281/zenodo.19139090)
@@ -197,7 +197,7 @@ graph TD
     Root --> Docs["docs/ (see documentation-index.md)"]
     Root --> Output["output/ (Final Deliverables)"]
 
-    subgraph "Layer 1 · 19 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
+    subgraph "Layer 1 · 25 importable Python packages under infrastructure/ (+ config/docker templates) · docs/modules/"
         Infra --> Core["core/ — logging, config, exceptions"]
         Infra --> Rendering["rendering/ — Pandoc + XeLaTeX"]
         Infra --> Stego["steganography/ — SHA-256 + watermarking"]
@@ -361,7 +361,7 @@ graph TB
     end
 
     subgraph Core["🧠 Core Systems (DAG Engine)"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>19 Python packages<br/>Validation, rendering, LLM, methods]
+        INFRASTRUCTURE[Infrastructure Modules<br/>25 Python packages<br/>Validation, rendering, LLM, methods]
         BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
         CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
     end
@@ -555,7 +555,7 @@ Every rendered PDF is automatically processed by the steganographic pipeline via
 | **Alpha overlay** | Low-opacity text per page (build time + commit hash) | Standard PDF operations, printing |
 | **QR code** | Repository URL injected on final page | Redistribution |
 
-Full specification: [docs/security/steganography.md](../docs/security/steganography.md) · [docs/security/hashing_and_manifests.md](../docs/security/hashing_and_manifests.md) · [docs/security/secure_execution.md](../docs/security/secure_execution.md).
+Full specification: [docs/security/threat-model.md](../docs/security/threat-model.md) · [docs/security/steganography.md](../docs/security/steganography.md) · [docs/security/hashing_and_manifests.md](../docs/security/hashing_and_manifests.md) · [docs/security/secure_execution.md](../docs/security/secure_execution.md).
 
 ---
 
@@ -801,9 +801,12 @@ Steganography, hashing, and secure execution.
 
 | File | Purpose |
 | --- | --- |
+| [threat-model.md](../docs/security/threat-model.md) | Repository-wide threat model: assets, attacker model, attack surfaces, threat register |
 | [steganography.md](../docs/security/steganography.md) | Watermarking layers, alpha overlay, QR injection |
 | [hashing_and_manifests.md](../docs/security/hashing_and_manifests.md) | SHA-256/512 hash manifests and tamper detection |
 | [secure_execution.md](../docs/security/secure_execution.md) | `secure_run.sh`, steganography config, output files |
+| [literature-fetch-security.md](../docs/security/literature-fetch-security.md) | Trust boundaries and hardening for literature fetching |
+| [ownership-and-promotion.md](../docs/security/ownership-and-promotion.md) | Sensitive ownership exceptions and private-project promotion attestation |
 
 ### 🔍 Audit And Documentation Gates
 
@@ -857,6 +860,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **15 jobs** (2 conditional) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
 | [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | GitHub Release with generated changelog |
+| [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
 ### CI Jobs (`ci.yml`) — complete inventory
 
