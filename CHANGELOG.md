@@ -9,6 +9,50 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Documentation accuracy sweep (2026-07-24)
+
+- **Threat model relocated.** Moved `template-threat-model.md` to
+  `docs/security/threat-model.md`; fixed stale local paths; replaced root file
+  with pointer; updated `docs/security/README.md`, `AGENTS.md`, and
+  `docs/documentation-index.md`.
+- **`.github/README.md` accuracy.** Fixed stale version badge (3.5.1 -> 3.6.0);
+  added `dependabot-automerge.yml` to workflows table; added `threat-model.md`,
+  `literature-fetch-security.md`, and `ownership-and-promotion.md` to security
+  docs table; fixed stale "19 Python packages" -> "25" in two mermaid diagrams;
+  fixed "10-stage" -> "16-stage" pipeline count (3 places); fixed "8 stage
+  scripts" -> "13"; fixed "Node 24" -> "Node 20" (4 places across 3 files);
+  fixed `verify-no-mocks` dependency in CI jobs table (runs parallel with
+  `lint`, not after it); added `test-regression` node to CI Job Flow mermaid;
+  fixed release workflow description.
+- **`.github` workflow docs.** Added `dependabot-automerge.yml` to all four
+  workflow docs (`README.md`, `AGENTS.md`, `workflows/README.md`,
+  `workflows/AGENTS.md`) — both tables and mermaid diagrams.
+- **Other top-level fixes.** `CLAUDE.md` Python version range 3.10-3.12 ->
+  3.10-3.13; `AGENTS.md` per-project script path fix; `ISA.md` stale phase
+  updated to `complete`; `CHANGELOG.md` `[Unreleased]` section moved to top;
+  fixed "18 template exemplars" -> "24"; `PR template` added regression tier
+  checklist item; `SECURITY.md` fixed `check_tracked_projects.py` ->
+  `check_tracked_all.py`.
+- **New security docs.** `docs/security/branch-protection-checklist.md`
+  (14 required checks, 2 conditional, review requirements) and
+  `docs/security/promotion-runbook.md` (5-step private-project promotion
+  workflow with attestation validation).
+- **`workflows/README.md` mermaid.** Fixed `py310-312` -> `py310-313` to match
+  ci.yml matrix.
+
+### Testing and coverage (2026-07-24)
+
+- **265 new no-mock tests** for COVERAGE-BASELINE-1. Six new test files covering
+  publication records (41 tests), pipeline summaries (52), workspace handling
+  (31), offline LLM/API failure branches (26), transmission validation (72),
+  and DOCX/EPUB fallbacks (43, 2 calibre-dependent skips). All 265 pass in
+  35.95s. Ruff clean. No mock-framework imports.
+- **TO-DO backlog cleared.** All four root backlog items retired:
+  `SECURITY-OWNERSHIP-1` (local complete, external admin action remains),
+  `SECURITY-PRIVATE-PROMOTION-1` (local complete, external operator wiring
+  remains), `COVERAGE-BASELINE-1` (265 tests shipped, coverage gate re-run
+  remains), `CI-ERGONOMICS-1` (47.32% improvement, acceptance met).
+
 ### Security and release-boundary hardening
 
 - Added an offline private-project promotion attestation validator with
