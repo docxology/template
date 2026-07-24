@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-12T20:51:27Z",
+  "timestamp": "2026-07-23T23:24:11Z",
   "checks": {
     "PDF validation": true,
     "Transmission bookends": true,
@@ -29,8 +29,8 @@
           },
           "pdf": {
             "exists": true,
-            "files": 12,
-            "size_mb": 1.55,
+            "files": 11,
+            "size_mb": 1.54,
             "readable": true,
             "optional": false
           },
@@ -50,8 +50,8 @@
           },
           "figures": {
             "exists": true,
-            "files": 14,
-            "size_mb": 1.36,
+            "files": 15,
+            "size_mb": 2.3,
             "readable": true,
             "optional": false
           },
@@ -64,23 +64,21 @@
           },
           "reports": {
             "exists": true,
-            "files": 14,
-            "size_mb": 0.12,
+            "files": 1,
+            "size_mb": 0.0,
             "readable": true,
             "optional": false
           },
           "simulations": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "llm": {
-            "exists": true,
+            "exists": false,
             "files": 0,
             "size_mb": 0.0,
-            "readable": true,
             "optional": true
           },
           "logs": {
@@ -94,8 +92,8 @@
       "directories": {
         "pdf": {
           "exists": true,
-          "file_count": 12,
-          "size_mb": "1.55",
+          "file_count": 11,
+          "size_mb": "1.54",
           "largest_file": "the-shape-between.pdf"
         },
         "web": {
@@ -112,9 +110,9 @@
         },
         "figures": {
           "exists": true,
-          "file_count": 14,
-          "size_mb": "1.36",
-          "largest_file": "13_shared_home.png"
+          "file_count": 15,
+          "size_mb": "2.30",
+          "largest_file": "storybook_contact_sheet.png"
         },
         "data": {
           "exists": true,
@@ -124,21 +122,19 @@
         },
         "reports": {
           "exists": true,
-          "file_count": 14,
-          "size_mb": "0.12",
-          "largest_file": "evidence_registry.json"
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "storybook_summary.md"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "llm": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": false,
@@ -147,19 +143,19 @@
         }
       },
       "file_counts": {
-        "pdf": 12,
+        "pdf": 11,
         "web": 9,
         "slides": 46,
-        "figures": 14,
+        "figures": 15,
         "data": 1,
-        "reports": 14,
-        "simulations": 0,
-        "llm": 0
+        "reports": 1
       },
-      "total_size_mb": 3.5374374389648438,
+      "total_size_mb": 4.357850074768066,
       "issues_by_severity": {
         "critical": [],
         "warning": [
+          "Directory 'simulations/' missing or empty",
+          "Directory 'llm/' missing or empty",
           "Directory 'logs/' missing or empty",
           "Combined PDF is unusually small: 0.04 MB"
         ],
@@ -168,16 +164,16 @@
       "recommendations": []
     },
     "pdf": {
-      "files": 12,
-      "size_mb": 1.5454893112182617
+      "files": 11,
+      "size_mb": 1.5403327941894531
     },
     "figures": {
-      "files": 0,
-      "size_mb": 0.0
+      "files": 1,
+      "size_mb": 0.9362335205078125
     },
     "data": {
       "files": 1,
-      "size_mb": 0.0052127838134765625
+      "size_mb": 0.0106048583984375
     }
   },
   "summary": {

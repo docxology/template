@@ -123,6 +123,7 @@ def storybook_variables(spec: StorybookSpec) -> dict[str, Any]:
                 "scene": page.scene,
                 "overlay_box": page.overlay_box,
                 "caption_position": page.caption_position,
+                "alt_text": (f"Full-page illustrated scene '{page.title}' ({page.scene}). Story text: {page.text}"),
             }
             for page in spec.pages
         ],

@@ -9,7 +9,8 @@ using project-local source code and thin Stage-02 scripts.
 - `content/story.yaml` owns the story text, cast, page order, overlay choice,
   and palettes.
 - `src/storybook/` owns character generation, page validation, illustration,
-  text overlay, manifest writing, and PDF assembly.
+  text overlay, accessible page metadata, contact-sheet generation, manifest
+  writing, and PDF assembly.
 - `scripts/` may only select a page or final artifact and call `src/storybook/`.
 - `output/` is generated; regenerate it through scripts rather than editing it.
 
@@ -33,7 +34,8 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_storybook
 ```
 
-After illustration changes, inspect `projects/templates/template_storybook/output/pdf/the-shape-between.pdf`.
+After illustration changes, inspect the full PDF and the generated
+`projects/templates/template_storybook/output/figures/storybook_contact_sheet.png`.
 
 ## Publishing
 

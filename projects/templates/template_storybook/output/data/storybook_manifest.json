@@ -39,7 +39,8 @@
       "title": "The Shape Between",
       "scene": "cosmic_yinyang",
       "overlay_box": false,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Shape Between' (cosmic_yinyang). Story text: A geometric fable of belonging, bracing, and reciprocal form\nDaniel Ari Friedman\nDOI 10.5281/zenodo.21176000\ntemplate_storybook\n"
     },
     {
       "number": 1,
@@ -47,7 +48,8 @@
       "title": "Publication Information",
       "scene": "publication_info",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'Publication Information' (publication_info). Story text: The Shape Between\nTemplate storybook exemplar, version 0.1.0\nGenerated in the public research-template repository.\nPrimary artifact: output/pdf/the-shape-between.pdf\nLicense: MIT for template code and project materials.\nAuthor: Daniel Ari Friedman.\nDOI: 10.5281/zenodo.21176000.\nStory and images: illustrative fiction.\n\nAcknowledgements\nFor children who notice they are shaped differently; for families that make room; and for R. Buckminster Fuller's Synergetics, where triangular structure reveals how a square room can become steady.\n"
     },
     {
       "number": 2,
@@ -55,7 +57,8 @@
       "title": "The Square House",
       "scene": "cube_home",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Square House' (cube_home). Story text: Tessa had four bright triangular faces and lived in a family of cubes. They loved her angles, but the chairs, shelves, songs, and bedtime quilts all expected corners to arrive in fours."
     },
     {
       "number": 3,
@@ -63,7 +66,8 @@
       "title": "The Pointed House",
       "scene": "tetra_home",
       "overlay_box": false,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Pointed House' (tetra_home). Story text: Across the valley, Ciro rolled his square shoulders through a family of tetrahedra. Their tents folded from triangles, their games climbed to peaks, and every story knew how to stand on three edges."
     },
     {
       "number": 4,
@@ -71,7 +75,8 @@
       "title": "The Valley That Turned",
       "scene": "symbol_valley",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Valley That Turned' (symbol_valley). Story text: Between the two homes was a round valley split like day and night. Cubes slept in the pale half. Tetrahedra dreamed in the dark half. The border curved like a question neither family could answer alone."
     },
     {
       "number": 5,
@@ -79,7 +84,8 @@
       "title": "The First Edge",
       "scene": "meeting",
       "overlay_box": false,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The First Edge' (meeting). Story text: Tessa and Ciro met where the curve bent inward. She offered an edge. He offered a face. Neither gift fit perfectly, and that was exactly why they stayed to listen."
     },
     {
       "number": 6,
@@ -87,7 +93,8 @@
       "title": "The Tetrahedron Inside",
       "scene": "tetra_stability",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Tetrahedron Inside' (tetra_stability). Story text: Ciro showed Tessa the hollow room at the center of his cube. Its square walls could lean unless something braced them. Tessa touched four far corners. Lines of strength flashed between them: a tetrahedron inside the cube, small and stable, teaching the room how to stand."
     },
     {
       "number": 7,
@@ -95,7 +102,8 @@
       "title": "Mirror Families",
       "scene": "mirror",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'Mirror Families' (mirror). Story text: Each child brought the other home. The cube family learned to set a triangular place at the table. The tetrahedral family learned that a square could hold a sky without losing its corners."
     },
     {
       "number": 8,
@@ -103,7 +111,8 @@
       "title": "Bridge of Edges",
       "scene": "bridge",
       "overlay_box": false,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'Bridge of Edges' (bridge). Story text: They built a bridge from shared edges: cube to tetrahedron, tetrahedron to cube, step after step until the valley no longer divided the map."
     },
     {
       "number": 9,
@@ -111,7 +120,8 @@
       "title": "The Shadow School",
       "scene": "shadow_school",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Shadow School' (shadow_school). Story text: At noon they visited the shadow school. Tessa turned and made triangles, kites, and arrows. Ciro turned and made squares, diamonds, and doors. The teacher smiled: every shape has more than one truth when light moves around it."
     },
     {
       "number": 10,
@@ -119,7 +129,8 @@
       "title": "The Tensegrity Lantern",
       "scene": "tensegrity_lantern",
       "overlay_box": false,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Tensegrity Lantern' (tensegrity_lantern). Story text: That night they built a lantern from struts that pushed and threads that pulled. Nothing touched the way the grown-ups expected, yet the little star held itself in balance and floated over the valley."
     },
     {
       "number": 11,
@@ -127,7 +138,8 @@
       "title": "The Vector Garden",
       "scene": "vector_garden",
       "overlay_box": true,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Vector Garden' (vector_garden). Story text: In the morning, seeds sprouted along invisible arrows. Some grew toward corners, some toward peaks, and some grew between. Tessa and Ciro learned that home was not a box or a point; it was a pattern of directions that could keep growing."
     },
     {
       "number": 12,
@@ -135,7 +147,8 @@
       "title": "The Mega-Symbol",
       "scene": "mega_symbol",
       "overlay_box": true,
-      "caption_position": "top"
+      "caption_position": "top",
+      "alt_text": "Full-page illustrated scene 'The Mega-Symbol' (mega_symbol). Story text: When both families crossed, the valley rose into a mega-symbol: square inside triangle, triangle inside square, dark carrying light, light carrying dark."
     },
     {
       "number": 13,
@@ -143,29 +156,117 @@
       "title": "The Shape Between",
       "scene": "shared_home",
       "overlay_box": false,
-      "caption_position": "bottom"
+      "caption_position": "bottom",
+      "alt_text": "Full-page illustrated scene 'The Shape Between' (shared_home). Story text: Tessa and Ciro did not become the same shape. They became a way through. Their homes kept their own geometry, and the space between them learned to glow."
     }
   ],
   "render": {
-    "output_path": "projects/templates/template_storybook/output/pdf/the-shape-between.pdf",
+    "output_path": "output/pdf/the-shape-between.pdf",
     "page_count": 14,
     "image_paths": [
-      "projects/templates/template_storybook/output/figures/storybook_pages/00_cover.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/01_publication_information.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/02_square_house.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/03_pointed_house.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/04_valley_symbol.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/05_first_connection.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/06_tetra_inside_cube.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/07_mirror_families.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/08_bridge_of_edges.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/09_shadow_school.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/10_tensegrity_lantern.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/11_vector_garden.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/12_mega_symbol.png",
-      "projects/templates/template_storybook/output/figures/storybook_pages/13_shared_home.png"
+      "output/figures/storybook_pages/00_cover.png",
+      "output/figures/storybook_pages/01_publication_information.png",
+      "output/figures/storybook_pages/02_square_house.png",
+      "output/figures/storybook_pages/03_pointed_house.png",
+      "output/figures/storybook_pages/04_valley_symbol.png",
+      "output/figures/storybook_pages/05_first_connection.png",
+      "output/figures/storybook_pages/06_tetra_inside_cube.png",
+      "output/figures/storybook_pages/07_mirror_families.png",
+      "output/figures/storybook_pages/08_bridge_of_edges.png",
+      "output/figures/storybook_pages/09_shadow_school.png",
+      "output/figures/storybook_pages/10_tensegrity_lantern.png",
+      "output/figures/storybook_pages/11_vector_garden.png",
+      "output/figures/storybook_pages/12_mega_symbol.png",
+      "output/figures/storybook_pages/13_shared_home.png"
     ],
-    "manifest_path": "projects/templates/template_storybook/output/data/storybook_manifest.json",
-    "summary_path": "projects/templates/template_storybook/output/reports/storybook_summary.md"
+    "manifest_path": "output/data/storybook_manifest.json",
+    "summary_path": "output/reports/storybook_summary.md",
+    "contact_sheet_path": "output/figures/storybook_contact_sheet.png",
+    "text_contrast_audit": [
+      {
+        "page": "cover",
+        "ink_present": true,
+        "contrast_ratio": 18.554,
+        "overlay": false
+      },
+      {
+        "page": "publication_information",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "square_house",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "pointed_house",
+        "ink_present": true,
+        "contrast_ratio": 18.49,
+        "overlay": false
+      },
+      {
+        "page": "valley_symbol",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "first_connection",
+        "ink_present": true,
+        "contrast_ratio": 18.49,
+        "overlay": false
+      },
+      {
+        "page": "tetra_inside_cube",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "mirror_families",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "bridge_of_edges",
+        "ink_present": true,
+        "contrast_ratio": 18.49,
+        "overlay": false
+      },
+      {
+        "page": "shadow_school",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "tensegrity_lantern",
+        "ink_present": true,
+        "contrast_ratio": 18.49,
+        "overlay": false
+      },
+      {
+        "page": "vector_garden",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "mega_symbol",
+        "ink_present": true,
+        "contrast_ratio": 16.299,
+        "overlay": true
+      },
+      {
+        "page": "shared_home",
+        "ink_present": true,
+        "contrast_ratio": 18.49,
+        "overlay": false
+      }
+    ]
   }
 }

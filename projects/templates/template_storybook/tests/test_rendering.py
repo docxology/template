@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -10,6 +11,7 @@ import yaml
 from PIL import Image
 
 from storybook import build_storybook_pdf, load_storybook, render_story_number, render_story_page
+from storybook.text_layout import contrast_ratio, validate_text_contrast
 
 
 def _pdf_page_count(data: bytes) -> int:
@@ -65,6 +67,8 @@ def test_build_storybook_pdf_writes_manifest_and_pdf(isolated_project) -> None:
     assert _pdf_page_count(data) == result.page_count
     assert result.manifest_path.is_file()
     assert result.summary_path.is_file()
+    assert result.contact_sheet_path is not None
+    assert result.contact_sheet_path.is_file()
     assert len(result.image_paths) == result.page_count
     assert _pdf_media_box(data) == (float(spec.page_width), float(spec.page_height))
 
@@ -95,6 +99,22 @@ def test_build_storybook_pdf_respects_widescreen_page_size(isolated_project) -> 
     data = result.output_path.read_bytes()
     assert data.startswith(b"%PDF-")
     assert _pdf_media_box(data) == (1600.0, 900.0)
+
+
+def test_storybook_manifest_contains_alt_text_and_contact_sheet(isolated_project) -> None:
+    result = build_storybook_pdf(isolated_project)
+    manifest = yaml.safe_load(result.manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["pages"][0]["alt_text"]
+    assert manifest["render"]["contact_sheet_path"] == "output/figures/storybook_contact_sheet.png"
+    assert len(manifest["render"]["text_contrast_audit"]) == 14
+    assert all(row["ink_present"] for row in manifest["render"]["text_contrast_audit"])
+    assert str(isolated_project) not in json.dumps(manifest)
+
+
+def test_text_overlay_palette_meets_wcag_contrast() -> None:
+    assert validate_text_contrast() >= 4.5
+    assert contrast_ratio((255, 255, 255), (255, 255, 255)) == 1.0
 
 
 def test_build_storybook_pdf_removes_stale_page_images(isolated_project) -> None:

@@ -2,9 +2,9 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 12,
-      "size_mb": "1.55",
-      "total_size_bytes": 1620563,
+      "file_count": 11,
+      "size_mb": "1.54",
+      "total_size_bytes": 1615156,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
@@ -24,7 +24,7 @@
       ],
       "extensions": {
         ".md": 1,
-        ".log": 3,
+        ".log": 2,
         ".aux": 1,
         ".blg": 1,
         ".pdf": 2,
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 46,
       "size_mb": "0.46",
-      "total_size_bytes": 486264,
+      "total_size_bytes": 486147,
       "largest_files": [
         {
           "name": "02_architecture_slides.log",
@@ -97,10 +97,15 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 14,
-      "size_mb": "1.36",
-      "total_size_bytes": 1424680,
+      "file_count": 15,
+      "size_mb": "2.30",
+      "total_size_bytes": 2406612,
       "largest_files": [
+        {
+          "name": "storybook_contact_sheet.png",
+          "size_mb": "0.94",
+          "path": "figures/storybook_contact_sheet.png"
+        },
         {
           "name": "13_shared_home.png",
           "size_mb": "0.13",
@@ -110,22 +115,17 @@
           "name": "06_tetra_inside_cube.png",
           "size_mb": "0.12",
           "path": "figures/storybook_pages/06_tetra_inside_cube.png"
-        },
-        {
-          "name": "10_tensegrity_lantern.png",
-          "size_mb": "0.12",
-          "path": "figures/storybook_pages/10_tensegrity_lantern.png"
         }
       ],
       "extensions": {
-        ".png": 14
+        ".png": 15
       }
     },
     "data": {
       "exists": true,
       "file_count": 1,
       "size_mb": "0.01",
-      "total_size_bytes": 5466,
+      "total_size_bytes": 11120,
       "largest_files": [
         {
           "name": "storybook_manifest.json",
@@ -139,9 +139,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 14,
-      "size_mb": "0.12",
-      "total_size_bytes": 120831,
+      "file_count": 5,
+      "size_mb": "0.09",
+      "total_size_bytes": 98665,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -150,36 +150,31 @@
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.02",
+          "size_mb": "0.01",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "output_statistics.json",
-          "size_mb": "0.01",
-          "path": "reports/output_statistics.json"
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 9,
-        ".txt": 2,
-        ".md": 3
+        ".json": 3,
+        ".md": 2
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
       "exists": false,
@@ -188,14 +183,20 @@
       "total_size_bytes": 0
     }
   },
-  "total_files": 96,
-  "total_size_mb": 3.536195755004883,
+  "total_files": 87,
+  "total_size_mb": 4.451623916625977,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
       "size_mb": "1.42",
       "category": "pdf",
       "path": "pdf/the-shape-between.pdf"
+    },
+    {
+      "name": "storybook_contact_sheet.png",
+      "size_mb": "0.94",
+      "category": "figures",
+      "path": "figures/storybook_contact_sheet.png"
     },
     {
       "name": "13_shared_home.png",
@@ -208,12 +209,6 @@
       "size_mb": "0.12",
       "category": "figures",
       "path": "figures/storybook_pages/06_tetra_inside_cube.png"
-    },
-    {
-      "name": "10_tensegrity_lantern.png",
-      "size_mb": "0.12",
-      "category": "figures",
-      "path": "figures/storybook_pages/10_tensegrity_lantern.png"
     },
     {
       "name": "evidence_registry.json",
@@ -253,21 +248,21 @@
     }
   ],
   "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.5454893112182617,
+    "pdf": 1.5403327941894531,
     "web": 0.04784202575683594,
-    "slides": 0.46373748779296875,
-    "figures": 1.3586807250976562,
-    "data": 0.0052127838134765625,
-    "reports": 0.1152334213256836,
-    "simulations": 0.0,
-    "llm": 0.0
+    "slides": 0.4636259078979492,
+    "figures": 2.295124053955078,
+    "data": 0.0106048583984375,
+    "reports": 0.09409427642822266
   },
   "file_counts_by_type": {
-    ".md": 5,
-    ".log": 9,
+    ".md": 4,
+    ".log": 8,
     ".aux": 7,
     ".blg": 1,
     ".pdf": 8,
@@ -280,8 +275,7 @@
     ".nav": 6,
     ".vrb": 3,
     ".snm": 6,
-    ".png": 14,
-    ".json": 10,
-    ".txt": 2
+    ".png": 15,
+    ".json": 4
   }
 }

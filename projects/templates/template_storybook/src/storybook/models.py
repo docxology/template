@@ -79,13 +79,28 @@ class RenderResult:
     image_paths: tuple[Path, ...]
     manifest_path: Path
     summary_path: Path
+    contact_sheet_path: Path | None = None
 
-    def to_dict(self) -> dict[str, object]:
-        """Serialize this object to a plain dict for JSON output."""
+    def to_dict(self, *, root: Path | None = None) -> dict[str, object]:
+        """Serialize this object to a plain dict for JSON output.
+
+        Generated manifests use project-relative paths when ``root`` is
+        provided so a checkout path never becomes publication metadata.
+        """
+
+        def serialize(path: Path) -> str:
+            if root is not None:
+                try:
+                    return path.resolve().relative_to(root.resolve()).as_posix()
+                except ValueError:
+                    pass
+            return str(path)
+
         return {
-            "output_path": str(self.output_path),
+            "output_path": serialize(self.output_path),
             "page_count": self.page_count,
-            "image_paths": [str(path) for path in self.image_paths],
-            "manifest_path": str(self.manifest_path),
-            "summary_path": str(self.summary_path),
+            "image_paths": [serialize(path) for path in self.image_paths],
+            "manifest_path": serialize(self.manifest_path),
+            "summary_path": serialize(self.summary_path),
+            "contact_sheet_path": serialize(self.contact_sheet_path) if self.contact_sheet_path else None,
         }

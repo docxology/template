@@ -3,10 +3,60 @@
 from __future__ import annotations
 
 import textwrap
+from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 from .models import PageSpec
+
+PANEL_TEXT_RGB = (24, 28, 42)
+PANEL_BACKGROUND_RGB = (255, 250, 240)
+LIGHT_TEXT_RGB = (255, 250, 240)
+DARK_SHADOW_RGB = (12, 14, 24)
+COVER_TEXT_RGB = (255, 249, 236)
+
+
+def contrast_ratio(foreground: tuple[int, int, int], background: tuple[int, int, int]) -> float:
+    """Return the WCAG relative-luminance contrast ratio for two RGB colors."""
+
+    def luminance(color: tuple[int, int, int]) -> float:
+        channels = []
+        for component in color:
+            normalized = component / 255
+            channels.append(normalized / 12.92 if normalized <= 0.04045 else ((normalized + 0.055) / 1.055) ** 2.4)
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+    lighter = max(luminance(foreground), luminance(background))
+    darker = min(luminance(foreground), luminance(background))
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def validate_text_contrast(*, minimum: float = 4.5) -> float:
+    """Validate the fixed overlay palette and return its contrast ratio."""
+    ratio = contrast_ratio(PANEL_TEXT_RGB, PANEL_BACKGROUND_RGB)
+    if ratio < minimum:
+        raise ValueError(f"storybook overlay contrast {ratio:.2f} is below the {minimum:.2f} minimum")
+    return ratio
+
+
+def audit_rendered_text_contrast(image_path: str | Path, page: PageSpec) -> dict[str, object]:
+    """Audit that rendered text ink exists and its declared pair is readable."""
+    with Image.open(image_path) as source:
+        image = source.convert("RGB")
+        pixel_data = image.get_flattened_data() if hasattr(image, "get_flattened_data") else image.getdata()
+        colors = set(pixel_data)
+    overlay = page.overlay_box or page.slug == "publication_information"
+    if page.slug == "cover":
+        ink = COVER_TEXT_RGB
+        pair_background = (10, 12, 24)
+    else:
+        ink = PANEL_TEXT_RGB if overlay else LIGHT_TEXT_RGB
+        pair_background = PANEL_BACKGROUND_RGB if overlay else DARK_SHADOW_RGB
+    ratio = contrast_ratio(ink, pair_background)
+    ink_present = ink in colors
+    if not ink_present or ratio < 4.5:
+        raise ValueError(f"text contrast audit failed for {page.slug}: ink_present={ink_present}, ratio={ratio:.2f}")
+    return {"page": page.slug, "ink_present": ink_present, "contrast_ratio": round(ratio, 3), "overlay": overlay}
 
 
 def load_font(size: int, *, bold: bool = False) -> ImageFont.ImageFont | ImageFont.FreeTypeFont:
@@ -69,6 +119,7 @@ def pixel_wrapped_lines(
 
 
 def draw_publication_text(image: Image.Image, page: PageSpec) -> None:
+    validate_text_contrast()
     draw = ImageDraw.Draw(image, "RGBA")
     width, height = image.size
     title_font = load_font(58, bold=True)
@@ -108,6 +159,7 @@ def draw_page_text(image: Image.Image, page: PageSpec) -> None:
     if page.caption_position == "top":
         top = 92
     if page.overlay_box:
+        validate_text_contrast()
         draw.rounded_rectangle(
             (margin - 28, top - 30, width - margin + 28, top + box_height),
             radius=24,

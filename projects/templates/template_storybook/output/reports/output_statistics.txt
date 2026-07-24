@@ -4,31 +4,32 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 96
-Total Size: 3.54 MB
+Total Files: 87
+Total Size: 4.45 MB
 
 Files by Category:
-  • pdf: 12 files (1.55 MB)
+  • pdf: 11 files (1.54 MB)
   • web: 9 files (0.05 MB)
   • slides: 46 files (0.46 MB)
-  • figures: 14 files (1.36 MB)
+  • figures: 15 files (2.30 MB)
   • data: 1 files (0.01 MB)
-  • reports: 14 files (0.12 MB)
+  • reports: 5 files (0.09 MB)
 
 Largest Files:
   • the-shape-between.pdf: 1.42 MB (pdf)
+  • storybook_contact_sheet.png: 0.94 MB (figures)
   • 13_shared_home.png: 0.13 MB (figures)
   • 06_tetra_inside_cube.png: 0.12 MB (figures)
-  • 10_tensegrity_lantern.png: 0.12 MB (figures)
   • evidence_registry.json: 0.08 MB (reports)
 
 Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
   ⚠  logs/ directory
 
 File Types:
-  • .png: 14 file(s)
-  • .json: 10 file(s)
-  • .log: 9 file(s)
+  • .png: 15 file(s)
+  • .log: 8 file(s)
   • .pdf: 8 file(s)
   • .tex: 8 file(s)
   • .aux: 7 file(s)
@@ -36,3 +37,4 @@ File Types:
   • .html: 7 file(s)
   • .nav: 6 file(s)
   • .snm: 6 file(s)
+  • .md: 4 file(s)

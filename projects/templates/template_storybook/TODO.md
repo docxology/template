@@ -16,8 +16,9 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 - Keep story text in `content/story.yaml` and rendering behavior in `src/storybook/`.
 - Keep every story page as a full-page illustration; no manuscript-style partial
   figures for the primary artifact.
-- Add richer accessibility alt-text metadata if the project grows beyond this
-  initial exemplar.
+- Page-level accessibility alt text is now generated in
+  `output/data/storybook_manifest.json`; keep it descriptive when page content
+  changes.
 
 ## Configurable-surface gaps
 
@@ -29,17 +30,21 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 
 - Keep README examples clear that Stage 02 renders the storybook PDF, while
   Stage 03 renders the descriptive manuscript PDF.
-- Add a visual contact sheet for the current fourteen-page book.
+- The deterministic contact sheet is generated at
+  `output/figures/storybook_contact_sheet.png` for every Stage-02 render.
 
 ## Test and validator gaps
 
 - Add a small raster contrast audit for direct text overlays. **Shipped:**
   `tests/test_contrast_audit.py` implements WCAG 2.1 contrast-ratio checks
-  using real pixel math on rendered storybook pages.
+  using real pixel math on rendered storybook pages; the Stage-02 PDF builder
+  runs the same audit for every rendered page and records the results in the
+  manifest. Extend the palette contract if future forks add new overlay modes.
 
 ## Ordered improvement ladder
 
 1. Keep deterministic page rendering and PDF assembly green.
 2. Add trim-size variants.
-3. Add contact-sheet generation.
-4. Add accessibility metadata and contrast validation.
+3. Keep contact-sheet generation and page-level accessibility metadata aligned
+   with content changes.
+4. Keep the raster contrast audit aligned with any new overlay modes.
