@@ -8,10 +8,12 @@ The Research Project Template pipelines integrate optional cryptographic hashing
 
 | File | Purpose |
 |------|---------|
+| [threat-model.md](threat-model.md) | Repository-wide threat model: assets, attacker model, attack surfaces, threat register, and ownership map |
 | [secure_execution.md](secure_execution.md) | Guide to the interactive orchestration environment `./secure_run.sh` |
 | [steganography.md](steganography.md) | How the `SteganographyProcessor` overlays watermarks and dynamic `mailto:` QR codes |
 | [hashing_and_manifests.md](hashing_and_manifests.md) | How cryptographic hashing ensures document provenance integrity |
 | [literature-fetch-security.md](literature-fetch-security.md) | Trust boundaries, threat model, and hardening for `infrastructure/search/literature/` web fetching |
+| [ownership-and-promotion.md](ownership-and-promotion.md) | Sensitive ownership exceptions, required reviews, and private-project promotion attestation |
 
 ## Quick Start
 

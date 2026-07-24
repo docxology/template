@@ -330,6 +330,7 @@ directories).
 ## Security and provenance
 
 - **[security/README.md](security/README.md)** - Security overview
+- **[security/threat-model.md](security/threat-model.md)** - Repository-wide threat model: assets, attacker model, attack surfaces, threat register, and ownership map
 - **[security/steganography.md](security/steganography.md)** - Alpha-channel watermarking and QR codes
 - **[security/hashing_and_manifests.md](security/hashing_and_manifests.md)** - SHA-256/512 hashing and manifests
 - **[security/secure_execution.md](security/secure_execution.md)** - `secure_run.sh` orchestration and threat model
