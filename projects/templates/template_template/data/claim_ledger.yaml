@@ -55,3 +55,10 @@ claims:
     source_tier: claim_ledger
     freshness: active
     artifact_path: manuscript/references.bib
+  - claim_id: fair4rs-actionable-principle-count
+    kind: number
+    value: 17
+    source: Garijo et al. (2024) FAIRsoft evaluator quality-indicator count; RSA/ReSA (2024) FAIR4RS actionable-guidelines principle count
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/references.bib
