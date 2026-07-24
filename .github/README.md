@@ -151,7 +151,7 @@ The **Research Project Template** addresses the structural root of research irre
 
 | You get | How |
 | --- | --- |
-| **Reproducible builds** | 10-stage DAG pipeline from env setup → tests → PDF → hashed artifact |
+| **Reproducible builds** | 16-stage DAG pipeline from env setup → tests → PDF → hashed artifact |
 | **Real test enforcement** | Zero-Mock policy · ≥90% project coverage · ≥60% infra coverage |
 | **Cryptographic provenance** | SHA-256/512 hashing + steganographic watermarking on every PDF |
 | **Horizontal scaling** | N independent projects share one infrastructure layer — no coupling |
@@ -224,7 +224,7 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 | `projects/` | Permanent | **Active** projects — discovered and executed by pipeline ([`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md)) |
 | `projects/working/` | Transient | Staging area: scaffold here before promoting to `projects/` |
 | `projects/archive/` | Permanent | Completed/retired work — preserved, not executed |
-| `scripts/` | Permanent | 8 generic pipeline stage scripts (Stages 00–07) |
+| `scripts/` | Permanent | 13 pipeline stage scripts (Stages 00–12) |
 | `output/` | Disposable | Final PDFs, dashboards, reports — cleaned on each run |
 | `docs/` | Permanent | Large documentation hub — inventory in [`docs/documentation-index.md`](../docs/documentation-index.md) (counts vary; do not rely on a single “N files” figure across READMEs) |
 | `tests/` | Permanent | Infrastructure-level test suite (≥ 60% coverage gate) |
@@ -421,7 +421,7 @@ stateDiagram-v2
 
 ## 🔄 Pipeline
 
-`run.sh` executes a **10-stage declarative DAG pipeline** configured via `pipeline.yaml`. `secure_run.sh` appends steganographic post-processing.
+`run.sh` executes a **16-stage declarative DAG pipeline** configured via `pipeline.yaml`. `secure_run.sh` appends steganographic post-processing.
 
 ```mermaid
 flowchart TD
@@ -432,7 +432,7 @@ flowchart TD
         CONFIG_FILES[Configuration<br/>config.yaml<br/>Runtime parameters]
     end
 
-    subgraph Processing["⚙️ 10-Stage DAG Pipeline"]
+    subgraph Processing["⚙️ 16-Stage DAG Pipeline"]
         STAGE0["Stage 0 — Clean<br/>(built-in / executor)"]
         STAGE1["Stage 1 — Setup<br/>scripts/pipeline/stage_00_setup.py"]
         STAGE2["Stage 2 — Infra smoke<br/>scripts/pipeline/stage_01_test.py --infra-scope pipeline-smoke"]
@@ -859,7 +859,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | --- | --- | --- |
 | [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **15 jobs** (2 conditional) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
-| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | GitHub Release with generated changelog |
+| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | GitHub Release with git-log changelog excerpt |
 | [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
 ### CI Jobs (`ci.yml`) — complete inventory
@@ -873,7 +873,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 3 | `actionlint` | — | always | Validates GitHub Actions workflow syntax |
 | 4 | `lint` | — | always | Ruff, mypy, exports, generated-artifact, and four-pool confidentiality gates |
 | 5 | `health` | `lint` | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
-| 6 | `verify-no-mocks` | `lint` | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements |
+| 6 | `verify-no-mocks` | — | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements (runs in parallel with `lint`) |
 | 7 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
 | 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12/3.13 + macOS × Py 3.12 (5 blocking cells), `--cov-fail-under=60` |
 | 9 | `test-regression` | `verify-no-mocks` | always | Claim-binding numerical regression tier |
@@ -892,12 +892,13 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 flowchart TB
     D[detect — presence flags]
     DP[detect-projects — public matrix]
-    AL[actionlint]
+    AL[actionlint — standalone]
     L[lint + type check]
     H[health — blocking static report]
-    VNM[verify-no-mocks]
+    VNM[verify-no-mocks — parallel with lint]
     SH[setup-hook windows — conditional]
     TI[test-infra matrix]
+    TR[test-regression — claim-binding pins]
     TP[test-project matrix]
     FL[fep-lean — conditional]
     VM[validate manuscripts]
@@ -905,11 +906,11 @@ flowchart TB
     DL[docs lint]
     PC[performance — informational]
     L --> H
-    L --> VNM
     L --> VM
     L --> SS
     L --> DL
     VNM --> TI
+    VNM --> TR
     VNM --> TP
     VNM --> SH
     VNM --> FL
@@ -1025,7 +1026,14 @@ Require PR review before merging: 1 approver
 | Python (uv) | `dev-tools` (pytest, mypy, ruff…) | 5 |
 | Python (uv) | `scientific-core` (numpy, scipy…) | 5 |
 
-Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+Auto-merge for safe (minor/patch) Dependabot PRs is enabled by
+[`workflows/dependabot-automerge.yml`](workflows/dependabot-automerge.yml) —
+it triggers on `pull_request_target` for Dependabot PRs only, enables GitHub
+native auto-merge (`gh pr merge --auto --squash`), and never checks out or
+executes PR HEAD code. Major bumps are left for human review. Auto-merge must
+also be enabled in repository settings.
+
+Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ---
 

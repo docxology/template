@@ -48,7 +48,7 @@ flowchart TB
     DETP[detect-projects<br/>public-exemplar matrix outputs]
     ACTLINT[actionlint<br/>lints workflow YAML · standalone]
     LINT[lint] --> HEALTH[health<br/>unified JSON artefact]
-    LINT --> VNM[verify-no-mocks]
+    VNM[verify-no-mocks<br/>parallel with lint · no needs:]
     LINT --> VAL[validate]
     LINT --> SEC[security]
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
@@ -184,7 +184,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 9. Documentation Lint (`docs-lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12 / Node 24-compatible actions
+- **Runner:** `ubuntu-latest` / Python 3.12 / Node 20-compatible actions
 - **Depends on:** `lint`
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
@@ -247,7 +247,7 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 4. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
 5. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
 
-Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ## Dependabot Automerge Workflow (`dependabot-automerge.yml`)
 

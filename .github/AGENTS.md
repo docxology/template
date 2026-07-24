@@ -67,7 +67,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 3 | `actionlint` | Actionlint | — | — | ubuntu (always) |
 | 4 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
 | 5 | `health` | Static Health Report | lint | 3.12 | ubuntu |
-| 6 | `verify-no-mocks` | Verify No Mocks Policy | lint | 3.12 | ubuntu |
+| 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.12 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.13 | ubuntu (×3.10/3.11/3.12/3.13) + macOS (3.12 only) — 5 cells |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.12 | ubuntu |

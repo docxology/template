@@ -27,7 +27,7 @@ flowchart TB
     LINT --> SEC[security<br/>pip-audit + bandit -c bandit.yaml]
     LINT --> DL[docs-lint<br/>mermaid + links + consistency]
     VNM --> SHW[setup-hook-windows-smoke<br/>conditional · Windows]
-    VNM --> TI[test-infra<br/>ubuntu × py310–312 + macOS × py312<br/>≥ 60% coverage]
+    VNM --> TI[test-infra<br/>ubuntu × py310–313 + macOS × py312<br/>≥ 60% coverage]
     VNM --> TR[test-regression<br/>claim-binding pins]
     VNM --> TP[test-project<br/>generated public roster × py310/py312<br/>each ≥ 90% own src/]
     VNM --> FL[fep-lean optional<br/>gauss + lake · timeout 60m]
@@ -105,7 +105,7 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 
 Triggered on `v*.*.*` tag push or `workflow_dispatch`. The workflow resolves the tag before checkout, checks out that exact ref, proves `HEAD` matches the dereferenced tag commit, and runs the root release contract before building. It writes a git-log excerpt to the release body (`generate_release_notes: false`) and uses `softprops/action-gh-release@v3.0.2`. Tags containing `-rc`/`-beta`/`-alpha` are auto-marked as pre-release.
 
-Current pinned GitHub Actions use the Node 24 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
+Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ## Troubleshooting
 
