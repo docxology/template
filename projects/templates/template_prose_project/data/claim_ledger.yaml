@@ -19,4 +19,4 @@ claims:
     source: projects/templates/template_prose_project/src/pipeline.py citation density metric
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/manuscript_report.json
+    artifact_path: output/manuscript_report.json

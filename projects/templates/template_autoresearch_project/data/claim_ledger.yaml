@@ -5,7 +5,7 @@ claims:
     source: projects/templates/template_autoresearch_project/src/ml/config.py ML task max candidate budget
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/candidate_ledger.json
+    artifact_path: src/config.py
   - claim_id: baseline-accuracy
     kind: number
     value: 0.50
@@ -19,21 +19,21 @@ claims:
     source: projects/templates/template_autoresearch_project/manuscript/04_results.md best ML candidate accuracy
     source_tier: manuscript_claim
     freshness: active
-    artifact_path: output/data/candidate_ledger.json
+    artifact_path: manuscript/03_results.md
   - claim_id: readiness-valid-threshold
     kind: number
     value: 0.85
     source: projects/templates/template_autoresearch_project/autoresearch.yaml readiness score threshold
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/loop_result.json
+    artifact_path: autoresearch.yaml
   - claim_id: seed-ideas-budget
     kind: number
     value: 5
     source: projects/templates/template_autoresearch_project/seed_ideas.yaml accepted seed idea cap
     source_tier: project_source
     freshness: active
-    artifact_path: output/data/seed_ledger.json
+    artifact_path: seed_ideas.yaml
   - claim_id: ml-iteration-cutoff
     kind: number
     value: 100

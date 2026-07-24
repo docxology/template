@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 988,
+  "fact_count": 995,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 177,
+    "artifact": 180,
     "citation": 4,
     "figure": 12,
-    "number": 789,
+    "number": 793,
     "section": 6
   },
-  "omitted_fact_count": 788,
+  "omitted_fact_count": 795,
   "sample_facts": [
     {
       "active": true,
@@ -570,6 +570,54 @@
       "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[7].context.exit_code",
       "source_field": "$.stage_results[7].context.exit_code",
       "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-18T20:16:56+00:00",
+      "kind": "number",
+      "source": "output/release_bundle/publication_metadata.json:$.citation_count",
+      "source_field": "$.citation_count",
+      "source_path": "output/release_bundle/publication_metadata.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-18T20:16:56+00:00",
+      "kind": "number",
+      "source": "output/release_bundle/publication_metadata.json:$.download_count",
+      "source_field": "$.download_count",
+      "source_path": "output/release_bundle/publication_metadata.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-18T20:16:56+00:00",
+      "kind": "number",
+      "source": "output/release_bundle/manifest.json:$.metadata.citation_count",
+      "source_field": "$.metadata.citation_count",
+      "source_path": "output/release_bundle/manifest.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-18T20:16:56+00:00",
+      "kind": "number",
+      "source": "output/release_bundle/manifest.json:$.metadata.download_count",
+      "source_field": "$.metadata.download_count",
+      "source_path": "output/release_bundle/manifest.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -1953,7 +2001,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.1"
+      "value": "0.031"
     },
     {
       "active": true,
@@ -1965,7 +2013,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.031"
+      "value": "3.1"
     },
     {
       "active": true,
@@ -2362,62 +2410,14 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "1.78371e+09"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:12+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.pipeline_start_time (numeric variant)",
-      "source_field": "$.pipeline_start_time",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1.78371e+07"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:12+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.checkpoint_time (numeric variant)",
-      "source_field": "$.checkpoint_time",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1.78371e+07"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:12+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.pipeline_start_time (numeric variant)",
-      "source_field": "$.pipeline_start_time",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1783710000"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:12+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.checkpoint_time (numeric variant)",
-      "source_field": "$.checkpoint_time",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1783710000"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 195,
+    "artifact": 198,
     "bibliography": 4,
     "configuration": 20,
-    "generated_metric": 753,
+    "generated_metric": 757,
     "project_source": 16
   }
 }

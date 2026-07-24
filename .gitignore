@@ -151,6 +151,7 @@ projects/templates/template_advanced_literature_review/output/*
 !projects/templates/template_advanced_literature_review/output/data/
 projects/templates/template_advanced_literature_review/output/data/*
 !projects/templates/template_advanced_literature_review/output/data/deep_research_replay.json
+!projects/templates/template_advanced_literature_review/output/data/cross_phase_analysis.json
 !projects/templates/template_advanced_literature_review/output/reports/
 projects/templates/template_advanced_literature_review/output/reports/*
 !projects/templates/template_advanced_literature_review/output/reports/artifact_manifest.json
