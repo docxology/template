@@ -131,7 +131,7 @@ Result: **484** project-scope infrastructure tests collected and **734** publish
 | `template_eda_notebook` | 66 | 98.97 % |
 | `template_formal` | 278 | 95.29 % |
 | `template_gold_refinement` | 328 | 92.64 % |
-| `template_literature_meta_analysis` | 1160 | 94.29 % |
+| `template_literature_meta_analysis` | 1162 | 94.29 % |
 | `template_madlib` | 148 | 99.67 % |
 | `template_methods_paper` | 90 | 99.01 % |
 | `template_newspaper` | 150 | 99.70 % |
@@ -142,7 +142,7 @@ Result: **484** project-scope infrastructure tests collected and **734** publish
 | `template_registered_report` | 34 | 96.42 % |
 | `template_search_project` | 315 | 96.40 % |
 | `template_sia` | 67 | 99.69 % |
-| `template_storybook` | 19 | 95.07 % |
+| `template_storybook` | 21 | 95.07 % |
 | `template_template` | 143 | 99.14 % |
 | `template_textbook` | 192 | 96.61 % |
 

@@ -14,7 +14,7 @@ tree instead of copying volatile literals into prose.
 | Figures and manuscript helpers | `figure_manager.py`, `generated_figure_registry.py`, `image_manager.py`, `markdown_integration.py` | Interactive figure management plus deterministic, fail-closed pipeline registries, insertion, table-of-figures, and cross-reference helpers. |
 | API docs | `api_reference_gen.py`, `glossary_gen.py` | AST-derived public API docs and marker injection. |
 | Pipeline docs | `stage_table.py` | Stage table rendered from `core/pipeline/pipeline.yaml`. |
-| Generated facts | `counts_doc.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, active projects, architecture diagram. |
+| Generated facts | `counts_doc.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, active projects, architecture diagram and accessible topology summary. |
 | Publication docs | `publication_records.py`, `publication_standalone.py` | DOI/archive/config/GitHub publication matrix plus generated publication-identity blocks in every canonical exemplar's `STANDALONE.md`. |
 
 ## Boundaries

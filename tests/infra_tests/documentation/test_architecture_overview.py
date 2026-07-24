@@ -21,6 +21,7 @@ import pytest
 from infrastructure.documentation.architecture_overview import (
     architecture_overview_is_current,
     build_architecture_mermaid,
+    build_architecture_summary,
     render_architecture_svg,
 )
 
@@ -88,6 +89,20 @@ def test_build_architecture_mermaid_includes_foo_package(tmp_path: Path) -> None
     assert "InfraPy --> Pipeline" in src
     assert "InfraCfg --> Pipeline" in src
     assert "Pipeline --> Projects" in src
+
+
+def test_build_architecture_summary_is_accessible_and_uses_live_scope(tmp_path: Path) -> None:
+    """The text companion must expose every component without Mermaid parsing."""
+    _make_fake_repo(tmp_path)
+
+    summary = build_architecture_summary(tmp_path)
+
+    assert summary.startswith("# Architecture overview\n")
+    assert "| Layer | Name | Role |" in summary
+    assert "`infrastructure/foo/`" in summary
+    assert "`infrastructure/config_only/`" in summary
+    assert "`projects/templates/template_code_project/`" in summary
+    assert "Infrastructure packages + configuration" in summary
 
 
 def test_build_architecture_mermaid_uses_double_quoted_labels(tmp_path: Path) -> None:

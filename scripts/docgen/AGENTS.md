@@ -12,7 +12,7 @@ related modules.
 |--------|---------|
 | `active_projects.py` | Derived active-project inventory |
 | `api_reference.py` | API reference from `__all__` (CI `validate --check`) |
-| `architecture_overview.py` | Architecture `.mmd`/`.svg` from live state |
+| `architecture_overview.py` | Architecture `.md`/`.mmd`/`.svg` from live state |
 | `coverage_history.py` | Coverage-history page from CI artefacts |
 | `counts.py` | Line/module count stats (`docs/_generated/COUNTS.md`) |
 | `stage_table.py` | Canonical pipeline stage table (marker block) |

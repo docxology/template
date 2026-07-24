@@ -211,7 +211,7 @@ for md_path, errors in validation_results.items():
 | **markdown_integration.py** | Section-aware figure placement | `MarkdownIntegration` | Manuscript structure management |
 | **glossary_gen.py** | API documentation from source | `build_api_index()`, `generate_markdown_table()` | Automatic glossary generation |
 | **generate_glossary_cli.py** | CLI for glossary generation | `main()` | Pipeline integration script |
-| **architecture_overview.py** | One-page architecture diagram from live repo state | `build_architecture_mermaid()`, `render_architecture_svg()` | Driven by `scripts/docgen/architecture_overview.py` |
+| **architecture_overview.py** | Architecture diagram plus accessible topology summary from live repo state | `build_architecture_mermaid()`, `build_architecture_summary()`, `render_architecture_svg()` | Driven by `scripts/docgen/architecture_overview.py` |
 | **active_projects_doc.py** | Render the authoritative public active-projects doc | `render_active_projects_doc()`, `write_active_projects_doc()` | Generates `docs/_generated/active_projects.md` |
 | **publication_records.py** | Load/render project publication metadata (DOIs, archives) | `PublicationRecord`, `load_publication_records()`, `render_publication_records_doc()`, `refresh_external_records()` | Publication doc + GitHub README block |
 | **publication_standalone.py** | Render and update source-owned publication identity blocks | `render_standalone_publication_block()`, `replace_standalone_publication_block()`, `extract_standalone_publication_block()` | Every canonical exemplar's `STANDALONE.md` |

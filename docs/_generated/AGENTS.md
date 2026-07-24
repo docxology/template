@@ -9,7 +9,7 @@ This directory holds **generator output** (`active_projects.md`) plus **maintain
 | File | Source |
 | --- | --- |
 | [`active_projects.md`](active_projects.md) | **Generated** — `uv run python scripts/docgen/active_projects.py` |
-| [`architecture_overview.svg`](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
+| [`architecture_overview.md`](architecture_overview.md) / [`architecture_overview.svg`](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
 | [`coverage_history.md`](coverage_history.md) | **Generated** — `uv run python scripts/docgen/coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [`COUNTS.md`](COUNTS.md) | **Maintained** — ground-truthed test counts, gates, and roster notes (refresh with measured `pytest` + `generate_active_projects_doc.py`; see [`README.md`](README.md)) |
 | [`hermes_knowledge_audit.json`](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; do not use for current counts |

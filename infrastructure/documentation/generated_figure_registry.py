@@ -99,17 +99,21 @@ def build_generated_figure_registry(
     if absent:
         raise FigureRegistryError(f"generated figure path(s) do not exist: {', '.join(absent)}")
 
+    def _record(spec: FigureSpecLike) -> dict[str, object]:
+        record: dict[str, object] = {
+            "caption": spec.caption,
+            "filename": spec.filename,
+            "generated_by": spec.generated_by,
+            "label": spec.label,
+        }
+        alt_text = str(getattr(spec, "alt_text", "") or "").strip()
+        if alt_text:
+            record["metadata"] = {"alt_text": alt_text}
+        return record
+
     return {
         "schema_version": schema_version,
-        "figures": [
-            {
-                "caption": spec.caption,
-                "filename": spec.filename,
-                "generated_by": spec.generated_by,
-                "label": spec.label,
-            }
-            for spec in ordered_specs
-        ],
+        "figures": [_record(spec) for spec in ordered_specs],
     }
 
 

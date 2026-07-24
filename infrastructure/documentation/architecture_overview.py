@@ -1,12 +1,16 @@
 """Generate a one-page architecture diagram from live repository state.
 
 This module discovers ``infrastructure/`` packages and ``projects/`` from the
-filesystem and emits a Mermaid ``flowchart TB`` source plus a rendered ``.svg``.
+filesystem and emits a Mermaid ``flowchart TB`` source plus a rendered ``.svg``
+and accessible Markdown topology summary.
 
-Two public functions are exposed:
+Public helpers are exposed:
 
 * :func:`build_architecture_mermaid` — pure function that scans the repo and
   returns the Mermaid source string (deterministic, sorted alphabetically).
+* :func:`build_architecture_summary` — pure function that renders the same
+  topology as a screen-reader-friendly Markdown table.
+* :func:`write_architecture_summary` — writes the generated Markdown summary.
 * :func:`render_architecture_svg` — runs the above, writes the ``.mmd`` source
   alongside the rendered ``.svg`` via the ``mmdc`` (mermaid-cli) binary.
 
@@ -46,7 +50,8 @@ def architecture_overview_is_current(repo_root: Path) -> bool:
     generated_dir = repo_root / "docs" / "_generated"
     mmd_path = generated_dir / "architecture_overview.mmd"
     svg_path = generated_dir / "architecture_overview.svg"
-    if not mmd_path.is_file() or not svg_path.is_file():
+    summary_path = generated_dir / "architecture_overview.md"
+    if not mmd_path.is_file() or not svg_path.is_file() or not summary_path.is_file():
         return False
     expected_mermaid = build_architecture_mermaid(repo_root)
     committed_mermaid = mmd_path.read_text(encoding="utf-8")
@@ -60,7 +65,9 @@ def architecture_overview_is_current(repo_root: Path) -> bool:
     }
     svg_text = svg_path.read_text(encoding="utf-8")
     actual_labels = set(re.findall(r"(?:infrastructure|projects)/[A-Za-z0-9_.\-/]+/", svg_text))
-    return actual_labels == expected_labels
+    if actual_labels != expected_labels:
+        return False
+    return summary_path.read_text(encoding="utf-8") == build_architecture_summary(repo_root)
 
 
 def _resolve_chrome_executable() -> str | None:
@@ -224,6 +231,63 @@ def build_architecture_mermaid(repo_root: Path) -> str:
     lines.append("    Pipeline --> Projects")
 
     return "\n".join(lines) + "\n"
+
+
+def build_architecture_summary(repo_root: Path) -> str:
+    """Build an accessible Markdown summary from the same live topology.
+
+    The SVG remains the compact visual overview. This companion is deliberately
+    tabular so the architecture is available without relying on Mermaid
+    rendering, browser zoom, or visual inspection of a very wide diagram.
+    """
+    repo_root = Path(repo_root).resolve()
+    packages = _discover_infrastructure_packages(repo_root)
+    config_dirs = _discover_infrastructure_config_dirs(repo_root)
+    projects = _project_qualified_names(repo_root)
+
+    lines = [
+        "# Architecture overview",
+        "",
+        "Generated from the live public repository topology. The companion SVG",
+        "and Mermaid source provide the visual graph; this table is the",
+        "screen-reader-friendly and text-searchable representation.",
+        "",
+        "| Layer | Name | Role |",
+        "| --- | --- | --- |",
+    ]
+    lines.extend(
+        f"| Infrastructure · Python | `infrastructure/{name}/` | Reusable Layer 1 package |" for name in packages
+    )
+    lines.extend(
+        f"| Infrastructure · config | `infrastructure/{name}/` | Shared configuration/resource directory |"
+        for name in config_dirs
+    )
+    lines.extend(
+        f"| Projects · public CI scope | `projects/{name}/` | Canonical Layer 2 exemplar |" for name in projects
+    )
+    if not packages and not config_dirs and not projects:
+        lines.append("| Repository | _(empty topology)_ | No public components discovered |")
+    lines.extend(
+        [
+            "",
+            "## Flow",
+            "",
+            "`Infrastructure packages + configuration → pipeline orchestrator → public projects`",
+            "",
+            "Source: `infrastructure.documentation.architecture_overview`.",
+            "Regenerate with `uv run python scripts/docgen/architecture_overview.py`.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def write_architecture_summary(repo_root: Path, output_path: Path) -> Path:
+    """Write the accessible architecture summary and return its resolved path."""
+    output_path = Path(output_path).resolve()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(build_architecture_summary(repo_root), encoding="utf-8")
+    return output_path
 
 
 def render_architecture_svg(repo_root: Path, output_path: Path) -> Path:

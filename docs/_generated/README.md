@@ -5,7 +5,7 @@ This directory mixes **one script-generated file** with **maintainer-written** h
 | File | Source |
 |------|--------|
 | [active_projects.md](active_projects.md) | **Generated** — `uv run python scripts/docgen/active_projects.py` |
-| [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
+| [architecture_overview.md](architecture_overview.md) / [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
 | [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/docgen/coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
 | [COUNTS.md](COUNTS.md) | **Generated** — `uv run python scripts/docgen/counts.py` (`--check` in CI, `--write` to refresh); measured infra counts, pytest collection totals, package roster |
 | [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |

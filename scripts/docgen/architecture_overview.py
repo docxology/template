@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write ``docs/_generated/architecture_overview.{mmd,svg}`` from live state.
+"""Write ``docs/_generated/architecture_overview.{md,mmd,svg}`` from live state.
 
 Thin orchestrator — all logic lives in
 :mod:`infrastructure.documentation.architecture_overview`.
@@ -17,7 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
-from infrastructure.documentation.architecture_overview import render_architecture_svg
+from infrastructure.documentation.architecture_overview import render_architecture_svg, write_architecture_summary
 
 logger = get_logger(__name__)
 
@@ -28,13 +28,16 @@ def main() -> None:
     out_dir = repo_root / "docs" / "_generated"
     out_dir.mkdir(parents=True, exist_ok=True)
     svg_path = out_dir / "architecture_overview.svg"
+    summary_path = out_dir / "architecture_overview.md"
 
     rendered = render_architecture_svg(repo_root, svg_path)
     mmd_path = rendered.with_suffix(".mmd")
+    summary = write_architecture_summary(repo_root, summary_path)
 
     print(str(mmd_path))
     print(str(rendered))
-    log_success(f"Wrote {mmd_path} and {rendered}", logger)
+    print(str(summary))
+    log_success(f"Wrote {summary}, {mmd_path}, and {rendered}", logger)
 
 
 if __name__ == "__main__":
