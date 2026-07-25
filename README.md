@@ -21,6 +21,8 @@ Just cloned the repo? Do this:
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
 5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
+**Repurposing for your research?** See [`docs/repurposing-architectures.md`](docs/repurposing-architectures.md) — maps every reusable architecture (DAG pipeline, two-layer separation, evidence registry, multi-format rendering, MCP server, publishing stack) to its module and adoption path.
+
 For deeper guidance see [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md).
 
 **Thin-orchestrator gates:** `uv run python scripts/audit/check_template_drift.py --strict`, `uv run python scripts/gates/module_line_count_check.py`, `uv run python -m infrastructure.core.health` — details in [`docs/architecture/thin-orchestrator-summary.md`](docs/architecture/thin-orchestrator-summary.md).

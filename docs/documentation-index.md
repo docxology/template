@@ -94,6 +94,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[Documentation hub (`docs/AGENTS.md`)](AGENTS.md)**
 - **[Repository system (`AGENTS.md` at repo root)](../AGENTS.md)**
 - **[CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)** - Headless / cloud server deployment
+- **[repurposing-architectures.md](repurposing-architectures.md)** - Repurposing template architectures for research (entry point for "can I reuse these architectures?")
 - **[PAI.md](PAI.md)** - Personal AI Infrastructure (PAI) context
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Pipeline orchestration reference
 - **[../.github/README.md](../.github/README.md)** - **GitHub**: Actions workflows, Dependabot, issue/PR templates, mirroring CI locally

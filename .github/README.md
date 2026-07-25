@@ -79,6 +79,7 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 | **Contribute / open a PR** | [CI/CD](#cicd) · [Issue & PR templates](#issue--pr-templates) | [`docs/development/contributing.md`](../docs/development/contributing.md) · [`docs/development/contribution-map.md`](../docs/development/contribution-map.md) |
 | **Mirror CI locally** | [Simulate CI locally](#simulate-ci-locally) | [`docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md) · [`scripts/shell/ci_local.sh`](../scripts/shell/ci_local.sh) |
 | **Cloud / headless deploy** | [`docs/CLOUD_DEPLOY.md`](../docs/CLOUD_DEPLOY.md) | [`infrastructure/docker/`](../infrastructure/docker/) |
+| **Repurpose architectures** | [`docs/repurposing-architectures.md`](../docs/repurposing-architectures.md) | [`architecture/two-layer-architecture.md`](../docs/architecture/two-layer-architecture.md) · [`architecture/capability-surfaces.md`](../docs/architecture/capability-surfaces.md) |
 | **Full system reference** | [`../AGENTS.md`](../AGENTS.md) | [`docs/documentation-index.md`](../docs/documentation-index.md) |
 
 ---
