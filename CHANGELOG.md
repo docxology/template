@@ -9,6 +9,29 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Exemplar pipeline fixes (2026-07-24)
+
+- **Conditional `siunitx` loading in 6 exemplar preambles.** Replaced
+  unconditional `\usepackage[...]{siunitx}` with
+  `\IfFileExists{siunitx.sty}{...}{}` in `template_code_project`,
+  `template_eda_notebook`, `template_formal`, `template_madlib`,
+  `template_methods_paper`, and `template_textbook`. siunitx is part of
+  texlive-science which is not available on all systems. Follows the same
+  pattern applied to algorithm2e in v3.6.0.
+- **`template_template` evidence claims fixed.** Added 3 missing evidence
+  entries to `data/claim_ledger.yaml` for contextual numbers (6 cross-cutting
+  concerns, 14 capability-matrix dimensions, RDA Plenary 24). All 143
+  template_template tests now pass.
+
+### Repurposing architectures doc (2026-07-24)
+
+- **New entry point:** `docs/repurposing-architectures.md` — maps every
+  reusable architecture to its module, contract, and adoption path. Includes
+  a quick-answer table of 12 adoptable architectures, 3 adoption paths
+  (minimal/partial/fork), architecture deep dives with ADR links, and a
+  "what you don't need to take" section. Wired into docs/documentation-index.md,
+  docs/README.md, .github/README.md (Choose Your Path table), and root README.md.
+
 ### Documentation accuracy sweep (2026-07-24)
 
 - **Threat model relocated.** Moved `template-threat-model.md` to
