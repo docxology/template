@@ -62,3 +62,24 @@ claims:
     source_tier: claim_ledger
     freshness: active
     artifact_path: manuscript/references.bib
+  - claim_id: template-six-concerns
+    kind: number
+    value: 6
+    source: manuscript/02_introduction.md — six cross-cutting concerns enumerated in the introduction
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/02_introduction.md
+  - claim_id: comparison-matrix-capability-count
+    kind: number
+    value: 14
+    source: manuscript/08f_appendix_matrix.md — 14 capabilities in the comparative feature matrix
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/08f_appendix_matrix.md
+  - claim_id: rda-plenary-24
+    kind: number
+    value: 24
+    source: RDA Virtual Plenary 24 (April 2025) — referenced in manuscript/05c_comparison.md
+    source_tier: claim_ledger
+    freshness: active
+    artifact_path: manuscript/05c_comparison.md
