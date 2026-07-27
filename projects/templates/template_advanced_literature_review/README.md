@@ -233,4 +233,9 @@ _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 
 
 ## License
 
-CC-BY-4.0 - See LICENSE file for details.
+CC-BY-4.0, granted by this exemplar's own [`LICENSE`](LICENSE) and declared in
+[`CITATION.cff`](CITATION.cff) (`license:`), [`pyproject.toml`](pyproject.toml)
+(`[project] license`), and [`manuscript/config.yaml`](manuscript/config.yaml)
+(`metadata.license`), from which the `codemeta.json` and `.zenodo.json` sidecars
+are generated. The template monorepo's own root `LICENSE` is Apache-2.0 and does
+not govern this project's content.

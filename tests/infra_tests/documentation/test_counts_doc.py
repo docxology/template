@@ -225,3 +225,39 @@ def test_exemplar_collection_ignores_stale_relocated_pytest_wrapper(tmp_path: Pa
 
     assert _exemplar_collected_count(tmp_path, "moved_project") == 1
     assert wrapper.read_bytes() == stale_contents
+
+
+def test_exemplar_snapshot_rewrite_updates_only_named_rows(tmp_path: Path) -> None:
+    """`--verify-coverage --write` must rewrite measured rows and leave others alone.
+
+    The recorded percentages were unverifiable until 2026-07-27: provenance only
+    checked that the source had not changed since a number was written, never that
+    the number was right. Two exemplars were found ~1.4pp and ~0.6pp adrift. This
+    guards the rewrite path that now refreshes them from a real measurement.
+    """
+    from infrastructure.documentation import counts_doc
+
+    module_copy = tmp_path / "counts_doc_copy.py"
+    module_copy.write_text(
+        'ExemplarSnapshot("template_alpha", "10.00 %"),\n'
+        'ExemplarSnapshot("template_beta", "20.00 %"),\n'
+        'ExemplarSnapshot("template_gamma", "30.00 %"),\n',
+        encoding="utf-8",
+    )
+    counts_doc._rewrite_exemplar_snapshot({"template_beta": "77.77 %"}, module_copy)
+
+    rewritten = module_copy.read_text(encoding="utf-8")
+    assert 'ExemplarSnapshot("template_beta", "77.77 %")' in rewritten
+    assert 'ExemplarSnapshot("template_alpha", "10.00 %")' in rewritten
+    assert 'ExemplarSnapshot("template_gamma", "30.00 %")' in rewritten
+
+
+def test_exemplar_snapshot_rewrite_is_a_noop_without_measurements(tmp_path: Path) -> None:
+    """An empty measurement map must not blank out the recorded values."""
+    from infrastructure.documentation import counts_doc
+
+    module_copy = tmp_path / "counts_doc_copy.py"
+    original = 'ExemplarSnapshot("template_alpha", "10.00 %"),\n'
+    module_copy.write_text(original, encoding="utf-8")
+    counts_doc._rewrite_exemplar_snapshot({}, module_copy)
+    assert module_copy.read_text(encoding="utf-8") == original

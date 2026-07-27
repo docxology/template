@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
-2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **12** core+science+LLM stages, while the YAML declares **16** stages including the opt-in ebook, metadata, bundle, and archival contracts.
+2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **16** stages including the opt-in science, provenance, ebook, metadata, bundle, and archival contracts.
 
 ## Thin Orchestration Architecture
 
@@ -385,7 +385,7 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Default full run (12 executed stages; pipeline.yaml declares 16 total)
+./run.sh --pipeline          # Default full run (10 executed stages; pipeline.yaml declares 16 total)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
 uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only

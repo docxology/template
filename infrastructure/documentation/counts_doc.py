@@ -69,18 +69,18 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # --project-only --include-slow` (720 passed, 6 deselected; 90.33 %).
     # Collected count from --collect-only in the project env.
     ExemplarSnapshot("template_active_inference", "90.33 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "92.48 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "93.07 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
     ExemplarSnapshot("template_autoscientists", "99.28 %"),
     ExemplarSnapshot("template_code_project", "96.98 %"),
     ExemplarSnapshot("template_data_descriptor", "98.75 %"),
     ExemplarSnapshot("template_eda_notebook", "98.97 %"),
-    ExemplarSnapshot("template_formal", "95.29 %"),
+    ExemplarSnapshot("template_formal", "95.28 %"),
     ExemplarSnapshot("template_gold_refinement", "92.64 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "94.29 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "94.10 %"),
     ExemplarSnapshot("template_madlib", "99.67 %"),
-    ExemplarSnapshot("template_methods_paper", "99.01 %"),
+    ExemplarSnapshot("template_methods_paper", "98.98 %"),
     # Reverified 2026-07-20 after strict manifest/page-loader hardening:
     # 150 tests, 99.70 % line+branch coverage in the project lane.
     ExemplarSnapshot("template_newspaper", "99.70 %"),
@@ -91,11 +91,11 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # 113 tests, 97.53 % line+branch coverage.
     ExemplarSnapshot("template_redacted_report", "97.53 %"),
     ExemplarSnapshot("template_registered_report", "96.42 %"),
-    ExemplarSnapshot("template_search_project", "96.40 %"),
+    ExemplarSnapshot("template_search_project", "97.69 %"),
     ExemplarSnapshot("template_sia", "99.69 %"),
-    ExemplarSnapshot("template_storybook", "95.07 %"),
+    ExemplarSnapshot("template_storybook", "94.40 %"),
     ExemplarSnapshot("template_template", "99.14 %"),
-    ExemplarSnapshot("template_textbook", "96.61 %"),
+    ExemplarSnapshot("template_textbook", "96.19 %"),
 )
 
 
@@ -272,6 +272,127 @@ def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
     return "\n".join(rows)
 
 
+def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
+    """Run one exemplar's canonical standalone coverage gate and return its total.
+
+    The canonical measurement is the STANDALONE one — pytest invoked from inside
+    the project directory, so the project's own ``[tool.coverage.run]`` applies.
+    Measuring from the repo root gives a different, wrong number: the root config
+    omits nothing while each exemplar omits ``*/__init__.py``, and a root-cwd
+    ``--cov=<path>`` can sweep a far larger statement set (measured 2026-07-27:
+    ``template_advanced_literature_review`` reports 38 % over 3489 statements from
+    the root versus 93.07 % over 423 standalone).
+
+    Percentages are re-read through ``coverage report --precision=2`` because
+    several exemplars set ``precision = 0`` and would otherwise report a rounded
+    whole percent.
+
+    Returns a string like ``"93.07 %"``. Raises ``RuntimeError`` if the run fails.
+    """
+    project_dir = repo_root / "projects" / "templates" / name
+    if not project_dir.is_dir():
+        raise RuntimeError(f"exemplar not checked out: {name}")
+    data_file = project_dir / f".coverage.measure_{name}"
+    env = dict(get_subprocess_env())
+    env["COVERAGE_FILE"] = str(data_file)
+    try:
+        run = subprocess.run(  # noqa: S603 - fixed argv, no shell
+            ["uv", "run", "--directory", str(project_dir), "pytest", "tests/", "--cov=src", "--cov-report=", "-q"],
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
+        if run.returncode != 0:
+            tail = "\n".join((run.stdout + run.stderr).splitlines()[-8:])
+            raise RuntimeError(f"coverage run failed for {name} (exit {run.returncode}):\n{tail}")
+        report = subprocess.run(  # noqa: S603 - fixed argv, no shell
+            ["uv", "run", "--directory", str(project_dir), "coverage", "report", "--precision=2"],
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
+        for line in report.stdout.splitlines():
+            if line.startswith("TOTAL"):
+                return f"{line.split()[-1].rstrip('%')} %"
+        raise RuntimeError(f"no TOTAL row in coverage report for {name}")
+    finally:
+        data_file.unlink(missing_ok=True)
+
+
+def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
+    """Re-measure every exemplar's coverage and compare against the recorded value.
+
+    This is the missing half of the coverage provenance system.
+    :func:`validate_coverage_provenance` only proves the *source has not changed
+    since the number was recorded* — it never re-derives the number itself, so a
+    percentage that was wrong when written stays wrong forever. Measured
+    2026-07-27: ``template_search_project`` recorded 96.40 % against an actual
+    97.69 %, and ``template_advanced_literature_review`` recorded 92.48 % against
+    an actual 93.07 %; neither gap was visible to any gate.
+
+    With ``rewrite=True`` the measured values are written back into this module's
+    ``EXEMPLAR_SNAPSHOT`` block, so refreshing them is one command rather than a
+    hand-edit per exemplar.
+
+    Returns ``(all_match, report_text)``. Deliberately not wired into CI: it runs
+    every exemplar's suite and takes minutes.
+    """
+    measured: dict[str, str] = {}
+    failures: list[str] = []
+    for row in EXEMPLAR_SNAPSHOT:
+        try:
+            measured[row.name] = measure_exemplar_coverage(repo_root, row.name)
+        except RuntimeError as exc:
+            failures.append(f"{row.name}: {exc}")
+
+    lines = [f"{'exemplar':44} {'recorded':>10} {'measured':>10}  status"]
+    mismatched: list[tuple[str, str, str]] = []
+    for row in EXEMPLAR_SNAPSHOT:
+        actual = measured.get(row.name)
+        if actual is None:
+            lines.append(f"{row.name:44} {row.coverage_pct:>10} {'-':>10}  NOT MEASURED")
+            continue
+        ok = actual.replace(" ", "") == row.coverage_pct.replace(" ", "")
+        if not ok:
+            mismatched.append((row.name, row.coverage_pct, actual))
+        lines.append(f"{row.name:44} {row.coverage_pct:>10} {actual:>10}  {'ok' if ok else 'DRIFTED'}")
+
+    if rewrite and measured:
+        _rewrite_exemplar_snapshot(measured)
+        lines.append(f"\nrewrote EXEMPLAR_SNAPSHOT with {len(measured)} measured values")
+
+    for failure in failures:
+        lines.append(f"MEASUREMENT FAILED — {failure}")
+    lines.append(f"\n{len(mismatched)} drifted, {len(failures)} failed, {len(measured)} measured")
+    return (not mismatched and not failures), "\n".join(lines)
+
+
+def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | None = None) -> None:
+    """Rewrite an ``EXEMPLAR_SNAPSHOT`` tuple with measured percentages.
+
+    ``source_path`` defaults to this module and exists so the rewrite can be
+    exercised against a scratch file — the repo forbids dependency replacement in
+    tests, so the seam is a real parameter rather than a patched ``__file__``.
+    """
+    source_path = source_path or Path(__file__)
+    text = source_path.read_text(encoding="utf-8")
+
+    def _replace(match: re.Match[str]) -> str:
+        name = match.group("name")
+        actual = measured.get(name)
+        return match.group(0) if actual is None else f'ExemplarSnapshot("{name}", "{actual}")'
+
+    updated = re.sub(
+        r'ExemplarSnapshot\(\s*"(?P<name>[^"]+)"\s*,\s*"[^"]*"\s*\)',
+        _replace,
+        text,
+    )
+    if updated != text:
+        source_path.write_text(updated, encoding="utf-8")
+
+
 def exemplar_source_hash(repo_root: Path, name: str) -> str:
     """Hash tracked source and tests that determine one exemplar's coverage."""
     project_root = repo_root / "projects" / "templates" / name
@@ -409,6 +530,12 @@ def render_counts_doc(facts: CountsFacts) -> str:
     roster = _roster_block(facts.public_projects)
     packages = _packages_block(facts.packages)
     n_pkgs = len(facts.packages)
+    # Derived, never hand-written: the drift registry is the source of truth for
+    # how many detectors actually run. `run_project_checks` additionally invokes
+    # `check_project_scripts` beyond the registered PROJECT_CHECKS list.
+    from infrastructure.project.drift.registry import PROJECT_CHECKS, REPO_CHECKS
+
+    drift_detector_summary = f"{len(PROJECT_CHECKS) + 1}+{len(REPO_CHECKS)}"
     return f"""# Canonical Factsheet
 
 > Auto-generated by `scripts/docgen/counts.py` from live repo state. Do not edit
@@ -499,7 +626,7 @@ Drift-checker coverage: `uv run python scripts/audit/check_template_drift.py --s
 
 | Gate | Command | Threshold |
 | --- | --- | --- |
-| Exemplar drift | `uv run python scripts/audit/check_template_drift.py --strict` | 9+2 detectors |
+| Exemplar drift | `uv run python scripts/audit/check_template_drift.py --strict` | {drift_detector_summary} detectors |
 | Module line count | `uv run python scripts/gates/module_line_count_check.py` | warn ≥800 / fail ≥950 (`infrastructure/`, `scripts/`); warn ≥150 / fail ≥250 (`projects/{{exemplar}}/scripts/` via `PUBLIC_PROJECT_NAMES`) |
 | Unified health | `uv run python -m infrastructure.core.health` | optional `--gates=module-line-count` |
 | Tracked public scope | `uv run python scripts/audit/check_tracked_all.py` | non-template paths under `projects/`, `fonds/`, `rules/`, and `tools/` |

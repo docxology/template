@@ -59,11 +59,49 @@ def should_exclude_path(path: Path, exclude_parts: Iterable[str] = DEFAULT_EXCLU
     return any(part in excluded for part in path.parts)
 
 
+def _discover_repo_root(roots: Iterable[Path]) -> Path | None:
+    """Walk up from *roots* to the nearest directory holding ``.gitmodules``."""
+    for root in roots:
+        for candidate in (root, *root.parents):
+            if (candidate / ".gitmodules").is_file():
+                return candidate
+    return None
+
+
+def submodule_paths(repo_root: Path) -> frozenset[Path]:
+    """Return absolute paths of git submodules declared in ``.gitmodules``.
+
+    Submodule trees are upstream third-party checkouts. This repository cannot fix
+    a defect in their documentation and must not edit it — an edit would be lost on
+    the next ``git submodule update`` — so their Markdown is outside the doc-scan
+    surface.
+    """
+    gitmodules = repo_root / ".gitmodules"
+    if not gitmodules.is_file():
+        return frozenset()
+    paths: set[Path] = set()
+    for line in gitmodules.read_text(encoding="utf-8", errors="replace").splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("path"):
+            continue
+        _, _, value = stripped.partition("=")
+        value = value.strip()
+        if value:
+            paths.add((repo_root / value).resolve())
+    return frozenset(paths)
+
+
+def _is_within_submodule(path: Path, submodules: frozenset[Path]) -> bool:
+    """True when *path* lies inside any declared submodule tree."""
+    return any(path == sub or sub in path.parents for sub in submodules)
+
+
 def iter_markdown_files(
     roots: Iterable[Path],
     *,
     exclude_parts: Iterable[str] = DEFAULT_EXCLUDE_PARTS,
     exclude_globs: Iterable[str] = (),
+    repo_root: Path | None = None,
 ) -> list[Path]:
     """Return Markdown files under *roots* while applying shared exclusions.
 
@@ -76,9 +114,13 @@ def iter_markdown_files(
     seen: set[Path] = set()
     out: list[Path] = []
     globs = tuple(exclude_globs)
+    resolved_roots = [Path(root).resolve() for root in roots]
 
-    for root in roots:
-        root = Path(root).resolve()
+    if repo_root is None:
+        repo_root = _discover_repo_root(resolved_roots)
+    submodules = submodule_paths(repo_root) if repo_root is not None else frozenset()
+
+    for root in resolved_roots:
         candidates = [root] if root.is_file() else root.rglob("*.md") if root.is_dir() else []
         for md in candidates:
             if md.suffix.lower() != ".md":
@@ -88,6 +130,8 @@ def iter_markdown_files(
             except ValueError:
                 scoped = md
             if should_exclude_path(scoped, exclude_parts):
+                continue
+            if submodules and _is_within_submodule(md, submodules):
                 continue
             if any(md.match(glob) for glob in globs):
                 continue

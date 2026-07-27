@@ -84,6 +84,8 @@ Pick the entry that matches your goal — each link is stable for deep navigatio
 
 ---
 
+<a id="agent-automation-entry-point"></a>
+
 ## Agent & automation entry point
 
 Structured routing for coding agents, review bots, and CI automation. **Read in this order** unless the user task is narrowly scoped.
@@ -161,6 +163,8 @@ The **Research Project Template** addresses the structural root of research irre
 
 ---
 
+<a id="quick-start"></a>
+
 ## ⚡ Quick Start
 
 ```bash
@@ -185,6 +189,8 @@ uv sync
 See the full walkthrough in [**docs/RUN_GUIDE.md**](../docs/RUN_GUIDE.md) and [**docs/guides/getting-started.md**](../docs/guides/getting-started.md).
 
 ---
+
+<a id="architecture"></a>
 
 ## 📐 Architecture
 
@@ -233,6 +239,8 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 > **Key invariant:** All domain logic lives in `projects/{name}/src/`. Scripts are **thin orchestrators** — they import and call, never implement. See [docs/architecture/thin-orchestrator-summary.md](../docs/architecture/thin-orchestrator-summary.md).
 
 ---
+
+<a id="active-projects"></a>
 
 ## 📁 Active Projects
 
@@ -420,6 +428,8 @@ stateDiagram-v2
 
 ---
 
+<a id="pipeline"></a>
+
 ## 🔄 Pipeline
 
 `run.sh` executes a **16-stage declarative DAG pipeline** configured via `pipeline.yaml`. `secure_run.sh` appends steganographic post-processing.
@@ -545,6 +555,8 @@ flowchart TB
 
 ---
 
+<a id="security-provenance"></a>
+
 ## 🔒 Security & Provenance
 
 Every rendered PDF is automatically processed by the steganographic pipeline via `secure_run.sh`:
@@ -559,6 +571,8 @@ Every rendered PDF is automatically processed by the steganographic pipeline via
 Full specification: [docs/security/threat-model.md](../docs/security/threat-model.md) · [docs/security/steganography.md](../docs/security/steganography.md) · [docs/security/hashing_and_manifests.md](../docs/security/hashing_and_manifests.md) · [docs/security/secure_execution.md](../docs/security/secure_execution.md).
 
 ---
+
+<a id="testing-standards"></a>
 
 ## 🧪 Testing Standards
 
@@ -580,6 +594,8 @@ python scripts/audit/verify_no_mocks.py
 See [docs/development/testing/](../docs/development/testing/) and [docs/guides/testing-and-reproducibility.md](../docs/guides/testing-and-reproducibility.md).
 
 ---
+
+<a id="documentation-hub"></a>
 
 ## 📚 Documentation Hub
 
@@ -852,6 +868,8 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 
 ---
 
+<a id="cicd"></a>
+
 ## 🔧 CI/CD
 
 ### Workflows
@@ -996,6 +1014,8 @@ Require PR review before merging: 1 approver
 
 ---
 
+<a id="issue--pr-templates"></a>
+
 ## 📋 Issue & PR Templates
 
 ### Issues → [New Issue](https://github.com/docxology/template/issues/new/choose)
@@ -1037,6 +1057,8 @@ also be enabled in repository settings.
 Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 
 ---
+
+<a id="troubleshooting"></a>
 
 ## 🔍 Troubleshooting
 

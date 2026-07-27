@@ -69,6 +69,10 @@ def _scaffold_minimal_project(tmp_path: Path, name: str = "fake_project") -> Pat
     root = make_project(tmp_path, name, with_manuscript=True)
     (root / "docs").mkdir()
     (root / "scripts").mkdir()
+    # Part of the exemplar contract since 2026-07-27: a fork must carry its own
+    # grant. `test_required_files_exist_flags_missing_license` is the paired
+    # positive control proving the detector still rejects its absence.
+    (root / "LICENSE").write_text("MIT License\n\nCopyright (c) 2026 Test\n", encoding="utf-8")
     write_doc(
         root / "README.md",
         """# Fake
@@ -573,6 +577,21 @@ def test_required_files_exist_flags_missing_todo(drift_module, tmp_path):
     drift_module.check_required_files_exist(root, rep, "fake_project")
     assert any(
         f.severity == "ERROR" and f.rule == "missing_canonical_file" and "TODO.md" in f.message for f in rep.findings
+    )
+
+
+def test_required_files_exist_flags_missing_license(drift_module, tmp_path):
+    """Positive control for the LICENSE clause of the exemplar contract.
+
+    Until 2026-07-27, 23 of 24 exemplars declared a license only in CITATION.cff
+    and shipped no LICENSE, so a fork asserted terms it never granted.
+    """
+    root = _scaffold_minimal_project(tmp_path)
+    (root / "LICENSE").unlink()
+    rep = drift_module.Report()
+    drift_module.check_required_files_exist(root, rep, "fake_project")
+    assert any(
+        f.severity == "ERROR" and f.rule == "missing_canonical_file" and "LICENSE" in f.message for f in rep.findings
     )
 
 
@@ -1220,6 +1239,88 @@ def test_docs_hardcoded_counts_ignores_untracked_dirs_in_git_repo(drift_module, 
     rep2 = drift_module.Report()
     drift_module.check_docs_hardcoded_counts(tmp_path, rep2)
     assert any(f.rule == "repo_docs_hardcoded_coverage_pct" for f in rep2.findings)
+
+
+def test_docs_hardcoded_counts_flags_bare_test_total(drift_module, tmp_path):
+    """The highest-churn form: a plain per-exemplar total with no qualifier.
+
+    The original pattern required the words infrastructure/project/infra between
+    the number and "tests", so `279 tests, mirroring src/...` in an exemplar
+    README was never caught — which is how adding one test to template_formal
+    came to require editing nine separate hardcoded totals (2026-07-27).
+    """
+    (tmp_path / "README.md").write_text("279 tests, mirroring the src layout.\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert any(f.rule == "repo_docs_hardcoded_test_count" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_flags_reversed_coverage_phrasing(drift_module, tmp_path):
+    """`Total coverage: 95.91%` must be caught, not just `95.91% coverage`."""
+    (tmp_path / "README.md").write_text("Total coverage: 95.91%\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert any(f.rule == "repo_docs_hardcoded_coverage_pct" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_ignores_stage_identifiers(drift_module, tmp_path):
+    """`Stage 01 test runner` is a stage number, not a measured total."""
+    (tmp_path / "README.md").write_text(
+        "Owns the Stage 01 test runner and the Stage-02 tests lane.\n", encoding="utf-8"
+    )
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert not any(f.rule == "repo_docs_hardcoded_test_count" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_ignores_singular_noun_phrases(drift_module, tmp_path):
+    """`50 test images per class` describes a dataset, not a suite."""
+    (tmp_path / "README.md").write_text("It contains 50 test images per class.\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert not any(f.rule == "repo_docs_hardcoded_test_count" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_ignores_policy_coverage_floors(drift_module, tmp_path):
+    """Contract floors (60/75/90) are policy, not measurements."""
+    (tmp_path / "README.md").write_text(
+        "Projects must hold 90% coverage; infrastructure requires 60% coverage.\n", encoding="utf-8"
+    )
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert not any(f.rule == "repo_docs_hardcoded_coverage_pct" for f in rep.findings)
+
+
+def test_docs_hardcoded_counts_honours_noqa_for_dated_history(drift_module, tmp_path):
+    """A dated historical record opts out; the escape hatch must work."""
+    (tmp_path / "README.md").write_text(
+        "The 2026-07 audit ran 362 tests. <!-- noqa: drift-counts -->\n", encoding="utf-8"
+    )
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    assert rep.findings == []
+
+
+def test_docs_hardcoded_counts_noqa_does_not_leak_to_other_lines(drift_module, tmp_path):
+    """The escape hatch is per-line, so it cannot silence a whole file."""
+    (tmp_path / "README.md").write_text(
+        "Historical: 362 tests. <!-- noqa: drift-counts -->\nToday we run 999 tests.\n",
+        encoding="utf-8",
+    )
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    messages = [f.message for f in rep.findings if f.rule == "repo_docs_hardcoded_test_count"]
+    assert len(messages) == 1
+    assert "999 tests" in messages[0]
+
+
+def test_docs_hardcoded_counts_reports_line_numbers(drift_module, tmp_path):
+    """Findings must cite a line, not a byte offset, to be actionable."""
+    (tmp_path / "README.md").write_text("intro\n\nWe run 500 tests.\n", encoding="utf-8")
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+    finding = next(f for f in rep.findings if f.rule == "repo_docs_hardcoded_test_count")
+    assert "README.md:3:" in finding.message
 
 
 def test_project_src_boundary_errors_on_standalone_infra_import(drift_module, tmp_path):

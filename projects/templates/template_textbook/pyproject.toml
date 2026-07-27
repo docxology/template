@@ -14,6 +14,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "template_textbook"
 version = "0.1.2"
+license = {text = "CC-BY-4.0"}
 description = "Modular, fillable textbook scaffold: data-driven manuscript (parts/chapters/labs/questions), tested computational backbone, deterministic figures + Mermaid diagrams, and a content scaffold/validation engine."
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.10"

@@ -14,6 +14,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "template_literature_meta_analysis"
 version = "0.1.0"
+license = {text = "CC-BY-4.0"}
 description = "Generic, idempotent literature meta-analysis template: multi-engine dispatch, de-duplication, full-text, embeddings, and bibliometrics for any search term"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"},

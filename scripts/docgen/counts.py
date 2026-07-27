@@ -32,6 +32,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from infrastructure.documentation.counts_doc import (  # noqa: E402
     check_counts_doc,
     write_coverage_provenance,
+    verify_exemplar_coverage,
     write_counts_doc,
 )
 
@@ -51,11 +52,30 @@ def main(argv: list[str] | None = None) -> int:
         help="record source hashes after rerunning every changed coverage gate",
     )
     parser.add_argument(
+        "--verify-coverage",
+        action="store_true",
+        help=(
+            "re-measure every exemplar's standalone coverage and compare against the "
+            "recorded percentage (slow — runs every suite); combine with --write to "
+            "rewrite the recorded values from the measurement"
+        ),
+    )
+    parser.add_argument(
         "--project-workers",
         default="serial",
         help="bounded public-exemplar collection concurrency; use 'serial' or a positive integer",
     )
     args = parser.parse_args(argv)
+
+    if args.verify_coverage:
+        all_match, report = verify_exemplar_coverage(REPO_ROOT, rewrite=args.write)
+        print(report)
+        if args.write and not all_match:
+            # Values were rewritten from the measurement, so the tree is now
+            # consistent even though the previously recorded numbers had drifted.
+            print("\nrecorded values refreshed — rerun with --refresh-coverage-provenance --write")
+            return 0
+        return 0 if all_match else 1
 
     if args.check:
         in_sync, message = check_counts_doc(REPO_ROOT, project_workers=args.project_workers)

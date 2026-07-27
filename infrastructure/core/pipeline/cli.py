@@ -1,6 +1,6 @@
 """CLI for introspecting the declarative pipeline definition.
 
-The 14-stage pipeline contract is the single source of truth in
+The pipeline contract is the single source of truth in
 ``pipeline.yaml`` (see :mod:`infrastructure.core.pipeline.dag`), but until now
 that contract was only *re-described in prose* across ``CLAUDE.md``,
 ``AGENTS.md`` and ``README.md`` — so an agent automating the pipeline had to

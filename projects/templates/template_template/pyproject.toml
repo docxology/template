@@ -1,6 +1,8 @@
 [project]
 name = "template-template-meta-project"
 version = "1.0.9"
+license = {text = "Apache-2.0"}
+authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 description = "Self-referential study of the Docxology Template infrastructure, architecture, and provenance pipeline."
 readme = "README.md"
 requires-python = ">=3.12"

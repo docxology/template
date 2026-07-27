@@ -179,7 +179,7 @@ data/fixtures/       committed deterministic offline corpus
 See [`AGENTS.md`](AGENTS.md) for the full module/API reference and [`docs/`](docs/)
 for architecture, testing philosophy, and the rendering pipeline.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

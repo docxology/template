@@ -1,7 +1,8 @@
 # `tests/` — the engine test suite
 
 Tests for the textbook engine in [`../src/`](../src/). The suite enforces a
-**90% project coverage minimum** (currently ~95% across 75 tests) and follows the
+**90% project coverage minimum** (measured coverage and the collected-test total
+live in [`COUNTS.md`](../../../../docs/_generated/COUNTS.md)) and follows the
 repository's **no-mocks policy** — every test uses real data, real files, and
 real computation.
 

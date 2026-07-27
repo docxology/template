@@ -297,7 +297,7 @@ version control to freeze a run for CI.
 
 ## Review phase
 
-Quality gate via [`scripts/review`](scripts/review) and [`review_config.yaml`](review_config.yaml). During the project-analysis stage, [`scripts/zz_generate_review_report.py`](scripts/zz_generate_review_report.py) runs last and invokes `scripts/review` when `output/review/summary.json` is missing, then writes `output/review/REVIEW_REPORT.md`.
+Quality gate via [`scripts/review`](scripts/review) and [`review_config.yaml`](review_config.yaml). During the project-analysis stage, [`scripts/zz_generate_review_report.py`](scripts/zz_generate_review_report.py) runs after `z_generate_manuscript_variables.py` and before the final `zzz_build_dashboard.py` step; it invokes `scripts/review` when `output/review/summary.json` is missing, then writes `output/review/REVIEW_REPORT.md`.
 
 ```bash
 # From repository root

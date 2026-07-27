@@ -128,7 +128,7 @@ uv run pytest projects/templates/template_autopoiesis/tests/ --cov=projects/temp
 ## Key Metadata
 
 - **Coverage target**: 90% (`fail_under=90`)
-- **Test count**: 493 tests (measured live by `measure_test_summary()` — see `output/data/manuscript_variables.json`; counts drift upward release to release as tests are added, treat as the value at last render)
+- **Test count**: measured live by `measure_test_summary()` — see `output/data/manuscript_variables.json` for the value at last render, and [`COUNTS.md`](../../../docs/_generated/COUNTS.md) for the regenerated repo-wide totals (the count drifts upward release to release as tests are added, so it is not pinned here)
 - **Coverage**: 96.28% (measured live — see `output/data/manuscript_variables.json`)
 - **Grammar seed**: 42
 - **Domains**: optimization, dynamics, statistics, signal, graph

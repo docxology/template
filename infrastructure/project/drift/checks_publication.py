@@ -8,6 +8,11 @@ from pathlib import Path
 from typing import cast
 from urllib.parse import urlparse
 
+try:
+    import tomllib
+except ImportError:  # Python <3.11 — use backport
+    import tomli as tomllib  # type: ignore[no-redef]
+
 import yaml
 
 from infrastructure.core.files.serialization import load_yaml_mapping as _load_yaml_mapping
@@ -196,8 +201,250 @@ def _normalize_doi(value: object) -> str:
     return text
 
 
+_PEP440_RELEASE_RE = re.compile(r"^\d+(?:\.\d+)*$")
+
+
+def _version_key(value: object) -> tuple[int, ...] | str:
+    """Return a PEP 440-comparable key so `0.1` and `0.1.0` do not read as drift.
+
+    PEP 440 zero-pads release segments, meaning `0.1 == 0.1.0 == 0.1.0.0`.
+    CITATION.cff (YAML) and pyproject.toml are written by different hands and
+    legitimately disagree on trailing zeros; only a *semantic* difference is
+    drift. Anything that is not a plain dotted-numeric release (pre/post/dev
+    suffixes, calendar strings, git describes) falls back to exact string
+    comparison rather than being silently normalized into equality.
+    """
+    text = str(value or "").strip().strip("'\"")
+    if not _PEP440_RELEASE_RE.match(text):
+        return text
+    parts = [int(segment) for segment in text.split(".")]
+    while len(parts) > 1 and parts[-1] == 0:
+        parts.pop()
+    return tuple(parts)
+
+
+def _cff_author_names(cff: dict[str, object]) -> list[str]:
+    """Return display names for a CITATION.cff `authors:` list.
+
+    Handles both person entries (`given-names` + `family-names`) and entity
+    entries (`name`), which CFF 1.2.0 allows interchangeably.
+    """
+    raw = cff.get("authors")
+    names: list[str] = []
+    if not isinstance(raw, list):
+        return names
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        given = str(entry.get("given-names") or "").strip()
+        family = str(entry.get("family-names") or "").strip()
+        person = " ".join(part for part in (given, family) if part)
+        display = person or str(entry.get("name") or "").strip()
+        if display:
+            names.append(display)
+    return names
+
+
+def _fold_name(value: str) -> str:
+    """Case- and whitespace-insensitive form used to compare author names."""
+    return " ".join(str(value or "").split()).casefold()
+
+
+def check_pyproject_publication_consistency(project_root: Path, report: Report, project: str) -> None:
+    """`[project] version` / `[project] authors` in pyproject.toml must match CITATION.cff.
+
+    Catches: on 2026-07-27 template_autopoiesis shipped `version = "0.1.0"` in
+    pyproject.toml while CITATION.cff, codemeta.json, .zenodo.json and
+    manuscript/config.yaml all declared 1.0.1 (the version actually deposited as
+    10.5281/zenodo.21229620). It survived because the publication cross-checks
+    bound config.yaml <-> CITATION.cff <-> .zenodo.json <-> codemeta.json and
+    nothing in the drift package ever read pyproject.toml — yet pyproject's
+    version and authors are the sole inputs to `uv build`, so the shipped wheel
+    METADATA is stamped from the one file no gate was reading.
+
+    Versions are compared as PEP 440 release tuples, so `0.1` (CITATION.cff) and
+    `0.1.0` (pyproject) are equal rather than a false positive. A missing
+    `[project] version`/`authors` key, or a `dynamic` declaration, is skipped:
+    absence is not drift, and the placeholder-author check for absent metadata
+    already lives in check_config_author_placeholders.
+    """
+    pyproject_path = project_root / "pyproject.toml"
+    cff_path = project_root / "CITATION.cff"
+    if not pyproject_path.is_file() or not cff_path.is_file():
+        return
+
+    try:
+        pyproject = tomllib.loads(_read(pyproject_path))
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        report.add(
+            "ERROR",
+            project,
+            "publication_pyproject_unparseable",
+            f"{_rel(pyproject_path, project_root)} is not valid TOML: {exc}",
+        )
+        return
+
+    table = pyproject.get("project")
+    if not isinstance(table, dict):
+        return
+    dynamic = table.get("dynamic")
+    dynamic_fields = {str(field) for field in dynamic} if isinstance(dynamic, list) else set()
+
+    try:
+        cff = _load_yaml_mapping(cff_path)
+    except (OSError, yaml.YAMLError):
+        return
+
+    cff_version = str(cff.get("version", "")).strip().strip("'\"")
+    py_version = str(table.get("version", "")).strip()
+    if py_version and cff_version and "version" not in dynamic_fields:
+        if _version_key(py_version) != _version_key(cff_version):
+            report.add(
+                "ERROR",
+                project,
+                "publication_pyproject_version_drift",
+                (
+                    f"{_rel(pyproject_path, project_root)} [project] version {py_version!r} disagrees "
+                    f"with CITATION.cff version {cff_version!r} — pyproject is the sole input to "
+                    "`uv build`, so the published distribution would be stamped with the wrong release"
+                ),
+            )
+
+    raw_authors = table.get("authors")
+    if not isinstance(raw_authors, list) or "authors" in dynamic_fields:
+        return
+    py_names = [str(entry.get("name") or "").strip() for entry in raw_authors if isinstance(entry, dict)]
+    py_names = [name for name in py_names if name]
+    if not py_names:
+        return
+
+    for idx, name in enumerate(py_names):
+        if _fold_name(name) in _PLACEHOLDER_AUTHOR_NAMES:
+            report.add(
+                "ERROR",
+                project,
+                "publication_pyproject_author_placeholder",
+                (
+                    f"{_rel(pyproject_path, project_root)} [project] authors[{idx}].name is the "
+                    f"scaffold placeholder {name!r} — it rides into the built wheel's "
+                    "`Author-email` metadata; replace with the real author"
+                ),
+            )
+
+    cff_names = _cff_author_names(cff)
+    if not cff_names:
+        return
+    known = {_fold_name(name) for name in cff_names}
+    unknown = [name for name in py_names if _fold_name(name) not in known]
+    if unknown:
+        report.add(
+            "ERROR",
+            project,
+            "publication_pyproject_author_drift",
+            (
+                f"{_rel(pyproject_path, project_root)} [project] authors {unknown!r} are not credited "
+                f"in CITATION.cff (authors: {cff_names!r}) — the DOI record and the built distribution "
+                "would attribute the same release to different people"
+            ),
+        )
+
+
+def check_license_file_present_and_consistent(project_root: Path, report: Report, project: str) -> None:
+    """Every exemplar must ship a LICENSE whose license matches its declared metadata.
+
+    Catches: on 2026-07-27, 23 of 24 exemplars declared a license in CITATION.cff
+    (and, for most, nowhere else) while shipping no LICENSE file at all. A fork
+    extracted via STANDALONE.md therefore arrived with a README asserting terms
+    that no file in the tree granted. `[project] license` was also absent from 21
+    pyprojects, so the built wheel carried no license metadata either.
+
+    The declared license in CITATION.cff is authoritative here: it is the surface
+    the Zenodo deposits were made from, so LICENSE and pyproject are checked
+    against it rather than the other way round.
+    """
+    cff_path = project_root / "CITATION.cff"
+    if not cff_path.is_file():
+        return
+    try:
+        cff = _load_yaml_mapping(cff_path)
+    except (OSError, yaml.YAMLError):
+        return
+    declared = str(cff.get("license", "")).strip().strip("'\"")
+    if not declared:
+        return
+
+    license_path = project_root / "LICENSE"
+    if not license_path.is_file():
+        report.add(
+            "ERROR",
+            project,
+            "publication_license_file_missing",
+            (
+                f"CITATION.cff declares license {declared!r} but no LICENSE file exists — "
+                "a standalone fork would ship terms it never grants"
+            ),
+        )
+        return
+
+    # Identify the shipped license by its distinctive header, not by full text.
+    body = _read(license_path)
+    head = "\n".join(body.splitlines()[:6]).lower()
+    identifiers = {
+        "MIT": "mit license",
+        "Apache-2.0": "apache license",
+        "CC-BY-4.0": "creative commons attribution 4.0",
+    }
+    marker = identifiers.get(declared)
+    if marker and marker not in head:
+        # Dual-licensed layout: code under one license in LICENSE, content under
+        # the declared license in a LICENSE-<scope> sibling (template_textbook
+        # ships Apache-2.0 code alongside CC-BY-4.0 manuscript content). Accept
+        # it only when a sibling actually carries the declared license.
+        siblings = sorted(project_root.glob("LICENSE-*"))
+        covered = any(marker in _read(path).lower() for path in siblings if path.is_file())
+        if not covered:
+            report.add(
+                "ERROR",
+                project,
+                "publication_license_file_drift",
+                (
+                    f"LICENSE does not look like {declared!r} (declared in CITATION.cff) and no "
+                    f"LICENSE-* sibling carries it either; LICENSE opens with "
+                    f"{head.splitlines()[0].strip()!r}"
+                ),
+            )
+
+    pyproject_path = project_root / "pyproject.toml"
+    if not pyproject_path.is_file():
+        return
+    try:
+        table = tomllib.loads(_read(pyproject_path)).get("project")
+    except (OSError, tomllib.TOMLDecodeError):
+        return
+    if not isinstance(table, dict):
+        return
+    raw = table.get("license")
+    declared_py = raw.get("text", "") if isinstance(raw, dict) else (raw or "")
+    declared_py = str(declared_py).strip()
+    if declared_py and declared_py != declared:
+        report.add(
+            "ERROR",
+            project,
+            "publication_license_metadata_drift",
+            (
+                f"pyproject [project] license {declared_py!r} disagrees with CITATION.cff "
+                f"license {declared!r} — the wheel and the DOI record would state different terms"
+            ),
+        )
+
+
 def check_publication_metadata_consistency(project_root: Path, report: Report, project: str) -> None:
-    """Cross-check publication.doi, version_doi, CITATION.cff, and .zenodo.json."""
+    """Cross-check publication.doi, version_doi, pyproject.toml, CITATION.cff, and .zenodo.json."""
+    # Runs first and unconditionally: pyproject.toml <-> CITATION.cff drift is
+    # real for draft exemplars too, and this function returns early for a draft
+    # publication status and for a project with no manuscript/config.yaml.
+    check_pyproject_publication_consistency(project_root, report, project)
+
     config_path = project_root / "manuscript" / "config.yaml"
     if not config_path.is_file():
         return

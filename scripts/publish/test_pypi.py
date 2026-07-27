@@ -6,9 +6,10 @@ import os
 import sys
 from pathlib import Path
 
-# This repo sets [tool.uv] package=false, so it is never installed into the
-# venv; each script must put the repo root on sys.path before importing
-# `infrastructure`. This file lives two levels below the root (scripts/publish/).
+# The wheel ships only `infrastructure` ([tool.hatch.build.targets.wheel]
+# packages), so `scripts/` is never installed into the venv; each script must put
+# the repo root on sys.path before importing `infrastructure`. This file lives two
+# levels below the root (scripts/publish/).
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 

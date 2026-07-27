@@ -108,7 +108,7 @@ because ARS is CC-BY-NC-4.0 and this repository is Apache-2.0.
 - [`../../CLAUDE.md`](../../CLAUDE.md) — command cheat sheet
 - [`../guides/new-project-one-shot-prompt.md`](../guides/new-project-one-shot-prompt.md) — one-shot LLM scaffold
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

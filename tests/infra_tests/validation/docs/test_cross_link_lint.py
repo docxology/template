@@ -49,8 +49,9 @@ def test_find_broken_links_skips_external_urls(tmp_path: Path) -> None:
 
 
 def test_find_broken_links_skips_anchor_only_links(tmp_path: Path) -> None:
+    """A pure `#anchor` is not a missing FILE (its anchor is checked separately)."""
     md = tmp_path / "p.md"
-    _write(md, "[top](#heading)\n")
+    _write(md, "[top](#heading)\n\n## Heading\n")
     assert find_broken_links([tmp_path]) == []
 
 
@@ -100,8 +101,9 @@ def test_find_broken_links_skips_inline_double_backtick_links(tmp_path: Path) ->
 
 
 def test_find_broken_links_handles_anchored_targets(tmp_path: Path) -> None:
+    """An `#anchor` suffix must not interfere with resolving the FILE part."""
     target = tmp_path / "guide.md"
-    _write(target, "# guide")
+    _write(target, "# guide\n\n## Heading\n")
     md = tmp_path / "index.md"
     _write(
         md,
@@ -194,6 +196,78 @@ def test_find_broken_links_skips_missing_nonpublic_project_links(tmp_path: Path)
     _write(md, "[local only](../projects/private_rotation/README.md)\n")
 
     assert find_broken_links([tmp_path]) == []
+
+
+def test_anchor_gate_rejects_dangling_cross_file_fragment(tmp_path: Path) -> None:
+    """Positive control: the anchor check must be able to FAIL, not just pass."""
+    _write(tmp_path / "guide.md", "# Guide\n\n## Real Section\n")
+    md = tmp_path / "index.md"
+    _write(md, "[bad](guide.md#no-such-section)\n")
+    broken = find_broken_links([tmp_path])
+    assert len(broken) == 1
+    assert "anchor '#no-such-section'" in broken[0].reason
+
+
+def test_anchor_gate_accepts_resolving_cross_file_fragment(tmp_path: Path) -> None:
+    _write(tmp_path / "guide.md", "# Guide\n\n## Real Section\n")
+    _write(tmp_path / "index.md", "[ok](guide.md#real-section)\n")
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_anchor_gate_rejects_dangling_same_file_fragment(tmp_path: Path) -> None:
+    md = tmp_path / "p.md"
+    _write(md, "# Title\n\n[jump](#missing-heading)\n\n## Present\n")
+    broken = find_broken_links([tmp_path])
+    assert len(broken) == 1
+    assert broken[0].target == "#missing-heading"
+
+
+def test_emoji_heading_slug_keeps_leading_separator(tmp_path: Path) -> None:
+    """GitHub drops the emoji but keeps the space it left, yielding `-quick-start`."""
+    md = tmp_path / "p.md"
+    _write(md, "# T\n\n[a](#quick-start)\n[b](#-quick-start)\n\n## \N{ROCKET} Quick Start\n")
+    broken = find_broken_links([tmp_path])
+    assert [b.target for b in broken] == ["#quick-start"]
+
+
+def test_anchor_slug_preserves_inline_code_and_underscores(tmp_path: Path) -> None:
+    """`secure_run.sh` in a heading contributes `secure_runsh`, underscore intact."""
+    md = tmp_path / "p.md"
+    _write(md, "# T\n\n[a](#secure-pipeline-secure_runsh)\n\n## Secure pipeline (`secure_run.sh`)\n")
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_anchor_gate_honours_explicit_html_id(tmp_path: Path) -> None:
+    _write(tmp_path / "guide.md", '# G\n\n<a id="custom-target"></a>\n\n## \N{DIRECT HIT} Section\n')
+    _write(tmp_path / "index.md", "[ok](guide.md#custom-target)\n")
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_anchor_gate_skips_glossary_dsl_fragments(tmp_path: Path) -> None:
+    """`#gl:` fragments are a textbook glossary DSL, not heading anchors."""
+    md = tmp_path / "p.md"
+    _write(md, "# T\n\n[term](#gl:entropy)\n")
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_anchor_gate_ignores_fragments_on_non_markdown_targets(tmp_path: Path) -> None:
+    """A `#L12` fragment on a source file is a line reference, not an anchor."""
+    _write(tmp_path / "mod.py", "x = 1\n")
+    _write(tmp_path / "p.md", "[code](mod.py#L1)\n")
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_anchor_gate_respects_noqa(tmp_path: Path) -> None:
+    _write(tmp_path / "guide.md", "# Guide\n")
+    _write(tmp_path / "p.md", "[x](guide.md#nope) <!-- noqa: docs-lint -->\n")
+    assert find_broken_links([tmp_path]) == []
+
+
+def test_duplicate_headings_get_numeric_anchor_suffixes(tmp_path: Path) -> None:
+    _write(tmp_path / "guide.md", "# G\n\n## Notes\n\n## Notes\n")
+    _write(tmp_path / "index.md", "[one](guide.md#notes)\n[two](guide.md#notes-1)\n[three](guide.md#notes-2)\n")
+    broken = find_broken_links([tmp_path])
+    assert [b.target for b in broken] == ["guide.md#notes-2"]
 
 
 def test_find_broken_links_format_returns_string() -> None:

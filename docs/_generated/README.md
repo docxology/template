@@ -1,13 +1,15 @@
 # Generated documentation snippets
 
-This directory mixes **one script-generated file** with **maintainer-written** hub files (`README.md`, `AGENTS.md`).
+This directory mixes **script-generated files** with two **maintainer-written** hub files (`README.md`, `AGENTS.md`) and one retained historical snapshot (`hermes_knowledge_audit.json`, no longer produced by any generator). Every other file listed below is generator output — do not edit it by hand; regenerate it with the command in its row.
 
 | File | Source |
 |------|--------|
 | [active_projects.md](active_projects.md) | **Generated** — `uv run python scripts/docgen/active_projects.py` |
 | [architecture_overview.md](architecture_overview.md) / [architecture_overview.svg](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
 | [coverage_history.md](coverage_history.md) | **Generated** — `uv run python scripts/docgen/coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
+| [coverage_snapshot.json](coverage_snapshot.json) | **Generated** — `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; source-commit/source-hash provenance for the COUNTS.md coverage table, validated fail-closed |
 | [COUNTS.md](COUNTS.md) | **Generated** — `uv run python scripts/docgen/counts.py` (`--check` in CI, `--write` to refresh); measured infra counts, pytest collection totals, package roster |
+| [exemplar_roster.md](exemplar_roster.md) | **Generated** — `uv run python scripts/docgen/exemplar_roster.py` (`--check` in CI and pre-commit) |
 | [hermes_knowledge_audit.json](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; superseded by current generated facts |
 | [publication_records.md](publication_records.md) | **Generated publication matrix** — public exemplar GitHub/Zenodo/config records; refresh with `scripts/docgen/publication_records.py --refresh-external` |
 | [skills_index.md](skills_index.md) | **Generated** — `uv run python -m infrastructure.skills write-index` |
@@ -42,7 +44,7 @@ uv run python scripts/docgen/coverage_history.py --from-dir=./_artefacts --days=
 uv run python scripts/docgen/coverage_history.py --from-gh --days=30
 ```
 
-**Canonical factsheet** — when CI gates, project counts, publishing tests, or public exemplar coverage changes, re-run the measurements cited in [`COUNTS.md`](COUNTS.md) and edit that file so numbers stay ground-truthed.
+**Canonical factsheet** — regenerate with `uv run python scripts/docgen/counts.py --write`; never hand-edit [`COUNTS.md`](COUNTS.md) (CI and pre-commit run `counts.py --check`). After changing an exemplar `src/` or its tests, rerun that project's coverage gate and then `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails closed when source hashes no longer match.
 
 **Publication records matrix** — when citing repository/DOI publication status, re-run `uv run python scripts/docgen/publication_records.py --refresh-external`; do not hand-edit [`publication_records.md`](publication_records.md).
 

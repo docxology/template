@@ -32,6 +32,31 @@ _INFRASTRUCTURE_AREA_COUNT_LINE_RE = re.compile(
 )
 _PY_COUNT_RE = re.compile(r"\b\d{3}\s*(?:`?\.py`?|Python)\s+files\b", re.IGNORECASE)
 
+# A changelog-style edit record such as: fixed stale "19 Python packages" -> "25".
+# Both sides are quoted historical values describing a past edit, not live claims
+# about the current tree, so neither should be measured against today's count.
+_CORRECTION_RECORD_RE = re.compile(
+    r"[\"'`][^\"'`]*?\d+[^\"'`]*?[\"'`]"  # quoted before-value containing a number
+    r"\s*(?:->|-->|→)\s*"  # explicit correction arrow
+    r"[\"'`][^\"'`]*?\d+[^\"'`]*?[\"'`]"  # quoted after-value containing a number
+)
+_RECORD_NUMBER_RE = re.compile(r"\d+")
+
+
+def line_records_correction(line: str, claimed: int) -> bool:
+    """True if ``claimed`` appears inside a quoted ``"old" -> "new"`` edit record.
+
+    Long-lived docs (notably ``CHANGELOG.md``) record count corrections verbatim.
+    The quoted operands are history, so flagging them produces a false positive
+    that no edit to the prose can resolve. Only numbers inside both quoted
+    operands of an explicit arrow record are exempt; a bare number elsewhere on
+    the same line is still checked.
+    """
+    for record in _CORRECTION_RECORD_RE.finditer(line):
+        if any(int(n) == claimed for n in _RECORD_NUMBER_RE.findall(record.group(0))):
+            return True
+    return False
+
 
 def check_module_count_claims(repo_root: Path, expected_count: int | None = None) -> list[Inconsistency]:
     """Verify Markdown claims about ``N Python (sub)packages`` match reality."""
@@ -57,6 +82,8 @@ def check_module_count_claims(repo_root: Path, expected_count: int | None = None
                     seen_lines.add(line)
                     line_text = text.splitlines()[line - 1] if 0 < line <= len(text.splitlines()) else ""
                     if line_has_noqa(line_text):
+                        continue
+                    if line_records_correction(line_text, claimed):
                         continue
                     issues.append(
                         Inconsistency(

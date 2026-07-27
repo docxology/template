@@ -850,7 +850,7 @@
     },
     {
       "name": "Advanced Multi-Phase Literature Retrieval",
-      "description": "Operations for phase-aware federated retrieval across ten literature engines, preserving provenance from broad discovery through focused synthesis.",
+      "description": "Operations for phase-aware federated retrieval across nine literature engines, preserving provenance from broad discovery through focused synthesis.",
       "path": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md",
       "cursor_at": "projects/templates/template_advanced_literature_review/src/literature/SKILL.md"
     },

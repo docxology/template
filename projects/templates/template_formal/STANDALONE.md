@@ -76,7 +76,7 @@ uv run pytest projects/working/my_formal_project/tests/ \
 MYPYPATH=projects/working/my_formal_project/src \
   uv run mypy --strict --explicit-package-bases --namespace-packages \
   projects/working/my_formal_project/src
-uv run python projects/working/my_formal_project/scripts/pipeline/stage_02_analysis.py
+uv run python projects/working/my_formal_project/scripts/02_run_analysis.py
 ```
 
 For the public exemplar:

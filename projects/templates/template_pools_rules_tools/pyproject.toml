@@ -8,6 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "template_pools_rules_tools"
 version = "1.0.0"
+license = {text = "CC-BY-4.0"}
 description = "Meta-project demonstrating fonds, tools, and rules integration"
 authors = [
     {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}

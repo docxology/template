@@ -294,7 +294,7 @@ uv run python scripts/publish/export_for_publishing.py --project templates/my_bo
 
 List available projects:
 ```bash
-uv run python -m infrastructure.project.public_scope list
+uv run python -m infrastructure.project.public_scope project-names
 ```
 
 ### Symlink `latest` not updating

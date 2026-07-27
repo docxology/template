@@ -136,7 +136,7 @@ uv sync
 
 # Run the demo colony pipeline (writes a JSON summary + two demo figures
 # under output/figures/ -- see "What this template demonstrates" above)
-uv run python projects/templates/template_formal/scripts/pipeline/stage_02_analysis.py
+uv run python projects/templates/template_formal/scripts/02_run_analysis.py
 ```
 
 Expected output (real paths this script prints, one per line):
@@ -149,6 +149,7 @@ Expected output (real paths this script prints, one per line):
 .../template_formal/output/figures/colony_demo_convergence.png
 .../template_formal/output/data/colony_statistics_sweep_summary.json
 .../template_formal/output/figures/colony_convergence_tick_distribution.png
+.../template_formal/output/figures/figure_registry.json
 ```
 
 ```bash
@@ -209,9 +210,9 @@ Real expected output (per ISA.md's own authoritative-invocation binding —
 a bare root-venv `uv run pytest` is not equivalent, see `ISA.md` Changelog):
 
 ```text
-Required test coverage of 90% reached. Total coverage: 95.91%
-278 passed (timing is machine-dependent)
-Project: ✓ PASSED (278/278 tests, 95.91% coverage)
+Required test coverage of 90% reached. Total coverage: 95.28%
+279 passed (timing is machine-dependent)
+Project: ✓ PASSED (279/279 tests, 95.28% coverage)
 ```
 
 **mypy --strict, the authoritative form.** The bare `uv run mypy --strict
@@ -239,7 +240,7 @@ Full end-to-end: `uv run python scripts/runner/execute_pipeline.py --project tem
 
 ```mermaid
 graph TD
-    A[scripts/pipeline/stage_02_analysis.py] --> B[src/template_formal/colony/]
+    A[scripts/02_run_analysis.py] --> B[src/template_formal/colony/]
     B --> C[src/template_formal/agent/agent.py]
     C --> D[src/template_formal/storage/]
     C --> E[src/template_formal/protocol/session.py]

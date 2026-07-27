@@ -38,7 +38,14 @@ def isolated_project(tmp_path: Path) -> Path:
             "htmlcov",
             "dist",
             ".lake",
+            # Local CodeGraph index; a gitignored symlink into ~/.omo that goes
+            # stale when the index is pruned. Absent in CI, so leaving it in
+            # failed only on developer machines.
+            ".codegraph",
         ),
+        # Any other gitignored local symlink that has gone stale must not turn a
+        # contract test into a setup error.
+        ignore_dangling_symlinks=True,
     )
     return destination
 

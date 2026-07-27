@@ -49,7 +49,7 @@ uv run python -m pstats profile.out
 Or use `snakeviz` for visualization:
 
 ```bash
-uv run python scripts/pipeline/stage_02_analysis.py --profile
+uv run python -m cProfile -o profile.prof scripts/pipeline/stage_02_analysis.py --project template_code_project
 snakeviz profile.prof
 ```
 

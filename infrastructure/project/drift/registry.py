@@ -33,6 +33,10 @@ from infrastructure.project.drift.checks import (  # noqa: E402 — registry agg
     check_test_class_drift,
 )
 from infrastructure.project.drift.checks_forkability import check_forkability_contract  # noqa: E402
+from infrastructure.project.drift.checks_publication import (  # noqa: E402
+    check_license_file_present_and_consistent,
+    check_pyproject_publication_consistency,
+)
 from infrastructure.project.drift.orchestrator import (  # noqa: E402
     check_project_scripts,
     check_repo_scripts,
@@ -53,6 +57,8 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_mocks_absent_from_tests,
     check_publication_index_completeness,
     check_publication_metadata_consistency,
+    check_pyproject_publication_consistency,
+    check_license_file_present_and_consistent,
     check_config_author_placeholders,
     check_metadata_export_current,
     check_publishing_status_block_current,

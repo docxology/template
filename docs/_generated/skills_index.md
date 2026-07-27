@@ -8,7 +8,7 @@ Project-level skills are opt-in: they are discovered only when a project ships a
 | Skill | Path | Description |
 | --- | --- | --- |
 | `Advanced Literature Manuscript Injection` | `projects/templates/template_advanced_literature_review/src/manuscript/SKILL.md` | Phase-aware tooling for injecting advanced-review evidence and statistics into Markdown manuscript templates. |
-| `Advanced Multi-Phase Literature Retrieval` | `projects/templates/template_advanced_literature_review/src/literature/SKILL.md` | Operations for phase-aware federated retrieval across ten literature engines, preserving provenance from broad discovery through focused synthesis. |
+| `Advanced Multi-Phase Literature Retrieval` | `projects/templates/template_advanced_literature_review/src/literature/SKILL.md` | Operations for phase-aware federated retrieval across nine literature engines, preserving provenance from broad discovery through focused synthesis. |
 | `Data Visualization Library` | `projects/templates/template_literature_meta_analysis/src/visualization/SKILL.md` | Orchestrates matplotlib and seaborn pipelines for rendering figures. |
 | `LLM Extraction & KG Construction` | `projects/templates/template_literature_meta_analysis/src/knowledge_graph/SKILL.md` | Core inference logic, prompt construction, and RDF/Nanopublication serialization. |
 | `Manuscript Templating & Injection` | `projects/templates/template_literature_meta_analysis/src/manuscript/SKILL.md` | Tooling for injecting JSON/CSV statistics into Markdown evaluation templates. |

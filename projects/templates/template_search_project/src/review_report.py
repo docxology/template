@@ -292,7 +292,7 @@ bespoke checks implemented in src.analysis.
 **Artifacts:**
   • review_config.yaml        stage enable/disable configuration
   • scripts/review            unified single-entrypoint orchestrator
-  • scripts/zz_generate_review_report.py  reporter (runs last in the project-analysis stage)
+  • scripts/zz_generate_review_report.py  reporter (runs after z_generate_manuscript_variables.py, before zzz_build_dashboard.py)
   • src/analysis.py           custom-stage functions
 
 **Default enabled stages (when run via scripts/review):**

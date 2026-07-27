@@ -115,8 +115,9 @@ by `scripts/docgen/stage_table.py`):
 ## Public Types
 
 `scripts/__init__.py` exports only `ensure_repo_root_on_path()` — the idempotent
-helper each script calls to put the repo root on `sys.path` (the repo sets
-`[tool.uv] package = false`, so it is never installed into the venv). The former
+helper each script calls to put the repo root on `sys.path` (the wheel ships only
+`infrastructure` — see `[tool.hatch.build.targets.wheel] packages` — so `scripts/`
+is never installed into the venv and must be reachable by path). The former
 `PipelineStageDefinition` / `MENU_SCRIPT_MAPPING` types were removed: they had no
 functional consumers and had drifted from the live interactive menu, whose single
 source of truth is `infrastructure.orchestration.menu.MENU_OPTIONS`.

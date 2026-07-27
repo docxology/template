@@ -98,7 +98,7 @@ PPTX rendering requires the opt-in dependency group: `uv sync --group rendering-
 | Folder | Contents |
 |--------|----------|
 | `manuscript/` | `deck_content_{short,medium,long}.yaml` (the pitch content), `config.yaml` (+ `.example`), plus the standard "about this template" manuscript chapters |
-| `scripts/` | Thin orchestrators: `10_audit_deck_content.py`, `15_generate_diagrams.py`, `20_render_decks.py`, `30_audit_diligence.py` |
+| `scripts/` | Thin orchestrators: `10_audit_deck_content.py`, `15_generate_diagrams.py`, `16_generate_charts.py`, `20_render_decks.py`, `30_audit_diligence.py` |
 | `src/` | Content loading, token resolution, cliché lint, diligence audit, repo-fact sourcing — no layout/drawing code |
 | `tests/` | Full suite, 90%+ coverage on `src/` |
 | `output/` | `pdf/`, `pptx/`, `figures/`, `slides_standalone/` — six deck artifacts, rendered diagrams, and one Markdown page per slide |

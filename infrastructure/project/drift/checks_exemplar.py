@@ -366,6 +366,11 @@ def check_required_files_exist(project_root: Path, report: Report, project: str)
         "README.md",
         "AGENTS.md",
         "TODO.md",
+        # A fork extracted through STANDALONE.md must carry its own grant. Until
+        # 2026-07-27, 23 of 24 exemplars declared a license only in CITATION.cff
+        # and shipped no LICENSE, so every fork asserted terms it never granted.
+        # check_license_file_present_and_consistent verifies it matches CITATION.cff.
+        "LICENSE",
         "pyproject.toml",
         ".gitignore",
         "scripts",

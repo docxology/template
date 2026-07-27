@@ -1,7 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "template_autopoiesis"
-version = "0.1.0"
+version = "1.0.1"
+license = {text = "MIT"}
 description = "Autopoietic project generator: combinatoric specification, infrastructure realization, and recompute-verified provenance"
+authors = [
+    {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
+]
 requires-python = ">=3.10"
 dependencies = [
     "numpy",

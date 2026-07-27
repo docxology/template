@@ -70,16 +70,28 @@ This command:
 
 ## Step 4 — Compose the final security decision
 
-```bash
-uv run python -m infrastructure.project.promotion compose \
-  --project-name "<qualified name>" \
-  --attestation /path/to/promotion.yaml \
-  --candidate-root /path/to/private/candidate \
-  --as-of 2026-07-24 --json
+The composite decision has **no CLI surface**. It ships as a library-only API,
+`evaluate_promotion_candidate()` in
+[`infrastructure/project/promotion/composite.py`](../../infrastructure/project/promotion/composite.py),
+which combines the attestation and candidate-security decisions into one typed
+`PromotionCompositeReport`:
+
+```python
+from datetime import date
+from pathlib import Path
+
+from infrastructure.project.promotion import evaluate_promotion_candidate
+
+report = evaluate_promotion_candidate(
+    Path("/path/to/private/candidate"),
+    project_name="<qualified name>",
+    orchestration_attestation=Path("/path/to/promotion.yaml"),
+    as_of=date(2026, 7, 24),
+)
 ```
 
-This calls `evaluate_promotion_candidate(...)` which combines the attestation
-and candidate-security decisions into one typed report. The composite rejects:
+`security_attestation` defaults to `promotion-security.yaml` inside the
+candidate root. The composite rejects (by raising `ValueError`):
 
 - A mismatched attestation project name
 - A `source_commit` different from candidate `HEAD`

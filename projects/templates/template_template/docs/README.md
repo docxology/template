@@ -31,5 +31,5 @@ PYTHONPATH=. uv run python projects/templates/template_template/scripts/generate
 
 - **Self-referential**: This project's manuscript describes the infrastructure it runs on
 - **Variable injection**: `${variable}` tokens in manuscript are replaced with live metrics at build time
-- **Zero-mock**: All 130 tests (across 5 test files) run against real filesystem and real infrastructure
+- **Zero-mock**: Every test runs against the real filesystem and real infrastructure; the collected total is in [`COUNTS.md`](../../../../docs/_generated/COUNTS.md)
 - **Four figures**: Architecture overview, pipeline stages, module inventory, comparative matrix — all auto-generated from live data

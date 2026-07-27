@@ -55,8 +55,9 @@ dependencies = [
     "pillow>=10.0",
 ]
 
-# No [project.scripts] shell-command aliases are defined in the root
-# pyproject.toml. Use `uv run pytest ...` or `uv run python scripts/...`
+# The root pyproject.toml defines exactly one [project.scripts] console entry
+# point: `research-template = "infrastructure.orchestration.cli:main"`. For
+# everything else use `uv run pytest ...` or `uv run python scripts/...`
 # directly so commands execute inside the managed environment.
 
 [dependency-groups]
@@ -70,7 +71,7 @@ dev = [
 [tool.uv]
 # uv-specific configuration
 managed = true  # Use uv's virtual environment management
-package = false  # This is not a distributable package
+package = true  # Install Layer 1 and the research-template console entry point
 default-groups = ["dev", "rendering", "discopy", "steganography", "active-inference", "public-exemplars"]
 
 [tool.uv.workspace]

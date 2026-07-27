@@ -106,7 +106,7 @@ Primary components:
 - CI/CD: GitHub Actions, pre-commit/pre-push hooks, Bandit, pip-audit, Ruff,
   mypy, generated-artifact guards, docs gates, and regression tests.
 - Ownership controls: `.github/CODEOWNERS`, `.github/SECURITY.md`, and
-  generated ownership-map artifacts under `security-analysis/ownership-map/`.
+  `.github/sensitive-ownership.yaml`.
 
 Trust boundaries:
 
@@ -150,7 +150,7 @@ flowchart TB
 | LLM/search inputs | Avoid prompt/data exfiltration and sanitize user-facing prompt paths | `infrastructure/llm/core/sanitization.py:37`, `infrastructure/llm/core/client.py:163`, `infrastructure/llm/core/client.py:224` |
 | Rendering subprocesses | Avoid shell injection, resource hangs, unsafe generated HTML, and unbounded local file reads | `infrastructure/rendering/pdf_renderer.py:117`, `infrastructure/rendering/pdf_renderer.py:131`, `infrastructure/rendering/web_renderer.py:160` |
 | Provenance metadata | Prove origin without leaking recipient secrets or overclaiming tamper resistance | `infrastructure/steganography/THREAT_MODEL.md:15`, `infrastructure/steganography/THREAT_MODEL.md:66`, `infrastructure/steganography/core.py:99` |
-| Ownership continuity | Sensitive surfaces have explicit reviewers and continuity beyond one maintainer | `security-analysis/ownership-map/summary.json` |
+| Ownership continuity | Sensitive surfaces have explicit reviewers, and single-owner areas carry a documented exception | `.github/CODEOWNERS:6`, `.github/sensitive-ownership.yaml:1`, `tests/infra_tests/project/test_codeowners_parity.py:51` |
 
 ## Attacker Model
 
@@ -305,19 +305,20 @@ preflight controls are shipped and are not repeated as backlog items.
 
 ## Ownership Map Summary
 
-Command run:
+> **Historical snapshot (2026-07-17), not re-runnable here.** This section records
+> a one-off analysis by an external ownership-mapping tool (`run_ownership_map.py`)
+> that is **not shipped in this repository**, run against a different checkout of
+> this project (the recorded `repo` path is not this working tree, which is why the
+> 22381-file count exceeds it). The tool and its `security-analysis/` inputs and
+> outputs are absent here, so the command is deliberately not reproduced and the
+> analysis cannot be re-run from this repo. The numbers below are still auditable:
+> the generating artifact remains in git history at
+> `git show 72e6a0487^:security-analysis/ownership-map/summary.json`.
+> The *reproducible* ownership controls are `.github/CODEOWNERS`,
+> `.github/sensitive-ownership.yaml`, and
+> `tests/infra_tests/project/test_codeowners_parity.py`.
 
-```bash
-uv run python scripts/audit/run_ownership_map.py \
-  --repo . \
-  --out security-analysis/ownership-map \
-  --sensitive-config security-analysis/sensitive-paths.csv \
-  --emit-commits \
-  --cochange-max-files 120 \
-  --community-top-owners 8
-```
-
-Key results:
+Key results at the time of that run:
 
 - Commits analyzed: 1008.
 - People identified: 3.

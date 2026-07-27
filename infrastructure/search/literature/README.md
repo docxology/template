@@ -55,7 +55,7 @@ For agent-oriented API examples see [SKILL.md](SKILL.md); for invariants
 and editing rules see the parent module's
 [`AGENTS.md`](../AGENTS.md).
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

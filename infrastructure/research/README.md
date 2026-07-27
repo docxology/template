@@ -114,4 +114,4 @@ replaced with the template/ pipeline scripts.
 - [`infrastructure/search/README.md`](../search/README.md) — literature search module
 - [`infrastructure/autoresearch/README.md`](../autoresearch/README.md) — deterministic readiness checks
 - [`scripts/AGENTS.md`](../../scripts/AGENTS.md) — pipeline entry points
-- [`infrastructure/core/pipeline/pipeline.yaml`](../core/pipeline/pipeline.yaml) — 14-stage pipeline definition
+- [`infrastructure/core/pipeline/pipeline.yaml`](../core/pipeline/pipeline.yaml) — the pipeline stage definitions (authoritative; stage count derived live)

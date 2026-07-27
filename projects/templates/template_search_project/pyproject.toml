@@ -20,9 +20,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "template_search_project"
-version = "0.1.0"
+# Must match CITATION.cff / codemeta.json / .zenodo.json / manuscript/config.yaml,
+# which all read `0.1` — the string form of the published Zenodo deposits
+# (concept 10.5281/zenodo.21298894, version 10.5281/zenodo.21298895).
+version = "0.1"
 description = "Configurable literature-search → BibTeX → LLM-synthesis pipeline built on infrastructure/search and infrastructure/reference."
-authors = [{name = "Research Template Author", email = "author@research-template.org"}]
+authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.10"

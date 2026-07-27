@@ -40,8 +40,8 @@ gate went **FAIL → PASS 11/11**; regression tier 55/55; drift `--strict` exit 
   `infrastructure.core.credentials.ensure_dotenv_loaded`.
 - **Doc-drift corrections** across `CLAUDE.md`, `STATUS.md`, `CHANGELOG.md`,
   `TO-DO.md`, `docs/guides/getting-started.md`: regression tier is 15
-  exemplars / 55 tests (was described as "scaffold-only / 3 tests / 10
-  exemplars / 36 tests"); the `mypy --strict passes` claim replaced with an
+  exemplars / 55 tests (was described as "scaffold-only / 3 tests / 10 <!-- noqa: drift-counts -->
+  exemplars / 36 tests"); the `mypy --strict passes` claim replaced with an <!-- noqa: drift-counts -->
   accurate CI-config statement; `run_matrix` needs `run.config` first; the
   "authoritative file list" overclaim softened; first-run command aligned
   across the two entry docs (core-only).
@@ -106,7 +106,7 @@ work units and convergence iterations instead of host timing. Manuscript source
 now states that boundary directly and no longer injects a microsecond value (or
 an `N/A μs` fallback) as a reproducible fact. Regression coverage runs the JSON
 report and PNG figure twice and asserts byte equality; the focused closure suite
-passed 39 tests.
+passed 39 tests. <!-- noqa: drift-counts -->
 
 ## Open — High
 

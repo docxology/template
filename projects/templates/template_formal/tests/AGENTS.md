@@ -1,6 +1,7 @@
 # `tests/` — Agent Guide
 
-278 tests, one subdirectory per `src/template_formal/` subpackage. See
+One subdirectory per `src/template_formal/` subpackage; the current collected
+test total is in [`COUNTS.md`](../../../../docs/_generated/COUNTS.md). See
 [`README.md`](README.md) for the full directory-to-responsibility map, the
 mypy-oracle harness mechanics, and measured xdist timing.
 

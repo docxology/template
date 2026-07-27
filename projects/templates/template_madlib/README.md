@@ -174,7 +174,7 @@ claim ledger.
 
 Output Markdown, PDF, HTML, slides, figures, reports, and copied deliverables are disposable. Regenerate them through Stages 02-05 after source edits; do not hand-edit `output/` artifacts to make a method or documentation claim pass review.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

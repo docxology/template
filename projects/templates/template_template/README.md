@@ -133,7 +133,7 @@ See [`docs/VERIFICATION.md`](docs/VERIFICATION.md) for the full gate checklist.
 - Project validation: `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

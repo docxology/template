@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate deep-review report for template_search_project (runs last in the project-analysis stage).
+"""Generate deep-review report for template_search_project (second-to-last in the project-analysis stage).
 
 All inventory scanning, documentation/bibliography/infrastructure audits,
 review-summary subprocess invocation, and markdown assembly live in

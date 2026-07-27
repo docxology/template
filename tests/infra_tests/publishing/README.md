@@ -4,7 +4,7 @@ tests for academic publishing infrastructure.
 
 ## Overview
 
-Tests for publishing module including platform API clients (Zenodo, arXiv, GitHub), citation generation, metadata extraction, release workflow, transmission bookends, and CLI interfaces. Current collect-only total: **362 tests**.
+Tests for publishing module including platform API clients (Zenodo, arXiv, GitHub), citation generation, metadata extraction, release workflow, transmission bookends, and CLI interfaces. Current collect-only total is in [`COUNTS.md`](../../../docs/_generated/COUNTS.md).
 
 ## Quick Start
 

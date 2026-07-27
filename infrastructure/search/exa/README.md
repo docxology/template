@@ -91,7 +91,7 @@ higher-quality synthesis. See the guide's Search Type Reference for latencies.
 - **No external SDK / no import-time network.** Pure-stdlib transport keeps the
   core pipeline offline-reproducible; tests use `pytest-httpserver`, no mocks.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

@@ -185,7 +185,11 @@ def write_integration_audit_artifacts(project_root: Path) -> dict[str, Path]:
         root / "output" / "reports" / "claim_evidence_audit.json",
         build_claim_evidence_audit(root),
     )
-    return paths
+    # The convergence tail below must run after the claim audit: rewriting
+    # claim_evidence_audit.json moves manuscript variables, so the staleness
+    # report, token provenance, and visualization-quality audit have to be
+    # re-derived from the settled state. An early `return paths` used to sit
+    # here and silently orphaned this pass.
     paths["manuscript_staleness"] = write_manuscript_staleness_report(root)
     paths["token_provenance"] = _write_json(
         root / "output" / "data" / "manuscript_token_provenance.json",

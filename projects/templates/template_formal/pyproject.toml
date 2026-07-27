@@ -8,9 +8,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "template_formal"
 version = "0.1.0"
+license = {text = "MIT"}
 description = "Strongly-typed multiagent ant-robot colony: ADTs, session-typed protocols, affine-discipline resource handles"
 authors = [
-    {name = "Research Template Author", email = "author@research-template.org"}
+    {name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}
 ]
 requires-python = ">=3.10"
 dependencies = [

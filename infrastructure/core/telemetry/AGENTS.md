@@ -78,6 +78,6 @@ the new report so the in-flight file is never affected. Failures inside
 
 ## Testing
 
-Tests:
-- `tests/infra_tests/core/test_telemetry.py` — 21 tests, Zero-Mock.
-- `tests/infra_tests/core/telemetry/test_retention.py` — 10 tests for `rotate()` (synthetic 12-run pruning, idempotence, edge cases, collision handling, end-to-end collector integration).
+Tests (collected totals are in [`COUNTS.md`](../../../docs/_generated/COUNTS.md)):
+- `tests/infra_tests/core/test_telemetry.py` — collector behaviour, Zero-Mock.
+- `tests/infra_tests/core/telemetry/test_retention.py` — `rotate()` coverage (synthetic 12-run pruning, idempotence, edge cases, collision handling, end-to-end collector integration).

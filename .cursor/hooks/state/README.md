@@ -21,6 +21,6 @@ cp .cursor/hooks/state/continual-learning-memory.example.json \
 The `agents-memory-updater` subagent (repo override at `.cursor/agents/`) creates
 or updates `continual-learning-memory.json` during continual-learning runs.
 
-Root [`AGENTS.md`](../../AGENTS.md) is the **public** contract — learned memory
+Root [`AGENTS.md`](../../../AGENTS.md) is the **public** contract — learned memory
 must not be written there. See [`infrastructure/core/agent_memory.py`](../../../infrastructure/core/agent_memory.py)
 for load/save helpers.

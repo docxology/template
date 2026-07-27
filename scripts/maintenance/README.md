@@ -34,6 +34,7 @@ For example, after targeted public-exemplar renders:
 uv run python scripts/maintenance/refresh_artifact_manifests.py --all-public
 ```
 
-The repo sets `[tool.uv] package = false`, so it is never installed into the
-venv; each script puts the repo root (`parents[2]` from here) on `sys.path`
-before importing `infrastructure`.
+The wheel ships only `infrastructure` (`[tool.hatch.build.targets.wheel]
+packages`), so `scripts/` is never installed into the venv; each script puts the
+repo root (`parents[2]` from here) on `sys.path` before importing
+`infrastructure`.

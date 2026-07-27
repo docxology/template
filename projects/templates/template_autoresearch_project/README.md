@@ -322,7 +322,7 @@ the full validation registry. Full fact serialization is opt-in with
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_autoresearch_project --project-only --quiet
 ```
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

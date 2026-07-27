@@ -27,8 +27,10 @@ Operator and repository-maintenance orchestrators. **None of these run in the de
 uv run python scripts/maintenance/<script>.py [args]
 ```
 
-`[tool.uv] package = false`, so each script puts the repo root (`parents[2]`
-from this directory) on `sys.path` before importing `infrastructure`.
+The wheel ships only `infrastructure` (`[tool.hatch.build.targets.wheel]
+packages`), so `scripts/` is never installed into the venv; each script puts the
+repo root (`parents[2]` from this directory) on `sys.path` before importing
+`infrastructure`.
 
 ## See also
 

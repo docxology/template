@@ -51,8 +51,9 @@ and their dependency lines.
 
 ```python
 # Example: use only the rendering pipeline
-from infrastructure.rendering.pdf_renderer import render_combined_pdf
-from infrastructure.rendering.web_renderer import render_web
+from infrastructure.rendering import RenderingConfig
+from infrastructure.rendering.pdf_renderer import PDFRenderer
+from infrastructure.rendering.web_renderer import WebRenderer
 
 # Example: use only the evidence registry
 from infrastructure.validation.evidence_registry import (

@@ -11,7 +11,7 @@ Public API:
 
 import os
 import re
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -161,8 +161,92 @@ def _strip_code(text: str) -> str:
     return text
 
 
+#: Fragment prefixes that are a domain DSL rather than a GitHub heading anchor.
+#: ``template_textbook`` renders ``[**term**](#gl:slug)`` glossary references through
+#: its own resolver, so those fragments must not be measured against heading slugs.
+_NON_ANCHOR_FRAGMENT_PREFIXES: tuple[str, ...] = ("gl:",)
+
+_ATX_HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$", re.MULTILINE)
+_EXPLICIT_ID_RE = re.compile(r"""<a\s+(?:id|name)\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
+_CURLY_ID_RE = re.compile(r"\{#([A-Za-z0-9_:.-]+)\}")
+_INLINE_CODE_RE = re.compile(r"`([^`]*)`")
+_MD_LINK_TEXT_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _blank_fences(text: str) -> str:
+    """Blank fenced code blocks while PRESERVING inline-code spans.
+
+    Headings legitimately contain inline code (``## `uv` command not found``) and
+    GitHub slugs the code's *text content*, so the inline-span blanking used for
+    link discovery would mis-slug those headings.
+    """
+
+    def _blank(match: re.Match[str]) -> str:
+        return "".join("\n" if ch == "\n" else " " for ch in match.group(0))
+
+    return _FENCE_RE.sub(_blank, text)
+
+
+def heading_slug(text: str) -> str:
+    """Return the GitHub-Flavored-Markdown anchor slug for a heading's text.
+
+    Mirrors ``github-slugger``: render-then-slug. Markup is reduced to its text
+    content, the result is lowercased, characters outside ``[\\w\\s-]`` are dropped,
+    and spaces become hyphens.
+
+    Two behaviours matter and are easy to get wrong:
+
+    * A leading emoji is dropped but the space after it is not, so
+      ``## 🚀 Quick Start`` slugs to ``-quick-start`` (leading hyphen), NOT
+      ``quick-start``.
+    * Intra-word underscores are not emphasis in GFM and survive into the slug,
+      so ``secure_run.sh`` contributes ``secure_runsh``.
+    """
+    s = _INLINE_CODE_RE.sub(r"\1", text.strip())
+    s = _MD_LINK_TEXT_RE.sub(r"\1", s)
+    s = _HTML_TAG_RE.sub("", s)
+    s = re.sub(r"[*~]+", "", s)
+    s = s.lower()
+    s = re.sub(r"[^\w\s-]", "", s, flags=re.UNICODE)
+    return s.replace(" ", "-")
+
+
+def collect_anchors(md_file: Path) -> frozenset[str]:
+    """Return every in-page anchor *md_file* defines.
+
+    Covers ATX heading slugs (with GitHub's ``-1``/``-2`` duplicate suffixes),
+    explicit ``<a id="...">``/``<a name="...">`` targets, and ``{#custom-id}``
+    heading attributes.
+    """
+    raw = read_markdown(md_file)
+    if raw is None:
+        return frozenset()
+    anchors: set[str] = set(_EXPLICIT_ID_RE.findall(raw))
+    seen: dict[str, int] = {}
+    for match in _ATX_HEADING_RE.finditer(_blank_fences(raw)):
+        heading = match.group(2)
+        custom = _CURLY_ID_RE.search(heading)
+        if custom:
+            anchors.add(custom.group(1))
+            heading = _CURLY_ID_RE.sub("", heading)
+        slug = heading_slug(heading)
+        if not slug:
+            continue
+        count = seen.get(slug, 0)
+        seen[slug] = count + 1
+        anchors.add(slug if count == 0 else f"{slug}-{count}")
+    return frozenset(anchors)
+
+
 def _is_external(target: str) -> bool:
-    """True if *target* is an external URL or otherwise not a filesystem reference."""
+    """True if *target* is an external URL or otherwise not a filesystem reference.
+
+    Pure-anchor targets (``#section``) stay "external" here because callers such as
+    :func:`_file_link_target` use this predicate to decide what is a *file* edge;
+    treating a same-file anchor as a file edge would add self-loops to the link
+    graph. Same-file anchors are validated separately in :func:`find_broken_links`.
+    """
     if not target:
         return True
     if target.startswith("#"):
@@ -199,6 +283,29 @@ def _resolve_target(md_file: Path, target: str) -> tuple[Path | None, str]:
     return None, "target does not exist on disk"
 
 
+def _fragment_failure(
+    target_file: Path,
+    fragment: str,
+    anchors_for: "Callable[[Path], frozenset[str]]",
+) -> str:
+    """Return a failure reason if *fragment* does not resolve in *target_file*.
+
+    Returns an empty string when the fragment resolves or is out of scope. Only
+    Markdown targets are checked — a fragment on a ``.py`` or image link is a
+    line-reference or viewer hint, not a heading anchor.
+    """
+    if not fragment:
+        return ""
+    decoded = unquote(fragment)
+    if decoded.startswith(_NON_ANCHOR_FRAGMENT_PREFIXES):
+        return ""
+    if target_file.is_dir() or target_file.suffix.lower() != ".md":
+        return ""
+    if decoded in anchors_for(target_file):
+        return ""
+    return f"anchor '#{decoded}' not found in {target_file.name}"
+
+
 def find_broken_links(
     roots: Iterable[Path],
     exclude_globs: Iterable[str] = _DEFAULT_EXCLUDE_GLOBS,
@@ -209,6 +316,13 @@ def find_broken_links(
     skips external URLs (http/https/mailto/etc.), and skips pure-anchor links.
     """
     broken: list[BrokenLink] = []
+    anchor_cache: dict[Path, frozenset[str]] = {}
+
+    def _anchors(path: Path) -> frozenset[str]:
+        if path not in anchor_cache:
+            anchor_cache[path] = collect_anchors(path)
+        return anchor_cache[path]
+
     for md in _iter_markdown_files(roots, exclude_globs):
         raw = read_markdown(md)
         if raw is None:
@@ -218,6 +332,20 @@ def find_broken_links(
         for match in _LINK_RE.finditer(scrubbed):
             target = match.group("url")
             if _is_external(target):
+                # A pure `#fragment` still has to resolve within THIS file.
+                if target.startswith("#"):
+                    line = scrubbed[: match.start()].count("\n") + 1
+                    reason = _fragment_failure(md, target[1:], _anchors)
+                    if reason and not (0 < line <= len(raw_lines) and _NOQA_RE.search(raw_lines[line - 1])):
+                        broken.append(
+                            BrokenLink(
+                                file=md,
+                                line=line,
+                                text=raw[match.start("text") : match.end("text")],
+                                target=target,
+                                reason=reason,
+                            )
+                        )
                 continue
             resolved, reason = _resolve_target(md, target)
             if resolved is None:
@@ -245,6 +373,25 @@ def find_broken_links(
                         text=original_text,
                         target=target,
                         reason=reason,
+                    )
+                )
+                continue
+            # File resolved — now the `#fragment`, if any, must resolve inside it.
+            if "#" in target and resolved is not None:
+                fragment = target.split("#", 1)[1]
+                frag_reason = _fragment_failure(resolved, fragment, _anchors)
+                if not frag_reason:
+                    continue
+                line = scrubbed[: match.start()].count("\n") + 1
+                if 0 < line <= len(raw_lines) and _NOQA_RE.search(raw_lines[line - 1]):
+                    continue
+                broken.append(
+                    BrokenLink(
+                        file=md,
+                        line=line,
+                        text=raw[match.start("text") : match.end("text")],
+                        target=target,
+                        reason=frag_reason,
                     )
                 )
     return broken

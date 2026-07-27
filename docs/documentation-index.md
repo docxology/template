@@ -42,7 +42,7 @@ This index lists documentation files in the Research Project Template by categor
 ---
 
 > [!IMPORTANT]
-> **Multi-project pipeline pitfalls** (root venv deps, `matplotlib` in core deps, `project_config:` namespace, idempotency) — authoritative copy in [docs/AGENTS.md](AGENTS.md#learnings--known-issues) and [guides/new-project-setup.md](guides/new-project-setup.md#pitfall-6-root-venv).
+> **Multi-project pipeline pitfalls** (root venv deps, `matplotlib` in core deps, `project_config:` namespace, idempotency) — authoritative copy in [docs/AGENTS.md](AGENTS.md#learnings--known-issues) and [guides/new-project-setup.md](guides/new-project-setup.md).
 
 ## Topic routing (canonical → deep dives)
 
@@ -54,7 +54,7 @@ This index lists documentation files in the Research Project Template by categor
 | Logging | [operational/logging/output-design.md](operational/logging/output-design.md) | [operational/logging/python-logging.md](operational/logging/python-logging.md), [operational/logging/bash-logging.md](operational/logging/bash-logging.md) |
 | Secure / steganography | [guides/secure-research-guide.md](guides/secure-research-guide.md) | [security/README.md](security/README.md), [security/secure_execution.md](security/secure_execution.md) |
 | Literature search | [guides/literature-workflow-guide.md](guides/literature-workflow-guide.md) | [core/literature-data-flow.md](core/literature-data-flow.md), [modules/literature-search-and-references.md](modules/literature-search-and-references.md) |
-| Web search (Exa) | [modules/guides/search-module.md](modules/guides/search-module.md#exa-web-search-exa) | [../infrastructure/search/exa/CAPABILITIES.md](../infrastructure/search/exa/CAPABILITIES.md) |
+| Web search (Exa) | [../infrastructure/search/README.md](../infrastructure/search/README.md#exa-quick-start) | [../infrastructure/search/exa/CAPABILITIES.md](../infrastructure/search/exa/CAPABILITIES.md) |
 | Deep research (OpenAI/Gemini, paid opt-in) | [../infrastructure/search/deep_research/README.md](../infrastructure/search/deep_research/README.md) | [../infrastructure/search/deep_research/AGENTS.md](../infrastructure/search/deep_research/AGENTS.md), [../infrastructure/search/SKILL.md](../infrastructure/search/SKILL.md) |
 | Publication | [guides/publication-runbook.md](guides/publication-runbook.md) | [guides/publishing-guide.md](guides/publishing-guide.md), [guides/zenodo-doi-strategy.md](guides/zenodo-doi-strategy.md), [modules/guides/publishing-module.md](modules/guides/publishing-module.md), [_generated/publication_records.md](_generated/publication_records.md) |
 
@@ -199,10 +199,11 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`, `published/`, `other/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
-- **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Stage 13 archival providers
+- **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Archival providers for the opt-in archival stage (stage index: see the generated stage table)
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/shell/ci_local.sh`)
 - **[maintenance/release-boundary.md](maintenance/release-boundary.md)** - Root package, tag, changelog, and GitHub release boundary
-- **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Stage 12 executable bundle design (file predates the Ebook/Metadata stage insertion; kept its original name)
+- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Supported-Python contract (`requires-python = ">=3.10"` floor, 3.12 default, 3.13 readiness lane)
+- **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Executable bundle design for the opt-in bundle stage (file predates the Ebook/Metadata stage insertion; kept its original name, and stage indices live only in the generated stage table)
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
 - **[maintenance/review-remediation-2026-07.md](maintenance/review-remediation-2026-07.md)** - Multi-lens review remediation plan (R1–R18 items with acceptance lines)
@@ -220,8 +221,9 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 
 Thin pointer stubs: each entry redirects to the module's own
 `infrastructure/<module>/` README/SKILL docs, which are the substantive
-references. One stub per infrastructure module (plus the config/docker asset
-directories).
+references. One stub per infrastructure package, plus the `config/`, `docker/`,
+and `logrotate.d/` asset directories and the `validation/integrity/`
+subpackage.
 
 - **[modules/guides/config-module.md](modules/guides/config-module.md)**
 - **[modules/guides/autoresearch-module.md](modules/guides/autoresearch-module.md)**
@@ -273,8 +275,8 @@ directories).
 - **[operational/build/ci-cd-integration.md](operational/build/ci-cd-integration.md)** - CI/CD integration
 - **[operational/build/dependency-management.md](operational/build/dependency-management.md)** - Dependency management
 - **[plans/README.md](plans/README.md)** - Strategic plans and architecture decisions
-- **Live doc linter** — `scripts/audit/lint_docs.py`: `uv run python scripts/audit/lint_docs.py` ([script entrypoint](../scripts/audit/lint_docs.py)) — repo-wide mermaid block validation + cross-link integrity + sibling-doc consistency; replaces the older point-in-time `scripts/audit/audit_filepaths.py` snapshots
-- **Template drift checker** — `scripts/audit/check_template_drift.py`: `uv run python scripts/audit/check_template_drift.py` ([script entrypoint](../scripts/audit/check_template_drift.py)) — 10 per-exemplar detectors + 2 repo-level checks (`check_repo_docs_hardcoded_counts` against `docs/` and the thin-orchestrator `check_repo_scripts`)
+- **Live doc linter** — `scripts/audit/lint_docs.py`: `uv run python scripts/audit/lint_docs.py` ([script entrypoint](../scripts/audit/lint_docs.py)) — mermaid block validation + cross-link integrity + sibling-doc consistency across `docs/`, `infrastructure/`, `.github/`, `scripts/`, `tests/`, root-level markdown, and the public exemplars (the scan set is `doc_roots()` in `infrastructure/validation/docs/lint_runner.py`, not the whole repo); replaces the older point-in-time `scripts/audit/audit_filepaths.py` snapshots
+- **Template drift checker** — `scripts/audit/check_template_drift.py`: `uv run python scripts/audit/check_template_drift.py` ([script entrypoint](../scripts/audit/check_template_drift.py)) — 19 per-exemplar detectors + 4 repo-level checks (registered in `infrastructure/project/drift/registry.py`)
 - **Audit replacement note** — dated audit snapshots were retired from public docs; use the live linters above as the canonical reference, or git history for point-in-time reports
 - **[audit/filepath-audit-report.md](audit/filepath-audit-report.md)** — Historical filepath audit report (point-in-time snapshot)
 - **[guides/fork-an-exemplar.md](guides/fork-an-exemplar.md)** - Top-level entry: pick the right exemplar and start a 5-minute fork
@@ -429,7 +431,7 @@ flowchart TB
 
 For the most up-to-date information, see the individual documentation files linked above.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

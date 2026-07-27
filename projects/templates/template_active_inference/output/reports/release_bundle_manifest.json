@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 38,
-  "bundle_hash": "92ed9aa69e74f9999befaeed8b3262a4dcdd5534b34a6d239d67e06edd9dab51",
+  "bundle_hash": "da7535f66cb9e9fefc1cf732b5f9f959e6a667a6e864cc475038e273f8dce945",
   "copied_output_parity": {
     "all_copied_outputs_match": true,
     "all_copied_outputs_match_or_deferred": true,
@@ -21,7 +21,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+        "source_sha256": "5b0fb179b009103b361d84baeaa189ff56a097b4de8089666770cd2d70e1f68d",
         "status": "deferred"
       },
       {
@@ -45,7 +45,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "6484db66b1ac33befd24cf0e3cb38b16c92c8eec62ac9b7bce191ae9c2db5122",
+        "source_sha256": "8a03c0264370cab73b81498d9086d4eed766aa4c5b9718081f68283ccbe1779f",
         "status": "deferred"
       },
       {
@@ -57,7 +57,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "cb2191b9dbb947e2185a5467358d9b67f84eddb77a3c59a61e9de657deef1e05",
+        "source_sha256": "e5c1aa2ab6252b0416da13593a94e386a4cc8626b33e6a063bf3c84703b1207a",
         "status": "deferred"
       },
       {
@@ -213,7 +213,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "e1d28ef8b7971970a41cdc8b5f61dfd6bd1cc9b745af401c2f3321f6c24260a0",
+        "source_sha256": "7fc1a7df048fc1d49f66f96dc4e9b65ace7b52b905a338a4eade5c5b8559a1d6",
         "status": "deferred"
       },
       {
@@ -225,7 +225,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599",
+        "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
         "status": "deferred"
       },
       {
@@ -237,7 +237,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
+        "source_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
         "status": "deferred"
       },
       {
@@ -249,7 +249,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "40716b6b7bdecb6b32d3298a2d2e912c22ca2b21ab6d950519a0a3b254029661",
+        "source_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
         "status": "deferred"
       },
       {
@@ -261,7 +261,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc",
+        "source_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
         "status": "deferred"
       },
       {
@@ -273,7 +273,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
+        "source_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
         "status": "deferred"
       },
       {
@@ -285,7 +285,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9",
+        "source_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
         "status": "deferred"
       },
       {
@@ -297,7 +297,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
+        "source_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
         "status": "deferred"
       },
       {
@@ -309,7 +309,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "36026ba1244fbeb7875586ca57739f09e47656204f16bc9438954edbee938f64",
+        "source_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
         "status": "deferred"
       },
       {
@@ -357,7 +357,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "ceb3a040e44d558a10c6795b1220b3c27ea9486be6f3e08c92428eaf73d8685c",
+        "source_sha256": "3fd340c20e34b79780489c541f4d0e7d43dbab48835d203daaa07314a02e4227",
         "status": "deferred"
       },
       {
@@ -465,7 +465,7 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "c7b7678cd7ec0971e5d5c285611467dd53e96379d019e6605ac8ba2a5b3e2dc8",
+        "source_sha256": "f4293b39e7106c8d8b65b294f56d4e758dc1df45e72423f59e4f31ff8c3d7248",
         "status": "deferred"
       }
     ]
@@ -476,7 +476,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439"
+      "source_sha256": "5b0fb179b009103b361d84baeaa189ff56a097b4de8089666770cd2d70e1f68d"
     },
     {
       "artifact": "output/data/validation_dependency_graph.json",
@@ -490,14 +490,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "6484db66b1ac33befd24cf0e3cb38b16c92c8eec62ac9b7bce191ae9c2db5122"
+      "source_sha256": "8a03c0264370cab73b81498d9086d4eed766aa4c5b9718081f68283ccbe1779f"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "cb2191b9dbb947e2185a5467358d9b67f84eddb77a3c59a61e9de657deef1e05"
+      "source_sha256": "e5c1aa2ab6252b0416da13593a94e386a4cc8626b33e6a063bf3c84703b1207a"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -588,63 +588,63 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "e1d28ef8b7971970a41cdc8b5f61dfd6bd1cc9b745af401c2f3321f6c24260a0"
+      "source_sha256": "7fc1a7df048fc1d49f66f96dc4e9b65ace7b52b905a338a4eade5c5b8559a1d6"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599"
+      "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7"
+      "source_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14"
     },
     {
       "artifact": "output/figures/track_lane_promotion_map.png",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "40716b6b7bdecb6b32d3298a2d2e912c22ca2b21ab6d950519a0a3b254029661"
+      "source_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd"
     },
     {
       "artifact": "output/figures/artifact_contract_map.png",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc"
+      "source_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f"
     },
     {
       "artifact": "output/figures/theorem_traceability_graph.png",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b"
+      "source_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9"
+      "source_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05"
+      "source_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175"
     },
     {
       "artifact": "output/reports/visualization_quality_audit.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "36026ba1244fbeb7875586ca57739f09e47656204f16bc9438954edbee938f64"
+      "source_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -672,7 +672,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "ceb3a040e44d558a10c6795b1220b3c27ea9486be6f3e08c92428eaf73d8685c"
+      "source_sha256": "3fd340c20e34b79780489c541f4d0e7d43dbab48835d203daaa07314a02e4227"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -735,7 +735,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c7b7678cd7ec0971e5d5c285611467dd53e96379d019e6605ac8ba2a5b3e2dc8"
+      "source_sha256": "f4293b39e7106c8d8b65b294f56d4e758dc1df45e72423f59e4f31ff8c3d7248"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",

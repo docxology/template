@@ -77,6 +77,8 @@ This is a **GitHub Template Repository** that gives you:
 
 Pick the entry point that matches your goal:
 
+- **Cold start, human or agent** (install prerequisites, run the canonical
+  exemplar once): [`START_HERE.md`](START_HERE.md).
 - **New users** (write docs, generate PDFs): start with [Quickstart](#quickstart),
   then [`docs/guides/getting-started.md`](docs/guides/getting-started.md) and
   [`docs/reference/quick-start-cheatsheet.md`](docs/reference/quick-start-cheatsheet.md).

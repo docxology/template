@@ -194,7 +194,7 @@ See [AGENTS.md](AGENTS.md) for technical documentation.
 - Project validation: `uv run pytest projects/templates/template_gold_refinement/tests/ --cov=projects/templates/template_gold_refinement/src --cov-fail-under=90`.
 - Repo drift validation: `uv run python scripts/audit/check_template_drift.py --strict`.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

@@ -176,14 +176,16 @@ LLM stages are gated; if you don't want them, run `execute_pipeline.py` with
 
 ## CI / GitHub Actions failures
 
-**Symptom:** PR check `lint` fails on `scripts/audit/check_tracked_projects.py`.
+**Symptom:** PR check `lint` fails on the step "Confidentiality guard — only
+public template resources tracked" (`scripts/audit/check_tracked_all.py`).
 
-You added a non-template project under `projects/` and tried to push.
+You added a non-template resource under one of the four guarded pools —
+`projects/`, `fonds/`, `rules/`, or `tools/` — and tried to push.
 Per the [private-projects-repo contract](../../maintenance/private-projects-repo.md),
-only the public canonical exemplars listed in
-[`docs/_generated/active_projects.md`](../../_generated/active_projects.md)
-are git-tracked. Move other projects out of
-`projects/` and re-push.
+only each pool's `templates/` subtree is git-tracked; for `projects/` that is
+the public canonical exemplars listed in
+[`docs/_generated/active_projects.md`](../../_generated/active_projects.md).
+Move the offending paths out of the tracked pool and re-push.
 
 **Symptom:** Coverage job `pytest --cov=infrastructure --cov-fail-under=60`
 fails.

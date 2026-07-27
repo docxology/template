@@ -49,7 +49,7 @@ uv --version   # should print 0.4.x or later
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version (3.10–3.12) automatically.
+You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.12 via `.python-version`, and the supported range is 3.10–3.13 (`requires-python = ">=3.10"` in `pyproject.toml`, CI matrix 3.10/3.11/3.12/3.13).
 
 ### Install `pandoc` (document converter — required)
 

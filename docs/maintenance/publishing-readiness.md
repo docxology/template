@@ -62,7 +62,7 @@ only**, which is safe and repeatable.
 - **PyPI pipeline** proven end-to-end except the push: `python -m build`
   produces sdist + wheel and `twine check` **PASSES**.
 - **Adapter tests**: 13/13 new HuggingFace + OSF tests pass; full publishing
-  suite 543 passed (the only failures are an unrelated missing optional
+  suite 543 passed (the only failures are an unrelated missing optional <!-- noqa: drift-counts -->
   `qrcode` package in the transmission-bookend code).
 
 ---

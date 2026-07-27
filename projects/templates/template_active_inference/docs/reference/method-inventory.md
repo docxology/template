@@ -157,17 +157,17 @@ Total documented definitions: 811
 | 33 | `function` | `_fallback_summary` | docstring | Build an inventory-backed summary for a definition without a docstring. |
 | 38 | `function` | `_definition_kind` | docstring | Normalize AST node types into report-friendly definition kinds. |
 | 47 | `class` | `_DefinitionVisitor` | docstring | Collect definitions while preserving nested qualified names. |
-| 50 | `function` | `_DefinitionVisitor.__init__` | inventory fallback | Inventory fallback for function `_DefinitionVisitor.__init__` defined at `src/gates/method_inventory.py:50`. |
-| 55 | `function` | `_DefinitionVisitor.visit_ClassDef` | docstring | Process visit ClassDef. |
-| 62 | `function` | `_DefinitionVisitor.visit_FunctionDef` | docstring | Process visit FunctionDef. |
-| 69 | `function` | `_DefinitionVisitor.visit_AsyncFunctionDef` | docstring | Process visit AsyncFunctionDef. |
-| 76 | `function` | `_DefinitionVisitor._record` | inventory fallback | Inventory fallback for function `_DefinitionVisitor._record` defined at `src/gates/method_inventory.py:76`. |
-| 92 | `function` | `_source_files` | docstring | Return Python files in the documentation inventory scope. |
-| 103 | `function` | `_path_sort_key` | docstring | Sort inventory paths by declared source-root order, then by path. |
-| 113 | `function` | `collect_method_entries` | docstring | Collect every class/function definition under source modules and scripts. |
-| 126 | `function` | `_escape_cell` | docstring | Escape Markdown table cells without changing the underlying value. |
-| 131 | `function` | `render_method_inventory_markdown` | docstring | Render method inventory entries as a grouped Markdown reference. |
-| 175 | `function` | `write_method_inventory` | docstring | Write the method inventory Markdown report and return its path. |
+| 50 | `function` | `_DefinitionVisitor.__init__` | docstring | Initialize the visitor with a relative path for entry recording. |
+| 60 | `function` | `_DefinitionVisitor.visit_ClassDef` | docstring | Process visit ClassDef. |
+| 67 | `function` | `_DefinitionVisitor.visit_FunctionDef` | docstring | Process visit FunctionDef. |
+| 74 | `function` | `_DefinitionVisitor.visit_AsyncFunctionDef` | docstring | Process visit AsyncFunctionDef. |
+| 81 | `function` | `_DefinitionVisitor._record` | docstring | Record a single definition as a :class:`MethodEntry` in ``self.entries``. |
+| 98 | `function` | `_source_files` | docstring | Return Python files in the documentation inventory scope. |
+| 109 | `function` | `_path_sort_key` | docstring | Sort inventory paths by declared source-root order, then by path. |
+| 119 | `function` | `collect_method_entries` | docstring | Collect every class/function definition under source modules and scripts. |
+| 132 | `function` | `_escape_cell` | docstring | Escape Markdown table cells without changing the underlying value. |
+| 137 | `function` | `render_method_inventory_markdown` | docstring | Render method inventory entries as a grouped Markdown reference. |
+| 181 | `function` | `write_method_inventory` | docstring | Write the method inventory Markdown report and return its path. |
 
 ## `src/gates/output_checks.py`
 
@@ -575,15 +575,15 @@ Total documented definitions: 811
 | 32 | `function` | `_project_state_fingerprint` | docstring | Return a deterministic source/output fingerprint for refresh caching. |
 | 59 | `function` | `_generator_name` | docstring | Return the refreshable script name in a command, if any. |
 | 70 | `class` | `_RefreshCache` | docstring | In-run fixed-point cache for idempotent generator commands. |
-| 73 | `function` | `_RefreshCache.__init__` | inventory fallback | Inventory fallback for function `_RefreshCache.__init__` defined at `src/orchestration/full_verification.py:73`. |
-| 76 | `function` | `_RefreshCache.run` | inventory fallback | Inventory fallback for function `_RefreshCache.run` defined at `src/orchestration/full_verification.py:76`. |
-| 95 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:95`. |
-| 99 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:99`. |
-| 137 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:137`. |
-| 144 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
-| 168 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:168`. |
-| 189 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:189`. |
-| 220 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
+| 73 | `function` | `_RefreshCache.__init__` | docstring | Initialize an empty in-run refresh cache. |
+| 77 | `function` | `_RefreshCache.run` | docstring | Run a generator command, skipping it when the project state is unchanged. |
+| 103 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:103`. |
+| 107 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:107`. |
+| 145 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:145`. |
+| 152 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
+| 176 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:176`. |
+| 197 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:197`. |
+| 228 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
 
 ## `src/orchestration/pipeline_manifest.py`
 
@@ -651,7 +651,7 @@ Total documented definitions: 811
 | ---: | --- | --- | --- | --- |
 | 93 | `function` | `write_manuscript_staleness_report` | docstring | Write the hydrated-manuscript staleness report. |
 | 113 | `function` | `write_integration_audit_artifacts` | docstring | Write integration audit artifacts to the output path. |
-| 201 | `function` | `validate_integration_audit_artifacts` | docstring | Validate integration audit artifacts. |
+| 205 | `function` | `validate_integration_audit_artifacts` | docstring | Validate integration audit artifacts. |
 
 ## `src/roadmap_tracks/integration_audit_artifacts.py`
 

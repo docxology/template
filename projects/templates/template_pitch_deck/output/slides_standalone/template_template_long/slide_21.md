@@ -2,7 +2,7 @@
 
 *Slide 21 of 56 — template_template pitch, long deck — kind: `stat`*
 
-## 139 tests
+## 143 tests
 
 99.14% coverage on template_template's own source — the same gate every exemplar in the repo must pass. No partial-credit reporting path exists.
 

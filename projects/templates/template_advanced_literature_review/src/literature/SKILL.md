@@ -1,11 +1,11 @@
 ---
 name: Advanced Multi-Phase Literature Retrieval
-description: Operations for phase-aware federated retrieval across ten literature engines, preserving provenance from broad discovery through focused synthesis.
+description: Operations for phase-aware federated retrieval across nine literature engines, preserving provenance from broad discovery through focused synthesis.
 ---
 
 # Instructions
 
-You are interacting with the `src/literature/` module. This coordinates multi-source API harvesting across ten independently toggled engines, canonical-identifier deduplication, full-text resolution/extraction, unified bibliography export, and phase-aware synthesis.
+You are interacting with the `src/literature/` module. This coordinates multi-source API harvesting across nine independently toggled engines, canonical-identifier deduplication, full-text resolution/extraction, unified bibliography export, and phase-aware synthesis.
 
 ## Agentic Interface (MCP Strategy)
 

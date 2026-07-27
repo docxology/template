@@ -2,7 +2,7 @@
 
 ## Overview
 
-Tests for `infrastructure/publishing/`: metadata, citations, platform clients, archival, CLIs, release workflow, and readiness. **362 tests**; coverage gate **≥85%** on `infrastructure.publishing`.
+Tests for `infrastructure/publishing/`: metadata, citations, platform clients, archival, CLIs, release workflow, and readiness. Collected test total is in [`COUNTS.md`](../../../docs/_generated/COUNTS.md); coverage gate **≥85%** on `infrastructure.publishing`.
 
 ## Test modules (on disk)
 

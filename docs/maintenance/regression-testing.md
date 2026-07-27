@@ -16,7 +16,8 @@ A reproducibility template that claims to make science *reproducible* needs to b
 ## The contract this directory creates
 
 > **Historical baseline:** the 2026-07-02 review recorded fifteen public
-> exemplars and 55 collected tests. The roster now rotates independently and
+> exemplars and 55 collected tests. <!-- noqa: drift-counts -->
+> The roster now rotates independently and
 > current counts must be derived from the generated scope and the command
 > below. The
 > broader per-figure/per-table contract below remains the target for deepening

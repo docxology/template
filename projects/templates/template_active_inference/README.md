@@ -309,7 +309,7 @@ requires the legacy single pytest coverage process.
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing
 docstrings remain visible without bloating internal helper code.
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

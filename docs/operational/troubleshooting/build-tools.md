@@ -113,7 +113,7 @@ tail -150 projects/{name}/output/pdf/_combined_manuscript.log | grep -A2 -B2 "gr
 1. Generate missing figures: `uv run python scripts/pipeline/stage_02_analysis.py`
 2. Verify graphicx package: `grep "usepackage{graphicx}" projects/{name}/output/pdf/_combined_manuscript.tex`
 3. Fix figure paths: `sed -i 's|{figures/|{../output/figures/|g' projects/{name}/manuscript/*.md`
-4. Run full rebuild: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only --clean`
+4. Run full rebuild: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` (Stage 0 "Clean Output Directories" runs by default — there is no `--clean` flag)
 
 ---
 

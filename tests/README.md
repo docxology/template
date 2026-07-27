@@ -73,7 +73,7 @@ Exclude Ollama-tied tests from a local run: `pytest -m 'not requires_ollama'`.
 - [`infra_tests/README.md`](infra_tests/README.md)
 - [`integration/README.md`](integration/README.md)
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

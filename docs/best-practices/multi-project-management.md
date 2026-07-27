@@ -370,6 +370,8 @@ dependencies = [
 ]
 ```
 
+<a id="root-venv-dependency-coverage-critical-rule"></a>
+
 ### ⚠️ Root Venv Dependency Coverage (Critical Rule)
 
 Each project in `projects/` may have its own `pyproject.toml` listing extra dependencies. However, **analysis scripts run with the root `.venv`** (via `scripts/pipeline/stage_02_analysis.py`) unless the project has a local `.venv/` directory.

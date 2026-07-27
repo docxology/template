@@ -270,6 +270,8 @@ flowchart TB
     class WIP,ARCH,OUT,O_CODE,O_DOTS gen
 ```
 
+<a id="directory-level-documentation"></a>
+
 ## 📚 Directory-Level Documentation
 
 Each directory contains documentation for easy navigation:
@@ -521,6 +523,8 @@ Configuration is read at runtime by `scripts/pipeline/stage_03_render.py` and ap
 - Generated file headers
 - Cross-reference systems
 - Title page generation
+
+<a id="rendering-pipeline"></a>
 
 ## 🚀 Rendering Pipeline
 
@@ -911,6 +915,8 @@ uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
 uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 ```
 
+<a id="output-formats"></a>
+
 ## 📤 Output Formats
 
 ### Generated Files Structure
@@ -956,6 +962,8 @@ flowchart TB
    - Web browser compatible
    - IDE integration
    - Interactive features (when available)
+
+<a id="advanced-modules"></a>
 
 ## 🧪 **Advanced Modules**
 
@@ -1188,6 +1196,8 @@ ls -la output/{name}/
 uv run python -m infrastructure.validation.cli pdf output/{name}/pdf/{name}_combined.pdf
 ```
 
+<a id="troubleshooting"></a>
+
 ## 🔧 Troubleshooting
 
 ### Quick Reference
@@ -1347,6 +1357,8 @@ Key log files for debugging:
 - `projects/{name}/output/pdf/_combined_manuscript.md` - combined markdown source when retained by the renderer
 - `output/{name}/pdf/` - final copied PDF deliverables
 - Test output from pytest runs
+
+<a id="maintenance"></a>
 
 ## 🛠️ Maintenance
 
@@ -1549,7 +1561,7 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 | **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

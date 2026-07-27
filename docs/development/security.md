@@ -22,7 +22,7 @@ Use GitHub's private vulnerability reporting:
 If private reporting is unavailable, contact the maintainer through the
 [`docxology`](https://github.com/docxology) GitHub profile.
 
-You can expect an acknowledgement within 48 hours. Include a safe contact
+You can expect an acknowledgement within a few days. Include a safe contact
 route in the report if you need follow-up outside the GitHub advisory thread.
 
 ### 📋 **What to Include**
@@ -39,7 +39,7 @@ Please include the following information in your report:
 
 ### 🔍 **What Happens Next**
 
-1. **Acknowledgment**: You will receive an acknowledgment within 48 hours
+1. **Acknowledgment**: You will receive an acknowledgment within a few days
 2. **Investigation**: Our security team will investigate the report
 3. **Updates**: You will receive updates on the progress
 4. **Resolution**: Once resolved, we will:

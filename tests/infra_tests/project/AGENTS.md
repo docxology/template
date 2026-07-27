@@ -9,6 +9,7 @@ Tests for `infrastructure.project.discovery` (`discover_projects`, project metad
 - `test_discovery.py` — exhaustive coverage of `discover_projects()`: nested project layouts, qualified-name handling, the `src/` + `tests/` runnable filter, manuscript-only projects, archived/in-progress filtering, edge cases (~47 KB)
 - `test_validation.py` — `validate_project_structure()` happy paths and failure modes (missing dir, missing `src/`, missing `tests/`, no Python files in `src/`)
 - `test_thin_orchestrator_drift.py` — drift policy: **repo** `scripts/` fat files emit **WARNING**; **project** `scripts/` fat files emit **ERROR**; `scan_project_scripts()` only scans `PUBLIC_PROJECT_NAMES` exemplars
+- `test_drift_pyproject_publication.py` — `check_pyproject_publication_consistency()`: `[project] version` / `[project] authors` in each exemplar's `pyproject.toml` must match `CITATION.cff`. Positive controls prove the detector fires on injected version drift, scaffold placeholder authors, uncredited authors, and unparseable TOML; negative controls pin PEP 440 equivalence (`0.1 == 0.1.0`) and the skip rules for absent/`dynamic` keys
 
 ## Drift vs line-count policies
 

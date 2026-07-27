@@ -5,8 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "template_storybook"
 version = "0.1.0"
+license = {text = "MIT"}
 description = "A full-page illustrated storybook exemplar with data-owned pages, shape-character generation, and ReportLab PDF assembly."
-authors = [{name = "Research Template Author", email = "author@research-template.org"}]
+authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.10"
 dependencies = [
     "Pillow>=10.0",

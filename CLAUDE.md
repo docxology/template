@@ -10,6 +10,7 @@ This is a research project template with a test-driven development workflow, aut
 
 | File | Use when you need |
 | --- | --- |
+| [`START_HERE.md`](START_HERE.md) | The Step 0-5 cold-start path: prerequisites, clone, `uv sync`, pre-commit, first pipeline run, verify outputs |
 | [`README.md`](README.md) | First-time setup, documentation map, contributor links |
 | **This file (`CLAUDE.md`)** | Copy-paste commands, CI parity, common code patterns |
 | [`AGENTS.md`](AGENTS.md) | Full pipeline semantics, validation, configuration reference, troubleshooting index |
@@ -44,9 +45,10 @@ This is a research project template with a test-driven development workflow, aut
 | Publication runbook (standalone GitHub + real Zenodo DOI + optional mirrors) | [`docs/guides/publication-runbook.md`](docs/guides/publication-runbook.md) |
 | Unified project release (GitHub + Zenodo + DOI) | `uv run python scripts/publish/publish_project_release.py --project {name} --tag v1.0.0 --repo owner/repo` (opt-in; see [`docs/guides/publication-runbook.md`](docs/guides/publication-runbook.md)) |
 | Reproduction bundle (single / all public exemplars) | `uv run python scripts/runner/repro_bundle.py build {name}` or `... build --all-public --out output/repro_bundles` (verify with `... verify <manifest>`) |
-| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (55 claim-binding tests plus a public-roster pin; see [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
+| Regression tests (claim-binding tier) | `uv run pytest tests/regression/ -v` (claim-binding tier plus a public-roster pin; collected totals in [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md), rationale in [`docs/maintenance/regression-testing.md`](docs/maintenance/regression-testing.md)) |
 | Repo-wide doc linter | `uv run python scripts/audit/lint_docs.py` |
-| Exemplar drift checker | `uv run python scripts/audit/check_template_drift.py` (add `--strict` for focused gates) |
+| Exemplar drift checker | `uv run python scripts/audit/check_template_drift.py` (add `--strict` to fail on warnings, including hardcoded doc counts) |
+| Re-measure exemplar coverage (slow; runs every suite) | `uv run python scripts/docgen/counts.py --verify-coverage` (add `--write` to rewrite the recorded percentages from the measurement, then `--refresh-coverage-provenance --write`) |
 | Module line count gate | `uv run python scripts/gates/module_line_count_check.py` |
 | CodeGraph local commands | `uv run python scripts/maintenance/codegraph_local.py commands .` (optional; see [`docs/guides/codegraph-local.md`](docs/guides/codegraph-local.md)) |
 | LEANN local semantic retrieval | Optional user-level companion only; see [`docs/guides/leann-local.md`](docs/guides/leann-local.md) |

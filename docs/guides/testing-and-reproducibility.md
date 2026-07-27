@@ -648,7 +648,11 @@ This creates a tamper-detectable PDF with embedded provenance metadata. See the 
 
 ### Coverage Below 90%
 
-**Symptom**: `CoverageWarning: Total coverage 85% < 90% threshold`
+**Symptom**:
+
+```text
+CoverageWarning: Total coverage 85% < 90% threshold
+```
 
 **Solution**:
 ```bash

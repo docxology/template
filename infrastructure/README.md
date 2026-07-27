@@ -417,7 +417,7 @@ flowchart TB
 - [../tests/infra_tests/](../tests/infra_tests/) - Infrastructure test suite
 - [../scripts/](../scripts/) - Orchestration scripts
 
-<!-- foam-orphan-nav:start (auto-managed: links sub-docs so they are reachable) -->
+<!-- foam-orphan-nav:start (hand-maintained: links sub-docs so they are reachable; no generator refreshes or validates this block) -->
 
 ## Directory & sub-document map
 

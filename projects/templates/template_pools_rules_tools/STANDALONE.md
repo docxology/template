@@ -69,13 +69,25 @@ my_project/
 │       └── template_code_executor/
 │           └── tools.yaml
 └── src/
-    ├── __init__.py
+    ├── __init__.py               # re-exports the public API (imports figures.py)
+    ├── py.typed
     ├── type_defs.py
     ├── fonds_reader.py
     ├── rules_applier.py
+    ├── strong_rule_evaluator.py  # imported by integration.py
     ├── tools_invoker.py
-    └── integration.py
+    ├── integration.py
+    ├── manuscript_variables.py
+    ├── figures.py                # imports cover_figure.py + rule_hierarchy_figure.py
+    ├── cover_figure.py
+    └── rule_hierarchy_figure.py
 ```
+
+Copy the whole `src/` package — the modules import each other at import time
+(`src/__init__.py` imports `figures.py`; `integration.py` imports
+`strong_rule_evaluator.py`), so omitting any of them makes the Quick start
+below fail with `ModuleNotFoundError` before any of this project's own code
+runs.
 
 ---
 
@@ -141,9 +153,9 @@ print(result["summary"])
 #   "rules_sets_total": 2,
 #   "tools_discovered": 1,
 #   "tools_valid": 1,
-#   "bib_entries": 42,
+#   "bib_entries": 8,
 #   "contacts": 5,
-#   "datasets": 3,
+#   "datasets": 5,
 # }
 
 from src.integration import generate_figure_data
@@ -151,6 +163,16 @@ rows = generate_figure_data(result)
 for row in rows:
     print(row["label"], row["count"], row["status"])
 ```
+
+The fonds and tools counts are discovered at runtime from whatever you actually
+copied. The rules-set counts are the exception: `rules_sets_total` is
+`len(_DEFAULT_RULE_SETS)` in [`src/integration.py`](src/integration.py), a
+fixed two-entry demo list (`template_project_rules`, `template_manuscript_rules`),
+so adding a rule set under `rules/` does not raise that total until you extend
+that list. The values shown match the minimal fork layout in
+"Directory layout" above, which copies a single tool manifest. Run inside the
+template monorepo, where `tools/templates/` holds four manifests,
+`tools_discovered` and `tools_valid` are both `4` instead.
 
 ---
 
@@ -216,4 +238,8 @@ entrypoints:
 
 ## Licence
 
-Same as the parent template repository. See `LICENSE` at the repo root.
+CC-BY-4.0, declared in [`CITATION.cff`](CITATION.cff) (`license:`) and in
+[`manuscript/config.yaml`](manuscript/config.yaml) (`publication.license`).
+The grant travels with a fork: this exemplar ships its own
+[`LICENSE`](LICENSE). Note that the parent template repository's root `LICENSE`
+is Apache-2.0, which is a different licence from this project's declared one.

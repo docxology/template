@@ -65,6 +65,34 @@ def _strip_code_fences(text: str) -> str:
     return re.sub(r"```[\s\S]*?```", "", text)
 
 
+# A bare collected-test total ("279 tests", "1,204 passed"). The original pattern
+# required the words infrastructure/project/infra between the number and "tests",
+# so the highest-churn form — a plain per-exemplar total in a README — was never
+# caught. Two digits minimum: single-digit counts are almost always prose.
+#
+# Plural only. The singular form is almost never a count in this repo — it is a
+# stage identifier ("Stage 01 test runner") or a noun phrase ("50 test images per
+# class") — so matching `tests?` produced pure false positives.
+# At most ONE qualifier word between the number and the noun, so both the original
+# "1234 infrastructure tests" and the bare "279 tests" are caught. Allowing two
+# words matched "max_tokens=500 for fallback tests", where 500 is a token limit.
+_TEST_COUNT_RE = re.compile(
+    r"\b(\d{2,3}(?:,\d{3})*|\d{2,5})\s+(?:[A-Za-z][A-Za-z-]*\s+)?(?:tests|passed)\b",
+    re.IGNORECASE,
+)
+# "Stage 12 tests" is a pipeline stage, not a measured total.
+_STAGE_PREFIX_RE = re.compile(r"stage[-\s]$", re.IGNORECASE)
+# Both orders: "95.91% coverage" and "coverage: 95.91%" / "coverage of 95.91 %".
+_COVERAGE_RE = re.compile(
+    r"\b(?:(?P<pre>\d{1,3}(?:\.\d+)?)\s*%\s*(?:source\s+|line\+branch\s+)?coverage"
+    r"|coverage(?:\s+of)?\s*[:=]?\s*(?P<post>\d{1,3}(?:\.\d+)?)\s*%)",
+    re.IGNORECASE,
+)
+# Policy floors, not measurements — these are contract values and belong in prose.
+_POLICY_COVERAGE_VALUES = {60.0, 75.0, 89.0, 90.0}
+_COUNT_NOQA_RE = re.compile(r"<!--\s*noqa:\s*(?:docs-lint|drift-counts)", re.IGNORECASE)
+
+
 def _scan_hardcoded_counts_in_text(
     text: str,
     rel_md: str,
@@ -72,31 +100,44 @@ def _scan_hardcoded_counts_in_text(
     *,
     rule_prefix: str,
 ) -> None:
-    test_count_pat = re.compile(r"\b(\d{3,5})\s+(?:infrastructure|project|infra)\s+tests?\b", re.IGNORECASE)
-    coverage_pat = re.compile(r"\b(\d{1,3}(?:\.\d+)?)\s*%\s*coverage\b", re.IGNORECASE)
-    for match in test_count_pat.finditer(text):
-        report.add(
-            "WARNING",
-            "repo",
-            f"{rule_prefix}_hardcoded_test_count",
-            (
-                f"{rel_md}: hardcoded '{match.group(0)}' near offset {match.start()} "
-                "— link to docs/_generated/COUNTS.md instead"
-            ),
-        )
-    for match in coverage_pat.finditer(text):
-        value = float(match.group(1))
-        if value in {60.0, 90.0}:
+    """Flag hardcoded test totals / coverage percentages outside the generated doc.
+
+    Line-based so a finding can cite a line number and so a dated historical note
+    can opt out with an inline ``<!-- noqa: drift-counts -->``. Measured values
+    belong in ``docs/_generated/COUNTS.md``, which is regenerated from the live
+    tree; a copy pasted into prose silently rots (2026-07-27: adding one test to
+    ``template_formal`` required editing nine separate hardcoded totals).
+    """
+    for lineno, line in enumerate(text.splitlines(), 1):
+        if _COUNT_NOQA_RE.search(line):
             continue
-        report.add(
-            "WARNING",
-            "repo",
-            f"{rule_prefix}_hardcoded_coverage_pct",
-            (
-                f"{rel_md}: hardcoded '{match.group(0)}' near offset {match.start()} "
-                "— link to docs/_generated/COUNTS.md instead"
-            ),
-        )
+        for match in _TEST_COUNT_RE.finditer(line):
+            if _STAGE_PREFIX_RE.search(line[max(0, match.start() - 8) : match.start()]):
+                continue
+            report.add(
+                "WARNING",
+                "repo",
+                f"{rule_prefix}_hardcoded_test_count",
+                (
+                    f"{rel_md}:{lineno}: hardcoded {match.group(0)!r} — link to "
+                    "docs/_generated/COUNTS.md, or mark a dated historical note with "
+                    "`<!-- noqa: drift-counts -->`"
+                ),
+            )
+        for match in _COVERAGE_RE.finditer(line):
+            raw = match.group("pre") or match.group("post")
+            if raw is None or float(raw) in _POLICY_COVERAGE_VALUES:
+                continue
+            report.add(
+                "WARNING",
+                "repo",
+                f"{rule_prefix}_hardcoded_coverage_pct",
+                (
+                    f"{rel_md}:{lineno}: hardcoded {match.group(0)!r} — link to "
+                    "docs/_generated/COUNTS.md, or mark a dated historical note with "
+                    "`<!-- noqa: drift-counts -->`"
+                ),
+            )
 
 
 def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
@@ -133,6 +174,16 @@ def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
         for md in repo_root.rglob(name):
             if _include(md):
                 scanned.add(md.resolve())
+
+    # Root agent-instruction files. These are the documents agents are told to
+    # trust for copy-paste commands, so a stale count here propagates furthest.
+    # STATUS.md and TO-DO.md are deliberately excluded: they are dated
+    # verification ledgers whose entries describe past runs by design, so every
+    # line would need an opt-out annotation.
+    for name in ("CLAUDE.md", "START_HERE.md", "CONTRIBUTING.md", "MAINTAINERS.md"):
+        md = repo_root / name
+        if md.is_file() and _include(md):
+            scanned.add(md.resolve())
 
     for md in sorted(scanned):
         text = _strip_code_fences(_read(md))

@@ -73,7 +73,11 @@ cat tests/test_data.json
 
 ### Coverage Below Threshold
 
-**Symptom:** `Coverage: 65% (below 90% requirement)`
+**Symptom:**
+
+```text
+Coverage: 65% (below 90% requirement)
+```
 
 **Diagnosis:**
 

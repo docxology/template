@@ -18,15 +18,16 @@ discover_*  ->  build_*_payload  ->  write_*_manifest  ->  *_matches_discovery (
 | --- | --- | --- | --- |
 | **Skills** (`SKILL.md` descriptors) | `infrastructure.skills.discovery` | `.cursor/skill_manifest.json` | `manifest_matches_discovery` |
 | **Operations** (every `python -m` CLI) | `infrastructure.skills.operation_registry` | `.cursor/operations_manifest.json` | `operations_manifest_matches_discovery` |
-| **Pipeline stages** (14-stage contract) | `infrastructure.core.pipeline.cli` | derived live from `pipeline.yaml` | n/a (derive-only) |
-| **Templates** (public exemplars) | `infrastructure.project.exemplar_roster` | `infrastructure/project/template_manifest.json` | `--check` in `generate_exemplar_roster_doc.py` |
+| **Pipeline stages** (stage count derived live from `pipeline.yaml`) | `infrastructure.core.pipeline.cli` | derived live from `pipeline.yaml` | n/a (derive-only) |
+| **Templates** (public exemplars) | `infrastructure.project.exemplar_roster` | `infrastructure/project/template_manifest.json` | `--check` in `scripts/docgen/exemplar_roster.py` |
 
 Catalogs are **derived, never hand-maintained** — so they cannot silently rot.
 
 ## Invoking capabilities
 
-All CLIs are invoked via `uv run python -m infrastructure.<module>` (the package
-sets `package = false`; there are no `console_scripts`). Conventions an adopting
+All infrastructure CLIs are invoked via `uv run python -m infrastructure.<module>`;
+the only `console_scripts` entry point is `research-template`
+(→ `infrastructure.orchestration.cli:main`). Conventions an adopting
 CLI should follow (see `infrastructure/core/cli_scaffold.py`):
 
 - `main(argv: Sequence[str] | None = None) -> int` — headless-invocable, returns

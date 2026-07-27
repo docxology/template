@@ -33,6 +33,8 @@ Plus:
 **Want essential commands only?**
 → Check the **[Quick Start Cheatsheet](../reference/quick-start-cheatsheet.md)**
 
+<a id="quick-start"></a>
+
 ## 🚀 Quick Start
 
 ### For Everyone: Use This Template
@@ -142,6 +144,8 @@ That's it! You now have a research project structure.
 **Prerequisites**: [Testing and Reproducibility Guide](../guides/testing-and-reproducibility.md)
 
 ---
+
+<a id="quick-reference-documents"></a>
 
 ## 🎯 Quick Reference Documents
 
