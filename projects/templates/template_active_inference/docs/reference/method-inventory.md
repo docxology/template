@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 811
+Total documented definitions: 814
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -184,9 +184,9 @@ Total documented definitions: 811
 | 9 | `function` | `load_promoted_artifacts` | docstring | Load promoted artifacts from a file. |
 | 14 | `function` | `add_toy_formal_integration_checks` | docstring | Add toy formal integration checks to the collection. |
 | 149 | `function` | `add_visualization_checks` | docstring | Add visualization checks to the collection. |
-| 197 | `function` | `add_canonical_sheaf_checks` | docstring | Add canonical sheaf checks to the collection. |
-| 331 | `function` | `add_track_validator_checks` | docstring | Add track validator checks to the collection. |
-| 352 | `function` | `set_experiment_plan_metrics` | docstring | Process set experiment plan metrics. |
+| 202 | `function` | `add_canonical_sheaf_checks` | docstring | Add canonical sheaf checks to the collection. |
+| 336 | `function` | `add_track_validator_checks` | docstring | Add track validator checks to the collection. |
+| 357 | `function` | `set_experiment_plan_metrics` | docstring | Process set experiment plan metrics. |
 
 ## `src/gates/output_checks_simulation.py`
 
@@ -645,6 +645,13 @@ Total documented definitions: 811
 | 548 | `function` | `write_formal_interop_artifacts` | docstring | Write all formal-interop artifacts, or only missing outputs when requested. |
 | 559 | `function` | `validate_formal_interop_artifacts` | docstring | Validate formal interop artifacts. |
 
+## `src/roadmap_tracks/image_content_hash.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 46 | `function` | `is_image_artifact` | docstring | True when *relative_path* names a raster artifact this module can hash. |
+| 51 | `function` | `image_content_sha256` | docstring | Return a compression-invariant content digest for an image file. |
+
 ## `src/roadmap_tracks/integration_audit.py`
 
 | line | kind | name | documentation source | summary |
@@ -652,20 +659,21 @@ Total documented definitions: 811
 | 93 | `function` | `write_manuscript_staleness_report` | docstring | Write the hydrated-manuscript staleness report. |
 | 113 | `function` | `write_integration_audit_artifacts` | docstring | Write integration audit artifacts to the output path. |
 | 205 | `function` | `validate_integration_audit_artifacts` | docstring | Validate integration audit artifacts. |
+| 393 | `function` | `validate_integration_audit_artifacts._row_equal` | docstring | Recompute a row's verdict from its own hashes. |
 
 ## `src/roadmap_tracks/integration_audit_artifacts.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 104 | `function` | `_blocked_scope_match` | inventory fallback | Inventory fallback for function `_blocked_scope_match` defined at `src/roadmap_tracks/integration_audit_artifacts.py:104`. |
-| 112 | `function` | `_blocked_scope_negated` | inventory fallback | Inventory fallback for function `_blocked_scope_negated` defined at `src/roadmap_tracks/integration_audit_artifacts.py:112`. |
-| 120 | `function` | `build_artifact_diffoscope` | docstring | Build artifact diffoscope. |
-| 151 | `function` | `build_artifact_license_audit` | docstring | Build artifact license audit. |
-| 179 | `function` | `build_release_notes_evidence` | docstring | Build release notes evidence. |
-| 217 | `function` | `build_scope_boundary_audit` | docstring | Audit manuscript scope language against toy-only and blocked-context contracts. |
-| 331 | `function` | `build_manuscript_evidence_tables` | docstring | Build manuscript evidence tables. |
-| 482 | `function` | `build_adversarial_audit` | docstring | Build adversarial audit. |
-| 489 | `function` | `build_integration_semantic_snapshot` | docstring | Build integration semantic snapshot. |
+| 105 | `function` | `_blocked_scope_match` | inventory fallback | Inventory fallback for function `_blocked_scope_match` defined at `src/roadmap_tracks/integration_audit_artifacts.py:105`. |
+| 113 | `function` | `_blocked_scope_negated` | inventory fallback | Inventory fallback for function `_blocked_scope_negated` defined at `src/roadmap_tracks/integration_audit_artifacts.py:113`. |
+| 121 | `function` | `build_artifact_diffoscope` | docstring | Build artifact diffoscope. |
+| 169 | `function` | `build_artifact_license_audit` | docstring | Build artifact license audit. |
+| 197 | `function` | `build_release_notes_evidence` | docstring | Build release notes evidence. |
+| 235 | `function` | `build_scope_boundary_audit` | docstring | Audit manuscript scope language against toy-only and blocked-context contracts. |
+| 349 | `function` | `build_manuscript_evidence_tables` | docstring | Build manuscript evidence tables. |
+| 500 | `function` | `build_adversarial_audit` | docstring | Build adversarial audit. |
+| 507 | `function` | `build_integration_semantic_snapshot` | docstring | Build integration semantic snapshot. |
 
 ## `src/roadmap_tracks/integration_audit_builders.py`
 
@@ -688,8 +696,8 @@ Total documented definitions: 811
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 13 | `function` | `build_figure_source_map` | docstring | Map rendered figures to source artifacts, section bindings, and claim lanes. |
-| 137 | `function` | `build_figure_hash_manifest` | docstring | Build figure hash manifest. |
+| 14 | `function` | `build_figure_source_map` | docstring | Map rendered figures to source artifacts, section bindings, and claim lanes. |
+| 138 | `function` | `build_figure_hash_manifest` | docstring | Build figure hash manifest. |
 
 ## `src/roadmap_tracks/integration_audit_lanes.py`
 
@@ -815,13 +823,13 @@ Total documented definitions: 811
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 18 | `function` | `_entropy` | inventory fallback | Inventory fallback for function `_entropy` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:18`. |
-| 24 | `function` | `_root_output_dir` | inventory fallback | Inventory fallback for function `_root_output_dir` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:24`. |
-| 32 | `function` | `_portable_repo_path` | docstring | Represent repository-local paths without embedding a developer home directory. |
-| 43 | `function` | `_copied_parity` | inventory fallback | Inventory fallback for function `_copied_parity` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:43`. |
-| 92 | `function` | `_remove_legacy_artifacts` | inventory fallback | Inventory fallback for function `_remove_legacy_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:92`. |
-| 99 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:99`. |
-| 105 | `function` | `_canonical_artifact_rows` | inventory fallback | Inventory fallback for function `_canonical_artifact_rows` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:105`. |
+| 19 | `function` | `_entropy` | inventory fallback | Inventory fallback for function `_entropy` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:19`. |
+| 25 | `function` | `_root_output_dir` | inventory fallback | Inventory fallback for function `_root_output_dir` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:25`. |
+| 33 | `function` | `_portable_repo_path` | docstring | Represent repository-local paths without embedding a developer home directory. |
+| 44 | `function` | `_copied_parity` | inventory fallback | Inventory fallback for function `_copied_parity` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:44`. |
+| 93 | `function` | `_remove_legacy_artifacts` | inventory fallback | Inventory fallback for function `_remove_legacy_artifacts` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:93`. |
+| 100 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:100`. |
+| 106 | `function` | `_canonical_artifact_rows` | inventory fallback | Inventory fallback for function `_canonical_artifact_rows` defined at `src/roadmap_tracks/sheaf_tracks_helpers.py:106`. |
 
 ## `src/roadmap_tracks/sheaf_tracks_io.py`
 

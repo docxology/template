@@ -2,8 +2,8 @@
   "measured_at": "2026-07-22",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "90.33 %",
-      "source_hash": "7f4a07a0eddff355e0fe7d0972ca7b6677ee5292a2a6d07451ae8d29f96fc6de"
+      "coverage_pct": "93.23 %",
+      "source_hash": "fe9099c36b849fd3438b4355ba9de56e3447c0146945357c9607085f24d75266"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "93.07 %",
@@ -99,5 +99,5 @@
     }
   },
   "schema_version": 2,
-  "source_commit": "3588c6176ec34f98cbf6ee6fa205bbf529b10c76"
+  "source_commit": "597786bd202a5a16951bb488d66b64d460c10f60"
 }

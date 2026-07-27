@@ -25,6 +25,7 @@ from .integration_audit_builders import (
     build_manuscript_token_provenance,
     build_stale_artifact_report,
 )
+from .image_content_hash import image_content_sha256, is_image_artifact
 from .integration_audit_figures import build_figure_hash_manifest, build_figure_source_map
 from .integration_audit_lanes import (
     ALLOWED_CLAIM_LANES,
@@ -130,18 +131,35 @@ def build_artifact_diffoscope(project_root: Path) -> dict[str, Any]:
         path = root / rel
         live_hash = _sha256(path) if path.is_file() else ""
         saved_hash = str(row.get("sha256") or "")
+        # Images are compared on decoded content, not compressed bytes: PNG byte
+        # output varies with the zlib build behind Pillow's platform wheel while
+        # the picture is identical (measured 2026-07-27: 22 of 25 figures byte-
+        # different, 0 pixel-different, across one machine change). Byte digests
+        # stay recorded on every row so the exact deposited bytes remain
+        # independently checkable with `sha256sum`.
+        image = is_image_artifact(rel)
+        live_content = image_content_sha256(path) if image else ""
+        saved_content = str(row.get("content_sha256") or "") if image else ""
+        compared = "content_sha256" if image else "sha256"
+        if image:
+            equal = bool(saved_content) and saved_content == live_content
+        else:
+            equal = bool(saved_hash) and saved_hash == live_hash
         rows.append(
             {
                 "artifact": rel,
                 "jsonpath": "$",
                 "saved_sha256": saved_hash,
                 "live_sha256": live_hash,
-                "equal": bool(saved_hash) and saved_hash == live_hash,
+                "saved_content_sha256": saved_content,
+                "live_content_sha256": live_content,
+                "compared_field": compared,
+                "equal": equal,
                 "source": "output/data/artifact_provenance.json",
             }
         )
     return {
-        "schema": "template_active_inference.artifact_diffoscope.v1",
+        "schema": "template_active_inference.artifact_diffoscope.v2",
         "rows": rows,
         "row_count": len(rows),
         "all_equal": bool(rows) and all(row["equal"] for row in rows),

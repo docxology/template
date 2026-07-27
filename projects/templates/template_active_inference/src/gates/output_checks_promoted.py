@@ -158,7 +158,12 @@ def add_visualization_checks(checks: dict[str, bool], artifacts: dict[str, dict]
         and figure_source.get("all_figures_have_claim_lanes") is True
         and figure_source.get("all_claim_lanes_valid") is True
     )
-    checks["figure_hash_manifest_schema"] = figure_hash.get("all_hashes_present") is True
+    checks["figure_hash_manifest_schema"] = (
+        figure_hash.get("all_hashes_present") is True
+        # Both digests must be present: the byte hash keeps the deposited file
+        # independently checkable, the content hash is what gates compare.
+        and figure_hash.get("all_content_hashes_present") is True
+    )
     checks["visualization_quality_audit_schema"] = (
         visualization_quality.get("schema") == "template_active_inference.visualization_quality_audit.v1"
         and visualization_quality.get("all_figures_complete") is True
@@ -263,7 +268,7 @@ def add_canonical_sheaf_checks(checks: dict[str, bool], artifacts: dict[str, dic
         and theorem_traceability.get("all_theorems_linked") is True
     )
     checks["artifact_diffoscope_schema"] = (
-        artifact_diffoscope.get("schema") == "template_active_inference.artifact_diffoscope.v1"
+        artifact_diffoscope.get("schema") == "template_active_inference.artifact_diffoscope.v2"
         and artifact_diffoscope.get("all_equal") is True
     )
     checks["proof_extraction_index_schema"] = (

@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from roadmap_tracks.image_content_hash import image_content_sha256, is_image_artifact
 from roadmap_tracks.sheaf_tracks_context import _ProvenanceContext, _provenance_context
 from roadmap_tracks.sheaf_tracks_io import (
     _analysis_scripts,
@@ -128,7 +129,13 @@ def _canonical_artifact_rows(root: Path, context: _ProvenanceContext | None = No
                 "producer": producer,
                 "exists": path.is_file(),
                 "size_bytes": path.stat().st_size if path.is_file() else 0,
+                # Both are recorded on purpose. `sha256` is the raw-byte digest a
+                # third party can confirm with `sha256sum` without running this
+                # code; `content_sha256` is the compression-invariant digest the
+                # diffoscope actually gates on for images. See
+                # roadmap_tracks.image_content_hash for why they differ.
                 "sha256": _sha256(path),
+                "content_sha256": (image_content_sha256(path) if is_image_artifact(rel) else ""),
                 "deterministic_seed": context.deterministic_seed,
                 "config_digest": context.config_digest,
                 "source_commit": context.source_commit,

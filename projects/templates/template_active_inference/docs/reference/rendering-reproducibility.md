@@ -100,6 +100,41 @@ sections that actually reference each statistically backed figure. Each
 referenced section is resolved back through `manuscript/sheaf/manifest.yaml`,
 and validation requires the section to carry a `visualization` track binding.
 
+### What "reproducible" means for a figure
+
+Figure reproducibility is defined on **rendered content, not on file bytes**, and
+the two are not the same thing. PNG bytes depend on the zlib build that
+compressed them; Pillow ships a platform-specific wheel bundling its own zlib, so
+the identical figure encodes differently on macOS and Linux. Measured
+2026-07-27 against the preceding commit: 22 of 25 figures differed in bytes and
+**0 differed in pixels**.
+
+Every image artifact therefore carries two digests, and they answer different
+questions:
+
+| Field | Covers | Who checks it |
+| --- | --- | --- |
+| `sha256` | the exact deposited bytes | anyone, with `sha256sum`, without running this code |
+| `content_sha256` | decoded pixels of every frame, canvas size, and all textual metadata chunks | the diffoscope and figure-hash gates in this repo |
+
+`content_sha256` is what `output/reports/artifact_diffoscope.json` compares for
+image rows — each row names its own `compared_field`, so the choice is auditable
+per artifact rather than implied. Data artifacts (JSON, CSV) are deterministic
+text and are still compared on `sha256`.
+
+The content digest is deliberately insensitive in exactly one respect:
+re-compressing an identical picture does not change it. It remains sensitive to
+a changed pixel, a resized canvas, and an injected metadata chunk — see
+`tests/test_image_content_hash.py`, which pins each of those directions.
+
+Two limits worth stating plainly. Font rasterization can differ across operating
+systems, and a genuine pixel difference from that would fail the gate rather than
+be absorbed by it — the intended behaviour, but it means this reduces
+environment sensitivity rather than eliminating it. And because
+`content_sha256` is computed by this repository's own code, it is not
+independently verifiable the way a raw `sha256` is; that is precisely why the
+byte digest is still recorded alongside it.
+
 ## Sheaf reproducibility
 
 The sheaf claim is finite and falsifiable:

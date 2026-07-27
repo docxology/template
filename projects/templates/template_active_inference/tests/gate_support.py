@@ -194,6 +194,24 @@ def temporary_json_mutation(path: Path, mutate: Callable[[dict], None]) -> Itera
 
 
 @contextmanager
+def temporary_binary_mutation(path: Path, mutate: Callable[[bytes], bytes]) -> Iterator[bytes]:
+    """Temporarily mutate a binary artifact and restore it byte-for-byte.
+
+    Needed for figure-level negative controls: the image gates compare decoded
+    content, so proving they can fail requires editing real pixels rather than
+    text. Restoration is byte-exact so a failed assertion cannot leave a
+    regenerated figure behind in the tracked tree.
+    """
+    original = path.read_bytes()
+    mutated = mutate(original)
+    path.write_bytes(mutated)
+    try:
+        yield mutated
+    finally:
+        path.write_bytes(original)
+
+
+@contextmanager
 def temporary_text_mutation(path: Path, mutate: Callable[[str], str]) -> Iterator[str]:
     """Temporarily mutate a text file and restore it byte-for-byte."""
     original = path.read_text(encoding="utf-8")

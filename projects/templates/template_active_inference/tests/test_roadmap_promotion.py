@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import json
 from pathlib import Path
 
@@ -13,6 +14,7 @@ from gate_support import (
     refresh_composed_gate_artifacts,
     refresh_gate_artifact_session_signature,
     refresh_output_gate_contracts,
+    temporary_binary_mutation,
     temporary_json_mutation,
     temporary_text_mutation,
 )
@@ -711,3 +713,60 @@ def test_promoted_claims_have_falsifiable_negative_controls(project_root: Path) 
                 f"{path.name}: gate did not catch a failing ROW under a true summary"
             )
     refresh_gate_artifact_session_signature(project_root)
+
+
+@pytest.mark.long_running
+def test_diffoscope_tolerates_recompression_but_not_a_changed_pixel(project_root: Path) -> None:
+    """Gate-level control for compression-invariant image hashing.
+
+    Both directions are pinned against the REAL diffoscope, because the unit
+    controls in `test_image_content_hash.py` only exercise the hash helper. The
+    rebuild is essential: `validate_integration_audit_artifacts` reads the stored
+    report, so drift is only observable after `write_integration_audit_artifacts`
+    recompares live files against recorded provenance.
+
+    Recompression must pass — that is the false failure this change removes
+    (2026-07-27: 22 of 25 committed figures were byte-different and 0 were
+    pixel-different after a machine change). A single changed pixel must still
+    fail, or the gate would be decorative.
+    """
+    from PIL import Image
+
+    from roadmap_tracks import validate_integration_audit_artifacts, write_integration_audit_artifacts
+
+    target = project_root / "output" / "figures" / "sheaf_coverage_heatmap.png"
+    assert target.is_file(), "expected a gated figure to exist"
+
+    def _diffoscope_issues() -> list[str]:
+        write_integration_audit_artifacts(project_root)
+        return [issue for issue in validate_integration_audit_artifacts(project_root) if "diffoscope" in issue]
+
+    assert _diffoscope_issues() == [], "baseline must be clean before mutating"
+
+    def _recompress(raw: bytes) -> bytes:
+        buffer = io.BytesIO()
+        with Image.open(io.BytesIO(raw)) as image:
+            image.load()
+            image.save(buffer, format="PNG", compress_level=1, optimize=False)
+        return buffer.getvalue()
+
+    original_bytes = target.read_bytes()
+    with temporary_binary_mutation(target, _recompress):
+        assert target.read_bytes() != original_bytes, "recompression fixture did not change the bytes"
+        assert _diffoscope_issues() == [], "recompressing an identical picture must not fail the gate"
+
+    def _flip_one_pixel(raw: bytes) -> bytes:
+        buffer = io.BytesIO()
+        with Image.open(io.BytesIO(raw)) as image:
+            edited = image.convert("RGBA")
+        red, green, blue, alpha = edited.getpixel((5, 5))
+        edited.putpixel((5, 5), (255 - red, 255 - green, 255 - blue, alpha))
+        edited.save(buffer, format="PNG")
+        return buffer.getvalue()
+
+    with temporary_binary_mutation(target, _flip_one_pixel):
+        assert _diffoscope_issues() != [], "a changed pixel must still fail the gate"
+
+    # Restored by the context manager; prove the gate is clean again so a later
+    # test does not inherit a mutated tree.
+    assert _diffoscope_issues() == []

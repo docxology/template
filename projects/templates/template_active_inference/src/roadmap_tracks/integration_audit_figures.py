@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .figure_provenance import _figure_sources_mapped
+from .image_content_hash import image_content_sha256
 from .integration_audit_builders import _sha256
 from .integration_audit_lanes import claim_lane_summary, figure_claim_lanes, manifest_tracks_by_section
 
@@ -146,16 +147,22 @@ def build_figure_hash_manifest(project_root: Path) -> dict[str, Any]:
         rows.append(
             {
                 "path": path.relative_to(root).as_posix(),
+                # `sha256` is the raw-byte digest, kept so the deposited bytes
+                # stay verifiable with `sha256sum` by someone who does not run
+                # this code. `content_sha256` is the compression-invariant digest
+                # gates compare — see roadmap_tracks.image_content_hash.
                 "sha256": _sha256(path),
+                "content_sha256": image_content_sha256(path),
                 "size_bytes": path.stat().st_size,
                 "fresh": True,
             }
         )
     return {
-        "schema": "template_active_inference.figure_hash_manifest.v1",
+        "schema": "template_active_inference.figure_hash_manifest.v2",
         "rows": rows,
         "figure_count": len(rows),
         "all_hashes_present": bool(rows) and all(row["sha256"] for row in rows),
+        "all_content_hashes_present": bool(rows) and all(row["content_sha256"] for row in rows),
     }
 
 

@@ -552,7 +552,7 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("validation_gate_index.json has unindexed gates")
 
     diffoscope = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["artifact_diffoscope"])
-    if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v1":
+    if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v2":
         issues.append("artifact_diffoscope.json schema mismatch")
     diffoscope_equal = _all_rows(diffoscope, "equal")
     if diffoscope.get("all_equal") is not True or diffoscope.get("all_equal") != diffoscope_equal:

@@ -64,11 +64,17 @@ class ExemplarSnapshot:
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # template_active_inference coverage is re-derived in its OWN environment
     # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
-    # cannot exercise): measured 2026-07-20 via
-    # `stage_01_test.py --project templates/template_active_inference
-    # --project-only --include-slow` (720 passed, 6 deselected; 90.33 %).
-    # Collected count from --collect-only in the project env.
-    ExemplarSnapshot("template_active_inference", "90.33 %"),
+    # cannot exercise). It is the only exemplar carrying `long_running` tests, so
+    # it is also the only one where test SELECTION moves the number, and the two
+    # readings must not be confused:
+    #   whole suite (what `--verify-coverage` runs, and what every other row
+    #     here is measured with)                          -> 93.23 %
+    #   routine gate with long_running deselected
+    #     (`stage_01_test.py --project-only`)             -> ~90.35 %
+    # The whole-suite figure is recorded so all 24 rows share one method and the
+    # value is reproducible with the shipped verifier; expect the day-to-day gate
+    # to report the lower number.
+    ExemplarSnapshot("template_active_inference", "93.23 %"),
     ExemplarSnapshot("template_advanced_literature_review", "93.07 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.46 %"),

@@ -387,9 +387,25 @@ def validate_integration_audit_artifacts(project_root: Path) -> list[str]:
     # PR#23 hardening: every aggregate below is re-derived from its rows so a
     # row-only forgery (rows contradict a True stored flag) cannot pass.
     diffoscope = _load_json(root / "output" / "reports" / "artifact_diffoscope.json")
-    if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v1":
+    if diffoscope.get("schema") != "template_active_inference.artifact_diffoscope.v2":
         issues.append("artifact_diffoscope.json schema mismatch")
-    diffoscope_equal = all_rows(diffoscope, lambda row: row.get("equal") is True)
+
+    def _row_equal(row: dict[str, object]) -> bool:
+        """Recompute a row's verdict from its own hashes.
+
+        `equal` is not trusted: a row asserting equality while carrying
+        mismatched digests is exactly the forgery this re-derivation exists to
+        catch. Which digest is authoritative is declared per row by
+        `compared_field` — images are compared on decoded content, everything
+        else on raw bytes (see roadmap_tracks.image_content_hash).
+        """
+        if row.get("compared_field") == "content_sha256":
+            saved, live = row.get("saved_content_sha256"), row.get("live_content_sha256")
+        else:
+            saved, live = row.get("saved_sha256"), row.get("live_sha256")
+        return bool(saved) and saved == live and row.get("equal") is True
+
+    diffoscope_equal = all_rows(diffoscope, _row_equal)
     if diffoscope.get("all_equal") is not True or diffoscope.get("all_equal") != diffoscope_equal:
         issues.append("artifact_diffoscope.json records artifact drift")
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
