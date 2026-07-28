@@ -625,6 +625,74 @@ def _zenodo_concept_identifier(payload: object) -> str:
     return ""
 
 
+def check_repository_url_consistent(project_root: Path, report: Report, project: str) -> None:
+    """Tracked sidecars must name the exemplar's own standalone repository.
+
+    Catches: on 2026-07-27 ``template_advanced_literature_review`` shipped
+    ``repository-code: https://github.com/docxology/template`` — the MONOREPO —
+    in its tracked ``CITATION.cff`` and ``codemeta.json``, while its own
+    ``config.yaml`` correctly named ``docxology/template_advanced_literature_review``
+    in four places. GitHub renders CITATION.cff live and Zenodo ingests this
+    metadata, so the published citation pointed readers at the wrong repository.
+
+    ``check_metadata_export_current`` did not catch it because that check
+    deliberately projects only authorship and concept-DOI fields, leaving the
+    repository URL unbound to its source.
+    """
+    config_path = project_root / "manuscript" / "config.yaml"
+    if not config_path.is_file():
+        return
+    try:
+        config = _load_yaml_mapping(config_path, strict=True)
+    except (OSError, yaml.YAMLError):
+        return
+
+    from infrastructure.publishing.repository_metadata import normalized_repository_url
+
+    publication = config.get("publication")
+    expected = normalized_repository_url(publication if isinstance(publication, dict) else None)
+    if not expected:
+        return
+    expected = expected.rstrip("/")
+
+    cff_path = project_root / "CITATION.cff"
+    if cff_path.is_file():
+        try:
+            cff = _load_yaml_mapping(cff_path)
+        except (OSError, yaml.YAMLError):
+            cff = {}
+        actual = str(cff.get("repository-code", "")).strip().rstrip("/")
+        if actual and actual != expected:
+            report.add(
+                "ERROR",
+                project,
+                "publication_repository_url_drift",
+                (
+                    f"CITATION.cff repository-code {actual!r} does not match the repository declared "
+                    f"in manuscript/config.yaml ({expected!r}) — GitHub renders this file as the "
+                    "citation, so readers would be sent to the wrong repository"
+                ),
+            )
+
+    codemeta_path = project_root / "codemeta.json"
+    if codemeta_path.is_file():
+        try:
+            codemeta = json.loads(_read(codemeta_path))
+        except (OSError, json.JSONDecodeError):
+            codemeta = {}
+        actual = str(codemeta.get("codeRepository", "")).strip().rstrip("/") if isinstance(codemeta, dict) else ""
+        if actual and actual != expected:
+            report.add(
+                "ERROR",
+                project,
+                "publication_repository_url_drift",
+                (
+                    f"codemeta.json codeRepository {actual!r} does not match the repository declared "
+                    f"in manuscript/config.yaml ({expected!r})"
+                ),
+            )
+
+
 def check_metadata_export_current(project_root: Path, report: Report, project: str) -> None:
     """Tracked CITATION.cff / .zenodo.json / codemeta.json must agree with
     manuscript/config.yaml on authorship (names, ORCIDs) and concept DOI.

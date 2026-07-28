@@ -18,7 +18,7 @@ keywords:
 - cross-validation
 license: CC-BY-4.0
 message: If you use this software, please cite it using the metadata from this file.
-repository-code: https://github.com/docxology/template
+repository-code: https://github.com/docxology/template_advanced_literature_review
 title: A Reproducible Multi-Phase Literature-Review Pipeline for Exoplanet Atmospheres
 type: software
 version: 0.1.0

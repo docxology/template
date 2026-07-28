@@ -166,3 +166,82 @@ def test_every_public_exemplar_satisfies_the_license_contract() -> None:
         check_license_file_present_and_consistent(project_root, report, qualified)
     assert checked > 0, "no public exemplars found — the scan set went empty"
     assert report.findings == [], [f.message for f in report.findings]
+
+
+# --------------------------------------------------------------------------
+# check_repository_url_consistent
+# --------------------------------------------------------------------------
+
+_CONFIG = """publication:
+  repository_url: "https://github.com/docxology/template_example"
+  github_repository: "docxology/template_example"
+"""
+
+
+def _repo_scaffold(tmp_path: Path, *, cff_repo: str | None, codemeta_repo: str | None = None) -> Path:
+    import json as _json
+
+    root = tmp_path / "fake_project"
+    (root / "manuscript").mkdir(parents=True, exist_ok=True)
+    (root / "manuscript" / "config.yaml").write_text(_CONFIG, encoding="utf-8")
+    if cff_repo is not None:
+        (root / "CITATION.cff").write_text(
+            f"cff-version: 1.2.0\ntitle: Example\nrepository-code: {cff_repo}\n", encoding="utf-8"
+        )
+    if codemeta_repo is not None:
+        (root / "codemeta.json").write_text(_json.dumps({"codeRepository": codemeta_repo}), encoding="utf-8")
+    return root
+
+
+def test_positive_control_citation_points_at_the_wrong_repository(tmp_path: Path) -> None:
+    """The exact 2026-07-27 defect: the sidecar named the monorepo."""
+    from infrastructure.project.drift.checks_publication import check_repository_url_consistent
+
+    root = _repo_scaffold(tmp_path, cff_repo="https://github.com/docxology/template")
+    report = Report()
+    check_repository_url_consistent(root, report, "templates/fake_project")
+    assert "publication_repository_url_drift" in _rules(report)
+
+
+def test_positive_control_codemeta_repository_drift(tmp_path: Path) -> None:
+    from infrastructure.project.drift.checks_publication import check_repository_url_consistent
+
+    root = _repo_scaffold(
+        tmp_path,
+        cff_repo="https://github.com/docxology/template_example",
+        codemeta_repo="https://github.com/docxology/template",
+    )
+    report = Report()
+    check_repository_url_consistent(root, report, "templates/fake_project")
+    assert "publication_repository_url_drift" in _rules(report)
+
+
+def test_negative_control_matching_repository_is_clean(tmp_path: Path) -> None:
+    from infrastructure.project.drift.checks_publication import check_repository_url_consistent
+
+    root = _repo_scaffold(
+        tmp_path,
+        cff_repo="https://github.com/docxology/template_example",
+        codemeta_repo="https://github.com/docxology/template_example/",
+    )
+    report = Report()
+    check_repository_url_consistent(root, report, "templates/fake_project")
+    assert report.findings == []
+
+
+def test_every_public_exemplar_names_its_own_repository() -> None:
+    """Bind to the live tree — this is what the stale sidecar violated."""
+    from infrastructure.project.drift.checks_publication import check_repository_url_consistent
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    repo_root = Path(__file__).resolve().parents[3]
+    report = Report()
+    checked = 0
+    for qualified in PUBLIC_PROJECT_NAMES:
+        project_root = repo_root / "projects" / qualified
+        if not project_root.is_dir():
+            continue
+        checked += 1
+        check_repository_url_consistent(project_root, report, qualified)
+    assert checked > 0, "no public exemplars found — the scan set went empty"
+    assert report.findings == [], [f.message for f in report.findings]

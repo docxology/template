@@ -36,6 +36,7 @@ from infrastructure.project.drift.checks_forkability import check_forkability_co
 from infrastructure.project.drift.checks_publication import (  # noqa: E402
     check_license_file_present_and_consistent,
     check_pyproject_publication_consistency,
+    check_repository_url_consistent,
 )
 from infrastructure.project.drift.orchestrator import (  # noqa: E402
     check_project_scripts,
@@ -59,6 +60,7 @@ PROJECT_CHECKS: tuple[ProjectCheckFn, ...] = (
     check_publication_metadata_consistency,
     check_pyproject_publication_consistency,
     check_license_file_present_and_consistent,
+    check_repository_url_consistent,
     check_config_author_placeholders,
     check_metadata_export_current,
     check_publishing_status_block_current,

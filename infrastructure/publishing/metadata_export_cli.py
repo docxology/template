@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -67,11 +68,35 @@ def main(argv: list[str] | None = None) -> int:
     written = write_metadata_files(
         dict(config),
         out_dir,
-        released_date=date.today().isoformat(),
+        released_date=_stable_released_date(out_dir),
     )
     for path in written:
         print(path)
     return 0
+
+
+_RELEASED_DATE_RE = re.compile(r"^date-released:\s*'?(\d{4}-\d{2}-\d{2})'?\s*$", re.MULTILINE)
+
+
+def _stable_released_date(out_dir: Path) -> str:
+    """Return the already-published release date, or today for a first export.
+
+    No exemplar pins a release date in ``config.yaml``, so stamping
+    ``date.today()`` on every run made ``date-released`` mean "whenever someone
+    last regenerated" rather than when the work was released — it rewrote the
+    field on each export and churned three tracked sidecars with it. Preserving
+    the committed date makes regeneration idempotent, which a CI-gated generated
+    file has to be, and keeps the value agreeing with the Zenodo deposit.
+
+    A genuine re-release should move the date by updating the deposit and
+    editing ``CITATION.cff`` deliberately, not as a side effect of regenerating.
+    """
+    existing = out_dir / "CITATION.cff"
+    if existing.is_file():
+        match = _RELEASED_DATE_RE.search(existing.read_text(encoding="utf-8"))
+        if match:
+            return match.group(1)
+    return date.today().isoformat()
 
 
 def _resolve_repo_root(repo_root: Path | None) -> Path:
