@@ -16,6 +16,7 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter, Diagnosti
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
+from infrastructure.rendering._pandoc_filters import formalism_filter_args
 
 logger = get_logger(__name__)
 
@@ -130,6 +131,10 @@ def render_combined_docx(
         "--resource-path=" + str(figures_dir),
         "--resource-path=" + str(figures_dir.parent),
     ]
+    # Same numbering as the PDF edition, and ahead of --citeproc below so
+    # [@def:...] never reaches citeproc as an unresolved citation.
+    extra_args.extend(formalism_filter_args())
+
     crossref = shutil.which("pandoc-crossref")
     if crossref:
         extra_args.extend(["--filter", crossref])
@@ -207,6 +212,9 @@ def render_combined_epub(
     # — confirmed via epubcheck RSC-012 "Fragment identifier is not defined"
     # on a real manuscript. render_combined_docx already adds this filter;
     # EPUB needs the identical treatment, not a partial subset.
+    # Same numbering as the PDF and DOCX editions, and ahead of --citeproc below.
+    extra_args.extend(formalism_filter_args())
+
     crossref = shutil.which("pandoc-crossref")
     if crossref:
         extra_args.extend(["--filter", crossref])

@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering._pdf_pandoc_engine import build_pandoc_render_error
 
 if TYPE_CHECKING:
@@ -79,6 +80,12 @@ def build_pandoc_tex_command(
                     logger.debug(f"Added fontsize to pandoc args: {fontsize}")
         except (OSError, yaml.YAMLError) as e:
             logger.warning(f"Failed to read typography settings from config.yaml: {e}")
+
+    # Numbers Definition/Proposition blocks and resolves [@def:...] references.
+    # Must precede pandoc-crossref and --natbib above: it consumes those
+    # citations, which natbib would otherwise emit as \citep{def:...} and ship
+    # as "[?]" in the PDF.
+    cmd.extend(formalism_filter_args())
 
     crossref = shutil.which("pandoc-crossref")
     if crossref:

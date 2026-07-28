@@ -2,12 +2,15 @@
 
 This document is the **single source of truth** for manuscript Markdown semantics across the Research Project Template. The public template exemplars under `projects/templates/` conform to the conventions below. The authoritative, always-current roster lives in [`docs/_generated/active_projects.md`](../_generated/active_projects.md). New projects should copy whichever exemplar most closely matches their shape and follow these rules verbatim.
 
-The PDF rendering pipeline uses **two cooperating tools**:
+The PDF rendering pipeline uses **three cooperating tools**:
 
 | Tool | Role | Activated by |
 |------|------|--------------|
-| Pandoc with `--natbib` | Converts `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`, ~line 22) |
-| `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | Same file (~line 72) — auto-detected on `PATH` |
+| `formalism.lua` filter | Numbers Definition/Proposition/Theorem blocks and resolves `@def:`, `@prop:`, `@thm:` references | [`infrastructure/rendering/_pandoc_filters.py`](../../infrastructure/rendering/_pandoc_filters.py) — ships with the repo, applied **first** |
+| `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`) — auto-detected on `PATH` |
+| Pandoc with `--natbib` | Converts the remaining `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | Same file |
+
+Order matters. `[@def:x]` and `[@knuth1997]` are both Pandoc *citations*; the formalism filter runs first so it can claim the formalism labels before the citation machinery would emit them as undefined citations. The same three-tool chain is applied to the PDF, HTML, DOCX and EPUB writers, so numbering is identical in every edition.
 
 Because these tools cooperate, **all citations must use Pandoc bracket-cite syntax** and **all cross-references must use Pandoc-crossref syntax**. Raw `\cite{}` and `\ref{}` work in PDF but break HTML / EPUB rendering and clutter the source.
 
@@ -123,7 +126,67 @@ Cross-reference: see [@sec:methodology] for the full pipeline.
 3. **Never use manual numbering like `## 2.1 Search`** — write `## Search` and let `--number-sections` apply the prefix.
 4. **Cross-section references** use `[@sec:label]`, not Markdown filename links
 
-## 6. Bibliography Section (`99_references.md`)
+## 6. Formalism blocks (Definitions, Propositions, Theorems)
+
+`pandoc-crossref` numbers figures, equations, tables, listings and sections, but it has **no custom-environment support**. Numbered Definitions and Propositions are therefore handled by a repo-shipped Lua filter, [`infrastructure/rendering/formalism.lua`](../../infrastructure/rendering/formalism.lua), which numbers the blocks and resolves references to them. Write the label; never write the number.
+
+### Syntax — 6. Formalism blocks
+
+```markdown
+<!-- Numbered block with a label and an optional title -->
+::: {.definition #def:aspiration title="Aspiration"}
+An aspiration is a six-tuple.
+:::
+
+<!-- Title is optional -->
+::: {.proposition #prop:monotone}
+Dropping oversight never softens a verdict.
+:::
+
+<!-- .unnumbered renders the kind name alone and consumes no number -->
+::: {.remark .unnumbered}
+Numbering is not a claim about importance.
+:::
+
+<!-- Reference by label, exactly like every other cross-reference -->
+By [@def:aspiration] the registry is well formed, which [@prop:monotone] extends.
+```
+
+renders as:
+
+```text
+Definition 1 (Aspiration). An aspiration is a six-tuple.
+Proposition 1. Dropping oversight never softens a verdict.
+Remark. Numbering is not a claim about importance.
+
+By Definition 1 the registry is well formed, which Proposition 1 extends.
+```
+
+Recognised classes: `definition`, `proposition`, `theorem`, `lemma`, `corollary`, `remark`, `axiom`, `claim`, `example`.
+
+### Rules — 6. Formalism blocks
+
+1. **Never write the number.** `**Definition 3.**` typed by hand goes stale the moment a block is inserted above it, and the prose referring to it keeps pointing at the old number. That silent drift is the entire reason this filter exists.
+2. **Reference with `[@def:label]`**, the same bracket syntax used for figures, tables and equations. The filter consumes these before the citation machinery sees them, so a formalism label must **not** appear in `references.bib`.
+3. Counters are **per kind** and run in document order: Definitions and Propositions each have their own sequence.
+4. A label is required for any block you intend to reference; an unlabelled block still gets a number.
+5. A reference to a label that was never declared is **left exactly as written** and reported on stderr, so a broken cross-reference stays visible in the output instead of silently vanishing. Watch the build log.
+6. Duplicate labels are reported on stderr; the last block declaring a label wins.
+
+### Metadata — 6. Formalism blocks
+
+Set in `manuscript/config.yaml` or a section's YAML block:
+
+| Key | Effect |
+|-----|--------|
+| `formalism_reset_level` | Restart every counter at each header of this level or above. `0` (default) never resets. A collected volume reproducing several works sets `1`; a standalone paper leaves it unset, because there a level-1 header is a section. |
+| `formalism_kinds` | Map of class name to displayed title, merged over the defaults. Adds a kind without editing the filter. |
+
+### Relationship to raw-LaTeX theorem environments
+
+Authors may instead write `\begin{theorem}…\end{theorem}` raw LaTeX, which the manuscript preamble's `\newtheorem` definitions number in the PDF and which `web_renderer.py` rewrites **web-only** into `.theorem-box` Divs. That path predates this filter and still works, but it numbers PDF and web independently and offers no `[@label]` resolution. **Prefer the portable `::: {.definition #def:x}` Div form** — it is the only form that produces identical numbering across the PDF, HTML, DOCX and EPUB editions of the same manuscript.
+
+## 7. Bibliography Section (`99_references.md`)
 
 Every project has a thin `99_references.md` that points Pandoc-citeproc at the BibTeX file:
 
@@ -135,7 +198,7 @@ Bibliography lives in [`manuscript/references.bib`](references.bib) and is read 
 
 The `99_` prefix ensures lexicographic-order assembly places it last. The Pandoc bibliography backend (natbib) replaces this section with the rendered citation list.
 
-## 7. Manuscript-variable substitution (`{{TOKEN}}`)
+## 8. Manuscript-variable substitution (`{{TOKEN}}`)
 
 Numeric values that come from analysis outputs **must** use `{{TOKEN_NAME}}` syntax — never hardcode numbers that change with `config.yaml` or analysis runs.
 
@@ -160,7 +223,7 @@ grep -r "{{" projects/<your_project>/output/manuscript/ \
   || echo "All resolved"
 ```
 
-## 8. Preamble (`preamble.md`)
+## 9. Preamble (`preamble.md`)
 
 LaTeX preamble lines live inside a fenced ` ```latex ` block in `preamble.md`. The renderer extracts that block and concatenates it into the Pandoc-LaTeX template via `infrastructure/rendering/latex_utils.py`. Required minimums for a project that uses figures, tables, equations, and citations:
 
@@ -178,7 +241,7 @@ LaTeX preamble lines live inside a fenced ` ```latex ` block in `preamble.md`. T
 
 Do not duplicate packages already loaded by `infrastructure/rendering/pdf_renderer.py`. If you need an extra package (e.g. `algorithm2e`, `siunitx`), add it here and document it in the project AGENTS.md.
 
-## 9. Common pitfalls
+## 10. Common pitfalls
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
@@ -187,8 +250,11 @@ Do not duplicate packages already loaded by `infrastructure/rendering/pdf_render
 | Section autonumbers like "2 2.1 Search" | Manual `## 2.1` heading prefix collides with `--number-sections` | Remove manual prefix; use plain `## Search` |
 | Broken markdown link to `02_methodology.md` in PDF | Markdown filename links don't resolve in PDF | Replace with `[@sec:methodology]` |
 | `{{TOKEN}}` literally in PDF | Substitution script not run, or token not defined in `src/manuscript_variables.py::generate_variables()` (code project) / `compute_variables()` (prose/search) | Run `z_generate_manuscript_variables.py`; add missing key to `src/manuscript_variables.py` |
+| `[@def:x]` left verbatim in the output, `reference to undeclared formalism` on stderr | No block declares `#def:x` — usually a typo or a deleted block | Fix the label, or restore the block. The reference stays visible on purpose |
+| Definition numbers disagree between the PDF and the EPUB | A hand-typed `**Definition 3.**` literal instead of a `::: {.definition}` block | Convert to the Div form and let the filter number it |
+| Render aborts with `formalism.lua is missing` | Broken or partial install of `infrastructure/rendering/` | `git checkout -- infrastructure/rendering/formalism.lua`. The render refuses rather than shipping unnumbered output |
 
-## 10. Per-project checklist for new authors
+## 11. Per-project checklist for new authors
 
 Before committing a manuscript change:
 
@@ -196,6 +262,8 @@ Before committing a manuscript change:
 - [ ] Every table has `{#tbl:label}` and is referenced with `[@tbl:label]`.
 - [ ] Every numbered equation has `{#eq:label}` (or `\label{eq:label}` inside a `\begin{equation}` block) and is referenced with `[@eq:label]`.
 - [ ] Every section H1 has `{#sec:label}`.
+- [ ] Every Definition/Proposition/Theorem is a `::: {.definition #def:label}` block — **no hand-typed numbers** — and is referenced with `[@def:label]`.
+- [ ] The build log shows no `formalism.lua: reference to undeclared formalism` or `duplicate label` lines.
 - [ ] Every `[@key]` citation resolves in `references.bib`.
 - [ ] Cross-section references use `[@sec:label]`, not Markdown filename links.
 - [ ] No raw `\cite{}` or `\ref{}` in Markdown source (LaTeX is fine inside math/equation environments).

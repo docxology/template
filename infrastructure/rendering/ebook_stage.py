@@ -28,6 +28,7 @@ from infrastructure.rendering._combined_exports import (
     resolve_combined_markdown,
     rewrite_pdf_figure_refs_to_raster,
 )
+from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.epub_renderer import render_epub
 from infrastructure.rendering.mobi_renderer import render_mobi
 from infrastructure.rendering.docx_renderer import render_docx
@@ -169,6 +170,9 @@ def run_ebook_generation(
     # confirmed via epubcheck RSC-012 "Fragment identifier is not defined" on
     # a real manuscript. Mirrors the same filter render_combined_docx already
     # applies in _combined_exports.py.
+    # Numbering must match the PDF/DOCX/EPUB editions of the same manuscript.
+    pandoc_extra_args_list.extend(formalism_filter_args())
+
     crossref = shutil.which("pandoc-crossref")
     if crossref:
         pandoc_extra_args_list.extend(["--filter", crossref])

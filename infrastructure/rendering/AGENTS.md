@@ -14,6 +14,7 @@ renderers without owning validation policy or project analysis.
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
 | Format renderers | `slides_renderer.py`, `web_renderer.py`, `_web_postprocess.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `mermaid_figure.py` | Slides, HTML orchestration and deterministic HTML post-processing, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Pandoc filters | `_pandoc_filters.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py` | Section ordering, substitutions, resolved manuscript trees. |
 | LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks. |
 | LaTeX checks | `latex_discovery.py`, `latex_validation.py`, `latex_log_quality.py`, `latex_texttt.py` | `kpsewhich`/per-package discovery, required/optional package `ValidationReport`, render-log findings for overfull/underfull boxes and undefined references, and rewriting long `\texttt{}` spans into a breakable monospace macro. |
@@ -36,12 +37,34 @@ renderers without owning validation policy or project analysis.
 - `pptx_deck.render_pptx()` normalizes OOXML ZIP-member timestamps after
   `python-pptx` saves the package. Do not remove that pass: identical decks
   must remain byte-identical, not merely content-equivalent.
+- `formalism.lua` must be applied by **every** writer that applies
+  `pandoc-crossref`, and always **before** it and before `--citeproc`: the
+  combined PDF (`_pdf_combined_pandoc.py`), combined DOCX and EPUB
+  (`_combined_exports.py`), combined HTML (`web_renderer.py`), and the opt-in
+  ebook stage (`ebook_stage.py`). Numbering must be identical across editions,
+  and the filter has to consume its `[@def:...]` citations before `--natbib`
+  turns them into `\citep` and ships "[?]". Add it through
+  `_pandoc_filters.formalism_filter_args()`, never by hand-writing the path;
+  `tests/infra_tests/rendering/test_formalism_wiring.py` reads the constructed
+  command line of each writer and fails if one drops it.
+- `pandoc-crossref` is an optional external binary, so a missing one warns and
+  continues. `formalism.lua` ships with the repo, so a missing one **raises**
+  `FormalismFilterMissingError` — degrading to unnumbered output while exiting
+  zero is the failure mode that policy exists to prevent. The error is
+  deliberately a `RuntimeError` so the DOCX/EPUB warning handlers cannot
+  swallow it.
+- The per-section HTML path (`WebRenderer.render`) intentionally gets neither
+  filter: it pre-converts citations and renders sections standalone, where
+  restarted numbering would be misleading.
 - Raw-LaTeX theorem-like environments (`\begin{theorem|lemma|proposition|`
   `corollary|definition}`) render in the PDF via the manuscript preamble's
   `\newtheorem` definitions. Pandoc's HTML writer cannot, so `web_renderer.py`
   rewrites them **web-only** (`_html_theorem_blocks`) into numbered, shared-counter
   `.theorem-box` Divs styled by the embedded CSS; the PDF/slides paths are
-  untouched. Authors keep writing `\begin{theorem}` — no portable-Div syntax needed.
+  untouched. That path still works, but it numbers PDF and web independently and
+  supports no `[@label]` resolution, so the portable `::: {.definition #def:x}`
+  form handled by `formalism.lua` is the preferred authoring syntax — it is the
+  only one whose numbering is identical across every edition.
 
 ## Public Commands
 

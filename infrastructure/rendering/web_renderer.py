@@ -10,6 +10,7 @@ import yaml
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.security import subprocess_options
 import infrastructure.rendering._web_postprocess as web_postprocess
@@ -236,6 +237,14 @@ class WebRenderer:
         # Add Lua filter for LaTeX image conversion
         if lua_filter.exists():
             cmd.extend(["--lua-filter", str(lua_filter)])
+
+        # Formalism numbering, identical to the PDF/DOCX/EPUB editions. Added
+        # ahead of pandoc-crossref and of the --citeproc block below, which is
+        # what keeps [@def:...] out of the citation machinery. Distinct from
+        # _html_theorem_blocks above: that handles the raw-LaTeX
+        # \begin{theorem} authoring style web-only, this handles the portable
+        # ::: {.definition #def:x} Div style across every edition.
+        cmd.extend(formalism_filter_args())
 
         crossref = shutil.which("pandoc-crossref")
         if crossref:
