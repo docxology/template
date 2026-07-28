@@ -5,7 +5,7 @@
       "path": "output/data/storybook_manifest.json",
       "sha256": "71c554a7910a68b666f88c3db21c50db7652aef726e25761ba2b97efa9b3561a",
       "size_bytes": 11120,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -14,7 +14,7 @@
       "path": "output/figures/storybook_contact_sheet.png",
       "sha256": "4a32476317e8e25bf2f4f720ccce55b5a15afa14738e6ff6210bc528659b09d3",
       "size_bytes": 981712,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -23,7 +23,7 @@
       "path": "output/figures/storybook_pages/00_cover.png",
       "sha256": "6ae237f530856ee829d1f498f40b8e2ef186d28fd43488c321b0c9b89c0638d4",
       "size_bytes": 93904,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -32,7 +32,7 @@
       "path": "output/figures/storybook_pages/01_publication_information.png",
       "sha256": "1785d58d8af2b8f0f28fddbd342268cc4943330ba60bdf0a7f347e9f475b906e",
       "size_bytes": 116258,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -41,7 +41,7 @@
       "path": "output/figures/storybook_pages/02_square_house.png",
       "sha256": "d41025307f1e9276ab675ba79a4fa40a7365618c070eff04d91851c7cd386e56",
       "size_bytes": 72351,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -50,7 +50,7 @@
       "path": "output/figures/storybook_pages/03_pointed_house.png",
       "sha256": "1eeb50e5f73f6c0b41a802a612240fc558ec4feacd627ffbf9b52cabf8f631a5",
       "size_bytes": 121334,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -59,7 +59,7 @@
       "path": "output/figures/storybook_pages/04_valley_symbol.png",
       "sha256": "0a622c842d35e6f2f360c872e4a4a3e0882145446ccf665658b3ab5ec83c7bef",
       "size_bytes": 98415,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -68,7 +68,7 @@
       "path": "output/figures/storybook_pages/05_first_connection.png",
       "sha256": "a534c5f4468d9b6d5bd8cf15725ff59091669e1b88cb5cda3a2aa6402f9611d6",
       "size_bytes": 84352,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -77,7 +77,7 @@
       "path": "output/figures/storybook_pages/06_tetra_inside_cube.png",
       "sha256": "2ffa247304d8f20792ca61403f2b03ef9c74cd0e7b1121440384567da085b648",
       "size_bytes": 130783,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -86,7 +86,7 @@
       "path": "output/figures/storybook_pages/07_mirror_families.png",
       "sha256": "36bcb78d67b00340b3293a1c615746ed0b00b723070e2e5a4db730181f0359a5",
       "size_bytes": 70798,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -95,7 +95,7 @@
       "path": "output/figures/storybook_pages/08_bridge_of_edges.png",
       "sha256": "eafd4a5d3020ecac2c8d21822964dad53a80b728ff032cfe37b5a705b1d2cfe0",
       "size_bytes": 83349,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -104,7 +104,7 @@
       "path": "output/figures/storybook_pages/09_shadow_school.png",
       "sha256": "29ac77d01b37a34644a9723f04409d673053d8adbea9114b8919baccac67c43c",
       "size_bytes": 85612,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -113,7 +113,7 @@
       "path": "output/figures/storybook_pages/10_tensegrity_lantern.png",
       "sha256": "95ffeddafccfb26d0873745c0c8415dc27133cc2cd728ee683512a536a559833",
       "size_bytes": 129110,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -122,7 +122,7 @@
       "path": "output/figures/storybook_pages/11_vector_garden.png",
       "sha256": "b48e214356b348f5903f32a97d86db663cdbbe8990cd1c00dd7959d8d1bbcd17",
       "size_bytes": 106244,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -131,7 +131,7 @@
       "path": "output/figures/storybook_pages/12_mega_symbol.png",
       "sha256": "9f142ef96d3a7644191ef3dc9386bac780b54c43a20c1980458cdd3131fa2101",
       "size_bytes": 98335,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -140,52 +140,7 @@
       "path": "output/figures/storybook_pages/13_shared_home.png",
       "sha256": "a3b67fafcb1217af27e1d66cea21557fb5b9518dce7a59f6f64cbc7f761de2a2",
       "size_bytes": 134055,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/pdf/_combined_manuscript.bbl",
-      "sha256": "716e2d7acbaab4b1105ac7242eac613adb07654d562b3aea449e7b32168dcb35",
-      "size_bytes": 444,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/pdf/_combined_manuscript.blg",
-      "sha256": "755fc4bea1a67d57af0cbbb163094c512d8c0bc77715f73918bc03c42b8c1aa7",
-      "size_bytes": 881,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/pdf/_combined_manuscript.md",
-      "sha256": "da2debfdc011dfbaa77ee848781eae9ed75cb58156a9e427dbc1b055982c91e9",
-      "size_bytes": 4733,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/pdf/_combined_manuscript.tex",
-      "sha256": "5a0235795611522f7dde890f984257ff30e991e12282ee405681a25477dcff72",
-      "size_bytes": 10448,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/pdf/references.bib",
-      "sha256": "14a1bd9044dedfeafe0ec8b68db4041531d8d8fc7146228e081ec15bb6a2b19d",
-      "size_bytes": 178,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -194,7 +149,7 @@
       "path": "output/pdf/template_storybook_combined.pdf",
       "sha256": "5a9101bf3df21690916601210c3a8b92fb476818eae61ecce367c06626bf49a9",
       "size_bytes": 45127,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -203,7 +158,7 @@
       "path": "output/pdf/the-shape-between.pdf",
       "sha256": "01e68ffbca29030974aba5adeca984405d20c412e974806cbb1fc551367c9eb5",
       "size_bytes": 1492681,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -212,7 +167,7 @@
       "path": "output/reports/storybook_summary.md",
       "sha256": "a77d15f40d5f088a303407b15456913de04f090f8b1a6c45629b9399d61000b7",
       "size_bytes": 219,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -221,16 +176,7 @@
       "path": "output/slides/00_abstract_slides.pdf",
       "sha256": "7288564ff268781600f6f1a73352081eb36156fcd3052c07f6fdad77f0846ea2",
       "size_bytes": 14070,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/00_abstract_slides.tex",
-      "sha256": "eeda964854fa62f7282c193cac4cd15cf82b7544a5f607c9ba0323180da7bec2",
-      "size_bytes": 5355,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -239,16 +185,7 @@
       "path": "output/slides/01_introduction_slides.pdf",
       "sha256": "d87193b95efa6c354888a3d356e9941e80cbda63726f2076267ea50b5106160b",
       "size_bytes": 7684,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/01_introduction_slides.tex",
-      "sha256": "176d0fa9d3cc80283baa5576d39b3998500ffed7e585b251e2a494832627c220",
-      "size_bytes": 4902,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -257,16 +194,7 @@
       "path": "output/slides/02_architecture_slides.pdf",
       "sha256": "8b0c9ecdcb7d33834085e89cbcba7ec9771a7021e68e3a9ac1f015b1c2358098",
       "size_bytes": 13272,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/02_architecture_slides.tex",
-      "sha256": "4af117cbac0c6765f3c7821c64c2a2c15733dc4e1c2e02070bb07cd8124d10d9",
-      "size_bytes": 5118,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -275,16 +203,7 @@
       "path": "output/slides/03_story_and_graphics_slides.pdf",
       "sha256": "bdba5c16147a86c48fa8752480603a4943e358a6219e0f85ccd7ea0faa063789",
       "size_bytes": 12491,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/03_story_and_graphics_slides.tex",
-      "sha256": "ed61f06871ee4140afead0a1a0376b4301c714272c724042b5f0b3a0450641b6",
-      "size_bytes": 5231,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -293,16 +212,7 @@
       "path": "output/slides/04_reproducibility_slides.pdf",
       "sha256": "60c4877a33f362130da2110b387c88e685b7a6744605e7a235ded5166857db9d",
       "size_bytes": 7976,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/04_reproducibility_slides.tex",
-      "sha256": "1c5b7649036ca8956da431a82e8ef4cecab9b406f8ad483c78021f5a18d0a25a",
-      "size_bytes": 4731,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -311,25 +221,7 @@
       "path": "output/slides/99_references_slides.pdf",
       "sha256": "edf1e0c34d30f352c8947147d8d9a0177c9b937708d7ba949b5901d1463b8b63",
       "size_bytes": 6802,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/99_references_slides.tex",
-      "sha256": "844d3e651d6263ce650260c7d6a342e83d5c3bd0502fb2a642b6cbfe2b11c33f",
-      "size_bytes": 4325,
-      "stage_name": "standalone-output-scan",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/slides/_slides_math_header.tex",
-      "sha256": "a17b6385cd838be2c1fce5dee294de6dc8b21a8a015a664981875ae492122bec",
-      "size_bytes": 1339,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -338,7 +230,7 @@
       "path": "output/web/_combined_manuscript.md",
       "sha256": "3793dfeabcbeb85e1d43232319fd987201f3145f47cb1db20fd8848205a0423a",
       "size_bytes": 4633,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -347,7 +239,7 @@
       "path": "output/web/favicon.ico",
       "sha256": "6ca6e9ffbb22550f6d94bf216e743cc7469a7fc50d8dcf0737b11bf800de7dad",
       "size_bytes": 121,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -356,7 +248,7 @@
       "path": "output/web/index.html",
       "sha256": "587e92f231430c0cb4bcec1ac7945fc1d05c26f2d2c29629a0173b452c62e555",
       "size_bytes": 16227,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -365,7 +257,7 @@
       "path": "output/web/manuscript__00_abstract.html",
       "sha256": "b7f7172ef34b1305487927fbc4518b2f6bb81d85861c70d86d82b69be277a238",
       "size_bytes": 5295,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -374,7 +266,7 @@
       "path": "output/web/manuscript__01_introduction.html",
       "sha256": "ecd81bb131f3c3b2935cbe8bd070d57f2b89a3fed2ded02e3960de32fc36a9b8",
       "size_bytes": 4839,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -383,7 +275,7 @@
       "path": "output/web/manuscript__02_architecture.html",
       "sha256": "21a50ce0bb335782083fbfcb6b5cc4331bc992ad564b39e6b474eeb7b3d14ae5",
       "size_bytes": 5038,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -392,7 +284,7 @@
       "path": "output/web/manuscript__03_story_and_graphics.html",
       "sha256": "f6156d1be55849a548a6452621f0ec9cf911a2af5d4dfc71ffb704d183d46bb3",
       "size_bytes": 5089,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -401,7 +293,7 @@
       "path": "output/web/manuscript__04_reproducibility.html",
       "sha256": "499c6c90875267fa7561ca73f8745d14335de0b46276cf1e47987f45a4ad8499",
       "size_bytes": 4668,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -410,7 +302,7 @@
       "path": "output/web/manuscript__99_references.html",
       "sha256": "4540be1c0af9c01632c6983876e5d6cb8ba8e7ddbf322865026abd340b85c3ed",
       "size_bytes": 4256,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
     }

@@ -7,6 +7,8 @@ import json
 import os
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
+import subprocess
+from collections.abc import Sequence
 from pathlib import Path
 
 from infrastructure.core.files.portability import sanitize_machine_local_paths
@@ -119,11 +121,13 @@ def write_stage_artifact_manifest(
             issues.append(f"missing declared output: {_display_path(repo_root, declared)}")
 
     if output_dir.exists():
+        scan = [item for item in sorted(output_dir.rglob("*")) if item.is_file() and not item.is_symlink()]
+        ignored = git_ignored_paths(scan, project_dir)
         for path in sorted(output_dir.rglob("*")):
             if path.is_symlink():
                 issues.append(_symlink_issue(path, output_dir))
                 continue
-            if not path.is_file() or _is_ignored_output(path, output_dir):
+            if not path.is_file() or _is_ignored_output(path, output_dir) or path in ignored:
                 continue
             relative_path = str(path.relative_to(project_dir))
             digest = compute_sha256(path)
@@ -178,10 +182,12 @@ def aggregate_artifact_manifests(output_dir: Path) -> ArtifactManifest:
             issues.extend(str(issue) for issue in payload.get("issues", []))
 
     if not entries and output_dir.exists():
+        scan = [item for item in sorted(output_dir.rglob("*")) if item.is_file() and not item.is_symlink()]
+        ignored = git_ignored_paths(scan, project_dir)
         for path in sorted(output_dir.rglob("*")):
             if path.is_symlink():
                 continue
-            if not path.is_file() or _is_ignored_output(path, output_dir):
+            if not path.is_file() or _is_ignored_output(path, output_dir) or path in ignored:
                 continue
             entries.append(
                 ArtifactManifestEntry(
@@ -223,11 +229,15 @@ def snapshot_current_artifact_manifest(output_dir: Path) -> ArtifactManifest:
     entries: list[ArtifactManifestEntry] = []
     issues: list[str] = []
     if output_dir.exists():
+        candidates = [path for path in sorted(output_dir.rglob("*")) if path.is_file() and not path.is_symlink()]
+        # Never record an artifact git will not ship — the manifest is committed
+        # evidence, and a fresh clone would read the entry as drift.
+        ignored = git_ignored_paths(candidates, project_dir)
         for path in sorted(output_dir.rglob("*")):
             if path.is_symlink():
                 issues.append(_symlink_issue(path, output_dir))
                 continue
-            if not path.is_file() or _is_ignored_output(path, output_dir):
+            if not path.is_file() or _is_ignored_output(path, output_dir) or path in ignored:
                 continue
             entries.append(
                 ArtifactManifestEntry(
@@ -417,6 +427,43 @@ def _stage_manifest_path(output_dir: Path, stage_num: int, stage_name: str) -> P
     while "--" in slug:
         slug = slug.replace("--", "-")
     return output_dir / ".pipeline" / "artifacts" / f"stage-{stage_num:02d}-{slug}.json"
+
+
+def git_ignored_paths(paths: "Sequence[Path]", project_dir: Path) -> frozenset[Path]:
+    """Return the subset of *paths* that git ignores, or empty when unavailable.
+
+    A committed artifact manifest is publication evidence, so it must only
+    reference files that can actually ship. The static suffix list below cannot
+    express path-scoped rules like ``output/slides/**/*.tex``, so it drifted from
+    ``.gitignore`` and the committed manifest for ``template_code_project`` came
+    to list 15 LaTeX intermediates (``.bbl``, ``.blg``, ``_combined_manuscript.tex``,
+    ``references.bib``) that exist after a local render but are absent from any
+    fresh clone. CI failed on all four Python versions and both platforms while
+    the same tests passed locally, because locally those files were present.
+
+    Asking git removes the second source of truth. One batched
+    ``git check-ignore --stdin`` call covers the whole candidate set; when git is
+    absent or the tree is not a repository (unit tests build trees under
+    ``tmp_path``) this returns empty and the static lists still apply.
+    """
+    if not paths:
+        return frozenset()
+    payload = "\n".join(str(path) for path in paths)
+    try:
+        proc = subprocess.run(  # noqa: S603 - fixed argv, no shell
+            ["git", "-C", str(project_dir), "check-ignore", "--stdin"],
+            input=payload,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except (OSError, ValueError):
+        return frozenset()
+    # 0 = some paths ignored, 1 = none ignored; anything else means git could not
+    # answer (not a repo, no git), and we must not silently drop artifacts.
+    if proc.returncode not in {0, 1}:
+        return frozenset()
+    return frozenset(Path(line) for line in proc.stdout.splitlines() if line.strip())
 
 
 def _is_ignored_output(path: Path, output_dir: Path) -> bool:

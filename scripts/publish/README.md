@@ -15,6 +15,7 @@ GitHub mirror, real Zenodo DOI, optional mirrors, and archival handoff, start at
 | `upload_template_project.py` | Upload a rendered exemplar project to all configured platforms (Zenodo, HuggingFace, OSF, etc.) |
 | `upload_gold_refinement.py` | Original hand-tuned reference uploader for the gold-standard exemplar |
 | `publish_project_release.py` | Core GitHub release + Zenodo DOI orchestrator for an already-created standalone public repository |
+| `sync_standalone_mirrors.py` | Sync public exemplars into their standalone publication repositories (dry-run by default; `--commit` to push) |
 | `export_for_publishing.py` | **Bridge script** — bundle template/ outputs for the docxology/publishing repo |
 
 ---

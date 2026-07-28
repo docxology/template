@@ -143,3 +143,81 @@ def test_refresh_manifest_maintenance_cli_uses_qualified_project(tmp_path: Path)
     assert "PASS templates/demo: 1 stable artifacts" in completed.stdout
     payload = json.loads((artifact.parents[1] / "reports" / "artifact_manifest.json").read_text(encoding="utf-8"))
     assert payload["entries"][0]["stage_name"] == "current-output-snapshot"
+
+
+def test_git_ignored_artifacts_are_never_recorded(tmp_path: Path) -> None:
+    """A committed manifest must only reference files that can actually ship.
+
+    Originating defect (2026-07-28): `template_code_project`'s tracked
+    `artifact_manifest.json` listed 15 LaTeX intermediates (`.bbl`, `.blg`,
+    `_combined_manuscript.tex`, `references.bib`) that exist after a local render
+    but are gitignored, so a fresh clone lacked them. Three `methods/` tests
+    failed on every CI platform while passing locally, because locally the files
+    were present. The static suffix list could not express path-scoped rules like
+    `output/slides/**/*.tex`, so it had drifted from `.gitignore`; asking git
+    removes the second source of truth.
+    """
+    import subprocess
+
+    from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
+
+    project = tmp_path / "proj"
+    output = project / "output" / "pdf"
+    output.mkdir(parents=True)
+    (output / "paper.pdf").write_bytes(b"%PDF-1.7\n")
+    (output / "paper.bbl").write_text("bibliography intermediate\n", encoding="utf-8")
+
+    subprocess.run(["git", "init", "-q"], cwd=project, check=True, capture_output=True)
+    (project / ".gitignore").write_text("output/pdf/*.bbl\n", encoding="utf-8")
+
+    manifest = snapshot_current_artifact_manifest(project / "output")
+    recorded = {entry.path for entry in manifest.entries}
+    assert "output/pdf/paper.pdf" in recorded
+    assert "output/pdf/paper.bbl" not in recorded, "gitignored intermediates must not enter committed evidence"
+
+
+def test_manifest_snapshot_still_works_outside_a_git_repository(tmp_path: Path) -> None:
+    """Falling back must not silently drop artifacts.
+
+    Unit trees under `tmp_path` are not repositories; when git cannot answer, the
+    static exclusion lists still apply and real artifacts are still recorded.
+    """
+    from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
+
+    project = tmp_path / "nogit"
+    output = project / "output" / "data"
+    output.mkdir(parents=True)
+    (output / "results.json").write_text("{}\n", encoding="utf-8")
+    (output / "render.log").write_text("noise\n", encoding="utf-8")
+
+    manifest = snapshot_current_artifact_manifest(project / "output")
+    recorded = {entry.path for entry in manifest.entries}
+    assert "output/data/results.json" in recorded
+    assert "output/data/render.log" not in recorded, "static suffix exclusions must still apply"
+
+
+def test_every_public_exemplar_manifest_references_only_tracked_files() -> None:
+    """Bind to the live tree — this is the assertion CI was failing on."""
+    import json
+    import subprocess
+
+    from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+    repo_root = Path(__file__).resolve().parents[3]
+    tracked = set(
+        subprocess.run(["git", "ls-files"], cwd=repo_root, capture_output=True, text=True, check=True).stdout.split()
+    )
+    checked = 0
+    offenders: list[str] = []
+    for qualified in PUBLIC_PROJECT_NAMES:
+        manifest_path = repo_root / "projects" / qualified / "output" / "reports" / "artifact_manifest.json"
+        if f"projects/{qualified}/output/reports/artifact_manifest.json" not in tracked:
+            continue
+        checked += 1
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for entry in payload.get("entries", []):
+            rel = entry.get("path")
+            if rel and f"projects/{qualified}/{rel}" not in tracked:
+                offenders.append(f"{qualified}: {rel}")
+    assert checked > 0, "no tracked exemplar manifests found — the scan set went empty"
+    assert not offenders, offenders[:10]

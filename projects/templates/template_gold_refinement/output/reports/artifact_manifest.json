@@ -12,7 +12,7 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "664d04016161f04ca1fae5ad4f81dd3a48045939a9d4b02e6ce25274cdf3a95d",
+      "sha256": "b79e9626bdf9a37767cf23fe5f1a24abf3031ba7b4fece3a5cee168182e0f1ca",
       "size_bytes": 34855,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -336,7 +336,7 @@
     {
       "contract_match": true,
       "path": "output/manuscript/06_reproducibility.md",
-      "sha256": "09d5401ec872bc4f8de72e428793fc90c2e84039b5e06b79460d7e2ca4d706cc",
+      "sha256": "a68349cc1ef7cd3bbfb76afdc08dd803f9ac06b1b662b6294649475adf338024",
       "size_bytes": 5883,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
