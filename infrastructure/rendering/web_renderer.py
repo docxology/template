@@ -42,7 +42,24 @@ class WebRenderer:
     # ``[@key]`` markdown into the rendered page.
     _PANDOC_CITATION_RE = re.compile(r"\[(?P<body>[^\]]*?@[A-Za-z0-9_][^\]]*?)\]")
     _PANDOC_CITEKEY_RE = re.compile(r"-?@([A-Za-z0-9_][A-Za-z0-9_:.#$%&+?<>~/-]*)")
-    _PANDOC_CROSSREF_PREFIXES = ("fig:", "tbl:", "sec:", "eq:")
+    #: Reference prefixes a filter resolves later, so the citation pre-pass must
+    #: not strip their ``@``. The first four belong to pandoc-crossref; the rest
+    #: are the formalism kinds ``formalism.lua`` numbers. Stripping a formalism
+    #: ``@`` left the per-section pages showing raw ``[def:registry]`` with the
+    #: block above it unlabelled.
+    _PANDOC_CROSSREF_PREFIXES = (
+        "fig:",
+        "tbl:",
+        "sec:",
+        "eq:",
+        "def:",
+        "prop:",
+        "thm:",
+        "lem:",
+        "cor:",
+        "rem:",
+        "ax:",
+    )
     # Raw-LaTeX theorem-like environments. Pandoc's HTML writer silently DROPS
     # these blocks (the ``\newtheorem`` definitions live in the LaTeX-only
     # preamble), so a manuscript's Theorems/Definitions vanish from the web page.
@@ -94,7 +111,7 @@ class WebRenderer:
             safe_source.write_text(
                 self._html_safe_markdown(
                     source_file.read_text(encoding="utf-8"),
-                    preserve_crossrefs=False,
+                    preserve_crossrefs=True,
                 ),
                 encoding="utf-8",
             )
@@ -110,6 +127,13 @@ class WebRenderer:
             str(output_file),
             "--standalone",
             f"--mathjax={_MATHJAX_URL}",
+            # A per-section page is rendered alone, so numbering here is
+            # section-local: correct for the section that declares the blocks
+            # (manuscripts keep them together), and unresolvable for a reference
+            # made from a different section, which the filter then leaves visible
+            # and reports. The combined ``index.html`` is the authoritative HTML
+            # edition and numbers the whole document.
+            *formalism_filter_args(),
         ]
 
         logger.info(f"Generating HTML from {source_file}")
