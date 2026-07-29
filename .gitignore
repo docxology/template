@@ -83,6 +83,9 @@ coverage_*.json
 ehthumbs.db
 Thumbs.db
 
+# Fingerprint cache for semantic fixed-point gate artifacts
+**/output/.fingerprint_cache.sha256
+
 # Generated outputs and caches are disposable by default. Public canonical
 # evidence is tracked only in each exemplar's project-local ``output/`` tree;
 # root ``output/templates/`` copies are generated CI/release artifacts.
