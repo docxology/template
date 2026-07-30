@@ -13,7 +13,15 @@ from infrastructure.validation.content.validator_pitfalls import NON_RENDERED_MA
 
 logger = get_logger(__name__)
 
-CITE_KEY_PATTERN = re.compile(r"(?<![A-Za-z0-9_])@([A-Za-z][\w:.\-]*)")
+# Pandoc allows a citation key to contain punctuation only *internally*: a trailing
+# ``.``, ``-`` or ``:`` terminates the key rather than belonging to it. Allowing the
+# class to run to the end of the match made every sentence-final in-text citation a
+# blocker — ``... by @parr2022active. That is ...`` was reported as the undefined key
+# ``parr2022active.`` even though ``parr2022active`` is in the bib, and the combined
+# PDF never got as far as Pandoc. The trailing ``[A-Za-z0-9_]`` makes the greedy class
+# backtrack to the last word character, which is exactly Pandoc's rule. Single-letter
+# keys stay legal through the optional group.
+CITE_KEY_PATTERN = re.compile(r"(?<![A-Za-z0-9_])@([A-Za-z](?:[\w:.\-]*[A-Za-z0-9_])?)")
 BIBTEX_KEY_PATTERN = re.compile(r"^@\w+\{\s*([^,\s}]+)\s*[,}]", re.MULTILINE)
 CROSSREF_PREFIXES = (
     "sec:",
