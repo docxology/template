@@ -240,7 +240,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     # ---- Results-derived ----
     if results:
         x_star, f_star = quadratic_optimum(exp_cfg.A_array(), exp_cfg.b_array())
-        variables["RESULT_OPTIMUM_X"] = _format_solution_vector(x_star.tolist(), precision=1)
+        variables["RESULT_OPTIMUM_X"] = _format_solution_vector([float(v) for v in x_star], precision=1)
         variables["RESULT_OPTIMUM_F"] = f"{f_star:.1f}"
 
         iterations_list = [int(r["iterations"]) for r in results]

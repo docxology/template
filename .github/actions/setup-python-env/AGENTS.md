@@ -6,7 +6,7 @@ Composite action wrapping the shared CI Python setup. See
 ## Steps (in order)
 
 1. `astral-sh/setup-uv` — SHA-pinned; `enable-cache: true`,
-   `cache-dependency-glob: "**/uv.lock"`.
+   `prune-cache: true`, `cache-dependency-glob: "**/uv.lock"`.
 2. `actions/setup-python` — SHA-pinned; `python-version` from the input
    (default `"3.12"`).
 

@@ -61,7 +61,7 @@ def encrypt_payload(
     _require_cryptography()
 
     if key is None:
-        key = AESGCM.generate_key(bit_length=256)
+        key = AESGCM.generate_key(256)
 
     nonce = os.urandom(12)  # 96-bit nonce for GCM
     aesgcm = AESGCM(key)

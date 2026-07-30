@@ -1,30 +1,41 @@
 {
-  "timestamp": "2026-07-20T12:49:50.939041",
+  "timestamp": "2026-07-30T10:41:28.734223",
   "infrastructure": {},
   "project": {
-    "passed": 717,
-    "failed": 0,
-    "skipped": 0,
-    "total": 717,
+    "passed": 676,
+    "failed": 2,
+    "skipped": 6,
+    "total": 684,
     "warnings": 0,
-    "exit_code": 0,
-    "discovery_count": 723,
+    "exit_code": 1,
+    "discovery_count": 735,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 321.99,
-      "collection": 321.99,
-      "execution": 321.99
+      "setup": 302.94,
+      "collection": 302.94,
+      "execution": 302.94
     },
     "test_categories": {},
-    "coverage_percent": 90.3,
-    "failed_tests": []
+    "coverage_percent": 88.91,
+    "failed_tests": [
+      {
+        "test": "tests/test_image_content_hash.py::test_live_figures_all_produce_a_content_digest",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      },
+      {
+        "test": "tests/test_method_inventory.py::test_method_inventory_check_command",
+        "error_type": "Unknown",
+        "error_message": "Failed (use --tb=short for details)"
+      }
+    ]
   },
   "summary": {
-    "total_passed": 717,
-    "total_failed": 0,
-    "total_skipped": 0,
-    "total_tests": 717,
-    "all_passed": true,
-    "project_coverage": 90.3
+    "total_passed": 676,
+    "total_failed": 2,
+    "total_skipped": 6,
+    "total_tests": 684,
+    "all_passed": false,
+    "project_coverage": 88.91
   }
 }

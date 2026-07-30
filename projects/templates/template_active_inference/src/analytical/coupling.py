@@ -22,7 +22,8 @@ def entangled_prior_unnormalised(
     ja = np.asarray(coupling_j, dtype=np.float64)
     if base.shape != ja.shape:
         raise ValueError(f"coupling shape {ja.shape} != mean-field shape {base.shape}")
-    return base * np.exp(lam * ja)
+    result: ArrayF = (base * np.exp(lam * ja)).astype(np.float64)
+    return result
 
 
 def entangled_posterior(

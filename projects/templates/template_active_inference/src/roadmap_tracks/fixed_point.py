@@ -4,10 +4,6 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from typing import cast
-
-
-from json_io import write_json as _write_json
 
 
 FINGERPRINT_CACHE = "output/.fingerprint_cache.sha256"
@@ -38,25 +34,28 @@ def _refresh_animation_outputs(root: Path) -> dict[str, Path]:
 def _refresh_hydrated_manuscript(root: Path, *, require_analysis_outputs: bool) -> dict[str, Path]:
     from manuscript.refresh import settle_manuscript_artifacts
 
-    return settle_manuscript_artifacts(root, require_analysis_outputs=require_analysis_outputs)
+    result: dict[str, Path] = settle_manuscript_artifacts(root, require_analysis_outputs=require_analysis_outputs)
+    return result
 
 
 def _write_sheaf_owned_artifacts(root: Path) -> dict[str, Path]:
     from manuscript.sheaf.coverage import emit_coverage_artifacts
 
-    return emit_coverage_artifacts(root)
+    result: dict[str, Path] = emit_coverage_artifacts(root)
+    return result
 
 
 def _write_semantic_core(root: Path) -> dict[str, Path]:
     from manuscript.sheaf.semantic import write_semantic_outputs
 
-    return write_semantic_outputs(root)
+    result: dict[str, Path] = write_semantic_outputs(root)
+    return result
 
 
 def _write_contract_artifacts(root: Path) -> dict[str, Path]:
     from roadmap_tracks.formal_interop import write_formal_interop_artifacts
 
-    result = write_formal_interop_artifacts(root)
+    result: dict[str, Path] = write_formal_interop_artifacts(root)
     from roadmap_tracks.integration_audit import write_integration_audit_artifacts
 
     result.update(write_integration_audit_artifacts(root))

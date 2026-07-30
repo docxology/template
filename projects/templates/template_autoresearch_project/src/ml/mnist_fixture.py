@@ -168,7 +168,8 @@ def _stratified_indices(labels: np.ndarray, *, per_class: int, seed: int) -> np.
         if class_indices.size < per_class:
             raise ValueError(f"not enough examples for label {label}")
         indices.append(np.sort(rng.choice(class_indices, size=per_class, replace=False)))
-    return np.concatenate(indices).astype(np.int64)
+    result: np.ndarray = np.concatenate(indices).astype(np.int64)
+    return result
 
 
 def _sha256(path: Path) -> str:

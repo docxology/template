@@ -70,7 +70,7 @@ def parse_dashboard_args(
 ) -> argparse.Namespace:
     """Parse CLI arguments for the dashboard builder."""
     cfg = defaults_loader(CFG_DEFAULT)
-    a_diag = np.diag(cfg.A_array()).tolist()
+    a_diag = [float(v) for v in np.diag(cfg.A_array())]
     parser = argparse.ArgumentParser(
         description="Build the interactive optimization dashboard.",
         formatter_class=argparse.RawDescriptionHelpFormatter,

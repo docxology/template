@@ -1,0 +1,11 @@
+# [bu2026nonstationary] — Non-stationary Stochastic Optimization: Adaptive Stochastic Gradient Descent Algorithm and Applications in Operations
+
+_Source keyword: **stochastic gradient descent**_
+
+_2026_  ·  
+Jinzhi Bu, Siyi Wang, Sen Yang
+DOI: <https://doi.org/10.2139/ssrn.6988658>
+
+## Abstract
+
+Many operations research problems involve sequential decision making in stochastic environments whose underlying distributions change over time. In this paper, we develop a gradient-based modeling-and-algorithmic framework for online stochastic convex optimization under a variation-budget constraint on the changing distributions. To adapt to the unknown variation budget $V_T$, we propose an Adaptive Stochastic Gradient Descent (AdaSGD) algorithm. This algorithm maintains multiple SGD learners calibrated to different hypothetical variation levels and switches to the learners with higher-variation levels by comparing the cumulative costs of the active and inactive learners. For general convex objectives, AdaSGD achieves dynamic regret of order $\widetilde{O}(T^{2/3} V_T^{1/3})$, matching the optimal regret rate up to logarithmic factors. We then apply this framework to three important classes of problems in operations. For a non-perishable inventory control problem, we modify the AdaSGD algorithm and establish a regret upper bound against the clairvoyant optimal inventory policy of order $\widetilde{O}(T^{2/3} V_T^{1/3})$. To account for the effect of inventory carryover, we construct two non-stationary queueing processes and bound the waiting times by carefully analyzing the lengths of their busy periods. We also show that this regret order is tight by proving a matching regret lower bound. For the first-price auction bidding problem and online portfolio selection problem, we obtain dynamic regret guarantees of the same order through, respectively, a convex bidding reformulation and an entropic mirror descent variant. Across the three applications, numerical experiments show that our proposed algorithms consistently achieve strong empirical performance and computational efficiency. The framework is further extended to both strongly convex and time-dependent cost functions.

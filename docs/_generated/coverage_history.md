@@ -3,52 +3,44 @@
 This file is **generated** by
 `scripts/docgen/coverage_history.py`. Do not edit by hand.
 
-> **Status: empty locally — populated in CI from `gh` artefacts.** The table
-> below contains **no coverage values**: this snapshot was produced without any
-> `coverage-*.xml` inputs (no `--from-dir` artefacts and no authenticated
-> `gh run download`). The dated rows are the rolling-window calendar only, not
-> measured coverage — do **not** read them as real zero-coverage data. CI
-> regenerates this file with actual percentages from downloaded run artefacts;
-> reproduce locally with the commands under [Regenerate](#regenerate).
-
-Last verified: 2026-05-27
-Rolling window: 30 day(s) — 2026-04-28 → 2026-05-27
+Last verified: 2026-07-30
+Rolling window: 30 day(s) — 2026-07-01 → 2026-07-30
 Suites observed: (none)
 
 ## Daily coverage table
 
 | Date |
 | --- |
-| 2026-04-28 |
-| 2026-04-29 |
-| 2026-04-30 |
-| 2026-05-01 |
-| 2026-05-02 |
-| 2026-05-03 |
-| 2026-05-04 |
-| 2026-05-05 |
-| 2026-05-06 |
-| 2026-05-07 |
-| 2026-05-08 |
-| 2026-05-09 |
-| 2026-05-10 |
-| 2026-05-11 |
-| 2026-05-12 |
-| 2026-05-13 |
-| 2026-05-14 |
-| 2026-05-15 |
-| 2026-05-16 |
-| 2026-05-17 |
-| 2026-05-18 |
-| 2026-05-19 |
-| 2026-05-20 |
-| 2026-05-21 |
-| 2026-05-22 |
-| 2026-05-23 |
-| 2026-05-24 |
-| 2026-05-25 |
-| 2026-05-26 |
-| 2026-05-27 |
+| 2026-07-01 |
+| 2026-07-02 |
+| 2026-07-03 |
+| 2026-07-04 |
+| 2026-07-05 |
+| 2026-07-06 |
+| 2026-07-07 |
+| 2026-07-08 |
+| 2026-07-09 |
+| 2026-07-10 |
+| 2026-07-11 |
+| 2026-07-12 |
+| 2026-07-13 |
+| 2026-07-14 |
+| 2026-07-15 |
+| 2026-07-16 |
+| 2026-07-17 |
+| 2026-07-18 |
+| 2026-07-19 |
+| 2026-07-20 |
+| 2026-07-21 |
+| 2026-07-22 |
+| 2026-07-23 |
+| 2026-07-24 |
+| 2026-07-25 |
+| 2026-07-26 |
+| 2026-07-27 |
+| 2026-07-28 |
+| 2026-07-29 |
+| 2026-07-30 |
 
 ## Trend sparklines
 

@@ -105,8 +105,7 @@ def generate_synthetic_timeseries() -> None:
         seasonal = seasonal_amp * np.sin(2 * np.pi * t / seasonal_period + rng.uniform(0, 2 * np.pi))
         noise = rng.normal(0, noise_scale, size=length)
 
-        values = trend + seasonal + noise
-        values = values.tolist()
+        values = [float(v) for v in (trend + seasonal + noise)]
 
         outpath = SYNTHETIC_OUTPUT / f"synthetic_{i + 1:03d}.json"
         outpath.write_text(
