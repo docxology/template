@@ -31,7 +31,7 @@ EOF
 # `https://astral.sh/uv/install.sh`, matching the repo's pin-everything posture
 # (a floating remote script piped to a shell can change under you between runs).
 # Override with `UV_INSTALL_VERSION=<x.y.z>` when a newer uv is required.
-UV_INSTALL_VERSION="${UV_INSTALL_VERSION:-0.11.25}"
+UV_INSTALL_VERSION="${UV_INSTALL_VERSION:-0.12.0}"
 
 ensure_uv() {
     if command -v uv >/dev/null 2>&1 && uv --version >/dev/null 2>&1; then

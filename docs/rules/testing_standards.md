@@ -441,8 +441,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.11"
 
@@ -455,7 +455,7 @@ jobs:
           uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v6.0.1
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
 ```
 
 ## Debugging Tests

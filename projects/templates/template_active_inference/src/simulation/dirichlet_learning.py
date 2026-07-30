@@ -169,7 +169,7 @@ def learn_likelihood(
     for _ in range(num_steps):
         learned = expected_likelihood(concentration)
         kls.append(_kl_columns(true_a, learned))
-        concentration = concentration + counts
+        concentration = (concentration + counts).reshape(n_o, n_s).astype(np.float64)
 
     return DirichletLearningResult(
         kl_trajectory=tuple(kls),

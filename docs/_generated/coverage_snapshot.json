@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "93.23 %",
-      "source_hash": "fe9099c36b849fd3438b4355ba9de56e3447c0146945357c9607085f24d75266"
+      "source_hash": "3992211a5cdd10d5dbeae848853cf52fd26449eea0e1ea7121092939c88ab655"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "93.07 %",
@@ -15,7 +15,7 @@
     },
     "template_autoresearch_project": {
       "coverage_pct": "96.46 %",
-      "source_hash": "d2d609705bdc8c513b2f138b3ab822c53a3fc18c0cd57fc46b81069ef28de15f"
+      "source_hash": "0f02f2f832da9f45e3acc076bc49b16066f1c31c0bae5e0057e00aa6432c9984"
     },
     "template_autoscientists": {
       "coverage_pct": "99.28 %",
@@ -23,7 +23,7 @@
     },
     "template_code_project": {
       "coverage_pct": "96.98 %",
-      "source_hash": "02fbc208792d65ab72687ff1a7f6e8a612ed12914fb8504fd1128c8d08d2c631"
+      "source_hash": "a2af94b874f0a8c8c28f5cc689396fe93bb9fc437a3c3873a084fa4d3ddea7ec"
     },
     "template_data_descriptor": {
       "coverage_pct": "98.75 %",
@@ -95,9 +95,9 @@
     },
     "template_textbook": {
       "coverage_pct": "96.19 %",
-      "source_hash": "69766c8d9a700f9d22009ec4e270570bff29599f9de508877bb6f20b66d584c5"
+      "source_hash": "6f30e71ea12de068d51740412eff3913cb564cf5d5bf0a34ca5c2365f552f005"
     }
   },
   "schema_version": 2,
-  "source_commit": "597786bd202a5a16951bb488d66b64d460c10f60"
+  "source_commit": "5eb6978a867434a065dcc9797fc00a965c8307c4"
 }

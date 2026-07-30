@@ -16,7 +16,8 @@ _LOG_FLOOR = 1e-300
 
 def _safe_log(p: ArrayF) -> ArrayF:
     pa = np.asarray(p, dtype=np.float64)
-    return np.log(np.where(pa > 0.0, pa, _LOG_FLOOR))
+    result: ArrayF = np.log(np.where(pa > 0.0, pa, _LOG_FLOOR)).astype(np.float64)
+    return result
 
 
 def shannon_entropy(p: ArrayF) -> float:

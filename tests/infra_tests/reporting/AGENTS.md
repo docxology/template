@@ -528,7 +528,7 @@ def debug_error_categorization():
 **Coverage Integration:**
 ```yaml
 - name: Upload Coverage
-  uses: codecov/codecov-action@v6.0.1
+  uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
   with:
     file: ./coverage.xml
     flags: reporting

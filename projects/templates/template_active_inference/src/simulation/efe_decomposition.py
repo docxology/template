@@ -157,7 +157,7 @@ def decompose_policy_efe(model: dict[str, Any], policy: Sequence[int]) -> EFETer
         # epistemic value = mutual information I(s;o) = H[q(o)] - E_q(s)[H[p(o|s)]].
         epistemic += _entropy(predicted_obs) - ambiguity_step
         # Propagate the state belief one step under the chosen action.
-        state_belief = b_tensor[:, :, int(action)] @ state_belief
+        state_belief = (b_tensor[:, :, int(action)] @ state_belief).reshape(-1).astype(np.float64)
 
     return EFETerms(
         risk=risk,
