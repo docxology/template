@@ -23,7 +23,7 @@ these run in the default `./run.sh` pipeline — invoke them directly when neede
 | `check_tracked_all.py` | `infrastructure.project.git_guards` | All-resource git guard (umbrella) |
 | `check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards` | Generated-artifact git-index hygiene |
 | `check_tracked_secrets.py` | `infrastructure.project.git_guards.tracked_secret_findings` | High-confidence credential scan over every tracked blob |
-| `check_staged_secrets.py` | `infrastructure.project.git_guards.staged_diff_secret_findings` | Pre-commit credential scan over staged added/modified files |
+| `check_staged_secrets.py` | `infrastructure.project.git_guards.staged_diff_secret_findings` | Pre-commit credential scan over staged A/C/M/R index blobs |
 | `copy_exemplar.py` | `infrastructure.project.exemplar` | Copy or update a canonical exemplar |
 
 ## Bootstrap pattern
@@ -50,6 +50,7 @@ uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_tracked_projects.py
 uv run python scripts/audit/check_tracked_all.py
 uv run python scripts/audit/check_tracked_secrets.py
+uv run python scripts/audit/check_staged_secrets.py
 
 # Lexical gate and enforced semantic inventory
 uv run python scripts/audit/verify_no_mocks.py

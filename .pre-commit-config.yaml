@@ -3,12 +3,14 @@
 #   `infrastructure.project.public_scope`
 #   mypy on the same paths (see `[tool.mypy]` in pyproject.toml)
 #
-# Pre-push (fast): no-mocks script + pytest on `tests/infra_tests/git_hook_smoke/`,
-# Bandit MEDIUM+ (`bandit.yaml`, including `exclude_dirs` for archive/WIP roots
-# and local `.venv` / `site-packages` trees), and a stale-manifest check via
-# `infrastructure.skills check`. Full infra tests run in CI
-# (`test-infra`); collecting all of `tests/infra_tests/` here is too slow for
-# every push (~thousands of tests).
+# Pre-commit: staged-index secret scanning plus the lint/type gates below.
+#
+# Pre-push (fast): tracked-secret and no-mocks scripts + pytest on
+# `tests/infra_tests/git_hook_smoke/`, Bandit MEDIUM+ (`bandit.yaml`, including
+# `exclude_dirs` for archive/WIP roots and local `.venv` / `site-packages`
+# trees), and a stale-manifest check via `infrastructure.skills check`. Full
+# infra tests run in CI (`test-infra`); collecting all of `tests/infra_tests/`
+# here is too slow for every push (~thousands of tests).
 #
 # Manual: `pre-commit run --all-files --hook-stage manual` (also runs the
 # strict `bandit-low` pass, which mirrors the LOW-severity sweep allowed by
@@ -77,6 +79,23 @@ repos:
 
   - repo: local
     hooks:
+      - id: staged-secret-scan
+        name: staged-index secret scan (A/C/M/R)
+        entry: bash
+        args:
+          - -eo
+          - pipefail
+          - -c
+          - >-
+            export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
+            export PYTHONDONTWRITEBYTECODE=1 &&
+            uv run python scripts/audit/check_staged_secrets.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit, manual]
+        always_run: true
+        verbose: true
+
       - id: ruff-ci
         name: ruff check + format (CI scope)
         entry: bash

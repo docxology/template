@@ -9,6 +9,17 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Staged-index credential guard (2026-07-31)
+
+- Made the pre-commit credential scanner inspect exact added, copied, modified,
+  and renamed blobs in Git's index, so partially staged worktree edits cannot
+  hide a credential or create a false finding.
+- Wired the value-redacting scanner into pre-commit and manual hooks while
+  retaining the full tracked-blob pre-push defense; real-Git negative controls
+  cover both partial-staging directions and all supported index states.
+- Removed the accidentally tracked active-inference fingerprint cache now
+  rejected by the generated/local-artifact hook.
+
 ### Template infrastructure hardening (2026-07-30)
 
 - Added lexical project-name confinement and in-project analysis-script allowlists,

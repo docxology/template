@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Fail closed when high-confidence credentials are present in staged files.
+"""Fail closed when high-confidence credentials are present in staged blobs.
 
-Pre-commit companion to ``check_tracked_secrets.py``. Scans the working-tree
-content of files staged for commit (added or modified) so a credential is
-caught before it enters history rather than after. Reports ``path:line:kind``
+Pre-commit companion to ``check_tracked_secrets.py``. Scans added, copied,
+modified, and renamed blobs directly from Git's index so partial staging cannot
+hide a credential or report an unstaged value. Reports ``path:line:kind``
 metadata only and never prints the matched value.
 """
 

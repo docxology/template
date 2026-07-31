@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import yaml
+
 from infrastructure.project.git_guards import (
     is_empty_public_template_output,
     is_generated_artifact_path,
@@ -90,6 +92,55 @@ def test_tracked_secret_scan_reports_path_line_and_kind(tmp_path: Path) -> None:
     findings = tracked_secret_findings(repo_root)
     assert findings == ["note.txt:2:github-token"]
     assert secret not in "\n".join(findings)
+
+
+def test_staged_secret_cli_reports_metadata_without_exposing_value(tmp_path: Path) -> None:
+    """The pre-commit command reads the index and never echoes the credential."""
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    secret = "ghp_" + "Z9y8X7w6V5u4T3s2R1q0N9m8L7k6J5h4G3f2E1d0"
+    note = repo_root / "note.txt"
+    note.write_text(f"reviewed\n{secret}\n", encoding="utf-8")
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
+    subprocess.run(["git", "add", "note.txt"], cwd=repo_root, check=True, timeout=30)
+    note.write_text("safe unstaged replacement\n", encoding="utf-8")
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit/check_staged_secrets.py",
+            "--repo-root",
+            str(repo_root),
+        ],
+        cwd=_repo_root(),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert proc.returncode == 1
+    assert "note.txt:2:github-token" in proc.stdout
+    assert secret not in proc.stdout
+    assert secret not in proc.stderr
+
+
+def test_staged_secret_hook_is_index_scoped_and_always_runs() -> None:
+    """The local guard runs before commit and through the manual hook surface."""
+    config = yaml.safe_load((_repo_root() / ".pre-commit-config.yaml").read_text(encoding="utf-8"))
+    hooks = {
+        hook["id"]: hook
+        for repository in config["repos"]
+        if repository["repo"] == "local"
+        for hook in repository["hooks"]
+    }
+    staged = hooks["staged-secret-scan"]
+    command = " ".join(str(arg) for arg in staged["args"])
+
+    assert "scripts/audit/check_staged_secrets.py" in command
+    assert set(staged["stages"]) == {"pre-commit", "manual"}
+    assert staged["pass_filenames"] is False
+    assert staged["always_run"] is True
 
 
 def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() -> None:

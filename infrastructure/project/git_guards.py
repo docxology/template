@@ -422,12 +422,12 @@ def tracked_secret_findings(repo_root: Path) -> list[str]:
 
 
 def staged_diff_secret_findings(repo_root: Path) -> list[str]:
-    """Return high-confidence secret findings from staged added/modified files.
+    """Return high-confidence secret findings from staged index blobs.
 
-    Scans the working-tree content of files staged for commit (added or
-    modified, per ``git diff --cached --diff-filter=AM``). The scanner reads
-    bytes from the worktree — not the index blob — so it reflects what a
-    maintainer is about to commit, and reports findings in the same
+    Added, copied, modified, and renamed post-image paths come from
+    ``git diff --cached --diff-filter=ACMR``. Each file is then read from the
+    index with ``git cat-file blob :path`` so partially staged worktree edits
+    cannot hide a credential or create a false finding. Findings use the same
     ``path:line:kind`` format as :func:`tracked_secret_findings`.
 
     Binary files are skipped (NUL byte in the first 4096 bytes), matching the
@@ -435,28 +435,39 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
     never prints the matched credential value.
     """
     proc = subprocess.run(
-        ["git", "diff", "--cached", "--diff-filter=AM", "-z", "--name-only"],
+        [
+            "git",
+            "diff",
+            "--cached",
+            "--find-renames",
+            "--find-copies",
+            "--diff-filter=ACMR",
+            "--name-only",
+            "-z",
+            "--",
+        ],
         cwd=repo_root,
         check=True,
         capture_output=True,
     )
     findings: list[str] = []
-    for raw_path in proc.stdout.decode("utf-8").split("\0"):
+    for raw_path in proc.stdout.split(b"\0"):
         if not raw_path:
             continue
-        path = raw_path.replace("\\", "/")
-        try:
-            content = (repo_root / path).read_bytes()
-        except OSError:
-            continue
+        path = raw_path.decode("utf-8", errors="surrogateescape")
+        blob = subprocess.run(
+            ["git", "cat-file", "blob", f":{path}"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+        )
+        content = blob.stdout
         if b"\x00" in content[:4096]:
             continue
         for kind, pattern in _TRACKED_SECRET_RES:
             for match in pattern.finditer(content):
                 value = match.group(0).lower()
-                is_documented_fixture = any(
-                    fragment in value for fragment in _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS
-                )
+                is_documented_fixture = any(fragment in value for fragment in _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS)
                 if kind != "private-key" and is_documented_fixture:
                     continue
                 line = content.count(b"\n", 0, match.start()) + 1
