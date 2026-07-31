@@ -12,6 +12,13 @@ from infrastructure.rendering.security import RenderSecurityProfile
 logger = get_logger(__name__)
 
 
+def _strict_yaml_bool(value: Any, key: str) -> bool:
+    """Return a YAML boolean, rejecting string truthiness traps."""
+    if not isinstance(value, bool):
+        raise ValueError(f"render.formats.{key} must be a YAML boolean, got {value!r}")
+    return value
+
+
 @dataclass
 class RenderingConfig:
     """Configuration for rendering output."""
@@ -147,6 +154,8 @@ class RenderingConfig:
         if not project_config:
             return base
         render_block = project_config.get("render") or {}
+        if not isinstance(render_block, dict):
+            return base
         formats = render_block.get("formats") or {}
         if not isinstance(formats, dict):
             return base
@@ -160,7 +169,7 @@ class RenderingConfig:
         }
         for yaml_key, attr in format_keys.items():
             if yaml_key in formats:
-                overrides[attr] = bool(formats[yaml_key])
+                overrides[attr] = _strict_yaml_bool(formats[yaml_key], yaml_key)
         if not overrides:
             return base
         from dataclasses import replace

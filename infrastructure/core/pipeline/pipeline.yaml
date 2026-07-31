@@ -153,7 +153,7 @@ stages:
     script: scripts/pipeline/stage_04_validate.py
     depends_on: [PDF Rendering]
     tags: [core]
-    failure_mode: warning + report
+    failure_mode: PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report
     contract:
       input_artifacts: ["projects/{project}/output/", "projects/{project}/manuscript/"]
       output_artifacts: ["projects/{project}/output/reports/"]

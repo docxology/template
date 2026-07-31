@@ -233,6 +233,10 @@ render:
     epub: false    # opt-in — requires pandoc
 ```
 
+Format values must be native YAML booleans (`true` or `false`), not quoted
+strings such as `"false"`; invalid values fail closed at the rendering
+configuration boundary.
+
 The block is validated by `infrastructure/core/config/schema.py` (strict
 `additionalProperties: false` on the inner mapping). When a format is
 disabled the pipeline logs `[skip] <format> rendering disabled in config`.
@@ -253,11 +257,12 @@ analysis:
     - z_generate_manuscript_variables.py
 ```
 
-Each item is a file name relative to the project `scripts/` directory. Missing,
-private, or non-Python entries are ignored with a warning. `analysis:` is a
-canonical top-level key in the shared manuscript schema; project-specific data
-belongs under `project_config:` unless the project registers its own schema
-extension.
+Each item is a relative file name under the project `scripts/` directory.
+Absolute paths, traversal components, external symlinks, missing files,
+private files, and non-Python entries are rejected with a warning. `analysis:`
+is a canonical top-level key in the shared manuscript schema; project-specific
+data belongs under `project_config:` unless the project registers its own
+schema extension.
 
 ## Configuration Examples
 

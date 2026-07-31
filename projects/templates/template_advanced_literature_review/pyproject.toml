@@ -77,7 +77,7 @@ addopts = [
     "--disable-warnings",
     "--tb=short",
     "--timeout=10",
-    "--cov=src",
+    "--cov=projects/templates/template_advanced_literature_review/src/multi_phase",
     "--cov-branch",
     "--cov-report=term-missing:skip-covered",
     "--cov-report=html:htmlcov",

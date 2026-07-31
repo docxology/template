@@ -14,6 +14,13 @@ rewrite generated outputs.
   work without turning subjective judgment into a fake binary proof.
 - Serialization is timestamp-free so reports can participate in reproducibility
   comparisons.
+- Rendered mode requires `output/reports/rendered_provenance.json`. The receipt
+  binds a green output snapshot to stage, source, config, output, and explicit
+  manuscript-consumption fingerprints without claiming per-stage lineage.
+- Placeholder tokens are valid in hydratable source manuscripts. Scan only the
+  canonical rendered manuscript input, once, and ignore literal code examples.
+- Missing, malformed, stale, or incomplete rendered provenance is a
+  deterministic failure, not an editorial review item.
 - `models.py` defines the typed finding/report contract used by the audit
   orchestrator; keep its status and diagnostic fields stable for downstream
   JSON consumers.

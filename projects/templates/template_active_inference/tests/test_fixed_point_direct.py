@@ -79,6 +79,56 @@ def test_stale_artifact_triggers_full_settlement(copied_root: Path) -> None:
 
 
 @pytest.mark.timeout(600)
+def test_sheaf_track_writer_writes_canonical_artifacts(copied_root: Path) -> None:
+    """The non-finalize multi-phase writer must emit canonical sheaf artifacts.
+
+    Exercises ``sheaf_tracks_write.write_sheaf_track_artifacts(finalize=False)``
+    directly against an isolated copy so the tracked snapshot is never
+    rewritten. This is the convergence-loop writer body; it previously ran
+    only when a gate rebuilt state, which is why ``sheaf_tracks_write`` was
+    nearly uncovered.
+    """
+    from roadmap_tracks.sheaf_tracks_write import write_sheaf_track_artifacts
+
+    paths = write_sheaf_track_artifacts(copied_root, finalize=False)
+    assert paths, "the writer must report emitted artifact paths"
+    for key in ("sensitivity", "uncertainty", "counterexample", "release_bundle"):
+        assert key in paths, f"expected canonical artifact '{key}' in writer output"
+        assert paths[key].is_file(), f"{key} artifact must exist on disk"
+
+
+@pytest.mark.timeout(600)
+def test_semantic_core_writer_returns_certificate_paths(copied_root: Path) -> None:
+    """``_write_semantic_core`` must return certificate/crosswalk paths.
+
+    Regression control for the latent ImportError: the module used to import
+    a non-existent ``write_semantic_outputs`` name and could never have run.
+    """
+    from roadmap_tracks.fixed_point import _write_semantic_core
+
+    paths = _write_semantic_core(copied_root)
+    assert "certificate" in paths
+    assert "crosswalk" in paths
+    assert paths["certificate"].is_file()
+    assert paths["crosswalk"].is_file()
+
+
+def test_sheaf_owned_writer_returns_coverage_matrix(copied_root: Path) -> None:
+    """``_write_sheaf_owned_artifacts`` must return a dict keyed by path.
+
+    Regression control for the latent TypeError: the function used to return
+    a bare ``Path`` where the caller expects ``dict[str, Path]`` (the full
+    convergence loop crashed with ``'PosixPath' object is not iterable``).
+    """
+    from roadmap_tracks.fixed_point import _write_sheaf_owned_artifacts
+
+    paths = _write_sheaf_owned_artifacts(copied_root)
+    assert isinstance(paths, dict)
+    assert "coverage_matrix" in paths
+    assert paths["coverage_matrix"].is_file()
+
+
+@pytest.mark.timeout(600)
 def test_unfixable_source_defect_raises_instead_of_converging(
     copied_root: Path,
 ) -> None:

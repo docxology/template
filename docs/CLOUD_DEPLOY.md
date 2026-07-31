@@ -274,7 +274,7 @@ options.
 The canonical headless configuration is [`.github/workflows/ci.yml`](../.github/workflows/ci.yml):
 
 ```yaml
-- uses: astral-sh/setup-uv@v8.1.0      # installs uv in CI
+- uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0      # installs uv in CI
   with:
     enable-cache: true
     cache-dependency-glob: "**/uv.lock"

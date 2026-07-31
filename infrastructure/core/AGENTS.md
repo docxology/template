@@ -111,7 +111,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Shared bounded subprocess service for public readiness, per-project union coverage, and parallel documentation counts. ``run_project_test_matrix(tasks, workers=...)`` isolates each task, applies a hard timeout, continues after failure/timeout, captures bounded diagnostics when requested, and returns results in canonical input order regardless of completion order. Outer project workers must not be combined with inner pytest-xdist workers; the higher-level orchestration validators enforce that boundary.
 
 **analysis_pipeline.py**
-- Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator
+- Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator. Direct script paths are confined to the resolved project `scripts/` tree, and credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
 - Public API: `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`
 
 **analysis_timeout.py**
@@ -311,7 +311,8 @@ from infrastructure.core.config.queries import get_translation_languages
 
 config = load_config(Path("projects/{project_name}/manuscript/config.yaml"))
 env_dict = get_config_as_dict(Path("."))  # Loads from projects/{project_name}/manuscript/config.yaml
-config_path = find_config_file(Path("."))  # Returns projects/{project_name}/manuscript/config.yaml if found
+config_path = find_config_file(Path("."), project_name="templates/template_code_project")
+# Unqualified lookup returns a path only when exactly one manuscript config exists.
 languages = get_translation_languages(Path("."))
 ```
 

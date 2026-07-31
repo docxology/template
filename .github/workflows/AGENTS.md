@@ -45,7 +45,7 @@ flowchart LR
 ```mermaid
 flowchart TB
     DET[detect<br/>optional-project outputs]
-    DETP[detect-projects<br/>public-exemplar matrix outputs]
+    DETP[detect-projects<br/>validated capability matrix output]
     ACTLINT[actionlint<br/>lints workflow YAML · standalone]
     LINT[lint] --> HEALTH[health<br/>unified JSON artefact]
     VNM[verify-no-mocks<br/>parallel with lint · no needs:]
@@ -55,7 +55,7 @@ flowchart TB
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
     VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
-    VNM --> TP[test-project<br/>generated public roster × py3.10/py3.12<br/>stage_01_test.py --project per cell]
+    VNM --> TP[test-project<br/>capability manifest roster × canonical Python versions<br/>stage_01_test.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
     DET --> SHW
     DET --> FL
@@ -106,7 +106,7 @@ behaviorally equivalent to the dedicated documentation job.
 #### 1. Lint & Type Check (`lint`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
+- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`, `uv run python scripts/audit/check_template_drift.py --strict`
 - **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
 #### 2. Static Health Report (`health`)
@@ -146,12 +146,12 @@ behaviorally equivalent to the dedicated documentation job.
 - **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
 - **Sync:** `uv sync --group public-exemplars`.
 - **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
-- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job.
+- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job. A separate "Assert regression tier is not empty" step fails the job when fewer than 3 tests collect, so the claim-binding pins cannot silently vanish behind the tolerance.
 
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group public-exemplars` — the same deterministic dependency union as a fresh local `uv sync`, including the DisCoPy, monitoring, scientific, LLM-client, and PPTX groups used by the public roster. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — `runs-on: ubuntu-latest` (no macOS) × `python-version: [3.10, 3.12]` × each public exemplar in [`../../docs/_generated/active_projects.md`](../../docs/_generated/active_projects.md) (`templates/template_*`) = **24 parallel jobs**. Each exemplar runs in its own job, so wall-clock is the slowest single project rather than the sequential sum. py3.10 (floor) + py3.12 (ceiling) give cross-version coverage; macOS breadth is handled by `test-infra`. Job `timeout-minutes: 45`.
+- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.12 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 60`.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
 - **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
@@ -163,7 +163,8 @@ behaviorally equivalent to the dedicated documentation job.
 - **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 60`
 - **Depends on:** `verify-no-mocks`
 - **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
-- **Toolchain:** elan + pinned `lean-toolchain`, `lake build` warm-up
+- **Toolchain:** SHA-pinned elan installer (with checksum verification) + pinned
+  `lean-toolchain`, `lake build` warm-up
 - **Open Gauss:** clone [math-inc/OpenGauss](https://github.com/math-inc/OpenGauss), `./scripts/install.sh --plain --noninteractive --skip-system-packages`, `gauss doctor`
 - **Tests:** `uv run pytest tests/ --timeout=1200 --cov=src --cov-fail-under=89` with `COVERAGE_FILE: ../../.coverage.fep_lean`
 - **Scaling:** Full catalogue × Lean is expensive; if runtime grows past the job budget, split slow integration tests behind a pytest marker or shard topics in a follow-up workflow.
@@ -214,6 +215,7 @@ behaviorally equivalent to the dedicated documentation job.
 | Ruff formatting | zero diffs | `lint` job |
 | mypy strict gate | zero errors across the generated public source scope | `lint` job |
 | Mock-framework lexical gate | zero prohibited imports/calls | `verify-no-mocks` job |
+| Public capability parity | exact roster/matrix; compatible Python floors; valid package/render/hydration/analysis declarations | `detect-projects` + unified `health` |
 | Infrastructure coverage | ≥ 60% | `test-infra` job |
 | Per-project coverage (standalone) | ≥ 90% | each project's own pytest gate |
 | Combined-union public-project coverage | ≥ 75% | `test-project` job (`DEFAULT_FAIL_UNDER`) |
@@ -242,10 +244,14 @@ Runs daily at 01:00 UTC using `actions/stale@v10.3.0`.
 Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 
 1. Resolves the requested tag before checkout and checks out that exact ref
-2. Proves `HEAD` equals the dereferenced tag commit and runs the root release contract before building
-3. Generates a commit-based changelog excerpt since the previous tag
-4. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
-5. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
+2. Proves `HEAD` equals the dereferenced tag commit and runs the root release contract
+3. Runs the bounded pipeline-smoke infrastructure test lane + no-mocks gate on the tagged SHA (executable test evidence, without the per-commit full matrix)
+4. Runs the fail-closed public capability manifest
+5. Clean-exports, installs, and import-smokes every canonical public exemplar without credentials
+6. Runs the strict rendered publication audit across every canonical public exemplar before building
+7. Generates a commit-based changelog excerpt since the previous tag
+8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
+9. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
 
 Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 

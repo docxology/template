@@ -122,11 +122,19 @@ def test_run_analysis_pipeline_reports_failure(tmp_path: Path) -> None:
 
 
 def test_run_analysis_script_missing_file_returns_python_exit(tmp_path: Path) -> None:
-    """A non-existent script reaches the interpreter and returns Python's exit code (not 0)."""
+    """A non-existent script is rejected before subprocess execution."""
     project = _make_project(tmp_path)
     bogus = project / "scripts" / "does_not_exist.py"
     rc = run_analysis_script(bogus, tmp_path, "p")
     assert rc != 0
+
+
+def test_run_analysis_script_rejects_external_path(tmp_path: Path) -> None:
+    """Direct callers cannot execute a script outside the project tree."""
+    _make_project(tmp_path)
+    outside = tmp_path / "outside.py"
+    outside.write_text("raise SystemExit(99)")
+    assert run_analysis_script(outside, tmp_path, "p") == 1
 
 
 def test_script_execution_error_class_attached() -> None:

@@ -102,6 +102,8 @@ class TestPublicSurface:
         ]
         assert specs["operations-manifest"][-1] == "operations-check"
         assert specs["skill-reachability"][-1] == "scripts/gates/skill_reachability_check.py"
+        assert specs["public-capabilities"][-1] == "scripts/gates/public_capabilities.py"
+        assert all("stage_01_test.py" not in argument for argument in specs["public-capabilities"])
 
     def test_ci_security_and_platform_oracles_fail_closed(self) -> None:
         workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")

@@ -23,7 +23,7 @@ jobs:
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 120
     steps:
       - name: Determine tag name
         id: tag
@@ -61,10 +61,31 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
 
+      - name: Verify core test contract on tagged SHA
+        run: |
+          set -euo pipefail
+          # Release gates must execute the real test contract on the exact
+          # tagged SHA, not merely static contracts. The bounded pipeline-smoke
+          # infra lane (the same contract project pipelines run) plus the
+          # no-mocks gate provide executable evidence without the 30-minute
+          # full matrix (which CI already runs per commit).
+          uv sync --group public-exemplars
+          uv run python scripts/audit/verify_no_mocks.py
+          uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
+
       - name: Verify root package release contract
         env:
           TAG: ${{ steps.tag.outputs.name }}
         run: uv run python -m infrastructure.publishing.root_release_contract --tag "$TAG"
+
+      - name: Verify public capability manifest
+        run: uv run python scripts/gates/public_capabilities.py
+
+      - name: Clean-export and import public exemplars
+        run: uv run python scripts/gates/exemplar_export_smoke.py
+
+      - name: Verify rendered public exemplars
+        run: uv run python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json
 
       - name: Build and validate Python distributions
         run: |

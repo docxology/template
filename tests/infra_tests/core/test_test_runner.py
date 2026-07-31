@@ -515,3 +515,168 @@ def test_stage01_rejects_hidden_nested_concurrency_from_env() -> None:
     assert proc.returncode != 0
     assert "--project-workers=2" in proc.stderr
     assert "PYTEST_XDIST_WORKERS" in proc.stderr
+
+
+def test_receipt_is_written_and_validates_for_green_run(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A passing matrix writes a deterministic receipt with per-lane facts."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    _write_project(synthetic_repo, "beta", fail=False, extra_module="mod_beta")
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha", "beta"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+    assert rc == 0
+    assert receipt_path.is_file()
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    lane_names = {lane.project_name for lane in receipt.lanes}
+    assert lane_names == {"alpha", "beta"}
+    assert receipt.roster_revision in {"unknown", "abc123"} or len(receipt.roster_revision) == 40
+    assert receipt.profile == "quick"
+    # Deterministic: repeated runs produce the same content digest.
+    first_digest = receipt.digest()
+    receipt.write(receipt_path)
+    assert PublicMatrixReceipt.read(receipt_path).digest() == first_digest
+
+
+def test_receipt_captures_failure_and_is_written_on_error(
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failing lane must still produce a receipt recording the failure."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    _write_project(synthetic_repo, "beta", fail=True, extra_module="mod_beta")
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha", "beta"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+    assert rc != 0
+    assert receipt_path.is_file(), "receipt must be written even when the matrix fails"
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    by_name = {lane.project_name: lane for lane in receipt.lanes}
+    assert by_name["beta"].exit_code != 0
+    assert receipt.overall_exit != 0
+    errors = receipt.validate(["alpha", "beta"])
+    assert any("EXIT-STATUS" in error and "beta" in error for error in errors)
+
+
+def test_receipt_rejects_test_generated_output_drift(synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A green pytest lane cannot hide a mutation of its real output tree."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    project_root = synthetic_repo / "projects" / "alpha"
+    output_file = project_root / "output" / "result.txt"
+    output_file.parent.mkdir()
+    output_file.write_text("baseline\n", encoding="utf-8")
+    (project_root / "tests" / "test_output_drift.py").write_text(
+        dedent(
+            """
+            from pathlib import Path
+
+
+            def test_changes_real_output_tree() -> None:
+                output = Path(__file__).parent.parent / "output" / "result.txt"
+                output.write_text("mutated by test\\n", encoding="utf-8")
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert rc == 1
+    assert receipt.overall_exit == 1
+    assert receipt.lanes[0].exit_code == 0
+    assert receipt.lanes[0].output_isolation_ok is False
+    assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]
+
+
+def test_receipt_rejects_output_drift_after_project_process_exits(
+    synthetic_repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A detached test writer cannot mutate output after an early comparison."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    project_root = synthetic_repo / "projects" / "alpha"
+    output_file = project_root / "output" / "result.txt"
+    output_file.parent.mkdir()
+    output_file.write_text("baseline\n", encoding="utf-8")
+    combined_coverage_file = synthetic_repo / DEFAULT_COVERAGE_FILE
+    child_code = dedent(
+        f"""
+        import time
+        from pathlib import Path
+
+        trigger = Path({str(combined_coverage_file)!r})
+        deadline = time.monotonic() + 10
+        while not trigger.exists():
+            if time.monotonic() >= deadline:
+                raise SystemExit(2)
+            time.sleep(0.005)
+        Path({str(output_file)!r}).write_text("late drift\\n", encoding="utf-8")
+        """
+    ).lstrip()
+    (project_root / "tests" / "test_late_output_drift.py").write_text(
+        dedent(
+            f"""
+            import subprocess
+            import sys
+
+
+            def test_starts_detached_output_writer() -> None:
+                subprocess.Popen(
+                    [sys.executable, "-c", {child_code!r}],
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    start_new_session=True,
+                )
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert output_file.read_text(encoding="utf-8") == "late drift\n"
+    assert rc == 1
+    assert receipt.overall_exit == 1
+    assert receipt.lanes[0].output_isolation_ok is False
+    assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]

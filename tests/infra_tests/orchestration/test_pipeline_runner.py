@@ -121,6 +121,21 @@ def test_run_returns_failure_when_stage_unsuccessful(fake_repo: Path) -> None:
     assert rc == 1
 
 
+def test_run_returns_failure_when_executor_plan_is_empty(fake_repo: Path) -> None:
+    class _EmptyPlanExecutor(_StubExecutor):
+        def preview_stage_names(self, *, include_llm: bool) -> tuple[str, ...]:
+            return ()
+
+    runner = PipelineRunner(
+        repo_root=fake_repo,
+        stream=io.StringIO(),
+        executor_factory=_EmptyPlanExecutor,
+    )
+
+    assert runner.run(PipelineInvocation(project="template_code_project")) == 1
+    assert "no executable stages" in runner.stream.getvalue()
+
+
 def test_run_banners_use_executor_project_and_plugin_plan(fake_repo: Path) -> None:
     class _ProjectPlanExecutor(_StubExecutor):
         def preview_stage_names(self, *, include_llm: bool) -> tuple[str, ...]:

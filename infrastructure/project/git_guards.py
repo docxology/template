@@ -116,6 +116,12 @@ PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_FILES = 3500
 PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 200 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES = 100 * 1024 * 1024
+# Advisory per-file ceiling: a single tracked evidence file above this is
+# presumed non-regenerable until proven otherwise. Sits well below the 50MB
+# hard cap so files approaching the cap surface for review before they become
+# a problem, while legitimate regenerable evidence (PDFs, corpora) stays
+# green.
+PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES = 20 * 1024 * 1024
 _MACHINE_LOCAL_HOME_RE = re.compile(
     rb"(?:"
     rb"(?:file://)?/(?:Users|home)/[^/\s\"'<>]+/"
@@ -129,6 +135,28 @@ _PUBLIC_OUTPUT_SECRET_RES: tuple[re.Pattern[bytes], ...] = (
     re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b"),
     re.compile(rb"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,255}\b"),
 )
+_TRACKED_SECRET_RES: tuple[tuple[str, re.Pattern[bytes]], ...] = (
+    ("github-token", re.compile(rb"\bgh[pousr]_[A-Za-z0-9]{30,255}\b")),
+    ("aws-access-key", re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b")),
+    ("openai-token", re.compile(rb"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,255}\b")),
+    (
+        "private-key",
+        re.compile(
+            rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
+            rb"\s+[A-Za-z0-9+/=\r\n]{64,}"
+            rb"-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
+        ),
+    ),
+)
+_DOCUMENTED_SECRET_FIXTURE_FRAGMENTS = (
+    b"abcdefghijklmnopqrstuvwxyz",
+    b"abcdefghijklmnop",
+    b"123456",
+    b"should_never_be_sent",
+    b"secret_material_must_not_be_logged",
+)
+_STAGED_BLOB_MODES = frozenset({b"100644", b"100755", b"120000"})
+_STAGED_GITLINK_MODE = b"160000"
 
 
 def is_public_template_output_path(path: str) -> bool:
@@ -225,6 +253,36 @@ def is_oversized_public_template_output(
         return False
 
 
+def is_hidden_public_template_output(path: str) -> bool:
+    """Return whether a tracked public output path is a local dotfile.
+
+    Canonical exemplar output is publication evidence. Hidden files in that
+    tree are caches, workspace markers, or interrupted atomic-write leftovers,
+    not portable evidence that should enter the Git index.
+    """
+    normalized = path.replace("\\", "/")
+    if not is_public_template_output_path(normalized):
+        return False
+    relative = next(
+        normalized[len(prefix) :] for prefix in PUBLIC_TEMPLATE_OUTPUT_PREFIXES if normalized.startswith(prefix)
+    )
+    return any(part.startswith(".") for part in Path(relative).parts)
+
+
+def is_empty_public_template_output(repo_root: Path, path: str) -> bool:
+    """Return whether a tracked public output payload is unexpectedly empty."""
+    normalized = path.replace("\\", "/")
+    if not is_public_template_output_path(normalized):
+        return False
+    if Path(normalized).name in {".gitignore", ".gitkeep", "__init__.py"}:
+        return False
+    candidate = repo_root / normalized
+    try:
+        return candidate.is_file() and candidate.stat().st_size == 0
+    except OSError:
+        return False
+
+
 def tracked_generated_artifacts(
     repo_root: Path, *, public_output_max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
 ) -> list[str]:
@@ -240,6 +298,8 @@ def tracked_generated_artifacts(
         path
         for path in paths
         if is_generated_artifact_path(path)
+        or is_hidden_public_template_output(path)
+        or is_empty_public_template_output(repo_root, path)
         or is_oversized_public_template_output(repo_root, path, max_bytes=public_output_max_bytes)
     )
 
@@ -250,6 +310,7 @@ def public_template_output_budget_findings(
     max_files: int = PUBLIC_TEMPLATE_OUTPUT_MAX_FILES,
     max_total_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES,
     max_duplicate_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES,
+    max_single_file_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES,
 ) -> list[str]:
     """Return ratchet violations for canonical tracked exemplar evidence."""
     proc = subprocess.run(
@@ -261,6 +322,7 @@ def public_template_output_budget_findings(
     paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
     total_bytes = 0
     blobs: dict[str, tuple[int, int]] = {}
+    oversized_single: list[str] = []
     for path in paths:
         try:
             data = (repo_root / path).read_bytes()
@@ -271,6 +333,8 @@ def public_template_output_budget_findings(
         digest = hashlib.sha256(data).hexdigest()
         prior_size, prior_count = blobs.get(digest, (size, 0))
         blobs[digest] = (prior_size, prior_count + 1)
+        if max_single_file_bytes > 0 and size > max_single_file_bytes:
+            oversized_single.append(f"{path} ({size} bytes)")
     duplicate_bytes = sum(size * (count - 1) for size, count in blobs.values() if count > 1)
 
     findings: list[str] = []
@@ -280,6 +344,11 @@ def public_template_output_budget_findings(
         findings.append(f"public output aggregate bytes {total_bytes} exceeds {max_total_bytes}")
     if duplicate_bytes > max_duplicate_bytes:
         findings.append(f"public output duplicate bytes {duplicate_bytes} exceeds {max_duplicate_bytes}")
+    if oversized_single:
+        findings.append(
+            "public output single-file bytes exceed advisory ceiling "
+            f"{max_single_file_bytes}: " + ", ".join(sorted(oversized_single))
+        )
     return findings
 
 
@@ -331,3 +400,121 @@ def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
         if any(pattern.search(content) for pattern in _PUBLIC_OUTPUT_SECRET_RES):
             secrets.append(normalized)
     return sorted(local_paths), sorted(secrets)
+
+
+def tracked_secret_findings(repo_root: Path) -> list[str]:
+    """Return high-confidence secret findings from every tracked text blob.
+
+    The scanner intentionally reports only ``path:line:kind`` metadata and
+    never prints the matched credential. Known low-entropy examples used by
+    security tests and documentation are ignored; real credentials must not
+    be hidden behind a broad test-directory exclusion.
+    """
+    proc = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    findings: list[str] = []
+    for raw_path in proc.stdout.decode("utf-8").split("\0"):
+        if not raw_path:
+            continue
+        path = raw_path.replace("\\", "/")
+        try:
+            content = (repo_root / path).read_bytes()
+        except OSError:
+            continue
+        if b"\x00" in content[:4096]:
+            continue
+        for kind, pattern in _TRACKED_SECRET_RES:
+            for match in pattern.finditer(content):
+                value = match.group(0).lower()
+                is_documented_fixture = any(fragment in value for fragment in _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS)
+                if kind != "private-key" and is_documented_fixture:
+                    continue
+                line = content.count(b"\n", 0, match.start()) + 1
+                findings.append(f"{path}:{line}:{kind}")
+    return sorted(set(findings))
+
+
+def staged_diff_secret_findings(repo_root: Path) -> list[str]:
+    """Return high-confidence secret findings from staged index blobs.
+
+    Added, copied, modified, and renamed post-image paths come from
+    ``git diff --cached --diff-filter=ACMR``. Stage-zero index metadata
+    identifies regular-file and symlink blobs, which are read by object ID so
+    partially staged worktree edits cannot hide a credential or create a false
+    finding. Verified gitlinks are skipped; unknown modes, unresolved index
+    stages, and unreadable blobs fail closed. Findings use the same
+    ``path:line:kind`` format as :func:`tracked_secret_findings`.
+
+    Binary files are skipped (NUL byte in the first 4096 bytes), matching the
+    tracked-index scanner. Like :func:`tracked_secret_findings`, the scanner
+    never prints the matched credential value.
+    """
+    proc = subprocess.run(
+        [
+            "git",
+            "diff",
+            "--cached",
+            "--find-renames",
+            "--find-copies",
+            "--diff-filter=ACMR",
+            "--name-only",
+            "-z",
+            "--",
+        ],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    index_proc = subprocess.run(
+        ["git", "ls-files", "--stage", "-z"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    index_entries: dict[bytes, list[tuple[bytes, bytes, bytes]]] = {}
+    for row in index_proc.stdout.split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, indexed_path = row.split(b"\t", 1)
+            mode, object_id, stage = metadata.split(b" ", 2)
+        except ValueError as exc:
+            raise RuntimeError("malformed staged index metadata") from exc
+        index_entries.setdefault(indexed_path, []).append((mode, object_id, stage))
+
+    findings: list[str] = []
+    for raw_path in proc.stdout.split(b"\0"):
+        if not raw_path:
+            continue
+        entries = index_entries.get(raw_path, [])
+        if len(entries) != 1 or entries[0][2] != b"0":
+            raise RuntimeError("staged diff path has no unique stage-zero index entry")
+        mode, object_id, _stage = entries[0]
+        if mode == _STAGED_GITLINK_MODE:
+            continue
+        if mode not in _STAGED_BLOB_MODES:
+            raise RuntimeError(f"unsupported staged index mode: {mode.decode('ascii', errors='replace')}")
+
+        path = raw_path.decode("utf-8", errors="surrogateescape")
+        blob = subprocess.run(
+            ["git", "cat-file", "blob", object_id.decode("ascii")],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+        )
+        content = blob.stdout
+        if b"\x00" in content[:4096]:
+            continue
+        for kind, pattern in _TRACKED_SECRET_RES:
+            for match in pattern.finditer(content):
+                value = match.group(0).lower()
+                is_documented_fixture = any(fragment in value for fragment in _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS)
+                if kind != "private-key" and is_documented_fixture:
+                    continue
+                line = content.count(b"\n", 0, match.start()) + 1
+                findings.append(f"{path}:{line}:{kind}")
+    return sorted(set(findings))

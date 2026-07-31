@@ -26,7 +26,6 @@ Example (CLI demo)::
 from __future__ import annotations
 
 import json
-import os
 import shutil
 from dataclasses import dataclass, field
 from datetime import datetime

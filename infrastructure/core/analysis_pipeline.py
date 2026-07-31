@@ -58,7 +58,11 @@ def run_analysis_script(
     logger.info("  Project root: %s", project_root.resolve())
     logger.info("  Working directory (subprocess cwd): %s", repo_root.resolve())
 
-    cmd, env = build_analysis_script_cmd_and_env(script_path, project_root, repo_root)
+    try:
+        cmd, env = build_analysis_script_cmd_and_env(script_path, project_root, repo_root)
+    except ValueError as exc:
+        logger.error("Refusing analysis script outside the project boundary: %s", exc)
+        return 1
     logger.info("  Command: %s", " ".join(shlex.quote(str(part)) for part in cmd))
 
     project_venv = project_root / ".venv"

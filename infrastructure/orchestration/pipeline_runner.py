@@ -114,6 +114,9 @@ class PipelineRunner:
             )
 
         which = "core pipeline" if invocation.core_only else "full pipeline"
+        if not stage_names:
+            self._emit(f"FAILED: {which} has no executable stages")
+            return 1
         self._emit(f"=== {which.upper()} === project={invocation.project}")
         for idx, name in enumerate(stage_names, start=1):
             self._banner(idx, len(stage_names), name, invocation.project)

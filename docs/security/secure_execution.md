@@ -8,6 +8,11 @@ The root `uv sync` installs the steganography dependency group by default, and `
 
 When **`--steganography-only`** is set and **`--project`** is omitted, every workspace returned by `discover_projects()` is scanned for PDFs and hardened.
 
+Targets without source PDFs are skipped in all-project mode, but an explicit
+`--project` with no source PDF fails. An all-project secure-only run also fails
+when it processes zero targets, so a green exit code always represents at least
+one hardened PDF.
+
 When the **pipeline phase** runs (`--steganography-only` not set), **`--project <name>` is required** — one project per invocation (see [`run_secure_pipeline`](../../infrastructure/orchestration/secure_run.py)).
 
 For multi-project **pipeline + steganography**, run `./run.sh --all-projects --pipeline` (or per-project pipelines), then `./secure_run.sh --steganography-only` with no `--project` to harden all discovered PDFs.
@@ -18,6 +23,11 @@ Post-processing outputs:
 
 - `*_steganography.pdf` — augmented PDF with overlays, barcodes, and metadata
 - `*.hashes.json` — SHA-256/512 hash manifest sidecar
+
+Secure mode loads malformed project configuration strictly and forces the
+master switch, hashing, and manifest evidence on. A processor must return a
+distinct companion PDF and refresh the source PDF's hash manifest; a disabled
+or input-preserving processor is treated as a failed secure target.
 
 ## Interactive orchestration
 

@@ -19,6 +19,7 @@ validation gates (those live in [`scripts/gates/`](../gates/)).
 | `setup_pre_commit.py` | (subprocess) | Install / refresh the pre-commit hook set |
 | `codegraph_local.py` | `infrastructure.project.codegraph` | Local CodeGraph index helper commands (optional, not a CI dependency) |
 | `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts` | Rebaseline integrity manifests after intentional targeted renders; records `current-output-snapshot`, not stage provenance, and methods audits report that distinction |
+| `refresh_rendered_provenance.py` | `infrastructure.validation.publication.rendered_provenance` | Bind an already-green output snapshot to deterministic stage/source/config/output and manuscript-consumption fingerprints |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Run serial/parallel clean-checkout health and write an acceptance manifest |
 | `benchmark_tests.py` | `infrastructure.core.test_performance` | Run matched serial/parallel evidence for the infrastructure or public quick test lane |
 
@@ -32,6 +33,7 @@ For example, after targeted public-exemplar renders:
 
 ```bash
 uv run python scripts/maintenance/refresh_artifact_manifests.py --all-public
+uv run python scripts/maintenance/refresh_rendered_provenance.py --all-public
 ```
 
 The wheel ships only `infrastructure` (`[tool.hatch.build.targets.wheel]

@@ -3775,6 +3775,7 @@ version = "3.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "defusedxml" },
+    { name = "markdown-it-py" },
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.4.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -3935,6 +3936,7 @@ requires-dist = [
     { name = "defusedxml", specifier = ">=0.7.1" },
     { name = "google-genai", marker = "extra == 'deep-research'", specifier = ">=1.0" },
     { name = "huggingface-hub", marker = "extra == 'publishing'", specifier = ">=0.35.0" },
+    { name = "markdown-it-py", specifier = ">=4.0.0" },
     { name = "matplotlib", specifier = ">=3.7" },
     { name = "numpy", specifier = ">=1.22" },
     { name = "openai", marker = "extra == 'deep-research'", specifier = ">=1.60" },

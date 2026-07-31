@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
+
+from markdown_it import MarkdownIt
 
 from infrastructure.core.pipeline.artifacts import validate_artifact_manifest
 from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
@@ -20,6 +23,11 @@ from infrastructure.validation.evidence_registry import (
 from infrastructure.validation.output.artifacts import read_artifact_manifest
 from infrastructure.validation.output.no_mock_enforcer import validate_no_mocks
 from infrastructure.validation.publication.models import PublicationAuditReport, PublicationFinding
+from infrastructure.validation.publication.rendered_provenance import (
+    RenderedProvenanceValidation,
+    rendered_manuscript_paths,
+    validate_rendered_provenance,
+)
 
 SCHEMA_VERSION = "template-publication-audit-v1"
 
@@ -42,6 +50,7 @@ class AuditContext:
     rendered: bool
     include_drift: bool
     require_figure_accessibility: bool = False
+    rendered_provenance: RenderedProvenanceValidation | None = None
 
 
 def _relative(path: Path, root: Path) -> str:
@@ -165,6 +174,14 @@ def check_methods(ctx: AuditContext) -> Iterable[PublicationFinding]:
         )
         return
     for issue in methods_issues:
+        if (
+            issue.code == "METHODS.STAGE_PROVENANCE_UNAVAILABLE"
+            and ctx.rendered_provenance is not None
+            and ctx.rendered_provenance.valid
+        ):
+            # A current co-snapshot receipt is alternative evidence. It never
+            # changes an integrity-only artifact manifest into stage lineage.
+            continue
         status = "fail" if issue.severity == "error" else "review_required"
         severity = "error" if issue.severity == "error" else "warning"
         yield _finding(
@@ -308,6 +325,168 @@ def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
         )
 
 
+_PLACEHOLDER_TOKEN_RE = re.compile(
+    r"""
+    (?:
+        \{\{\{?\s*
+        (?:
+            (?!\#(?:fig|tbl|sec|eq|def|prop|thm|lem|cor|rem|ax):)
+            [\#/>^&!]\s*[A-Za-z_][A-Za-z0-9_.-]*(?:\s+[^{}\n]+)?
+            |
+            [A-Za-z_][A-Za-z0-9_.-]*
+            (?:
+                \.\*
+                |
+                :[^\s{}\n]+
+                |
+                \s*\([^{}\n]*\)
+            )?
+        )
+        \s*\}\}\}?
+        |
+        \$\{\s*(?!\()[#!]?[A-Za-z_][A-Za-z0-9_.-]*(?:[^{}\n]*)?\}
+    )
+    """,
+    re.VERBOSE,
+)
+
+
+def _mask_inline_code_spans(content: str) -> str:
+    """Mask CommonMark code spans using exact maximal backtick-run matching."""
+    masked = list(content)
+    index = 0
+    while index < len(content):
+        opener = content.find("`", index)
+        if opener < 0:
+            break
+        opener_end = opener
+        while opener_end < len(content) and content[opener_end] == "`":
+            opener_end += 1
+        width = opener_end - opener
+        cursor = opener_end
+        closer_end = -1
+        while cursor < len(content):
+            closer = content.find("`", cursor)
+            if closer < 0:
+                break
+            candidate_end = closer
+            while candidate_end < len(content) and content[candidate_end] == "`":
+                candidate_end += 1
+            if candidate_end - closer == width:
+                closer_end = candidate_end
+                break
+            cursor = candidate_end
+        if closer_end < 0:
+            index = opener_end
+            continue
+        for position in range(opener, closer_end):
+            if masked[position] != "\n":
+                masked[position] = " "
+        index = closer_end
+    return "".join(masked)
+
+
+def _mask_markdown_code(content: str) -> str:
+    """Mask only CommonMark-parsed code blocks/spans while preserving offsets."""
+    lines = content.splitlines(keepends=True)
+    offsets = [0]
+    for line in lines:
+        offsets.append(offsets[-1] + len(line))
+    masked = list(content)
+    for token in MarkdownIt("commonmark").parse(content):
+        if token.map is None:
+            continue
+        start_line, end_line = token.map
+        start = offsets[start_line]
+        end = offsets[end_line]
+        if token.type in {"fence", "code_block"}:
+            for position in range(start, end):
+                if masked[position] != "\n":
+                    masked[position] = " "
+            continue
+        if token.type != "inline":
+            continue
+        inline_mask = _mask_inline_code_spans(content[start:end])
+        for relative, character in enumerate(inline_mask):
+            if character != content[start + relative]:
+                masked[start + relative] = character
+    return "".join(masked)
+
+
+def check_placeholder_tokens(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Scan combined and hydrated manuscripts, reporting each unresolved token once."""
+    seen_tokens: set[str] = set()
+    for path in rendered_manuscript_paths(ctx.project_root):
+        try:
+            content = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            yield _finding(
+                ctx,
+                path=f"projects/{ctx.project}/{_relative(path, ctx.project_root)}",
+                code="PUBLICATION.PLACEHOLDER_SCAN_FAILED",
+                severity="error",
+                status="fail",
+                message=f"cannot read rendered manuscript input: {exc}",
+                remediation="Restore the rendered manuscript and rerun the canonical render.",
+            )
+            continue
+        searchable = _mask_markdown_code(content)
+        for match in _PLACEHOLDER_TOKEN_RE.finditer(searchable):
+            token = match.group(0)
+            if token in seen_tokens:
+                continue
+            seen_tokens.add(token)
+            line = searchable[: match.start()].count("\n") + 1
+            yield _finding(
+                ctx,
+                path=f"projects/{ctx.project}/{_relative(path, ctx.project_root)}",
+                code="PUBLICATION.PLACEHOLDER_TOKEN",
+                severity="error",
+                status="fail",
+                message=f"unresolved placeholder token in rendered output: {token}",
+                remediation="Hydrate the declared token and regenerate rendered outputs.",
+                line=line,
+            )
+
+
+def check_unconsumed_markdown(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Fail when explicit canonical source-to-render consumption is incomplete."""
+    if ctx.rendered_provenance is None:
+        return
+    for issue in ctx.rendered_provenance.issues:
+        if issue.code != "UNCONSUMED_MANUSCRIPT":
+            continue
+        yield _finding(
+            ctx,
+            path=f"projects/{ctx.project}/output/reports/rendered_provenance.json",
+            code="PUBLICATION.UNCONSUMED_MANUSCRIPT",
+            severity="error",
+            status="fail",
+            message=issue.message,
+            remediation=(
+                "Hydrate every canonical manuscript input and rerun render, validation, and receipt generation."
+            ),
+        )
+
+
+def check_rendered_provenance(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Require a complete, well-formed, current rendered co-snapshot receipt."""
+    if ctx.rendered_provenance is None:
+        return
+    for issue in ctx.rendered_provenance.issues:
+        if issue.code == "UNCONSUMED_MANUSCRIPT":
+            continue
+        yield _finding(
+            ctx,
+            path=f"projects/{ctx.project}/output/reports/rendered_provenance.json",
+            code=f"PUBLICATION.RENDERED_PROVENANCE_{issue.code}",
+            severity="error",
+            status="fail",
+            message=issue.message,
+            remediation="Regenerate outputs, pass validation, and write a new rendered provenance receipt.",
+        )
+
+
 SOURCE_CHECKERS: tuple[Checker, ...] = (
     check_project_skill,
     check_drift,
@@ -321,6 +500,9 @@ RENDERED_CHECKERS: tuple[Checker, ...] = (
     check_render_reports,
     check_artifact_manifest,
     check_figure_registry,
+    check_rendered_provenance,
+    check_placeholder_tokens,
+    check_unconsumed_markdown,
 )
 
 
@@ -333,6 +515,7 @@ def _audit_project(
     require_figure_accessibility: bool,
 ) -> list[PublicationFinding]:
     project_root = (repo_root / "projects" / project).resolve()
+    provenance = validate_rendered_provenance(repo_root, project) if rendered and project_root.is_dir() else None
     ctx = AuditContext(
         repo_root=repo_root,
         project=project,
@@ -340,6 +523,7 @@ def _audit_project(
         rendered=rendered,
         include_drift=include_drift,
         require_figure_accessibility=require_figure_accessibility,
+        rendered_provenance=provenance,
     )
     findings: list[PublicationFinding] = []
     findings.extend(check_project_presence(ctx))

@@ -15,14 +15,15 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.determinism import resolve_build_timestamp
+from infrastructure.core.files.secure_write import atomic_write_text_confined
+from infrastructure.core.logging.constants import BANNER_WIDTH
+from infrastructure.core.logging.diagnostic import DiagnosticReporter
+from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.pipeline.artifacts import (
     ArtifactManifest,
     aggregate_artifact_manifests,
     validate_artifact_manifest,
 )
-from infrastructure.core.logging.constants import BANNER_WIDTH
-from infrastructure.core.logging.diagnostic import DiagnosticReporter
-from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.content.figure_validator import validate_figure_registry
@@ -56,6 +57,11 @@ from infrastructure.validation.output.claim_verification import (
 from infrastructure.validation.output.validator import ValidationResultDict, collect_detailed_validation_results
 
 logger = get_logger(__name__)
+
+# Optional-format structure and diagnostics remain advisory because a project
+# may deliberately disable a render target. Artifact, provenance, figure,
+# design, and publication checks remain blocking release evidence.
+_ADVISORY_CHECKS = frozenset({"Markdown validation", "Output structure", "Prose quality"})
 
 # Resolve repository root once at module load.
 # This file lives at infrastructure/validation/output/pipeline.py → 4 parents up = repo root.
@@ -220,7 +226,7 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
     for source_path in missing_evidence_source_paths(project_root, registry, repo_root=_REPO_ROOT):
         error_issues.append(f"missing evidence source path: {source_path}")
     for path in markdown_files:
-        text = path.read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8", errors="replace")
         strict_file = any(token in path.name.lower() for token in ("claim", "ledger", "results", "table", "caption"))
         report = validate_text_against_registry(text, registry, strict=strict_file)
         for issue in report.errors:
@@ -266,6 +272,7 @@ def generate_validation_report(
     project_name: str = "project",
     *,
     repo_root: Path = _REPO_ROOT,
+    bind_rendered_inputs: bool = False,
 ) -> dict[str, Any]:
     """Generate validation report with structured output."""
     log_substep("Generating validation report...", logger)
@@ -273,7 +280,10 @@ def generate_validation_report(
     output_dir = _project_output_dir(project_name, repo_root=repo_root) / "reports"
 
     validation_results: dict[str, Any] = {
-        "timestamp": resolve_build_timestamp(repo_root=repo_root),
+        "timestamp": resolve_build_timestamp(
+            deterministic=True if bind_rendered_inputs else None,
+            repo_root=repo_root,
+        ),
         "checks": {name: result for name, result in check_results},
         "figure_issues": figure_issues,
         "output_statistics": output_statistics,
@@ -327,6 +337,17 @@ def generate_validation_report(
                         "file": _project_relative_path(project_name, "output", repo_root=repo_root),
                     }
                 )
+            elif check_name == "Figure registry":
+                recommendations.append(
+                    {
+                        "priority": "high",
+                        "issue": "Figure registry validation failed",
+                        "action": "Regenerate the figure registry and repair missing or unbound figures",
+                        "file": _project_relative_path(
+                            project_name, "output/figures/figure_registry.json", repo_root=repo_root
+                        ),
+                    }
+                )
             elif check_name == "Evidence registry":
                 recommendations.append(
                     {
@@ -352,7 +373,7 @@ def generate_validation_report(
             elif check_name == "Project design overlays":
                 recommendations.append(
                     {
-                        "priority": "low",
+                        "priority": "high",
                         "issue": "Domain profile or experiment plan validation failed",
                         "action": "Fix domain_profile.yaml or experiment_plan.yaml schema and design declarations",
                         "file": _project_relative_path(project_name, repo_root=repo_root),
@@ -372,20 +393,43 @@ def generate_validation_report(
         )
 
     validation_results["recommendations"] = recommendations
+    if bind_rendered_inputs:
+        from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
 
-    try:
-        from infrastructure.reporting import save_validation_report as gen_validation_report
+        snapshot = build_current_rendered_snapshot(repo_root, project_name)
+        validation_results["validated_inputs"] = snapshot.validated_inputs_dict()
 
-        saved_files = gen_validation_report(validation_results, output_dir)
-        logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
-    except (ImportError, OSError, TypeError, AttributeError) as e:
-        logger.warning(f"Failed to generate structured validation report: {e}")
-        report_file = output_dir / "validation_report.json"
-        output_dir.mkdir(parents=True, exist_ok=True)
+    if bind_rendered_inputs:
+        from infrastructure.reporting.pipeline_io import generate_validation_markdown
 
-        with open(report_file, "w") as f:
-            json.dump(validation_results, f, indent=2)
-        logger.info(f"Validation report saved: {report_file}")
+        project_root = _project_root(project_name, repo_root=repo_root)
+        json_path = output_dir / "validation_report.json"
+        markdown_path = output_dir / "validation_report.md"
+        atomic_write_text_confined(
+            project_root,
+            json_path,
+            json.dumps(validation_results, indent=2, sort_keys=True) + "\n",
+        )
+        atomic_write_text_confined(
+            project_root,
+            markdown_path,
+            generate_validation_markdown(validation_results),
+        )
+        logger.info(f"Validation reports saved: {json_path}, {markdown_path}")
+    else:
+        try:
+            from infrastructure.reporting import save_validation_report as gen_validation_report
+
+            saved_files = gen_validation_report(validation_results, output_dir)
+            logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
+        except (ImportError, OSError, TypeError, AttributeError) as e:
+            logger.warning(f"Failed to generate structured validation report: {e}")
+            report_file = output_dir / "validation_report.json"
+            output_dir.mkdir(parents=True, exist_ok=True)
+
+            with open(report_file, "w") as f:
+                json.dump(validation_results, f, indent=2)
+            logger.info(f"Validation report saved: {report_file}")
 
     # Print final diagnostic telemetry report (end of pipeline run)
     reporter = DiagnosticReporter(project_name=project_name, output_dir=output_dir.parent)
@@ -537,8 +581,35 @@ def execute_validation_pipeline(
                 "size_mb": size_mb,
             }
 
-    write_report = report_writer or generate_validation_report
-    write_report(results, figure_issues, output_statistics, project_name, repo_root=repo_root)
+    if report_writer is None:
+        from infrastructure.validation.rendered_snapshot import RenderedSnapshotError
+
+        try:
+            generate_validation_report(
+                results,
+                figure_issues,
+                output_statistics,
+                project_name,
+                repo_root=repo_root,
+                bind_rendered_inputs=True,
+            )
+        except RenderedSnapshotError as exc:
+            logger.error("Cannot bind validation report to rendered inputs [%s]: %s", exc.code, exc)
+            results.append(("Rendered provenance inputs", False))
+            output_statistics["rendered_provenance_issue"] = {
+                "code": exc.code,
+                "message": str(exc),
+            }
+            generate_validation_report(
+                results,
+                figure_issues,
+                output_statistics,
+                project_name,
+                repo_root=repo_root,
+                bind_rendered_inputs=False,
+            )
+    else:
+        report_writer(results, figure_issues, output_statistics, project_name, repo_root=repo_root)
 
     logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("VALIDATION SUMMARY")
@@ -557,11 +628,7 @@ def execute_validation_pipeline(
             status = "✅ PASS"
             logger.info(f"  {status}: {check_name}")
         else:
-            if check_name == "PDF validation":
-                status = "❌ FAIL"
-                critical_count += 1
-                all_passed = False
-            elif check_name == "Transmission bookends":
+            if check_name not in _ADVISORY_CHECKS:
                 status = "❌ FAIL"
                 critical_count += 1
                 all_passed = False

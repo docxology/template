@@ -59,21 +59,19 @@ jobs:
             echo "fep_lean=false" >> "$GITHUB_OUTPUT"
           fi
 
-  # Derive the public-exemplar matrix for `test-project` from the canonical
-  # roster (`infrastructure.project.public_scope`) instead of a hard-coded list,
-  # so adding/retiring an exemplar under projects/templates/ extends or trims the
-  # matrix automatically (CI-MATRIX-DYNAMIC-1). The `project-names-json` command
-  # emits a one-line JSON array which `test-project` consumes via
-  # `fromJSON(needs.detect-projects.outputs.projects)`. No network calls — pure
-  # local filesystem discovery.
+  # Derive the complete project/Python matrix from the validated, versioned
+  # public-capability manifest. One source now owns the exact public roster and
+  # supported CI Python versions; malformed metadata, incompatible Python
+  # floors, or declaration drift fails before any matrix cell starts
+  # (PUBLIC-CAPABILITY-PARITY-1). No project runtime is executed here.
   detect-projects:
-    name: Detect public exemplars
+    name: Detect public capability matrix
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
     outputs:
-      projects: ${{ steps.matrix.outputs.projects }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -82,12 +80,12 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
-      - name: Emit exemplar matrix
+      - name: Validate capabilities and emit CI matrix
         id: matrix
         run: |
           set -euo pipefail
-          projects="$(uv run python -m infrastructure.project.public_scope project-names-json)"
-          echo "projects=${projects}" >> "$GITHUB_OUTPUT"
+          matrix="$(uv run python scripts/gates/public_capabilities.py --ci-matrix-json)"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
 
   # ───────────────────────────────────────────────────────────────────────────
   # Job 0b — Actionlint (workflow syntax gate; independent of project setup)
@@ -118,6 +116,8 @@ jobs:
           curl -fsSL \
             "https://raw.githubusercontent.com/rhysd/actionlint/${ACTIONLINT_REF}/scripts/download-actionlint.bash" \
             -o "${RUNNER_TEMP}/download-actionlint.bash"
+          echo "72fa3e45ac20f3c3a512d6747b4fcf719e21f890e8c43e78d48a41fdfb900c4e  ${RUNNER_TEMP}/download-actionlint.bash" \
+            | sha256sum --check --status
           bash "${RUNNER_TEMP}/download-actionlint.bash" "${ACTIONLINT_VERSION}" "${RUNNER_TEMP}"
           "${RUNNER_TEMP}/actionlint" -color
 
@@ -162,6 +162,9 @@ jobs:
       - name: Reject tracked generated artifacts
         run: uv run python scripts/audit/check_tracked_generated_artifacts.py
 
+      - name: Reject tracked high-confidence secrets
+        run: uv run python scripts/audit/check_tracked_secrets.py
+
       - name: Confidentiality guard — only public template resources tracked
         run: uv run python scripts/audit/check_tracked_all.py
 
@@ -178,6 +181,13 @@ jobs:
       # only warn.
       - name: Module line-count gate — composability budget
         run: uv run python scripts/gates/module_line_count_check.py
+
+      # Strict template-drift gate: exemplar docs/scripts must match the
+      # canonical Layer-1 contracts (thin orchestrators, pipeline wording,
+      # publication metadata). Previously pre-commit-only; elevated to CI so
+      # drift cannot land through a branch that skips local hooks.
+      - name: Template drift — strict
+        run: uv run python scripts/audit/check_template_drift.py --strict
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 1b — Blocking static health report
@@ -289,6 +299,10 @@ jobs:
     needs: [verify-no-mocks]
     permissions:
       contents: read
+    env:
+      # Override the repository's .python-version so uv uses the interpreter
+      # selected by this matrix cell, including its moving patch release.
+      UV_PYTHON: ${{ matrix.python-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -309,6 +323,11 @@ jobs:
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group public-exemplars
+
+      - name: Verify selected Python minor
+        run: |
+          uv run python -c \
+            'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
 
       - name: Fix macOS socket.getfqdn timeout
         if: runner.os == 'macOS'
@@ -399,7 +418,22 @@ jobs:
       # per-project aliases + temporary sys.meta_path finders whose isolation is
       # collection-order-sensitive (see docs/maintenance/regression-testing.md).
       - name: Run claim-binding regression tier
-        run: uv run pytest tests/regression/ -q --no-cov --timeout=120
+        run: >-
+          uv run pytest tests/regression/ -q --no-cov --timeout=120
+          --collect-only -q | tee /tmp/regression-collect.txt
+          && uv run pytest tests/regression/ -q --no-cov --timeout=120
+
+      # Fail closed against a silently empty regression tier: the claim-binding
+      # pins are load-bearing release evidence, so zero collected tests must
+      # surface as a violation, not vacuous success.
+      - name: Assert regression tier is not empty
+        run: |-
+          count=$(grep -c "::" /tmp/regression-collect.txt || true)
+          echo "regression collection lines: $count"
+          if [ "$count" -lt 3 ]; then
+            echo "FAIL: regression tier collected fewer than 3 tests; claim-binding pins are missing." >&2
+            exit 1
+          fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Job 4 — Project Tests (one parallel job per public exemplar)
@@ -419,15 +453,16 @@ jobs:
     needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read
+    env:
+      # .python-version requests 3.12 by default; bind uv to this exact matrix
+      # minor so the capability contract covers the interpreter actually used.
+      UV_PYTHON: ${{ matrix.python-version }}
     strategy:
       fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.12"]
-        # Public-exemplar list is derived at runtime from the canonical roster
-        # (infrastructure.project.public_scope) by the detect-projects job, so
-        # adding/retiring an exemplar under projects/templates/ extends or trims
-        # this matrix without editing any literal here (CI-MATRIX-DYNAMIC-1).
-        project: ${{ fromJSON(needs.detect-projects.outputs.projects) }}
+      # The include list is the exact canonical project × Python product from
+      # `public_capabilities.py`; no project or Python literal is duplicated in
+      # workflow YAML.
+      matrix: ${{ fromJSON(needs.detect-projects.outputs.matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -440,6 +475,11 @@ jobs:
         # for every canonical public project, including scientific, literature,
         # PPTX, and monitoring dependencies.
         run: uv sync --group public-exemplars
+
+      - name: Verify selected Python minor
+        run: |
+          uv run python -c \
+            'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
 
       # scripts/pipeline/stage_01_test.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the
@@ -494,7 +534,12 @@ jobs:
       - name: Install elan (lean + lake)
         run: |
           set -euxo pipefail
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          curl -sSf \
+            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" \
+            | sha256sum --check --status
+          sh "$RUNNER_TEMP/elan-init.sh" -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Pin Lean toolchain and warm Lake build

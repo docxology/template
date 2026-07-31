@@ -19,7 +19,7 @@ print_uv_install_instructions() {
 ERROR: uv is required to run ${script_name}.
 
 Install uv (one of):
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+  curl -LsSf https://astral.sh/uv/0.12.0/install.sh | sh
   brew install uv
   pip install uv
 
@@ -27,11 +27,11 @@ Then re-run: ./${script_name}
 EOF
 }
 
-# Pin the installer to a specific uv release rather than the floating
-# `https://astral.sh/uv/install.sh`, matching the repo's pin-everything posture
-# (a floating remote script piped to a shell can change under you between runs).
+# Pin the installer to a specific uv release rather than the floating endpoint,
+# matching the repo's pin-everything posture (a floating remote script piped to
+# a shell can change under you between runs).
 # Override with `UV_INSTALL_VERSION=<x.y.z>` when a newer uv is required.
-UV_INSTALL_VERSION="${UV_INSTALL_VERSION:-0.11.25}"
+UV_INSTALL_VERSION="${UV_INSTALL_VERSION:-0.12.0}"
 
 ensure_uv() {
     if command -v uv >/dev/null 2>&1 && uv --version >/dev/null 2>&1; then

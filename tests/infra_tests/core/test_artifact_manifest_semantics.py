@@ -55,12 +55,14 @@ def test_validation_self_reports_are_not_attested_recursively(tmp_path: Path) ->
     report = project / "output" / "reports" / "validation_report.json"
     diagnostics = project / "output" / "reports" / "diagnostics.json"
     readiness = project / "output" / "reports" / "autoresearch_readiness.json"
+    rendered_provenance = project / "output" / "reports" / "rendered_provenance.json"
     data.parent.mkdir(parents=True)
     report.parent.mkdir(parents=True)
     data.write_text('{"result": 1}\n', encoding="utf-8")
     report.write_text('{"summary": {"all_passed": true}}\n', encoding="utf-8")
     diagnostics.write_text('{"events": []}\n', encoding="utf-8")
     readiness.write_text('{"valid": true}\n', encoding="utf-8")
+    rendered_provenance.write_text('{"schema_version": "receipt"}\n', encoding="utf-8")
 
     write_stage_artifact_manifest(
         repo_root=repo_root,
@@ -194,6 +196,21 @@ def test_manifest_snapshot_still_works_outside_a_git_repository(tmp_path: Path) 
     recorded = {entry.path for entry in manifest.entries}
     assert "output/data/results.json" in recorded
     assert "output/data/render.log" not in recorded, "static suffix exclusions must still apply"
+
+
+def test_current_output_snapshot_omits_hidden_atomic_write_leftovers(tmp_path: Path) -> None:
+    """Interrupted hidden writers must never become publication evidence."""
+    project = tmp_path / "nogit"
+    figures = project / "output" / "figures"
+    figures.mkdir(parents=True)
+    (figures / ".trace.png").write_bytes(b"transient payload")
+    (figures / "trace.png").write_bytes(b"stable payload")
+
+    manifest = snapshot_current_artifact_manifest(project / "output")
+
+    recorded = {entry.path for entry in manifest.entries}
+    assert "output/figures/trace.png" in recorded
+    assert "output/figures/.trace.png" not in recorded
 
 
 def test_every_public_exemplar_manifest_references_only_tracked_files() -> None:

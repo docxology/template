@@ -10,6 +10,8 @@ Covers:
 
 from __future__ import annotations
 
+import pytest
+
 from infrastructure.rendering.config import RenderingConfig
 
 
@@ -80,6 +82,15 @@ def test_from_project_config_malformed_formats_falls_back() -> None:
     cfg = RenderingConfig.from_project_config(yaml_mapping, env={})
     assert cfg.enable_pdf is True
     assert cfg.enable_docx is False
+
+
+def test_from_project_config_rejects_string_boolean() -> None:
+    """Quoted YAML booleans must not become truthy format toggles."""
+    with pytest.raises(ValueError, match="must be a YAML boolean"):
+        RenderingConfig.from_project_config(
+            {"render": {"formats": {"pdf": "false"}}},
+            env={},
+        )
 
 
 def test_new_dirs_default_paths() -> None:

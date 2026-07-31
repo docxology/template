@@ -17,6 +17,8 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 | `check_tracked_tools.py` | Tools git guard |
 | `check_tracked_all.py` | All-resource git guard |
 | `check_tracked_generated_artifacts.py` | Generated-artifact git-index hygiene |
+| `check_tracked_secrets.py` | High-confidence tracked-blob credential scan |
+| `check_staged_secrets.py` | High-confidence staged A/C/M/R index-blob scan |
 | `copy_exemplar.py` | Copy/update a canonical exemplar |
 
 ## Usage
@@ -25,6 +27,8 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 uv run python scripts/audit/lint_docs.py
 uv run python scripts/audit/check_template_drift.py --strict
 uv run python scripts/audit/check_tracked_all.py
+uv run python scripts/audit/check_tracked_secrets.py
+uv run python scripts/audit/check_staged_secrets.py
 uv run python scripts/audit/verify_no_mocks.py
 uv run python scripts/audit/verify_no_mocks.py --inventory
 ```

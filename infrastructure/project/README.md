@@ -138,13 +138,27 @@ or `.private_projects_root`.
 ### Public Capability Inventory (`public_capabilities.py`)
 
 The capability inventory is a static, repository-local preflight for every
-canonical public exemplar. It checks the required forkable project structure
-and records each declared pytest skip as an optional capability, fixture, or
-declared-condition contract. Run it with:
+canonical public exemplar. Its versioned deterministic manifest binds the exact
+public roster and CI Python product to normalized, globally unique distribution
+identities, import targets, full-minor-series `requires-python` compatibility,
+resolved render formats, manuscript hydration requirements, canonical Stage 2
+analysis entrypoints, parseable source/test Python, structure, and
+reason-bearing pytest skips. Distribution names normally match the project
+basename after hyphen/underscore
+normalization; `templates/template_template` has the explicit historical
+`template-template-meta-project` exception. Hydration entrypoints are confined
+to `scripts/`, SHA-256 bound, compiled, and required to expose a `main()` that
+is invoked by a direct executable statement in the `__main__` guard; calls
+hidden in nested dead branches do not qualify. Disabled formats and absent
+hydration are valid when the manuscript source does not require them. This
+static evidence never reruns the 24 project suites. Focused identity,
+Python-series, syntax, entrypoint, and skip parsing live in
+`public_capability_contracts.py`.
 
 ```bash
 uv run python scripts/gates/public_capabilities.py
 uv run python scripts/gates/public_capabilities.py --json
+uv run python scripts/gates/public_capabilities.py --ci-matrix-json
 ```
 
 ### Roster, Domain Profile, and Experiment Plan

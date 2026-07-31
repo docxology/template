@@ -14,7 +14,11 @@ from typing import Any
 
 from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.logging.utils import get_logger, log_success
-from infrastructure.core.project_paths import resolve_project_root, resolve_source_manuscript_dir
+from infrastructure.core.project_paths import (
+    resolve_project_root,
+    resolve_source_manuscript_dir,
+    validate_project_name,
+)
 
 logger = get_logger(__name__)
 
@@ -39,6 +43,21 @@ def _is_analysis_script(path: Path) -> bool:
         and not path.name.startswith("_")
         and path.name not in _NON_ANALYSIS_SCRIPT_NAMES
     )
+
+
+def _resolve_configured_script(project_scripts_dir: Path, item: str) -> Path | None:
+    """Resolve one allowlisted script without leaving ``scripts/``."""
+    try:
+        relative_name = validate_project_name(item)
+    except ValueError:
+        return None
+
+    candidate = (project_scripts_dir / relative_name).resolve(strict=False)
+    try:
+        candidate.relative_to(project_scripts_dir.resolve())
+    except ValueError:
+        return None
+    return candidate
 
 
 def _configured_analysis_scripts(project_dir: Path, project_scripts_dir: Path) -> list[Path] | None:
@@ -71,11 +90,11 @@ def _configured_analysis_scripts(project_dir: Path, project_scripts_dir: Path) -
         if not isinstance(item, str):
             logger.warning("Ignoring non-string analysis script entry in %s: %r", config_path, item)
             continue
-        script = project_scripts_dir / item
-        if _is_analysis_script(script):
+        script = _resolve_configured_script(project_scripts_dir, item)
+        if script is not None and _is_analysis_script(script):
             scripts.append(script)
         else:
-            logger.warning("Configured analysis script not found or not runnable: %s", script)
+            logger.warning("Configured analysis script not found, confined, or not runnable: %s", item)
 
     return scripts
 

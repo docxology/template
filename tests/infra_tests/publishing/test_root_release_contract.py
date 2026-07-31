@@ -73,5 +73,16 @@ def test_root_release_workflow_invokes_version_contract() -> None:
     assert "ref: ${{ steps.tag.outputs.name }}" in workflow
     assert 'EXPECTED=$(git rev-parse "refs/tags/$TAG^{commit}")' in workflow
     assert 'if [ "$ACTUAL" != "$EXPECTED" ]; then' in workflow
+    assert (
+        "python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json"
+    ) in workflow
+    assert "python scripts/gates/public_capabilities.py" in workflow
+    assert "python scripts/gates/exemplar_export_smoke.py" in workflow
     assert workflow.index("Determine tag name") < workflow.index("uses: actions/checkout@")
-    assert workflow.index("Verify checkout is the requested tag") < workflow.index("uv build")
+    assert (
+        workflow.index("Verify checkout is the requested tag")
+        < workflow.index("python scripts/gates/public_capabilities.py")
+        < workflow.index("python scripts/gates/exemplar_export_smoke.py")
+        < workflow.index("publication-audit --all-public --strict --rendered")
+        < workflow.index("uv build")
+    )

@@ -18,6 +18,7 @@ Operator and repository-maintenance orchestrators. **None of these run in the de
 | `setup_pre_commit.py` | (subprocess `pre-commit install`) | Install / refresh the pre-commit hook set |
 | `codegraph_local.py` | `infrastructure.project.codegraph` | Local CodeGraph index helper commands (optional; not a CI/publication dependency) |
 | `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` | Explicit integrity rebaseline for already-generated outputs; never claim its `current-output-snapshot` entries are stage provenance |
+| `refresh_rendered_provenance.py` | `infrastructure.validation.publication.rendered_provenance.write_rendered_provenance_receipt` | Bind already-green tracked outputs to stage/source/config/output and explicit manuscript-consumption fingerprints without inventing lineage |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Own clean-checkout serial/parallel health runs and fail unless gate parity, provenance, green status, and the latency criterion all hold |
 | `rename_counts_doc.py` | (self-contained tree scan) | Guard that scans tracked text files for stale `canonical_facts.md` markers after the COUNTS.md rename; `--check` exits non-zero when any remain outside archived audits |
 

@@ -1,0 +1,5 @@
+# [anon1011171225128176013939792001] — 10.1117/12.2512817.6013939792001
+
+_Source keyword: **stochastic gradient descent**_
+
+DOI: <https://doi.org/10.1117/12.2512817.6013939792001>

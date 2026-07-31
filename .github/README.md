@@ -507,7 +507,7 @@ Stage indices **0–9** are pipeline positions; they **do not** match the `stage
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
@@ -878,7 +878,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | --- | --- | --- |
 | [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **15 jobs** (2 conditional) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
-| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | GitHub Release with git-log changelog excerpt |
+| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Smoke test gate, capability, clean-export/import, rendered-evidence, build, and GitHub Release gates |
 | [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
 ### CI Jobs (`ci.yml`) — complete inventory
@@ -888,15 +888,15 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | # | Job (`id`) | `needs` | Runs when | Purpose |
 | - | --- | --- | --- | --- |
 | 1 | `detect` | — | always | Emits presence flags (`setup_hook`, `fep_lean`) for optional jobs |
-| 2 | `detect-projects` | — | always | Emits the generated public-exemplar matrix |
+| 2 | `detect-projects` | — | always | Validates the versioned public capability manifest and emits its exact project/Python matrix |
 | 3 | `actionlint` | — | always | Validates GitHub Actions workflow syntax |
 | 4 | `lint` | — | always | Ruff, mypy, exports, generated-artifact, and four-pool confidentiality gates |
 | 5 | `health` | `lint` | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
 | 6 | `verify-no-mocks` | — | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements (runs in parallel with `lint`) |
 | 7 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
-| 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12/3.13 + macOS × Py 3.12 (5 blocking cells), `--cov-fail-under=60` |
+| 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12/3.13 + macOS × Py 3.12 (5 blocking cells), `UV_PYTHON`-bound runtime, `--cov-fail-under=60` |
 | 9 | `test-regression` | `verify-no-mocks` | always | Claim-binding numerical regression tier |
-| 10 | `test-project` | `verify-no-mocks`, `detect-projects` | always | Generated public-exemplar matrix × {py3.10, py3.12}; each project enforces its own ≥90 floor |
+| 10 | `test-project` | `verify-no-mocks`, `detect-projects` | always | Capability-manifest project/Python matrix with `UV_PYTHON`-bound moving patches; each project enforces its own ≥90 floor |
 | 11 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
 | 12 | `validate` | `lint` | always | Manuscript/output validation (`infrastructure.validation.cli`) |
 | 13 | `security` | `lint` | always | Frozen dependency audit plus Bandit over the generated public source scope |
@@ -910,7 +910,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 ```mermaid
 flowchart TB
     D[detect — presence flags]
-    DP[detect-projects — public matrix]
+    DP[detect-projects — validated capability matrix]
     AL[actionlint — standalone]
     L[lint + type check]
     H[health — blocking static report]
@@ -998,8 +998,8 @@ Required status checks:
   Lint & Type Check
   Infra Tests (ubuntu-latest, Python 3.10/3.11/3.12/3.13)
   Infra Tests (macos-latest, Python 3.12)
-  # test-project expands from docs/_generated/active_projects.md:
-  # one check per public exemplar × {py3.10, py3.12}. Examples:
+  # test-project expands from the validated public capability manifest:
+  # one check per canonical project/Python lane. Examples:
   Project Tests (templates/template_active_inference, py3.12)
   Project Tests (templates/template_code_project, py3.10)
   Static Health Report

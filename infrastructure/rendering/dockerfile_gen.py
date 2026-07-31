@@ -30,7 +30,7 @@ DEFAULT_BASE_IMAGE: Final[str] = "ubuntu:24.04"
 # ``latest``) is what makes the default Stage-10 bundle reproducible: the same
 # project state always resolves the same uv toolchain. Bump deliberately when
 # the repo's toolchain moves; pass ``uv_version="latest"`` explicitly to opt out.
-DEFAULT_UV_VERSION: Final[str] = "0.11.20"
+DEFAULT_UV_VERSION: Final[str] = "0.12.0"
 
 # LaTeX packages this template's PDF rendering depends on at minimum.
 # Mirror of the troubleshooting list in docs/operational/troubleshooting/.

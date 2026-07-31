@@ -44,6 +44,7 @@ from infrastructure.core.files.cleanup import (
     clean_root_output_directory,
 )
 from infrastructure.core.files.operations import copy_final_deliverables
+from infrastructure.orchestration.discovery import validate_project_slug
 from infrastructure.project.discovery import resolve_project_root
 from infrastructure.validation.output.validator import (
     validate_copied_outputs,
@@ -84,15 +85,21 @@ def main() -> int:
     log_header(f"STAGE 05: Copy Outputs (Project: {args.project})", logger)
 
     repo_root = Path(__file__).resolve().parents[2]
-    project_root = resolve_project_root(repo_root, args.project)
-    output_dir = repo_root / "output" / args.project
+    try:
+        project_name = validate_project_slug(args.project, repo_root)
+    except ValueError as exc:
+        logger.error("Invalid project: %s", exc)
+        return 1
+
+    project_root = resolve_project_root(repo_root, project_name)
+    output_dir = repo_root / "output" / project_name
 
     try:
         # Step 1: Clean root-level directories from output/ (keep only project folders)
         from infrastructure.project.discovery import discover_projects
 
         projects = discover_projects(repo_root)
-        project_names = sorted({p.qualified_name for p in projects} | {args.project})
+        project_names = sorted({p.qualified_name for p in projects} | {project_name})
         if not clean_root_output_directory(repo_root, project_names):
             logger.error("Failed to clean root output directory")
             return 1
@@ -101,7 +108,7 @@ def main() -> int:
         clean_final_output_directory(output_dir)
 
         # Step 2: Copy final deliverables
-        stats = copy_final_deliverables(repo_root, output_dir, args.project, project_dir=project_root)
+        stats = copy_final_deliverables(repo_root, output_dir, project_name, project_dir=project_root)
 
         # Step 3: Validate copied files
         validation_passed = validate_copied_outputs(output_dir)
@@ -110,7 +117,7 @@ def main() -> int:
         structure_validation = validate_output_structure(output_dir)
 
         # Step 4: Collect comprehensive output statistics
-        output_stats = collect_output_statistics(repo_root, args.project, project_dir=project_root)
+        output_stats = collect_output_statistics(repo_root, project_name, project_dir=project_root)
         detailed_report = generate_detailed_output_report(output_dir, output_stats)
 
         # Log detailed report

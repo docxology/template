@@ -38,7 +38,7 @@ def logistic_growth(t: ArrayLike, *, r: float, carrying_capacity: float, initial
     t_arr = np.asarray(t, dtype=np.float64)
     k = carrying_capacity
     a = (k - initial) / initial
-    return k / (1.0 + a * np.exp(-r * t_arr))
+    return (k / (1.0 + a * np.exp(-r * t_arr))).astype(np.float64)
 
 
 def saturating_response(
@@ -144,7 +144,7 @@ def normalize_unit_interval(values: ArrayLike) -> NDArray[np.float64]:
     hi = float(np.max(arr))
     if hi == lo:
         return np.zeros_like(arr)
-    return (arr - lo) / (hi - lo)
+    return ((arr - lo) / (hi - lo)).astype(np.float64)
 
 
 __all__ = [

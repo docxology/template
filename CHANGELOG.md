@@ -9,6 +9,116 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Release gate hardening (2026-07-31)
+
+- Release workflow now executes a bounded test contract on the exact tagged
+  SHA before publishing: the no-mocks gate plus the pipeline-smoke
+  infrastructure lane (`stage_01_test.py --infra-only --infra-scope
+  pipeline-smoke`), so a release can no longer be cut while its commit's real
+  test suite is red.
+- CI lint job now runs the strict template-drift gate
+  (`check_template_drift.py --strict`) as a named, early failure rather than
+  relying on pre-commit hooks alone.
+- Regression tier now fails closed against an empty suite: a collect-only pass
+  asserts the claim-binding pins are present (55 tests today), closing the
+  exit-5 vacuous-success hole.
+
+### Rendered provenance and secure atomic writes (2026-07-31)
+
+- Added deterministic rendered-provenance receipt system: snapshots capture
+  stage/source/config/output SHA-256 fingerprints across all tracked files,
+  with symlink-confined tree walking and Git-index cache filtering. Receipts
+  bind committed validation reports to exact source, config, and output trees.
+- Added `atomic_write_text_confined()` in `infrastructure/core/files/secure_write.py`:
+  TOCTOU-safe writes using held O_NOFOLLOW directory descriptors, directory-identity
+  checks before rename, and cleanup of abandoned temporaries. Wired into the
+  rendered-provenance path and the validation-report writer.
+- Added `infrastructure/rendering/manuscript_composition.py`: render-boundary
+  evidence recording ordered manuscript input digest chains. Combined-path,
+  ordered-inputs, and binding digests provide cryptographic continuity from
+  source to rendered manuscript.
+- Added `infrastructure/validation/rendered_snapshot.py` (548 lines): walks
+  implementation roots, project source, config, and output trees with
+  `O_NOFOLLOW` confinement; validates artifact manifests against current output;
+  validates manuscript composition evidence against current render inputs.
+- Added `infrastructure/validation/publication/rendered_provenance.py`:
+  builds, writes, and validates RenderedProvenanceReceipts bound to committed
+  validation reports. `validate_rendered_provenance()` compares the current
+  snapshot against a committed receipt; wired into `audit.py` as
+  `check_rendered_provenance()`.
+- Updated `infrastructure/validation/output/pipeline.py`: validation reports
+  can now bind rendered inputs (`validated_inputs`) and use confined atomic
+  writes when `bind_rendered_inputs=True`.
+- Updated `PipelineExecutor`: artifact manifest is sealed immediately before
+  Stage 04 validation to prevent post-commitment re-aggregation; resume
+  correctly restores the sealed state.
+- Added `scripts/maintenance/refresh_rendered_provenance.py` to regenerate
+  receipts for all public exemplars.
+- Added 32 rendered-provenance tests, 47 artifact-finalization/web-renderer
+  tests — all pass.
+- This closes `RENDERED-PROVENANCE-1`.
+
+- Added a deterministic, versioned capability manifest with one independently
+  probed row for each of the 24 canonical exemplars and an exact 48-lane
+  project/Python CI product derived from the same roster.
+- Bound normalized distribution identity, unique package names, full Python
+  3.10.x/3.12.x compatibility, confined compilable hydration entrypoints,
+  resolved render formats, analysis entrypoints, and reasoned skip contracts.
+- Bound `uv` to each CI matrix interpreter and added runtime minor assertions,
+  so the repository-level `.python-version` cannot silently collapse a
+  cross-version lane onto Python 3.12.
+
+### Public-matrix isolation and active-inference coverage (2026-07-31)
+
+- Made receipt-bearing public-matrix runs fail when a project test changes its
+  real `output/` tree, with immediate and post-pytest detached-subprocess
+  negative controls plus byte-preserving no-mock fixtures for the four
+  exemplars that exercise generators in place.
+- Hardened active-inference figure writes against interrupted atomic saves,
+  excluded transient hidden files from live artifact scans, and added direct
+  sheaf-track and figure-I/O coverage above the declared 90% project floor.
+- Cleared the pre-push documentation and Bandit blockers exposed by the new
+  controls without weakening either gate.
+
+### Staged-index credential guard (2026-07-31)
+
+- Made the pre-commit credential scanner inspect exact added, copied, modified,
+  and renamed blobs in Git's index, so partially staged worktree edits cannot
+  hide a credential or create a false finding.
+- Wired the value-redacting scanner into pre-commit and manual hooks while
+  retaining the full tracked-blob pre-push defense; real-Git negative controls
+  cover both partial-staging directions, local gitlinks, unreadable blobs, and
+  all supported blob index states.
+- Removed the accidentally tracked active-inference fingerprint cache now
+  rejected by the generated/local-artifact hook.
+
+### Template infrastructure hardening (2026-07-30)
+
+- Added lexical project-name confinement and in-project analysis-script allowlists,
+  including traversal, absolute-path, and external-script negative controls.
+- Made nested manuscript-config lookup deterministic and fail closed on ambiguity;
+  render-format and transmission-bookend flags now require native YAML booleans.
+- Hardened secure-run so explicit no-input requests fail, project overrides cannot
+  disable secure hashing/manifests, malformed secure configs fail closed, and each
+  processed PDF must produce distinct output plus fresh hash evidence.
+- Made empty pipeline plans fail instead of reporting vacuous success, promoted
+  figure/evidence/design/artifact validation failures to blocking status, and made
+  Stage 02 output verification failure an exit failure.
+- Added tracked-output guards for hidden atomic-write leftovers and empty public
+  generated artifacts; removed the interrupted active-inference figure/cache and
+  regenerated its method inventory and artifact manifest.
+- Aligned the self-describing `template_template` exemplar with the repository's
+  Python 3.10 floor and refreshed its standalone lockfile.
+- Confined direct Stage-02 script execution to each project's resolved
+  `scripts/` tree and redacted credential-like environment variables by default;
+  live integrations now require the explicit `ANALYSIS_ALLOW_SECRETS=1` opt-in.
+- Pinned the shell/CI installer paths used by uv, actionlint, and elan; CI now
+  verifies the downloaded actionlint and elan installer checksums before
+  execution.
+- Added a tracked-index high-confidence secret scan to CI and pre-push guards;
+  it reports only path/line/type evidence and preserves explicit fixture-safe
+  placeholder examples.
+
 ### Exemplar pipeline fixes (2026-07-24)
 
 - **Conditional `siunitx` loading in 6 exemplar preambles.** Replaced

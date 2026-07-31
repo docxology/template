@@ -261,6 +261,7 @@ class PipelineDAG:
                     func=func,
                     contract=stage.contract,
                     hooks=stage.hooks,
+                    key=stage.key,
                 )
             )
 

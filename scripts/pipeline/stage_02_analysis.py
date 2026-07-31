@@ -78,7 +78,8 @@ def main() -> int:
             if verify_analysis_outputs(repo_root, args.project):
                 log_success("Analysis complete - ready for PDF rendering", logger)
             else:
-                logger.warning("\nAnalysis complete but output verification failed")
+                logger.error("\nAnalysis complete but output verification failed")
+                return 1
         else:
             logger.error("\nAnalysis failed - fix issues and try again")
 

@@ -614,7 +614,7 @@ if __name__ == "__main__":
     runner = EvaluationRunner(evaluator, test_set)
     summary = runner.run_all(verbose=True)
 
-    print(f"\n--- Summary ---")
+    print("\n--- Summary ---")
     print(f"Total: {summary['total_tests']}")
     print(f"Passed: {summary['passed']}")
     print(f"Failed: {summary['failed']}")
@@ -622,6 +622,6 @@ if __name__ == "__main__":
     print(f"Dimension averages: {summary['dimension_averages']}")
 
     if summary["failures"]:
-        print(f"\nFailures:")
+        print("\nFailures:")
         for f in summary["failures"]:
             print(f"  - {f['test']}: {f['score']:.2f}")

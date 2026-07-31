@@ -64,6 +64,10 @@ two names for the same operation.
 - `audit/lint_docs.py`, `audit/audit_documentation.py`, `audit/verify_no_mocks.py`
 - `audit/audit_filepaths.py`, `audit/check_template_drift.py`
 - `audit/check_tracked_*` guards, `audit/copy_exemplar.py`
+- `audit/check_tracked_secrets.py` scans every tracked blob for high-confidence
+  credential formats without printing matched values.
+- `audit/check_staged_secrets.py` scans staged A/C/M/R index blobs without
+  reading or exposing unstaged worktree values.
 - `gates/module_line_count_check.py` - line-count gate via `infrastructure.validation.line_count`
 
 **Publishing** — `publish/publish_project_release.py` (opt-in unified release)
@@ -100,7 +104,7 @@ by `scripts/docgen/stage_table.py`):
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
@@ -169,6 +173,8 @@ orchestrator:
 | `audit/check_tracked_tools.py` | `infrastructure.project.git_guards.offending_tracked_tools` | |
 | `audit/check_tracked_all.py` | all four `offending_tracked_*` guards | CI lint + pre-push |
 | `audit/check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards.tracked_generated_artifacts` | |
+| `audit/check_tracked_secrets.py` | `infrastructure.project.git_guards.tracked_secret_findings` | CI + pre-push tracked-index secret guard |
+| `audit/check_staged_secrets.py` | `infrastructure.project.git_guards.staged_diff_secret_findings` | Pre-commit staged A/C/M/R index-blob secret guard |
 | `maintenance/codegraph_local.py` | `infrastructure.project.codegraph` | Optional local-only index helper; never a pipeline dependency |
 | `maintenance/refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` | Explicit current-output integrity rebaseline after targeted renders; not stage provenance |
 | `runner/bundle_executable.py` | `infrastructure.publishing.executable_bundle.bundle_project` | |

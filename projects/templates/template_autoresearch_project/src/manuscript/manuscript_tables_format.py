@@ -22,8 +22,17 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[str]], captio
 
 
 def pdf_small_table(headers: Sequence[str], rows: Sequence[Sequence[str]], caption: str) -> str:
-    """Process pdf small table."""
-    return "\n".join(("\\begingroup\\footnotesize", markdown_table(headers, rows, caption), "\\endgroup"))
+    """Process pdf small table.
+
+    Blank lines separate the raw ``\\begingroup``/``\\endgroup`` wrappers from
+    the markdown table block. Without them, Pandoc's Beamer longtable writer
+    absorbs the trailing ``\\endgroup`` into the table ``\\caption{...}``,
+    which corrupts the longtable group/alignment structure ("Missing }" and
+    "Misplaced alignment tab" errors). The article-class PDF manuscript is
+    unaffected because paragraph breaks do not close a ``\\begingroup``.
+    """
+    table = markdown_table(headers, rows, caption)
+    return "\n".join(("\\begingroup\\footnotesize", "", table, "", "\\endgroup"))
 
 
 def artifact_link_label(path: str) -> str:

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -11,8 +12,9 @@ import pytest
 from infrastructure.project.git_guards import (
     is_generated_artifact_path,
     is_public_template_output_path,
-    public_template_output_budget_findings,
     offending_tracked_projects,
+    public_template_output_budget_findings,
+    staged_diff_secret_findings,
     tracked_generated_artifacts,
     tracked_public_output_local_paths,
     tracked_public_output_secrets,
@@ -23,6 +25,153 @@ def _init_git_repo(root: Path) -> None:
     subprocess.run(["git", "init"], cwd=root, check=True, capture_output=True)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=root, check=True)
     subprocess.run(["git", "config", "user.name", "Test User"], cwd=root, check=True)
+
+
+def _github_credential(marker: str) -> str:
+    """Build a high-confidence fixture without tracking a token-shaped literal."""
+    return "ghp_" + (marker * 40)[:40]
+
+
+def _commit_all(root: Path, message: str) -> None:
+    subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+    subprocess.run(["git", "commit", "-m", message], cwd=root, check=True, capture_output=True)
+
+
+def test_staged_secret_scan_reads_secret_from_index_when_worktree_is_safe(tmp_path: Path) -> None:
+    """A safe unstaged edit must not hide the credential staged for commit."""
+    _init_git_repo(tmp_path)
+    note = tmp_path / "note.txt"
+    note.write_text("baseline\n", encoding="utf-8")
+    _commit_all(tmp_path, "baseline")
+
+    secret = _github_credential("Z9")
+    note.write_text(f"staged\n{secret}\n", encoding="utf-8")
+    subprocess.run(["git", "add", "note.txt"], cwd=tmp_path, check=True)
+    note.write_text("safe worktree edit\n", encoding="utf-8")
+
+    findings = staged_diff_secret_findings(tmp_path)
+    assert findings == ["note.txt:2:github-token"]
+    assert secret not in "\n".join(findings)
+
+
+def test_staged_secret_scan_ignores_unstaged_secret_when_index_is_safe(tmp_path: Path) -> None:
+    """An unstaged credential must not create a finding for a safe staged blob."""
+    _init_git_repo(tmp_path)
+    note = tmp_path / "note.txt"
+    note.write_text("baseline\n", encoding="utf-8")
+    _commit_all(tmp_path, "baseline")
+
+    note.write_text("safe staged edit\n", encoding="utf-8")
+    subprocess.run(["git", "add", "note.txt"], cwd=tmp_path, check=True)
+    secret = _github_credential("Y8")
+    note.write_text(f"unstaged\n{secret}\n", encoding="utf-8")
+
+    assert staged_diff_secret_findings(tmp_path) == []
+
+
+def test_staged_secret_scan_covers_added_copied_modified_and_renamed_blobs(tmp_path: Path) -> None:
+    """Every non-deleted staged post-image classification is scanned."""
+    _init_git_repo(tmp_path)
+    copied_source = tmp_path / "copy-source.txt"
+    modified = tmp_path / "modified.txt"
+    copied_source.write_text(f"copy source\n{_github_credential('C7')}\n", encoding="utf-8")
+    modified.write_text("stable header\nbaseline\nstable footer\n", encoding="utf-8")
+    _commit_all(tmp_path, "baseline")
+
+    renamed = tmp_path / "renamed.txt"
+    subprocess.run(["git", "mv", copied_source.name, renamed.name], cwd=tmp_path, check=True)
+    shutil.copyfile(renamed, tmp_path / "copied.txt")
+    (tmp_path / "added.txt").write_text(f"added\n{_github_credential('A1')}\n", encoding="utf-8")
+    modified.write_text(
+        f"stable header\n{_github_credential('M5')}\nstable footer\n",
+        encoding="utf-8",
+    )
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+
+    status = subprocess.run(
+        ["git", "diff", "--cached", "--find-renames", "--find-copies", "--name-status"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert {"A", "C", "M", "R"} <= {line[0] for line in status}
+
+    findings = staged_diff_secret_findings(tmp_path)
+    assert findings == [
+        "added.txt:2:github-token",
+        "copied.txt:2:github-token",
+        "modified.txt:2:github-token",
+        "renamed.txt:2:github-token",
+    ]
+
+
+def test_staged_secret_scan_skips_real_gitlink_but_scans_regular_blob(tmp_path: Path) -> None:
+    """A local submodule update is non-blob state, not a reason to skip blobs."""
+    dependency = tmp_path / "dependency"
+    dependency.mkdir()
+    _init_git_repo(dependency)
+    (dependency / "README.md").write_text("# local dependency\n", encoding="utf-8")
+    _commit_all(dependency, "dependency baseline")
+
+    parent = tmp_path / "parent"
+    parent.mkdir()
+    _init_git_repo(parent)
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "add",
+            str(dependency),
+            "vendor/dependency",
+        ],
+        cwd=parent,
+        check=True,
+        capture_output=True,
+    )
+    _commit_all(parent, "parent baseline")
+
+    submodule = parent / "vendor" / "dependency"
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=submodule, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=submodule, check=True)
+    (submodule / "README.md").write_text("# updated local dependency\n", encoding="utf-8")
+    _commit_all(submodule, "dependency update")
+    subprocess.run(["git", "add", "vendor/dependency"], cwd=parent, check=True)
+
+    secret = _github_credential("G4")
+    (parent / "note.txt").write_text(f"{secret}\n", encoding="utf-8")
+    subprocess.run(["git", "add", "note.txt"], cwd=parent, check=True)
+
+    assert staged_diff_secret_findings(parent) == ["note.txt:1:github-token"]
+
+
+def test_staged_secret_scan_fails_closed_for_unreadable_blob(tmp_path: Path) -> None:
+    """A non-gitlink index object that Git cannot read must abort the scan."""
+    _init_git_repo(tmp_path)
+    subprocess.run(
+        ["git", "commit", "--allow-empty", "-m", "baseline"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+    missing_blob = "a" * 40
+    subprocess.run(
+        [
+            "git",
+            "update-index",
+            "--add",
+            "--info-only",
+            "--cacheinfo",
+            f"100644,{missing_blob},broken.txt",
+        ],
+        cwd=tmp_path,
+        check=True,
+    )
+
+    with pytest.raises(subprocess.CalledProcessError):
+        staged_diff_secret_findings(tmp_path)
 
 
 def test_offending_tracked_projects_flags_non_exemplar(tmp_path: Path) -> None:
@@ -268,3 +417,19 @@ def test_public_output_budgets_fail_when_ratchet_is_exceeded(tmp_path: Path) -> 
     assert any("file count" in finding for finding in findings)
     assert any("aggregate bytes" in finding for finding in findings)
     assert any("duplicate bytes" in finding for finding in findings)
+
+
+def test_public_output_budget_flags_single_file_over_advisory_ceiling(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/data"
+    output.mkdir(parents=True)
+    payload = b"x" * 1024
+    (output / "big.bin").write_bytes(payload)
+    subprocess.run(["git", "add", "-f", "projects/templates"], cwd=tmp_path, check=True)
+
+    findings = public_template_output_budget_findings(tmp_path, max_single_file_bytes=512)
+    assert any("single-file bytes exceed advisory ceiling" in finding for finding in findings)
+    assert "big.bin" in findings[0]
+
+    findings_under = public_template_output_budget_findings(tmp_path, max_single_file_bytes=2048)
+    assert not any("single-file bytes exceed advisory ceiling" in finding for finding in findings_under)

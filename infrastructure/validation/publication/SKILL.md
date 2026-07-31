@@ -15,4 +15,8 @@ uv run python -m infrastructure.validation.cli publication-audit \
 ```
 
 The audit is read-only. Fix the producer or source contract, regenerate, and
-run it again. Do not edit reports by hand.
+run it again. Source placeholders may remain when the canonical hydrated or
+combined rendered input is resolved. Do not edit reports or rendered provenance
+receipts by hand; stage 04 writes them after a green validation run, and
+`scripts/maintenance/refresh_rendered_provenance.py` backfills already-green
+tracked snapshots.

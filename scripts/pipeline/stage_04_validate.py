@@ -28,6 +28,10 @@ ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_header
 from infrastructure.validation.output.pipeline import execute_validation_pipeline
+from infrastructure.validation.publication.rendered_provenance import (
+    RenderedProvenanceError,
+    write_rendered_provenance_receipt,
+)
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -47,7 +51,21 @@ def main() -> int:
 
     log_header(f"STAGE 04: Validate Output (Project: {args.project})", logger)
 
-    return execute_validation_pipeline(args.project)
+    result = execute_validation_pipeline(args.project)
+    if result != 0:
+        return result
+    try:
+        receipt = write_rendered_provenance_receipt(Path(__file__).resolve().parents[2], args.project)
+    except RenderedProvenanceError as exc:
+        logger.error("Rendered provenance receipt failed [%s]: %s", exc.code, exc)
+        return 1
+    logger.info(
+        "Rendered provenance receipt: %d source, %d config, %d output files",
+        receipt.source.file_count,
+        receipt.config.file_count,
+        receipt.output.file_count,
+    )
+    return 0
 
 
 if __name__ == "__main__":

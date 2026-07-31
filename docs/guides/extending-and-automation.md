@@ -186,10 +186,10 @@ jobs:
         python-version: ['3.10', '3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v6.0.2
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -202,7 +202,7 @@ jobs:
         uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=xml --cov-fail-under=90
 
     - name: Upload coverage
-      uses: codecov/codecov-action@v6.0.1
+      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
       with:
         file: ./coverage.xml
         fail_ci_if_error: true
@@ -212,7 +212,7 @@ jobs:
     needs: test
 
     steps:
-    - uses: actions/checkout@v6.0.2
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Install system dependencies
       run: |
@@ -220,7 +220,7 @@ jobs:
         sudo apt-get install -y pandoc texlive-xetex
 
     - name: Set up Python
-      uses: actions/setup-python@v6.2.0
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
         python-version: '3.10'
 
@@ -233,7 +233,7 @@ jobs:
         uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
     - name: Upload PDFs
-      uses: actions/upload-artifact@v7.0.1
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: pdfs
         path: output/*/pdf/*.pdf

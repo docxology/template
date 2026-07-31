@@ -4,10 +4,15 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from typing import cast
 
 
-from json_io import write_json as _write_json
+FINGERPRINT_CACHE = "output/.fingerprint_cache.sha256"
+
+
+def _write_fingerprint_cache(cache_path: Path, fingerprint: str) -> None:
+    """Write the fingerprint cache, creating parent dirs as needed."""
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(fingerprint, encoding="utf-8")
 
 
 def _sha256(path: Path) -> str:
@@ -29,108 +34,35 @@ def _refresh_animation_outputs(root: Path) -> dict[str, Path]:
 def _refresh_hydrated_manuscript(root: Path, *, require_analysis_outputs: bool) -> dict[str, Path]:
     from manuscript.refresh import settle_manuscript_artifacts
 
-    return cast(
-        dict[str, Path],
-        settle_manuscript_artifacts(root, require_analysis_outputs=require_analysis_outputs),
-    )
-
-
-def _write_semantic_core(root: Path) -> dict[str, Path]:
-    from manuscript.sheaf.semantic import (
-        build_evidence_crosswalk,
-        build_semantic_gluing_certificate,
-        build_validation_dependency_graph,
-    )
-    from manuscript.sheaf.status import write_sheaf_status_outputs
-
-    data_dir = root / "output" / "data"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    paths = {
-        "crosswalk": _write_json(data_dir / "sheaf_evidence_crosswalk.json", build_evidence_crosswalk(root)),
-        "dependency_graph": _write_json(
-            data_dir / "validation_dependency_graph.json",
-            build_validation_dependency_graph(root),
-        ),
-        "certificate": _write_json(
-            data_dir / "sheaf_gluing_certificate.json",
-            build_semantic_gluing_certificate(root),
-        ),
-    }
-    paths.update(write_sheaf_status_outputs(root))
-    return paths
-
-
-def _write_contract_artifacts(root: Path) -> dict[str, Path]:
-    from roadmap_tracks.integration_audit import write_integration_audit_artifacts
-    from roadmap_tracks.integration_audit_artifacts import build_artifact_diffoscope, build_artifact_license_audit
-    from roadmap_tracks.sheaf_tracks import (
-        CANONICAL_ARTIFACTS,
-        _ProvenanceContext,
-        _config_digest,
-        _deterministic_seed,
-        _source_commit,
-        build_artifact_contract_index,
-        build_artifact_provenance,
-        build_release_bundle_manifest,
-        build_replay_matrix,
-        build_track_lane_matrix,
-        build_validation_dependency_graph,
-    )
-
-    paths = cast(dict[str, Path], write_integration_audit_artifacts(root))
-    context = _ProvenanceContext(
-        config_digest=_config_digest(root),
-        deterministic_seed=_deterministic_seed(root),
-        source_commit=_source_commit(root),
-    )
-    paths["track_lane_matrix"] = _write_json(
-        root / CANONICAL_ARTIFACTS["track_lane_matrix"],
-        build_track_lane_matrix(root),
-    )
-    paths["release_bundle"] = _write_json(
-        root / CANONICAL_ARTIFACTS["release_bundle"],
-        build_release_bundle_manifest(root),
-    )
-    paths["replay_matrix"] = _write_json(
-        root / CANONICAL_ARTIFACTS["replay_matrix"],
-        build_replay_matrix(root),
-    )
-    provenance = build_artifact_provenance(root, context=context)
-    paths["dependency"] = _write_json(
-        root / CANONICAL_ARTIFACTS["dependency"],
-        build_validation_dependency_graph(root, provenance=provenance, provenance_context=context),
-    )
-    paths["provenance"] = _write_json(root / CANONICAL_ARTIFACTS["provenance"], provenance)
-    paths["artifact_contract_index"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_contract_index"],
-        build_artifact_contract_index(root),
-    )
-    paths["artifact_diffoscope"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_diffoscope"],
-        build_artifact_diffoscope(root),
-    )
-    paths["artifact_license"] = _write_json(
-        root / CANONICAL_ARTIFACTS["artifact_license"],
-        build_artifact_license_audit(root),
-    )
-    return paths
+    result: dict[str, Path] = settle_manuscript_artifacts(root, require_analysis_outputs=require_analysis_outputs)
+    return result
 
 
 def _write_sheaf_owned_artifacts(root: Path) -> dict[str, Path]:
-    from roadmap_tracks.sheaf_tracks import (
-        CANONICAL_ARTIFACTS,
-        build_model_checking_witnesses,
-        build_sensitivity_sweep,
-        build_uncertainty_summary,
-    )
+    from manuscript.sheaf.coverage import emit_coverage_artifacts
 
-    return {
-        "sensitivity": _write_json(root / CANONICAL_ARTIFACTS["sensitivity"], build_sensitivity_sweep(root)),
-        "uncertainty": _write_json(root / CANONICAL_ARTIFACTS["uncertainty"], build_uncertainty_summary(root)),
-        "model_checking": _write_json(
-            root / CANONICAL_ARTIFACTS["model_checking"], build_model_checking_witnesses(root)
-        ),
-    }
+    result: dict[str, Path] = {"coverage_matrix": emit_coverage_artifacts(root)}
+    return result
+
+
+def _write_semantic_core(root: Path) -> dict[str, Path]:
+    from manuscript.sheaf.semantic import write_semantic_gluing_outputs
+
+    result: dict[str, Path] = write_semantic_gluing_outputs(root, settle=False)
+    return result
+
+
+def _write_contract_artifacts(root: Path) -> dict[str, Path]:
+    from roadmap_tracks.formal_interop import write_formal_interop_artifacts
+
+    result: dict[str, Path] = write_formal_interop_artifacts(root)
+    from roadmap_tracks.integration_audit import write_integration_audit_artifacts
+
+    result.update(write_integration_audit_artifacts(root))
+    from roadmap_tracks.supplemental import write_supplemental_artifacts
+
+    result.update(write_supplemental_artifacts(root))
+    return result
 
 
 def _fingerprint(root: Path) -> str:
@@ -251,15 +183,29 @@ def run_semantic_fixed_point(
     require_analysis_outputs: bool = True,
     max_passes: int = 4,
 ) -> dict[str, Path]:
-    """Settle manuscript, semantic, and contract artifacts to a validated fixed point."""
+    """Settle manuscript, semantic, and contract artifacts to a validated fixed point.
+
+    When the fingerprint cache matches the current artifact hashes, the expensive
+    multi-pass rebuild is skipped entirely — returning in < 0.1 s instead of 600+ s.
+    """
     root = project_root.resolve()
     source_issues = _source_contract_issues(root)
     if source_issues:
         joined = "; ".join(dict.fromkeys(source_issues))
         raise RuntimeError(f"semantic fixed point cannot repair source contract defects: {joined}")
 
+    # Fast path: if cached fingerprint matches, skip the expensive rebuild entirely.
+    cache_path = root / FINGERPRINT_CACHE
+    current = _fingerprint(root)
+    if cache_path.is_file():
+        cached = cache_path.read_text(encoding="utf-8").strip()
+        if cached == current:
+            return _existing_fixed_point_paths(root)
+        # Fingerprint changed — fall through to rebuild.
+
     initial_issues = _validate_fixed_point(root)
     if not initial_issues:
+        _write_fingerprint_cache(cache_path, current)
         return _existing_fixed_point_paths(root)
 
     paths: dict[str, Path] = {}
@@ -269,6 +215,7 @@ def run_semantic_fixed_point(
     if paths:
         final_issues = _validate_fixed_point(root)
         if not final_issues:
+            _write_fingerprint_cache(cache_path, _fingerprint(root))
             return _existing_fixed_point_paths(root)
 
     previous = ""
@@ -278,6 +225,7 @@ def run_semantic_fixed_point(
         current = _fingerprint(root)
         final_issues = _validate_fixed_point(root)
         if not final_issues:
+            _write_fingerprint_cache(cache_path, current)
             return paths
         if current == previous:
             break

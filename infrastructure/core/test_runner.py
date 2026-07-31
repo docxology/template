@@ -29,8 +29,9 @@ The runner:
 * combines those per-project files only after all subprocesses exit, so an
   inherited infrastructure ``COVERAGE_FILE`` cannot contaminate the union,
 * runs ``coverage report --fail-under=<fail_under>`` at the end and
-  returns ``0`` only when **every** per-project pytest exited cleanly
-  **and** the combined coverage gate passes.
+  returns ``0`` only when **every** per-project pytest exited cleanly, every
+  receipt-bearing lane preserved its project's ``output/`` tree, **and** the
+  combined coverage gate passes.
 
 The runner is a thin orchestrator: business logic (fail-under threshold,
 skip list, marker expression) is configurable, and all subprocess work
@@ -38,6 +39,8 @@ happens via real ``subprocess.run`` calls — no mocking.
 """
 
 from dataclasses import dataclass
+import hashlib
+import io
 import subprocess  # nosec B404
 from pathlib import Path
 from typing import Sequence
@@ -49,6 +52,11 @@ from infrastructure.core.logging.utils import (
     log_success,
 )
 from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
+from infrastructure.core.public_matrix_receipt import (
+    PublicMatrixLaneResult,
+    build_public_matrix_receipt,
+    determine_worker_info,
+)
 from infrastructure.core.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     TestProfileName,
@@ -259,6 +267,127 @@ def _combine_project_coverage(
         return 1
 
 
+def _measure_coverage_percent(coverage_file: Path) -> float | None:
+    """Return the total coverage percentage from one isolated coverage file.
+
+    Uses the ``coverage`` Python API so the percentage is measured the same
+    way pytest-cov reports it (branches included). Returns ``None`` when the
+    file is missing or unreadable.
+    """
+    if not coverage_file.is_file():
+        return None
+    import coverage as coverage_module  # local import keeps startup fast
+
+    try:
+        cov = coverage_module.Coverage(data_file=str(coverage_file))
+        cov.load()
+        return float(cov.report(file=io.StringIO()))
+    except (OSError, ValueError, coverage_module.CoverageException) as exc:
+        logger.warning("Could not measure coverage from %s: %s", coverage_file, exc)
+        return None
+
+
+def _output_tree_digest(project_root: Path) -> str:
+    """Return a content digest of the project's ``output/`` tree, or ``""``.
+
+    Used to detect test-generated output churn: the digest is computed before
+    and after a project lane, and the lane fails output isolation when they
+    differ. Missing output trees digest to ``""`` (no churn possible).
+    """
+    output_dir = project_root / "output"
+    if not output_dir.is_dir():
+        return ""
+    digest = hashlib.sha256()
+    for path in sorted(output_dir.rglob("*")):
+        if path.is_file():
+            digest.update(path.relative_to(project_root).as_posix().encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def _resolve_roster_revision(repo_root: Path) -> str:
+    """Return the current git commit SHA, or ``"unknown"`` outside a checkout."""
+    try:
+        completed = subprocess.run(  # nosec B603
+            ["git", "rev-parse", "HEAD"],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return "unknown"
+    if completed.returncode != 0:
+        return "unknown"
+    return completed.stdout.strip() or "unknown"
+
+
+def _write_public_matrix_receipt(
+    repo_root: Path,
+    receipt_path: str | Path | None,
+    *,
+    specs: Sequence[ProjectPytestSpec],
+    results: Sequence[ProjectPytestResult],
+    output_digests_before: dict[str, str],
+    profile: str,
+    marker_expr: str | None,
+    project_workers: str | int | None,
+    parallel: str | int | None,
+    combined_coverage_percent: float | None,
+    combined_floor: int,
+    overall_exit: int,
+) -> int:
+    """Finalize output isolation and write a requested public-matrix receipt."""
+    if receipt_path is None:
+        return overall_exit
+
+    lane_context: list[tuple[ProjectPytestResult, ProjectPytestSpec, float | None]] = []
+    for result in results:
+        spec = next(s for s in specs if s.index == result.index)
+        coverage_percent = _measure_coverage_percent(result.coverage_file)
+        lane_context.append((result, spec, coverage_percent))
+
+    output_isolation: dict[int, bool] = {}
+    for spec in specs:
+        before = output_digests_before[spec.project_name]
+        output_isolation[spec.index] = before == _output_tree_digest(spec.project_root)
+        if not output_isolation[spec.index]:
+            logger.error(
+                "Project '%s' changed its output/ tree during the public-matrix run",
+                spec.project_name,
+            )
+            overall_exit = 1
+
+    lanes = []
+    for result, spec, coverage_percent in lane_context:
+        lanes.append(
+            PublicMatrixLaneResult(
+                project_name=result.project_name,
+                declared_floor=project_declared_coverage_floor(spec.project_root),
+                exit_code=result.exit_code,
+                timed_out=result.timed_out,
+                coverage_percent=coverage_percent,
+                output_isolation_ok=output_isolation[spec.index],
+            )
+        )
+    receipt = build_public_matrix_receipt(
+        roster_revision=_resolve_roster_revision(repo_root),
+        profile=profile,
+        marker_expression=marker_expr,
+        worker_info=determine_worker_info(project_workers, parallel),
+        lanes=lanes,
+        combined_coverage_percent=combined_coverage_percent,
+        combined_floor=combined_floor,
+        overall_exit=overall_exit,
+    )
+    receipt.write(receipt_path)
+    log_substep(f"Public-matrix receipt written: {receipt_path}", logger)
+    return overall_exit
+
+
 def run_per_project_pytest(
     repo_root: Path,
     *,
@@ -277,6 +406,7 @@ def run_per_project_pytest(
     subprocess_timeout_seconds: int = DEFAULT_SUBPROCESS_TIMEOUT_SECONDS,
     parallel: str | int | None = None,
     allow_empty: bool = False,
+    receipt_path: str | Path | None = None,
 ) -> int:
     """Run pytest once per project and gate combined coverage.
 
@@ -305,6 +435,10 @@ def run_per_project_pytest(
             combines per-worker data before each project's ``--cov-append``.
         allow_empty: Explicitly permit a zero-project run. Defaults to false so
             discovery drift and misspelled explicit project names fail closed.
+        receipt_path: When set, write a deterministic public-matrix receipt
+            (roster revision, profile, per-project floor/exit/timeout/coverage/
+            output-isolation) to this path after the run. Written even on
+            failure so the evidence is preserved for release review.
 
     Returns:
         ``0`` only when **every** per-project pytest exited cleanly **and**
@@ -399,6 +533,10 @@ def run_per_project_pytest(
             )
         )
 
+    output_digests_before: dict[str, str] = {}
+    if receipt_path is not None:
+        output_digests_before = {spec.project_name: _output_tree_digest(spec.project_root) for spec in specs}
+
     results = _execute_project_pytest_matrix(
         repo_root,
         specs,
@@ -438,6 +576,25 @@ def run_per_project_pytest(
     else:
         logger.error("Combined coverage gate failed (exit=%d)", cov_rc)
         overall_exit = overall_exit or cov_rc or 1
+
+    combined_pct: float | None = None
+    if cf_path.is_file():
+        imported_pct = _measure_coverage_percent(cf_path)
+        combined_pct = imported_pct
+    overall_exit = _write_public_matrix_receipt(
+        repo_root,
+        receipt_path,
+        specs=specs,
+        results=results,
+        output_digests_before=output_digests_before,
+        profile=profile,
+        marker_expr=resolved_markers,
+        project_workers=project_workers,
+        parallel=parallel,
+        combined_coverage_percent=combined_pct,
+        combined_floor=fail_under,
+        overall_exit=overall_exit,
+    )
 
     return 0 if overall_exit == 0 else 1
 

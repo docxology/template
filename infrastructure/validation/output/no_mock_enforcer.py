@@ -147,6 +147,24 @@ class SemanticStandInScanResult:
     errors: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class HandRolledFakeResult:
+    """Advisory inventory of hand-rolled fake, stub, and dummy classes in test files.
+
+    This is an advisory scan, not a blocking gate. The lexical mock-framework
+    gate (``scan_lexical_mock_policy``) catches real import-based mocks; this
+    heuristic complements it by flagging classes whose naming convention
+    suggests they are hand-rolled substitutes (``class FakeDB``,
+    ``class StubService``).  False positives are possible (a legitimate
+    ``FakeNewsClassifier`` used in production code discovered through a test
+    import) — hence advisory-only.
+    """
+
+    files_scanned: int
+    findings: tuple[str, ...]
+    errors: tuple[str, ...]
+
+
 def _import_violations(tree: ast.AST) -> set[int]:
     """Return line numbers of static and dynamic mock-framework imports."""
     flagged: set[int] = set()
@@ -512,11 +530,61 @@ def validate_no_mocks(tests_dir: Path, repo_root: Path) -> list[str]:
     return list(result.violations)
 
 
+def scan_hand_rolled_fakes(
+    tests_dir: Path,
+    repo_root: Path,
+) -> HandRolledFakeResult:
+    """Scan a tests tree for hand-rolled fake/stub/dummy classes.
+
+    This heuristic looks for class definitions whose name matches common
+    hand-rolled substitution patterns (``class Fake*``, ``class Stub*``,
+    ``class Dummy*``).  Results are advisory — false positives are possible
+    when a class with a qualifying name is a real implementation that happens
+    to be discovered through a test import.
+
+    Returns:
+        HandRolledFakeResult with advisory findings, never blocks gates.
+    """
+    findings: list[str] = []
+    errors: list[str] = []
+    py_files = _iter_test_python_files(tests_dir)
+    _FAKE_PATTERNS = re.compile(r"\b(Fake|Stub|Dummy)[A-Z]", re.ASCII)
+
+    for py_file in py_files:
+        relative_path = _relative_path(py_file, repo_root)
+        try:
+            source = py_file.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            errors.append(f"{relative_path}: read error: {exc}")
+            continue
+        try:
+            tree = ast.parse(source, filename=str(py_file))
+        except SyntaxError as exc:
+            errors.append(f"{relative_path}:{exc.lineno or 0}: syntax error: {exc.msg}")
+            continue
+        raw_lines = source.splitlines()
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.ClassDef):
+                continue
+            if _FAKE_PATTERNS.search(node.name):
+                line = node.lineno
+                source_line = raw_lines[line - 1].strip() if 1 <= line <= len(raw_lines) else ""
+                findings.append(f"{relative_path}:{line}: {source_line}")
+
+    return HandRolledFakeResult(
+        files_scanned=len(py_files),
+        findings=tuple(sorted(findings)),
+        errors=tuple(sorted(errors)),
+    )
+
+
 __all__ = [
+    "HandRolledFakeResult",
     "LexicalMockScanResult",
     "SemanticStandInScanResult",
     "SemanticStandInUse",
     "StandInCategory",
+    "scan_hand_rolled_fakes",
     "scan_lexical_mock_policy",
     "scan_semantic_standins",
     "scan_test_roots",

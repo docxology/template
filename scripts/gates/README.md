@@ -11,7 +11,7 @@ Pipeline gate scripts for template.
 - `pip_audit_ignore_policy.py` — Requires accountable metadata on every dependency-audit exemption.
 - `plugin_export_check` — Verifies plugin exports
 - `methods_plan_check` — Validates source or rendered methods contracts for one project or all public exemplars. Source mode runs in unified health; rendered mode is an explicit publication gate.
-- `public_capabilities.py` — Audits structural completeness and classifies every discovered public-exemplar test skip.
+- `public_capabilities.py` — Emits the deterministic public-exemplar capability manifest and fails closed on roster/matrix, package/Python, source/test syntax, render, hydration, analysis, and skip-contract drift.
 - `check_private_project_promotion.py` — Candidate security scan and composite private-promotion gate, with the historical script entrypoint retained.
 
 ```bash

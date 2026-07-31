@@ -714,7 +714,7 @@ def stage_estimate(batch_id: str) -> dict[str, Any] | None:
     print(f"  Estimated input tokens: {int(est_input_tokens):,}")
     print(f"  Estimated output tokens: {int(est_output_tokens):,}")
     print(f"  Estimated cost: ${est_cost:.2f}")
-    print(f"\nNote: Actual costs may vary. Add 20-30% buffer for retries.")
+    print("\nNote: Actual costs may vary. Add 20-30% buffer for retries.")
 
     return estimate
 

@@ -159,11 +159,14 @@ class PipelineStageResult:
 class StageSpec(NamedTuple):
     """Specification for a single pipeline stage.
 
-    NamedTuple is intentional: callers unpack (name, func) positionally
-    and the pair is logically immutable once defined.
+    NamedTuple is intentional: the specification is logically immutable once
+    defined. ``key`` carries the stable machine-facing identity from
+    ``pipeline.yaml`` so orchestration does not have to infer lifecycle
+    boundaries from a user-facing stage name.
     """
 
     name: str
     func: Callable[[], bool]
     contract: StageContract = StageContract()
     hooks: StageHooks = StageHooks()
+    key: str | None = None

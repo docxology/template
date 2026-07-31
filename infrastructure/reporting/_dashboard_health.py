@@ -56,7 +56,7 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
 
         # Plot each project
         colors = ["#2E86AB", "#06A77D", "#F77F00", "#D62828", "#9B59B6", "#E74C3C"]
-        angles = np.linspace(0, 2 * np.pi, len(factors), endpoint=False).tolist()
+        angles = [float(a) for a in np.linspace(0, 2 * np.pi, len(factors), endpoint=False)]
         angles += angles[:1]  # Close the polygon
 
         for i, project in enumerate(projects):

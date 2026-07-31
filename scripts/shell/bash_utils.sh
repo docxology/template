@@ -504,8 +504,8 @@ check_uv() {
     return 1
 }
 
-# Ensure uv is installed — auto-installs via the official installer if missing.
-# Safe to call on headless servers; idempotent if uv already present.
+# Ensure uv is installed — auto-installs via a versioned official installer if
+# missing. Safe to call on headless servers; idempotent if uv already present.
 ensure_uv() {
     if check_uv; then
         log_info "uv $(uv --version 2>/dev/null) detected"
@@ -515,11 +515,13 @@ ensure_uv() {
     log_warning "uv not found — attempting automatic installation..."
     log_info "See: https://docs.astral.sh/uv/getting-started/installation/"
 
+    local uv_install_version="${UV_INSTALL_VERSION:-0.12.0}"
+    local installer_url="https://astral.sh/uv/${uv_install_version}/install.sh"
     local install_failed=0
     if command -v curl >/dev/null 2>&1; then
-        curl -LsSf https://astral.sh/uv/install.sh | sh || install_failed=1
+        curl -LsSf "$installer_url" | sh || install_failed=1
     elif command -v wget >/dev/null 2>&1; then
-        wget -qO- https://astral.sh/uv/install.sh | sh || install_failed=1
+        wget -qO- "$installer_url" | sh || install_failed=1
     else
         log_error "Cannot install uv: neither curl nor wget is available."
         log_info "Install curl (e.g. apt-get install -y curl) then re-run."

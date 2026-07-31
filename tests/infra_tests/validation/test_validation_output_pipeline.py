@@ -407,7 +407,7 @@ class TestExecuteValidationPipeline:
             captured["figure_issues"] = list(figure_issues)
             return real_generate_report(results, figure_issues, output_statistics, project, *args, **kwargs)
 
-        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=record_report)
+        assert mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=record_report) == 1
 
         assert ("Figure registry", False) in captured["results"]
         assert captured["figure_issues"] == ["Figure registry not found but 1 figure reference(s) found in manuscript"]

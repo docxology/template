@@ -17,6 +17,7 @@ from infrastructure.core.runtime._python_env import (  # noqa: F401
     get_python_command,
     get_subprocess_env,
     resolve_test_python,
+    validate_analysis_script_path,
     validate_interpreter,
 )
 
@@ -47,6 +48,7 @@ __all__ = [
     "get_python_command",
     "get_subprocess_env",
     "resolve_test_python",
+    "validate_analysis_script_path",
     "validate_interpreter",
     # _directories
     "setup_directories",

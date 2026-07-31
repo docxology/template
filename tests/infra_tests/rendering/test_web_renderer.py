@@ -170,13 +170,15 @@ class TestCombinedHtmlRendering:
         from infrastructure.rendering.web_renderer import WebRenderer
 
         # Create test markdown files
-        md1 = tmp_path / "01_intro.md"
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        md1 = manuscript_dir / "01_intro.md"
         md1.write_text("# Introduction\n\nThis is the introduction.")
 
-        md2 = tmp_path / "02_methods.md"
+        md2 = manuscript_dir / "02_methods.md"
         md2.write_text("# Methods\n\nThis describes the methods.")
 
-        md3 = tmp_path / "03_results.md"
+        md3 = manuscript_dir / "03_results.md"
         md3.write_text("# Results\n\n$E = mc^2$\n\nSome results here.")
 
         # Setup config
@@ -192,7 +194,7 @@ class TestCombinedHtmlRendering:
         renderer = WebRenderer(config)
         source_files = [md1, md2, md3]
 
-        result = renderer.render_combined(source_files, tmp_path, "test_project")
+        result = renderer.render_combined(source_files, manuscript_dir, "test_project")
 
         # Verify index.html was created
         assert result.name == "index.html"
@@ -217,10 +219,12 @@ class TestCombinedHtmlRendering:
         from infrastructure.rendering.core import RenderManager
 
         # Create test files
-        md1 = tmp_path / "a.md"
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        md1 = manuscript_dir / "a.md"
         md1.write_text("# Section A\n\nContent A.")
 
-        md2 = tmp_path / "b.md"
+        md2 = manuscript_dir / "b.md"
         md2.write_text("# Section B\n\nContent B.")
 
         # Setup config
@@ -231,7 +235,7 @@ class TestCombinedHtmlRendering:
         )
 
         manager = RenderManager(config)
-        result = manager.render_combined_web([md1, md2], tmp_path, "test")
+        result = manager.render_combined_web([md1, md2], manuscript_dir, "test")
 
         assert result.exists()
         assert result.name == "index.html"

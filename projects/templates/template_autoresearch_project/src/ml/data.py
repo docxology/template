@@ -211,8 +211,8 @@ def load_mnist_arrays(
         x_test = np.asarray(data["x_test"], dtype=np.float64)
         y_test = np.asarray(data["y_test"], dtype=np.int64)
     if config.normalization == "zero_one":
-        x_train = x_train / 255.0
-        x_test = x_test / 255.0
+        x_train = (x_train / 255.0).astype(np.float64)
+        x_test = (x_test / 255.0).astype(np.float64)
     elif config.normalization != "none":
         raise ValueError(f"unsupported normalization: {config.normalization}")
     _validate_mnist_shapes(x_train, y_train, x_test, y_test)

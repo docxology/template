@@ -19,6 +19,7 @@ from infrastructure.core.project_paths import find_repo_root
 from infrastructure.validation.output.no_mock_enforcer import (
     SemanticStandInUse,
     StandInCategory,
+    scan_hand_rolled_fakes,
     scan_lexical_mock_policy,
     scan_semantic_standins,
     scan_test_roots,
@@ -103,10 +104,11 @@ class StandInInventoryReport:
     uses: tuple[SemanticStandInUse, ...]
     errors: tuple[str, ...]
     fail_on_dependency_replacement: bool = False
+    hand_rolled_fakes: tuple[str, ...] = ()
 
     @property
     def counts(self) -> dict[str, int]:
-        """Return per-category stand-in counts plus a ``"total"`` entry."""
+        """Return per-category stand-in counts plus a "total" entry."""
         counts = {category.value: 0 for category in _CATEGORY_ORDER}
         for use in self.uses:
             counts[use.category.value] += 1
@@ -115,7 +117,7 @@ class StandInInventoryReport:
 
     @property
     def status(self) -> str:
-        """Return ``"scan_error"``, ``"fail"``/``"advisory_debt"`` (if replacement debt), or ``"clear"``."""
+        """Return "scan_error", "fail"/"advisory_debt" (if replacement debt), or "clear"."""
         if self.errors:
             return "scan_error"
         dependency_replacements = self.counts[StandInCategory.dependency_replacement.value]
@@ -125,7 +127,7 @@ class StandInInventoryReport:
 
     @property
     def exit_code(self) -> int:
-        """Return ``FAILURE`` (1) on scan errors or enforced failures, else ``SUCCESS`` (0)."""
+        """Return FAILURE (1) on scan errors or enforced failures, else SUCCESS (0)."""
         return FAILURE if self.status in {"scan_error", "fail"} else SUCCESS
 
     def to_dict(self) -> dict[str, Any]:
@@ -142,6 +144,7 @@ class StandInInventoryReport:
             },
             "counts": self.counts,
             "uses": [use.to_dict() for use in self.uses],
+            "hand_rolled_fakes": list(self.hand_rolled_fakes),
             "errors": list(self.errors),
         }
 
@@ -178,6 +181,7 @@ def collect_standin_inventory(
     roots = _repository_test_roots(repo_root)
     errors: list[str] = []
     uses: list[SemanticStandInUse] = []
+    hand_rolled_fakes: list[str] = []
     files_scanned = 0
     if not (repo_root / "tests").is_dir():
         errors.append(f"required tests directory not found: {repo_root / 'tests'}")
@@ -187,6 +191,9 @@ def collect_standin_inventory(
         files_scanned += result.files_scanned
         uses.extend(result.uses)
         errors.extend(result.errors)
+        fake_result = scan_hand_rolled_fakes(tests_dir, repo_root)
+        hand_rolled_fakes.extend(fake_result.findings)
+        errors.extend(fake_result.errors)
 
     return StandInInventoryReport(
         test_roots=tuple(_display_path(path, repo_root) for path in roots),
@@ -205,6 +212,7 @@ def collect_standin_inventory(
         ),
         errors=tuple(sorted(set(errors))),
         fail_on_dependency_replacement=fail_on_dependency_replacement,
+        hand_rolled_fakes=tuple(sorted(set(hand_rolled_fakes))),
     )
 
 
@@ -289,6 +297,14 @@ def _print_inventory_report(
     if details:
         for use in report.uses:
             print(f"{use.path}:{use.line}:{use.column}: {use.category.value}: {use.method}: {use.source}")
+    if report.hand_rolled_fakes:
+        print(f"ADVISORY hand-rolled fake/stub/dummy classes ({len(report.hand_rolled_fakes)}):")
+        for finding in report.hand_rolled_fakes:
+            print(f"  {finding}")
+        print(
+            "  These are advisory naming signals, not gate violations; review whether "
+            "each class substitutes a real dependency."
+        )
 
 
 def main(

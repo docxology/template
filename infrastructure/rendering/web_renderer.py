@@ -10,6 +10,7 @@ import yaml
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.security import subprocess_options
@@ -231,6 +232,12 @@ class WebRenderer:
             _tmp.unlink(missing_ok=True)
             raise
         logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
+        write_manuscript_composition(
+            output_dir.parents[1],
+            project_name,
+            source_files,
+            combined_md,
+        )
 
         # Build pandoc command for HTML conversion
         figures_dir = manuscript_dir.parent / "output" / "figures"

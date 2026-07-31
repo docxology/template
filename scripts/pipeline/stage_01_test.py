@@ -175,6 +175,17 @@ def main() -> int:
             "count (e.g. -n 6) over 'auto' to avoid wall-clock timeout flakiness."
         ),
     )
+    parser.add_argument(
+        "--receipt",
+        metavar="PATH",
+        default=None,
+        help=(
+            "When combined with --project-only --all-projects, write a "
+            "deterministic public-matrix receipt (roster revision, profile, "
+            "per-project floor/exit/timeout/coverage/output-isolation) to this "
+            "path after the run."
+        ),
+    )
     args = parser.parse_args()
 
     # Validate mutually exclusive flags
@@ -267,6 +278,7 @@ def main() -> int:
             include_bench=args.include_bench,
             project_workers=effective_project_workers,
             parallel=args.parallel,
+            receipt_path=args.receipt,
         )
         log_live_resource_usage("Test stage end", logger)
         return exit_code

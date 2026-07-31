@@ -1,0 +1,192 @@
+"""Deterministic public-matrix receipt for per-project release lanes.
+
+The receipt records, for one bounded public-matrix run:
+
+- roster revision (git HEAD commit)
+- command / profile used
+- per-project declared coverage floor
+- per-project exit status
+- per-project timeout status
+- per-project measured coverage percent
+- per-project output-isolation result (whether output/ tree was dirty after run)
+
+A paired validator checks negative controls: missing project results, timeouts,
+nonzero exits, coverage-floor failures, and test-generated output drift all
+cause deterministic rejection.
+
+Usage (produced by the runner):
+    receipt = build_public_matrix_receipt(
+        roster_revision=roster_revision,
+        profile="quick",
+        lanes=lane_results,
+        combined_coverage_percent=75.0,
+        combined_floor=75,
+    )
+    receipt.write(path)
+    read_back = PublicMatrixReceipt.read(path)
+    errors = read_back.validate(roster_names)
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Sequence
+
+
+@dataclass(frozen=True)
+class PublicMatrixLaneResult:
+    """Result for one project lane in a public-matrix run."""
+
+    project_name: str
+    declared_floor: int | None
+    exit_code: int
+    timed_out: bool
+    coverage_percent: float | None
+    output_isolation_ok: bool
+    duration_seconds: float = 0.0
+
+
+@dataclass(frozen=True)
+class PublicMatrixReceipt:
+    """Deterministic receipt for a single public-matrix execution.
+
+    ``roster_revision`` is the git commit SHA or ``"unknown"``.
+    ``profile`` is the test profile name (``"quick"``, ``"release"``, etc.).
+    ``marker_expression`` is the ``pytest -m`` expression, or ``None``.
+    ``worker_info`` describes the concurrency model used.
+    """
+
+    roster_revision: str
+    profile: str
+    marker_expression: str | None = None
+    worker_info: str = "serial"
+    generated_at: str = ""
+    lanes: tuple[PublicMatrixLaneResult, ...] = ()
+    combined_coverage_percent: float | None = None
+    combined_floor: int = 75
+    overall_exit: int = 0
+
+    def write(self, path: Path | str) -> Path:
+        """Write deterministic JSON (sorted keys, no extraneous whitespace).
+
+        ``generated_at`` is intentionally NOT part of the digest so the
+        receipt is reproducible byte-for-byte when re-run against the same
+        state.
+        """
+        path = Path(path) if isinstance(path, str) else path
+        data = self._to_dict()
+        content = json.dumps(data, indent=2, sort_keys=True, default=str) + "\n"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        return path
+
+    @classmethod
+    def read(cls, path: Path | str) -> PublicMatrixReceipt:
+        """Load a previously written receipt from disk."""
+        path = Path(path) if isinstance(path, str) else path
+        data = json.loads(path.read_text(encoding="utf-8"))
+        lanes = tuple(PublicMatrixLaneResult(**lane) for lane in data.pop("lanes", []))
+        return cls(lanes=lanes, **data)
+
+    def digest(self) -> str:
+        """Content-addressable SHA-256 of the receipt payload (excluding generated_at)."""
+        data = self._to_dict()
+        data.pop("generated_at", None)
+        raw = json.dumps(data, sort_keys=True, default=str).encode("utf-8")
+        return hashlib.sha256(raw).hexdigest()
+
+    def validate(self, roster: Sequence[str]) -> list[str]:
+        """Negative-control validation.
+
+        Returns a list of error strings. An empty list means the receipt
+        is valid.
+
+        Checks:
+        1. Every name in *roster* has a lane result (missing-project failure).
+        2. No lane has timed_out=True.
+        3. No lane with exit_code != 0 (unless accounted for).
+        4. No lane has coverage_percent < declared_floor (coverage-floor failure).
+        5. No lane changed its project's output tree (output-isolation failure).
+        """
+        errors: list[str] = []
+        lane_names = {lane.project_name for lane in self.lanes}
+
+        # Negative control 1: missing project result
+        for name in roster:
+            if name not in lane_names:
+                errors.append(f"MISSING-PROJECT: roster entry '{name}' has no lane result")
+
+        # Negative control 2: lane errors
+        for lane in self.lanes:
+            if lane.timed_out:
+                errors.append(f"TIMEOUT: project '{lane.project_name}' timed out")
+            if lane.exit_code != 0:
+                errors.append(f"EXIT-STATUS: project '{lane.project_name}' exit={lane.exit_code}")
+            if not lane.output_isolation_ok:
+                errors.append(f"OUTPUT-ISOLATION: project '{lane.project_name}' changed output/")
+
+            # Negative control 4: coverage-floor failure
+            if (
+                lane.declared_floor is not None
+                and lane.coverage_percent is not None
+                and lane.coverage_percent < lane.declared_floor
+            ):
+                errors.append(
+                    f"COVERAGE-FLOOR: project '{lane.project_name}' "
+                    f"measured {lane.coverage_percent:.2f}% < "
+                    f"declared floor {lane.declared_floor}%"
+                )
+
+        return errors
+
+    def _to_dict(self) -> dict:
+        """Deterministic dict for serialization (sorted lanes)."""
+        raw = asdict(self)
+        raw["lanes"] = sorted(raw["lanes"], key=lambda l: l["project_name"])
+        return raw
+
+
+def determine_worker_info(
+    project_workers: str | int | None,
+    parallel: str | int | None,
+) -> str:
+    """Describe the outer / inner concurrency model for the receipt."""
+    outer = str(project_workers) if project_workers else "serial"
+    inner = str(parallel) if parallel else "none"
+    return f"outer={outer}, inner={inner}"
+
+
+def build_public_matrix_receipt(
+    *,
+    roster_revision: str,
+    profile: str = "quick",
+    marker_expression: str | None = None,
+    worker_info: str = "serial",
+    lanes: Sequence[PublicMatrixLaneResult],
+    combined_coverage_percent: float | None = None,
+    combined_floor: int = 75,
+    overall_exit: int = 0,
+) -> PublicMatrixReceipt:
+    """Factory that builds a sorted-lane receipt from per-project results."""
+    return PublicMatrixReceipt(
+        roster_revision=roster_revision,
+        profile=profile,
+        marker_expression=marker_expression,
+        worker_info=worker_info,
+        generated_at="",
+        lanes=tuple(lanes),
+        combined_coverage_percent=combined_coverage_percent,
+        combined_floor=combined_floor,
+        overall_exit=overall_exit,
+    )
+
+
+__all__ = [
+    "PublicMatrixLaneResult",
+    "PublicMatrixReceipt",
+    "build_public_matrix_receipt",
+    "determine_worker_info",
+]

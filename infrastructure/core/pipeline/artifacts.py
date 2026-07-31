@@ -36,6 +36,7 @@ _IGNORED_OUTPUT_FILENAMES = frozenset(
         "evidence_registry.json",
         "output_statistics.json",
         "output_statistics.txt",
+        "rendered_provenance.json",
         "snapshot_compare.json",
         "snapshot_compare.md",
         "validation_report.json",
@@ -213,18 +214,10 @@ def aggregate_artifact_manifests(output_dir: Path) -> ArtifactManifest:
     return aggregate
 
 
-def snapshot_current_artifact_manifest(output_dir: Path) -> ArtifactManifest:
-    """Write an integrity baseline for the output tree's current stable files.
-
-    This explicit maintenance operation is useful after a targeted render and
-    validation run that did not execute through :class:`PipelineExecutor`.
-    Historical per-stage manifests remain untouched; the aggregate report is a
-    clearly labelled current-output snapshot rather than invented stage
-    provenance.
-    """
+def collect_current_artifact_manifest(output_dir: Path) -> ArtifactManifest:
+    """Collect the complete stable, shippable output tree without writing it."""
     if output_dir.is_symlink():
-        raise ValueError(f"refusing to snapshot through symlink output directory: {output_dir}")
-    sanitize_machine_local_paths(output_dir)
+        raise ValueError(f"refusing to collect through symlink output directory: {output_dir}")
     project_dir = output_dir.parent
     entries: list[ArtifactManifestEntry] = []
     issues: list[str] = []
@@ -249,7 +242,22 @@ def snapshot_current_artifact_manifest(output_dir: Path) -> ArtifactManifest:
                     contract_match=True,
                 )
             )
-    manifest = ArtifactManifest(entries=tuple(entries), issues=tuple(dict.fromkeys(issues)))
+    return ArtifactManifest(entries=tuple(entries), issues=tuple(dict.fromkeys(issues)))
+
+
+def snapshot_current_artifact_manifest(output_dir: Path) -> ArtifactManifest:
+    """Write an integrity baseline for the output tree's current stable files.
+
+    This explicit maintenance operation is useful after a targeted render and
+    validation run that did not execute through :class:`PipelineExecutor`.
+    Historical per-stage manifests remain untouched; the aggregate report is a
+    clearly labelled current-output snapshot rather than invented stage
+    provenance.
+    """
+    if output_dir.is_symlink():
+        raise ValueError(f"refusing to snapshot through symlink output directory: {output_dir}")
+    sanitize_machine_local_paths(output_dir)
+    manifest = collect_current_artifact_manifest(output_dir)
     report_path = output_dir / "reports" / "artifact_manifest.json"
     symlink_component = _first_symlink_component(output_dir, report_path)
     if symlink_component is not None:
@@ -468,6 +476,12 @@ def git_ignored_paths(paths: "Sequence[Path]", project_dir: Path) -> frozenset[P
 
 def _is_ignored_output(path: Path, output_dir: Path) -> bool:
     rel_parts = path.relative_to(output_dir).parts
+    # Dotfiles under output are local caches, atomic-write leftovers, or
+    # workspace markers rather than publication evidence. In particular,
+    # figure writers use hidden temporary files while normalizing PNGs; a
+    # killed render must not turn that transient file into a manifest entry.
+    if path.name.startswith("."):
+        return True
     if path.name == "fulltext_inventory.json":
         return path.name in _IGNORED_OUTPUT_FILENAMES or path.suffix in _IGNORED_OUTPUT_SUFFIXES
     return (
@@ -480,7 +494,8 @@ def _is_ignored_output(path: Path, output_dir: Path) -> bool:
 def _is_ignored_manifest_path(raw_path: str) -> bool:
     path = Path(raw_path)
     return (
-        any(part in _IGNORED_OUTPUT_PARTS for part in path.parts)
+        path.name.startswith(".")
+        or any(part in _IGNORED_OUTPUT_PARTS for part in path.parts)
         or path.name in _IGNORED_OUTPUT_FILENAMES
         or path.suffix in _IGNORED_OUTPUT_SUFFIXES
     )

@@ -94,12 +94,13 @@ def build_citation_cff(
     if resolved_repo_url:
         citation["repository-code"] = resolved_repo_url
 
-    return yaml.safe_dump(
+    result: str = yaml.safe_dump(
         citation,
         sort_keys=True,
         allow_unicode=True,
         default_flow_style=False,
     )
+    return result
 
 
 def build_codemeta(

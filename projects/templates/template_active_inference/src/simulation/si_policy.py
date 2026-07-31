@@ -61,9 +61,9 @@ def _expected_utility_fallback(
         raise ValueError("fallback expected-utility scores must be finite")
     score_arr = np.clip(score_arr, 0.0, None)
     if float(score_arr.sum()) <= 0:
-        policy_dist = np.full(transition.shape[2], 1.0 / transition.shape[2])
+        policy_dist = np.full(transition.shape[2], 1.0 / transition.shape[2], dtype=np.float64)
     else:
-        policy_dist = score_arr / float(score_arr.sum())
+        policy_dist = (score_arr / float(score_arr.sum())).reshape(-1).astype(np.float64)
     q_pi_entropy = float(-np.sum([p * np.log(p) for p in policy_dist if p > 0]))
     action = int(np.argmax(policy_dist))
     return (
