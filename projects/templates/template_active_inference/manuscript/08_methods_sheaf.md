@@ -487,7 +487,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Dependency edges ok | `True` |
 | Track scope complete | `True` |
 | Empirical adapter blocked | `True` |
-| Provenance bundles complete | `False` |
+| Provenance bundles complete | `True` |
 | Replay rows matched | `True` |
 | Sensitivity complete | `True` |
 | Uncertainty normalized | `True` |

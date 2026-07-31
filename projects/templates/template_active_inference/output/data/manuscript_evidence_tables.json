@@ -1,5 +1,5 @@
 {
-  "all_source_backed": false,
+  "all_source_backed": true,
   "schema": "template_active_inference.manuscript_evidence_tables.v1",
   "table_count": 23,
   "tables": [
@@ -15,7 +15,7 @@
     },
     {
       "id": "artifact_provenance",
-      "row_count": 34,
+      "row_count": 85,
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "id": "artifact_diffoscope",
-      "row_count": 0,
+      "row_count": 41,
       "source": "output/reports/artifact_diffoscope.json"
     },
     {
@@ -70,7 +70,7 @@
     },
     {
       "id": "artifact_license",
-      "row_count": 0,
+      "row_count": 85,
       "source": "output/reports/artifact_license_audit.json"
     },
     {

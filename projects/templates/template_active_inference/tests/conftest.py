@@ -1,4 +1,13 @@
-"""Shared fixtures for template_active_inference tests."""
+"""Shared fixtures for template_active_inference tests.
+
+Gate-negative-control overhead (cold gate ~250s) is the single largest
+wall-time cost. Use the fast dev loop to skip it entirely:
+
+    uv run bash scripts/run_ai_direct_fast.sh
+
+That runs only the test_*_direct.py family (105+ tests, ~25-40s).
+The full suite (777 tests, ~280-600s) only needs to run before release.
+"""
 
 from __future__ import annotations
 
