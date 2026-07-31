@@ -9,11 +9,57 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rendered provenance and secure atomic writes (2026-07-31)
+
+- Added deterministic rendered-provenance receipt system: snapshots capture
+  stage/source/config/output SHA-256 fingerprints across all tracked files,
+  with symlink-confined tree walking and Git-index cache filtering. Receipts
+  bind committed validation reports to exact source, config, and output trees.
+- Added `atomic_write_text_confined()` in `infrastructure/core/files/secure_write.py`:
+  TOCTOU-safe writes using held O_NOFOLLOW directory descriptors, directory-identity
+  checks before rename, and cleanup of abandoned temporaries. Wired into the
+  rendered-provenance path and the validation-report writer.
+- Added `infrastructure/rendering/manuscript_composition.py`: render-boundary
+  evidence recording ordered manuscript input digest chains. Combined-path,
+  ordered-inputs, and binding digests provide cryptographic continuity from
+  source to rendered manuscript.
+- Added `infrastructure/validation/rendered_snapshot.py` (548 lines): walks
+  implementation roots, project source, config, and output trees with
+  `O_NOFOLLOW` confinement; validates artifact manifests against current output;
+  validates manuscript composition evidence against current render inputs.
+- Added `infrastructure/validation/publication/rendered_provenance.py`:
+  builds, writes, and validates RenderedProvenanceReceipts bound to committed
+  validation reports. `validate_rendered_provenance()` compares the current
+  snapshot against a committed receipt; wired into `audit.py` as
+  `check_rendered_provenance()`.
+- Updated `infrastructure/validation/output/pipeline.py`: validation reports
+  can now bind rendered inputs (`validated_inputs`) and use confined atomic
+  writes when `bind_rendered_inputs=True`.
+- Updated `PipelineExecutor`: artifact manifest is sealed immediately before
+  Stage 04 validation to prevent post-commitment re-aggregation; resume
+  correctly restores the sealed state.
+- Added `scripts/maintenance/refresh_rendered_provenance.py` to regenerate
+  receipts for all public exemplars.
+- Added 32 rendered-provenance tests, 47 artifact-finalization/web-renderer
+  tests — all pass.
+- This closes `RENDERED-PROVENANCE-1`.
+
+- Added a deterministic, versioned capability manifest with one independently
+  probed row for each of the 24 canonical exemplars and an exact 48-lane
+  project/Python CI product derived from the same roster.
+- Bound normalized distribution identity, unique package names, full Python
+  3.10.x/3.12.x compatibility, confined compilable hydration entrypoints,
+  resolved render formats, analysis entrypoints, and reasoned skip contracts.
+- Bound `uv` to each CI matrix interpreter and added runtime minor assertions,
+  so the repository-level `.python-version` cannot silently collapse a
+  cross-version lane onto Python 3.12.
+
 ### Public-matrix isolation and active-inference coverage (2026-07-31)
 
 - Made receipt-bearing public-matrix runs fail when a project test changes its
-  real `output/` tree, with a subprocess negative control and byte-preserving
-  no-mock fixtures for the four exemplars that exercise generators in place.
+  real `output/` tree, with immediate and post-pytest detached-subprocess
+  negative controls plus byte-preserving no-mock fixtures for the four
+  exemplars that exercise generators in place.
 - Hardened active-inference figure writes against interrupted atomic saves,
   excluded transient hidden files from live artifact scans, and added direct
   sheaf-track and figure-I/O coverage above the declared 90% project floor.
@@ -27,7 +73,8 @@ not to the contents of any specific workspace.
   hide a credential or create a false finding.
 - Wired the value-redacting scanner into pre-commit and manual hooks while
   retaining the full tracked-blob pre-push defense; real-Git negative controls
-  cover both partial-staging directions and all supported index states.
+  cover both partial-staging directions, local gitlinks, unreadable blobs, and
+  all supported blob index states.
 - Removed the accidentally tracked active-inference fingerprint cache now
   rejected by the generated/local-artifact hook.
 

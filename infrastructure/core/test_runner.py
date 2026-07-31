@@ -331,7 +331,7 @@ def _write_public_matrix_receipt(
     *,
     specs: Sequence[ProjectPytestSpec],
     results: Sequence[ProjectPytestResult],
-    output_isolation: dict[str, bool],
+    output_digests_before: dict[str, str],
     profile: str,
     marker_expr: str | None,
     project_workers: str | int | None,
@@ -339,14 +339,30 @@ def _write_public_matrix_receipt(
     combined_coverage_percent: float | None,
     combined_floor: int,
     overall_exit: int,
-) -> None:
-    """Write the deterministic public-matrix receipt when a path is requested."""
+) -> int:
+    """Finalize output isolation and write a requested public-matrix receipt."""
     if receipt_path is None:
-        return
-    lanes = []
+        return overall_exit
+
+    lane_context: list[tuple[ProjectPytestResult, ProjectPytestSpec, float | None]] = []
     for result in results:
         spec = next(s for s in specs if s.index == result.index)
         coverage_percent = _measure_coverage_percent(result.coverage_file)
+        lane_context.append((result, spec, coverage_percent))
+
+    output_isolation: dict[int, bool] = {}
+    for spec in specs:
+        before = output_digests_before[spec.project_name]
+        output_isolation[spec.index] = before == _output_tree_digest(spec.project_root)
+        if not output_isolation[spec.index]:
+            logger.error(
+                "Project '%s' changed its output/ tree during the public-matrix run",
+                spec.project_name,
+            )
+            overall_exit = 1
+
+    lanes = []
+    for result, spec, coverage_percent in lane_context:
         lanes.append(
             PublicMatrixLaneResult(
                 project_name=result.project_name,
@@ -354,7 +370,7 @@ def _write_public_matrix_receipt(
                 exit_code=result.exit_code,
                 timed_out=result.timed_out,
                 coverage_percent=coverage_percent,
-                output_isolation_ok=output_isolation[result.project_name],
+                output_isolation_ok=output_isolation[spec.index],
             )
         )
     receipt = build_public_matrix_receipt(
@@ -369,6 +385,7 @@ def _write_public_matrix_receipt(
     )
     receipt.write(receipt_path)
     log_substep(f"Public-matrix receipt written: {receipt_path}", logger)
+    return overall_exit
 
 
 def run_per_project_pytest(
@@ -549,18 +566,6 @@ def run_per_project_pytest(
             )
             overall_exit = 1
 
-    output_isolation: dict[str, bool] = {}
-    if receipt_path is not None:
-        for spec in specs:
-            before = output_digests_before[spec.project_name]
-            output_isolation[spec.project_name] = before == _output_tree_digest(spec.project_root)
-            if not output_isolation[spec.project_name]:
-                logger.error(
-                    "Project '%s' changed its output/ tree during tests",
-                    spec.project_name,
-                )
-                overall_exit = 1
-
     combine_rc = _combine_project_coverage(repo_root, cf_path, project_coverage_files, base_env)
     if combine_rc != 0:
         overall_exit = overall_exit or combine_rc
@@ -576,12 +581,12 @@ def run_per_project_pytest(
     if cf_path.is_file():
         imported_pct = _measure_coverage_percent(cf_path)
         combined_pct = imported_pct
-    _write_public_matrix_receipt(
+    overall_exit = _write_public_matrix_receipt(
         repo_root,
         receipt_path,
         specs=specs,
         results=results,
-        output_isolation=output_isolation,
+        output_digests_before=output_digests_before,
         profile=profile,
         marker_expr=resolved_markers,
         project_workers=project_workers,

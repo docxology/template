@@ -522,7 +522,7 @@ the numbering system and slug rules are authoritative in
 ## 📊 Testing
 
 TDD with strict coverage gates: **infrastructure ≥ 60 %**, **projects ≥ 90 %**.
-No mocks — tests use real data, real files, `pytest-httpserver` for HTTP. The
+No unit-level mock frameworks — tests use real data, real files; HTTP boundaries use `pytest-httpserver` (in-process test server). The
 project pipeline runs a focused `pipeline-smoke` infrastructure contract plus
 the selected project's full coverage suite, so ordinary renders do not rerun
 the entire repository test matrix. Run the full infrastructure gate explicitly

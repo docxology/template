@@ -520,7 +520,7 @@ if __name__ == "__main__":
     print(f"Total tokens : {report['total_tokens']}")
     print(f"Utilization  : {report['utilization']:.1%}")
     print(f"Status       : {report['status']}")
-    print(f"\nBreakdown by section:")
+    print("\nBreakdown by section:")
     for section, tokens in report["by_section"].items():
         print(f"  {section:20s} : {tokens:,} tokens")
 
@@ -528,6 +528,6 @@ if __name__ == "__main__":
     if validation["valid"]:
         print("\nValidation   : PASSED")
     else:
-        print(f"\nValidation   : FAILED")
+        print("\nValidation   : FAILED")
         for issue in validation["issues"]:
             print(f"  - {issue}")

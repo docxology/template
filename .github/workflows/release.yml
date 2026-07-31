@@ -23,7 +23,7 @@ jobs:
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 120
     steps:
       - name: Determine tag name
         id: tag
@@ -65,6 +65,15 @@ jobs:
         env:
           TAG: ${{ steps.tag.outputs.name }}
         run: uv run python -m infrastructure.publishing.root_release_contract --tag "$TAG"
+
+      - name: Verify public capability manifest
+        run: uv run python scripts/gates/public_capabilities.py
+
+      - name: Clean-export and import public exemplars
+        run: uv run python scripts/gates/exemplar_export_smoke.py
+
+      - name: Verify rendered public exemplars
+        run: uv run python -m infrastructure.validation.cli publication-audit --all-public --strict --rendered --format json
 
       - name: Build and validate Python distributions
         run: |

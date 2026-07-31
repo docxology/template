@@ -13,7 +13,7 @@ Note: This is pseudocode demonstrating architectural patterns.
 Adapt for your specific infrastructure (Modal, Fly.io, etc.).
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Optional, Callable, Any
 from enum import Enum

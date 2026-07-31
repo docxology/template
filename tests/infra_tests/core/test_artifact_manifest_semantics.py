@@ -55,12 +55,14 @@ def test_validation_self_reports_are_not_attested_recursively(tmp_path: Path) ->
     report = project / "output" / "reports" / "validation_report.json"
     diagnostics = project / "output" / "reports" / "diagnostics.json"
     readiness = project / "output" / "reports" / "autoresearch_readiness.json"
+    rendered_provenance = project / "output" / "reports" / "rendered_provenance.json"
     data.parent.mkdir(parents=True)
     report.parent.mkdir(parents=True)
     data.write_text('{"result": 1}\n', encoding="utf-8")
     report.write_text('{"summary": {"all_passed": true}}\n', encoding="utf-8")
     diagnostics.write_text('{"events": []}\n', encoding="utf-8")
     readiness.write_text('{"valid": true}\n', encoding="utf-8")
+    rendered_provenance.write_text('{"schema_version": "receipt"}\n', encoding="utf-8")
 
     write_stage_artifact_manifest(
         repo_root=repo_root,

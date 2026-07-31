@@ -83,6 +83,8 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         from infrastructure.core.pipeline.incremental import HashManifest
 
         self._incremental_manifest: HashManifest | None = None
+        self._artifact_manifest_sealed = False
+        self._artifact_manifest_boundary_names: frozenset[str] = frozenset()
 
     def _setup_log_file_handler(self) -> None:
         """Set up or recreate the log file handler.
@@ -192,7 +194,9 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         dag.filter_tags(exclude=exclude_tags)
 
         self._merge_plugin_stages_into_dag(dag)
-        return dag.to_stage_specs(self)
+        specs = dag.to_stage_specs(self)
+        self._artifact_manifest_boundary_names = frozenset(spec.name for spec in specs if spec.key == "validate")
+        return specs
 
     def preview_stage_names(self, *, include_llm: bool, skip_clean: bool | None = None) -> tuple[str, ...]:
         """Return the exact filtered project/plugin execution order without running it."""
@@ -261,6 +265,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         feature disabled (the default) this path is never entered and behavior is
         byte-identical to before.
         """
+        self._prepare_artifact_manifest_for_stage(stage_spec, results)
         skipped = self._maybe_skip_stage_incremental(stage_num, stage_spec)
         if skipped is not None:
             results.append(skipped)
@@ -278,7 +283,8 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             logger.error(PIPELINE_STAGE_FAILED.format(stage_num=stage_num, stage_name=stage_spec.name))
         elif result.stage_completed:
             self._record_incremental_hash(stage_spec)
-            self._write_artifact_manifest(stage_num, stage_spec)
+            if not self._artifact_manifest_sealed:
+                self._write_artifact_manifest(stage_num, stage_spec)
             self._write_snapshot(stage_num, stage_spec)
             self._save_checkpoint(pipeline_start, stage_num, results)
         return result
@@ -350,6 +356,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
     def _execute_pipeline(self, stages: list[StageSpec]) -> list[PipelineStageResult]:
         """Execute pipeline stages."""
         self._current_stage_count = len(stages)
+        self._artifact_manifest_sealed = False
         results: list[PipelineStageResult] = []
         pipeline_start = time.time()
         self._load_incremental_manifest()
@@ -412,6 +419,44 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             aggregate_artifact_manifests(self.config.project_dir / "output")
         except (OSError, ValueError) as exc:
             logger.warning(f"Failed to write artifact manifest: {exc}")
+
+    def _prepare_artifact_manifest_for_stage(
+        self,
+        stage_spec: StageSpec,
+        results: list[PipelineStageResult],
+    ) -> None:
+        """Seal the aggregate immediately before canonical output validation.
+
+        Stage 04 binds its validation report and rendered-provenance receipt to
+        the aggregate manifest inside the stage subprocess. Re-aggregating
+        afterward would replace stage metadata and invalidate that commitment.
+        Once validation is reached, later runtime-only stages therefore keep
+        writing snapshots/checkpoints but never rewrite the aggregate.
+
+        The completed-result check restores the same sealed state when a run is
+        resumed after validation.
+        """
+        if self._artifact_manifest_sealed:
+            return
+        crossed_boundary = any(
+            result.success and result.stage_completed and result.stage_name in self._artifact_manifest_boundary_names
+            for result in results
+        )
+        if crossed_boundary:
+            self._artifact_manifest_sealed = True
+            return
+        if stage_spec.key != "validate":
+            return
+
+        # Seal first: a failed aggregate refresh must not fall through to a
+        # post-validation rewrite of an older manifest.
+        self._artifact_manifest_sealed = True
+        try:
+            from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests
+
+            aggregate_artifact_manifests(self.config.project_dir / "output")
+        except (OSError, ValueError) as exc:
+            logger.warning(f"Failed to finalize artifact manifest before validation: {exc}")
 
     def _write_snapshot(self, stage_num: int, stage_spec: StageSpec) -> None:
         """Persist a stage output snapshot."""

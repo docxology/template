@@ -149,6 +149,8 @@ _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS = (
     b"should_never_be_sent",
     b"secret_material_must_not_be_logged",
 )
+_STAGED_BLOB_MODES = frozenset({b"100644", b"100755", b"120000"})
+_STAGED_GITLINK_MODE = b"160000"
 
 
 def is_public_template_output_path(path: str) -> bool:
@@ -425,9 +427,11 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
     """Return high-confidence secret findings from staged index blobs.
 
     Added, copied, modified, and renamed post-image paths come from
-    ``git diff --cached --diff-filter=ACMR``. Each file is then read from the
-    index with ``git cat-file blob :path`` so partially staged worktree edits
-    cannot hide a credential or create a false finding. Findings use the same
+    ``git diff --cached --diff-filter=ACMR``. Stage-zero index metadata
+    identifies regular-file and symlink blobs, which are read by object ID so
+    partially staged worktree edits cannot hide a credential or create a false
+    finding. Verified gitlinks are skipped; unknown modes, unresolved index
+    stages, and unreadable blobs fail closed. Findings use the same
     ``path:line:kind`` format as :func:`tracked_secret_findings`.
 
     Binary files are skipped (NUL byte in the first 4096 bytes), matching the
@@ -450,13 +454,39 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
         check=True,
         capture_output=True,
     )
+    index_proc = subprocess.run(
+        ["git", "ls-files", "--stage", "-z"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    index_entries: dict[bytes, list[tuple[bytes, bytes, bytes]]] = {}
+    for row in index_proc.stdout.split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, indexed_path = row.split(b"\t", 1)
+            mode, object_id, stage = metadata.split(b" ", 2)
+        except ValueError as exc:
+            raise RuntimeError("malformed staged index metadata") from exc
+        index_entries.setdefault(indexed_path, []).append((mode, object_id, stage))
+
     findings: list[str] = []
     for raw_path in proc.stdout.split(b"\0"):
         if not raw_path:
             continue
+        entries = index_entries.get(raw_path, [])
+        if len(entries) != 1 or entries[0][2] != b"0":
+            raise RuntimeError("staged diff path has no unique stage-zero index entry")
+        mode, object_id, _stage = entries[0]
+        if mode == _STAGED_GITLINK_MODE:
+            continue
+        if mode not in _STAGED_BLOB_MODES:
+            raise RuntimeError(f"unsupported staged index mode: {mode.decode('ascii', errors='replace')}")
+
         path = raw_path.decode("utf-8", errors="surrogateescape")
         blob = subprocess.run(
-            ["git", "cat-file", "blob", f":{path}"],
+            ["git", "cat-file", "blob", object_id.decode("ascii")],
             cwd=repo_root,
             check=True,
             capture_output=True,

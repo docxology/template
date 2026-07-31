@@ -43,6 +43,9 @@ dependencies = [
   # benchmarking and figure generation — not optional for projects using this template
   "numpy>=1.22",
   "pyyaml>=6.0",
+  # Publication placeholder audits need CommonMark block source maps so only
+  # actual code blocks are excluded from fail-closed rendered-text scanning.
+  "markdown-it-py>=4.0.0",
   # tomllib was added to the stdlib in Python 3.11; backport for 3.10.
   "tomli>=2.0; python_version < '3.11'",
   # typing.NotRequired / datetime.UTC added in Python 3.11; backport for 3.10.
@@ -366,6 +369,7 @@ ignore = [
 "infrastructure/scientific/templates.py" = ["E501"]
 "infrastructure/validation/content/*.py" = ["E501"]
 "projects/*/src/**" = ["E501"]
+".agents/skills/**/*.py" = ["E501", "F841"]
 
 # ============================================================================
 # mypy Type Checking Configuration (v2.7.0)

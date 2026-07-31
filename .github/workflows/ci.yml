@@ -59,21 +59,19 @@ jobs:
             echo "fep_lean=false" >> "$GITHUB_OUTPUT"
           fi
 
-  # Derive the public-exemplar matrix for `test-project` from the canonical
-  # roster (`infrastructure.project.public_scope`) instead of a hard-coded list,
-  # so adding/retiring an exemplar under projects/templates/ extends or trims the
-  # matrix automatically (CI-MATRIX-DYNAMIC-1). The `project-names-json` command
-  # emits a one-line JSON array which `test-project` consumes via
-  # `fromJSON(needs.detect-projects.outputs.projects)`. No network calls — pure
-  # local filesystem discovery.
+  # Derive the complete project/Python matrix from the validated, versioned
+  # public-capability manifest. One source now owns the exact public roster and
+  # supported CI Python versions; malformed metadata, incompatible Python
+  # floors, or declaration drift fails before any matrix cell starts
+  # (PUBLIC-CAPABILITY-PARITY-1). No project runtime is executed here.
   detect-projects:
-    name: Detect public exemplars
+    name: Detect public capability matrix
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
     outputs:
-      projects: ${{ steps.matrix.outputs.projects }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -82,12 +80,12 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
-      - name: Emit exemplar matrix
+      - name: Validate capabilities and emit CI matrix
         id: matrix
         run: |
           set -euo pipefail
-          projects="$(uv run python -m infrastructure.project.public_scope project-names-json)"
-          echo "projects=${projects}" >> "$GITHUB_OUTPUT"
+          matrix="$(uv run python scripts/gates/public_capabilities.py --ci-matrix-json)"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
 
   # ───────────────────────────────────────────────────────────────────────────
   # Job 0b — Actionlint (workflow syntax gate; independent of project setup)
@@ -294,6 +292,10 @@ jobs:
     needs: [verify-no-mocks]
     permissions:
       contents: read
+    env:
+      # Override the repository's .python-version so uv uses the interpreter
+      # selected by this matrix cell, including its moving patch release.
+      UV_PYTHON: ${{ matrix.python-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -314,6 +316,11 @@ jobs:
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group public-exemplars
+
+      - name: Verify selected Python minor
+        run: |
+          uv run python -c \
+            'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
 
       - name: Fix macOS socket.getfqdn timeout
         if: runner.os == 'macOS'
@@ -424,15 +431,16 @@ jobs:
     needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read
+    env:
+      # .python-version requests 3.12 by default; bind uv to this exact matrix
+      # minor so the capability contract covers the interpreter actually used.
+      UV_PYTHON: ${{ matrix.python-version }}
     strategy:
       fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.12"]
-        # Public-exemplar list is derived at runtime from the canonical roster
-        # (infrastructure.project.public_scope) by the detect-projects job, so
-        # adding/retiring an exemplar under projects/templates/ extends or trims
-        # this matrix without editing any literal here (CI-MATRIX-DYNAMIC-1).
-        project: ${{ fromJSON(needs.detect-projects.outputs.projects) }}
+      # The include list is the exact canonical project × Python product from
+      # `public_capabilities.py`; no project or Python literal is duplicated in
+      # workflow YAML.
+      matrix: ${{ fromJSON(needs.detect-projects.outputs.matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -445,6 +453,11 @@ jobs:
         # for every canonical public project, including scientific, literature,
         # PPTX, and monitoring dependencies.
         run: uv sync --group public-exemplars
+
+      - name: Verify selected Python minor
+        run: |
+          uv run python -c \
+            'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
 
       # scripts/pipeline/stage_01_test.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the

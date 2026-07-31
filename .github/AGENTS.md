@@ -63,7 +63,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `detect` | Detect optional projects | — | — | ubuntu (always) |
-| 2 | `detect-projects` | Detect public exemplars | — | — | ubuntu (always) |
+| 2 | `detect-projects` | Detect public capability matrix | — | manifest-owned 3.10 + 3.12 | ubuntu (always) |
 | 3 | `actionlint` | Actionlint | — | — | ubuntu (always) |
 | 4 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
 | 5 | `health` | Static Health Report | lint | 3.12 | ubuntu |
@@ -71,7 +71,7 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.13 | ubuntu (×3.10/3.11/3.12/3.13) + macOS (3.12 only) — 5 cells |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.12 | ubuntu |
-| 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | 3.10 + 3.12 | ubuntu only — one cell per live public exemplar × 2 Python versions; roster from `PUBLIC_PROJECT_NAMES` |
+| 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | capability-manifest versions | ubuntu only — exact project/Python include matrix from `public_capabilities.py` |
 | 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
 | 12 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
 | 13 | `security` | Security Scan | lint | 3.12 | ubuntu |
@@ -92,7 +92,16 @@ Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale 
 
 ### Release Workflow (`workflows/release.yml`)
 
-Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. It resolves the requested tag before checkout, checks out that exact ref, proves `HEAD` matches the dereferenced tag commit, runs the root release contract, and only then builds. The release uses `softprops/action-gh-release@v3.0.2`, writes a short git-log excerpt to `body_path`, and keeps **`generate_release_notes`** off so GitHub does not duplicate the body.
+Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. It resolves the
+requested tag before checkout, checks out that exact ref, proves `HEAD` matches
+the dereferenced tag commit, runs the root release contract, and then runs the
+fail-closed capability manifest, credential-free clean-export package/import
+smoke, and strict rendered publication audit across the canonical public
+roster. Those gates require valid source/package contracts, standalone imports,
+and current rendered co-snapshot receipts before distributions are built.
+The release uses `softprops/action-gh-release@v3.0.2`, writes a short git-log
+excerpt to `body_path`, and keeps **`generate_release_notes`** off so GitHub
+does not duplicate the body.
 
 ### Dependabot Automerge Workflow (`workflows/dependabot-automerge.yml`)
 
@@ -110,6 +119,7 @@ Triggered by `pull_request_target` on Dependabot PRs only (`github.actor == 'dep
 | Ruff format | zero diffs |
 | mypy strict gate | zero errors across the generated public source scope |
 | Mock-framework lexical gate | zero prohibited imports/calls (`--inventory` debt remains advisory) |
+| Public capability parity | exact public roster and CI matrix; unique normalized package identities; complete moving-patch Python series; parseable source/tests; compiled/confined direct hydration; reason-bearing skips |
 | Infrastructure coverage | ≥ 60% |
 | Project coverage (per-project standalone) | ≥ 90% |
 | Combined-union public-project gate (`DEFAULT_FAIL_UNDER`) | ≥ 75% via local `scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects` (CI `test-project` enforces per-exemplar 90% only) |
@@ -169,7 +179,7 @@ severity as the CI `security` job, so contributors hear it before CI does.
 Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
 
 - **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 5 cells: `ubuntu-latest × 3.10/3.11/3.12/3.13` plus `macos-latest × 3.12`.
-- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — one cell for each public exemplar from [`../docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (`templates/template_*`) on each of `py3.10` and `py3.12`, ubuntu-latest only.
+- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — one cell for every entry emitted by the validated capability manifest. Its current canonical versions are py3.10 and py3.12, ubuntu-latest only.
 
 Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
 

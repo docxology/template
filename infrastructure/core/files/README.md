@@ -6,6 +6,7 @@ File cleanup, inventory, and output-copying helpers for `infrastructure.core`.
 
 - `operations.py`
 - `serialization.py`
+- `secure_write.py`
 - `cleanup.py`
 - `cleanup_helpers.py`
 - `cleanup_root.py`
