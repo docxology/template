@@ -95,6 +95,8 @@ Runs daily. Issues → stale after 60 days, closed after 14 more. PRs → stale 
 Triggered by `v*.*.*` tag pushes or manual dispatch with a tag. It resolves the
 requested tag before checkout, checks out that exact ref, proves `HEAD` matches
 the dereferenced tag commit, runs the root release contract, and then runs the
+bounded pipeline-smoke infra test lane plus no-mocks gate on the tagged SHA
+(executable test evidence without the per-commit full matrix), the
 fail-closed capability manifest, credential-free clean-export package/import
 smoke, and strict rendered publication audit across the canonical public
 roster. Those gates require valid source/package contracts, standalone imports,

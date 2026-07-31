@@ -61,6 +61,18 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
 
+      - name: Verify core test contract on tagged SHA
+        run: |
+          set -euo pipefail
+          # Release gates must execute the real test contract on the exact
+          # tagged SHA, not merely static contracts. The bounded pipeline-smoke
+          # infra lane (the same contract project pipelines run) plus the
+          # no-mocks gate provide executable evidence without the 30-minute
+          # full matrix (which CI already runs per commit).
+          uv sync --group public-exemplars
+          uv run python scripts/audit/verify_no_mocks.py
+          uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
+
       - name: Verify root package release contract
         env:
           TAG: ${{ steps.tag.outputs.name }}

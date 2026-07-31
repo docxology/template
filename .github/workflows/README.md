@@ -107,8 +107,10 @@ Exempt labels: `pinned` · `security` · `in-progress` · `blocked` · `do-not-c
 Triggered on `v*.*.*` tag push or `workflow_dispatch`. The workflow resolves
 the tag before checkout, checks out that exact ref, proves `HEAD` matches the
 dereferenced tag commit, runs the root release contract, and requires
-the public capability manifest, clean exported-package install/import smoke,
-and `publication-audit --all-public --strict --rendered` before building. The
+the no-mocks gate plus the bounded pipeline-smoke infra test lane on the tagged
+SHA, the public capability manifest, clean exported-package install/import
+smoke, and `publication-audit --all-public --strict --rendered` before
+building. The
 source gates fail closed on package/Python, source/test syntax, hydration, and
 standalone import drift; the rendered gate verifies each exemplar's
 deterministic source/config/output and manuscript-consumption receipt. It

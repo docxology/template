@@ -106,7 +106,7 @@ behaviorally equivalent to the dedicated documentation job.
 #### 1. Lint & Type Check (`lint`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`
+- **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`, `uv run python scripts/audit/check_template_drift.py --strict`
 - **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
 #### 2. Static Health Report (`health`)
@@ -146,7 +146,7 @@ behaviorally equivalent to the dedicated documentation job.
 - **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
 - **Sync:** `uv sync --group public-exemplars`.
 - **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
-- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job.
+- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job. A separate "Assert regression tier is not empty" step fails the job when fewer than 3 tests collect, so the claim-binding pins cannot silently vanish behind the tolerance.
 
 #### 5. Project Tests (`test-project`)
 
@@ -245,12 +245,13 @@ Triggers on `v*.*.*` tag push or `workflow_dispatch` (with tag input).
 
 1. Resolves the requested tag before checkout and checks out that exact ref
 2. Proves `HEAD` equals the dereferenced tag commit and runs the root release contract
-3. Runs the fail-closed public capability manifest
-4. Clean-exports, installs, and import-smokes every canonical public exemplar without credentials
-5. Runs the strict rendered publication audit across every canonical public exemplar before building
-6. Generates a commit-based changelog excerpt since the previous tag
-7. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
-8. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
+3. Runs the bounded pipeline-smoke infrastructure test lane + no-mocks gate on the tagged SHA (executable test evidence, without the per-commit full matrix)
+4. Runs the fail-closed public capability manifest
+5. Clean-exports, installs, and import-smokes every canonical public exemplar without credentials
+6. Runs the strict rendered publication audit across every canonical public exemplar before building
+7. Generates a commit-based changelog excerpt since the previous tag
+8. Creates a GitHub Release using `softprops/action-gh-release@v3.0.2` with **`generate_release_notes: false`** so the body is the git-log excerpt only (no duplicate auto-generated section)
+9. Auto-marks as pre-release if tag contains `-rc`, `-beta`, or `-alpha`
 
 Current pinned GitHub Actions use the Node 20 action runtime. GitHub-hosted runners satisfy this; self-hosted runners must be Actions runner `v2.327.1` or newer.
 

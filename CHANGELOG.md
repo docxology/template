@@ -9,6 +9,20 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Release gate hardening (2026-07-31)
+
+- Release workflow now executes a bounded test contract on the exact tagged
+  SHA before publishing: the no-mocks gate plus the pipeline-smoke
+  infrastructure lane (`stage_01_test.py --infra-only --infra-scope
+  pipeline-smoke`), so a release can no longer be cut while its commit's real
+  test suite is red.
+- CI lint job now runs the strict template-drift gate
+  (`check_template_drift.py --strict`) as a named, early failure rather than
+  relying on pre-commit hooks alone.
+- Regression tier now fails closed against an empty suite: a collect-only pass
+  asserts the claim-binding pins are present (55 tests today), closing the
+  exit-5 vacuous-success hole.
+
 ### Rendered provenance and secure atomic writes (2026-07-31)
 
 - Added deterministic rendered-provenance receipt system: snapshots capture

@@ -878,7 +878,7 @@ Long-horizon viability — toolchain migration, local CI, archival targets, regr
 | --- | --- | --- |
 | [`ci.yml`](workflows/ci.yml) | push/PR to `main` · weekly (Sun 00:00 UTC) · manual | **15 jobs** (2 conditional) — see the full table below |
 | [`stale.yml`](workflows/stale.yml) | Daily schedule | Close inactive issues/PRs (`actions/stale`) |
-| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Capability, clean-export/import, rendered-evidence, build, and GitHub Release gates |
+| [`release.yml`](workflows/release.yml) | `v*.*.*` tag · manual dispatch | Smoke test gate, capability, clean-export/import, rendered-evidence, build, and GitHub Release gates |
 | [`dependabot-automerge.yml`](workflows/dependabot-automerge.yml) | `pull_request_target` (Dependabot only) | Auto-merge safe (minor/patch) Dependabot PRs after all required checks pass |
 
 ### CI Jobs (`ci.yml`) — complete inventory
