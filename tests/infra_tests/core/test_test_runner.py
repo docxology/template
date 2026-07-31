@@ -515,3 +515,64 @@ def test_stage01_rejects_hidden_nested_concurrency_from_env() -> None:
     assert proc.returncode != 0
     assert "--project-workers=2" in proc.stderr
     assert "PYTEST_XDIST_WORKERS" in proc.stderr
+
+
+def test_receipt_is_written_and_validates_for_green_run(
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A passing matrix writes a deterministic receipt with per-lane facts."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    _write_project(synthetic_repo, "beta", fail=False, extra_module="mod_beta")
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha", "beta"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+    assert rc == 0
+    assert receipt_path.is_file()
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    lane_names = {lane.project_name for lane in receipt.lanes}
+    assert lane_names == {"alpha", "beta"}
+    assert receipt.roster_revision in {"unknown", "abc123"} or len(receipt.roster_revision) == 40
+    assert receipt.profile == "quick"
+    # Deterministic: repeated runs produce the same content digest.
+    first_digest = receipt.digest()
+    receipt.write(receipt_path)
+    assert PublicMatrixReceipt.read(receipt_path).digest() == first_digest
+
+
+def test_receipt_captures_failure_and_is_written_on_error(
+    synthetic_repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failing lane must still produce a receipt recording the failure."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    _write_project(synthetic_repo, "beta", fail=True, extra_module="mod_beta")
+
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    rc = run_per_project_pytest(
+        synthetic_repo,
+        projects=["alpha", "beta"],
+        fail_under=1,
+        timeout=60,
+        receipt_path=receipt_path,
+    )
+    assert rc != 0
+    assert receipt_path.is_file(), "receipt must be written even when the matrix fails"
+
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    by_name = {lane.project_name: lane for lane in receipt.lanes}
+    assert by_name["beta"].exit_code != 0
+    assert receipt.overall_exit != 0
+    errors = receipt.validate(["alpha", "beta"])
+    assert any("EXIT-STATUS" in error and "beta" in error for error in errors)

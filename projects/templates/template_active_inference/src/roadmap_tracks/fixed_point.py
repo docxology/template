@@ -41,14 +41,14 @@ def _refresh_hydrated_manuscript(root: Path, *, require_analysis_outputs: bool) 
 def _write_sheaf_owned_artifacts(root: Path) -> dict[str, Path]:
     from manuscript.sheaf.coverage import emit_coverage_artifacts
 
-    result: dict[str, Path] = emit_coverage_artifacts(root)
+    result: dict[str, Path] = {"coverage_matrix": emit_coverage_artifacts(root)}
     return result
 
 
 def _write_semantic_core(root: Path) -> dict[str, Path]:
-    from manuscript.sheaf.semantic import write_semantic_outputs
+    from manuscript.sheaf.semantic import write_semantic_gluing_outputs
 
-    result: dict[str, Path] = write_semantic_outputs(root)
+    result: dict[str, Path] = write_semantic_gluing_outputs(root, settle=False)
     return result
 
 

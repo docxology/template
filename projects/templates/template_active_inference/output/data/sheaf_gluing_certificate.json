@@ -1,6 +1,6 @@
 {
-  "all_lane_summaries_ok": true,
-  "all_proof_obligations_ok": true,
+  "all_lane_summaries_ok": false,
+  "all_proof_obligations_ok": false,
   "artifact_graph": {
     "output/data/analysis_statistics.json": {
       "claim_ids": [],
@@ -4781,7 +4781,24 @@
     ],
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
-  "issues": [],
+  "issues": [
+    "output/data/sensitivity_sweep.json: hash mismatch",
+    "output/data/sensitivity_sweep.json: size mismatch",
+    "output/data/uncertainty_summary.json: hash mismatch",
+    "output/data/uncertainty_summary.json: size mismatch",
+    "output/reports/model_checking_witnesses.json: hash mismatch",
+    "output/reports/model_checking_witnesses.json: size mismatch",
+    "claim_evidence_audit.json has untyped claims",
+    "manuscript_evidence_tables.json has unbacked tables",
+    "artifact_diffoscope.json records artifact drift",
+    "artifact_license_audit.json records unsafe artifacts",
+    "artifact_provenance.json has incomplete provenance rows or bundles",
+    "artifact_provenance.json has incomplete field-level provenance rows",
+    "artifact_diffoscope.json records artifact drift",
+    "artifact_license_audit.json records unsafe artifacts",
+    "canonical semantic restrictions failed: artifact_diffoscope_equal, artifact_field_provenance_complete, artifact_license_safe, artifact_provenance_complete",
+    "typed claim evidence failed"
+  ],
   "lane_summaries": {
     "analytical": {
       "all_ok": true,
@@ -4853,8 +4870,8 @@
       ]
     },
     "release": {
-      "all_ok": true,
-      "ok_count": 34,
+      "all_ok": false,
+      "ok_count": 29,
       "restriction_count": 34,
       "restrictions": [
         "all_canonical_artifacts_have_claims",
@@ -4905,8 +4922,8 @@
       ]
     },
     "semantic": {
-      "all_ok": true,
-      "ok_count": 29,
+      "all_ok": false,
+      "ok_count": 28,
       "restriction_count": 29,
       "restrictions": [
         "adversarial_expected_failures",
@@ -4974,10 +4991,10 @@
     "artifact_contract_complete": true,
     "artifact_contract_copied_parity_complete": true,
     "artifact_contract_row_count": 85,
-    "artifact_diffoscope_all_equal": true,
-    "artifact_diffoscope_row_count": 41,
-    "artifact_license_all_safe": true,
-    "artifact_license_row_count": 85,
+    "artifact_diffoscope_all_equal": false,
+    "artifact_diffoscope_row_count": 0,
+    "artifact_license_all_safe": false,
+    "artifact_license_row_count": 0,
     "benchmark_all_models_complete": true,
     "benchmark_model_count": 3,
     "bernoulli_ontology_term_count": 8,
@@ -4986,8 +5003,8 @@
     "causal_ablation_complete_grid": true,
     "causal_ablation_row_count": 36,
     "claim_evidence_audit_all_artifacts_resolved": true,
-    "claim_evidence_audit_all_complete": true,
-    "claim_evidence_audit_all_predicates_hold": true,
+    "claim_evidence_audit_all_complete": false,
+    "claim_evidence_audit_all_predicates_hold": false,
     "claim_evidence_audit_count": 97,
     "composed_section_count": 12,
     "counterexample_all_known_bad_fail": 1,
@@ -5054,9 +5071,9 @@
     "provenance_all_config_digests": true,
     "provenance_all_seeded": true,
     "provenance_all_source_commits": true,
-    "provenance_bundle_complete": true,
-    "provenance_bundle_count": 5,
-    "provenance_seeded_count": 85,
+    "provenance_bundle_complete": false,
+    "provenance_bundle_count": 0,
+    "provenance_seeded_count": 34,
     "pymdp_config_hash": "81eb061f43b7bfd7",
     "pymdp_horizon": 2,
     "pymdp_mode": "state_inference",
@@ -5098,7 +5115,7 @@
     "security_posture_enforced_count": 7,
     "security_posture_high_risk_gap_count": 0,
     "security_posture_secret_finding_count": 0,
-    "semantic_ok": true,
+    "semantic_ok": false,
     "semantic_restriction_count": 126,
     "sensitivity_cell_count": 96,
     "sensitivity_complete_grid": true,
@@ -5167,7 +5184,7 @@
     "uncertainty_bin_count": 3,
     "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
-    "validation_spine_artifact_count": 85,
+    "validation_spine_artifact_count": 34,
     "visualization_figures_section_bound": true,
     "visualization_intent_metadata_complete": true,
     "visualization_paper_claims_complete": true,
@@ -5179,7 +5196,7 @@
     "visualization_statistics_backed_count": 7,
     "visualization_statistics_bridge_ok": true
   },
-  "ok": true,
+  "ok": false,
   "proof_obligations": [
     {
       "class": "semantic_restriction",
@@ -5226,25 +5243,25 @@
     {
       "class": "semantic_restriction",
       "obligation": "prove_artifact_diffoscope_equal",
-      "ok": true,
+      "ok": false,
       "restriction": "artifact_diffoscope_equal"
     },
     {
       "class": "artifact_contract",
       "obligation": "prove_artifact_field_provenance_complete",
-      "ok": true,
+      "ok": false,
       "restriction": "artifact_field_provenance_complete"
     },
     {
       "class": "semantic_restriction",
       "obligation": "prove_artifact_license_safe",
-      "ok": true,
+      "ok": false,
       "restriction": "artifact_license_safe"
     },
     {
       "class": "artifact_contract",
       "obligation": "prove_artifact_provenance_complete",
-      "ok": true,
+      "ok": false,
       "restriction": "artifact_provenance_complete"
     },
     {
@@ -5645,10 +5662,10 @@
     "animation_frame_count": 4,
     "artifact_contract_copied_parity_complete": true,
     "artifact_contract_index_complete": true,
-    "artifact_diffoscope_equal": true,
-    "artifact_field_provenance_complete": true,
-    "artifact_license_safe": true,
-    "artifact_provenance_complete": true,
+    "artifact_diffoscope_equal": false,
+    "artifact_field_provenance_complete": false,
+    "artifact_license_safe": false,
+    "artifact_provenance_complete": false,
     "artifact_provenance_seed_config_complete": true,
     "benchmark_all_models_complete": true,
     "benchmark_model_count": 3,
@@ -5700,8 +5717,8 @@
     "proof_dependency_edge_count": 207,
     "proof_dependency_graph_resolved": true,
     "proof_extraction_constructive": true,
-    "provenance_bundle_complete": true,
-    "provenance_bundle_count": 5,
+    "provenance_bundle_complete": false,
+    "provenance_bundle_count": 0,
     "pymdp_config_hash_match": true,
     "pymdp_mode_match": true,
     "pymdp_runtime_known_warning_count": 4,
@@ -5756,7 +5773,7 @@
     "uncertainty_normalized": true,
     "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
-    "validation_spine_ok": true,
+    "validation_spine_ok": false,
     "visualization_figures_section_bound": true,
     "visualization_intent_metadata_complete": true,
     "visualization_paper_claims_complete": true,

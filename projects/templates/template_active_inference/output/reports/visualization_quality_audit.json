@@ -114,7 +114,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 466540,
+      "size_bytes": 471105,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -164,7 +164,7 @@
         "appendix_full_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 57015,
+      "size_bytes": 58002,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -216,7 +216,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 43094,
+      "size_bytes": 44027,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -265,7 +265,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 65481,
+      "size_bytes": 67263,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -314,7 +314,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 70138,
+      "size_bytes": 71897,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -362,7 +362,7 @@
         "results_free_energy"
       ],
       "section_bound": true,
-      "size_bytes": 43115,
+      "size_bytes": 44377,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -409,7 +409,7 @@
         "methods_analytical"
       ],
       "section_bound": true,
-      "size_bytes": 77358,
+      "size_bytes": 78773,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -457,7 +457,7 @@
         "results_invariants"
       ],
       "section_bound": true,
-      "size_bytes": 119451,
+      "size_bytes": 121023,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -508,7 +508,7 @@
         "results_mi_sweep"
       ],
       "section_bound": true,
-      "size_bytes": 88738,
+      "size_bytes": 90685,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -557,7 +557,7 @@
         "methods_lean"
       ],
       "section_bound": true,
-      "size_bytes": 356478,
+      "size_bytes": 365005,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -604,7 +604,7 @@
         "intro_contributions"
       ],
       "section_bound": true,
-      "size_bytes": 224955,
+      "size_bytes": 227401,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -652,7 +652,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 79213,
+      "size_bytes": 81077,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -701,7 +701,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 470707,
+      "size_bytes": 478477,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -752,7 +752,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 218708,
+      "size_bytes": 221432,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -800,7 +800,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 251230,
+      "size_bytes": 254630,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -850,7 +850,7 @@
         "coverage_page"
       ],
       "section_bound": true,
-      "size_bytes": 236608,
+      "size_bytes": 240903,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -945,7 +945,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 44361,
+      "size_bytes": 45225,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -995,7 +995,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 47210,
+      "size_bytes": 48162,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1046,7 +1046,7 @@
         "results_si_tmaze"
       ],
       "section_bound": true,
-      "size_bytes": 29283,
+      "size_bytes": 29836,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1095,7 +1095,7 @@
         "appendix_full_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 122202,
+      "size_bytes": 123852,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1144,7 +1144,7 @@
         "methods_pymdp"
       ],
       "section_bound": true,
-      "size_bytes": 36061,
+      "size_bytes": 36622,
       "source_backed": true,
       "source_mapped": true,
       "sources": [
@@ -1198,7 +1198,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 194060,
+      "size_bytes": 197987,
       "source_backed": true,
       "source_mapped": true,
       "sources": [

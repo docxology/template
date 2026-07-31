@@ -1,41 +1,30 @@
 {
-  "timestamp": "2026-07-30T10:41:28.734223",
+  "timestamp": "2026-07-31T09:04:21.410629",
   "infrastructure": {},
   "project": {
-    "passed": 676,
-    "failed": 2,
-    "skipped": 6,
+    "passed": 683,
+    "failed": 0,
+    "skipped": 1,
     "total": 684,
     "warnings": 0,
     "exit_code": 1,
     "discovery_count": 735,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 302.94,
-      "collection": 302.94,
-      "execution": 302.94
+      "setup": 427.31,
+      "collection": 427.31,
+      "execution": 427.31
     },
     "test_categories": {},
-    "coverage_percent": 88.91,
-    "failed_tests": [
-      {
-        "test": "tests/test_image_content_hash.py::test_live_figures_all_produce_a_content_digest",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      },
-      {
-        "test": "tests/test_method_inventory.py::test_method_inventory_check_command",
-        "error_type": "Unknown",
-        "error_message": "Failed (use --tb=short for details)"
-      }
-    ]
+    "coverage_percent": 89.35,
+    "failed_tests": []
   },
   "summary": {
-    "total_passed": 676,
-    "total_failed": 2,
-    "total_skipped": 6,
+    "total_passed": 683,
+    "total_failed": 0,
+    "total_skipped": 1,
     "total_tests": 684,
     "all_passed": false,
-    "project_coverage": 88.91
+    "project_coverage": 89.35
   }
 }

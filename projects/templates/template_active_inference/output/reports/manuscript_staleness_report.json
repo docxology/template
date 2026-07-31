@@ -542,14 +542,14 @@
       "token": "claim_evidence_audit_all_artifacts_resolved"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "claim_evidence_audit_all_predicates_hold"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -717,21 +717,21 @@
       "token": "security_posture_high_risk_gap_count"
     },
     {
-      "expected": "85",
+      "expected": "34",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "validation_spine_artifact_count"
     },
     {
-      "expected": "5",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "provenance_bundle_count"
     },
     {
-      "expected": "85",
+      "expected": "34",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -745,7 +745,7 @@
       "token": "provenance_all_seeded"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -815,28 +815,28 @@
       "token": "validation_gate_index_count"
     },
     {
-      "expected": "41",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "artifact_diffoscope_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "artifact_diffoscope_all_equal"
     },
     {
-      "expected": "85",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "artifact_license_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -1620,7 +1620,7 @@
       "token": "interop_all_lossless"
     },
     {
-      "expected": "5",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -1746,28 +1746,28 @@
       "token": "track_lane_matrix_complete"
     },
     {
-      "expected": "41",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "artifact_diffoscope_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "artifact_diffoscope_all_equal"
     },
     {
-      "expected": "85",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "artifact_license_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -2222,7 +2222,7 @@
       "token": "release_attestation_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",

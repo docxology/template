@@ -246,12 +246,12 @@
         "finite_normalizer",
         "spin_coding_of_binary_policies"
       ],
-      "closed_form": 0.29131261245159096,
+      "closed_form": 0.2913126124515909,
       "empirical": 0.2913126124515909,
       "equation_id": "eq:ising_spin_correlation",
       "lambda": 0.6000000000000001,
       "observable": "ising_spin_correlation",
-      "residual": -5.551115123125783e-17,
+      "residual": 0.0,
       "residual_tolerance": 1e-09
     },
     {
@@ -456,12 +456,12 @@
         "finite_normalizer",
         "spin_coding_of_binary_policies"
       ],
-      "closed_form": 0.5370495669980353,
+      "closed_form": 0.5370495669980354,
       "empirical": 0.5370495669980353,
       "equation_id": "eq:ising_spin_correlation",
       "lambda": 1.2000000000000002,
       "observable": "ising_spin_correlation",
-      "residual": 0.0,
+      "residual": -1.1102230246251565e-16,
       "residual_tolerance": 1e-09
     },
     {
@@ -526,12 +526,12 @@
         "finite_normalizer",
         "spin_coding_of_binary_policies"
       ],
-      "closed_form": 0.6043677771171635,
+      "closed_form": 0.6043677771171636,
       "empirical": 0.6043677771171635,
       "equation_id": "eq:ising_spin_correlation",
       "lambda": 1.4000000000000001,
       "observable": "ising_spin_correlation",
-      "residual": 0.0,
+      "residual": -1.1102230246251565e-16,
       "residual_tolerance": 1e-09
     },
     {
@@ -596,12 +596,12 @@
         "finite_normalizer",
         "spin_coding_of_binary_policies"
       ],
-      "closed_form": 0.664036770267849,
+      "closed_form": 0.6640367702678491,
       "empirical": 0.6640367702678489,
       "equation_id": "eq:ising_spin_correlation",
       "lambda": 1.6,
       "observable": "ising_spin_correlation",
-      "residual": -1.1102230246251565e-16,
+      "residual": -2.220446049250313e-16,
       "residual_tolerance": 1e-09
     },
     {

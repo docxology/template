@@ -1,7 +1,7 @@
 {
-  "all_attested": true,
-  "attestation_hash": "ff60e333888af98997b8b193c05d1564daa3656b8e566f01930e5496b83751a0",
-  "bundle_hash": "cb24f0234beb8001623ce6e6b4528d10bd2e785981f44778bb65764dbd5f0a45",
+  "all_attested": false,
+  "attestation_hash": "bc7ab6d44c656de17191f1bb1c87b6a923052b9d0aed8af9cfbfe5dcfb13d24b",
+  "bundle_hash": "73d4ada2761ddfc2f1878fe569908887dfc3f9f8f363bf314b139489f1cd7af2",
   "row_count": 7,
   "rows": [
     {
@@ -11,7 +11,7 @@
       "source": "output/reports/validation_report.json"
     },
     {
-      "bundle_hash": "cb24f0234beb8001623ce6e6b4528d10bd2e785981f44778bb65764dbd5f0a45",
+      "bundle_hash": "73d4ada2761ddfc2f1878fe569908887dfc3f9f8f363bf314b139489f1cd7af2",
       "deferred_until_validation": false,
       "id": "release_bundle",
       "passed": true,
@@ -20,7 +20,7 @@
     {
       "deferred_until_validation": false,
       "id": "artifact_license",
-      "passed": true,
+      "passed": false,
       "source": "output/reports/artifact_license_audit.json"
     },
     {
@@ -46,7 +46,7 @@
       "deferred_until_validation": false,
       "id": "semantic_certificate",
       "ignored_self_restrictions": [],
-      "passed": true,
+      "passed": false,
       "source": "output/data/sheaf_gluing_certificate.json"
     }
   ],

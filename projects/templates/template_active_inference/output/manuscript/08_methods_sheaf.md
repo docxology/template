@@ -14,7 +14,7 @@ The operational claim is auditable binding. Analytical, simulation, pymdp, visua
 
 The visualization gate is deliberately row-level. It requires declared visual/evidence roles (`true`), artifact-backed paper claims (`true`), section bindings (`true`), RGB nonblank image renders, hashes, and source-map agreement. The statistical bridge then expands 7 statistically backed figures into 7 figure-source-scholarship rows with connected status `true`, manuscript-reference status `true`, and visualization-bound reference status `true`.
 
-The claim ledger is also checked at row level rather than as prose metadata. `claim_evidence_audit.json` resolves 97 claim rows to live artifacts (`true`) and replays their typed predicates (`true`), yielding the promoted completeness flag `true`.
+The claim ledger is also checked at row level rather than as prose metadata. `claim_evidence_audit.json` resolves 97 claim rows to live artifacts (`true`) and replays their typed predicates (`false`), yielding the promoted completeness flag `false`.
 
 ## Compose commands
 
@@ -89,9 +89,9 @@ Semantic gluing then checks agreement of the glued content: coverage counts, man
 
 <!-- sheaf-track:provenance -->
 
-The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes 85 required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and 5 artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
+The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes 34 required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and 0 artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
 
-The provenance claim is intentionally limited: every listed artifact exists, has a SHA-256 digest or an explicit cycle exclusion, is produced by a configured analysis script, and carries seed/config provenance (`85` seeded rows; all seeded flag `true`; bundle-complete flag `true`). A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
+The provenance claim is intentionally limited: every listed artifact exists, has a SHA-256 digest or an explicit cycle exclusion, is produced by a configured analysis script, and carries seed/config provenance (`34` seeded rows; all seeded flag `true`; bundle-complete flag `false`). A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
 
 <!-- sheaf-track:counterexample -->
 
@@ -128,8 +128,8 @@ The `gate_ergonomics` fragment turns validation commands into evidence rows. `ou
 The `artifact_diffoscope` track compares saved provenance hashes against live
 artifact hashes at the artifact root JSONPath. Its proof artifact is
 `output/reports/artifact_diffoscope.json`: it currently records
-41 comparison rows, with equality status
-`true`.
+0 comparison rows, with equality status
+`false`.
 
 <!-- sheaf-track:artifact_license -->
 
@@ -138,8 +138,8 @@ artifact hashes at the artifact root JSONPath. Its proof artifact is
 The `artifact_license` track classifies generated and project-source artifacts
 under the public project license boundary. Its audit artifact is
 `output/reports/artifact_license_audit.json`: it currently records
-85 rows, with license-safe status
-`true`.
+0 rows, with license-safe status
+`false`.
 
 <!-- sheaf-track:scholarship -->
 
@@ -487,7 +487,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Dependency edges ok | `True` |
 | Track scope complete | `True` |
 | Empirical adapter blocked | `True` |
-| Provenance bundles complete | `True` |
+| Provenance bundles complete | `False` |
 | Replay rows matched | `True` |
 | Sensitivity complete | `True` |
 | Uncertainty normalized | `True` |

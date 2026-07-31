@@ -51,7 +51,7 @@ pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy,
 
 <!-- sheaf-track:provenance -->
 
-The appendix provenance fragment points to `output/data/artifact_provenance.json`, the canonical artifact that records required toy artifact hashes, producer scripts, source commit, deterministic seeds, config digests, and 5 bundle rows.
+The appendix provenance fragment points to `output/data/artifact_provenance.json`, the canonical artifact that records required toy artifact hashes, producer scripts, source commit, deterministic seeds, config digests, and 0 bundle rows.
 
 <!-- sheaf-track:replay_matrix -->
 
@@ -94,8 +94,8 @@ incomplete in the track-improvement scope.
 ### Appendix track: artifact diffoscope
 
 `artifact_diffoscope` binds `output/reports/artifact_diffoscope.json` into the
-full sheaf appendix. Rows: 41. All equal:
-`true`.
+full sheaf appendix. Rows: 0. All equal:
+`false`.
 
 This diffoscope is deliberately narrow and reproducibility-facing. For each
 non-cyclic generated artifact, it compares the saved provenance digest to the
@@ -113,8 +113,8 @@ provenance.
 ### Appendix track: artifact license
 
 `artifact_license` binds `output/reports/artifact_license_audit.json` into the
-full sheaf appendix. Rows: 85. All safe:
-`true`.
+full sheaf appendix. Rows: 0. All safe:
+`false`.
 
 The license audit classifies each generated or source-backed artifact under the
 public exemplar's configured license boundary. It is intentionally conservative:
@@ -352,4 +352,4 @@ row still fails.
 `output/reports/release_attestation.json` is the compact final view over the
 same boundary. It records 7 attestation rows for
 validation, release bundle hash, license audit, semantic certificate, and
-blocked-scope status, with all-attested flag `true`.
+blocked-scope status, with all-attested flag `false`.
