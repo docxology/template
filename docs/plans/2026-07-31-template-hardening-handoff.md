@@ -90,9 +90,9 @@ stage provenance, or claim a release gate passed when a project lane failed.
 
 The following evidence was collected before and after publication:
 
-- Full infrastructure suite: `9,586 passed, 2 skipped`.
-- Regression suite: `55 passed, 1 warning`.
-- Exact pre-push hook: `12 passed` plus generated-artifact, secret,
+- Full infrastructure suite: `9,586 passed, 2 skipped`. <!-- noqa: drift-counts -->
+- Regression suite: `55 passed, 1 warning`. <!-- noqa: drift-counts -->
+- Exact pre-push hook: `12 passed` plus generated-artifact, secret, <!-- noqa: drift-counts -->
   confidentiality, no-mocks, and stand-in checks.
 - Published-commit health gate: passed with `clean_checkout: true`, Ruff,
   Ruff-format, Bandit, no-mocks, confidentiality, generated-artifact, drift,
@@ -112,7 +112,7 @@ The following evidence was collected before and after publication:
 
 The bounded serial public matrix covered all 24 canonical exemplars. Twenty-
 three lanes passed their declared project floors. The
-`template_active_inference` lane ran 683 passing tests, 1 skipped test, and 51
+`template_active_inference` lane ran 683 passing tests, 1 skipped test, and 51 <!-- noqa: drift-counts -->
 deselected tests, but measured `89.35%` against its declared `90%` floor. The
 combined matrix coverage was `94.47%`.
 

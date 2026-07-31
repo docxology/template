@@ -10,8 +10,9 @@ The receipt records, for one bounded public-matrix run:
 - per-project measured coverage percent
 - per-project output-isolation result (whether output/ tree was dirty after run)
 
-A paired validator checks negative controls: a missing project result and a
-coverage-floor failure both cause deterministic rejection.
+A paired validator checks negative controls: missing project results, timeouts,
+nonzero exits, coverage-floor failures, and test-generated output drift all
+cause deterministic rejection.
 
 Usage (produced by the runner):
     receipt = build_public_matrix_receipt(
@@ -30,7 +31,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
 
@@ -87,9 +88,7 @@ class PublicMatrixReceipt:
         """Load a previously written receipt from disk."""
         path = Path(path) if isinstance(path, str) else path
         data = json.loads(path.read_text(encoding="utf-8"))
-        lanes = tuple(
-            PublicMatrixLaneResult(**lane) for lane in data.pop("lanes", [])
-        )
+        lanes = tuple(PublicMatrixLaneResult(**lane) for lane in data.pop("lanes", []))
         return cls(lanes=lanes, **data)
 
     def digest(self) -> str:
@@ -110,6 +109,7 @@ class PublicMatrixReceipt:
         2. No lane has timed_out=True.
         3. No lane with exit_code != 0 (unless accounted for).
         4. No lane has coverage_percent < declared_floor (coverage-floor failure).
+        5. No lane changed its project's output tree (output-isolation failure).
         """
         errors: list[str] = []
         lane_names = {lane.project_name for lane in self.lanes}
@@ -124,11 +124,11 @@ class PublicMatrixReceipt:
             if lane.timed_out:
                 errors.append(f"TIMEOUT: project '{lane.project_name}' timed out")
             if lane.exit_code != 0:
-                errors.append(
-                    f"EXIT-STATUS: project '{lane.project_name}' exit={lane.exit_code}"
-                )
+                errors.append(f"EXIT-STATUS: project '{lane.project_name}' exit={lane.exit_code}")
+            if not lane.output_isolation_ok:
+                errors.append(f"OUTPUT-ISOLATION: project '{lane.project_name}' changed output/")
 
-            # Negative control 3: coverage-floor failure
+            # Negative control 4: coverage-floor failure
             if (
                 lane.declared_floor is not None
                 and lane.coverage_percent is not None

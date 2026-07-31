@@ -1,15 +1,13 @@
 """Tests for ``infrastructure.core.public_matrix_receipt``.
 
-Covers the deterministic JSON round-trip, the content digest, and the two
-required negative controls: a missing project result and a coverage-floor
-failure. All checks run against constructed payloads (no subprocess needed).
+Covers the deterministic JSON round-trip, the content digest, and release
+negative controls including missing projects, coverage floors, and output
+isolation. All checks run against constructed payloads (no subprocess needed).
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-
-import pytest
 
 from infrastructure.core.public_matrix_receipt import (
     PublicMatrixLaneResult,
@@ -106,10 +104,7 @@ def test_validate_rejects_coverage_floor_failure() -> None:
     )
     receipt = _receipt(lanes)
     errors = receipt.validate(ROSTER)
-    assert any(
-        "COVERAGE-FLOOR" in error and "templates/template_b" in error and "89.00%" in error
-        for error in errors
-    )
+    assert any("COVERAGE-FLOOR" in error and "templates/template_b" in error and "89.00%" in error for error in errors)
 
 
 def test_validate_rejects_timeout_and_nonzero_exit() -> None:
@@ -133,6 +128,27 @@ def test_validate_rejects_timeout_and_nonzero_exit() -> None:
     errors = receipt.validate(ROSTER)
     assert any("TIMEOUT" in error and "templates/template_a" in error for error in errors)
     assert any("EXIT-STATUS" in error and "templates/template_b" in error for error in errors)
+
+
+def test_validate_rejects_output_tree_drift() -> None:
+    """Negative control: a test-generated output change must fail validation."""
+    drifted = PublicMatrixLaneResult(
+        project_name="templates/template_b",
+        declared_floor=90,
+        exit_code=0,
+        timed_out=False,
+        coverage_percent=95.0,
+        output_isolation_ok=False,
+    )
+    receipt = _receipt(
+        (
+            _passing_lane("templates/template_a"),
+            drifted,
+            _passing_lane("templates/template_c"),
+        )
+    )
+
+    assert receipt.validate(ROSTER) == ["OUTPUT-ISOLATION: project 'templates/template_b' changed output/"]
 
 
 def test_validate_ignores_missing_floor_or_missing_coverage() -> None:

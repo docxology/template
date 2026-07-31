@@ -1,8 +1,11 @@
 """Pytest configuration for template_gold_refinement tests."""
 
 import os
+import shutil
 import subprocess
 import sys
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 
@@ -20,7 +23,26 @@ for _path in (REPO_ROOT, SRC):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _ensure_analysis_outputs_exist():
+def _preserve_project_output(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> Iterator[None]:
+    """Restore real generated output after scripts exercise it in place."""
+    output = Path(ROOT) / "output"
+    snapshot = tmp_path_factory.mktemp("gold-refinement-output") / "output"
+    existed = output.is_dir()
+    if existed:
+        shutil.copytree(output, snapshot, symlinks=True)
+
+    yield
+
+    if output.exists():
+        shutil.rmtree(output)
+    if existed:
+        shutil.copytree(snapshot, output, symlinks=True)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _ensure_analysis_outputs_exist(_preserve_project_output: None) -> None:
     """Run the analysis script once before the suite so registry/dashboard
     outputs exist regardless of test-file collection order.
 

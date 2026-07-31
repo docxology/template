@@ -8,29 +8,33 @@ whether the heavy sheaf-track writers happen to run during a given CI leg.
 from __future__ import annotations
 
 from pathlib import Path
-
-import pytest
+from typing import Any, cast
 
 
 # ---------------------------------------------------------------------------
 # roadmap_tracks.row_aggregates  (row predicates on dict payloads)
 # ---------------------------------------------------------------------------
 
+
 def _rows(payload: dict, key: str = "rows"):
     from roadmap_tracks.row_aggregates import rows
+
     return rows(payload, key)
+
 
 def _all_rows(payload: dict, predicate, key: str = "rows") -> bool:
     from roadmap_tracks.row_aggregates import all_rows
-    return all_rows(payload, predicate, key)
+
+    return cast(bool, all_rows(payload, predicate, key))
+
 
 def _all_field_present(payload: dict, fields, key: str = "rows") -> bool:
     from roadmap_tracks.row_aggregates import all_field_present
-    return all_field_present(payload, fields, key)
+
+    return cast(bool, all_field_present(payload, fields, key))
 
 
 class TestRowAggregates:
-
     def test_rows_returns_filtered_list(self) -> None:
         payload = {"rows": [{"a": 1}, {"a": 2}, "not-a-dict"]}
         assert _rows(payload) == [{"a": 1}, {"a": 2}]
@@ -67,17 +71,20 @@ class TestRowAggregates:
 # roadmap_tracks.sheaf_tracks_helpers
 # ---------------------------------------------------------------------------
 
+
 def _entropy(values: list[float]) -> float:
     from roadmap_tracks.sheaf_tracks_helpers import _entropy
-    return _entropy(values)
+
+    return cast(float, _entropy(values))
+
 
 def _portable_repo_path(path: Path, project_root: Path) -> str:
     from roadmap_tracks.sheaf_tracks_helpers import _portable_repo_path
-    return _portable_repo_path(path, project_root)
+
+    return cast(str, _portable_repo_path(path, project_root))
 
 
 class TestSheafTracksHelpersEntropy:
-
     def test_entropy_uniform(self) -> None:
         e = _entropy([0.5, 0.5])
         assert abs(e - 0.693) < 0.01
@@ -91,7 +98,6 @@ class TestSheafTracksHelpersEntropy:
 
 
 class TestSheafTracksHelpersPortableRepoPath:
-
     def test_inside_repo_returns_relative(self, tmp_path: Path) -> None:
         repo_root = tmp_path / "repo"
         repo_root.mkdir(parents=True)
@@ -118,21 +124,26 @@ class TestSheafTracksHelpersPortableRepoPath:
 # roadmap_tracks.sheaf_tracks_io
 # ---------------------------------------------------------------------------
 
+
 def _bridge(row: dict) -> tuple[bool, bool]:
     from roadmap_tracks.sheaf_tracks_io import _bridge_reference_section_status
-    return _bridge_reference_section_status(row)
+
+    return cast(tuple[bool, bool], _bridge_reference_section_status(row))
+
 
 def _sha256(path: Path) -> str:
     from roadmap_tracks.sheaf_tracks_io import _sha256
-    return _sha256(path)
+
+    return cast(str, _sha256(path))
+
 
 def _deterministic_seed(root: Path) -> int:
     from roadmap_tracks.sheaf_tracks_io import _deterministic_seed
-    return _deterministic_seed(root)
+
+    return cast(int, _deterministic_seed(root))
 
 
 class TestSheafTracksIOBridgeReference:
-
     def test_unbound_row_returns_false_false(self) -> None:
         assert _bridge({}) == (False, False)
 
@@ -160,7 +171,6 @@ class TestSheafTracksIOBridgeReference:
 
 
 class TestSheafTracksIOSha256:
-
     def test_missing_file_returns_empty(self) -> None:
         assert _sha256(Path("/nonexistent/path")) == ""
 
@@ -172,7 +182,6 @@ class TestSheafTracksIOSha256:
 
 
 class TestSheafTracksIODeterministicSeed:
-
     def test_missing_pymdp_yaml_returns_zero(self, tmp_path: Path) -> None:
         assert _deterministic_seed(tmp_path) == 0
 
@@ -186,44 +195,53 @@ class TestSheafTracksIODeterministicSeed:
 # roadmap_tracks.sheaf_tracks_io  - _source_commit (injectable subprocess)
 # ---------------------------------------------------------------------------
 
-class TestSheafTracksIOSourceCommit:
 
-    def test_returns_stdout_stripped(self) -> None:
+class TestSheafTracksIOSourceCommit:
+    def test_returns_stdout_stripped(self, tmp_path: Path) -> None:
         def _fake_runner(*args, **kwargs):
             class Result:
                 stdout = " abc123def  \n"
                 returncode = 0
-            return Result()
-        from roadmap_tracks.sheaf_tracks_io import _source_commit
-        assert _source_commit(Path("/tmp"), process_runner=_fake_runner) == "abc123def"
 
-    def test_returns_unknown_on_error(self) -> None:
+            return Result()
+
+        from roadmap_tracks.sheaf_tracks_io import _source_commit
+
+        assert _source_commit(tmp_path, process_runner=_fake_runner) == "abc123def"
+
+    def test_returns_unknown_on_error(self, tmp_path: Path) -> None:
         def _fake_runner(*args, **kwargs):
             raise OSError("not a git repo")
-        from roadmap_tracks.sheaf_tracks_io import _source_commit
-        assert _source_commit(Path("/tmp"), process_runner=_fake_runner) == "unknown"
 
-    def test_returns_unknown_when_stdout_empty(self) -> None:
+        from roadmap_tracks.sheaf_tracks_io import _source_commit
+
+        assert _source_commit(tmp_path, process_runner=_fake_runner) == "unknown"
+
+    def test_returns_unknown_when_stdout_empty(self, tmp_path: Path) -> None:
         def _fake_runner(*args, **kwargs):
             class Result:
                 stdout = ""
                 returncode = 0
+
             return Result()
+
         from roadmap_tracks.sheaf_tracks_io import _source_commit
-        assert _source_commit(Path("/tmp"), process_runner=_fake_runner) == "unknown"
+
+        assert _source_commit(tmp_path, process_runner=_fake_runner) == "unknown"
 
 
 # ---------------------------------------------------------------------------
 # roadmap_tracks.sheaf_tracks_io  - _config_digest (tmp_path fixture)
 # ---------------------------------------------------------------------------
 
+
 def _config_digest(root: Path) -> str:
     from roadmap_tracks.sheaf_tracks_io import _config_digest
-    return _config_digest(root)
+
+    return cast(str, _config_digest(root))
 
 
 class TestSheafTracksIOConfigDigest:
-
     def test_digest_is_nonempty_even_with_all_missing(self, tmp_path: Path) -> None:
         """Missing files hash to their empty keys, producing a deterministic digest."""
         d = _config_digest(tmp_path)
@@ -246,13 +264,14 @@ class TestSheafTracksIOConfigDigest:
 # roadmap_tracks.sheaf_tracks_io  - _load_structured
 # ---------------------------------------------------------------------------
 
-def _load_structured(path: Path) -> dict:
+
+def _load_structured(path: Path) -> dict[str, Any]:
     from roadmap_tracks.sheaf_tracks_io import _load_structured
-    return _load_structured(path)
+
+    return cast(dict[str, Any], _load_structured(path))
 
 
 class TestSheafTracksIOLoadStructured:
-
     def test_missing_yaml_file_returns_empty(self, tmp_path: Path) -> None:
         assert _load_structured(tmp_path / "nonexistent.yaml") == {}
 
@@ -265,23 +284,25 @@ class TestSheafTracksIOLoadStructured:
 # roadmap_tracks.sheaf_tracks_io  - _pipeline_tracks and _claim_ids_by_track
 # ---------------------------------------------------------------------------
 
-class TestSheafTracksIOPipelineTracks:
 
+class TestSheafTracksIOPipelineTracks:
     def test_missing_tracks_yaml_returns_empty(self, tmp_path: Path) -> None:
         from roadmap_tracks.sheaf_tracks_io import _pipeline_tracks
+
         assert _pipeline_tracks(tmp_path) == []
 
     def test_malformed_tracks_yaml_returns_empty(self, tmp_path: Path) -> None:
         cfg = tmp_path / "tracks.yaml"
         cfg.write_text("tracks: invalid\n")
         from roadmap_tracks.sheaf_tracks_io import _pipeline_tracks
+
         assert _pipeline_tracks(tmp_path) == []
 
 
 class TestSheafTracksIOClaimIdsByTrack:
-
     def test_missing_ledger_returns_empty(self, tmp_path: Path) -> None:
         from roadmap_tracks.sheaf_tracks_io import _claim_ids_by_track
+
         assert _claim_ids_by_track(tmp_path) == {}
 
     def test_present_claims_by_track(self, tmp_path: Path) -> None:
@@ -289,14 +310,9 @@ class TestSheafTracksIOClaimIdsByTrack:
         data_dir.mkdir(parents=True)
         ledger = data_dir / "claim_ledger.yaml"
         ledger.write_text(
-            "claims:\n"
-            "  - id: c1\n"
-            "    tracks: [t1, t2]\n"
-            "  - id: c2\n"
-            "    tracks: [t2]\n"
-            "  - id: c3\n"
-            "    tracks: []\n"
+            "claims:\n  - id: c1\n    tracks: [t1, t2]\n  - id: c2\n    tracks: [t2]\n  - id: c3\n    tracks: []\n"
         )
         from roadmap_tracks.sheaf_tracks_io import _claim_ids_by_track
+
         result = _claim_ids_by_track(tmp_path)
         assert result == {"t1": ["c1"], "t2": ["c1", "c2"]}

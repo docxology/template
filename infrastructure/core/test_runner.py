@@ -29,8 +29,9 @@ The runner:
 * combines those per-project files only after all subprocesses exit, so an
   inherited infrastructure ``COVERAGE_FILE`` cannot contaminate the union,
 * runs ``coverage report --fail-under=<fail_under>`` at the end and
-  returns ``0`` only when **every** per-project pytest exited cleanly
-  **and** the combined coverage gate passes.
+  returns ``0`` only when **every** per-project pytest exited cleanly, every
+  receipt-bearing lane preserved its project's ``output/`` tree, **and** the
+  combined coverage gate passes.
 
 The runner is a thin orchestrator: business logic (fail-under threshold,
 skip list, marker expression) is configurable, and all subprocess work
@@ -330,7 +331,7 @@ def _write_public_matrix_receipt(
     *,
     specs: Sequence[ProjectPytestSpec],
     results: Sequence[ProjectPytestResult],
-    output_digests_before: dict[str, str],
+    output_isolation: dict[str, bool],
     profile: str,
     marker_expr: str | None,
     project_workers: str | int | None,
@@ -346,8 +347,6 @@ def _write_public_matrix_receipt(
     for result in results:
         spec = next(s for s in specs if s.index == result.index)
         coverage_percent = _measure_coverage_percent(result.coverage_file)
-        before = output_digests_before.get(result.project_name, "")
-        after = _output_tree_digest(spec.project_root)
         lanes.append(
             PublicMatrixLaneResult(
                 project_name=result.project_name,
@@ -355,7 +354,7 @@ def _write_public_matrix_receipt(
                 exit_code=result.exit_code,
                 timed_out=result.timed_out,
                 coverage_percent=coverage_percent,
-                output_isolation_ok=(before == after),
+                output_isolation_ok=output_isolation[result.project_name],
             )
         )
     receipt = build_public_matrix_receipt(
@@ -519,9 +518,7 @@ def run_per_project_pytest(
 
     output_digests_before: dict[str, str] = {}
     if receipt_path is not None:
-        output_digests_before = {
-            spec.project_name: _output_tree_digest(spec.project_root) for spec in specs
-        }
+        output_digests_before = {spec.project_name: _output_tree_digest(spec.project_root) for spec in specs}
 
     results = _execute_project_pytest_matrix(
         repo_root,
@@ -552,6 +549,18 @@ def run_per_project_pytest(
             )
             overall_exit = 1
 
+    output_isolation: dict[str, bool] = {}
+    if receipt_path is not None:
+        for spec in specs:
+            before = output_digests_before[spec.project_name]
+            output_isolation[spec.project_name] = before == _output_tree_digest(spec.project_root)
+            if not output_isolation[spec.project_name]:
+                logger.error(
+                    "Project '%s' changed its output/ tree during tests",
+                    spec.project_name,
+                )
+                overall_exit = 1
+
     combine_rc = _combine_project_coverage(repo_root, cf_path, project_coverage_files, base_env)
     if combine_rc != 0:
         overall_exit = overall_exit or combine_rc
@@ -572,7 +581,7 @@ def run_per_project_pytest(
         receipt_path,
         specs=specs,
         results=results,
-        output_digests_before=output_digests_before,
+        output_isolation=output_isolation,
         profile=profile,
         marker_expr=resolved_markers,
         project_workers=project_workers,

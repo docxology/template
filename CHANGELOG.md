@@ -9,6 +9,17 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Public-matrix isolation and active-inference coverage (2026-07-31)
+
+- Made receipt-bearing public-matrix runs fail when a project test changes its
+  real `output/` tree, with a subprocess negative control and byte-preserving
+  no-mock fixtures for the four exemplars that exercise generators in place.
+- Hardened active-inference figure writes against interrupted atomic saves,
+  excluded transient hidden files from live artifact scans, and added direct
+  sheaf-track and figure-I/O coverage above the declared 90% project floor.
+- Cleared the pre-push documentation and Bandit blockers exposed by the new
+  controls without weakening either gate.
+
 ### Staged-index credential guard (2026-07-31)
 
 - Made the pre-commit credential scanner inspect exact added, copied, modified,

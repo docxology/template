@@ -88,7 +88,7 @@ def test_is_image_artifact_routes_only_raster_suffixes() -> None:
 def test_live_figures_all_produce_a_content_digest() -> None:
     """Bind the helper to the real tree, not just fixtures."""
     figures = Path(__file__).resolve().parents[1] / "output" / "figures"
-    images = sorted(p for p in figures.glob("*") if p.suffix.lower() in {".png", ".gif"})
+    images = sorted(p for p in figures.glob("*") if not p.name.startswith(".") and p.suffix.lower() in {".png", ".gif"})
     assert images, "no figures found — the scan set went empty"
     assert all(image_content_sha256(p) for p in images)
 
