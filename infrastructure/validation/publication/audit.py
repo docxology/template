@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
@@ -308,12 +309,120 @@ def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
         )
 
 
+_PLACEHOLDER_TOKEN_RE = re.compile(r"\{\{[A-Z_][A-Z0-9_]*\}\}|\$\{[A-Za-z_][A-Za-z0-9_]*\?\}")
+
+_IMRAD_MANUSCRIPT_SUFFIXES = frozenset({".md", ".Rmd"})
+
+
+def _iter_manuscript_markdown(project_root: Path) -> list[tuple[str, Path]]:
+    """Return (relative_path, Path) for all tracked manuscript markdown files."""
+    results: list[tuple[str, Path]] = []
+    md_dir = project_root / "manuscript"
+    if not md_dir.is_dir():
+        return results
+    for path in sorted(md_dir.rglob("*")):
+        if path.suffix.lower() in _IMRAD_MANUSCRIPT_SUFFIXES and path.name not in {"AGENTS.md", "README.md", "SYNTAX.md"}:
+            try:
+                rel = path.relative_to(project_root).as_posix()
+            except ValueError:
+                continue
+            results.append((rel, path))
+    return results
+
+
+def check_placeholder_tokens(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Scan manuscript source for unresolved placeholder tokens that would survive into a release."""
+    for rel, path in _iter_manuscript_markdown(ctx.project_root):
+        try:
+            content = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        for match in _PLACEHOLDER_TOKEN_RE.finditer(content):
+            line = content[: match.start()].count("\n") + 1
+            yield _finding(
+                ctx,
+                path=f"projects/{ctx.project}/{rel}",
+                code="PUBLICATION.PLACEHOLDER_TOKEN",
+                severity="error",
+                status="fail",
+                message=f"unresolved placeholder token: {match.group(0)}",
+                remediation="Replace the placeholder with the intended value or remove the token reference.",
+                line=line,
+            )
+
+    # Rendered audit: also scan output/manuscript/ for stale placeholders
+    if ctx.rendered:
+        output_md = ctx.project_root / "output" / "manuscript"
+        if output_md.is_dir():
+            for path in sorted(output_md.rglob("*.md")):
+                try:
+                    content = path.read_text(encoding="utf-8")
+                except OSError:
+                    continue
+                try:
+                    rel = path.relative_to(ctx.project_root).as_posix()
+                except ValueError:
+                    rel = path.as_posix()
+                for match in _PLACEHOLDER_TOKEN_RE.finditer(content):
+                    line = content[: match.start()].count("\n") + 1
+                    yield _finding(
+                        ctx,
+                        path=f"projects/{ctx.project}/{rel}",
+                        code="PUBLICATION.PLACEHOLDER_TOKEN",
+                        severity="error",
+                        status="fail",
+                        message=f"stale placeholder token in rendered output: {match.group(0)}",
+                        remediation="Re-render the manuscript after resolving the placeholder in the source.",
+                        line=line,
+                    )
+
+
+def check_unconsumed_markdown(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Warn about tracked manuscript markdown files that are not composed into the output.
+    
+    Only runs in rendered mode where output/manifest data exists.
+    """
+    if not ctx.rendered:
+        return
+    # Look for markdown files in manuscript/ that don't appear in the output/manifest
+    manuscript_files = {rel for rel, _ in _iter_manuscript_markdown(ctx.project_root)}
+    if not manuscript_files:
+        return
+    output_manifest = ctx.project_root / "output" / "reports" / "artifact_manifest.json"
+    if not output_manifest.is_file():
+        return
+    try:
+        manifest = json.loads(output_manifest.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    composed = set()
+    for entry in manifest.get("entries", []):
+        src = entry.get("source", "") if isinstance(entry, dict) else ""
+        if src.startswith("manuscript/") and src.endswith((".md", ".Rmd")):
+            composed.add(src)
+        path = entry.get("path", "") if isinstance(entry, dict) else ""
+        if path.startswith("manuscript/") and path.endswith((".md", ".Rmd")):
+            composed.add(path)
+    unconsumed = manuscript_files - composed
+    for rel in sorted(unconsumed):
+        yield _finding(
+            ctx,
+            path=f"projects/{ctx.project}/{rel}",
+            code="PUBLICATION.UNCONSUMED_MANUSCRIPT",
+            severity="warning",
+            status="review_required",
+            message="manuscript markdown file is tracked but does not appear in the composed output manifest",
+            remediation="Either include it in the composition pipeline or flag it as intentionally excluded.",
+        )
+
+
 SOURCE_CHECKERS: tuple[Checker, ...] = (
     check_project_skill,
     check_drift,
     check_no_mocks,
     check_methods,
     check_evidence,
+    check_placeholder_tokens,
 )
 
 RENDERED_CHECKERS: tuple[Checker, ...] = (
@@ -321,6 +430,8 @@ RENDERED_CHECKERS: tuple[Checker, ...] = (
     check_render_reports,
     check_artifact_manifest,
     check_figure_registry,
+    check_placeholder_tokens,
+    check_unconsumed_markdown,
 )
 
 

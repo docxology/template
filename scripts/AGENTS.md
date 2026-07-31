@@ -172,6 +172,7 @@ orchestrator:
 | `audit/check_tracked_all.py` | all four `offending_tracked_*` guards | CI lint + pre-push |
 | `audit/check_tracked_generated_artifacts.py` | `infrastructure.project.git_guards.tracked_generated_artifacts` | |
 | `audit/check_tracked_secrets.py` | `infrastructure.project.git_guards.tracked_secret_findings` | CI + pre-push tracked-index secret guard |
+| `audit/check_staged_secrets.py` | `infrastructure.project.git_guards.staged_diff_secret_findings` | Pre-commit staged-diff secret guard |
 | `maintenance/codegraph_local.py` | `infrastructure.project.codegraph` | Optional local-only index helper; never a pipeline dependency |
 | `maintenance/refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` | Explicit current-output integrity rebaseline after targeted renders; not stage provenance |
 | `runner/bundle_executable.py` | `infrastructure.publishing.executable_bundle.bundle_project` | |
