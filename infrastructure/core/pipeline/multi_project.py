@@ -256,7 +256,7 @@ class MultiProjectOrchestrator:
                             )
 
                     # Check if all stages succeeded
-                    all_success = all(r.success for r in results)
+                    all_success = bool(results) and all(r.success for r in results)
                     if all_success:
                         successful_projects += 1
                         logger.info(f"✅ Project '{project_name}' completed successfully")

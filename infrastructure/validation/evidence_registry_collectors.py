@@ -313,7 +313,10 @@ def _register_markdown_labels(project_root: Path, registry: VerifiedEvidenceRegi
     manuscript_dir = resolve_source_manuscript_dir(project_root)
     for markdown_path in _iter_existing(manuscript_dir, "*.md"):
         try:
-            text = markdown_path.read_text(encoding="utf-8")
+            # Keep evidence collection diagnostic rather than crash-only when
+            # a manuscript tree contains a malformed Markdown fixture. The
+            # markdown validator reports the encoding defect separately.
+            text = markdown_path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
         relative = _relative_to_project(markdown_path, project_root)

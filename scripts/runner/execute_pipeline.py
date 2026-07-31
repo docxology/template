@@ -70,6 +70,9 @@ def execute_pipeline(
             project_name=project_name,
             skip_infra=skip_infra,
         )
+        if not results:
+            logger.error("Pipeline produced no stage results; refusing an empty success")
+            return 1
         return 0 if all(r.success for r in results) else 1
     except Exception as exc:
         logger.error("Pipeline execution failed: %s", exc)

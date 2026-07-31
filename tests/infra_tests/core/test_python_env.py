@@ -12,6 +12,7 @@ from infrastructure.core.runtime._python_env import (
     get_python_command,
     get_subprocess_env,
     resolve_test_python,
+    validate_analysis_script_path,
     validate_interpreter,
 )
 
@@ -61,10 +62,10 @@ class TestGetSubprocessEnv:
 
 class TestBuildAnalysisScriptCmdAndEnv:
     def test_basic(self, tmp_path):
-        script = tmp_path / "analysis.py"
-        script.write_text("print('hello')")
         project_root = tmp_path / "project"
-        project_root.mkdir()
+        script = project_root / "scripts" / "analysis.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("print('hello')")
         repo_root = tmp_path
 
         cmd, env = build_analysis_script_cmd_and_env(script, project_root, repo_root)
@@ -77,10 +78,10 @@ class TestBuildAnalysisScriptCmdAndEnv:
         assert env["PROJECT_DIR"] == str(project_root)
 
     def test_with_project_venv(self, tmp_path):
-        script = tmp_path / "analysis.py"
-        script.write_text("print('hello')")
         project_root = tmp_path / "project"
-        project_root.mkdir()
+        script = project_root / "scripts" / "analysis.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("print('hello')")
         # Create a .venv directory in the project
         (project_root / ".venv").mkdir()
         repo_root = tmp_path
@@ -92,10 +93,10 @@ class TestBuildAnalysisScriptCmdAndEnv:
         assert "PYTHONPATH" in env
 
     def test_pythonpath_includes_project_src(self, tmp_path):
-        script = tmp_path / "script.py"
-        script.write_text("")
         project_root = tmp_path / "project"
-        project_root.mkdir()
+        script = project_root / "scripts" / "script.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("")
         repo_root = tmp_path
 
         cmd, env = build_analysis_script_cmd_and_env(script, project_root, repo_root)
@@ -110,10 +111,10 @@ class TestBuildAnalysisScriptCmdAndEnv:
         self-bootstrap sys.path failed with ``No module named 'src'`` because
         only ``project_root/src`` (not ``project_root``) was on the path.
         """
-        script = tmp_path / "script.py"
-        script.write_text("")
         project_root = tmp_path / "project"
-        project_root.mkdir()
+        script = project_root / "scripts" / "script.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("")
         repo_root = tmp_path
 
         _, env = build_analysis_script_cmd_and_env(script, project_root, repo_root)
@@ -121,6 +122,28 @@ class TestBuildAnalysisScriptCmdAndEnv:
         assert str(project_root) in paths
         # Root must precede project_root/src so ``src`` resolves as a package.
         assert paths.index(str(project_root)) < paths.index(str(project_root / "src"))
+
+    def test_rejects_script_outside_project_boundary(self, tmp_path):
+        project_root = tmp_path / "project"
+        (project_root / "scripts").mkdir(parents=True)
+        outside = tmp_path / "outside.py"
+        outside.write_text("")
+
+        with pytest.raises(ValueError, match="under"):
+            validate_analysis_script_path(outside, project_root)
+
+    def test_redacts_credentials_by_default_and_allows_explicit_opt_in(self, tmp_path, monkeypatch):
+        project_root = tmp_path / "project"
+        script = project_root / "scripts" / "script.py"
+        script.parent.mkdir(parents=True)
+        script.write_text("")
+        monkeypatch.setenv("PAPERCLIP_API_KEY", "secret")
+
+        _, redacted = build_analysis_script_cmd_and_env(script, project_root, tmp_path, allow_secret_env=False)
+        assert "PAPERCLIP_API_KEY" not in redacted
+
+        _, opted_in = build_analysis_script_cmd_and_env(script, project_root, tmp_path, allow_secret_env=True)
+        assert opted_in["PAPERCLIP_API_KEY"] == "secret"
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")

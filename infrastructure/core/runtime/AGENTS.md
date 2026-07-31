@@ -6,7 +6,8 @@ The `infrastructure/core/runtime/` package contains runtime helpers for environm
 
 ## Files
 
-- `_python_env.py` - Python environment helpers
+- `_python_env.py` - Python environment helpers, confined analysis-script paths,
+  and fail-closed analysis subprocess environments
 - `_packages.py` - package detection helpers
 - `_directories.py` - directory helpers
 - `checkpoint.py` - pipeline checkpointing

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from infrastructure.project.discovery import resolve_project_root
 
 
@@ -140,3 +142,15 @@ def test_resolve_project_root_templates_stub_without_markers_falls_through(tmp_p
 
     resolved = resolve_project_root(tmp_path, "template_stub")
     assert resolved == active.resolve()
+
+
+@pytest.mark.parametrize("unsafe_name", ["../outside", "/tmp/outside", "active/../outside", "active//demo"])
+def test_resolve_project_root_rejects_unsafe_names(tmp_path: Path, unsafe_name: str) -> None:
+    """Low-level callers cannot turn a project name into an arbitrary path."""
+    with pytest.raises(ValueError):
+        resolve_project_root(tmp_path, unsafe_name)
+
+
+def test_resolve_project_root_rejects_nul_bytes(tmp_path: Path) -> None:
+    with pytest.raises(ValueError):
+        resolve_project_root(tmp_path, "safe\x00name")

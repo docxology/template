@@ -16,6 +16,7 @@ from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.files.cleanup_helpers import archive_output_logs, clean_output_dir_contents
 from infrastructure.core.files.cleanup_root import clean_root_output_directory
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.core.project_paths import validate_project_name
 
 logger = get_logger(__name__)
 
@@ -28,6 +29,12 @@ __all__ = [
 ]
 
 _PUBLICATION_SIDECAR_NAMES = frozenset({"release_bundle", "swh_repo_url.txt", "upload_receipts.json"})
+
+
+def _reject_symlink_directory(path: Path) -> None:
+    """Refuse cleanup when the directory itself redirects outside its root."""
+    if path.is_symlink():
+        raise FileOperationError(f"Refusing to clean symlinked output directory: {path}")
 
 
 def clean_output_directory(output_dir: Path, *, preserve_names: frozenset[str] = frozenset()) -> None:
@@ -47,6 +54,7 @@ def clean_output_directory(output_dir: Path, *, preserve_names: frozenset[str] =
     import shutil
 
     logger.info("Cleaning output directory...")
+    _reject_symlink_directory(output_dir)
 
     if not output_dir.exists():
         logger.info(f"Output directory does not exist, creating: {output_dir}")
@@ -117,6 +125,8 @@ def clean_output_directories(repo_root: Path, project_name: str = "project", sub
         project_name: Name of project in projects/ directory (default: "project")
         subdirs: List of subdirectories to recreate. If None, uses default list.
     """
+    project_name = validate_project_name(project_name)
+
     # Discover valid project names by scanning the projects/ directory directly.
     # Using Path scan instead of infrastructure.project.discovery avoids a
     # circular import: file_operations -> project.discovery -> core.logging_utils.
@@ -151,6 +161,7 @@ def clean_output_directories(repo_root: Path, project_name: str = "project", sub
     ]
 
     for output_dir in output_dirs:
+        _reject_symlink_directory(output_dir)
         relative_path = output_dir.relative_to(repo_root)
 
         if output_dir.exists():

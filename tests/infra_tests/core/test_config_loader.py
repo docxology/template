@@ -274,6 +274,24 @@ class TestFindConfigFile:
 
         assert result is None
 
+    def test_finds_nested_template_config_by_bare_name(self, tmp_path):
+        config_file = tmp_path / "projects" / "templates" / "template_demo" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        config_file.write_text("paper:\n  title: Demo\n", encoding="utf-8")
+
+        assert find_config_file(tmp_path, "template_demo") == config_file
+
+    def test_unqualified_lookup_refuses_ambiguous_nested_configs(self, tmp_path):
+        for name in ("template_one", "template_two"):
+            config_file = tmp_path / "projects" / "templates" / name / "manuscript" / "config.yaml"
+            config_file.parent.mkdir(parents=True)
+            config_file.write_text("paper:\n  title: Demo\n", encoding="utf-8")
+
+        assert find_config_file(tmp_path) is None
+
+    def test_lookup_rejects_traversal_project_name(self, tmp_path):
+        assert find_config_file(tmp_path, "../outside") is None
+
 
 class TestIntegration:
     """Integration tests for config loading workflow."""

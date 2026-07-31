@@ -196,6 +196,21 @@ def test_manifest_snapshot_still_works_outside_a_git_repository(tmp_path: Path) 
     assert "output/data/render.log" not in recorded, "static suffix exclusions must still apply"
 
 
+def test_current_output_snapshot_omits_hidden_atomic_write_leftovers(tmp_path: Path) -> None:
+    """Interrupted hidden writers must never become publication evidence."""
+    project = tmp_path / "nogit"
+    figures = project / "output" / "figures"
+    figures.mkdir(parents=True)
+    (figures / ".trace.png").write_bytes(b"transient payload")
+    (figures / "trace.png").write_bytes(b"stable payload")
+
+    manifest = snapshot_current_artifact_manifest(project / "output")
+
+    recorded = {entry.path for entry in manifest.entries}
+    assert "output/figures/trace.png" in recorded
+    assert "output/figures/.trace.png" not in recorded
+
+
 def test_every_public_exemplar_manifest_references_only_tracked_files() -> None:
     """Bind to the live tree — this is the assertion CI was failing on."""
     import json

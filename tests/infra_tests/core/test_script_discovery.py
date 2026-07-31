@@ -114,6 +114,42 @@ class TestDiscoverAnalysisScripts:
 
         assert [script.name for script in scripts] == ["generate_figures.py", "biology_analysis.py"]
 
+    def test_discover_analysis_scripts_rejects_allowlist_traversal(self, tmp_path):
+        """A config cannot make Stage 02 execute a script outside its project."""
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "project"
+        scripts_dir = project_dir / "scripts"
+        manuscript_dir = project_dir / "manuscript"
+        scripts_dir.mkdir(parents=True)
+        manuscript_dir.mkdir()
+        outside = project_dir.parent / "outside.py"
+        outside.write_text("# outside", encoding="utf-8")
+        (manuscript_dir / "config.yaml").write_text(
+            "analysis:\n  scripts:\n    - ../outside.py\n    - /tmp/escape.py\n",
+            encoding="utf-8",
+        )
+
+        assert discover_analysis_scripts(repo_root, project_name="project") == []
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_discover_analysis_scripts_rejects_external_allowlist_symlink(self, tmp_path):
+        """An allowlisted symlink must still resolve inside the scripts tree."""
+        repo_root = tmp_path / "repo"
+        project_dir = repo_root / "projects" / "project"
+        scripts_dir = project_dir / "scripts"
+        manuscript_dir = project_dir / "manuscript"
+        scripts_dir.mkdir(parents=True)
+        manuscript_dir.mkdir()
+        outside = tmp_path / "outside.py"
+        outside.write_text("# outside", encoding="utf-8")
+        (scripts_dir / "escape.py").symlink_to(outside)
+        (manuscript_dir / "config.yaml").write_text(
+            "analysis:\n  scripts:\n    - escape.py\n",
+            encoding="utf-8",
+        )
+
+        assert discover_analysis_scripts(repo_root, project_name="project") == []
+
     def test_discover_analysis_scripts_reads_docs_manuscript_allowlist(self, tmp_path):
         """A config-only compatibility tree cannot shadow the canonical docs source."""
         repo_root = tmp_path / "repo"

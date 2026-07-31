@@ -28,6 +28,11 @@ Steganography configuration is resolved in three layers:
 2. Repository secure-run defaults in `infrastructure/config/secure_config.yaml`.
 3. Per-project overrides in `projects/<name>/manuscript/config.yaml` under `steganography:`.
 
+The ordinary processor honors the effective mapping. The explicit
+`secure_run.sh` boundary is stricter: malformed project YAML fails closed and
+the secure wrapper re-enables the master switch, hashing, and hash-manifest
+companion even when a project override attempts to disable them.
+
 Normal public exemplar renders do not apply watermarking or encryption. Running `./secure_run.sh` is the explicit opt-in path for applying the repository secure defaults to a project.
 
 ```yaml

@@ -562,7 +562,7 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |

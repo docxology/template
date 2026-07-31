@@ -73,6 +73,34 @@ def resolve_source_manuscript_dir(project_root: Path | str) -> Path:
     return conventional
 
 
+def validate_project_name(project_name: str) -> str:
+    """Validate and normalize a project-relative name.
+
+    Low-level helpers can be called without the interactive CLI's roster
+    validation. Reject absolute paths, traversal components, NUL bytes, and
+    ambiguous separators while allowing qualified lifecycle names such as
+    ``templates/template_code_project``.
+
+    This is lexical validation only. Managed lifecycle symlinks are an
+    intentional workspace contract and are handled separately by
+    :func:`resolve_project_root`.
+    """
+    if not isinstance(project_name, str) or not project_name:
+        raise ValueError("project name must be a non-empty string")
+    if "\x00" in project_name:
+        raise ValueError("project name must not contain NUL bytes")
+
+    normalized = project_name.replace("\\", "/")
+    parts = normalized.split("/")
+    if (
+        normalized.startswith("/")
+        or (len(parts[0]) == 2 and parts[0][1] == ":")
+        or any(part in {"", ".", ".."} for part in parts)
+    ):
+        raise ValueError(f"project name must be a relative path without traversal: {project_name!r}")
+    return "/".join(parts)
+
+
 def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     """Return the directory for *project_name*, preferring the hot seat over WIP trees.
 
@@ -88,13 +116,35 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
 
     Args:
         repo_root: Repository root (directory containing ``infrastructure/``).
-        project_name: Final path segment (e.g. ``"cogant"``).
+        project_name: Bare or qualified relative project name
+            (e.g. ``"cogant"`` or ``"templates/template_code_project"``).
 
     Returns:
         Absolute resolved path to the project directory.
     """
     if isinstance(repo_root, str):
         repo_root = Path(repo_root)
+    repo_root = repo_root.resolve()
+    project_name = validate_project_name(project_name)
+    projects_root = (repo_root / "projects").resolve()
+
+    def confined_candidate(relative_name: str) -> Path:
+        """Resolve a candidate while preserving intentional leaf symlinks.
+
+        Public and lifecycle projects may be represented by a managed symlink
+        whose target lives in the private sibling workspace. That leaf-link
+        contract remains supported. A symlink hidden in an intermediate path,
+        however, cannot redirect a low-level caller outside ``projects/``.
+        """
+        raw = projects_root.joinpath(*relative_name.split("/"))
+        resolved = raw.resolve(strict=False)
+        if raw.is_symlink():
+            return resolved
+        try:
+            resolved.relative_to(projects_root)
+        except ValueError as exc:
+            raise ValueError(f"project path escapes projects/: {relative_name!r}") from exc
+        return resolved
 
     def has_project_markers(path: Path) -> bool:
         """Return True if the directory contains project marker files."""
@@ -103,27 +153,27 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     # A name that already carries a typed-subfolder prefix (e.g. ``active/demo``,
     # ``working/draft``, ``templates/template_code_project``) is resolved directly
     # under ``projects/`` without re-prepending the hot-seat prefix.
-    head = project_name.replace("\\", "/").split("/", 1)[0]
+    head = project_name.split("/", 1)[0]
     if head in (NON_RENDERED_SUBDIRS | {"active", "templates"}):
-        qualified = repo_root / "projects" / project_name
+        qualified = confined_candidate(project_name)
         if qualified.is_dir():
-            return qualified.resolve()
+            return qualified
         return qualified
 
-    primary = repo_root / "projects" / "active" / project_name
+    primary = confined_candidate(f"active/{project_name}")
     if primary.is_dir() and has_project_markers(primary):
-        return primary.resolve()
-    wip = repo_root / "projects" / "working" / project_name
+        return primary
+    wip = confined_candidate(f"working/{project_name}")
     if wip.is_dir():
-        return wip.resolve()
+        return wip
     # A flat standalone tree only wins outright when it carries source markers.
     # An output-only flat skeleton (e.g. a stale ``projects/<name>/output/``
     # minted by a prior run) must not shadow a real exemplar under
     # ``projects/templates/`` — that shadow made bare-name consumers such as
     # ``build_evidence_graph`` silently see an empty project.
-    flat = repo_root / "projects" / project_name
+    flat = confined_candidate(project_name)
     if flat.is_dir() and has_project_markers(flat):
-        return flat.resolve()
+        return flat
     # Public canonical exemplars live under ``projects/templates/<name>`` and
     # must resolve by bare name as well. Without this, an output-only shadow
     # under ``projects/active/<name>`` (or the stable error-path fallback below)
@@ -131,15 +181,15 @@ def resolve_project_root(repo_root: Path | str, project_name: str) -> Path:
     # ``infrastructure.autoresearch.build_autoresearch_plan`` silently load
     # default config instead of the exemplar's own. Checked after the
     # hot-seat/WIP/flat trees so an actually-promoted project still wins.
-    templated = repo_root / "projects" / "templates" / project_name
+    templated = confined_candidate(f"templates/{project_name}")
     if templated.is_dir() and has_project_markers(templated):
-        return templated.resolve()
+        return templated
     # Marker-less flat tree with no exemplar counterpart: keep the historical
     # behavior of returning it so bespoke layouts and error paths still resolve.
     if flat.is_dir():
-        return flat.resolve()
+        return flat
     if primary.is_dir():
-        return primary.resolve()
+        return primary
     return primary
 
 
@@ -148,4 +198,5 @@ __all__ = [
     "find_repo_root",
     "resolve_project_root",
     "resolve_source_manuscript_dir",
+    "validate_project_name",
 ]

@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 814
+Total documented definitions: 815
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -20,8 +20,8 @@ Total documented definitions: 814
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 15 | `function` | `entangled_prior_unnormalised` | docstring | Process entangled prior unnormalised. |
-| 28 | `function` | `entangled_posterior` | docstring | Process entangled posterior. |
-| 45 | `function` | `expected_value` | docstring | Process expected value. |
+| 29 | `function` | `entangled_posterior` | docstring | Process entangled posterior. |
+| 46 | `function` | `expected_value` | docstring | Process expected value. |
 
 ## `src/analytical/decomposition.py`
 
@@ -42,12 +42,12 @@ Total documented definitions: 814
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
 | 17 | `function` | `_safe_log` | inventory fallback | Inventory fallback for function `_safe_log` defined at `src/analytical/free_energy.py:17`. |
-| 22 | `function` | `shannon_entropy` | docstring | Shannon entropy ``H(p) = -Σ p log p`` in nats. |
-| 39 | `function` | `kl_divergence` | docstring | Kullback-Leibler divergence ``D(q‖p) = Σ q log(q/p)`` in nats. |
-| 66 | `function` | `total_correlation` | docstring | Total correlation ``TC(q) = Σ_k H(q_k) - H(q)`` in nats (direct form). |
-| 84 | `function` | `total_correlation_via_kl` | docstring | Total correlation as ``D(q‖∏_k q_k)`` in nats (KL form). |
-| 101 | `function` | `free_energy` | docstring | Variational free energy ``F = γ·E_q[G] - E_q[log prior] - H(q)`` in nats. |
-| 130 | `function` | `marginal_free_energy` | docstring | Per-stream (mean-field) free energy for factor ``k`` in nats. |
+| 23 | `function` | `shannon_entropy` | docstring | Shannon entropy ``H(p) = -Σ p log p`` in nats. |
+| 40 | `function` | `kl_divergence` | docstring | Kullback-Leibler divergence ``D(q‖p) = Σ q log(q/p)`` in nats. |
+| 67 | `function` | `total_correlation` | docstring | Total correlation ``TC(q) = Σ_k H(q_k) - H(q)`` in nats (direct form). |
+| 85 | `function` | `total_correlation_via_kl` | docstring | Total correlation as ``D(q‖∏_k q_k)`` in nats (KL form). |
+| 102 | `function` | `free_energy` | docstring | Variational free energy ``F = γ·E_q[G] - E_q[log prior] - H(q)`` in nats. |
+| 131 | `function` | `marginal_free_energy` | docstring | Per-stream (mean-field) free energy for factor ``k`` in nats. |
 
 ## `src/analytical/hyperparameters.py`
 
@@ -604,19 +604,20 @@ Total documented definitions: 814
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 13 | `function` | `_sha256` | inventory fallback | Inventory fallback for function `_sha256` defined at `src/roadmap_tracks/fixed_point.py:13`. |
-| 17 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:17`. |
-| 29 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:29`. |
-| 38 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:38`. |
-| 63 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:63`. |
-| 119 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:119`. |
-| 136 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:136`. |
-| 165 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:165`. |
-| 179 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 194 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:194`. |
-| 210 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:210`. |
-| 230 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 248 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 12 | `function` | `_write_fingerprint_cache` | docstring | Write the fingerprint cache, creating parent dirs as needed. |
+| 18 | `function` | `_sha256` | inventory fallback | Inventory fallback for function `_sha256` defined at `src/roadmap_tracks/fixed_point.py:18`. |
+| 22 | `function` | `_refresh_animation_outputs` | inventory fallback | Inventory fallback for function `_refresh_animation_outputs` defined at `src/roadmap_tracks/fixed_point.py:22`. |
+| 34 | `function` | `_refresh_hydrated_manuscript` | inventory fallback | Inventory fallback for function `_refresh_hydrated_manuscript` defined at `src/roadmap_tracks/fixed_point.py:34`. |
+| 41 | `function` | `_write_sheaf_owned_artifacts` | inventory fallback | Inventory fallback for function `_write_sheaf_owned_artifacts` defined at `src/roadmap_tracks/fixed_point.py:41`. |
+| 48 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:48`. |
+| 55 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:55`. |
+| 68 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:68`. |
+| 97 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:97`. |
+| 111 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 126 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:126`. |
+| 142 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:142`. |
+| 162 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 180 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 

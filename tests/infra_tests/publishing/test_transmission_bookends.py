@@ -66,6 +66,14 @@ class TestTransmissionBookends:
         assert transmission_bookends_enabled(project_root / "manuscript" / "config.yaml") is False
         assert write_transmission_bookends(project_root, "demo") is None
 
+    def test_quoted_boolean_fails_closed(self, tmp_path: Path) -> None:
+        project_root = tmp_path / "demo"
+        _write_project(project_root, enabled=True)
+        config_path = project_root / "manuscript" / "config.yaml"
+        config_path.write_text(config_path.read_text().replace("enabled: true", 'enabled: "false"'), encoding="utf-8")
+
+        assert transmission_bookends_enabled(config_path) is False
+
     def test_draft_context_is_unpublished(self, tmp_path: Path) -> None:
         project_root = tmp_path / "demo"
         _write_project(project_root, enabled=True)

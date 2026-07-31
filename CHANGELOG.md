@@ -9,6 +9,33 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Template infrastructure hardening (2026-07-30)
+
+- Added lexical project-name confinement and in-project analysis-script allowlists,
+  including traversal, absolute-path, and external-script negative controls.
+- Made nested manuscript-config lookup deterministic and fail closed on ambiguity;
+  render-format and transmission-bookend flags now require native YAML booleans.
+- Hardened secure-run so explicit no-input requests fail, project overrides cannot
+  disable secure hashing/manifests, malformed secure configs fail closed, and each
+  processed PDF must produce distinct output plus fresh hash evidence.
+- Made empty pipeline plans fail instead of reporting vacuous success, promoted
+  figure/evidence/design/artifact validation failures to blocking status, and made
+  Stage 02 output verification failure an exit failure.
+- Added tracked-output guards for hidden atomic-write leftovers and empty public
+  generated artifacts; removed the interrupted active-inference figure/cache and
+  regenerated its method inventory and artifact manifest.
+- Aligned the self-describing `template_template` exemplar with the repository's
+  Python 3.10 floor and refreshed its standalone lockfile.
+- Confined direct Stage-02 script execution to each project's resolved
+  `scripts/` tree and redacted credential-like environment variables by default;
+  live integrations now require the explicit `ANALYSIS_ALLOW_SECRETS=1` opt-in.
+- Pinned the shell/CI installer paths used by uv, actionlint, and elan; CI now
+  verifies the downloaded actionlint and elan installer checksums before
+  execution.
+- Added a tracked-index high-confidence secret scan to CI and pre-push guards;
+  it reports only path/line/type evidence and preserves explicit fixture-safe
+  placeholder examples.
+
 ### Exemplar pipeline fixes (2026-07-24)
 
 - **Conditional `siunitx` loading in 6 exemplar preambles.** Replaced

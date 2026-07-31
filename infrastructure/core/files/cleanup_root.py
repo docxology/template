@@ -29,6 +29,10 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
     """
     output_dir = repo_root / "output"
 
+    if output_dir.is_symlink():
+        logger.error("Refusing to clean symlinked root output directory: %s", output_dir)
+        return False
+
     if not output_dir.exists():
         logger.debug("Output directory does not exist, nothing to clean")
         return True

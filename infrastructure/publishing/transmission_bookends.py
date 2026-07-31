@@ -64,10 +64,14 @@ def _bookend_settings(config: dict[str, Any]) -> TransmissionBookendSettings:
     if not isinstance(transmission, dict):
         transmission = {}
     github_repository = publication.get("github_repository")
+    enabled = transmission.get("enabled", False)
+    show_steganography = transmission.get("show_steganography", True)
     return TransmissionBookendSettings(
-        enabled=bool(transmission.get("enabled")),
+        # Only native YAML booleans are accepted. Quoted values such as
+        # ``"false"`` must fail closed instead of becoming truthy.
+        enabled=enabled if isinstance(enabled, bool) else False,
         max_prior_releases=int(transmission.get("max_prior_releases") or 5),
-        show_steganography=transmission.get("show_steganography", True) is not False,
+        show_steganography=show_steganography if isinstance(show_steganography, bool) else True,
         github_repository=str(github_repository).strip() if github_repository else None,
     )
 

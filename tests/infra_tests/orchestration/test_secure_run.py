@@ -7,6 +7,7 @@ delegates correctly without exercising the cryptography code path.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,7 @@ class _NoopProcessor:
     """Real class, no mocking. Records calls and returns the input path."""
 
     def __init__(self, _config):
+        self.config = _config
         self.calls: list[Path] = []
 
     def process(self, pdf_path: Path, *, title: str = "", authors=None, keywords=None, author_emails=None):
@@ -31,6 +33,7 @@ class _NoopProcessor:
         # Return an object with a `.name` to match the production interface.
         out = pdf_path.with_name(pdf_path.stem + "_steganography.pdf")
         out.write_bytes(b"%PDF-1.4\n")
+        pdf_path.with_suffix(".hashes.json").write_text(json.dumps({"source": pdf_path.name}), encoding="utf-8")
         return out
 
 
@@ -187,6 +190,69 @@ def test_run_secure_pipeline_steg_only_skips_pipeline(fake_repo_with_pdf: Path) 
     assert rc == 0
     # No pipeline runs in steganography-only mode
     assert len(captured) == 1
+
+
+def test_run_secure_pipeline_explicit_no_pdfs_is_failure(fake_repo: Path) -> None:
+    rc = run_secure_pipeline(
+        fake_repo,
+        SecureRunOptions(project="template_code_project", steganography_only=True),
+        runner_cls=_StubRunner,
+        processor_factory=lambda cfg: _NoopProcessor(cfg),
+    )
+    assert rc == 1
+
+
+def test_run_secure_pipeline_all_projects_without_pdfs_is_failure(fake_repo: Path) -> None:
+    rc = run_secure_pipeline(
+        fake_repo,
+        SecureRunOptions(project=None, steganography_only=True),
+        runner_cls=_StubRunner,
+        processor_factory=lambda cfg: _NoopProcessor(cfg),
+    )
+    assert rc == 1
+
+
+def test_secure_run_forces_enabled_hashing_and_manifest(fake_repo_with_pdf: Path) -> None:
+    project = fake_repo_with_pdf / "projects" / "template_code_project"
+    (project / "manuscript").mkdir(parents=True, exist_ok=True)
+    (project / "manuscript" / "config.yaml").write_text(
+        "steganography:\n  enabled: false\n  hashing_enabled: false\n  manifest_enabled: false\n",
+        encoding="utf-8",
+    )
+    captured: list[dict[str, object]] = []
+
+    def factory(config):
+        captured.append(config)
+        return _NoopProcessor(config)
+
+    assert (
+        run_secure_pipeline(
+            fake_repo_with_pdf,
+            SecureRunOptions(project="template_code_project", steganography_only=True),
+            runner_cls=_StubRunner,
+            processor_factory=factory,
+        )
+        == 0
+    )
+    assert captured[0]["enabled"] is True
+    assert captured[0]["hashing_enabled"] is True
+    assert captured[0]["manifest_enabled"] is True
+
+
+def test_secure_run_rejects_malformed_project_config(fake_repo_with_pdf: Path) -> None:
+    project = fake_repo_with_pdf / "projects" / "template_code_project"
+    (project / "manuscript").mkdir(parents=True, exist_ok=True)
+    (project / "manuscript" / "config.yaml").write_text("paper: [unterminated", encoding="utf-8")
+
+    assert (
+        run_secure_pipeline(
+            fake_repo_with_pdf,
+            SecureRunOptions(project="template_code_project", steganography_only=True),
+            runner_cls=_StubRunner,
+            processor_factory=lambda cfg: _NoopProcessor(cfg),
+        )
+        == 1
+    )
 
 
 def test_run_secure_pipeline_runs_pipeline_then_steg(

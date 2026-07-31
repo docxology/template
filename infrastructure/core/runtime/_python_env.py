@@ -6,6 +6,7 @@ and provides subprocess environment configuration.
 
 import os
 import platform
+import re
 import subprocess  # nosec B404
 import sys
 from pathlib import Path
@@ -13,6 +14,28 @@ from pathlib import Path
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
+
+_SECRET_ENV_NAME = re.compile(r"(?:API[_-]?KEY|TOKEN|SECRET|PASSWORD|PRIVATE[_-]?KEY|CREDENTIAL)", re.IGNORECASE)
+_ANALYSIS_SECRET_OPT_IN = "ANALYSIS_ALLOW_SECRETS"
+
+
+def validate_analysis_script_path(script_path: Path, project_root: Path) -> Path:
+    """Return a runnable project script only when it stays under ``scripts/``.
+
+    Stage 02 normally receives paths from :func:`script_discovery`, but this
+    low-level helper is also public and can be called directly. Resolve the
+    candidate before checking containment so ``..`` components and symlinks
+    cannot redirect execution outside the project script tree.
+    """
+    scripts_root = (project_root / "scripts").resolve()
+    candidate = Path(script_path).resolve(strict=False)
+    try:
+        candidate.relative_to(scripts_root)
+    except ValueError as exc:
+        raise ValueError(f"analysis script must remain under {scripts_root}: {script_path}") from exc
+    if candidate.suffix != ".py" or not candidate.is_file():
+        raise ValueError(f"analysis script is missing or not a Python file: {script_path}")
+    return candidate
 
 
 def check_python_version() -> bool:
@@ -127,16 +150,25 @@ def validate_interpreter() -> bool:
     return True
 
 
-def get_subprocess_env(base_env: dict[str, str] | None = None) -> dict[str, str]:
+def get_subprocess_env(
+    base_env: dict[str, str] | None = None,
+    *,
+    redact_secrets: bool = False,
+) -> dict[str, str]:
     """Return env dict with VIRTUAL_ENV stripped when uv is active (avoids warnings).
 
     Args:
         base_env: Base environment dictionary (defaults to os.environ if None)
+        redact_secrets: Remove credential-like variable names before returning.
 
     Returns:
         Environment dictionary suitable for subprocess.run(env=...)
     """
-    env = dict(base_env or os.environ)
+    env = dict(os.environ if base_env is None else base_env)
+    if redact_secrets:
+        for key in tuple(env):
+            if _SECRET_ENV_NAME.search(key):
+                env.pop(key, None)
     # Unset VIRTUAL_ENV when using uv to avoid warnings about absolute paths
     if check_uv_available() and "VIRTUAL_ENV" in env:
         env.pop("VIRTUAL_ENV", None)
@@ -144,7 +176,11 @@ def get_subprocess_env(base_env: dict[str, str] | None = None) -> dict[str, str]
 
 
 def build_analysis_script_cmd_and_env(
-    script_path: Path, project_root: Path, repo_root: Path
+    script_path: Path,
+    project_root: Path,
+    repo_root: Path,
+    *,
+    allow_secret_env: bool | None = None,
 ) -> tuple[list[str], dict[str, str]]:
     """Build the subprocess command and environment for running an analysis script.
 
@@ -155,12 +191,23 @@ def build_analysis_script_cmd_and_env(
         script_path: Path to the analysis script to execute.
         project_root: Absolute path to the project directory (projects/{name}/).
         repo_root: Absolute path to the repository root.
+        allow_secret_env: Explicitly permit credential-like environment
+            variables. When omitted, only ``ANALYSIS_ALLOW_SECRETS=1`` (or
+            another strict true value) opts in; the default is fail-closed.
 
     Returns:
         A (cmd, env) tuple ready for ``subprocess.run(cmd, env=env, ...)``.
     """
     import shutil
     import tempfile
+
+    script_path = validate_analysis_script_path(script_path, project_root)
+    if allow_secret_env is None:
+        allow_secret_env = os.environ.get(_ANALYSIS_SECRET_OPT_IN, "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
 
     # Detect project-local venv: if the project has its own .venv with optional
     # dependencies (e.g. discopy), use uv run from the project directory.
@@ -174,7 +221,7 @@ def build_analysis_script_cmd_and_env(
     else:
         cmd = get_python_command() + [str(script_path)]
 
-    env = get_subprocess_env()
+    env = get_subprocess_env(redact_secrets=not allow_secret_env)
     env.setdefault("MPLBACKEND", "Agg")
     env.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib"))
     env["PYTHONPATH"] = os.pathsep.join(
@@ -212,7 +259,9 @@ def build_analysis_script_cmd_and_env(
         "ELAN_HOME",
     )
     for key, val in os.environ.items():
-        if any(key.startswith(p) for p in _PASSTHROUGH_PREFIXES) or key in _PASSTHROUGH_KEYS:
+        if (any(key.startswith(p) for p in _PASSTHROUGH_PREFIXES) or key in _PASSTHROUGH_KEYS) and (
+            allow_secret_env or not _SECRET_ENV_NAME.search(key)
+        ):
             env[key] = val
 
     return cmd, env

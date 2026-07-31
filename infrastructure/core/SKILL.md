@@ -42,8 +42,9 @@ from infrastructure.core.config.loader import load_config, find_config_file, get
 # Load project config.yaml
 config = load_config(project_path / "manuscript" / "config.yaml")
 
-# Auto-discover config file
-config_path = find_config_file(project_root)
+# Resolve a named project config; unqualified lookup is intentionally
+# ambiguous when a repository contains multiple project manuscripts.
+config_path = find_config_file(repo_root, project_name="templates/template_code_project")
 ```
 
 ## Exception Hierarchy (`exceptions.py`)

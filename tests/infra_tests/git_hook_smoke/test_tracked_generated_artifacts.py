@@ -6,7 +6,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-from infrastructure.project.git_guards import is_generated_artifact_path
+from infrastructure.project.git_guards import (
+    is_empty_public_template_output,
+    is_generated_artifact_path,
+    is_hidden_public_template_output,
+    tracked_secret_findings,
+)
 
 
 def _repo_root() -> Path:
@@ -29,6 +34,24 @@ def test_generated_artifact_path_matcher() -> None:
     assert is_generated_artifact_path("projects/working/private_project/output/data/x.csv")
 
 
+def test_public_output_guard_rejects_hidden_and_empty_payloads(tmp_path: Path) -> None:
+    """Portable public evidence cannot include dotfiles or empty payloads."""
+    repo_root = tmp_path / "repo"
+    hidden = "projects/templates/template_code_project/output/figures/.trace.png"
+    empty = "projects/templates/template_code_project/output/figures/trace.png"
+    (repo_root / hidden).parent.mkdir(parents=True)
+    (repo_root / hidden).write_bytes(b"leftover")
+    (repo_root / empty).touch()
+
+    assert is_hidden_public_template_output(hidden)
+    assert not is_hidden_public_template_output("projects/templates/template_code_project/output/figures/trace.png")
+    assert is_empty_public_template_output(repo_root, empty)
+    assert not is_empty_public_template_output(
+        repo_root,
+        "projects/templates/template_code_project/output/figures/__init__.py",
+    )
+
+
 def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     """Repository index must stay free of regeneratable output artifacts."""
     proc = subprocess.run(
@@ -46,6 +69,27 @@ def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     )
 
     assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+def test_current_repo_has_no_high_confidence_tracked_secrets() -> None:
+    """Credential examples remain fixture-safe and real tokens are rejected."""
+    repo_root = _repo_root()
+    assert tracked_secret_findings(repo_root) == []
+
+
+def test_tracked_secret_scan_reports_path_line_and_kind(tmp_path: Path) -> None:
+    """The scanner reports evidence metadata without exposing the token value."""
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    secret = "ghp_" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8"
+    note = repo_root / "note.txt"
+    note.write_text(f"reviewed\n{secret}\n", encoding="utf-8")
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
+    subprocess.run(["git", "add", "note.txt"], cwd=repo_root, check=True, timeout=30)
+
+    findings = tracked_secret_findings(repo_root)
+    assert findings == ["note.txt:2:github-token"]
+    assert secret not in "\n".join(findings)
 
 
 def test_projects_docs_are_trackable_while_rotating_projects_remain_ignored() -> None:

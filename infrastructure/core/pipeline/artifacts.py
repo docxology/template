@@ -468,6 +468,12 @@ def git_ignored_paths(paths: "Sequence[Path]", project_dir: Path) -> frozenset[P
 
 def _is_ignored_output(path: Path, output_dir: Path) -> bool:
     rel_parts = path.relative_to(output_dir).parts
+    # Dotfiles under output are local caches, atomic-write leftovers, or
+    # workspace markers rather than publication evidence. In particular,
+    # figure writers use hidden temporary files while normalizing PNGs; a
+    # killed render must not turn that transient file into a manifest entry.
+    if path.name.startswith("."):
+        return True
     if path.name == "fulltext_inventory.json":
         return path.name in _IGNORED_OUTPUT_FILENAMES or path.suffix in _IGNORED_OUTPUT_SUFFIXES
     return (
@@ -480,7 +486,8 @@ def _is_ignored_output(path: Path, output_dir: Path) -> bool:
 def _is_ignored_manifest_path(raw_path: str) -> bool:
     path = Path(raw_path)
     return (
-        any(part in _IGNORED_OUTPUT_PARTS for part in path.parts)
+        path.name.startswith(".")
+        or any(part in _IGNORED_OUTPUT_PARTS for part in path.parts)
         or path.name in _IGNORED_OUTPUT_FILENAMES
         or path.suffix in _IGNORED_OUTPUT_SUFFIXES
     )

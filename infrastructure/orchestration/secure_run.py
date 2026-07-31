@@ -54,14 +54,14 @@ def _load_steganography() -> tuple[Any, Any]:  # pragma: no cover - import indir
     return SteganographyConfig, SteganographyProcessor
 
 
-def _load_project_config(project_path: Path) -> dict[str, Any]:
+def _load_project_config(project_path: Path, *, strict: bool = False) -> dict[str, Any]:
     """Load ``manuscript/config.yaml`` for the project, if present."""
-    return _load_yaml_mapping(project_path / "manuscript" / "config.yaml")
+    return _load_yaml_mapping(project_path / "manuscript" / "config.yaml", strict=strict)
 
 
-def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+def _load_yaml_mapping(path: Path, *, strict: bool = False) -> dict[str, Any]:
     """Compatibility wrapper over the shared tolerant YAML loader."""
-    return load_yaml_mapping(path)
+    return load_yaml_mapping(path, strict=strict)
 
 
 def _load_repo_secure_config(repo_root: Path) -> dict[str, Any]:
@@ -71,7 +71,12 @@ def _load_repo_secure_config(repo_root: Path) -> dict[str, Any]:
     return dict(steg) if isinstance(steg, dict) else {}
 
 
-def _effective_steganography_config(repo_root: Path, project_config: dict[str, Any]) -> dict[str, Any]:
+def _effective_steganography_config(
+    repo_root: Path,
+    project_config: dict[str, Any],
+    *,
+    force_secure: bool = False,
+) -> dict[str, Any]:
     """Merge steganography config with precedence: dataclass < repo < project."""
     merged = _load_repo_secure_config(repo_root)
     project_steg = project_config.get("steganography", {})
@@ -79,6 +84,11 @@ def _effective_steganography_config(repo_root: Path, project_config: dict[str, A
         merged.update(project_steg)
     elif project_steg:
         logger.warning("Ignoring non-mapping steganography config: %r", project_steg)
+    if force_secure:
+        # A secure run must not be downgraded by a per-project override. The
+        # hash manifest is the companion evidence that lets operators verify
+        # which source PDF was processed.
+        merged.update(enabled=True, hashing_enabled=True, manifest_enabled=True)
     return merged
 
 
@@ -91,7 +101,11 @@ def validate_kmyth_for_secure_run(repo_root: Path, project_qualified_name: str |
         except ValueError:
             logger.error("Unknown project: %s", project_qualified_name)
             return 1
-        project_config = _load_project_config(project.path)
+        try:
+            project_config = _load_project_config(project.path, strict=True)
+        except Exception as exc:  # noqa: BLE001 - secure validation fails closed
+            logger.error("Could not load secure config for %s: %s", project_qualified_name, exc)
+            return 1
 
     SteganographyConfig, _ = _load_steganography()
     steg_mapping = _effective_steganography_config(repo_root, project_config)
@@ -116,6 +130,8 @@ def apply_steganography_to_project(
     project_qualified_name: str,
     *,
     processor_factory: Any = None,
+    force_secure: bool = False,
+    strict_config: bool = False,
 ) -> int:
     """Apply steganography to all PDFs in a single project.
 
@@ -147,12 +163,25 @@ def apply_steganography_to_project(
         logger.warning("No PDFs found in %s", pdf_dir)
         return 2
 
-    config_yaml = _load_project_config(project.path)
-    title = config_yaml.get("paper", {}).get("title", project_qualified_name)
-    authors = [a.get("name", "") for a in config_yaml.get("authors", [])]
-    author_emails = [a.get("email") for a in config_yaml.get("authors", []) if a.get("email")]
+    try:
+        config_yaml = _load_project_config(project.path, strict=strict_config)
+    except Exception as exc:  # noqa: BLE001 - strict mode must fail closed
+        logger.error("Could not load secure config for %s: %s", project_qualified_name, exc)
+        return 1
+
+    paper = config_yaml.get("paper")
+    paper_mapping = paper if isinstance(paper, dict) else {}
+    raw_authors = config_yaml.get("authors")
+    author_mappings = (
+        [author for author in raw_authors if isinstance(author, dict)] if isinstance(raw_authors, list) else []
+    )
+    title = paper_mapping.get("title", project_qualified_name)
+    authors = [str(author.get("name", "")) for author in author_mappings]
+    author_emails = [str(author["email"]) for author in author_mappings if author.get("email")]
     keywords = config_yaml.get("keywords", [])
-    steg_mapping = _effective_steganography_config(repo_root, config_yaml)
+    if not isinstance(keywords, list):
+        keywords = []
+    steg_mapping = _effective_steganography_config(repo_root, config_yaml, force_secure=force_secure)
 
     if processor_factory is None:  # pragma: no cover - heavy reportlab path
         SteganographyConfig, SteganographyProcessor = _load_steganography()
@@ -163,6 +192,8 @@ def apply_steganography_to_project(
 
     success_count = 0
     for pdf_path in pdfs:
+        manifest_path = pdf_path.with_suffix(".hashes.json")
+        manifest_mtime_before = manifest_path.stat().st_mtime_ns if manifest_path.exists() else None
         try:
             result = processor.process(
                 pdf_path,
@@ -171,6 +202,15 @@ def apply_steganography_to_project(
                 keywords=keywords,
                 author_emails=author_emails,
             )
+            if force_secure:
+                result_path = Path(result) if isinstance(result, (str, Path)) else None
+                manifest_is_fresh = manifest_path.is_file() and (
+                    manifest_mtime_before is None or manifest_path.stat().st_mtime_ns > manifest_mtime_before
+                )
+                if result_path is None or not result_path.is_file() or result_path.resolve() == pdf_path.resolve():
+                    raise RuntimeError("secure processor did not create a distinct output PDF")
+                if not manifest_is_fresh:
+                    raise RuntimeError("secure processor did not create a fresh hash manifest")
             logger.info("Processed %s -> %s", pdf_path.name, getattr(result, "name", result))
             success_count += 1
         except Exception as exc:  # noqa: BLE001
@@ -239,10 +279,28 @@ def run_secure_pipeline(
             return 1
 
     overall_status = 0
+    processed_targets = 0
     for target in targets:
-        rc = apply_steganography_to_project(repo_root, target, processor_factory=processor_factory)
+        rc = apply_steganography_to_project(
+            repo_root,
+            target,
+            processor_factory=processor_factory,
+            force_secure=True,
+            strict_config=True,
+        )
         if rc == 1:
             overall_status = 1
-        # rc == 2 (no PDFs) is non-fatal here, mirroring secure_run.sh
+        elif rc == 0:
+            processed_targets += 1
+        elif options.project is not None:
+            # An explicitly requested target with no source PDF is a failed
+            # request, not a successful no-op.
+            logger.error("No source PDFs were processed for explicit target %s", target)
+            overall_status = 1
+        else:
+            logger.info("Skipping %s: no source PDFs", target)
 
+    if overall_status == 0 and processed_targets == 0:
+        logger.error("Secure run produced no processed targets")
+        return 1
     return overall_status

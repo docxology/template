@@ -163,7 +163,8 @@ behaviorally equivalent to the dedicated documentation job.
 - **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 60`
 - **Depends on:** `verify-no-mocks`
 - **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
-- **Toolchain:** elan + pinned `lean-toolchain`, `lake build` warm-up
+- **Toolchain:** SHA-pinned elan installer (with checksum verification) + pinned
+  `lean-toolchain`, `lake build` warm-up
 - **Open Gauss:** clone [math-inc/OpenGauss](https://github.com/math-inc/OpenGauss), `./scripts/install.sh --plain --noninteractive --skip-system-packages`, `gauss doctor`
 - **Tests:** `uv run pytest tests/ --timeout=1200 --cov=src --cov-fail-under=89` with `COVERAGE_FILE: ../../.coverage.fep_lean`
 - **Scaling:** Full catalogue × Lean is expensive; if runtime grows past the job budget, split slow integration tests behind a pytest marker or shard topics in a follow-up workflow.

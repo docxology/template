@@ -118,6 +118,8 @@ jobs:
           curl -fsSL \
             "https://raw.githubusercontent.com/rhysd/actionlint/${ACTIONLINT_REF}/scripts/download-actionlint.bash" \
             -o "${RUNNER_TEMP}/download-actionlint.bash"
+          echo "72fa3e45ac20f3c3a512d6747b4fcf719e21f890e8c43e78d48a41fdfb900c4e  ${RUNNER_TEMP}/download-actionlint.bash" \
+            | sha256sum --check --status
           bash "${RUNNER_TEMP}/download-actionlint.bash" "${ACTIONLINT_VERSION}" "${RUNNER_TEMP}"
           "${RUNNER_TEMP}/actionlint" -color
 
@@ -161,6 +163,9 @@ jobs:
 
       - name: Reject tracked generated artifacts
         run: uv run python scripts/audit/check_tracked_generated_artifacts.py
+
+      - name: Reject tracked high-confidence secrets
+        run: uv run python scripts/audit/check_tracked_secrets.py
 
       - name: Confidentiality guard — only public template resources tracked
         run: uv run python scripts/audit/check_tracked_all.py
@@ -494,7 +499,12 @@ jobs:
       - name: Install elan (lean + lake)
         run: |
           set -euxo pipefail
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
+          curl -sSf \
+            https://raw.githubusercontent.com/leanprover/elan/58e8d545e33641f66dbcbd22c4283109e71757be/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          echo "4bacca9502cb89736fe63d2685abc2947cfbf34dc87673504f1bb4c43eda9264  $RUNNER_TEMP/elan-init.sh" \
+            | sha256sum --check --status
+          sh "$RUNNER_TEMP/elan-init.sh" -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Pin Lean toolchain and warm Lake build

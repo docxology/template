@@ -20,14 +20,14 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   regenerated from source. Its fixture phase replay is now part of the normal
   project analysis sequence; live retrieval remains an explicit opt-in path.
 - Generated checks for counts, coverage provenance, exemplar roster, and
-  publication records were refreshed on 2026-07-22.
-- Public release evidence covers all 24 canonical exemplars: the initial
-  release matrix passed 23/24, then the corrected `template_template` lane
-  passed 139 tests at 99.14% and the corrected `template_active_inference`
-  lane passed 720 tests at 90.33%. The one-shot matrix was not rerun after
-  output pruning; treat the per-project release lanes as the current evidence
-  boundary.
-- Configured mypy passes with zero errors across 1,470 source files; the
+  publication records were refreshed on 2026-07-30.
+- The bounded public matrix was rerun across all 24 canonical exemplars on
+  2026-07-30. Twenty-three lanes passed their declared project floors; the
+  `template_active_inference` lane ran 683 tests with 1 skipped and 51
+  deselected, but measured 89.35% against its 90% floor. The combined matrix
+  coverage was 94.47%. This is current evidence for the remaining
+  `PUBLIC-MATRIX-1` blocker, not a zero-failure release receipt.
+- Configured mypy passes with zero errors across 1,476 source files; the
   public-scope ratchet remains a separate gate.
 - Roadmap, status, contribution-map, regression-testing, and threat-model
   surfaces were reconciled against the current generated facts and active IDs;
@@ -56,60 +56,30 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   external administrator/operator action remains for the two security items;
   the coverage and CI-ergonomics items are fully complete.
 
-## TODO scope (2026-07-24)
+## Open cross-cutting work (2026-07-30)
 
-The root backlog has no open items. All four previously active items have been
-retired to the completed section below. New cross-cutting work should be scoped
-with a stable ID, problem statement, acceptance criteria, and evidence command
-before being added.
+The following items are the remaining infrastructure-level work identified by
+the Mahakala adversarial review and the all-exemplar audit. Shipped fixes are
+recorded in [`CHANGELOG.md`](CHANGELOG.md); project-local improvements remain
+in each canonical exemplar's `TODO.md`.
 
-Each of the 24 canonical `template_*` exemplars has its own `TODO.md` for
-project-local improvements. Those local ladders are deliberately not copied
-into the root backlog. The `template_textbook` `TODO:`/`STUB` markers are
-intentional authoring placeholders governed by that exemplar's authoring
-contract, not unresolved repository infrastructure work. Generated reports,
-virtual environments, and historical documents are not TODO sources for the
-current public scope.
+| ID | Priority | Problem and impact | Smallest next step | Acceptance evidence | Scope boundary |
+| --- | --- | --- | --- | --- | --- |
+| `PUBLIC-MATRIX-1` | High | The public matrix is not yet a single zero-failure release gate: 23 lanes passed, while `template_active_inference` measured 89.35% against its 90% floor; the run also exposed test-generated output churn. | Add a deterministic per-project matrix receipt with bounded Lean policy, clean-output isolation, and targeted active-inference coverage. | Every roster entry has a passing lane at its declared coverage floor; combined coverage remains at least 75%; no timeout, coverage failure, or output drift receipt. | Test orchestration and release evidence only; no scientific claim expansion. |
+| `RENDERED-PROVENANCE-1` | High | Source-only publication checks can pass while rendered strict audit asks for provenance review on current-output snapshots. | Add stage/source/config fingerprints and a rendered strict release gate for every public exemplar. | Rendered strict publication audit returns zero review-required findings and every artifact has producer/provenance evidence. | Generated outputs and release validation; no weakening of disposable-output policy. |
+| `CONFIG-FAIL-CLOSED-1` | High | Placeholder tokens, stale injected manuscripts, and unconsumed source files can survive tolerant exploratory paths into release. | Add strict release-mode token, source-layout, and rendered-tree freshness validators. | Negative controls for `{{TOKEN}}`, `${token}`, stale injected chapters, and unconsumed Markdown fail the release command. | Strict release/render boundaries; exploratory authoring remains tolerant. |
+| `PROJECT-EXECUTION-BOUNDARY-1` | High | Direct stage/library calls still need a complete symlink policy and subprocess environment/network boundary; configured script lexical confinement is now shipped. | Centralize trusted lifecycle-link classification and run project hooks with an explicit non-secret environment and network policy. | Traversal, intermediate-symlink, secret-inheritance, network-egress, and hook-root negative controls pass. | Does not remove intentional private lifecycle links or live research capabilities; requires an explicit opt-in for networked hooks. |
+| `SECURE-RUN-1` | High | Secure-run now requires distinct output and fresh hash evidence, but project hooks still run in the caller's process boundary. | Add a reviewed subprocess boundary with secret stripping, root confinement, and process-group cleanup. | A hostile hook cannot read ambient credentials, escape its project, or outlive a failed secure run. | Steganography and secure orchestration only; no cryptographic algorithm redesign. |
+| `SECRET-SCAN-1` | High | The repository-wide tracked-blob scan is now shipped, but staged new files are not inspected until they enter the index and no operator rotation receipt is recorded for a future leak. | Add a staged-diff scan and a documented credential-rotation handoff around the shipped high-confidence scanner. | Tracked and staged scans cover every blob, report file/line evidence without printing secret values, block high-confidence credentials, and link any finding to operator rotation evidence. | Detection and handoff only; credential revocation remains operator-owned. |
+| `PUBLIC-CAPABILITY-PARITY-1` | Medium | Shared exemplar structure does not prove runtime parity across formats, hydration, analysis, package identity, and Python floor. | Generate one capability manifest from each project and compare it with the public roster and CI matrix. | Manifest has one row per public exemplar; declared capabilities and observed smoke probes agree. | Inventory and drift detection; no forced feature parity between intentionally different templates. |
+| `RELEASE-METADATA-1` | Medium | DOI/GitHub metadata freshness, installer pinning, and live branch protection cannot be fully proven by repository-only gates. | Add credential-free external metadata receipts and pin remaining mutable installers/actions with checksums or reviewed versions. | Release preflight records current external checks or an explicit operator blocker; no mutable `curl|sh` or unpinned release installer remains. | External services and administrator settings remain operator-owned and are not simulated locally. |
+| `MODULARITY-1` | Medium | Three modules still exceed the advisory 800-line composability budget, increasing review and hidden coupling risk. | Split the largest infrastructure and exemplar modules along existing contracts, preserving public imports. | `module_line_count_check.py` reports no advisory warnings; focused API and behavior tests remain green. | Refactoring only; no behavior or public API changes without a separate contract row. |
 
-## Completed (2026-07-24)
-
-### SECURITY-OWNERSHIP-1 - Formalize sole-owner exceptions and required reviews [RETIRED]
-
-- **Completed:** sensitive-area map has all 12 sole-owner exceptions in
-  `sensitive-ownership.yaml`; CODEOWNERS parity test green (8 passed);
-  branch-protection checklist at `docs/security/branch-protection-checklist.md`
-  lists all 14 required status checks and 2 conditional jobs that must NOT be
-  required.
-- **External follow-up:** a repository administrator must apply the
-  branch-protection checklist in GitHub Settings.
-- **Evidence:** `uv run pytest tests/infra_tests/project/test_codeowners_parity.py -q --no-cov` (8 passed).
-
-### SECURITY-PRIVATE-PROMOTION-1 - Gate private-project promotion [RETIRED]
-
-- **Completed:** attestation validator shipped in
-  `infrastructure/project/promotion/` with 10 passing tests; promotion runbook
-  at `docs/security/promotion-runbook.md` documents the 5-step workflow.
-- **External follow-up:** the private sidecar's promotion runbook must be wired
-  into the private project's change-record workflow by an operator.
-- **Evidence:** `uv run pytest tests/infra_tests/project/test_promotion.py -q --no-cov` (10 passed).
-
-### COVERAGE-BASELINE-1 - Close meaningful coverage gaps [RETIRED]
-
-- **Completed:** 265 new no-mock tests across 6 files covering publication
-  records (41), pipeline summaries (52), workspace handling (31), offline
-  LLM/API failure branches (26), transmission validation (72), and DOCX/EPUB
-  fallbacks (43, 2 calibre-dependent skips). All 265 pass in 35.95s. Ruff clean.
-- **Remaining:** re-run the full infrastructure coverage gate on a clean
-  checkout to verify the module rows and aggregate against the refreshed
-  baseline.
-- **Evidence:** `uv run pytest tests/infra_tests/documentation/test_publication_records_workflow.py tests/infra_tests/core/pipeline/test_summary_reporting.py tests/infra_tests/project/test_workspace_handling.py tests/infra_tests/llm/test_offline_failure_branches.py tests/infra_tests/rendering/test_transmission_validation.py tests/infra_tests/rendering/test_docx_epub_fallbacks.py -q --no-cov --timeout=120` (265 passed, 2 skipped).
-
-### CI-ERGONOMICS-1 - Reduce local gate latency [RETIRED]
-
-- **Completed:** health benchmark shows 47.32% improvement (144.2s serial ->
-  76.0s parallel, 4 workers, 24 gates). Exceeds 25% threshold.
-  `acceptance_passed: true`, `clean_checkout: true`, `all_gates_executed: true`.
-- **Evidence:** `output/health-benchmark.json` (`improvement_percent: 47.32`).
+Each of the 24 canonical `template_*` exemplars has its own local ladder. The
+`template_textbook` `TODO:`/`STUB` markers remain intentional authoring
+placeholders governed by that exemplar's contract, not root infrastructure
+backlog items. Generated reports, virtual environments, and historical
+documents are not TODO sources for the current public scope.
 
 ## Backlog conventions
 

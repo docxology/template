@@ -272,7 +272,7 @@ graph TD
 ### Configuration Management
 - **`load_config()`** - YAML configuration file loading with validation
 - **`get_config_as_dict()`** - Convert config to a dictionary of key-value pairs
-- **`find_config_file()`** - Discover config at standard `projects/{project_name}/manuscript/config.yaml` location
+- **`find_config_file()`** - Discover direct or nested project configs; bare-name lookup follows active/working/flat/templates precedence and unqualified lookup refuses ambiguity
 - **`get_translation_languages()`** - Extract LLM translation languages from config
 - **`get_testing_config()`** - Load test failure tolerance settings
 

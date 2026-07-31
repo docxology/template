@@ -57,6 +57,11 @@ from infrastructure.validation.output.validator import ValidationResultDict, col
 
 logger = get_logger(__name__)
 
+# Optional-format structure and diagnostics remain advisory because a project
+# may deliberately disable a render target. Artifact, provenance, figure,
+# design, and publication checks remain blocking release evidence.
+_ADVISORY_CHECKS = frozenset({"Markdown validation", "Output structure", "Prose quality"})
+
 # Resolve repository root once at module load.
 # This file lives at infrastructure/validation/output/pipeline.py → 4 parents up = repo root.
 _REPO_ROOT = Path(__file__).parent.parent.parent.parent
@@ -220,7 +225,7 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
     for source_path in missing_evidence_source_paths(project_root, registry, repo_root=_REPO_ROOT):
         error_issues.append(f"missing evidence source path: {source_path}")
     for path in markdown_files:
-        text = path.read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8", errors="replace")
         strict_file = any(token in path.name.lower() for token in ("claim", "ledger", "results", "table", "caption"))
         report = validate_text_against_registry(text, registry, strict=strict_file)
         for issue in report.errors:
@@ -327,6 +332,17 @@ def generate_validation_report(
                         "file": _project_relative_path(project_name, "output", repo_root=repo_root),
                     }
                 )
+            elif check_name == "Figure registry":
+                recommendations.append(
+                    {
+                        "priority": "high",
+                        "issue": "Figure registry validation failed",
+                        "action": "Regenerate the figure registry and repair missing or unbound figures",
+                        "file": _project_relative_path(
+                            project_name, "output/figures/figure_registry.json", repo_root=repo_root
+                        ),
+                    }
+                )
             elif check_name == "Evidence registry":
                 recommendations.append(
                     {
@@ -352,7 +368,7 @@ def generate_validation_report(
             elif check_name == "Project design overlays":
                 recommendations.append(
                     {
-                        "priority": "low",
+                        "priority": "high",
                         "issue": "Domain profile or experiment plan validation failed",
                         "action": "Fix domain_profile.yaml or experiment_plan.yaml schema and design declarations",
                         "file": _project_relative_path(project_name, repo_root=repo_root),
@@ -557,11 +573,7 @@ def execute_validation_pipeline(
             status = "✅ PASS"
             logger.info(f"  {status}: {check_name}")
         else:
-            if check_name == "PDF validation":
-                status = "❌ FAIL"
-                critical_count += 1
-                all_passed = False
-            elif check_name == "Transmission bookends":
+            if check_name not in _ADVISORY_CHECKS:
                 status = "❌ FAIL"
                 critical_count += 1
                 all_passed = False

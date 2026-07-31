@@ -17,10 +17,16 @@ import sys
 from pathlib import Path
 
 from infrastructure.core.pipeline.hitl_cli import PipelineArgs
+from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.orchestration import build_parser
 from infrastructure.orchestration.pipeline_runner import PipelineInvocation
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
+
+
+def _successful_stage_result() -> PipelineStageResult:
+    """Return a minimal real result so the empty-plan guard is exercised honestly."""
+    return PipelineStageResult(stage_num=1, stage_name="capture", success=True, duration=0.0)
 
 
 def test_pipeline_args_default_incremental_is_false() -> None:
@@ -52,10 +58,10 @@ def _capture_config(*, incremental: bool):
             captured["config"] = config
 
         def execute_full_pipeline(self) -> list:
-            return []
+            return [_successful_stage_result()]
 
         def execute_core_pipeline(self) -> list:
-            return []
+            return [_successful_stage_result()]
 
     rc = ep.execute_pipeline(
         project_name="demo",
@@ -92,10 +98,10 @@ def _capture_runner_config(tmp_path, *, incremental: bool, core_only: bool = Fal
             captured["config"] = config
 
         def execute_full_pipeline(self) -> list:
-            return []
+            return [_successful_stage_result()]
 
         def execute_core_pipeline(self) -> list:
-            return []
+            return [_successful_stage_result()]
 
     runner = pr.PipelineRunner(
         repo_root=tmp_path,

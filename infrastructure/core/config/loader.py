@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import validate_project_name
 
 # Re-export all schema types so existing imports continue to work
 from infrastructure.core.config.schema import (  # noqa: F401
@@ -287,16 +288,61 @@ def find_config_file(
     """
     repo_root = Path(repo_root)
 
+    projects_root = (repo_root / projects_dir).resolve()
+
     if project_name:
-        config_path = repo_root / projects_dir / project_name / "manuscript" / "config.yaml"
-        if config_path.exists():
-            return config_path
+        try:
+            normalized_name = validate_project_name(project_name)
+        except ValueError as exc:
+            logger.warning("Ignoring unsafe project name %r: %s", project_name, exc)
+            return None
+
+        direct = projects_root.joinpath(*normalized_name.split("/"), "manuscript", "config.yaml")
+        if direct.is_file():
+            return direct
+
+        # Bare names must also resolve canonical nested exemplars and
+        # lifecycle trees. Prefer the same active/working/flat/templates order
+        # used by project-path resolution, then refuse a genuinely ambiguous
+        # match instead of silently choosing filesystem order.
+        candidates = sorted(
+            path
+            for path in projects_root.rglob("config.yaml")
+            if path.parent.name == "manuscript" and path.parent.parent.name == normalized_name
+        )
+        if not candidates:
+            return None
+
+        def priority(path: Path) -> int:
+            relative = path.relative_to(projects_root).parts
+            if relative and relative[0] == "active":
+                return 0
+            if relative and relative[0] == "working":
+                return 1
+            if relative and relative[0] == "templates":
+                return 3
+            if len(relative) == 3:
+                return 2
+            return 4
+
+        best_priority = min(priority(path) for path in candidates)
+        best = [path for path in candidates if priority(path) == best_priority]
+        if len(best) == 1:
+            return best[0]
+        logger.warning("Ambiguous config for project %r: %s", project_name, ", ".join(map(str, best)))
         return None
 
-    # Scan for any project config under <projects_dir>/*/manuscript/config.yaml
-    for config_path in sorted((repo_root / projects_dir).glob("*/manuscript/config.yaml")):
-        return config_path
-
+    # Unqualified discovery is intentionally fail-closed. A repository with
+    # multiple project configs must provide a project name rather than letting
+    # the first glob result select an arbitrary manuscript.
+    candidates = sorted(path for path in projects_root.rglob("config.yaml") if path.parent.name == "manuscript")
+    if len(candidates) == 1:
+        return candidates[0]
+    if candidates:
+        logger.warning(
+            "Multiple manuscript configs found under %s; pass project_name explicitly",
+            projects_root,
+        )
     return None
 
 

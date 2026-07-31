@@ -4,11 +4,14 @@ Comprehensive tests for file and directory operation utilities including
 cleaning output directories and copying final deliverables.
 """
 
+import os
+
+import pytest
+
 from infrastructure.core.files.cleanup import (
     clean_output_directories,
     clean_output_directory,
 )
-import pytest
 
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.files.operations import calculate_file_hash, copy_final_deliverables
@@ -126,6 +129,19 @@ class TestCleanOutputDirectory:
         assert result is None
         assert output_dir.exists()
         assert len(list(output_dir.iterdir())) == 0
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_refuses_symlinked_output_directory(self, tmp_path):
+        """Cleanup may remove a link entry, but never follow a linked root."""
+        external = tmp_path / "external"
+        external.mkdir()
+        output_dir = tmp_path / "output"
+        output_dir.symlink_to(external, target_is_directory=True)
+
+        with pytest.raises(FileOperationError, match="symlinked"):
+            clean_output_directory(output_dir)
+        assert output_dir.is_symlink()
+        assert external.exists()
 
 
 class TestCleanOutputDirectories:

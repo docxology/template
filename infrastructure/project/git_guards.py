@@ -129,6 +129,26 @@ _PUBLIC_OUTPUT_SECRET_RES: tuple[re.Pattern[bytes], ...] = (
     re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b"),
     re.compile(rb"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,255}\b"),
 )
+_TRACKED_SECRET_RES: tuple[tuple[str, re.Pattern[bytes]], ...] = (
+    ("github-token", re.compile(rb"\bgh[pousr]_[A-Za-z0-9]{30,255}\b")),
+    ("aws-access-key", re.compile(rb"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b")),
+    ("openai-token", re.compile(rb"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,255}\b")),
+    (
+        "private-key",
+        re.compile(
+            rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
+            rb"\s+[A-Za-z0-9+/=\r\n]{64,}"
+            rb"-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
+        ),
+    ),
+)
+_DOCUMENTED_SECRET_FIXTURE_FRAGMENTS = (
+    b"abcdefghijklmnopqrstuvwxyz",
+    b"abcdefghijklmnop",
+    b"123456",
+    b"should_never_be_sent",
+    b"secret_material_must_not_be_logged",
+)
 
 
 def is_public_template_output_path(path: str) -> bool:
@@ -225,6 +245,36 @@ def is_oversized_public_template_output(
         return False
 
 
+def is_hidden_public_template_output(path: str) -> bool:
+    """Return whether a tracked public output path is a local dotfile.
+
+    Canonical exemplar output is publication evidence. Hidden files in that
+    tree are caches, workspace markers, or interrupted atomic-write leftovers,
+    not portable evidence that should enter the Git index.
+    """
+    normalized = path.replace("\\", "/")
+    if not is_public_template_output_path(normalized):
+        return False
+    relative = next(
+        normalized[len(prefix) :] for prefix in PUBLIC_TEMPLATE_OUTPUT_PREFIXES if normalized.startswith(prefix)
+    )
+    return any(part.startswith(".") for part in Path(relative).parts)
+
+
+def is_empty_public_template_output(repo_root: Path, path: str) -> bool:
+    """Return whether a tracked public output payload is unexpectedly empty."""
+    normalized = path.replace("\\", "/")
+    if not is_public_template_output_path(normalized):
+        return False
+    if Path(normalized).name in {".gitignore", ".gitkeep", "__init__.py"}:
+        return False
+    candidate = repo_root / normalized
+    try:
+        return candidate.is_file() and candidate.stat().st_size == 0
+    except OSError:
+        return False
+
+
 def tracked_generated_artifacts(
     repo_root: Path, *, public_output_max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
 ) -> list[str]:
@@ -240,6 +290,8 @@ def tracked_generated_artifacts(
         path
         for path in paths
         if is_generated_artifact_path(path)
+        or is_hidden_public_template_output(path)
+        or is_empty_public_template_output(repo_root, path)
         or is_oversized_public_template_output(repo_root, path, max_bytes=public_output_max_bytes)
     )
 
@@ -331,3 +383,39 @@ def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
         if any(pattern.search(content) for pattern in _PUBLIC_OUTPUT_SECRET_RES):
             secrets.append(normalized)
     return sorted(local_paths), sorted(secrets)
+
+
+def tracked_secret_findings(repo_root: Path) -> list[str]:
+    """Return high-confidence secret findings from every tracked text blob.
+
+    The scanner intentionally reports only ``path:line:kind`` metadata and
+    never prints the matched credential. Known low-entropy examples used by
+    security tests and documentation are ignored; real credentials must not
+    be hidden behind a broad test-directory exclusion.
+    """
+    proc = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+    findings: list[str] = []
+    for raw_path in proc.stdout.decode("utf-8").split("\0"):
+        if not raw_path:
+            continue
+        path = raw_path.replace("\\", "/")
+        try:
+            content = (repo_root / path).read_bytes()
+        except OSError:
+            continue
+        if b"\x00" in content[:4096]:
+            continue
+        for kind, pattern in _TRACKED_SECRET_RES:
+            for match in pattern.finditer(content):
+                value = match.group(0).lower()
+                is_documented_fixture = any(fragment in value for fragment in _DOCUMENTED_SECRET_FIXTURE_FRAGMENTS)
+                if kind != "private-key" and is_documented_fixture:
+                    continue
+                line = content.count(b"\n", 0, match.start()) + 1
+                findings.append(f"{path}:{line}:{kind}")
+    return sorted(set(findings))
