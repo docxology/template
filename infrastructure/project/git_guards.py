@@ -116,6 +116,12 @@ PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES = 50 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_FILES = 3500
 PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES = 200 * 1024 * 1024
 PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES = 100 * 1024 * 1024
+# Advisory per-file ceiling: a single tracked evidence file above this is
+# presumed non-regenerable until proven otherwise. Sits well below the 50MB
+# hard cap so files approaching the cap surface for review before they become
+# a problem, while legitimate regenerable evidence (PDFs, corpora) stays
+# green.
+PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES = 20 * 1024 * 1024
 _MACHINE_LOCAL_HOME_RE = re.compile(
     rb"(?:"
     rb"(?:file://)?/(?:Users|home)/[^/\s\"'<>]+/"
@@ -304,6 +310,7 @@ def public_template_output_budget_findings(
     max_files: int = PUBLIC_TEMPLATE_OUTPUT_MAX_FILES,
     max_total_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_TOTAL_BYTES,
     max_duplicate_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_DUPLICATE_BYTES,
+    max_single_file_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES,
 ) -> list[str]:
     """Return ratchet violations for canonical tracked exemplar evidence."""
     proc = subprocess.run(
@@ -315,6 +322,7 @@ def public_template_output_budget_findings(
     paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
     total_bytes = 0
     blobs: dict[str, tuple[int, int]] = {}
+    oversized_single: list[str] = []
     for path in paths:
         try:
             data = (repo_root / path).read_bytes()
@@ -325,6 +333,8 @@ def public_template_output_budget_findings(
         digest = hashlib.sha256(data).hexdigest()
         prior_size, prior_count = blobs.get(digest, (size, 0))
         blobs[digest] = (prior_size, prior_count + 1)
+        if max_single_file_bytes > 0 and size > max_single_file_bytes:
+            oversized_single.append(f"{path} ({size} bytes)")
     duplicate_bytes = sum(size * (count - 1) for size, count in blobs.values() if count > 1)
 
     findings: list[str] = []
@@ -334,6 +344,11 @@ def public_template_output_budget_findings(
         findings.append(f"public output aggregate bytes {total_bytes} exceeds {max_total_bytes}")
     if duplicate_bytes > max_duplicate_bytes:
         findings.append(f"public output duplicate bytes {duplicate_bytes} exceeds {max_duplicate_bytes}")
+    if oversized_single:
+        findings.append(
+            "public output single-file bytes exceed advisory ceiling "
+            f"{max_single_file_bytes}: " + ", ".join(sorted(oversized_single))
+        )
     return findings
 
 

@@ -417,3 +417,19 @@ def test_public_output_budgets_fail_when_ratchet_is_exceeded(tmp_path: Path) -> 
     assert any("file count" in finding for finding in findings)
     assert any("aggregate bytes" in finding for finding in findings)
     assert any("duplicate bytes" in finding for finding in findings)
+
+
+def test_public_output_budget_flags_single_file_over_advisory_ceiling(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "projects/templates/template_code_project/output/data"
+    output.mkdir(parents=True)
+    payload = b"x" * 1024
+    (output / "big.bin").write_bytes(payload)
+    subprocess.run(["git", "add", "-f", "projects/templates"], cwd=tmp_path, check=True)
+
+    findings = public_template_output_budget_findings(tmp_path, max_single_file_bytes=512)
+    assert any("single-file bytes exceed advisory ceiling" in finding for finding in findings)
+    assert "big.bin" in findings[0]
+
+    findings_under = public_template_output_budget_findings(tmp_path, max_single_file_bytes=2048)
+    assert not any("single-file bytes exceed advisory ceiling" in finding for finding in findings_under)
