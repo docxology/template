@@ -91,6 +91,41 @@ def _git_head_epoch(repo_root: Path) -> int | None:
         return None
 
 
+def _git_head_epoch_strict(repo_root: Path) -> int:
+    """Like :func:`_git_head_epoch` but raises on any failure.
+
+    Raises:
+        RuntimeError: with a descriptive message when git is unavailable, the
+            git log command fails, or its output is not a valid epoch integer.
+    """
+    try:
+        result = subprocess.run(  # noqa: S603 — fixed argv, no shell
+            ["git", "log", "-1", "--format=%ct"],
+            cwd=str(repo_root),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (FileNotFoundError, OSError, subprocess.SubprocessError) as exc:
+        raise RuntimeError(
+            f"Deterministic build failure: git invocation failed ({exc}). "
+            "Set SOURCE_DATE_EPOCH explicitly or run in a git working tree."
+        ) from exc
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Deterministic build failure: 'git log' returned exit {result.returncode}. "
+            f"stderr: {result.stderr.strip()}"
+        )
+    raw = result.stdout.strip()
+    try:
+        return int(raw)
+    except ValueError:
+        raise RuntimeError(
+            f"Deterministic build failure: unparseable git epoch {raw!r}"
+        )
+
+
 def resolve_source_date_epoch(
     *,
     deterministic: bool | None = None,

@@ -363,6 +363,9 @@ def validate_ci_matrix(
     actual = tuple(matrix)
     expected = build_ci_matrix(projects, python_versions)
     issues: list[str] = []
+    if not actual:
+        issues.append("CI matrix is empty: no project/Python lanes defined")
+        return tuple(issues)
     duplicate_versions = sorted(version for version, count in Counter(python_versions).items() if count > 1)
     if duplicate_versions:
         issues.append(f"canonical CI Python versions contain duplicates: {', '.join(duplicate_versions)}")

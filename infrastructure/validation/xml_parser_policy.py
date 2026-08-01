@@ -100,8 +100,16 @@ def _scan_source(source: str) -> list[tuple[int, str]]:
                     )
         elif isinstance(node, ast.ImportFrom):
             module = node.module or ""
-            if module in ("xml.etree.ElementTree", "xml.etree.cElementTree"):
-                bad = [a.name for a in node.names if a.name in _ETREE_PARSE_NAMES]
+            if module in ("xml.etree.ElementTree", "xml.etree.cElementTree", "xml.etree"):
+                # ``from xml.etree import ElementTree`` and the direct
+                # ``from xml.etree.ElementTree import ...`` forms both grant
+                # parser access; anything named after a standalone parsing
+                # entry point, or a parser submodule itself, is forbidden.
+                bad = [
+                    a.name
+                    for a in node.names
+                    if a.name in _ETREE_PARSE_NAMES or a.name in {"ElementTree", "cElementTree"}
+                ]
                 if bad:
                     findings.append(
                         (
