@@ -927,3 +927,44 @@ jobs:
           name: coverage-history
           path: docs/_generated/coverage_history.md
           if-no-files-found: warn
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job — Public-matrix receipt (weekly/manual only)
+#
+# The per-project test-projects jobs run one exemplar per matrix cell, so no
+# single job can produce the aggregated public-matrix receipt. This scheduled
+# lane runs the full receipt-bearing matrix in one process and uploads the
+# deterministic receipt (roster revision, per-project floor/exit/coverage/
+# output-isolation) for operator verification. Deliberately NOT run on push/PR
+# — a full 24-exemplar matrix takes ~45 min and would triple every PR's cost.
+# ─────────────────────────────────────────────────────────────────────────────
+  public-matrix-receipt:
+    name: Public Matrix Receipt
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/setup-python-env
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies (dev + optional test groups)
+        run: uv sync --group public-exemplars
+
+      - name: Run receipt-bearing public matrix
+        run: >-
+          uv run python scripts/pipeline/stage_01_test.py
+          --project-only --all-projects --public-scope
+          --workers 2
+          --receipt public_matrix_receipt.json
+
+      - name: Upload public-matrix receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: public-matrix-receipt
+          path: public_matrix_receipt.json
+          if-no-files-found: error
