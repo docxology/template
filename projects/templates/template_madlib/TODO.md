@@ -7,9 +7,9 @@ same forkability contract as the older exemplars.
 ## Current validation evidence
 
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_madlib/manuscript --repo-root .`
-- Project tests and coverage: `uv run pytest projects/templates/template_madlib/tests/ --cov=projects/templates/template_madlib/src --cov-fail-under=90`
+- Project tests and coverage: 148 passed, 99.93% coverage (required floor: 90%).
 - Generated artifacts come from `scripts/01_generate_madlib_artifacts.py` and `scripts/z_generate_manuscript_variables.py`.
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_madlib --strict` — no drift detected.
 - Live test counts and coverage are read from
   [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
   here; keep every `src/` module (config, composition, tokens, analysis,

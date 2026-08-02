@@ -18,41 +18,39 @@ The system applies four complementary layers of provenance information:
 
 The `inject_pdf_metadata` function writes structured metadata into both the PDF Info dictionary and an XMP (Extensible Metadata Platform) packet:
 
-- `/Creator`: Pipeline identifier
+- `/Creator`: `Research Template Steganography Module`
 - `/Producer`: Module path (`infrastructure.steganography`)
-- `/CreationDate`: UTC timestamp in `ISO 8601` format
+- `/CreationDate` / `/ModDate`: UTC timestamp in `ISO 8601` format
 - `/Author`: From `config.yaml`
 - `/Title`: From `config.yaml`
-- Custom fields: DOI, ORCID, repository URL
+- `/Subject`: document identifier, plus `/DocumentID`
+- Dedicated `/Hash_<ALGO>` fields for each computed digest (e.g. `/Hash_SHA256`)
+- Custom fields: `GitCommit`, `GitCommitAvailable`, `/SteganographyTimestamp`
+- An embedded `stego_manifest.json` attachment carrying the document id, digests, title, and git commit
 
 ### Layer 2: Cryptographic Hashing
 
-Before watermarking, a SHA-256 hash of the rendered PDF is computed and stored in:
+Before watermarking, SHA-256 (and SHA-512 when configured) digests of the original PDF are computed and stored in:
 
-- The output manifest (`output/manifest.json`)
-- The PDF metadata (`/Subject` field)
-- An external hash file (`output/<name>.sha256`)
+- A JSON hash manifest sidecar (`<pdf>.hashes.json`, e.g. `output/pdf/<name>_combined.hashes.json`)
+- Dedicated PDF metadata fields (`/Hash_SHA256`, `/Hash_SHA512`)
+- The embedded `stego_manifest.json` attachment
 
-This enables post-hoc verification: anyone with the hash can verify that the PDF has not been modified since rendering.
+This enables post-hoc verification: anyone with the manifest can verify that the PDF has not been modified since rendering.
 
-### Layer 3: Alpha-Channel Text Overlay
+### Layer 3: Alpha-Channel Overlay, Footer, and Invisible Text
 
-A semi-transparent text overlay is applied to each page of the PDF, encoding:
+A semi-transparent overlay is merged onto every page of the hardened PDF:
 
-- Build timestamp
-- Git commit hash (short SHA)
-- Project name
-- Pipeline version
-
-The overlay is rendered at low opacity (typically 3–5% alpha) to be invisible during normal viewing but detectable through image analysis. It survives printing (as a faint watermark) and standard PDF operations.
-
-A representative overlay text string takes the following form:
+- **Watermark overlay**: in the default `text` mode, a configurable string (default `CONFIDENTIAL`) is repeated diagonally at 45° across the page; in `qr` mode a tiled QR overlay replaces it. The overlay is rendered at low opacity — the default is 8% (`overlay_opacity: 0.08`), configurable from 0.02 (subtle) to 0.30 (strong) — to be invisible during normal viewing but detectable through image analysis.
+- **Provenance footer**: every page additionally receives a footer carrying the document identifier, page number / total pages, a digest prefix, title, authors, and source filename/size.
+- **Invisible text layer**: the first page embeds a hidden text string with the machine-readable payload:
 
 ```
-template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | pipeline: v2.0.0 | project: template
+STEG_ID:<document-id>|TITLE:<title>|HASHES:<hash-prefix>
 ```
 
-This single line, tiled across each page at 3–5% opacity, encodes the complete build provenance chain: the system identifier, `ISO 8601` build timestamp, short Git commit hash, pipeline version, and project name. Together these fields allow a verifier to reconstruct—from the watermark alone—which version of the code, at which moment in time, produced the document.
+The build timestamp and Git commit hash (short SHA) are recorded in the PDF metadata and the hash manifest rather than in the visible watermark text itself. Together these fields allow a verifier to reconstruct—from the hardened PDF alone—which version of the code, at which moment in time, produced the document.
 
 ### Layer 4: QR Code Injection
 

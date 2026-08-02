@@ -8,7 +8,7 @@ Canonical trio:
 
 - **`template_code_project`**: Numerical optimization example with gradient-descent narration and ${project_template_code_project_test_count} discovered tests. Its `pyproject.toml` declares the ${coverage_floor_project}% project-source floor. Minimal footprint: compact `src/`, scripted analysis, short manuscript sections.
 - **`template_prose_project`**: Prose-heavy manuscript emphasizing narrative structure and bibliography discipline, with ${project_template_prose_project_test_count} discovered tests and the same declared project-source floor; tests exercise rendering and Markdown integrity without heavyweight numerics.
-- **`template_autoresearch_project`**: AutoResearch readiness workflow invoking `projects/templates/template_search_project/scripts/` to run corpus builders, scripted figures (`output/figures/`), and manifold-variable injection (the literature-search exemplar). Typical Stage 02 workloads include bibliography fusion, corpus JSON assembly, deep-search aggregates, and report composition.
+- **`template_autoresearch_project`**: AutoResearch readiness workflow — bounded ML task loop (deterministic MNIST run), plan validation (`infrastructure.autoresearch`), evidence-registry reports, and manuscript hydration; its own scripts (`run_autoresearch_loop.py`, `z_generate_manuscript_variables.py`) stay thin over `src/` logic. **`template_search_project`** exercises literature-search workflows (remote corpus JSON fusion, `y_generate_search_figures.py`, review reports).
 
 Meta manuscript (**`projects/templates/template_template`**) analyzes the repository via `src/template_template/` introspection metrics; it now lives alongside the other public exemplars under `projects/templates/`.
 

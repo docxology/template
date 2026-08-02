@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "1.54",
-      "total_size_bytes": 1615156,
+      "total_size_bytes": 1615352,
       "largest_files": [
         {
           "name": "the-shape-between.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.05",
-      "total_size_bytes": 50166,
+      "total_size_bytes": 50143,
       "largest_files": [
         {
           "name": "index.html",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 46,
       "size_mb": "0.46",
-      "total_size_bytes": 486147,
+      "total_size_bytes": 486141,
       "largest_files": [
         {
           "name": "02_architecture_slides.log",
@@ -139,9 +139,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 5,
-      "size_mb": "0.09",
-      "total_size_bytes": 98665,
+      "file_count": 11,
+      "size_mb": "0.11",
+      "total_size_bytes": 116696,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -155,13 +155,14 @@
         },
         {
           "name": "validation_report.json",
-          "size_mb": "0.00",
+          "size_mb": "0.01",
           "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 3,
-        ".md": 2
+        ".json": 7,
+        ".txt": 1,
+        ".md": 3
       }
     },
     "simulations": {
@@ -183,8 +184,8 @@
       "total_size_bytes": 0
     }
   },
-  "total_files": 87,
-  "total_size_mb": 4.451623916625977,
+  "total_files": 93,
+  "total_size_mb": 4.4689788818359375,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
@@ -253,15 +254,15 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.5403327941894531,
-    "web": 0.04784202575683594,
-    "slides": 0.4636259078979492,
+    "pdf": 1.5405197143554688,
+    "web": 0.047820091247558594,
+    "slides": 0.4636201858520508,
     "figures": 2.295124053955078,
     "data": 0.0106048583984375,
-    "reports": 0.09409427642822266
+    "reports": 0.11128997802734375
   },
   "file_counts_by_type": {
-    ".md": 4,
+    ".md": 5,
     ".log": 8,
     ".aux": 7,
     ".blg": 1,
@@ -276,6 +277,7 @@
     ".vrb": 3,
     ".snm": 6,
     ".png": 15,
-    ".json": 4
+    ".json": 8,
+    ".txt": 1
   }
 }

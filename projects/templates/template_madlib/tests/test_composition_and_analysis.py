@@ -711,7 +711,7 @@ def test_contribution_table_includes_boundary_note(tmp_path: Path) -> None:
     table = build_contribution_table(config)
 
     assert "Local exemplar claim" in table
-    assert "no live DOI" in table
+    assert "publication status remains config-declared" in table
 
 
 # ---------------------------------------------------------------------------

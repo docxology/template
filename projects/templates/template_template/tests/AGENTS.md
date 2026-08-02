@@ -13,6 +13,7 @@ Technical specification for the template project test infrastructure.
 | `test_edge_cases.py` | Error branches, sibling fallback, and malformed-input handling |
 | `test_evidence_contract.py` | Executable policy binding, evidence completeness, and an invented-result negative control |
 | `test_script_entrypoints.py` | Sandboxed subprocess execution of the manuscript-metrics orchestrator |
+| `test_stale_metrics_control.py` | Negative controls for stale generated metrics (key presence, positive counts, generated-vs-live consistency, private-path absence) |
 
 Do not hand-maintain counts here. Re-derive live test and coverage values through
 the commands above and the repository's generated counts report.

@@ -1,7 +1,7 @@
 ---
 name: template-madlib
 description: Deterministic token-injection manuscript generator — config-owned lexicon, conditional IMRAD, QA probes, authoring contract, and token provenance.
-version: 0.1.0
+version: 0.1.1
 author: docxology
 license: MIT
 tags: [exemplar, madlib, token-injection, imrad]

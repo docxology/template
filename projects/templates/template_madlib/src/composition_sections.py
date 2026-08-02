@@ -138,9 +138,9 @@ def _methods(config: MadlibConfig, token_plan: TokenPlan) -> str:
             ),
             (
                 "The first review scenario is declared before generation. The project names its scope as a local "
-                "exemplar, records enabled sections, keeps DOI and publication claims blank, and treats the copy "
-                "stage as a review handoff. That ordering matters because a reader should know the allowed claim "
-                "boundary before inspecting fluent generated text."
+                "exemplar, records enabled sections, treats any publication identifiers as metadata rather than "
+                "method evidence, and treats the copy stage as a review handoff. That ordering matters because a "
+                "reader should know the allowed claim boundary before inspecting fluent generated text."
             ),
             (
                 f"The governing constraint is {constraint}. The source manuscript is intentionally sparse: it "
@@ -428,10 +428,9 @@ def _scope(config: MadlibConfig) -> str:
                 "small version of that idea for research manuscripts."
             ),
             (
-                "Publication metadata remains conservative. The local `CITATION.cff`, `.zenodo.json`, and "
-                "`codemeta.json` describe this exemplar inside the shared template repository; they do not claim "
-                "a live standalone DOI, external release, or empirical validation outside the generated local "
-                "artifacts."
+                "Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` "
+                "record the declared repository and deposited identifiers when present, but those metadata do not "
+                "turn the generated manuscript into empirical validation or reader-quality evidence.
             ),
         ]
     )

@@ -22,6 +22,8 @@ uv run pytest projects/templates/template_template/tests/ --cov=projects/templat
 | `test_confidentiality.py` | Public/private discovery boundary |
 | `test_edge_cases.py` | Error branches and filesystem fallbacks |
 | `test_evidence_contract.py` | Policy-source binding plus manuscript evidence fail-closed controls |
+| `test_script_entrypoints.py` | Sandboxed subprocess execution of the manuscript-metrics orchestrator |
+| `test_stale_metrics_control.py` | Negative controls for stale generated metrics |
 
 Live test and coverage counts belong in the generated repository metrics, not
 this inventory. All tests use real filesystem paths and imports; the project

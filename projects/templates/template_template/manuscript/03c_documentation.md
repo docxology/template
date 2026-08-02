@@ -23,15 +23,12 @@ The [Documentation Duality](#documentation-duality-and-ai-collaboration) standar
 | 2 — Structure | `AGENTS.md` | Every directory | Local file inventories, API surfaces, integration patterns, architectural constraints |
 | 3 — Skill | `SKILL.md` | Every infrastructure module | Machine-parseable skill descriptor: module name, description, key imports, usage pattern |
 
-Tier 1 and Tier 2 have direct analogues in the prompt-engineering literature: system prompts and retrieval-augmented context [@lau2025aicoding]. Tier 3 is novel. The `SKILL.md` files follow a YAML frontmatter + Markdown instruction format precisely aligned with the tool-descriptor schemas of the Model Context Protocol [@anthropic2024mcp]. The following is the exact frontmatter from `infrastructure/rendering/SKILL.md`:
+Tier 1 and Tier 2 have direct analogues in the prompt-engineering literature: system prompts and retrieval-augmented context [@lau2025aicoding]. Tier 3 is novel. The `SKILL.md` files follow a YAML frontmatter + Markdown instruction format precisely aligned with the tool-descriptor schemas of the Model Context Protocol [@anthropic2024mcp]. The following is the actual frontmatter from `infrastructure/rendering/SKILL.md`:
 
 ```yaml
 ---
-name: rendering
-description: >
-  Multi-format output generation (PDF, HTML, slides).
-  Use for: Pandoc/XeLaTeX rendering, RenderManager, slide deck generation.
-  Key imports: RenderManager, RenderingConfig from infrastructure.rendering
+name: infrastructure-rendering
+description: Skill for the rendering infrastructure module providing multi-format output generation including PDF manuscripts, HTML web pages, and Beamer/Reveal.js slides. Use when rendering research outputs, converting markdown to PDF, generating slides, or configuring LaTeX rendering.
 ---
 ```
 

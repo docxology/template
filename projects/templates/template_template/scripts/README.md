@@ -20,7 +20,7 @@ Module logic:
 
 Outputs:
 
-- `output/data/metrics.json` — ~40 live repository variables
+- `output/data/metrics.json` — live repository variables (count grows with the exemplar roster and metric surface)
 - `output/manuscript/*.md` — rendered chapters plus copied ancillary files (`.bib`, `.yaml`, `.md`)
 
 ### `generate_architecture_viz.py`
@@ -39,6 +39,6 @@ Module logic:
 Outputs (`output/figures/`):
 
 - `architecture_overview.png` — Two-Layer Architecture diagram with file counts and four-layer doc badges
-- `pipeline_stages.png` — eight-stage pipeline flow with descriptions
+- `pipeline_stages.png` — YAML-declared pipeline flow with stage descriptions
 - `module_inventory.png` — module file counts with graduated colour and [ARSP] badges
 - `comparative_feature_matrix.png` — 14×10 capability heatmap with ✓/◐/— symbols

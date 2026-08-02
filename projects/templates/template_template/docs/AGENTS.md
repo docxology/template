@@ -9,11 +9,14 @@ Technical documentation for the `template` meta-project — the self-referential
 | File | Purpose |
 |------|---------|
 | `AGENTS.md` | This file — directory index and agent instructions |
+| `README.md` | Quick navigation and document links |
 | `VERIFICATION.md` | Sub-minute verification routine (tests, figures, introspection) |
 | `architecture.md` | Project architecture: src/ modules, scripts, data flow |
 | `testing_philosophy.md` | Zero-mock standard, test categories, coverage targets |
 | `manuscript_guide.md` | Manuscript file structure, variable injection, rendering |
 | `rendering_pipeline.md` | How Stage 02 + Stage 03 produce the final PDF |
+| `agent_instructions.md` | Agent-facing orientation for working in this exemplar |
+| `troubleshooting.md` | Common failure modes and remedies |
 
 ## Project Structure
 
@@ -36,10 +39,14 @@ projects/templates/template_template/
 │   └── generate_manuscript_metrics.py # Metrics + variable injection orchestrator
 ├── tests/                         # Project suite; counts are generated, coverage floor is declared in pyproject.toml
 │   ├── conftest.py                # Shared fixtures (repo root path)
-│   ├── test_meta.py               # Introspection + figure + integration tests
+│   ├── helpers.py                 # REPO_ROOT / PROJECT_DIR resolution helpers
+│   ├── test_meta.py               # Introspection + injection + real-manuscript integration
 │   ├── test_architecture_viz.py   # Visualization output tests
 │   ├── test_metrics.py            # Metric formatting + table builder tests
 │   ├── test_confidentiality.py    # Public/private discovery boundary (negative controls)
+│   ├── test_evidence_contract.py  # Executable policy binding + evidence fail-closed controls
+│   ├── test_script_entrypoints.py # Sandboxed subprocess execution of the metrics orchestrator
+│   ├── test_stale_metrics_control.py  # Stale-metric negative controls
 │   └── test_edge_cases.py         # Error branches, fallbacks, and previously-uncovered paths
 ├── manuscript/                    # 21 Markdown chapters + references.bib
 ├── docs/                          # This directory

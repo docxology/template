@@ -146,7 +146,7 @@ def build_contribution_table(config: MadlibConfig) -> str:
     """Build contribution table."""
     rows = ["| Claim | Boundary |", "| --- | --- |"]
     for claim in config.contribution_claims:
-        rows.append(f"| {claim} | Local exemplar claim; no live DOI or standalone release implied. |")
+        rows.append(f"| {claim} | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |")
     return "\n".join(rows)
 
 

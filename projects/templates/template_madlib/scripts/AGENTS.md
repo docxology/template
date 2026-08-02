@@ -6,6 +6,7 @@ Do not add Madlib business logic here. Put schema parsing in `src/config.py`, to
 
 | Script | Calls |
 | --- | --- |
+| `00_preflight.py` | Runs shared manuscript preflight checks before rendering. |
 | `_bootstrap.py` | Adds project root and repo root to `sys.path` for `from src…` imports. |
 | `01_generate_madlib_artifacts.py` | `src.analysis.generate_artifacts` |
 | `z_generate_manuscript_variables.py` | `src.manuscript_variables.generate_variables` plus shared injection |

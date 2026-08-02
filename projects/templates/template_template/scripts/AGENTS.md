@@ -28,6 +28,6 @@ Technical specification for the template project's analysis scripts.
 
 | Output | Path | Description |
 |--------|------|-------------|
-| Metrics JSON | `output/data/metrics.json` | ~40 live repo counts and derived manuscript variables |
+| Metrics JSON | `output/data/metrics.json` | Live repo counts and derived manuscript variables |
 | Rendered chapters | `output/manuscript/*.md` | Variable-injected chapter files used by render stage |
 | Ancillary copy | `output/manuscript/references.bib`, `config.yaml`, `preamble.md` | Rendering dependencies copied verbatim |
