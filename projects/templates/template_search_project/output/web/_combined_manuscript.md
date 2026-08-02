@@ -1,6 +1,6 @@
 # Abstract {#sec:abstract}
 
-This paper documents `template_search_project`, the literature-search exemplar shipped with the [Research Project Template](https://github.com/docxology/template). The project demonstrates **two configurable, reproducible pipelines** sharing the same configuration file and the same `infrastructure/search/` + `infrastructure/reference/` modules. The standard pipeline (`scripts/run_search_pipeline.py`) handles a single `SearchQuery` end-to-end. The deep-search pipeline (`scripts/run_deep_search.py`, see [@sec:deep_search]) fans out across a list of keywords (each capped at 100 papers per keyword from `project_config.deep_search.max_results_per_keyword` in `manuscript/config.yaml`), fully enriches every paper with its abstract and PDF fulltext, and (optionally) uses the local LLM to write a multi-section reading note for every paper. When a deep-search aggregate exists, the latest run covered **3** keyword(s) with **<deep-search not run>** unique paper(s) after cross-keyword deduplication. Both turn a free-text topic into:
+This paper documents `template_search_project`, the literature-search exemplar shipped with the [Research Project Template](https://github.com/docxology/template). The project demonstrates **two configurable, reproducible pipelines** sharing the same configuration file and the same `infrastructure/search/` + `infrastructure/reference/` modules. The standard pipeline (`scripts/run_search_pipeline.py`) handles a single `SearchQuery` end-to-end. The deep-search pipeline (`scripts/run_deep_search.py`, see [@sec:deep_search]) fans out across a list of keywords (each capped at 100 papers per keyword from `project_config.deep_search.max_results_per_keyword` in `manuscript/config.yaml`), fully enriches every paper with its abstract and PDF fulltext, and (optionally) uses the local LLM to write a multi-section reading note for every paper. When a deep-search aggregate exists, the latest run covered **3** keyword(s) with **300** unique paper(s) after cross-keyword deduplication. Both turn a free-text topic into:
 
 1. a deduplicated, year-filtered set of papers drawn from arXiv, Crossref, optional local corpora, and (opt-in) [Paperclip](https://paperclip.gxl.ai/);
 2. a Pandoc-compatible `references.bib` byte-identical in style to the canonical exemplar in [`template_code_project`](../../template_code_project/manuscript/references.bib) (file `manuscript/references.bib`);
@@ -12,6 +12,8 @@ All discovery logic lives in `infrastructure/search/literature/` ([source on Git
 The motivating concern is *reproducibility*: a query at time $t_0$ should produce the same results at time $t_1$ unless the cache is explicitly invalidated. This is achieved by deterministic search caching keyed on canonical query identity, on-disk caching of every fetched abstract / PDF, and pinned LLM seeds. The same `manuscript/config.yaml` that drives the pipeline is also the only configuration any reviewer needs.
 
 **Run snapshot.** With the bundled `manuscript/config.yaml`, the most recent pipeline execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract), and recorded backend errors: none. Resolve ``{{…}}`` tokens by running `scripts/z_generate_manuscript_variables.py` after `run_search_pipeline.py`; the script writes `output/data/manuscript_variables.json` and resolved markdown under `output/manuscript/`, which the PDF-rendering stage prefers when present.
+
+**Claim boundary.** The committed `data/corpus.json` and the default local-source run are deterministic workflow fixtures. Their counts, summaries, and generated bibliography exercise the pipeline contract; they are not empirical findings about the literature.
 
 **Keywords:** literature search, BibTeX automation, reproducible research, local LLM synthesis, scientific infrastructure
 
@@ -143,7 +145,9 @@ Citation keys appear in `[brackets]` so a downstream tool — for example a Pand
 
 # Results {#sec:results}
 
-**Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from arxiv, crossref, producing <deep-search not run> unique paper(s) after cross-keyword deduplication.
+**Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from arxiv, crossref, producing 300 unique paper(s) after cross-keyword deduplication.
+
+When `sources: [local]` is used, this section reports fixture execution only. It must not be read as a claim about empirical literature coverage; a live-provider run requires source-level provenance and a separately reviewed claim boundary.
 
 The diagnostic figures generated for this run are catalogued in [@sec:methodology]: [@fig:papers_per_source] surfaces per-backend coverage, [@fig:year_histogram] surfaces the temporal distribution, and [@fig:score_distribution] surfaces the relevance-score profile. The full determinism contract for each stage is itemised in [@tbl:determinism] of [@sec:reproducibility].
 
@@ -206,7 +210,12 @@ We close with three concrete extensions that build naturally on this foundation:
 
 The infrastructure modules are deliberately small and stable; the project that exercises them is deliberately small and explicit. Together they show that *domain-specific research automation* and *template-strict architectural discipline* are compatible — and, in fact, mutually reinforcing.
 
-The bundled `data/corpus.json` exercises classical optimisation references [@boyd2004convex; @nocedal2006numerical; @nesterov2013gradient] alongside modern stochastic-optimisation work [@kingma2014adam; @reddi2018convergence] and the canonical reproducibility paper [@peng2011reproducible], so the auto-generated `manuscript/references.bib` always contains real citation-ready entries that downstream tooling can resolve.
+The bundled `data/corpus.json` is a deterministic workflow fixture containing
+citation-shaped optimisation records [@boyd2004convex; @nocedal2006numerical;
+@nesterov2013gradient; @kingma2014adam; @reddi2018convergence;
+@peng2011reproducible]. It ensures that the auto-generated
+`manuscript/references.bib` contains citation-ready entries that downstream
+tooling can resolve; it does not establish empirical literature findings.
 
 
 

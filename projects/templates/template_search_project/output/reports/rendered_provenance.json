@@ -1,0 +1,107 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/manuscript/00_abstract.md",
+      "rendered_sha256": "45bb8687da8c477cd7a510127ca46f0b0313a905ac6b85a8c1592da3bb12fe01",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "4af139d69610e28416e69699dd696d7c7337c73cb9a565b3299d3d21b8cdd094"
+    },
+    {
+      "rendered_path": "output/manuscript/01_introduction.md",
+      "rendered_sha256": "04c6d6b5d8fc16c3a3172c01434e5d6dd2edb72754964b5c4551d12d6f570b6b",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "04c6d6b5d8fc16c3a3172c01434e5d6dd2edb72754964b5c4551d12d6f570b6b"
+    },
+    {
+      "rendered_path": "output/manuscript/02_methodology.md",
+      "rendered_sha256": "d78a1f7b6c4e0453d93c6fc77b2c94329a1f53ea7d5c3e2aa7ef42c2c2e14b9d",
+      "source_path": "manuscript/02_methodology.md",
+      "source_sha256": "d78a1f7b6c4e0453d93c6fc77b2c94329a1f53ea7d5c3e2aa7ef42c2c2e14b9d"
+    },
+    {
+      "rendered_path": "output/manuscript/03_results.md",
+      "rendered_sha256": "b89f783ca8abc506b7011e58f57315ff4e045b1780fcea8f1c997dc9913021a9",
+      "source_path": "manuscript/03_results.md",
+      "source_sha256": "6eeeb62cc647c286ee53a455d91028624119905cf857aa4b8da5507b7820e3b5"
+    },
+    {
+      "rendered_path": "output/manuscript/04_conclusion.md",
+      "rendered_sha256": "09f5eeee66879e2a449a84e56fad6946c88f712a53058bb254272f3af6b28fb6",
+      "source_path": "manuscript/04_conclusion.md",
+      "source_sha256": "09f5eeee66879e2a449a84e56fad6946c88f712a53058bb254272f3af6b28fb6"
+    },
+    {
+      "rendered_path": "output/manuscript/05_pipeline_internals.md",
+      "rendered_sha256": "ffc0b8061ca1d2bf02bee108cc7ab5292bf4626e0a21e82d31d3bbe007cd6298",
+      "source_path": "manuscript/05_pipeline_internals.md",
+      "source_sha256": "ffc0b8061ca1d2bf02bee108cc7ab5292bf4626e0a21e82d31d3bbe007cd6298"
+    },
+    {
+      "rendered_path": "output/manuscript/06_reproducibility.md",
+      "rendered_sha256": "8c70512728cb32157f9ec0842cf467bc06fbb53780d288c3cba1992341f476af",
+      "source_path": "manuscript/06_reproducibility.md",
+      "source_sha256": "8c70512728cb32157f9ec0842cf467bc06fbb53780d288c3cba1992341f476af"
+    },
+    {
+      "rendered_path": "output/manuscript/07_deep_search.md",
+      "rendered_sha256": "4850516ee4a3c7339c90071aac77c0cac19babcd8d05fcccfe06eb87faa43db5",
+      "source_path": "manuscript/07_deep_search.md",
+      "source_sha256": "4850516ee4a3c7339c90071aac77c0cac19babcd8d05fcccfe06eb87faa43db5"
+    },
+    {
+      "rendered_path": "output/manuscript/S01_literature_review.md",
+      "rendered_sha256": "5e82b253763e7f1965acf44c8b6b2e498b4a07a4451b77bc3541acffdc96358b",
+      "source_path": "manuscript/S01_literature_review.md",
+      "source_sha256": "5e82b253763e7f1965acf44c8b6b2e498b4a07a4451b77bc3541acffdc96358b"
+    },
+    {
+      "rendered_path": "output/manuscript/99_references.md",
+      "rendered_sha256": "dbb036e9a96ca12b3b7383fdbdda3b7eec536a7360cc00ecdbf132d181d74c2a",
+      "source_path": "manuscript/99_references.md",
+      "source_sha256": "dbb036e9a96ca12b3b7383fdbdda3b7eec536a7360cc00ecdbf132d181d74c2a"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "56eb91149341db850f089c6ad71ab9af389b5083677f3573802533f8e39efa17",
+      "size_bytes": 128768
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "0c54371002b14426d1877c0cdbf9a73ddb76ab5b3bf7e0a14c83557e3e87eaba",
+      "size_bytes": 102522
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "ad5dd97bce34fdee19a1f2927af8386dbbf141c330772d1355055cbc102b7461",
+      "size_bytes": 2536
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "0d30906add1059593a0397c9d1f5e0fb9a18d01d8a21e6f79877da10db0e4ecf",
+      "size_bytes": 9077
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 18,
+      "sha256": "e051c8d390d557b424e58bc5ce48c8911c8acd2fa87f64ce9ed51780542ea52f"
+    },
+    "output": {
+      "file_count": 384,
+      "sha256": "7532c8ca92bfb91af0808ae229bfd465ba9e31e4bb09be79f9c7797f8ccf9aee"
+    },
+    "source": {
+      "file_count": 43,
+      "sha256": "450b79150a2c977fcdcace8532eb6ba658ad819e667dcb83ce3c2482b83b0f61"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_search_project",
+  "schema_version": "template-rendered-provenance-v2"
+}

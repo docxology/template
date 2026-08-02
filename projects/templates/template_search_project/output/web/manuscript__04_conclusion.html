@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_conclusion.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -227,13 +226,13 @@ project that exercises them is deliberately small and explicit. Together
 they show that <em>domain-specific research automation</em> and
 <em>template-strict architectural discipline</em> are compatible — and,
 in fact, mutually reinforcing.</p>
-<p>The bundled <code>data/corpus.json</code> exercises classical
-optimisation references [boyd2004convex; nocedal2006numerical;
-nesterov2013gradient] alongside modern stochastic-optimisation work
-[kingma2014adam; reddi2018convergence] and the canonical reproducibility
-paper [peng2011reproducible], so the auto-generated
-<code>manuscript/references.bib</code> always contains real
-citation-ready entries that downstream tooling can resolve.</p>
+<p>The bundled <code>data/corpus.json</code> is a deterministic workflow
+fixture containing citation-shaped optimisation records [boyd2004convex;
+nocedal2006numerical; nesterov2013gradient; kingma2014adam;
+reddi2018convergence; peng2011reproducible]. It ensures that the
+auto-generated <code>manuscript/references.bib</code> contains
+citation-ready entries that downstream tooling can resolve; it does not
+establish empirical literature findings.</p>
 </main>
 </body>
 </html>

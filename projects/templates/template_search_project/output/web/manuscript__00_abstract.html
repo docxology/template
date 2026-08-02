@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>00_abstract.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -199,15 +212,16 @@ the same <code>infrastructure/search/</code> +
 <code>infrastructure/reference/</code> modules. The standard pipeline
 (<code>scripts/run_search_pipeline.py</code>) handles a single
 <code>SearchQuery</code> end-to-end. The deep-search pipeline
-(<code>scripts/run_deep_search.py</code>, see [sec:deep_search]) fans
-out across a list of keywords (each capped at 100 papers per keyword
-from <code>project_config.deep_search.max_results_per_keyword</code> in
+(<code>scripts/run_deep_search.py</code>, see <span class="citation"
+data-cites="sec:deep_search">[@sec:deep_search]</span>) fans out across
+a list of keywords (each capped at 100 papers per keyword from
+<code>project_config.deep_search.max_results_per_keyword</code> in
 <code>manuscript/config.yaml</code>), fully enriches every paper with
 its abstract and PDF fulltext, and (optionally) uses the local LLM to
 write a multi-section reading note for every paper. When a deep-search
 aggregate exists, the latest run covered <strong>3</strong> keyword(s)
-with <strong><deep-search not run></strong> unique paper(s) after
-cross-keyword deduplication. Both turn a free-text topic into:</p>
+with <strong>300</strong> unique paper(s) after cross-keyword
+deduplication. Both turn a free-text topic into:</p>
 <ol type="1">
 <li>a deduplicated, year-filtered set of papers drawn from arXiv,
 Crossref, optional local corpora, and (opt-in) <a
@@ -253,6 +267,11 @@ carrying an abstract), and recorded backend errors: none. Resolve
 <code>output/data/manuscript_variables.json</code> and resolved markdown
 under <code>output/manuscript/</code>, which the PDF-rendering stage
 prefers when present.</p>
+<p><strong>Claim boundary.</strong> The committed
+<code>data/corpus.json</code> and the default local-source run are
+deterministic workflow fixtures. Their counts, summaries, and generated
+bibliography exercise the pipeline contract; they are not empirical
+findings about the literature.</p>
 <p><strong>Keywords:</strong> literature search, BibTeX automation,
 reproducible research, local LLM synthesis, scientific
 infrastructure</p>

@@ -79,7 +79,7 @@ Reference with `[@fig:papers_per_source]`, `[@fig:year_histogram]`, `[@fig:score
 | `3` | distinct keywords in the deep-search aggregate |
 | `convex optimization; stochastic gradient descent; reproducible research` | keyword list rendered as `; `-joined string |
 | `arxiv, crossref` | `project_config.deep_search.sources` (joined) |
-| `<deep-search not run>` | unique papers across all keywords (or `<deep-search not run>`) |
+| `300` | unique papers across all keywords (or `<deep-search not run>`) |
 | `100` | `project_config.deep_search.max_results_per_keyword` in `config.yaml` |
 
 When a token has no value (e.g. before any deep-search run), the resolver substitutes the placeholder string `<deep-search not run>` so the `grep` check in [@sec:deep_search] can detect missed substitutions.

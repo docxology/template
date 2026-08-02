@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A configurable pipeline from query → references.bib → LLM-driven reading report" />
   <title>Reproducible Literature Synthesis with infrastructure/search
 and infrastructure/reference</title>
   <style>
@@ -43,7 +44,6 @@ and infrastructure/reference</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -265,6 +265,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -289,11 +303,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -424,7 +433,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -433,7 +444,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -443,8 +459,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -615,8 +641,8 @@ capped at 100 papers per keyword from
 its abstract and PDF fulltext, and (optionally) uses the local LLM to
 write a multi-section reading note for every paper. When a deep-search
 aggregate exists, the latest run covered <strong>3</strong> keyword(s)
-with <strong><deep-search not run></strong> unique paper(s) after
-cross-keyword deduplication. Both turn a free-text topic into:</p>
+with <strong>300</strong> unique paper(s) after cross-keyword
+deduplication. Both turn a free-text topic into:</p>
 <ol type="1">
 <li>a deduplicated, year-filtered set of papers drawn from arXiv,
 Crossref, optional local corpora, and (opt-in) <a
@@ -662,6 +688,11 @@ carrying an abstract), and recorded backend errors: none. Resolve
 <code>output/data/manuscript_variables.json</code> and resolved markdown
 under <code>output/manuscript/</code>, which the PDF-rendering stage
 prefers when present.</p>
+<p><strong>Claim boundary.</strong> The committed
+<code>data/corpus.json</code> and the default local-source run are
+deterministic workflow fixtures. Their counts, summaries, and generated
+bibliography exercise the pipeline contract; they are not empirical
+findings about the literature.</p>
 <p><strong>Keywords:</strong> literature search, BibTeX automation,
 reproducible research, local LLM synthesis, scientific
 infrastructure</p>
@@ -951,8 +982,12 @@ abstract); the per-source breakdown is local=6 and recorded backend
 errors are none. The deep-search workflow (sec. <a
 href="#sec:deep_search">8</a>) covered 3 keyword(s) — <em>convex
 optimization; stochastic gradient descent; reproducible research</em> —
-drawn from arxiv, crossref, producing <deep-search not run> unique
-paper(s) after cross-keyword deduplication.</p>
+drawn from arxiv, crossref, producing 300 unique paper(s) after
+cross-keyword deduplication.</p>
+<p>When <code>sources: [local]</code> is used, this section reports
+fixture execution only. It must not be read as a claim about empirical
+literature coverage; a live-provider run requires source-level
+provenance and a separately reviewed claim boundary.</p>
 <p>The diagnostic figures generated for this run are catalogued in
 sec. <a href="#sec:methodology">3</a>: fig. <a
 href="#fig:papers_per_source">1</a> surfaces per-backend coverage,
@@ -1103,23 +1138,21 @@ project that exercises them is deliberately small and explicit. Together
 they show that <em>domain-specific research automation</em> and
 <em>template-strict architectural discipline</em> are compatible — and,
 in fact, mutually reinforcing.</p>
-<p>The bundled <code>data/corpus.json</code> exercises classical
-optimisation references <span class="citation"
-data-cites="boyd2004convex nocedal2006numerical nesterov2013gradient">(<a
+<p>The bundled <code>data/corpus.json</code> is a deterministic workflow
+fixture containing citation-shaped optimisation records <span
+class="citation"
+data-cites="boyd2004convex nocedal2006numerical nesterov2013gradient kingma2014adam reddi2018convergence peng2011reproducible">(<a
 href="#ref-boyd2004convex" role="doc-biblioref">Boyd and Vandenberghe
 2004</a>; <a href="#ref-nocedal2006numerical"
 role="doc-biblioref">Nocedal and Wright 2006</a>; <a
-href="#ref-nesterov2013gradient" role="doc-biblioref">Nesterov
-2013</a>)</span> alongside modern stochastic-optimisation work <span
-class="citation" data-cites="kingma2014adam reddi2018convergence">(<a
-href="#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba 2014</a>;
-<a href="#ref-reddi2018convergence" role="doc-biblioref">Reddi et al.
-2018</a>)</span> and the canonical reproducibility paper <span
-class="citation" data-cites="peng2011reproducible">(<a
-href="#ref-peng2011reproducible" role="doc-biblioref">Peng
-2011</a>)</span>, so the auto-generated
-<code>manuscript/references.bib</code> always contains real
-citation-ready entries that downstream tooling can resolve.</p>
+href="#ref-nesterov2013gradient" role="doc-biblioref">Nesterov 2013</a>;
+<a href="#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba
+2014</a>; <a href="#ref-reddi2018convergence" role="doc-biblioref">Reddi
+et al. 2018</a>; <a href="#ref-peng2011reproducible"
+role="doc-biblioref">Peng 2011</a>)</span>. It ensures that the
+auto-generated <code>manuscript/references.bib</code> contains
+citation-ready entries that downstream tooling can resolve; it does not
+establish empirical literature findings.</p>
 <hr />
 <h1 data-number="6" id="sec:pipeline_internals"><span
 class="header-section-number">6</span> Pipeline Internals</h1>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_pipeline_internals.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -391,8 +390,9 @@ these keys verbatim, so the LLM synthesis and the BibTeX file always
 agree.</p>
 <p>The deep-search workflow has its own collision handler in
 <code>src/deep_search.py::run_deep_search</code> that operates over the
-post-deduplication aggregate roster — see [sec:deep_search] — and the
-unified <code>references_deep.bib</code> reflects the same mapping.</p>
+post-deduplication aggregate roster — see <span class="citation"
+data-cites="sec:deep_search">[@sec:deep_search]</span> — and the unified
+<code>references_deep.bib</code> reflects the same mapping.</p>
 <h2 id="failure-isolation">Failure isolation</h2>
 <ul>
 <li><strong>A backend is unreachable.</strong>

@@ -1,0 +1,73 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "341ae0a004dabe925a08d3af31232ca8384e74acefb1d69de60a758ad5be21ed",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "0c54371002b14426d1877c0cdbf9a73ddb76ab5b3bf7e0a14c83557e3e87eaba",
+  "combined_size_bytes": 102522,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "45bb8687da8c477cd7a510127ca46f0b0313a905ac6b85a8c1592da3bb12fe01",
+      "size_bytes": 3731
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "04c6d6b5d8fc16c3a3172c01434e5d6dd2edb72754964b5c4551d12d6f570b6b",
+      "size_bytes": 2618
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "d78a1f7b6c4e0453d93c6fc77b2c94329a1f53ea7d5c3e2aa7ef42c2c2e14b9d",
+      "size_bytes": 9042
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "b89f783ca8abc506b7011e58f57315ff4e045b1780fcea8f1c997dc9913021a9",
+      "size_bytes": 5229
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "09f5eeee66879e2a449a84e56fad6946c88f712a53058bb254272f3af6b28fb6",
+      "size_bytes": 2578
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_pipeline_internals.md",
+      "sha256": "ffc0b8061ca1d2bf02bee108cc7ab5292bf4626e0a21e82d31d3bbe007cd6298",
+      "size_bytes": 8054
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_reproducibility.md",
+      "sha256": "8c70512728cb32157f9ec0842cf467bc06fbb53780d288c3cba1992341f476af",
+      "size_bytes": 5776
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/07_deep_search.md",
+      "sha256": "4850516ee4a3c7339c90071aac77c0cac19babcd8d05fcccfe06eb87faa43db5",
+      "size_bytes": 9335
+    },
+    {
+      "ordinal": 9,
+      "path": "output/manuscript/S01_literature_review.md",
+      "sha256": "5e82b253763e7f1965acf44c8b6b2e498b4a07a4451b77bc3541acffdc96358b",
+      "size_bytes": 54594
+    },
+    {
+      "ordinal": 10,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "dbb036e9a96ca12b3b7383fdbdda3b7eec536a7360cc00ecdbf132d181d74c2a",
+      "size_bytes": 1504
+    }
+  ],
+  "ordered_inputs_sha256": "a1f7dc58717980c492035d1b1e9a99d8e354e10d304b19cdd607b87f3da06ff6",
+  "project": "templates/template_search_project",
+  "schema_version": "template-manuscript-composition-v1"
+}

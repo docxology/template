@@ -4,23 +4,23 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 114
-Total Size: 3.15 MB
+Total Files: 133
+Total Size: 3.76 MB
 
 Files by Category:
-  • pdf: 11 files (1.01 MB)
-  • web: 12 files (0.43 MB)
+  • pdf: 11 files (1.02 MB)
+  • web: 14 files (0.50 MB)
   • slides: 81 files (1.46 MB)
-  • figures: 3 files (0.17 MB)
-  • data: 1 files (0.00 MB)
-  • reports: 6 files (0.08 MB)
+  • figures: 13 files (0.53 MB)
+  • data: 2 files (0.01 MB)
+  • reports: 12 files (0.24 MB)
 
 Largest Files:
   • template_search_project_combined.pdf: 0.45 MB (pdf)
   • 02_methodology_slides.pdf: 0.22 MB (slides)
-  • index.html: 0.15 MB (web)
+  • index.html: 0.20 MB (web)
+  • inline_mermaid_0001_d3ead0e9d850.png: 0.19 MB (figures)
   • _combined_manuscript.tex: 0.12 MB (pdf)
-  • references_deep.bib: 0.12 MB (pdf)
 
 Missing Expected Files:
   ⚠  simulations/ directory
@@ -30,11 +30,11 @@ Missing Expected Files:
 File Types:
   • .log: 12 file(s)
   • .tex: 12 file(s)
+  • .html: 12 file(s)
   • .aux: 11 file(s)
   • .pdf: 11 file(s)
   • .toc: 11 file(s)
-  • .html: 11 file(s)
+  • .json: 11 file(s)
   • .nav: 10 file(s)
   • .vrb: 10 file(s)
   • .snm: 10 file(s)
-  • .json: 5 file(s)
