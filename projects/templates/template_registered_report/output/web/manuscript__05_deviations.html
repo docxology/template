@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_deviations.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -177,7 +176,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:deviations">Deviation register</h1>
 <p>A registered report must state, explicitly, every way the executed
 analysis departed from the frozen plan. This template treats that
@@ -241,8 +241,9 @@ against a perfect plan). Had either deviation lacked a rationale, the
 same code would have raised a blocking
 <code>deviation_without_rationale</code> or
 <code>unregistered_outcome</code> error, and the packet would be
-invalid. [fig:deviation_timeline] plots this register along the
-registered-to-executed axis.</p>
+invalid. <span class="citation"
+data-cites="fig:deviation_timeline">[@fig:deviation_timeline]</span>
+plots this register along the registered-to-executed axis.</p>
 <figure id="fig:deviation_timeline">
 <img src="figures/deviation_timeline.png"
 alt="Preregistration-versus-executed deviation ledger timeline, rendered by plot_deviation_timeline from build_deviation_ledger and deviation_timeline ." />
@@ -258,7 +259,8 @@ a rationale. An undocumented departure would appear in red and
 invalidate the review packet.</figcaption>
 </figure>
 <h2 id="reading-the-register">Reading the register</h2>
-<p>The register is the mechanism that keeps [sec:results] honest: the
+<p>The register is the mechanism that keeps <span class="citation"
+data-cites="sec:results">[Section @sec:results]</span> honest: the
 confirmatory claim is restricted to the registered
 <code>primary_score</code> outcome, and the exploratory
 <code>secondary_score</code> endpoint is visible, labelled, and excluded

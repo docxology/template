@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.38",
-      "total_size_bytes": 398972,
+      "total_size_bytes": 400596,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.11",
-      "total_size_bytes": 112095,
+      "total_size_bytes": 114648,
       "largest_files": [
         {
           "name": "index.html",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 65,
       "size_mb": "0.94",
-      "total_size_bytes": 984067,
+      "total_size_bytes": 982888,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -140,9 +140,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 31,
-      "size_mb": "0.16",
-      "total_size_bytes": 164961,
+      "file_count": 15,
+      "size_mb": "0.12",
+      "total_size_bytes": 120749,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -151,21 +151,19 @@
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.02",
+          "size_mb": "0.01",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "pipeline_report.json",
+          "name": "validation_report.json",
           "size_mb": "0.01",
-          "path": "reports/pipeline_report.json"
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 21,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".md": 5,
-        ".html": 1
+        ".json": 12,
+        ".txt": 1,
+        ".md": 2
       }
     },
     "simulations": {
@@ -181,24 +179,14 @@
       "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 205,
-      "largest_files": [
-        {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
-        }
-      ],
-      "extensions": {
-        ".log": 1
-      }
+      "total_size_bytes": 0
     }
   },
-  "total_files": 124,
-  "total_size_mb": 1.7793350219726562,
+  "total_files": 107,
+  "total_size_mb": 1.7398347854614258,
   "largest_files": [
     {
       "name": "template_registered_report_combined.pdf",
@@ -263,20 +251,20 @@
   ],
   "missing_expected_files": [
     "simulations/ directory",
-    "llm/ directory"
+    "llm/ directory",
+    "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.3804893493652344,
-    "web": 0.1069021224975586,
-    "slides": 0.9384794235229492,
+    "pdf": 0.3820381164550781,
+    "web": 0.10933685302734375,
+    "slides": 0.9373550415039062,
     "figures": 0.19556045532226562,
     "data": 0.00038909912109375,
-    "reports": 0.1573190689086914,
-    "logs": 0.00019550323486328125
+    "reports": 0.11515522003173828
   },
   "file_counts_by_type": {
-    ".md": 7,
-    ".log": 11,
+    ".md": 4,
+    ".log": 10,
     ".pdf": 9,
     ".aux": 9,
     ".blg": 1,
@@ -284,14 +272,13 @@
     ".tex": 10,
     ".toc": 9,
     ".bbl": 1,
-    ".html": 10,
+    ".html": 9,
     ".ico": 1,
     ".nav": 8,
     ".vrb": 8,
     ".snm": 8,
-    ".json": 23,
+    ".json": 14,
     ".png": 4,
-    ".jsonl": 1,
-    ".txt": 3
+    ".txt": 1
   }
 }

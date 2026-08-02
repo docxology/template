@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_methods.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -177,13 +176,15 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methods">Methods and analysis plan</h1>
 <p>The method is the registered-report workflow itself, implemented as
 tested code. It has four locked stages that complete before any result
 is observed, followed by two interpretation stages that run only after
-the deviation ledger is built. [fig:analysis_dag] shows this ordering
-and the lock boundary it protects.</p>
+the deviation ledger is built. <span class="citation"
+data-cites="fig:analysis_dag">[@fig:analysis_dag]</span> shows this
+ordering and the lock boundary it protects.</p>
 <figure id="fig:analysis_dag">
 <img src="figures/analysis_dag.png"
 alt="Registered-report analysis workflow, rendered from analysis_plan_stages() in src/registered_report/demo_study.py ." />
@@ -238,7 +239,8 @@ seed. <code>run_registered_analysis</code> reads the seed and
 registered permutation test against this dataset, guaranteeing the
 executed analysis honours the locked plan. The executed summary is
 written to <code>output/data/demo_analysis.json</code> and is the single
-source of truth for every number in [sec:results].</p>
+source of truth for every number in <span class="citation"
+data-cites="sec:results">[Section @sec:results]</span>.</p>
 <p>Forks replace this generator with genuine data collection while
 keeping the same <code>run_registered_analysis</code> contract, so the
 confirmatory analysis remains bound to the frozen plan rather than to

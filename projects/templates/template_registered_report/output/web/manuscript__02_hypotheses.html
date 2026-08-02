@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_hypotheses.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -177,7 +176,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:hypotheses">Preregistered hypotheses</h1>
 <p>The registration in <code>data/example_registration.json</code>
 declares its hypotheses, outcomes, exclusion rules, and analysis plan
@@ -195,8 +195,9 @@ score difference and analysed with a two-sided label-permutation test at
 <code>alpha = 0.05</code>.</li>
 </ul>
 <p>Each registered hypothesis is bound to exactly one registered outcome
-and one registered analysis. [fig:hypothesis_map] renders that binding
-directly from the frozen registration via
+and one registered analysis. <span class="citation"
+data-cites="fig:hypothesis_map">[@fig:hypothesis_map]</span> renders
+that binding directly from the frozen registration via
 <code>hypothesis_outcome_map</code>, so the figure cannot silently drift
 from the locked plan.</p>
 <figure id="fig:hypothesis_map">
@@ -225,8 +226,9 @@ exclusion decisions cannot depend on the observed effect.</li>
 </ul>
 <p>No secondary outcome is preregistered. Any additional endpoint
 introduced during analysis is therefore exploratory and must be recorded
-in the deviation ledger ([sec:deviations]) rather than presented as a
-confirmatory finding.</p>
+in the deviation ledger (<span class="citation"
+data-cites="sec:deviations">[Section @sec:deviations]</span>) rather
+than presented as a confirmatory finding.</p>
 </main>
 </body>
 </html>

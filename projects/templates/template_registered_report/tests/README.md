@@ -1,6 +1,6 @@
 # tests - template_registered_report
 
-Real-data, no-mock tests across two files:
+Real-data, no-mock tests across four files:
 
 - `test_protocol.py` — registration freezing, section validation, deviation
   classification, sensitivity-table checks, review packets, and analysis-plan
@@ -10,6 +10,12 @@ Real-data, no-mock tests across two files:
   `TestDiagramData`. These pin the seeded statistics the manuscript quotes and
   assert the executed summary matches the committed
   `output/data/demo_analysis.json` artifact when present.
+- `test_figures.py` — deterministic figure rendering: each plot writes a real,
+  non-empty PNG, and `render_all_figures` is byte-stable across runs.
+- `test_generate_figures_script.py` — script-level integration: asset
+  generation writes a validator-compatible registry, an incomplete render set
+  cannot publish a registry, and the validator rejects a deleted registered
+  figure.
 
 Run from the repository root:
 
