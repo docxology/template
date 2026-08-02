@@ -1,0 +1,67 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "7e6e34e66fa176505cc5560f43a2468fa3e4862b66f6332f2cfde940e1a99ba0",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "1c519d0d6b2f0d1c8a39f4492cfa0aede82f13b8f9c1cc785a8ac22a2acac1f2",
+  "combined_size_bytes": 30185,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "f46601c2cde9f8a795ee351b50da49a7a25cb36f2fe4fd2cf5e6107969c991fd",
+      "size_bytes": 2094
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "1a52f31ffe76cb5177ce2c12fa6bf152eb7d51d659228c2d5a701edbc5417018",
+      "size_bytes": 4298
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_methodology.md",
+      "sha256": "a23f876b1f839529a1ac68fa8663f34fcd2c10414f9ae061a26d2c53fed0a88c",
+      "size_bytes": 6327
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_results.md",
+      "sha256": "babd3efbd389204e8e8a955b96d2e9ea946f074b6d93f70a8b39f8c13399b2fe",
+      "size_bytes": 6863
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_experimental_setup.md",
+      "sha256": "544a3fbb3f5797953300d1581b9ce4d5f9db538562d124f9b8116a2ae13c1799",
+      "size_bytes": 2251
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/05_reproducibility.md",
+      "sha256": "66f330b736f4be8a69e7a41cb942ac0baa657d11dd8eee4235e818b8fe4adbe3",
+      "size_bytes": 2481
+    },
+    {
+      "ordinal": 7,
+      "path": "manuscript/06_scope_and_related_work.md",
+      "sha256": "9f064c7a3799194c6f6d389dcf95e77584fd041f5b7e11ff3131eaac0bef1d37",
+      "size_bytes": 3061
+    },
+    {
+      "ordinal": 8,
+      "path": "manuscript/07_conclusion.md",
+      "sha256": "d2910c2d1a6823bf0a10f5e8821735c631843edd4d10f7b927574d6912844d7f",
+      "size_bytes": 2145
+    },
+    {
+      "ordinal": 9,
+      "path": "manuscript/99_references.md",
+      "sha256": "d39e2efb51c30d2eb9f657fe059201a3facb31ce7d3ff942a308c31c64556ef1",
+      "size_bytes": 618
+    }
+  ],
+  "ordered_inputs_sha256": "af3e541c2b5c134d0265b0f914bdd36ffa1c6f0fca6f8c72a2311c4790388cfd",
+  "project": "templates/template_autoscientists",
+  "schema_version": "template-manuscript-composition-v1"
+}

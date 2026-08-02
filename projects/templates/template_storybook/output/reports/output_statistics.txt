@@ -4,8 +4,8 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 87
-Total Size: 4.45 MB
+Total Files: 93
+Total Size: 4.47 MB
 
 Files by Category:
   • pdf: 11 files (1.54 MB)
@@ -13,7 +13,7 @@ Files by Category:
   • slides: 46 files (0.46 MB)
   • figures: 15 files (2.30 MB)
   • data: 1 files (0.01 MB)
-  • reports: 5 files (0.09 MB)
+  • reports: 11 files (0.11 MB)
 
 Largest Files:
   • the-shape-between.pdf: 1.42 MB (pdf)
@@ -32,9 +32,9 @@ File Types:
   • .log: 8 file(s)
   • .pdf: 8 file(s)
   • .tex: 8 file(s)
+  • .json: 8 file(s)
   • .aux: 7 file(s)
   • .toc: 7 file(s)
   • .html: 7 file(s)
   • .nav: 6 file(s)
   • .snm: 6 file(s)
-  • .md: 4 file(s)
