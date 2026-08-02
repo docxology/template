@@ -32,3 +32,30 @@
 5. Add rendered public report examples — shipped in output generation.
 6. Visual redaction/background proof matrix with provenance PDFs — shipped in source/script/tests.
 7. Typed canonical audit/ledger generation in the normal Stage 02 order — shipped in source/script/tests/output.
+
+## Log
+
+### 2026-08-02 — Publication pass
+
+- Accuracy: corrected `manuscript/02_results.md` redaction-decision count from
+  "Twenty-one" to "Twenty-two" to match `data/example_segments.json` and the
+  canonical `output/reports/redaction_audit.json` (`decision_count: 22`);
+  split the residual-risk table's conflated "Sensitive markers / `2026-`" row
+  into the actual year-stable ISO-date regex (`\b20\d{2}-\d{2}-\d{2}\b`) and
+  the literal sensitive-marker list.
+- Docs: `scripts/AGENTS.md` and `tests/AGENTS.md` now enumerate every on-disk
+  script/test file with roles; `.agents/` catalog completed
+  (`.agents/README.md`, `.agents/skills/README.md` added; `.agents/AGENTS.md`
+  expanded to the sibling table convention).
+- Config: `manuscript/config.yaml.example` paper date synced to the live
+  config (`2026-07-10`).
+- Verified gates: 113 passed / 97.53% coverage; prerender clean; Stage 02
+  deterministic (audit/ledger byte-identical across runs); render 8 pages,
+  0 LaTeX errors, 0 `??`; Stage 04/05 green; project drift clean.
+- Remaining: the `02_results.md` Kmyth claim ("verified run ... thirty-two
+  `.ski` files") records a development-time swtpm verification; tracked
+  `output/dev/redaction_variants/` intentionally ships no `.ski` sidecars
+  (`.gitignore` contract) — regenerate and re-verify that claim only on a
+  TPM/swtpm-enabled machine. A transient repo-wide drift warning about
+  `template_storybook/tests/AGENTS.md` was observed during this pass and
+  resolved by its owning exemplar.

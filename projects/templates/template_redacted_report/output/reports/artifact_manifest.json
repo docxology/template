@@ -5,7 +5,7 @@
       "path": "output/data/release_ledger.json",
       "sha256": "17f4f303e2ccb68d6eb84ff9612f37ce3c686c3c953b85c1f8ef4f5c349797ef",
       "size_bytes": 10932,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -14,7 +14,7 @@
       "path": "output/dev/redaction_variants/blackout_on_black.hashes.json",
       "sha256": "1e21aa7cfaa3a0d3b36f632fe43f89a89b407ae8af46ccb085cad6aa64368e13",
       "size_bytes": 544,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -23,7 +23,7 @@
       "path": "output/dev/redaction_variants/blackout_on_black.pdf",
       "sha256": "3128a32c830aeb2121f5767674788d0c62b3f0d750fb5e7680b4cc27aa3ecfd7",
       "size_bytes": 21504,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -32,7 +32,7 @@
       "path": "output/dev/redaction_variants/blackout_on_black_steganography.pdf",
       "sha256": "8d0bf9aef1dcda6bb82d8bf45390b3ce4fe8dce256600955bf63d9cd65bdd975",
       "size_bytes": 145846,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -41,7 +41,7 @@
       "path": "output/dev/redaction_variants/blackout_on_blur.hashes.json",
       "sha256": "972a9383964cd649ede9ceb3d36001e0c861162e561e4cf7e7173b25e12237ba",
       "size_bytes": 543,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -50,7 +50,7 @@
       "path": "output/dev/redaction_variants/blackout_on_blur.pdf",
       "sha256": "457db039378bbff5c4aa8f0451ed622dc4fa700aa8f5a83347a1ab0778f4dc45",
       "size_bytes": 36502,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -59,7 +59,7 @@
       "path": "output/dev/redaction_variants/blackout_on_blur_steganography.pdf",
       "sha256": "2779a7a8da8728f7108501dcd61ca0cca99144ff65ed545a1ca0f0cd528ef3aa",
       "size_bytes": 253233,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -68,7 +68,7 @@
       "path": "output/dev/redaction_variants/blackout_on_gray.hashes.json",
       "sha256": "ced460d766debeaf3457d20d7b0719949af2ba35622eee2f5dce085844845340",
       "size_bytes": 543,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -77,7 +77,7 @@
       "path": "output/dev/redaction_variants/blackout_on_gray.pdf",
       "sha256": "19ee19dd5ec44ebbe79513ae4e3583c3d035bd2b80a95cd471f0ec1259acde4b",
       "size_bytes": 21592,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -86,7 +86,7 @@
       "path": "output/dev/redaction_variants/blackout_on_gray_steganography.pdf",
       "sha256": "829993a9065834b69592c976017fd5fbb6229bc61d7d37d7453cccd840282e02",
       "size_bytes": 146064,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -95,7 +95,7 @@
       "path": "output/dev/redaction_variants/blackout_on_white.hashes.json",
       "sha256": "2782c427177c96cfc8566c515261b38082473b51368fd2d10608b5e1407b62cc",
       "size_bytes": 544,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -104,7 +104,7 @@
       "path": "output/dev/redaction_variants/blackout_on_white.pdf",
       "sha256": "2c7d3b8b8b54d475cf4213d284571b065461cec197e3f7b593867a629d5648dc",
       "size_bytes": 21530,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -113,7 +113,7 @@
       "path": "output/dev/redaction_variants/blackout_on_white_steganography.pdf",
       "sha256": "ea9b89e0cd2910b15b2ab78e69a9eb38ef2a984412e2ecc1bdbddadc03765317",
       "size_bytes": 146116,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -122,7 +122,7 @@
       "path": "output/dev/redaction_variants/blur_on_black.hashes.json",
       "sha256": "9da4f56efbaad0069ac6e33e3b485a370303138394ef930afbcea51def70c2ef",
       "size_bytes": 540,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -131,7 +131,7 @@
       "path": "output/dev/redaction_variants/blur_on_black.pdf",
       "sha256": "5a7465a51371ae670487079bb5b6d4705ab61fe10e2def4c107c19ea23f0a590",
       "size_bytes": 21930,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -140,7 +140,7 @@
       "path": "output/dev/redaction_variants/blur_on_black_steganography.pdf",
       "sha256": "a92d2ddcbb3b1693b5d61097c104f796cfce754364b82373025641c2b119eb8f",
       "size_bytes": 149460,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -149,7 +149,7 @@
       "path": "output/dev/redaction_variants/blur_on_blur.hashes.json",
       "sha256": "aedc2e4a059cd6d9c5139b3baeb5fc003d129b4ebaa9a30a1e72edbaa56c789d",
       "size_bytes": 539,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -158,7 +158,7 @@
       "path": "output/dev/redaction_variants/blur_on_blur.pdf",
       "sha256": "8b8a5d665d482f4dd98ed3c3742ab573d7b8441c3445b1cdd3b8201d25e19518",
       "size_bytes": 36807,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -167,7 +167,7 @@
       "path": "output/dev/redaction_variants/blur_on_blur_steganography.pdf",
       "sha256": "1a18a8c8040a38105723df14be01c0bde9d5f820699382dd455fde3654d0b6a2",
       "size_bytes": 255928,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -176,7 +176,7 @@
       "path": "output/dev/redaction_variants/blur_on_gray.hashes.json",
       "sha256": "7d94f8eeeb77ab058cda1564dec3c8c11c95a6c9a329a7c32a24ced974f969f2",
       "size_bytes": 539,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -185,7 +185,7 @@
       "path": "output/dev/redaction_variants/blur_on_gray.pdf",
       "sha256": "538c136f17c01eb2748b055d2214d44438b92385b398dce36fc21bf9aeb6e146",
       "size_bytes": 21965,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -194,7 +194,7 @@
       "path": "output/dev/redaction_variants/blur_on_gray_steganography.pdf",
       "sha256": "95da8f857462df3e2a2195e335c833c50e208a7ff614e4419ea49196ad02e348",
       "size_bytes": 148991,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -203,7 +203,7 @@
       "path": "output/dev/redaction_variants/blur_on_white.hashes.json",
       "sha256": "90597143a2b010ed8636bf199ef155a7a8149e8e5933e0532003056d6864d742",
       "size_bytes": 540,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -212,7 +212,7 @@
       "path": "output/dev/redaction_variants/blur_on_white.pdf",
       "sha256": "9dc2d3a5bde0946afbfd9a47473f1eaa8d4c12f7604224ce7076f2968908f23e",
       "size_bytes": 21923,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -221,7 +221,7 @@
       "path": "output/dev/redaction_variants/blur_on_white_steganography.pdf",
       "sha256": "fc7bd3eeb1360e68ceceb558531c83320164e22d2a704e2ca0b4fe2a3239bf1f",
       "size_bytes": 148493,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -230,7 +230,7 @@
       "path": "output/dev/redaction_variants/grayout_on_black.hashes.json",
       "sha256": "36a65b44201f95413e61fca725c80692bf668dbe341797cfb1cae9a26feb6346",
       "size_bytes": 543,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -239,7 +239,7 @@
       "path": "output/dev/redaction_variants/grayout_on_black.pdf",
       "sha256": "e00ccf0e511eb00d0274684df6cc644eb2c72a99d0e53d65432e8dec51c63d37",
       "size_bytes": 21593,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -248,7 +248,7 @@
       "path": "output/dev/redaction_variants/grayout_on_black_steganography.pdf",
       "sha256": "a58b512ad3eeb4f374a8a497d7f6cf131c4ecace0012e3d2f23c44b929e46061",
       "size_bytes": 146502,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -257,7 +257,7 @@
       "path": "output/dev/redaction_variants/grayout_on_blur.hashes.json",
       "sha256": "5c377a99c0497b507d1e1df69f85ac6d97b314eb77be0e159d82a99775a7cd39",
       "size_bytes": 542,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -266,7 +266,7 @@
       "path": "output/dev/redaction_variants/grayout_on_blur.pdf",
       "sha256": "9708a215da7e41f52cc953e4e26dec1783a4df751417463102e1593d20eeef43",
       "size_bytes": 36552,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -275,7 +275,7 @@
       "path": "output/dev/redaction_variants/grayout_on_blur_steganography.pdf",
       "sha256": "4e327792a17eb157ff77fd774fb474a8f94c04f4ed7bddec4936534be819f73b",
       "size_bytes": 253806,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -284,7 +284,7 @@
       "path": "output/dev/redaction_variants/grayout_on_gray.hashes.json",
       "sha256": "a6adeb12f41dfcdd9c1a9e17452550a1e7c03145e1288784b6e43ae43bf0284c",
       "size_bytes": 542,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -293,7 +293,7 @@
       "path": "output/dev/redaction_variants/grayout_on_gray.pdf",
       "sha256": "e2c58e7761f8eb82e5968b244e5db2f5a604356f4500c91476546deb02464920",
       "size_bytes": 21610,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -302,7 +302,7 @@
       "path": "output/dev/redaction_variants/grayout_on_gray_steganography.pdf",
       "sha256": "460a1815cf406aca1fbe4ce1d8766a842fb905515c13b35800d1134eb95a6dfd",
       "size_bytes": 146909,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -311,7 +311,7 @@
       "path": "output/dev/redaction_variants/grayout_on_white.hashes.json",
       "sha256": "572d19ce406cee12a6726d88cd0add530cd1bb48cb17dbcc5c2281001dba214b",
       "size_bytes": 543,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -320,7 +320,7 @@
       "path": "output/dev/redaction_variants/grayout_on_white.pdf",
       "sha256": "45f6d635d8ed7457e22f39f2309c38f93f81603cc4e05a3c6983bbb1c81a9f73",
       "size_bytes": 21574,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -329,7 +329,7 @@
       "path": "output/dev/redaction_variants/grayout_on_white_steganography.pdf",
       "sha256": "4f4e683b96fd6be6496dd0a40dd4425a410f8afa144cba688c8da89ba11a518f",
       "size_bytes": 146587,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -338,7 +338,7 @@
       "path": "output/dev/redaction_variants/variant_matrix.json",
       "sha256": "222ce47200591d578a37d6d7a1a8cc7dc4bb7334d695207186f9c02c2108c19f",
       "size_bytes": 30418,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -347,7 +347,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_black.hashes.json",
       "sha256": "6e501b119ddbaac1c8368eb94a7b20c695024bcf63934608fc3b6c3ef8e58733",
       "size_bytes": 544,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -356,7 +356,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_black.pdf",
       "sha256": "c7715c46ef8ff62cee9f9f98085cae04f68e6852a99169b80281d0013afa421e",
       "size_bytes": 21364,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -365,7 +365,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_black_steganography.pdf",
       "sha256": "d0accb40b812b99dde39af703168d0d76a353e0a54c4694b2c9ac7390c45dc70",
       "size_bytes": 146013,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -374,7 +374,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_blur.hashes.json",
       "sha256": "2aa7c5bc7921d9b4d6cb380f60051192fe83d78de8de411556e5c135ecd8c8c5",
       "size_bytes": 543,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -383,7 +383,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_blur.pdf",
       "sha256": "8d50bb51bc5107a5e3592625943628ba465e3ef493d2dc52beed9f0b5b28375e",
       "size_bytes": 36315,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -392,7 +392,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_blur_steganography.pdf",
       "sha256": "5ef2ecc30f0e3a00095d7bcafa4a81f8dc4120803cbdbf3fe685873b9501148a",
       "size_bytes": 253280,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -401,7 +401,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_gray.hashes.json",
       "sha256": "ee728f676e54b3748731f54525e49f6ea15e38217f003f9bae164c66cced5b7e",
       "size_bytes": 543,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -410,7 +410,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_gray.pdf",
       "sha256": "dd82cece00a4a4ef515f6bd45fe5099fb5b40bb31864ee005fdb58ad4ec970d0",
       "size_bytes": 21404,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -419,7 +419,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_gray_steganography.pdf",
       "sha256": "33063543cea646b86b7397b038dec97976482208b7a54b894f6ef8d2eb0dd4ca",
       "size_bytes": 146082,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -428,7 +428,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_white.hashes.json",
       "sha256": "5c0c94afe02e7879d018199fd09fb062cd5ed62aeec53fe9d50fe19749559f4c",
       "size_bytes": 544,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -437,7 +437,7 @@
       "path": "output/dev/redaction_variants/whiteout_on_white.pdf",
       "sha256": "6e8bdb1832ee3d514953269040dbac08547db340f35818c0d5f9541016b85d1a",
       "size_bytes": 21298,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -446,16 +446,25 @@
       "path": "output/dev/redaction_variants/whiteout_on_white_steganography.pdf",
       "sha256": "1b32dd82d8a648b50a618b54f5807f1a72a32c64445b8fac477247453dc1bde9",
       "size_bytes": 145425,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/pdf/template_redacted_report_combined.pdf",
-      "sha256": "8caaf7c80488bfcd9cb4397387ad86f4acde24d902f658a0f01fd052a1d5ce71",
-      "size_bytes": 59460,
-      "stage_name": "current-output-snapshot",
+      "sha256": "dbca4f6f7f8c61b1d9422af3ccf13af82cee562ea8e5a9dc4f451e2c26d3f8dc",
+      "size_bytes": 59481,
+      "stage_name": "standalone-output-scan",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "7ba5656a01586fc1eada5696c8503390994e60ab5d4dae99e7992448526f02a1",
+      "size_bytes": 1125,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -464,7 +473,7 @@
       "path": "output/reports/redaction_audit.json",
       "sha256": "f71e36616eccfcb6eb70f51956777a14c985fce14b3537419f7a75f2513fc766",
       "size_bytes": 4806,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -473,7 +482,7 @@
       "path": "output/reports/test_results.json",
       "sha256": "43c22a7f4b07126197e52967855b91757012f9c104917020f5a09ae6babc99aa",
       "size_bytes": 613,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -482,43 +491,43 @@
       "path": "output/reports/test_results.md",
       "sha256": "06baa867afd78d930c9a26bd58779f4fe39f8ce268f822463f1876cc2e72221f",
       "size_bytes": 293,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "f930ee189675cec462848cb1916854d40f74db35409c2738c01a28f443207b11",
-      "size_bytes": 11847,
-      "stage_name": "current-output-snapshot",
+      "sha256": "d8689f4ec006b19b21d5b3f5999f1571b7586409d75ee80e8acfa9140bb8e15c",
+      "size_bytes": 11848,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/01_methods_slides.pdf",
-      "sha256": "5d7db98f51985532644c51843fd2ba155b07f55913bb3316eaeea800a228b218",
-      "size_bytes": 35339,
-      "stage_name": "current-output-snapshot",
+      "sha256": "a5240bad76fe419ba2dc8ee5db60db237e1f264e679031b6972de2dfb663f684",
+      "size_bytes": 35338,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/slides/02_results_slides.pdf",
-      "sha256": "c3708ae0c9b6a5676a8cd9b59a608ed480c25f1d2b65196baf517e77f02afa52",
-      "size_bytes": 41833,
-      "stage_name": "current-output-snapshot",
+      "sha256": "5cd4fc03b7df19a9e1885132b8944ce78eff8a7ad01e724c2cef687e9ab95288",
+      "size_bytes": 41834,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "ba999ddeb9cd3c59bd855f19e9a918149f77e842f18948f76a0e19c99cad3119",
-      "size_bytes": 14162,
-      "stage_name": "current-output-snapshot",
+      "sha256": "003c9d38442d6a7e1495dd9dcaa57f178691ef4fea7620e691a9c7cb9c20448d",
+      "size_bytes": 14203,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
@@ -527,43 +536,43 @@
       "path": "output/web/favicon.ico",
       "sha256": "6ca6e9ffbb22550f6d94bf216e743cc7469a7fc50d8dcf0737b11bf800de7dad",
       "size_bytes": 121,
-      "stage_name": "current-output-snapshot",
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "3e12ee075e4aba7a83da13d3df66818dfd671b5006d2d5eb40c67549762aab6d",
-      "size_bytes": 28733,
-      "stage_name": "current-output-snapshot",
+      "sha256": "0be575b13b2d8480ebd7873750dece209e714ac58dc6ab620207672537a6c8a0",
+      "size_bytes": 29409,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__00_abstract.html",
-      "sha256": "a49aec88c7ca8fac2f649acf4c9c5a6249ba1345a3c9e1605f80bce5a9a51ada",
-      "size_bytes": 5663,
-      "stage_name": "current-output-snapshot",
+      "sha256": "ad8c68f146d3664935504550495b41bda4056b50cb9730d30c4f2d9c9253af5e",
+      "size_bytes": 5640,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__01_methods.html",
-      "sha256": "e450384c4f3b6f2a02a9d5b52b0f14af65dbc88b4e14626e4790b78a9ba18a7d",
-      "size_bytes": 11008,
-      "stage_name": "current-output-snapshot",
+      "sha256": "264e13101b440e6167ca5a91090004eb99dd5b60711505bd5aa168b5db1bdc1c",
+      "size_bytes": 10985,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__02_results.html",
-      "sha256": "bf9907d2bb66171c4c86dbaecf9775c1065a103ed6b55529151b13b56a6c4739",
-      "size_bytes": 11921,
-      "stage_name": "current-output-snapshot",
+      "sha256": "d3d15a31ac483b2ccaeb085e4d479d236a42687149662fb62db0451e86635040",
+      "size_bytes": 11962,
+      "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""
     }

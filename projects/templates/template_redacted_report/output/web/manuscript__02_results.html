@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_results.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -185,7 +184,7 @@
 classification levels: UNCLASSIFIED (ten segments), CUI (one segment),
 SECRET (two segments), and TOP_SECRET (one segment). Four segments carry
 source controls (drawn from the HUMINT, SIGINT, and IMINT disciplines).
-Twenty-one redaction decisions are applied across those four segments,
+Twenty-two redaction decisions are applied across those four segments,
 using all five bounded reasons: <code>source_identity</code>,
 <code>operational_detail</code>, <code>time_place_selector</code>,
 <code>legal_privilege</code>, and <code>privacy</code>.</p>
@@ -315,9 +314,13 @@ public-release leaks:</p>
 <td><code>\b(?:SCI\|TS_SCI\|TOP\s+SECRET)\b</code></td>
 </tr>
 <tr>
+<td>ISO calendar date</td>
+<td><code>\b20\d{2}-\d{2}-\d{2}\b</code></td>
+</tr>
+<tr>
 <td>Sensitive markers</td>
 <td><code>HUMINT</code>, <code>SIGINT</code>, <code>source</code>,
-<code>selector</code>, <code>location</code>, <code>2026-</code></td>
+<code>selector</code>, <code>location</code></td>
 </tr>
 </tbody>
 </table>

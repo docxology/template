@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for sanitized release workflows" />
   <title>Redacted Report Template: Disclosure Control and Release
 Audit</title>
   <style>
@@ -43,7 +44,6 @@ Audit</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -181,6 +181,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -205,11 +219,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -340,7 +349,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -349,7 +360,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -359,8 +375,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -677,7 +703,7 @@ class="header-section-number">4.1</span> Fixture Release Packet</h2>
 classification levels: UNCLASSIFIED (ten segments), CUI (one segment),
 SECRET (two segments), and TOP_SECRET (one segment). Four segments carry
 source controls (drawn from the HUMINT, SIGINT, and IMINT disciplines).
-Twenty-one redaction decisions are applied across those four segments,
+Twenty-two redaction decisions are applied across those four segments,
 using all five bounded reasons: <code>source_identity</code>,
 <code>operational_detail</code>, <code>time_place_selector</code>,
 <code>legal_privilege</code>, and <code>privacy</code>.</p>
@@ -815,9 +841,13 @@ public-release leaks:</p>
 <td><code>\b(?:SCI\|TS_SCI\|TOP\s+SECRET)\b</code></td>
 </tr>
 <tr>
+<td>ISO calendar date</td>
+<td><code>\b20\d{2}-\d{2}-\d{2}\b</code></td>
+</tr>
+<tr>
 <td>Sensitive markers</td>
 <td><code>HUMINT</code>, <code>SIGINT</code>, <code>source</code>,
-<code>selector</code>, <code>location</code>, <code>2026-</code></td>
+<code>selector</code>, <code>location</code></td>
 </tr>
 </tbody>
 </table>

@@ -2,7 +2,7 @@
 
 ## Fixture Release Packet
 
-The fixture release packet contains fourteen segments spanning four classification levels: UNCLASSIFIED (ten segments), CUI (one segment), SECRET (two segments), and TOP_SECRET (one segment). Four segments carry source controls (drawn from the HUMINT, SIGINT, and IMINT disciplines). Twenty-one redaction decisions are applied across those four segments, using all five bounded reasons: `source_identity`, `operational_detail`, `time_place_selector`, `legal_privilege`, and `privacy`.
+The fixture release packet contains fourteen segments spanning four classification levels: UNCLASSIFIED (ten segments), CUI (one segment), SECRET (two segments), and TOP_SECRET (one segment). Four segments carry source controls (drawn from the HUMINT, SIGINT, and IMINT disciplines). Twenty-two redaction decisions are applied across those four segments, using all five bounded reasons: `source_identity`, `operational_detail`, `time_place_selector`, `legal_privilege`, and `privacy`.
 
 The audit produces:
 
@@ -83,7 +83,8 @@ The residual-risk detector scans sanitized text for common public-release leaks:
 | Controlled dissemination | `\b(?:NOFORN\|ORCON\|REL\s+TO)\b` |
 | Collection discipline | `\b(?:HUMINT\|SIGINT\|IMINT\|MASINT\|OSINT)\b` |
 | Compartment marker | `\b(?:SCI\|TS_SCI\|TOP\s+SECRET)\b` |
-| Sensitive markers | `HUMINT`, `SIGINT`, `source`, `selector`, `location`, `2026-` |
+| ISO calendar date | `\b20\d{2}-\d{2}-\d{2}\b` |
+| Sensitive markers | `HUMINT`, `SIGINT`, `source`, `selector`, `location` |
 
 Each detected marker generates a warning finding. The mosaic risk score aggregates residual markers across all segments.
 

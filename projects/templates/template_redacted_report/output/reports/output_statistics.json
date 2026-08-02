@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.15",
-      "total_size_bytes": 158227,
+      "total_size_bytes": 161754,
       "largest_files": [
         {
           "name": "template_redacted_report_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "0.07",
-      "total_size_bytes": 69483,
+      "total_size_bytes": 72320,
       "largest_files": [
         {
           "name": "index.html",
@@ -65,8 +65,8 @@
     "slides": {
       "exists": true,
       "file_count": 25,
-      "size_mb": "0.32",
-      "total_size_bytes": 340010,
+      "size_mb": "0.33",
+      "total_size_bytes": 341174,
       "largest_files": [
         {
           "name": "02_results_slides.log",
@@ -75,7 +75,7 @@
         },
         {
           "name": "01_methods_slides.log",
-          "size_mb": "0.07",
+          "size_mb": "0.06",
           "path": "slides/01_methods_slides.log"
         },
         {
@@ -96,101 +96,88 @@
       }
     },
     "figures": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "data": {
       "exists": true,
-      "file_count": 0,
-      "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "file_count": 1,
+      "size_mb": "0.01",
+      "total_size_bytes": 10932,
+      "largest_files": [
+        {
+          "name": "release_ledger.json",
+          "size_mb": "0.01",
+          "path": "data/release_ledger.json"
+        }
+      ],
+      "extensions": {
+        ".json": 1
+      }
     },
     "reports": {
       "exists": true,
-      "file_count": 13,
-      "size_mb": "0.17",
-      "total_size_bytes": 173905,
+      "file_count": 11,
+      "size_mb": "0.12",
+      "total_size_bytes": 128943,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.07",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
           "name": "artifact_manifest.json",
-          "size_mb": "0.06",
+          "size_mb": "0.02",
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "stage-07-output-validation.json",
+          "name": "validation_report.json",
           "size_mb": "0.01",
-          "path": "reports/snapshots/stage-07-output-validation.json"
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 11,
+        ".json": 8,
+        ".txt": 1,
         ".md": 2
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 203,
-      "largest_files": [
-        {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
-        }
-      ],
-      "extensions": {
-        ".log": 1
-      }
+      "total_size_bytes": 0
     }
   },
-  "total_files": 55,
-  "total_size_mb": 0.7074623107910156,
+  "total_files": 53,
+  "total_size_mb": 0.6819944381713867,
   "largest_files": [
+    {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
     {
       "name": "02_results_slides.log",
       "size_mb": "0.07",
       "category": "slides",
       "path": "slides/02_results_slides.log"
-    },
-    {
-      "name": "01_methods_slides.log",
-      "size_mb": "0.07",
-      "category": "slides",
-      "path": "slides/01_methods_slides.log"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.07",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     },
     {
       "name": "template_redacted_report_combined.pdf",
@@ -199,16 +186,16 @@
       "path": "pdf/template_redacted_report_combined.pdf"
     },
     {
+      "name": "01_methods_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/01_methods_slides.log"
+    },
+    {
       "name": "00_abstract_slides.log",
       "size_mb": "0.06",
       "category": "slides",
       "path": "slides/00_abstract_slides.log"
-    },
-    {
-      "name": "artifact_manifest.json",
-      "size_mb": "0.06",
-      "category": "reports",
-      "path": "reports/artifact_manifest.json"
     },
     {
       "name": "_combined_manuscript.log",
@@ -229,27 +216,34 @@
       "path": "pdf/_combined_manuscript.tex"
     },
     {
+      "name": "artifact_manifest.json",
+      "size_mb": "0.02",
+      "category": "reports",
+      "path": "reports/artifact_manifest.json"
+    },
+    {
       "name": "_combined_manuscript.md",
       "size_mb": "0.01",
       "category": "web",
       "path": "web/_combined_manuscript.md"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "figures/ directory",
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 0.15089702606201172,
-    "web": 0.06626415252685547,
-    "slides": 0.32425880432128906,
-    "figures": 0.0,
-    "data": 0.0,
-    "reports": 0.1658487319946289,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.00019359588623046875
+    "pdf": 0.15426063537597656,
+    "web": 0.0689697265625,
+    "slides": 0.32536888122558594,
+    "data": 0.010425567626953125,
+    "reports": 0.1229696273803711
   },
   "file_counts_by_type": {
     ".md": 4,
-    ".log": 6,
+    ".log": 5,
     ".aux": 4,
     ".blg": 1,
     ".pdf": 4,
@@ -262,6 +256,7 @@
     ".vrb": 3,
     ".snm": 3,
     ".nav": 3,
-    ".json": 11
+    ".json": 9,
+    ".txt": 1
   }
 }
