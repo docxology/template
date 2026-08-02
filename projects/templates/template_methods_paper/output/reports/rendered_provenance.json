@@ -1,0 +1,101 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/manuscript/00_abstract.md",
+      "rendered_sha256": "85d9cc8c6c1b966e53117214ab8c7c6a488b2f9fce6b8ed98d13bfb6908789c6",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "c645e9ea945c4f4152ed6825a92caf9f5b261ab8e0341c7b623a8ee5d8e838a4"
+    },
+    {
+      "rendered_path": "output/manuscript/01_introduction.md",
+      "rendered_sha256": "dd7b706840de519623d28468095ffa7c60b57168275b8825b41b4d4393eed80e",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "dd7b706840de519623d28468095ffa7c60b57168275b8825b41b4d4393eed80e"
+    },
+    {
+      "rendered_path": "output/manuscript/02_methodology.md",
+      "rendered_sha256": "2b6d77e4f8c977fe47e04b9ea8236785a7f77a6ffd53ff4c0ee3b55d9e56616a",
+      "source_path": "manuscript/02_methodology.md",
+      "source_sha256": "3c0c226231e0646384d99f798e207b87d54521ed12cc3e0bb46592f425f5f73f"
+    },
+    {
+      "rendered_path": "output/manuscript/03_results.md",
+      "rendered_sha256": "87e0d7f0bf8fae96cb3e4900793bf3a9196a7617bcc36dc46bfac411647c5eca",
+      "source_path": "manuscript/03_results.md",
+      "source_sha256": "6882920dffe0cc3e9aeea759b7c11bc153db81ab270430c80e2cc0449935187c"
+    },
+    {
+      "rendered_path": "output/manuscript/04_conclusion.md",
+      "rendered_sha256": "b4cbbeb793b0806a201414026ede9dcbebe6c6975c408480ba6b623ffdfb194c",
+      "source_path": "manuscript/04_conclusion.md",
+      "source_sha256": "b4cbbeb793b0806a201414026ede9dcbebe6c6975c408480ba6b623ffdfb194c"
+    },
+    {
+      "rendered_path": "output/manuscript/05_experimental_setup.md",
+      "rendered_sha256": "5691a29160ed469aa62692877d836495700d945a7919172492189ab78d53cd23",
+      "source_path": "manuscript/05_experimental_setup.md",
+      "source_sha256": "2bcec96c09a2646485966b3dea36ee57c27cadffaae1c52f1649b5cd9a654719"
+    },
+    {
+      "rendered_path": "output/manuscript/06_reproducibility.md",
+      "rendered_sha256": "d8679874b459f4524dd710c06c955dbed2a3c47c47a3b99218e09104d39c4a29",
+      "source_path": "manuscript/06_reproducibility.md",
+      "source_sha256": "12e46130cad733accd07737e7061b31608911391a96e77b2df32cbe66354d7de"
+    },
+    {
+      "rendered_path": "output/manuscript/07_scope_and_related_work.md",
+      "rendered_sha256": "4c7bfa1b76cfe48dca9107b0fd0963a1ee9220401aec772a404ab865ad305780",
+      "source_path": "manuscript/07_scope_and_related_work.md",
+      "source_sha256": "4c7bfa1b76cfe48dca9107b0fd0963a1ee9220401aec772a404ab865ad305780"
+    },
+    {
+      "rendered_path": "output/manuscript/99_references.md",
+      "rendered_sha256": "c48142cf739ba1f52609e8be29de6236438798d2a9fab68a6a7ae87c6f35ee89",
+      "source_path": "manuscript/99_references.md",
+      "source_sha256": "c48142cf739ba1f52609e8be29de6236438798d2a9fab68a6a7ae87c6f35ee89"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "868b264993f52f9f154e2069b09ede8deb15b89b8d4e8ee5fa0ded5e682624fa",
+      "size_bytes": 17667
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "890bd5a42c103f9b74f691a0036484f441feeded3c9ec821cbccc1a7d5bd0e17",
+      "size_bytes": 36563
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "ca148d274c8580b86c2619ebc33635109546916c6cfa67a9f64fff1b277ea80f",
+      "size_bytes": 2340
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "ce2cc829ace1cdba013fa80cfd308631cde30feb390727bedaa6bb1b85d209bf",
+      "size_bytes": 8742
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 15,
+      "sha256": "08d53ca16209bdeefd44fa2d4897ac001c9c3cedec756f5e860fd96ef958cf8c"
+    },
+    "output": {
+      "file_count": 59,
+      "sha256": "fb93036be7275536a926188d4624cdb5fe4a42d1be154f483836eb801a83cde9"
+    },
+    "source": {
+      "file_count": 35,
+      "sha256": "a880ee79e5c7cfb4d8e513c93491243ca3fdb7ab3194d3cdb2f6577e7f65ba61"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_methods_paper",
+  "schema_version": "template-rendered-provenance-v2"
+}

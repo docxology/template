@@ -18,7 +18,7 @@ A `Method` is a name, a set of typed parameters and resources, and an
 ordered, dependent set of steps — constructed directly as frozen Python
 dataclasses (`src/methods_dsl/model.py`) rather than parsed from new text
 syntax. Every `Quantity` carries a unit that resolves to one of
-18 controlled units across seven dimensions, and every step
+18 controlled units across eight dimensions, and every step
 names one of 9 controlled-vocabulary intents
 (`src/methods_dsl/vocabulary.py`), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and
@@ -45,11 +45,11 @@ not a parsed grammar — is sufficient to reproduce BPL's core safety
 properties (dimensional safety, staged validation, deterministic
 compilation) at a scope appropriate for a template exemplar. On the
 architecture side, the DSL is exercised by a zero-mock test suite under the
-repository's configured project coverage gate, generates 14 artifacts
+repository's configured project coverage gate, generates 17 artifacts
 (1 figures, 7 data files,
-6 reports) per pipeline run, and injects reproducibility
+9 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash `a0f000565bef6a79`, build timestamp
-`2026-07-12T22:24:06Z`) into [@sec:reproducibility].
+`2026-08-02T23:24:06Z`) into [@sec:reproducibility].
 
 **Keywords:** methods paper, domain-specific language, controlled methods, deterministic compilation, staged validation, dimensional analysis
 
@@ -182,10 +182,14 @@ protocol-level verbs (`add_reagent`, `transfer`, `incubate`): a step names
 
 ## Dimensional safety (`units.py`)
 
-Every `Quantity(value, unit)` resolves its `unit` to one of seven
-`Dimension` members (mass, volume, temperature, time, concentration, count,
-dimensionless) via `dimension_of`, drawing from a controlled table of
-18 unit strings. `check_compatible` raises `DimensionError`
+Every `Quantity(value, unit)` resolves its `unit` to one of eight
+`Dimension` members (mass, volume, temperature, time, molar concentration,
+mass concentration, count, dimensionless) via `dimension_of`, drawing from a
+controlled table of 18 unit strings. Molar concentration
+(`mol/L`, `mM`) and mass concentration (`g/L`) are separate dimensions
+rather than one shared "concentration" dimension, since converting between
+them needs a substance's molar mass that this DSL does not carry.
+`check_compatible` raises `DimensionError`
 the moment two quantities with different dimensions are combined — the
 concrete realization of BPL's design principle that "the type system catches
 `mL + g` at compile time, not at the bench." Temperature is tracked as its
@@ -451,9 +455,10 @@ provide.
    noise, not signal — `run_all_gates` short-circuits after the first two
    gates for exactly this reason.
 3. **A controlled vocabulary generalizes by restraint, not by expansion**:
-   `SensorCalibrationSweep` reuses every `StepKind` and `Target` the
-   wet-lab-flavored `PBSPreparation` example uses; nothing was added to
-   support a second domain.
+   `SensorCalibrationSweep` introduces no new `StepKind` or `Target`: its
+   `MEASURE`/`COMPUTE`/`ANNOTATE`/`VALIDATE` steps and `HUMAN` sign-off all
+   draw on the same controlled vocabulary `PBSPreparation` uses — nothing was
+   added to support a second domain.
 
 ## Future extensions
 
@@ -496,7 +501,7 @@ and the compiler — never re-declared per method:
 | Module | Declares | Cardinality |
 |---|---|---|
 | `src/methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` | 9 step kinds, 3 targets |
-| `src/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | 18 controlled units across 7 dimensions |
+| `src/methods_dsl/units.py` | `Dimension`, `Quantity`, the unit table | 18 controlled units across 8 dimensions |
 | `src/methods_dsl/validation.py` | The four staged gates | 4 gates, fixed order |
 
 ## Worked examples
@@ -648,7 +653,7 @@ evidence-registry validation. The manuscript intentionally does not
 hand-transcribe volatile values, so prose and artifacts cannot disagree.
 Configuration provenance is itself injected: `a0f000565bef6a79` is the
 SHA-256 of `manuscript/config.yaml` at build time, and
-`2026-07-12T22:24:06Z` records when the variables were generated
+`2026-08-02T23:24:06Z` records when the variables were generated
 (honoring `SOURCE_DATE_EPOCH` for byte-reproducible builds).
 
 
@@ -689,9 +694,11 @@ compilation to a hashed plan.
 2. **Biology-native types.** BPL's unit system includes MW-aware
    concentration conversions and reagent physical-form metadata
    (`cas`, `physical_form`). This exemplar's `units.py` implements only the
-   dimensional-safety subset (mass, volume, temperature, time,
-   concentration, count, dimensionless) needed to demonstrate the "the type
-   system catches `mL + g`" guarantee.
+   dimensional-safety subset (mass, volume, temperature, time, molar
+   concentration, mass concentration, count, dimensionless) needed to
+   demonstrate the "the type system catches `mL + g`" guarantee — molar and
+   mass concentration are kept as distinct dimensions precisely because no
+   MW-aware conversion exists here to safely mix them.
 3. **A robot backend.** BPL lowers intents to Biomek i7 primitives
    (`aspirate`, `dispense`, `pick_tips`). This exemplar's `Target.AUTOMATED`
    has no backend-specific lowering stage; it is a scheduling and
@@ -723,7 +730,7 @@ protocol, an instrument calibration sweep, or a computational pipeline.
 2. **No backend lowering**: `Target` selects a compatibility class, not a
    concrete execution backend; no robot or simulation runtime exists in this
    exemplar.
-3. **Unit table, not a full unit library**: seven dimensions and a fixed
+3. **Unit table, not a full unit library**: eight dimensions and a fixed
    unit table, not a general-purpose dimensional-analysis library like
    `pint`.
 4. **No persistence layer**: `trust.py`'s hash-chain lives in memory for the

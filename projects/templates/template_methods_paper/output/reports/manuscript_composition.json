@@ -1,0 +1,67 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "1504722afd81fd95c72ca2fc8c98ee36011fc4a711eab5948478bf9678811bd7",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "890bd5a42c103f9b74f691a0036484f441feeded3c9ec821cbccc1a7d5bd0e17",
+  "combined_size_bytes": 36563,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "85d9cc8c6c1b966e53117214ab8c7c6a488b2f9fce6b8ed98d13bfb6908789c6",
+      "size_bytes": 3056
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "dd7b706840de519623d28468095ffa7c60b57168275b8825b41b4d4393eed80e",
+      "size_bytes": 5015
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "2b6d77e4f8c977fe47e04b9ea8236785a7f77a6ffd53ff4c0ee3b55d9e56616a",
+      "size_bytes": 7675
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "87e0d7f0bf8fae96cb3e4900793bf3a9196a7617bcc36dc46bfac411647c5eca",
+      "size_bytes": 4046
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "b4cbbeb793b0806a201414026ede9dcbebe6c6975c408480ba6b623ffdfb194c",
+      "size_bytes": 3964
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_experimental_setup.md",
+      "sha256": "5691a29160ed469aa62692877d836495700d945a7919172492189ab78d53cd23",
+      "size_bytes": 3932
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_reproducibility.md",
+      "sha256": "d8679874b459f4524dd710c06c955dbed2a3c47c47a3b99218e09104d39c4a29",
+      "size_bytes": 3645
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/07_scope_and_related_work.md",
+      "sha256": "4c7bfa1b76cfe48dca9107b0fd0963a1ee9220401aec772a404ab865ad305780",
+      "size_bytes": 4544
+    },
+    {
+      "ordinal": 9,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "c48142cf739ba1f52609e8be29de6236438798d2a9fab68a6a7ae87c6f35ee89",
+      "size_bytes": 617
+    }
+  ],
+  "ordered_inputs_sha256": "0205f3342998e98b1e42f8732d17c0029cf56a290fe8a791d7e54f2e2c6ef0a0",
+  "project": "templates/template_methods_paper",
+  "schema_version": "template-manuscript-composition-v1"
+}

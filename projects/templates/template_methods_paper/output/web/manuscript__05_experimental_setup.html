@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_experimental_setup.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -208,7 +207,7 @@ gate and the compiler — never re-declared per method:</p>
 <tr>
 <td><code>src/methods_dsl/units.py</code></td>
 <td><code>Dimension</code>, <code>Quantity</code>, the unit table</td>
-<td>18 controlled units across 7 dimensions</td>
+<td>18 controlled units across 8 dimensions</td>
 </tr>
 <tr>
 <td><code>src/methods_dsl/validation.py</code></td>
@@ -255,8 +254,9 @@ a <code>HUMAN</code> <code>ANNOTATE</code> sign-off step</td>
 </tbody>
 </table>
 <p>The second example exists specifically to demonstrate that the
-controlled vocabulary generalizes beyond wet-lab protocols, as
-[sec:introduction] claims.</p>
+controlled vocabulary generalizes beyond wet-lab protocols, as <span
+class="citation"
+data-cites="sec:introduction">[@sec:introduction]</span> claims.</p>
 <h2 id="pipeline-conditions">Pipeline conditions</h2>
 <p>The experiment overlay (<code>experiment_plan.yaml</code>) declares
 three conditions:</p>
@@ -313,7 +313,8 @@ prose match the analysis that just completed.</li>
 </colgroup>
 <thead>
 <tr>
-<th>Result ([sec:results])</th>
+<th>Result (<span class="citation"
+data-cites="sec:results">[@sec:results]</span>)</th>
 <th>Producing function (<code>src/methods_dsl/</code>)</th>
 <th>Primary inputs</th>
 </tr>

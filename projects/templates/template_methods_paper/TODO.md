@@ -7,10 +7,38 @@ ideas.
 ## Current validation evidence
 
 - Project tests and coverage: `uv run pytest projects/templates/template_methods_paper/tests --cov=projects/templates/template_methods_paper/src --cov-fail-under=90`
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
-- Code quality: `uv run ruff check projects/templates/template_methods_paper/src/` and `uv run mypy projects/templates/template_methods_paper/src/` must both pass clean.
+  — last full run: **90 passed, 0 failed, 99.01% coverage** (2026-08-02).
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_methods_paper --strict`
+  — last run: **no drift detected** for this exemplar (2026-08-02). A
+  repo-level `repo_docs_hardcoded_test_count` warning currently fires for
+  `template_storybook/tests/AGENTS.md` (hardcoded '12 tests' from a prior
+  commit); it is outside this exemplar's subtree and is tracked by the
+  storybook lane.
+- Code quality: `uv run ruff check projects/templates/template_methods_paper/src/` and `uv run mypy projects/templates/template_methods_paper/src/` must both pass clean — last run: **ruff clean, mypy clean (14 source files)** (2026-08-02).
+- Prerender: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_methods_paper/manuscript --repo-root .`
+  — last run: **no render-blocking pitfalls or undefined citations** (2026-08-02).
+- Full pipeline (analysis → variables → render → validate → copy):
+  **stage 02 3/3 scripts, stage 03 1/1 PDF (14 pages), stage 04 clean,
+  stage 05 clean**; render log `^! ` count **0**, `??` count **0**
+  (2026-08-02).
 - Determinism: `tests/test_compiler.py::test_compile_method_is_deterministic` recompiles the same `Method` five times and asserts a single `plan_hash`.
 - Coverage floor: ≥90% on `src/`; live test count and achieved coverage are tracked in `docs/_generated/COUNTS.md` (not hardcoded here).
+
+## Pass log
+
+- **2026-08-02 — publication pass (accuracy + full re-render).** Deep
+  semantic review of manuscript prose vs `src/methods_dsl/` code and live
+  outputs, doc-completeness sweep (all eight directory levels carry
+  AGENTS.md + README.md; `.agents/` catalog matches the sibling
+  `template-*` hyphenated convention), version-marker agreement
+  (pyproject / config.yaml / CITATION.cff all 1.0.0; figure registry
+  schema matches `src/figure_specs.py`), and a full canonical pipeline
+  re-run. Fixed one prose inaccuracy: `04_conclusion.md` insight #3
+  overclaimed that `SensorCalibrationSweep` "reuses every StepKind and
+  Target" that `PBSPreparation` uses (the only shared kind is VALIDATE);
+  rewrote it to the measured claim (no new StepKind/Target introduced for
+  the second domain). All output artifacts regenerated from source; no
+  `output/` files hand-edited.
 
 ## Integrity and template-status gaps
 

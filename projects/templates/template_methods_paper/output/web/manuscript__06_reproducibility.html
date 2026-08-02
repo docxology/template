@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>06_reproducibility.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -343,14 +342,15 @@ merely asserted once in a test.</li>
 </ul>
 <h2 id="verification-no-hand-transcribed-numbers">Verification (no
 hand-transcribed numbers)</h2>
-<p>Every quantitative claim in [sec:results] is either a generated
+<p>Every quantitative claim in <span class="citation"
+data-cites="sec:results">[@sec:results]</span> is either a generated
 variable sourced from a live analysis output or registered in
 <code>data/claim_ledger.yaml</code> for evidence-registry validation.
 The manuscript intentionally does not hand-transcribe volatile values,
 so prose and artifacts cannot disagree. Configuration provenance is
 itself injected: <code>a0f000565bef6a79</code> is the SHA-256 of
 <code>manuscript/config.yaml</code> at build time, and
-<code>2026-07-12T22:24:06Z</code> records when the variables were
+<code>2026-08-02T23:24:06Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 </main>

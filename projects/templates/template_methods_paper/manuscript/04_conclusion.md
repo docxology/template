@@ -53,9 +53,10 @@ provide.
    noise, not signal — `run_all_gates` short-circuits after the first two
    gates for exactly this reason.
 3. **A controlled vocabulary generalizes by restraint, not by expansion**:
-   `SensorCalibrationSweep` reuses every `StepKind` and `Target` the
-   wet-lab-flavored `PBSPreparation` example uses; nothing was added to
-   support a second domain.
+   `SensorCalibrationSweep` introduces no new `StepKind` or `Target`: its
+   `MEASURE`/`COMPUTE`/`ANNOTATE`/`VALIDATE` steps and `HUMAN` sign-off all
+   draw on the same controlled vocabulary `PBSPreparation` uses — nothing was
+   added to support a second domain.
 
 ## Future extensions
 

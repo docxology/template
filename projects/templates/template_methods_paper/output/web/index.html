@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Staged Validation and Deterministic Compilation for Method Specification, Informed by BPL" />
@@ -43,7 +43,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -711,7 +710,7 @@ controlled procedure.</p>
 resources, and an ordered, dependent set of steps — constructed directly
 as frozen Python dataclasses (<code>src/methods_dsl/model.py</code>)
 rather than parsed from new text syntax. Every <code>Quantity</code>
-carries a unit that resolves to one of 18 controlled units across seven
+carries a unit that resolves to one of 18 controlled units across eight
 dimensions, and every step names one of 9 controlled-vocabulary intents
 (<code>src/methods_dsl/vocabulary.py</code>), executable on one of 3
 backends. 4 staged gates — structural, semantic, plan, and target —
@@ -739,10 +738,10 @@ grammar — is sufficient to reproduce BPL’s core safety properties
 (dimensional safety, staged validation, deterministic compilation) at a
 scope appropriate for a template exemplar. On the architecture side, the
 DSL is exercised by a zero-mock test suite under the repository’s
-configured project coverage gate, generates 14 artifacts (1 figures, 7
-data files, 6 reports) per pipeline run, and injects reproducibility
+configured project coverage gate, generates 17 artifacts (1 figures, 7
+data files, 9 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash <code>a0f000565bef6a79</code>, build
-timestamp <code>2026-07-12T22:24:06Z</code>) into sec. <a
+timestamp <code>2026-08-02T23:24:06Z</code>) into sec. <a
 href="#sec:reproducibility">7</a>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
@@ -898,17 +897,22 @@ protocol-level verbs (<code>add_reagent</code>, <code>transfer</code>,
 class="header-section-number">3.2</span> Dimensional safety
 (<code>units.py</code>)</h2>
 <p>Every <code>Quantity(value, unit)</code> resolves its
-<code>unit</code> to one of seven <code>Dimension</code> members (mass,
-volume, temperature, time, concentration, count, dimensionless) via
-<code>dimension_of</code>, drawing from a controlled table of 18 unit
-strings. <code>check_compatible</code> raises
-<code>DimensionError</code> the moment two quantities with different
-dimensions are combined — the concrete realization of BPL’s design
-principle that “the type system catches <code>mL + g</code> at compile
-time, not at the bench.” Temperature is tracked as its own dimension
-with no shared base unit (<code>degC</code> and <code>K</code> are never
-auto-converted), since this DSL has no use for that conversion and an
-incorrect affine conversion is worse than refusing one.</p>
+<code>unit</code> to one of eight <code>Dimension</code> members (mass,
+volume, temperature, time, molar concentration, mass concentration,
+count, dimensionless) via <code>dimension_of</code>, drawing from a
+controlled table of 18 unit strings. Molar concentration
+(<code>mol/L</code>, <code>mM</code>) and mass concentration
+(<code>g/L</code>) are separate dimensions rather than one shared
+“concentration” dimension, since converting between them needs a
+substance’s molar mass that this DSL does not carry.
+<code>check_compatible</code> raises <code>DimensionError</code> the
+moment two quantities with different dimensions are combined — the
+concrete realization of BPL’s design principle that “the type system
+catches <code>mL + g</code> at compile time, not at the bench.”
+Temperature is tracked as its own dimension with no shared base unit
+(<code>degC</code> and <code>K</code> are never auto-converted), since
+this DSL has no use for that conversion and an incorrect affine
+conversion is worse than refusing one.</p>
 <h2 data-number="3.3" id="method-model-model.py"><span
 class="header-section-number">3.3</span> Method model
 (<code>model.py</code>)</h2>
@@ -1227,10 +1231,12 @@ structurally invalid method would report noise, not signal —
 <code>run_all_gates</code> short-circuits after the first two gates for
 exactly this reason.</li>
 <li><strong>A controlled vocabulary generalizes by restraint, not by
-expansion</strong>: <code>SensorCalibrationSweep</code> reuses every
-<code>StepKind</code> and <code>Target</code> the wet-lab-flavored
-<code>PBSPreparation</code> example uses; nothing was added to support a
-second domain.</li>
+expansion</strong>: <code>SensorCalibrationSweep</code> introduces no
+new <code>StepKind</code> or <code>Target</code>: its
+<code>MEASURE</code>/<code>COMPUTE</code>/<code>ANNOTATE</code>/<code>VALIDATE</code>
+steps and <code>HUMAN</code> sign-off all draw on the same controlled
+vocabulary <code>PBSPreparation</code> uses — nothing was added to
+support a second domain.</li>
 </ol>
 <h2 data-number="5.4" id="future-extensions"><span
 class="header-section-number">5.4</span> Future extensions</h2>
@@ -1289,7 +1295,7 @@ gate and the compiler — never re-declared per method:</p>
 <tr>
 <td><code>src/methods_dsl/units.py</code></td>
 <td><code>Dimension</code>, <code>Quantity</code>, the unit table</td>
-<td>18 controlled units across 7 dimensions</td>
+<td>18 controlled units across 8 dimensions</td>
 </tr>
 <tr>
 <td><code>src/methods_dsl/validation.py</code></td>
@@ -1549,7 +1555,7 @@ validation. The manuscript intentionally does not hand-transcribe
 volatile values, so prose and artifacts cannot disagree. Configuration
 provenance is itself injected: <code>a0f000565bef6a79</code> is the
 SHA-256 of <code>manuscript/config.yaml</code> at build time, and
-<code>2026-07-12T22:24:06Z</code> records when the variables were
+<code>2026-08-02T23:24:06Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 <hr />
@@ -1599,9 +1605,11 @@ dataclasses — no concrete syntax, no parser, no AST layer.</li>
 MW-aware concentration conversions and reagent physical-form metadata
 (<code>cas</code>, <code>physical_form</code>). This exemplar’s
 <code>units.py</code> implements only the dimensional-safety subset
-(mass, volume, temperature, time, concentration, count, dimensionless)
-needed to demonstrate the “the type system catches <code>mL + g</code>”
-guarantee.</li>
+(mass, volume, temperature, time, molar concentration, mass
+concentration, count, dimensionless) needed to demonstrate the “the type
+system catches <code>mL + g</code>” guarantee — molar and mass
+concentration are kept as distinct dimensions precisely because no
+MW-aware conversion exists here to safely mix them.</li>
 <li><strong>A robot backend.</strong> BPL lowers intents to Biomek i7
 primitives (<code>aspirate</code>, <code>dispense</code>,
 <code>pick_tips</code>). This exemplar’s <code>Target.AUTOMATED</code>
@@ -1640,7 +1648,7 @@ but are not a corpus; gate-failure coverage instead lives in
 <li><strong>No backend lowering</strong>: <code>Target</code> selects a
 compatibility class, not a concrete execution backend; no robot or
 simulation runtime exists in this exemplar.</li>
-<li><strong>Unit table, not a full unit library</strong>: seven
+<li><strong>Unit table, not a full unit library</strong>: eight
 dimensions and a fixed unit table, not a general-purpose
 dimensional-analysis library like <code>pint</code>.</li>
 <li><strong>No persistence layer</strong>: <code>trust.py</code>’s

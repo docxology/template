@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_conclusion.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -225,7 +224,8 @@ guarantee the implementation does not actually provide.</p>
 <li><strong>Determinism follows from explicit tie-breaking</strong>:
 Kahn’s algorithm [kahn1962topological] alone does not guarantee a stable
 schedule across runs — the ascending-<code>step_id</code> tie-break is
-what makes <code>plan_hash</code> reproducible, and [sec:results] checks
+what makes <code>plan_hash</code> reproducible, and <span
+class="citation" data-cites="sec:results">[@sec:results]</span> checks
 this live rather than asserting it.</li>
 <li><strong>Staged short-circuit avoids misleading errors</strong>:
 running <code>plan_gate</code> and <code>target_gate</code> against a
@@ -233,10 +233,12 @@ structurally invalid method would report noise, not signal —
 <code>run_all_gates</code> short-circuits after the first two gates for
 exactly this reason.</li>
 <li><strong>A controlled vocabulary generalizes by restraint, not by
-expansion</strong>: <code>SensorCalibrationSweep</code> reuses every
-<code>StepKind</code> and <code>Target</code> the wet-lab-flavored
-<code>PBSPreparation</code> example uses; nothing was added to support a
-second domain.</li>
+expansion</strong>: <code>SensorCalibrationSweep</code> introduces no
+new <code>StepKind</code> or <code>Target</code>: its
+<code>MEASURE</code>/<code>COMPUTE</code>/<code>ANNOTATE</code>/<code>VALIDATE</code>
+steps and <code>HUMAN</code> sign-off all draw on the same controlled
+vocabulary <code>PBSPreparation</code> uses — nothing was added to
+support a second domain.</li>
 </ol>
 <h2 id="future-extensions">Future extensions</h2>
 <p>This foundation could be extended to:</p>
