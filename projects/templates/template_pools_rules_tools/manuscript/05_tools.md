@@ -22,11 +22,11 @@ entrypoints:
   - scripts/validate.sh
 ```
 
-The `type` field determines the invocation contract the consumer should expect. The `entrypoints` list names the scripts that must exist on disk; the `tools_invoker` module validates their presence at discovery time rather than at invocation time, making failures visible early in the pipeline rather than at runtime. @fig:toolcontract visualises the stdin/stdout/exit-code contract for all three template tools side by side; note that the *shape* of stdin and stdout differs per tool while the *presence* of a well-defined contract does not — this is what makes `tools_invoker` able to discover and validate any tool generically without knowing its payload schema.
+The `type` field determines the invocation contract the consumer should expect. The `entrypoints` list names the files that must exist on disk; the `tools_invoker` module validates their presence at discovery time rather than at invocation time, making failures visible early in the pipeline rather than at runtime. @fig:toolcontract visualises the stdin/stdout/exit-code contract for all four template tools side by side. note that the *shape* of stdin and stdout differs per tool while the *presence* of a well-defined contract does not — this is what makes `tools_invoker` able to discover and validate any tool generically without knowing its payload schema.
 
-![Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape.](figures/tool_contract.png){#fig:toolcontract width=90%}
+![Invocation contract for the four template tools: stdin payload, tool behaviour, and stdout/exit-code shape.](figures/tool_contract.png){#fig:toolcontract width=90%}
 
-## The Three Template Tools
+## The Four Template Tools
 
 ### `template_code_executor`
 
@@ -41,13 +41,17 @@ The code executor exemplifies tools that wrap a computational capability. The JS
 
 ### `template_validator`
 
-A JSON Schema validation tool. It reads a target document and a schema from disk and reports validation results in human-readable form. The entrypoint `scripts/validate.sh` exits 0 when the document is valid and non-zero with a detailed error message otherwise. The validator tool is used in the project pipeline to validate `manuscript_variables.json` against its expected schema before manuscript rendering.
+A JSON Schema validation tool. It reads a target document and a schema from disk and reports validation results in human-readable form. The entrypoint `scripts/validate.sh` exits 0 when the document is valid and non-zero with a detailed error message otherwise. its `scripts/schema.json` requires `name` and `version`, and the test suite exercises both valid and invalid payloads with real subprocesses.
 
 ### `template_skill`
 
 An agent skill invocation tool that wraps a Hermes-compatible skill definition. The entrypoint `scripts/invoke.sh` accepts a prompt string on standard input and returns the agent response as text. This tool type bridges the repository's tool architecture with external agent frameworks, demonstrating that the same manifest-and-entrypoint pattern applies equally to computational tools and AI agents.
 
-Unlike the two tools above, `scripts/invoke.sh` requires a real `OPENAI_API_KEY` and makes a paid network call to `api.openai.com` — it is therefore never invoked by this project's tests or pipeline, by design. Offline reproducibility is a stated requirement of this exemplar (see the front-matter Reproducibility Checklist), and no CI job in this repository injects `OPENAI_API_KEY` into this project's test run. `template_code_executor` and `template_validator`, by contrast, are fully local and deterministic — see the Execution-Proof Testing subsection below for how this project actually exercises them.
+Unlike the two tools above, `scripts/invoke.sh` requires a real `OPENAI_API_KEY` and makes a paid network call to `api.openai.com` — it is therefore never invoked by this project's tests or pipeline, by design. Offline reproducibility is a stated requirement of this exemplar (see the front-matter Reproducibility Checklist), and no CI job in this repository injects `OPENAI_API_KEY` into this project's test run. `template_code_executor`, `template_validator`, and `template_model` are fully local and deterministic.
+
+### `template_model`
+
+A pre-trained linear-regression model exemplar. It predicts a numeric target from `hours_studied` using fixed coefficients in `model_weights.json`; `scripts/predict.sh` reads `{"hours_studied": number}` and returns a JSON prediction. The manifest declares the weights file as an entrypoint, so the same discovery and existence-validation contract covers both executable scripts and model data.
 
 ## The `tools_invoker` Module
 

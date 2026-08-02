@@ -8,12 +8,12 @@ Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` for forkable
 configuration. Preserve template integrity when forking this exemplar into a
 standalone checkout.
 
-A meta-project exemplar demonstrating the integration of three top-level resource directories:
+A meta-project exemplar demonstrating the integration of three top-level resource directories and four public tool exemplars:
 
 | Directory | Role |
 |---|---|
 | `fonds/` | Stable data resource pools (bibliographies, contacts, datasets) |
-| `tools/` | Executable tool entry points (code executors, validators, skills) |
+| `tools/` | Executable tool entry points (code executor, model, validator, skill) |
 | `rules/` | Soft (prompt-like) and strong (formal) rule specifications |
 
 ## Purpose
@@ -56,7 +56,8 @@ template_pools_rules_tools/
 │   ├── test_figures.py
 │   ├── test_property_based.py
 │   ├── test_manuscript_variables.py
-│   └── test_coverage_extras.py
+│   ├── test_coverage_extras.py
+│   └── test_generate_figures_script.py
 └── manuscript/
     ├── config.yaml, config.yaml.example
     ├── 00_frontmatter.md … 07_conclusion.md
@@ -138,6 +139,8 @@ uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integ
 ## Dependencies
 
 - `pyyaml` — YAML manifest loading (always available in the template environment)
+- `matplotlib` — deterministic PNG figure generation
+- `jsonschema` — real validator-tool subprocess tests
 
 ## See Also
 

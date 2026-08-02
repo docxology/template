@@ -11,7 +11,7 @@
 | **Correspondence** | daniel@activeinference.institute |
 | **ORCID** | [0000-0001-6232-9096](https://orcid.org/0000-0001-6232-9096) |
 | **Version** | 1.0.0 |
-| **Date** | 2026-07-05 |
+| **Date** | 2026-07-10 |
 | **License** | CC-BY-4.0 |
 | **Repository** | [Public template repository](https://github.com/docxology/template) |
 | **DOI** | 10.5281/zenodo.21298888 |

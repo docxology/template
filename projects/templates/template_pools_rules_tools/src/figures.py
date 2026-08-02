@@ -231,7 +231,7 @@ def generate_architecture_overview(
         [
             [("Bibliography", 8), ("Contacts", 5), ("Datasets", 5)],
             [("Project Rules", 4), ("Manuscript Rules", 4)],
-            [("Code Executor", 2), ("Validator", 2), ("Skill", 2)],
+            [("Code Executor", 2), ("Model", 3), ("Validator", 2), ("Skill", 2)],
         ],
         [BLUE, TEAL, BLUE_LIGHT],
         strict=True,
@@ -356,6 +356,7 @@ def generate_status_dashboard(
             "Code Executor": "ok",
             "Validator": "ok",
             "Skill": "ok",
+            "Model": "ok",
         }
     carried_statuses = getattr(integration_result, "statuses", None)
     if carried_statuses is not None:
@@ -534,6 +535,7 @@ def generate_tool_contract(
     dest = _resolve_output(output_dir, filename)
     tools = [
         ("template_code_executor", "{code, language}", "{exit_code, stdout, stderr}"),
+        ("template_model", '{"hours_studied": number}', '{"prediction": number}'),
         ("template_validator", "document + schema paths", "human-readable report + exit code"),
         ("template_skill", "prompt string", "agent response text"),
     ]

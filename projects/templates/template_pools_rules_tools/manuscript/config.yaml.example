@@ -4,8 +4,14 @@
 paper:
   title: "Your Paper Title"
   subtitle: "Your Subtitle"
+  short_title: "Your Short Title"
   version: "1.0.0"
   date: ""  # Leave empty to auto-fill from pipeline
+  keywords:
+    - research software engineering
+    - reproducibility
+  cover:
+    image: "figures/cover_art.png"
 
 authors:
   - name: "Your Name"
@@ -16,7 +22,16 @@ authors:
 
 publication:
   doi: ""  # Fill after Zenodo deposit
+  doi_status: ""
+  version_doi: ""
   github_repository: "your-org/your-repo"
+  repository_url: "https://github.com/your-org/your-repo"
+  license: "CC-BY-4.0"
+  venue: ""
+  status: "draft"
+  preprint_server: ""
+  preprint_id: ""
+  version_record: ""
 
 project_config:
   strong_rules:

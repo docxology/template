@@ -1,0 +1,61 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "58870aa78db29780024d7039fca1deab4c95f21f7357db003d3d8ba1ab0a6aa2",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "a5e51fba173296c21385184ca72803cdab30bdde8c19f86d6b37d134f8cedfa8",
+  "combined_size_bytes": 59708,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_frontmatter.md",
+      "sha256": "02ffc0d80a74097d41e5aa561e093fb0c2015daeec3a5990cea9487bb47462e0",
+      "size_bytes": 3881
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_abstract.md",
+      "sha256": "e6f4a4d76def06bb01059ba68b783f5c747a665fe17d251b727470832029eec2",
+      "size_bytes": 3476
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_introduction.md",
+      "sha256": "097de66b7e12b2bcda9e2efb99cc677e07b7ce5ec66ca7452bafb477f91f95be",
+      "size_bytes": 6163
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_pools.md",
+      "sha256": "181ff4fa62263ebdfb6b35914035cce998cb34d61741e501fb8b1eaa87e49e7b",
+      "size_bytes": 7919
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_rules.md",
+      "sha256": "4ee812eaa82fde4b6e0c13c514cff34f377f68d505c9888a5b773c9302704772",
+      "size_bytes": 8733
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_tools.md",
+      "sha256": "dbb7d86824920aece6bfbdda067944c963a6594dc8eeba09b4e7941e4a4e20db",
+      "size_bytes": 10688
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_integration.md",
+      "sha256": "73ece841846df9d2e90ea94515d8a0ba2261898deb934e8e5aae6bc97a752835",
+      "size_bytes": 9683
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/07_conclusion.md",
+      "sha256": "f5662b707579afbaf98315476b35c0723f98b6adbed0fce2586202cbe2c4eaca",
+      "size_bytes": 9095
+    }
+  ],
+  "ordered_inputs_sha256": "0fbdec20b9c6e1eb549256db20b629307e77c0ebee129dcd6516c7e62c86fc27",
+  "project": "templates/template_pools_rules_tools",
+  "schema_version": "template-manuscript-composition-v1"
+}

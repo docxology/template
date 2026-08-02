@@ -6,7 +6,13 @@ project's perspective).
 
 ## Current validation evidence
 
-- Project tests and coverage: `uv run pytest projects/templates/template_pools_rules_tools/tests/ --cov=projects/templates/template_pools_rules_tools/src --cov-fail-under=90`
+- Project tests and coverage (2026-08-02): 259 passed, 2 skipped, 0 failed; 94.88% total coverage, above the 90% floor. Command: `uv run pytest projects/templates/template_pools_rules_tools/tests --cov=projects/templates/template_pools_rules_tools/src --cov-fail-under=90`.
+- Pre-render validation (2026-08-02): passed with no render-blocking pitfalls or undefined citations.
+- Analysis stage (2026-08-02): 6/6 scripts completed successfully; observed 3 fonds, 2/2 rule sets OK, 4 tools discovered and valid, 8 bibliography entries, 5 contacts, and 5 datasets. The non-IMRaD section-schema messages are advisory by design.
+- Render stage (2026-08-02): combined PDF generated successfully from 8 manuscript sections; 9 figures found, including the cover art. Render logs contain 0 lines beginning with `!` and the combined PDF contains 0 `??` tokens; `pdfinfo` reports 21 pages.
+- Output validation: all component checks pass (PDF, bookends, Markdown, structure, figure registry, evidence registry, design overlays, and artifact manifest). The rendered-provenance binding remains blocked by the shared validator's `ARTIFACT_MANIFEST_INCOMPLETE` comparison of stable generated files; this exemplar does not modify shared infrastructure, so the issue remains recorded here.
+- Output copy stage: passed; 121 files copied to `output/templates/template_pools_rules_tools/` and the combined PDF was copied successfully.
+- Repo drift gate (2026-08-02): `uv run python scripts/audit/check_template_drift.py --project templates/template_pools_rules_tools --strict` passed.
 - Type-checking: `uv run mypy projects/templates/template_pools_rules_tools/src --config-file projects/templates/template_pools_rules_tools/pyproject.toml`
 - Strong-rule validation gate: `uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py`
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
