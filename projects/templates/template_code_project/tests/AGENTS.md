@@ -25,6 +25,7 @@ flowchart LR
     T --> TFO[test_figures_orchestration.py]
     T --> TDC[test_dashboard_config.py]
     T --> TINV[test_invariants.py]
+    T --> TBS[test_benchmark_support.py]
     T --> TIDA[test_invariants_and_dashboard.py]
     T --> TMV[test_manuscript_variables.py]
     T --> TSS[test_scripts_smoke.py]
@@ -35,7 +36,7 @@ flowchart LR
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class INIT,CFG,TEST,TAI,TAC,TEC,TFO,TDC,TINV,TIDA,TMV,TSS code
+    class INIT,CFG,TEST,TAI,TAC,TEC,TFO,TDC,TINV,TIDA,TBS,TMV,TSS,TDOC code
     class DOCS doc
 ```
 
@@ -158,6 +159,7 @@ Core mathematical primitives only — no infrastructure-dependent integration te
 - `test_invariants.py` — numerical invariant builders
 - `test_invariants_and_dashboard.py` — `build_dashboard.py` CLI
 - `test_manuscript_variables.py` — `{{TOKEN}}` map + live manuscript cross-reference
+- `test_benchmark_support.py` — `infrastructure.benchmark` rubric demo (`src/benchmark_support.py`)
 - `test_scripts_smoke.py` — auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`)
 
 ## API Reference

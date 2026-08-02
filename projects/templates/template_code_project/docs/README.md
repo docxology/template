@@ -116,4 +116,4 @@ grep -r "from infrastructure\|import infrastructure" projects/templates/template
 - [../README.md](../README.md) — Project quick start
 - [../manuscript/AGENTS.md](../manuscript/AGENTS.md) — Manuscript directory rules and `{{VARIABLE}}` protocol
 - [output_conventions.md](output_conventions.md) — Output directory structure and regeneration
-- [../../../docs/](../../../../docs/) — Repository-level documentation hub (127 files, 14 subdirectories)
+- [../../../docs/](../../../../docs/) — Repository-level documentation hub (measured file/subdirectory counts live in `docs/_generated/COUNTS.md`)

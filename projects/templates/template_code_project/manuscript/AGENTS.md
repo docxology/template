@@ -1,7 +1,7 @@
 ---
 title: "Manuscript directory: template_code_project"
 type: "manuscript_guide"
-version: "2.5.0"
+version: "2.5.2"
 ---
 
 # Manuscript (`projects/templates/template_code_project/manuscript/`)
@@ -12,13 +12,13 @@ Repository-wide agent rules for this exemplar live in [`../docs/agent_instructio
 
 | File / Pattern | Role | `{{VARIABLE}}` Tokens | Figure References |
 |---|---|---|---|
-| `00_abstract.md` | Abstract; introduces template features and results summary | `CONFIG_NUM_STEP_SIZES`, `CONFIG_MIN_STEP_SIZE`, `CONFIG_MAX_STEP_SIZE`, `CONFIG_MAX_ITERATIONS`, `RESULT_NUM_CONVERGED`, `RESULT_OPTIMUM_X`, `RESULT_OPTIMUM_F` | None |
+| `00_abstract.md` | Abstract; introduces template features and results summary | `CONFIG_KEYWORDS`, `CONFIG_MAX_ITERATIONS`, `CONFIG_MAX_STEP_SIZE`, `CONFIG_MIN_STEP_SIZE`, `CONFIG_NUM_STEP_SIZES`, `RESULT_NUM_CONVERGED`, `RESULT_OPTIMUM_F`, `RESULT_OPTIMUM_X` | None |
 | `01_introduction.md` | Infrastructure pillars, algorithm overview, reader's guide | None | None |
 | `02_methodology.md` | Mathematical methods, gradient descent algorithm, step-size theory | `CONFIG_STEP_SIZES_BULLETS` | None |
-| `03_results.md` | All results; ALL figures; ALL numeric result tokens | `CONFIG_STEP_SIZES_CSV`, `CONFIG_MAX_ITERATIONS`, `CONFIG_TOLERANCE`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_STABILITY_CELLS`, `CONFIG_STABILITY_MIN_STEP`, `CONFIG_STABILITY_MAX_STEP`, `CONFIG_BENCHMARK_DIMS`, `RESULT_OPTIMUM_F`, `RESULT_MIN_ITERATIONS`, `RESULT_MAX_ITERATIONS`, `RESULT_AVG_ITERATIONS`, `RESULT_BEST_STEP_SIZE`, `RESULT_NUM_CONVERGED`, `RESULT_OPTIMUM_X`, `RESULT_TABLE_ROWS`, `RESULT_CONVERGENCE_FACTORS`, `STABILITY_SCORE` | All 6 figures |
+| `03_results.md` | All results; ALL figures; ALL numeric result tokens | `CONFIG_BENCHMARK_DIMS`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_MAX_ITERATIONS`, `CONFIG_MAX_STEP_SIZE`, `CONFIG_MIN_STEP_SIZE`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_STABILITY_CELLS`, `CONFIG_STABILITY_MAX_STEP`, `CONFIG_STABILITY_MIN_STEP`, `CONFIG_STEP_SIZES_CSV`, `CONFIG_TOLERANCE`, `RESULT_AVG_ITERATIONS`, `RESULT_BEST_STEP_SIZE`, `RESULT_CONVERGENCE_FACTORS`, `RESULT_MAX_ITERATIONS`, `RESULT_MIN_ITERATIONS`, `RESULT_NUM_CONVERGED`, `RESULT_OPTIMUM_F`, `RESULT_OPTIMUM_X`, `RESULT_TABLE_ROWS`, `STABILITY_SCORE`` | All 6 figures |
 | `04_conclusion.md` | Summary of pipeline automation and template guarantees | None | None |
-| `05_experimental_setup.md` | Configuration parameters, software environment | `CONFIG_QUADRATIC_A`, `CONFIG_QUADRATIC_B`, `RESULT_OPTIMUM_X`, `RESULT_OPTIMUM_F`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_STEP_SIZES_BULLETS`, `CONFIG_INITIAL_POINT`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_MAX_ITERATIONS`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_STABILITY_CELLS`, `CONFIG_BENCHMARK_DIMS`, `CONFIG_BENCHMARK_MIN_DIM`, `CONFIG_BENCHMARK_MAX_DIM`, `PYTHON_VERSION`, `NUMPY_VERSION`, `PLATFORM`, `GENERATION_TIMESTAMP` | None |
-| `06_reproducibility.md` | Config hash, artifact inventory, test results | `CONFIG_HASH`, `CONFIG_VERSION`, `CONFIG_FIRST_AUTHOR`, `CONFIG_KEYWORDS` (comma-joined string, not a count), `ARTIFACT_FIGURES`, `ARTIFACT_DATA_FILES` | None |
+| `05_experimental_setup.md` | Configuration parameters, software environment | `CONFIG_BENCHMARK_DIMS`, `CONFIG_BENCHMARK_MAX_DIM`, `CONFIG_BENCHMARK_MIN_DIM`, `CONFIG_CONVERGENCE_TOL`, `CONFIG_INITIAL_POINT`, `CONFIG_MAX_ITERATIONS`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_QUADRATIC_A`, `CONFIG_QUADRATIC_B`, `CONFIG_STABILITY_CELLS`, `CONFIG_STEP_SIZES_BULLETS`, `GENERATION_TIMESTAMP`, `NUMPY_VERSION`, `PLATFORM`, `PYTHON_VERSION`, `RESULT_OPTIMUM_F`, `RESULT_OPTIMUM_X`, `STABILITY_FUNCTION`` | None |
+| `06_reproducibility.md` | Config hash, artifact inventory, test results | `ARTIFACT_DATA_FILES`, `ARTIFACT_FIGURES`, `ARTIFACT_REPORTS`, `ARTIFACT_TOTAL`, `CONFIG_FIRST_AUTHOR`, `CONFIG_HASH`, `CONFIG_KEYWORDS`, `CONFIG_NUM_STABILITY_STARTS`, `CONFIG_NUM_STABILITY_STEPS`, `CONFIG_NUM_STEP_SIZES`, `CONFIG_STABILITY_CELLS`, `CONFIG_VERSION`, `RESULT_ALL_CONVERGED`, `RESULT_AVG_ITERATIONS`, `RESULT_BEST_STEP_SIZE`, `RESULT_CONVERGED_STEP_SIZES`, `RESULT_DIVERGED_STEP_SIZES`, `RESULT_MAX_ITERATIONS`, `RESULT_MIN_ITERATIONS`, `RESULT_NUM_CONVERGED`, `RESULT_WORST_STEP_SIZE`, `STABILITY_SCORE`` | None |
 | `07_scope_and_related_work.md` | Scope limitations, related literature | None | None |
 | `config.yaml` | Paper metadata, experiment parameters, `publication.transmission_bookends`, `publication.deposit_filename`, `steganography` profile | — | — |
 | `config.yaml.example` | Reference copy for new projects; shows all configurable fields | — | — |

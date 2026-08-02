@@ -23,6 +23,11 @@ flowchart LR
     SC --> PF[00_preflight.py<br/>Manuscript preflight · AESTHETIC]
     SC --> GD[generate_api_docs.py<br/>API documentation generator]
     SC --> ZGEN[z_generate_manuscript_variables.py<br/>Manuscript variable hydration · z_ prefix = runs LAST]
+    SC --> BMS[04_benchmark_stage.py<br/>infrastructure.benchmark rubric demo]
+    SC --> CSR[08_connector_search.py<br/>Connector search stage · opt-in science]
+    SC --> PRR[09_provenance_record.py<br/>Provenance DAG record · opt-in]
+    SC --> RWF[10_research_workflow.py<br/>Research workflow dispatch · opt-in]
+    SC --> INIT[__init__.py<br/>Package marker]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
@@ -83,7 +88,7 @@ main()
 
 Scripts use hardcoded parameters for reproducibility:
 
-- **Step sizes**: `[0.01, 0.05, 0.1, 0.2]` for convergence comparison
+- **Step sizes**: `[0.01, 0.1, 0.5, 1.0, 1.5, 2.5]` (read from `manuscript/config.yaml` → `experiment.step_sizes`; the six configured values) for convergence comparison
 - **Initial point**: `[0.0]` for 1D optimization
 - **Plot settings**: 300 DPI, tight bounding box
 - **Output directories**: `output/figures/`, `output/data/`
@@ -137,6 +142,33 @@ Thin wrapper → [`src/dashboard.py`](../src/dashboard.py). See [`../src/AGENTS.
 
 Thin wrapper → [`infrastructure.rendering.preflight`](../../../../infrastructure/rendering/preflight.py).
 
+### 04_benchmark_stage.py
+
+Thin orchestrator for the `infrastructure.benchmark` rubric demo backed by
+`src/benchmark_support.py`. Writes `output/data/benchmark_report.json` and a
+deterministic timing figure (`output/figures/benchmark_timings.png`) with
+wall-clock timing logged as a runtime diagnostic only. See
+[`src/benchmark_support.py`](../src/benchmark_support.py).
+
+### 08_connector_search.py
+
+Opt-in `science` pipeline stage (not in default runs): executes the
+`Connector Search` step declared in `infrastructure/core/pipeline/pipeline.yaml`
+for this exemplar when a connector is configured. Thin wrapper → infrastructure
+connector machinery; skipped cleanly when not configured.
+
+### 09_provenance_record.py
+
+Opt-in `provenance` pipeline stage: records a provenance-DAG entry after the
+Connector Search stage. Thin wrapper → `infrastructure.provenance`; skipped
+cleanly when provenance recording is not configured.
+
+### 10_research_workflow.py
+
+Opt-in research-workflow dispatcher for LLM-backed research prompts
+(`infrastructure.research`). Runs only when explicitly invoked; not part of the
+default core DAG.
+
 ### z_generate_manuscript_variables.py
 
 Thin wrapper → [`src/manuscript_variables.py`](../src/manuscript_variables.py).
@@ -189,7 +221,7 @@ from infrastructure.core.progress import ProgressBar
 
 # Progress tracking for experiments
 progress = ProgressBar(total=4, task="Step sizes")
-for step_size in [0.01, 0.05, 0.1, 0.2]:
+for step_size in [0.01, 0.1, 0.5, 1.0]:
     result = run_single_experiment(step_size)
     progress.update(1)
 progress.finish()

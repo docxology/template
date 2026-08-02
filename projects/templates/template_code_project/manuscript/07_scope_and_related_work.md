@@ -12,7 +12,7 @@ Practical machine-learning optimizers (e.g., Adam [@kingma2014adam]) introduce m
 
 ## What this project proves about the template
 
-The scientific claims through [@sec:introduction], [@sec:methodology], and [@sec:results] are standard textbook material. The **non-standard** contribution is procedural: configuration in `manuscript/config.yaml` drives `run_convergence_experiment()`, figures, CSV exports, and `{{RESULT_*}}` substitution (`scripts/z_generate_manuscript_variables.py`) so that PDF, HTML, and validation logs refer to the same numbers. That pattern is what downstream projects should copy—whether the domain is optimization, differential equations, or Bayesian workflows.
+The scientific claims through [@sec:introduction], [@sec:methodology], and [@sec:results] are standard textbook material. The **non-standard** contribution is procedural: configuration in `manuscript/config.yaml` drives `run_convergence_experiment()`, figures, CSV exports, and `RESULT_*` token substitution (`scripts/z_generate_manuscript_variables.py`) so that PDF, HTML, and validation logs refer to the same numbers. That pattern is what downstream projects should copy—whether the domain is optimization, differential equations, or Bayesian workflows.
 
 ## Explicit limitations
 

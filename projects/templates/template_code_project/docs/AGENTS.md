@@ -8,20 +8,20 @@ Technical guide for `projects/templates/template_code_project/docs/` — the ope
 
 | File | Purpose | Lines | Status |
 |---|---|---|---|
-| `README.md` | Quick navigation and audience-targeted entry points | ~45 | Current |
-| `AGENTS.md` | This index — technical overview of `docs/` | ~100 | Current |
-| `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) | ~80 | Comprehensive |
+| `README.md` | Quick navigation and audience-targeted entry points | ~119 | Current |
+| `AGENTS.md` | This index — technical overview of `docs/` | ~123 | Current |
+| `agent_instructions.md` | Behavioral constraints for AI agents (read-first priority) | ~160 | Comprehensive |
 | `architecture.md` | Thin orchestrator flow: layers, dependencies, forbidden patterns, how-to-add-algorithm | ~100 | Comprehensive |
 | `testing_philosophy.md` | Zero-mock policy; coverage mechanics; class inventory (live counts in `docs/_generated/COUNTS.md`) | ~110 | Comprehensive |
 | `faq.md` | Frequently asked questions about architecture, testing, manuscripts | ~130 | Comprehensive |
-| `troubleshooting.md` | Symptom-driven recipes for common failures | ~170 | Comprehensive |
+| `troubleshooting.md` | Symptom-driven recipes for common failures | ~253 | Comprehensive |
 | `quickstart.md` | 5-minute first-run walkthrough | ~90 | Comprehensive |
 | `output_conventions.md` | `output/` directory layout and regeneration | ~120 | Comprehensive |
 | `output_inventory.md` | Producer/consumer graph for pipeline artifacts | ~80 | Comprehensive |
 | `forking_guide.md` | Fork workflow, drift checker, friction-point table | ~130 | Comprehensive |
 | `rendering_pipeline.md` | 4-phase manuscript→PDF flow; config.yaml controls; troubleshooting | ~80 | Comprehensive |
 | `style_guide.md` | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | ~120 | Comprehensive |
-| `syntax_guide.md` | Markdown links, LaTeX refs, all 28 `{{VARIABLE}}` tokens, figure label registry, adding variables/figures | ~130 | Comprehensive |
+| `syntax_guide.md` | Markdown links, LaTeX refs, all 46 `{{VARIABLE}}` tokens, figure label registry, adding variables/figures | ~130 | Comprehensive |
 
 ## Key Conventions
 

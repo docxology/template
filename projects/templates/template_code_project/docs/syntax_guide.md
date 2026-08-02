@@ -88,7 +88,7 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 | `{{CONFIG_BENCHMARK_DIMS}}` | `1, 2, 5, 10, 20, 50` | `experiment.benchmark_dimensions` |
 | `{{CONFIG_BENCHMARK_MIN_DIM}}` | `1` | `min(experiment.benchmark_dimensions)` |
 | `{{CONFIG_BENCHMARK_MAX_DIM}}` | `50` | `max(experiment.benchmark_dimensions)` |
-| `{{CONFIG_VERSION}}` | `2.5.0` | `paper.version` |
+| `{{CONFIG_VERSION}}` | `2.5.2` | `paper.version` |
 | `{{CONFIG_FIRST_AUTHOR}}` | First author name | `authors[0].name` |
 | `{{CONFIG_KEYWORDS}}` | `"optimization algorithms, gradient descent, …"` (comma-joined) | `", ".join(keywords)` |
 | `{{CONFIG_HASH}}` | SHA-256 of config.yaml (truncated) | Computed |
@@ -104,6 +104,14 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 | `{{RESULT_AVG_ITERATIONS}}` | Mean iterations across all step sizes | Yes |
 | `{{RESULT_BEST_STEP_SIZE}}` | Step size achieving minimum iterations | Yes |
 | `{{RESULT_NUM_CONVERGED}}` | Count of step sizes with `converged=True` | Yes |
+| `{{RESULT_ALL_CONVERGED}}` | `Yes`/`No` — whether every row in `optimization_results.csv` converged | Yes |
+| `{{RESULT_CONVERGED_STEP_SIZES}}` | CSV of step sizes whose runs converged | Yes |
+| `{{RESULT_DIVERGED_STEP_SIZES}}` | CSV of step sizes whose runs diverged | Yes |
+| `{{RESULT_WORST_STEP_SIZE}}` | Step size with the slowest converged run | Yes |
+| `{{RESULT_ALL_CONVERGED}}` | `Yes`/`No` — whether every row in `optimization_results.csv` converged | Yes |
+| `{{RESULT_CONVERGED_STEP_SIZES}}` | CSV of step sizes whose runs converged | Yes |
+| `{{RESULT_DIVERGED_STEP_SIZES}}` | CSV of step sizes whose runs diverged | Yes |
+| `{{RESULT_WORST_STEP_SIZE}}` | Step size with the slowest converged run | Yes |
 | `{{RESULT_TABLE_ROWS}}` | Formatted markdown table rows for `03_results.md`, including vector-safe solutions and termination reasons | Yes |
 | `{{RESULT_CONVERGENCE_FACTORS}}` | Formatted convergence factor table | Yes |
 
@@ -113,6 +121,10 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 |---|---|
 | `{{ARTIFACT_FIGURES}}` | Count of PNG files in `output/figures/` |
 | `{{ARTIFACT_DATA_FILES}}` | Count of CSV/JSON files in `output/data/` |
+| `{{ARTIFACT_REPORTS}}` | Count of report files in `output/reports/` |
+| `{{ARTIFACT_TOTAL}}` | Total artifact count (figures + data + reports) |
+| `{{ARTIFACT_REPORTS}}` | Count of report files in `output/reports/` |
+| `{{ARTIFACT_TOTAL}}` | Total artifact count (figures + data + reports) |
 
 **System tokens**
 
@@ -123,6 +135,8 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 | `{{PLATFORM}}` | Platform string (`Darwin`, `Linux`, etc.) |
 | `{{GENERATION_TIMESTAMP}}` | ISO timestamp when script ran |
 | `{{STABILITY_SCORE}}` | Aggregate stability score from `output/reports/stability_analysis.json` |
+| `{{STABILITY_FUNCTION}}` | Quadratic form used by the stability sweep (`a*x^2 + b*x`) |
+| `{{STABILITY_FUNCTION}}` | Quadratic form used by the stability sweep (`a*x^2 + b*x`) |
 
 ### Adding a New Variable
 
@@ -197,11 +211,12 @@ To add a figure that appears in `03_results.md`:
 
 Use `$...$` for inline math and `$$...$$` for display equations. Pandoc converts these to LaTeX automatically.
 
-For numbered, referable equations, attach a Pandoc-crossref anchor with
-`{#eq:label}` directly after the closing `$$`. Reference with
-`[@eq:label]`. **Never** use a raw `\begin{equation}...\label{...}` block
-inside Markdown — Pandoc-crossref will not pick up the LaTeX label and
-the equation will be unreferenceable from prose.
+For numbered, referable equations, either attach a Pandoc-crossref anchor
+with `{#eq:label}` directly after the closing `$$`, or use a LaTeX
+`\begin{equation}...\label{eq:label}...\end{equation}` block (the
+manuscript's 02_methodology.md and 03_results.md use this latter form for
+`eq:` labels). Both forms are recognised by Pandoc-crossref; reference either
+with `[@eq:label]`.
 
 ```markdown
 $$

@@ -80,11 +80,11 @@ flowchart TB
     P --> PY[pyproject.toml<br/>Pytest/coverage config · project metadata]
     P --> DP[domain_profile.yaml · experiment_plan.yaml ·<br/>data/claim_ledger.yaml<br/>advisory controls · evidence validation]
 
-    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · analysis/ · figures/ ·<br/>dashboard.py · manuscript_variables.py ·<br/>STYLE.md · AGENTS.md · README.md]
+    SRC --> SRC_F[__init__.py · optimizer.py · invariants.py ·<br/>experiment_config.py · sweeps.py · project_paths.py ·<br/>_runtime.py · viz_config.py · benchmark_support.py ·<br/>dashboard.py · dashboard_payload.py · dashboard_panels.py ·<br/>manuscript_variables.py · documentation.py ·<br/>analysis/ · figures/ ·<br/>STYLE.md · AGENTS.md · README.md]
     SC --> SC_F[optimization_analysis.py · build_dashboard.py ·<br/>00_preflight.py · generate_api_docs.py ·<br/>z_generate_manuscript_variables.py ·<br/>CONVENTIONS.md · AGENTS.md · README.md]
     T --> T_F[conftest.py · test_optimizer.py · test_analysis_integration.py ·<br/>test_analysis_coverage.py · test_experiment_config.py ·<br/>test_figures_orchestration.py · test_dashboard_config.py ·<br/>test_invariants.py · test_invariants_and_dashboard.py ·<br/>test_manuscript_variables.py · test_documentation.py ·<br/>test_scripts_smoke.py ·<br/>PATTERNS.md · AGENTS.md · README.md]
     DOCS --> DOCS_F[AGENTS.md · README.md · agent_instructions.md ·<br/>architecture.md · testing_philosophy.md ·<br/>rendering_pipeline.md · style_guide.md · syntax_guide.md]
-    M --> M_F[00_abstract → 07_scope_and_related_work.md ·<br/>SYNTAX.md · config.yaml · config.yaml.example ·<br/>preamble.md · references.bib · AGENTS.md · README.md]
+    M --> M_F[00_abstract → 07_scope_and_related_work.md · 99_references.md ·<br/>SYNTAX.md · config.yaml · config.yaml.example · layer_contract.yaml ·<br/>preamble.md · references.bib · AGENTS.md · README.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -446,7 +446,6 @@ with log_operation("Running convergence experiments", logger=logger):
 log_success("Analysis completed successfully!", logger=logger)
 ```
 
-##
 ## Agent skill
 
 A Hermes/agentskills.io-compatible skill for this exemplar lives at
@@ -492,7 +491,7 @@ from infrastructure.core.progress import ProgressBar
 
 # Progress tracking for step size experiments
 progress = ProgressBar(total=4, task="Step sizes")
-for step_size in [0.01, 0.05, 0.1, 0.2]:
+for step_size in [0.01, 0.1, 0.5, 1.0]:
     result = run_single_experiment(step_size)
     progress.update(1)
 progress.finish()

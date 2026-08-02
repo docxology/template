@@ -112,7 +112,7 @@ except Exception as e:
 ```python
 from infrastructure.core.progress import ProgressBar
 
-step_sizes = [0.01, 0.05, 0.1, 0.2]
+step_sizes = [0.01, 0.1, 0.5, 1.0]
 
 progress = ProgressBar(total=len(step_sizes), task="Experiments")
 for step_size in step_sizes:

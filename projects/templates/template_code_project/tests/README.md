@@ -30,6 +30,7 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 | `test_invariants.py` | Invariant builders |
 | `test_invariants_and_dashboard.py` | Dashboard CLI |
 | `test_manuscript_variables.py` | `{{TOKEN}}` map + live cross-reference |
+| `test_benchmark_support.py` | `infrastructure.benchmark` rubric demo (`src/benchmark_support.py`) |
 | `test_scripts_smoke.py` | Auxiliary scripts (`generate_api_docs.py`, `00_preflight.py`) |
 | `test_documentation.py` | `documentation.py` API reference helpers |
 
