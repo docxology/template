@@ -21,10 +21,15 @@ publication:
   version_doi: ""
   version_record: ""
   github_repository: ""
+  repository_url: ""
+  repository_label: ""
   journal: ""
   volume: ""
   pages: ""
   year: ""
+  # Durable references for artifacts published outside the Zenodo/GitHub pair;
+  # each key maps a platform to a URL/identifier or is omitted.
+  published_artifacts: {}
 
 keywords:
   - "gold refining"
@@ -134,14 +139,6 @@ gold_refinement:
       - "distinguish"
       - "limit claims"
       - "explain forking"
-    evaluation:
-      - "name readiness criteria"
-      - "connect criteria to artifacts"
-      - "make failure probes visible"
-    authoring_contract:
-      - "state human responsibilities"
-      - "name fork obligations"
-      - "require domain validators before domain claims"
   lexicon:
     metallurgical_terms:
       - "cupellation"
