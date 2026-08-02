@@ -1,0 +1,101 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "8c83006d71ceb7fad14c6fa0b37a18e80db5261dd77e6f662be0c9a32171a05f"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "1eb20f251320f09bb8e2fc959f9189acf560a298a829a5caec853f16d66ff13e"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/02_methodology.md",
+      "source_sha256": "33071adcbbf306531db9830e9bd39ea40425a44156ba30467256e9b65c35faf9"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/03_results.md",
+      "source_sha256": "326a6f0b93c1a758945836f98e246cf3f2923c7c002ee8e832706576cb21cc41"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/04_conclusion.md",
+      "source_sha256": "73897c9ae3ce9f4d23b28c956a5243406c0631c2462b8592e6a812809043f193"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/05_experimental_setup.md",
+      "source_sha256": "fb4a113ca3d9dd89525e460732e49004873da2f90e7e7c9090487f14c1fa2836"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/06_reproducibility.md",
+      "source_sha256": "17b806a2f8370d4e521e3ad882d7739af9b7493d4bceb5259a0d955e421b55aa"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/07_scope_and_related_work.md",
+      "source_sha256": "52cca0ec051711c8732eafa6b999de6ea0158357763c92611c1f3e28a07c9cf4"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "source_path": "manuscript/99_references.md",
+      "source_sha256": "7844eeb01c35af0ad6c7cf5e7174e0985a924bfe088bfca9cdeafb83c025dd35"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "664da071eee3f700f1338a0a4acd255aa96d065120aa6fef5ddf22eaa5b20dc1",
+      "size_bytes": 9332
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+      "size_bytes": 26713
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "4d92ab7d8a61124045794088d03e3fc86e91c408ea5e2260017e37bdda2a1819",
+      "size_bytes": 2274
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "534d0c0d147552594674cbd0446c12f94c19bb0aedbb0bf91df2720385f169d1",
+      "size_bytes": 8715
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 15,
+      "sha256": "f1ea980cc53be5027a88c3b61fa8e9a22d3bc0d7de452bb88c59368e7d598ead"
+    },
+    "output": {
+      "file_count": 31,
+      "sha256": "ae0790c77a2009cb5b537d3e3f25ae63a82781b07ffcd567826fac39ace23f85"
+    },
+    "source": {
+      "file_count": 29,
+      "sha256": "ca849fbcd82391f65a06a32fa6075062fbf97ef222331abbb20451b382cd1e54"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_eda_notebook",
+  "schema_version": "template-rendered-provenance-v2"
+}

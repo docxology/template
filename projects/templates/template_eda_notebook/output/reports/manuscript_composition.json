@@ -1,0 +1,67 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "4e86bf15c35bbc0516366930ab850ef95cce02025480d3e338e7c1d15aec3559",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "67d934ef98599c35f5104975844b903300126b63d2e10b24e5a1cf22530a468a",
+  "combined_size_bytes": 26713,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "8c83006d71ceb7fad14c6fa0b37a18e80db5261dd77e6f662be0c9a32171a05f",
+      "size_bytes": 1707
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "1eb20f251320f09bb8e2fc959f9189acf560a298a829a5caec853f16d66ff13e",
+      "size_bytes": 3517
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_methodology.md",
+      "sha256": "33071adcbbf306531db9830e9bd39ea40425a44156ba30467256e9b65c35faf9",
+      "size_bytes": 4425
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_results.md",
+      "sha256": "326a6f0b93c1a758945836f98e246cf3f2923c7c002ee8e832706576cb21cc41",
+      "size_bytes": 5363
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_conclusion.md",
+      "sha256": "73897c9ae3ce9f4d23b28c956a5243406c0631c2462b8592e6a812809043f193",
+      "size_bytes": 3102
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/05_experimental_setup.md",
+      "sha256": "fb4a113ca3d9dd89525e460732e49004873da2f90e7e7c9090487f14c1fa2836",
+      "size_bytes": 2909
+    },
+    {
+      "ordinal": 7,
+      "path": "manuscript/06_reproducibility.md",
+      "sha256": "17b806a2f8370d4e521e3ad882d7739af9b7493d4bceb5259a0d955e421b55aa",
+      "size_bytes": 2410
+    },
+    {
+      "ordinal": 8,
+      "path": "manuscript/07_scope_and_related_work.md",
+      "sha256": "52cca0ec051711c8732eafa6b999de6ea0158357763c92611c1f3e28a07c9cf4",
+      "size_bytes": 2613
+    },
+    {
+      "ordinal": 9,
+      "path": "manuscript/99_references.md",
+      "sha256": "7844eeb01c35af0ad6c7cf5e7174e0985a924bfe088bfca9cdeafb83c025dd35",
+      "size_bytes": 616
+    }
+  ],
+  "ordered_inputs_sha256": "19b581c47c4071cabbef71a3eb6181d0035ea35340ac1160d025400d170d5536",
+  "project": "templates/template_eda_notebook",
+  "schema_version": "template-manuscript-composition-v1"
+}

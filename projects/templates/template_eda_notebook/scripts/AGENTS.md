@@ -22,6 +22,7 @@ returned data with matplotlib, and write artifacts to `output/`.
 flowchart LR
     SC[scripts/]
     SC --> EDA[eda_analysis.py<br/>EDA pipeline: figures + summary CSV]
+    SC --> INIT[__init__.py<br/>package marker]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
