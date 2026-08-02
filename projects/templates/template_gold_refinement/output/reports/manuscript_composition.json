@@ -1,0 +1,73 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "b35411c260de92ac70568bbf6a1d023b679d3301ded7c7118f6e443b48cf2571",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "d3a31842ce0896f4a3f15593b6cf31ec3ba2a090f78639b854d9ec6fef78c0c5",
+  "combined_size_bytes": 101644,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "f656c7a26ed18681b0ceee2a770ddaed1734222771b90a6aeb505e3db35a8360",
+      "size_bytes": 2521
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "dc130ff48488e22976c067ac2d2ad6812d1255d8fbb065b730d86c546302869e",
+      "size_bytes": 6174
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "4e8d594698dd517e7137a94ba038874f1f410047862f6d4bce931314531c1933",
+      "size_bytes": 23841
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "d5caa7a55fb71c8c21c064bedb2ded2ad9ba09dff929d4da8f598f39119bcbb1",
+      "size_bytes": 26473
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_discussion.md",
+      "sha256": "30a13b07f1c9f9ef6bf1e069d3710c09ebff99be1469abf745834fd43942d82b",
+      "size_bytes": 11729
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_conclusion.md",
+      "sha256": "07441d72e6fb52db3c8b4d9828589433085d46b058c51a7ebf6440a153536f15",
+      "size_bytes": 2765
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_reproducibility.md",
+      "sha256": "a68349cc1ef7cd3bbfb76afdc08dd803f9ac06b1b662b6294649475adf338024",
+      "size_bytes": 5883
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/07_scope.md",
+      "sha256": "3ab75adeab1b72fa17e4e1571ea272ce5b7e9c17b99ab4e4ce87379688036271",
+      "size_bytes": 7585
+    },
+    {
+      "ordinal": 9,
+      "path": "output/manuscript/08_evaluation.md",
+      "sha256": "8303251caa6198c2f8173a1058f06641eedf98d0b21e2ecb8044f177b18fe772",
+      "size_bytes": 9006
+    },
+    {
+      "ordinal": 10,
+      "path": "output/manuscript/09_authoring_contract.md",
+      "sha256": "bc1b398cfd735bf28ebea189d91681125d1e6d0ae0b78c92de287ab9ac4eac3f",
+      "size_bytes": 5669
+    }
+  ],
+  "ordered_inputs_sha256": "2c26e2e4ceed8c891e36cb52b97f7ed8020a08b417f864f8ac440da77c161128",
+  "project": "templates/template_gold_refinement",
+  "schema_version": "template-manuscript-composition-v1"
+}

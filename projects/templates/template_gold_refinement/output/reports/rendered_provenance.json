@@ -1,0 +1,107 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/manuscript/00_abstract.md",
+      "rendered_sha256": "f656c7a26ed18681b0ceee2a770ddaed1734222771b90a6aeb505e3db35a8360",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "8472d2ce899399e72a775e0bd0255086cedb53796446e280ca02a7e1cd9f50b1"
+    },
+    {
+      "rendered_path": "output/manuscript/01_introduction.md",
+      "rendered_sha256": "dc130ff48488e22976c067ac2d2ad6812d1255d8fbb065b730d86c546302869e",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "7ca7afeed475898a5e7d326fbb91d63be613503b6e594cb7d8e5fea4e7046232"
+    },
+    {
+      "rendered_path": "output/manuscript/02_methodology.md",
+      "rendered_sha256": "4e8d594698dd517e7137a94ba038874f1f410047862f6d4bce931314531c1933",
+      "source_path": "manuscript/02_methodology.md",
+      "source_sha256": "1d2d3db2c4a4151c81ac6622b6dad52ceafbbd9f8c8864e76bb9f8a67f2c49fa"
+    },
+    {
+      "rendered_path": "output/manuscript/03_results.md",
+      "rendered_sha256": "d5caa7a55fb71c8c21c064bedb2ded2ad9ba09dff929d4da8f598f39119bcbb1",
+      "source_path": "manuscript/03_results.md",
+      "source_sha256": "006e554c03c8af4c193a9ffce0fa3cfaaf36505b9e4429d4415e96df11d71b11"
+    },
+    {
+      "rendered_path": "output/manuscript/04_discussion.md",
+      "rendered_sha256": "30a13b07f1c9f9ef6bf1e069d3710c09ebff99be1469abf745834fd43942d82b",
+      "source_path": "manuscript/04_discussion.md",
+      "source_sha256": "b904a75b97025309688edeec4c00ac4a9082440675a8c0b6e9802543a2c5790a"
+    },
+    {
+      "rendered_path": "output/manuscript/05_conclusion.md",
+      "rendered_sha256": "07441d72e6fb52db3c8b4d9828589433085d46b058c51a7ebf6440a153536f15",
+      "source_path": "manuscript/05_conclusion.md",
+      "source_sha256": "b1ff45d46c0805bac6df75595883f1bb3138d15e433bdf73b046ff6521bdabd0"
+    },
+    {
+      "rendered_path": "output/manuscript/06_reproducibility.md",
+      "rendered_sha256": "a68349cc1ef7cd3bbfb76afdc08dd803f9ac06b1b662b6294649475adf338024",
+      "source_path": "manuscript/06_reproducibility.md",
+      "source_sha256": "8d251038ea1764421edfdcdd483dd548edf0ce5c97b4e1d27e03c00a800f1d7b"
+    },
+    {
+      "rendered_path": "output/manuscript/07_scope.md",
+      "rendered_sha256": "3ab75adeab1b72fa17e4e1571ea272ce5b7e9c17b99ab4e4ce87379688036271",
+      "source_path": "manuscript/07_scope.md",
+      "source_sha256": "6bf31cd2168267ebc1a11a8b397eba615b319d9707e34a239c9b1f842ad2bb25"
+    },
+    {
+      "rendered_path": "output/manuscript/08_evaluation.md",
+      "rendered_sha256": "8303251caa6198c2f8173a1058f06641eedf98d0b21e2ecb8044f177b18fe772",
+      "source_path": "manuscript/08_evaluation.md",
+      "source_sha256": "7da6e1116bbea793fbbe4b5ea54951df8e6cd7b7f4d4ddd65d2fd8619eb19de1"
+    },
+    {
+      "rendered_path": "output/manuscript/09_authoring_contract.md",
+      "rendered_sha256": "bc1b398cfd735bf28ebea189d91681125d1e6d0ae0b78c92de287ab9ac4eac3f",
+      "source_path": "manuscript/09_authoring_contract.md",
+      "source_sha256": "c97918d9524878a0ee04b5d0704bac2d8154a40340dac4a155770bc1031d17b6"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "251423331e2c9142b262441359c67a904c6d11d24aabe4ed4d4fc715da355e59",
+      "size_bytes": 19721
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "d3a31842ce0896f4a3f15593b6cf31ec3ba2a090f78639b854d9ec6fef78c0c5",
+      "size_bytes": 101644
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "6366ac6c13d4fcfa3437d38d4fdc81f769b9dc077977e221f3b9055f9b4f14eb",
+      "size_bytes": 2525
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "8bcc35d47b2514726664e7908aa9c12e60c3be26077bdfcf9c9958a1a935d089",
+      "size_bytes": 9034
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 16,
+      "sha256": "be891829b576cf63c830519015df882eee723792b9c861beaef6445f730dda5c"
+    },
+    "output": {
+      "file_count": 66,
+      "sha256": "a3a6e3baa69b98530f012b22d8c78292f8c0b3bfb7d0e4c5ac15320912abdd1a"
+    },
+    "source": {
+      "file_count": 41,
+      "sha256": "d9ba214b302da6da96f00d8621c190c42616d4283a008e260e9ff4fa51b868d3"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_gold_refinement",
+  "schema_version": "template-rendered-provenance-v2"
+}
