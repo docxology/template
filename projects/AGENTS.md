@@ -262,7 +262,7 @@ flowchart TB
 
 ### Stub directory (not discovered)
 
-[`projects/_test_project/`](_test_project/) contains only `output/` for validation tests that reference a fixed project name. It does **not** satisfy the required `src/` + `tests/` layout and is omitted from `discover_projects()`.
+[`projects/active/_test_project/`](active/_test_project/) contains only `output/` for validation tests that reference a fixed project name. It does **not** satisfy the required `src/` + `tests/` layout and is omitted from `discover_projects()`.
 
 ## Infrastructure Compliance
 
@@ -714,7 +714,7 @@ Authoritative project names: `docs/_generated/active_projects.md` (regenerate wi
 
 #### Pipeline Integration Results
 
-- **Import errors**: Fixed in `infrastructure/validation/output_validator.py` ✅
+- **Import errors**: Fixed in `infrastructure/validation/output/validator.py` ✅
 - **Figure generation**: Active projects generate and register figures where applicable ✅
 - **Manuscript integration**: Equations and figures referenced per project manuscript ✅
 

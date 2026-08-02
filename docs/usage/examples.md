@@ -217,6 +217,11 @@ graph LR
 
 ### Example: Adding ML Optimization Module
 
+> **Note:** The module names below (`ml_optimizer`, `test_ml_optimizer`, `ml_training`) are
+> illustrative example names, not files present in the canonical exemplar. The exemplar's
+> real optimization surface is `src/optimizer.py` + `tests/test_optimizer.py` +
+> `scripts/optimization_analysis.py`; this example shows the *pattern* for adding a module.
+
 1. **Create `projects/templates/template_code_project/src/ml_optimizer.py`:**
 
 ```python

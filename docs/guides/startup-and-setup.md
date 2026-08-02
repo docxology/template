@@ -249,7 +249,7 @@ uv sync   # reinstalls all Python deps
 ```
 
 ### Stage 4 (Analysis) completes in < 1 second with no figures
-Project-specific packages are missing from the root `.venv`. See [`new-project-setup.md` Pitfall 6](new-project-setup.md#pitfall-6-root-venv).
+Project-specific packages are missing from the root `.venv`. See [`new-project-setup.md` Pitfall 6](new-project-setup.md#pitfall-6-project-specific-packages-absent-from-root-venv--silent-stage-4-failure).
 ```bash
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 # The actual error appears here
