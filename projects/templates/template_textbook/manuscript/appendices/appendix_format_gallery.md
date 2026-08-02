@@ -99,14 +99,15 @@ A simple table with column alignment and a cross-referencable caption
 
 : Column alignment — left, centre, right. {#tbl:gallery_alignment}
 
-The values below are mirrored in `manuscript/assets/data/format_gallery.csv` so
-rendering examples remain evidence-addressable fixtures rather than anonymous literals.
-
 | Left      |  Centre  |    Right |
 | :-------- | :------: | -------: |
 | alpha     |    1     |     10.0 |
 | beta      |    22    |      2.5 |
 | gamma     |   333    |    0.125 |
+
+The values above are mirrored in `manuscript/assets/data/format_gallery.csv` so
+rendering examples remain evidence-addressable fixtures rather than anonymous
+literals.
 
 A multi-line / grid table (cells may contain longer wrapped text):
 

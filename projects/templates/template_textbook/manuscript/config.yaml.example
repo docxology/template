@@ -2,7 +2,11 @@
 #
 # Copy this file to config.yaml in a fork. Keep `units:` as the source of truth
 # for parts and chapters, then run scripts/scaffold_chapter.py to materialize
-# missing manuscript files.
+# missing manuscript files. The shape mirrors the live manuscript/config.yaml:
+# book -> authors -> publication -> analysis -> layout -> typography ->
+# front_matter -> rendering -> render -> project_config -> units -> appendices
+# -> llm. Replace every placeholder ("Your ...", empty strings) with your own
+# values; delete sections you do not need.
 
 book:
   title: "Your Template Textbook"
@@ -33,6 +37,16 @@ publication:
   repository_url: ""
   repository_label: "Source repository"
   github_repository: ""
+  # Durable identifiers recorded once each platform is published; leave empty
+  # until a platform records a URL.
+  published_artifacts:
+    ipfs_pinata: ""
+    huggingface_hub: ""
+    osf: ""
+    pypi: ""
+    netlify: ""
+    github_pages: ""
+    software_heritage: ""
   zenodo_description: ""
   keywords:
     - "open textbook"
@@ -71,6 +85,12 @@ front_matter:
       title: "Front Matter"
     - file: preface.md
       title: "Preface"
+  page_two_quote:
+    text: "A quote for the title page's verso."
+    attribution: "Your Author"
+  page_two_acknowledgements:
+    title: "Acknowledgements"
+    text: "Thank the people and institutions that made the work possible."
   include_front_matter: true
   include_preface: true
 
@@ -98,26 +118,126 @@ project_config:
     default_lab_minutes: 60
     extended_case_study_lab_minutes: 75
 
+# Four parts, three chapters each — the canonical shape. Rename ids, labels,
+# directories, and chapter files to your own; run scripts/scaffold_chapter.py
+# after editing so stub files materialize in the correct shape.
 units:
+  - id: part_0
+    title: "Orientation and Methods"
+    label: "0"
+    directory: part_0
+    intro_file: unit_intro.md
+    chapters:
+      - file: orientation.md
+        title: "Orientation to the Field"
+      - file: core_methods.md
+        title: "Core Methods and Tools"
+      - file: quantitative_foundations.md
+        title: "Quantitative Foundations"
+
   - id: part_I
-    title: "Foundations"
+    title: "Fundamentals"
     label: "I"
     directory: part_I
+    intro_file: unit_intro.md
     chapters:
       - file: first_principles.md
         title: "First Principles"
       - file: building_blocks.md
         title: "Building Blocks"
+      - file: structure_and_form.md
+        title: "Structure and Form"
+
+  - id: part_II
+    title: "Core Systems"
+    label: "II"
+    directory: part_II
+    intro_file: unit_intro.md
+    chapters:
+      - file: systems_overview.md
+        title: "Systems Overview"
+      - file: dynamics_and_change.md
+        title: "Dynamics and Change"
+      - file: regulation_and_control.md
+        title: "Regulation and Control"
+
+  - id: part_III
+    title: "Applications and Synthesis"
+    label: "III"
+    directory: part_III
+    intro_file: unit_intro.md
+    chapters:
+      - file: applied_models.md
+        title: "Applied Models"
+      - file: case_studies.md
+        title: "Case Studies"
+      - file: frontiers.md
+        title: "Frontiers and Open Problems"
 
 appendices:
   include_labs: true
   include_questions: true
   include_reference: true
+  # Reference appendices: keep the files you ship; drop the rest.
   reference:
     - file: appendix_authoring_guide.md
       title: "Appendix A - Authoring Guide"
+    - file: appendix_notation.md
+      title: "Appendix B - Notation and Symbols"
+    - file: appendix_math_review.md
+      title: "Appendix C - Mathematical Review"
+    - file: appendix_formalisms.md
+      title: "Appendix D - Formalisms"
+    - file: appendix_format_gallery.md
+      title: "Appendix E - Format Gallery"
     - file: glossary.md
-      title: "Appendix B - Glossary"
+      title: "Appendix F - Master Glossary"
+    - file: appendix_index.md
+      title: "Appendix G - Index of Key Terms"
+  # One lab per chapter, keyed by unit id; list file names only.
+  labs:
+    - unit: part_0
+      files:
+        - file: lab_orientation.md
+        - file: lab_core_methods.md
+        - file: lab_quantitative_foundations.md
+    - unit: part_I
+      files:
+        - file: lab_first_principles.md
+        - file: lab_building_blocks.md
+        - file: lab_structure_and_form.md
+    - unit: part_II
+      files:
+        - file: lab_systems_overview.md
+        - file: lab_dynamics_and_change.md
+        - file: lab_regulation_and_control.md
+    - unit: part_III
+      files:
+        - file: lab_applied_models.md
+        - file: lab_case_studies.md
+        - file: lab_frontiers.md
+  # One question bank per chapter, keyed by unit id.
+  questions:
+    - unit: part_0
+      files:
+        - file: q_orientation.md
+        - file: q_core_methods.md
+        - file: q_quantitative_foundations.md
+    - unit: part_I
+      files:
+        - file: q_first_principles.md
+        - file: q_building_blocks.md
+        - file: q_structure_and_form.md
+    - unit: part_II
+      files:
+        - file: q_systems_overview.md
+        - file: q_dynamics_and_change.md
+        - file: q_regulation_and_control.md
+    - unit: part_III
+      files:
+        - file: q_applied_models.md
+        - file: q_case_studies.md
+        - file: q_frontiers.md
 
 llm:
   review:

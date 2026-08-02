@@ -58,4 +58,4 @@ print(models.linear_fit(dose, response))
 2. Your four-point fit changed the slope. Which is the more honest summary of the
    system, and what would you measure next to decide?
 3. When is a straight-line dose–response model adequate, and when does the
-   saturating model from [@sec:part_I_first_principles] become necessary?
+   saturating model from [@sec:appendix_math_review] become necessary?

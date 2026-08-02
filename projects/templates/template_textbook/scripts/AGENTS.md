@@ -19,6 +19,10 @@ pattern for any new script.
 | `scaffold_chapter.py` | `textbook.content`, `textbook.config.iter_chapters` / `iter_unit_intros`, `textbook_io.write_text_atomic` | stub `.md` files under `manuscript/` |
 | `audit_textbook_quality.py` | `textbook.audit.run_manuscript_audit` | stdout gate (structural by default; intentional stubs allowed; `--require-complete` for filled forks; `--lenient` optional) |
 
+The remaining module files are `_bootstrap.py` (shared `PROJECT` /
+`ensure_project_paths` bootstrap every script imports) and `__init__.py`
+(package marker).
+
 ## Conventions
 
 - Print every produced path to stdout so the pipeline can collect a manifest.

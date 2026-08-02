@@ -20,7 +20,10 @@ Tests cover the engine in [`../src/`](../src/). Two hard requirements:
 | `textbook.toc` | `test_toc.py` |
 | `textbook.content` (scaffold/validate) | `test_content.py` |
 | `textbook.models` (formulas) | `test_models.py` |
+| `textbook.analysis` (worked-model summary) | `test_analysis.py` |
+| `textbook.audit` (manuscript audit gate) | `test_audit.py` |
 | `visualization/` | `test_visualization.py` |
+| `visualization.gallery` (specs/registry) | `test_gallery.py` |
 | `mermaid/` | `test_mermaid.py` |
 | `textbook_paths` / `textbook_io` | `test_paths_io.py` |
 | structural/whole-book contract | `test_manuscript_integrity.py` |

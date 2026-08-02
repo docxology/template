@@ -110,7 +110,7 @@ fit on. Using it to predict a *much higher* dose — say $d = 3$, giving
 $\widehat{y} = 6.3$ — is an **extrapolation** the data cannot support. Real
 dose–response curves usually saturate (recall the
 [**threshold**](#gl:threshold) behaviour of the saturating response in
-[@sec:part_I_first_principles]); a straight line will overpredict once the system
+[@sec:appendix_math_review]); a straight line will overpredict once the system
 approaches its ceiling.
 
 ```mermaid
