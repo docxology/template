@@ -1,0 +1,85 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "4bec98cbd0b7efe5390d5436a5c2311e8caf84659fe5d53592c36fcef90c4cde",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "d9c612a745899df05bc53b591b78ce394a33d1440251ed675b0a217d25def417",
+  "combined_size_bytes": 72554,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "fd5d1364b29fad9e62f0eae23f318d1d61bbcb23491fe2a85fee5cbf45764ea0",
+      "size_bytes": 1250
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "e0b73f4939762def38b98984014aadde0075418697406a5b6ca18f7986051492",
+      "size_bytes": 3496
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "2b7114943970d7b0ab9145bae1f3e671afad4a39feb7883b00041edae6e3496a",
+      "size_bytes": 26490
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "0f60653498061d03d725d4470ecfc9b5990b3399697fe366eeeecd221aae730c",
+      "size_bytes": 8805
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_discussion.md",
+      "sha256": "434ceb7a3edf77c7ce4f5172dece242023b6bb84ecf97b72160aac39de498a05",
+      "size_bytes": 1194
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_experimental_setup.md",
+      "sha256": "a73bdd32bdd321de11d05e240643bd9f90aa9a83260641c17083a0c6676c369f",
+      "size_bytes": 13942
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_evaluation.md",
+      "sha256": "f773c2449302d27552a7ae09387f40c87d3d1c91b67bb2c193f1797bd058568e",
+      "size_bytes": 6848
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/07_reproducibility.md",
+      "sha256": "99403988ea15d54d311665895ad34318d7af2589343eb60865c18108b7011a13",
+      "size_bytes": 1700
+    },
+    {
+      "ordinal": 9,
+      "path": "output/manuscript/08_limitations.md",
+      "sha256": "319cf89af2df580dc0fb97adf985ea868d586a72c57c1d9e6a44ab043ba49ffd",
+      "size_bytes": 4874
+    },
+    {
+      "ordinal": 10,
+      "path": "output/manuscript/09_scope_and_related_work.md",
+      "sha256": "44491849718fee4e73a73e3e74d48b742db92ee5116d1c8e83617501a8616a79",
+      "size_bytes": 1124
+    },
+    {
+      "ordinal": 11,
+      "path": "output/manuscript/10_authoring_contract.md",
+      "sha256": "dd3ef8190a6d40a641ba83160d69b5cb107dec60a56af89465155a3f47738baa",
+      "size_bytes": 2776
+    },
+    {
+      "ordinal": 12,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "bdaf0cb7e6e5178804448b09006f2ae23550d1bf5561025472d7bbf93924f913",
+      "size_bytes": 13
+    }
+  ],
+  "ordered_inputs_sha256": "cdaf18000e639c383b9e9e080fe2dbad4342784ab140227e13026e4d2a5dafb0",
+  "project": "templates/template_madlib",
+  "schema_version": "template-manuscript-composition-v1"
+}
