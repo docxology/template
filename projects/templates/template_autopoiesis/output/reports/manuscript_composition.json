@@ -1,0 +1,61 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "3b1fa841782cfb6399d37ea992f34060dca7cbf71dbc38faf4530576eb3c18ff",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "7f44e802cc828c1e234012d0c1ccef2eac543a39012089ae4716d23b5944e101",
+  "combined_size_bytes": 82666,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "629ee38e3713a4b5dc91da3c312e13d8ef1e9dd6127224afd0fb2d30d568d9db",
+      "size_bytes": 2714
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "32a9a1153de60c2a099d7978466d24ce2552d7c0d0074b5d3b372916aeb36165",
+      "size_bytes": 11133
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/02_methods.md",
+      "sha256": "10de4b0e54995e8e6a5fa122b2512e0e7b882ebd6c029a8e61b2c87f97390759",
+      "size_bytes": 16982
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "f82a2190ed331a225399e4d1add69a223cf3a4655a8e818d2bde8ac0f6ba6962",
+      "size_bytes": 14556
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/04_honesty.md",
+      "sha256": "db08df662915de3bdcdeb39601b0be7bb91eae2a8987fa0af3118796b67e379b",
+      "size_bytes": 12958
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_reproducibility.md",
+      "sha256": "5533552858a098d9edda445fee3fca7acac9dafafa087c1836311790e8c46b9e",
+      "size_bytes": 12175
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_limitations.md",
+      "sha256": "806c6e53c464390d759b69b743009aef033f92a576c7b1dcaad13ea5bd7f23f9",
+      "size_bytes": 9645
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "14664b2f576e4918aecc00d7cd508ff81121b4bc254fc7b09abb6708e98f3dc6",
+      "size_bytes": 2465
+    }
+  ],
+  "ordered_inputs_sha256": "401b9805113f5b4af0a9dcd4a037f49bbc019a41ec5b01cce40b134046f3ac00",
+  "project": "templates/template_autopoiesis",
+  "schema_version": "template-manuscript-composition-v1"
+}
