@@ -12,6 +12,18 @@ general feature ideas.
 - Notebook binding: `tests/test_notebook.py` checks the walkthrough is valid nbformat, binds to `src.__all__`, and carries no logic in cells.
 - Coverage floor: ≥90% on `src/`; live test count and achieved coverage are tracked in `docs/_generated/COUNTS.md` (not hardcoded here).
 
+### 2026-08-02 publication pass (measured, as observed)
+
+- Project suite: **66 passed, 0 failed, 0 skipped**; coverage **99.02%** on
+  `src/` (`--cov-fail-under=90` gate satisfied).
+- Pre-render validation: clean; no render-blocking pitfalls or undefined citations.
+- Template drift (`--project templates/template_eda_notebook --strict`): **no drift detected**.
+- Pipeline stages 02 (analysis), 03 (render), 04 (validate), and 05 (copy): all green.
+- Render quality: **0** `^! ` LaTeX error lines in `output/pdf/*.log`; **0** unresolved `??`; combined PDF = **14 pages**.
+- Accuracy: 120 rows → 4 dropped → 116 complete-case; group counts 38/34/44; 10 histogram bins summing to 116; correlations height–weight ≈ +0.72, height–resting ≈ −0.12, weight–resting ≈ −0.08; ranking order matches Results prose.
+- Version drift: all five version-bearing metadata files declare **1.0.0**; repository URL is consistently `docxology/template_eda_notebook`; figure registry labels/schema match `src/eda/figures.py`.
+- Documentation parity: `tests/AGENTS.md` lists exactly the 8 test modules; `scripts/AGENTS.md` lists both on-disk Python files; required `.agents` README entry points were added.
+
 ## Integrity and template-status gaps
 
 - Keep this exemplar as the smallest reliable control-positive path for
