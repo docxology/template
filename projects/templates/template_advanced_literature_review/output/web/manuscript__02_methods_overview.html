@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methods_overview.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
+<h1 id="methods-overview">Methods Overview</h1>
+<p>The project is an eleven-stage, file-system-backed pipeline.
+<code>methods_pipeline.yaml</code> is the executable contract: each
+stage names its method, dependencies, inputs, outputs, definition of
+done, and stable failure code. Business logic lives in tested
+<code>src/</code> modules; numbered scripts only perform bootstrapping,
+argument parsing, orchestration, and boundary I/O.</p>
+<h2 id="pipeline-stages">Pipeline stages</h2>
+<ol type="1">
+<li><strong>Multi-phase retrieval</strong>
+(<code>01_multi_phase_search.py</code>) acquires records or runs the
+labelled offline fixture, applies configured filters, de-duplicates
+identifiers, and writes phase corpora plus
+<code>phase_metadata.json</code> and the
+<code>phase_artifact_manifest.json</code> phase-to-artifact provenance
+map.</li>
+<li><strong>Corpus analysis</strong>
+(<code>02_meta_analysis_pipeline.py</code>) computes subfields, temporal
+trends, TF-IDF/topics, and citation-network artifacts.</li>
+<li><strong>Knowledge graph construction</strong>
+(<code>03_build_knowledge_graph.py</code>) optionally extracts
+assertions and phase-aware hypothesis evidence; disabled or unmeasured
+LLM outputs remain explicitly pending.</li>
+<li><strong>Visualization</strong> (<code>04_generate_figures.py</code>)
+renders figures from analysis artifacts and records each figure’s label,
+caption, filename, and generating stage in the figure registry.</li>
+<li><strong>Manuscript hydration</strong>
+(<code>05_inject_variables.py</code>) computes variables from outputs
+and writes rendered Markdown without changing source sections.</li>
+<li><strong>Full-text assessment</strong>
+(<code>06_fulltext_assessment.py</code>) records abstract, open-access,
+and PDF availability; downloading is opt-in and network-gated.</li>
+<li><strong>Literature evaluation</strong>
+(<code>07_literature_evaluation.py</code>) applies configured quality
+and fixture-honesty checks.</li>
+<li><strong>Research dispatch</strong>
+(<code>08_deep_research_dispatch.py</code>) replays a recorded report by
+default and exposes live provider dispatch only as an explicit
+opt-in.</li>
+<li><strong>Bibliography export</strong>
+(<code>09_export_bibliography.py</code>) writes a deterministic
+bibliography from the retained corpus and source references.</li>
+<li><strong>Reproducibility assessment</strong>
+(<code>10_reproducibility_assessment.py</code>) records workflow and
+source-consumption evidence.</li>
+<li><strong>Publication validation</strong>
+(<code>11_validate_outputs.py</code>) validates artifact, evidence,
+figure, and report contracts before the shared publication audit
+runs.</li>
+</ol>
+<h2 id="reproducibility-model">Reproducibility model</h2>
+<p>The offline path uses a deterministic synthetic fixture with reserved
+identifiers and generated authors. It is useful for CI and structural
+testing only; it is never a substitute for a representative live review.
+A live run must preserve the retrieval report, engine status, source
+identifiers, configuration, and claim classifications. Seeds and
+timestamp-free serializers are used where the pipeline supports exact
+replay.</p>
+<h2 id="configuration-surface">Configuration surface</h2>
+<p><code>manuscript/config.yaml</code> owns search terms, engines, phase
+boundaries, filters, sampling seeds, full-text policy, embedding
+settings, knowledge-graph settings, hypotheses, and subfield taxonomy.
+<code>domain_profile.yaml</code> owns package and gate expectations;
+<code>experiment_plan.yaml</code> records the review design;
+<code>data/claim_ledger.yaml</code> records the provenance tier and
+fixture/synthetic status of manuscript-facing claims.</p>
+</main>
+</body>
+</html>

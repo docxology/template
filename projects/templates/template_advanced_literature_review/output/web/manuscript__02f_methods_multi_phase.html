@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02f_methods_multi_phase.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
+<h1 id="multi-phase-search-strategy-and-results">Multi-Phase Search
+Strategy and Results</h1>
+<h2 id="three-phase-architecture">Three-Phase Architecture</h2>
+<p>This review employs a <strong>three-phase search strategy</strong>
+that progressively refines coverage from broad foundational literature
+through technology-specific studies to targeted molecular detection
+analyses. Each phase builds on prior phases through cross-phase citation
+validation and shared deduplication.</p>
+<h3 id="phase-1-exoplanet-atmosphere-foundation">Phase 1: Exoplanet
+Atmosphere Foundation</h3>
+<p><strong>Objective:</strong> Establish the foundational literature on
+exoplanet atmospheric studies, covering the broadest range of research
+from 2010 onwards.</p>
+<p><strong>Queries:</strong> 1.
+<code>"exoplanet atmosphere" OR "exoplanet atmospheric"</code> 2.
+<code>"transit spectroscopy" AND "atmosphere"</code> 3.
+<code>"atmospheric composition" AND "exoplanet"</code></p>
+<p><strong>Engines:</strong> arXiv, OpenAlex, Crossref, Semantic
+Scholar</p>
+<p><strong>Deterministic Filters:</strong> - Minimum year: 2010 -
+Maximum year: 2026 - Minimum citation count: 0 (inclusive to capture
+recent work)</p>
+<p><strong>Results:</strong> 46 papers discovered, forming the
+foundational knowledge base for the review. This phase captures the
+broadest scope of atmospheric research, from observational
+characterizations to theoretical modeling studies.</p>
+<h3 id="phase-2-james-webb-space-telescope-studies">Phase 2: James Webb
+Space Telescope Studies</h3>
+<p><strong>Objective:</strong> Identify papers specifically utilizing
+JWST observational data for exoplanet atmospheric analysis, capturing
+the post-launch (2021+) surge in high-precision spectroscopic
+observations.</p>
+<p><strong>Queries:</strong> 1.
+<code>"James Webb" AND "atmosphere" AND ("exoplanet" OR "planet")</code>
+2. <code>"JWST" AND "transit" AND "spectroscopy"</code> 3.
+<code>"NIRSpec" OR "MIRI" OR "NIRCam" AND "exoplanet"</code></p>
+<p><strong>Engines:</strong> arXiv, OpenAlex, Crossref, Semantic
+Scholar</p>
+<p><strong>Deterministic Filters:</strong> - Minimum year: 2020
+(capturing pre-launch calibration papers) - Maximum year: 2026</p>
+<p><strong>Dependencies:</strong> Builds on Phase 1 foundational
+papers.</p>
+<p><strong>Results:</strong> 17 papers after deterministic filtering.
+This phase targets records associated with JWST-era observations and
+analysis. Any claim about instrumental capability or scientific findings
+requires live, source-backed review.</p>
+<h3 id="phase-3-molecular-detection-studies">Phase 3: Molecular
+Detection Studies</h3>
+<p><strong>Objective:</strong> Identify papers focused on detecting and
+analyzing specific atmospheric molecules (H₂O, CO₂, CH₄, H₂S, Na, K) in
+the configured domain.</p>
+<p><strong>Queries:</strong> 1.
+<code>"water vapor" AND "exoplanet" AND ("detection" OR "abundance")</code>
+2.
+<code>"carbon dioxide" AND "exoplanet" AND ("CO2" OR "atmosphere")</code>
+3. <code>"methane" AND "exoplanet" AND ("CH4" OR "atmosphere")</code> 4.
+<code>"hydrogen sulfide" OR "H2S" AND "exoplanet"</code> 5.
+<code>"sodium" OR "potassium" AND "exoplanet atmosphere"</code></p>
+<p><strong>Engines:</strong> arXiv, OpenAlex, Crossref, Semantic
+Scholar</p>
+<p><strong>Deterministic Filters:</strong> - Minimum year: 2015 -
+Maximum year: 2026</p>
+<p><strong>Dependencies:</strong> Builds on both Phase 1 and Phase 2
+papers.</p>
+<p><strong>Results:</strong> 29 papers covering molecular detection
+across diverse exoplanet populations, from hot Jupiters to terrestrial
+worlds.</p>
+<h2 id="cross-phase-analysis">Cross-Phase Analysis</h2>
+<h3 id="phase-overlap">Phase Overlap</h3>
+<p>The three phases produced complementary but overlapping corpora, with
+49.5% average Jaccard similarity between phases. Papers discovered in
+multiple phases are tracked with full provenance, enabling analysis of
+papers that span multiple research paradigms.</p>
+<h3 id="citation-validation">Citation Validation</h3>
+<p>Cross-phase citation analysis records that 39.4% of later-phase
+papers cite foundational work from Phase 1. This is a descriptive
+connection statistic for the retained corpus; it does not establish
+methodological coherence across the field.</p>
+<h3 id="combined-corpus">Combined Corpus</h3>
+<p>The deduplicated combined corpus contains 46 unique papers spanning
+2010–2023 (13 years). It provides a multi-phase description of the
+retained retrieval slice, not a field-wide account.</p>
+<h2 id="llm-based-content-filtering">LLM-Based Content Filtering</h2>
+<p>Three LLM-based content filters were designed for this review:</p>
+<ol type="1">
+<li><p><strong>Study Type Classification</strong>: Categorizes papers as
+observational, theoretical, review, or other. Keeps only observational
+and theoretical studies for analysis.</p></li>
+<li><p><strong>JWST Data Analysis</strong>: Identifies papers that
+analyze actual JWST observational data, distinguishing from theoretical
+JWST predictions.</p></li>
+<li><p><strong>Molecular Detection Focus</strong>: Filters for papers
+primarily focused on detecting and measuring specific atmospheric
+molecules.</p></li>
+</ol>
+<p>These filters are configurable through
+<code>manuscript/config.yaml</code> and can be enabled for specific
+phases or applied across the entire corpus. When enabled, they use a
+local Ollama LLM instance for cost-effective, privacy-preserving content
+classification.</p>
+</main>
+</body>
+</html>

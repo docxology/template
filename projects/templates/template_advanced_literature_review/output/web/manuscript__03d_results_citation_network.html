@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03d_results_citation_network.md.web</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
+<h1 id="results-citation-network">Results: Citation Network</h1>
+<h2 id="rq4-citation-geometry">RQ4: Citation Geometry</h2>
+<p>Resolving each record’s references against the corpus yields an
+intra-corpus citation graph (built and analyzed with NetworkX
+[hagberg2008exploring]) of 46 nodes and 48 edges across 10 connected
+components, with a graph density of 2.32% and a mean in-degree of 1.0.
+Of 96 total outgoing references, 50.0% resolve to another record inside
+the corpus. This resolution rate describes how self-contained the
+retrieved slice is; it is not an estimate of the underlying citation
+density of any individual work.</p>
+<p>The citation network has 15 communities (detected by modularity
+optimization), a maximum in-degree of 6 (the most-cited paper within the
+corpus), and a maximum out-degree of 4 (the paper that cites the most
+other corpus members).</p>
+<h2 id="centrality-analysis">Centrality Analysis</h2>
+<p>Centrality scores (PageRank [page1999pagerank] and HITS) and
+modularity-based community detection [clauset2004finding] are rounded
+and ranked with a stable tiebreaker so the reported hub and authority
+rankings are byte-reproducible across runs despite the floating-point
+non-associativity of the underlying iterative solvers.</p>
+<p><strong>Table 4. Top 5 papers by PageRank.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>PageRank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.5555/exoplanet atmospheres.0000</td>
+<td>0.100386</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.5555/exoplanet atmospheres.0005</td>
+<td>0.094693</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.5555/exoplanet atmospheres.0008</td>
+<td>0.089991</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.5555/exoplanet atmospheres.0010</td>
+<td>0.080374</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.5555/exoplanet atmospheres.0015</td>
+<td>0.044154</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 5. Top 5 authority papers (HITS).</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>Authority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.5555/exoplanet atmospheres.0010</td>
+<td>0.328136</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.5555/exoplanet atmospheres.0016</td>
+<td>0.117442</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.5555/exoplanet atmospheres.0047</td>
+<td>0.097992</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.5555/exoplanet atmospheres.0009</td>
+<td>0.080540</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.5555/exoplanet atmospheres.0015</td>
+<td>0.076253</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 6. Top 5 hub papers (HITS).</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>Hub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.5555/exoplanet atmospheres.0057</td>
+<td>0.126454</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.5555/exoplanet atmospheres.0018</td>
+<td>0.121085</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.5555/exoplanet atmospheres.0078</td>
+<td>0.115800</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.5555/exoplanet atmospheres.0056</td>
+<td>0.111057</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.5555/exoplanet atmospheres.0015</td>
+<td>0.089171</td>
+</tr>
+</tbody>
+</table>
+<p>The highest-ranked paper by PageRank (DOI 10.5555/exoplanet
+atmospheres.0000) is a central node in the retained citation graph. Its
+score indicates relative centrality within this graph, not scientific
+importance or causal influence. Hub papers cite many corpus members and
+may connect threads of the retrieved literature, but their role should
+be checked against their source type and content.</p>
+<!-- FIGURE: citation_network.png -->
+<figure id="fig:citation_network">
+<img src="../figures/citation_network.png" title="Citation Network"
+alt="Citation network for Exoplanet Atmospheres." />
+<figcaption>Citation network for Exoplanet
+Atmospheres. Nodes represent papers; directed edges represent citation
+links. Node colours indicate community membership (15 communities
+detected by modularity optimization). Layout uses a spring-based
+algorithm with a fixed seed for reproducibility.</figcaption>
+</figure>
+<!-- FIGURE: degree_distribution.png -->
+<figure id="fig:degree_distribution">
+<img src="../figures/degree_distribution.png"
+title="Degree Distribution"
+alt="Degree distribution for the Exoplanet Atmospheres citation network." />
+<figcaption>Degree distribution for the Exoplanet
+Atmospheres citation network. The histogram shows the frequency of each
+in-degree value on a log-linear scale, revealing the heavy-tailed
+structure characteristic of citation networks.</figcaption>
+</figure>
+<p>The heavy-tailed degree distribution is characteristic of citation
+networks: a small number of highly-cited papers anchor the structure,
+while the long tail of low-degree nodes represents newer or peripheral
+works. The low graph density (2.32%) reflects the sparsity of
+intra-corpus citation links. Many papers may cite works outside the
+retrieved slice, especially under a capped retrieval design.</p>
+<h2 id="advanced-network-metrics">Advanced Network Metrics</h2>
+<p>Beyond PageRank and HITS, the network analysis computes betweenness
+centrality (which papers bridge different communities), closeness
+centrality (which papers are near all others), degree assortativity (do
+highly-cited papers cite other highly-cited papers?), and average
+clustering coefficient (how tightly knit are local neighborhoods).</p>
+<p>The degree assortativity coefficient is -0.0325, and the average
+clustering coefficient is 0.0601. A negative assortativity indicates
+that highly-cited papers tend to cite less-cited papers (dissortative
+mixing), which is typical of citation networks where review papers (high
+in-degree) cite many primary studies (low in-degree).</p>
+<p><strong>Table 7. Top 5 papers by betweenness centrality.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>DOI</th>
+<th>Betweenness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10.5555/exoplanet atmospheres.0010</td>
+<td>0.021717</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.5555/exoplanet atmospheres.0008</td>
+<td>0.016667</td>
+</tr>
+<tr>
+<td>3</td>
+<td>10.5555/exoplanet atmospheres.0015</td>
+<td>0.012879</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.5555/exoplanet atmospheres.0005</td>
+<td>0.010606</td>
+</tr>
+<tr>
+<td>5</td>
+<td>10.5555/exoplanet atmospheres.0017</td>
+<td>0.005051</td>
+</tr>
+</tbody>
+</table>
+<p>Papers with high betweenness centrality occupy shortest paths between
+communities in the retained graph. Removing one may alter connectivity,
+but that graph operation does not by itself establish that the paper is
+a review or methodological bridge in the scientific field. Source-type
+and content review are required for that interpretation.</p>
+</main>
+</body>
+</html>
