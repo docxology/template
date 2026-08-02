@@ -1,0 +1,61 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "13e10ce7ce8dea0eb1e59c40443defbe6b4907daa81d82d0fb37458258ad8bf7",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "6c51aea8a9330a0d2853226e1089be02ea0eb8bca6c9d7eea4598078018f70d4",
+  "combined_size_bytes": 16871,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "692830fc08239faf5ac17ce20cb3a0c582d8e9f3c2463f84d17c028bef50acc8",
+      "size_bytes": 1324
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "eae6699217794acb8b6f532c7e35b7cc43c6104252f0c6e3c0796062b1efc2af",
+      "size_bytes": 2212
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_hypotheses.md",
+      "sha256": "47773bcbefdfa9e04d1584a221b0f7e7854d2b52e66eb61a6e83784d11b57745",
+      "size_bytes": 2074
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_methods.md",
+      "sha256": "60b50386c2fbfac4705e965a036d9c72f7a521690c83be6669c5a5173e153351",
+      "size_bytes": 3006
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_results.md",
+      "sha256": "8869c8532504be7c2608f36c25c77578b508590bf1b8849801ecbd7c038d1054",
+      "size_bytes": 2400
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/05_deviations.md",
+      "sha256": "2d74cb25a15d4d2d50562ad604d638fee0cf0373c4f155d058e0eb8ac41dfb14",
+      "size_bytes": 2701
+    },
+    {
+      "ordinal": 7,
+      "path": "manuscript/06_discussion.md",
+      "sha256": "a0063720b4969d5eea190e11ceb37653783d5cdba656e0fdf65354bd506fbd9d",
+      "size_bytes": 2471
+    },
+    {
+      "ordinal": 8,
+      "path": "manuscript/99_references.md",
+      "sha256": "5cba1019cd25152ad7b0c3b70b02e17658b4e5f37afc2b703ee2bffe0cca38f8",
+      "size_bytes": 613
+    }
+  ],
+  "ordered_inputs_sha256": "4ad6507f43a32534677890bc545979f5e7f7304c0162a4979c7b3850b1b11d90",
+  "project": "templates/template_registered_report",
+  "schema_version": "template-manuscript-composition-v1"
+}
