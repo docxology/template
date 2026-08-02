@@ -22,7 +22,7 @@ This directory documents how to work on the `template_advanced_literature_review
 
 ## Why This Project Has Its Own docs/ Hub
 
-`template_advanced_literature_review` is not a copy of `template_literature_meta_analysis` — it shares four modules by symlink (`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`, `src/visualization/`, `src/config_loader.py`; see `architecture.md`) but owns a distinct multi-phase search layer (`src/multi_phase/`, `src/literature/multi_phase_search.py`, phase-aware `src/manuscript/variables/`). Documentation that only describes the single-term flow would misrepresent this project's actual control surface (`manuscript/config.yaml` → `project_config.search_phases`). This hub documents the advanced surface on its own terms, per `TODO.md`'s "Documentation and signposting gaps" entry: *"Document multi-phase architecture distinctly from single-term template capabilities."*
+`template_advanced_literature_review` is not a copy of `template_literature_meta_analysis` — it shares four modules by symlink (`src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`, `src/visualization/`, `src/config_loader.py`; see `architecture.md`) but owns a distinct multi-phase search layer (`src/multi_phase/`, phase-aware `src/manuscript/variables/`). Documentation that only describes the single-term flow would misrepresent this project's actual control surface (`manuscript/config.yaml` → `project_config.search_phases`). This hub documents the advanced surface on its own terms, per `TODO.md`'s "Documentation and signposting gaps" entry: *"Document multi-phase architecture distinctly from single-term template capabilities."*
 
 ## Verification
 

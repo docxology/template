@@ -19,12 +19,14 @@ License: CC-BY-4.0
 | `02c_methods_bibliometrics.md` | Stage 2: bibliometrics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `02d_methods_knowledge_graph.md` | Stage 3: knowledge graph | `{{TOTAL_ASSERTIONS}}`, `{{CITATION_RESOLUTION_PCT}}` | Stage 3 + 5 |
 | `02e_methods_viz_injection.md` | Stages 4–5 | `{{NUM_FIGURES}}` | Stage 4 + 5 |
+| `02f_methods_multi_phase.md` | Multi-phase search strategy | `{{PHASE_1_PAPERS}}`, `{{PHASE_2_PAPERS}}`, `{{PHASE_3_PAPERS}}`, `{{CROSS_PHASE_OVERLAP_PCT}}`, `{{CROSS_PHASE_CITATION_RATE}}` | Stage 1 + 5 |
 | `03_results_hypothesis.md` | Hypothesis results | `{{N_HYPOTHESES}}`, `{{HYPOTHESIS_TABLE}}` and configuration-keyed score variables | Stage 3 + 5 |
 | `03a_results_field_overview.md` | Field overview | generated corpus, temporal, and configured-subfield variables | Stage 2 + 5 |
 | `03b_results_subfields.md` | Subfield analysis | counts and percentages for configured subfields | Stage 2 + 5 |
 | `03c_results_text_analytics.md` | Text analytics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `03d_results_citation_network.md` | Citation network | `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}` | Stage 2 + 5 |
 | `03e_results_reproducibility.md` | Reproducibility assessment | `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}` | Stage 5 |
+| `03f_results_multi_phase.md` | Multi-phase results | `{{PHASE_1_PAPERS}}`, `{{PHASE_2_PAPERS}}`, `{{PHASE_3_PAPERS}}`, `{{TOTAL_ASSERTIONS}}`, `{{HYPOTHESIS_TABLE}}` | Stage 1 + 3 + 5 |
 | `04_discussion.md` | Discussion | — | — |
 | `05_conclusion.md` | Conclusion | `{{CORPUS_SIZE}}`, `{{TOTAL_ASSERTIONS}}` | Stage 5 |
 | `06_appendix_tooling.md` | Tooling appendix | — | — |

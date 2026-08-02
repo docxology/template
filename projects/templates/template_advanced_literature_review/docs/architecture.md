@@ -15,7 +15,7 @@ This split (ARL-7 in `ISA.md`) exists so the advanced template can focus its own
 
 | Layer | Files | Responsibility | Tested by |
 | --- | --- | --- | --- |
-| **Phase-aware retrieval** | `src/multi_phase/search.py`, `src/literature/multi_phase_search.py`, `src/literature/query_router.py` | Execute each configured phase's query set against its engine set; apply the phase's `deterministic_filters`; preserve phase provenance | `TestPhaseMetadata`, `TestDeterministicFilters`, `TestMultiPhaseConfig` |
+| **Phase-aware retrieval** | `src/multi_phase/search.py`, `src/literature/query_router.py` | Execute each configured phase's query set against its engine set; apply the phase's `deterministic_filters`; preserve phase provenance | `TestPhaseMetadata`, `TestDeterministicFilters`, `TestMultiPhaseConfig` |
 | **Retrieval engines** | `src/literature/{arxiv,openalex,semantic_scholar,crossref,pubmed,europepmc,biorxiv,sovietrxiv}_client.py`, `search_runner.py`, `engine_dispatch.py` | Dispatch a query to each enabled engine; parse responses into `Paper`; degrade to `skipped` on error | engine + dispatch test classes (shared contract with the single-term sibling) |
 | **Model & cross-phase de-dup** | `src/literature/models.py`, `corpus.py` | Canonical `Paper` record; merge duplicates by DOI/arXiv/S2/OpenAlex/title-hash across phases, per `phase_integration.duplicate_resolution` | `TestCorpusCoverage`, `TestPhaseOverlap` |
 | **Full text** | `src/literature/fulltext_download.py`, `fulltext_download_cli.py`, `fulltext_assessment.py` | Resolve + download OA PDFs (opt-in); summarize availability | full-text test module |

@@ -2,53 +2,62 @@
 
 The pipeline is a two-layer system: generic infrastructure (rendering, validation,
 logging) shared across the template monorepo, and project-local `src/` modules that
-implement the meta-analysis. All numbered `scripts/` are thin orchestrators that wire
-I/O, configuration loading, and logging — no computational logic resides in scripts.
+implement the multi-phase literature review. All numbered `scripts/` are thin
+orchestrators that wire I/O, configuration loading, and logging — no computational
+logic resides in scripts.
 
 ## Reproduce the Offline Default Run
 
-No network, no language model required:
+No network, no language model required. The default analysis lane replays the
+tracked three-phase evidence snapshot, then runs deterministic analysis, figure
+generation, assessment, evaluation, deep-research replay, bibliography export, and
+variable injection:
 
 ```bash
-uv run python scripts/generate_fixture_corpus.py --out output/data/corpus.jsonl
-uv run python scripts/02_meta_analysis_pipeline.py
-uv run python scripts/03_build_knowledge_graph.py --max-papers 0
-uv run python scripts/04_generate_figures.py --dpi 300
-uv run python scripts/05_inject_variables.py
+uv run python projects/templates/template_advanced_literature_review/scripts/01b_fixture_phase_replay.py
+uv run python projects/templates/template_advanced_literature_review/scripts/02_meta_analysis_pipeline.py
+uv run python projects/templates/template_advanced_literature_review/scripts/04_generate_figures.py --dpi 300
+uv run python projects/templates/template_advanced_literature_review/scripts/06_fulltext_assessment.py
+uv run python projects/templates/template_advanced_literature_review/scripts/07_literature_evaluation.py
+uv run python projects/templates/template_advanced_literature_review/scripts/08_deep_research_dispatch.py
+uv run python projects/templates/template_advanced_literature_review/scripts/09_export_bibliography.py
+uv run python projects/templates/template_advanced_literature_review/scripts/05_inject_variables.py
 ```
 
-## Reproduce the Live Run
+`scripts/01b_fixture_phase_replay.py` replays the committed corpus through the
+phase-provenance contract, writing the per-phase corpora, `phase_metadata.json`,
+and `cross_phase_analysis.json` without any network access.
 
-This manuscript was generated from a live retrieval run. To reproduce:
+## Reproduce a Live Retrieval Run
+
+Refreshing the evidence snapshot is an intentional live operation. The multi-phase
+search stage reads every phase's queries, engines, and filters from
+`manuscript/config.yaml` — there is no per-phase command-line surface:
 
 ```bash
-# Live search (all 9 engines, max 1000 per engine)
-uv run python scripts/01_literature_search.py --query modafinil --max-results 1000 --no-resume
-
-# Analysis pipeline
-uv run python scripts/02_meta_analysis_pipeline.py
-uv run python scripts/03_build_knowledge_graph.py --max-papers 0
-uv run python scripts/04_generate_figures.py --dpi 300
-uv run python scripts/05_inject_variables.py
-uv run python scripts/06_fulltext_assessment.py
-uv run python scripts/07_literature_evaluation.py
-uv run python scripts/09_export_bibliography.py
+uv run python projects/templates/template_advanced_literature_review/scripts/01_multi_phase_search.py
 ```
+
+then re-run the deterministic downstream stages above and re-inject variables so
+the manuscript reflects the new evidence. The committed corpus is a dated evidence
+snapshot; live claims require source-tier provenance and domain review, per the
+project `AGENTS.md` contracts.
 
 ## Re-target to Another Topic
 
 Edit `manuscript/config.yaml` — `project_config.search.term`, `query`,
-`relevance_keywords`, `subfield_keywords`, and `hypothesis_definitions` — then regenerate
-the seed corpus and re-run. No code changes are required; the manuscript re-targets
-through token injection.
+`relevance_keywords`, `subfield_keywords`, `hypothesis_definitions`, and the phase
+definitions under `project_config.search_phases` (queries, engines, temporal
+filters, `depends_on`) — then regenerate the seed corpus and re-run. No code
+changes are required; the manuscript re-targets through token injection.
 
 ## Live Retrieval
 
-Enable engines under `project_config.search.engines`, supply any optional credentials
-(Unpaywall email, Semantic Scholar key), and run `scripts/01_literature_search.py`; absent
-engines degrade to skipped sources. The CLI supports per-engine skip flags:
-`--skip-arxiv`, `--skip-s2`, `--skip-openalex`, `--skip-crossref`, `--skip-pubmed`,
-`--skip-sovietrxiv`, `--skip-chinarxiv`, `--skip-europepmc`, `--skip-biorxiv`.
+Enable engines under each phase's `engines` map, supply any optional credentials
+(Unpaywall email, Semantic Scholar key), and run `scripts/01_multi_phase_search.py`;
+absent engines degrade to skipped sources. Each phase's engine set is configured
+independently (the bundled default enables arXiv, OpenAlex, Crossref, and Semantic
+Scholar per phase, with biomedical archives disabled for the astronomy domain).
 
 ## Deep Research (Offline Fixture Replay)
 
@@ -68,21 +77,24 @@ dispatch, so a fork can enable real providers behind an explicit live-only comma
 
 ```bash
 # Offline (default): replays the recorded report, no key required
-uv run python scripts/08_deep_research_dispatch.py
+uv run python projects/templates/template_advanced_literature_review/scripts/08_deep_research_dispatch.py
 ```
 
 ## Test Suite
 
-Every stage is covered by a no-mocks test suite (real computation and
-`pytest-httpserver` for network adapters) gated at $\geq 90\%$ statement coverage on
-`src/`. The suite covers:
+Every project-owned stage is covered by a no-mocks test suite (real computation and
+`pytest-httpserver` for network adapters) gated at $\geq 90\%$ coverage on the
+project-owned `src/multi_phase/` surface (`pyproject.toml` → `fail_under = 90`).
+The suite covers:
 
-- Record models and serialization (deduplication, canonical ID hierarchy)
-- All 9 engine clients (arXiv, Semantic Scholar, OpenAlex, Crossref, PubMed, SovietRxiv,
-  ChinaRxiv, Europe PMC, bioRxiv/medRxiv) with pytest-httpserver integration tests
-- Search runner (multi-engine dispatch, relevance filtering, resume/clear, YAML config)
-- Bibliometric analysis (subfield classification, temporal metrics, TF-IDF, NMF, citation
-  network)
-- Knowledge graph (schema, nanopublications, hypothesis scoring, LLM extraction)
-- Visualization (headless figure generation, style config)
-- Manuscript variable computation and injection
+- Multi-phase configuration validation (search, sampling, hypotheses, LLM filters)
+- Deterministic filters and phase metadata structure
+- Cross-phase overlap (Jaccard) and corpus coverage
+- Multi-phase search runner and fixture replay contracts
+- Phase-aware manuscript variable extraction (including pending/unmeasured states)
+- Deep-research offline replay (provider-neutral, fails closed)
+- Publication-extension and fixture-honesty contracts
+
+Symlinked shared modules (`src/analysis/`, `src/knowledge_graph/`,
+`src/reproducibility/`, `src/visualization/`) are covered by
+`template_literature_meta_analysis`'s own suite, not duplicated here.

@@ -2,7 +2,7 @@
 
 ## Figure Accessibility
 
-All {{NUM_FIGURES}} figures are rendered with a colourblind-safe palette (Wong 2011,
+All 18 figures are rendered with a colourblind-safe palette (Wong 2011,
 8 colours) and high-contrast labels at publication DPI (300). Each figure carries a
 descriptive caption so the visual claims are recoverable from text alone. The palette
 avoids red-green colour pairs that are indistinguishable for deuteranopia and
@@ -24,10 +24,9 @@ to the exact pipeline run that produced it. The provenance chain is:
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
 5. `scripts/05_inject_variables.py` computes variables from data files → manuscript text
 
-Each figure in `figure_registry.json` records its label, caption, filename, and
-generating stage, binding the visual output to the analysis artifacts of the exact
-pipeline run. Re-running the pipeline with the same configuration and seed produces
-identical data outputs.
+Each figure in `figure_registry.json` records its source data file, generation parameters,
+and SHA-256 hash, binding the visual output to the exact pipeline run. Re-running the
+pipeline with the same configuration and seed produces identical data outputs.
 
 ## FAIR Data Principles
 
@@ -46,5 +45,5 @@ principles:
 ## Honesty
 
 The default corpus is synthetic and labelled as such; the manuscript does not present
-fixture-derived numbers as empirical findings about {{SEARCH_TERM}}. Live findings
+fixture-derived numbers as empirical findings about exoplanet atmospheres. Live findings
 require a real retrieval run with regenerated artifacts and source-level provenance.

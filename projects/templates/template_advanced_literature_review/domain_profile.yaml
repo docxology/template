@@ -41,12 +41,12 @@ review_gates:
   - phase_boundary_validation
   - cross_temporal_consistency
 artifact_expectations:
-  - output/data/phase_1_corpus.jsonl
-  - output/data/phase_2_corpus.jsonl
-  - output/data/phase_3_corpus.jsonl
-  - output/data/merged_corpus.jsonl
-  - output/data/phase_statistics.json
-  - output/data/cross_phase_validation.json
+  - output/data/phase_1_foundation_corpus.jsonl
+  - output/data/phase_2_jwst_corpus.jsonl
+  - output/data/phase_3_molecules_corpus.jsonl
+  - output/data/combined_corpus.jsonl
+  - output/data/phase_metadata.json
+  - output/data/cross_phase_analysis.json
   - output/data/temporal_analysis.json
   - output/data/subfield_classification.json
   - output/data/topics.json

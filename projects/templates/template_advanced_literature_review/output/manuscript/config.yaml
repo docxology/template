@@ -383,26 +383,12 @@ project_config:
         - output/data/topics.json
         - output/data/citation_network.json
       outputs:
-        - output/figures/field_summary.png
-        - output/figures/subfield_distribution.png
-        - output/figures/growth_curve.png
-        - output/figures/subfield_timeline.png
-        - output/figures/citation_distribution.png
-        - output/figures/top_venues.png
-        - output/figures/author_productivity.png
-        - output/figures/citation_network.png
-        - output/figures/degree_distribution.png
-        - output/figures/hypothesis_dashboard.png
-        - output/figures/word_cloud.png
-        - output/figures/topic_term_bars.png
-        - output/figures/pca_embeddings.png
-        - output/figures/term_heatmap.png
-        - output/figures/dendrogram.png
-        - output/figures/cooccurrence_matrix.png
-        - output/figures/entity_bar_chart.png
-        - output/figures/similarity_heatmap.png
-        - output/figures/figure_registry.json
-      description: "Deterministic figure generation from analysis artifacts"
+        - output/figures/phase_overview.png
+        - output/figures/phase_timeline.png
+        - output/figures/cross_phase_citations.png
+        - output/figures/molecular_detection_summary.png
+        - output/figures/jwst_impact.png
+      description: "Multi-phase aware visualizations"
 
   # Phase-aware subfield taxonomy
   subfield_keywords:

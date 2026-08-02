@@ -33,8 +33,8 @@ Live test counts and coverage snapshots belong in `../../../../docs/_generated/C
 
 - `manuscript/config.yaml` → `project_config.search_phases` owns the phase design: query sets, engines, deterministic filters, and `depends_on` ordering for each phase.
 - `manuscript/config.yaml` → `project_config.llm_filters` and `project_config.phase_integration` own LLM-based content filtering and cross-phase deduplication/validation/quality-gate policy.
-- `src/multi_phase/` and `src/literature/multi_phase_search.py` own phase-aware search orchestration and provenance.
-- `src/literature/` (minus `multi_phase_search.py`) owns per-engine retrieval clients, the canonical `Paper` model, and corpus persistence — the same contracts as the single-term sibling.
+- `src/multi_phase/` owns phase-aware search orchestration and provenance.
+- `src/literature/` owns per-engine retrieval clients, the canonical `Paper` model, and corpus persistence — the same contracts as the single-term sibling.
 - `src/analysis/`, `src/knowledge_graph/`, `src/reproducibility/`, `src/visualization/`, `src/config_loader.py` are **symlinks** into `template_literature_meta_analysis/src/` — see `architecture.md`. Edit them there, not here.
 - `src/manuscript/variables/` owns phase-aware `{{TOKEN}}` computation (`extractors/multi_phase.py` in particular).
 - `src/deep_research/` owns the deterministic offline replay of the optional deep-research dispatch stage.

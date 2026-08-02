@@ -17,16 +17,18 @@ Source directory for the paper: all `.md` sections, `config.yaml`, `preamble.md`
 | `02c_methods_bibliometrics.md` | Stage 2: bibliometric analysis (TF-IDF, topic modeling, citation networks) |
 | `02d_methods_knowledge_graph.md` | Stage 3: nanopublications, RDF schema, citation-weighted scoring |
 | `02e_methods_viz_injection.md` | Stages 4–5: visualization pipeline and variable injection |
+| `02f_methods_multi_phase.md` | Multi-phase search strategy, phases, cross-phase analysis, LLM filtering |
 | `03_results_hypothesis.md` | Configuration-derived hypothesis scores, evidence composition, temporal trends |
 | `03a_results_field_overview.md` | Corpus summary, domain distribution, growth dynamics (RQ1/RQ2) |
 | `03b_results_subfields.md` | Detailed characterization of the configured subfields |
 | `03c_results_text_analytics.md` | NMF topic modeling, vocabulary analysis, document embeddings |
 | `03d_results_citation_network.md` | Citation network topology, degree distribution, hub analysis |
 | `03e_results_reproducibility.md` | Workflow-graph reproducibility scoring, low-scoring-paper table |
+| `03f_results_multi_phase.md` | Phase-specific findings, knowledge-graph results, cross-phase citation network |
 | `04_discussion.md` | Prior work comparison, tactical/strategic priorities, living review maintenance |
 | `05_conclusion.md` | Summary, methodological constraints, research agenda, open questions |
-| `06_appendix_tooling.md` | Software ecosystem survey, deep AIF, predictive coding, QA thresholds |
-| `07_appendix_technical.md` | Citation-weighted scoring math, NMF mathematics, growth rate estimation |
+| `06_appendix_tooling.md` | Reproduce offline and live runs, re-targeting, live retrieval, deep-research replay, test suite |
+| `07_appendix_technical.md` | Determinism, data model, NMF mathematics, growth-rate estimation, artifacts |
 | `08_appendix_accessibility.md` | FAIR data, cognitive ergonomics, decentralized science |
 | `98_symbols_glossary.md` | Mathematical notation table and abbreviations |
 | `99_references.md` | BibTeX bibliography directive (points to `references.bib`) |

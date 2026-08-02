@@ -6,25 +6,20 @@ Figures are rendered headlessly (matplotlib Agg backend) and deterministically f
 analysis artifacts: subfield distributions, the publication growth curve, the citation
 network, topic-term bars, a term cloud, and embedding projections. All figures use a
 colourblind-safe palette (Wong 2011, 8 colours) with high-contrast labels at $\geq 16$pt.
-This run produced {{NUM_FIGURES}} figures at 300 DPI. The full figure set includes:
+This run produced 18 figures at 300 DPI. The full figure set includes:
 
 - **Field overview**: field summary and subfield distribution
   ((Figure field summary; Figure subfield distribution))
 - **Temporal**: growth curve and subfield timeline ((Figure growth curve; Figure subfield timeline))
-- **Descriptive**: citation distribution, top venues, and author productivity
-  ((Figure citation distribution; Figure top venues; Figure author productivity))
 - **Citation network**: network layout and degree distribution
   ((Figure citation network; Figure degree distribution))
-- **Hypothesis**: evidence dashboard ((Figure hypothesis dashboard))
+- **Hypothesis**: dashboard and evidence timeline ((Figure hypothesis dashboard))
 - **Text analytics**: word cloud, topic-term bars, PCA embeddings, term heatmap,
   dendrogram, and co-occurrence matrix
   ((Figure word cloud; Figure topic term bars; Figure pca embeddings; Figure term heatmap; Figure dendrogram; Figure cooccurrence matrix))
-- **Entities**: named-entity bar chart and similar-document pairs
-  ((Figure entity bar chart; Figure similarity heatmap))
 
-Each figure is registered in `figure_registry.json` with its label, caption,
-filename, and generating stage, binding the visual output to the analysis
-artifacts of the exact pipeline run.
+Each figure is registered in `figure_registry.json` with its source data file, generation
+parameters, and SHA-256 hash, binding the visual output to the exact pipeline run.
 
 ## Variable Injection
 
@@ -36,8 +31,7 @@ placeholder is a hard error rather than a silent gap. Every number in the render
 guaranteed to trace to a committed artifact. Re-running the pipeline after a
 configuration change re-computes the values and re-targets the prose automatically.
 
-The injection system computes variables from the configuration and generated
-artifacts, including:
+The injection system computes variables from seven sources:
 
 1. `manuscript/config.yaml`: search term, engine roster, subfield taxonomy, hypotheses
 2. `corpus.jsonl`: corpus size

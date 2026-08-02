@@ -3,7 +3,7 @@ project: template_advanced_literature_review
 task: "Multi-Phase Exoplanet Atmospheric Literature Review: Advanced Search and Cross-Validation Pipeline"
 effort: E6
 phase: complete
-progress: "public exemplar registered; standalone export, phase orchestration, offline replay, documentation, drift, and 95.57% coverage verified"
+progress: "public exemplar registered; standalone export, phase orchestration, offline replay, documentation, drift, and 90%+ project coverage verified"
 mode: algorithm
 started: 2026-07-15
 updated: 2026-07-15

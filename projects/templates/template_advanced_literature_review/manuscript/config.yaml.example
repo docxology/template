@@ -1,4 +1,5 @@
 # Copy to config.yaml and replace the example identity and search phases.
+# Shape-mirrors manuscript/config.yaml: placeholder values only, no live domain terms.
 paper:
   title: "A Reproducible Multi-Phase Literature-Review Pipeline"
   subtitle: "Configured research question and evidence boundary"
@@ -19,6 +20,10 @@ publication:
   github_repository: "owner/repository"
   repository_url: "https://github.com/owner/repository"
   repository_label: "owner/repository"
+  journal: ""
+  volume: ""
+  pages: ""
+  year: "2026"
 keywords:
   - "literature review pipeline"
   - "systematic-review reporting"
@@ -30,14 +35,25 @@ metadata:
 llm:
   reviews:
     enabled: false
+    types:
+      - executive_summary
   translations:
     enabled: false
+    languages:
+      - zh
 testing:
   max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0
 analysis:
   scripts:
+    - 01b_fixture_phase_replay.py
     - 02_meta_analysis_pipeline.py
     - 04_generate_figures.py
+    - 06_fulltext_assessment.py
+    - 07_literature_evaluation.py
+    - 08_deep_research_dispatch.py
+    - 09_export_bibliography.py
     - 05_inject_variables.py
 project_config:
   search:
@@ -45,9 +61,20 @@ project_config:
     query: '"configured topic"'
     start_year: 2000
     max_results: 100
+    resume: false
+    clear_corpus: true
     engines:
       arxiv: true
       openalex: true
+      semantic_scholar: false
+      crossref: false
+      pubmed: false
+      sovietrxiv: false
+      chinarxiv: false
+      europepmc: false
+      biorxiv: false
+    relevance_keywords:
+      - "configured topic"
   search_phases:
     phase_1_foundation:
       name: "Foundation"
@@ -58,9 +85,207 @@ project_config:
       engines:
         arxiv: true
         openalex: true
+        semantic_scholar: false
+        crossref: false
+        pubmed: false
+        europepmc: false
+        biorxiv: false
       deterministic_filters:
         min_year: 2000
-  llm_filters: {}
+        max_year: 2026
+        min_citation_count: 0
+    phase_2_focused:
+      name: "Focused Phase"
+      description: "Technology- or method-specific retrieval"
+      queries:
+        - '"configured topic" AND "method"'
+      max_results_per_query: 100
+      engines:
+        arxiv: true
+        openalex: true
+        semantic_scholar: false
+        crossref: false
+        pubmed: false
+        europepmc: false
+        biorxiv: false
+      deterministic_filters:
+        min_year: 2015
+        max_year: 2026
+        min_citation_count: 0
+      depends_on: ["phase_1_foundation"]
+    phase_3_synthesis:
+      name: "Synthesis Phase"
+      description: "Phenomenon-specific retrieval and cross-phase validation"
+      queries:
+        - '"configured topic" AND "synthesis"'
+      max_results_per_query: 100
+      engines:
+        arxiv: true
+        openalex: true
+        semantic_scholar: false
+        crossref: false
+        pubmed: false
+        europepmc: false
+        biorxiv: false
+      deterministic_filters:
+        min_year: 2010
+        max_year: 2026
+        min_citation_count: 0
+      depends_on: ["phase_1_foundation", "phase_2_focused"]
+  llm_filters:
+    study_type_classifier:
+      name: "Study Type Classification"
+      description: "Classify papers as observational, theoretical, or review"
+      prompt: |
+        Classify this paper's abstract into ONE of these categories:
+        - observational: Uses real data to study the configured topic
+        - theoretical: Develops models, simulations, or theoretical frameworks
+        - review: Review article, survey, or meta-analysis
+        - other: Doesn't fit the above categories
+
+        Abstract: {abstract}
+
+        Return only the category name (observational/theoretical/review/other).
+      apply_to_phases: []
+      keep_categories: ["observational", "theoretical"]
+    relevance_filter:
+      name: "Topic Relevance"
+      description: "Identify papers relevant to the configured topic"
+      prompt: |
+        Does this paper primarily address the configured topic?
+
+        Abstract: {abstract}
+
+        Return "yes" or "no".
+      apply_to_phases: []
+      keep_values: ["yes"]
   phase_integration:
+    duplicate_resolution: "merge_metadata"
     citation_validation:
-      enabled: false
+      enabled: true
+      min_cross_phase_citations: 1
+    quality_gates:
+      phase_1_foundation:
+        min_papers: 10
+        min_citation_avg: 5
+      phase_2_focused:
+        min_papers: 5
+        min_citation_avg: 2
+      phase_3_synthesis:
+        min_papers: 5
+        min_citation_avg: 2
+  sampling:
+    fraction: 0.1
+    seed: 42
+  fulltext:
+    enabled: false
+    unpaywall_email: ""
+    download_dir: "output/fulltext"
+  embeddings:
+    method: "tfidf_svd"
+    n_components: 50
+    max_features: 500
+    seed: 42
+  knowledge_graph:
+    resume: true
+    checkpoint_interval: 50
+    checkpoint_path: "output/data/nanopublications.jsonl"
+    clear_assertions: false
+    max_papers: null
+  llm_extraction:
+    model: "gemma3:4b"
+    base_url: "http://localhost:11434"
+    temperature: 0.1
+    max_tokens: 2048
+    timeout_seconds: 120
+    max_retries: 3
+    min_confidence: 0.6
+  reproducibility_assessment:
+    checkpoint_interval: 50
+    clear_workflow_graphs: false
+    max_papers: null
+    llm_model: "gemma3:4b"
+    llm_url: "http://localhost:11434"
+    llm_temperature: 0.1
+    llm_max_tokens: 2048
+    llm_timeout: 120
+    llm_max_retries: 3
+    content_weights:
+      sources: 0.30
+      methods: 0.20
+      experiments: 0.20
+      sinks: 0.30
+    structural_weights:
+      source_consumption: 0.25
+      sink_production: 0.25
+      reference_resolution: 0.20
+      path_coverage: 0.15
+      cohesion: 0.15
+    low_score_threshold: 0.4
+    fuzzy_quote_threshold: 0.85
+  hypothesis_definitions:
+    H1:
+      id: "TOPIC_CHARACTERIZATION"
+      name: "Topic Characterization"
+      description: "What evidence is retained for characterizing the configured topic?"
+      scope: "observational"
+      relevant_phases: ["phase_1_foundation", "phase_2_focused"]
+    H2:
+      id: "METHOD_DIVERSITY"
+      name: "Method Diversity"
+      description: "Which methods and measurement contexts are represented in the retained corpus?"
+      scope: "methodological"
+      relevant_phases: ["phase_3_synthesis"]
+  pipeline_stages:
+    - name: phase_search
+      script: 01_multi_phase_search.py
+      inputs: []
+      outputs:
+        - output/data/phase_1_corpus.jsonl
+        - output/data/phase_2_corpus.jsonl
+        - output/data/phase_3_corpus.jsonl
+        - output/data/combined_corpus.jsonl
+        - output/data/phase_metadata.json
+      description: "Execute multi-phase search with deterministic and LLM filtering"
+    - name: meta_analysis
+      script: 02_meta_analysis_pipeline.py
+      inputs:
+        - output/data/combined_corpus.jsonl
+      outputs:
+        - output/data/subfield_classification.json
+        - output/data/temporal_analysis.json
+        - output/data/tfidf_data.json
+        - output/data/topics.json
+        - output/data/citation_network.json
+        - output/data/citation_graph.gml
+      description: "Multi-phase aware analysis with cross-phase validation"
+    - name: knowledge_graph
+      script: 03_build_knowledge_graph.py
+      inputs:
+        - output/data/combined_corpus.jsonl
+      outputs:
+        - output/data/nanopublications.jsonl
+        - output/data/hypothesis_scores.json
+        - output/data/assertion_summary.json
+      description: "Multi-phase hypothesis scoring and knowledge graph construction"
+    - name: figure_generation
+      script: 04_generate_figures.py
+      inputs:
+        - output/data/temporal_analysis.json
+        - output/data/citation_network.json
+      outputs:
+        - output/figures/figure_registry.json
+      description: "Deterministic figure generation from analysis artifacts"
+  subfield_keywords:
+    observational_methods:
+      - "transit spectroscopy"
+      - "emission spectroscopy"
+    atmospheric_molecules:
+      - "water vapor"
+      - "carbon dioxide"
+    instrumentation:
+      - "spectrograph"
+      - "telescope"
+    theoretical_modeling:
+      - "atmospheric models"
+      - "radiative transfer"
