@@ -10,14 +10,14 @@ only place a generation time is recorded is deck metadata, following the
 repository for reproducible builds.
 
 ```bash
-uv run python scripts/20_render_decks.py
+uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py
 # → output/pdf/template_template_pitch_{short,medium,long}.pdf
 # → output/pptx/template_template_pitch_{short,medium,long}.pptx
 
 uv run pytest projects/templates/template_pitch_deck/tests/ \
   --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90
 
-uv run python scripts/audit/check_template_drift.py
+uv run python scripts/audit/check_template_drift.py --project templates/template_pitch_deck --strict
 ```
 
 This project participates in the standard multi-project pipeline like any

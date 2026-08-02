@@ -10,6 +10,9 @@
   live-read source.
 - Any slide bullet/title/stat/quote referencing a `PITCH_SUBJECT_*`/`EXEMPLAR_*`
   token needs a `source` citation on that slide (see `src/diligence_audit.py`).
-- `config.yaml`'s `publication:` block stays empty until a real DOI/GitHub
-  repo exists — never set a placeholder `github_repository` (it flips the
-  PUBLISHING-STATUS block to a false "published" state).
+- `config.yaml`'s `publication:` block carries this deck's real, recorded
+  identifiers (concept DOI `10.5281/zenodo.21281509`, version DOI
+  `10.5281/zenodo.21281510`, standalone repo `docxology/template-pitch-deck`).
+  Never set a placeholder `github_repository` or fake DOI — a placeholder
+  flips the PUBLISHING-STATUS block to a false "published" state, and the
+  deck's `PITCH_DECK_DOI_STATUS` token reads this block live.

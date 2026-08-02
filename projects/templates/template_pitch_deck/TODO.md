@@ -4,6 +4,24 @@ Forward-only integrity backlog for the pitch-deck generation exemplar.
 
 ## Current validation evidence
 
+- Prerender passed with no render-blocking pitfalls or undefined citations.
+- Project tests: `uv run python -m pytest projects/templates/template_pitch_deck/tests --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90 -q` — 125 passed, 98.43% coverage.
+- Analysis: `stage_02_analysis.py --project templates/template_pitch_deck` — 5/5 scripts passed; token/cliché audit clean (40/102/170 text fields), diagrams/charts regenerated, diligence coverage 5/5, 9/9, 11/11. Its isolated project environment lacks optional `python-pptx`, so the six artifacts were regenerated from the repo environment with `20_render_decks.py`.
+- Manuscript render, output validation, and output copy stages all passed; 44 files copied to `output/templates/template_pitch_deck/`.
+- Render quality: six pitch-deck artifacts present; PDF pages 11/37/56, combined manuscript PDF 8 pages; PDF logs contain 0 `^! ` lines; extracted PDFs contain 0 `??` markers.
+- Drift passed: `check_template_drift.py --project templates/template_pitch_deck --strict`.
+- Relative-link audit: 36 Markdown files / 20 relative links, all resolve.
+
+## Fixes completed in this pass
+
+- Corrected stale deck-length comments to observed 11/37/56 counts and shared budgets.
+- Removed the empty Methods heading and corrected the reproducibility commands.
+- Replaced the fork template's fake publication repository with `publication: {}`.
+- Completed the `.agents/` catalog contract with outer, skills, and hyphenated-skill README/AGENTS files.
+- Regenerated diagrams, charts, pitch PDFs/PPTX, manuscript outputs, validation/evidence reports, and standalone slide pages.
+
+<!-- Historical validation notes follow. Keep new evidence above this line. -->
+
 - Project tests and coverage: `uv run pytest projects/templates/template_pitch_deck/tests/ --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90` (derive the live result; do not copy an old count here).
 - Infra rendering tests: `uv run pytest tests/infra_tests/rendering/test_slide_deck.py tests/infra_tests/rendering/test_pptx_deck.py tests/infra_tests/rendering/test_pptx_determinism.py`.
 - Content audit: `uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py` — token resolution + cliche lint, all three lengths clean (170 text fields in the long deck alone).

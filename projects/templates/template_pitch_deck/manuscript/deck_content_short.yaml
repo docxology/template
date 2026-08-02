@@ -1,4 +1,4 @@
-# Short pitch (<=10 slides) — template_template, for a meta-science /
+# Short pitch (11 slides — SlideBudget.SHORT) — template_template, for a meta-science /
 # science-integrity audience. Every {{TOKEN}} here must resolve via
 # src/deck_tokens.py::build_deck_tokens — see src/token_resolution.py for the
 # substitution rule. Slides whose text references a live-sourced fact token

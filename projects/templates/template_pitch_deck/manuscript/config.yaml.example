@@ -18,10 +18,10 @@ authors:
     affiliation: "Your Organization"
     corresponding: true
 
-# No DOI/publication record until you actually publish — leave this block
-# minimal until you run `publish_project_release.py`.
-publication:
-  github_repository: "your-org/your-pitch-deck-repo"
+# No DOI/publication record until you actually publish. Keep this mapping
+# empty until a real repository and DOI exist; a placeholder repository value
+# would falsely flip the generated PUBLISHING-STATUS block to "published".
+publication: {}
 
 keywords:
   - "pitch deck"
