@@ -114,16 +114,13 @@ def _git_head_epoch_strict(repo_root: Path) -> int:
         ) from exc
     if result.returncode != 0:
         raise RuntimeError(
-            f"Deterministic build failure: 'git log' returned exit {result.returncode}. "
-            f"stderr: {result.stderr.strip()}"
+            f"Deterministic build failure: 'git log' returned exit {result.returncode}. stderr: {result.stderr.strip()}"
         )
     raw = result.stdout.strip()
     try:
         return int(raw)
     except ValueError:
-        raise RuntimeError(
-            f"Deterministic build failure: unparseable git epoch {raw!r}"
-        )
+        raise RuntimeError(f"Deterministic build failure: unparseable git epoch {raw!r}")
 
 
 def resolve_source_date_epoch(

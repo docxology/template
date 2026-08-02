@@ -278,5 +278,3 @@ def check_config_author_placeholders(project_root: Path, report: Report, project
                     "affiliation from public metadata)"
                 ),
             )
-
-

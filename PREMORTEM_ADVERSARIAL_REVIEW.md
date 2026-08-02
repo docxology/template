@@ -1,6 +1,6 @@
 # Premortem + Devil's Advocate Review — `docxology/template`
 
-**Target**: `HumOS/projects/platform/hum-docxology/repos/public/template`
+**Target**: `https://github.com/docxology/template`
 **Method**: `sat.premortem_analysis` + `sat.devils_advocacy`
 **Reviewer**: Hermes Agent (autonomous adversarial review)
 **Date**: 2026-07-31

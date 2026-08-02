@@ -73,7 +73,7 @@ class ReferenceResolver:
         allow_network: bool = False,
         crossref_base_url: str = "https://api.crossref.org/works",
         openalex_base_url: str = "https://api.openalex.org/works",
-        arxiv_base_url: str = "http://export.arxiv.org/api/query",
+        arxiv_base_url: str = "https://export.arxiv.org/api/query",
         mailto: str | None = None,
         timeout: float = 15.0,
         title_match_floor: float = 0.82,

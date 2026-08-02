@@ -343,6 +343,7 @@ subpackage.
 - **[security/ownership-and-promotion.md](security/ownership-and-promotion.md)** - Sensitive ownership exceptions, required reviews, and private-project promotion attestation
 - **[security/branch-protection-checklist.md](security/branch-protection-checklist.md)** - Required GitHub branch-protection settings for `main` (administrator action)
 - **[security/promotion-runbook.md](security/promotion-runbook.md)** - Step-by-step guide for promoting a private sidecar project into active/public scope
+- **[security/credential-rotation-handoff.md](security/credential-rotation-handoff.md)** - Operator runbook for credential rotation and safeguarding
 
 ---
 

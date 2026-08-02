@@ -31,7 +31,7 @@ Each subpackage includes SKILL.md (YAML frontmatter) for agent-oriented discover
 Runtime note: Python may create __pycache__/ directories under each subpackage; they are bytecode caches, gitignored, and not part of the public API.
 """
 
-__version__ = "2.0.0"
+__version__ = "3.6.0"
 __layer__ = "infrastructure"
 
 from importlib import import_module

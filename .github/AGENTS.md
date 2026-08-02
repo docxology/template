@@ -34,7 +34,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs (fep-lean, setup-hook-windows-smoke) + 1 scheduled-only (public-matrix-receipt)]
+    WF --> WF_CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs — fep-lean, setup-hook-windows-smoke — plus 1 scheduled-only — public-matrix-receipt]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]

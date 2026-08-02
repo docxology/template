@@ -34,7 +34,7 @@ class ArxivBackend(SearchBackend, HttpGetMixin):
     """arXiv export API. Returns Atom XML; we parse it locally."""
 
     name = "arxiv"
-    base_url = "http://export.arxiv.org/api/query"
+    base_url = "https://export.arxiv.org/api/query"
 
     _ATOM_NS = {
         "atom": "http://www.w3.org/2005/Atom",

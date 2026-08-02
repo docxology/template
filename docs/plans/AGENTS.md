@@ -6,7 +6,9 @@ Technical guide for `docs/plans/` — repo-wide planning documents and phased co
 
 ## Current status
 
-This directory is **intentionally empty**. Per-project plans live under `projects/{name}/docs/` (active) or `projects/archive/{name}/docs/` (historical). Historical repo-wide audit snapshots were retired from the public docs archive; use git history for dated point-in-time reports.
+This directory holds active repo-wide plans. Per-project plans live under `projects/{name}/docs/` (active) or `projects/archive/{name}/docs/` (historical). Historical repo-wide audit snapshots were retired from the public docs archive; use git history for dated point-in-time reports.
+
+The active plan is **[2026-07-31-template-hardening-handoff.md](2026-07-31-template-hardening-handoff.md)**, the cross-cutting hardening handoff from the 2026-07-31 review session. Its canonical backlog continuation lives in the repository-root [`TO-DO.md`](../../TO-DO.md).
 
 A project-specific review that previously lived here was relocated to its own (private) project repository during the May 2026 hardening pass.
 

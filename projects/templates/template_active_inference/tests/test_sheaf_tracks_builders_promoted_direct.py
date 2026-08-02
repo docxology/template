@@ -43,9 +43,11 @@ def test_release_bundle_manifest_has_schema_and_rows(project_root: Path) -> None
 def test_release_bundle_required_sources_have_existence_state(project_root: Path) -> None:
     """Every required artifact row reports whether it exists or is deferred."""
     payload = build_release_bundle_manifest(project_root)
-    pdf_web = {row["artifact"] for row in payload["rows"]
-               if row["artifact"].startswith("output/pdf/")
-               or row["artifact"].startswith("output/web/")}
+    pdf_web = {
+        row["artifact"]
+        for row in payload["rows"]
+        if row["artifact"].startswith("output/pdf/") or row["artifact"].startswith("output/web/")
+    }
     for row in payload["rows"]:
         deferred = row.get("deferred_until_render", False)
         if row["artifact"] in pdf_web and not row["source_exists"]:

@@ -42,7 +42,7 @@ from infrastructure.search.literature.models import Paper
 logger = get_logger(__name__)
 
 # arXiv abstract URLs — used when only a DOI / title is known.
-_ARXIV_ABS_BASE = "http://export.arxiv.org/api/query"
+_ARXIV_ABS_BASE = "https://export.arxiv.org/api/query"
 
 
 def _safe_id(paper_id: str) -> str:

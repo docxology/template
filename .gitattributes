@@ -5,3 +5,11 @@
 *.jpeg binary
 *.gif binary
 *.svg text eol=lf
+
+# Keep generated/vendored trees out of GitHub language & COCOMO stats so the
+# tracked-but-regenerated exemplar evidence does not skew repository metrics.
+docs/_generated/** linguist-generated=true
+projects/templates/**/output/** linguist-vendored
+projects/**/output/data/** linguist-vendored
+*.lock linguist-language=JSON
+*.jsonl linguist-language=JSON

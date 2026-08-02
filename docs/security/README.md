@@ -16,6 +16,7 @@ The Research Project Template pipelines integrate optional cryptographic hashing
 | [ownership-and-promotion.md](ownership-and-promotion.md) | Sensitive ownership exceptions, required reviews, and private-project promotion attestation |
 | [branch-protection-checklist.md](branch-protection-checklist.md) | Required GitHub branch-protection settings for `main` — administrator action |
 | [promotion-runbook.md](promotion-runbook.md) | Step-by-step guide for promoting a private sidecar project into active/public scope |
+| [credential-rotation-handoff.md](credential-rotation-handoff.md) | Operator runbook: rotating and safeguarding credentials (secret-rotation handoff) |
 
 ## Quick Start
 

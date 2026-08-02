@@ -10,7 +10,7 @@ The `workflows/` directory contains GitHub Actions workflows that automate the c
 flowchart LR
     W[.github/workflows/]
     W --> META[AGENTS.md · README.md]
-    W --> CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs (fep-lean, setup-hook-windows-smoke) + 1 scheduled-only (public-matrix-receipt)]
+    W --> CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs — fep-lean, setup-hook-windows-smoke — plus 1 scheduled-only — public-matrix-receipt]
     W --> STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     W --> REL[release.yml<br/>Create GitHub Releases on version tags]
     W --> DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
