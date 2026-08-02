@@ -22,6 +22,11 @@ not to the contents of any specific workspace.
 - Regression tier now fails closed against an empty suite: a collect-only pass
   asserts the claim-binding pins are present (55 tests today), closing the
   exit-5 vacuous-success hole.
+- Added a scheduled/manual-only `public-matrix-receipt` CI job that runs the
+  full receipt-bearing public matrix in one process (`stage_01_test.py
+  --project-only --all-projects --public-scope --receipt`) and uploads the
+  deterministic receipt as an artifact — the receipt was previously produced
+  only on operator request, not in CI.
 
 ### Rendered provenance and secure atomic writes (2026-07-31)
 

@@ -57,7 +57,7 @@ def resolve_private_root(repo_root: Path, config: SidecarLinkConfig) -> Path | N
     candidates: list[tuple[Path, bool]] = []
     env = os.environ.get(config.env_var)
     if env:
-        candidates.append((Path(os.path.expanduser(os.path.expandvars(env))), False))
+        candidates.append((Path(os.path.expanduser(env)), False))
     config_path = repo_root / config.config_filename
     if config_path.is_file():
         line = config_path.read_text(encoding="utf-8").strip()

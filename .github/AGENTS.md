@@ -34,7 +34,7 @@ flowchart TB
     ITPL --> ITPL_F[config.yml · bug_report.md ·<br/>feature_request.md · documentation.md]
 
     WF --> WF_DOCS[AGENTS.md · README.md]
-    WF --> WF_CI[ci.yml<br/>15 jobs — 2 conditional via detect-job outputs — fep-lean and setup-hook-windows-smoke]
+    WF --> WF_CI[ci.yml<br/>16 jobs — 2 conditional via detect-job outputs (fep-lean, setup-hook-windows-smoke) + 1 scheduled-only (public-matrix-receipt)]
     WF --> WF_STALE[stale.yml<br/>Auto-label/close stale issues/PRs]
     WF --> WF_REL[release.yml<br/>GitHub Releases on version tags]
     WF --> WF_DA[dependabot-automerge.yml<br/>Auto-merge safe Dependabot PRs]
@@ -56,9 +56,10 @@ flowchart TB
 
 **Pipeline jobs** (job ids in `ci.yml`; display names differ — use `name:` for branch protection):
 
-**15 jobs total; 2 are conditional, gated by the `detect` job's outputs
+**16 jobs total; 2 are conditional on push/PR (fep-lean, setup-hook-windows-smoke), gated by the `detect` job's outputs
 (`needs.detect.outputs.*`) — NOT a job-level `hashFiles()` (that is invalid
-in a job `if:` and rejects the whole workflow at parse).**
+in a job `if:` and rejects the whole workflow at parse). 1 further job
+(`public-matrix-receipt`) runs only on the weekly schedule or manual dispatch.**
 
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
@@ -77,8 +78,9 @@ in a job `if:` and rejects the whole workflow at parse).**
 | 13 | `security` | Security Scan | lint | 3.12 | ubuntu |
 | 14 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
 | 15 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
+| 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.12 | ubuntu · schedule/manual only |
 
-**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/audit/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), and **`scripts/audit/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/docgen/api_reference.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
+**Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/audit/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), **`scripts/audit/check_template_drift.py --strict`** (exemplar doc/script drift against Layer-1 contracts), and **`scripts/audit/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/docgen/api_reference.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 

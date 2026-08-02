@@ -33,16 +33,22 @@ from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any
-from xml.etree import ElementTree as ET
+from xml.etree.ElementTree import (
+    Element,
+    SubElement,
+    indent,
+    register_namespace,
+    tostring,
+)
 
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
 
 
-def _serialize_xml(root: ET.Element) -> str:
-    ET.indent(root, space="  ")
-    body = ET.tostring(root, encoding="unicode", xml_declaration=False)
+def _serialize_xml(root: Element) -> str:
+    indent(root, space="  ")
+    body = tostring(root, encoding="unicode", xml_declaration=False)
     return '<?xml version="1.0" encoding="UTF-8"?>\n' + body
 
 
@@ -107,8 +113,8 @@ class EbookPublicationMetadata:
 # ── ONIX 3.0 generator ────────────────────────────────────────────────────────
 
 
-def _onix_subelement(parent: ET.Element, tag: str, text: str | None = None) -> ET.Element:
-    el = ET.SubElement(parent, tag)
+def _onix_subelement(parent: Element, tag: str, text: str | None = None) -> Element:
+    el = SubElement(parent, tag)
     if text is not None:
         el.text = text
     return el
@@ -121,7 +127,7 @@ def generate_onix_xml(meta: EbookPublicationMetadata) -> str:
     Produces a single-product message suitable for retail ingestion (Amazon,
     IngramSpark, Gardners, etc.).
     """
-    root = ET.Element("ONIXMessage", release="3.0")
+    root = Element("ONIXMessage", release="3.0")
     root.set("xmlns", "http://ns.editeur.org/onix/3.0/reference")
 
     # ── Header ────────────────────────────────────────────────────────────────
@@ -363,10 +369,10 @@ def generate_epub_opf(meta: EbookPublicationMetadata) -> str:
     The returned XML string can be saved as ``content.opf`` inside an EPUB
     ``META-INF/`` directory, or used as input to calibre / Sigil.
     """
-    ET.register_namespace("", _OPF_NS)
-    ET.register_namespace("dc", _DC_NS)
+    register_namespace("", _OPF_NS)
+    register_namespace("dc", _DC_NS)
 
-    package = ET.Element(
+    package = Element(
         "{%s}package" % _OPF_NS,
         attrib={
             "version": "3.0",
@@ -376,59 +382,59 @@ def generate_epub_opf(meta: EbookPublicationMetadata) -> str:
     )
 
     # ── metadata element ──────────────────────────────────────────────────────
-    metadata = ET.SubElement(package, "{%s}metadata" % _OPF_NS)
+    metadata = SubElement(package, "{%s}metadata" % _OPF_NS)
     metadata.set("xmlns:dc", _DC_NS)
 
     # Dublin Core basics
-    dc_id = ET.SubElement(metadata, "{%s}identifier" % _DC_NS, attrib={"id": "book-id"})
+    dc_id = SubElement(metadata, "{%s}identifier" % _DC_NS, attrib={"id": "book-id"})
     dc_id.text = meta.isbn or meta.doi or "urn:uuid:unknown"
 
-    dc_title = ET.SubElement(metadata, "{%s}title" % _DC_NS, attrib={"id": "title"})
+    dc_title = SubElement(metadata, "{%s}title" % _DC_NS, attrib={"id": "title"})
     dc_title.text = meta.title
     if meta.subtitle:
-        dc_subtitle = ET.SubElement(metadata, "{%s}title" % _DC_NS, attrib={"id": "subtitle", "refines": "#title"})
+        dc_subtitle = SubElement(metadata, "{%s}title" % _DC_NS, attrib={"id": "subtitle", "refines": "#title"})
         dc_subtitle.text = meta.subtitle
 
-    ET.SubElement(metadata, "{%s}language" % _DC_NS).text = meta.language
+    SubElement(metadata, "{%s}language" % _DC_NS).text = meta.language
 
     if meta.publisher:
-        ET.SubElement(metadata, "{%s}publisher" % _DC_NS).text = meta.publisher
+        SubElement(metadata, "{%s}publisher" % _DC_NS).text = meta.publisher
     if meta.description:
-        ET.SubElement(metadata, "{%s}description" % _DC_NS).text = meta.description
+        SubElement(metadata, "{%s}description" % _DC_NS).text = meta.description
     if meta.license:
-        ET.SubElement(metadata, "{%s}rights" % _DC_NS).text = meta.license
+        SubElement(metadata, "{%s}rights" % _DC_NS).text = meta.license
 
     for author in meta.authors:
-        creator = ET.SubElement(metadata, "{%s}creator" % _DC_NS)
+        creator = SubElement(metadata, "{%s}creator" % _DC_NS)
         creator.text = author.get("name", "")
         if author.get("orcid"):
             # OPF3 refinement for ORCID
             creator.set("id", f"creator-{author.get('orcid', '').replace('-', '')[:8]}")
 
     if meta.doi:
-        source = ET.SubElement(metadata, "{%s}source" % _DC_NS)
+        source = SubElement(metadata, "{%s}source" % _DC_NS)
         source.text = f"https://doi.org/{meta.doi}"
 
     # OPF3 meta elements
-    ET.SubElement(
+    SubElement(
         metadata,
         "{%s}meta" % _OPF_NS,
         attrib={"property": "dcterms:modified"},
     ).text = meta._pub_date_str() + "T00:00:00Z"
 
     for kw in meta.keywords:
-        ET.SubElement(metadata, "{%s}subject" % _DC_NS).text = kw
+        SubElement(metadata, "{%s}subject" % _DC_NS).text = kw
 
     for code in meta.bisac_codes:
-        ET.SubElement(
+        SubElement(
             metadata,
             "{%s}meta" % _OPF_NS,
             attrib={"property": "schema:about"},
         ).text = code
 
     # ── manifest (skeleton — real items added by ebook toolchain) ─────────────
-    manifest = ET.SubElement(package, "{%s}manifest" % _OPF_NS)
-    ET.SubElement(
+    manifest = SubElement(package, "{%s}manifest" % _OPF_NS)
+    SubElement(
         manifest,
         "{%s}item" % _OPF_NS,
         attrib={
@@ -437,7 +443,7 @@ def generate_epub_opf(meta: EbookPublicationMetadata) -> str:
             "media-type": "application/x-dtbncx+xml",
         },
     )
-    ET.SubElement(
+    SubElement(
         manifest,
         "{%s}item" % _OPF_NS,
         attrib={
@@ -449,7 +455,7 @@ def generate_epub_opf(meta: EbookPublicationMetadata) -> str:
     )
 
     # ── spine (skeleton) ──────────────────────────────────────────────────────
-    ET.SubElement(package, "{%s}spine" % _OPF_NS, attrib={"toc": "ncx"})
+    SubElement(package, "{%s}spine" % _OPF_NS, attrib={"toc": "ncx"})
 
     return _serialize_xml(package)
 
