@@ -111,8 +111,8 @@ hashes into one summary digest, and the project does not conflate them:
   itself carries no positional structure.
 - **`merkle_root()`** builds a binary Merkle tree
   [@merkle_tree_provenance] over an *ordered* list of hex digests: each level
-  pairwise-concatenates adjacent nodes and hashes the concatenation, promoting
-  an unpaired trailing node unchanged to the next level, until one root
+  pairwise-concatenates adjacent nodes and hashes the concatenation, duplicating
+  an unpaired trailing node before hashing it with itself, until one root
   remains (the empty list is defined as the SHA-256 of the empty string,
   not a magic sentinel). Because the tree is addressable node-by-node, a
   Merkle profile supports proving that one specific file's hash is part of the

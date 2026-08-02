@@ -4,7 +4,7 @@
 
 {{SLOT_TABLE}}
 
-![Options per grammar slot, stacked. Each band is one slot's contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below.](../output/figures/fig_stacked_product.png){#fig:stacked_product width=85% fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."}
+![Options per effective grammar slot, stacked. Each band is one of the three content-determining slots; reserved presentation and sealing slots are intentionally omitted from this figure.](../output/figures/fig_stacked_product.png){#fig:stacked_product width=85% fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."}
 
 - **Total product size**: {{PRODUCT_SIZE}} cells
 - **Effective product size** (reserved slots excluded): {{EFFECTIVE_PRODUCT_SIZE}} cells

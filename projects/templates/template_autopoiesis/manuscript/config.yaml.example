@@ -1,7 +1,10 @@
+# Fork-safe placeholder configuration. Keep this shape aligned with the live
+# manuscript/config.yaml; replace placeholders and grammar options before use.
 paper:
   title: "Your Project Title"
   subtitle: "Your Subtitle"
   version: "0.1.0"
+  date: "YYYY-MM-DD"
   cover:
     image: "figures/cover.png"
 
@@ -12,37 +15,42 @@ authors:
     affiliation: "Your Institution"
     corresponding: true
 
-publication:
-  doi_status: "forthcoming"
-
-keywords:
-  - "your"
-  - "keywords"
-
+keywords: ["your", "keywords"]
 metadata:
   license: "MIT"
-  language: "en"
-  # Denser page layout; forwarded to pandoc as `-V geometry:`. Pair with a
-  # \changefontsize declaration in preamble.md for a matching font rescale.
   geometry: "a4paper,margin=0.25in"
-
-render:
-  formats:
-    pdf: true
-    html: true
-    slides: false
-
 analysis:
   scripts:
+    - 02_measure_test_coverage.py
     - 01_generate_manuscript_assets.py
     - generate_cover_art.py
+    - realize_archetypes.py
+    - realize_child_full.py
+    - 04_seal.py
     - z_generate_manuscript_variables.py
-
 project_config:
   autopoiesis:
     seed: 42
     slots:
-      domain: [optimization, dynamics, statistics, signal, graph]
-    deps:
-      glossary_gen: vendor
-      logging: template
+      - name: primitive_domain
+        options: [optimization, dynamics, statistics, signal, graph]
+      - name: track
+        options: [analytical, empirical, hybrid]
+      - name: section_set
+        options: [minimal, standard, extended]
+      - name: figure_profile
+        options: [minimal, full]
+      - name: qr_profile
+        options: ["off", "on"]
+      - name: integrity_profile
+        options: [sha256, merkle]
+    deps: []
+publication:
+  doi: ""
+  version_doi: ""
+  version_record: ""
+  github_repository: "your-org/your-repository"
+  repository_url: "https://github.com/your-org/your-repository"
+  published_artifacts: {}
+render:
+  formats: {pdf: true, html: true, slides: false}

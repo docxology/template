@@ -29,7 +29,7 @@ MANUSCRIPT_FIGURE_SPECS: tuple[ManuscriptFigureSpec, ...] = (
     ManuscriptFigureSpec(
         label="fig:stacked_product",
         filename="fig_stacked_product.png",
-        caption="Options per effective grammar slot, shown as a stacked bar.",
+        caption="Option counts for the three effective grammar slots, shown as a stacked bar.",
         generated_by="src.manuscript_figures.fig_stacked_product",
     ),
     ManuscriptFigureSpec(
