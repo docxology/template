@@ -19,6 +19,31 @@ token composition.
   `uv run python scripts/audit/check_tracked_all.py` and
   `uv run python scripts/audit/check_template_drift.py --strict`
 
+## 2026-08-02 review-and-render pass
+
+- Validation evidence (measured on this pass): 328 project tests passing,
+  coverage ≥ 90% project gate; pre-render CLI reports no render-blocking
+  pitfalls; drift check reports no drift; combined PDF renders with 0 `^! `
+  log lines and 0 unresolved `??` markers (41 pages); stage-04 output
+  validation passes all checks.
+- Added the two missing `.agents/` catalog READMEs (`.agents/README.md`,
+  `.agents/skills/README.md`) so every exemplar catalog level carries
+  AGENTS.md + README.md per the shared template contract.
+- Re-synced `manuscript/config.yaml.example` with the live config shape:
+  the fork template now carries `publication.repository_url`,
+  `publication.repository_label`, and a placeholder
+  `publication.published_artifacts` map, and its `gold_refinement.narrative_moves`
+  cover the same sections as the live config (removed the two extra
+  `evaluation`/`authoring_contract` move blocks the live config does not ship).
+  Live `manuscript/config.yaml` remains the untouched source of truth; no
+  output regeneration was required.
+- Verified the full surface programmatically: every relative Markdown link
+  resolves; scripts/tests AGENTS listings match the files on disk; version
+  markers agree across pyproject.toml, config.yaml, CITATION.cff,
+  codemeta.json, .zenodo.json, and the figure registry; all documented
+  `src/`/`scripts/` symbols exist; manuscript tokens all resolve to generated
+  variables.
+
 ## Integrity and template-status gaps
 
 - Keep the refinery pipeline (ore → smelting → assaying → cupellation →
