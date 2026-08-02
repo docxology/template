@@ -68,11 +68,11 @@ types, pure helpers, and operations as needed; logic must stay in
 | File | May import from infrastructure | Must NOT do |
 |---|---|---|
 | `src/config.py` | (does not currently import infrastructure) | re-implement YAML parsing or schema validation |
-| `src/pipeline/` | `infrastructure.prose.{ManuscriptReport, analyze_manuscript, write_report}`, `infrastructure.reference.citation.parse_bibfile` | I/O outside the documented `write_outputs=True` branch |
-| `src/figures.py` | `infrastructure.prose.ManuscriptReport` (top-level type only) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
+| `src/pipeline/` | none (pure checks over `ManuscriptReportLike`; the bibliography cross-check uses `src.prose_facade.parse_bib_keys`) | I/O outside the documented `write_outputs=True` branch; importing `infrastructure.*` |
+| `src/figures.py` | none (plots over the project-owned `ManuscriptReportLike` Protocol) | re-implement readability/structure analysis; plot over a typed report, never recompute metrics |
 | `src/report.py` | `src.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper, no infrastructure import) | `analyze_*`, `parse_*`, `write_*` |
-| `src/prose_facade.py` | (does not import infrastructure — project-owned report Protocols plus `render_outline`/`parse_bib_keys`, deliberately decoupled from `infrastructure.prose`/`infrastructure.reference`) | call into `infrastructure.*`; re-implement `infrastructure.reference.citation.parse_bibfile` (its `parse_bib_keys` is a deliberately minimal cross-check helper, not a replacement) |
-| `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) and `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` for the {{TOKEN}} substitution path | re-implement substitution; reads JSON written by `pipeline/`, delegates writes to infrastructure |
+| `src/prose_facade.py` | (does not import infrastructure — project-owned report Protocols plus `render_outline`/`parse_bib_keys`, deliberately decoupled from `infrastructure.prose`/`infrastructure.reference`) | call into `infrastructure.*`; re-implement dialect-complete BibTeX parsing (its `parse_bib_keys` is a deliberately minimal cross-check regex, and forks needing the full parser can call `infrastructure.reference.citation.parse_bibfile` from their scripts layer) |
+| `src/manuscript_variables.py` | `load_report_payload` (raw JSON dict) | re-implement substitution; reads JSON written by `pipeline/`. (`infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` are called by `scripts/z_generate_manuscript_variables.py`, not from `src/`.) |
 | `scripts/y_generate_prose_figures.py` | `infrastructure.prose.report.load_report_json` → typed `ManuscriptReport` for `src/figures.py` | inline analysis logic |
 | `scripts/run_prose_pipeline.py` | `src.pipeline`, `src.config`, `src.report` | inline analysis logic, regex over prose, BibTeX parsing |
 | `scripts/z_generate_manuscript_variables.py` | `src.manuscript_variables` (`load_report_payload`) | inline analysis logic |
@@ -80,8 +80,8 @@ types, pure helpers, and operations as needed; logic must stay in
 
 **Verify the boundary** (no analysis re-implemented under `src/`):
 ```bash
-# Operations originate from src/pipeline/ and src/manuscript_variables.py only;
-# figures.py loads infrastructure types from JSON but does not call analyze_*/parse_*/write_*.
+# Operations originate from the scripts/ layer; figures/report/config/prose_facade
+# must not call analyze_*/write_* infrastructure entry points.
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
     projects/templates/template_prose_project/src/figures.py \
     projects/templates/template_prose_project/src/report.py \
@@ -138,12 +138,13 @@ agents must be able to find the referenced code.
 Our pipeline computes readability and validates citations automatically.
 ```
 
-**Correct (concrete, anchored to `src/pipeline/`)**:
+**Correct (concrete, anchored to `src/pipeline/`)**: 
 ```markdown
-`projects/templates/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` computes
+`projects/templates/template_prose_project/scripts/run_prose_pipeline.py` computes
 readability via `infrastructure.prose.analyze_manuscript` and validates
 citation keys against `manuscript/references.bib` parsed by
-`infrastructure.reference.citation.parse_bibfile`. The thresholds applied
+`src/prose_facade.parse_bib_keys`; `src/pipeline/__init__.py::run_prose_pipeline`
+evaluates the configured checks. The thresholds applied
 to the resulting metrics are read from `manuscript/config.yaml`
 (`prose.target_grade_level_min`, `prose.target_grade_level_max`,
 `prose.citation_density_min_per_1000`, …).

@@ -2,8 +2,10 @@
 
 ## Purpose
 
-Project-specific orchestration over `infrastructure.prose` and
-`infrastructure.reference.citation`.
+Project-specific check orchestration over a pre-analysed
+`ManuscriptReportLike`. `src/pipeline/` itself imports no `infrastructure`
+modules — the thin `scripts/` layer calls
+`infrastructure.prose.analyze_manuscript` and hands the report in.
 
 ## Rules
 

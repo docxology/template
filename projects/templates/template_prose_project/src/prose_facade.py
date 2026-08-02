@@ -11,9 +11,10 @@ Two free functions live here for the same reason:
 * :func:`parse_bib_keys` — extract BibTeX citation keys via a lightweight
   regex so :mod:`src.pipeline.checks` can cross-check citations without
   importing :mod:`infrastructure.reference.citation`.  The full
-  ``infrastructure.reference.citation.parse_bibfile`` parser is used by the
-  scripts layer and handles all BibTeX dialect edge-cases; this helper is
-  deliberately minimal and is used only for the cross-check gate.
+  ``infrastructure.reference.citation.parse_bibfile`` parser handles all
+  BibTeX dialect edge-cases; this exemplar deliberately uses only this
+  minimal helper for its cross-check gate, and neither the scripts layer
+  nor the tests invoke the full parser.
 """
 
 from __future__ import annotations

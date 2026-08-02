@@ -29,7 +29,7 @@ Every cited key is matched against the BibTeX file at `bibliography.references_p
 | `fail_on_unused: true` | Bib entries that are never cited fail the check. |
 | `fail_on_unused: false` | Unused entries are warned but do not fail. |
 
-The check uses [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.
+The check compares the cited keys from the `ManuscriptReport` against the BibTeX keys returned by `src.prose_facade.parse_bib_keys` — a deliberately minimal regex that skips `@comment` blocks. (Forks that need dialect-complete BibTeX parsing can swap in [`infrastructure.reference.citation.parse_bibfile`](../../../../infrastructure/reference/citation/SKILL.md) at the script layer; the exemplar's own gate does not require it.)
 
 ## Evaluate
 

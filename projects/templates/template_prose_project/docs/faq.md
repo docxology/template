@@ -11,9 +11,12 @@ testable with real `numpy` arrays and zero infrastructure imports. Its
 
 `template_prose_project` owns no algorithm. The science lives in
 `infrastructure/prose/analysis/` (Flesch, Flesch-Kincaid, Gunning Fog,
-heading parsers, citation extractors) and `infrastructure/reference/citation/`
-(BibTeX parsing). This project's `src/` is **project-orchestration glue**
-— it wires those modules to a specific manuscript directory and a specific
+heading parsers, citation extractors); the project's own bibliography
+cross-check uses the minimal `src/prose_facade.parse_bib_keys` regex
+(dialect-complete BibTeX parsing is available in
+`infrastructure/reference/citation/` for forks that need it). This
+project's `src/` is **project-orchestration glue** — it wires those
+modules to a specific manuscript directory and a specific
 configuration file.
 
 The thin-orchestrator pattern still applies, just at a different level:
@@ -48,7 +51,7 @@ to a `_check_<name>` function in `src/pipeline/checks.py` and write a test for i
 ### Why are mocks forbidden?
 
 The pipeline is composed entirely of pure or near-pure modules. Mocks would
-substitute for `analyze_manuscript`, `parse_bibfile`, or filesystem I/O —
+substitute for `analyze_manuscript`, `parse_bib_keys`, or filesystem I/O —
 all of which are cheap, deterministic, and fully testable with real inputs
 in `tmp_path`. A mocked test would assert call signatures, not real
 behaviour, and break the moment the underlying API evolves.

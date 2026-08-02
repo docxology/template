@@ -16,7 +16,7 @@ claims:
   - claim_id: citation-density-denominator
     kind: number
     value: 1000
-    source: projects/templates/template_prose_project/src/pipeline.py citation density metric
+    source: projects/templates/template_prose_project/src/pipeline/checks.py::_check_citation_density
     source_tier: project_source
     freshness: active
     artifact_path: output/manuscript_report.json

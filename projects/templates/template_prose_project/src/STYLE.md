@@ -4,15 +4,17 @@ Code style and design conventions for `src/` modules in the
 `template_prose_project` exemplar. Sibling of
 [`template_code_project/src/STYLE.md`](../../template_code_project/src/STYLE.md);
 the same principles apply, but `src/` here is *project-orchestration glue
-over `infrastructure/prose/` and `infrastructure/reference/citation/`*,
-not its own algorithm.
+that stays import-free of `infrastructure/`* (the thin `scripts/` layer
+calls `infrastructure.prose` and
+`infrastructure.rendering.manuscript_injection` on its behalf), not its
+own algorithm.
 
 ## What belongs in `src/` vs `infrastructure/`
 
 | Code shape | Belongs in |
 |---|---|
 | Readability metric (FKGL / FRE / Gunning Fog) implementation | `infrastructure/prose/` |
-| BibTeX parsing / `BibDatabase` construction | `infrastructure/reference/citation/` |
+| BibTeX key extraction for the cross-check gate | `src/prose_facade.py::parse_bib_keys` (deliberately minimal regex; dialect-complete parsing lives in `infrastructure/reference/citation/` for forks that need it) |
 | Token-substitution + manuscript-tree write | `infrastructure/rendering/manuscript_injection` |
 | **Project-specific threshold checks** (`grade_level_in_band`, etc.) | `src/pipeline/checks.py` (`_check_<name>` functions) |
 | **Project-specific report assembly** | `src/report.py` |
@@ -22,7 +24,9 @@ not its own algorithm.
 
 The rule of thumb: if a module under `src/` is doing string-regex over
 manuscript prose, computing readability, or parsing BibTeX, that work has
-leaked from `infrastructure/`. Move it.
+leaked from `infrastructure/` — move it, unless it is the documented
+`parse_bib_keys` cross-check helper in `src/prose_facade.py`, which is
+deliberately minimal and project-owned.
 
 ## Pure-by-default
 
@@ -37,9 +41,11 @@ def _check_grade_level(report: ManuscriptReport, lo: float, hi: float) -> CheckR
 ```
 
 The intentional exception is `src/pipeline/__init__.py::run_prose_pipeline`
-itself: it writes JSON + markdown + figures to disk when
-`write_outputs=True`. That branch is the documented I/O frontier; every
-other function in `src/` stays pure.
+itself: it writes the JSON artefacts (`manuscript_report.json`,
+`checks.json`, `evidence_summary.json`) to disk when
+`write_outputs=True`. Markdown and figures are written by the explicit
+helpers in `src/report.py` and `src/figures.py`; every other function in
+`src/` stays pure.
 
 ## Type Hints
 

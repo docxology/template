@@ -52,10 +52,11 @@ uv run python projects/templates/template_prose_project/scripts/run_prose_pipeli
 `manuscript/config.yaml`.
 
 **What it does**: Loads `ProjectConfig` from `manuscript/config.yaml`, calls
-`src.pipeline.run_prose_pipeline`, which delegates to
-`infrastructure.prose.analyze_manuscript` and
-`infrastructure.reference.citation.parse_bibfile`, evaluates the configured
-checks, and writes JSON + Markdown artefacts.
+`infrastructure.prose.analyze_manuscript` to produce the `ManuscriptReport`,
+passes it to `src.pipeline.run_prose_pipeline`, which evaluates the
+configured checks (the bibliography check compares cited keys against
+`src/prose_facade.parse_bib_keys`) and writes the JSON artefacts, then
+`src.report.write_review_report` writes the markdown review.
 
 **Outputs**:
 
@@ -165,7 +166,7 @@ Every knob lives in `projects/templates/template_prose_project/manuscript/config
 | `prose.citation_density_min_per_1000` | Floor for `citation_density_above_floor` check | `_check_citation_density` in `src/pipeline/checks.py` |
 | `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_h1_per_file` in `src/pipeline/checks.py` |
 | `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_no_skipped_levels` in `src/pipeline/checks.py` |
-| `bibliography.references_path` | Path to BibTeX file | `parse_bibfile` in `src/pipeline/checks.py` |
+| `bibliography.references_path` | Path to BibTeX file | `_check_bibliography` in `src/pipeline/checks.py` (via `src/prose_facade.parse_bib_keys`) |
 | `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline/checks.py` |
 | `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline/checks.py` |
 | `report.output_path` | Where the markdown review report is written | `write_review_report` in `src/report.py` |

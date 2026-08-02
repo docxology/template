@@ -57,8 +57,8 @@ def test_check_against_real_manuscript(tmp_path: Path):
 
 Tests covering `_check_bibliography` (which emits
 `CheckResult(name="bibliography_consistency")`) write small but valid
-`.bib` files and let `infrastructure.reference.citation.parse_bibfile`
-parse them:
+`.bib` files and `_check_bibliography` parses them via
+`src/prose_facade.parse_bib_keys`:
 
 ```python
 def _write_bib(path: Path, entries: dict[str, dict[str, str]]) -> Path:
@@ -71,8 +71,8 @@ def _write_bib(path: Path, entries: dict[str, dict[str, str]]) -> Path:
     return path
 ```
 
-Never mock the `BibDatabase` return value — write the bytes, let the
-parser run, assert on the resulting `CheckResult.details`.
+Never mock the parse — write the bytes, let `parse_bib_keys` run, assert on
+the resulting `CheckResult.details`.
 
 ### Real subprocess for scripts
 
@@ -116,6 +116,7 @@ file in this project):
 | `TestProseRunArtifacts` | result-container shape (`ProseRunArtifacts.all_passed` etc.) |
 | `TestCheckResult` | `CheckResult` dataclass shape (name, passed, message, details) |
 | `TestLongSentenceThresholdWired` | proves `prose.long_sentence_threshold` reaches `infrastructure.prose.analyze_quality` |
+| `TestNegativeControls` | negative controls: failure-path `all_passed`/`to_dict`, exact boundary values, checks-JSON-on-failure, all-disabled registry, missing-bib-with-both-flags-false |
 
 Other test files use the same `Test<Concept>` convention:
 `tests/test_config.py` (free functions, no class), `tests/test_figures.py`
@@ -206,7 +207,7 @@ across editorial revisions of the bundled prose.
 Before submitting any test:
 
 - [ ] Real Markdown strings or `.md` files written to `tmp_path`.
-- [ ] Real `BibDatabase` parsed from a real `.bib` file in `tmp_path`.
+- [ ] Real citation keys parsed from a real `.bib` file in `tmp_path`.
 - [ ] No `unittest.mock`, `MagicMock`, `@patch`, or `create_autospec`.
 - [ ] Assertions check **properties** (passed/failed, file existence,
   field values) — never call counts.

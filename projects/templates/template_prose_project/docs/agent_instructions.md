@@ -4,7 +4,7 @@
 
 `template_prose_project` is the **editorial-review exemplar** of the
 template repository: the canonical example proving that `infrastructure/prose/`
-and `infrastructure/reference/citation/` can be wired into a project that
+can be wired into a project that
 produces a publication-ready PDF, a JSON report, and a human-readable review
 without an algorithm of its own. Deviating from the rules below — introducing
 a mock, leaking analysis logic into `scripts/`, or scattering infrastructure
@@ -67,19 +67,21 @@ sub-module level inside `src/`:
 
 | File | May call infrastructure operations | Notes |
 |---|---|---|
-| `src/pipeline/` | **Yes** — the primary infra-operations entry point | Calls `analyze_manuscript`, `write_report`, `parse_bibfile` |
-| `src/figures.py` | **Yes** — `infrastructure.prose.ManuscriptReport` (top-level type only) | Must not re-implement analysis — plot only over a typed report |
+| `src/pipeline/` | **No** — pure check evaluation over the pre-analysed report | Zero `infrastructure` imports; the bibliography cross-check uses `src.prose_facade.parse_bib_keys` |
+| `src/figures.py` | **No** — plots over the project-owned `ManuscriptReportLike` Protocol | Must not re-implement analysis — plot only over a typed report |
 | `src/report.py` | **Yes** — via `src.prose_facade.{ManuscriptReportLike, render_outline}` (project-owned Protocol + pure helper) | No `analyze_*`, no `parse_*`, no I/O into infrastructure |
 | `src/prose_facade.py` | **No** — zero `infrastructure` imports by design | Project-owned report Protocols plus `render_outline`/`parse_bib_keys`; decouples `src/` from `infrastructure.prose`/`infrastructure.reference` internals |
-| `src/manuscript_variables.py` | **Yes** — `load_report_payload` for raw JSON; calls `infrastructure.rendering.manuscript_injection.{substitute_manuscript_text, write_resolved_manuscript_tree}` inside `write_resolved_manuscript_tree` and the `{{TOKEN}}` substitution path | Reads JSON written by `pipeline/`; rendering helpers are pure delegations to infrastructure |
+| `src/manuscript_variables.py` | **No** — `load_report_payload` reads raw JSON only | `infrastructure.rendering.manuscript_injection` is called by `scripts/z_generate_manuscript_variables.py`, not from `src/` |
+| `scripts/run_prose_pipeline.py` | **Yes** — `infrastructure.prose.analyze_manuscript` produces the `ManuscriptReport` before calling `src.pipeline.run_prose_pipeline` | No inline analysis logic |
 | `scripts/y_generate_prose_figures.py` | **Yes** — `infrastructure.prose.report.load_report_json` rehydrates a typed `ManuscriptReport` before calling `src/figures.py` | No inline analysis logic |
 | `src/config.py` | No | Pure YAML loading + dataclasses |
-| `scripts/*.py` | No analysis logic — only CLI shim | `run_prose_pipeline.py` is a wrapper around `src.pipeline.run_prose_pipeline` |
+| `scripts/z_generate_manuscript_variables.py` | **Yes** — `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` for the token-substituted tree | No inline analysis logic |
 
 **The boundary test**: if you find yourself writing a regex over
 manuscript prose, computing readability, or parsing BibTeX inside `scripts/`
 or inside `src/figures.py`, stop. That work belongs in `infrastructure/prose/`
-or `infrastructure/reference/`, called from `src/pipeline/`.
+or (for dialect-complete parsing) `infrastructure/reference/`, called from
+the scripts layer.
 
 ---
 
@@ -95,11 +97,12 @@ The pipeline analyses the manuscript using standard readability metrics.
 
 **GOOD** (concrete, linkable):
 ```markdown
-`projects/templates/template_prose_project/src/pipeline/__init__.py::run_prose_pipeline` calls
+`projects/templates/template_prose_project/scripts/run_prose_pipeline.py` calls
 `infrastructure.prose.analyze_manuscript` to compute Flesch-Kincaid Grade
 Level, Flesch Reading Ease, and Gunning Fog from the files under
 `manuscript/`, then validates citations against `manuscript/references.bib`
-via `infrastructure.reference.citation.parse_bibfile`.
+via `src/prose_facade.parse_bib_keys` (`src/pipeline/__init__.py::run_prose_pipeline`
+evaluates the configured checks).
 ```
 
 **BAD** (vague):
@@ -110,9 +113,10 @@ The bibliography is automatically validated.
 **GOOD** (concrete):
 ```markdown
 `_check_bibliography` in `src/pipeline/checks.py` cross-references the
-`[@key]` citations extracted by `infrastructure.prose` against the
-`BibDatabase` returned by `infrastructure.reference.citation.parse_bibfile`,
-emitting a `CheckResult` with `name="bibliography_consistency"` whose
+`[@key]` citations extracted by `infrastructure.prose` against the keys
+returned by `src/prose_facade.parse_bib_keys` (a minimal regex over
+`manuscript/references.bib` that skips `@comment` blocks), emitting a
+`CheckResult` with `name="bibliography_consistency"` whose
 `details.missing` lists unmatched keys.
 ```
 
@@ -187,13 +191,13 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_prose_project/tests/ || echo "Clean — no mocks found"
 
-# 3. pipeline/ is the only module performing infrastructure operations
+# 3. No infrastructure analysis calls outside the scripts seam
 grep -nE "analyze_manuscript|parse_bibfile|write_report" \
     projects/templates/template_prose_project/src/figures.py \
     projects/templates/template_prose_project/src/report.py \
     projects/templates/template_prose_project/src/manuscript_variables.py \
     projects/templates/template_prose_project/src/config.py \
-    || echo "Clean — only pipeline/ performs infrastructure operations"
+    || echo "Clean — only the scripts layer performs infrastructure operations"
 ```
 
 All three must produce zero violations (or the "Clean" message for checks 2 and 3).

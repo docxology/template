@@ -1,7 +1,9 @@
 # `template_prose_project/src/`
 
-Domain orchestration: pure functions over `infrastructure/prose/` and
-`infrastructure/reference/`.
+Domain orchestration: pure, `infrastructure`-free functions. The thin
+`scripts/` orchestrators call `infrastructure/prose/` (analysis,
+report loading) and `infrastructure/rendering/manuscript_injection`
+(token substitution) on `src/`'s behalf.
 
 ```mermaid
 flowchart LR
@@ -18,18 +20,26 @@ flowchart LR
 
 ## Quick start
 
+Programmatic use (the scripts in `scripts/` wire these calls to the
+filesystem; `src/` must be importable, e.g. under the project's
+`[tool.pytest.ini_options] pythonpath`):
+
 ```python
-from template_prose_project.src import (
-    load_project_config,
-    run_prose_pipeline,
-    write_review_report,
-)
+from infrastructure.prose import analyze_manuscript
+
+from src.config import load_project_config
+from src.pipeline import run_prose_pipeline
+from src.report import write_review_report
 
 config = load_project_config("manuscript/config.yaml")
-artifacts = run_prose_pipeline(config, project_root=".")
+report = analyze_manuscript(
+    "manuscript",
+    long_sentence_threshold=config.prose.long_sentence_threshold,
+)
+artifacts = run_prose_pipeline(config, project_root=".", manuscript_report=report)
 
 write_review_report(
-    "output/review_report.md",
+    config.report.output_path,
     title=config.title,
     manuscript_report=artifacts.manuscript_report,
     checks=artifacts.checks,

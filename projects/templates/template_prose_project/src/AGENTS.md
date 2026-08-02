@@ -54,8 +54,12 @@ flowchart LR
 
 ## Invariants
 
-* **Only `pipeline/` touches `infrastructure.prose.*` or
-  `infrastructure.reference.citation.*`.** Other modules stay framework-free.
+* **`src/` stays import-free of `infrastructure`.** The thin `scripts/`
+  orchestrators call `infrastructure.prose.analyze_manuscript` /
+  `infrastructure.prose.report.load_report_json` and
+  `infrastructure.rendering.manuscript_injection` on `src/`'s behalf;
+  `src/pipeline/` evaluates the configured checks over the pre-analysed
+  report using the project-owned `src/prose_facade` helpers.
 * **No I/O outside `pipeline/__init__.py`'s `write_outputs=True` branch and
   `figures.py`/`manuscript_variables.py`/`report.py`'s explicit write
   helpers.** Tests must be able to drive the logic without touching the

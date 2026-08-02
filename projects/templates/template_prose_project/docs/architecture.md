@@ -27,8 +27,8 @@ flowchart TB
     L1 --> L2
     L2 --> SCR
 
-    PIPE -.uses.-> PROSE
-    PIPE -.uses.-> REF
+    PIPE -.report type.-> PROSE
+    PIPE -.parse_bib_keys.-> PF
 
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef l2 fill:#0f766e,stroke:#0f172a,color:#fff
@@ -44,19 +44,19 @@ flowchart TB
 sequenceDiagram
     participant CLI as scripts/run_prose_pipeline.py
     participant CFG as load_project_config
-    participant PIPE as run_prose_pipeline
     participant PROSE as infrastructure.prose
-    participant REF as infrastructure.reference
+    participant PIPE as run_prose_pipeline (src/pipeline)
+    participant PF as src/prose_facade.parse_bib_keys
     participant FS as Filesystem
-    participant REP as write_review_report
+    participant REP as write_review_report (src/report)
 
     CLI->>CFG: load_project_config(yaml)
     CFG-->>CLI: ProjectConfig
-    CLI->>PIPE: run_prose_pipeline(config, root)
-    PIPE->>PROSE: analyze_manuscript(manuscript_dir)
-    PROSE-->>PIPE: ManuscriptReport
-    PIPE->>REF: parse_bibfile(references_path)
-    REF-->>PIPE: BibDatabase
+    CLI->>PROSE: analyze_manuscript(manuscript_dir, long_sentence_threshold)
+    PROSE-->>CLI: ManuscriptReport
+    CLI->>PIPE: run_prose_pipeline(config, root, manuscript_report)
+    PIPE->>PF: parse_bib_keys(references_path)
+    PF-->>PIPE: set[keys]
     PIPE->>PIPE: evaluate checks
     PIPE->>FS: write manuscript_report.json + checks.json
     PIPE-->>CLI: ProseRunArtifacts

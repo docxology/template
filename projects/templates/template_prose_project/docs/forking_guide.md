@@ -43,11 +43,11 @@ add -f` it. Read [`../../../CLAUDE.md`](../../../../CLAUDE.md)
 ## What you're forking
 
 This template is a **prose-review pipeline**: it has **no algorithm of
-its own** — instead, `src/pipeline/` calls
-`infrastructure.prose.analyze_manuscript` and
-`infrastructure.reference.citation.parse_bibfile`, applies five
+its own** — instead, `scripts/run_prose_pipeline.py` calls
+`infrastructure.prose.analyze_manuscript`, then `src/pipeline/` applies five
 threshold checks (grade-level band, citation density, H1-per-file,
-no-skipped-heading-levels, bibliography consistency), and emits JSON +
+no-skipped-heading-levels, bibliography consistency via
+`src/prose_facade.parse_bib_keys`), and emits JSON +
 Markdown + three PNGs.
 
 The transferable pattern is **self-grading**: the bundled

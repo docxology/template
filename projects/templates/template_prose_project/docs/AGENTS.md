@@ -39,14 +39,19 @@ gate, the thin-orchestrator boundary inside `src/`, "show not tell"
 documentation, determinism, the style/syntax-guide split, and the
 disposability of `output/`.
 
-**Architecture isolation.** The `src/` boundary is fine-grained for this
-project. `src/pipeline/` is the **only** module that performs
-infrastructure operations (`analyze_manuscript`, `parse_bibfile`,
-`write_report`); other `src/` modules may import the infrastructure *type*
-`ManuscriptReport` but not call analysis or I/O functions. `render_outline`
-is project-owned in `src/prose_facade.py` (zero infrastructure imports),
-not an infrastructure type. See [`style_guide.md`](style_guide.md) Rule 2
-for the full delegation table.
+**Architecture isolation.** `src/` never imports `infrastructure`:
+`src/prose_facade.py` defines project-owned report Protocols and the
+`parse_bib_keys` / `render_outline` helpers that decouple the layer from
+`infrastructure.prose`/`infrastructure.reference` internals. The thin
+`scripts/` orchestrators make the `infrastructure` calls
+(`infrastructure.prose.analyze_manuscript` in `run_prose_pipeline.py`,
+`infrastructure.prose.report.load_report_json` in
+`y_generate_prose_figures.py`,
+`infrastructure.rendering.manuscript_injection` in
+`z_generate_manuscript_variables.py`). The bibliography cross-check
+(`_check_bibliography`) compares the cited keys against
+`src/prose_facade.parse_bib_keys`. See [`style_guide.md`](style_guide.md)
+Rule 2 for the full delegation table.
 
 **Zero-mock enforcement.** No `unittest.mock`, `MagicMock`, `@patch`, or
 `create_autospec` anywhere in `tests/`. Tests use real Markdown, real
@@ -100,8 +105,8 @@ uv run pytest projects/templates/template_prose_project/tests/ \
 grep -r "unittest.mock\|MagicMock\|@patch\|create_autospec" \
     projects/templates/template_prose_project/tests/ || echo "Clean"
 
-# 3. Only pipeline/ performs infrastructure operations
-grep -nE "analyze_manuscript|parse_bibfile|write_report" \
+# 3. No infrastructure analysis calls outside the scripts seam
+grep -nE "analyze_manuscript|write_report|parse_bibfile" \
     projects/templates/template_prose_project/src/figures.py \
     projects/templates/template_prose_project/src/report.py \
     projects/templates/template_prose_project/src/manuscript_variables.py \

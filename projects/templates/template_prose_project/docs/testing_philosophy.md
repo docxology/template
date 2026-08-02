@@ -10,8 +10,9 @@ directories, and real subprocess invocation.
 
 The prose project owns no algorithm of its own. Every line of `src/` is
 either pure (config parsing, figure rendering, variable derivation, report
-assembly) or a thin shell over `infrastructure/prose/` and
-`infrastructure/reference/citation/`, which are themselves pure. There is
+assembly, check evaluation) or a thin shell over `infrastructure/prose/`
+(which is itself pure), with the `infrastructure` calls confined to the
+`scripts/` layer. There is
 nothing legitimate to mock: tests can always pass real text and assert on
 real outputs.
 
@@ -33,7 +34,8 @@ Files (`projects/templates/template_prose_project/tests/`):
   isolation — `_check_grade_level`, `_check_citation_density`,
   `_check_no_skipped_levels`, `_check_h1_per_file`, `_check_bibliography`),
   `TestCitationExtractionViaPipeline`, `TestProseRunArtifacts`,
-  `TestCheckResult`, `TestLongSentenceThresholdWired`).
+  `TestCheckResult`, `TestLongSentenceThresholdWired`,
+  `TestNegativeControls`).
 - `test_pipeline_integration.py` — runs the bundled `manuscript/` end-to-end
   against `run_prose_pipeline` (1 test).
 - `test_prose_facade.py` — covers `src/prose_facade.py` report Protocols,
@@ -81,9 +83,9 @@ Every test uses real artefacts:
   pre-built `ManuscriptReport` objects in production-path tests.
 - **Real BibTeX.** Tests covering `_check_bibliography` (emits
   `CheckResult(name="bibliography_consistency")`) write small but valid
-  `.bib` files and parse them through
-  `infrastructure.reference.citation.parse_bibfile`. This catches
-  parser-level breakage that a mocked `BibDatabase` would hide.
+  `.bib` files and `_check_bibliography` parses them through
+  `src/prose_facade.parse_bib_keys`. This catches
+  parser-level breakage that a mocked parse would hide.
 - **Real `tmp_path`.** No test writes into the project's own `output/`
   tree; every filesystem operation is contained in pytest's
   `tmp_path` fixture.
@@ -108,7 +110,7 @@ Before submitting any test, verify all boxes are checked:
 
 - [ ] Test uses real Markdown strings or `.md` files written to `tmp_path`.
 - [ ] Test calls `src/` functions with real `ManuscriptReport`,
-  `BibDatabase`, or `ProjectConfig` objects produced by infrastructure
+  `ProjectConfig`, or `CheckResult` objects produced by infrastructure
   or by `src/config.py::load_project_config`.
 - [ ] Test asserts on properties (passed/failed checks, file existence,
   field values), not on call counts.
@@ -124,13 +126,15 @@ The zero-mock constraint is self-enforcing when the architecture is correct:
 - **`src/config.py`, `src/manuscript_variables.py`, `src/figures.py`,
   `src/report.py`, `src/prose_facade.py`** — pure modules → testable with
   real data.
-- **`src/pipeline/`** — orchestrates `infrastructure.prose` and
-  `infrastructure.reference.citation` → testable with real Markdown and
-  real BibTeX in `tmp_path`.
-- **`scripts/*.py`** — CLI shims → tested via `subprocess.run` in
+- **`src/pipeline/`** — evaluates the configured checks over the
+  pre-analysed report (pure; no `infrastructure` imports; bibliography
+  cross-check via `src/prose_facade.parse_bib_keys`) → testable with real
+  Markdown and real BibTeX in `tmp_path`.
+- **`scripts/*.py`** — CLI shims that call `infrastructure.prose` /
+  `infrastructure.rendering` → tested via `subprocess.run` in
   `tests/test_scripts.py`.
 
-If you find yourself wanting to mock `analyze_manuscript`, `parse_bibfile`,
+If you find yourself wanting to mock `analyze_manuscript`, `parse_bib_keys`,
 or any I/O inside a test, stop. Either pass it real data, or move the
 work behind a configuration knob and test both branches with real inputs.
 

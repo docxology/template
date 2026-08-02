@@ -219,7 +219,7 @@ experiments, mutate prompts, or run autonomous review agents.
 ## Architecture
 
 * `src/config.py` — typed YAML loader.
-* `src/pipeline/` — read manuscript → analyse → cross-check bibliography → evaluate checks. **Pure orchestration over `infrastructure/`.**
+* `src/pipeline/` — receives the pre-analysed `ManuscriptReport`, evaluates the configured checks (bibliography cross-check via `src/prose_facade.parse_bib_keys`), writes the JSON artefacts. **Pure orchestration; zero `infrastructure` imports — the thin `scripts/` call `infrastructure/` on its behalf.**
 * `src/figures.py` — matplotlib renderers (no business logic).
 * `src/manuscript_variables.py` — abstract substitution variables.
 * `src/report.py` — markdown review-report assembly.
