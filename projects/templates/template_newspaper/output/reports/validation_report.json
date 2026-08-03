@@ -1,246 +1,268 @@
 {
-  "timestamp": "2026-08-03T00:03:29Z",
   "checks": {
-    "PDF validation": true,
-    "Transmission bookends": true,
+    "Artifact manifest": true,
+    "Evidence registry": true,
+    "Figure registry": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": true,
-    "Evidence registry": false,
+    "PDF validation": true,
     "Project design overlays": true,
-    "Artifact manifest": false,
-    "Rendered provenance inputs": false
+    "Transmission bookends": true
   },
   "figure_issues": [],
   "output_statistics": {
-    "evidence_issues": [
-      "missing evidence source path: output/data/render_report.json",
-      "missing evidence source path: output/pdf/the-triplicate.pdf",
-      "missing evidence source path: output/reports/output_statistics.json",
-      "missing evidence source path: output/reports/test_results.json"
-    ],
-    "artifact_manifest_issues": [
-      "missing artifact: output/data/publication_ledger.json",
-      "missing artifact: output/data/render_report.json",
-      "missing artifact: output/figures/ad_bakery.png",
-      "missing artifact: output/figures/ad_festival.png",
-      "missing artifact: output/figures/ad_grocery.png",
-      "missing artifact: output/figures/ad_realty.png",
-      "missing artifact: output/figures/baseball.png",
-      "missing artifact: output/figures/crab_boat.png",
-      "missing artifact: output/figures/crab_landings.png",
-      "missing artifact: output/figures/harbor.png",
-      "missing artifact: output/figures/lighthouse.png",
-      "missing artifact: output/figures/lily_fields.png",
-      "missing artifact: output/figures/redwoods.png",
-      "missing artifact: output/figures/tides.png",
-      "missing artifact: output/figures/weather_7day.png",
-      "missing artifact: output/pdf/the-triplicate.pdf",
-      "missing artifact: output/release/swh_repo_url.txt",
-      "missing artifact: output/release/upload_receipts.json",
-      "missing artifact: output/reports/test_results.json",
-      "missing artifact: output/reports/test_results.md",
-      "missing artifact: output/slides/00_abstract_slides.pdf",
-      "missing artifact: output/slides/01_introduction_slides.pdf",
-      "missing artifact: output/slides/02_engine_architecture_slides.pdf",
-      "missing artifact: output/slides/03_typography_and_figures_slides.pdf",
-      "missing artifact: output/slides/04_reproducibility_slides.pdf",
-      "missing artifact: output/web/manuscript__00_abstract.html",
-      "missing artifact: output/web/manuscript__01_introduction.html",
-      "missing artifact: output/web/manuscript__02_engine_architecture.html",
-      "missing artifact: output/web/manuscript__03_typography_and_figures.html",
-      "missing artifact: output/web/manuscript__04_reproducibility.html"
-    ],
+    "data": {
+      "files": 1,
+      "size_mb": 0.00010967254638671875
+    },
     "detailed_validation": {
-      "structure": {
-        "valid": true,
-        "issues": [
-          "Missing directory: figures/",
-          "Missing directory: data/"
-        ],
-        "missing_files": [],
-        "suspicious_sizes": [
-          "Combined PDF is unusually small: 0.06 MB"
-        ],
-        "warnings": [],
-        "directory_structure": {
-          "combined_pdf": {
-            "exists": true,
-            "size_mb": 0.06,
-            "readable": true
-          },
-          "pdf": {
-            "exists": true,
-            "files": 10,
-            "size_mb": 0.14,
-            "readable": true,
-            "optional": false
-          },
-          "web": {
-            "exists": true,
-            "files": 4,
-            "size_mb": 0.04,
-            "readable": true,
-            "optional": false
-          },
-          "slides": {
-            "exists": true,
-            "files": 44,
-            "size_mb": 0.43,
-            "readable": true,
-            "optional": false
-          },
-          "figures": {
-            "exists": false,
-            "files": 0,
-            "size_mb": 0.0,
-            "optional": false
-          },
-          "data": {
-            "exists": false,
-            "files": 0,
-            "size_mb": 0.0,
-            "optional": false
-          },
-          "reports": {
-            "exists": true,
-            "files": 9,
-            "size_mb": 0.03,
-            "readable": true,
-            "optional": false
-          },
-          "simulations": {
-            "exists": true,
-            "files": 0,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          },
-          "llm": {
-            "exists": true,
-            "files": 0,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          },
-          "logs": {
-            "exists": true,
-            "files": 1,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          }
-        }
-      },
       "directories": {
-        "pdf": {
+        "data": {
           "exists": true,
-          "file_count": 10,
-          "size_mb": "0.14",
-          "largest_file": "template_newspaper_combined.pdf"
-        },
-        "web": {
-          "exists": true,
-          "file_count": 4,
-          "size_mb": "0.04",
-          "largest_file": "index.html"
-        },
-        "slides": {
-          "exists": true,
-          "file_count": 44,
-          "size_mb": "0.43",
-          "largest_file": "99_references_slides.log"
+          "file_count": 1,
+          "largest_file": "render_report.json",
+          "size_mb": "0.00"
         },
         "figures": {
-          "exists": false,
-          "file_count": 0,
-          "size_mb": "0.00"
-        },
-        "data": {
-          "exists": false,
-          "file_count": 0,
-          "size_mb": "0.00"
-        },
-        "reports": {
           "exists": true,
-          "file_count": 9,
-          "size_mb": "0.03",
-          "largest_file": "artifact_manifest.json"
-        },
-        "simulations": {
-          "exists": true,
-          "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "file_count": 13,
+          "largest_file": "weather_7day.png",
+          "size_mb": "0.17"
         },
         "llm": {
           "exists": true,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "largest_file": null,
+          "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
           "file_count": 1,
-          "size_mb": "0.00",
-          "largest_file": "pipeline.log"
+          "largest_file": "pipeline.log",
+          "size_mb": "0.00"
+        },
+        "pdf": {
+          "exists": true,
+          "file_count": 11,
+          "largest_file": "the-triplicate.pdf",
+          "size_mb": "0.60"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 26,
+          "largest_file": "evidence_registry.json",
+          "size_mb": "0.14"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "largest_file": null,
+          "size_mb": "0.00"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 49,
+          "largest_file": "99_references_slides.log",
+          "size_mb": "0.52"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 9,
+          "largest_file": "index.html",
+          "size_mb": "0.07"
         }
       },
       "file_counts": {
-        "pdf": 10,
-        "web": 4,
-        "slides": 44,
-        "reports": 9,
-        "simulations": 0,
+        "data": 1,
+        "figures": 13,
         "llm": 0,
-        "logs": 1
+        "logs": 1,
+        "pdf": 11,
+        "reports": 26,
+        "simulations": 0,
+        "slides": 49,
+        "web": 9
       },
-      "total_size_mb": 0.6451082229614258,
       "issues_by_severity": {
         "critical": [],
+        "info": [],
         "warning": [
-          "Directory 'figures/' missing or empty",
-          "Directory 'data/' missing or empty",
+          "Combined PDF is unusually small: 0.06 MB"
+        ]
+      },
+      "recommendations": [],
+      "structure": {
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "readable": true,
+            "size_mb": 0.06
+          },
+          "data": {
+            "exists": true,
+            "files": 1,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.0
+          },
+          "figures": {
+            "exists": true,
+            "files": 13,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.17
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "optional": true,
+            "readable": true,
+            "size_mb": 0.0
+          },
+          "logs": {
+            "exists": true,
+            "files": 1,
+            "optional": true,
+            "readable": true,
+            "size_mb": 0.0
+          },
+          "pdf": {
+            "exists": true,
+            "files": 11,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.6
+          },
+          "reports": {
+            "exists": true,
+            "files": 26,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.14
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "optional": true,
+            "readable": true,
+            "size_mb": 0.0
+          },
+          "slides": {
+            "exists": true,
+            "files": 49,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.52
+          },
+          "web": {
+            "exists": true,
+            "files": 9,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.07
+          }
+        },
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [
           "Combined PDF is unusually small: 0.06 MB"
         ],
-        "info": []
+        "valid": true,
+        "warnings": []
       },
-      "recommendations": [
-        {
-          "priority": "medium",
-          "action": "Ensure analysis scripts generate figures",
-          "details": "Check projects/{name}/scripts/analysis_pipeline.py execution"
-        }
-      ]
+      "total_size_mb": 1.4946069717407227
+    },
+    "figures": {
+      "files": 13,
+      "size_mb": 0.16872692108154297
     },
     "pdf": {
-      "files": 10,
-      "size_mb": 0.14259815216064453
-    },
-    "rendered_provenance_issue": {
-      "code": "ARTIFACT_MANIFEST_INVALID",
-      "message": "missing artifact: output/data/publication_ledger.json; missing artifact: output/data/render_report.json; missing artifact: output/figures/ad_bakery.png; missing artifact: output/figures/ad_festival.png; missing artifact: output/figures/ad_grocery.png; missing artifact: output/figures/ad_realty.png; missing artifact: output/figures/baseball.png; missing artifact: output/figures/crab_boat.png; missing artifact: output/figures/crab_landings.png; missing artifact: output/figures/harbor.png; missing artifact: output/figures/lighthouse.png; missing artifact: output/figures/lily_fields.png; missing artifact: output/figures/redwoods.png; missing artifact: output/figures/tides.png; missing artifact: output/figures/weather_7day.png; missing artifact: output/pdf/the-triplicate.pdf; missing artifact: output/release/swh_repo_url.txt; missing artifact: output/release/upload_receipts.json; missing artifact: output/reports/test_results.json; missing artifact: output/reports/test_results.md; missing artifact: output/slides/00_abstract_slides.pdf; missing artifact: output/slides/01_introduction_slides.pdf; missing artifact: output/slides/02_engine_architecture_slides.pdf; missing artifact: output/slides/03_typography_and_figures_slides.pdf; missing artifact: output/slides/04_reproducibility_slides.pdf; missing artifact: output/web/manuscript__00_abstract.html; missing artifact: output/web/manuscript__01_introduction.html; missing artifact: output/web/manuscript__02_engine_architecture.html; missing artifact: output/web/manuscript__03_typography_and_figures.html; missing artifact: output/web/manuscript__04_reproducibility.html"
+      "files": 11,
+      "size_mb": 0.5997810363769531
     }
   },
+  "recommendations": [],
   "summary": {
-    "total_checks": 9,
-    "passed": 6,
-    "failed": 3,
+    "all_passed": true,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "passed": 8,
+    "total_checks": 8
   },
-  "recommendations": [
-    {
-      "priority": "medium",
-      "issue": "Evidence registry reported unsupported manuscript facts",
-      "action": "Register generated facts or replace unsupported hard-coded claims",
-      "file": "projects/templates/template_newspaper/output/reports/evidence_registry.json"
+  "timestamp": "2026-08-03T00:19:44Z",
+  "validated_inputs": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "cd53dc5cdf506868190cb8b5b7abfed471fde79f079608a7ed5682c16247b793",
+      "size_bytes": 9793
     },
-    {
-      "priority": "medium",
-      "issue": "Artifact manifest reported drift or missing declared outputs",
-      "action": "Regenerate declared outputs or update the stage contract",
-      "file": "projects/templates/template_newspaper/output/reports/artifact_manifest.json"
-    }
-  ]
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+      "size_bytes": 10636
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "6d229a786109315604b2e39d8271b63b3c0a3da1329ecab6717fe67c969aebd6",
+      "size_bytes": 1713
+    },
+    "consumed_manuscript": [
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+        "source_path": "manuscript/00_abstract.md",
+        "source_sha256": "f5585d614bcb9e6cbdf77bf3ecdf5513587ceb86d7b765d2937bc31baea4b643"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+        "source_path": "manuscript/01_introduction.md",
+        "source_sha256": "750b02dfd716972dc3edfa0bbecadbf10444bb8fb217fc57b9ee58090a225f15"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+        "source_path": "manuscript/02_engine_architecture.md",
+        "source_sha256": "f733508c6b20fe7b3fdea2a2932cbddaaa722c6c9c7c74e784b249c9d7208c5e"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+        "source_path": "manuscript/03_typography_and_figures.md",
+        "source_sha256": "1bc2f2ef489e40d29f51ace34bbfe80561bbd0b5411f54b32c058a3e34a82d5f"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+        "source_path": "manuscript/04_reproducibility.md",
+        "source_sha256": "81fe1f8fb124759af8248d624ae16b8fdc20ab6fba950245dd578c3bbc17ef3b"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+        "source_path": "manuscript/99_references.md",
+        "source_sha256": "f30ff85064649a1b95b74eca7ca6c506fa21391f03b77d8e56157c8fecac9afc"
+      }
+    ],
+    "fingerprints": {
+      "config": {
+        "file_count": 28,
+        "sha256": "9bc6d8029ed8cd7bde325267a97564a5a748458f698f411ed75c619d1300e900"
+      },
+      "output": {
+        "file_count": 34,
+        "sha256": "defa83fa1543f3d3925f0757170cd5853191d3e9f4f39fdfd5b60d8e065917ac"
+      },
+      "source": {
+        "file_count": 28,
+        "sha256": "2abdbe5b44de195a185a2f9b7b08b32560597f00f0d8bda2de1aa97abdd7ae1b"
+      },
+      "stage": {
+        "file_count": 1080,
+        "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+      }
+    },
+    "project": "templates/template_newspaper",
+    "schema_version": "template-validated-rendered-inputs-v1"
+  }
 }
