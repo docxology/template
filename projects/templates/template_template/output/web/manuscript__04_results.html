@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_results.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -211,7 +210,7 @@ policy floor rather than an unversioned observed percentage.</p>
 <tr>
 <td><code>template_code_project</code></td>
 <td>8</td>
-<td style="text-align: right;">236</td>
+<td style="text-align: right;">242</td>
 <td style="text-align: right;">90%</td>
 </tr>
 <tr>
@@ -247,11 +246,11 @@ set.</p>
 <tbody>
 <tr>
 <td>Test files</td>
-<td>504+</td>
+<td>557+</td>
 </tr>
 <tr>
 <td>Total tests</td>
-<td>~8,583</td>
+<td>~9,557</td>
 </tr>
 <tr>
 <td>Infrastructure coverage gate</td>
@@ -299,7 +298,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>benchmark</code></td>
-<td style="text-align: center;">3</td>
+<td style="text-align: center;">4</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Template harness scoring + comparative gates</td>
@@ -313,7 +312,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>core</code></td>
-<td style="text-align: center;">112</td>
+<td style="text-align: center;">120</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>get_logger</code>, <code>load_config</code>,
@@ -335,7 +334,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>documentation</code></td>
-<td style="text-align: center;">13</td>
+<td style="text-align: center;">14</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>FigureManager</code>, <code>generate_glossary</code></td>
@@ -349,7 +348,7 @@ table below—every row reflects
 </tr>
 <tr>
 <td><code>llm</code></td>
-<td style="text-align: center;">54</td>
+<td style="text-align: center;">55</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Ollama helpers, sanitization, review + translation pipelines</td>
@@ -371,7 +370,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>orchestration</code></td>
-<td style="text-align: center;">9</td>
+<td style="text-align: center;">12</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>PipelineRunner</code>, entry point for
@@ -379,7 +378,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>project</code></td>
-<td style="text-align: center;">27</td>
+<td style="text-align: center;">41</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_projects</code>, workspace management</td>
@@ -400,7 +399,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>publishing</code></td>
-<td style="text-align: center;">74</td>
+<td style="text-align: center;">81</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>Zenodo, executable bundle, archival targets</td>
@@ -414,7 +413,7 @@ contracts + validation</td>
 </tr>
 <tr>
 <td><code>rendering</code></td>
-<td style="text-align: center;">60</td>
+<td style="text-align: center;">65</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF/HTML/slide rendering, Pandoc filters</td>
@@ -465,7 +464,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>skills</code></td>
-<td style="text-align: center;">7</td>
+<td style="text-align: center;">8</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td><code>discover_skills</code>, SKILL manifest regeneration</td>
@@ -486,7 +485,7 @@ capture</td>
 </tr>
 <tr>
 <td><code>validation</code></td>
-<td style="text-align: center;">75</td>
+<td style="text-align: center;">80</td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;">✓</td>
 <td>PDF + Markdown + integrity CLIs</td>
@@ -531,7 +530,7 @@ Documentation Coverage</h2>
 </tr>
 </tbody>
 </table>
-<p><code>390+</code> Markdown shards under <code>docs/</code> capture
+<p><code>404+</code> Markdown shards under <code>docs/</code> capture
 operational knowledge without duplicating auto-generated
 inventories.</p>
 <h2 id="dag-reference-declarative-executor">DAG Reference (Declarative
@@ -563,55 +562,55 @@ order—not strict numeric script filenames). Scripts live under
 </tr>
 <tr>
 <td>Environment Setup</td>
-<td><code>00_setup_environment.py</code></td>
+<td><code>scripts/pipeline/stage_00_setup.py</code></td>
 <td>Validates tooling, PYTHONPATH scaffolding</td>
 <td>Blocking</td>
 </tr>
 <tr>
 <td>Infrastructure Tests</td>
-<td><code>01_run_tests.py --infra-only</code></td>
+<td><code>scripts/pipeline/stage_01_test.py --infra-only</code></td>
 <td>Infra pytest + coverage gates</td>
 <td>Tunable thresholds</td>
 </tr>
 <tr>
 <td>Project Tests</td>
-<td><code>01_run_tests.py --project-only</code></td>
+<td><code>scripts/pipeline/stage_01_test.py --project-only</code></td>
 <td>Project pytest + coverage gates</td>
 <td>Zero failures default</td>
 </tr>
 <tr>
 <td>Project Analysis</td>
-<td><code>02_run_analysis.py</code></td>
+<td><code>scripts/pipeline/stage_02_analysis.py</code></td>
 <td>Executes <code>projects/&lt;name&gt;/scripts/*.py</code></td>
 <td>Blocking</td>
 </tr>
 <tr>
 <td>PDF Rendering</td>
-<td><code>03_render_pdf.py</code></td>
+<td><code>scripts/pipeline/stage_03_render.py</code></td>
 <td>Pandoc → XeLaTeX manuscripts</td>
 <td>Blocking</td>
 </tr>
 <tr>
 <td>Output Validation</td>
-<td><code>04_validate_output.py</code></td>
+<td><code>scripts/pipeline/stage_04_validate.py</code></td>
 <td>Structural PDF/markdown probes</td>
 <td>Blocking / warnings</td>
 </tr>
 <tr>
 <td>LLM Scientific Review</td>
-<td><code>06_llm_review.py --reviews-only</code></td>
+<td><code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code></td>
 <td>Local Ollama reviews</td>
 <td>Skippable / exit 2 tolerated</td>
 </tr>
 <tr>
 <td>LLM Translations</td>
-<td><code>06_llm_review.py --translations-only</code></td>
+<td><code>scripts/pipeline/stage_06_llm_review.py --translations-only</code></td>
 <td>Optional translations</td>
 <td>Skippable</td>
 </tr>
 <tr>
 <td>Copy Outputs</td>
-<td><code>05_copy_outputs.py</code></td>
+<td><code>scripts/pipeline/stage_05_copy.py</code></td>
 <td>Mirrors deliverables → <code>output/&lt;project&gt;/</code></td>
 <td>Soft-fail surfaced in logs</td>
 </tr>

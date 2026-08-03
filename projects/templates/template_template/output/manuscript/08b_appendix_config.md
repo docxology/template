@@ -23,6 +23,22 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.XXXXXX"
+  version_doi: "10.5281/zenodo.XXXXXX"
+  version_record: "https://zenodo.org/records/XXXXXX"
+  github_repository: "owner/repository"
+  repository_url: "https://github.com/owner/repository"
+  published_artifacts:
+    github_pages: "https://owner.github.io/repository/"
+    software_heritage: "https://archive.softwareheritage.org/..."
+    pypi: "https://test.pypi.org/project/..."
+    osf: "https://osf.io/..."
+    huggingface_hub: "https://huggingface.co/datasets/owner/repository"
+    netlify: "https://..."
+    ipfs_pinata: "https://gateway.pinata.cloud/ipfs/..."
+  transmission_bookends:
+    enabled: false
+    max_prior_releases: 5
+    show_steganography: true
   journal: "Target Journal"
   volume: "1"
   pages: "1-10"

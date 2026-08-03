@@ -8,7 +8,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Project | Effective core stages¹ | Discovered tests | Declared project floor |
 |---------|-----------------------|-----------------:|-----------------------:|
-| `template_code_project` | 8 | 236 | 90% |
+| `template_code_project` | 8 | 242 | 90% |
 | `template_prose_project` | 8 | 120 | 90% |
 | `template_autoresearch_project` | 8 | 300 | 90% |
 
@@ -18,8 +18,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 504+ |
-| Total tests | ~8,583 |
+| Test files | 557+ |
+| Total tests | ~9,557 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -32,33 +32,33 @@ The introspection module (`template_template.introspection`) emits the authorita
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
 | `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
-| `benchmark` | 3 | ✓ | ✓ | Template harness scoring + comparative gates |
+| `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 112 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 120 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 13 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 14 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
 | `fonds` | 6 | ✓ | ✓ | — |
-| `llm` | 54 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
+| `llm` | 55 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
 | `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |
 | `methods` | 5 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
-| `orchestration` | 9 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 27 | ✓ | ✓ | `discover_projects`, workspace management |
+| `orchestration` | 12 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
+| `project` | 41 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 7 | ✓ | ✓ | — |
-| `publishing` | 74 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `publishing` | 81 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 60 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `rendering` | 65 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
 | `search` | 62 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
 | `sia` | 10 | ✓ | ✓ | Self-Improving-AI loop: task validation, harness, metric capture |
-| `skills` | 7 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
+| `skills` | 8 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
-| `validation` | 75 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 80 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS.md` coverage wherever the Documentation Duality standard applies; subsets ship Tier‑3 `SKILL.md` descriptors for MCP routing (`infrastructure/skills` manifest generation).
 
@@ -71,7 +71,7 @@ All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`390+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`404+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
@@ -80,15 +80,15 @@ Stages below mirror `pipeline.yaml` (executor-topological order—not strict num
 | Name | Typical script / method | Responsibility | Failure semantics |
 |------|------------------------|----------------|------------------|
 | Clean Output Directories | `_run_clean_outputs` | Deletes stale `output/` trees | Blocking |
-| Environment Setup | `00_setup_environment.py` | Validates tooling, PYTHONPATH scaffolding | Blocking |
-| Infrastructure Tests | `01_run_tests.py --infra-only` | Infra pytest + coverage gates | Tunable thresholds |
-| Project Tests | `01_run_tests.py --project-only` | Project pytest + coverage gates | Zero failures default |
-| Project Analysis | `02_run_analysis.py` | Executes `projects/<name>/scripts/*.py` | Blocking |
-| PDF Rendering | `03_render_pdf.py` | Pandoc → XeLaTeX manuscripts | Blocking |
-| Output Validation | `04_validate_output.py` | Structural PDF/markdown probes | Blocking / warnings |
-| LLM Scientific Review | `06_llm_review.py --reviews-only` | Local Ollama reviews | Skippable / exit 2 tolerated |
-| LLM Translations | `06_llm_review.py --translations-only` | Optional translations | Skippable |
-| Copy Outputs | `05_copy_outputs.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
+| Environment Setup | `scripts/pipeline/stage_00_setup.py` | Validates tooling, PYTHONPATH scaffolding | Blocking |
+| Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only` | Infra pytest + coverage gates | Tunable thresholds |
+| Project Tests | `scripts/pipeline/stage_01_test.py --project-only` | Project pytest + coverage gates | Zero failures default |
+| Project Analysis | `scripts/pipeline/stage_02_analysis.py` | Executes `projects/<name>/scripts/*.py` | Blocking |
+| PDF Rendering | `scripts/pipeline/stage_03_render.py` | Pandoc → XeLaTeX manuscripts | Blocking |
+| Output Validation | `scripts/pipeline/stage_04_validate.py` | Structural PDF/markdown probes | Blocking / warnings |
+| LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | Local Ollama reviews | Skippable / exit 2 tolerated |
+| LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | Optional translations | Skippable |
+| Copy Outputs | `scripts/pipeline/stage_05_copy.py` | Mirrors deliverables → `output/<project>/` | Soft-fail surfaced in logs |
 
 `scripts/pipeline/stage_07_executive_report.py` is **multi-project orchestration glue** invoked after iterating active projects—not a tenth DAG node for single-repo runs (`execute_pipeline.py`).
 

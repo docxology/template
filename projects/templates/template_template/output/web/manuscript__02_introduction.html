@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_introduction.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -419,22 +418,24 @@ pipeline-enforced system with version-controlled infrastructure
 cleanly separates globally shared infrastructure (logging, rendering,
 validation, steganography) from project-specific logic (manuscripts,
 scripts, data). 28 infrastructure subdirectories (25 importable
-packages) comprising ~662 Python modules provide reusable services;
+packages) comprising ~708 Python modules provide reusable services;
 projects consume them without modification.</p></li>
 <li><p><strong>Execution Integrity</strong>: Pipeline advancement is
 contingent on test passage. The configured source-coverage floors are
 60% for infrastructure and 90% for each project. The static gate rejects
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~8,583
-infrastructure tests and 4907+ project tests are discovered by the
+explicitly enabled live services for network boundaries. ~9,557
+infrastructure tests and 5405+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
-rendering pipeline. Every generated PDF carries a SHA-256 fingerprint,
-an alpha-channel text overlay encoding the build timestamp and commit
-hash, and optionally a QR code linking to the repository. Provenance is
-not asserted by policy; it is enforced by architecture.</p></li>
+rendering pipeline. Every generated PDF carries SHA-256 (and, when
+enabled, SHA-512) fingerprints, an alpha-channel watermark (configurable
+text or QR overlay), per-page provenance footers and barcode strips, and
+embedded PDF metadata recording the build timestamp, document
+identifier, and Git commit hash. Provenance is not asserted by policy;
+it is enforced by architecture.</p></li>
 <li><p><strong>AI-Agent Collaboration and Skill-Based Agentic
 Operations</strong>: A three-tier documentation architecture enables AI
 agents to operate at every level of the system. At the system level,
@@ -490,10 +491,13 @@ metadata, bundle, and archival stages via <code>--tags</code>.</li>
 nine peer tools—Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
 Markdown, DVC, Overleaf, OpenAI Prism—across fourteen feature
 dimensions, demonstrating that <code>template/</code> uniquely bundles
-the fourteen enforcement capabilities enumerated in §Results.</li>
+the eleven capabilities it supports (testing, provenance, documentation,
+and orchestration enforcement) of the fourteen surveyed dimensions
+enumerated in §Results.</li>
 <li>An empirical evaluation across the canonical exemplar projects under
 <code>projects/templates/</code>
 (<code>templates/template_active_inference</code>,
+<code>templates/template_advanced_literature_review</code>,
 <code>templates/template_autopoiesis</code>,
 <code>templates/template_autoresearch_project</code>,
 <code>templates/template_autoscientists</code>,

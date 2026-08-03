@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>00_abstract.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -190,7 +189,7 @@ and data-versioning tools track artifacts. <code>template/</code>
 combines those concerns with test and provenance gates by applying
 Infrastructure as Code to the research lifecycle. Its Two-Layer
 Architecture separates 28 infrastructure subdirectories (25 importable
-Python packages, ~662 modules, validated by ~8,583 tests) from
+Python packages, ~708 modules, validated by ~9,557 tests) from
 self-contained project workspaces. A YAML-declared pipeline (16 stages;
 10 in a default full run) coordinates environment checks, test
 execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with
@@ -205,6 +204,7 @@ skill-enabled infrastructure packages additionally expose structured
 capabilities from versioned interfaces.</p>
 <p>The generated public exemplar roster
 (<code>templates/template_active_inference</code>,
+<code>templates/template_advanced_literature_review</code>,
 <code>templates/template_autopoiesis</code>,
 <code>templates/template_autoresearch_project</code>,
 <code>templates/template_autoscientists</code>,
@@ -228,13 +228,13 @@ capabilities from versioned interfaces.</p>
 <code>templates/template_template</code>,
 <code>templates/template_textbook</code>) supplies heterogeneous
 control-positive layouts, including optimization
-(<code>template_code_project</code>, 236 discovered tests), prose
+(<code>template_code_project</code>, 242 discovered tests), prose
 (<code>template_prose_project</code>, 120 discovered tests), and
 AutoResearch readiness (<code>template_autoresearch_project</code>, 300
 discovered tests). Each declares the same 90% project-source floor and
 consumes the shared pipeline without project-to-project imports. This
 manuscript adds a reflexive artifact: <code>template_template</code>
-(138 discovered tests) follows the same analysis and render path while
+(143 discovered tests) follows the same analysis and render path while
 injecting repository counters and figures from live introspection. The
 result is a self-documenting build whose quantitative repository claims
 are generated artifacts, whose manuscript claims are checked against an

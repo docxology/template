@@ -23,7 +23,7 @@ See also [Figure 4](04_results.md#comparative-feature-analysis) for a colour-cod
 | Agentic skill protocol (SKILL.md / MCP) | Y | N | N | N | N | N | N | N | N | N |
 | Interactive TUI | Y | N | N | N | N | N | N | N | N | N |
 | Zero-mock policy | Y | N | N | N | N | N | N | N | N | N |
-| Container support | N | Y | Y | Y | N | N | N | N | N | N |
+| Container support | ~ | Y | Y | Y | N | N | N | N | N | N |
 | Distributed execution | N | Y | Y | Y | N | N | N | ~³ | N | N |
 | Multi-language (R/Julia) | N | Y | N | Y | Y | Y | Y | Y | N | N |
 

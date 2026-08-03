@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03b_pipeline.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -185,46 +184,50 @@
 <code>infrastructure/core/pipeline/pipeline.yaml</code>.
 <code>scripts/runner/execute_pipeline.py</code> expands the declarative
 DAG, applies tag filters (<code>--core-only</code> skips
-<code>llm</code> stages), checkpoints between nodes, then dispatches
-numbered scripts (<code>scripts/NN_*.py</code>) or builtin methods
-(<code>_run_clean_outputs</code>).</p>
-<p>The <strong>default YAML graph contains ten named stages</strong>
-(plus telemetry configuration metadata):</p>
+<code>llm</code> stages), checkpoints between nodes, then dispatches the
+declared <code>scripts/pipeline/stage_NN_*.py</code> scripts or builtin
+methods (<code>_run_clean_outputs</code>).</p>
+<p>The <strong>default YAML graph contains ten named core
+stages</strong> (plus telemetry configuration metadata):</p>
 <ol type="1">
 <li><strong>Clean Output Directories</strong> — wipes prior
 <code>projects/&lt;name&gt;/output/</code> + delivered
 <code>output/&lt;name&gt;/</code> paths so stale PDFs cannot satisfy
 validation.</li>
 <li><strong>Environment Setup</strong>
-(<code>00_setup_environment.py</code>) — Python/uv probing, toolchain
-discovery, scaffolding directories, <code>PYTHONPATH</code> wiring.</li>
+(<code>scripts/pipeline/stage_00_setup.py</code>) — Python/uv probing,
+toolchain discovery, scaffolding directories, <code>PYTHONPATH</code>
+wiring.</li>
 <li><strong>Infrastructure Tests</strong>
-(<code>01_run_tests.py --infra-only</code>) — <code>tests/</code> suite
-with the configured ≥60% source-coverage floor.</li>
+(<code>scripts/pipeline/stage_01_test.py --infra-only</code>) —
+<code>tests/</code> suite with the configured ≥60% source-coverage
+floor.</li>
 <li><strong>Project Tests</strong>
-(<code>01_run_tests.py --project-only</code>) — isolated per-project
-suites with each project’s declared floor (≥90% for this exemplar).</li>
-<li><strong>Project Analysis</strong> (<code>02_run_analysis.py</code>)
-— lexicographically ordered
-<code>projects/&lt;name&gt;/scripts/*.py</code>, each a thin
+(<code>scripts/pipeline/stage_01_test.py --project-only</code>) —
+isolated per-project suites with each project’s declared floor (≥90% for
+this exemplar).</li>
+<li><strong>Project Analysis</strong>
+(<code>scripts/pipeline/stage_02_analysis.py</code>) — lexicographically
+ordered <code>projects/&lt;name&gt;/scripts/*.py</code>, each a thin
 orchestrator (<code>src/</code> does real work).</li>
-<li><strong>PDF Rendering</strong> (<code>03_render_pdf.py</code>) —
-Pandoc → XeLaTeX loop, bibliography assembly, injected variables from
-Stage 02 artefacts.</li>
+<li><strong>PDF Rendering</strong>
+(<code>scripts/pipeline/stage_03_render.py</code>) — Pandoc → XeLaTeX
+loop, bibliography assembly, injected variables from Stage 02
+artefacts.</li>
 <li><strong>Output Validation</strong>
-(<code>04_validate_output.py</code>) — PDF structure, manifests,
-Markdown hygiene.</li>
+(<code>scripts/pipeline/stage_04_validate.py</code>) — PDF structure,
+manifests, Markdown hygiene.</li>
 <li><strong>LLM Scientific Review</strong>
-(<code>06_llm_review.py --reviews-only</code>; <code>tags: llm</code>) —
-executive + quality critiques via local Ollama;
-<code>allow_skip: true</code>.</li>
+(<code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code>;
+<code>tags: llm</code>) — executive + quality critiques via local
+Ollama; <code>allow_skip: true</code>.</li>
 <li><strong>LLM Translations</strong>
-(<code>06_llm_review.py --translations-only</code>; tags
-<code>llm</code>, same dependency edges) — multilingual abstract
+(<code>scripts/pipeline/stage_06_llm_review.py --translations-only</code>;
+tags <code>llm</code>, same dependency edges) — multilingual abstract
 expansion.</li>
-<li><strong>Copy Outputs</strong> (<code>05_copy_outputs.py</code>) —
-reproducible snapshots into canonical
-<code>output/&lt;project&gt;/</code>.</li>
+<li><strong>Copy Outputs</strong>
+(<code>scripts/pipeline/stage_05_copy.py</code>) — reproducible
+snapshots into canonical <code>output/&lt;project&gt;/</code>.</li>
 </ol>
 <p>Two LLM nodes intentionally share one script module with orthogonal
 CLI switches; both depend only on validation so they can parallelize
@@ -235,9 +238,10 @@ logically while remaining optional.</p>
 <code>--all-projects</code> / <code>execute_multi_project.py</code>
 invokes it once after iterating projects, consolidating cross-project
 KPIs dashboards.</p>
-<p>Topological order therefore differs slightly from lexical script
-numbering (e.g., copy executes after validation even though script
-<code>05</code> precedes <code>06</code> lexically).</p>
+<p>Topological order therefore differs slightly from declaration order
+(e.g., copy executes after validation even though stage
+<code>stage_05_copy.py</code> precedes
+<code>stage_06_llm_review.py</code> lexically).</p>
 <h3 id="stage-highlights">Stage Highlights</h3>
 <p><strong>Infrastructure vs project tests.</strong> Splitting pytest
 invocations isolates flaky infra regressions

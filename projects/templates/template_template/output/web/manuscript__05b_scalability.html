@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05b_scalability.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -188,15 +187,15 @@ code changes, no <code>pyproject.toml</code> modifications, no CI
 configuration updates. The <code>run.sh</code> orchestrator
 automatically discovers new projects and presents them in its
 interactive menu.</p>
-<p>We have validated scaling with 23 canonical exemplars under
+<p>We have validated scaling with 24 canonical exemplars under
 <code>projects/templates/</code>—always present for onboarding and
 tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (138 tests) as a
+<code>projects/templates/template_template</code> (143 tests) as a
 git-tracked public exemplar in the same automated discovery menus.</p>
 <p>Canonical trio:</p>
 <ul>
 <li><strong><code>template_code_project</code></strong>: Numerical
-optimization example with gradient-descent narration and 236 discovered
+optimization example with gradient-descent narration and 242 discovered
 tests. Its <code>pyproject.toml</code> declares the 90% project-source
 floor. Minimal footprint: compact <code>src/</code>, scripted analysis,
 short manuscript sections.</li>
@@ -206,12 +205,15 @@ with 120 discovered tests and the same declared project-source floor;
 tests exercise rendering and Markdown integrity without heavyweight
 numerics.</li>
 <li><strong><code>template_autoresearch_project</code></strong>:
-AutoResearch readiness workflow invoking
-<code>projects/templates/template_search_project/scripts/</code> to run
-corpus builders, scripted figures (<code>../figures/</code>), and
-manifold-variable injection (the literature-search exemplar). Typical
-Stage 02 workloads include bibliography fusion, corpus JSON assembly,
-deep-search aggregates, and report composition.</li>
+AutoResearch readiness workflow — bounded ML task loop (deterministic
+MNIST run), plan validation (<code>infrastructure.autoresearch</code>),
+evidence-registry reports, and manuscript hydration; its own scripts
+(<code>run_autoresearch_loop.py</code>,
+<code>z_generate_manuscript_variables.py</code>) stay thin over
+<code>src/</code> logic.
+<strong><code>template_search_project</code></strong> exercises
+literature-search workflows (remote corpus JSON fusion,
+<code>y_generate_search_figures.py</code>, review reports).</li>
 </ul>
 <p>Meta manuscript
 (<strong><code>projects/templates/template_template</code></strong>)
@@ -219,7 +221,7 @@ analyzes the repository via <code>src/template_template/</code>
 introspection metrics; it now lives alongside the other public exemplars
 under <code>projects/templates/</code>.</p>
 <p>These workspaces share no project-level code—only Layer 1 (28
-infrastructure subdirectories, ~662 Python files)—validating insulation
+infrastructure subdirectories, ~708 Python files)—validating insulation
 between domain repos and reusable services.</p>
 <h3 id="multi-project-orchestration">Multi-Project Orchestration</h3>
 <p>When the <code>--all-projects</code> flag is passed to
@@ -263,7 +265,7 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tr>
 <tr>
 <td>Test count</td>
-<td style="text-align: center;">236</td>
+<td style="text-align: center;">242</td>
 <td style="text-align: center;">120</td>
 <td style="text-align: center;">300</td>
 </tr>
@@ -288,7 +290,7 @@ style="text-align: center;"><code>template_autoresearch_project</code></th>
 </tbody>
 </table>
 <p>The infrastructure overhead per project is constant regardless of
-project size: the same 28 modules, the same 16 pipeline stages, the same
+project size: the same 28 modules, the same 13 pipeline stages, the same
 rendering and validation logic. This O(1) infrastructure cost is the
 architectural payoff of the Two-Layer separation.</p>
 </main>

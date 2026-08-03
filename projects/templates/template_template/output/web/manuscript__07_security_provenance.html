@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>07_security_provenance.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -219,48 +218,61 @@ Injection</h3>
 metadata into both the PDF Info dictionary and an XMP (Extensible
 Metadata Platform) packet:</p>
 <ul>
-<li><code>/Creator</code>: Pipeline identifier</li>
+<li><code>/Creator</code>:
+<code>Research Template Steganography Module</code></li>
 <li><code>/Producer</code>: Module path
 (<code>infrastructure.steganography</code>)</li>
-<li><code>/CreationDate</code>: UTC timestamp in <code>ISO 8601</code>
-format</li>
+<li><code>/CreationDate</code> / <code>/ModDate</code>: UTC timestamp in
+<code>ISO 8601</code> format</li>
 <li><code>/Author</code>: From <code>config.yaml</code></li>
 <li><code>/Title</code>: From <code>config.yaml</code></li>
-<li>Custom fields: DOI, ORCID, repository URL</li>
+<li><code>/Subject</code>: document identifier, plus
+<code>/DocumentID</code></li>
+<li>Dedicated <code>/Hash_&lt;ALGO&gt;</code> fields for each computed
+digest (e.g. <code>/Hash_SHA256</code>)</li>
+<li>Custom fields: <code>GitCommit</code>,
+<code>GitCommitAvailable</code>,
+<code>/SteganographyTimestamp</code></li>
+<li>An embedded <code>stego_manifest.json</code> attachment carrying the
+document id, digests, title, and git commit</li>
 </ul>
 <h3 id="layer-2-cryptographic-hashing">Layer 2: Cryptographic
 Hashing</h3>
-<p>Before watermarking, a SHA-256 hash of the rendered PDF is computed
-and stored in:</p>
+<p>Before watermarking, SHA-256 (and SHA-512 when configured) digests of
+the original PDF are computed and stored in:</p>
 <ul>
-<li>The output manifest (<code>output/manifest.json</code>)</li>
-<li>The PDF metadata (<code>/Subject</code> field)</li>
-<li>An external hash file (<code>output/&lt;name&gt;.sha256</code>)</li>
+<li>A JSON hash manifest sidecar (<code>&lt;pdf&gt;.hashes.json</code>,
+e.g. <code>output/pdf/&lt;name&gt;_combined.hashes.json</code>)</li>
+<li>Dedicated PDF metadata fields (<code>/Hash_SHA256</code>,
+<code>/Hash_SHA512</code>)</li>
+<li>The embedded <code>stego_manifest.json</code> attachment</li>
 </ul>
-<p>This enables post-hoc verification: anyone with the hash can verify
-that the PDF has not been modified since rendering.</p>
-<h3 id="layer-3-alpha-channel-text-overlay">Layer 3: Alpha-Channel Text
-Overlay</h3>
-<p>A semi-transparent text overlay is applied to each page of the PDF,
-encoding:</p>
+<p>This enables post-hoc verification: anyone with the manifest can
+verify that the PDF has not been modified since rendering.</p>
+<h3 id="layer-3-alpha-channel-overlay-footer-and-invisible-text">Layer
+3: Alpha-Channel Overlay, Footer, and Invisible Text</h3>
+<p>A semi-transparent overlay is merged onto every page of the hardened
+PDF:</p>
 <ul>
-<li>Build timestamp</li>
-<li>Git commit hash (short SHA)</li>
-<li>Project name</li>
-<li>Pipeline version</li>
+<li><strong>Watermark overlay</strong>: in the default <code>text</code>
+mode, a configurable string (default <code>CONFIDENTIAL</code>) is
+repeated diagonally at 45° across the page; in <code>qr</code> mode a
+tiled QR overlay replaces it. The overlay is rendered at low opacity —
+the default is 8% (<code>overlay_opacity: 0.08</code>), configurable
+from 0.02 (subtle) to 0.30 (strong) — to be invisible during normal
+viewing but detectable through image analysis.</li>
+<li><strong>Provenance footer</strong>: every page additionally receives
+a footer carrying the document identifier, page number / total pages, a
+digest prefix, title, authors, and source filename/size.</li>
+<li><strong>Invisible text layer</strong>: the first page embeds a
+hidden text string with the machine-readable payload:</li>
 </ul>
-<p>The overlay is rendered at low opacity (typically 3–5% alpha) to be
-invisible during normal viewing but detectable through image analysis.
-It survives printing (as a faint watermark) and standard PDF
-operations.</p>
-<p>A representative overlay text string takes the following form:</p>
-<pre><code>template/ | built: 2026-03-19T14:23:11Z | commit: a4f2c1b | pipeline: v2.0.0 | project: template</code></pre>
-<p>This single line, tiled across each page at 3–5% opacity, encodes the
-complete build provenance chain: the system identifier,
-<code>ISO 8601</code> build timestamp, short Git commit hash, pipeline
-version, and project name. Together these fields allow a verifier to
-reconstruct—from the watermark alone—which version of the code, at which
-moment in time, produced the document.</p>
+<pre><code>STEG_ID:&lt;document-id&gt;|TITLE:&lt;title&gt;|HASHES:&lt;hash-prefix&gt;</code></pre>
+<p>The build timestamp and Git commit hash (short SHA) are recorded in
+the PDF metadata and the hash manifest rather than in the visible
+watermark text itself. Together these fields allow a verifier to
+reconstruct—from the hardened PDF alone—which version of the code, at
+which moment in time, produced the document.</p>
 <h3 id="layer-4-qr-code-injection">Layer 4: QR Code Injection</h3>
 <p>An optional QR code is generated containing a URL pointing to the
 repository (e.g., <code>github.com/docxology/template</code>). The QR
