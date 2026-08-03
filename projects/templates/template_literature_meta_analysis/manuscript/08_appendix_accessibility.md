@@ -24,8 +24,9 @@ to the exact pipeline run that produced it. The provenance chain is:
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
 5. `scripts/05_inject_variables.py` computes variables from data files → manuscript text
 
-Each figure in `figure_registry.json` records its source data file, generation parameters,
-and SHA-256 hash, binding the visual output to the exact pipeline run. Re-running the
+Each figure in `figure_registry.json` records its label, caption, and the
+producing script, so downstream rendering and validation resolve the same figure set
+that the pipeline generated. Re-running the
 pipeline with the same configuration and seed produces identical data outputs.
 
 ## FAIR Data Principles

@@ -377,7 +377,7 @@ def test_generate_all_figures_writes_figure_registry(tmp_path: Path) -> None:
     assert registry
     first_label = next(iter(registry.values()))["label"]
     assert first_label.startswith("fig:")
-    assert first_label.replace("fig:", "") in FIGURE_CAPTIONS or True
+    assert first_label.replace("fig:", "") in FIGURE_CAPTIONS
 
     # Second run should not duplicate registry entries
     generate_all_figures(args)

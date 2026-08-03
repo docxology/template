@@ -50,7 +50,7 @@ The corpus has strong identifier coverage: {{DOI_COUNT}} of {{CORPUS_SIZE}} reco
 ({{PCT_WITH_DOI}}\%) carry DOIs, enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for {{OPENALEX_ID_COUNT}} records. Abstract coverage stands at
 {{ABSTRACT_COVERAGE_PCT}}\% ({{ABSTRACT_COUNT}} records), which limits the text analytics
-to that subset. Open-access status is confirmed for {{OA_PCT}}\% of records, and
+to that subset. Open access is confirmed for {{OA_PCT}}\% of records, and
 {{PDF_AVAIL_PCT}}\% have a direct PDF link.
 
 ## Descriptive Bibliometrics

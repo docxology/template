@@ -22,8 +22,8 @@ citation-network analysis exposes the corpus's internal structure ({{CITATION_ED
 intra-corpus edges across {{CITATION_NODES}} nodes, {{CITATION_COMMUNITIES}} communities,
 graph density {{CITATION_DENSITY_PCT}}\%). Of {{CITATION_TOTAL_REFS}} total outgoing
 references, {{CITATION_RESOLUTION_PCT}}\% resolve to another record inside the corpus.
-Abstract coverage stands at {{ABSTRACT_COVERAGE_PCT}}\%, open-access status is known for
-{{OA_PCT}}\% of records, and {{PDF_AVAIL_PCT}}\% have a direct PDF link. An optional,
+Abstract coverage stands at {{ABSTRACT_COVERAGE_PCT}}\%, {{OA_PCT}}\% of records are open access, and
+{{PDF_AVAIL_PCT}}\% have a direct PDF link. An optional,
 LLM-gated knowledge-graph stage scores the {{N_HYPOTHESES}} hypotheses explored against
 the evidence. This run produced {{NUM_FIGURES}} publication-quality figures.
 
