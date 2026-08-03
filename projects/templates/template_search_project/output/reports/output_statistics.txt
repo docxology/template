@@ -8,7 +8,7 @@ Total Files: 133
 Total Size: 3.76 MB
 
 Files by Category:
-  • pdf: 11 files (1.02 MB)
+  • pdf: 11 files (1.03 MB)
   • web: 14 files (0.50 MB)
   • slides: 81 files (1.46 MB)
   • figures: 13 files (0.53 MB)
@@ -20,7 +20,7 @@ Largest Files:
   • 02_methodology_slides.pdf: 0.22 MB (slides)
   • index.html: 0.20 MB (web)
   • inline_mermaid_0001_d3ead0e9d850.png: 0.19 MB (figures)
-  • _combined_manuscript.tex: 0.12 MB (pdf)
+  • references_deep.bib: 0.13 MB (pdf)
 
 Missing Expected Files:
   ⚠  simulations/ directory
