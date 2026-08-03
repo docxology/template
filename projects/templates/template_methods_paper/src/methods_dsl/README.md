@@ -15,7 +15,7 @@ describes is reproducible and unit-tested.
 | `vocabulary.py` | Controlled-vocabulary `StepKind` and `Target` enums; `target_accepts`. |
 | `units.py` | Dimensional-safety unit system: `Dimension`, `DimensionError`, `Quantity`. |
 | `model.py` | `Method`, `Step`, `Resource`, `Parameter` frozen dataclasses with shape validation. |
-| `validation.py` | Four staged gates (`structural_gate`, `semantic_gate`, `plan_gate`, `target_gate`) and `run_all_gates`. |
+| `validation.py` | Four staged gates (`structural_gate`, `semantic_gate`, `plan_gate`, `target_gate`), `run_all_gates`, and the derived `GATE_COUNT`/`GATE_SEQUENCE`. |
 | `compiler.py` | `topological_order` (Kahn's algorithm) and `compile_method` — deterministic `Method` → `Plan`. |
 | `export.py` | Worklist markdown, CSV, Mermaid graph, and canonical JSON renderers for a `Plan`. |
 | `trust.py` | `ProvenanceTier` and a hash-chained `StateRecord` history (`append_record`, `verify_chain`). |

@@ -109,14 +109,14 @@ uv run pytest projects/templates/template_methods_paper/tests -k "test_run_all_g
 | `methods_dsl/vocabulary.py` | `StepKind`, `Target`, `target_accepts` |
 | `methods_dsl/units.py` | `Dimension`, `DimensionError`, `Quantity`, `check_compatible`, `dimension_of`, `known_units` |
 | `methods_dsl/model.py` | `Method`, `Step`, `Resource`, `Parameter`, `MethodModelError` |
-| `methods_dsl/validation.py` | `GateResult`, `structural_gate`, `semantic_gate`, `plan_gate`, `target_gate`, `run_all_gates` |
+| `methods_dsl/validation.py` | `GATE_COUNT` (derived from `GATE_SEQUENCE`), `GateResult`, `structural_gate`, `semantic_gate`, `plan_gate`, `target_gate`, `run_all_gates` |
 | `methods_dsl/compiler.py` | `Plan`, `PlanStep`, `compile_method`, `topological_order`, `MethodValidationError`, `CycleError` |
 | `methods_dsl/export.py` | `to_worklist_markdown`, `to_csv_rows`, `write_csv`, `to_mermaid`, `to_json`, `write_json` |
 | `methods_dsl/trust.py` | `ProvenanceTier`, `StateRecord`, `append_record`, `verify_chain` |
 | `methods_dsl/examples_methods.py` | `pbs_preparation_method`, `sensor_calibration_method`, `all_example_methods` |
 | `project_paths.py` | `project_output_dirs`, `resolve_project_root` (orchestration plumbing; not in `__all__`) |
 | `figure_specs.py` | `METHODS_FIGURE_SPECS`, `FIGURE_REGISTRY_SCHEMA` (immutable output provenance consumed by `methods_analysis.py`) |
-| `manuscript_variables.py` | `generate_variables`, `save_variables` (manuscript-rendering plumbing; not in `__all__`) |
+| `manuscript_variables.py` | `generate_variables`, `save_variables`, `CONFIG_HASH_LENGTH`, `PLAN_HASH_TRUNCATION` (manuscript-rendering plumbing; not in `__all__`) |
 
 ## See Also
 

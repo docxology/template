@@ -26,6 +26,16 @@ ideas.
 
 ## Pass log
 
+- **2026-08-02 — derive-don't-transcribe hardening.** De-hardcoded
+  `DSL_GATE_COUNT` (was `"4"` literal in `src/manuscript_variables.py`):
+  `validation.py` now declares `GATE_SEQUENCE`/`GATE_COUNT` derived from the
+  actual gate functions, exported through both package facades. Added
+  `PLAN_HASH_TRUNCATION = 12` for the plan-hash display truncation.
+  `tests/test_manuscript_variables.py::test_claim_ledger_constants_match_live_source`
+  now binds **all seven** claim-ledger claims to live source (previously only
+  2 of 7: dimension count and config-hash prefix length). 90 passed, 99.01%
+  coverage, ruff + mypy clean.
+
 - **2026-08-02 — publication pass (accuracy + full re-render).** Deep
   semantic review of manuscript prose vs `src/methods_dsl/` code and live
   outputs, doc-completeness sweep (all eight directory levels carry
