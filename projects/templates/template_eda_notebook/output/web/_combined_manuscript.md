@@ -84,11 +84,12 @@ The project sits on the repository's three pillars:
 ## The dataset
 
 We analyze a small synthetic cohort of subject measurements — height (cm),
-weight (kg), and resting heart rate (bpm) across three groups — generated with a
-fixed seed so every statistic in [@sec:results] is reproducible. The data is
-shaped so that weight depends positively on height (a strong, easy-to-see
-correlation) while resting heart rate is only weakly related, and a few cells
-are left blank to exercise the missing-data path honestly.
+weight (kg), and resting heart rate (bpm) across three groups. The dataset is
+a static, committed fixture — the same file on every run — so every statistic
+in [@sec:results] is reproducible. The data is shaped so that weight depends
+positively on height (a strong, easy-to-see correlation) while resting heart
+rate is only weakly related, and a few cells are left blank to exercise the
+missing-data path honestly.
 
 ## Reader's guide to the manuscript
 
@@ -383,8 +384,8 @@ drift from a hardcoded value.
 ## Dataset
 
 The analysis uses a shipped, deterministic CSV fixture
-(`data/measurements.csv`) generated once with a fixed NumPy seed. It contains
-120 subject records with the following columns:
+(`data/measurements.csv`): a static, committed file with fixed content. It
+contains 120 subject records with the following columns:
 
 | Column | Role | Type |
 |---|---|---|
@@ -462,6 +463,9 @@ From the repository root:
 # 1. Run the analysis (writes figures + summary CSV, prints output paths)
 uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 
+# 1b. Regenerate the deterministic dataset sibling (optional; stage 02 runs it too)
+uv run python projects/templates/template_eda_notebook/scripts/generate_measurements_data.py
+
 # 2. Run the test suite with the coverage gate
 uv run pytest projects/templates/template_eda_notebook/tests \
     --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
@@ -472,7 +476,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_e
 
 ## Generated artifact registry
 
-The analysis script writes the following artifacts under
+The analysis scripts write the following artifacts under
 `projects/templates/template_eda_notebook/output/`:
 
 | Artifact | Produced by |
@@ -481,18 +485,26 @@ The analysis script writes the following artifacts under
 | `figures/correlation_heatmap.png` | `correlation_heatmap_data()` + analysis script |
 | `figures/group_counts.png` | `group_count_data()` + analysis script |
 | `data/summary_statistics.csv` | `summary_statistics()` + analysis script |
+| `data/measurements_generated.csv` | `generate_measurements()` + generator script |
 
 The `output/` tree is disposable and regenerated on every run; it is not the
 source of truth.
 
 ## Determinism
 
-- The dataset (`data/measurements.csv`) is a static, committed fixture generated
-  once with a fixed NumPy seed, so every statistic is reproducible bit-for-bit.
+- The dataset (`data/measurements.csv`) is a static, committed fixture with
+  fixed content — the same file is read on every run, so every statistic is
+  reproducible bit-for-bit.
 - The figure-data preparers are pure transforms with no RNG; the same inputs
   always produce the same bin counts, correlation values, and group counts.
 - `clean_dataset()` reports exactly how many rows it removed, so the
   complete-case row count is a checkable invariant.
+- `generate_measurements()` (`src/eda/generate.py`) regenerates a deterministic
+  *sibling* of the dataset from a fixed NumPy seed: the same schema, 120 rows,
+  the same missingness pattern, and the same correlation sign structure. The
+  original fixture's exact random draw order is not recoverable, so the
+  generator deliberately reproduces the fixture's documented contract rather
+  than a byte-exact clone.
 
 ## Verification (no hand-transcribed numbers)
 

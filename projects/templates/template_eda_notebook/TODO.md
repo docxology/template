@@ -41,7 +41,10 @@ general feature ideas.
   scope note: the generator reproduces the fixture's *family*, not a byte-exact
   clone — the original fixture's random draw order is not recoverable, so
   byte-exact regeneration is recorded as intentionally out of scope (see Test
-  and validator gaps).
+  and validator gaps). Manuscript 06_reproducibility.md was updated to list
+  `output/data/measurements_generated.csv` in its artifact registry and to
+  document the generator in its determinism section (re-rendered; still 0
+  `^! ` errors, 0 `??`, 14 pages).
 
 ## Integrity and template-status gaps
 

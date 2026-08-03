@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_conclusion.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -219,8 +218,10 @@ assumption.</p>
 <h2 id="key-insights">Key insights</h2>
 <ol type="1">
 <li><strong>Reproducibility follows from testing fidelity</strong>:
-every number in [sec:results] is produced by a tested function and
-regenerated on demand, so prose and artifacts cannot drift.</li>
+every number in <span class="citation"
+data-cites="sec:results">[@sec:results]</span> is produced by a tested
+function and regenerated on demand, so prose and artifacts cannot
+drift.</li>
 <li><strong>Purity enables reuse</strong>: because <code>src/eda/</code>
 returns plot-ready data and never touches a display backend, the same
 functions serve the notebook, the headless script, and the
@@ -244,7 +245,8 @@ while keeping the schema contract.</li>
 <p>The <code>template_eda_notebook</code> tree is the canonical
 reference for how an exploratory notebook, a thin analysis script, a
 tested library, and a manuscript stay synchronized across rebuilds. The
-pipeline produced the figures referenced in [sec:results], wrote
+pipeline produced the figures referenced in <span class="citation"
+data-cites="sec:results">[@sec:results]</span>, wrote
 <code>output/data/summary_statistics.csv</code>, and rendered this
 markdown together with <code>config.yaml</code> into PDF.</p>
 </main>

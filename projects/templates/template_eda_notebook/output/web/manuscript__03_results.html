@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_results.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -223,9 +222,10 @@ numeric features: height (cm), weight (kg), and resting heart rate
 and reports the count. With the shipped data, four rows are removed,
 leaving a complete-case dataset for the analysis below.</p>
 <h2 id="distributions">Distributions</h2>
-<p>[fig:height_histogram] shows the distribution of height across the
-complete-case dataset, binned by <code>histogram_data()</code> and
-plotted by the analysis script.</p>
+<p><span class="citation"
+data-cites="fig:height_histogram">[@fig:height_histogram]</span> shows
+the distribution of height across the complete-case dataset, binned by
+<code>histogram_data()</code> and plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
 <img src="../figures/height_histogram.png"
 alt="Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py ." />
@@ -237,9 +237,11 @@ of complete-case rows; the shape is the roughly bell-shaped spread
 expected from the generating process.</figcaption>
 </figure>
 <h2 id="group-composition">Group composition</h2>
-<p>[fig:group_counts] reports how many complete-case rows fall in each
-group, computed by <code>group_count_data()</code> (labels sorted for
-deterministic output).</p>
+<p><span class="citation"
+data-cites="fig:group_counts">[@fig:group_counts]</span> reports how
+many complete-case rows fall in each group, computed by
+<code>group_count_data()</code> (labels sorted for deterministic
+output).</p>
 <figure id="fig:group_counts">
 <img src="../figures/group_counts.png"
 alt="Rows per group: sorted category labels and aligned counts from group_count_data() ." />
@@ -249,11 +251,12 @@ groups are of comparable, though not identical, size; the counts sum to
 the complete-case row total.</figcaption>
 </figure>
 <h2 id="correlation-structure">Correlation structure</h2>
-<p>[fig:correlation_heatmap] visualizes the Pearson correlation matrix
-of the three numeric features, computed by
-<code>correlation_matrix()</code> and prepared for the heatmap by
-<code>correlation_heatmap_data()</code>. The diagonal is unity by
-construction and the matrix is symmetric.</p>
+<p><span class="citation"
+data-cites="fig:correlation_heatmap">[@fig:correlation_heatmap]</span>
+visualizes the Pearson correlation matrix of the three numeric features,
+computed by <code>correlation_matrix()</code> and prepared for the
+heatmap by <code>correlation_heatmap_data()</code>. The diagonal is
+unity by construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
 <img src="../figures/correlation_heatmap.png"
 alt="Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;) ) rendered with a diverging colour map on the fixed range [-1, 1] ." />

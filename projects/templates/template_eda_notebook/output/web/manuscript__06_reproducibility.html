@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>06_reproducibility.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -255,14 +254,17 @@ script, never transcribed by hand.</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Run the analysis (writes figures + summary CSV, prints output paths)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_eda_notebook/scripts/eda_analysis.py</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Run the test suite with the coverage gate</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_eda_notebook/tests <span class="dt">\</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_eda_notebook/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Render the manuscript</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1b. Regenerate the deterministic dataset sibling (optional; stage 02 runs it too)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_eda_notebook/scripts/generate_measurements_data.py</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Run the test suite with the coverage gate</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_eda_notebook/tests <span class="dt">\</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--cov</span><span class="op">=</span>projects/templates/template_eda_notebook/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Render the manuscript</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/pipeline/stage_03_render.py <span class="at">--project</span> templates/template_eda_notebook</span></code></pre></div>
 <h2 id="generated-artifact-registry">Generated artifact registry</h2>
-<p>The analysis script writes the following artifacts under
+<p>The analysis scripts write the following artifacts under
 <code>projects/templates/template_eda_notebook/output/</code>:</p>
 <table>
 <colgroup>
@@ -292,6 +294,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <td><code>data/summary_statistics.csv</code></td>
 <td><code>summary_statistics()</code> + analysis script</td>
 </tr>
+<tr>
+<td><code>data/measurements_generated.csv</code></td>
+<td><code>generate_measurements()</code> + generator script</td>
+</tr>
 </tbody>
 </table>
 <p>The <code>output/</code> tree is disposable and regenerated on every
@@ -299,17 +305,25 @@ run; it is not the source of truth.</p>
 <h2 id="determinism">Determinism</h2>
 <ul>
 <li>The dataset (<code>data/measurements.csv</code>) is a static,
-committed fixture generated once with a fixed NumPy seed, so every
-statistic is reproducible bit-for-bit.</li>
+committed fixture with fixed content — the same file is read on every
+run, so every statistic is reproducible bit-for-bit.</li>
 <li>The figure-data preparers are pure transforms with no RNG; the same
 inputs always produce the same bin counts, correlation values, and group
 counts.</li>
 <li><code>clean_dataset()</code> reports exactly how many rows it
 removed, so the complete-case row count is a checkable invariant.</li>
+<li><code>generate_measurements()</code>
+(<code>src/eda/generate.py</code>) regenerates a deterministic
+<em>sibling</em> of the dataset from a fixed NumPy seed: the same
+schema, 120 rows, the same missingness pattern, and the same correlation
+sign structure. The original fixture’s exact random draw order is not
+recoverable, so the generator deliberately reproduces the fixture’s
+documented contract rather than a byte-exact clone.</li>
 </ul>
 <h2 id="verification-no-hand-transcribed-numbers">Verification (no
 hand-transcribed numbers)</h2>
-<p>Every quantitative claim in [sec:results] is either reproduced by
+<p>Every quantitative claim in <span class="citation"
+data-cites="sec:results">[@sec:results]</span> is either reproduced by
 running the analysis script or registered in
 <code>data/claim_ledger.yaml</code> for evidence-registry validation.
 The manuscript intentionally does not embed volatile values, so prose

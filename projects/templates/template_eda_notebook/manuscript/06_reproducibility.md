@@ -12,6 +12,9 @@ From the repository root:
 # 1. Run the analysis (writes figures + summary CSV, prints output paths)
 uv run python projects/templates/template_eda_notebook/scripts/eda_analysis.py
 
+# 1b. Regenerate the deterministic dataset sibling (optional; stage 02 runs it too)
+uv run python projects/templates/template_eda_notebook/scripts/generate_measurements_data.py
+
 # 2. Run the test suite with the coverage gate
 uv run pytest projects/templates/template_eda_notebook/tests \
     --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90
@@ -22,7 +25,7 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_e
 
 ## Generated artifact registry
 
-The analysis script writes the following artifacts under
+The analysis scripts write the following artifacts under
 `projects/templates/template_eda_notebook/output/`:
 
 | Artifact | Produced by |
@@ -31,6 +34,7 @@ The analysis script writes the following artifacts under
 | `figures/correlation_heatmap.png` | `correlation_heatmap_data()` + analysis script |
 | `figures/group_counts.png` | `group_count_data()` + analysis script |
 | `data/summary_statistics.csv` | `summary_statistics()` + analysis script |
+| `data/measurements_generated.csv` | `generate_measurements()` + generator script |
 
 The `output/` tree is disposable and regenerated on every run; it is not the
 source of truth.
@@ -44,6 +48,12 @@ source of truth.
   always produce the same bin counts, correlation values, and group counts.
 - `clean_dataset()` reports exactly how many rows it removed, so the
   complete-case row count is a checkable invariant.
+- `generate_measurements()` (`src/eda/generate.py`) regenerates a deterministic
+  *sibling* of the dataset from a fixed NumPy seed: the same schema, 120 rows,
+  the same missingness pattern, and the same correlation sign structure. The
+  original fixture's exact random draw order is not recoverable, so the
+  generator deliberately reproduces the fixture's documented contract rather
+  than a byte-exact clone.
 
 ## Verification (no hand-transcribed numbers)
 
