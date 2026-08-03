@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.41",
-      "total_size_bytes": 433519,
+      "total_size_bytes": 432399,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 12,
       "size_mb": "0.18",
-      "total_size_bytes": 185719,
+      "total_size_bytes": 185867,
       "largest_files": [
         {
           "name": "index.html",
@@ -125,9 +125,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 17,
-      "size_mb": "0.13",
-      "total_size_bytes": 133948,
+      "file_count": 10,
+      "size_mb": "0.11",
+      "total_size_bytes": 114321,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -146,7 +146,7 @@
         }
       ],
       "extensions": {
-        ".json": 14,
+        ".json": 7,
         ".txt": 1,
         ".md": 2
       }
@@ -171,7 +171,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 160,
+      "total_size_bytes": 304,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -184,8 +184,8 @@
       }
     }
   },
-  "total_files": 47,
-  "total_size_mb": 0.8779411315917969,
+  "total_files": 40,
+  "total_size_mb": 0.858433723449707,
   "largest_files": [
     {
       "name": "template_autoscientists_combined.pdf",
@@ -250,15 +250,15 @@
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.4134359359741211,
-    "web": 0.17711544036865234,
+    "pdf": 0.4123678207397461,
+    "web": 0.17725658416748047,
     "slides": 0.0,
     "figures": 0.15622615814208984,
     "data": 0.0032682418823242188,
-    "reports": 0.12774276733398438,
+    "reports": 0.1090250015258789,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.000152587890625
+    "logs": 0.0002899169921875
   },
   "file_counts_by_type": {
     ".pdf": 1,
@@ -273,7 +273,7 @@
     ".html": 10,
     ".ico": 1,
     ".png": 3,
-    ".json": 18,
+    ".json": 11,
     ".txt": 1
   }
 }

@@ -69,7 +69,7 @@ where $\varepsilon(x, s)$ is derived deterministically from a hash of the rounde
 
 ## Shared state
 
-The deterministic core mirrors the AutoScientists shared state: an immutable **champion** record $p^\*$ (parameters, metric, originating experiment index) plus an append-only **experiment log** $L$ of structured outcomes. Recording an outcome appends it to $L$ and promotes the champion only when the outcome *improved* — i.e. it was confirmed and beat the incumbent. The champion metric is the value plotted against experiment count.
+The deterministic core mirrors the AutoScientists shared state: an immutable **champion** record $p^{\ast}$ (parameters, metric, originating experiment index) plus an append-only **experiment log** $L$ of structured outcomes. Recording an outcome appends it to $L$ and promotes the champion only when the outcome *improved* — i.e. it was confirmed and beat the incumbent. The champion metric is the value plotted against experiment count.
 
 ## The five mechanisms
 
@@ -197,7 +197,7 @@ The rendered figures and the JSON summaries are produced with `DeterministicProp
 Two thin orchestrator scripts produce all results:
 
 - `scripts/run_search_comparison.py` → `../figures/search_comparison.png`, `output/data/search_comparison.json`.
-- `scripts/run_ablation.py` → `../figures/ablation.png`, `output/data/ablation.json`.
+- `scripts/run_ablation.py` → `../figures/ablation.png`, `../figures/ablation_efficiency.png`, `output/data/ablation.json`.
 
 Each script imports all computation from `src/`, runs the configurations, and writes a figure plus a machine-readable summary. The numbers quoted in @sec:results are read directly from those JSON files.
 
