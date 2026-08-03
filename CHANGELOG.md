@@ -9,6 +9,31 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Red-team reconciliation (2026-08-03)
+
+- `methods-plan` gate now passes all 24 public exemplars in both source and
+  rendered mode. Regenerated four committed `artifact_manifest.json` files
+  (template_autoresearch_project, template_pools_rules_tools,
+  template_prose_project, template_template) that had drifted from the
+  committed output tree, and gave template_pitch_deck a real Methodology
+  section so the deck exemplar (which legitimately has no research Methods
+  section) satisfies the methods contract without a special-case exemption.
+- Fixed five pre-existing infrastructure test failures: the combined-HTML
+  fixture layout in `test_formalism_wiring.py`, four missing module
+  references in `AGENTS.md` (public_matrix_receipt, checks_publication_validators,
+  manuscript_composition, rendered_snapshot), and the stale
+  `context-engineering.lock.json` vendored-tree digest.
+- Persisted the kmyth submodule's macOS build patches (network/KMIP stubs +
+  FlushContext fix) that previously existed only as uncommitted working-tree
+  edits — re-pointed the submodule to a `docxology/kmyth` fork so fresh
+  clones reproduce the documented macOS build.
+- Re-derived stale template_prose_project regression pins (abstract words
+  1745→1842, sentences 86→90, grade 15.97→15.68) so the claim-binding
+  regression tier matches committed source.
+- `template_validator/scripts/validate.sh` now resolves a jsonschema-capable
+  interpreter (repo venv preferred) and fails closed instead of silently
+  downgrading to a JSON-syntax-only pass when jsonschema is absent.
+
 ### Release gate hardening (2026-07-31)
 
 - Release workflow now executes a bounded test contract on the exact tagged
