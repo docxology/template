@@ -9,6 +9,29 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Secure execution boundary (2026-08-03)
+
+- Added `infrastructure/core/execution_boundary.py` implementing the
+  `SECURE-RUN-1` and `PROJECT-EXECUTION-BOUNDARY-1` backlog items:
+  - `run_bounded_subprocess` launches commands in a fresh process group so a
+    timeout `killpg`s the whole tree (no orphaned descendants can outlive a
+    failed or timed-out hook run).
+  - `build_bounded_env` strips credential-like environment variables unless
+    explicitly allow-listed (secret policy).
+  - `validate_hook_root` enforces root confinement (traversal + symlink
+    policy), and `classify_lifecycle_link` distinguishes intentional lifecycle
+    links from escapes.
+  - Optional `egress_check` callback lets an operator refuse a launch before
+    execution (egress policy).
+- Wired the boundary into three execution surfaces: `setup_hook.run_project_setup_hook`
+  (new `secret_env` manifest allow-list), `pipeline.hooks.run_stage_hooks`
+  (secret stripping + process-group cleanup), and `analysis_pipeline.run_analysis_script`.
+- Added 14 boundary negative-control tests (traversal, symlink escape,
+  credential stripping, process-group cleanup, egress refusal) plus 4
+  end-to-end setup-hook boundary tests. A hostile hook cannot read
+  credentials, escape the project root, or outlive a timed-out run.
+- Regenerated `docs/_generated/COUNTS.md` for the new project-scope tests.
+
 ### Red-team reconciliation (2026-08-03)
 
 - `methods-plan` gate now passes all 24 public exemplars in both source and

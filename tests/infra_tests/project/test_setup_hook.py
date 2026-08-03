@@ -382,3 +382,54 @@ def test_module_works_when_yaml_loads_returns_none(tmp_path: Path) -> None:
     ok, errors = preflight_setup_hook(project_dir)
     assert ok is True
     assert errors == []
+
+
+def test_hook_runs_without_credential_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A real hook run through the boundary cannot see credential env vars."""
+    project_dir = _make_project(tmp_path)
+    sentinel = tmp_path / "sniff.txt"
+    # The hook writes whether OPENAI_API_KEY is present to a sentinel file.
+    hook = project_dir / "scripts" / "setup_hook.py"
+    hook.write_text(
+        "#!/usr/bin/env python3\n"
+        "import os, pathlib\n"
+        f"pathlib.Path(r'{sentinel}').write_text('HAS_TOKEN' if 'OPENAI_API_KEY' in os.environ else 'CLEAN')\n",
+        encoding="utf-8",
+    )
+    hook.chmod(hook.stat().st_mode | stat.S_IXUSR)
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-secret")
+    # No secret_env allowlist → boundary strips the credential.
+    assert run_project_setup_hook(project_dir) is True
+    assert sentinel.read_text() == "CLEAN"
+
+
+def test_hook_secret_env_allowlist_passes_credential(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """secret_env in the manifest explicitly allows a named credential."""
+    project_dir = _make_project(tmp_path)
+    sentinel = tmp_path / "sniff.txt"
+    hook = project_dir / "scripts" / "setup_hook.py"
+    hook.write_text(
+        "#!/usr/bin/env python3\n"
+        "import os, pathlib\n"
+        f"pathlib.Path(r'{sentinel}').write_text(os.environ.get('HF_TOKEN', '') or 'MISSING')\n",
+        encoding="utf-8",
+    )
+    hook.chmod(hook.stat().st_mode | stat.S_IXUSR)
+    _write_manifest(project_dir, "secret_env: ['HF_TOKEN']\n")
+
+    monkeypatch.setenv("HF_TOKEN", "hf_x")
+    assert run_project_setup_hook(project_dir) is True
+    assert sentinel.read_text() == "hf_x"
+
+
+def test_hook_outside_scripts_root_rejected(tmp_path: Path) -> None:
+    """A hook path that escapes the project scripts root is rejected."""
+    project_dir = _make_project(tmp_path)
+    # Plant a symlink in scripts/ that points outside the project.
+    outside = tmp_path / "outside.py"
+    outside.write_text("print('escaped')\n", encoding="utf-8")
+    script = project_dir / "scripts" / "setup_hook.py"
+    script.symlink_to(outside)
+
+    assert run_project_setup_hook(project_dir) is False

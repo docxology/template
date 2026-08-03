@@ -10,21 +10,17 @@ from __future__ import annotations
 import json
 import os
 import shlex
-import subprocess
 import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Mapping
 
+from infrastructure.core.execution_boundary import (
+    build_bounded_env,
+    run_bounded_subprocess,
+)
 from infrastructure.core.pipeline.types import StageHooks
-
-
-def _timeout_output(value: bytes | str | None) -> str:
-    """Normalize TimeoutExpired output, which may be bytes even in text mode."""
-    if isinstance(value, bytes):
-        return value.decode(errors="replace")
-    return value or ""
 
 
 class HookEvent(str, Enum):
@@ -80,8 +76,15 @@ def run_stage_hooks(
     *,
     extra_env: Mapping[str, str] | None = None,
     allow_in_ci: bool = False,
+    strip_secrets: bool = True,
 ) -> list[HookExecutionResult]:
-    """Run hook commands for ``event`` and return per-command results."""
+    """Run hook commands for ``event`` and return per-command results.
+
+    Hooks run through the bounded execution boundary: a fresh process
+    group (so a timeout kills the whole tree, not just the hook), and —
+    when ``strip_secrets`` is true — credential-like environment variables
+    are removed before launch (secret policy, SECURE-RUN-1).
+    """
     if os.environ.get("CI") and not hooks.run_in_ci and not allow_in_ci:
         return []
 
@@ -90,23 +93,45 @@ def run_stage_hooks(
         return []
 
     context_path = _write_context_file(context)
-    env = _build_env(context, context_path, extra_env)
+    raw_env = _build_env(context, context_path, extra_env)
+    bounded_env = build_bounded_env(raw_env) if strip_secrets else dict(raw_env)
     results: list[HookExecutionResult] = []
     for command in commands:
         argv = _normalize_command(command)
         if not argv:
             continue
         started = time.monotonic()
-        try:
-            completed = subprocess.run(
-                argv,
-                cwd=str(context.run_dir),
-                env=env,
-                capture_output=True,
-                text=True,
-                timeout=hooks.timeout_seconds,
-                check=False,
+        completed = run_bounded_subprocess(
+            argv,
+            cwd=context.run_dir,
+            env=bounded_env,
+            timeout=hooks.timeout_seconds,
+        )
+        if completed.command_error:
+            results.append(
+                HookExecutionResult(
+                    event=event,
+                    command=argv,
+                    success=False,
+                    duration=time.monotonic() - started,
+                    exit_code=1,
+                    error_message=completed.command_error,
+                )
             )
+        elif completed.timed_out:
+            results.append(
+                HookExecutionResult(
+                    event=event,
+                    command=argv,
+                    success=False,
+                    duration=time.monotonic() - started,
+                    exit_code=124,
+                    stdout=completed.stdout,
+                    stderr=completed.stderr,
+                    error_message=f"hook timed out after {hooks.timeout_seconds}s",
+                )
+            )
+        else:
             results.append(
                 HookExecutionResult(
                     event=event,
@@ -117,30 +142,6 @@ def run_stage_hooks(
                     stdout=completed.stdout,
                     stderr=completed.stderr,
                     error_message=completed.stderr.strip(),
-                )
-            )
-        except subprocess.TimeoutExpired as exc:
-            results.append(
-                HookExecutionResult(
-                    event=event,
-                    command=argv,
-                    success=False,
-                    duration=time.monotonic() - started,
-                    exit_code=124,
-                    stdout=_timeout_output(exc.stdout),
-                    stderr=_timeout_output(exc.stderr),
-                    error_message=f"hook timed out after {hooks.timeout_seconds}s",
-                )
-            )
-        except OSError as exc:
-            results.append(
-                HookExecutionResult(
-                    event=event,
-                    command=argv,
-                    success=False,
-                    duration=time.monotonic() - started,
-                    exit_code=1,
-                    error_message=str(exc),
                 )
             )
 

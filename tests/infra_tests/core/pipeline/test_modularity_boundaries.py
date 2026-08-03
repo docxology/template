@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -89,7 +90,14 @@ def test_removed_root_entrypoints_are_absent() -> None:
 
 
 def test_canonical_entrypoints_remain_directly_executable() -> None:
-    """Canonical entrypoints remain directly executable after consolidation."""
+    """Canonical entrypoints remain directly executable after consolidation.
+
+    Invoked through ``sys.executable`` (the project's Python) rather than the
+    raw ``#!/usr/bin/env python3`` shebang, so the check is robust to hosts
+    whose *system* ``python3`` is below the project's ``>=3.10`` floor (the
+    venv interpreter CI runs under is always honored). Mirrors the sibling
+    ``test_incremental_cli_flag`` subprocess contract.
+    """
     repo_root = Path(__file__).parents[4]
     for relative in (
         "scripts/runner/execute_pipeline.py",
@@ -99,7 +107,7 @@ def test_canonical_entrypoints_remain_directly_executable() -> None:
         script = repo_root / relative
         assert script.stat().st_mode & 0o111, f"{relative} lost its executable bit"
         result = subprocess.run(
-            [str(script), "--help"],
+            [sys.executable, str(script), "--help"],
             cwd=repo_root,
             check=False,
             capture_output=True,

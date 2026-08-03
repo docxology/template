@@ -117,6 +117,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator. Direct script paths are confined to the resolved project `scripts/` tree, and credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
 - Public API: `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`
 
+**execution_boundary.py**
+- Bounded subprocess execution for project hooks and analysis scripts (SECURE-RUN-1 / PROJECT-EXECUTION-BOUNDARY-1): `run_bounded_subprocess` launches a command in a fresh process group so a timeout can `killpg` the whole tree (no orphaned descendants); `build_bounded_env` strips credential-like env vars unless explicitly allow-listed; `validate_hook_root` enforces root confinement; `classify_lifecycle_link` distinguishes intentional lifecycle links from escapes. Wired into `infrastructure.project.setup_hook.run_project_setup_hook` and `infrastructure.core.pipeline.hooks.run_stage_hooks`.
+- Public API: `run_bounded_subprocess`, `build_bounded_env`, `validate_hook_root`, `classify_lifecycle_link`, `LinkClassification`, `BoundedSubprocessResult`
+
 **analysis_timeout.py**
 - Resolves the per-script Stage-02 subprocess timeout from `ANALYSIS_SCRIPT_TIMEOUT_SEC` (default 7200s; `0`/`none`/`unlimited`/`inf` disables it; invalid/negative falls back to the default)
 - Public API: `parse_analysis_script_timeout_sec(environ=None) -> float | None`

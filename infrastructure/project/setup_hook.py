@@ -20,11 +20,19 @@ The hook may declare a small YAML manifest at
     description: "Free-text purpose"
     required_tools: ["elan", "lake", "gauss"]   # binaries that must be on PATH
     required_env: ["HF_TOKEN"]                   # required env vars (presence only)
+    secret_env: ["HF_TOKEN"]                     # exact names to pass to the hook
     timeout_sec: 1800                            # overrides PROJECT_SETUP_HOOK_TIMEOUT_SEC
     skip_if_env: ["CI_NO_HOOKS"]                 # truthy env vars that disable the hook
 
 All manifest fields are optional. A project without ``setup_hook.yaml``
 behaves as it always has — the hook simply runs to completion (or times out).
+
+Security boundary: the hook runs through
+:mod:`infrastructure.core.execution_boundary` — a fresh process group (so a
+timeout kills the whole tree, not just the hook), the resolved hook path must
+stay inside ``projects/<name>/scripts`` (root confinement), and
+credential-like environment variables are stripped unless the hook
+explicitly lists them in ``secret_env`` (secret policy).
 
 Environment knobs:
 
@@ -42,7 +50,6 @@ import platform
 import shutil
 
 # Required to invoke the project-supplied setup hook.
-import subprocess  # nosec B404
 import sys
 from pathlib import Path
 from typing import Any
@@ -52,6 +59,11 @@ try:
 except ImportError:  # pragma: no cover — pyyaml is a hard project dep
     _yaml = None  # type: ignore[assignment]
 
+from infrastructure.core.execution_boundary import (
+    build_bounded_env,
+    run_bounded_subprocess,
+    validate_hook_root,
+)
 from infrastructure.core.logging.utils import get_logger
 
 logger = get_logger(__name__)
@@ -276,33 +288,44 @@ def run_project_setup_hook(project_dir: Path) -> bool:
             return True
 
     timeout = _resolved_timeout(hook)
-    cmd = _build_command(hook)
+    raw_cmd = _build_command(hook)
+    manifest = _load_manifest(hook)
+
+    # Secret policy: allow-listed vars named in secret_env are passed through;
+    # everything credential-like is stripped. Root confinement: the hook must
+    # resolve inside this project's scripts dir.
+    try:
+        scripts_root = (project_dir / "scripts").resolve()
+        confined_hook = validate_hook_root(hook, hook_root=scripts_root)
+    except ValueError as exc:
+        logger.error("%s setup_hook rejected by boundary: %s", project_dir.name, exc)
+        return False
+
+    secret_env = _coerce_str_list(manifest.get("secret_env"), "secret_env", _manifest_path(hook))
+    bounded_env = build_bounded_env(allow_secret_names=secret_env)
 
     if _is_truthy(os.environ.get("PROJECT_SETUP_HOOK_DRY_RUN")):
         logger.info(
             "[dry-run] would run setup_hook for %s: %s (timeout=%ds)",
             project_dir.name,
-            " ".join(cmd),
+            " ".join(raw_cmd),
             timeout,
         )
         return True
 
-    logger.info("Running setup_hook for %s: %s (timeout=%ds)", project_dir.name, hook, timeout)
-    try:
-        # argv is fixed by this module; the hook path is validated as repo-local.
-        result = subprocess.run(  # nosec B603
-            cmd,
-            cwd=str(project_dir),
-            check=False,
-            timeout=timeout,
-        )
-    except subprocess.TimeoutExpired:
+    logger.info("Running setup_hook for %s: %s (timeout=%ds)", project_dir.name, confined_hook, timeout)
+    result = run_bounded_subprocess(
+        raw_cmd,
+        cwd=project_dir,
+        env=bounded_env,
+        timeout=timeout,
+    )
+    if result.command_error:
+        logger.error("setup_hook for %s failed to launch: %s", project_dir.name, result.command_error)
+        return False
+    if result.timed_out:
         logger.error("setup_hook for %s timed out after %ds", project_dir.name, timeout)
         return False
-    except (OSError, subprocess.SubprocessError) as exc:
-        logger.error("setup_hook for %s failed to launch: %s", project_dir.name, exc)
-        return False
-
     if result.returncode != 0:
         logger.error("setup_hook for %s exited with code %d", project_dir.name, result.returncode)
         return False
