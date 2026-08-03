@@ -99,14 +99,15 @@ sync with `src/methods_dsl/__init__.py` — drift is caught by
 
 ```python
 __all__ = [
-    "CycleError", "Dimension", "DimensionError", "GateResult", "Method",
-    "MethodModelError", "MethodValidationError", "Parameter", "Plan",
-    "PlanStep", "ProvenanceTier", "Quantity", "Resource", "StateRecord",
-    "Step", "StepKind", "Target", "all_example_methods", "append_record",
-    "check_compatible", "compile_method", "demo_chain_report", "dimension_of",
-    "known_units", "pbs_preparation_method", "plan_gate", "run_all_gates",
-    "semantic_gate", "sensor_calibration_method", "structural_gate",
-    "target_accepts", "target_gate", "to_csv_rows", "to_json", "to_mermaid",
+    "GATE_COUNT", "CycleError", "Dimension", "DimensionError", "GateResult",
+    "Method", "MethodModelError", "MethodValidationError", "Parameter",
+    "Plan", "PlanStep", "ProvenanceTier", "Quantity", "Resource",
+    "StateRecord", "Step", "StepKind", "Target", "all_example_methods",
+    "append_record", "check_compatible", "compile_method",
+    "demo_chain_report", "dimension_of", "known_units",
+    "pbs_preparation_method", "plan_gate", "run_all_gates", "semantic_gate",
+    "sensor_calibration_method", "structural_gate", "target_accepts",
+    "target_gate", "to_csv_rows", "to_json", "to_mermaid",
     "to_worklist_markdown", "topological_order", "verify_chain",
     "write_all_exports", "write_csv", "write_json", "write_json_report",
 ]
