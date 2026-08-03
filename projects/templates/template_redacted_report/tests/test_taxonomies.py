@@ -6,7 +6,6 @@ import pytest
 
 from redacted_report import (
     RedactionDecision,
-    RedactionFinding,
     RedactionPolicy,
     RedactionSegment,
     ReviewRecord,
