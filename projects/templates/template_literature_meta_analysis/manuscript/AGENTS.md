@@ -30,7 +30,7 @@ Source directory for the paper: all `.md` sections, `config.yaml`, `preamble.md`
 | `08_appendix_accessibility.md` | FAIR data, cognitive ergonomics, decentralized science |
 | `98_symbols_glossary.md` | Mathematical notation table and abbreviations |
 | `99_references.md` | BibTeX bibliography directive (points to `references.bib`) |
-| `references.bib` | BibTeX source file (100+ citations, 2000–2026) |
+| `references.bib` | BibTeX source file (15 curated methodology/data-source entries) |
 
 ## Variable Injection System
 
@@ -39,13 +39,13 @@ Manuscript source files use double-brace placeholders of the form `{{<NAME>}}` w
 **Injection sources:**
 - `corpus.jsonl` → `{{CORPUS_SIZE}}`, `{{YEAR_START}}`, `{{YEAR_END}}`
 - `temporal_analysis.json` → `{{CAGR_PCT}}`, `{{PEAK_YEAR}}`, `{{PEAK_YEAR_PUBS}}`, `{{DOUBLING_TIME}}`
-- `subfield_classification.json` → `{{A1_COUNT}}`, `{{A1_PCT}}`, `{{B_COUNT}}`, `{{B_PCT}}`, `{{C1_COUNT}}`, `{{C1_PCT}}` … (per domain)
+- `subfield_classification.json` → `{{SUBFIELD_TABLE}}`, `{{SUBFIELD_LIST}}`, `{{N_SUBFIELDS}}`, `{{TOP_SUBFIELD}}`, `{{TOP_SUBFIELD_PCT}}`
 - `citation_network.json` → `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}`, `{{CITATION_RESOLUTION_PCT}}`
 - `assertion_summary.json` → `{{TOTAL_ASSERTIONS}}`, `{{ASSERTION_SUPPORT_PCT}}`, `{{ASSERTION_CONTRADICT_PCT}}`
 - `hypothesis_scores.json` → `{{H1_SCORE}}`, `{{H1_SUPPORT}}`, `{{H1_NEUTRAL}}`, `{{H1_CONTRADICT}}` … (per hypothesis)
 - `topics.json` → `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}`
 - `reproducibility_summary.json` + `reproducibility_scores.json` → `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}`, `{{REPRODUCIBILITY_TABLE}}`
-- Hardcoded → `{{NUM_FIGURES}}` (= 16)
+- `output/figures/` → `{{NUM_FIGURES}}` (computed from the generated figure count; 21 in the tracked snapshot)
 
 All computation lives in `src/manuscript/variables/` (see `compute.py` and `extractors/`). Do not add variables to scripts directly.
 

@@ -21,6 +21,7 @@ scripts/
 ├── 09_export_bibliography.py     # → literature/bibliography.py
 ├── 10_reproducibility_assessment.py # → reproducibility/runner.py
 ├── 11_fulltext_download.py       # → literature/fulltext_download_cli.py
+├── generate_fixture_corpus.py   # rebuild the committed synthetic fixture corpus
 └── __pycache__/                  # Python bytecode cache (gitignored)
 ```
 
@@ -123,9 +124,10 @@ in docs — link this section or the registry instead.
 **Figure categories:**
 - **Field overview:** `field_summary.png`, `subfield_distribution.png`
 - **Temporal:** `growth_curve.png`, `subfield_timeline.png`
-- **Citation:** `citation_network.png`, `degree_distribution.png`
+- **Citation:** `citation_network.png`, `degree_distribution.png`, `citation_distribution.png`
 - **Hypothesis:** `hypothesis_dashboard.png`, `evidence_timeline.png`
-- **Text analytics:** `word_cloud.png`, `topic_term_bars.png`, `pca_embeddings.png`, `term_heatmap.png`, `dendrogram.png`, `cooccurrence_matrix.png`
+- **Text analytics:** `word_cloud.png`, `topic_term_bars.png`, `pca_embeddings.png`, `term_heatmap.png`, `dendrogram.png`, `cooccurrence_matrix.png`, `similarity_heatmap.png`, `entity_bar_chart.png`
+- **Bibliometric:** `top_venues.png`, `author_productivity.png`
 - **Assertions:** `assertion_breakdown.png`, `assertion_summary.png`
 
 **Key flags:**

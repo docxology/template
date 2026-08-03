@@ -26,7 +26,7 @@ Common token families:
 | --- | --- |
 | `SEARCH_TERM*`, `ENGINE_LIST`, `N_ENGINES` | `manuscript/config.yaml` |
 | `CORPUS_SIZE*`, year/growth fields | `output/data/corpus.jsonl`, `temporal_analysis.json` |
-| `A1_COUNT` / configured subfield counts | `subfield_classification.json` |
+| `SUBFIELD_TABLE` / `SUBFIELD_LIST` / `N_SUBFIELDS` | `subfield_classification.json` + config |
 | `HYPOTHESIS_*`, `H*_SCORE` | config + `hypothesis_scores.json` |
 | figure counts | `output/figures/` and figure registry |
 

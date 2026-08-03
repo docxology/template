@@ -25,10 +25,12 @@ modules and is imported by `scripts/02_meta_analysis_pipeline.py`.
 ## Key Algorithms
 
 ### Subfield classification priority
-```
-C1–C5 (priority 1) > B (priority 2) > A1 (priority 3) > A2 (priority 4, catch-all)
-```
-Within a tier, highest keyword-match count wins.
+Config `subfield_keywords` override the generic defaults; each configured bucket's
+priority comes from the prefix map in `subfield_registry.load_subfields_from_config`
+(`C`=1, `B`=2, `A1`=3, otherwise 4). With the bundled modafinil taxonomy all six
+buckets carry priority 4, so the classifier selects the bucket with the highest
+keyword-match count; papers with no keyword matches fall to the catch-all (the
+highest-priority bucket, first in definition order when tied).
 
 ### TF-IDF formula
 ```
@@ -50,11 +52,13 @@ The default `max_iter=200` is an upper bound, not the typical stopping point.
 
 ## Known Limitations
 
-- **Subfield classifier**: Papers using non-canonical vocabulary may default to A2 (catch-all).
-  Consider an embedding-based classifier for large future corpora.
+- **Subfield classifier**: Papers using non-canonical vocabulary fall to the catch-all bucket
+  (with the bundled taxonomy, the first configured bucket). Consider an embedding-based
+  classifier for large future corpora.
 - **Temporal CAGR**: Uses single-year endpoint counts; an incomplete current year (e.g. April 2026)
   will undercount that year's publications and deflate CAGR.
-- **Citation resolution**: Only ~5% of references resolve to corpus papers because API identifier
-  formats (DOI, arXiv, S2 ID) rarely match exactly. Cross-format fuzzy matching would improve this.
+- **Citation resolution**: Only ~22% of references resolve to corpus papers in the tracked
+  snapshot; API identifier formats (DOI, arXiv, S2 ID) rarely match exactly across engines.
+  Cross-format fuzzy matching would improve this.
 - **NMF initialization**: Random initialization means topics are locally optimal, not globally.
   Jaccard stability > 0.90 across alternative seeds has been verified empirically.

@@ -19,9 +19,9 @@ License: CC-BY-4.0
 | `02c_methods_bibliometrics.md` | Stage 2: bibliometrics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `02d_methods_knowledge_graph.md` | Stage 3: knowledge graph | `{{TOTAL_ASSERTIONS}}`, `{{CITATION_RESOLUTION_PCT}}` | Stage 3 + 5 |
 | `02e_methods_viz_injection.md` | Stages 4–5 | `{{NUM_FIGURES}}` | Stage 4 + 5 |
-| `03_results_hypothesis.md` | Hypothesis results | `{{H1_SCORE}}`…`{{H8_SCORE}}`, support/neutral/contradict counts | Stage 3 + 5 |
-| `03a_results_field_overview.md` | Field overview | `{{A1_COUNT}}`, `{{A1_PCT}}`…`{{C5_COUNT}}`, `{{C5_PCT}}`, `{{CAGR_PCT}}`, `{{PEAK_YEAR}}` | Stage 2 + 5 |
-| `03b_results_subfields.md` | Subfield analysis | Domain counts per A1/A2/B/C1–C5 | Stage 2 + 5 |
+| `03_results_hypothesis.md` | Hypothesis results | `{{H1_SCORE}}`…`{{H6_SCORE}}`, support/neutral/contradict counts | Stage 3 + 5 |
+| `03a_results_field_overview.md` | Field overview | `{{SUBFIELD_TABLE}}`, `{{TOP_SUBFIELD}}`, `{{TOP_SUBFIELD_PCT}}`, `{{CAGR_PCT}}`, `{{PEAK_YEAR}}` | Stage 2 + 5 |
+| `03b_results_subfields.md` | Subfield analysis | Per-bucket characterization (config-driven taxonomy) | Stage 2 + 5 |
 | `03c_results_text_analytics.md` | Text analytics | `{{NUM_TOPICS}}`, `{{NUM_VOCAB_FEATURES}}` | Stage 2 + 5 |
 | `03d_results_citation_network.md` | Citation network | `{{CITATION_NODES}}`, `{{CITATION_EDGES}}`, `{{CITATION_DENSITY_PCT}}` | Stage 2 + 5 |
 | `03e_results_reproducibility.md` | Reproducibility assessment | `{{REPRODUCIBILITY_MEAN_SCORE}}`, `{{REPRODUCIBILITY_N_PAPERS_SCORED}}`, `{{REPRODUCIBILITY_LOW_SCORE_COUNT}}` | Stage 5 |
@@ -65,7 +65,7 @@ Key sections:
 - `paper` — title, version
 - `authors` — name, ORCID, affiliation
 - `publication` — DOI, journal, year, license
-- `hypothesis_definitions` — H1–H8 definitions (controls LLM extraction)
-- `subfield_keywords` — A1–C5 keyword lists (controls domain classification)
+- `hypothesis_definitions` — H1–H6 definitions (controls LLM extraction)
+- `subfield_keywords` — per-bucket keyword lists (controls domain classification)
 - `project_config.search` — arXiv queries, max results, resume behavior
 - `project_config.knowledge_graph` — checkpointing, LLM model, temperature
