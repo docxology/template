@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_format_gallery.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -379,14 +378,10 @@ otherwise it renders as a normal block.</p>
 <hr />
 <h2 id="tables">4. Tables</h2>
 <p>A simple table with column alignment and a cross-referencable caption
-([tbl:gallery_alignment]):</p>
-<p>: Column alignment — left, centre, right.
-{#tbl:gallery_alignment}</p>
-<p>The values below are mirrored in
-<code>manuscript/assets/data/format_gallery.csv</code> so rendering
-examples remain evidence-addressable fixtures rather than anonymous
-literals.</p>
-<table>
+(<span class="citation"
+data-cites="tbl:gallery_alignment">[@tbl:gallery_alignment]</span>):</p>
+<table id="tbl:gallery_alignment">
+<caption>Column alignment — left, centre, right.</caption>
 <thead>
 <tr>
 <th style="text-align: left;">Left</th>
@@ -412,6 +407,10 @@ literals.</p>
 </tr>
 </tbody>
 </table>
+<p>The values above are mirrored in
+<code>manuscript/assets/data/format_gallery.csv</code> so rendering
+examples remain evidence-addressable fixtures rather than anonymous
+literals.</p>
 <p>A multi-line / grid table (cells may contain longer wrapped
 text):</p>
 <table style="width:93%;">
@@ -444,8 +443,9 @@ text):</p>
 <h2 id="mathematics-and-units">5. Mathematics and units</h2>
 <p>Inline math: the half-life is <span class="math inline">\(t_{1/2} =
 \ln 2 / \lambda\)</span>.</p>
-<p>A numbered display equation, cross-referenced as
-[eq:gallery_logistic]:</p>
+<p>A numbered display equation, cross-referenced as <span
+class="citation"
+data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span>:</p>
 <p><span class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \]</span> {#eq:gallery_logistic}</p>
 <p>Multi-line aligned derivation:</p>
@@ -473,7 +473,8 @@ math-mode units are the portable choice.)</p>
 <hr />
 <h2 id="figures">6. Figures</h2>
 <p>A single figure with caption, label, and alt text, cross-referenced
-as [fig:gallery_line]:</p>
+as <span class="citation"
+data-cites="fig:gallery_line">[@fig:gallery_line]</span>:</p>
 <figure id="fig:gallery_line">
 <img src="../figures/gallery/gallery_line.png" style="width:80.0%"
 alt="A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ." />
@@ -496,7 +497,8 @@ alt="Pie chart." />
 <figcaption>Pie chart.</figcaption>
 </figure>
 </div>
-<p>A multi-panel composite ([fig:gallery_multipanel]):</p>
+<p>A multi-panel composite (<span class="citation"
+data-cites="fig:gallery_multipanel">[@fig:gallery_multipanel]</span>):</p>
 <figure id="fig:gallery_multipanel">
 <img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
 alt="A 2×2 composite: line, scatter, bar, and histogram panels." />
@@ -567,10 +569,15 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="
 <hr />
 <h2 id="cross-references-and-citations">9. Cross-references and
 citations</h2>
-<p>Cross-references resolve by label: figure [fig:gallery_line], table
-[tbl:gallery_alignment], equation [eq:gallery_logistic], and section
-[sec:appendix_formalisms]. Never hand-number — Pandoc fills these
-in.</p>
+<p>Cross-references resolve by label: figure <span class="citation"
+data-cites="fig:gallery_line">[@fig:gallery_line]</span>, table <span
+class="citation"
+data-cites="tbl:gallery_alignment">[@tbl:gallery_alignment]</span>,
+equation <span class="citation"
+data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span>, and
+section <span class="citation"
+data-cites="sec:appendix_formalisms">[@sec:appendix_formalisms]</span>.
+Never hand-number — Pandoc fills these in.</p>
 <p>Citations resolve against <code>references.bib</code>: a single
 source [smith2020foundations], multiple sources [doe2019methods;
 lee2021systems], and an in-text form — <span class="citation"
@@ -632,8 +639,9 @@ its contents as a table:</p>
 </tr>
 </tbody>
 </table>
-<p>The error-bar figure [fig:gallery_errorbar] visualises this kind of
-data:</p>
+<p>The error-bar figure <span class="citation"
+data-cites="fig:gallery_errorbar">[@fig:gallery_errorbar]</span>
+visualises this kind of data:</p>
 <figure id="fig:gallery_errorbar">
 <img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
 alt="Means with standard-error bars." />
@@ -652,7 +660,8 @@ identify which Markdown primitive to use for a given purpose.
 <p><strong>Worked example.</strong> Given <span class="math inline">\(r
 = 0.8\)</span>, <span class="math inline">\(K = 100\)</span>, <span
 class="math inline">\(N_0 = 5\)</span>, evaluate <span
-class="math inline">\(N(10)\)</span> via [eq:gallery_logistic] using
+class="math inline">\(N(10)\)</span> via <span class="citation"
+data-cites="eq:gallery_logistic">[@eq:gallery_logistic]</span> using
 <code>textbook.models.logistic_growth</code>. The result approaches
 <span class="math inline">\(K\)</span>.
 <!-- STUB: show the full numeric work. --></p>

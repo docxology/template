@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_authoring_guide.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -324,9 +323,9 @@ parameter table <code>{#tbl:...}</code></li>
 <strong>Further Reading</strong>, <strong>Practice</strong>
 sections</li>
 </ul>
-<p>Cross-reference syntax is pandoc-crossref: <code>[fig:..]</code>,
-<code>[tbl:..]</code>, <code>[eq:..]</code>, <code>[sec:..]</code>. Stub
-markers the audit counts are <code>&lt;!-- STUB --&gt;</code>,
+<p>Cross-reference syntax is pandoc-crossref: <code>[@fig:..]</code>,
+<code>[@tbl:..]</code>, <code>[@eq:..]</code>, <code>[@sec:..]</code>.
+Stub markers the audit counts are <code>&lt;!-- STUB --&gt;</code>,
 <code>TODO:</code>, and <code>TKTK</code> — drive these to zero as the
 chapter matures.</p>
 <h2 id="step-4-add-a-figure">Step 4 — Add a Figure</h2>
@@ -340,7 +339,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 <p>For diagrams, edit <code>src/mermaid/diagram_specs.yaml</code> and
 run <code>scripts/generate_diagrams.py</code> (PNG, or <code>.mmd</code>
 fallback). Reference the figure in prose with
-<code>[fig:&lt;part&gt;_&lt;stem&gt;]</code> and give it alt text.</p>
+<code>[@fig:&lt;part&gt;_&lt;stem&gt;]</code> and give it alt text.</p>
 <h2 id="step-5-add-a-glossary-term">Step 5 — Add a Glossary Term</h2>
 <p>Glossary anchors are a <strong>closed contract</strong>. To add a
 term you must update <strong>both</strong>:</p>

@@ -2,9 +2,9 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "1.37",
-      "total_size_bytes": 1441012,
+      "file_count": 10,
+      "size_mb": "1.36",
+      "total_size_bytes": 1430700,
       "largest_files": [
         {
           "name": "template_textbook_combined.pdf",
@@ -24,7 +24,7 @@
       ],
       "extensions": {
         ".md": 1,
-        ".log": 3,
+        ".log": 2,
         ".aux": 1,
         ".pdf": 1,
         ".blg": 1,
@@ -37,8 +37,8 @@
     "web": {
       "exists": true,
       "file_count": 52,
-      "size_mb": "0.76",
-      "total_size_bytes": 802026,
+      "size_mb": "0.78",
+      "total_size_bytes": 813146,
       "largest_files": [
         {
           "name": "index.html",
@@ -52,7 +52,7 @@
         },
         {
           "name": "appendices__appendix_format_gallery.html",
-          "size_mb": "0.02",
+          "size_mb": "0.03",
           "path": "web/appendices__appendix_format_gallery.html"
         }
       ],
@@ -119,9 +119,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 26,
-      "size_mb": "0.30",
-      "total_size_bytes": 316046,
+      "file_count": 10,
+      "size_mb": "0.18",
+      "total_size_bytes": 191581,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -134,17 +134,15 @@
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "lessons.jsonl",
-          "size_mb": "0.04",
-          "path": "reports/lessons.jsonl"
+          "name": "validation_report.json",
+          "size_mb": "0.02",
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 16,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".md": 5,
-        ".html": 1
+        ".json": 7,
+        ".txt": 1,
+        ".md": 2
       }
     },
     "simulations": {
@@ -160,24 +158,14 @@
       "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 133,
-      "largest_files": [
-        {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
-        }
-      ],
-      "extensions": {
-        ".log": 1
-      }
+      "total_size_bytes": 0
     }
   },
-  "total_files": 188,
-  "total_size_mb": 4.142477035522461,
+  "total_files": 170,
+  "total_size_mb": 4.024421691894531,
   "largest_files": [
     {
       "name": "template_textbook_combined.pdf",
@@ -243,19 +231,19 @@
   "missing_expected_files": [
     "slides/ directory",
     "simulations/ directory",
-    "llm/ directory"
+    "llm/ directory",
+    "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.3742561340332031,
-    "web": 0.7648715972900391,
+    "pdf": 1.3644218444824219,
+    "web": 0.7754764556884766,
     "figures": 1.699019432067871,
     "data": 0.0027980804443359375,
-    "reports": 0.3014049530029297,
-    "logs": 0.00012683868408203125
+    "reports": 0.18270587921142578
   },
   "file_counts_by_type": {
-    ".md": 7,
-    ".log": 4,
+    ".md": 4,
+    ".log": 2,
     ".aux": 1,
     ".pdf": 1,
     ".blg": 1,
@@ -263,12 +251,11 @@
     ".tex": 1,
     ".toc": 1,
     ".bbl": 1,
-    ".html": 51,
+    ".html": 50,
     ".ico": 1,
     ".png": 64,
-    ".json": 20,
+    ".json": 11,
     ".mmd": 30,
-    ".jsonl": 1,
-    ".txt": 3
+    ".txt": 1
   }
 }

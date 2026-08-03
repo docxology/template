@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <title>_combined_manuscript</title>
@@ -42,7 +42,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -3425,9 +3424,9 @@ interpolates within the range it was fit on. Using it to predict a
 6.3\)</span> — is an <strong>extrapolation</strong> the data cannot
 support. Real dose–response curves usually saturate (recall the <a
 href="#gl:threshold"><strong>threshold</strong></a> behaviour of the
-saturating response in sec. <a
-href="#sec:part_I_first_principles">8</a>); a straight line will
-overpredict once the system approaches its ceiling.</p>
+saturating response in sec. <a href="#sec:appendix_math_review">45</a>);
+a straight line will overpredict once the system approaches its
+ceiling.</p>
 <pre class="mermaid"><code>graph LR
   A[Raw measurements] --&gt; B[Group + average]
   B --&gt; C[Fit a trend]
@@ -4123,7 +4122,7 @@ a useful internal consistency check?</li>
 summary of the system, and what would you measure next to decide?</li>
 <li>When is a straight-line dose–response model adequate, and when does
 the saturating model from sec. <a
-href="#sec:part_I_first_principles">8</a> become necessary?</li>
+href="#sec:appendix_math_review">45</a> become necessary?</li>
 </ol>
 <hr />
 <h1 data-number="30" id="sec:lab_part_III_frontiers"><span
@@ -5192,14 +5191,9 @@ otherwise it renders as a normal block.</p>
 <h2 data-number="47.4" id="tables"><span
 class="header-section-number">47.4</span> 4. Tables</h2>
 <p>A simple table with column alignment and a cross-referencable caption
-(tbl. <strong>¿tbl:gallery_alignment?</strong>):</p>
-<p>: Column alignment — left, centre, right.
-{#tbl:gallery_alignment}</p>
-<p>The values below are mirrored in
-<code>manuscript/assets/data/format_gallery.csv</code> so rendering
-examples remain evidence-addressable fixtures rather than anonymous
-literals.</p>
-<table>
+(tbl. <a href="#tbl:gallery_alignment">14</a>):</p>
+<table id="tbl:gallery_alignment">
+<caption>Table 14: Column alignment — left, centre, right.</caption>
 <thead>
 <tr>
 <th style="text-align: left;">Left</th>
@@ -5225,6 +5219,10 @@ literals.</p>
 </tr>
 </tbody>
 </table>
+<p>The values above are mirrored in
+<code>manuscript/assets/data/format_gallery.csv</code> so rendering
+examples remain evidence-addressable fixtures rather than anonymous
+literals.</p>
 <p>A multi-line / grid table (cells may contain longer wrapped
 text):</p>
 <table style="width:93%;">
@@ -5390,8 +5388,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href=
 class="header-section-number">47.9</span> 9. Cross-references and
 citations</h2>
 <p>Cross-references resolve by label: figure fig. <a
-href="#fig:gallery_line">13</a>, table
-tbl. <strong>¿tbl:gallery_alignment?</strong>, equation eq. <a
+href="#fig:gallery_line">13</a>, table tbl. <a
+href="#tbl:gallery_alignment">14</a>, equation eq. <a
 href="#eq:gallery_logistic">17</a>, and section sec. <a
 href="#sec:appendix_formalisms">46</a>. Never hand-number — Pandoc fills
 these in.</p>
@@ -5429,7 +5427,7 @@ class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb40-1">
 href="../assets/data/sample_dataset.csv"><code>assets/data/sample_dataset.csv</code></a>;
 its contents as a table:</p>
 <table id="tbl:gallery_data">
-<caption>Table 14: Sample dataset (mirrors
+<caption>Table 15: Sample dataset (mirrors
 <code>assets/data/sample_dataset.csv</code>).</caption>
 <thead>
 <tr>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>first_principles.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -318,17 +317,18 @@ href="#gl:system"><strong>system</strong></a>, <a
 href="#gl:state"><strong>state</strong></a>, <a
 href="#gl:parameter"><strong>parameter</strong></a>, <a
 href="#gl:equilibrium"><strong>equilibrium</strong></a>.</li>
-<li><strong>Quantitative lens:</strong> the logistic law in
-[eq:part_I_first_principles_model].</li>
+<li><strong>Quantitative lens:</strong> the logistic law in <span
+class="citation"
+data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>.</li>
 <li><strong>Data skill:</strong> read an S-curve and estimate its
 carrying capacity by eye, then confirm numerically.</li>
 <li><strong>Common misconception to repair:</strong> “exponential” and
 “logistic” are not the same — unbounded growth is an early-time
 approximation, not the rule.</li>
-<li><strong>Primary lab:</strong>
-[sec:lab_part_I_first_principles].</li>
-<li><strong>Question bank:</strong>
-[sec:q_part_I_first_principles].</li>
+<li><strong>Primary lab:</strong> <span class="citation"
+data-cites="sec:lab_part_I_first_principles">[@sec:lab_part_I_first_principles]</span>.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_I_first_principles">[@sec:q_part_I_first_principles]</span>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.logistic_growth</code>.
 <!-- curriculum-scaffold-end --></li>
@@ -364,15 +364,18 @@ parameter as a variable.</p>
 <p>Unbounded (exponential) growth assumes nothing ever pushes back. Real
 systems saturate. The simplest law that grows fast when small and levels
 off when large is the <strong>logistic</strong> equation, written as a
-rate of change in [eq:part_I_first_principles_rate] and in closed form
-in [eq:part_I_first_principles_model]:</p>
+rate of change in <span class="citation"
+data-cites="eq:part_I_first_principles_rate">[@eq:part_I_first_principles_rate]</span>
+and in closed form in <span class="citation"
+data-cites="eq:part_I_first_principles_model">[@eq:part_I_first_principles_model]</span>:</p>
 <p><span class="math display">\[ \frac{dN}{dt} = rN\left(1 -
 \frac{N}{K}\right) \]</span> {#eq:part_I_first_principles_rate}</p>
 <p><span class="math display">\[ N(t) = \frac{K}{1 + \left(\dfrac{K -
 N_0}{N_0}\right) e^{-rt}} \]</span>
 {#eq:part_I_first_principles_model}</p>
-<p>Read [eq:part_I_first_principles_rate] aloud: the rate of change is
-proportional to how much there is (<span
+<p>Read <span class="citation"
+data-cites="eq:part_I_first_principles_rate">[@eq:part_I_first_principles_rate]</span>
+aloud: the rate of change is proportional to how much there is (<span
 class="math inline">\(rN\)</span>) <em>times</em> how much room remains
 (<span class="math inline">\(1 - N/K\)</span>). When <span
 class="math inline">\(N\)</span> is small the second factor is near
@@ -380,7 +383,8 @@ class="math inline">\(N\)</span> is small the second factor is near
 as <span class="math inline">\(N\)</span> approaches <span
 class="math inline">\(K\)</span> the factor approaches <span
 class="math inline">\(0\)</span> and growth stalls. The parameters are
-collected in [tbl:part_I_first_principles_parameters].</p>
+collected in <span class="citation"
+data-cites="tbl:part_I_first_principles_parameters">[@tbl:part_I_first_principles_parameters]</span>.</p>
 <table id="tbl:part_I_first_principles_parameters">
 <caption>Parameters of the logistic model. Variables change over time;
 parameters are held fixed while reasoning.</caption>
@@ -438,16 +442,19 @@ class="math inline">\(t = 5\)</span> with <span
 class="math inline">\(N(5) = 74.18\)</span>, and by <span
 class="math inline">\(t = 10\)</span> has all but arrived at <span
 class="math inline">\(N(10) = 99.37\)</span> — within one part in a
-hundred of the carrying capacity. This is the S-curve plotted in
-[fig:part_I_first_principles]: an early near-exponential rise, an
-inflection, and a long approach to the asymptote.</p>
+hundred of the carrying capacity. This is the S-curve plotted in <span
+class="citation"
+data-cites="fig:part_I_first_principles">[@fig:part_I_first_principles]</span>:
+an early near-exponential rise, an inflection, and a long approach to
+the asymptote.</p>
 <p>The long-run behaviour is exact, not approximate. Because <span
 class="math inline">\(r &gt; 0\)</span>, the term <span
 class="math inline">\(e^{-rt} \to 0\)</span>, so <span
 class="math inline">\(N(t) \to K\)</span>. The proof is one line and is
-recorded as Theorem 1 in [sec:appendix_formalisms]; the same fact is
-asserted numerically by the test suite, so the prose and the code cannot
-silently disagree.</p>
+recorded as Theorem 1 in <span class="citation"
+data-cites="sec:appendix_formalisms">[@sec:appendix_formalisms]</span>;
+the same fact is asserted numerically by the test suite, so the prose
+and the code cannot silently disagree.</p>
 <h2 id="how-the-pieces-connect">How the pieces connect</h2>
 <pre class="mermaid"><code>graph TD
   A[Choose state variables] --&gt; B[Write a rate rule]
@@ -485,10 +492,12 @@ alternatives.</li>
 </ul>
 <h2 id="practice">Practice</h2>
 <ul>
-<li><strong>Lab:</strong> [sec:lab_part_I_first_principles] — measure an
-S-curve and estimate its parameters.</li>
-<li><strong>Question bank:</strong> [sec:q_part_I_first_principles] —
-recall through synthesis.</li>
+<li><strong>Lab:</strong> <span class="citation"
+data-cites="sec:lab_part_I_first_principles">[@sec:lab_part_I_first_principles]</span>
+— measure an S-curve and estimate its parameters.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_I_first_principles">[@sec:q_part_I_first_principles]</span>
+— recall through synthesis.</li>
 </ul>
 </main>
 </body>

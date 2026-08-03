@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>case_studies.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -288,9 +287,10 @@ Principles</p>
 </blockquote>
 <blockquote>
 <p><strong>This chapter is a worked reference</strong> in a different
-style from [sec:part_I_first_principles]: where that chapter
-<em>derives</em> a model, this one <em>applies</em> one to a small
-dataset. The remaining chapters ship as stubs.</p>
+style from <span class="citation"
+data-cites="sec:part_I_first_principles">[@sec:part_I_first_principles]</span>:
+where that chapter <em>derives</em> a model, this one <em>applies</em>
+one to a small dataset. The remaining chapters ship as stubs.</p>
 </blockquote>
 <h2 id="learning-objectives">Learning Objectives</h2>
 <p>By the end of this chapter you should be able to:</p>
@@ -318,15 +318,18 @@ href="#gl:observable"><strong>observable</strong></a>, <a
 href="#gl:gradient"><strong>gradient</strong></a>, <a
 href="#gl:threshold"><strong>threshold</strong></a>.</li>
 <li><strong>Quantitative lens:</strong> a linear dose–response fit,
-[eq:part_III_case_studies_fit].</li>
+<span class="citation"
+data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>.</li>
 <li><strong>Data skill:</strong> group, average, and fit; then
-sanity-check the fit against the raw numbers in
-[tbl:part_III_case_studies_data].</li>
+sanity-check the fit against the raw numbers in <span class="citation"
+data-cites="tbl:part_III_case_studies_data">[@tbl:part_III_case_studies_data]</span>.</li>
 <li><strong>Common misconception to repair:</strong> a high <span
 class="math inline">\(R^2\)</span> on three points is not strong
 evidence — it is an invitation to collect more.</li>
-<li><strong>Primary lab:</strong> [sec:lab_part_III_case_studies].</li>
-<li><strong>Question bank:</strong> [sec:q_part_III_case_studies].</li>
+<li><strong>Primary lab:</strong> <span class="citation"
+data-cites="sec:lab_part_III_case_studies">[@sec:lab_part_III_case_studies]</span>.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_III_case_studies">[@sec:q_part_III_case_studies]</span>.</li>
 <li><strong>Bridge to computation:</strong>
 <code>textbook.models.linear_fit</code>,
 <code>descriptive_statistics</code>.
@@ -346,8 +349,9 @@ overreaching.</p>
 <hr />
 <h2 id="the-data">The data</h2>
 <p>The pilot produced six measurements across three conditions, recorded
-in <code>assets/data/sample_dataset.csv</code> and reproduced in
-[tbl:part_III_case_studies_data].</p>
+in <code>assets/data/sample_dataset.csv</code> and reproduced in <span
+class="citation"
+data-cites="tbl:part_III_case_studies_data">[@tbl:part_III_case_studies_data]</span>.</p>
 <table id="tbl:part_III_case_studies_data">
 <caption>The pilot dataset: two replicates per condition.</caption>
 <thead>
@@ -404,7 +408,8 @@ class="math inline">\(4.95\)</span> (high). Across all six points the
 mean is <span class="math inline">\(3.55\)</span> with a standard
 deviation of <span class="math inline">\(1.13\)</span>
 (<code>textbook.models.descriptive_statistics</code>). The error-bar
-view is [fig:part_III_case_studies].</p>
+view is <span class="citation"
+data-cites="fig:part_III_case_studies">[@fig:part_III_case_studies]</span>.</p>
 <h2 id="fitting-a-trend">Fitting a trend</h2>
 <p>Encode the dose as <span class="math inline">\(0, 1, 2\)</span> for
 control, low, and high, and fit a line with
@@ -417,7 +422,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> np.array([<span class="fl">2.20</span>, <span class="fl">3.50</span>, <span class="fl">4.95</span>])   <span class="co"># condition means</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> models.linear_fit(dose, response)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># fit.slope ≈ 1.375, fit.intercept ≈ 2.175, fit.r_squared ≈ 0.999</span></span></code></pre></div>
-<p>The fitted relationship in [eq:part_III_case_studies_fit] is</p>
+<p>The fitted relationship in <span class="citation"
+data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>
+is</p>
 <p><span class="math display">\[ \widehat{y}(d) = 1.375\,d + 2.175
 \]</span> {#eq:part_III_case_studies_fit}</p>
 <p>with <span class="math inline">\(R^2 = 0.999\)</span>. The slope says
@@ -427,16 +434,19 @@ is close to the measured control mean of <span
 class="math inline">\(2.20\)</span>, a reassuring internal check.</p>
 <h2 id="interpolation-versus-extrapolation">Interpolation versus
 extrapolation</h2>
-<p>Using [eq:part_III_case_studies_fit] to estimate the response at an
-<em>intermediate</em> dose is reasonable: the model interpolates within
-the range it was fit on. Using it to predict a <em>much higher</em> dose
-— say <span class="math inline">\(d = 3\)</span>, giving <span
-class="math inline">\(\widehat{y} = 6.3\)</span> — is an
-<strong>extrapolation</strong> the data cannot support. Real
-dose–response curves usually saturate (recall the <a
+<p>Using <span class="citation"
+data-cites="eq:part_III_case_studies_fit">[@eq:part_III_case_studies_fit]</span>
+to estimate the response at an <em>intermediate</em> dose is reasonable:
+the model interpolates within the range it was fit on. Using it to
+predict a <em>much higher</em> dose — say <span class="math inline">\(d
+= 3\)</span>, giving <span class="math inline">\(\widehat{y} =
+6.3\)</span> — is an <strong>extrapolation</strong> the data cannot
+support. Real dose–response curves usually saturate (recall the <a
 href="#gl:threshold"><strong>threshold</strong></a> behaviour of the
-saturating response in [sec:part_I_first_principles]); a straight line
-will overpredict once the system approaches its ceiling.</p>
+saturating response in <span class="citation"
+data-cites="sec:appendix_math_review">[@sec:appendix_math_review]</span>);
+a straight line will overpredict once the system approaches its
+ceiling.</p>
 <pre class="mermaid"><code>graph LR
   A[Raw measurements] --&gt; B[Group + average]
   B --&gt; C[Fit a trend]
@@ -477,11 +487,13 @@ difference between a good fit and a good prediction.</li>
 </ul>
 <h2 id="practice">Practice</h2>
 <ul>
-<li><strong>Lab:</strong> [sec:lab_part_III_case_studies] — re-run the
-grouping and fit, then add a fourth condition and watch the fit
-change.</li>
-<li><strong>Question bank:</strong> [sec:q_part_III_case_studies] —
-recall through synthesis.</li>
+<li><strong>Lab:</strong> <span class="citation"
+data-cites="sec:lab_part_III_case_studies">[@sec:lab_part_III_case_studies]</span>
+— re-run the grouping and fit, then add a fourth condition and watch the
+fit change.</li>
+<li><strong>Question bank:</strong> <span class="citation"
+data-cites="sec:q_part_III_case_studies">[@sec:q_part_III_case_studies]</span>
+— recall through synthesis.</li>
 </ul>
 </main>
 </body>

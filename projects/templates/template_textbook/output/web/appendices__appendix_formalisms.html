@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>appendix_formalisms.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -237,10 +236,12 @@ which trajectories converge.</p>
 <h2 id="a-theorem-with-proof">2. A theorem with proof</h2>
 <blockquote>
 <p><strong>Theorem 1 (Logistic limit).</strong> For the logistic model
-in [eq:formalisms_logistic] with <span class="math inline">\(r &gt;
-0\)</span> and <span class="math inline">\(0 &lt; N_0 \le K\)</span>,
-the trajectory satisfies <span class="math inline">\(\lim_{t \to \infty}
-N(t) = K\)</span>.</p>
+in <span class="citation"
+data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>
+with <span class="math inline">\(r &gt; 0\)</span> and <span
+class="math inline">\(0 &lt; N_0 \le K\)</span>, the trajectory
+satisfies <span class="math inline">\(\lim_{t \to \infty} N(t) =
+K\)</span>.</p>
 </blockquote>
 <p><span class="math display">\[ N(t) = \frac{K}{1 + A e^{-rt}}, \qquad
 A = \frac{K - N_0}{N_0} . \]</span> {#eq:formalisms_logistic}</p>
@@ -304,20 +305,25 @@ variables:</p>
 N(t) &amp;= \frac{K}{1 + A e^{-rt}}, \qquad A = e^{-C},
 \end{aligned}
 \]</span></p>
-<p>which recovers [eq:formalisms_logistic]. Each line is one algebraic
-move; show your work at this granularity so readers can follow without
-gaps.</p>
+<p>which recovers <span class="citation"
+data-cites="eq:formalisms_logistic">[@eq:formalisms_logistic]</span>.
+Each line is one algebraic move; show your work at this granularity so
+readers can follow without gaps.</p>
 <hr />
 <h2 id="a-system-of-numbered-equations">6. A system of numbered
 equations</h2>
 <p>A simple predator–prey system, with each equation individually
-referenceable ([eq:formalisms_prey], [eq:formalisms_pred]):</p>
+referenceable (<span class="citation"
+data-cites="eq:formalisms_prey">[@eq:formalisms_prey]</span>, <span
+class="citation"
+data-cites="eq:formalisms_pred">[@eq:formalisms_pred]</span>):</p>
 <p><span class="math display">\[ \frac{dx}{dt} = \alpha x - \beta x y
 \]</span> {#eq:formalisms_prey}</p>
 <p><span class="math display">\[ \frac{dy}{dt} = \delta x y - \gamma y
 \]</span> {#eq:formalisms_pred}</p>
 <p>The vector-field figure style for such systems is demonstrated by the
-quiver plot in the format gallery ([sec:appendix_format_gallery]).</p>
+quiver plot in the format gallery (<span class="citation"
+data-cites="sec:appendix_format_gallery">[@sec:appendix_format_gallery]</span>).</p>
 <hr />
 <h2 id="dimensioned-quantities">7. Dimensioned quantities</h2>
 <p>State parameters with units explicitly, in math mode so they render
@@ -358,9 +364,11 @@ values.</caption>
 <hr />
 <h2 id="notation-summary">8. Notation summary</h2>
 <!-- STUB: maintain a running notation table; cross-reference Appendix B. -->
-<p>Symbols used throughout are collected in the notation appendix
-([sec:appendix_notation]); glossary definitions for narrative terms such
-as <a href="#gl:gradient"><strong>gradient</strong></a> and <a
+<p>Symbols used throughout are collected in the notation appendix (<span
+class="citation"
+data-cites="sec:appendix_notation">[@sec:appendix_notation]</span>);
+glossary definitions for narrative terms such as <a
+href="#gl:gradient"><strong>gradient</strong></a> and <a
 href="#gl:threshold"><strong>threshold</strong></a> are in the master
 glossary.</p>
 </main>

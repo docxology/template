@@ -1475,7 +1475,7 @@ fit on. Using it to predict a *much higher* dose — say $d = 3$, giving
 $\widehat{y} = 6.3$ — is an **extrapolation** the data cannot support. Real
 dose–response curves usually saturate (recall the
 [**threshold**](#gl:threshold) behaviour of the saturating response in
-[@sec:part_I_first_principles]); a straight line will overpredict once the system
+[@sec:appendix_math_review]); a straight line will overpredict once the system
 approaches its ceiling.
 
 ```mermaid
@@ -2117,7 +2117,7 @@ print(models.linear_fit(dose, response))
 2. Your four-point fit changed the slope. Which is the more honest summary of the
    system, and what would you measure next to decide?
 3. When is a straight-line dose–response model adequate, and when does the
-   saturating model from [@sec:part_I_first_principles] become necessary?
+   saturating model from [@sec:appendix_math_review] become necessary?
 
 
 
@@ -2982,14 +2982,15 @@ A simple table with column alignment and a cross-referencable caption
 
 : Column alignment — left, centre, right. {#tbl:gallery_alignment}
 
-The values below are mirrored in `manuscript/assets/data/format_gallery.csv` so
-rendering examples remain evidence-addressable fixtures rather than anonymous literals.
-
 | Left      |  Centre  |    Right |
 | :-------- | :------: | -------: |
 | alpha     |    1     |     10.0 |
 | beta      |    22    |      2.5 |
 | gamma     |   333    |    0.125 |
+
+The values above are mirrored in `manuscript/assets/data/format_gallery.csv` so
+rendering examples remain evidence-addressable fixtures rather than anonymous
+literals.
 
 A multi-line / grid table (cells may contain longer wrapped text):
 

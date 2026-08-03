@@ -1,134 +1,33 @@
 {
-  "timestamp": "2026-07-20T15:24:20Z",
   "checks": {
-    "PDF validation": true,
-    "Transmission bookends": true,
+    "Artifact manifest": true,
+    "Evidence registry": true,
+    "Figure registry": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": true,
-    "Evidence registry": true,
+    "PDF validation": true,
     "Project design overlays": true,
-    "Artifact manifest": true
+    "Transmission bookends": true
   },
   "figure_issues": [],
   "output_statistics": {
+    "data": {
+      "files": 2,
+      "size_mb": 0.0027980804443359375
+    },
     "detailed_validation": {
-      "structure": {
-        "valid": true,
-        "issues": [
-          "Missing directory: slides/"
-        ],
-        "missing_files": [],
-        "suspicious_sizes": [],
-        "warnings": [],
-        "directory_structure": {
-          "combined_pdf": {
-            "exists": true,
-            "size_mb": 0.9,
-            "readable": true
-          },
-          "pdf": {
-            "exists": true,
-            "files": 11,
-            "size_mb": 1.37,
-            "readable": true,
-            "optional": false
-          },
-          "web": {
-            "exists": true,
-            "files": 52,
-            "size_mb": 0.76,
-            "readable": true,
-            "optional": false
-          },
-          "slides": {
-            "exists": false,
-            "files": 0,
-            "size_mb": 0.0,
-            "optional": false
-          },
-          "figures": {
-            "exists": true,
-            "files": 96,
-            "size_mb": 1.7,
-            "readable": true,
-            "optional": false
-          },
-          "data": {
-            "exists": true,
-            "files": 2,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": false
-          },
-          "reports": {
-            "exists": true,
-            "files": 26,
-            "size_mb": 0.3,
-            "readable": true,
-            "optional": false
-          },
-          "simulations": {
-            "exists": false,
-            "files": 0,
-            "size_mb": 0.0,
-            "optional": true
-          },
-          "llm": {
-            "exists": false,
-            "files": 0,
-            "size_mb": 0.0,
-            "optional": true
-          },
-          "logs": {
-            "exists": true,
-            "files": 1,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          }
-        }
-      },
       "directories": {
-        "pdf": {
+        "data": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "1.37",
-          "largest_file": "template_textbook_combined.pdf"
-        },
-        "web": {
-          "exists": true,
-          "file_count": 52,
-          "size_mb": "0.76",
-          "largest_file": "index.html"
-        },
-        "slides": {
-          "exists": false,
-          "file_count": 0,
+          "file_count": 2,
+          "largest_file": "worked_model_summary.json",
           "size_mb": "0.00"
         },
         "figures": {
           "exists": true,
           "file_count": 96,
-          "size_mb": "1.70",
-          "largest_file": "gallery_contour.png"
-        },
-        "data": {
-          "exists": true,
-          "file_count": 2,
-          "size_mb": "0.00",
-          "largest_file": "worked_model_summary.json"
-        },
-        "reports": {
-          "exists": true,
-          "file_count": 26,
-          "size_mb": "0.30",
-          "largest_file": "evidence_registry.json"
-        },
-        "simulations": {
-          "exists": false,
-          "file_count": 0,
-          "size_mb": "0.00"
+          "largest_file": "gallery_contour.png",
+          "size_mb": "1.70"
         },
         "llm": {
           "exists": false,
@@ -136,51 +35,486 @@
           "size_mb": "0.00"
         },
         "logs": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "pdf": {
           "exists": true,
-          "file_count": 1,
-          "size_mb": "0.00",
-          "largest_file": "pipeline.log"
+          "file_count": 10,
+          "largest_file": "template_textbook_combined.pdf",
+          "size_mb": "1.36"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 10,
+          "largest_file": "evidence_registry.json",
+          "size_mb": "0.16"
+        },
+        "simulations": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "slides": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 52,
+          "largest_file": "index.html",
+          "size_mb": "0.78"
         }
       },
       "file_counts": {
-        "pdf": 11,
-        "web": 52,
-        "figures": 96,
         "data": 2,
-        "reports": 26,
-        "logs": 1
+        "figures": 96,
+        "pdf": 10,
+        "reports": 10,
+        "web": 52
       },
-      "total_size_mb": 4.1424760818481445,
       "issues_by_severity": {
         "critical": [],
+        "info": [],
         "warning": [
           "Directory 'slides/' missing or empty",
           "Directory 'simulations/' missing or empty",
-          "Directory 'llm/' missing or empty"
-        ],
-        "info": []
+          "Directory 'llm/' missing or empty",
+          "Directory 'logs/' missing or empty"
+        ]
       },
-      "recommendations": []
+      "recommendations": [],
+      "structure": {
+        "directory_structure": {
+          "combined_pdf": {
+            "exists": true,
+            "readable": true,
+            "size_mb": 0.9
+          },
+          "data": {
+            "exists": true,
+            "files": 2,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.0
+          },
+          "figures": {
+            "exists": true,
+            "files": 96,
+            "optional": false,
+            "readable": true,
+            "size_mb": 1.7
+          },
+          "llm": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "size_mb": 0.0
+          },
+          "logs": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "size_mb": 0.0
+          },
+          "pdf": {
+            "exists": true,
+            "files": 10,
+            "optional": false,
+            "readable": true,
+            "size_mb": 1.36
+          },
+          "reports": {
+            "exists": true,
+            "files": 10,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.16
+          },
+          "simulations": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "size_mb": 0.0
+          },
+          "slides": {
+            "exists": false,
+            "files": 0,
+            "optional": false,
+            "size_mb": 0.0
+          },
+          "web": {
+            "exists": true,
+            "files": 52,
+            "optional": false,
+            "readable": true,
+            "size_mb": 0.78
+          }
+        },
+        "issues": [
+          "Missing directory: slides/"
+        ],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "valid": true,
+        "warnings": []
+      },
+      "total_size_mb": 4.006174087524414
     },
-    "pdf": {
-      "files": 11,
-      "size_mb": 1.3742561340332031
-    },
+    "evidence_issues": [
+      "appendix_format_gallery.md:152: unsupported number 1.5"
+    ],
     "figures": {
       "files": 17,
       "size_mb": 0.39624881744384766
     },
-    "data": {
-      "files": 2,
-      "size_mb": 0.0027980804443359375
+    "pdf": {
+      "files": 10,
+      "size_mb": 1.3644218444824219
     }
   },
+  "recommendations": [],
   "summary": {
-    "total_checks": 8,
-    "passed": 8,
+    "all_passed": true,
     "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": true
+    "passed": 8,
+    "total_checks": 8
   },
-  "recommendations": []
+  "timestamp": "2026-08-03T00:18:44Z",
+  "validated_inputs": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "ebb3353a0b2dd6bc7e872cdf6c18003d2e48f74879e64d03d2bce0e81f57d026",
+      "size_bytes": 48870
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+      "size_bytes": 110801
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "3f136455653480925ad2796a8e728933435490bcfba146a5bfa0dd3be152ecb1",
+      "size_bytes": 10485
+    },
+    "consumed_manuscript": [
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/front_matter.md",
+        "source_sha256": "2a28655e25e3da1c43ba08cec0617f4c8169c3b922bb58469f56de006418f606"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/preface.md",
+        "source_sha256": "6629442c58e97816c104802d5f2ad9cf834d0c2b0c64cbec7bc29e69172b605e"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_0/unit_intro.md",
+        "source_sha256": "e09a97f931a42a3f983949d039f7e7e42a27d366ebc3badc227ecdc033056388"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_0/orientation.md",
+        "source_sha256": "df11c0374a5bd0529953f27e095b84de177bdf68978bb099fa6e94399e49334b"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_0/core_methods.md",
+        "source_sha256": "e185fa63f2844e1af4bef33ec7df1009e991f95535788753b596027ffa20f4c2"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_0/quantitative_foundations.md",
+        "source_sha256": "61fea16605c0053df6d3e6ff36932409219eff7cc5deb7f8656d40e06d89b9a1"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_I/unit_intro.md",
+        "source_sha256": "05d8f4fb9853f855241f280c2d9a55b0e610b1ac4f8b8cd512a272938011412a"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_I/first_principles.md",
+        "source_sha256": "2182cda2a34529106b496b33a39115591ead9ff75237e49f34c60a5f29b2eb4f"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_I/building_blocks.md",
+        "source_sha256": "215b6349c90a5db665678f2fcc8ed5a80fb0bc7fb6eae507fd0aab34648dc70e"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_I/structure_and_form.md",
+        "source_sha256": "e5feea5107b8d811a6765a89746a40800cc0c377f0a49e1da6fe9ed5fe5b1787"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_II/unit_intro.md",
+        "source_sha256": "caa7c4082a813ad87f4b6e7a226a885c99a82a43ea8bb1b5596e34056fc17d9d"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_II/systems_overview.md",
+        "source_sha256": "13f6815c02ac00fa54d42ac36f63b279a259c7ea6f8313218754a7f696e19220"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_II/dynamics_and_change.md",
+        "source_sha256": "0ccafc2e4ee21727b0e0c53862073321a8b1607dac9f4eed6237699e2fce083f"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_II/regulation_and_control.md",
+        "source_sha256": "75623338ae9ba13a31ffd091d712f10e18ca684a02caaab2c72433b861dace2d"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_III/unit_intro.md",
+        "source_sha256": "1842ec9d08721b9829f227a957a752beffbc50fab22ecdd470e0e74c8650014e"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_III/applied_models.md",
+        "source_sha256": "1f1392a869d0a646b19907c24e2b3d42c5a6be825fb261d8b07a87840a29b11c"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_III/case_studies.md",
+        "source_sha256": "48b2359edd3f77d2c2d281adaa29dbcee0f55dcd9ca176c5b866ed39d4dbac96"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/part_III/frontiers.md",
+        "source_sha256": "1d4f15257031df4e7486ba036449a61176bb151a50021d8dcbc5346fb8ea71b4"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_0/lab_orientation.md",
+        "source_sha256": "83268176d894bb0eb46ec6b021615191d7d65354ddfe75a05461c033bbe5aae7"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_0/lab_core_methods.md",
+        "source_sha256": "b9ca3524bfb632d55944434e3af22ed1a9484d1a1c56c4d2e08094df9a993d2a"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_0/lab_quantitative_foundations.md",
+        "source_sha256": "996254f8e2128b0713c333102e78dc81b083063b95d7629ce80b055ae52e5be6"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_I/lab_first_principles.md",
+        "source_sha256": "5ed1fe786c5e3f17433ae7f83be75be9b4172d52c5bc15d009610c2962012df0"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_I/lab_building_blocks.md",
+        "source_sha256": "9199e3b15ea57217396879b78e4c45c5b4ca3a72bf25f264d3f66ad4005bf1f3"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_I/lab_structure_and_form.md",
+        "source_sha256": "10d7fa1265d20f2fbfeed466b4eb59383296434f3f458efdd703312c8d07dfc5"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_II/lab_systems_overview.md",
+        "source_sha256": "a919b2e1d76a93372587a9148cf3087e52f61361c05f352a3acb8d3ac325a042"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_II/lab_dynamics_and_change.md",
+        "source_sha256": "b243bb024054647e579642efc2f0293a3fb108471a9cf776d8f4d7bf627b22b8"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_II/lab_regulation_and_control.md",
+        "source_sha256": "933cd3d77cce3642cfcd46d49ffde9b490dde2a426c3ba4d8ff94cd25804b01b"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_III/lab_applied_models.md",
+        "source_sha256": "7a2d99c6ec82865db1decfdc05b8b42e0e92e33ded19c4dc46a35a6501a8bd2e"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_III/lab_case_studies.md",
+        "source_sha256": "93d1b47d9673ad830300fb3e68ab3b815aceee931da21eb28dbeaa0abd74dbc7"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/labs/part_III/lab_frontiers.md",
+        "source_sha256": "ef13089bded13accc08070bc14cd0449e61fb82329807d77ea24f1b98ab3d664"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_0/q_orientation.md",
+        "source_sha256": "f5eb22f6cc7bc93a93763069f70f4564ae09b1bef623a1dcfc14337aef5e8fab"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_0/q_core_methods.md",
+        "source_sha256": "62cef79a98ac3994a45ceb9a61ba7ef707e04c08ccc57cc0fb19ce9fa4c6ab4b"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_0/q_quantitative_foundations.md",
+        "source_sha256": "c8b6f5fb84ecdb4811e11e7c2c63ea164e2f0bd9b10054c7ccc24e70e130eb6c"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_I/q_first_principles.md",
+        "source_sha256": "0390fdf3ac30c7e384022769c5a1745d4917348a49514d76f3ef6d96a4ed34f1"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_I/q_building_blocks.md",
+        "source_sha256": "2479b880424b9695f8e40b214702e2a40a59333df8daa7700fd79e96b352cb5e"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_I/q_structure_and_form.md",
+        "source_sha256": "90d54a9460ecce288a8af3b46a35db1097315024e35f3a188548175b1396cdec"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_II/q_systems_overview.md",
+        "source_sha256": "3b6c7955cf19f60eae433a47744a11d4cbc47265439a2758bae32c4cce64f63a"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_II/q_dynamics_and_change.md",
+        "source_sha256": "e4f3ae19de54561617881b347ede1b7af647861cb37203cb0e6cd8ec5aa0cde2"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_II/q_regulation_and_control.md",
+        "source_sha256": "6aaf61fef279b8db0ca57c0226b3b1e0fc81efb07d38fe2b7ed05163e85d1504"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_III/q_applied_models.md",
+        "source_sha256": "164097473617bd61c63ec0f4da6449bdfdd55af22026a6dc6ecd2faee8ce96f0"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_III/q_case_studies.md",
+        "source_sha256": "d969420cd21c3804bd11565cad511dd12cccfd08a142d03671ba9a0f2797a4d8"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/questions/part_III/q_frontiers.md",
+        "source_sha256": "242d3d5622212f7c5eff71075eadec0c14c57b0ca10b639ee02291eb2d4fa546"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/appendices/appendix_authoring_guide.md",
+        "source_sha256": "f0c93a0ebb760e7749ac283ace49693c7ce84282dcc00ed0bdf010e98cf1f28f"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/appendices/appendix_notation.md",
+        "source_sha256": "bc01edc9b37c84fdc4a3c9ad6665ad581143912303fa6c2c7538d0052a22c271"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/appendices/appendix_math_review.md",
+        "source_sha256": "8469646aeee7e15a510aa1e43baa5e04c861efd75f8af776289a9f2e084372df"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/appendices/appendix_formalisms.md",
+        "source_sha256": "0fd94d201ccc49bf6ec455ead6ac1aa643ccecb9b4aae081883a751c4bed9ceb"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/appendices/appendix_format_gallery.md",
+        "source_sha256": "e520e5289917ae499692fae920a80efcd193853c04449682cb0a861fe9ae44d5"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/glossary.md",
+        "source_sha256": "0f14237b094fd34d90d11ffacd4848d6cca75f1b335ea621152b7be0ebe420bf"
+      },
+      {
+        "rendered_path": "output/web/_combined_manuscript.md",
+        "rendered_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+        "source_path": "manuscript/appendices/appendix_index.md",
+        "source_sha256": "266842a13cdd884238cc3a96ecfdd2ba2298cea861d006fcd25f0fc76a7c2bbe"
+      }
+    ],
+    "fingerprints": {
+      "config": {
+        "file_count": 17,
+        "sha256": "8106abdc141b0e3df2a273f6e61cb2977694dfe1d8c1bf54fe02ff419b2131fa"
+      },
+      "output": {
+        "file_count": 159,
+        "sha256": "f29b2a87f9af9a611756fbbb17ec54cfc6afed473f7776f828b692b30965bb1e"
+      },
+      "source": {
+        "file_count": 92,
+        "sha256": "0f4dd83579e4c28b36a3ef190e1545f7bd5cf3be638bd8f7df2a3bfe08d743d4"
+      },
+      "stage": {
+        "file_count": 1080,
+        "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+      }
+    },
+    "project": "templates/template_textbook",
+    "schema_version": "template-validated-rendered-inputs-v1"
+  }
 }
