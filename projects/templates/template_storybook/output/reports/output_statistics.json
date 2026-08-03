@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.05",
-      "total_size_bytes": 50143,
+      "total_size_bytes": 50005,
       "largest_files": [
         {
           "name": "index.html",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 46,
       "size_mb": "0.46",
-      "total_size_bytes": 486141,
+      "total_size_bytes": 486137,
       "largest_files": [
         {
           "name": "02_architecture_slides.log",
@@ -141,7 +141,7 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.11",
-      "total_size_bytes": 116696,
+      "total_size_bytes": 117026,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -185,7 +185,7 @@
     }
   },
   "total_files": 93,
-  "total_size_mb": 4.4689788818359375,
+  "total_size_mb": 4.469158172607422,
   "largest_files": [
     {
       "name": "the-shape-between.pdf",
@@ -255,11 +255,11 @@
   ],
   "sizes_by_category": {
     "pdf": 1.5405197143554688,
-    "web": 0.047820091247558594,
-    "slides": 0.4636201858520508,
+    "web": 0.04768848419189453,
+    "slides": 0.46361637115478516,
     "figures": 2.295124053955078,
     "data": 0.0106048583984375,
-    "reports": 0.11128997802734375
+    "reports": 0.11160469055175781
   },
   "file_counts_by_type": {
     ".md": 5,
