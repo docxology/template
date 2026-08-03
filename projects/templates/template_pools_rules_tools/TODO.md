@@ -13,6 +13,7 @@ project's perspective).
 - Output validation: all component checks pass (PDF, bookends, Markdown, structure, figure registry, evidence registry, design overlays, and artifact manifest). The rendered-provenance binding remains blocked by the shared validator's `ARTIFACT_MANIFEST_INCOMPLETE` comparison of stable generated files; this exemplar does not modify shared infrastructure, so the issue remains recorded here.
 - Output copy stage: passed; 121 files copied to `output/templates/template_pools_rules_tools/` and the combined PDF was copied successfully.
 - Repo drift gate (2026-08-02): `uv run python scripts/audit/check_template_drift.py --project templates/template_pools_rules_tools --strict` passed.
+- Standalone mirror sync (2026-08-02): `scripts/publish/sync_standalone_mirrors.py --project template_pools_rules_tools --commit` reported SYNCED (+3 ~14 -0); mirror commit `f9bd990` (verified by fresh clone: four-tools manuscript, combined PDF, figures, and figure registry present).
 - Type-checking: `uv run mypy projects/templates/template_pools_rules_tools/src --config-file projects/templates/template_pools_rules_tools/pyproject.toml`
 - Strong-rule validation gate: `uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py`
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
