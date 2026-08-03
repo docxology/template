@@ -22,6 +22,10 @@ This exemplar is limited to lawful redaction, declassification support, public-r
 
 The pipeline architecture consists of two layers. Layer one performs text-level disclosure control: each segment is audited against a public classification ceiling, redaction spans are validated for non-overlap, orphan decisions are flagged, and source-control coverage is enforced. Layer two applies visual redaction treatments, steganographic provenance overlays, and optional Kmyth TPM sidecar sealing.
 
+![Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual layer renders the 4x4 proof matrix with optional steganography and Kmyth TPM sidecars.](../output/figures/redaction_flow.png){#fig:redaction_flow}
+
+[@fig:redaction_flow] traces the full pipeline: typed fixture load, ceiling and span validation, source-control coverage and mosaic checks, the in-memory sanitized packet, the two text-free public projections, and the visual proof chain.
+
 ## Layer One: Disclosure Control
 
 The disclosure-control engine operates on `RedactionSegment` objects, each carrying an identifier, classification level, text content, and optional source controls. Redaction decisions are `RedactionDecision` records with bounded reasons: `source_identity`, `operational_detail`, `time_place_selector`, `legal_privilege`, and `privacy`. The audit engine validates that:

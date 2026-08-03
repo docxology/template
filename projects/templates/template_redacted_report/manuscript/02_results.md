@@ -12,6 +12,23 @@ The audit produces:
 - **Mosaic risk score**: residual markers normalized by segment and pattern count.
 - **Findings**: warning-level findings for residual markers in sanitized text.
 
+The canonical run's measured values are bound to `output/reports/redaction_audit.json` by the manuscript-binding tests:
+
+| Metric | Measured value |
+|---|---|
+| Segment count | 14 |
+| Redaction decision count | 22 |
+| Reviewer record count | 3 |
+| Release safety score | 0.798 |
+| Redaction coverage | 1.0 |
+| Mosaic risk score | 0.012 |
+| Findings | 2 warning-level |
+| Releasable | true |
+| Final release recommended | false |
+| Approvals | 3 |
+
+Because the intelligence policy blocks on warnings and the fixture retains two warning-level residual markers, `final_release_recommended` is false even though the packet is releasable and the review gate is approved.
+
 ## Source-Safe Redaction Ledger
 
 The redaction ledger records each decision with:
@@ -59,6 +76,10 @@ The development proof matrix produces sixteen base PDFs (four redaction styles Ã
 - Steganography PDF filename, byte size, and SHA-256.
 - Hash manifest filename and SHA-256.
 - Kmyth sidecar count and filenames (when Kmyth is available).
+
+![Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction decisions.](../output/figures/disclosure_control_matrix.png){#fig:disclosure_control_matrix}
+
+[@fig:disclosure_control_matrix] renders the sixteen style-background combinations; only the visual token and the page background differ between cells.
 
 ## Kmyth TPM Sidecar Production
 
