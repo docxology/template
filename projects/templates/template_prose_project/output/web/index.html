@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Readability, structural, and citation-density gating for research manuscripts" />
@@ -44,7 +44,6 @@ Pipeline</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -667,10 +666,10 @@ three figures (per-file word counts, readability metrics, citation
 density) and a JSON <code>manuscript_report.json</code> suitable for CI
 artefacts.</p>
 <p><strong>Run snapshot.</strong> The current configuration analyses 8
-file(s) totalling 1745 words across 86 sentence(s) and 64 paragraph(s).
-Average Flesch-Kincaid grade level is 15.97; average Gunning Fog index
-is 16.73; the manuscript references 6 unique citation key(s); the
-longest section is 416 words and the shortest is 17. These numbers are
+file(s) totalling 1842 words across 90 sentence(s) and 65 paragraph(s).
+Average Flesch-Kincaid grade level is 15.68; average Gunning Fog index
+is 16.38; the manuscript references 6 unique citation key(s); the
+longest section is 483 words and the shortest is 17. These numbers are
 auto-substituted by
 <code>scripts/z_generate_manuscript_variables.py</code> after every run,
 so the abstract tracks the JSON outputs in <code>output/</code>.</p>
@@ -711,18 +710,20 @@ show how to compose existing template infrastructure into a complete,
 reproducible editorial workflow.</p>
 <p>The architecture is simple. <code>manuscript/config.yaml</code>
 defines policy: target grade-level band, citation-density floor,
-heading-structure rules, bibliography-consistency policy.
-<code>src/pipeline/__init__.py::run_prose_pipeline</code> reads the
-manuscript directory, calls <a
+heading-structure rules, bibliography-consistency policy. The
+orchestrator script <code>scripts/run_prose_pipeline.py</code> reads the
+manuscript directory and calls <a
 href="../../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
-to produce a <code>ManuscriptReport</code>, cross-checks the cited keys
-against <a
-href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
-for the <code>references.bib</code>, evaluates each configured check,
-and writes a markdown review report alongside JSON artefacts and three
-figures. None of this is project-specific: a different project can
-re-use the same infrastructure with a different <code>config.yaml</code>
-and a different manuscript directory.</p>
+to produce a <code>ManuscriptReport</code>;
+<code>src/pipeline/__init__.py::run_prose_pipeline</code> then
+cross-checks the cited keys against the <code>references.bib</code> (via
+the project-owned <code>src.prose_facade.parse_bib_keys</code> helper),
+evaluates each configured check, and writes the JSON artefacts, while
+<code>src/report.py::write_review_report</code> assembles the markdown
+review and three diagnostic figures are rendered from the report. None
+of this is project-specific: a different project can re-use the same
+infrastructure with a different <code>config.yaml</code> and a different
+manuscript directory.</p>
 <p>The remainder of this paper documents the methodology (sec. <a
 href="#sec:methodology">3</a>), the run-time results on the bundled
 manuscript (sec. <a href="#sec:results">4</a>), and the architectural
@@ -810,10 +811,13 @@ the check.</td>
 </tr>
 </tbody>
 </table>
-<p>The check uses <a
+<p>The check compares the cited keys from the
+<code>ManuscriptReport</code> against the BibTeX keys returned by
+<code>src.prose_facade.parse_bib_keys</code> — a deliberately minimal
+regex that skips <code>@comment</code> blocks. (Forks that need
+dialect-complete BibTeX parsing can swap in <a
 href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
-so it sees exactly the same view of the bibliography that the rendering
-pipeline uses.</p>
+at the script layer; the exemplar’s own gate does not require it.)</p>
 <h2 data-number="3.4" id="evaluate"><span
 class="header-section-number">3.4</span> Evaluate</h2>
 <p>The report runs through a set of pure check functions:</p>
@@ -834,6 +838,12 @@ heading level (when
 <p>Each check produces a
 <code>CheckResult(passed, message, details)</code>; the run’s
 <code>all_passed</code> flag is the conjunction.</p>
+<p>The thresholds each check applies come from
+<code>manuscript/config.yaml</code>. A <code>prose.preset</code> key
+(<code>lenient</code> for the bundled exemplar; <code>strict</code> in
+<code>config.yaml.example</code>) seeds the defaults for any knob the
+YAML does not set explicitly, so a fork can adopt a named editorial
+profile in one line and override individual knobs afterwards.</p>
 <h2 data-number="3.5" id="render"><span
 class="header-section-number">3.5</span> Render</h2>
 <p><code>src/report.py::write_review_report</code> writes a markdown
@@ -957,10 +967,14 @@ deterministic pipeline.</p>
 <ul>
 <li><code>manuscript/config.yaml</code> is the only place run policy
 lives.</li>
-<li><code>src/pipeline/</code> is the only place the project touches
-<code>infrastructure/</code>.</li>
-<li>Scripts in <code>scripts/</code> do only filesystem I/O and CLI
-argument handling.</li>
+<li><code>src/</code> is deliberately <code>infrastructure</code>-free:
+the report Protocols and the
+<code>parse_bib_keys</code>/<code>render_outline</code> helpers in
+<code>src/prose_facade.py</code> are the decoupling seam.</li>
+<li>Scripts in <code>scripts/</code> do only filesystem I/O, CLI
+argument handling, and the <code>infrastructure/</code> calls
+(e.g. <code>infrastructure.prose.analyze_manuscript</code>) on
+<code>src/</code>’s behalf.</li>
 <li>Every artefact in <code>output/</code> is regeneratable;
 <code>manuscript/references.bib</code> is curated and validated
 read-only by this project.</li>
@@ -1181,9 +1195,10 @@ manuscript is rewritten to the appropriate
 command and resolved against the bib file.</p>
 <p>This project does not auto-generate the bibliography — it
 <strong>validates</strong> that every <code>[@key]</code> cited in the
-prose has a matching entry, via <a
-href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>.
-The check policy is configured under <code>bibliography:</code> in <a
+prose has a matching entry, via the project’s own
+<code>src.prose_facade.parse_bib_keys</code> helper (a lightweight
+BibTeX-key regex that skips <code>@comment</code> blocks). The check
+policy is configured under <code>bibliography:</code> in <a
 href="config.yaml"><code>config.yaml</code></a>.</p>
 <p>To validate that <code>references.bib</code> is syntactically
 clean:</p>

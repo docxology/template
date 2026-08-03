@@ -8,7 +8,7 @@
     },
     {
       "rendered_path": "output/manuscript/00_abstract.md",
-      "rendered_sha256": "e76cb8bad1f4bb7950b03cdd8e4c433461c00eaa33344719e5558687828f4152",
+      "rendered_sha256": "1b8f336e60fc6575ebce63106dfe1b6ffcd6a58e1313528f0ba207c4e67e5ded",
       "source_path": "manuscript/00_abstract.md",
       "source_sha256": "5ec4ec18fcd61098d7afe98839017e654eb4e88a784d62902ec65b4a894b3512"
     },
@@ -20,9 +20,9 @@
     },
     {
       "rendered_path": "output/manuscript/02_methodology.md",
-      "rendered_sha256": "503bd83a327fb6e1c1a4f655380be97761dfb649f996582c61b7d86b33dbf42e",
+      "rendered_sha256": "cd8aa4fc32077f009eb3ec456ae1fd9a3432db030ce4e025b9697cfb05644b49",
       "source_path": "manuscript/02_methodology.md",
-      "source_sha256": "503bd83a327fb6e1c1a4f655380be97761dfb649f996582c61b7d86b33dbf42e"
+      "source_sha256": "cd8aa4fc32077f009eb3ec456ae1fd9a3432db030ce4e025b9697cfb05644b49"
     },
     {
       "rendered_path": "output/manuscript/03_results.md",
@@ -64,38 +64,38 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "3f66524aefab41367c449ca33d0540eb2aa9f2fc2df468c99f530233c1e337ec",
-      "size_bytes": 16825
+      "sha256": "49d96a215cbda6c1315e51cef05300c1c358c61bf704c5676f2ca71888d76275",
+      "size_bytes": 16827
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "418d22856e2686cc1f9608bdc53c14bf05e89d7bebf09c48677affc372ce2b40",
-      "size_bytes": 22283
+      "sha256": "9be265877c9e87973e0b27b1567e04b165f8fbe1de51a5a33e8e821e34774eb1",
+      "size_bytes": 22614
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "9c1f4065f4d70a4c8b3aae38ab5964b835d7079ab7f60626fe603529d77ca678",
+      "sha256": "5fb17cb187368392675fddbc2cec4854195a95bf35cd7b4cd0039bf8a24074e1",
       "size_bytes": 2542
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "86f6d41a2468697c0bba6b2370c423b127175fa5dd935cba238785cec02d043c",
-      "size_bytes": 8888
+      "sha256": "9de18d036786a44b02bb169fa892acf6f372cee8f28f97f52336b760c6a6899d",
+      "size_bytes": 8894
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
   "fingerprints": {
     "config": {
       "file_count": 15,
-      "sha256": "407c3e4975771375d4f1c6599ba8f6752908925474e04e7260b47321a06c1643"
+      "sha256": "8505b4433c8c871405ff68355fd6a1483c0070fa8e0829ce9a31103811f51bd7"
     },
     "output": {
       "file_count": 56,
-      "sha256": "b0300e73783ba2990ff1a9e1f1112fa6d5a22506c31b4f54456e5415d6b1ae6d"
+      "sha256": "c86515a862b3dfbf220df4c5f3146273a35b8bf305169b689974d8815c880711"
     },
     "source": {
       "file_count": 27,
-      "sha256": "dad121aafb9fd2ace3e2ffa18af25297a76edfc48d425e1a971e4cf29eeb7fc5"
+      "sha256": "87f3195515e8ab3e4706c85c054d8712790f139018734e35463b1ebc98ae3863"
     },
     "stage": {
       "file_count": 1080,

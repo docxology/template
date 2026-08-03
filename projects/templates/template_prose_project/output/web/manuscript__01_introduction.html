@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>01_introduction.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -201,22 +200,28 @@ show how to compose existing template infrastructure into a complete,
 reproducible editorial workflow.</p>
 <p>The architecture is simple. <code>manuscript/config.yaml</code>
 defines policy: target grade-level band, citation-density floor,
-heading-structure rules, bibliography-consistency policy.
-<code>src/pipeline/__init__.py::run_prose_pipeline</code> reads the
-manuscript directory, calls <a
+heading-structure rules, bibliography-consistency policy. The
+orchestrator script <code>scripts/run_prose_pipeline.py</code> reads the
+manuscript directory and calls <a
 href="../../../../infrastructure/prose/SKILL.md"><code>infrastructure.prose.analyze_manuscript</code></a>
-to produce a <code>ManuscriptReport</code>, cross-checks the cited keys
-against <a
-href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
-for the <code>references.bib</code>, evaluates each configured check,
-and writes a markdown review report alongside JSON artefacts and three
-figures. None of this is project-specific: a different project can
-re-use the same infrastructure with a different <code>config.yaml</code>
-and a different manuscript directory.</p>
-<p>The remainder of this paper documents the methodology
-([sec:methodology]), the run-time results on the bundled manuscript
-([sec:results]), and the architectural lessons drawn from wiring prose
-analysis through the template pipeline ([sec:conclusion]).</p>
+to produce a <code>ManuscriptReport</code>;
+<code>src/pipeline/__init__.py::run_prose_pipeline</code> then
+cross-checks the cited keys against the <code>references.bib</code> (via
+the project-owned <code>src.prose_facade.parse_bib_keys</code> helper),
+evaluates each configured check, and writes the JSON artefacts, while
+<code>src/report.py::write_review_report</code> assembles the markdown
+review and three diagnostic figures are rendered from the report. None
+of this is project-specific: a different project can re-use the same
+infrastructure with a different <code>config.yaml</code> and a different
+manuscript directory.</p>
+<p>The remainder of this paper documents the methodology (<span
+class="citation"
+data-cites="sec:methodology">[@sec:methodology]</span>), the run-time
+results on the bundled manuscript (<span class="citation"
+data-cites="sec:results">[@sec:results]</span>), and the architectural
+lessons drawn from wiring prose analysis through the template pipeline
+(<span class="citation"
+data-cites="sec:conclusion">[@sec:conclusion]</span>).</p>
 </main>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>99_references.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -254,9 +253,10 @@ manuscript is rewritten to the appropriate
 command and resolved against the bib file.</p>
 <p>This project does not auto-generate the bibliography — it
 <strong>validates</strong> that every <code>[key]</code> cited in the
-prose has a matching entry, via <a
-href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>.
-The check policy is configured under <code>bibliography:</code> in <a
+prose has a matching entry, via the project’s own
+<code>src.prose_facade.parse_bib_keys</code> helper (a lightweight
+BibTeX-key regex that skips <code>@comment</code> blocks). The check
+policy is configured under <code>bibliography:</code> in <a
 href="config.yaml"><code>config.yaml</code></a>.</p>
 <p>To validate that <code>references.bib</code> is syntactically
 clean:</p>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>04_conclusion.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -192,10 +191,14 @@ deterministic pipeline.</p>
 <ul>
 <li><code>manuscript/config.yaml</code> is the only place run policy
 lives.</li>
-<li><code>src/pipeline/</code> is the only place the project touches
-<code>infrastructure/</code>.</li>
-<li>Scripts in <code>scripts/</code> do only filesystem I/O and CLI
-argument handling.</li>
+<li><code>src/</code> is deliberately <code>infrastructure</code>-free:
+the report Protocols and the
+<code>parse_bib_keys</code>/<code>render_outline</code> helpers in
+<code>src/prose_facade.py</code> are the decoupling seam.</li>
+<li>Scripts in <code>scripts/</code> do only filesystem I/O, CLI
+argument handling, and the <code>infrastructure/</code> calls
+(e.g. <code>infrastructure.prose.analyze_manuscript</code>) on
+<code>src/</code>’s behalf.</li>
 <li>Every artefact in <code>output/</code> is regeneratable;
 <code>manuscript/references.bib</code> is curated and validated
 read-only by this project.</li>

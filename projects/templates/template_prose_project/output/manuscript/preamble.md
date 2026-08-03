@@ -38,7 +38,7 @@ multi-page tables will likely need everything below.
 \usepackage[capitalise,noabbrev]{cleveref}
 
 % Optional: algorithm pseudocode (uncomment if any section embeds \begin{algorithm})
-% \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+% \IfFileExists{algorithm2e.sty}{\usepackage[ruled,vlined,linesnumbered]{algorithm2e}}{}
 
 % Optional: code listings (uncomment if any section embeds non-fenced code blocks)
 % \usepackage{listings}

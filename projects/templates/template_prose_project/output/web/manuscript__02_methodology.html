@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_methodology.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -250,10 +249,13 @@ the check.</td>
 </tr>
 </tbody>
 </table>
-<p>The check uses <a
+<p>The check compares the cited keys from the
+<code>ManuscriptReport</code> against the BibTeX keys returned by
+<code>src.prose_facade.parse_bib_keys</code> — a deliberately minimal
+regex that skips <code>@comment</code> blocks. (Forks that need
+dialect-complete BibTeX parsing can swap in <a
 href="../../../../infrastructure/reference/citation/SKILL.md"><code>infrastructure.reference.citation.parse_bibfile</code></a>
-so it sees exactly the same view of the bibliography that the rendering
-pipeline uses.</p>
+at the script layer; the exemplar’s own gate does not require it.)</p>
 <h2 id="evaluate">Evaluate</h2>
 <p>The report runs through a set of pure check functions:</p>
 <ul>
@@ -273,6 +275,12 @@ heading level (when
 <p>Each check produces a
 <code>CheckResult(passed, message, details)</code>; the run’s
 <code>all_passed</code> flag is the conjunction.</p>
+<p>The thresholds each check applies come from
+<code>manuscript/config.yaml</code>. A <code>prose.preset</code> key
+(<code>lenient</code> for the bundled exemplar; <code>strict</code> in
+<code>config.yaml.example</code>) seeds the defaults for any knob the
+YAML does not set explicitly, so a fork can adopt a named editorial
+profile in one line and override individual knobs afterwards.</p>
 <h2 id="render">Render</h2>
 <p><code>src/report.py::write_review_report</code> writes a markdown
 file with:</p>

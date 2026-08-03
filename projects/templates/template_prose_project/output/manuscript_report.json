@@ -1,10 +1,10 @@
 {
-  "total_words": 1745,
-  "total_sentences": 86,
-  "total_paragraphs": 64,
-  "avg_flesch_reading_ease": 19.19,
-  "avg_flesch_kincaid_grade": 15.97,
-  "avg_gunning_fog": 16.73,
+  "total_words": 1842,
+  "total_sentences": 90,
+  "total_paragraphs": 65,
+  "avg_flesch_reading_ease": 21.25,
+  "avg_flesch_kincaid_grade": 15.68,
+  "avg_gunning_fog": 16.38,
   "citation_keys": [
     "peng2011reproducible",
     "gunning1952technique",
@@ -76,21 +76,21 @@
     {
       "name": "01_introduction.md",
       "metrics": {
-        "char_count": 1983,
-        "word_count": 258,
-        "sentence_count": 9,
+        "char_count": 2032,
+        "word_count": 268,
+        "sentence_count": 10,
         "paragraph_count": 5,
-        "syllable_count": 533,
-        "avg_words_per_sentence": 28.667,
-        "avg_syllables_per_word": 2.066,
-        "complex_word_count": 62,
-        "complex_word_fraction": 0.24,
-        "flesch_reading_ease": 2.96,
-        "flesch_kincaid_grade": 19.97,
-        "gunning_fog": 21.08
+        "syllable_count": 548,
+        "avg_words_per_sentence": 26.8,
+        "avg_syllables_per_word": 2.045,
+        "complex_word_count": 60,
+        "complex_word_fraction": 0.224,
+        "flesch_reading_ease": 6.64,
+        "flesch_kincaid_grade": 18.99,
+        "gunning_fog": 19.68
       },
       "structure": {
-        "total_words": 285,
+        "total_words": 307,
         "max_depth": 1,
         "has_h1": true,
         "has_skipped_level": false,
@@ -106,53 +106,54 @@
             "level": 1,
             "title": "Introduction {#sec:introduction}",
             "line": 1,
-            "word_count": 285
+            "word_count": 307
           }
         ]
       },
       "quality": {
-        "word_count": 258,
-        "passive_count": 1,
+        "word_count": 268,
+        "passive_count": 2,
         "hedge_count": 0,
         "citation_count": 3,
         "long_sentence_count": 3,
-        "passive_density_per_1000": 3.88,
+        "passive_density_per_1000": 7.46,
         "hedge_density_per_1000": 0.0,
-        "citation_density_per_1000": 11.63,
+        "citation_density_per_1000": 11.19,
         "citation_keys": [
           "peng2011reproducible",
           "gunning1952technique",
           "strunk2000elements"
         ],
         "passive_sentences": [
-          "The traditional remedy — a senior co-author re-reading the manuscript with [@strunk2000elements] in hand — is slow, non-reproducible, and impossible to apply continuously.\n\n exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**."
+          "The traditional remedy — a senior co-author re-reading the manuscript with [@strunk2000elements] in hand — is slow, non-reproducible, and impossible to apply continuously.\n\n exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**.",
+          "The orchestrator script  reads the manuscript directory and calls [](../../../../infrastructure/prose/SKILL.md) to produce a ;  then cross-checks the cited keys against the  (via the project-owned  helper), evaluates each configured check, and writes the JSON artefacts, while  assembles the markdown review and three diagnostic figures are rendered from the report."
         ],
         "hedge_words": [],
         "long_sentences": [
           "A working draft accumulates structural drift (skipped heading levels, sections that have grown to 2,000 words while their siblings sit at 200), readability drift (a once-clean introduction now reads at the Gunning Fog level of a legal contract [@gunning1952technique]), and citation drift ( references that no longer exist in , or bibliography entries that nobody actually cites).",
           "The traditional remedy — a senior co-author re-reading the manuscript with [@strunk2000elements] in hand — is slow, non-reproducible, and impossible to apply continuously.\n\n exists to demonstrate that the editorial-review pass can be expressed as a **deterministic, configurable, infrastructure-backed pipeline**.",
-          "The architecture is simple.  defines policy: target grade-level band, citation-density floor, heading-structure rules, bibliography-consistency policy.  reads the manuscript directory, calls [](../../../../infrastructure/prose/SKILL.md) to produce a , cross-checks the cited keys against [](../../../../infrastructure/reference/citation/SKILL.md) for the , evaluates each configured check, and writes a markdown review report alongside JSON artefacts and three figures."
+          "The orchestrator script  reads the manuscript directory and calls [](../../../../infrastructure/prose/SKILL.md) to produce a ;  then cross-checks the cited keys against the  (via the project-owned  helper), evaluates each configured check, and writes the JSON artefacts, while  assembles the markdown review and three diagnostic figures are rendered from the report."
         ]
       }
     },
     {
       "name": "02_methodology.md",
       "metrics": {
-        "char_count": 3091,
-        "word_count": 416,
-        "sentence_count": 26,
-        "paragraph_count": 23,
-        "syllable_count": 754,
-        "avg_words_per_sentence": 16.0,
-        "avg_syllables_per_word": 1.812,
-        "complex_word_count": 69,
-        "complex_word_fraction": 0.166,
-        "flesch_reading_ease": 37.26,
-        "flesch_kincaid_grade": 12.04,
-        "gunning_fog": 13.03
+        "char_count": 3503,
+        "word_count": 483,
+        "sentence_count": 29,
+        "paragraph_count": 24,
+        "syllable_count": 857,
+        "avg_words_per_sentence": 16.655,
+        "avg_syllables_per_word": 1.774,
+        "complex_word_count": 77,
+        "complex_word_fraction": 0.159,
+        "flesch_reading_ease": 39.82,
+        "flesch_kincaid_grade": 11.84,
+        "gunning_fog": 13.04
       },
       "structure": {
-        "total_words": 586,
+        "total_words": 671,
         "max_depth": 2,
         "has_h1": true,
         "has_skipped_level": false,
@@ -185,7 +186,7 @@
           {
             "level": 2,
             "title": "Render",
-            "line": 46
+            "line": 48
           }
         ],
         "sections": [
@@ -211,31 +212,31 @@
             "level": 2,
             "title": "Cross-check",
             "line": 21,
-            "word_count": 108
+            "word_count": 140
           },
           {
             "level": 2,
             "title": "Evaluate",
             "line": 34,
-            "word_count": 97
+            "word_count": 150
           },
           {
             "level": 2,
             "title": "Render",
-            "line": 46,
+            "line": 48,
             "word_count": 180
           }
         ]
       },
       "quality": {
-        "word_count": 416,
+        "word_count": 483,
         "passive_count": 3,
         "hedge_count": 0,
         "citation_count": 3,
-        "long_sentence_count": 6,
-        "passive_density_per_1000": 7.21,
+        "long_sentence_count": 7,
+        "passive_density_per_1000": 6.21,
         "hedge_density_per_1000": 0.0,
-        "citation_density_per_1000": 7.21,
+        "citation_density_per_1000": 6.21,
         "citation_keys": [
           "flesch1948new",
           "kincaid1975derivation",
@@ -244,15 +245,16 @@
         "passive_sentences": [
           "Scaffolding files (, , , , ) are excluded by default — they hold infrastructure documentation rather than manuscript prose.\n\n## Analyse\n\nFor each file, three analysers run in parallel:\n\n* **Metrics** () — word, sentence, paragraph, syllable counts; average words per sentence; average syllables per word; complex-word fraction; Flesch Reading Ease [@flesch1948new]; Flesch-Kincaid Grade Level [@kincaid1975derivation]; Gunning Fog Index [@gunning1952technique].",
           "The results are aggregated into a  whose JSON form is small, greppable, and diff-friendly.\n\n## Cross-check\n\nEvery cited key is matched against the BibTeX file at .",
-          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block."
+          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check compares the cited keys from the  against the BibTeX keys returned by  — a deliberately minimal regex that skips  blocks."
         ],
         "hedge_words": [],
         "long_sentences": [
           "# Methodology {#sec:methodology}\n\nThe pipeline runs in five stages, each a pure function in the project's  modules; the orchestrator script in  does only argument parsing and filesystem I/O.\n\n## Read\n\n walks the configured manuscript directory and returns a sorted  mapping.",
           "Scaffolding files (, , , , ) are excluded by default — they hold infrastructure documentation rather than manuscript prose.\n\n## Analyse\n\nFor each file, three analysers run in parallel:\n\n* **Metrics** () — word, sentence, paragraph, syllable counts; average words per sentence; average syllables per word; complex-word fraction; Flesch Reading Ease [@flesch1948new]; Flesch-Kincaid Grade Level [@kincaid1975derivation]; Gunning Fog Index [@gunning1952technique].",
           "The implementations are textbook formulae over a vowel-group syllable heuristic; they're good enough for a writer-facing signal, not for linguistic research.\n\n* **Structure** () — heading outline, per-section word counts, max heading depth, presence of an H1, detection of skipped heading levels (e.g. an H1 followed directly by an H3).\n\n* **Quality** () — passive-voice candidates (heuristic: \"be\" form + past participle), hedge-word density, citation density (Pandoc-style  extraction), long-sentence flagging.",
-          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check uses [](../../../../infrastructure/reference/citation/SKILL.md) so it sees exactly the same view of the bibliography that the rendering pipeline uses.\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block.",
-          "Each check produces a ; the run's  flag is the conjunction.\n\n## Render\n\n writes a markdown file with:\n\n* Top-line counts (files, words, sentences, paragraphs, averages).\n* A pass/fail table for every check.\n* Per-file metrics table (word count, sentence count, FRE, FKGL, Fog, citations, hedges, passives).\n* Heading outline per file.\n* Quality-flag callouts (long sentences, passive candidates, hedges) per file.",
+          "The check has four tunable behaviours via :\n\n| Setting | Effect |\n|---|---|\n|  | Any cited  that does not exist in the bib fails the check. |\n|  | Missing citations are warned but do not fail the run. |\n|  | Bib entries that are never cited fail the check. |\n|  | Unused entries are warned but do not fail. |\n\nThe check compares the cited keys from the  against the BibTeX keys returned by  — a deliberately minimal regex that skips  blocks.",
+          "(Forks that need dialect-complete BibTeX parsing can swap in [](../../../../infrastructure/reference/citation/SKILL.md) at the script layer; the exemplar's own gate does not require it.)\n\n## Evaluate\n\nThe report runs through a set of pure check functions:\n\n*  — the manuscript-wide weighted average FKGL falls within .\n*  — citations per 1000 words ≥ .\n*  — no file uses a skipped heading level (when ).\n*  — every file has an H1 (when ).\n*  — citation/bib consistency per the  policy block.",
+          "A  key ( for the bundled exemplar;  in ) seeds the defaults for any knob the YAML does not set explicitly, so a fork can adopt a named editorial profile in one line and override individual knobs afterwards.\n\n## Render\n\n writes a markdown file with:\n\n* Top-line counts (files, words, sentences, paragraphs, averages).\n* A pass/fail table for every check.\n* Per-file metrics table (word count, sentence count, FRE, FKGL, Fog, citations, hedges, passives).\n* Heading outline per file.\n* Quality-flag callouts (long sentences, passive candidates, hedges) per file.",
           "Three orchestrators run in lexicographic order (so the figure and variable\nstages always see a fresh review):\n\n*  writes \n  (the raw ),  (the list of check\n  results),  (the human-readable review report),\n   (versioned diagnostic-only evidence), and\n   (one-line metadata).\n*  reads \n  and writes .\n*  reads \n  +  and writes \n  along with a resolved manuscript tree under .\n*  is **not** modified by this pipeline — the prose project does not generate citations, only validates them."
         ]
       }
@@ -324,21 +326,21 @@
     {
       "name": "04_conclusion.md",
       "metrics": {
-        "char_count": 1440,
-        "word_count": 191,
+        "char_count": 1525,
+        "word_count": 205,
         "sentence_count": 8,
         "paragraph_count": 7,
-        "syllable_count": 412,
-        "avg_words_per_sentence": 23.875,
-        "avg_syllables_per_word": 2.157,
-        "complex_word_count": 48,
-        "complex_word_fraction": 0.251,
-        "flesch_reading_ease": 0.11,
-        "flesch_kincaid_grade": 19.17,
-        "gunning_fog": 19.6
+        "syllable_count": 435,
+        "avg_words_per_sentence": 25.625,
+        "avg_syllables_per_word": 2.122,
+        "complex_word_count": 49,
+        "complex_word_fraction": 0.239,
+        "flesch_reading_ease": 1.31,
+        "flesch_kincaid_grade": 19.44,
+        "gunning_fog": 19.81
       },
       "structure": {
-        "total_words": 214,
+        "total_words": 242,
         "max_depth": 1,
         "has_h1": true,
         "has_skipped_level": false,
@@ -354,26 +356,26 @@
             "level": 1,
             "title": "Conclusion {#sec:conclusion}",
             "line": 1,
-            "word_count": 214
+            "word_count": 242
           }
         ]
       },
       "quality": {
-        "word_count": 191,
+        "word_count": 205,
         "passive_count": 1,
         "hedge_count": 0,
         "citation_count": 0,
         "long_sentence_count": 2,
-        "passive_density_per_1000": 5.24,
+        "passive_density_per_1000": 4.88,
         "hedge_density_per_1000": 0.0,
         "citation_density_per_1000": 0.0,
         "citation_keys": [],
         "passive_sentences": [
-          "This exemplar follows a single house style:\n\n*  is the only place run policy lives.\n*  is the only place the project touches .\n* Scripts in  do only filesystem I/O and CLI argument handling.\n* Every artefact in  is regeneratable;  is curated and validated read-only by this project."
+          "This exemplar follows a single house style:\n\n*  is the only place run policy lives.\n*  is deliberately -free: the report Protocols and the / helpers in  are the decoupling seam.\n* Scripts in  do only filesystem I/O, CLI argument handling, and the  calls (e.g. ) on 's behalf.\n* Every artefact in  is regeneratable;  is curated and validated read-only by this project."
         ],
         "hedge_words": [],
         "long_sentences": [
-          "This exemplar follows a single house style:\n\n*  is the only place run policy lives.\n*  is the only place the project touches .\n* Scripts in  do only filesystem I/O and CLI argument handling.\n* Every artefact in  is regeneratable;  is curated and validated read-only by this project.",
+          "This exemplar follows a single house style:\n\n*  is the only place run policy lives.\n*  is deliberately -free: the report Protocols and the / helpers in  are the decoupling seam.\n* Scripts in  do only filesystem I/O, CLI argument handling, and the  calls (e.g. ) on 's behalf.\n* Every artefact in  is regeneratable;  is curated and validated read-only by this project.",
           "Three concrete extensions follow naturally:\n\n1. **Style-guide enforcement** — extend  with project-specific style rules (e.g. forbidden phrases, required terminology) read from .\n2. **Diff-aware review** — restrict the report to files modified since a given git ref so editorial review can run on every PR.\n3. **LLM-assisted rewriting** — pipe long sentences and passive candidates into  for suggested rewrites, using the same  reproducibility contract as optional LLM stages in the template pipeline."
         ]
       }
@@ -527,21 +529,21 @@
     {
       "name": "99_references.md",
       "metrics": {
-        "char_count": 569,
-        "word_count": 81,
+        "char_count": 588,
+        "word_count": 87,
         "sentence_count": 6,
         "paragraph_count": 4,
-        "syllable_count": 154,
-        "avg_words_per_sentence": 13.5,
-        "avg_syllables_per_word": 1.901,
-        "complex_word_count": 15,
-        "complex_word_fraction": 0.185,
-        "flesch_reading_ease": 32.29,
-        "flesch_kincaid_grade": 12.11,
-        "gunning_fog": 12.81
+        "syllable_count": 159,
+        "avg_words_per_sentence": 14.5,
+        "avg_syllables_per_word": 1.828,
+        "complex_word_count": 12,
+        "complex_word_fraction": 0.138,
+        "flesch_reading_ease": 37.5,
+        "flesch_kincaid_grade": 11.63,
+        "gunning_fog": 11.32
       },
       "structure": {
-        "total_words": 116,
+        "total_words": 124,
         "max_depth": 1,
         "has_h1": true,
         "has_skipped_level": false,
@@ -557,17 +559,17 @@
             "level": 1,
             "title": "References {#sec:references}",
             "line": 1,
-            "word_count": 116
+            "word_count": 124
           }
         ]
       },
       "quality": {
-        "word_count": 81,
+        "word_count": 87,
         "passive_count": 2,
         "hedge_count": 0,
         "citation_count": 0,
         "long_sentence_count": 0,
-        "passive_density_per_1000": 24.69,
+        "passive_density_per_1000": 22.99,
         "hedge_density_per_1000": 0.0,
         "citation_density_per_1000": 0.0,
         "citation_keys": [],

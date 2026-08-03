@@ -5,8 +5,8 @@
 This exemplar follows a single house style:
 
 * `manuscript/config.yaml` is the only place run policy lives.
-* `src/pipeline/` is the only place the project touches `infrastructure/`.
-* Scripts in `scripts/` do only filesystem I/O and CLI argument handling.
+* `src/` is deliberately `infrastructure`-free: the report Protocols and the `parse_bib_keys`/`render_outline` helpers in `src/prose_facade.py` are the decoupling seam.
+* Scripts in `scripts/` do only filesystem I/O, CLI argument handling, and the `infrastructure/` calls (e.g. `infrastructure.prose.analyze_manuscript`) on `src/`'s behalf.
 * Every artefact in `output/` is regeneratable; `manuscript/references.bib` is curated and validated read-only by this project.
 
 The contribution of this exemplar is architectural: a *generic, reusable* prose-quality module that any project in the template can opt into, and a *minimal, configurable* exemplar wiring it to the bibliography and the manuscript pipeline.

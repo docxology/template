@@ -70,6 +70,11 @@ render:
 # will produce noisy or meaningless reports.
 # ---------------------------------------------------------------------------
 prose:
+  # Named editorial profile: seeds defaults for any knob not set explicitly
+  # below ("lenient" is this exemplar; the stricter "strict" profile is shown
+  # in config.yaml.example). Explicit keys always win over the preset.
+  preset: lenient
+
   # FKGL band the manuscript should land within. Default targets a
   # university-graduate audience without being needlessly dense.
   # Sensible range: min ∈ [0, 14], max ∈ [10, 22]. min must be ≤ max.

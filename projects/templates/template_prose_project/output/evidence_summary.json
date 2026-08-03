@@ -4,14 +4,14 @@
   "diagnostic_only": true,
   "metrics": {
     "readability": {
-      "avg_flesch_reading_ease": 19.19,
-      "avg_flesch_kincaid_grade": 15.97,
-      "avg_gunning_fog": 16.73
+      "avg_flesch_reading_ease": 21.25,
+      "avg_flesch_kincaid_grade": 15.68,
+      "avg_gunning_fog": 16.38
     },
     "citations": {
       "unique_keys": 6,
       "citation_count": 8,
-      "density_per_1000": 4.58
+      "density_per_1000": 4.34
     },
     "bibliography": {
       "missing": [],
@@ -25,8 +25,8 @@
       "heading_count": 16
     },
     "quality_flags": {
-      "long_sentence_count": 22,
-      "passive_count": 14,
+      "long_sentence_count": 23,
+      "passive_count": 15,
       "hedge_count": 0
     }
   },
@@ -34,9 +34,9 @@
     {
       "name": "grade_level_in_band",
       "passed": true,
-      "message": "avg FKGL = 15.97 (target 10.0–18.0)",
+      "message": "avg FKGL = 15.68 (target 10.0–18.0)",
       "details": {
-        "value": 15.97,
+        "value": 15.68,
         "min": 10.0,
         "max": 18.0
       }
@@ -44,13 +44,13 @@
     {
       "name": "citation_density_above_floor",
       "passed": true,
-      "message": "density = 4.58/1000 words (min 0.0)",
+      "message": "density = 4.34/1000 words (min 0.0)",
       "details": {
-        "density_per_1000": 4.58,
+        "density_per_1000": 4.34,
         "min": 0.0,
         "citation_count": 8,
         "unique_keys": 6,
-        "word_count": 1745
+        "word_count": 1842
       }
     },
     {

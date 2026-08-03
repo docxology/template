@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.25",
-      "total_size_bytes": 258595,
+      "size_mb": "0.26",
+      "total_size_bytes": 269226,
       "largest_files": [
         {
           "name": "template_prose_project_combined.pdf",
-          "size_mb": "0.12",
+          "size_mb": "0.13",
           "path": "pdf/template_prose_project_combined.pdf"
         },
         {
@@ -18,7 +18,7 @@
         },
         {
           "name": "_combined_manuscript.tex",
-          "size_mb": "0.03",
+          "size_mb": "0.04",
           "path": "pdf/_combined_manuscript.tex"
         }
       ],
@@ -36,9 +36,9 @@
     },
     "web": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "0.12",
-      "total_size_bytes": 124458,
+      "file_count": 11,
+      "size_mb": "0.13",
+      "total_size_bytes": 133525,
       "largest_files": [
         {
           "name": "index.html",
@@ -58,6 +58,7 @@
       ],
       "extensions": {
         ".md": 1,
+        ".ico": 1,
         ".html": 9
       }
     },
@@ -65,7 +66,7 @@
       "exists": true,
       "file_count": 65,
       "size_mb": "0.78",
-      "total_size_bytes": 813766,
+      "total_size_bytes": 820027,
       "largest_files": [
         {
           "name": "02_methodology_slides.log",
@@ -96,9 +97,9 @@
     },
     "figures": {
       "exists": true,
-      "file_count": 8,
-      "size_mb": "0.48",
-      "total_size_bytes": 498272,
+      "file_count": 10,
+      "size_mb": "0.50",
+      "total_size_bytes": 529022,
       "largest_files": [
         {
           "name": "readability_metrics.png",
@@ -117,8 +118,8 @@
         }
       ],
       "extensions": {
-        ".png": 6,
-        ".mmd": 1,
+        ".png": 7,
+        ".mmd": 2,
         ".json": 1
       }
     },
@@ -150,13 +151,13 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 26,
-      "size_mb": "0.16",
-      "total_size_bytes": 167654,
+      "file_count": 10,
+      "size_mb": "0.12",
+      "total_size_bytes": 125750,
       "largest_files": [
         {
           "name": "evidence_registry.json",
-          "size_mb": "0.07",
+          "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
@@ -165,54 +166,38 @@
           "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "pipeline_report.json",
+          "name": "validation_report.json",
           "size_mb": "0.01",
-          "path": "reports/pipeline_report.json"
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 16,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".md": 5,
-        ".html": 1
+        ".json": 7,
+        ".txt": 1,
+        ".md": 2
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 162,
-      "largest_files": [
-        {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
-        }
-      ],
-      "extensions": {
-        ".log": 1
-      }
+      "total_size_bytes": 0
     }
   },
-  "total_files": 123,
-  "total_size_mb": 1.7783432006835938,
+  "total_files": 109,
+  "total_size_mb": 1.7923078536987305,
   "largest_files": [
     {
       "name": "readability_metrics.png",
@@ -222,7 +207,7 @@
     },
     {
       "name": "template_prose_project_combined.pdf",
-      "size_mb": "0.12",
+      "size_mb": "0.13",
       "category": "pdf",
       "path": "pdf/template_prose_project_combined.pdf"
     },
@@ -239,16 +224,16 @@
       "path": "figures/section_word_counts.png"
     },
     {
+      "name": "evidence_registry.json",
+      "size_mb": "0.08",
+      "category": "reports",
+      "path": "reports/evidence_registry.json"
+    },
+    {
       "name": "02_methodology_slides.log",
       "size_mb": "0.07",
       "category": "slides",
       "path": "slides/02_methodology_slides.log"
-    },
-    {
-      "name": "evidence_registry.json",
-      "size_mb": "0.07",
-      "category": "reports",
-      "path": "reports/evidence_registry.json"
     },
     {
       "name": "06_reproducibility_slides.log",
@@ -269,27 +254,28 @@
       "path": "pdf/_combined_manuscript.log"
     },
     {
-      "name": "index.html",
+      "name": "_combined_manuscript.tex",
       "size_mb": "0.04",
-      "category": "web",
-      "path": "web/index.html"
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 0.24661540985107422,
-    "web": 0.11869239807128906,
-    "slides": 0.7760677337646484,
-    "figures": 0.475189208984375,
+    "pdf": 0.25675392150878906,
+    "web": 0.12733936309814453,
+    "slides": 0.782038688659668,
+    "figures": 0.5045146942138672,
     "data": 0.0017366409301757812,
-    "reports": 0.15988731384277344,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.0001544952392578125
+    "reports": 0.11992454528808594
   },
   "file_counts_by_type": {
-    ".md": 7,
-    ".log": 11,
+    ".md": 4,
+    ".log": 10,
     ".aux": 9,
     ".blg": 1,
     ".bib": 1,
@@ -297,14 +283,14 @@
     ".toc": 9,
     ".bbl": 1,
     ".pdf": 9,
-    ".html": 10,
+    ".ico": 1,
+    ".html": 9,
     ".nav": 8,
     ".vrb": 8,
     ".snm": 8,
-    ".png": 6,
-    ".mmd": 1,
-    ".json": 20,
-    ".jsonl": 1,
-    ".txt": 3
+    ".png": 7,
+    ".mmd": 2,
+    ".json": 11,
+    ".txt": 1
   }
 }
