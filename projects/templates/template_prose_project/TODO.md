@@ -5,6 +5,12 @@ about template status, validation depth, and forkability.
 
 ## Current validation evidence
 
+- **2026-08-02 accuracy pass:** manuscript + docs now describe the real
+  layer seam (src/ is `infrastructure`-free; `scripts/` call
+  `infrastructure.prose.analyze_manuscript`); bibliography cross-check is
+  `src/prose_facade.parse_bib_keys`, not `parse_bibfile`; claim ledger
+  source fixed; `.agents/` catalog completed with READMEs.
+
 - Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_prose_project/manuscript --repo-root .`
 - Project tests and coverage (live counts in
   [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here):
