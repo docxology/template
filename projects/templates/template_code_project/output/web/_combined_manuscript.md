@@ -131,7 +131,7 @@ As the representative project for the repository, this implementation explicitly
 ## Reader's guide to the manuscript
 
 - **[@sec:methodology]** ties pseudocode to `gradient_descent()` and explains how stability checks and benchmarks call into `infrastructure.scientific`.
-- **[@sec:results]** is figure-centric: every panel references a generator in `src/figures/` (orchestrated via `scripts/optimization_analysis.py`) and uses `{{CONFIG_*}}` / `{{RESULT_*}}` placeholders for numeric values.
+- **[@sec:results]** is figure-centric: every panel references a generator in `src/figures/` (orchestrated via `scripts/optimization_analysis.py`) and uses `CONFIG_*` / `RESULT_*` template tokens for numeric values.
 - **[@sec:experimental_setup]** lists the exact YAML fields (`experiment:` block) that controlled the run whose artifacts you are viewing.
 - **[@sec:reproducibility]** records the configuration hash and artifact inventory produced alongside the PDF.
 - **[@sec:scope]** states scope and related literature so the exemplar is not mistaken for a general-purpose optimizer benchmark suite.
@@ -256,7 +256,7 @@ This section presents the experimental results from the gradient descent optimiz
 **Key observations from [@fig:convergence]:**
 
 1. **Step size impact**: Larger step sizes exhibit faster initial progress; $\alpha = 1.0$ converges in 1 iteration(s)
-2. **Agency categories**: Conservative ($\alpha \leq 0.1$), near-optimal ($0.3 \leq \alpha \leq 1.0$), aggressive ($1 < \alpha < 2$), and divergent ($\alpha \geq 2$)
+2. **Agency categories**: Conservative ($\alpha < 0.3$; in this grid $\alpha = 0.01, 0.1$), near-optimal ($0.3 \leq \alpha \leq 1.0$), aggressive ($1 < \alpha < 2$), and divergent ($\alpha \geq 2$)
 3. **Stability boundary**: The critical threshold is $\alpha = 2$ for this unit-Hessian problem; $\alpha < 2$ converges, $\alpha \geq 2$ diverges
 
 ### Step Size Sensitivity Analysis
@@ -373,7 +373,7 @@ Divergent step sizes ($\alpha \geq 2$) confirm the theoretical instability bound
 
 [@fig:complexity] provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
-![Four-panel diagnostic from `generate_complexity_visualization()`. **Top left**: bars give the empirical iteration count per configured $\alpha$, coloured by agency category; $\alpha=1.0$ achieves the global minimum of 1 step(s), while $\alpha=0.01$ and $\alpha=2.5$ both saturate at the iteration cap $N_{\max}=1000$ (slow convergence and divergence respectively). **Top right**: $\log_{10}|f(x)-f(x^\ast)|$ at termination; the four converged rows reach $\approx 10^{-16}$ (machine precision) while $\alpha=0.01$ stops near $10^{-9}$ at the cap. Dashed reference at $\log_{10}\varepsilon$ for $\varepsilon=$ `experiment.convergence_tolerance`. **Bottom left**: empirical iterations (solid) versus the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed) on log axes — a shape comparison, not a tight count prediction for every $\alpha$. **Bottom right**: per-step error contraction factor $\rho=|1-\alpha|$ from the unit-Hessian linear recurrence ([@eq:scalar_linear_update]); the dashed reference at $\rho=1$ separates stable bars (left of it) from divergent ones (right).](../figures/algorithm_complexity.png){#fig:complexity}
+![Six-panel diagnostic from `generate_complexity_visualization()` (3×2 grid). **Top left**: bars give the empirical iteration count per configured $\alpha$, coloured by agency category; $\alpha=1.0$ achieves the global minimum of 1 step(s), while $\alpha=0.01$ saturates at the iteration cap $N_{\max}=1000$ (slow convergence) and $\alpha=2.5$ terminates early via a `non_finite` update (divergence). **Top right**: $\log_{10}|f(x)-f(x^\ast)|$ at termination; the four converged rows reach $\approx 10^{-16}$ (machine precision) while $\alpha=0.01$ stops near $10^{-9}$ at the cap. Dashed reference at $\log_{10}\varepsilon$ for $\varepsilon=$ `experiment.convergence_tolerance`. **Middle left**: empirical iterations (solid) versus the smooth proxy $1/(2\alpha(1-\alpha))$ (dashed) on log axes — a shape comparison, not a tight count prediction for every $\alpha$. **Middle right**: per-step error contraction factor $\rho=|1-\alpha|$ from the unit-Hessian linear recurrence ([@eq:scalar_linear_update]); the dashed reference at $\rho=1$ separates stable bars (left of it) from divergent ones (right). **Bottom left**: stable step-size region width $2/L$ per backend profile ($H=I,2I,5I,10I$) with the optimal $\alpha^\ast=1/L$ overlaid. **Bottom right**: cross-profile contraction curves $\rho(\alpha)=|1-\alpha L|$ with dotted verticals at each $2/L$ stability boundary.](../figures/algorithm_complexity.png){#fig:complexity}
 
 The algorithm demonstrates efficient performance for small-scale optimization problems:
 
@@ -532,10 +532,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.10.18
-- **NumPy**: 2.2.6
+- **Python**: 3.12.13
+- **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-07-24T00:05:39Z
+- **Generated**: 2026-08-03T00:12:48Z
 
 ## Pipeline ordering
 
@@ -587,10 +587,10 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 
 | Category                           | Count                  |
 | ---------------------------------- | ---------------------- |
-| Publication-quality figures        | 8   |
+| Publication-quality figures        | 9   |
 | Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 9   |
-| **Total artifacts**                | **22** |
+| Analysis reports                   | 25   |
+| **Total artifacts**                | **39** |
 
 ## Numerical Validation Summary
 
@@ -645,7 +645,7 @@ Practical machine-learning optimizers (e.g., Adam [@kingma2014adam]) introduce m
 
 ## What this project proves about the template
 
-The scientific claims through [@sec:introduction], [@sec:methodology], and [@sec:results] are standard textbook material. The **non-standard** contribution is procedural: configuration in `manuscript/config.yaml` drives `run_convergence_experiment()`, figures, CSV exports, and `{{RESULT_*}}` substitution (`scripts/z_generate_manuscript_variables.py`) so that PDF, HTML, and validation logs refer to the same numbers. That pattern is what downstream projects should copy—whether the domain is optimization, differential equations, or Bayesian workflows.
+The scientific claims through [@sec:introduction], [@sec:methodology], and [@sec:results] are standard textbook material. The **non-standard** contribution is procedural: configuration in `manuscript/config.yaml` drives `run_convergence_experiment()`, figures, CSV exports, and `RESULT_*` token substitution (`scripts/z_generate_manuscript_variables.py`) so that PDF, HTML, and validation logs refer to the same numbers. That pattern is what downstream projects should copy—whether the domain is optimization, differential equations, or Bayesian workflows.
 
 ## Explicit limitations
 

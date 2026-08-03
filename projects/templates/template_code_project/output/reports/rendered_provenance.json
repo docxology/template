@@ -1,0 +1,113 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/manuscript/00_00_transmission_begin.md",
+      "rendered_sha256": "7b779077daad47510cb31ae8d227423e66d1f29ab53945e48666ceefe26f814b",
+      "source_path": null,
+      "source_sha256": null
+    },
+    {
+      "rendered_path": "output/manuscript/00_abstract.md",
+      "rendered_sha256": "aa72fdbd8313a3b5304d140c7b421b2d03d0be39e3cd8078be7d18d3c570fdef",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "f11562a60809f1539184a65e3b390050740426957243ec3726ff6b4e7a2e9b37"
+    },
+    {
+      "rendered_path": "output/manuscript/01_introduction.md",
+      "rendered_sha256": "203114ec0cf12af67216dbab761009d1f0ac74b180464901422dc32b45a39f29",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "203114ec0cf12af67216dbab761009d1f0ac74b180464901422dc32b45a39f29"
+    },
+    {
+      "rendered_path": "output/manuscript/02_methodology.md",
+      "rendered_sha256": "dcd13274cfba29130e08e942b8ec42feb7b39bc979d36f5d2d93587b2828af0c",
+      "source_path": "manuscript/02_methodology.md",
+      "source_sha256": "bbd5b998f069016e55a3d3c1e4e7120e469d342ee710bf6b66e7d76d39b332f5"
+    },
+    {
+      "rendered_path": "output/manuscript/03_results.md",
+      "rendered_sha256": "3495d98284447db6e1cb7b784fc32a0b7a2eece386bdcb12ad820447e232441e",
+      "source_path": "manuscript/03_results.md",
+      "source_sha256": "6a9c2c8daa21555022f1c1ef28b69d200e30643d326f0a77af80a2b4e0166ffd"
+    },
+    {
+      "rendered_path": "output/manuscript/04_conclusion.md",
+      "rendered_sha256": "11b1d933c62c6e44b9049dbb4532cc231f830c7c89835ea4215cba192123a9b1",
+      "source_path": "manuscript/04_conclusion.md",
+      "source_sha256": "11b1d933c62c6e44b9049dbb4532cc231f830c7c89835ea4215cba192123a9b1"
+    },
+    {
+      "rendered_path": "output/manuscript/05_experimental_setup.md",
+      "rendered_sha256": "a5497fdd10ea27b0082c7b810964ca44b1231743b4662a2f0c456efc48437b17",
+      "source_path": "manuscript/05_experimental_setup.md",
+      "source_sha256": "99890ec7c8157eeef9d19e5ae931158e760c8e194d5cdbd23da377695773d36d"
+    },
+    {
+      "rendered_path": "output/manuscript/06_reproducibility.md",
+      "rendered_sha256": "bebff9f2669cf04d5724617add7691e68d52f5bd6cf5ecc82bbc3c2a705dc60c",
+      "source_path": "manuscript/06_reproducibility.md",
+      "source_sha256": "24301ce7c2bd4caf41e43ffe546da36abc41e699918835b6a6b8d5434a94c904"
+    },
+    {
+      "rendered_path": "output/manuscript/07_scope_and_related_work.md",
+      "rendered_sha256": "65f57c164e9cc5ad8f55414c79d99ea652b2fb66982eba27b5b5be969c91c5c2",
+      "source_path": "manuscript/07_scope_and_related_work.md",
+      "source_sha256": "65f57c164e9cc5ad8f55414c79d99ea652b2fb66982eba27b5b5be969c91c5c2"
+    },
+    {
+      "rendered_path": "output/manuscript/99_references.md",
+      "rendered_sha256": "a15a782c0f136d441b1265654f2528a5a70764208389ed8a5bd60806e26d6cd3",
+      "source_path": "manuscript/99_references.md",
+      "source_sha256": "a15a782c0f136d441b1265654f2528a5a70764208389ed8a5bd60806e26d6cd3"
+    },
+    {
+      "rendered_path": "output/manuscript/99_zz_transmission_end.md",
+      "rendered_sha256": "47363062d45eb5a7d14c0d5f5d831f8a716182a01b00f24c2084b7c23a40e4ea",
+      "source_path": null,
+      "source_sha256": null
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "0d2b0ff5d0b822a5f87e13908504417726bbaaa645aad6bb981751d91cb0aed9",
+      "size_bytes": 21654
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "a357b48d21a5ea469e9f5891c812c31499a46129e58f5a79c733695e912d3205",
+      "size_bytes": 49983
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "dad2810a99f705c3929c661f62aea2f9f75a95d72ad08554f08a20900a2746dd",
+      "size_bytes": 2749
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "62e2d93430c732d7e8e7b4cea098924d2a10a6483c61c67bdbc46e4aba123d2f",
+      "size_bytes": 9275
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 18,
+      "sha256": "c9d2f934454eadc921502f1b27ebbefe8506185952cedeae9753f6a0ead344fd"
+    },
+    "output": {
+      "file_count": 72,
+      "sha256": "b621550c97de80ecd837c0aff3b16450209f3de732a568f751147d3f10fe8c3a"
+    },
+    "source": {
+      "file_count": 54,
+      "sha256": "6173e16bc5b523bdcc01e433255b1a3fc7f56492305d55f6bb48691f4d290a68"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_code_project",
+  "schema_version": "template-rendered-provenance-v2"
+}

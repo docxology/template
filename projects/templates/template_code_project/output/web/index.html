@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Theoretical Bounds and Empirical Performance in Quadratic Minimization" />
@@ -43,7 +43,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -1014,7 +1013,7 @@ checks and benchmarks call into
 figure-centric: every panel references a generator in
 <code>src/figures/</code> (orchestrated via
 <code>scripts/optimization_analysis.py</code>) and uses
-<code>{{CONFIG_*}}</code> / <code>{{RESULT_*}}</code> placeholders for
+<code>CONFIG_*</code> / <code>RESULT_*</code> template tokens for
 numeric values.</li>
 <li><strong>sec. <a href="#sec:experimental_setup">6</a></strong> lists
 the exact YAML fields (<code>experiment:</code> block) that controlled
@@ -1294,7 +1293,8 @@ href="#fig:convergence">1</a>:</strong></p>
 initial progress; <span class="math inline">\(\alpha = 1.0\)</span>
 converges in 1 iteration(s)</li>
 <li><strong>Agency categories</strong>: Conservative (<span
-class="math inline">\(\alpha \leq 0.1\)</span>), near-optimal (<span
+class="math inline">\(\alpha &lt; 0.3\)</span>; in this grid <span
+class="math inline">\(\alpha = 0.01, 0.1\)</span>), near-optimal (<span
 class="math inline">\(0.3 \leq \alpha \leq 1.0\)</span>), aggressive
 (<span class="math inline">\(1 &lt; \alpha &lt; 2\)</span>), and
 divergent (<span class="math inline">\(\alpha \geq 2\)</span>)</li>
@@ -1610,17 +1610,18 @@ algorithm’s computational characteristics, including time and space
 complexity analysis across different problem scales.</p>
 <figure id="fig:complexity">
 <img src="../figures/algorithm_complexity.png"
-alt="Figure 4: Four-panel diagnostic from generate_complexity_visualization() ." />
-<figcaption>Figure 4: Four-panel diagnostic from
-<code>generate_complexity_visualization()</code>. <strong>Top
+alt="Figure 4: Six-panel diagnostic from generate_complexity_visualization() (3×2 grid)." />
+<figcaption>Figure 4: Six-panel diagnostic from
+<code>generate_complexity_visualization()</code> (3×2 grid). <strong>Top
 left</strong>: bars give the empirical iteration count per configured
 <span class="math inline">\(\alpha\)</span>, coloured by agency
 category; <span class="math inline">\(\alpha=1.0\)</span> achieves the
 global minimum of 1 step(s), while <span
-class="math inline">\(\alpha=0.01\)</span> and <span
-class="math inline">\(\alpha=2.5\)</span> both saturate at the iteration
-cap <span class="math inline">\(N_{\max}=1000\)</span> (slow convergence
-and divergence respectively). <strong>Top right</strong>: <span
+class="math inline">\(\alpha=0.01\)</span> saturates at the iteration
+cap <span class="math inline">\(N_{\max}=1000\)</span> (slow
+convergence) and <span class="math inline">\(\alpha=2.5\)</span>
+terminates early via a <code>non_finite</code> update (divergence).
+<strong>Top right</strong>: <span
 class="math inline">\(\log_{10}|f(x)-f(x^\ast)|\)</span> at termination;
 the four converged rows reach <span class="math inline">\(\approx
 10^{-16}\)</span> (machine precision) while <span
@@ -1628,17 +1629,24 @@ class="math inline">\(\alpha=0.01\)</span> stops near <span
 class="math inline">\(10^{-9}\)</span> at the cap. Dashed reference at
 <span class="math inline">\(\log_{10}\varepsilon\)</span> for <span
 class="math inline">\(\varepsilon=\)</span>
-<code>experiment.convergence_tolerance</code>. <strong>Bottom
+<code>experiment.convergence_tolerance</code>. <strong>Middle
 left</strong>: empirical iterations (solid) versus the smooth proxy
 <span class="math inline">\(1/(2\alpha(1-\alpha))\)</span> (dashed) on
 log axes — a shape comparison, not a tight count prediction for every
-<span class="math inline">\(\alpha\)</span>. <strong>Bottom
+<span class="math inline">\(\alpha\)</span>. <strong>Middle
 right</strong>: per-step error contraction factor <span
 class="math inline">\(\rho=|1-\alpha|\)</span> from the unit-Hessian
 linear recurrence (eq. <strong>¿eq:scalar_linear_update?</strong>); the
 dashed reference at <span class="math inline">\(\rho=1\)</span>
-separates stable bars (left of it) from divergent ones
-(right).</figcaption>
+separates stable bars (left of it) from divergent ones (right).
+<strong>Bottom left</strong>: stable step-size region width <span
+class="math inline">\(2/L\)</span> per backend profile (<span
+class="math inline">\(H=I,2I,5I,10I\)</span>) with the optimal <span
+class="math inline">\(\alpha^\ast=1/L\)</span> overlaid. <strong>Bottom
+right</strong>: cross-profile contraction curves <span
+class="math inline">\(\rho(\alpha)=|1-\alpha L|\)</span> with dotted
+verticals at each <span class="math inline">\(2/L\)</span> stability
+boundary.</figcaption>
 </figure>
 <p>The algorithm demonstrates efficient performance for small-scale
 optimization problems:</p>
@@ -1957,10 +1965,10 @@ make microsecond values unsuitable as pinned reproducibility claims.</p>
 <h2 data-number="6.5" id="computational-environment"><span
 class="header-section-number">6.5</span> Computational Environment</h2>
 <ul>
-<li><strong>Python</strong>: 3.10.18</li>
-<li><strong>NumPy</strong>: 2.2.6</li>
+<li><strong>Python</strong>: 3.12.13</li>
+<li><strong>NumPy</strong>: 2.4.2</li>
 <li><strong>Platform</strong>: Darwin arm64</li>
-<li><strong>Generated</strong>: 2026-07-24T00:05:39Z</li>
+<li><strong>Generated</strong>: 2026-08-03T00:12:48Z</li>
 </ul>
 <h2 data-number="6.6" id="pipeline-ordering"><span
 class="header-section-number">6.6</span> Pipeline ordering</h2>
@@ -2092,7 +2100,7 @@ validated by
 <tbody>
 <tr>
 <td>Publication-quality figures</td>
-<td>8</td>
+<td>9</td>
 </tr>
 <tr>
 <td>Structured data files (CSV/JSON)</td>
@@ -2100,11 +2108,11 @@ validated by
 </tr>
 <tr>
 <td>Analysis reports</td>
-<td>9</td>
+<td>25</td>
 </tr>
 <tr>
 <td><strong>Total artifacts</strong></td>
-<td><strong>22</strong></td>
+<td><strong>39</strong></td>
 </tr>
 </tbody>
 </table>
@@ -2226,7 +2234,7 @@ href="#sec:results">4</a> are standard textbook material. The
 <strong>non-standard</strong> contribution is procedural: configuration
 in <code>manuscript/config.yaml</code> drives
 <code>run_convergence_experiment()</code>, figures, CSV exports, and
-<code>{{RESULT_*}}</code> substitution
+<code>RESULT_*</code> token substitution
 (<code>scripts/z_generate_manuscript_variables.py</code>) so that PDF,
 HTML, and validation logs refer to the same numbers. That pattern is
 what downstream projects should copy—whether the domain is optimization,

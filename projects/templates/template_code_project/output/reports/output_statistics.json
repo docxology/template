@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "2.32",
-      "total_size_bytes": 2432392,
+      "total_size_bytes": 2434907,
       "largest_files": [
         {
           "name": "template_code_project_combined.pdf",
@@ -37,8 +37,8 @@
     "web": {
       "exists": true,
       "file_count": 13,
-      "size_mb": "0.36",
-      "total_size_bytes": 381921,
+      "size_mb": "0.37",
+      "total_size_bytes": 388505,
       "largest_files": [
         {
           "name": "dashboard.html",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 73,
       "size_mb": "2.92",
-      "total_size_bytes": 3063474,
+      "total_size_bytes": 3064942,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
@@ -126,7 +126,7 @@
       "exists": true,
       "file_count": 5,
       "size_mb": "0.17",
-      "total_size_bytes": 183157,
+      "total_size_bytes": 183158,
       "largest_files": [
         {
           "name": "dashboard_payload.json",
@@ -151,9 +151,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 19,
-      "size_mb": "0.15",
-      "total_size_bytes": 153085,
+      "file_count": 34,
+      "size_mb": "0.20",
+      "total_size_bytes": 205095,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -172,26 +172,24 @@
         }
       ],
       "extensions": {
-        ".json": 15,
-        ".txt": 2,
-        ".md": 2
+        ".json": 22,
+        ".jsonl": 1,
+        ".txt": 5,
+        ".md": 5,
+        ".html": 1
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
       "exists": true,
@@ -210,8 +208,8 @@
       }
     }
   },
-  "total_files": 131,
-  "total_size_mb": 7.896702766418457,
+  "total_files": 146,
+  "total_size_mb": 7.956381797790527,
   "largest_files": [
     {
       "name": "template_code_project_combined.pdf",
@@ -274,21 +272,22 @@
       "path": "pdf/_combined_manuscript.tex"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 2.3197097778320312,
-    "web": 0.3642282485961914,
-    "slides": 2.9215564727783203,
+    "pdf": 2.322108268737793,
+    "web": 0.37050724029541016,
+    "slides": 2.9229564666748047,
     "figures": 1.9703922271728516,
-    "data": 0.17467212677001953,
-    "reports": 0.14599323272705078,
-    "simulations": 0.0,
-    "llm": 0.0,
+    "data": 0.17467308044433594,
+    "reports": 0.19559383392333984,
     "logs": 0.0001506805419921875
   },
   "file_counts_by_type": {
     ".pdf": 10,
-    ".md": 4,
+    ".md": 7,
     ".log": 12,
     ".aux": 10,
     ".blg": 1,
@@ -297,13 +296,14 @@
     ".toc": 10,
     ".bbl": 1,
     ".ico": 1,
-    ".html": 11,
+    ".html": 12,
     ".nav": 9,
     ".snm": 9,
     ".vrb": 9,
     ".png": 9,
-    ".json": 20,
+    ".json": 27,
     ".csv": 1,
-    ".txt": 2
+    ".jsonl": 1,
+    ".txt": 5
   }
 }
