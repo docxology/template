@@ -11,6 +11,7 @@ test exercises the actual `src/data_descriptor/` functions.
 | `test_descriptor.py` | Descriptor validation, negative controls, schema fingerprints, readiness scoring, field-constraint summaries, and the metadata-only release manifest. |
 | `test_verification.py` | Byte-level digest/row reconciliation against real temporary CSV files: absent, checksum-mismatch, and row-mismatch cases. |
 | `test_figures.py` | Plot-ready data preparers (schema rows, inventory rows, provenance steps, severity counts) and the demonstration perturbation. |
+| `test_registry.py` | Project-local fail-closed figure-registry publisher: deterministic registry building, missing-file rejection, atomic publish, byte-identical output. |
 | `test_generate_figures_script.py` | End-to-end integration: runs the figure script against a temporary project root and asserts real PNGs plus the figure registry are written. |
 | `conftest.py` | Puts `src/` on `sys.path` for the suite. |
 

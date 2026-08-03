@@ -14,5 +14,7 @@ duplicating rules. Modules:
   (`schema_table_rows`, `file_inventory_rows`, `provenance_steps`,
   `severity_counts`, `demo_broken_descriptor`).
 
-The public API is re-exported from `__init__.py`. Figure rendering and file I/O
-belong in the thin scripts under `scripts/`, never here.
+The public API is re-exported from `__init__.py`. Matplotlib rendering belongs
+in the thin scripts under `scripts/`, never here; `registry.py` is the one
+project-local exception that mirrors/writes figure artifacts so standalone
+clones stay self-contained.

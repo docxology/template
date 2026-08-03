@@ -11,4 +11,8 @@ number must come from a tested `src/` function.
 `generate_figures.py` mirrors the complete PNG set to `output/figures/` and
 writes `figure_registry.json` from `DESCRIPTOR_FIGURE_SPECS`. It validates the
 full source set before copying, so a missing renderer output cannot produce a
-partial registry.
+partial registry. In the monorepo it uses the shared
+`infrastructure.documentation.generated_figure_registry` publisher; on a
+standalone clone (no `infrastructure` package) it falls back to the
+byte-compatible `src/data_descriptor/registry.py` implementation so the mirror
+repo stays self-contained.

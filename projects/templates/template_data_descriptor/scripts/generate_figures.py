@@ -13,9 +13,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(PROJECT_ROOT / "src"), str(PROJECT_ROOT.parents[2])]
 
 import matplotlib.pyplot as plt  # noqa: E402
-
 import data_descriptor as dd  # noqa: E402
-from infrastructure.documentation.generated_figure_registry import publish_generated_figures  # noqa: E402
+
+try:  # Monorepo; standalone clones fall back to the project-local publisher.
+    from infrastructure.documentation.generated_figure_registry import publish_generated_figures  # noqa: E402
+except ModuleNotFoundError:
+    from data_descriptor.registry import publish_generated_figures  # noqa: E402
 
 INK, TEAL, BLUE, AMBER, RED, GREEN = "#0f172a", "#0f766e", "#1e3a8a", "#b45309", "#b91c1c", "#15803d"
 
@@ -108,8 +111,7 @@ def main(project_root: Path | None = None) -> list[Path]:
         schema_version=dd.FIGURE_REGISTRY_SCHEMA,
     )
     written = [*rendered, *published]
-    for path in written:
-        print(path)
+    print("\n".join(str(path) for path in written))
     return written
 
 

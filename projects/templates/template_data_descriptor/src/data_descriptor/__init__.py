@@ -25,6 +25,12 @@ from data_descriptor.figures import (
     severity_counts,
     verification_table_rows,
 )
+from data_descriptor.registry import (
+    FigureRegistryError,
+    build_generated_figure_registry,
+    publish_generated_figures,
+    write_generated_figure_registry,
+)
 from data_descriptor.verification import (
     FileVerification,
     compute_file_digest,
@@ -42,9 +48,11 @@ __all__ = [
     "FieldConstraintSummary",
     "FileInventoryRow",
     "FileVerification",
+    "FigureRegistryError",
     "ProvenanceStep",
     "SchemaRow",
     "build_descriptor_report",
+    "build_generated_figure_registry",
     "build_release_bundle_manifest",
     "compute_file_digest",
     "count_csv_rows",
@@ -53,6 +61,7 @@ __all__ = [
     "descriptor_fingerprint",
     "file_inventory_rows",
     "provenance_steps",
+    "publish_generated_figures",
     "schema_table_rows",
     "severity_counts",
     "summarize_field_constraints",
@@ -60,4 +69,5 @@ __all__ = [
     "verification_summary",
     "verification_table_rows",
     "verify_descriptor_files",
+    "write_generated_figure_registry",
 ]

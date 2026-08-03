@@ -67,8 +67,8 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "2766b7a5ace91e55364da8f94ee8e443792f9626338b54e1068bb9ffacec6e52",
-      "size_bytes": 8546
+      "sha256": "fdcc7dd07b816662f1b03e6a5d70b2bbdcee3bf9ee185711498ce48599971d27",
+      "size_bytes": 8355
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -83,7 +83,7 @@
     },
     "source": {
       "file_count": 29,
-      "sha256": "bde44a7914ff5644e55fe422d3f9e88e71b488a32b592e704bb96c7a50e361b7"
+      "sha256": "eda48b199c03f6f93abc3387064cffcf02019b6445c80c66d8fa0b1edf074f54"
     },
     "stage": {
       "file_count": 1080,
