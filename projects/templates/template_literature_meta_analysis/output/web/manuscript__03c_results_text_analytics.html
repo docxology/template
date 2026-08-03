@@ -252,13 +252,17 @@ excessive</td>
 </tbody>
 </table>
 <p>The topics reveal the thematic structure of the literature: Topic 0
-centres on cognitive enhancement and neuroenhancement; Topic 1 addresses
-ADHD treatment and clinical evidence; Topic 2 covers pharmacological
-dose-response studies (including animal models); Topic 3 focuses on
-sleep disorders (narcolepsy, excessive daytime sleepiness); and Topic 4
-addresses fatigue in psychiatric populations. These topics cross-cut the
-keyword-based subfield taxonomy, revealing connections that the explicit
-classification does not capture.</p>
+reflects preclinical dose-response pharmacology in animal models (mg/kg
+dosing, dopamine activity); Topic 1 captures clinical fatigue and mood
+trials (placebo-controlled patient studies, armodafinil); Topic 2
+collects structured-abstract and meta-analytic language (methods,
+results, 95% confidence intervals, risk estimates); Topic 3 centres on
+cognitive enhancement and psychostimulant pharmacology (ADHD,
+methylphenidate, cocaine comparisons); and Topic 4 addresses sleep
+disorders (narcolepsy, excessive daytime sleepiness, cataplexy,
+hypersomnia). These topics cross-cut the keyword-based subfield
+taxonomy, revealing connections that the explicit classification does
+not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
 <img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
@@ -287,12 +291,11 @@ keyword taxonomy.</figcaption>
 <!-- FIGURE: dendrogram.png -->
 <figure id="fig:dendrogram">
 <img src="../figures/dendrogram.png" title="Document Dendrogram"
-alt="Hierarchical clustering dendrogram of document embeddings." />
+alt="Hierarchical clustering dendrogram of subfield TF-IDF centroids." />
 <figcaption>Hierarchical clustering dendrogram of
-document embeddings. The tree shows the similarity structure of the
-corpus: documents that join low in the tree are semantically similar,
-while high-level splits separate the major topical
-clusters.</figcaption>
+subfield TF-IDF centroids. Leaves are the configured subfields; the tree
+shows the similarity structure between subfield centroid
+vectors.</figcaption>
 </figure>
 <h2 id="term-analysis">Term Analysis</h2>
 <p>The TF-IDF term heatmap reveals which terms discriminate between
@@ -551,8 +554,8 @@ share topical and lexical content.</figcaption>
 <img src="../figures/word_cloud.png" title="Term Cloud"
 alt="Term cloud for Modafinil." />
 <figcaption>Term cloud for Modafinil. Term sizes are
-proportional to their TF-IDF weights across the corpus, providing a
-visual summary of the dominant vocabulary.</figcaption>
+proportional to their topic-term weights from the discovered topics,
+providing a visual summary of the dominant vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">

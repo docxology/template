@@ -22,8 +22,8 @@ citation-network analysis exposes the corpus's internal structure (8,623
 intra-corpus edges across 2234 nodes, 1416 communities,
 graph density 0.17\%). Of 38,489 total outgoing
 references, 22.4\% resolve to another record inside the corpus.
-Abstract coverage stands at 61.6\%, open-access status is known for
-24.6\% of records, and 54.6\% have a direct PDF link. An optional,
+Abstract coverage stands at 61.6\%, 24.6\% of records are open access, and
+54.6\% have a direct PDF link. An optional,
 LLM-gated knowledge-graph stage scores the 6 hypotheses explored against
 the evidence. This run produced 21 publication-quality figures.
 
@@ -632,7 +632,7 @@ The corpus has strong identifier coverage: 2260 of 2334 records
 (97.2\%) carry DOIs, enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for 923 records. Abstract coverage stands at
 61.6\% (1437 records), which limits the text analytics
-to that subset. Open-access status is confirmed for 24.6\% of records, and
+to that subset. Open access is confirmed for 24.6\% of records, and
 54.6\% have a direct PDF link.
 
 ## Descriptive Bibliometrics
@@ -766,13 +766,16 @@ taxonomy. The top vocabulary terms are: modafinil, treatment, study, results, pa
 | 3 | use, cognitive, drugs, adhd, studies, drug, cocaine, methylphenidate |
 | 4 | sleep, narcolepsy, sleepiness, cataplexy, daytime, patients, eds, excessive |
 
-The topics reveal the thematic structure of the literature: Topic 0 centres on cognitive
-enhancement and neuroenhancement; Topic 1 addresses ADHD treatment and clinical evidence;
-Topic 2 covers pharmacological dose-response studies (including animal models); Topic 3
-focuses on sleep disorders (narcolepsy, excessive daytime sleepiness); and Topic 4
-addresses fatigue in psychiatric populations. These topics cross-cut the keyword-based
-subfield taxonomy, revealing connections that the explicit classification does not
-capture.
+The topics reveal the thematic structure of the literature: Topic 0 reflects
+preclinical dose-response pharmacology in animal models (mg/kg dosing, dopamine
+activity); Topic 1 captures clinical fatigue and mood trials (placebo-controlled
+patient studies, armodafinil); Topic 2 collects structured-abstract and
+meta-analytic language (methods, results, 95% confidence intervals, risk
+estimates); Topic 3 centres on cognitive enhancement and psychostimulant
+pharmacology (ADHD, methylphenidate, cocaine comparisons); and Topic 4 addresses
+sleep disorders (narcolepsy, excessive daytime sleepiness, cataplexy,
+hypersomnia). These topics cross-cut the keyword-based subfield taxonomy,
+revealing connections that the explicit classification does not capture.
 
 <!-- FIGURE: topic_term_bars.png -->
 ![Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../figures/topic_term_bars.png "Topic-Term Weights"){#fig:topic_term_bars}
@@ -788,7 +791,7 @@ two-dimensional projection are all reproducible.
 ![PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../figures/pca_embeddings.png "PCA Embeddings"){#fig:pca_embeddings}
 
 <!-- FIGURE: dendrogram.png -->
-![Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters.](../figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
+![Hierarchical clustering dendrogram of subfield TF-IDF centroids. Leaves are the configured subfields; the tree shows the similarity structure between subfield centroid vectors.](../figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
 
 ## Term Analysis
 
@@ -873,7 +876,7 @@ reveal the most closely related works in the corpus.
 ![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
 
 <!-- FIGURE: word_cloud.png -->
-![Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary.](../figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
+![Term cloud for Modafinil. Term sizes are proportional to their topic-term weights from the discovered topics, providing a visual summary of the dominant vocabulary.](../figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
 
 <!-- FIGURE: cooccurrence_matrix.png -->
 ![Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../figures/cooccurrence_matrix.png "Term Co-occurrence"){#fig:cooccurrence_matrix}
@@ -1144,10 +1147,10 @@ The analysis answers the four research questions posed in the introduction:
    literature dominated by clinical sleep research (63.0\%), with
    significant representation from cognition, psychiatry, and pharmacology.
 
-3. **RQ3 (Topics)**: NMF extracted 5 latent topics — cognitive enhancement,
-   ADHD treatment, pharmacological dose-response, sleep disorders, and psychiatric
-   fatigue — that cross-cut the explicit subfield taxonomy and reveal the thematic
-   structure of the field.
+3. **RQ3 (Topics)**: NMF extracted 5 latent topics — preclinical
+   pharmacology, clinical fatigue trials, meta-analytic methods, cognitive
+   enhancement, and sleep disorders — that cross-cut the explicit subfield taxonomy
+   and reveal the thematic structure of the field.
 
 4. **RQ4 (Citations)**: The citation network of 2234 nodes and
    8,623 edges has a resolution rate of 22.4\%,
@@ -1396,8 +1399,9 @@ to the exact pipeline run that produced it. The provenance chain is:
 4. `scripts/04_generate_figures.py` renders figures → `*.png` + `figure_registry.json`
 5. `scripts/05_inject_variables.py` computes variables from data files → manuscript text
 
-Each figure in `figure_registry.json` records its source data file, generation parameters,
-and SHA-256 hash, binding the visual output to the exact pipeline run. Re-running the
+Each figure in `figure_registry.json` records its label, caption, and the
+producing script, so downstream rendering and validation resolve the same figure set
+that the pipeline generated. Re-running the
 pipeline with the same configuration and seed produces identical data outputs.
 
 ## FAIR Data Principles

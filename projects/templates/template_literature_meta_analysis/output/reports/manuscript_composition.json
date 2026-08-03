@@ -1,16 +1,16 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "7ba709080d57eaa6bde13302b52c5a1eb59626ef42048aca3206762de185ffce",
+  "binding_sha256": "c0571232bcf1d60ba2e6d21782cbcd34e0a5202503419344c69078ab9ea0a9ff",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "807f2d6d2c01ec03a4813089d5c810c2a2ef5360d6f7b0cc05a7c72d4e7c18eb",
-  "combined_size_bytes": 70878,
+  "combined_sha256": "7e7ebd154ce92b72b1d27f6e062cd5db1ecda095af9edaafca4646977ec0b0f6",
+  "combined_size_bytes": 71065,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
       "ordinal": 1,
       "path": "output/manuscript/00_abstract.md",
-      "sha256": "f1c3931ac911b21b4b098f6437e1f0bd177ae2fea2f371b6b16764ddbc97606d",
-      "size_bytes": 2597
+      "sha256": "73729452c07bede70c3f4b810f4ae822a1c1766817c895c83b45250b2afcbdf3",
+      "size_bytes": 2581
     },
     {
       "ordinal": 2,
@@ -63,8 +63,8 @@
     {
       "ordinal": 10,
       "path": "output/manuscript/03a_results_field_overview.md",
-      "sha256": "97bca262aa324833a9257c2824fdffa7264db5c2b836c1c519f55facbf7d5996",
-      "size_bytes": 5577
+      "sha256": "21e34117be6b549a537392b1f3aaecdaecc2568ac0abb551c9974de758413b97",
+      "size_bytes": 5570
     },
     {
       "ordinal": 11,
@@ -75,8 +75,8 @@
     {
       "ordinal": 12,
       "path": "output/manuscript/03c_results_text_analytics.md",
-      "sha256": "13067ec4838f29db87be51aa46e13c92104cab1258f8730b9ab086d6348c1c61",
-      "size_bytes": 6906
+      "sha256": "2ee55157e177d5951fbc84d35da4e614dd9426ecd6b4cf174de4464058cf855b",
+      "size_bytes": 7084
     },
     {
       "ordinal": 13,
@@ -99,8 +99,8 @@
     {
       "ordinal": 16,
       "path": "output/manuscript/05_conclusion.md",
-      "sha256": "f1cd0c7609597bc482408dc1f63195c0f18f9758dd4aef3de700b815c798319c",
-      "size_bytes": 2812
+      "sha256": "e4791e44284c51160eacb10c3d011fc391a9f90a3a3ce87aa11849d0ceab3340",
+      "size_bytes": 2818
     },
     {
       "ordinal": 17,
@@ -117,8 +117,8 @@
     {
       "ordinal": 19,
       "path": "output/manuscript/08_appendix_accessibility.md",
-      "sha256": "b5efa72a4c6e6c9ca4a3c66d53d1e658225c4aa5613cd833af2f0a3bd03c9fa4",
-      "size_bytes": 2702
+      "sha256": "0fb3820b978b792012b4f6926988bc4bda48590e5ce30d1d15540e5a2d19629e",
+      "size_bytes": 2728
     },
     {
       "ordinal": 20,
@@ -133,7 +133,7 @@
       "size_bytes": 793
     }
   ],
-  "ordered_inputs_sha256": "a7e2689ea57278fc3714e1c6557908e91dc082b1e9d8cc49f2796f084654e4cd",
+  "ordered_inputs_sha256": "67b4aa562c596350dfe405d227bde2581380794dbd0740d175380f74de75a2da",
   "project": "templates/template_literature_meta_analysis",
   "schema_version": "template-manuscript-composition-v1"
 }

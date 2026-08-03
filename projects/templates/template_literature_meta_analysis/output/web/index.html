@@ -812,10 +812,10 @@ space, and citation-network analysis exposes the corpus’s internal
 structure (8,623 intra-corpus edges across 2234 nodes, 1416 communities,
 graph density 0.17%). Of 38,489 total outgoing references, 22.4% resolve
 to another record inside the corpus. Abstract coverage stands at 61.6%,
-open-access status is known for 24.6% of records, and 54.6% have a
-direct PDF link. An optional, LLM-gated knowledge-graph stage scores the
-6 hypotheses explored against the evidence. This run produced 21
-publication-quality figures.</p>
+24.6% of records are open access, and 54.6% have a direct PDF link. An
+optional, LLM-gated knowledge-graph stage scores the 6 hypotheses
+explored against the evidence. This run produced 21 publication-quality
+figures.</p>
 <p>Every domain-specific value in this manuscript — the search term,
 keyword set, engine roster, subfield taxonomy, and hypotheses — is
 injected from a single configuration file and the pipeline’s own
@@ -1684,8 +1684,8 @@ Coverage</h2>
 (97.2%) carry DOIs, enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for 923 records. Abstract coverage stands at
 61.6% (1437 records), which limits the text analytics to that subset.
-Open-access status is confirmed for 24.6% of records, and 54.6% have a
-direct PDF link.</p>
+Open access is confirmed for 24.6% of records, and 54.6% have a direct
+PDF link.</p>
 <h2 data-number="10.4" id="descriptive-bibliometrics"><span
 class="header-section-number">10.4</span> Descriptive Bibliometrics</h2>
 <p>The corpus spans 8152 unique authors across 2334 papers, yielding a
@@ -1968,13 +1968,17 @@ excessive</td>
 </tbody>
 </table>
 <p>The topics reveal the thematic structure of the literature: Topic 0
-centres on cognitive enhancement and neuroenhancement; Topic 1 addresses
-ADHD treatment and clinical evidence; Topic 2 covers pharmacological
-dose-response studies (including animal models); Topic 3 focuses on
-sleep disorders (narcolepsy, excessive daytime sleepiness); and Topic 4
-addresses fatigue in psychiatric populations. These topics cross-cut the
-keyword-based subfield taxonomy, revealing connections that the explicit
-classification does not capture.</p>
+reflects preclinical dose-response pharmacology in animal models (mg/kg
+dosing, dopamine activity); Topic 1 captures clinical fatigue and mood
+trials (placebo-controlled patient studies, armodafinil); Topic 2
+collects structured-abstract and meta-analytic language (methods,
+results, 95% confidence intervals, risk estimates); Topic 3 centres on
+cognitive enhancement and psychostimulant pharmacology (ADHD,
+methylphenidate, cocaine comparisons); and Topic 4 addresses sleep
+disorders (narcolepsy, excessive daytime sleepiness, cataplexy,
+hypersomnia). These topics cross-cut the keyword-based subfield
+taxonomy, revealing connections that the explicit classification does
+not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
 <img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
@@ -2004,12 +2008,11 @@ relates to the keyword taxonomy.</figcaption>
 <!-- FIGURE: dendrogram.png -->
 <figure id="fig:dendrogram">
 <img src="../figures/dendrogram.png" title="Document Dendrogram"
-alt="Figure 11: Hierarchical clustering dendrogram of document embeddings." />
+alt="Figure 11: Hierarchical clustering dendrogram of subfield TF-IDF centroids." />
 <figcaption>Figure 11: Hierarchical clustering
-dendrogram of document embeddings. The tree shows the similarity
-structure of the corpus: documents that join low in the tree are
-semantically similar, while high-level splits separate the major topical
-clusters.</figcaption>
+dendrogram of subfield TF-IDF centroids. Leaves are the configured
+subfields; the tree shows the similarity structure between subfield
+centroid vectors.</figcaption>
 </figure>
 <h2 data-number="12.3" id="term-analysis"><span
 class="header-section-number">12.3</span> Term Analysis</h2>
@@ -2272,8 +2275,9 @@ High-similarity pairs share topical and lexical content.</figcaption>
 <img src="../figures/word_cloud.png" title="Term Cloud"
 alt="Figure 15: Term cloud for Modafinil." />
 <figcaption>Figure 15: Term cloud for Modafinil. Term
-sizes are proportional to their TF-IDF weights across the corpus,
-providing a visual summary of the dominant vocabulary.</figcaption>
+sizes are proportional to their topic-term weights from the discovered
+topics, providing a visual summary of the dominant
+vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">
@@ -2672,9 +2676,9 @@ multi-disciplinary literature dominated by clinical sleep research
 (63.0%), with significant representation from cognition, psychiatry, and
 pharmacology.</p></li>
 <li><p><strong>RQ3 (Topics)</strong>: NMF extracted 5 latent topics —
-cognitive enhancement, ADHD treatment, pharmacological dose-response,
-sleep disorders, and psychiatric fatigue — that cross-cut the explicit
-subfield taxonomy and reveal the thematic structure of the
+preclinical pharmacology, clinical fatigue trials, meta-analytic
+methods, cognitive enhancement, and sleep disorders — that cross-cut the
+explicit subfield taxonomy and reveal the thematic structure of the
 field.</p></li>
 <li><p><strong>RQ4 (Citations)</strong>: The citation network of 2234
 nodes and 8,623 edges has a resolution rate of 22.4%, 1416 communities,
@@ -3004,10 +3008,11 @@ corpus → <code>*.json</code> data files</li>
 <li><code>scripts/05_inject_variables.py</code> computes variables from
 data files → manuscript text</li>
 </ol>
-<p>Each figure in <code>figure_registry.json</code> records its source
-data file, generation parameters, and SHA-256 hash, binding the visual
-output to the exact pipeline run. Re-running the pipeline with the same
-configuration and seed produces identical data outputs.</p>
+<p>Each figure in <code>figure_registry.json</code> records its label,
+caption, and the producing script, so downstream rendering and
+validation resolve the same figure set that the pipeline generated.
+Re-running the pipeline with the same configuration and seed produces
+identical data outputs.</p>
 <h2 data-number="19.3" id="fair-data-principles"><span
 class="header-section-number">19.3</span> FAIR Data Principles</h2>
 <p>The pipeline supports FAIR (Findable, Accessible, Interoperable,

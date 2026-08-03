@@ -233,10 +233,11 @@ corpus → <code>*.json</code> data files</li>
 <li><code>scripts/05_inject_variables.py</code> computes variables from
 data files → manuscript text</li>
 </ol>
-<p>Each figure in <code>figure_registry.json</code> records its source
-data file, generation parameters, and SHA-256 hash, binding the visual
-output to the exact pipeline run. Re-running the pipeline with the same
-configuration and seed produces identical data outputs.</p>
+<p>Each figure in <code>figure_registry.json</code> records its label,
+caption, and the producing script, so downstream rendering and
+validation resolve the same figure set that the pipeline generated.
+Re-running the pipeline with the same configuration and seed produces
+identical data outputs.</p>
 <h2 id="fair-data-principles">FAIR Data Principles</h2>
 <p>The pipeline supports FAIR (Findable, Accessible, Interoperable,
 Reusable) data principles:</p>
