@@ -104,6 +104,9 @@ def _draw_flow_figure(spec: Mapping[str, str], output_png: Path, output_svg: Pat
     from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
     matplotlib.use("Agg", force=True)
+    # Fixed salt makes matplotlib's SVG element ids deterministic across runs
+    # (ids are otherwise derived from object memory addresses).
+    matplotlib.rcParams["svg.hashsalt"] = "template_redacted_report"
     fig, ax = plt.subplots(figsize=_CANVAS_INCHES, dpi=_DPI)
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 5.4)
@@ -172,6 +175,9 @@ def _draw_matrix_figure(spec: Mapping[str, str], output_png: Path, output_svg: P
     import matplotlib.pyplot as plt
 
     matplotlib.use("Agg", force=True)
+    # Fixed salt makes matplotlib's SVG element ids deterministic across runs
+    # (ids are otherwise derived from object memory addresses).
+    matplotlib.rcParams["svg.hashsalt"] = "template_redacted_report"
     fig, ax = plt.subplots(figsize=_CANVAS_INCHES, dpi=_DPI)
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 5.4)
