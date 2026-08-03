@@ -1,16 +1,16 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 2347,
+  "fact_count": 1777,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 450,
+    "artifact": 419,
     "citation": 13,
     "equation": 1,
-    "figure": 15,
-    "number": 1853,
+    "figure": 14,
+    "number": 1315,
     "section": 15
   },
-  "omitted_fact_count": 2147,
+  "omitted_fact_count": 1577,
   "sample_facts": [
     {
       "active": true,
@@ -98,47 +98,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[1].duration (numeric variant)",
-      "source_field": "$.stage_results[1].duration",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.3"
-    },
-    {
-      "active": true,
       "checked_at": "2026-07-10T20:15:22+00:00",
       "kind": "number",
       "source": "output/data/colony_statistics_sweep_summary.json:$.config.num_ticks (numeric variant)",
       "source_field": "$.config.num_ticks",
       "source_path": "output/data/colony_statistics_sweep_summary.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.stages[1].duration (numeric variant)",
-      "source_field": "$.stages[1].duration",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.3"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/telemetry.json:$.stages[1].duration (numeric variant)",
-      "source_field": "$.stages[1].duration",
-      "source_path": "output/reports/telemetry.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -214,7 +178,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "35%"
+      "value": "35"
     },
     {
       "active": true,
@@ -226,7 +190,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "35%"
+      "value": "35"
     },
     {
       "active": true,
@@ -238,7 +202,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "35"
+      "value": "35%"
     },
     {
       "active": true,
@@ -250,7 +214,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "35"
+      "value": "35%"
     },
     {
       "active": true,
@@ -446,18 +410,6 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.sizes_by_category.reports (numeric variant)",
-      "source_field": "$.output_statistics.sizes_by_category.reports",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.7"
-    },
-    {
-      "active": true,
       "checked_at": "2026-07-10T20:15:22+00:00",
       "kind": "number",
       "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
@@ -514,7 +466,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "67%"
+      "value": "67"
     },
     {
       "active": true,
@@ -526,7 +478,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "67%"
+      "value": "67"
     },
     {
       "active": true,
@@ -538,7 +490,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "67"
+      "value": "67%"
     },
     {
       "active": true,
@@ -550,7 +502,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "67"
+      "value": "67%"
     },
     {
       "active": true,
@@ -572,18 +524,6 @@
       "source_field": "$.claims[41].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "15"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.reports.extensions..json",
-      "source_field": "$.output_statistics.directories.reports.extensions..json",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "15"
@@ -652,18 +592,6 @@
       "active": true,
       "checked_at": "2026-07-12T16:01:16+00:00",
       "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.reports.extensions..json (numeric variant)",
-      "source_field": "$.output_statistics.directories.reports.extensions..json",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.15"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
       "source": "output/reports/output_statistics.json:$.file_counts_by_type..json (numeric variant)",
       "source_field": "$.file_counts_by_type..json",
       "source_path": "output/reports/output_statistics.json",
@@ -710,6 +638,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/rendered_provenance.json:$.fingerprints.output.file_count",
+      "source_field": "$.fingerprints.output.file_count",
+      "source_path": "output/reports/rendered_provenance.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "31"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T16:01:16+00:00",
       "kind": "number",
       "source": "ISA.md and project method/test contract",
@@ -740,6 +680,18 @@
       "source_field": "$.claims[16].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.31"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/rendered_provenance.json:$.fingerprints.output.file_count (numeric variant)",
+      "source_field": "$.fingerprints.output.file_count",
+      "source_path": "output/reports/rendered_provenance.json",
+      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.31"
@@ -1082,18 +1034,6 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/telemetry.json:$.config_used.high_cpu_percent (numeric variant)",
-      "source_field": "$.config_used.high_cpu_percent",
-      "source_path": "output/reports/telemetry.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.9"
-    },
-    {
-      "active": true,
       "checked_at": "2026-07-10T20:15:22+00:00",
       "kind": "number",
       "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
@@ -1139,54 +1079,6 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "0.9"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[9].value (numeric variant)",
-      "source_field": "$.claims[9].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "93.3%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
-      "source_field": "manuscript-number-010",
-      "source_path": "output/reports/validation_report.json",
-      "source_tier": "fixture",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "93.3%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[9].value (numeric variant)",
-      "source_field": "$.claims[9].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "93.33"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
-      "source_field": "manuscript-number-010",
-      "source_path": "output/reports/validation_report.json",
-      "source_tier": "fixture",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "93.33"
     },
     {
       "active": true,
@@ -1270,6 +1162,54 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
+      "value": "93.3%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-010",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "93.3%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[9].value (numeric variant)",
+      "source_field": "$.claims[9].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "93.33"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-010",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "93.33"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[9].value (numeric variant)",
+      "source_field": "$.claims[9].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
       "value": "93.33%"
     },
     {
@@ -1318,7 +1258,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "88.2%"
+      "value": "0.88"
     },
     {
       "active": true,
@@ -1330,31 +1270,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "88.2%"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[11].value (numeric variant)",
-      "source_field": "$.claims[11].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "88.2"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
-      "source_field": "manuscript-number-012",
-      "source_path": "output/reports/validation_report.json",
-      "source_tier": "fixture",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "88.2"
+      "value": "0.88"
     },
     {
       "active": true,
@@ -1390,6 +1306,30 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
+      "value": "88.16"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-012",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "88.16"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[11].value (numeric variant)",
+      "source_field": "$.claims[11].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
       "value": "88.16%"
     },
     {
@@ -1414,7 +1354,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.88"
+      "value": "88.2"
     },
     {
       "active": true,
@@ -1426,7 +1366,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.88"
+      "value": "88.2"
     },
     {
       "active": true,
@@ -1438,7 +1378,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "88.16"
+      "value": "88.2%"
     },
     {
       "active": true,
@@ -1450,7 +1390,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "88.16"
+      "value": "88.2%"
     },
     {
       "active": true,
@@ -1486,7 +1426,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "96.34%"
+      "value": "0.96"
     },
     {
       "active": true,
@@ -1498,7 +1438,31 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "96.34%"
+      "value": "0.96"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[12].value (numeric variant)",
+      "source_field": "$.claims[12].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.963"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-013",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.963"
     },
     {
       "active": true,
@@ -1520,18 +1484,6 @@
       "source_field": "$.claims[26].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[0].context.stage_num",
-      "source_field": "$.stage_results[0].context.stage_num",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "1"
@@ -1603,246 +1555,6 @@
       "source": "output/data/colony_statistics_sweep_summary.json:$.wilson_95_upper (numeric variant)",
       "source_field": "$.wilson_95_upper",
       "source_path": "output/data/colony_statistics_sweep_summary.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pause_recommendations.json:$.recommendations[0].score",
-      "source_field": "$.recommendations[0].score",
-      "source_path": "output/reports/pause_recommendations.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..md",
-      "source_field": "$.output_statistics.directories.pdf.extensions..md",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..aux",
-      "source_field": "$.output_statistics.directories.pdf.extensions..aux",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..blg",
-      "source_field": "$.output_statistics.directories.pdf.extensions..blg",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..pdf",
-      "source_field": "$.output_statistics.directories.pdf.extensions..pdf",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..bib",
-      "source_field": "$.output_statistics.directories.pdf.extensions..bib",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..tex",
-      "source_field": "$.output_statistics.directories.pdf.extensions..tex",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..toc",
-      "source_field": "$.output_statistics.directories.pdf.extensions..toc",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.pdf.extensions..bbl",
-      "source_field": "$.output_statistics.directories.pdf.extensions..bbl",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.web.extensions..md",
-      "source_field": "$.output_statistics.directories.web.extensions..md",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.web.extensions..ico",
-      "source_field": "$.output_statistics.directories.web.extensions..ico",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.reports.extensions..jsonl",
-      "source_field": "$.output_statistics.directories.reports.extensions..jsonl",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.logs.file_count",
-      "source_field": "$.output_statistics.directories.logs.file_count",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.logs.extensions..log",
-      "source_field": "$.output_statistics.directories.logs.extensions..log",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.sizes_by_category.slides (numeric variant)",
-      "source_field": "$.output_statistics.sizes_by_category.slides",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..blg",
-      "source_field": "$.output_statistics.file_counts_by_type..blg",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..bib",
-      "source_field": "$.output_statistics.file_counts_by_type..bib",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..bbl",
-      "source_field": "$.output_statistics.file_counts_by_type..bbl",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..ico",
-      "source_field": "$.output_statistics.file_counts_by_type..ico",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..jsonl",
-      "source_field": "$.output_statistics.file_counts_by_type..jsonl",
-      "source_path": "output/reports/pipeline_report.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -2054,23 +1766,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
+      "checked_at": "2026-08-03T01:23:54+00:00",
       "kind": "number",
-      "source": "output/reports/telemetry.json:$.stages[0].stage_num",
-      "source_field": "$.stages[0].stage_num",
-      "source_path": "output/reports/telemetry.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/snapshots/stage-01-clean-output-directories.json:$.stage_num",
-      "source_field": "$.stage_num",
-      "source_path": "output/reports/snapshots/stage-01-clean-output-directories.json",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[0].ordinal",
+      "source_field": "$.ordered_inputs[0].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -2110,7 +1810,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.963"
+      "value": "96.3"
     },
     {
       "active": true,
@@ -2122,55 +1822,7 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.963"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[12].value (numeric variant)",
-      "source_field": "$.claims[12].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.96"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
-      "source_field": "manuscript-number-013",
-      "source_path": "output/reports/validation_report.json",
-      "source_tier": "fixture",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.96"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "data/claim_ledger.yaml:$.claims[12].value (numeric variant)",
-      "source_field": "$.claims[12].value",
-      "source_path": "data/claim_ledger.yaml",
-      "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "96.34"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
-      "source_field": "manuscript-number-013",
-      "source_path": "output/reports/validation_report.json",
-      "source_tier": "fixture",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "96.34"
+      "value": "96.3"
     },
     {
       "active": true,
@@ -2206,7 +1858,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "96.3"
+      "value": "96.34"
     },
     {
       "active": true,
@@ -2218,7 +1870,31 @@
       "source_tier": "fixture",
       "stale": false,
       "tolerance": 0.0,
-      "value": "96.3"
+      "value": "96.34"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[12].value (numeric variant)",
+      "source_field": "$.claims[12].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "96.34%"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-07-12T16:01:16+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-013",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "96.34%"
     },
     {
       "active": true,
@@ -2228,54 +1904,6 @@
       "source_field": "$.claims[13].value",
       "source_path": "data/claim_ledger.yaml",
       "source_tier": "configuration",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "4"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[3].context.stage_num",
-      "source_field": "$.stage_results[3].context.stage_num",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "4"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.figures.extensions..png",
-      "source_field": "$.output_statistics.directories.figures.extensions..png",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "4"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.reports.extensions..md",
-      "source_field": "$.output_statistics.directories.reports.extensions..md",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "4"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.file_counts_by_type..png",
-      "source_field": "$.output_statistics.file_counts_by_type..png",
-      "source_path": "output/reports/pipeline_report.json",
-      "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "4"
@@ -2318,23 +1946,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
+      "checked_at": "2026-08-03T01:23:54+00:00",
       "kind": "number",
-      "source": "output/reports/telemetry.json:$.stages[3].stage_num",
-      "source_field": "$.stages[3].stage_num",
-      "source_path": "output/reports/telemetry.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "4"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
-      "kind": "number",
-      "source": "output/reports/snapshots/stage-04-project-tests.json:$.stage_num",
-      "source_field": "$.stage_num",
-      "source_path": "output/reports/snapshots/stage-04-project-tests.json",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].ordinal",
+      "source_field": "$.ordered_inputs[3].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -2390,11 +2006,11 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
+      "checked_at": "2026-08-03T01:23:54+00:00",
       "kind": "number",
-      "source": "output/.checkpoints/pipeline_checkpoint.json:$.stage_results[3].context.stage_num (numeric variant)",
-      "source_field": "$.stage_results[3].context.stage_num",
-      "source_path": "output/.checkpoints/pipeline_checkpoint.json",
+      "source": "output/reports/output_statistics.json:$.directories.figures.extensions..png (numeric variant)",
+      "source_field": "$.directories.figures.extensions..png",
+      "source_path": "output/reports/output_statistics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -2402,25 +2018,409 @@
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:01:16+00:00",
+      "checked_at": "2026-08-03T01:23:54+00:00",
       "kind": "number",
-      "source": "output/reports/pipeline_report.json:$.output_statistics.directories.figures.extensions..png (numeric variant)",
-      "source_field": "$.output_statistics.directories.figures.extensions..png",
-      "source_path": "output/reports/pipeline_report.json",
+      "source": "output/reports/output_statistics.json:$.file_counts_by_type..md (numeric variant)",
+      "source_field": "$.file_counts_by_type..md",
+      "source_path": "output/reports/output_statistics.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
       "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.file_counts_by_type..png (numeric variant)",
+      "source_field": "$.file_counts_by_type..png",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].ordinal (numeric variant)",
+      "source_field": "$.ordered_inputs[3].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-014",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-067",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-085",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[14].value",
+      "source_field": "$.claims[14].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.file_counts_by_type..tex",
+      "source_field": "$.file_counts_by_type..tex",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "ISA.md and project method/test contract",
+      "source_field": "manuscript-number-015",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "project_source",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "9"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[14].value (numeric variant)",
+      "source_field": "$.claims[14].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.09"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[55].value (numeric variant)",
+      "source_field": "$.claims[55].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.09"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.file_counts_by_type..tex (numeric variant)",
+      "source_field": "$.file_counts_by_type..tex",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.09"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "ISA.md and project method/test contract (numeric variant)",
+      "source_field": "manuscript-number-015",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "project_source",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.09"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-055",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.09"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[15].value",
+      "source_field": "$.claims[15].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.0977"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py",
+      "source_field": "manuscript-number-016",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.0977"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[15].value (numeric variant)",
+      "source_field": "$.claims[15].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.098"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "tests/colony/test_colony_experiments_extended.py and tests/colony/test_colony_convergence_statistics.py (numeric variant)",
+      "source_field": "manuscript-number-016",
+      "source_path": "output/reports/validation_report.json",
+      "source_tier": "fixture",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.098"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[15].value (numeric variant)",
+      "source_field": "$.claims[15].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[17].value (numeric variant)",
+      "source_field": "$.claims[17].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[20].value",
+      "source_field": "$.claims[20].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[23].value (numeric variant)",
+      "source_field": "$.claims[23].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[28].value (numeric variant)",
+      "source_field": "$.claims[28].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[32].value (numeric variant)",
+      "source_field": "$.claims[32].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[48].value (numeric variant)",
+      "source_field": "$.claims[48].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[52].value (numeric variant)",
+      "source_field": "$.claims[52].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[55].value (numeric variant)",
+      "source_field": "$.claims[55].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[66].value (numeric variant)",
+      "source_field": "$.claims[66].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[72].value (numeric variant)",
+      "source_field": "$.claims[72].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[78].value (numeric variant)",
+      "source_field": "$.claims[78].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "data/claim_ledger.yaml:$.claims[84].value (numeric variant)",
+      "source_field": "$.claims[84].value",
+      "source_path": "data/claim_ledger.yaml",
+      "source_tier": "configuration",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.pdf.file_count (numeric variant)",
+      "source_field": "$.directories.pdf.file_count",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:23:54+00:00",
+      "kind": "number",
+      "source": "output/reports/output_statistics.json:$.directories.web.file_count (numeric variant)",
+      "source_field": "$.directories.web.file_count",
+      "source_path": "output/reports/output_statistics.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.1"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 481,
+    "artifact": 449,
     "bibliography": 13,
     "configuration": 438,
     "fixture": 393,
     "formal_check": 10,
-    "generated_metric": 980,
+    "generated_metric": 442,
     "project_source": 32
   }
 }

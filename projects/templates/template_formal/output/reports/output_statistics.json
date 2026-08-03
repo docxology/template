@@ -2,13 +2,13 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "0.85",
-      "total_size_bytes": 887457,
+      "file_count": 12,
+      "size_mb": "0.87",
+      "total_size_bytes": 911468,
       "largest_files": [
         {
           "name": "template_formal_combined.pdf",
-          "size_mb": "0.53",
+          "size_mb": "0.44",
           "path": "pdf/template_formal_combined.pdf"
         },
         {
@@ -17,18 +17,19 @@
           "path": "pdf/_combined_manuscript.tex"
         },
         {
-          "name": "_combined_manuscript.md",
-          "size_mb": "0.09",
-          "path": "pdf/_combined_manuscript.md"
+          "name": "_pages.txt",
+          "size_mb": "0.10",
+          "path": "pdf/_pages.txt"
         }
       ],
       "extensions": {
         ".md": 1,
-        ".log": 2,
+        ".log": 3,
         ".aux": 1,
         ".blg": 1,
         ".pdf": 1,
         ".bib": 1,
+        ".txt": 1,
         ".tex": 1,
         ".toc": 1,
         ".bbl": 1
@@ -38,7 +39,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.38",
-      "total_size_bytes": 394708,
+      "total_size_bytes": 402379,
       "largest_files": [
         {
           "name": "index.html",
@@ -66,7 +67,7 @@
       "exists": true,
       "file_count": 57,
       "size_mb": "1.01",
-      "total_size_bytes": 1063534,
+      "total_size_bytes": 1060827,
       "largest_files": [
         {
           "name": "05_results_discussion_slides.pdf",
@@ -99,7 +100,7 @@
       "exists": true,
       "file_count": 8,
       "size_mb": "0.16",
-      "total_size_bytes": 170246,
+      "total_size_bytes": 170244,
       "largest_files": [
         {
           "name": "inline_mermaid_0001_e0b519d89719.png",
@@ -126,23 +127,23 @@
     "data": {
       "exists": true,
       "file_count": 325,
-      "size_mb": "2.53",
-      "total_size_bytes": 2648123,
+      "size_mb": "5.03",
+      "total_size_bytes": 5269493,
       "largest_files": [
         {
           "name": "agent_0.sqlite3",
-          "size_mb": "0.01",
-          "path": "data/agent_0.sqlite3"
+          "size_mb": "0.02",
+          "path": "data/stats_sweep/trial_9008/agent_0.sqlite3"
         },
         {
           "name": "agent_1.sqlite3",
-          "size_mb": "0.01",
-          "path": "data/agent_1.sqlite3"
+          "size_mb": "0.02",
+          "path": "data/stats_sweep/trial_9008/agent_1.sqlite3"
         },
         {
-          "name": "agent_2.sqlite3",
-          "size_mb": "0.01",
-          "path": "data/agent_2.sqlite3"
+          "name": "agent_3.sqlite3",
+          "size_mb": "0.02",
+          "path": "data/stats_sweep/trial_9008/agent_3.sqlite3"
         }
       ],
       "extensions": {
@@ -152,78 +153,59 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 13,
-      "size_mb": "0.55",
-      "total_size_bytes": 581341,
+      "file_count": 10,
+      "size_mb": "0.11",
+      "total_size_bytes": 116122,
       "largest_files": [
-        {
-          "name": "artifact_manifest.json",
-          "size_mb": "0.33",
-          "path": "reports/artifact_manifest.json"
-        },
         {
           "name": "evidence_registry.json",
           "size_mb": "0.08",
           "path": "reports/evidence_registry.json"
         },
         {
-          "name": "stage-07-output-validation.json",
-          "size_mb": "0.04",
-          "path": "reports/snapshots/stage-07-output-validation.json"
+          "name": "artifact_manifest.json",
+          "size_mb": "0.01",
+          "path": "reports/artifact_manifest.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.01",
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 11,
+        ".json": 7,
+        ".txt": 1,
         ".md": 2
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 1,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 194,
-      "largest_files": [
-        {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
-        }
-      ],
-      "extensions": {
-        ".log": 1
-      }
+      "total_size_bytes": 0
     }
   },
-  "total_files": 424,
-  "total_size_mb": 5.479434013366699,
+  "total_files": 422,
+  "total_size_mb": 7.563145637512207,
   "largest_files": [
     {
       "name": "template_formal_combined.pdf",
-      "size_mb": "0.53",
+      "size_mb": "0.44",
       "category": "pdf",
       "path": "pdf/template_formal_combined.pdf"
-    },
-    {
-      "name": "artifact_manifest.json",
-      "size_mb": "0.33",
-      "category": "reports",
-      "path": "reports/artifact_manifest.json"
     },
     {
       "name": "05_results_discussion_slides.pdf",
@@ -244,10 +226,10 @@
       "path": "pdf/_combined_manuscript.tex"
     },
     {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.09",
+      "name": "_pages.txt",
+      "size_mb": "0.10",
       "category": "pdf",
-      "path": "pdf/_combined_manuscript.md"
+      "path": "pdf/_pages.txt"
     },
     {
       "name": "_combined_manuscript.md",
@@ -272,19 +254,26 @@
       "size_mb": "0.08",
       "category": "reports",
       "path": "reports/evidence_registry.json"
+    },
+    {
+      "name": "05_results_discussion_slides.log",
+      "size_mb": "0.07",
+      "category": "slides",
+      "path": "slides/05_results_discussion_slides.log"
     }
   ],
-  "missing_expected_files": [],
+  "missing_expected_files": [
+    "simulations/ directory",
+    "llm/ directory",
+    "logs/ directory"
+  ],
   "sizes_by_category": {
-    "pdf": 0.8463449478149414,
-    "web": 0.3764228820800781,
-    "slides": 1.0142650604248047,
-    "figures": 0.16235923767089844,
-    "data": 2.525446891784668,
-    "reports": 0.5544099807739258,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.0001850128173828125
+    "pdf": 0.8692436218261719,
+    "web": 0.38373851776123047,
+    "slides": 1.011683464050293,
+    "figures": 0.16235733032226562,
+    "data": 5.0253801345825195,
+    "reports": 0.11074256896972656
   },
   "file_counts_by_type": {
     ".md": 4,
@@ -293,6 +282,7 @@
     ".blg": 1,
     ".pdf": 8,
     ".bib": 1,
+    ".txt": 2,
     ".tex": 9,
     ".toc": 8,
     ".bbl": 1,
@@ -301,7 +291,7 @@
     ".nav": 7,
     ".vrb": 7,
     ".snm": 7,
-    ".json": 15,
+    ".json": 11,
     ".png": 4,
     ".mmd": 2,
     ".sqlite3": 323

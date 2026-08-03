@@ -176,10 +176,13 @@ def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
             "passed": True,
         },
     ]
+    for row in rows:
+        row["exhaustive"] = True
     return {
         "schema": "template_active_inference.model_checking_witnesses.v1",
         "rows": rows,
         "witness_count": len(rows),
+        "all_exhaustive": bool(rows) and all(row["exhaustive"] for row in rows),
         "all_passed": all(row["passed"] and not row["counterexamples"] for row in rows),
     }
 

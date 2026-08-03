@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_type_architecture.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -187,7 +200,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:type-architecture">Type Architecture</h1>
 <h2 id="module-layout">Module layout</h2>
 <p>The typed surface described in this section is not spread arbitrarily
@@ -303,12 +317,15 @@ data-cites="sec:results-discussion">@sec:results-discussion</span>,
 handles</h2>
 <div class="theorem-box definition">
 <p><strong>Definition 1</strong> (Affine-discipline resource handle). An
-is an object that (i) is immutable after construction (, -restricted, no
-public mutator), (ii) carries a private consumed flag set exactly once
-by its first consuming call, and (iii) raises a dedicated exception on
-every subsequent consuming call rather than silently re-executing or
-returning stale state. () and every protocol-phase class () satisfy this
-definition, checked at runtime, not at edit time.</p>
+is an object that (i) is immutable after construction
+(<code>frozen=True</code>, <code>__slots__</code>-restricted, no public
+mutator), (ii) carries a private consumed flag set exactly once by its
+first consuming call, and (iii) raises a dedicated exception on every
+subsequent consuming call rather than silently re-executing or returning
+stale state. <code>TransactionHandle</code>
+(<code>storage/transaction.py</code>) and every protocol-phase class
+(<code>protocol/session.py</code>) satisfy this definition, checked at
+runtime, not at edit time.</p>
 </div>
 <p><code>src/template_formal/storage/transaction.py</code>’s
 <code>TransactionHandle</code> and the protocol-phase classes above are
@@ -336,13 +353,17 @@ runtime-checked disciplines — and cites the ISC (Ideal-State Criterion)
 number of the test that would fail if the claim were false.</p>
 <div class="theorem-box proposition">
 <p><strong>Proposition 2</strong> (Static type-safety guarantees,
-edit-time/CI-time only). Each of the following is rejected by before the
-program ever runs, and each rejection is exercised by a real subprocess
+edit-time/CI-time only). Each of the following is rejected by
+<code>mypy --strict</code> before the program ever runs, and each
+rejection is exercised by a real <code>mypy --strict</code> subprocess
 invocation over a negative-control fixture (never a hand-inspected
-signature): nominal identifier confusion ( for ), a non-exhaustive over
-, a phase-inappropriate method call on a session-typed handle, an
-out-of- isolation level, an constructed from a bare /, and a
-structurally-nonconforming . See the itemized list below for the exact
+signature): nominal identifier confusion (<code>AgentId</code> for
+<code>MessageId</code>), a non-exhaustive <code>match</code> over
+<code>Result</code>, a phase-inappropriate method call on a
+session-typed handle, an out-of-<code>Literal</code> isolation level, an
+<code>Agent</code> constructed from a bare
+<code>str</code>/<code>UUID</code>, and a structurally-nonconforming
+<code>PheromoneField</code>. See the itemized list below for the exact
 fixture and ISC bound to each claim.</p>
 </div>
 <p><strong>Proved by mypy –strict (edit-time/CI-time only):</strong></p>
@@ -399,13 +420,14 @@ conformance, not an unsatisfiable one.</li>
 </ul>
 <div class="theorem-box proposition">
 <p><strong>Proposition 3</strong> (Runtime-only disciplines, not
-type-checker guarantees). None of the following is ill-typed under :
-each is instead caught only at runtime, by an explicit consumed-flag
-check or an explicit wire-decode validation, and each is exercised by a
-real fault-injected test (a seeded, reproducible fault sequence through
-the in-process bus, never a fault-free-only happy path). This is the
-affine-discipline handle of the definition above paying off dynamically
-where Python’s static type system structurally cannot.</p>
+type-checker guarantees). None of the following is ill-typed under
+<code>mypy --strict</code>: each is instead caught only at runtime, by
+an explicit consumed-flag check or an explicit wire-decode validation,
+and each is exercised by a real fault-injected test (a seeded,
+reproducible fault sequence through the in-process bus, never a
+fault-free-only happy path). This is the affine-discipline handle of the
+definition above paying off dynamically where Python’s static type
+system structurally cannot.</p>
 </div>
 <p><strong>Runtime disciplines only — not type-checker
 guarantees:</strong></p>

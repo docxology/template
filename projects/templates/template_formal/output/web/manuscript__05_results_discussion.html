@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_results_discussion.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -187,7 +200,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results-discussion">Results and Discussion</h1>
 <h2 id="mypy-as-oracle-proof-of-detection">mypy-as-oracle
 proof-of-detection</h2>
@@ -306,19 +320,19 @@ tick — computed from real per-agent state.</li>
 </ol>
 <figure id="fig:demo-convergence">
 <img src="../figures/colony_demo_convergence.png"
-alt="The deterministic demo colony’s real concentration_history ( scripts/02_run_analysis.py::run_demo_colony , 3 agents, 2 locations, 5 ticks)." />
+alt="The deterministic demo colony’s real concentration_history ( src/template_formal/colony/demo.py::run_demo_colony , 3 agents, 2 locations, 5 ticks)." />
 <figcaption>The deterministic demo colony’s real
 <code>concentration_history</code>
-(<code>scripts/02_run_analysis.py::run_demo_colony</code>, 3 agents, 2
-locations, 5 ticks). Top: each location’s sensed pheromone concentration
-per tick — <code>south</code> never leaves zero because no real agent
-ever chose it, the same fact item 4 above states in prose. Bottom:
-<code>north</code>’s share of total concentration, constant at <span
-class="math inline">\(1.0\)</span> from tick 0 because <em>every</em>
-agent resolves the identical free-energy tie to <code>north</code> on
-the very first tick (item 1 above) — this is the mechanism-demonstration
-run, presented honestly as “guaranteed by construction,” not as
-emergence.</figcaption>
+(<code>src/template_formal/colony/demo.py::run_demo_colony</code>, 3
+agents, 2 locations, 5 ticks). Top: each location’s sensed pheromone
+concentration per tick — <code>south</code> never leaves zero because no
+real agent ever chose it, the same fact item 4 above states in prose.
+Bottom: <code>north</code>’s share of total concentration, constant at
+<span class="math inline">\(1.0\)</span> from tick 0 because
+<em>every</em> agent resolves the identical free-energy tie to
+<code>north</code> on the very first tick (item 1 above) — this is the
+mechanism-demonstration run, presented honestly as “guaranteed by
+construction,” not as emergence.</figcaption>
 </figure>
 <p>What this test demonstrates is a genuine, correctly-wired
 positive-feedback mechanism operating on real per-agent state — the
@@ -481,11 +495,11 @@ result. Gated by
 in <code>test_colony_experiments_extended.py</code>.</p>
 <figure id="fig:convergence-tick-distribution">
 <img src="../figures/colony_convergence_tick_distribution.png"
-alt="Convergence-tick distribution from this template’s own demo statistics sweep ( scripts/02_run_analysis.py::run_statistics_sweep , N=40 trials, same real, heterogeneous/noisy configuration as the N=150 test above, just smaller so the demo…" />
+alt="Convergence-tick distribution from this template’s own demo statistics sweep ( src/template_formal/colony/demo.py::run_statistics_sweep , N=40 trials, same real, heterogeneous/noisy configuration as the N=150 test above, just smaller so…" />
 <figcaption>Convergence-tick distribution from this
 template’s own demo statistics sweep
-(<code>scripts/02_run_analysis.py::run_statistics_sweep</code>, <span
-class="math inline">\(N=40\)</span> trials, same real,
+(<code>src/template_formal/colony/demo.py::run_statistics_sweep</code>,
+<span class="math inline">\(N=40\)</span> trials, same real,
 heterogeneous/noisy configuration as the <span
 class="math inline">\(N=150\)</span> test above, just smaller so the
 demo script stays fast): 37/40 trials converged (92.5%). Left: histogram
@@ -520,7 +534,7 @@ exploratory evidence loosely consistent with (not proof of) the
 heterogeneity-sweep finding below that wider preference spread makes
 consensus harder, not a second confirmed result.</p>
 <h2
-id="eight-pre-registered-analyses-across-three-experiment-families">Eight
+id="eleven-pre-registered-analyses-across-three-experiment-families">Eleven
 pre-registered analyses across three experiment families</h2>
 <p>The N=150 statistical claim above answers one question — does the
 real mechanism converge reliably at <em>one</em> calibrated
@@ -1312,9 +1326,9 @@ as future work, not silently resolved. Gated by
 and
 <code>test_wide_condition_clears_the_null_model_baseline_at_both_seed_bases</code>
 in <code>test_colony_experiments_extended.py</code>.</p>
-<h3 id="honesty-hedges-common-to-all-eight-analyses">Honesty hedges
-common to all eight analyses</h3>
-<p>All eight analyses hold <code>num_agents=8</code>, two
+<h3 id="honesty-hedges-common-to-all-eleven-analyses">Honesty hedges
+common to all eleven analyses</h3>
+<p>All eleven analyses hold <code>num_agents=8</code>, two
 <code>locations</code>, and <code>num_ticks=30</code> fixed — none of
 the results above is evidence about convergence at other colony sizes,
 other numbers of candidate locations, or other tick horizons, matching
@@ -1443,11 +1457,17 @@ side-spec expansion: what grew, and what still needs wiring</h2>
 <p><strong>Theorem 1</strong> (Mechanically verified protocol
 invariants). Three claims about the handshake protocol’s (not this
 template’s Python implementation, per the scoping note above) are
-machine-checked, zero-, zero-extra-axiom results, re-verified end to end
-by : (i) (Lean 4) — every transition into the phase originates from , ,
-or , never any other phase; (ii) (Lean 4) — a second, un-reassigned call
-on a consumed session token has an unsatisfiable precondition; (iii)
-(TLA+, ) — a peer is never without the other peer having genuinely the
+machine-checked, zero-<code>sorry</code>, zero-extra-axiom results,
+re-verified end to end by <code>scripts/check_formal_specs.sh</code>:
+(i) <code>step_to_closed_cases</code> (Lean 4) — every transition into
+the <code>closed</code> phase originates from <code>idle</code>,
+<code>established</code>, or <code>handshaking</code>, never any other
+phase; (ii) <code>cannot_reuse_consumed_token</code> (Lean 4) — a
+second, un-reassigned <code>use</code> call on a consumed session token
+has an unsatisfiable precondition; (iii)
+<code>NoFalseEstablishment</code> (TLA+,
+<code>AntProtocolFaulty.tla</code>) — a peer is never
+<code>established</code> without the other peer having genuinely the
 corresponding real message at some point (), checked over 494 generated
 / 92 distinct states under arbitrary drop/corrupt/duplicate fault
 interleaving, and independently proven non-vacuous by a permanent

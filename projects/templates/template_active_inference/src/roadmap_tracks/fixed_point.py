@@ -65,6 +65,13 @@ def _write_contract_artifacts(root: Path) -> dict[str, Path]:
     return result
 
 
+def _refresh_validation_spine(root: Path) -> dict[str, Path]:
+    """Refresh provenance after all required artifact writers have settled."""
+    from validation_spine.artifacts import write_validation_spine_artifacts
+
+    return write_validation_spine_artifacts(root)
+
+
 def _fingerprint(root: Path) -> str:
     from roadmap_tracks.sheaf_tracks import CANONICAL_ARTIFACTS
 
@@ -173,6 +180,7 @@ def _write_final_validation_pass(root: Path, *, require_analysis_outputs: bool) 
     paths.update(_write_semantic_core(root))
     paths.update(write_supplemental_artifacts(root))
     paths.update(_write_contract_artifacts(root))
+    paths.update(_refresh_validation_spine(root))
     paths.update(_write_semantic_core(root))
     return paths
 

@@ -44,7 +44,7 @@ mechanism (deliberately not overclaimed as "emergence" — see
 proves vs. what is a runtime discipline" section (@sec:honesty-line) that
 pins every strong claim to the ISC (Ideal-State Criterion) number of its
 paired negative-control test, so the claim-to-evidence mapping is
-auditable rather than asserted. Empirically: eight pre-registered analyses
+auditable rather than asserted. Empirically: eleven pre-registered analyses
 grouped across three experiment families,
 falsifiable experiments (@sec:results-discussion) — a decay-rate sweep
 revealing a real, non-monotonic threshold effect (near-zero convergence
@@ -273,11 +273,11 @@ neither ever crashes or silently advances the phase (@sec:results-discussion,
 
 ::: {.theorem-box .definition}
 **Definition 1** (Affine-discipline resource handle). An \emph{affine-discipline handle} is an object that (i) is immutable after construction
-(\texttt{frozen=True}, \texttt{\_\_slots\_\_}-restricted, no public mutator), (ii) carries a private
+(`frozen=True`, `__slots__`-restricted, no public mutator), (ii) carries a private
 consumed flag set exactly once by its first consuming call, and (iii) raises a dedicated exception
 on every subsequent consuming call rather than silently re-executing or returning stale state.
-\texttt{TransactionHandle} (\texttt{storage/transaction.py}) and every protocol-phase class
-(\texttt{protocol/session.py}) satisfy this definition, checked at runtime, not at edit time.
+`TransactionHandle` (`storage/transaction.py`) and every protocol-phase class
+(`protocol/session.py`) satisfy this definition, checked at runtime, not at edit time.
 :::
 
 
@@ -307,13 +307,13 @@ that would fail if the claim were false.
 
 
 ::: {.theorem-box .proposition}
-**Proposition 2** (Static type-safety guarantees, edit-time/CI-time only). Each of the following is rejected by \texttt{mypy --strict} before the program ever runs, and each
-rejection is exercised by a real \texttt{mypy --strict} subprocess invocation over a negative-control
-fixture (never a hand-inspected signature): nominal identifier confusion (\texttt{AgentId} for
-\texttt{MessageId}), a non-exhaustive \texttt{match} over \texttt{Result}, a phase-inappropriate method
-call on a session-typed handle, an out-of-\texttt{Literal} isolation level, an \texttt{Agent}
-constructed from a bare \texttt{str}/\texttt{UUID}, and a structurally-nonconforming
-\texttt{PheromoneField}. See the itemized list below for the exact fixture and ISC bound to each claim.
+**Proposition 2** (Static type-safety guarantees, edit-time/CI-time only). Each of the following is rejected by `mypy --strict` before the program ever runs, and each
+rejection is exercised by a real `mypy --strict` subprocess invocation over a negative-control
+fixture (never a hand-inspected signature): nominal identifier confusion (`AgentId` for
+`MessageId`), a non-exhaustive `match` over `Result`, a phase-inappropriate method
+call on a session-typed handle, an out-of-`Literal` isolation level, an `Agent`
+constructed from a bare `str`/`UUID`, and a structurally-nonconforming
+`PheromoneField`. See the itemized list below for the exact fixture and ISC bound to each claim.
 :::
 
 
@@ -360,7 +360,7 @@ constructed from a bare \texttt{str}/\texttt{UUID}, and a structurally-nonconfor
 
 
 ::: {.theorem-box .proposition}
-**Proposition 3** (Runtime-only disciplines, not type-checker guarantees). None of the following is ill-typed under \texttt{mypy --strict}: each is instead caught only at
+**Proposition 3** (Runtime-only disciplines, not type-checker guarantees). None of the following is ill-typed under `mypy --strict`: each is instead caught only at
 runtime, by an explicit consumed-flag check or an explicit wire-decode validation, and each is
 exercised by a real fault-injected test (a seeded, reproducible fault sequence through the in-process
 bus, never a fault-free-only happy path). This is the affine-discipline handle of the definition
@@ -417,7 +417,7 @@ begin with.
 
 ::: {.theorem-box .definition}
 **Definition 4** (Schema-as-category design lens). A \emph{schema category} has one object per table and one morphism per foreign key. A
-\emph{schema-conforming instance} is a functor from the schema category into \(\mathbf{Set}\),
+\emph{schema-conforming instance} is a functor from the schema category into $\mathbf{Set}$,
 sending each table object to the set of its rows and each foreign-key morphism to the corresponding
 function between row-sets. This template uses the term as a design lens (below), not as a
 mechanically checked property.
@@ -497,12 +497,12 @@ everywhere else in this manuscript that uses it:
 
 
 ::: {.theorem-box .definition}
-**Definition 5** (Expected free energy of a candidate action). For a scalar Gaussian belief \(Q(o \mid \text{action}) = \mathcal{N}(\mu_q, \sigma_q^2)\) about the
-outcome a candidate action would produce, and a fixed Gaussian preference \(P(o) = \mathcal{N}(\mu_p,
-\sigma_p^2)\), subject to \(\sigma_q^2 > 0\) and \(\sigma_p^2 > 0\) (enforced at construction by
-\texttt{BeliefState.\_\_post\_init\_\_}, ISC-81), the \emph{expected free energy} of the action is
-the sum of a KL-divergence risk term and a differential-entropy ambiguity term over \(Q\), given in
-\cref{eq:expected-free-energy}. \texttt{Agent.decide} selects the candidate action minimizing this
+**Definition 5** (Expected free energy of a candidate action). For a scalar Gaussian belief $Q(o \mid \text{action}) = \mathcal{N}(\mu_q, \sigma_q^2)$ about the
+outcome a candidate action would produce, and a fixed Gaussian preference $P(o) = \mathcal{N}(\mu_p,
+\sigma_p^2)$, subject to $\sigma_q^2 > 0$ and $\sigma_p^2 > 0$ (enforced at construction by
+`BeliefState.__post_init__`, ISC-81), the \emph{expected free energy} of the action is
+the sum of a KL-divergence risk term and a differential-entropy ambiguity term over $Q$, given in
+\cref{eq:expected-free-energy}. `Agent.decide` selects the candidate action minimizing this
 quantity.
 :::
 
@@ -688,7 +688,7 @@ real state, not asserted a priori:
    per-agent state.
 
 ![The deterministic demo colony's real `concentration_history`
-(`scripts/02_run_analysis.py::run_demo_colony`, 3 agents, 2 locations, 5
+(`src/template_formal/colony/demo.py::run_demo_colony`, 3 agents, 2 locations, 5
 ticks). Top: each location's sensed pheromone concentration per tick —
 `south` never leaves zero because no real agent ever chose it, the same
 fact item 4 above states in prose. Bottom: `north`'s share of total
@@ -823,7 +823,7 @@ result. Gated by
 in `test_colony_experiments_extended.py`.
 
 ![Convergence-tick distribution from this template's own demo statistics
-sweep (`scripts/02_run_analysis.py::run_statistics_sweep`, $N=40$ trials,
+sweep (`src/template_formal/colony/demo.py::run_statistics_sweep`, $N=40$ trials,
 same real, heterogeneous/noisy configuration as the $N=150$ test above,
 just smaller so the demo script stays fast): 37/40 trials converged
 (92.5%). Left: histogram of the real `consensus_tick` at which each
@@ -854,7 +854,7 @@ consistent with (not proof of) the heterogeneity-sweep finding below that
 wider preference spread makes consensus harder, not a second confirmed
 result.
 
-## Eight pre-registered analyses across three experiment families
+## Eleven pre-registered analyses across three experiment families
 
 The N=150 statistical claim above answers one question — does the real
 mechanism converge reliably at *one* calibrated configuration — and
@@ -1347,9 +1347,9 @@ further; that is named as future work, not silently resolved. Gated by
 `test_wide_condition_clears_the_null_model_baseline_at_both_seed_bases` in
 `test_colony_experiments_extended.py`.
 
-### Honesty hedges common to all eight analyses
+### Honesty hedges common to all eleven analyses
 
-All eight analyses hold `num_agents=8`, two `locations`, and
+All eleven analyses hold `num_agents=8`, two `locations`, and
 `num_ticks=30` fixed — none of the results above is evidence about
 convergence at other colony sizes, other numbers of candidate locations,
 or other tick horizons, matching the scoping already stated for the N=150
@@ -1453,13 +1453,13 @@ the Python code in `src/`.
 
 ::: {.theorem-box .theorem}
 **Theorem 6** (Mechanically verified protocol invariants). Three claims about the handshake protocol's \emph{design} (not this template's Python
-implementation, per the scoping note above) are machine-checked, zero-\texttt{sorry}, zero-extra-axiom
-results, re-verified end to end by \texttt{scripts/check\_formal\_specs.sh}: (i)
-\texttt{step\_to\_closed\_cases} (Lean 4) — every transition into the \texttt{closed} phase originates
-from \texttt{idle}, \texttt{established}, or \texttt{handshaking}, never any other phase; (ii)
-\texttt{cannot\_reuse\_consumed\_token} (Lean 4) — a second, un-reassigned \texttt{use} call on a
-consumed session token has an unsatisfiable precondition; (iii) \texttt{NoFalseEstablishment} (TLA+,
-\texttt{AntProtocolFaulty.tla}) — a peer is never \texttt{established} without the other peer having
+implementation, per the scoping note above) are machine-checked, zero-`sorry`, zero-extra-axiom
+results, re-verified end to end by `scripts/check_formal_specs.sh`: (i)
+`step_to_closed_cases` (Lean 4) — every transition into the `closed` phase originates
+from `idle`, `established`, or `handshaking`, never any other phase; (ii)
+`cannot_reuse_consumed_token` (Lean 4) — a second, un-reassigned `use` call on a
+consumed session token has an unsatisfiable precondition; (iii) `NoFalseEstablishment` (TLA+,
+`AntProtocolFaulty.tla`) — a peer is never `established` without the other peer having
 genuinely \emph{sent} the corresponding real message at some point (\emph{send-provenance}), checked
 over 494 generated / 92 distinct states under arbitrary drop/corrupt/duplicate fault interleaving, and
 independently proven non-vacuous by a permanent negative control (below) rather than merely asserted.
