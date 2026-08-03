@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Designed multi-column page layout as a reproducible-research exemplar" />
@@ -44,7 +44,6 @@ Engine</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -613,8 +612,8 @@ always-available base-14 fonts when a face is missing. Registration is
 best-effort and never fatal: a checkout on a machine without the macOS
 supplemental fonts still renders a structurally identical paper in Times
 and Helvetica. Only the typography module names a font; every other
-module refers to four logical roles (display, body, sans, and their bold
-and italic variants), so a change of typeface touches one file.</p>
+module refers to three logical roles (display, body, sans, and their
+bold and italic variants), so a change of typeface touches one file.</p>
 <p>A subtle lesson is recorded in the code: the bold weight inside a
 <code>.ttc</code> font collection is at a face-specific subfont index.
 Didot’s collection orders its faces Regular, Italic, Bold; an early
@@ -655,7 +654,7 @@ correct trim with no over-set page. Because the remaining correctness of
 a <em>layout</em> is visual, the development loop rasterizes each page
 and inspects it; the project’s agent guidance makes that visual check
 mandatory after any layout change. The engine is type-checked with mypy
-and linted with ruff, and the test suite reports roughly ninety-five
+and linted with ruff, and the test suite reports roughly ninety-nine
 percent line coverage.</p>
 <p>Every quantitative claim in this project — the page count, the trim
 dimensions, the figure count — is recorded in

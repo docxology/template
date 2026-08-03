@@ -50,4 +50,13 @@ metadata:
   license: "MIT"
   language: "en"
 
+# Render format toggles consumed by infrastructure/rendering.
+render:
+  formats:
+    pdf: true
+    html: true
+    slides: true
+    docx: false
+    epub: false
+
 manuscript_dir: "manuscript"

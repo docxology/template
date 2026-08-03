@@ -1,0 +1,49 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "680ae173e1aec447f799f1e940c01b385620d32410c62670df5891386b56cfcc",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "e36df7091d0fc301c8582e7ec3079fa0fc6aac9a84e4e325578d0d43f1ef25da",
+  "combined_size_bytes": 10636,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "f5585d614bcb9e6cbdf77bf3ecdf5513587ceb86d7b765d2937bc31baea4b643",
+      "size_bytes": 1089
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "750b02dfd716972dc3edfa0bbecadbf10444bb8fb217fc57b9ee58090a225f15",
+      "size_bytes": 1606
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_engine_architecture.md",
+      "sha256": "f733508c6b20fe7b3fdea2a2932cbddaaa722c6c9c7c74e784b249c9d7208c5e",
+      "size_bytes": 3943
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_typography_and_figures.md",
+      "sha256": "1bc2f2ef489e40d29f51ace34bbfe80561bbd0b5411f54b32c058a3e34a82d5f",
+      "size_bytes": 1735
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_reproducibility.md",
+      "sha256": "81fe1f8fb124759af8248d624ae16b8fdc20ab6fba950245dd578c3bbc17ef3b",
+      "size_bytes": 1596
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/99_references.md",
+      "sha256": "f30ff85064649a1b95b74eca7ca6c506fa21391f03b77d8e56157c8fecac9afc",
+      "size_bytes": 621
+    }
+  ],
+  "ordered_inputs_sha256": "e217ce678bb7e602a5dc77ea3a9f958544d947d64eb6e573217456067cfabcce",
+  "project": "templates/template_newspaper",
+  "schema_version": "template-manuscript-composition-v1"
+}

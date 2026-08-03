@@ -1,7 +1,7 @@
 ---
 name: template-newspaper
 description: Newspaper layout engine exemplar — 12-page tabloid/broadsheet PDF from structured YAML via pure-Python ReportLab.
-version: 0.1.0
+version: 1.0.2
 author: docxology
 license: MIT
 tags: [exemplar, layout, reportlab, typography]

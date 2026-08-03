@@ -18,7 +18,7 @@ exactly twelve pages at the correct trim with no over-set page. Because the
 remaining correctness of a *layout* is visual, the development loop rasterizes
 each page and inspects it; the project's agent guidance makes that visual check
 mandatory after any layout change. The engine is type-checked with mypy and
-linted with ruff, and the test suite reports roughly ninety-five percent line
+linted with ruff, and the test suite reports roughly ninety-nine percent line
 coverage.
 
 Every quantitative claim in this project — the page count, the trim dimensions,

@@ -19,6 +19,7 @@ authors:
 
 publication:
   github_repository: ""
+  repository_url: ""
   doi: ""
   version_doi: ""
   version_record: ""
@@ -39,6 +40,6 @@ render:
   formats:
     pdf: true
     html: true
-    slides: false
+    slides: true
     docx: false
     epub: false

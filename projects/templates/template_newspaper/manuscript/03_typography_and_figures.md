@@ -7,7 +7,7 @@ and falls back to ReportLab's always-available base-14 fonts when a face is
 missing. Registration is best-effort and never fatal: a checkout on a machine
 without the macOS supplemental fonts still renders a structurally identical
 paper in Times and Helvetica. Only the typography module names a font; every
-other module refers to four logical roles (display, body, sans, and their bold
+other module refers to three logical roles (display, body, sans, and their bold
 and italic variants), so a change of typeface touches one file.
 
 A subtle lesson is recorded in the code: the bold weight inside a `.ttc` font
