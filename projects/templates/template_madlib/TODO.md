@@ -17,6 +17,8 @@ same forkability contract as the older exemplars.
 
 ## Integrity and template-status gaps
 
+- Fixed in this pass: corrected publication-boundary prose that falsely claimed deposited DOIs were blank, synchronized version markers to `0.1.1`, added the missing `.agents/` catalog READMEs, created `docs/README.md` and `data/README.md`, and documented `00_preflight.py` in `scripts/AGENTS.md`.
+
 - Keep the lexicon, conditional section plan, token provenance, and authoring contract as generated evidence, not prose-only claims.
 - Keep digest invariants, claim-ledger alignment, review-packet assembly, and fork-migration obligations config-owned and test-covered.
 - Split any oversized source module before adding new visualization or report builders.
