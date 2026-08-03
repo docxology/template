@@ -1,14 +1,8 @@
 # tests - template_data_descriptor
 
-Zero-mock tests over real fixture dictionaries and real temporary files:
-
-- `test_descriptor.py` — descriptor validation, negative controls, schema
-  fingerprints, readiness scoring, and the release manifest.
-- `test_verification.py` — byte-level digest/row reconciliation against real
-  temporary CSV files, including absent, checksum-mismatch, and row-mismatch cases.
-- `test_figures.py` — plot-ready data preparers and the demonstration perturbation.
-- `test_generate_figures_script.py` — end-to-end integration: runs the figure
-  script against a temporary project root and asserts real PNGs are written.
+Zero-mock tests over real fixture dictionaries, real temporary files, and real
+generated PNGs. See [`AGENTS.md`](AGENTS.md) for the full contract and
+per-file coverage map.
 
 Run from the monorepo root:
 

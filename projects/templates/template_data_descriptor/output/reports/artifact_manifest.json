@@ -83,6 +83,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "57454b84fbbaed8f58268bba5a82dd7f084d07730dd50f32292477fa89495b69",
+      "size_bytes": 2078,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/release_bundle_manifest.json",
       "sha256": "a5c473c009517970bb8d52c4edf9b8092f752120a616538006b3edd92d44a9e9",
       "size_bytes": 2005,

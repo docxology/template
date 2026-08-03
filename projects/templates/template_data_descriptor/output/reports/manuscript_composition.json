@@ -1,0 +1,61 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "77229910262df3b61d5245cb710ac7259ea96130ce077a60fc2fe989b0d4ba1d",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+  "combined_size_bytes": 16346,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "707e675b5d1d118073e2134791f80aa4264e1427ee36b54963875b4464f66eea",
+      "size_bytes": 1175
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "6bc554f2f9212ed3671029379a2caf56a417f4ff01e277f5cbba51076c119c98",
+      "size_bytes": 2173
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_data_description.md",
+      "sha256": "deecb0d5b7dece261bab640ba87b7bc9469f6cb80ab27ce2feb3847477ab4df3",
+      "size_bytes": 2089
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_schema.md",
+      "sha256": "3cd7ebc8619cadf30de07534a601471fcdfcade159c2f7b84bbcf3148bc1bda0",
+      "size_bytes": 2485
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_provenance.md",
+      "sha256": "56291c4774765119ece150a09e4ea3793a9f94e32249e82e648feabda88097e2",
+      "size_bytes": 1737
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/05_quality_validation.md",
+      "sha256": "4bbc572b33c85a3690cd703303f46190fec4ee3ad0d888af13ea8e300ed19508",
+      "size_bytes": 3685
+    },
+    {
+      "ordinal": 7,
+      "path": "manuscript/06_usage_notes.md",
+      "sha256": "8931f1f989bbd4e7ecb1337d2c656be5c523720a0f754a57b58abb642576b023",
+      "size_bytes": 2103
+    },
+    {
+      "ordinal": 8,
+      "path": "manuscript/99_references.md",
+      "sha256": "528de1877358cd9eb6163b0cbb52a62fab3e5a7d4f2398c6883314cae1624d21",
+      "size_bytes": 829
+    }
+  ],
+  "ordered_inputs_sha256": "e733a496492408391dfdc604ef51a5ef376e5aa2e4c43fafe8e8b71aff125306",
+  "project": "templates/template_data_descriptor",
+  "schema_version": "template-manuscript-composition-v1"
+}

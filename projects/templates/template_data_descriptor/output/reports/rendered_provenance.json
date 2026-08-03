@@ -1,0 +1,95 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "707e675b5d1d118073e2134791f80aa4264e1427ee36b54963875b4464f66eea"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "6bc554f2f9212ed3671029379a2caf56a417f4ff01e277f5cbba51076c119c98"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/02_data_description.md",
+      "source_sha256": "deecb0d5b7dece261bab640ba87b7bc9469f6cb80ab27ce2feb3847477ab4df3"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/03_schema.md",
+      "source_sha256": "3cd7ebc8619cadf30de07534a601471fcdfcade159c2f7b84bbcf3148bc1bda0"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/04_provenance.md",
+      "source_sha256": "56291c4774765119ece150a09e4ea3793a9f94e32249e82e648feabda88097e2"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/05_quality_validation.md",
+      "source_sha256": "4bbc572b33c85a3690cd703303f46190fec4ee3ad0d888af13ea8e300ed19508"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/06_usage_notes.md",
+      "source_sha256": "8931f1f989bbd4e7ecb1337d2c656be5c523720a0f754a57b58abb642576b023"
+    },
+    {
+      "rendered_path": "output/web/_combined_manuscript.md",
+      "rendered_sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "source_path": "manuscript/99_references.md",
+      "source_sha256": "528de1877358cd9eb6163b0cbb52a62fab3e5a7d4f2398c6883314cae1624d21"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "e84ac76a5e1c9590ad49368c1ebb2ee7c81873da48a7c65e6d0bb40573803985",
+      "size_bytes": 9643
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "b6138c8bae68f55d106a5e7034d1e3fc96b5b278801d758596e9457d195fe713",
+      "size_bytes": 16346
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "57454b84fbbaed8f58268bba5a82dd7f084d07730dd50f32292477fa89495b69",
+      "size_bytes": 2078
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "2766b7a5ace91e55364da8f94ee8e443792f9626338b54e1068bb9ffacec6e52",
+      "size_bytes": 8546
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 14,
+      "sha256": "b1b6add1045b301203231b3b95873a68111fa8203875724e2e569c6fe9e0fc80"
+    },
+    "output": {
+      "file_count": 32,
+      "sha256": "d47b519c98aa04e170ad7fc29b25c483699dc8df3013c6c74c00dfff90d56879"
+    },
+    "source": {
+      "file_count": 29,
+      "sha256": "bde44a7914ff5644e55fe422d3f9e88e71b488a32b592e704bb96c7a50e361b7"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_data_descriptor",
+  "schema_version": "template-rendered-provenance-v2"
+}
