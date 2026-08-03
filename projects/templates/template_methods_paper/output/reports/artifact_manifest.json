@@ -237,8 +237,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_methods_paper_combined.pdf",
-      "sha256": "2463291e214cefd81df92f27d84ff9d493ba0c54dd352f4091c262fd3f28ff82",
-      "size_bytes": 143731,
+      "sha256": "24c8363c854de1d79ed1d09a4c33911b991c1523baa4c09c511174dd6a6b6ad0",
+      "size_bytes": 143723,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
       "timestamp": ""

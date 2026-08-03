@@ -1,0 +1,55 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "6b303b55be67a5cd076c7c3ce7389f340e05036b81aac62ff9b6c93b8a27b66a",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "c566c3f9a869f20eb3a9754f6d2bb0ff5b813fa019e68fb91733e1fb72183c17",
+  "combined_size_bytes": 98734,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/00_abstract.md",
+      "sha256": "58da6a0b0b5103dfd45144796f7fe129224435838207e5512594257fe9c3ea96",
+      "size_bytes": 3939
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/01_introduction.md",
+      "sha256": "599e5840ae5f2903835263d166498b2817cd301021fdf67f98e33717768b60cb",
+      "size_bytes": 5210
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/02_type_architecture.md",
+      "sha256": "d34164ff802d8e6bd074bc6bead46e85ddbc056005f953cceb4b2509278154cb",
+      "size_bytes": 13267
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/03_storage_as_functor.md",
+      "sha256": "cdd2bf4bdf9a08959d0e0eb481c87804fdd76d899491db73f943c7edfd88f7ae",
+      "size_bytes": 3684
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/04_active_inference.md",
+      "sha256": "6266ab547479b0588a782e0b2892fd6ce0e6dac4f97dbcf41608af693f2ad870",
+      "size_bytes": 5591
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/05_results_discussion.md",
+      "sha256": "c6aff912cc465784ac73184580bcf66ca055062013659082704b9491db5ba3c3",
+      "size_bytes": 66501
+    },
+    {
+      "ordinal": 7,
+      "path": "manuscript/99_references.md",
+      "sha256": "5abaacd9073c47791020625fc753aced1cb9674a446d0745b39cd12b0755373a",
+      "size_bytes": 610
+    }
+  ],
+  "ordered_inputs_sha256": "638436fc71395ff9addbf850fe49dd5cfce362d742cb74112bf3eab5535d63b0",
+  "project": "templates/template_formal",
+  "schema_version": "template-manuscript-composition-v1"
+}

@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.32",
-      "total_size_bytes": 340636,
+      "total_size_bytes": 340630,
       "largest_files": [
         {
           "name": "template_methods_paper_combined.pdf",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 73,
       "size_mb": "0.97",
-      "total_size_bytes": 1022015,
+      "total_size_bytes": 1022017,
       "largest_files": [
         {
           "name": "03_results_slides.log",
@@ -150,7 +150,7 @@
       "exists": true,
       "file_count": 12,
       "size_mb": "0.12",
-      "total_size_bytes": 126706,
+      "total_size_bytes": 126355,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -194,7 +194,7 @@
     }
   },
   "total_files": 120,
-  "total_size_mb": 1.6329317092895508,
+  "total_size_mb": 1.6325931549072266,
   "largest_files": [
     {
       "name": "template_methods_paper_combined.pdf",
@@ -263,12 +263,12 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.3248558044433594,
+    "pdf": 0.32485008239746094,
     "web": 0.19295215606689453,
-    "slides": 0.9746694564819336,
+    "slides": 0.9746713638305664,
     "figures": 0.01468658447265625,
     "data": 0.004931449890136719,
-    "reports": 0.12083625793457031
+    "reports": 0.12050151824951172
   },
   "file_counts_by_type": {
     ".md": 6,
