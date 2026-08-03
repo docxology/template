@@ -30,8 +30,8 @@
 | `release_workflow.py` | Unified GitHub + Zenodo + re-render orchestration |
 | `release_workflow_zenodo.py` | Reserve-first DOI phase and Zenodo publish paths |
 | `platforms.py`, `api.py` | Backwards-compatible re-exports |
-| `executable_bundle.py` | Stage 12 executable bundle (`bundle_project`) |
-| `archival/` | Stage 13 multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |
+| `executable_bundle.py` | Opt-in executable bundle (`bundle_project`) |
+| `archival/` | Opt-in multi-target archival — see [`archival/README.md`](../../../infrastructure/publishing/archival/README.md) |
 | `cli.py`, `publish_cli.py`, `archival_cli.py` | CLI entry points |
 | `scripts/publish/publish_project_release.py` | Thin orchestrator for unified release (opt-in) |
 | `scripts/publish/upload_gold_refinement.py` | Thin CLI over `upload_runner` (worked example) |
@@ -357,7 +357,7 @@ uv run python -m infrastructure.publishing.cli publish-zenodo output/ --token $Z
 uv run python -m infrastructure.publishing.publish_cli \
   --token $GITHUB_TOKEN --repo owner/repo --tag v1.0.0 --name "Release 1.0.0"
 
-# Archival dry-run (Stage 13)
+# Archival dry-run (opt-in)
 uv run python scripts/runner/archive_publication.py --project templates/template_code_project
 
 # Unified GitHub + Zenodo + DOI release (opt-in; use a qualified project name)

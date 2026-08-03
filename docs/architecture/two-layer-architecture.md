@@ -195,7 +195,7 @@ graph TB
 
     subgraph L2["LAYER 2: SCIENTIFIC<br/>(Algorithms, analysis, visualization, data)"]
         subgraph SRC["projects/{name}/src/"]
-            SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
+            SRC_MODS["optimizer.py · analysis/ · figures/<br/>dashboard.py · manuscript_variables.py ·<br/>project_paths.py · invariants.py · sweeps.py<br/>— canonical exemplar layout; other exemplars vary"]
         end
 
         subgraph PROJ_SCRIPTS["projects/{name}/scripts<br/>(thin orchestrators · see active_projects.md for the live exemplar roster)"]

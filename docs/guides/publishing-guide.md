@@ -641,7 +641,7 @@ uv run python -m infrastructure.publishing.transmission_page_check \
 ```
 
 
-## Executable bundle (Stage 12)
+## Executable bundle (opt-in stage)
 
 ```bash
 uv run python scripts/runner/bundle_executable.py --project templates/template_code_project
@@ -664,7 +664,7 @@ print(bundle_path)
 
 ---
 
-## Multi-target archival (Stage 13)
+## Multi-target archival (opt-in stage)
 
 Dry-run via pipeline stage (graceful skip if bundle missing):
 

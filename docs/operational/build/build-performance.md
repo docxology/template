@@ -34,7 +34,7 @@ This document provides detailed performance analysis extracted from the build sy
 #### Script 1: `projects/templates/template_code_project/scripts/optimization_analysis.py`
 
 - ✅ Demonstrates thin orchestrator pattern
-- ✅ Imports from `src/analysis.py`, `src/figures.py`, `src/optimizer.py`
+- ✅ Imports from `src/analysis/workflow.py` (`run_analysis_pipeline`), with figure builders under `src/figures/` and the optimizer core in `src/optimizer.py`
 - ✅ Generates: `output/figures/convergence_plot.png`, `output/data/optimization_results.csv`, reports under `output/reports/`
 
 #### Script 2: `projects/{name}/scripts/<analysis>.py`
@@ -47,7 +47,7 @@ This document provides detailed performance analysis extracted from the build sy
 
 #### Glossary Generation
 
-- ✅ Auto-generated from `projects/{name}/src/` API
+- ✅ Auto-generated from the project `src/` API by `infrastructure/documentation/generate_glossary_cli.py`
 - ✅ Output: `manuscript/98_symbols_glossary.md`
 
 #### Markdown Validation

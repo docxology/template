@@ -61,7 +61,7 @@ The build pipeline evolved from a 6-stage core path, to an 8-stage `--core-only`
 | 7 | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | LLM Scientific Review (optional) |
 | 8 | `scripts/pipeline/stage_06_llm_review.py --translations-only` | LLM Translations (optional) |
 | 9 | `scripts/pipeline/stage_05_copy.py` | Copy deliverables |
-| — | `scripts/pipeline/stage_07_executive_report.py` | Multi-project only (not a numbered DAG stage) |
+| — | `scripts/pipeline/stage_07_executive_report.py` | Multi-project only; the script's 07 prefix is not part of the DAG's numbered stage list |
 
 **Usage:**
 

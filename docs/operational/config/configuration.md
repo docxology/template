@@ -195,7 +195,7 @@ from the environment (see [`infrastructure/search/`](../../../infrastructure/sea
 **Key Variables:**
 - `EXA_API_KEY` - API key for the Exa client (`infrastructure/search/exa`)
 - `PAPERCLIP_API_KEY` - API key for `PaperclipBackend` (off by default)
-- `CROSSREF_MAILTO` - Contact email for the Crossref backend (default `you@example.org`)
+- Crossref backend contact email (`mailto`) — configured per instance; the connector's default is `team@example.org` (`infrastructure/search/connectors/impl/crossref.py`)
 
 ### LLM Integration
 
