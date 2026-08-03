@@ -1,3 +1,4 @@
 [submodule "infrastructure/steganography/kmyth"]
 	path = infrastructure/steganography/kmyth
-	url = https://github.com/NationalSecurityAgency/kmyth
+	url = https://github.com/docxology/kmyth.git
+	branch = docxology/macos-build-stubs
