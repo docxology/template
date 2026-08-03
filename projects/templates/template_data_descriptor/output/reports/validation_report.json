@@ -159,7 +159,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 1.5120601654052734
+      "total_size_mb": 1.5118780136108398
     },
     "figures": {
       "files": 6,
@@ -178,7 +178,7 @@
     "passed": 8,
     "total_checks": 8
   },
-  "timestamp": "2026-08-03T00:47:16Z",
+  "timestamp": "2026-08-03T01:03:29Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
@@ -255,8 +255,8 @@
         "sha256": "d47b519c98aa04e170ad7fc29b25c483699dc8df3013c6c74c00dfff90d56879"
       },
       "source": {
-        "file_count": 29,
-        "sha256": "eda48b199c03f6f93abc3387064cffcf02019b6445c80c66d8fa0b1edf074f54"
+        "file_count": 30,
+        "sha256": "2a027ef8ecd884001a4c9bc96cbc09f971e499008d33690131110ab56abeb832"
       },
       "stage": {
         "file_count": 1080,
