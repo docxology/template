@@ -18,8 +18,9 @@ This run produced 21 figures at 300 DPI. The full figure set includes:
   dendrogram, and co-occurrence matrix
   ((Figure word cloud; Figure topic term bars; Figure pca embeddings; Figure term heatmap; Figure dendrogram; Figure cooccurrence matrix))
 
-Each figure is registered in `figure_registry.json` with its source data file, generation
-parameters, and SHA-256 hash, binding the visual output to the exact pipeline run.
+Each figure is registered in `figure_registry.json` with its label, caption, and the
+producing script, so downstream rendering and validation resolve the same figure set
+that the pipeline generated.
 
 ## Variable Injection
 

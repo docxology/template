@@ -9,7 +9,7 @@ no computational logic resides in scripts.
 ## Pipeline Stages
 
 1. **Retrieval** (`01_literature_search.py`) — dispatch the configured query across
-   10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into `corpus.jsonl`.
+   10 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), merge, and de-duplicate into `corpus.jsonl`.
    Each engine is an isolated adapter exposing a uniform `search(query) -> list[Paper]`
    interface; engines that are keyless need no credentials, while Semantic Scholar uses
    a key when present. SovietRxiv and ChinaRxiv share a unified API with an optional

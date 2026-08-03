@@ -5,7 +5,10 @@
       "openai",
       "gemini"
     ],
-    "available": [],
+    "available": [
+      "openai",
+      "gemini"
+    ],
     "openai_model": "o3-deep-research",
     "gemini_agent": "deep-research-preview-04-2026"
   },

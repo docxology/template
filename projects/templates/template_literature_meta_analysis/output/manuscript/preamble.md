@@ -48,7 +48,7 @@ This file contains LaTeX packages and commands that are automatically included i
 \usepackage{subcaption}
 
 % Algorithm typesetting
-\usepackage[ruled,vlined]{algorithm2e}
+\IfFileExists{algorithm2e.sty}{\usepackage[ruled,vlined]{algorithm2e}}{}
 
 % Custom commands for domain notation
 \newcommand{\FEP}{\textsc{fep}}
