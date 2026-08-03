@@ -23,6 +23,13 @@ general feature ideas.
 - Accuracy: 120 rows → 4 dropped → 116 complete-case; group counts 38/34/44; 10 histogram bins summing to 116; correlations height–weight ≈ +0.72, height–resting ≈ −0.12, weight–resting ≈ −0.08; ranking order matches Results prose.
 - Version drift: all five version-bearing metadata files declare **1.0.0**; repository URL is consistently `docxology/template_eda_notebook`; figure registry labels/schema match `src/eda/figures.py`.
 - Documentation parity: `tests/AGENTS.md` lists exactly the 8 test modules; `scripts/AGENTS.md` lists both on-disk Python files; required `.agents` README entry points were added.
+- Notebook launch fix (2026-08-02): the walkthrough's path cell previously
+  only resolved `src` when launched from the project directory. It now also
+  locates the project from the monorepo root via the `notebooks/` marker
+  (no hard-coded project name), and all 9 code cells were verified to execute
+  headlessly end-to-end from BOTH launch locations (120 rows → 4 dropped →
+  116; correlations +0.720 / −0.121 / −0.083, matching the Results prose).
+  Stray `htmlcov/` and `dist/` build junk were removed from the tree.
 
 ## Integrity and template-status gaps
 
