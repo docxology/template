@@ -33,7 +33,7 @@ file.
 - pytest: **315 passed**, 97.80% coverage (gate `--cov-fail-under=90`).
 - `prerender`, `stage_04_validate` (all checks PASS), `stage_05_copy`,
   and `check_template_drift --strict` (`no drift detected`) all green.
-- Combined PDF: 59 pages, 0 `??`, 0 `^! ` LaTeX errors; abstract and results
+- Combined PDF: 60 pages, 0 `??`, 0 `^! ` LaTeX errors; abstract and results
   now show `300` unique deep-search papers (the previous shipped PDF rendered
   the `<deep-search not run>` sentinel invisibly).
 
@@ -69,11 +69,12 @@ file.
 - Keep manuscript numbers (`RESULT_NUM_PAPERS`, `RESULT_WITH_ABSTRACT`,
   `RESULT_WITH_DOI`, etc.) sourced only from `output/run_summary.json` and
   `output/data/manuscript_variables.json`, never hand-typed.
-- `output/deep_search/run_summary.json` was last generated on another machine
-  and still embeds a machine-local checkout path (sanitized to
-  `<home>/Documents/Git/HumOS/...`). The producer (`src/deep_search_cli.py`)
-  now writes `<repo-root>`-relative paths; regenerate the file on the next
-  live deep-search run rather than hand-editing it.
+- `output/deep_search/run_summary.json`, `aggregate_report.md`,
+  `composition_summary.json`, and the self-contained dashboard now use
+  `<repo-root>`-relative paths. Puppeteer metadata still records its cache
+  executable as `<home>/.cache/puppeteer/...`; this is renderer-owned metadata
+  and requires a shared infrastructure normalization rather than a project
+  output edit.
 
 ## Configurable-surface gaps
 
@@ -107,13 +108,13 @@ file.
 - Keep the byte-identical-across-reruns test
   (`tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns`)
   in sync as new pipeline stages are added.
-- Observed (non-blocking): `s_compose_literature_review.py` reports 4 citation
-  key(s) absent from `manuscript/references_deep.bib`
-  (`anon2019replication`, `bu2026nonstationary`, `gong2026comparative`,
-  `singer1980minimization`). They are cited only inside the per-keyword
-  reading reports and `output/deep_search/aggregate_report.md` (not in the
-  manuscript), so the composed S01 and the PDF resolve cleanly; the warning is
-  the composer's upstream-check. Revisit when the deep-search corpus rotates.
+- **Resolved:** regenerated `manuscript/references_deep.bib` from the committed
+  deep-search aggregate so its 300 citation keys exactly match the 300-paper
+  aggregate. The four stale entries (`anon2019what`, `archibald2020stochastic`,
+  `liu2021diffusion`, `zaslavski2020minimization`) were replaced by the four
+  current keys (`anon2019replication`, `bu2026nonstationary`,
+  `gong2026comparative`, `singer1980minimization`); prerender now reports no
+  undefined citations.
 
 ## Ordered improvement ladder
 
