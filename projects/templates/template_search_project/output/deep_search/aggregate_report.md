@@ -311,4 +311,4 @@ _Keywords:_ **3** · _total papers:_ **300** · _unique after dedup:_ **300**
 - **[anon2019introduction]** *Introduction* (2019) — 10.2307/j.ctvpb3xkg.6
 - **[anon2019tables]** *Tables* (2019) — 10.1525/9780520969230-002
 
-_BibTeX written to:_ `<home>/Documents/Git/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_search_project/manuscript/references_deep.bib`
+_BibTeX written to:_ `<repo-root>/projects/templates/template_search_project/manuscript/references_deep.bib`

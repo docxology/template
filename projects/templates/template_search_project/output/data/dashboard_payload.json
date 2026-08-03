@@ -2,12 +2,12 @@
   "title": "Literature Search Coverage Dashboard",
   "subtitle": "6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.",
   "project": "template_search_project",
-  "generated_utc": "2026-07-10T19:25:29Z",
-  "git_rev": "d87ca592",
+  "generated_utc": "2026-08-03T00:32:42Z",
+  "git_rev": "80735407f",
   "git_dirty": true,
   "hyperparameters": {
-    "corpus_path": "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project/output/corpus.json",
-    "aggregate_path": null,
+    "corpus_path": "<repo-root>/projects/templates/template_search_project/output/corpus.json",
+    "aggregate_path": "<repo-root>/projects/templates/template_search_project/output/deep_search/aggregate.json",
     "year_min_filter": null,
     "year_max_filter": null,
     "doi_floor": 0.5,
@@ -15,7 +15,7 @@
     "year_floor": 0.7,
     "min_per_keyword": 1,
     "n_papers": 6,
-    "n_keywords": 0
+    "n_keywords": 3
   },
   "meta": {},
   "payload": {
@@ -41,7 +41,11 @@
       "abstract": 1.0,
       "year": 1.0
     },
-    "keywords": [],
+    "keywords": [
+      "convex optimization",
+      "stochastic gradient descent",
+      "reproducible research"
+    ],
     "keyword_overlap_matrix": [],
     "papers_preview": [
       {
@@ -255,6 +259,42 @@
       "driven_by": [],
       "update_fn": "",
       "preview_rows": 10
+    },
+    {
+      "panel_id": "keywords",
+      "title": "Search keywords",
+      "description": "Deep-search ran on 3 keywords; unique papers across them: 6.",
+      "traces": [
+        {
+          "type": "bar",
+          "x": [
+            "convex optimization",
+            "stochastic gradient descent",
+            "reproducible research"
+          ],
+          "y": [
+            2.0,
+            2.0,
+            2.0
+          ],
+          "marker": {
+            "color": "#facc15"
+          },
+          "name": "avg unique / keyword"
+        }
+      ],
+      "layout": {
+        "xaxis": {
+          "title": "keyword",
+          "tickangle": -25
+        },
+        "yaxis": {
+          "title": "papers"
+        }
+      },
+      "driven_by": [],
+      "update_fn": "",
+      "preview_rows": 10
     }
   ],
   "controls": [],
@@ -322,6 +362,30 @@
       "tolerance": 0.0,
       "witness": "2018 <= 2027 + 0.0e+00",
       "description": "latest paper year = 2018"
+    },
+    {
+      "name": "keywords_nonempty",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "3 >= 1 - 0.0e+00",
+      "description": "deep search ran with 3 keywords"
+    },
+    {
+      "name": "unique_papers_nonempty",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "300 >= 1 - 0.0e+00",
+      "description": "unique papers list has 300 entries"
+    },
+    {
+      "name": "unique_papers_min_per_keyword",
+      "passed": true,
+      "kind": "ge",
+      "tolerance": 0.0,
+      "witness": "100 >= 1 - 0.0e+00",
+      "description": "avg papers per keyword = 100.0 ≥ 1"
     }
   ],
   "tables": {},

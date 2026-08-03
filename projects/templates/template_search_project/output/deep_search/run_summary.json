@@ -6,8 +6,8 @@
   ],
   "total_papers": 300,
   "unique_papers": 300,
-  "bibtex": "<home>/Documents/Git/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_search_project/manuscript/references_deep.bib",
-  "aggregate_report": "<home>/Documents/Git/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_search_project/output/deep_search/aggregate_report.md",
+  "bibtex": "<repo-root>/projects/templates/template_search_project/manuscript/references_deep.bib",
+  "aggregate_report": "<repo-root>/projects/templates/template_search_project/output/deep_search/aggregate_report.md",
   "llm_used": false,
   "errors_per_keyword": {
     "convex optimization": {},
