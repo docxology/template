@@ -91,10 +91,7 @@ def _inject_svg_accessibility(svg_text: str, title: str, desc: str) -> str:
         '<svg role="img" aria-labelledby="fig-title fig-desc" ',
         1,
     )
-    markup = (
-        f'<title id="fig-title">{title}</title>\n'
-        f'<desc id="fig-desc">{escaped}</desc>'
-    )
+    markup = f'<title id="fig-title">{title}</title>\n<desc id="fig-desc">{escaped}</desc>'
     return svg_text.replace("<defs>", f"<defs>\n{markup}", 1)
 
 
@@ -186,7 +183,6 @@ def _draw_matrix_figure(spec: Mapping[str, str], output_png: Path, output_svg: P
     styles = REDACTION_VISUAL_STYLES
     backgrounds = PDF_BACKGROUND_MODES
     n_rows = len(styles)
-    n_cols = len(backgrounds)
     cell_w = 1.7
     cell_h = 0.78
     x0 = 1.55
