@@ -231,6 +231,22 @@ classification ceiling, redaction spans are validated for non-overlap,
 orphan decisions are flagged, and source-control coverage is enforced.
 Layer two applies visual redaction treatments, steganographic provenance
 overlays, and optional Kmyth TPM sidecar sealing.</p>
+<figure id="fig:redaction_flow">
+<img src="../figures/redaction_flow.png"
+alt="Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual…" />
+<figcaption>Release-review pipeline: the
+disclosure-control layer audits the invented fixture against the public
+ceiling and builds an in-memory sanitized packet, the evidence layer
+projects text-free audit and hashed-ledger JSON, and the visual layer
+renders the 4x4 proof matrix with optional steganography and Kmyth TPM
+sidecars.</figcaption>
+</figure>
+<p><span class="citation"
+data-cites="fig:redaction_flow">[@fig:redaction_flow]</span> traces the
+full pipeline: typed fixture load, ceiling and span validation,
+source-control coverage and mosaic checks, the in-memory sanitized
+packet, the two text-free public projections, and the visual proof
+chain.</p>
 <h2 id="layer-one-disclosure-control">Layer One: Disclosure Control</h2>
 <p>The disclosure-control engine operates on
 <code>RedactionSegment</code> objects, each carrying an identifier,

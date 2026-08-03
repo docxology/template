@@ -201,6 +201,63 @@ segment and pattern count.</li>
 <li><strong>Findings</strong>: warning-level findings for residual
 markers in sanitized text.</li>
 </ul>
+<p>The canonical run’s measured values are bound to
+<code>output/reports/redaction_audit.json</code> by the
+manuscript-binding tests:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Measured value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segment count</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Redaction decision count</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Reviewer record count</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Release safety score</td>
+<td>0.798</td>
+</tr>
+<tr>
+<td>Redaction coverage</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Mosaic risk score</td>
+<td>0.012</td>
+</tr>
+<tr>
+<td>Findings</td>
+<td>2 warning-level</td>
+</tr>
+<tr>
+<td>Releasable</td>
+<td>true</td>
+</tr>
+<tr>
+<td>Final release recommended</td>
+<td>false</td>
+</tr>
+<tr>
+<td>Approvals</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>Because the intelligence policy blocks on warnings and the fixture
+retains two warning-level residual markers,
+<code>final_release_recommended</code> is false even though the packet
+is releasable and the review gate is approved.</p>
 <h2 id="source-safe-redaction-ledger">Source-Safe Redaction Ledger</h2>
 <p>The redaction ledger records each decision with:</p>
 <ul>
@@ -257,6 +314,18 @@ records:</p>
 <li>Hash manifest filename and SHA-256.</li>
 <li>Kmyth sidecar count and filenames (when Kmyth is available).</li>
 </ul>
+<figure id="fig:disclosure_control_matrix">
+<img src="../figures/disclosure_control_matrix.png"
+alt="Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction decisions." />
+<figcaption>Development proof matrix: four redaction
+styles (blackout, whiteout, grayout, blur) rendered across four PDF
+backgrounds (white, gray, black, blur); every one of the sixteen cells
+applies the identical source-safe redaction decisions.</figcaption>
+</figure>
+<p><span class="citation"
+data-cites="fig:disclosure_control_matrix">[@fig:disclosure_control_matrix]</span>
+renders the sixteen style-background combinations; only the visual token
+and the page background differ between cells.</p>
 <h2 id="kmyth-tpm-sidecar-production">Kmyth TPM Sidecar Production</h2>
 <p>When Kmyth tools are runnable and a TPM backend is available, each
 variant produces two <code>.ski</code> sidecars:</p>
