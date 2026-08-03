@@ -93,35 +93,39 @@ uv run pytest projects/templates/template_autopoiesis/tests/ --cov=projects/temp
 
 ## Test Files
 
-| Test file | Count | What it covers |
-|---|---|---|
-| `test_grammar_and_expand.py` | ~55 | Grammar parsing, slot validation, product sizes, expand, enumerate_all, sample, derive_seed |
-| `test_common.py` | ~7 | `CheckResult`, `CheckReport`, `trunc()` |
-| `test_materialize.py` | ~18 | Materialize structure, byte stability, tree hash, clean=True, provenance format |
-| `test_integrity_and_verify.py` | ~32 | sha256_text/bytes, tree_hash, merkle_root, verify on clean/tampered/missing/added |
-| `test_emit_templates.py` | ~22 | Template string coverage per child file, `@@KEY@@` substitution from `Spec` |
-| `test_manuscript_figures.py` | ~9 | `fig_coverage_by_module` rendering, data shape, output path |
-| `test_primitives_dynamics.py` | ~12 | damped_oscillator known output, envelope bound, negative control, PRIMITIVES |
-| `test_primitives_graph.py` | ~14 | bfs_distances exact distances, pagerank sum-to-one, negative control, PRIMITIVES |
-| `test_primitives_optimization.py` | ~12 | gradient_descent convergence, trajectory shape, analytic_minimizer, negative control |
-| `test_primitives_signal.py` | ~14 | dft Parseval, convolve lengths, smoothing, identity kernel negative control |
-| `test_primitives_statistics.py` | ~10 | ols_fit recovers beta, R², shuffled negative control |
-| `test_primitives_registry.py` | ~10 | collect_primitives returns all 5 domains, 8 total kernels |
-| `test_manuscript_variables.py` | ~10 | DOMAIN_COUNT=5, EFFECTIVE_PRODUCT_SIZE=45, RESERVED_SLOT_COUNT=3, roundtrip |
-| `test_cli.py` | ~14 | Parser commands, main expand/enumerate/sample/honesty |
-| `test_cover_art.py` | ~25 | ring_root_angles, domain_root_indices, branch_segments, build_ring_geometry, render_cover |
-| `test_deps_vendoring.py` | ~14 | vendor mode, seam file, infra seam test, _resolve_deps, materialize with deps |
-| `test_figures.py` | ~11 | render_primitive_figure per domain, scalar fallback, figure_registry roundtrip |
-| `test_honesty.py` | ~16 | build_manifest, verify_honesty, STRUCTURAL_EVIDENCE, AST inspection |
-| `test_manuscript_mermaid.py` | ~7 | Reserved slot values not in Mermaid node labels |
-| `test_meta_teeth.py` | ~20 | Parametrized: stub must fail gate, real primitive passes, negative controls discriminate |
-| `test_sealing.py` | ~18 | qr_matrix, build_payload, build_pointer_payload, embed_semi_transparent |
-| `test_seal_child.py` | ~8 | Child seal flow end-to-end, verify_seal |
-| `test_realize.py` | ~18 | _project_slug, _gate_python, run_child_stage, run_analysis_stage, validate_child |
-| `test_realize_pure.py` | ~7 | Pure unit tests for realize (no fixtures) |
-| `test_property_invariants.py` | ~20 | Hypothesis: grammar product, expand determinism, double materialize, verify invariants |
-| `test_stress_edge_cases.py` | ~27 | Single slot, zero options raises, boundary seeds, 1000-seed stress, Merkle invariants |
-| `test_project_paths.py` | ~7 | project_output_dirs creates dirs, idempotent |
+The live suite currently collects 512 items (parametrized cases included), as
+measured by `pytest --collect-only`:
+
+| Test file | Collected items | What it covers |
+|---|---:|---|
+| `test_cli.py` | 21 | Parser and CLI command behavior |
+| `test_common.py` | 7 | `CheckResult`, `CheckReport`, `trunc()` |
+| `test_cover_art.py` | 29 | Ring geometry, cover rendering, QR-seal branch |
+| `test_deps_vendoring.py` | 16 | Vendor mode, seam file, dependency resolution |
+| `test_emit_templates.py` | 32 | Child file templates and substitutions |
+| `test_figures.py` | 23 | Primitive figure rendering and registry roundtrip |
+| `test_grammar_and_expand.py` | 57 | Grammar parsing, expansion, enumeration, sampling |
+| `test_honesty.py` | 17 | Honesty manifest and AST evidence |
+| `test_integrity_and_verify.py` | 32 | Hashes, Merkle roots, verification and tamper cases |
+| `test_manuscript_assets_script.py` | 3 | Asset generation and registry validation |
+| `test_manuscript_figures.py` | 9 | Manuscript figure writers |
+| `test_manuscript_mermaid.py` | 6 | Mermaid grammar rendering constraints |
+| `test_manuscript_variables.py` | 14 | Derived manuscript tokens and measurements |
+| `test_materialize.py` | 33 | Child tree structure, stability, provenance |
+| `test_meta_teeth.py` | 20 | Stub rejection, real-kernel acceptance, controls |
+| `test_primitives_dynamics.py` | 13 | Damped oscillator and controls |
+| `test_primitives_graph.py` | 17 | BFS, PageRank, graph controls |
+| `test_primitives_optimization.py` | 13 | Gradient descent, minimizer, controls |
+| `test_primitives_registry.py` | 10 | Primitive registry completeness |
+| `test_primitives_signal.py` | 17 | DFT, convolution, smoothing controls |
+| `test_primitives_statistics.py` | 13 | OLS recovery, R², shuffled control |
+| `test_project_paths.py` | 7 | Output directory helpers |
+| `test_property_invariants.py` | 28 | Hypothesis determinism and integrity properties |
+| `test_realize.py` | 16 | Child-stage orchestration and validation |
+| `test_realize_pure.py` | 7 | Pure realization helpers |
+| `test_seal_child.py` | 7 | End-to-end child sealing |
+| `test_sealing.py` | 26 | Payloads, QR matrices, optional decode path |
+| `test_stress_edge_cases.py` | 19 | Boundary seeds, Merkle and sampling stress |
 
 ---
 

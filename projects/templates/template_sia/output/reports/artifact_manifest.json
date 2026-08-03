@@ -173,6 +173,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "d3a5f63ee45585211a8ad0690704269e72fabc5e8d19b8aa846c7caf0211ac2a",
+      "size_bytes": 1719,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/reports/sia_loop_report.md",
       "sha256": "0ebb2f42e65edf11a81c179a87505e3f46b582b5cdf65a6f86fe05900f272c18",
       "size_bytes": 250,
