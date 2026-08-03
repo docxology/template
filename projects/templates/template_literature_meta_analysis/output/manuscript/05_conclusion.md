@@ -23,10 +23,10 @@ The analysis answers the four research questions posed in the introduction:
    literature dominated by clinical sleep research (63.0\%), with
    significant representation from cognition, psychiatry, and pharmacology.
 
-3. **RQ3 (Topics)**: NMF extracted 5 latent topics — cognitive enhancement,
-   ADHD treatment, pharmacological dose-response, sleep disorders, and psychiatric
-   fatigue — that cross-cut the explicit subfield taxonomy and reveal the thematic
-   structure of the field.
+3. **RQ3 (Topics)**: NMF extracted 5 latent topics — preclinical
+   pharmacology, clinical fatigue trials, meta-analytic methods, cognitive
+   enhancement, and sleep disorders — that cross-cut the explicit subfield taxonomy
+   and reveal the thematic structure of the field.
 
 4. **RQ4 (Citations)**: The citation network of 2234 nodes and
    8,623 edges has a resolution rate of 22.4\%,

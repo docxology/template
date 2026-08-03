@@ -68,7 +68,7 @@ The corpus has strong identifier coverage: 2260 of 2334 records
 (97.2\%) carry DOIs, enabling robust cross-engine de-duplication.
 OpenAlex IDs are present for 923 records. Abstract coverage stands at
 61.6\% (1437 records), which limits the text analytics
-to that subset. Open-access status is confirmed for 24.6\% of records, and
+to that subset. Open access is confirmed for 24.6\% of records, and
 54.6\% have a direct PDF link.
 
 ## Descriptive Bibliometrics

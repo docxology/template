@@ -22,8 +22,8 @@ citation-network analysis exposes the corpus's internal structure (8,623
 intra-corpus edges across 2234 nodes, 1416 communities,
 graph density 0.17\%). Of 38,489 total outgoing
 references, 22.4\% resolve to another record inside the corpus.
-Abstract coverage stands at 61.6\%, open-access status is known for
-24.6\% of records, and 54.6\% have a direct PDF link. An optional,
+Abstract coverage stands at 61.6\%, 24.6\% of records are open access, and
+54.6\% have a direct PDF link. An optional,
 LLM-gated knowledge-graph stage scores the 6 hypotheses explored against
 the evidence. This run produced 21 publication-quality figures.
 

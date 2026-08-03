@@ -17,13 +17,16 @@ taxonomy. The top vocabulary terms are: modafinil, treatment, study, results, pa
 | 3 | use, cognitive, drugs, adhd, studies, drug, cocaine, methylphenidate |
 | 4 | sleep, narcolepsy, sleepiness, cataplexy, daytime, patients, eds, excessive |
 
-The topics reveal the thematic structure of the literature: Topic 0 centres on cognitive
-enhancement and neuroenhancement; Topic 1 addresses ADHD treatment and clinical evidence;
-Topic 2 covers pharmacological dose-response studies (including animal models); Topic 3
-focuses on sleep disorders (narcolepsy, excessive daytime sleepiness); and Topic 4
-addresses fatigue in psychiatric populations. These topics cross-cut the keyword-based
-subfield taxonomy, revealing connections that the explicit classification does not
-capture.
+The topics reveal the thematic structure of the literature: Topic 0 reflects
+preclinical dose-response pharmacology in animal models (mg/kg dosing, dopamine
+activity); Topic 1 captures clinical fatigue and mood trials (placebo-controlled
+patient studies, armodafinil); Topic 2 collects structured-abstract and
+meta-analytic language (methods, results, 95% confidence intervals, risk
+estimates); Topic 3 centres on cognitive enhancement and psychostimulant
+pharmacology (ADHD, methylphenidate, cocaine comparisons); and Topic 4 addresses
+sleep disorders (narcolepsy, excessive daytime sleepiness, cataplexy,
+hypersomnia). These topics cross-cut the keyword-based subfield taxonomy,
+revealing connections that the explicit classification does not capture.
 
 <!-- FIGURE: topic_term_bars.png -->
 ![Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the $\mathbf{H}$ matrix.](../output/figures/topic_term_bars.png "Topic-Term Weights"){#fig:topic_term_bars}
@@ -39,7 +42,7 @@ two-dimensional projection are all reproducible.
 ![PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy.](../output/figures/pca_embeddings.png "PCA Embeddings"){#fig:pca_embeddings}
 
 <!-- FIGURE: dendrogram.png -->
-![Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters.](../output/figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
+![Hierarchical clustering dendrogram of subfield TF-IDF centroids. Leaves are the configured subfields; the tree shows the similarity structure between subfield centroid vectors.](../output/figures/dendrogram.png "Document Dendrogram"){#fig:dendrogram}
 
 ## Term Analysis
 
@@ -124,7 +127,7 @@ reveal the most closely related works in the corpus.
 ![Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content.](../output/figures/similarity_heatmap.png "Similar Document Pairs"){#fig:similarity_heatmap}
 
 <!-- FIGURE: word_cloud.png -->
-![Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary.](../output/figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
+![Term cloud for Modafinil. Term sizes are proportional to their topic-term weights from the discovered topics, providing a visual summary of the dominant vocabulary.](../output/figures/word_cloud.png "Term Cloud"){#fig:word_cloud}
 
 <!-- FIGURE: cooccurrence_matrix.png -->
 ![Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature.](../output/figures/cooccurrence_matrix.png "Term Co-occurrence"){#fig:cooccurrence_matrix}
