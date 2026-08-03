@@ -209,9 +209,9 @@ def test_combined_html_command_carries_the_filter(tmp_path: Path) -> None:
     section.write_text("# Intro\n\n::: {.definition #def:a}\nBody.\n:::\n", encoding="utf-8")
 
     cfg = RenderingConfig(
-        web_dir=str(tmp_path / "output/web"),
-        output_dir=str(tmp_path / "output"),
-        figures_dir=str(tmp_path / "output/figures"),
+        web_dir=str(tmp_path / "proj/output/web"),
+        output_dir=str(tmp_path / "proj/output"),
+        figures_dir=str(tmp_path / "proj/output/figures"),
     )
     cfg.pandoc_path = str(bin_dir / "pandoc")
     renderer = WebRenderer(config=cfg)

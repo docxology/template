@@ -110,6 +110,9 @@ The Core module provides fundamental foundation utilities used across the entire
 **project_test_matrix.py**
 - Shared bounded subprocess service for public readiness, per-project union coverage, and parallel documentation counts. ``run_project_test_matrix(tasks, workers=...)`` isolates each task, applies a hard timeout, continues after failure/timeout, captures bounded diagnostics when requested, and returns results in canonical input order regardless of completion order. Outer project workers must not be combined with inner pytest-xdist workers; the higher-level orchestration validators enforce that boundary.
 
+**public_matrix_receipt.py**
+- Deterministic public-matrix receipt for per-project release lanes: records one bounded public-matrix run (per-project coverage floors, pass/fail, run bounds) into a committed-receipt contract, and fails closed when the on-disk output tree would drift from the receipt after the run (post-coverage output isolation). Backs the `--receipt` public-matrix mode and the scheduled `public-matrix-receipt` CI job. Public API: `write_public_matrix_receipt`, `read_public_matrix_receipt`, `validate_receipt_against_output`.
+
 **analysis_pipeline.py**
 - Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator. Direct script paths are confined to the resolved project `scripts/` tree, and credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
 - Public API: `run_analysis_script(script_path, repo_root, project_name)`, `run_analysis_pipeline(scripts, repo_root, project_name)`

@@ -12,8 +12,8 @@
     {
       "contract_match": true,
       "path": "output/figures/architecture_overview.png",
-      "sha256": "fd22137a75ce639bc3b7256f4e0534cfa671019cb473d5b273896a6c9171177a",
-      "size_bytes": 154701,
+      "sha256": "cf920a9fdb82d70b8816ca6ad04b579cce815ccdc44fa9ba90f9eb6a22f833a4",
+      "size_bytes": 160513,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -93,8 +93,8 @@
     {
       "contract_match": true,
       "path": "output/figures/tool_contract.png",
-      "sha256": "1dc5e7384204929f2e634306cf78a3112555f02e120f2c069cea10e566ba0b4e",
-      "size_bytes": 120557,
+      "sha256": "0cf36483de03210766e15edb6bd7b145212fbc420ccf1b0886244ab195095ffc",
+      "size_bytes": 152992,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -203,6 +203,15 @@
       "path": "output/pdf/template_pools_rules_tools_combined.pdf",
       "sha256": "ffe805cade7461839e52ad11bf3950a9d64bece6f3e2d086cdbb1f34fda947e8",
       "size_bytes": 1269348,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "b2a47e348cc8c6297736f15a731aba06b0db50b3420e4601792a241eab5711e9",
+      "size_bytes": 2116,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
