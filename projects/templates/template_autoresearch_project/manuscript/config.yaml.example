@@ -17,7 +17,17 @@ publication:
   doi: ""  # Concept DOI — stable citation; PDF cover and CITATION.cff
   version_doi: ""  # Latest Zenodo version DOI
   version_record: ""  # https://zenodo.org/records/{id}
+  year: "YYYY"  # e.g. "2026"
   github_repository: ""  # e.g. docxology/template_autoresearch_project
+  repository_url: ""  # e.g. https://github.com/docxology/template_autoresearch_project
+  published_artifacts:  # Optional per-platform release evidence; leave empty for a fresh fork
+    ipfs_pinata: ""
+    huggingface_hub: ""
+    osf: ""
+    pypi: ""
+    netlify: ""
+    github_pages: ""
+    software_heritage: ""
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
