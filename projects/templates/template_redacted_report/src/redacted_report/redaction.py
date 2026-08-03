@@ -313,7 +313,7 @@ def audit_release_packet(
         _check_classification_ceiling(segment, rank, ceiling_rank, segment_decisions, findings)
         _check_decisions(segment, segment_decisions, findings)
         _check_sensitive_residue(segment, segment_decisions, findings, policy)
-    coverage = _redaction_coverage(segments, decision_map)
+    coverage = _redaction_coverage(segments, decision_map, policy)
     mosaic = _mosaic_risk(segments, decision_map, policy)
     if mosaic > mosaic_threshold:
         findings.append(RedactionFinding("warning", "mosaic_risk", "combined residual selectors exceed threshold"))
@@ -689,9 +689,17 @@ def _check_sensitive_residue(
         )
 
 
-def _redaction_coverage(segments: list[RedactionSegment], decision_map: dict[str, list[RedactionDecision]]) -> float:
+def _redaction_coverage(
+    segments: list[RedactionSegment],
+    decision_map: dict[str, list[RedactionDecision]],
+    policy: RedactionPolicy,
+) -> float:
+    ceiling_rank = policy.taxonomy.order.get(policy.public_ceiling, 0)
     sensitive_segments = [
-        segment for segment in segments if segment.classification.upper() != "UNCLASSIFIED" or segment.source_controls
+        segment
+        for segment in segments
+        if policy.taxonomy.order.get(_normalize_classification(segment.classification), 99) > ceiling_rank
+        or segment.source_controls
     ]
     if not sensitive_segments:
         return 1.0

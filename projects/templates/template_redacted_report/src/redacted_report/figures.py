@@ -79,7 +79,13 @@ def _rgb(profile_rgb: tuple[int, int, int]) -> tuple[float, float, float]:
 
 def _inject_svg_accessibility(svg_text: str, title: str, desc: str) -> str:
     """Add role/title/desc accessibility markup to a matplotlib SVG string."""
+    import re
+
     escaped = desc.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    # matplotlib stamps a live <dc:date> into the SVG metadata; drop it so the
+    # companion SVG is byte-deterministic across runs (the PNG writer does not
+    # embed a timestamp).
+    svg_text = re.sub(r"\s*<dc:date>[^<]*</dc:date>", "", svg_text)
     svg_text = svg_text.replace(
         "<svg ",
         '<svg role="img" aria-labelledby="fig-title fig-desc" ',
