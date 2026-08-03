@@ -210,8 +210,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/02_methods_overview.md",
-      "sha256": "20a60b822c119f8e76ff49cb137a71efeb1eccab668b139dfeadaaabc0a9eb9c",
-      "size_bytes": 3137,
+      "sha256": "44bf5a858f2ef55e3aaf9c1eeede0c902d755022c465cbedf56009012158db61",
+      "size_bytes": 3156,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -255,8 +255,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/02e_methods_viz_injection.md",
-      "sha256": "9db46d924d5a6c63aad3db61254ea7d0bca8fcc1db17ef4d99da49f589f3b674",
-      "size_bytes": 2488,
+      "sha256": "70ad86ae6a873a27d0f5ddfa88ca0e062a4c25a22161a530a337c1305b3edadc",
+      "size_bytes": 2812,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -354,8 +354,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/06_appendix_tooling.md",
-      "sha256": "38e28face9bd3731931c08f953074d4dcbdb67b2ef3af658b2d8ac769c98b92f",
-      "size_bytes": 4194,
+      "sha256": "89d9275db919718e099ee747fcbb10f8aa980ad56d723df02dcb4e7983d3d57f",
+      "size_bytes": 5469,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -372,8 +372,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/08_appendix_accessibility.md",
-      "sha256": "1caadb8384046220615e728b929deb383c733b73882c817109d9e6b4e85cde70",
-      "size_bytes": 2666,
+      "sha256": "8fbf227d45ac93cf34c094fedfa7c29c9fa68b0f31a216fbe54fddb2be75729a",
+      "size_bytes": 2681,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -399,8 +399,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml",
-      "sha256": "b2651ded4018ddfdce18ca4d3ecddd6837c87ea0738a047e6bfe2d2ef16d0b04",
-      "size_bytes": 13890,
+      "sha256": "39f52913b5783c09281e7d039e14379b4940eaf482ec5b76cab057195c13ef1e",
+      "size_bytes": 14544,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -408,8 +408,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/config.yaml.example",
-      "sha256": "1a8926e06bc0a23a9e7ac411db79b82b30253a89515474768e5fb7c45f099f56",
-      "size_bytes": 1613,
+      "sha256": "5c7580f797cbc1b5f24957ccb80539e50da8f2bb9ea76ae5aee5edab777c8099",
+      "size_bytes": 8509,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
