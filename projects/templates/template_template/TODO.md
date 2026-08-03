@@ -7,9 +7,10 @@ infrastructure and the public exemplar roster.
 
 - Manuscript pre-render gate:
   `uv run python -m infrastructure.validation.cli prerender projects/templates/template_template/manuscript --repo-root .`
+  → no render-blocking pitfalls or undefined citations (2026-08-02).
 - Project tests and coverage:
   `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
+- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project template_template --strict`
 - Live test counts and coverage snapshots belong in
   `../../../docs/_generated/COUNTS.md`, not hardcoded here.
 
@@ -25,7 +26,8 @@ infrastructure and the public exemplar roster.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` as the copy-and-customize metadata
-  starting point.
+  starting point (shape-synced with the live config: split DOIs,
+  `repository_url`, `published_artifacts`, `transmission_bookends`).
 - Add explicit config keys before any new manuscript metric becomes
   user-tunable.
 
@@ -62,3 +64,9 @@ infrastructure and the public exemplar roster.
 3. Expand architecture visualization only with deterministic inputs and
    documented omissions.
 4. Refresh generated docs after public-roster or metric-surface changes.
+5. Keep the appendix matrix and figure data in lockstep (the 08f table and
+   `figure_comparative_matrix.py` share the 14×10 shape; verify the container
+   row's `~` stays aligned with the data module's 0.5 value).
+6. Re-verify chapter 07 steganography prose whenever `infrastructure/steganography`
+   defaults change (`overlay_opacity`, `overlay_text`, hash algorithms,
+   barcode placement).

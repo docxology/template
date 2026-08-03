@@ -273,11 +273,16 @@ the PDF metadata and the hash manifest rather than in the visible
 watermark text itself. Together these fields allow a verifier to
 reconstruct—from the hardened PDF alone—which version of the code, at
 which moment in time, produced the document.</p>
-<h3 id="layer-4-qr-code-injection">Layer 4: QR Code Injection</h3>
-<p>An optional QR code is generated containing a URL pointing to the
-repository (e.g., <code>github.com/docxology/template</code>). The QR
-code is placed in a configurable position (default: bottom-right corner
-of the last page) at a specified size.</p>
+<h3 id="layer-4-qr-and-barcode-injection">Layer 4: QR and Barcode
+Injection</h3>
+<p>When barcodes are enabled, a bottom-of-page barcode strip (QR code +
+Code128 label) is merged onto <strong>every</strong> page, encoding the
+document identifier and page number
+(<code>ID:&lt;doc-id-prefix&gt;|P:&lt;page&gt;</code>). In
+<code>overlay_mode: "qr"</code>, a tiled QR overlay covers the full page
+in place of the text watermark. Both are configurable via the
+<code>steganography:</code> block in <code>manuscript/config.yaml</code>
+(or the repo-level <code>secure_config.yaml</code> defaults).</p>
 <h2 id="the-secure_run.sh-orchestrator">The <code>secure_run.sh</code>
 Orchestrator</h2>
 <p>The steganographic pipeline is orchestrated by

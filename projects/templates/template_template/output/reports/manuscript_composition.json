@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "6fa4e5760c6f3ee695457a9fb87350309327c9fa1487520dab59b878266870a0",
+  "binding_sha256": "4abf5f9ed216c517bb8064ca4dd48f77efe644619957da970bcf1eb61868efa1",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "44d62401c37d43f408ef349d57574029b3515f3593f56342d1ec2ca428465f45",
-  "combined_size_bytes": 115017,
+  "combined_sha256": "e1eb5c715c4d371723857942b1b28c9232ef79bb0711b196f44317a20122ff56",
+  "combined_size_bytes": 115214,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -21,7 +21,7 @@
     {
       "ordinal": 3,
       "path": "output/manuscript/02_introduction.md",
-      "sha256": "c21c2bd4bdd6b0d2c3bed3f31fe5aaa64fe7df9e4e09116ee4929f9ca0ec66f9",
+      "sha256": "00d536097abd5d3f9feba02302c6420806df7109483928d4a42474c3cb569e8d",
       "size_bytes": 18523
     },
     {
@@ -99,8 +99,8 @@
     {
       "ordinal": 16,
       "path": "output/manuscript/07_security_provenance.md",
-      "sha256": "b7e15a559f37b45ae059d077696c1cb339bf258fddf9efecacbe3b4c1451afdb",
-      "size_bytes": 9769
+      "sha256": "3a1aef7c69970fc8a4eb207d96b2058fd6b0b12eb5d4a40210e068d6ee9bbd98",
+      "size_bytes": 9966
     },
     {
       "ordinal": 17,
@@ -145,7 +145,7 @@
       "size_bytes": 601
     }
   ],
-  "ordered_inputs_sha256": "6ae8f0abb147bc609922cf3ff0e72fc89169b9392d3183f5fd8f7890d331adab",
+  "ordered_inputs_sha256": "9d6ce0e7120551cd46f8e2ce162f4edb77df3cec8d8fe87e8d6302cd70302858",
   "project": "templates/template_template",
   "schema_version": "template-manuscript-composition-v1"
 }

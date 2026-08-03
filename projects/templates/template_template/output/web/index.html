@@ -869,9 +869,9 @@ Hashing</a></li>
 id="toc-layer-3-alpha-channel-overlay-footer-and-invisible-text"><span
 class="toc-section-number">7.2.3</span> Layer 3: Alpha-Channel Overlay,
 Footer, and Invisible Text</a></li>
-<li><a href="#layer-4-qr-code-injection"
-id="toc-layer-4-qr-code-injection"><span
-class="toc-section-number">7.2.4</span> Layer 4: QR Code
+<li><a href="#layer-4-qr-and-barcode-injection"
+id="toc-layer-4-qr-and-barcode-injection"><span
+class="toc-section-number">7.2.4</span> Layer 4: QR and Barcode
 Injection</a></li>
 </ul></li>
 <li><a href="#the-secure_run.sh-orchestrator"
@@ -1405,7 +1405,7 @@ contingent on test passage. The configured source-coverage floors are
 prohibited mock-framework imports, while the suites exercise real
 filesystem and subprocess behavior and use local protocol servers or
 explicitly enabled live services for network boundaries. ~9,557
-infrastructure tests and 5405+ project tests are discovered by the
+infrastructure tests and 5440+ project tests are discovered by the
 introspection build.</p></li>
 <li><p><strong>Automated Provenance</strong>: Steganographic
 watermarking and cryptographic hashing are integrated directly into the
@@ -3841,13 +3841,17 @@ the PDF metadata and the hash manifest rather than in the visible
 watermark text itself. Together these fields allow a verifier to
 reconstruct—from the hardened PDF alone—which version of the code, at
 which moment in time, produced the document.</p>
-<h3 data-number="7.2.4" id="layer-4-qr-code-injection"><span
-class="header-section-number">7.2.4</span> Layer 4: QR Code
+<h3 data-number="7.2.4" id="layer-4-qr-and-barcode-injection"><span
+class="header-section-number">7.2.4</span> Layer 4: QR and Barcode
 Injection</h3>
-<p>An optional QR code is generated containing a URL pointing to the
-repository (e.g., <code>github.com/docxology/template</code>). The QR
-code is placed in a configurable position (default: bottom-right corner
-of the last page) at a specified size.</p>
+<p>When barcodes are enabled, a bottom-of-page barcode strip (QR code +
+Code128 label) is merged onto <strong>every</strong> page, encoding the
+document identifier and page number
+(<code>ID:&lt;doc-id-prefix&gt;|P:&lt;page&gt;</code>). In
+<code>overlay_mode: "qr"</code>, a tiled QR overlay covers the full page
+in place of the text watermark. Both are configurable via the
+<code>steganography:</code> block in <code>manuscript/config.yaml</code>
+(or the repo-level <code>secure_config.yaml</code> defaults).</p>
 <h2 data-number="7.3" id="the-secure_run.sh-orchestrator"><span
 class="header-section-number">7.3</span> The <code>secure_run.sh</code>
 Orchestrator</h2>
