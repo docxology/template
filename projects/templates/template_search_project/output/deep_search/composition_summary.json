@@ -1,5 +1,5 @@
 {
-  "output_path": "<home>/Documents/Git/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_search_project/manuscript/S01_literature_review.md",
+  "output_path": "<repo-root>/manuscript/S01_literature_review.md",
   "keywords": [
     "convex optimization",
     "stochastic gradient descent",
@@ -7,7 +7,12 @@
   ],
   "unique_papers": 300,
   "per_paper_notes_integrated": 300,
-  "bibtex_path": "<home>/Documents/Git/HumOS/projects/platform/hum-docxology/repos/public/template/projects/templates/template_search_project/manuscript/references_deep.bib",
+  "bibtex_path": "<repo-root>/manuscript/references_deep.bib",
   "bibtex_keys": 300,
-  "missing_citation_keys": []
+  "missing_citation_keys": [
+    "anon2019replication",
+    "bu2026nonstationary",
+    "gong2026comparative",
+    "singer1980minimization"
+  ]
 }

@@ -3,20 +3,20 @@ Literature Search Coverage Dashboard
 6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.
 
 project:           template_search_project
-generated:         2026-07-10T19:25:30Z
-git rev:           d87ca592
-panels:            4
+generated:         2026-08-03T00:32:43Z
+git rev:           80735407f
+panels:            5
 controls:          0
-invariants:        8
+invariants:        11
 
 hyperparameters
 ---------------
   abstract_floor: 0.5
-  aggregate_path: None
-  corpus_path: <repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_search_project/output/corpus.json
+  aggregate_path: <repo-root>/projects/templates/template_search_project/output/deep_search/aggregate.json
+  corpus_path: <repo-root>/projects/templates/template_search_project/output/corpus.json
   doi_floor: 0.5
   min_per_keyword: 1
-  n_keywords: 0
+  n_keywords: 3
   n_papers: 6
   year_floor: 0.7
   year_max_filter: None

@@ -1,11 +1,11 @@
 Invariants for Literature Search Coverage Dashboard
 ===================================================
-generated:    2026-07-10T19:25:30Z
+generated:    2026-08-03T00:32:43Z
 project:      template_search_project
-git rev:      d87ca592
+git rev:      80735407f
 git status:   dirty (uncommitted changes)
 
-summary:      8/8 passed, 0 failed
+summary:      11/11 passed, 0 failed
 
   [PASS] paper_field_present_id         equal  |0 - 0| = 0.000e+00 (tol=0.0e+00)
          every paper has a non-empty `id`; missing at indices []
@@ -23,3 +23,9 @@ summary:      8/8 passed, 0 failed
          earliest paper year = 2004
   [PASS] year_max_plausible             le     2018 <= 2027 + 0.0e+00
          latest paper year = 2018
+  [PASS] keywords_nonempty              ge     3 >= 1 - 0.0e+00
+         deep search ran with 3 keywords
+  [PASS] unique_papers_nonempty         ge     300 >= 1 - 0.0e+00
+         unique papers list has 300 entries
+  [PASS] unique_papers_min_per_keyword  ge     100 >= 1 - 0.0e+00
+         avg papers per keyword = 100.0 ≥ 1
