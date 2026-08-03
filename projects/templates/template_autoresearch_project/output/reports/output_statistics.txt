@@ -4,17 +4,16 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 181
-Total Size: 7.71 MB
+Total Files: 165
+Total Size: 7.69 MB
 
 Files by Category:
-  • pdf: 10 files (1.65 MB)
-  • web: 8 files (0.33 MB)
-  • slides: 49 files (1.87 MB)
+  • pdf: 10 files (1.67 MB)
+  • web: 9 files (0.36 MB)
+  • slides: 49 files (1.88 MB)
   • figures: 28 files (1.12 MB)
   • data: 48 files (2.48 MB)
-  • reports: 37 files (0.26 MB)
-  • logs: 1 files (0.00 MB)
+  • reports: 21 files (0.19 MB)
 
 Largest Files:
   • template_autoresearch_project_combined.pdf: 1.28 MB (pdf)
@@ -23,14 +22,19 @@ Largest Files:
   • ml_task_results.json: 0.67 MB (data)
   • ml_candidate_ledger.json: 0.54 MB (data)
 
+Missing Expected Files:
+  ⚠  simulations/ directory
+  ⚠  llm/ directory
+  ⚠  logs/ directory
+
 File Types:
-  • .json: 66 file(s)
+  • .json: 57 file(s)
   • .png: 27 file(s)
-  • .md: 14 file(s)
-  • .log: 9 file(s)
+  • .md: 11 file(s)
+  • .log: 8 file(s)
   • .tex: 8 file(s)
-  • .html: 8 file(s)
   • .aux: 7 file(s)
   • .toc: 7 file(s)
   • .pdf: 7 file(s)
+  • .html: 7 file(s)
   • .nav: 6 file(s)

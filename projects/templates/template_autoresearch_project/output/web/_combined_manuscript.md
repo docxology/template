@@ -101,7 +101,7 @@ AutoResearch systems are most useful when their planning, evidence, evaluation,
 and review surfaces remain inspectable. The recent pattern popularized by
 bounded coding-agent research loops is simple: define a tractable objective,
 try candidate changes under a budget, keep the result that improves the metric,
-and leave a replayable trace of what happened [karpathy_autoresearch_2026].
+and leave a replayable trace of what happened [@karpathy_autoresearch_2026].
 That pattern is powerful, but it is also easy to overstate. A public research
 template should show how to run the loop without hiding cost, evidence, review,
 or execution boundaries.
@@ -110,7 +110,7 @@ or execution boundaries.
 
 This project implements that safer version. The central task is
 `small MNIST neural-network classification`: `MNIST handwritten digit database` from the handwritten-digit database
-[lecun_mnist_database], a `nearest-centroid` baseline, and a
+[@lecun_mnist_database], a `nearest-centroid` baseline, and a
 finite list of candidate model families (`MLP, nearest-centroid, softmax regression, tiny patch-attention`). The
 AutoResearch loop is responsible for proposing candidate configurations,
 evaluating them against `test_accuracy`, selecting the best result with
@@ -148,18 +148,18 @@ scientific output is growing faster than document-centered review and synthesis
 can absorb. Recent science-of-science evidence complicates any simple
 productivity story: AI-augmented scientists can publish and be cited more often,
 but the same adoption pattern can narrow the collective range of topics and
-interactions in science [hao_ai_tools_focus_2026]. This is a 2026 Nature result,
+interactions in science [@hao_ai_tools_focus_2026]. This is a 2026 Nature result,
 not a 2024 analysis, and it motivates governance rather than celebration.
 
 One response is to make literature synthesis more source governed.
 OpenScholar uses retrieval-augmented generation over a large scientific passage
 store and reports citation accuracy improvements on literature synthesis tasks
-[asai_openscholar_2026]. PaperQA2 similarly evaluates literature-search agents
+[@asai_openscholar_2026]. PaperQA2 similarly evaluates literature-search agents
 against expert scientific tasks and emphasizes cited answers, contradiction
-detection, and factuality [skarlinski_paperqa2_2024]. STORM, PaperQA, and GPT
+detection, and factuality [@skarlinski_paperqa2_2024]. STORM, PaperQA, and GPT
 Researcher are adjacent source-grounded writing systems that motivate this
 project's insistence on citation-backed claims and visible evidence surfaces
-[shao_storm_2024; lala_paperqa_2023; gpt_researcher_2026]. The common lesson
+[@shao_storm_2024; @lala_paperqa_2023; @gpt_researcher_2026]. The common lesson
 is that automated writing is not enough: claims must remain tied to inspectable
 sources, artifacts, and evaluation records.
 
@@ -169,7 +169,7 @@ The Discovery Engine proposes a more structural answer to the same overload
 problem. It distills publications into source-linked knowledge artifacts,
 organizes those artifacts under a conceptual schema, encodes them into a
 high-dimensional Conceptual Tensor, and unrolls that tensor into graph and
-vector views for agent navigation [baulin_discovery_engine_2025]. This project
+vector views for agent navigation [@baulin_discovery_engine_2025]. This project
 does not construct a Conceptual Nexus Model or claim domain-scale literature
 synthesis. It adopts a much smaller analogue: outputs, ledgers, evidence
 registries, figure records, and hydrated manuscript variables are file-backed
@@ -177,15 +177,15 @@ objects whose provenance can be checked before publication.
 
 The representational background is broader than one framework. FAIR principles
 argue for data that are findable, accessible, interoperable, and reusable by
-people and machines [wilkinson2016fair]. RO-Crate and Workflow Run RO-Crate
+people and machines [@wilkinson2016fair]. RO-Crate and Workflow Run RO-Crate
 package research artifacts and computational executions with linked-data
-metadata [soiland_reyes2022rocrate; soiland_reyes2024workflow_run_rocrate].
+metadata [@soiland_reyes2022rocrate; @soiland_reyes2024workflow_run_rocrate].
 Hyperdimensional computing and vector symbolic architectures provide one route
 for robust high-dimensional symbolic-subsymbolic representations
-[heddes_hdc_2024], while tensor factorization methods such as TuckER and
+[@heddes_hdc_2024], while tensor factorization methods such as TuckER and
 mixed-geometry tensor factorization show how multi-relational knowledge graphs
 can be completed and queried as structured tensors
-[balazevic_tucker_2019; yusupov_mixed_geometry_2025]. The local contribution
+[@balazevic_tucker_2019; @yusupov_mixed_geometry_2025]. The local contribution
 here is not a new knowledge representation method; it is an executable template
 that makes a small research workflow compatible with that machine-readable
 direction.
@@ -194,23 +194,23 @@ direction.
 
 The most ambitious AutoResearch systems now aim at the entire scientific
 lifecycle. The AI Scientist assembles idea generation, experiment execution,
-paper writing, and automated review [lu_aiscientist_2024], and its Nature
+paper writing, and automated review [@lu_aiscientist_2024], and its Nature
 version reports an end-to-end AI research pipeline whose generated manuscript
-passed a workshop peer-review round [lu_ai_scientist_nature_2026].
+passed a workshop peer-review round [@lu_ai_scientist_nature_2026].
 AI Scientist-v2 removes more hand-authored scaffolding and uses agentic tree
-search for broader hypothesis exploration [yamada_ai_scientist_v2_2025].
+search for broader hypothesis exploration [@yamada_ai_scientist_v2_2025].
 FutureHouse's platform exposes specialized scientific agents for literature
 search, deep review, novelty checking, and chemistry planning
-[futurehouse_platform_2025], while Robin integrates literature and data-analysis
-agents in a lab-in-the-loop discovery workflow [ghareeb_robin_2026].
+[@futurehouse_platform_2025], while Robin integrates literature and data-analysis
+agents in a lab-in-the-loop discovery workflow [@ghareeb_robin_2026].
 
 Survey work is already separating reliable assistance from risky autonomy.
 The AI for Auto-Research roadmap describes the full lifecycle from creation to
 dissemination, but stresses that novelty, research-level implementation, and
-judgment remain fragile under automation [kong_ai_auto_research_2026].
+judgment remain fragile under automation [@kong_ai_auto_research_2026].
 EXHYTE frames discovery as an iterative Exploration, Hypothesis generation, and
 Testing loop, clarifying where current systems are mature and where closed-loop
-autonomy remains thin [hasib_exhyte_2025]. This exemplar therefore takes the
+autonomy remains thin [@hasib_exhyte_2025]. This exemplar therefore takes the
 opposite stance from full autonomy: it implements a bounded local loop whose
 candidate space, data, cost, outputs, and review gates can be audited.
 
@@ -220,12 +220,12 @@ Autoformalization supplies a different kind of boundary: instead of only asking
 whether generated text is plausible, it asks whether an informal statement can
 be translated into a form that a proof assistant or compiler can check.
 AlphaProof shows the power of reinforcement learning over formal mathematical
-proof search [hubert_alphaproof_2025]. Process-driven autoformalization in
+proof search [@hubert_alphaproof_2025]. Process-driven autoformalization in
 Lean uses compiler feedback as a precise signal for improving translations
 from natural-language mathematics to formal statements and proofs
-[lu_process_driven_autoformalization_2024]. APOLLO turns Lean feedback into an
+[@lu_process_driven_autoformalization_2024]. APOLLO turns Lean feedback into an
 iterative proof-repair workflow in which generated proofs are decomposed,
-patched, and reverified [apollo_lean_collaboration_2025].
+patched, and reverified [@apollo_lean_collaboration_2025].
 
 This project does not perform theorem proving, proof repair, or formal
 mathematical verification. It borrows the architectural lesson: generated
@@ -240,15 +240,15 @@ ML-for-ML systems optimize models, code, or algorithms with search loops that ar
 themselves subject to evaluation. Karpathy's `autoresearch` repository frames a
 minimal version of this pattern as a prompt-controlled system with a fixed
 budget, editable code surface, and comparable metric
-[karpathy_autoresearch_2026]. MLAgentBench and MLE-bench package machine
+[@karpathy_autoresearch_2026]. MLAgentBench and MLE-bench package machine
 learning tasks as scored, replayable environments with logs and grading outputs
-[huang_mlagentbench_2023; chan_mle_bench_2024].
+[@huang_mlagentbench_2023; @chan_mle_bench_2024].
 
 At a larger scale, AlphaEvolve couples language-model proposals to evolutionary
 program search and automated evaluators, producing algorithmic improvements in
-mathematics and computing [romera_paredes_alphaevolve_2025]. DeepEvolve adds
+mathematics and computing [@romera_paredes_alphaevolve_2025]. DeepEvolve adds
 external retrieval, multi-file code editing, and debugging to the same basic
-proposal-implementation-evaluation loop [deepevolve_2025]. This manuscript's
+proposal-implementation-evaluation loop [@deepevolve_2025]. This manuscript's
 candidate search is intentionally smaller: a finite list of configured model
 families is evaluated against `test_accuracy`, with deterministic selection
 and recorded deferrals rather than unbounded code mutation.
@@ -257,13 +257,15 @@ and recorded deferrals rather than unbounded code mutation.
 
 Agentic science surveys describe systems that move from tool use toward
 scientific agency across perception, knowledge representation, planning,
-experimentation, analysis, and communication [wei_agentic_science_2025; gridach_agentic_science_2025]. GraphRAG work adds structured retrieval to that
+experimentation, analysis, and communication [@wei_agentic_science_2025;
+@gridach_agentic_science_2025]. GraphRAG work adds structured retrieval to that
 picture: graph construction and graph-aware retrieval can support multi-hop
 reasoning, but benchmarks also show that knowledge-graph RAG remains brittle
-when relevant knowledge is incomplete [graphrag_bench_2026; brink_kg_rag_2026]. Active-inference perspectives make a similar design demand
+when relevant knowledge is incomplete [@graphrag_bench_2026;
+@brink_kg_rag_2026]. Active-inference perspectives make a similar design demand
 in different language: scientific agents need persistent uncertainty-aware
 memory, causal models, counterfactual exploration, deterministic validation, and
-human judgment as an architectural component [active_inference_science_2025].
+human judgment as an architectural component [@active_inference_science_2025].
 
 This exemplar uses those ideas as constraints, not as capabilities it already
 possesses. It does not run live literature mining, autonomous proof search,
@@ -277,50 +279,51 @@ safe baseline for a public template.
 
 `MNIST` and LeNet remain useful here because they provide a
 compact historical benchmark for small neural networks and handwriting
-recognition [lecun_gradient_1998; lecun_mnist_database]. Vision Transformers
+recognition [@lecun_gradient_1998; @lecun_mnist_database]. Vision Transformers
 introduce the patch-token pattern for image classification at scale
-[dosovitskiy_vit_2020]; this exemplar borrows only the patching and attention
+[@dosovitskiy_vit_2020]; this exemplar borrows only the patching and attention
 representation through `Tiny patch-attention classifier`, then keeps the
 implementation inside the configured candidate budget. MLPerf Tiny and OpenML
 motivate explicit task descriptions, fixed inputs, machine-readable run
-metadata, and checkable metrics [banbury_mlperf_tiny_2021; vanschoren_openml_2014]. Machine-learning reproducibility checklists motivate
+metadata, and checkable metrics [@banbury_mlperf_tiny_2021;
+@vanschoren_openml_2014]. Machine-learning reproducibility checklists motivate
 reporting data, seeds, model sizes, hyperparameters, and compute boundaries
-[pineau_reproducibility_2020].
+[@pineau_reproducibility_2020].
 
 Dataset and model documentation work further informs the safe boundary.
 Datasheets for Datasets motivate explicit reporting of dataset motivation,
-composition, collection, and recommended use [gebru2021datasheets]. Model Cards
+composition, collection, and recommended use [@gebru2021datasheets]. Model Cards
 motivate structured reporting of model context, intended use, evaluation
-procedure, and limitations [mitchell2019model_cards]. The diagnostic layer
+procedure, and limitations [@mitchell2019model_cards]. The diagnostic layer
 follows the same conservative reporting posture: calibration is treated as
-separate from accuracy [guo2017calibration], binomial accuracy intervals use
-Wilson-style score intervals [wilson1927probable_inference], matched classifier
+separate from accuracy [@guo2017calibration], binomial accuracy intervals use
+Wilson-style score intervals [@wilson1927probable_inference], matched classifier
 comparison is summarized through paired discordance
-[dietterich1998statistical_tests], deterministic bootstrap intervals are local
-resampling diagnostics [efron1993bootstrap], and probability quality is
+[@dietterich1998statistical_tests], deterministic bootstrap intervals are local
+resampling diagnostics [@efron1993bootstrap], and probability quality is
 reported with Brier score, negative log likelihood, and chance-corrected
-agreement [brier1950verification; cohen1960coefficient].
+agreement [@brier1950verification; @cohen1960coefficient].
 
 The process language is borrowed cautiously from teleology and theoretical
 biology. Kant's account of organized beings treats a natural purpose as a whole
 whose parts and whole mutually condition one another
-[ginsborg_kant_aesthetics_teleology]. Autopoiesis characterizes living systems
-through self-producing organization [varela_autopoiesis_1974], and later work
+[@ginsborg_kant_aesthetics_teleology]. Autopoiesis characterizes living systems
+through self-producing organization [@varela_autopoiesis_1974], and later work
 connects Kantian natural purpose to autopoietic individuality
-[weber_varela_life_after_kant_2002]. Moreno and Mossio's account of biological
+[@weber_varela_life_after_kant_2002]. Moreno and Mossio's account of biological
 autonomy emphasizes organizational closure and self-maintenance
-[moreno_mossio_biological_autonomy_2015]. This paper uses those ideas only as
+[@moreno_mossio_biological_autonomy_2015]. This paper uses those ideas only as
 disciplined analogies for configured scientific workflows whose artifacts help
 reproduce, constrain, and evaluate subsequent artifacts.
 
 Security and supply-chain references enter with the same restraint. NIST's
 zero-trust architecture treats verification as explicit and continuous rather
-than inherited from a trusted perimeter [nist_sp800_207_zero_trust]. The NIST
+than inherited from a trusted perimeter [@nist_sp800_207_zero_trust]. The NIST
 Secure Software Development Framework emphasizes repeatable practices for
-reducing software vulnerability risk [nist_sp800_218_ssdf]. SLSA frames
+reducing software vulnerability risk [@nist_sp800_218_ssdf]. SLSA frames
 software-artifact provenance and supply-chain integrity as a graded assurance
-problem [slsa_spec_latest], while MITRE ATT&CK T1195 names supply-chain
-compromise as a concrete adversary technique [mitre_attack_t1195]. This
+problem [@slsa_spec_latest], while MITRE ATT&CK T1195 names supply-chain
+compromise as a concrete adversary technique [@mitre_attack_t1195]. This
 exemplar borrows those frameworks as disciplined analogies for local research
 artifact integrity: checksums, inventories, review gates, and explicit
 non-claims, not production deployment certification.
@@ -496,6 +499,7 @@ the threat model and inventory, not manually maintained.
 : Local security artifacts generated for the bounded AutoResearch run. {#tbl:security-artifacts}
 
 \begingroup\footnotesize
+
 | Threat | STRIDE | ATT&CK | Scenario | Residual risk |
 | --- | --- | --- | --- | --- |
 | dataset tamper | Tampering | T1195 | A local fixture could be replaced or edited before analysis. | Residual risk remains if a reviewer ignores checksum drift. |
@@ -507,6 +511,7 @@ the threat model and inventory, not manually maintained.
 | build assumption | Denial of service | T1195.003 | A local or CI build context could omit checks or run stale generated... | The exemplar does not sign build logs or isolate runners. |
 
 : Threat-model rows from `output/data/autoresearch_threat_model.json`; ATT&CK labels scope supply-chain compromise analogies. {#tbl:security-threat-model}
+
 \endgroup
 
 ## Positioning Against Autonomous Science Systems {#sec:positioning-autonomous-science}
@@ -566,6 +571,7 @@ rendered method table below is generated from that registry rather than
 maintained manually.
 
 \begingroup\footnotesize
+
 | Figure | Source | Method | Scope |
 | --- | --- | --- | --- |
 | @fig:autoresearch_candidate_lifecycle | [candidate ledger](../data/ml_candidate_ledger.json) | Candidate lifecycle status-count bar chart. | Lifecycle counts describe bounded orchestration, not autonomous approval. |
@@ -595,6 +601,7 @@ maintained manually.
 | @fig:mnist_subset_contact_sheet | [small](../../data/mnist_small.npz) | Class-balanced contact sheet from fixed local MNIST arrays. | The sheet illustrates the local fixed subset and is not a statistical sample claim. |
 
 : Registry-backed figure methods from [`figure_registry.json`](../figures/figure_registry.json); full validation hooks, alt text, and claim boundaries remain in the registry. {#tbl:figure-methods}
+
 \endgroup
 
 
@@ -943,6 +950,7 @@ surface supports and what it does not support.
 : Candidate-selection audit from `output/data/ml_candidate_selection_audit.json`; the objective metric ranks candidates, while probability diagnostics and parameter counts audit the chosen tie-break context. {#tbl:candidate-selection-audit}
 
 \begingroup\footnotesize
+
 | Surface | Source | Method | Supports | Does not support |
 | --- | --- | --- | --- | --- |
 | objective selection | [task results](../data/ml_task_results.json) | rank evaluated candidates by configured held-out metric and deterministic tie... | accepted-candidate selection within this fixed local task | full MNIST state-of-the-art, external benchmark leadership, or universal mode... |
@@ -952,6 +960,7 @@ surface supports and what it does not support.
 | review governance | [review decisions](../data/review_decisions.json) | deferred generated review decisions with human review required | readiness for human review | machine self-approval or publication acceptance |
 
 : Diagnostic claim-boundary table from `output/data/ml_diagnostic_boundary.json`. {#tbl:diagnostic-boundary}
+
 \endgroup
 
 ## Readiness And Review Artifacts {#sec:readiness-review-artifacts}
@@ -975,15 +984,15 @@ figure(s) with validity `false`.
 | output/data/autoresearch_claims.json | Loop artifact | 1766 |
 | output/data/autoresearch_evidence_overview.json | Evidence registry | 4436 |
 | output/data/autoresearch_integrity_attestation.json | Security evidence | 22755 |
-| output/data/autoresearch_inventory_export.json | Security evidence | 20203 |
+| output/data/autoresearch_inventory_export.json | Security evidence | 20155 |
 | output/data/autoresearch_loop.json | Loop artifact | 16085 |
 | output/data/autoresearch_phase_ledger.json | Run or candidate ledger | 3779 |
-| output/data/autoresearch_plan.json | Loop artifact | 17361 |
+| output/data/autoresearch_plan.json | Loop artifact | 19262 |
 | output/data/autoresearch_review_packet.json | Review packet | 16204 |
 | output/data/autoresearch_schema_manifest.json | Loop artifact | 7226 |
 | output/data/autoresearch_security_profile.json | Security evidence | 1537 |
 | output/data/autoresearch_stage_matrix.csv | Loop artifact | 749 |
-| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 21459 |
+| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 21411 |
 | output/data/autoresearch_threat_model.json | Security evidence | 6370 |
 | output/data/benchmark_boundary.json | Benchmark grading | 2363 |
 | output/data/benchmark_scores.json | Benchmark grading | 621 |
@@ -1014,14 +1023,18 @@ figure(s) with validity `false`.
 | output/data/ml_training_diagnostics.json | Loop artifact | 2968 |
 | output/data/ml_training_history.csv | Loop artifact | 6775 |
 | output/data/mnist_task_config.json | Loop artifact | 3926 |
+| output/data/publication_ledger.json | Run or candidate ledger | 1005 |
 | output/data/research_object_manifest.json | Loop artifact | 20789 |
 | output/data/research_program.json | Loop artifact | 965 |
 | output/data/review_decisions.json | Review packet | 669 |
 | output/data/run_ledger.json | Run or candidate ledger | 328 |
+| output/data/transmission_manifest.json | Loop artifact | 503 |
 | ../figures/autoresearch_candidate_lifecycle.png | Generated figure | 28053 |
 | ../figures/autoresearch_closure_flow.png | Generated figure | 40410 |
 | ../figures/autoresearch_integrity_chain.png | Generated figure | 48256 |
 | ../figures/autoresearch_security_control_matrix.png | Generated figure | 86574 |
+| ../figures/autoresearch_stage_matrix.png | Generated figure | 23476 |
+| ../figures/figure_registry.json | Loop artifact | 30674 |
 | ../figures/ml_bootstrap_intervals.png | Generated figure | 21834 |
 | ../figures/ml_calibration_reliability.png | Generated figure | 73889 |
 | ../figures/ml_candidate_rank_stability.png | Generated figure | 43692 |
@@ -1042,14 +1055,49 @@ figure(s) with validity `false`.
 | ../figures/mnist_class_balance.png | Generated figure | 27059 |
 | ../figures/mnist_error_examples.png | Generated figure | 28431 |
 | ../figures/mnist_subset_contact_sheet.png | Generated figure | 23617 |
+| ../figures/transmission_integrity_strip.png | Generated figure | 18348 |
+| ../figures/transmission_pairing.png | Generated figure | 11286 |
+| output/manuscript/00_00_transmission_begin.md | Manuscript hydration | 1554 |
+| output/manuscript/00_abstract.md | Manuscript hydration | 1451 |
+| output/manuscript/01_introduction.md | Manuscript hydration | 14774 |
+| output/manuscript/02_methodology.md | Manuscript hydration | 21097 |
+| output/manuscript/03_results.md | Manuscript hydration | 39363 |
+| output/manuscript/04_conclusion.md | Manuscript hydration | 2642 |
+| output/manuscript/99_references.md | Manuscript hydration | 58 |
+| output/manuscript/99_zz_transmission_end.md | Manuscript hydration | 543 |
+| output/manuscript/config.yaml | Manuscript hydration | 3233 |
+| output/manuscript/preamble.md | Manuscript hydration | 137 |
+| output/manuscript/references.bib | Manuscript hydration | 23228 |
+| output/pdf/template_autoresearch_project_combined.pdf | Loop artifact | 1342096 |
+| output/release/swh_repo_url.txt | Loop artifact | 59 |
+| output/release/upload_receipts.json | Loop artifact | 2004 |
 | output/reports/autoresearch_evidence_overview.md | Evidence registry | 1136 |
 | output/reports/autoresearch_loop.json | Loop artifact | 16085 |
+| output/reports/autoresearch_loop.md | Loop artifact | 1982 |
 | output/reports/autoresearch_review_packet.md | Review packet | 912 |
 | output/reports/autoresearch_security_review.md | Review packet | 1104 |
 | output/reports/autoresearch_summary.md | Loop artifact | 255 |
 | output/reports/benchmark_readiness_smoke.json | Benchmark grading | 778 |
+| output/reports/manuscript_composition.json | Manuscript hydration | 2149 |
 | output/reports/ml_benchmark_score.json | Benchmark grading | 382 |
 | output/reports/ml_experiment_report.md | Loop artifact | 1687 |
+| output/reports/test_results.json | Loop artifact | 616 |
+| output/reports/test_results.md | Loop artifact | 293 |
+| output/slides/00_abstract_slides.pdf | Loop artifact | 15419 |
+| output/slides/01_introduction_slides.pdf | Loop artifact | 30739 |
+| output/slides/02_methodology_slides.pdf | Loop artifact | 191202 |
+| output/slides/03_results_slides.pdf | Loop artifact | 1060056 |
+| output/slides/04_conclusion_slides.pdf | Loop artifact | 15939 |
+| output/slides/99_references_slides.pdf | Loop artifact | 7623 |
+| output/web/_combined_manuscript.md | Manuscript hydration | 81389 |
+| output/web/favicon.ico | Loop artifact | 121 |
+| output/web/index.html | Loop artifact | 127633 |
+| output/web/manuscript__00_abstract.html | Manuscript hydration | 5627 |
+| output/web/manuscript__01_introduction.html | Manuscript hydration | 19028 |
+| output/web/manuscript__02_methodology.html | Manuscript hydration | 32746 |
+| output/web/manuscript__03_results.html | Manuscript hydration | 69087 |
+| output/web/manuscript__04_conclusion.html | Manuscript hydration | 6574 |
+| output/web/manuscript__99_references.html | Manuscript hydration | 3942 |
 
 : Generated artifact manifest from `output/reports/artifact_manifest.json`. {#tbl:autoresearch-loop}
 
@@ -1079,11 +1127,11 @@ figure(s) with validity `false`.
 | final visuals | 8 | figures | 54 | write final registry-backed figures |
 | manuscript hydration | 9 | manuscript | 9 | write variables, provenance, and figure blocks |
 | readiness manifest | 10 | settlement | 12 | refresh checksum manifest before extrinsic validation |
-| schema manifest | 11 | schema | 2 | write generated JSON schema-version manifest |
-| research object manifest | 12 | packaging | 2 | write local research-object manifest |
+| schema manifest | 11 | schema | 1 | write generated JSON schema-version manifest |
+| research object manifest | 12 | packaging | 1 | write local research-object manifest |
 | extrinsic readiness | 13 | readiness | 3 | validate generated artifacts and extrinsic contracts |
-| final schema manifest | 14 | schema | 2 | refresh schema manifest after final payload updates |
-| final research object manifest | 15 | packaging | 2 | refresh local research-object manifest |
+| final schema manifest | 14 | schema | 1 | refresh schema manifest after final payload updates |
+| final research object manifest | 15 | packaging | 1 | refresh local research-object manifest |
 | artifact manifest | 16 | settlement | 12 | write final artifact checksum manifest |
 
 : Deterministic phase ledger from `output/data/autoresearch_phase_ledger.json`; settlement order is not an autonomy claim. {#tbl:phase-ledger}

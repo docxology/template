@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_methodology.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -173,8 +172,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology</h1>
 <p>The loop is implemented through the project source surface summarized
 by the validated run artifacts. The project scripts remain thin
@@ -201,8 +204,8 @@ and the dataset contact sheet is <span class="citation"
 data-cites="fig:mnist_subset_contact_sheet">@fig:mnist_subset_contact_sheet</span>.</p>
 <figure id="fig:mnist_class_balance">
 <img src="../figures/mnist_class_balance.png"
-alt="Train and test class counts from output/data/ml_class_balance.json; the local fixture contains 2000 train and 500 test examples across 10 classes. Generation method: Grouped train/test class-count bars from the local MNIST fixture. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Train and test class counts from
+alt="Train and test class counts from output/data/ml_class_balance.json; the local fixture contains 2000 train and 500 test examples across 10 classes." />
+<figcaption>Train and test class counts from
 output/data/ml_class_balance.json; the local fixture contains 2000 train
 and 500 test examples across 10 classes. Generation method: Grouped
 train/test class-count bars from the local MNIST fixture. Registry
@@ -346,8 +349,8 @@ offline fixture used by this run.</caption>
 </table>
 <figure id="fig:mnist_subset_contact_sheet">
 <img src="../figures/mnist_subset_contact_sheet.png"
-alt="Deterministic class-balanced contact sheet for MNIST handwritten digit database from data/mnist_small.npz and data/mnist_small_provenance.json; the figure documents the local subset used by the offline run. Generation method: Class-balanced contact sheet from fixed local MNIST arrays. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Deterministic class-balanced contact
+alt="Deterministic class-balanced contact sheet for MNIST handwritten digit database from data/mnist_small.npz and data/mnist_small_provenance.json; the figure documents the local subset used by the offline run." />
+<figcaption>Deterministic class-balanced contact
 sheet for MNIST handwritten digit database from data/mnist_small.npz and
 data/mnist_small_provenance.json; the figure documents the local subset
 used by the offline run. Generation method: Class-balanced contact sheet
@@ -459,8 +462,8 @@ The table and figure are generated from the threat model and inventory,
 not manually maintained.</p>
 <figure id="fig:autoresearch_security_control_matrix">
 <img src="../figures/autoresearch_security_control_matrix.png"
-alt="Local security-control matrix from output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and ATT&amp;CK-inspired safeguards to deterministic evidence surfaces without claiming production security certification. Generation method: structured control matrix with separate control, evidence, framework, and status columns. Generation method: Structured control matrix from local threat-model controls. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Local security-control matrix from
+alt="Local security-control matrix from output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and ATT&amp;CK-inspired safeguards to deterministic evidence surfaces without claiming production security certification." />
+<figcaption>Local security-control matrix from
 output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and
 ATT&amp;CK-inspired safeguards to deterministic evidence surfaces
 without claiming production security certification. Generation method:
@@ -913,5 +916,6 @@ statistical sample claim.</td>
 </tr>
 </tbody>
 </table>
+</main>
 </body>
 </html>

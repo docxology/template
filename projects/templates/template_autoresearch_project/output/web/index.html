@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration" />
   <title>Bounded AutoResearch for a Tiny Reproducible Machine-Learning
 Task</title>
   <style>
@@ -42,7 +44,6 @@ Task</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -173,10 +174,52 @@ Task</title>
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-  </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 
 <style>
 :root {
@@ -195,11 +238,6 @@ Task</title>
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -215,34 +253,61 @@ Task</title>
 }
 
 html {
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Liberation Serif', 'Times New Roman', serif;
   line-height: 1.6;
-  width: 100vw;
+  width: min(100%, 800px);
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f8f8f8;
   color: #1a1a1a;
-  overflow-x: hidden;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 @media (max-width: 600px) {
   body {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
 @media (max-width: 800px) {
   body {
-    width: 390px;
+    width: 100%;
     max-width: 100vw;
-    margin: 0;
+    margin: 0 auto;
   }
 }
 
@@ -274,6 +339,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -281,7 +351,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -297,17 +367,24 @@ img {
 }
 
 a {
-  color: red;
-  text-decoration: none;
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
 a:visited {
-  color: red;
+  color: #8f1d1d;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -317,14 +394,32 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
-  color: red;
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
   text-align: center;
   margin: 20px 0;
   font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .figure {
@@ -342,7 +437,7 @@ a:hover {
 
 .figure-caption {
   font-style: italic;
-  color: #7f8c8d;
+  color: #4b5563;
   margin-top: 10px;
   text-align: center;
 }
@@ -350,11 +445,13 @@ a:hover {
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Bounded AutoResearch for a Tiny Reproducible
 Machine-Learning Task</h1>
 <p class="subtitle">A public exemplar for autoresearch, metric loops,
 evidence ledgers, review gates, and template orchestration</p>
+<p class="author">Daniel Ari Friedman</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -481,6 +578,7 @@ class="toc-section-number">5</span> Conclusion</a></li>
 class="toc-section-number">6</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <p><strong>State:</strong> published</p>
 <p><strong>Pairing:</strong> complete (DOI, GitHub, SHA-256, Zenodo
 URL)</p>
@@ -544,14 +642,14 @@ confirm they resolve to this release pairing.</li>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
 <img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" />
-<figcaption aria-hidden="true">Publication pairing flow</figcaption>
+<figcaption>Publication pairing flow</figcaption>
 </figure>
 <p><strong>Stego:</strong> off | overlays text | barcodes on | XMP on |
 manifest on → <code>./secure_run.sh</code></p>
@@ -597,17 +695,21 @@ evaluation, and review surfaces remain inspectable. The recent pattern
 popularized by bounded coding-agent research loops is simple: define a
 tractable objective, try candidate changes under a budget, keep the
 result that improves the metric, and leave a replayable trace of what
-happened [karpathy_autoresearch_2026]. That pattern is powerful, but it
-is also easy to overstate. A public research template should show how to
-run the loop without hiding cost, evidence, review, or execution
-boundaries.</p>
+happened <span class="citation"
+data-cites="karpathy_autoresearch_2026">(<a
+href="#ref-karpathy_autoresearch_2026" role="doc-biblioref">Karpathy
+2026</a>)</span>. That pattern is powerful, but it is also easy to
+overstate. A public research template should show how to run the loop
+without hiding cost, evidence, review, or execution boundaries.</p>
 <h2 data-number="2.2" id="sec:exemplar-task"><span
 class="header-section-number">2.2</span> Exemplar Task</h2>
 <p>This project implements that safer version. The central task is
 <code>small MNIST neural-network classification</code>:
 <code>MNIST handwritten digit database</code> from the handwritten-digit
-database [lecun_mnist_database], a <code>nearest-centroid</code>
-baseline, and a finite list of candidate model families
+database <span class="citation" data-cites="lecun_mnist_database">(<a
+href="#ref-lecun_mnist_database" role="doc-biblioref">LeCun et al.,
+n.d.</a>)</span>, a <code>nearest-centroid</code> baseline, and a finite
+list of candidate model families
 (<code>MLP, nearest-centroid, softmax regression, tiny patch-attention</code>).
 The AutoResearch loop is responsible for proposing candidate
 configurations, evaluating them against <code>test_accuracy</code>,
@@ -623,8 +725,9 @@ hydrates manuscript variables, validation checks evidence and readiness,
 and copy stages publish final deliverables. The default path makes no
 network calls, no LLM calls, executes no generated code, and never
 treats a generated review packet as human approval. The methods in
-sec. 3 define that boundary, and the results in sec. 4 report only what
-the validated artifacts support.</p>
+sec. <a href="#sec:methodology">3</a> define that boundary, and the
+results in sec. <a href="#sec:results">4</a> report only what the
+validated artifacts support.</p>
 <h2 data-number="2.4" id="sec:process-organization-motif"><span
 class="header-section-number">2.4</span> Process Organization Motif</h2>
 <p>The exemplar also treats research orchestration itself as a
@@ -647,21 +750,33 @@ bottleneck: scientific output is growing faster than document-centered
 review and synthesis can absorb. Recent science-of-science evidence
 complicates any simple productivity story: AI-augmented scientists can
 publish and be cited more often, but the same adoption pattern can
-narrow the collective range of topics and interactions in science
-[hao_ai_tools_focus_2026]. This is a 2026 Nature result, not a 2024
-analysis, and it motivates governance rather than celebration.</p>
+narrow the collective range of topics and interactions in science <span
+class="citation" data-cites="hao_ai_tools_focus_2026">(<a
+href="#ref-hao_ai_tools_focus_2026" role="doc-biblioref">Hao et al.
+2026</a>)</span>. This is a 2026 Nature result, not a 2024 analysis, and
+it motivates governance rather than celebration.</p>
 <p>One response is to make literature synthesis more source governed.
 OpenScholar uses retrieval-augmented generation over a large scientific
 passage store and reports citation accuracy improvements on literature
-synthesis tasks [asai_openscholar_2026]. PaperQA2 similarly evaluates
-literature-search agents against expert scientific tasks and emphasizes
-cited answers, contradiction detection, and factuality
-[skarlinski_paperqa2_2024]. STORM, PaperQA, and GPT Researcher are
-adjacent source-grounded writing systems that motivate this project’s
-insistence on citation-backed claims and visible evidence surfaces
-[shao_storm_2024; lala_paperqa_2023; gpt_researcher_2026]. The common
-lesson is that automated writing is not enough: claims must remain tied
-to inspectable sources, artifacts, and evaluation records.</p>
+synthesis tasks <span class="citation"
+data-cites="asai_openscholar_2026">(<a href="#ref-asai_openscholar_2026"
+role="doc-biblioref"><span class="nocase">Asai et al.</span>
+2026</a>)</span>. PaperQA2 similarly evaluates literature-search agents
+against expert scientific tasks and emphasizes cited answers,
+contradiction detection, and factuality <span class="citation"
+data-cites="skarlinski_paperqa2_2024">(<a
+href="#ref-skarlinski_paperqa2_2024" role="doc-biblioref">Skarlinski et
+al. 2024</a>)</span>. STORM, PaperQA, and GPT Researcher are adjacent
+source-grounded writing systems that motivate this project’s insistence
+on citation-backed claims and visible evidence surfaces <span
+class="citation"
+data-cites="shao_storm_2024 lala_paperqa_2023 gpt_researcher_2026">(<a
+href="#ref-shao_storm_2024" role="doc-biblioref">Shao et al. 2024</a>;
+<a href="#ref-lala_paperqa_2023" role="doc-biblioref">Lala et al.
+2023</a>; <a href="#ref-gpt_researcher_2026"
+role="doc-biblioref">Contributors 2026</a>)</span>. The common lesson is
+that automated writing is not enough: claims must remain tied to
+inspectable sources, artifacts, and evaluation records.</p>
 <h3 data-number="2.5.2"
 id="sec:structured-distillation-knowledge-substrates"><span
 class="header-section-number">2.5.2</span> Structured Distillation And
@@ -670,54 +785,84 @@ Conceptual Knowledge Substrates</h3>
 overload problem. It distills publications into source-linked knowledge
 artifacts, organizes those artifacts under a conceptual schema, encodes
 them into a high-dimensional Conceptual Tensor, and unrolls that tensor
-into graph and vector views for agent navigation
-[baulin_discovery_engine_2025]. This project does not construct a
-Conceptual Nexus Model or claim domain-scale literature synthesis. It
-adopts a much smaller analogue: outputs, ledgers, evidence registries,
-figure records, and hydrated manuscript variables are file-backed
-objects whose provenance can be checked before publication.</p>
+into graph and vector views for agent navigation <span class="citation"
+data-cites="baulin_discovery_engine_2025">(<a
+href="#ref-baulin_discovery_engine_2025" role="doc-biblioref">Baulin et
+al. 2025</a>)</span>. This project does not construct a Conceptual Nexus
+Model or claim domain-scale literature synthesis. It adopts a much
+smaller analogue: outputs, ledgers, evidence registries, figure records,
+and hydrated manuscript variables are file-backed objects whose
+provenance can be checked before publication.</p>
 <p>The representational background is broader than one framework. FAIR
 principles argue for data that are findable, accessible, interoperable,
-and reusable by people and machines [wilkinson2016fair]. RO-Crate and
-Workflow Run RO-Crate package research artifacts and computational
-executions with linked-data metadata [soiland_reyes2022rocrate;
-soiland_reyes2024workflow_run_rocrate]. Hyperdimensional computing and
-vector symbolic architectures provide one route for robust
-high-dimensional symbolic-subsymbolic representations [heddes_hdc_2024],
-while tensor factorization methods such as TuckER and mixed-geometry
-tensor factorization show how multi-relational knowledge graphs can be
-completed and queried as structured tensors [balazevic_tucker_2019;
-yusupov_mixed_geometry_2025]. The local contribution here is not a new
-knowledge representation method; it is an executable template that makes
-a small research workflow compatible with that machine-readable
-direction.</p>
+and reusable by people and machines <span class="citation"
+data-cites="wilkinson2016fair">(<a href="#ref-wilkinson2016fair"
+role="doc-biblioref"><span class="nocase">Wilkinson et al.</span>
+2016</a>)</span>. RO-Crate and Workflow Run RO-Crate package research
+artifacts and computational executions with linked-data metadata <span
+class="citation"
+data-cites="soiland_reyes2022rocrate soiland_reyes2024workflow_run_rocrate">(<a
+href="#ref-soiland_reyes2022rocrate" role="doc-biblioref">Soiland-Reyes
+et al. 2022</a>; <a href="#ref-soiland_reyes2024workflow_run_rocrate"
+role="doc-biblioref"><span class="nocase">Leo et al.</span>
+2024</a>)</span>. Hyperdimensional computing and vector symbolic
+architectures provide one route for robust high-dimensional
+symbolic-subsymbolic representations <span class="citation"
+data-cites="heddes_hdc_2024">(<a href="#ref-heddes_hdc_2024"
+role="doc-biblioref">Heddes et al. 2024</a>)</span>, while tensor
+factorization methods such as TuckER and mixed-geometry tensor
+factorization show how multi-relational knowledge graphs can be
+completed and queried as structured tensors <span class="citation"
+data-cites="balazevic_tucker_2019 yusupov_mixed_geometry_2025">(<a
+href="#ref-balazevic_tucker_2019" role="doc-biblioref">Balazevic et al.
+2019</a>; <a href="#ref-yusupov_mixed_geometry_2025"
+role="doc-biblioref">Yusupov et al. 2025</a>)</span>. The local
+contribution here is not a new knowledge representation method; it is an
+executable template that makes a small research workflow compatible with
+that machine-readable direction.</p>
 <h3 data-number="2.5.3" id="sec:end-to-end-autoresearch-systems"><span
 class="header-section-number">2.5.3</span> End-To-End AutoResearch
 Systems</h3>
 <p>The most ambitious AutoResearch systems now aim at the entire
 scientific lifecycle. The AI Scientist assembles idea generation,
-experiment execution, paper writing, and automated review
-[lu_aiscientist_2024], and its Nature version reports an end-to-end AI
+experiment execution, paper writing, and automated review <span
+class="citation" data-cites="lu_aiscientist_2024">(<a
+href="#ref-lu_aiscientist_2024" role="doc-biblioref">C. Lu et al.
+2024</a>)</span>, and its Nature version reports an end-to-end AI
 research pipeline whose generated manuscript passed a workshop
-peer-review round [lu_ai_scientist_nature_2026]. AI Scientist-v2 removes
-more hand-authored scaffolding and uses agentic tree search for broader
-hypothesis exploration [yamada_ai_scientist_v2_2025]. FutureHouse’s
-platform exposes specialized scientific agents for literature search,
-deep review, novelty checking, and chemistry planning
-[futurehouse_platform_2025], while Robin integrates literature and
-data-analysis agents in a lab-in-the-loop discovery workflow
-[ghareeb_robin_2026].</p>
+peer-review round <span class="citation"
+data-cites="lu_ai_scientist_nature_2026">(<a
+href="#ref-lu_ai_scientist_nature_2026" role="doc-biblioref">Lu et al.
+2026</a>)</span>. AI Scientist-v2 removes more hand-authored scaffolding
+and uses agentic tree search for broader hypothesis exploration <span
+class="citation" data-cites="yamada_ai_scientist_v2_2025">(<a
+href="#ref-yamada_ai_scientist_v2_2025" role="doc-biblioref">Yamada et
+al. 2025</a>)</span>. FutureHouse’s platform exposes specialized
+scientific agents for literature search, deep review, novelty checking,
+and chemistry planning <span class="citation"
+data-cites="futurehouse_platform_2025">(<a
+href="#ref-futurehouse_platform_2025" role="doc-biblioref">FutureHouse
+2025</a>)</span>, while Robin integrates literature and data-analysis
+agents in a lab-in-the-loop discovery workflow <span class="citation"
+data-cites="ghareeb_robin_2026">(<a href="#ref-ghareeb_robin_2026"
+role="doc-biblioref"><span class="nocase">Ghareeb et al.</span>
+2026</a>)</span>.</p>
 <p>Survey work is already separating reliable assistance from risky
 autonomy. The AI for Auto-Research roadmap describes the full lifecycle
 from creation to dissemination, but stresses that novelty,
 research-level implementation, and judgment remain fragile under
-automation [kong_ai_auto_research_2026]. EXHYTE frames discovery as an
-iterative Exploration, Hypothesis generation, and Testing loop,
-clarifying where current systems are mature and where closed-loop
-autonomy remains thin [hasib_exhyte_2025]. This exemplar therefore takes
-the opposite stance from full autonomy: it implements a bounded local
-loop whose candidate space, data, cost, outputs, and review gates can be
-audited.</p>
+automation <span class="citation"
+data-cites="kong_ai_auto_research_2026">(<a
+href="#ref-kong_ai_auto_research_2026" role="doc-biblioref"><span
+class="nocase">Kong et al.</span> 2026</a>)</span>. EXHYTE frames
+discovery as an iterative Exploration, Hypothesis generation, and
+Testing loop, clarifying where current systems are mature and where
+closed-loop autonomy remains thin <span class="citation"
+data-cites="hasib_exhyte_2025">(<a href="#ref-hasib_exhyte_2025"
+role="doc-biblioref"><span class="nocase">Hasib et al.</span>
+2025</a>)</span>. This exemplar therefore takes the opposite stance from
+full autonomy: it implements a bounded local loop whose candidate space,
+data, cost, outputs, and review gates can be audited.</p>
 <h3 data-number="2.5.4" id="sec:autoformalization-verification"><span
 class="header-section-number">2.5.4</span> Autoformalization And
 Verification</h3>
@@ -725,14 +870,22 @@ Verification</h3>
 only asking whether generated text is plausible, it asks whether an
 informal statement can be translated into a form that a proof assistant
 or compiler can check. AlphaProof shows the power of reinforcement
-learning over formal mathematical proof search [hubert_alphaproof_2025].
-Process-driven autoformalization in Lean uses compiler feedback as a
-precise signal for improving translations from natural-language
-mathematics to formal statements and proofs
-[lu_process_driven_autoformalization_2024]. APOLLO turns Lean feedback
-into an iterative proof-repair workflow in which generated proofs are
-decomposed, patched, and reverified
-[apollo_lean_collaboration_2025].</p>
+learning over formal mathematical proof search <span class="citation"
+data-cites="hubert_alphaproof_2025">(<a
+href="#ref-hubert_alphaproof_2025" role="doc-biblioref"><span
+class="nocase">Hubert et al.</span> 2025</a>)</span>. Process-driven
+autoformalization in Lean uses compiler feedback as a precise signal for
+improving translations from natural-language mathematics to formal
+statements and proofs <span class="citation"
+data-cites="lu_process_driven_autoformalization_2024">(<a
+href="#ref-lu_process_driven_autoformalization_2024"
+role="doc-biblioref"><span class="nocase">J. Lu et al.</span>
+2024</a>)</span>. APOLLO turns Lean feedback into an iterative
+proof-repair workflow in which generated proofs are decomposed, patched,
+and reverified <span class="citation"
+data-cites="apollo_lean_collaboration_2025">(<a
+href="#ref-apollo_lean_collaboration_2025" role="doc-biblioref">Ospanov
+et al. 2025</a>)</span>.</p>
 <p>This project does not perform theorem proving, proof repair, or
 formal mathematical verification. It borrows the architectural lesson:
 generated research artifacts should be checked by deterministic tools
@@ -746,36 +899,56 @@ Algorithm Discovery</h3>
 loops that are themselves subject to evaluation. Karpathy’s
 <code>autoresearch</code> repository frames a minimal version of this
 pattern as a prompt-controlled system with a fixed budget, editable code
-surface, and comparable metric [karpathy_autoresearch_2026].
-MLAgentBench and MLE-bench package machine learning tasks as scored,
-replayable environments with logs and grading outputs
-[huang_mlagentbench_2023; chan_mle_bench_2024].</p>
+surface, and comparable metric <span class="citation"
+data-cites="karpathy_autoresearch_2026">(<a
+href="#ref-karpathy_autoresearch_2026" role="doc-biblioref">Karpathy
+2026</a>)</span>. MLAgentBench and MLE-bench package machine learning
+tasks as scored, replayable environments with logs and grading outputs
+<span class="citation"
+data-cites="huang_mlagentbench_2023 chan_mle_bench_2024">(<a
+href="#ref-huang_mlagentbench_2023" role="doc-biblioref">Huang et al.
+2023</a>; <a href="#ref-chan_mle_bench_2024" role="doc-biblioref"><span
+class="nocase">Chan et al.</span> 2024</a>)</span>.</p>
 <p>At a larger scale, AlphaEvolve couples language-model proposals to
 evolutionary program search and automated evaluators, producing
-algorithmic improvements in mathematics and computing
-[romera_paredes_alphaevolve_2025]. DeepEvolve adds external retrieval,
-multi-file code editing, and debugging to the same basic
-proposal-implementation-evaluation loop [deepevolve_2025]. This
-manuscript’s candidate search is intentionally smaller: a finite list of
-configured model families is evaluated against
-<code>test_accuracy</code>, with deterministic selection and recorded
-deferrals rather than unbounded code mutation.</p>
+algorithmic improvements in mathematics and computing <span
+class="citation" data-cites="romera_paredes_alphaevolve_2025">(<a
+href="#ref-romera_paredes_alphaevolve_2025" role="doc-biblioref"><span
+class="nocase">Novikov et al.</span> 2025</a>)</span>. DeepEvolve adds
+external retrieval, multi-file code editing, and debugging to the same
+basic proposal-implementation-evaluation loop <span class="citation"
+data-cites="deepevolve_2025">(<a href="#ref-deepevolve_2025"
+role="doc-biblioref">Liu et al. 2025</a>)</span>. This manuscript’s
+candidate search is intentionally smaller: a finite list of configured
+model families is evaluated against <code>test_accuracy</code>, with
+deterministic selection and recorded deferrals rather than unbounded
+code mutation.</p>
 <h3 data-number="2.5.6" id="sec:agentic-science-graph-retrieval"><span
 class="header-section-number">2.5.6</span> Agentic Science, Graph
 Retrieval, And Epistemic Foraging</h3>
 <p>Agentic science surveys describe systems that move from tool use
 toward scientific agency across perception, knowledge representation,
-planning, experimentation, analysis, and communication
-[wei_agentic_science_2025; gridach_agentic_science_2025]. GraphRAG work
-adds structured retrieval to that picture: graph construction and
-graph-aware retrieval can support multi-hop reasoning, but benchmarks
-also show that knowledge-graph RAG remains brittle when relevant
-knowledge is incomplete [graphrag_bench_2026; brink_kg_rag_2026].
-Active-inference perspectives make a similar design demand in different
-language: scientific agents need persistent uncertainty-aware memory,
-causal models, counterfactual exploration, deterministic validation, and
-human judgment as an architectural component
-[active_inference_science_2025].</p>
+planning, experimentation, analysis, and communication <span
+class="citation"
+data-cites="wei_agentic_science_2025 gridach_agentic_science_2025">(<a
+href="#ref-wei_agentic_science_2025" role="doc-biblioref"><span
+class="nocase">Wei et al.</span> 2025</a>; <a
+href="#ref-gridach_agentic_science_2025" role="doc-biblioref">Gridach et
+al. 2025</a>)</span>. GraphRAG work adds structured retrieval to that
+picture: graph construction and graph-aware retrieval can support
+multi-hop reasoning, but benchmarks also show that knowledge-graph RAG
+remains brittle when relevant knowledge is incomplete <span
+class="citation" data-cites="graphrag_bench_2026 brink_kg_rag_2026">(<a
+href="#ref-graphrag_bench_2026" role="doc-biblioref">Xiao et al.
+2025</a>; <a href="#ref-brink_kg_rag_2026" role="doc-biblioref">Zhou et
+al. 2026</a>)</span>. Active-inference perspectives make a similar
+design demand in different language: scientific agents need persistent
+uncertainty-aware memory, causal models, counterfactual exploration,
+deterministic validation, and human judgment as an architectural
+component <span class="citation"
+data-cites="active_inference_science_2025">(<a
+href="#ref-active_inference_science_2025" role="doc-biblioref">Duraisamy
+2025</a>)</span>.</p>
 <p>This exemplar uses those ideas as constraints, not as capabilities it
 already possesses. It does not run live literature mining, autonomous
 proof search, external agent swarms, graph-based hypothesis hunting, or
@@ -790,57 +963,104 @@ class="header-section-number">2.5.7</span> Benchmark, Documentation, And
 Process Analogies</h3>
 <p><code>MNIST</code> and LeNet remain useful here because they provide
 a compact historical benchmark for small neural networks and handwriting
-recognition [lecun_gradient_1998; lecun_mnist_database]. Vision
-Transformers introduce the patch-token pattern for image classification
-at scale [dosovitskiy_vit_2020]; this exemplar borrows only the patching
-and attention representation through
-<code>Tiny patch-attention classifier</code>, then keeps the
-implementation inside the configured candidate budget. MLPerf Tiny and
-OpenML motivate explicit task descriptions, fixed inputs,
-machine-readable run metadata, and checkable metrics
-[banbury_mlperf_tiny_2021; vanschoren_openml_2014]. Machine-learning
-reproducibility checklists motivate reporting data, seeds, model sizes,
-hyperparameters, and compute boundaries
-[pineau_reproducibility_2020].</p>
+recognition <span class="citation"
+data-cites="lecun_gradient_1998 lecun_mnist_database">(<a
+href="#ref-lecun_gradient_1998" role="doc-biblioref">LeCun et al.
+1998</a>, <a href="#ref-lecun_mnist_database"
+role="doc-biblioref">n.d.</a>)</span>. Vision Transformers introduce the
+patch-token pattern for image classification at scale <span
+class="citation" data-cites="dosovitskiy_vit_2020">(<a
+href="#ref-dosovitskiy_vit_2020" role="doc-biblioref">Dosovitskiy et al.
+2020</a>)</span>; this exemplar borrows only the patching and attention
+representation through <code>Tiny patch-attention classifier</code>,
+then keeps the implementation inside the configured candidate budget.
+MLPerf Tiny and OpenML motivate explicit task descriptions, fixed
+inputs, machine-readable run metadata, and checkable metrics <span
+class="citation"
+data-cites="banbury_mlperf_tiny_2021 vanschoren_openml_2014">(<a
+href="#ref-banbury_mlperf_tiny_2021" role="doc-biblioref">Banbury et al.
+2021</a>; <a href="#ref-vanschoren_openml_2014"
+role="doc-biblioref">Vanschoren et al. 2014</a>)</span>.
+Machine-learning reproducibility checklists motivate reporting data,
+seeds, model sizes, hyperparameters, and compute boundaries <span
+class="citation" data-cites="pineau_reproducibility_2020">(<a
+href="#ref-pineau_reproducibility_2020" role="doc-biblioref"><span
+class="nocase">Pineau et al.</span> 2020</a>)</span>.</p>
 <p>Dataset and model documentation work further informs the safe
 boundary. Datasheets for Datasets motivate explicit reporting of dataset
-motivation, composition, collection, and recommended use
-[gebru2021datasheets]. Model Cards motivate structured reporting of
-model context, intended use, evaluation procedure, and limitations
-[mitchell2019model_cards]. The diagnostic layer follows the same
-conservative reporting posture: calibration is treated as separate from
-accuracy [guo2017calibration], binomial accuracy intervals use
-Wilson-style score intervals [wilson1927probable_inference], matched
-classifier comparison is summarized through paired discordance
-[dietterich1998statistical_tests], deterministic bootstrap intervals are
-local resampling diagnostics [efron1993bootstrap], and probability
-quality is reported with Brier score, negative log likelihood, and
-chance-corrected agreement [brier1950verification;
-cohen1960coefficient].</p>
+motivation, composition, collection, and recommended use <span
+class="citation" data-cites="gebru2021datasheets">(<a
+href="#ref-gebru2021datasheets" role="doc-biblioref">Gebru et al.
+2021</a>)</span>. Model Cards motivate structured reporting of model
+context, intended use, evaluation procedure, and limitations <span
+class="citation" data-cites="mitchell2019model_cards">(<a
+href="#ref-mitchell2019model_cards" role="doc-biblioref">Mitchell et al.
+2019</a>)</span>. The diagnostic layer follows the same conservative
+reporting posture: calibration is treated as separate from accuracy
+<span class="citation" data-cites="guo2017calibration">(<a
+href="#ref-guo2017calibration" role="doc-biblioref">Guo et al.
+2017</a>)</span>, binomial accuracy intervals use Wilson-style score
+intervals <span class="citation"
+data-cites="wilson1927probable_inference">(<a
+href="#ref-wilson1927probable_inference" role="doc-biblioref">Wilson
+1927</a>)</span>, matched classifier comparison is summarized through
+paired discordance <span class="citation"
+data-cites="dietterich1998statistical_tests">(<a
+href="#ref-dietterich1998statistical_tests"
+role="doc-biblioref">Dietterich 1998</a>)</span>, deterministic
+bootstrap intervals are local resampling diagnostics <span
+class="citation" data-cites="efron1993bootstrap">(<a
+href="#ref-efron1993bootstrap" role="doc-biblioref">Efron and Tibshirani
+1993</a>)</span>, and probability quality is reported with Brier score,
+negative log likelihood, and chance-corrected agreement <span
+class="citation"
+data-cites="brier1950verification cohen1960coefficient">(<a
+href="#ref-brier1950verification" role="doc-biblioref">Brier 1950</a>;
+<a href="#ref-cohen1960coefficient" role="doc-biblioref">Cohen
+1960</a>)</span>.</p>
 <p>The process language is borrowed cautiously from teleology and
 theoretical biology. Kant’s account of organized beings treats a natural
 purpose as a whole whose parts and whole mutually condition one another
-[ginsborg_kant_aesthetics_teleology]. Autopoiesis characterizes living
-systems through self-producing organization [varela_autopoiesis_1974],
-and later work connects Kantian natural purpose to autopoietic
-individuality [weber_varela_life_after_kant_2002]. Moreno and Mossio’s
-account of biological autonomy emphasizes organizational closure and
-self-maintenance [moreno_mossio_biological_autonomy_2015]. This paper
-uses those ideas only as disciplined analogies for configured scientific
+<span class="citation"
+data-cites="ginsborg_kant_aesthetics_teleology">(<a
+href="#ref-ginsborg_kant_aesthetics_teleology"
+role="doc-biblioref">Ginsborg 2022</a>)</span>. Autopoiesis
+characterizes living systems through self-producing organization <span
+class="citation" data-cites="varela_autopoiesis_1974">(<a
+href="#ref-varela_autopoiesis_1974" role="doc-biblioref">Varela et al.
+1974</a>)</span>, and later work connects Kantian natural purpose to
+autopoietic individuality <span class="citation"
+data-cites="weber_varela_life_after_kant_2002">(<a
+href="#ref-weber_varela_life_after_kant_2002" role="doc-biblioref">Weber
+and Varela 2002</a>)</span>. Moreno and Mossio’s account of biological
+autonomy emphasizes organizational closure and self-maintenance <span
+class="citation" data-cites="moreno_mossio_biological_autonomy_2015">(<a
+href="#ref-moreno_mossio_biological_autonomy_2015"
+role="doc-biblioref">Moreno and Mossio 2015</a>)</span>. This paper uses
+those ideas only as disciplined analogies for configured scientific
 workflows whose artifacts help reproduce, constrain, and evaluate
 subsequent artifacts.</p>
 <p>Security and supply-chain references enter with the same restraint.
 NIST’s zero-trust architecture treats verification as explicit and
-continuous rather than inherited from a trusted perimeter
-[nist_sp800_207_zero_trust]. The NIST Secure Software Development
-Framework emphasizes repeatable practices for reducing software
-vulnerability risk [nist_sp800_218_ssdf]. SLSA frames software-artifact
-provenance and supply-chain integrity as a graded assurance problem
-[slsa_spec_latest], while MITRE ATT&amp;CK T1195 names supply-chain
-compromise as a concrete adversary technique [mitre_attack_t1195]. This
-exemplar borrows those frameworks as disciplined analogies for local
-research artifact integrity: checksums, inventories, review gates, and
-explicit non-claims, not production deployment certification.</p>
+continuous rather than inherited from a trusted perimeter <span
+class="citation" data-cites="nist_sp800_207_zero_trust">(<a
+href="#ref-nist_sp800_207_zero_trust" role="doc-biblioref">Rose et al.
+2020</a>)</span>. The NIST Secure Software Development Framework
+emphasizes repeatable practices for reducing software vulnerability risk
+<span class="citation" data-cites="nist_sp800_218_ssdf">(<a
+href="#ref-nist_sp800_218_ssdf" role="doc-biblioref">Souppaya et al.
+2022</a>)</span>. SLSA frames software-artifact provenance and
+supply-chain integrity as a graded assurance problem <span
+class="citation" data-cites="slsa_spec_latest">(<a
+href="#ref-slsa_spec_latest" role="doc-biblioref">Open Source Security
+Foundation 2026</a>)</span>, while MITRE ATT&amp;CK T1195 names
+supply-chain compromise as a concrete adversary technique <span
+class="citation" data-cites="mitre_attack_t1195">(<a
+href="#ref-mitre_attack_t1195" role="doc-biblioref">MITRE ATT&amp;CK
+2026</a>)</span>. This exemplar borrows those frameworks as disciplined
+analogies for local research artifact integrity: checksums, inventories,
+review gates, and explicit non-claims, not production deployment
+certification.</p>
 <hr />
 <h1 data-number="3" id="sec:methodology"><span
 class="header-section-number">3</span> Methodology</h1>
@@ -864,12 +1084,13 @@ The provenance artifact records upstream source-file hashes, the subset
 seed, class counts, and the compressed subset hash. The default pipeline
 never downloads data at runtime. The train and test splits contain
 <code>200</code> and <code>50</code> examples per class, respectively.
-The registered class-balance diagnostic is fig. 1, and the dataset
-contact sheet is fig. 2.</p>
+The registered class-balance diagnostic is fig. <a
+href="#fig:mnist_class_balance">1</a>, and the dataset contact sheet is
+fig. <a href="#fig:mnist_subset_contact_sheet">2</a>.</p>
 <figure id="fig:mnist_class_balance">
 <img src="../figures/mnist_class_balance.png"
-alt="Figure 1: Train and test class counts from output/data/ml_class_balance.json; the local fixture contains 2000 train and 500 test examples across 10 classes. Generation method: Grouped train/test class-count bars from the local MNIST fixture. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 1: Train and test class counts
+alt="Figure 1: Train and test class counts from output/data/ml_class_balance.json; the local fixture contains 2000 train and 500 test examples across 10 classes." />
+<figcaption>Figure 1: Train and test class counts
 from output/data/ml_class_balance.json; the local fixture contains 2000
 train and 500 test examples across 10 classes. Generation method:
 Grouped train/test class-count bars from the local MNIST fixture.
@@ -1013,8 +1234,8 @@ offline fixture used by this run.</caption>
 </table>
 <figure id="fig:mnist_subset_contact_sheet">
 <img src="../figures/mnist_subset_contact_sheet.png"
-alt="Figure 2: Deterministic class-balanced contact sheet for MNIST handwritten digit database from data/mnist_small.npz and data/mnist_small_provenance.json; the figure documents the local subset used by the offline run. Generation method: Class-balanced contact sheet from fixed local MNIST arrays. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 2: Deterministic class-balanced
+alt="Figure 2: Deterministic class-balanced contact sheet for MNIST handwritten digit database from data/mnist_small.npz and data/mnist_small_provenance.json; the figure documents the local subset used by the offline run." />
+<figcaption>Figure 2: Deterministic class-balanced
 contact sheet for MNIST handwritten digit database from
 data/mnist_small.npz and data/mnist_small_provenance.json; the figure
 documents the local subset used by the offline run. Generation method:
@@ -1124,12 +1345,14 @@ are written to <code>output/data/autoresearch_threat_model.json</code>,
 <code>output/data/autoresearch_supply_chain_inventory.json</code>,
 <code>output/data/autoresearch_integrity_attestation.json</code>, and
 <code>output/reports/autoresearch_security_review.md</code>. The
-control-matrix figure is fig. 3. The table and figure are generated from
-the threat model and inventory, not manually maintained.</p>
+control-matrix figure is fig. <a
+href="#fig:autoresearch_security_control_matrix">3</a>. The table and
+figure are generated from the threat model and inventory, not manually
+maintained.</p>
 <figure id="fig:autoresearch_security_control_matrix">
 <img src="../figures/autoresearch_security_control_matrix.png"
-alt="Figure 3: Local security-control matrix from output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and ATT&amp;CK-inspired safeguards to deterministic evidence surfaces without claiming production security certification. Generation method: structured control matrix with separate control, evidence, framework, and status columns. Generation method: Structured control matrix from local threat-model controls. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 3: Local security-control matrix
+alt="Figure 3: Local security-control matrix from output/data/autoresearch_threat_model.json; controls map NIST, SLSA, and ATT&amp;CK-inspired safeguards to deterministic evidence surfaces without claiming production security certification." />
+<figcaption>Figure 3: Local security-control matrix
 from output/data/autoresearch_threat_model.json; controls map NIST,
 SLSA, and ATT&amp;CK-inspired safeguards to deterministic evidence
 surfaces without claiming production security certification. Generation
@@ -1331,7 +1554,7 @@ for review. The reviewer-facing
 summarizes readiness versus publication approval, claim-evidence rows,
 source-ledger status, benchmark boundary issues, and security/integrity
 status without granting approval. The generated tables and figure blocks
-used in sec. 4 are sourced through
+used in sec. <a href="#sec:results">4</a> are sourced through
 <code>output/data/manuscript_variable_provenance.json</code> and
 <code>output/data/manuscript_figure_blocks.json</code>, so captions,
 artifact tables, and run-derived result statements share the same
@@ -1361,21 +1584,21 @@ registry.</caption>
 </thead>
 <tbody>
 <tr>
-<td>fig. 12</td>
+<td>fig. <a href="#fig:autoresearch_candidate_lifecycle">12</a></td>
 <td><a href="../data/ml_candidate_ledger.json">candidate ledger</a></td>
 <td>Candidate lifecycle status-count bar chart.</td>
 <td>Lifecycle counts describe bounded orchestration, not autonomous
 approval.</td>
 </tr>
 <tr>
-<td>fig. 24</td>
+<td>fig. <a href="#fig:autoresearch_closure_flow">24</a></td>
 <td><a href="../data/autoresearch_loop.json">loop</a></td>
 <td>File-backed process-flow diagram from final loop state.</td>
 <td>The workflow is file-backed and inspectable but not
 self-approving.</td>
 </tr>
 <tr>
-<td>fig. 25</td>
+<td>fig. <a href="#fig:autoresearch_integrity_chain">25</a></td>
 <td><a href="../data/autoresearch_integrity_attestation.json">integrity
 attestation</a></td>
 <td>Local checksum attestation chain with checked, missing, and mismatch
@@ -1384,7 +1607,7 @@ counts.</td>
 externally signed provenance.</td>
 </tr>
 <tr>
-<td>fig. 3</td>
+<td>fig. <a href="#fig:autoresearch_security_control_matrix">3</a></td>
 <td><a href="../data/autoresearch_threat_model.json">threat
 model</a></td>
 <td>Structured control matrix from local threat-model controls.</td>
@@ -1392,28 +1615,28 @@ model</a></td>
 security certification.</td>
 </tr>
 <tr>
-<td>fig. 23</td>
+<td>fig. <a href="#fig:autoresearch_stage_matrix">23</a></td>
 <td><a href="../data/autoresearch_loop.json">loop</a></td>
 <td>Horizontal count summary from final loop metrics.</td>
 <td>Readiness artifacts summarize local validation only; publication
 approval is human.</td>
 </tr>
 <tr>
-<td>fig. 19</td>
+<td>fig. <a href="#fig:ml_bootstrap_intervals">19</a></td>
 <td><a href="../data/ml_bootstrap_intervals.json">bootstrap
 intervals</a></td>
 <td>Horizontal percentile-bootstrap interval plot.</td>
 <td>Bootstrap intervals summarize local test-set resampling only.</td>
 </tr>
 <tr>
-<td>fig. 13</td>
+<td>fig. <a href="#fig:ml_calibration_reliability">13</a></td>
 <td><a href="../data/ml_calibration_report.json">calibration
 report</a></td>
 <td>Reliability curve with confidence-bin support histogram.</td>
 <td>Calibration values describe the fixed local split only.</td>
 </tr>
 <tr>
-<td>fig. 5</td>
+<td>fig. <a href="#fig:ml_candidate_rank_stability">5</a></td>
 <td><a href="../data/ml_candidate_rank_stability.json">candidate rank
 stability</a></td>
 <td>Bootstrap top-rank frequency and mean-rank comparison.</td>
@@ -1421,7 +1644,7 @@ stability</a></td>
 model-selection certainty.</td>
 </tr>
 <tr>
-<td>fig. 4</td>
+<td>fig. <a href="#fig:ml_candidate_scores">4</a></td>
 <td><a href="../data/ml_candidate_intervals.json">candidate
 intervals</a></td>
 <td>Lollipop accuracy comparison with Wilson interval error bars and
@@ -1430,7 +1653,7 @@ direct labels.</td>
 candidates.</td>
 </tr>
 <tr>
-<td>fig. 14</td>
+<td>fig. <a href="#fig:ml_classification_metrics_heatmap">14</a></td>
 <td><a href="../data/ml_classification_diagnostics.json">class
 diagnostics</a></td>
 <td>Per-class precision, recall, and F1 heatmap.</td>
@@ -1438,21 +1661,21 @@ diagnostics</a></td>
 estimates.</td>
 </tr>
 <tr>
-<td>fig. 10</td>
+<td>fig. <a href="#fig:ml_complexity_accuracy">10</a></td>
 <td><a href="../data/ml_task_results.json">task results</a></td>
 <td>Log-parameter scatter plot against held-out accuracy.</td>
 <td>The plot compares this bounded candidate set and does not infer a
 scaling law.</td>
 </tr>
 <tr>
-<td>fig. 6</td>
+<td>fig. <a href="#fig:ml_confusion_matrix">6</a></td>
 <td><a href="../data/ml_confusion_matrix.csv">confusion matrix</a></td>
 <td>Row-normalized heatmap with cell counts and row percentages.</td>
 <td>Confusion counts diagnose this run only and do not imply
 full-dataset generalization.</td>
 </tr>
 <tr>
-<td>fig. 15</td>
+<td>fig. <a href="#fig:ml_confusion_pairs">15</a></td>
 <td><a href="../data/ml_classification_diagnostics.json">class
 diagnostics</a></td>
 <td>Ranked off-diagonal confusion-pair bars with true-class error
@@ -1461,7 +1684,7 @@ rates.</td>
 taxonomy.</td>
 </tr>
 <tr>
-<td>fig. 16</td>
+<td>fig. <a href="#fig:ml_generalization_gap">16</a></td>
 <td><a href="../data/ml_classification_diagnostics.json">class
 diagnostics</a></td>
 <td>Grouped train/test accuracy and loss bars by evaluated
@@ -1470,7 +1693,7 @@ candidate.</td>
 guarantees.</td>
 </tr>
 <tr>
-<td>fig. 8</td>
+<td>fig. <a href="#fig:ml_learning_curves">8</a></td>
 <td><a href="../data/ml_training_history.csv">training history</a></td>
 <td>Epoch-level held-out accuracy lines with accepted best-epoch
 marker.</td>
@@ -1478,14 +1701,14 @@ marker.</td>
 in general.</td>
 </tr>
 <tr>
-<td>fig. 20</td>
+<td>fig. <a href="#fig:ml_paired_correctness">20</a></td>
 <td><a href="../data/ml_paired_comparison.json">paired
 comparison</a></td>
 <td>Matched accepted-versus-baseline correctness heatmap.</td>
 <td>Matched comparison is limited to the fixed local test split.</td>
 </tr>
 <tr>
-<td>fig. 7</td>
+<td>fig. <a href="#fig:ml_per_class_accuracy">7</a></td>
 <td><a href="../data/ml_confusion_matrix.csv">confusion matrix</a></td>
 <td>Per-class accuracy bars computed from the confusion matrix
 diagonal.</td>
@@ -1493,7 +1716,7 @@ diagonal.</td>
 robustness.</td>
 </tr>
 <tr>
-<td>fig. 18</td>
+<td>fig. <a href="#fig:ml_probability_margin_distribution">18</a></td>
 <td><a href="../data/ml_probability_diagnostics.json">probability
 diagnostics</a></td>
 <td>Confidence and margin histograms split by correctness.</td>
@@ -1501,7 +1724,7 @@ diagnostics</a></td>
 split.</td>
 </tr>
 <tr>
-<td>fig. 22</td>
+<td>fig. <a href="#fig:ml_probability_quality">22</a></td>
 <td><a href="../data/ml_statistical_summary.json">statistical
 summary</a></td>
 <td>Brier score and negative-log-likelihood bar comparison.</td>
@@ -1509,7 +1732,7 @@ summary</a></td>
 candidates only.</td>
 </tr>
 <tr>
-<td>fig. 17</td>
+<td>fig. <a href="#fig:ml_robustness_matrix">17</a></td>
 <td><a href="../data/ml_robustness_report.json">robustness
 report</a></td>
 <td>Candidate-by-transform accuracy heatmap for deterministic
@@ -1518,7 +1741,7 @@ perturbations.</td>
 robustness.</td>
 </tr>
 <tr>
-<td>fig. 21</td>
+<td>fig. <a href="#fig:ml_selective_accuracy">21</a></td>
 <td><a href="../data/ml_statistical_summary.json">statistical
 summary</a></td>
 <td>Confidence-threshold coverage and selective-accuracy line
@@ -1527,7 +1750,7 @@ chart.</td>
 local split only.</td>
 </tr>
 <tr>
-<td>fig. 9</td>
+<td>fig. <a href="#fig:ml_training_dynamics">9</a></td>
 <td><a href="../data/ml_training_diagnostics.json">training
 diagnostics</a></td>
 <td>Final and best-epoch accuracy bars plus train-test gap bars.</td>
@@ -1535,7 +1758,7 @@ diagnostics</a></td>
 only.</td>
 </tr>
 <tr>
-<td>fig. 1</td>
+<td>fig. <a href="#fig:mnist_class_balance">1</a></td>
 <td><a href="../data/ml_class_balance.json">class balance</a></td>
 <td>Grouped train/test class-count bars from the local MNIST
 fixture.</td>
@@ -1543,7 +1766,7 @@ fixture.</td>
 statistics.</td>
 </tr>
 <tr>
-<td>fig. 11</td>
+<td>fig. <a href="#fig:mnist_error_examples">11</a></td>
 <td><a href="../data/ml_error_examples.json">error examples</a></td>
 <td>Deterministic grid of the first accepted-candidate
 misclassifications.</td>
@@ -1551,7 +1774,7 @@ misclassifications.</td>
 taxonomy.</td>
 </tr>
 <tr>
-<td>fig. 2</td>
+<td>fig. <a href="#fig:mnist_subset_contact_sheet">2</a></td>
 <td><a href="../../data/mnist_small.npz">small</a></td>
 <td>Class-balanced contact sheet from fixed local MNIST arrays.</td>
 <td>The sheet illustrates the local fixed subset and is not a
@@ -1583,12 +1806,20 @@ execution, and selected-candidate recording. Rank-stability diagnostics
 report that the selected candidate is top ranked in <code>72.5%</code>
 of deterministic bootstrap resamples, with runner-up
 <code>exp-mlp-relu-32</code>. The candidate score figure is registered
-as fig. 4, the confusion matrix as fig. 6, the per-class diagnostic as
-fig. 7, the learning curves as fig. 8, the complexity diagnostic as
-fig. 10, the selected-candidate error examples as fig. 11, the candidate
-lifecycle diagnostic as fig. 12, rank stability as fig. 5, the
-training-dynamics diagnostic as fig. 9, the final readiness matrix as
-fig. 23, and the process closure as fig. 24.</p>
+as fig. <a href="#fig:ml_candidate_scores">4</a>, the confusion matrix
+as fig. <a href="#fig:ml_confusion_matrix">6</a>, the per-class
+diagnostic as fig. <a href="#fig:ml_per_class_accuracy">7</a>, the
+learning curves as fig. <a href="#fig:ml_learning_curves">8</a>, the
+complexity diagnostic as fig. <a
+href="#fig:ml_complexity_accuracy">10</a>, the selected-candidate error
+examples as fig. <a href="#fig:mnist_error_examples">11</a>, the
+candidate lifecycle diagnostic as fig. <a
+href="#fig:autoresearch_candidate_lifecycle">12</a>, rank stability as
+fig. <a href="#fig:ml_candidate_rank_stability">5</a>, the
+training-dynamics diagnostic as fig. <a
+href="#fig:ml_training_dynamics">9</a>, the final readiness matrix as
+fig. <a href="#fig:autoresearch_stage_matrix">23</a>, and the process
+closure as fig. <a href="#fig:autoresearch_closure_flow">24</a>.</p>
 <table id="tbl:candidate-intervals">
 <caption>Table 5: Candidate accuracy intervals from
 <code>output/data/ml_candidate_intervals.json</code>; intervals describe
@@ -1695,8 +1926,8 @@ are deterministic local bootstrap summaries.</caption>
 class="header-section-number">4.2</span> Run-Derived Figures</h2>
 <figure id="fig:ml_candidate_scores">
 <img src="../figures/ml_candidate_scores.png"
-alt="Figure 4: Held-out accuracy with Wilson intervals for the baseline and evaluated candidates from output/data/ml_candidate_intervals.json; accepted candidate exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed subset, with deferred proposals kept in the candidate ledger. Generation method: Lollipop accuracy comparison with Wilson interval error bars and direct labels. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 4: Held-out accuracy with Wilson
+alt="Figure 4: Held-out accuracy with Wilson intervals for the baseline and evaluated candidates from output/data/ml_candidate_intervals.json; accepted candidate exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed subset, with…" />
+<figcaption>Figure 4: Held-out accuracy with Wilson
 intervals for the baseline and evaluated candidates from
 output/data/ml_candidate_intervals.json; accepted candidate
 exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed
@@ -1707,8 +1938,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_candidate_rank_stability">
 <img src="../figures/ml_candidate_rank_stability.png"
-alt="Figure 5: Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json; deterministic local bootstrap resampling shows how often each evaluated candidate ranks first under the fixed test split. Generation method: Bootstrap top-rank frequency and mean-rank comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 5: Rank-stability summary for
+alt="Figure 5: Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json; deterministic local bootstrap resampling shows how often each evaluated candidate ranks first under the fixed test split." />
+<figcaption>Figure 5: Rank-stability summary for
 exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json;
 deterministic local bootstrap resampling shows how often each evaluated
 candidate ranks first under the fixed test split. Generation method:
@@ -1718,8 +1949,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_confusion_matrix">
 <img src="../figures/ml_confusion_matrix.png"
-alt="Figure 6: Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses the selected run, not general full-dataset performance. Generation method: Row-normalized heatmap with cell counts and row percentages. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 6: Accepted-candidate confusion
+alt="Figure 6: Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses the selected run, not general full-dataset…" />
+<figcaption>Figure 6: Accepted-candidate confusion
 matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database
 test split, sourced from output/data/ml_confusion_matrix.csv; it
 diagnoses the selected run, not general full-dataset performance.
@@ -1729,8 +1960,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_per_class_accuracy">
 <img src="../figures/ml_per_class_accuracy.png"
-alt="Figure 7: Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv; variation across digits is a run diagnostic for the fixed local test split. Generation method: Per-class accuracy bars computed from the confusion matrix diagonal. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 7: Per-class accuracy for
+alt="Figure 7: Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv; variation across digits is a run diagnostic for the fixed local test split." />
+<figcaption>Figure 7: Per-class accuracy for
 exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv;
 variation across digits is a run diagnostic for the fixed local test
 split. Generation method: Per-class accuracy bars computed from the
@@ -1742,8 +1973,8 @@ class="header-section-number">4.3</span> Training And Error
 Diagnostics</h2>
 <figure id="fig:ml_learning_curves">
 <img src="../figures/ml_learning_curves.png"
-alt="Figure 8: Epoch-level held-out accuracy curves for evaluated candidates from output/data/ml_training_history.csv; the accepted curve is visually emphasized for exp-mlp-tanh-64. Generation method: Epoch-level held-out accuracy lines with accepted best-epoch marker. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 8: Epoch-level held-out accuracy
+alt="Figure 8: Epoch-level held-out accuracy curves for evaluated candidates from output/data/ml_training_history.csv; the accepted curve is visually emphasized for exp-mlp-tanh-64." />
+<figcaption>Figure 8: Epoch-level held-out accuracy
 curves for evaluated candidates from
 output/data/ml_training_history.csv; the accepted curve is visually
 emphasized for exp-mlp-tanh-64. Generation method: Epoch-level held-out
@@ -1753,8 +1984,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_training_dynamics">
 <img src="../figures/ml_training_dynamics.png"
-alt="Figure 9: Configured-training dynamics for evaluated candidates from output/data/ml_training_diagnostics.json; exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test gaps remain bounded to the local run. Generation method: Final and best-epoch accuracy bars plus train-test gap bars. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 9: Configured-training dynamics
+alt="Figure 9: Configured-training dynamics for evaluated candidates from output/data/ml_training_diagnostics.json; exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test gaps remain bounded to the local run." />
+<figcaption>Figure 9: Configured-training dynamics
 for evaluated candidates from output/data/ml_training_diagnostics.json;
 exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test
 gaps remain bounded to the local run. Generation method: Final and
@@ -1764,8 +1995,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_complexity_accuracy">
 <img src="../figures/ml_complexity_accuracy.png"
-alt="Figure 10: Parameter-count versus held-out accuracy for the baseline and evaluated candidates from output/data/ml_task_results.json; the accepted candidate is highlighted without claiming a general scaling law. Generation method: Log-parameter scatter plot against held-out accuracy. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 10: Parameter-count versus
+alt="Figure 10: Parameter-count versus held-out accuracy for the baseline and evaluated candidates from output/data/ml_task_results.json; the accepted candidate is highlighted without claiming a general scaling law." />
+<figcaption>Figure 10: Parameter-count versus
 held-out accuracy for the baseline and evaluated candidates from
 output/data/ml_task_results.json; the accepted candidate is highlighted
 without claiming a general scaling law. Generation method: Log-parameter
@@ -1775,8 +2006,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:mnist_error_examples">
 <img src="../figures/mnist_error_examples.png"
-alt="Figure 11: First accepted-candidate error examples for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and data/mnist_small.npz; these images support qualitative diagnosis only. Generation method: Deterministic grid of the first accepted-candidate misclassifications. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 11: First accepted-candidate error
+alt="Figure 11: First accepted-candidate error examples for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and data/mnist_small.npz; these images support qualitative diagnosis only." />
+<figcaption>Figure 11: First accepted-candidate error
 examples for exp-mlp-tanh-64, sourced from
 output/data/ml_error_examples.json and data/mnist_small.npz; these
 images support qualitative diagnosis only. Generation method:
@@ -1786,8 +2017,8 @@ claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:autoresearch_candidate_lifecycle">
 <img src="../figures/autoresearch_candidate_lifecycle.png"
-alt="Figure 12: Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed candidates, with deferred proposals kept visible instead of executed automatically. Generation method: Candidate lifecycle status-count bar chart. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 12: Candidate lifecycle ledger
+alt="Figure 12: Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed candidates, with deferred proposals kept visible instead of executed automatically." />
+<figcaption>Figure 12: Candidate lifecycle ledger
 from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed
 candidates, with deferred proposals kept visible instead of executed
 automatically. Generation method: Candidate lifecycle status-count bar
@@ -1881,15 +2112,17 @@ validated local run, not external benchmark claims.</p>
 class="header-section-number">4.4.1</span> Classification And Error
 Structure</h3>
 <p>The class-level and error-pattern diagnostics are intentionally
-visual-first: fig. 13 checks confidence calibration, fig. 14 separates
-precision, recall, and F1 by digit, and fig. 15 ranks the non-diagonal
-confusions that most shape the selected-candidate error profile. The
-accompanying tables preserve the same values for audit and downstream
-comparison.</p>
+visual-first: fig. <a href="#fig:ml_calibration_reliability">13</a>
+checks confidence calibration, fig. <a
+href="#fig:ml_classification_metrics_heatmap">14</a> separates
+precision, recall, and F1 by digit, and fig. <a
+href="#fig:ml_confusion_pairs">15</a> ranks the non-diagonal confusions
+that most shape the selected-candidate error profile. The accompanying
+tables preserve the same values for audit and downstream comparison.</p>
 <figure id="fig:ml_calibration_reliability">
 <img src="../figures/ml_calibration_reliability.png"
-alt="Figure 13: Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected calibration error and bin counts summarize the accepted candidate on the fixed local test split. Generation method: Reliability curve with confidence-bin support histogram. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 13: Reliability curve for
+alt="Figure 13: Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected calibration error and bin counts summarize the accepted candidate on the fixed local test split." />
+<figcaption>Figure 13: Reliability curve for
 exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected
 calibration error and bin counts summarize the accepted candidate on the
 fixed local test split. Generation method: Reliability curve with
@@ -1899,8 +2132,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_classification_metrics_heatmap">
 <img src="../figures/ml_classification_metrics_heatmap.png"
-alt="Figure 14: Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; metrics are scoped to the local test split. Generation method: Per-class precision, recall, and F1 heatmap. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 14: Per-class precision, recall,
+alt="Figure 14: Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; metrics are scoped to the local test split." />
+<figcaption>Figure 14: Per-class precision, recall,
 and F1 for exp-mlp-tanh-64, sourced from
 output/data/ml_classification_diagnostics.json; metrics are scoped to
 the local test split. Generation method: Per-class precision, recall,
@@ -1909,8 +2142,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_confusion_pairs">
 <img src="../figures/ml_confusion_pairs.png"
-alt="Figure 15: Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; the bars highlight which local digit pairs account for accepted-candidate errors. Generation method: Ranked off-diagonal confusion-pair bars with true-class error rates. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 15: Top non-diagonal confusion
+alt="Figure 15: Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; the bars highlight which local digit pairs account for accepted-candidate errors." />
+<figcaption>Figure 15: Top non-diagonal confusion
 pairs for exp-mlp-tanh-64, sourced from
 output/data/ml_classification_diagnostics.json; the bars highlight which
 local digit pairs account for accepted-candidate errors. Generation
@@ -2261,15 +2494,19 @@ correct-prediction confidence <code>90.9%</code>, mean error confidence
 prediction(s). These diagnostics are generated from the fixed local test
 split and are reported as run evidence, not as population-level
 certification.</p>
-<p>fig. 16 compares train and test behavior, fig. 17 shows deterministic
-no-retrain perturbation results, fig. 18 summarizes confidence and
-margin distributions, fig. 19 shows local resampling intervals, and
-fig. 20 exposes the matched selected-versus-baseline correctness table
-used by the paired comparison.</p>
+<p>fig. <a href="#fig:ml_generalization_gap">16</a> compares train and
+test behavior, fig. <a href="#fig:ml_robustness_matrix">17</a> shows
+deterministic no-retrain perturbation results, fig. <a
+href="#fig:ml_probability_margin_distribution">18</a> summarizes
+confidence and margin distributions, fig. <a
+href="#fig:ml_bootstrap_intervals">19</a> shows local resampling
+intervals, and fig. <a href="#fig:ml_paired_correctness">20</a> exposes
+the matched selected-versus-baseline correctness table used by the
+paired comparison.</p>
 <figure id="fig:ml_generalization_gap">
 <img src="../figures/ml_generalization_gap.png"
-alt="Figure 16: Train/test accuracy and loss for evaluated candidates from output/data/ml_classification_diagnostics.json; the plot exposes local generalization gaps without claiming full-dataset behavior. Generation method: Grouped train/test accuracy and loss bars by evaluated candidate. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 16: Train/test accuracy and loss
+alt="Figure 16: Train/test accuracy and loss for evaluated candidates from output/data/ml_classification_diagnostics.json; the plot exposes local generalization gaps without claiming full-dataset behavior." />
+<figcaption>Figure 16: Train/test accuracy and loss
 for evaluated candidates from
 output/data/ml_classification_diagnostics.json; the plot exposes local
 generalization gaps without claiming full-dataset behavior. Generation
@@ -2279,8 +2516,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_robustness_matrix">
 <img src="../figures/ml_robustness_matrix.png"
-alt="Figure 17: Accuracy for evaluated candidates under identity, one-pixel shifts, and low contrast from output/data/ml_robustness_report.json; the deterministic transforms provide a bounded smoke test only. Generation method: Candidate-by-transform accuracy heatmap for deterministic perturbations. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 17: Accuracy for evaluated
+alt="Figure 17: Accuracy for evaluated candidates under identity, one-pixel shifts, and low contrast from output/data/ml_robustness_report.json; the deterministic transforms provide a bounded smoke test only." />
+<figcaption>Figure 17: Accuracy for evaluated
 candidates under identity, one-pixel shifts, and low contrast from
 output/data/ml_robustness_report.json; the deterministic transforms
 provide a bounded smoke test only. Generation method:
@@ -2290,8 +2527,8 @@ claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_probability_margin_distribution">
 <img src="../figures/ml_probability_margin_distribution.png"
-alt="Figure 18: Confidence and prediction-margin histograms for exp-mlp-tanh-64 from output/data/ml_probability_diagnostics.json; the figure separates correct and incorrect local test predictions. Generation method: Confidence and margin histograms split by correctness. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 18: Confidence and
+alt="Figure 18: Confidence and prediction-margin histograms for exp-mlp-tanh-64 from output/data/ml_probability_diagnostics.json; the figure separates correct and incorrect local test predictions." />
+<figcaption>Figure 18: Confidence and
 prediction-margin histograms for exp-mlp-tanh-64 from
 output/data/ml_probability_diagnostics.json; the figure separates
 correct and incorrect local test predictions. Generation method:
@@ -2301,8 +2538,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_bootstrap_intervals">
 <img src="../figures/ml_bootstrap_intervals.png"
-alt="Figure 19: Deterministic percentile-bootstrap intervals for exp-mlp-tanh-64 from output/data/ml_bootstrap_intervals.json; the intervals summarize local sampling variation for accuracy and macro F1. Generation method: Horizontal percentile-bootstrap interval plot. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 19: Deterministic
+alt="Figure 19: Deterministic percentile-bootstrap intervals for exp-mlp-tanh-64 from output/data/ml_bootstrap_intervals.json; the intervals summarize local sampling variation for accuracy and macro F1." />
+<figcaption>Figure 19: Deterministic
 percentile-bootstrap intervals for exp-mlp-tanh-64 from
 output/data/ml_bootstrap_intervals.json; the intervals summarize local
 sampling variation for accuracy and macro F1. Generation method:
@@ -2312,8 +2549,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_paired_correctness">
 <img src="../figures/ml_paired_correctness.png"
-alt="Figure 20: Matched correctness comparison between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from output/data/ml_paired_comparison.json; discordant cells support the paired test summary. Generation method: Matched accepted-versus-baseline correctness heatmap. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 20: Matched correctness comparison
+alt="Figure 20: Matched correctness comparison between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from output/data/ml_paired_comparison.json; discordant cells support the paired test summary." />
+<figcaption>Figure 20: Matched correctness comparison
 between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from
 output/data/ml_paired_comparison.json; discordant cells support the
 paired test summary. Generation method: Matched accepted-versus-baseline
@@ -2549,16 +2786,18 @@ accuracy <code>95.6%</code>, and Cohen kappa <code>0.882</code> for the
 selected candidate. At the highest configured confidence threshold,
 retained coverage is <code>67.8%</code> and selective accuracy is
 <code>98.2%</code>.</p>
-<p>The selective-prediction view in fig. 21 reports the configured
+<p>The selective-prediction view in fig. <a
+href="#fig:ml_selective_accuracy">21</a> reports the configured
 confidence-threshold trade-off: retaining fewer predictions can raise
 selective accuracy, but the coverage table keeps that trade-off
-explicit. The candidate probability-quality comparison in fig. 22 keeps
-accuracy separate from proper-score behavior, so the selected candidate
-is not treated as automatically best on every diagnostic axis.</p>
+explicit. The candidate probability-quality comparison in fig. <a
+href="#fig:ml_probability_quality">22</a> keeps accuracy separate from
+proper-score behavior, so the selected candidate is not treated as
+automatically best on every diagnostic axis.</p>
 <figure id="fig:ml_selective_accuracy">
 <img src="../figures/ml_selective_accuracy.png"
-alt="Figure 21: Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot compares retained coverage, selective accuracy, and the unthresholded accepted-candidate accuracy on the fixed local split. Generation method: Confidence-threshold coverage and selective-accuracy line chart. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 21: Confidence-threshold trade-off
+alt="Figure 21: Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot compares retained coverage, selective accuracy, and the unthresholded accepted-candidate accuracy on the fixed local split." />
+<figcaption>Figure 21: Confidence-threshold trade-off
 for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the
 plot compares retained coverage, selective accuracy, and the
 unthresholded accepted-candidate accuracy on the fixed local split.
@@ -2568,8 +2807,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_probability_quality">
 <img src="../figures/ml_probability_quality.png"
-alt="Figure 22: Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is highlighted. Generation method: Brier score and negative-log-likelihood bar comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 22: Brier score and negative log
+alt="Figure 22: Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is…" />
+<figcaption>Figure 22: Brier score and negative log
 likelihood for evaluated candidates from
 output/data/ml_statistical_summary.json; lower values indicate better
 probability quality within the configured local run, and the accepted
@@ -2956,8 +3195,8 @@ figure-quality report covers <code>25</code> registered figure(s) with
 validity <code>false</code>.</p>
 <figure id="fig:autoresearch_stage_matrix">
 <img src="../figures/autoresearch_stage_matrix.png"
-alt="Figure 23: Validated AutoResearch run with 7 stages, 6 supported claims, and 78 required artifacts from output/data/autoresearch_loop.json; the count summarizes readiness artifacts, not human approval. Generation method: Horizontal count summary from final loop metrics. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 23: Validated AutoResearch run
+alt="Figure 23: Validated AutoResearch run with 7 stages, 6 supported claims, and 78 required artifacts from output/data/autoresearch_loop.json; the count summarizes readiness artifacts, not human approval." />
+<figcaption>Figure 23: Validated AutoResearch run
 with 7 stages, 6 supported claims, and 78 required artifacts from
 output/data/autoresearch_loop.json; the count summarizes readiness
 artifacts, not human approval. Generation method: Horizontal count
@@ -2967,8 +3206,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:autoresearch_closure_flow">
 <img src="../figures/autoresearch_closure_flow.png"
-alt="Figure 24: File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable. Generation method: File-backed process-flow diagram from final loop state. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 24: File-backed AutoResearch
+alt="Figure 24: File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable." />
+<figcaption>Figure 24: File-backed AutoResearch
 closure from program through review, with 6 supported claims and
 readiness passed; review remains a deferred human decision and the
 provenance path remains inspectable. Generation method: File-backed
@@ -3010,7 +3249,7 @@ validation.</figcaption>
 <tr>
 <td>output/data/autoresearch_inventory_export.json</td>
 <td>Security evidence</td>
-<td>20203</td>
+<td>20155</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_loop.json</td>
@@ -3025,7 +3264,7 @@ validation.</figcaption>
 <tr>
 <td>output/data/autoresearch_plan.json</td>
 <td>Loop artifact</td>
-<td>17361</td>
+<td>19262</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_review_packet.json</td>
@@ -3050,7 +3289,7 @@ validation.</figcaption>
 <tr>
 <td>output/data/autoresearch_supply_chain_inventory.json</td>
 <td>Security evidence</td>
-<td>21459</td>
+<td>21411</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_threat_model.json</td>
@@ -3203,6 +3442,11 @@ validation.</figcaption>
 <td>3926</td>
 </tr>
 <tr>
+<td>output/data/publication_ledger.json</td>
+<td>Run or candidate ledger</td>
+<td>1005</td>
+</tr>
+<tr>
 <td>output/data/research_object_manifest.json</td>
 <td>Loop artifact</td>
 <td>20789</td>
@@ -3223,6 +3467,11 @@ validation.</figcaption>
 <td>328</td>
 </tr>
 <tr>
+<td>output/data/transmission_manifest.json</td>
+<td>Loop artifact</td>
+<td>503</td>
+</tr>
+<tr>
 <td>../figures/autoresearch_candidate_lifecycle.png</td>
 <td>Generated figure</td>
 <td>28053</td>
@@ -3241,6 +3490,16 @@ validation.</figcaption>
 <td>../figures/autoresearch_security_control_matrix.png</td>
 <td>Generated figure</td>
 <td>86574</td>
+</tr>
+<tr>
+<td>../figures/autoresearch_stage_matrix.png</td>
+<td>Generated figure</td>
+<td>23476</td>
+</tr>
+<tr>
+<td>../figures/figure_registry.json</td>
+<td>Loop artifact</td>
+<td>30674</td>
 </tr>
 <tr>
 <td>../figures/ml_bootstrap_intervals.png</td>
@@ -3343,6 +3602,86 @@ validation.</figcaption>
 <td>23617</td>
 </tr>
 <tr>
+<td>../figures/transmission_integrity_strip.png</td>
+<td>Generated figure</td>
+<td>18348</td>
+</tr>
+<tr>
+<td>../figures/transmission_pairing.png</td>
+<td>Generated figure</td>
+<td>11286</td>
+</tr>
+<tr>
+<td>output/manuscript/00_00_transmission_begin.md</td>
+<td>Manuscript hydration</td>
+<td>1554</td>
+</tr>
+<tr>
+<td>output/manuscript/00_abstract.md</td>
+<td>Manuscript hydration</td>
+<td>1451</td>
+</tr>
+<tr>
+<td>output/manuscript/01_introduction.md</td>
+<td>Manuscript hydration</td>
+<td>14774</td>
+</tr>
+<tr>
+<td>output/manuscript/02_methodology.md</td>
+<td>Manuscript hydration</td>
+<td>21097</td>
+</tr>
+<tr>
+<td>output/manuscript/03_results.md</td>
+<td>Manuscript hydration</td>
+<td>39363</td>
+</tr>
+<tr>
+<td>output/manuscript/04_conclusion.md</td>
+<td>Manuscript hydration</td>
+<td>2642</td>
+</tr>
+<tr>
+<td>output/manuscript/99_references.md</td>
+<td>Manuscript hydration</td>
+<td>58</td>
+</tr>
+<tr>
+<td>output/manuscript/99_zz_transmission_end.md</td>
+<td>Manuscript hydration</td>
+<td>543</td>
+</tr>
+<tr>
+<td>output/manuscript/config.yaml</td>
+<td>Manuscript hydration</td>
+<td>3233</td>
+</tr>
+<tr>
+<td>output/manuscript/preamble.md</td>
+<td>Manuscript hydration</td>
+<td>137</td>
+</tr>
+<tr>
+<td>output/manuscript/references.bib</td>
+<td>Manuscript hydration</td>
+<td>23228</td>
+</tr>
+<tr>
+<td>output/pdf/template_autoresearch_project_combined.pdf</td>
+<td>Loop artifact</td>
+<td>1342096</td>
+</tr>
+<tr>
+<td>output/release/swh_repo_url.txt</td>
+<td>Loop artifact</td>
+<td>59</td>
+</tr>
+<tr>
+<td>output/release/upload_receipts.json</td>
+<td>Loop artifact</td>
+<td>2004</td>
+</tr>
+<tr>
 <td>output/reports/autoresearch_evidence_overview.md</td>
 <td>Evidence registry</td>
 <td>1136</td>
@@ -3351,6 +3690,11 @@ validation.</figcaption>
 <td>output/reports/autoresearch_loop.json</td>
 <td>Loop artifact</td>
 <td>16085</td>
+</tr>
+<tr>
+<td>output/reports/autoresearch_loop.md</td>
+<td>Loop artifact</td>
+<td>1982</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_review_packet.md</td>
@@ -3373,6 +3717,11 @@ validation.</figcaption>
 <td>778</td>
 </tr>
 <tr>
+<td>output/reports/manuscript_composition.json</td>
+<td>Manuscript hydration</td>
+<td>2149</td>
+</tr>
+<tr>
 <td>output/reports/ml_benchmark_score.json</td>
 <td>Benchmark grading</td>
 <td>382</td>
@@ -3381,6 +3730,91 @@ validation.</figcaption>
 <td>output/reports/ml_experiment_report.md</td>
 <td>Loop artifact</td>
 <td>1687</td>
+</tr>
+<tr>
+<td>output/reports/test_results.json</td>
+<td>Loop artifact</td>
+<td>616</td>
+</tr>
+<tr>
+<td>output/reports/test_results.md</td>
+<td>Loop artifact</td>
+<td>293</td>
+</tr>
+<tr>
+<td>output/slides/00_abstract_slides.pdf</td>
+<td>Loop artifact</td>
+<td>15419</td>
+</tr>
+<tr>
+<td>output/slides/01_introduction_slides.pdf</td>
+<td>Loop artifact</td>
+<td>30739</td>
+</tr>
+<tr>
+<td>output/slides/02_methodology_slides.pdf</td>
+<td>Loop artifact</td>
+<td>191202</td>
+</tr>
+<tr>
+<td>output/slides/03_results_slides.pdf</td>
+<td>Loop artifact</td>
+<td>1060056</td>
+</tr>
+<tr>
+<td>output/slides/04_conclusion_slides.pdf</td>
+<td>Loop artifact</td>
+<td>15939</td>
+</tr>
+<tr>
+<td>output/slides/99_references_slides.pdf</td>
+<td>Loop artifact</td>
+<td>7623</td>
+</tr>
+<tr>
+<td>output/web/_combined_manuscript.md</td>
+<td>Manuscript hydration</td>
+<td>81389</td>
+</tr>
+<tr>
+<td>output/web/favicon.ico</td>
+<td>Loop artifact</td>
+<td>121</td>
+</tr>
+<tr>
+<td>output/web/index.html</td>
+<td>Loop artifact</td>
+<td>127633</td>
+</tr>
+<tr>
+<td>output/web/manuscript__00_abstract.html</td>
+<td>Manuscript hydration</td>
+<td>5627</td>
+</tr>
+<tr>
+<td>output/web/manuscript__01_introduction.html</td>
+<td>Manuscript hydration</td>
+<td>19028</td>
+</tr>
+<tr>
+<td>output/web/manuscript__02_methodology.html</td>
+<td>Manuscript hydration</td>
+<td>32746</td>
+</tr>
+<tr>
+<td>output/web/manuscript__03_results.html</td>
+<td>Manuscript hydration</td>
+<td>69087</td>
+</tr>
+<tr>
+<td>output/web/manuscript__04_conclusion.html</td>
+<td>Manuscript hydration</td>
+<td>6574</td>
+</tr>
+<tr>
+<td>output/web/manuscript__99_references.html</td>
+<td>Manuscript hydration</td>
+<td>3942</td>
 </tr>
 </tbody>
 </table>
@@ -3545,14 +3979,14 @@ order is not an autonomy claim.</caption>
 <td>schema manifest</td>
 <td>11</td>
 <td>schema</td>
-<td>2</td>
+<td>1</td>
 <td>write generated JSON schema-version manifest</td>
 </tr>
 <tr>
 <td>research object manifest</td>
 <td>12</td>
 <td>packaging</td>
-<td>2</td>
+<td>1</td>
 <td>write local research-object manifest</td>
 </tr>
 <tr>
@@ -3566,14 +4000,14 @@ order is not an autonomy claim.</caption>
 <td>final schema manifest</td>
 <td>14</td>
 <td>schema</td>
-<td>2</td>
+<td>1</td>
 <td>refresh schema manifest after final payload updates</td>
 </tr>
 <tr>
 <td>final research object manifest</td>
 <td>15</td>
 <td>packaging</td>
-<td>2</td>
+<td>1</td>
 <td>refresh local research-object manifest</td>
 </tr>
 <tr>
@@ -3791,13 +4225,13 @@ Integrity Evidence</h2>
 <code>0</code> missing record(s) and <code>0</code> checksum
 mismatch(es). The inventory contains <code>14</code> input record(s) and
 <code>69</code> generated-artifact record(s). The integrity-chain figure
-is fig. 25. These values support local artifact-integrity claims only;
-they do not claim external signing, production SLSA compliance, or
-runtime security monitoring.</p>
+is fig. <a href="#fig:autoresearch_integrity_chain">25</a>. These values
+support local artifact-integrity claims only; they do not claim external
+signing, production SLSA compliance, or runtime security monitoring.</p>
 <figure id="fig:autoresearch_integrity_chain">
 <img src="../figures/autoresearch_integrity_chain.png"
-alt="Figure 25: Local integrity chain from output/data/autoresearch_integrity_attestation.json; checksums summarize the observed run artifacts and remain unsigned local evidence. Generation method: Local checksum attestation chain with checked, missing, and mismatch counts. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Figure 25: Local integrity chain from
+alt="Figure 25: Local integrity chain from output/data/autoresearch_integrity_attestation.json; checksums summarize the observed run artifacts and remain unsigned local evidence." />
+<figcaption>Figure 25: Local integrity chain from
 output/data/autoresearch_integrity_attestation.json; checksums summarize
 the observed run artifacts and remain unsigned local evidence.
 Generation method: Local checksum attestation chain with checked,
@@ -4037,10 +4471,370 @@ class="header-section-number">6</span> References</h1>
 <figure>
 <img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" />
-<figcaption aria-hidden="true">Integrity QR strip</figcaption>
+<figcaption>Integrity QR strip</figcaption>
 </figure>
 <p><strong>Prior:</strong> <code>v0.3.1</code> ·
 <code>10.5281/zenodo.20417016</code> · <code>537dd8a6…</code></p>
 <!-- END OF TRANSMISSION -->
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="list">
+<div id="ref-asai_openscholar_2026" class="csl-entry" role="listitem">
+<span class="nocase">Asai, Akari, Jacqueline He, Rulin Shao, et
+al.</span> 2026. <span>“Synthesizing Scientific Literature with
+Retrieval-Augmented Language Models.”</span> <em>Nature</em> 650:
+857–63. <a
+href="https://doi.org/10.1038/s41586-025-10072-4">https://doi.org/10.1038/s41586-025-10072-4</a>.
+</div>
+<div id="ref-balazevic_tucker_2019" class="csl-entry" role="listitem">
+Balazevic, Ivana, Carl Allen, and Timothy Hospedales. 2019.
+<span>“TuckER: Tensor Factorization for Knowledge Graph
+Completion.”</span> <em>Proceedings of the 2019 Conference on Empirical
+Methods in Natural Language Processing and the 9th International Joint
+Conference on Natural Language Processing</em>, 5185–94. <a
+href="https://doi.org/10.18653/v1/D19-1522">https://doi.org/10.18653/v1/D19-1522</a>.
+</div>
+<div id="ref-banbury_mlperf_tiny_2021" class="csl-entry"
+role="listitem">
+Banbury, Colby, Vijay Janapa Reddi, Peter Torelli, et al. 2021.
+<em>MLPerf Tiny Benchmark</em>. <a
+href="https://arxiv.org/abs/2106.07597">https://arxiv.org/abs/2106.07597</a>.
+</div>
+<div id="ref-baulin_discovery_engine_2025" class="csl-entry"
+role="listitem">
+Baulin, Vladimir, Austin Cook, Daniel Friedman, et al. 2025. <em>The
+Discovery Engine: A Framework for AI-Driven Synthesis and Navigation of
+Scientific Knowledge Landscapes</em>. <a
+href="https://doi.org/10.48550/arXiv.2505.17500">https://doi.org/10.48550/arXiv.2505.17500</a>.
+</div>
+<div id="ref-brier1950verification" class="csl-entry" role="listitem">
+Brier, Glenn W. 1950. <span>“Verification of Forecasts Expressed in
+Terms of Probability.”</span> <em>Monthly Weather Review</em> 78 (1):
+1–3. <a
+href="https://doi.org/10.1175/1520-0493(1950)078&lt;0001:VOFEIT&gt;2.0.CO;2">https://doi.org/10.1175/1520-0493(1950)078&lt;0001:VOFEIT&gt;2.0.CO;2</a>.
+</div>
+<div id="ref-chan_mle_bench_2024" class="csl-entry" role="listitem">
+<span class="nocase">Chan, Jun Shern, Aakanksha Chowdhery, et al.</span>
+2024. <em>MLE-Bench: Evaluating Machine Learning Agents on Machine
+Learning Engineering</em>. <a
+href="https://arxiv.org/abs/2410.07095">https://arxiv.org/abs/2410.07095</a>.
+</div>
+<div id="ref-cohen1960coefficient" class="csl-entry" role="listitem">
+Cohen, Jacob. 1960. <span>“A Coefficient of Agreement for Nominal
+Scales.”</span> <em>Educational and Psychological Measurement</em> 20
+(1): 37–46. <a
+href="https://doi.org/10.1177/001316446002000104">https://doi.org/10.1177/001316446002000104</a>.
+</div>
+<div id="ref-gpt_researcher_2026" class="csl-entry" role="listitem">
+Contributors, GPT Researcher. 2026. <em>GPT Researcher</em>. Released.
+<a
+href="https://github.com/assafelovic/gpt-researcher">https://github.com/assafelovic/gpt-researcher</a>.
+</div>
+<div id="ref-dietterich1998statistical_tests" class="csl-entry"
+role="listitem">
+Dietterich, Thomas G. 1998. <span>“Approximate Statistical Tests for
+Comparing Supervised Classification Learning Algorithms.”</span>
+<em>Neural Computation</em> 10 (7): 1895–923. <a
+href="https://doi.org/10.1162/089976698300017197">https://doi.org/10.1162/089976698300017197</a>.
+</div>
+<div id="ref-dosovitskiy_vit_2020" class="csl-entry" role="listitem">
+Dosovitskiy, Alexey, Lucas Beyer, Alexander Kolesnikov, et al. 2020.
+<em>An Image Is Worth 16x16 Words: Transformers for Image Recognition at
+Scale</em>. <a
+href="https://arxiv.org/abs/2010.11929">https://arxiv.org/abs/2010.11929</a>.
+</div>
+<div id="ref-active_inference_science_2025" class="csl-entry"
+role="listitem">
+Duraisamy, Karthik. 2025. <em>Active Inference AI Systems for Scientific
+Discovery</em>. <a
+href="https://doi.org/10.48550/arXiv.2506.21329">https://doi.org/10.48550/arXiv.2506.21329</a>.
+</div>
+<div id="ref-efron1993bootstrap" class="csl-entry" role="listitem">
+Efron, Bradley, and Robert J. Tibshirani. 1993. <em>An Introduction to
+the Bootstrap</em>. Chapman; Hall/CRC. <a
+href="https://doi.org/10.1201/9780429246593">https://doi.org/10.1201/9780429246593</a>.
+</div>
+<div id="ref-futurehouse_platform_2025" class="csl-entry"
+role="listitem">
+FutureHouse. 2025. <span>“FutureHouse Platform: Superintelligent AI
+Agents for Scientific Discovery.”</span> <a
+href="https://www.futurehouse.org/research-announcements/launching-futurehouse-platform-ai-agents">https://www.futurehouse.org/research-announcements/launching-futurehouse-platform-ai-agents</a>.
+</div>
+<div id="ref-gebru2021datasheets" class="csl-entry" role="listitem">
+Gebru, Timnit, Jamie Morgenstern, Briana Vecchione, et al. 2021.
+<span>“Datasheets for Datasets.”</span> <em>Communications of the
+ACM</em> 64 (12): 86–92. <a
+href="https://doi.org/10.1145/3458723">https://doi.org/10.1145/3458723</a>.
+</div>
+<div id="ref-ghareeb_robin_2026" class="csl-entry" role="listitem">
+<span class="nocase">Ghareeb, Ali Essam, Benjamin Chang, Ludovico
+Mitchener, et al.</span> 2026. <span>“A Multi-Agent System for
+Automating Scientific Discovery.”</span> <em>Nature</em>, ahead of
+print. <a
+href="https://doi.org/10.1038/s41586-026-10652-y">https://doi.org/10.1038/s41586-026-10652-y</a>.
+</div>
+<div id="ref-ginsborg_kant_aesthetics_teleology" class="csl-entry"
+role="listitem">
+Ginsborg, Hannah. 2022. <span>“Kant’s Aesthetics and Teleology.”</span>
+<a
+href="https://plato.stanford.edu/entries/kant-aesthetics/">https://plato.stanford.edu/entries/kant-aesthetics/</a>.
+</div>
+<div id="ref-gridach_agentic_science_2025" class="csl-entry"
+role="listitem">
+Gridach, Mourad, Jay Nanavati, Khaldoun Zine El Abidine, Lenon Mendes,
+and Christina Mack. 2025. <em>Agentic AI for Scientific Discovery: A
+Survey of Progress, Challenges, and Future Directions</em>. <a
+href="https://doi.org/10.48550/arXiv.2503.08979">https://doi.org/10.48550/arXiv.2503.08979</a>.
+</div>
+<div id="ref-guo2017calibration" class="csl-entry" role="listitem">
+Guo, Chuan, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger. 2017.
+<span>“On Calibration of Modern Neural Networks.”</span> <em>Proceedings
+of the 34th International Conference on Machine Learning</em>,
+Proceedings of machine learning research, vol. 70: 1321–30. <a
+href="https://proceedings.mlr.press/v70/guo17a.html">https://proceedings.mlr.press/v70/guo17a.html</a>.
+</div>
+<div id="ref-hao_ai_tools_focus_2026" class="csl-entry" role="listitem">
+Hao, Qianyue, Fengli Xu, Yong Li, and James A. Evans. 2026.
+<span>“Artificial Intelligence Tools Expand Scientists’ Impact but
+Contract Science’s Focus.”</span> <em>Nature</em> 649: 1237–43. <a
+href="https://doi.org/10.1038/s41586-025-09922-y">https://doi.org/10.1038/s41586-025-09922-y</a>.
+</div>
+<div id="ref-hasib_exhyte_2025" class="csl-entry" role="listitem">
+<span class="nocase">Hasib, Md Musaddaqul, Sumin Jo, Harsh Sinha, et
+al.</span> 2025. <span>“A Process-Centric Survey of AI for Scientific
+Discovery Through the EXHYTE Framework.”</span> In <em>Research
+Square</em>. <a
+href="https://doi.org/10.21203/rs.3.rs-8370059/v1">https://doi.org/10.21203/rs.3.rs-8370059/v1</a>.
+</div>
+<div id="ref-heddes_hdc_2024" class="csl-entry" role="listitem">
+Heddes, Mike, Igor Nunes, Tony Givargis, Alexandru Nicolau, and Alex
+Veidenbaum. 2024. <span>“Hyperdimensional Computing: A Framework for
+Stochastic Computation and Symbolic AI.”</span> <em>Journal of Big
+Data</em> 11 (145). <a
+href="https://doi.org/10.1186/s40537-024-01010-8">https://doi.org/10.1186/s40537-024-01010-8</a>.
+</div>
+<div id="ref-huang_mlagentbench_2023" class="csl-entry" role="listitem">
+Huang, Qian, Jeevana Priya Inala Vora, Percy Liang, and Jure Leskovec.
+2023. <em>MLAgentBench: Evaluating Language Agents on Machine Learning
+Experimentation</em>. <a
+href="https://arxiv.org/abs/2310.03302">https://arxiv.org/abs/2310.03302</a>.
+</div>
+<div id="ref-hubert_alphaproof_2025" class="csl-entry" role="listitem">
+<span class="nocase">Hubert, Thomas, Rishi Mehta, Laurent Sartran, et
+al.</span> 2025. <span>“Olympiad-Level Formal Mathematical Reasoning
+with Reinforcement Learning.”</span> <em>Nature</em> 651: 607–13. <a
+href="https://doi.org/10.1038/s41586-025-09833-y">https://doi.org/10.1038/s41586-025-09833-y</a>.
+</div>
+<div id="ref-karpathy_autoresearch_2026" class="csl-entry"
+role="listitem">
+Karpathy, Andrej. 2026. <em>Autoresearch</em>. Released. <a
+href="https://github.com/karpathy/autoresearch">https://github.com/karpathy/autoresearch</a>.
+</div>
+<div id="ref-kong_ai_auto_research_2026" class="csl-entry"
+role="listitem">
+<span class="nocase">Kong, Lingdong, Xian Sun, Wei Chow, et al.</span>
+2026. <em>AI for Auto-Research: Roadmap and User Guide</em>. <a
+href="https://doi.org/10.48550/arXiv.2605.18661">https://doi.org/10.48550/arXiv.2605.18661</a>.
+</div>
+<div id="ref-lala_paperqa_2023" class="csl-entry" role="listitem">
+Lala, Ankit, Henry Mantsch, Cindy Zhou, Theodore LaBruna, Ronak Sinha,
+and Manav Choudhary. 2023. <em>PaperQA: Retrieval-Augmented Generative
+Agent for Scientific Research</em>. <a
+href="https://arxiv.org/abs/2312.07559">https://arxiv.org/abs/2312.07559</a>.
+</div>
+<div id="ref-lecun_gradient_1998" class="csl-entry" role="listitem">
+LeCun, Yann, Léon Bottou, Yoshua Bengio, and Patrick Haffner. 1998.
+<span>“Gradient-Based Learning Applied to Document Recognition.”</span>
+<em>Proceedings of the IEEE</em> 86 (11): 2278–324. <a
+href="https://bottou.org/papers/lecun-98h">https://bottou.org/papers/lecun-98h</a>.
+</div>
+<div id="ref-lecun_mnist_database" class="csl-entry" role="listitem">
+LeCun, Yann, Corinna Cortes, and Christopher J. C. Burges. n.d.
+<span>“The MNIST Database of Handwritten Digits.”</span> <a
+href="https://yann.lecun.org/exdb/mnist/">https://yann.lecun.org/exdb/mnist/</a>.
+</div>
+<div id="ref-soiland_reyes2024workflow_run_rocrate" class="csl-entry"
+role="listitem">
+<span class="nocase">Leo, Simone, Michael R. Crusoe, Laura
+Rodríguez-Navas, et al.</span> 2024. <span>“Recording Provenance of
+Workflow Runs with RO-Crate.”</span> <em>PLOS ONE</em> 19 (9): e0309210.
+<a
+href="https://doi.org/10.1371/journal.pone.0309210">https://doi.org/10.1371/journal.pone.0309210</a>.
+</div>
+<div id="ref-deepevolve_2025" class="csl-entry" role="listitem">
+Liu, Gang, Yihan Zhu, Jie Chen, and Meng Jiang. 2025. <em>Scientific
+Algorithm Discovery by Augmenting AlphaEvolve with Deep Research</em>.
+<a
+href="https://doi.org/10.48550/arXiv.2510.06056">https://doi.org/10.48550/arXiv.2510.06056</a>.
+</div>
+<div id="ref-lu_ai_scientist_nature_2026" class="csl-entry"
+role="listitem">
+Lu, Chris, Cong Lu, Robert Tjarko Lange, et al. 2026. <span>“Towards
+End-to-End Automation of AI Research.”</span> <em>Nature</em> 651:
+914–19. <a
+href="https://doi.org/10.1038/s41586-026-10265-5">https://doi.org/10.1038/s41586-026-10265-5</a>.
+</div>
+<div id="ref-lu_aiscientist_2024" class="csl-entry" role="listitem">
+Lu, Chris, Cong Lu, Robert Tjarko Lange, Jakob Foerster, Jeff Clune, and
+David Ha. 2024. <em>The AI Scientist: Towards Fully Automated Open-Ended
+Scientific Discovery</em>. <a
+href="https://arxiv.org/abs/2408.06292">https://arxiv.org/abs/2408.06292</a>.
+</div>
+<div id="ref-lu_process_driven_autoformalization_2024" class="csl-entry"
+role="listitem">
+<span class="nocase">Lu, Jianqiao, Yingjia Wan, Zhengying Liu, et
+al.</span> 2024. <em>Process-Driven Autoformalization in Lean 4</em>. <a
+href="https://doi.org/10.48550/arXiv.2406.01940">https://doi.org/10.48550/arXiv.2406.01940</a>.
+</div>
+<div id="ref-mitchell2019model_cards" class="csl-entry" role="listitem">
+Mitchell, Margaret, Simone Wu, Andrew Zaldivar, et al. 2019.
+<span>“Model Cards for Model Reporting.”</span> <em>Proceedings of the
+Conference on Fairness, Accountability, and Transparency</em>, 220–29.
+<a
+href="https://doi.org/10.1145/3287560.3287596">https://doi.org/10.1145/3287560.3287596</a>.
+</div>
+<div id="ref-mitre_attack_t1195" class="csl-entry" role="listitem">
+MITRE ATT&amp;CK. 2026. <em>Supply Chain Compromise, Technique
+T1195</em>. Online technique catalog. <a
+href="https://attack.mitre.org/techniques/T1195/">https://attack.mitre.org/techniques/T1195/</a>.
+</div>
+<div id="ref-moreno_mossio_biological_autonomy_2015" class="csl-entry"
+role="listitem">
+Moreno, Alvaro, and Matteo Mossio. 2015. <em>Biological Autonomy: A
+Philosophical and Theoretical Enquiry</em>. Springer. <a
+href="https://doi.org/10.1007/978-94-017-9837-2">https://doi.org/10.1007/978-94-017-9837-2</a>.
+</div>
+<div id="ref-romera_paredes_alphaevolve_2025" class="csl-entry"
+role="listitem">
+<span class="nocase">Novikov, Alexander, Ngan Vu, Marvin Eisenberger, et
+al.</span> 2025. <em>AlphaEvolve: A Coding Agent for Scientific and
+Algorithmic Discovery</em>. <a
+href="https://doi.org/10.48550/arXiv.2506.13131">https://doi.org/10.48550/arXiv.2506.13131</a>.
+</div>
+<div id="ref-slsa_spec_latest" class="csl-entry" role="listitem">
+Open Source Security Foundation. 2026. <em>Supply-Chain Levels for
+Software Artifacts Specification</em>. Online specification. <a
+href="https://slsa.dev/spec/latest/">https://slsa.dev/spec/latest/</a>.
+</div>
+<div id="ref-apollo_lean_collaboration_2025" class="csl-entry"
+role="listitem">
+Ospanov, Azim, Farzan Farnia, and Roozbeh Yousefzadeh. 2025. <em>APOLLO:
+Automated LLM and Lean Collaboration for Advanced Formal Reasoning</em>.
+<a
+href="https://doi.org/10.48550/arXiv.2505.05758">https://doi.org/10.48550/arXiv.2505.05758</a>.
+</div>
+<div id="ref-pineau_reproducibility_2020" class="csl-entry"
+role="listitem">
+<span class="nocase">Pineau, Joelle, Philippe Vincent-Lamarre, Koustuv
+Sinha, et al.</span> 2020. <em>Improving Reproducibility in Machine
+Learning Research: A Report from the NeurIPS 2019 Reproducibility
+Program</em>. <a
+href="https://arxiv.org/abs/2003.12206">https://arxiv.org/abs/2003.12206</a>.
+</div>
+<div id="ref-nist_sp800_207_zero_trust" class="csl-entry"
+role="listitem">
+Rose, Scott, Oliver Borchert, Stu Mitchell, and Sean Connelly. 2020.
+<em>Zero Trust Architecture</em>. Special Publication Nos. 800-207.
+National Institute of Standards; Technology. <a
+href="https://doi.org/10.6028/NIST.SP.800-207">https://doi.org/10.6028/NIST.SP.800-207</a>.
+</div>
+<div id="ref-shao_storm_2024" class="csl-entry" role="listitem">
+Shao, Yijia, Yucheng Jiang, Theodore Kanell, Peter Xu, Omar Khattab, and
+Monica S. Lam. 2024. <em>Assisting in Writing Wikipedia-Like Articles
+from Scratch with Large Language Models</em>. <a
+href="https://arxiv.org/abs/2402.14207">https://arxiv.org/abs/2402.14207</a>.
+</div>
+<div id="ref-skarlinski_paperqa2_2024" class="csl-entry"
+role="listitem">
+Skarlinski, Michael D., Sam Cox, Jon M. Laurent, et al. 2024.
+<em>Language Agents Achieve Superhuman Synthesis of Scientific
+Knowledge</em>. <a
+href="https://doi.org/10.48550/arXiv.2409.13740">https://doi.org/10.48550/arXiv.2409.13740</a>.
+</div>
+<div id="ref-soiland_reyes2022rocrate" class="csl-entry"
+role="listitem">
+Soiland-Reyes, Stian, Peter Sefton, Mercè Crosas, et al. 2022.
+<span>“Packaging Research Artefacts with RO-Crate.”</span> <em>Data
+Science</em> 5 (2): 97–138. <a
+href="https://doi.org/10.3233/DS-210053">https://doi.org/10.3233/DS-210053</a>.
+</div>
+<div id="ref-nist_sp800_218_ssdf" class="csl-entry" role="listitem">
+Souppaya, Murugiah, Karen Scarfone, and Donna Dodson. 2022. <em>Secure
+Software Development Framework (SSDF) Version 1.1: Recommendations for
+Mitigating the Risk of Software Vulnerabilities</em>. Special
+Publication Nos. 800-218. National Institute of Standards; Technology.
+<a
+href="https://doi.org/10.6028/NIST.SP.800-218">https://doi.org/10.6028/NIST.SP.800-218</a>.
+</div>
+<div id="ref-vanschoren_openml_2014" class="csl-entry" role="listitem">
+Vanschoren, Joaquin, Jan N. van Rijn, Bernd Bischl, and Luis Torgo.
+2014. <em>OpenML: Networked Science in Machine Learning</em>. <a
+href="https://arxiv.org/abs/1407.7722">https://arxiv.org/abs/1407.7722</a>.
+</div>
+<div id="ref-varela_autopoiesis_1974" class="csl-entry" role="listitem">
+Varela, Francisco G., Humberto R. Maturana, and Ricardo Uribe. 1974.
+<span>“Autopoiesis: The Organization of Living Systems, Its
+Characterization and a Model.”</span> <em>BioSystems</em> 5 (4): 187–96.
+<a
+href="https://doi.org/10.1016/0303-2647(74)90031-8">https://doi.org/10.1016/0303-2647(74)90031-8</a>.
+</div>
+<div id="ref-weber_varela_life_after_kant_2002" class="csl-entry"
+role="listitem">
+Weber, Andreas, and Francisco J. Varela. 2002. <span>“Life After Kant:
+Natural Purposes and the Autopoietic Foundations of Biological
+Individuality.”</span> <em>Phenomenology and the Cognitive Sciences</em>
+1 (2): 97–125. <a
+href="https://doi.org/10.1023/A:1020368120174">https://doi.org/10.1023/A:1020368120174</a>.
+</div>
+<div id="ref-wei_agentic_science_2025" class="csl-entry"
+role="listitem">
+<span class="nocase">Wei, Jiaqi, Yuejin Yang, Xiang Zhang, et al.</span>
+2025. <em>From AI for Science to Agentic Science: A Survey on Autonomous
+Scientific Discovery</em>. <a
+href="https://doi.org/10.48550/arXiv.2508.14111">https://doi.org/10.48550/arXiv.2508.14111</a>.
+</div>
+<div id="ref-wilkinson2016fair" class="csl-entry" role="listitem">
+<span class="nocase">Wilkinson, Mark D., Michel Dumontier, IJsbrand Jan
+Aalbersberg, et al.</span> 2016. <span>“The FAIR Guiding Principles for
+Scientific Data Management and Stewardship.”</span> <em>Scientific
+Data</em> 3: 160018. <a
+href="https://doi.org/10.1038/sdata.2016.18">https://doi.org/10.1038/sdata.2016.18</a>.
+</div>
+<div id="ref-wilson1927probable_inference" class="csl-entry"
+role="listitem">
+Wilson, Edwin B. 1927. <span>“Probable Inference, the Law of Succession,
+and Statistical Inference.”</span> <em>Journal of the American
+Statistical Association</em> 22 (158): 209–12. <a
+href="https://doi.org/10.1080/01621459.1927.10502953">https://doi.org/10.1080/01621459.1927.10502953</a>.
+</div>
+<div id="ref-graphrag_bench_2026" class="csl-entry" role="listitem">
+Xiao, Yilin, Junnan Dong, Chuang Zhou, et al. 2025. <em>GraphRAG-Bench:
+Challenging Domain-Specific Reasoning for Evaluating Graph
+Retrieval-Augmented Generation</em>. <a
+href="https://doi.org/10.48550/arXiv.2506.02404">https://doi.org/10.48550/arXiv.2506.02404</a>.
+</div>
+<div id="ref-yamada_ai_scientist_v2_2025" class="csl-entry"
+role="listitem">
+Yamada, Yutaro, Robert Tjarko Lange, Cong Lu, et al. 2025. <em>The AI
+Scientist-V2: Workshop-Level Automated Scientific Discovery via Agentic
+Tree Search</em>. <a
+href="https://doi.org/10.48550/arXiv.2504.08066">https://doi.org/10.48550/arXiv.2504.08066</a>.
+</div>
+<div id="ref-yusupov_mixed_geometry_2025" class="csl-entry"
+role="listitem">
+Yusupov, Viacheslav, Maxim Rakhuba, and Evgeny Frolov. 2025.
+<span>“Knowledge Graph Completion with Mixed Geometry Tensor
+Factorization.”</span> <em>Proceedings of the 28th International
+Conference on Artificial Intelligence and Statistics</em>, Proceedings
+of machine learning research, vol. 258: 4924–32. <a
+href="https://proceedings.mlr.press/v258/yusupov25a.html">https://proceedings.mlr.press/v258/yusupov25a.html</a>.
+</div>
+<div id="ref-brink_kg_rag_2026" class="csl-entry" role="listitem">
+Zhou, Dongzhuoran, Yuqicheng Zhu, Xiaxia Wang, et al. 2026. <em>What
+Breaks Knowledge Graph Based RAG? Benchmarking and Empirical Insights
+into Reasoning Under Incomplete Knowledge</em>. <a
+href="https://doi.org/10.48550/arXiv.2508.08344">https://doi.org/10.48550/arXiv.2508.08344</a>.
+</div>
+</div>
+</main>
 </body>
 </html>

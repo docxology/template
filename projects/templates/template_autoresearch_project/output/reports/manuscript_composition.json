@@ -1,0 +1,61 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "2e802f3b618a1c73c966be0d0712ff17bdba153d1ac64946e8ef65308924243b",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "41bceb24b8bfdcf735074c3d4a0057cae8d67f37023d4f43c091a6f9469ed4ea",
+  "combined_size_bytes": 84118,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_00_transmission_begin.md",
+      "sha256": "89d1126ba576cbc35c36004927041432f25d8a428661f7af6115abd8871d7ac5",
+      "size_bytes": 1554
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "470d61e36035d7ff26a50ce49ba91dec4128fb34127c976e206292ba49c965d3",
+      "size_bytes": 1451
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/01_introduction.md",
+      "sha256": "a4e65d9c77487099867a0e697c283b9d93db407e63b38ef67461df77a628fba5",
+      "size_bytes": 14774
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/02_methodology.md",
+      "sha256": "1cb1274a0015c66a38e8fece45cebee7af57d36b54f46a6246e783b29bf3da4c",
+      "size_bytes": 21101
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/03_results.md",
+      "sha256": "6994f99ffb06837923926cc008b746a3c0edfe49da7766c81add7fc3007a183e",
+      "size_bytes": 42047
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/04_conclusion.md",
+      "sha256": "cba092e7924f75792ecbe647b48d0bef5d4e25b45fceee2e502b361e813d8580",
+      "size_bytes": 2642
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "6271dead2e93c6e466455cf69267739182a8af69a06f6b2de2b52b439b08e4c6",
+      "size_bytes": 58
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/99_zz_transmission_end.md",
+      "sha256": "729c54987b84839234b2e24f269418ef426773c3f1242a27745d86cb40cc419a",
+      "size_bytes": 543
+    }
+  ],
+  "ordered_inputs_sha256": "b363bc93010d2d53ef9e4280fcce0ac7cc9738cc32ccf032277c4b8b8cca9ae0",
+  "project": "templates/template_autoresearch_project",
+  "schema_version": "template-manuscript-composition-v1"
+}

@@ -110,9 +110,7 @@ class ProseAnalysisConfig:
         preset_name = raw.get("preset")
         if preset_name is not None:
             if preset_name not in PROSE_PRESETS:
-                raise ValueError(
-                    f"Unknown prose preset {preset_name!r}. Allowed: {sorted(PROSE_PRESETS)}"
-                )
+                raise ValueError(f"Unknown prose preset {preset_name!r}. Allowed: {sorted(PROSE_PRESETS)}")
             values = dict(PROSE_PRESETS[preset_name])
             values.update({k: v for k, v in raw.items() if k != "preset"})
         else:

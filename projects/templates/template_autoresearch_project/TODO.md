@@ -21,6 +21,23 @@ normal analysis/render/validate/copy pipeline. This TODO records future work
 only; shipped evidence belongs in generated artifacts, reports, tests, and the
 README/AGENTS contract.
 
+Validation snapshot from the 2026-08 publication pass (measured, observed):
+
+- Project-only gate (`scripts/pipeline/stage_01_test.py --project-only`):
+  370/370 tests passed, 96.5% `src/` coverage (≥ 90% required).
+- Manuscript prerender (`infrastructure.validation.cli prerender`): clean, no
+  render-blocking pitfalls or undefined citations.
+- Analysis (stage_02): both declared scripts (`run_autoresearch_loop.py`,
+  `z_generate_manuscript_variables.py`) exited 0.
+- Render (stage_03): combined PDF generated; 0 `^! ` LaTeX errors in logs;
+  0 unresolved `??` in extracted text; 38 pages.
+- Validation (stage_04): 8/8 checks green (PDF, transmission bookends,
+  markdown, output structure, figure registry, evidence registry, project
+  design overlays, artifact manifest), with a rendered-provenance receipt.
+- Template drift (`check_template_drift.py --strict`): no drift detected.
+- Manifest: 117 attested stable outputs, including transmission figures,
+  `manuscript_composition.json`, and `output/web/favicon.ico`.
+
 Live test counts and coverage are read from
 [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
 here. Edge-case coverage lives in `tests/test_edge_{config,ledger,loop,gates}.py`

@@ -62,9 +62,7 @@ def test_every_claim_source_resolves_to_a_real_file():
     claims = _load_claims()
     for claim in claims:
         path = _source_path(claim["source"])
-        assert path is not None, (
-            f"claim {claim['claim_id']} source does not resolve: {claim['source']!r}"
-        )
+        assert path is not None, f"claim {claim['claim_id']} source does not resolve: {claim['source']!r}"
         assert path.is_file(), f"claim {claim['claim_id']} source is not a file: {path}"
 
 
@@ -72,22 +70,20 @@ def test_claim_values_bind_to_live_code():
     claims = {c["claim_id"]: c for c in _load_claims()}
 
     dpi = claims["figure-export-dpi"]
-    figures_src = (REPO_ROOT / "projects/templates/template_prose_project/src/figures.py").read_text(
-        encoding="utf-8"
-    )
+    figures_src = (REPO_ROOT / "projects/templates/template_prose_project/src/figures.py").read_text(encoding="utf-8")
     assert dpi["value"] == 300
     assert "dpi=300" in figures_src, "figure-export-dpi claim no longer matches src/figures.py"
 
     denominator = claims["citation-density-denominator"]
-    checks_src = (
-        REPO_ROOT / "projects/templates/template_prose_project/src/pipeline/checks.py"
-    ).read_text(encoding="utf-8")
+    checks_src = (REPO_ROOT / "projects/templates/template_prose_project/src/pipeline/checks.py").read_text(
+        encoding="utf-8"
+    )
     assert denominator["value"] == 1000
     assert "1000.0" in checks_src, "citation-density-denominator claim no longer matches the check"
 
     sibling = claims["comparison-sibling-word-count"]
-    intro = (
-        REPO_ROOT / "projects/templates/template_prose_project/manuscript/01_introduction.md"
-    ).read_text(encoding="utf-8")
+    intro = (REPO_ROOT / "projects/templates/template_prose_project/manuscript/01_introduction.md").read_text(
+        encoding="utf-8"
+    )
     assert sibling["value"] == 200
     assert "sit at 200" in intro, "comparison-sibling-word-count claim no longer matches the prose"

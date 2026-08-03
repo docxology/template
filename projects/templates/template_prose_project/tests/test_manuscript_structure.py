@@ -15,9 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MANUSCRIPT = PROJECT_ROOT / "manuscript"
 
 SECTION_FILES = sorted(
-    p
-    for p in MANUSCRIPT.glob("*.md")
-    if p.name not in {"preamble.md", "AGENTS.md", "README.md", "SYNTAX.md"}
+    p for p in MANUSCRIPT.glob("*.md") if p.name not in {"preamble.md", "AGENTS.md", "README.md", "SYNTAX.md"}
 )
 
 H1_LABEL_RE = re.compile(r"^#\s+.+?\{#(sec:[A-Za-z0-9_\-]+)\}\s*$", re.MULTILINE)

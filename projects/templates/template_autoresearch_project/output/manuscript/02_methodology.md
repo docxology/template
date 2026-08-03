@@ -163,6 +163,7 @@ the threat model and inventory, not manually maintained.
 : Local security artifacts generated for the bounded AutoResearch run. {#tbl:security-artifacts}
 
 \begingroup\footnotesize
+
 | Threat | STRIDE | ATT&CK | Scenario | Residual risk |
 | --- | --- | --- | --- | --- |
 | dataset tamper | Tampering | T1195 | A local fixture could be replaced or edited before analysis. | Residual risk remains if a reviewer ignores checksum drift. |
@@ -174,6 +175,7 @@ the threat model and inventory, not manually maintained.
 | build assumption | Denial of service | T1195.003 | A local or CI build context could omit checks or run stale generated... | The exemplar does not sign build logs or isolate runners. |
 
 : Threat-model rows from `output/data/autoresearch_threat_model.json`; ATT&CK labels scope supply-chain compromise analogies. {#tbl:security-threat-model}
+
 \endgroup
 
 ## Positioning Against Autonomous Science Systems {#sec:positioning-autonomous-science}
@@ -233,6 +235,7 @@ rendered method table below is generated from that registry rather than
 maintained manually.
 
 \begingroup\footnotesize
+
 | Figure | Source | Method | Scope |
 | --- | --- | --- | --- |
 | @fig:autoresearch_candidate_lifecycle | [candidate ledger](../data/ml_candidate_ledger.json) | Candidate lifecycle status-count bar chart. | Lifecycle counts describe bounded orchestration, not autonomous approval. |
@@ -262,4 +265,5 @@ maintained manually.
 | @fig:mnist_subset_contact_sheet | [small](../../data/mnist_small.npz) | Class-balanced contact sheet from fixed local MNIST arrays. | The sheet illustrates the local fixed subset and is not a statistical sample claim. |
 
 : Registry-backed figure methods from [`figure_registry.json`](../figures/figure_registry.json); full validation hooks, alt text, and claim boundaries remain in the registry. {#tbl:figure-methods}
+
 \endgroup

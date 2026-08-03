@@ -338,6 +338,7 @@ surface supports and what it does not support.
 : Candidate-selection audit from `output/data/ml_candidate_selection_audit.json`; the objective metric ranks candidates, while probability diagnostics and parameter counts audit the chosen tie-break context. {#tbl:candidate-selection-audit}
 
 \begingroup\footnotesize
+
 | Surface | Source | Method | Supports | Does not support |
 | --- | --- | --- | --- | --- |
 | objective selection | [task results](../data/ml_task_results.json) | rank evaluated candidates by configured held-out metric and deterministic tie... | accepted-candidate selection within this fixed local task | full MNIST state-of-the-art, external benchmark leadership, or universal mode... |
@@ -347,6 +348,7 @@ surface supports and what it does not support.
 | review governance | [review decisions](../data/review_decisions.json) | deferred generated review decisions with human review required | readiness for human review | machine self-approval or publication acceptance |
 
 : Diagnostic claim-boundary table from `output/data/ml_diagnostic_boundary.json`. {#tbl:diagnostic-boundary}
+
 \endgroup
 
 ## Readiness And Review Artifacts {#sec:readiness-review-artifacts}
@@ -370,15 +372,15 @@ figure(s) with validity `false`.
 | output/data/autoresearch_claims.json | Loop artifact | 1766 |
 | output/data/autoresearch_evidence_overview.json | Evidence registry | 4436 |
 | output/data/autoresearch_integrity_attestation.json | Security evidence | 22755 |
-| output/data/autoresearch_inventory_export.json | Security evidence | 20203 |
+| output/data/autoresearch_inventory_export.json | Security evidence | 20155 |
 | output/data/autoresearch_loop.json | Loop artifact | 16085 |
 | output/data/autoresearch_phase_ledger.json | Run or candidate ledger | 3779 |
-| output/data/autoresearch_plan.json | Loop artifact | 19334 |
+| output/data/autoresearch_plan.json | Loop artifact | 19262 |
 | output/data/autoresearch_review_packet.json | Review packet | 16204 |
 | output/data/autoresearch_schema_manifest.json | Loop artifact | 7226 |
 | output/data/autoresearch_security_profile.json | Security evidence | 1537 |
 | output/data/autoresearch_stage_matrix.csv | Loop artifact | 749 |
-| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 21459 |
+| output/data/autoresearch_supply_chain_inventory.json | Security evidence | 21411 |
 | output/data/autoresearch_threat_model.json | Security evidence | 6370 |
 | output/data/benchmark_boundary.json | Benchmark grading | 2363 |
 | output/data/benchmark_scores.json | Benchmark grading | 621 |
@@ -409,14 +411,18 @@ figure(s) with validity `false`.
 | output/data/ml_training_diagnostics.json | Loop artifact | 2968 |
 | output/data/ml_training_history.csv | Loop artifact | 6775 |
 | output/data/mnist_task_config.json | Loop artifact | 3926 |
+| output/data/publication_ledger.json | Run or candidate ledger | 1005 |
 | output/data/research_object_manifest.json | Loop artifact | 20789 |
 | output/data/research_program.json | Loop artifact | 965 |
 | output/data/review_decisions.json | Review packet | 669 |
 | output/data/run_ledger.json | Run or candidate ledger | 328 |
+| output/data/transmission_manifest.json | Loop artifact | 503 |
 | output/figures/autoresearch_candidate_lifecycle.png | Generated figure | 28053 |
 | output/figures/autoresearch_closure_flow.png | Generated figure | 40410 |
 | output/figures/autoresearch_integrity_chain.png | Generated figure | 48256 |
 | output/figures/autoresearch_security_control_matrix.png | Generated figure | 86574 |
+| output/figures/autoresearch_stage_matrix.png | Generated figure | 23476 |
+| output/figures/figure_registry.json | Loop artifact | 30674 |
 | output/figures/ml_bootstrap_intervals.png | Generated figure | 21834 |
 | output/figures/ml_calibration_reliability.png | Generated figure | 73889 |
 | output/figures/ml_candidate_rank_stability.png | Generated figure | 43692 |
@@ -437,14 +443,49 @@ figure(s) with validity `false`.
 | output/figures/mnist_class_balance.png | Generated figure | 27059 |
 | output/figures/mnist_error_examples.png | Generated figure | 28431 |
 | output/figures/mnist_subset_contact_sheet.png | Generated figure | 23617 |
+| output/figures/transmission_integrity_strip.png | Generated figure | 18348 |
+| output/figures/transmission_pairing.png | Generated figure | 11286 |
+| output/manuscript/00_00_transmission_begin.md | Manuscript hydration | 1554 |
+| output/manuscript/00_abstract.md | Manuscript hydration | 1451 |
+| output/manuscript/01_introduction.md | Manuscript hydration | 14774 |
+| output/manuscript/02_methodology.md | Manuscript hydration | 21097 |
+| output/manuscript/03_results.md | Manuscript hydration | 39363 |
+| output/manuscript/04_conclusion.md | Manuscript hydration | 2642 |
+| output/manuscript/99_references.md | Manuscript hydration | 58 |
+| output/manuscript/99_zz_transmission_end.md | Manuscript hydration | 543 |
+| output/manuscript/config.yaml | Manuscript hydration | 3233 |
+| output/manuscript/preamble.md | Manuscript hydration | 137 |
+| output/manuscript/references.bib | Manuscript hydration | 23228 |
+| output/pdf/template_autoresearch_project_combined.pdf | Loop artifact | 1342096 |
+| output/release/swh_repo_url.txt | Loop artifact | 59 |
+| output/release/upload_receipts.json | Loop artifact | 2004 |
 | output/reports/autoresearch_evidence_overview.md | Evidence registry | 1136 |
 | output/reports/autoresearch_loop.json | Loop artifact | 16085 |
+| output/reports/autoresearch_loop.md | Loop artifact | 1982 |
 | output/reports/autoresearch_review_packet.md | Review packet | 912 |
 | output/reports/autoresearch_security_review.md | Review packet | 1104 |
 | output/reports/autoresearch_summary.md | Loop artifact | 255 |
 | output/reports/benchmark_readiness_smoke.json | Benchmark grading | 778 |
+| output/reports/manuscript_composition.json | Manuscript hydration | 2149 |
 | output/reports/ml_benchmark_score.json | Benchmark grading | 382 |
 | output/reports/ml_experiment_report.md | Loop artifact | 1687 |
+| output/reports/test_results.json | Loop artifact | 616 |
+| output/reports/test_results.md | Loop artifact | 293 |
+| output/slides/00_abstract_slides.pdf | Loop artifact | 15419 |
+| output/slides/01_introduction_slides.pdf | Loop artifact | 30739 |
+| output/slides/02_methodology_slides.pdf | Loop artifact | 191202 |
+| output/slides/03_results_slides.pdf | Loop artifact | 1060056 |
+| output/slides/04_conclusion_slides.pdf | Loop artifact | 15939 |
+| output/slides/99_references_slides.pdf | Loop artifact | 7623 |
+| output/web/_combined_manuscript.md | Manuscript hydration | 81389 |
+| output/web/favicon.ico | Loop artifact | 121 |
+| output/web/index.html | Loop artifact | 127633 |
+| output/web/manuscript__00_abstract.html | Manuscript hydration | 5627 |
+| output/web/manuscript__01_introduction.html | Manuscript hydration | 19028 |
+| output/web/manuscript__02_methodology.html | Manuscript hydration | 32746 |
+| output/web/manuscript__03_results.html | Manuscript hydration | 69087 |
+| output/web/manuscript__04_conclusion.html | Manuscript hydration | 6574 |
+| output/web/manuscript__99_references.html | Manuscript hydration | 3942 |
 
 : Generated artifact manifest from `output/reports/artifact_manifest.json`. {#tbl:autoresearch-loop}
 

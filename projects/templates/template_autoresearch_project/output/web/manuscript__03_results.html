@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_results.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -173,8 +172,12 @@
       vertical-align: middle;
     }
   </style>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <h2 id="sec:candidate-outcome">Candidate Outcome</h2>
 <p>The generated loop selected <code>exp-mlp-tanh-64</code>
@@ -323,8 +326,8 @@ are deterministic local bootstrap summaries.</caption>
 <h2 id="sec:run-derived-figures">Run-Derived Figures</h2>
 <figure id="fig:ml_candidate_scores">
 <img src="../figures/ml_candidate_scores.png"
-alt="Held-out accuracy with Wilson intervals for the baseline and evaluated candidates from output/data/ml_candidate_intervals.json; accepted candidate exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed subset, with deferred proposals kept in the candidate ledger. Generation method: Lollipop accuracy comparison with Wilson interval error bars and direct labels. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Held-out accuracy with Wilson intervals
+alt="Held-out accuracy with Wilson intervals for the baseline and evaluated candidates from output/data/ml_candidate_intervals.json; accepted candidate exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed subset, with deferred…" />
+<figcaption>Held-out accuracy with Wilson intervals
 for the baseline and evaluated candidates from
 output/data/ml_candidate_intervals.json; accepted candidate
 exp-mlp-tanh-64 improves accuracy from 82.6% to 89.4% on the fixed
@@ -335,8 +338,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_candidate_rank_stability">
 <img src="../figures/ml_candidate_rank_stability.png"
-alt="Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json; deterministic local bootstrap resampling shows how often each evaluated candidate ranks first under the fixed test split. Generation method: Bootstrap top-rank frequency and mean-rank comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Rank-stability summary for
+alt="Rank-stability summary for exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json; deterministic local bootstrap resampling shows how often each evaluated candidate ranks first under the fixed test split." />
+<figcaption>Rank-stability summary for
 exp-mlp-tanh-64 from output/data/ml_candidate_rank_stability.json;
 deterministic local bootstrap resampling shows how often each evaluated
 candidate ranks first under the fixed test split. Generation method:
@@ -346,8 +349,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_confusion_matrix">
 <img src="../figures/ml_confusion_matrix.png"
-alt="Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses the selected run, not general full-dataset performance. Generation method: Row-normalized heatmap with cell counts and row percentages. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Accepted-candidate confusion matrix for
+alt="Accepted-candidate confusion matrix for exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses the selected run, not general full-dataset performance." />
+<figcaption>Accepted-candidate confusion matrix for
 exp-mlp-tanh-64 on the fixed MNIST handwritten digit database test
 split, sourced from output/data/ml_confusion_matrix.csv; it diagnoses
 the selected run, not general full-dataset performance. Generation
@@ -357,8 +360,8 @@ claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_per_class_accuracy">
 <img src="../figures/ml_per_class_accuracy.png"
-alt="Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv; variation across digits is a run diagnostic for the fixed local test split. Generation method: Per-class accuracy bars computed from the confusion matrix diagonal. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Per-class accuracy for exp-mlp-tanh-64,
+alt="Per-class accuracy for exp-mlp-tanh-64, computed from output/data/ml_confusion_matrix.csv; variation across digits is a run diagnostic for the fixed local test split." />
+<figcaption>Per-class accuracy for exp-mlp-tanh-64,
 computed from output/data/ml_confusion_matrix.csv; variation across
 digits is a run diagnostic for the fixed local test split. Generation
 method: Per-class accuracy bars computed from the confusion matrix
@@ -369,8 +372,8 @@ artifact, and claim boundary for validation.</figcaption>
 Diagnostics</h2>
 <figure id="fig:ml_learning_curves">
 <img src="../figures/ml_learning_curves.png"
-alt="Epoch-level held-out accuracy curves for evaluated candidates from output/data/ml_training_history.csv; the accepted curve is visually emphasized for exp-mlp-tanh-64. Generation method: Epoch-level held-out accuracy lines with accepted best-epoch marker. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Epoch-level held-out accuracy curves for
+alt="Epoch-level held-out accuracy curves for evaluated candidates from output/data/ml_training_history.csv; the accepted curve is visually emphasized for exp-mlp-tanh-64." />
+<figcaption>Epoch-level held-out accuracy curves for
 evaluated candidates from output/data/ml_training_history.csv; the
 accepted curve is visually emphasized for exp-mlp-tanh-64. Generation
 method: Epoch-level held-out accuracy lines with accepted best-epoch
@@ -379,8 +382,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_training_dynamics">
 <img src="../figures/ml_training_dynamics.png"
-alt="Configured-training dynamics for evaluated candidates from output/data/ml_training_diagnostics.json; exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test gaps remain bounded to the local run. Generation method: Final and best-epoch accuracy bars plus train-test gap bars. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Configured-training dynamics for
+alt="Configured-training dynamics for evaluated candidates from output/data/ml_training_diagnostics.json; exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test gaps remain bounded to the local run." />
+<figcaption>Configured-training dynamics for
 evaluated candidates from output/data/ml_training_diagnostics.json;
 exp-mlp-tanh-64 is highlighted while best-epoch markers and train-test
 gaps remain bounded to the local run. Generation method: Final and
@@ -390,8 +393,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_complexity_accuracy">
 <img src="../figures/ml_complexity_accuracy.png"
-alt="Parameter-count versus held-out accuracy for the baseline and evaluated candidates from output/data/ml_task_results.json; the accepted candidate is highlighted without claiming a general scaling law. Generation method: Log-parameter scatter plot against held-out accuracy. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Parameter-count versus held-out accuracy
+alt="Parameter-count versus held-out accuracy for the baseline and evaluated candidates from output/data/ml_task_results.json; the accepted candidate is highlighted without claiming a general scaling law." />
+<figcaption>Parameter-count versus held-out accuracy
 for the baseline and evaluated candidates from
 output/data/ml_task_results.json; the accepted candidate is highlighted
 without claiming a general scaling law. Generation method: Log-parameter
@@ -401,8 +404,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:mnist_error_examples">
 <img src="../figures/mnist_error_examples.png"
-alt="First accepted-candidate error examples for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and data/mnist_small.npz; these images support qualitative diagnosis only. Generation method: Deterministic grid of the first accepted-candidate misclassifications. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">First accepted-candidate error examples
+alt="First accepted-candidate error examples for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and data/mnist_small.npz; these images support qualitative diagnosis only." />
+<figcaption>First accepted-candidate error examples
 for exp-mlp-tanh-64, sourced from output/data/ml_error_examples.json and
 data/mnist_small.npz; these images support qualitative diagnosis only.
 Generation method: Deterministic grid of the first accepted-candidate
@@ -411,8 +414,8 @@ source artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:autoresearch_candidate_lifecycle">
 <img src="../figures/autoresearch_candidate_lifecycle.png"
-alt="Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed candidates, with deferred proposals kept visible instead of executed automatically. Generation method: Candidate lifecycle status-count bar chart. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Candidate lifecycle ledger from
+alt="Candidate lifecycle ledger from output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed candidates, with deferred proposals kept visible instead of executed automatically." />
+<figcaption>Candidate lifecycle ledger from
 output/data/ml_candidate_ledger.json: 4 evaluated out of 5 proposed
 candidates, with deferred proposals kept visible instead of executed
 automatically. Generation method: Candidate lifecycle status-count bar
@@ -515,8 +518,8 @@ profile. The accompanying tables preserve the same values for audit and
 downstream comparison.</p>
 <figure id="fig:ml_calibration_reliability">
 <img src="../figures/ml_calibration_reliability.png"
-alt="Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected calibration error and bin counts summarize the accepted candidate on the fixed local test split. Generation method: Reliability curve with confidence-bin support histogram. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Reliability curve for exp-mlp-tanh-64
+alt="Reliability curve for exp-mlp-tanh-64 from output/data/ml_calibration_report.json; expected calibration error and bin counts summarize the accepted candidate on the fixed local test split." />
+<figcaption>Reliability curve for exp-mlp-tanh-64
 from output/data/ml_calibration_report.json; expected calibration error
 and bin counts summarize the accepted candidate on the fixed local test
 split. Generation method: Reliability curve with confidence-bin support
@@ -525,8 +528,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_classification_metrics_heatmap">
 <img src="../figures/ml_classification_metrics_heatmap.png"
-alt="Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; metrics are scoped to the local test split. Generation method: Per-class precision, recall, and F1 heatmap. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Per-class precision, recall, and F1 for
+alt="Per-class precision, recall, and F1 for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; metrics are scoped to the local test split." />
+<figcaption>Per-class precision, recall, and F1 for
 exp-mlp-tanh-64, sourced from
 output/data/ml_classification_diagnostics.json; metrics are scoped to
 the local test split. Generation method: Per-class precision, recall,
@@ -535,8 +538,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_confusion_pairs">
 <img src="../figures/ml_confusion_pairs.png"
-alt="Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; the bars highlight which local digit pairs account for accepted-candidate errors. Generation method: Ranked off-diagonal confusion-pair bars with true-class error rates. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Top non-diagonal confusion pairs for
+alt="Top non-diagonal confusion pairs for exp-mlp-tanh-64, sourced from output/data/ml_classification_diagnostics.json; the bars highlight which local digit pairs account for accepted-candidate errors." />
+<figcaption>Top non-diagonal confusion pairs for
 exp-mlp-tanh-64, sourced from
 output/data/ml_classification_diagnostics.json; the bars highlight which
 local digit pairs account for accepted-candidate errors. Generation
@@ -900,8 +903,8 @@ exposes the matched selected-versus-baseline correctness table used by
 the paired comparison.</p>
 <figure id="fig:ml_generalization_gap">
 <img src="../figures/ml_generalization_gap.png"
-alt="Train/test accuracy and loss for evaluated candidates from output/data/ml_classification_diagnostics.json; the plot exposes local generalization gaps without claiming full-dataset behavior. Generation method: Grouped train/test accuracy and loss bars by evaluated candidate. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Train/test accuracy and loss for
+alt="Train/test accuracy and loss for evaluated candidates from output/data/ml_classification_diagnostics.json; the plot exposes local generalization gaps without claiming full-dataset behavior." />
+<figcaption>Train/test accuracy and loss for
 evaluated candidates from
 output/data/ml_classification_diagnostics.json; the plot exposes local
 generalization gaps without claiming full-dataset behavior. Generation
@@ -911,8 +914,8 @@ artifact, and claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_robustness_matrix">
 <img src="../figures/ml_robustness_matrix.png"
-alt="Accuracy for evaluated candidates under identity, one-pixel shifts, and low contrast from output/data/ml_robustness_report.json; the deterministic transforms provide a bounded smoke test only. Generation method: Candidate-by-transform accuracy heatmap for deterministic perturbations. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Accuracy for evaluated candidates under
+alt="Accuracy for evaluated candidates under identity, one-pixel shifts, and low contrast from output/data/ml_robustness_report.json; the deterministic transforms provide a bounded smoke test only." />
+<figcaption>Accuracy for evaluated candidates under
 identity, one-pixel shifts, and low contrast from
 output/data/ml_robustness_report.json; the deterministic transforms
 provide a bounded smoke test only. Generation method:
@@ -922,8 +925,8 @@ claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_probability_margin_distribution">
 <img src="../figures/ml_probability_margin_distribution.png"
-alt="Confidence and prediction-margin histograms for exp-mlp-tanh-64 from output/data/ml_probability_diagnostics.json; the figure separates correct and incorrect local test predictions. Generation method: Confidence and margin histograms split by correctness. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Confidence and prediction-margin
+alt="Confidence and prediction-margin histograms for exp-mlp-tanh-64 from output/data/ml_probability_diagnostics.json; the figure separates correct and incorrect local test predictions." />
+<figcaption>Confidence and prediction-margin
 histograms for exp-mlp-tanh-64 from
 output/data/ml_probability_diagnostics.json; the figure separates
 correct and incorrect local test predictions. Generation method:
@@ -933,8 +936,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_bootstrap_intervals">
 <img src="../figures/ml_bootstrap_intervals.png"
-alt="Deterministic percentile-bootstrap intervals for exp-mlp-tanh-64 from output/data/ml_bootstrap_intervals.json; the intervals summarize local sampling variation for accuracy and macro F1. Generation method: Horizontal percentile-bootstrap interval plot. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Deterministic percentile-bootstrap
+alt="Deterministic percentile-bootstrap intervals for exp-mlp-tanh-64 from output/data/ml_bootstrap_intervals.json; the intervals summarize local sampling variation for accuracy and macro F1." />
+<figcaption>Deterministic percentile-bootstrap
 intervals for exp-mlp-tanh-64 from
 output/data/ml_bootstrap_intervals.json; the intervals summarize local
 sampling variation for accuracy and macro F1. Generation method:
@@ -944,8 +947,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:ml_paired_correctness">
 <img src="../figures/ml_paired_correctness.png"
-alt="Matched correctness comparison between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from output/data/ml_paired_comparison.json; discordant cells support the paired test summary. Generation method: Matched accepted-versus-baseline correctness heatmap. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Matched correctness comparison between
+alt="Matched correctness comparison between exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from output/data/ml_paired_comparison.json; discordant cells support the paired test summary." />
+<figcaption>Matched correctness comparison between
 exp-mlp-tanh-64 and the nearest_centroid_baseline baseline from
 output/data/ml_paired_comparison.json; discordant cells support the
 paired test summary. Generation method: Matched accepted-versus-baseline
@@ -1191,8 +1194,8 @@ candidate is not treated as automatically best on every diagnostic
 axis.</p>
 <figure id="fig:ml_selective_accuracy">
 <img src="../figures/ml_selective_accuracy.png"
-alt="Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot compares retained coverage, selective accuracy, and the unthresholded accepted-candidate accuracy on the fixed local split. Generation method: Confidence-threshold coverage and selective-accuracy line chart. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Confidence-threshold trade-off for
+alt="Confidence-threshold trade-off for exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot compares retained coverage, selective accuracy, and the unthresholded accepted-candidate accuracy on the fixed local split." />
+<figcaption>Confidence-threshold trade-off for
 exp-mlp-tanh-64 from output/data/ml_statistical_summary.json; the plot
 compares retained coverage, selective accuracy, and the unthresholded
 accepted-candidate accuracy on the fixed local split. Generation method:
@@ -1202,8 +1205,8 @@ claim boundary for validation.</figcaption>
 </figure>
 <figure id="fig:ml_probability_quality">
 <img src="../figures/ml_probability_quality.png"
-alt="Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is highlighted. Generation method: Brier score and negative-log-likelihood bar comparison. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Brier score and negative log likelihood
+alt="Brier score and negative log likelihood for evaluated candidates from output/data/ml_statistical_summary.json; lower values indicate better probability quality within the configured local run, and the accepted candidate is highlighted." />
+<figcaption>Brier score and negative log likelihood
 for evaluated candidates from output/data/ml_statistical_summary.json;
 lower values indicate better probability quality within the configured
 local run, and the accepted candidate is highlighted. Generation method:
@@ -1587,8 +1590,8 @@ figure-quality report covers <code>25</code> registered figure(s) with
 validity <code>false</code>.</p>
 <figure id="fig:autoresearch_stage_matrix">
 <img src="../figures/autoresearch_stage_matrix.png"
-alt="Validated AutoResearch run with 7 stages, 6 supported claims, and 78 required artifacts from output/data/autoresearch_loop.json; the count summarizes readiness artifacts, not human approval. Generation method: Horizontal count summary from final loop metrics. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Validated AutoResearch run with 7 stages,
+alt="Validated AutoResearch run with 7 stages, 6 supported claims, and 78 required artifacts from output/data/autoresearch_loop.json; the count summarizes readiness artifacts, not human approval." />
+<figcaption>Validated AutoResearch run with 7 stages,
 6 supported claims, and 78 required artifacts from
 output/data/autoresearch_loop.json; the count summarizes readiness
 artifacts, not human approval. Generation method: Horizontal count
@@ -1598,8 +1601,8 @@ validation.</figcaption>
 </figure>
 <figure id="fig:autoresearch_closure_flow">
 <img src="../figures/autoresearch_closure_flow.png"
-alt="File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable. Generation method: File-backed process-flow diagram from final loop state. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">File-backed AutoResearch closure from
+alt="File-backed AutoResearch closure from program through review, with 6 supported claims and readiness passed; review remains a deferred human decision and the provenance path remains inspectable." />
+<figcaption>File-backed AutoResearch closure from
 program through review, with 6 supported claims and readiness passed;
 review remains a deferred human decision and the provenance path remains
 inspectable. Generation method: File-backed process-flow diagram from
@@ -1640,7 +1643,7 @@ source artifact, and claim boundary for validation.</figcaption>
 <tr>
 <td>output/data/autoresearch_inventory_export.json</td>
 <td>Security evidence</td>
-<td>20203</td>
+<td>20155</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_loop.json</td>
@@ -1655,7 +1658,7 @@ source artifact, and claim boundary for validation.</figcaption>
 <tr>
 <td>output/data/autoresearch_plan.json</td>
 <td>Loop artifact</td>
-<td>17361</td>
+<td>19262</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_review_packet.json</td>
@@ -1680,7 +1683,7 @@ source artifact, and claim boundary for validation.</figcaption>
 <tr>
 <td>output/data/autoresearch_supply_chain_inventory.json</td>
 <td>Security evidence</td>
-<td>21459</td>
+<td>21411</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_threat_model.json</td>
@@ -1833,6 +1836,11 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>3926</td>
 </tr>
 <tr>
+<td>output/data/publication_ledger.json</td>
+<td>Run or candidate ledger</td>
+<td>1005</td>
+</tr>
+<tr>
 <td>output/data/research_object_manifest.json</td>
 <td>Loop artifact</td>
 <td>20789</td>
@@ -1853,6 +1861,11 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>328</td>
 </tr>
 <tr>
+<td>output/data/transmission_manifest.json</td>
+<td>Loop artifact</td>
+<td>503</td>
+</tr>
+<tr>
 <td>../figures/autoresearch_candidate_lifecycle.png</td>
 <td>Generated figure</td>
 <td>28053</td>
@@ -1871,6 +1884,16 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>../figures/autoresearch_security_control_matrix.png</td>
 <td>Generated figure</td>
 <td>86574</td>
+</tr>
+<tr>
+<td>../figures/autoresearch_stage_matrix.png</td>
+<td>Generated figure</td>
+<td>23476</td>
+</tr>
+<tr>
+<td>../figures/figure_registry.json</td>
+<td>Loop artifact</td>
+<td>30674</td>
 </tr>
 <tr>
 <td>../figures/ml_bootstrap_intervals.png</td>
@@ -1973,6 +1996,86 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>23617</td>
 </tr>
 <tr>
+<td>../figures/transmission_integrity_strip.png</td>
+<td>Generated figure</td>
+<td>18348</td>
+</tr>
+<tr>
+<td>../figures/transmission_pairing.png</td>
+<td>Generated figure</td>
+<td>11286</td>
+</tr>
+<tr>
+<td>output/manuscript/00_00_transmission_begin.md</td>
+<td>Manuscript hydration</td>
+<td>1554</td>
+</tr>
+<tr>
+<td>output/manuscript/00_abstract.md</td>
+<td>Manuscript hydration</td>
+<td>1451</td>
+</tr>
+<tr>
+<td>output/manuscript/01_introduction.md</td>
+<td>Manuscript hydration</td>
+<td>14774</td>
+</tr>
+<tr>
+<td>output/manuscript/02_methodology.md</td>
+<td>Manuscript hydration</td>
+<td>21097</td>
+</tr>
+<tr>
+<td>output/manuscript/03_results.md</td>
+<td>Manuscript hydration</td>
+<td>39363</td>
+</tr>
+<tr>
+<td>output/manuscript/04_conclusion.md</td>
+<td>Manuscript hydration</td>
+<td>2642</td>
+</tr>
+<tr>
+<td>output/manuscript/99_references.md</td>
+<td>Manuscript hydration</td>
+<td>58</td>
+</tr>
+<tr>
+<td>output/manuscript/99_zz_transmission_end.md</td>
+<td>Manuscript hydration</td>
+<td>543</td>
+</tr>
+<tr>
+<td>output/manuscript/config.yaml</td>
+<td>Manuscript hydration</td>
+<td>3233</td>
+</tr>
+<tr>
+<td>output/manuscript/preamble.md</td>
+<td>Manuscript hydration</td>
+<td>137</td>
+</tr>
+<tr>
+<td>output/manuscript/references.bib</td>
+<td>Manuscript hydration</td>
+<td>23228</td>
+</tr>
+<tr>
+<td>output/pdf/template_autoresearch_project_combined.pdf</td>
+<td>Loop artifact</td>
+<td>1342096</td>
+</tr>
+<tr>
+<td>output/release/swh_repo_url.txt</td>
+<td>Loop artifact</td>
+<td>59</td>
+</tr>
+<tr>
+<td>output/release/upload_receipts.json</td>
+<td>Loop artifact</td>
+<td>2004</td>
+</tr>
+<tr>
 <td>output/reports/autoresearch_evidence_overview.md</td>
 <td>Evidence registry</td>
 <td>1136</td>
@@ -1981,6 +2084,11 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>output/reports/autoresearch_loop.json</td>
 <td>Loop artifact</td>
 <td>16085</td>
+</tr>
+<tr>
+<td>output/reports/autoresearch_loop.md</td>
+<td>Loop artifact</td>
+<td>1982</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_review_packet.md</td>
@@ -2003,6 +2111,11 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>778</td>
 </tr>
 <tr>
+<td>output/reports/manuscript_composition.json</td>
+<td>Manuscript hydration</td>
+<td>2149</td>
+</tr>
+<tr>
 <td>output/reports/ml_benchmark_score.json</td>
 <td>Benchmark grading</td>
 <td>382</td>
@@ -2011,6 +2124,91 @@ source artifact, and claim boundary for validation.</figcaption>
 <td>output/reports/ml_experiment_report.md</td>
 <td>Loop artifact</td>
 <td>1687</td>
+</tr>
+<tr>
+<td>output/reports/test_results.json</td>
+<td>Loop artifact</td>
+<td>616</td>
+</tr>
+<tr>
+<td>output/reports/test_results.md</td>
+<td>Loop artifact</td>
+<td>293</td>
+</tr>
+<tr>
+<td>output/slides/00_abstract_slides.pdf</td>
+<td>Loop artifact</td>
+<td>15419</td>
+</tr>
+<tr>
+<td>output/slides/01_introduction_slides.pdf</td>
+<td>Loop artifact</td>
+<td>30739</td>
+</tr>
+<tr>
+<td>output/slides/02_methodology_slides.pdf</td>
+<td>Loop artifact</td>
+<td>191202</td>
+</tr>
+<tr>
+<td>output/slides/03_results_slides.pdf</td>
+<td>Loop artifact</td>
+<td>1060056</td>
+</tr>
+<tr>
+<td>output/slides/04_conclusion_slides.pdf</td>
+<td>Loop artifact</td>
+<td>15939</td>
+</tr>
+<tr>
+<td>output/slides/99_references_slides.pdf</td>
+<td>Loop artifact</td>
+<td>7623</td>
+</tr>
+<tr>
+<td>output/web/_combined_manuscript.md</td>
+<td>Manuscript hydration</td>
+<td>81389</td>
+</tr>
+<tr>
+<td>output/web/favicon.ico</td>
+<td>Loop artifact</td>
+<td>121</td>
+</tr>
+<tr>
+<td>output/web/index.html</td>
+<td>Loop artifact</td>
+<td>127633</td>
+</tr>
+<tr>
+<td>output/web/manuscript__00_abstract.html</td>
+<td>Manuscript hydration</td>
+<td>5627</td>
+</tr>
+<tr>
+<td>output/web/manuscript__01_introduction.html</td>
+<td>Manuscript hydration</td>
+<td>19028</td>
+</tr>
+<tr>
+<td>output/web/manuscript__02_methodology.html</td>
+<td>Manuscript hydration</td>
+<td>32746</td>
+</tr>
+<tr>
+<td>output/web/manuscript__03_results.html</td>
+<td>Manuscript hydration</td>
+<td>69087</td>
+</tr>
+<tr>
+<td>output/web/manuscript__04_conclusion.html</td>
+<td>Manuscript hydration</td>
+<td>6574</td>
+</tr>
+<tr>
+<td>output/web/manuscript__99_references.html</td>
+<td>Manuscript hydration</td>
+<td>3942</td>
 </tr>
 </tbody>
 </table>
@@ -2175,14 +2373,14 @@ order is not an autonomy claim.</caption>
 <td>schema manifest</td>
 <td>11</td>
 <td>schema</td>
-<td>2</td>
+<td>1</td>
 <td>write generated JSON schema-version manifest</td>
 </tr>
 <tr>
 <td>research object manifest</td>
 <td>12</td>
 <td>packaging</td>
-<td>2</td>
+<td>1</td>
 <td>write local research-object manifest</td>
 </tr>
 <tr>
@@ -2196,14 +2394,14 @@ order is not an autonomy claim.</caption>
 <td>final schema manifest</td>
 <td>14</td>
 <td>schema</td>
-<td>2</td>
+<td>1</td>
 <td>refresh schema manifest after final payload updates</td>
 </tr>
 <tr>
 <td>final research object manifest</td>
 <td>15</td>
 <td>packaging</td>
-<td>2</td>
+<td>1</td>
 <td>refresh local research-object manifest</td>
 </tr>
 <tr>
@@ -2427,8 +2625,8 @@ claim external signing, production SLSA compliance, or runtime security
 monitoring.</p>
 <figure id="fig:autoresearch_integrity_chain">
 <img src="../figures/autoresearch_integrity_chain.png"
-alt="Local integrity chain from output/data/autoresearch_integrity_attestation.json; checksums summarize the observed run artifacts and remain unsigned local evidence. Generation method: Local checksum attestation chain with checked, missing, and mismatch counts. Registry metadata records the generation method, source artifact, and claim boundary for validation." />
-<figcaption aria-hidden="true">Local integrity chain from
+alt="Local integrity chain from output/data/autoresearch_integrity_attestation.json; checksums summarize the observed run artifacts and remain unsigned local evidence." />
+<figcaption>Local integrity chain from
 output/data/autoresearch_integrity_attestation.json; checksums summarize
 the observed run artifacts and remain unsigned local evidence.
 Generation method: Local checksum attestation chain with checked,
@@ -2612,5 +2810,6 @@ self-approval.</p>
 </tr>
 </tbody>
 </table>
+</main>
 </body>
 </html>
