@@ -11,9 +11,9 @@ Use Pandoc-crossref and natbib:
 ## Cross-references
 
 - `[@sec:abstract]` — section reference
-- `[@eq:purity]` — equation reference
-- `[@fig:convergence]` — figure reference
-- `[@tbl:stages]` — table reference
+- `[@eq:purity_functional]` — equation reference
+- `[@fig:purity_progression]` — figure reference
+- `[@tbl:formalism_registry]` — table reference
 
 ## Token syntax
 

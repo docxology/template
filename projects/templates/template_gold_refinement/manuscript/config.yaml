@@ -148,6 +148,14 @@ gold_refinement:
       - "distinguish analogy from truth"
       - "limit publication claims"
       - "explain responsible forking"
+    evaluation:
+      - "name readiness criteria"
+      - "connect criteria to artifacts"
+      - "make failure probes visible"
+    authoring_contract:
+      - "state human responsibilities"
+      - "name fork obligations"
+      - "require domain validators before domain claims"
   lexicon:
     metallurgical_terms:
       - "cupellation"

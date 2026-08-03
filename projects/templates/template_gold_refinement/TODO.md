@@ -29,14 +29,17 @@ token composition.
 - Added the two missing `.agents/` catalog READMEs (`.agents/README.md`,
   `.agents/skills/README.md`) so every exemplar catalog level carries
   AGENTS.md + README.md per the shared template contract.
-- Re-synced `manuscript/config.yaml.example` with the live config shape:
-  the fork template now carries `publication.repository_url`,
-  `publication.repository_label`, and a placeholder
-  `publication.published_artifacts` map, and its `gold_refinement.narrative_moves`
-  cover the same sections as the live config (removed the two extra
-  `evaluation`/`authoring_contract` move blocks the live config does not ship).
-  Live `manuscript/config.yaml` remains the untouched source of truth; no
-  output regeneration was required.
+- Synchronized `manuscript/config.yaml.example` with the live config shape:
+  both files carry `publication.repository_url`, `publication.repository_label`,
+  a placeholder `publication.published_artifacts` map, and
+  `gold_refinement.narrative_moves` covering all ten configured sections
+  (`evaluation` and `authoring_contract` added to the live config so
+  `narrative_moves` matches `section_conditions`/`section_titles` and the fork
+  template). Outputs were regenerated through stages 02-05 after the config
+  change.
+- Replaced placeholder cross-reference examples in `manuscript/SYNTAX.md` and
+  `docs/syntax_guide.md` with real project labels (`eq:purity_functional`,
+  `eq:monotone_refinery`, `fig:purity_progression`, `tbl:formalism_registry`).
 - Verified the full surface programmatically: every relative Markdown link
   resolves; scripts/tests AGENTS listings match the files on disk; version
   markers agree across pyproject.toml, config.yaml, CITATION.cff,

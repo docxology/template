@@ -12,8 +12,8 @@
 |------|--------|---------|
 | Section | `[@sec:label]` | `[@sec:methodology]` |
 | Figure | `[@fig:label]` | `[@fig:purity_progression]` |
-| Equation | `[@eq:label]` | `[@eq:monotone_purity]` |
-| Table | `[@tbl:label]` | `[@tbl:stages]` |
+| Equation | `[@eq:label]` | `[@eq:monotone_refinery]` |
+| Table | `[@tbl:label]` | `[@tbl:formalism_registry]` |
 
 ## Figure labels
 
@@ -46,7 +46,7 @@ All numeric values and config-derived text use `{{UPPERCASE_TOKEN}}` syntax.
 
 ```latex
 \begin{equation}
-\label{eq:monotone_purity}
+\label{eq:monotone_refinery}
 p_{\text{out}}^{(i)} > p_{\text{in}}^{(i)} \quad \forall i
 \end{equation}
 ```
