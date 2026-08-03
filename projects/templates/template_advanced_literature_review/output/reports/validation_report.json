@@ -51,7 +51,7 @@
           "exists": true,
           "file_count": 28,
           "largest_file": "evidence_registry.json",
-          "size_mb": "0.23"
+          "size_mb": "0.24"
         },
         "simulations": {
           "exists": true,
@@ -136,7 +136,7 @@
             "files": 28,
             "optional": false,
             "readable": true,
-            "size_mb": 0.23
+            "size_mb": 0.24
           },
           "simulations": {
             "exists": true,
@@ -166,7 +166,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 19.03993320465088
+      "total_size_mb": 19.044153213500977
     },
     "figures": {
       "files": 19,
@@ -185,7 +185,7 @@
     "passed": 8,
     "total_checks": 8
   },
-  "timestamp": "2026-08-03T00:26:40Z",
+  "timestamp": "2026-08-03T00:28:37Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",

@@ -157,8 +157,8 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "9b576bb832673bddec44b776038aa9ac85d4fb45bd2a6a0788a6980a15061ec2",
-      "size_bytes": 13688
+      "sha256": "3e5d2b54f13d91a5215b36b21ca99c5d401c8b7e5fe5ccf01782b268fb49d663",
+      "size_bytes": 13689
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
