@@ -1,71 +1,28 @@
 # template_autoscientists TODO
 
-Forward-only backlog for the deterministic coordination-mechanism testbed
-exemplar (arXiv:2605.28655 primitives: proposer, dead-end registry,
-confirmation band, reorganization).
+Forward-only backlog for the deterministic coordination-mechanism testbed exemplar (arXiv:2605.28655 primitives: proposer, dead-end registry, confirmation band, reorganization).
 
 ## Current validation evidence
 
-- Manuscript pre-render gate:
-  `uv run python -m infrastructure.validation.cli prerender projects/templates/template_autoscientists/manuscript --repo-root .`
-- Project tests and coverage (read live counts from
-  [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) and the gate
-  output, not a pinned number here):
-  `uv run pytest projects/templates/template_autoscientists/tests/ --cov=projects/templates/template_autoscientists/src --cov-fail-under=90`
-- Repo drift gate:
-  `uv run python scripts/audit/check_template_drift.py --strict`
-- Stage-04 output validation (figure registry, evidence registry, artifact manifest):
-  `uv run python scripts/pipeline/stage_04_validate.py --project templates/template_autoscientists`
-- The live Hermes path stays opt-in through the `requires_ollama` test marker
-  (skipped at runtime in `test_hermes_live.py`) and is not part of the default
-  render gate.
+- Pre-render validation passed with no render-blocking pitfalls or undefined citations.
+- Project test gate: **114 passed, 1 skipped** (`requires_ollama`), **99.29%** isolated source coverage.
+- Full core pipeline (8 stages) completed green; single-stage analysis/render/validate/copy all exit 0 with Stage-04 validation passing every check (PDF, transmission bookends, Markdown, output structure, figure registry, evidence registry, project design overlays, artifact manifest, rendered provenance).
+- Combined PDF: **14 pages**, **0** `^! ` LaTeX error lines, **0** unresolved `??` markers.
+- Qualified template-drift gate: `template_drift: no drift detected.`
 
-## Integrity and template-status gaps
+## Fixes completed in this pass
 
-- Keep the deterministic proposer, dead-end registry, confirmation band, and
-  reorganization logic as the default gated path.
-- Add a small generated readiness report that distinguishes deterministic
-  fixture evidence from live language-model behavior.
-- Preserve the no-mocks policy by adding any new coordination seam as a real
-  deterministic test double or fixture object.
+- Corrected claim-ledger `confirmation-noise-seeds` from 5 to the measured `SearchConfig.confirm_seeds` count of 3 and bound its source to `src/search.py`.
+- Expanded `tests/AGENTS.md` to list every test file and identify the opt-in Ollama test.
+- Synchronized `manuscript/config.yaml.example` with live publication shape (`repository_url`, `published_artifacts`).
+- Documented `ablation_efficiency.png` output and corrected troubleshooting guidance to `SearchConfig.confirm_seeds`.
+- Repaired manuscript champion notation with `$p^{\ast}$`, eliminating invalid escaped-star LaTeX (`Missing {`/`Missing }` recoverable errors).
+- Regenerated figures, data, PDF/HTML manuscript outputs, validation reports, output statistics, composition, and provenance evidence; refreshed the artifact manifest snapshot.
 
-## Configurable-surface gaps
-
-- Keep `manuscript/config.yaml.example` aligned with the shipped experiment
-  mirror when code defaults (`SearchConfig`, `SyntheticObjective`) change.
-- Add a script-level config summary artifact if the analysis scripts begin
-  reading YAML directly instead of constructing defaults in code.
-
-## Documentation and signposting gaps
-
-- Link every new analysis artifact from README, AGENTS, and the manuscript
-  method section before treating it as a public template surface.
-- Add a short fork checklist for replacing `DeterministicProposer` with a real
-  proposer while retaining matched-budget controls.
-
-## Test and validator gaps
-
-- Register the remaining unsupported numeric claims in the evidence registry or
-  rewrite them as clearly illustrative constants before treating Stage 04 as
-  warning-free.
-- Add a stable final artifact-manifest refresh path for single-stage
-  analysis/render/copy checks, or document that only full `PipelineExecutor`
-  runs are manifest-authoritative. **Documented:**
-  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
-  provides the stable refresh path for single-stage runs; full
-  `PipelineExecutor` runs remain the only source of per-stage provenance.
-- Add a validator for stale live-Hermes transcripts if live transcript fixtures
-  are ever checked in.
-- **Shipped:** the shared evidence registry now fails validation when a
-  claim-ledger `artifact_path` escapes the project or no longer resolves on
-  disk; the stale ablation artifact reference was corrected and covered by
-  infrastructure-level negative controls.
-
-## Ordered improvement ladder
+## Remaining gaps (forward-only ladder)
 
 1. Keep deterministic fixture replay green under the project coverage gate.
-2. Add readiness/report artifacts for the deterministic-versus-live boundary.
-3. Add config-driven orchestration only after tests prove parity with current
-   code defaults.
-4. Promote any live agent path only with offline transcript fixtures,
-   stale-transcript detection, and a no-network default validation.
+2. Keep `manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
+3. Add a script-level config summary only if analysis scripts begin reading YAML directly.
+4. Promote the live agent path only with offline transcript fixtures, stale-transcript detection, and a no-network default validation.
+5. The single-stage rendered-provenance bridge remains sensitive to `git check-ignore` under concurrent repo churn; full `PipelineExecutor` runs are the manifest-authoritative path. Any further hardening belongs in shared infrastructure, not this exemplar.
