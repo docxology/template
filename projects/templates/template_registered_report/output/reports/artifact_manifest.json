@@ -57,7 +57,7 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_registered_report_combined.pdf",
-      "sha256": "b61620071f07d728b5065a7cb13309013c751b710d065646a063e135a02a4992",
+      "sha256": "f7fad2cd9b23c75eceef26a5f1062a1643dc8480b51878c7470455282e8f14de",
       "size_bytes": 276907,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
@@ -120,7 +120,7 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
-      "sha256": "3ddee5f3778a346fae65830439394ed8c90dfb11341813bdacde5975ad3908ea",
+      "sha256": "c15a1c5001f1265c8224447213973ad59625fae1674448713ddb22ea1e276cbe",
       "size_bytes": 608,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
@@ -129,7 +129,7 @@
     {
       "contract_match": true,
       "path": "output/reports/test_results.md",
-      "sha256": "c51dd9f547eb37ef3d05783b551c7713f8e25a86e87fbf0860d839f774f5964b",
+      "sha256": "fc2a04089d1035168e9051d0bd4a113d1554d355d5d5d2cf51ba5ff33e5a7bdc",
       "size_bytes": 290,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
@@ -183,7 +183,7 @@
     {
       "contract_match": true,
       "path": "output/slides/05_deviations_slides.pdf",
-      "sha256": "d3133d70ee4e78eec8824243ec7fbcb8d99c0de6bf35d0d60cc3e6fccd6ef721",
+      "sha256": "a70cfeacab8a633b4721daa725307a9377b4799e43a42d3e34e34f6bad5606ee",
       "size_bytes": 66029,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
@@ -192,7 +192,7 @@
     {
       "contract_match": true,
       "path": "output/slides/06_discussion_slides.pdf",
-      "sha256": "fe067a27a3f220d763b7efe1e19df38c9e0dcb3d6f63656887e1a8dfa8bab64e",
+      "sha256": "4c56329cddcbcb904197bd35f09435c9c78985da3507098180dd67b36d001084",
       "size_bytes": 19970,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
@@ -201,7 +201,7 @@
     {
       "contract_match": true,
       "path": "output/slides/99_references_slides.pdf",
-      "sha256": "803fa59bebd62192d7670d792028dacf4828930faec364b992925f42935aa76d",
+      "sha256": "31e734bc7a201ab4b0f5403853228ca86e2cbdbca046c93b91bb750f95382f62",
       "size_bytes": 11173,
       "stage_name": "standalone-output-scan",
       "stage_num": 0,
