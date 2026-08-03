@@ -43,6 +43,8 @@ The report runs through a set of pure check functions:
 
 Each check produces a `CheckResult(passed, message, details)`; the run's `all_passed` flag is the conjunction.
 
+The thresholds each check applies come from `manuscript/config.yaml`. A `prose.preset` key (`lenient` for the bundled exemplar; `strict` in `config.yaml.example`) seeds the defaults for any knob the YAML does not set explicitly, so a fork can adopt a named editorial profile in one line and override individual knobs afterwards.
+
 ## Render
 
 `src/report.py::write_review_report` writes a markdown file with:

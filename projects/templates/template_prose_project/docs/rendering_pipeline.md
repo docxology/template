@@ -166,6 +166,7 @@ Every knob lives in `projects/templates/template_prose_project/manuscript/config
 | `prose.citation_density_min_per_1000` | Floor for `citation_density_above_floor` check | `_check_citation_density` in `src/pipeline/checks.py` |
 | `prose.require_h1_per_section` | Toggle `every_file_has_h1` check | `_check_h1_per_file` in `src/pipeline/checks.py` |
 | `prose.forbid_skipped_levels` | Toggle `no_skipped_heading_levels` check | `_check_no_skipped_levels` in `src/pipeline/checks.py` |
+| `prose.preset` | Named editorial profile (`lenient`/`strict`) applied to unset prose knobs | `ProseAnalysisConfig.from_dict` in `src/config.py` |
 | `bibliography.references_path` | Path to BibTeX file | `_check_bibliography` in `src/pipeline/checks.py` (via `src/prose_facade.parse_bib_keys`) |
 | `bibliography.fail_on_missing` | Fail if a `[@key]` is not in the bib | `_check_bibliography` in `src/pipeline/checks.py` |
 | `bibliography.fail_on_unused` | Fail if a bib entry is never cited | `_check_bibliography` in `src/pipeline/checks.py` |

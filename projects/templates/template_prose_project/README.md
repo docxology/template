@@ -191,6 +191,7 @@ Every knob lives in `manuscript/config.yaml`:
 | `prose` | `citation_density_min_per_1000` | `0.0` | Minimum citations per 1000 words. |
 | `prose` | `require_h1_per_section` | `true` | Every file must have an H1. |
 | `prose` | `forbid_skipped_levels` | `true` | Heading levels must be contiguous. |
+| `prose` | `preset` | `lenient` (example: `strict`) | Named editorial profile seeding defaults for unset prose knobs. |
 | `bibliography` | `references_path` | `manuscript/references.bib` | Path to BibTeX file. |
 | `bibliography` | `fail_on_missing` | `true` | Fail if a cited `[@key]` is not in the bib. |
 | `bibliography` | `fail_on_unused` | `false` | Fail if a bib entry is never cited. |

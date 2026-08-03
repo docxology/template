@@ -63,6 +63,11 @@ manuscript_dir: "manuscript"
 # your audience.
 # ---------------------------------------------------------------------------
 prose:
+  # Named editorial profile: seeds defaults for any knob not set explicitly.
+  # "strict" is the realistic editorial-review starting point shown here;
+  # the bundled exemplar uses "lenient" so its own prose passes its own gate.
+  preset: strict
+
   # FKGL band the manuscript should land within. Tighter than bundled
   # (which is 10–18 so the exemplar's own methodological prose passes).
   target_grade_level_min: 12.0

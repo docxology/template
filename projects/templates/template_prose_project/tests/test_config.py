@@ -286,3 +286,111 @@ class TestConfigNegativeControls:
         assert config.report.include_per_file_table is False
         assert config.report.include_outline is False
         assert config.report.include_quality_flags is False
+
+
+# ---------------------------------------------------------------------------
+# Named editorial presets + forkable-example sync
+# ---------------------------------------------------------------------------
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def test_preset_lenient_applies_defaults(tmp_path: Path):
+    """prose.preset: lenient seeds the bundled exemplar's permissive defaults."""
+    cfg = _write(
+        tmp_path / "config.yaml",
+        """
+        paper: {title: "X"}
+        prose:
+          preset: lenient
+        """,
+    )
+    config = load_project_config(cfg)
+    assert config.prose.preset == "lenient"
+    assert config.prose.target_grade_level_min == 10.0
+    assert config.prose.target_grade_level_max == 18.0
+    assert config.prose.long_sentence_threshold == 35
+    assert config.prose.citation_density_min_per_1000 == 0.0
+
+
+def test_preset_strict_applies_strict_values(tmp_path: Path):
+    """prose.preset: strict seeds the forkable stricter editorial defaults."""
+    cfg = _write(
+        tmp_path / "config.yaml",
+        """
+        paper: {title: "X"}
+        prose:
+          preset: strict
+        """,
+    )
+    config = load_project_config(cfg)
+    assert config.prose.preset == "strict"
+    assert config.prose.target_grade_level_min == 12.0
+    assert config.prose.target_grade_level_max == 16.0
+    assert config.prose.long_sentence_threshold == 30
+    assert config.prose.citation_density_min_per_1000 == 3.0
+
+
+def test_explicit_knob_overrides_preset(tmp_path: Path):
+    """An explicitly-set knob always wins over the preset value."""
+    cfg = _write(
+        tmp_path / "config.yaml",
+        """
+        paper: {title: "X"}
+        prose:
+          preset: strict
+          target_grade_level_max: 20.0
+        """,
+    )
+    config = load_project_config(cfg)
+    assert config.prose.target_grade_level_min == 12.0  # from the preset
+    assert config.prose.target_grade_level_max == 20.0  # explicit wins
+
+
+def test_unknown_preset_rejected(tmp_path: Path):
+    """An unknown preset name raises ValueError with the allowed set."""
+    cfg = _write(
+        tmp_path / "config.yaml",
+        """
+        paper: {title: "X"}
+        prose:
+          preset: extra_strict
+        """,
+    )
+    with pytest.raises(ValueError, match=r"Unknown prose preset"):
+        load_project_config(cfg)
+
+
+def test_preset_null_treated_as_absent(tmp_path: Path):
+    """preset: null behaves like no preset at all."""
+    cfg = _write(
+        tmp_path / "config.yaml",
+        """
+        paper: {title: "X"}
+        prose:
+          preset: ~
+        """,
+    )
+    config = load_project_config(cfg)
+    assert config.prose.preset is None
+    assert config.prose.target_grade_level_min == 10.0
+
+
+def test_bundled_config_declares_lenient_preset():
+    """The live bundled config names its profile explicitly."""
+    config = load_project_config(PROJECT_ROOT / "manuscript" / "config.yaml")
+    assert config.prose.preset == "lenient"
+
+
+def test_example_config_parses_and_is_stricter_than_bundled():
+    """config.yaml.example must parse under the strict loader and stay stricter
+    than the bundled exemplar config (the forkable starting point)."""
+    live = load_project_config(PROJECT_ROOT / "manuscript" / "config.yaml")
+    example = load_project_config(PROJECT_ROOT / "manuscript" / "config.yaml.example")
+    assert example.prose.preset == "strict"
+    assert example.prose.target_grade_level_min > live.prose.target_grade_level_min
+    assert example.prose.target_grade_level_max < live.prose.target_grade_level_max
+    assert example.prose.long_sentence_threshold < live.prose.long_sentence_threshold
+    assert example.prose.citation_density_min_per_1000 > live.prose.citation_density_min_per_1000
+    assert example.bibliography.fail_on_unused is True
+    assert live.bibliography.fail_on_unused is False

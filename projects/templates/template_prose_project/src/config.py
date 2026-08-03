@@ -45,8 +45,34 @@ _KNOWN_PROSE_KEYS: frozenset[str] = frozenset(
         "citation_density_min_per_1000",
         "require_h1_per_section",
         "forbid_skipped_levels",
+        "preset",
     }
 )
+
+
+# Named editorial profiles. A ``prose.preset`` key applies these defaults for
+# any knob the YAML does not set explicitly; explicit keys always win.
+# "lenient" is the bundled exemplar's permissive band (its own abstract must
+# pass its own gate); "strict" is the forkable starting point also shown in
+# manuscript/config.yaml.example.
+PROSE_PRESETS: dict[str, dict[str, float | int | bool]] = {
+    "lenient": {
+        "target_grade_level_min": 10.0,
+        "target_grade_level_max": 18.0,
+        "long_sentence_threshold": 35,
+        "citation_density_min_per_1000": 0.0,
+        "require_h1_per_section": True,
+        "forbid_skipped_levels": True,
+    },
+    "strict": {
+        "target_grade_level_min": 12.0,
+        "target_grade_level_max": 16.0,
+        "long_sentence_threshold": 30,
+        "citation_density_min_per_1000": 3.0,
+        "require_h1_per_section": True,
+        "forbid_skipped_levels": True,
+    },
+}
 _KNOWN_BIBLIOGRAPHY_KEYS: frozenset[str] = frozenset({"references_path", "fail_on_missing", "fail_on_unused"})
 _KNOWN_REPORT_KEYS: frozenset[str] = frozenset(
     {"output_path", "include_per_file_table", "include_outline", "include_quality_flags"}
@@ -70,6 +96,36 @@ class ProseAnalysisConfig:
     citation_density_min_per_1000: float = 0.0
     require_h1_per_section: bool = True
     forbid_skipped_levels: bool = True
+    preset: str | None = None
+
+    @classmethod
+    def from_dict(cls, raw: dict[str, Any]) -> "ProseAnalysisConfig":
+        """Build from a ``prose:`` YAML mapping, applying a named preset first.
+
+        A ``preset`` key selects a profile from :data:`PROSE_PRESETS`; any
+        knob explicitly present in *raw* wins over the preset value. An
+        unknown preset name raises ``ValueError`` with the allowed set
+        quoted, matching the strict-loader contract.
+        """
+        preset_name = raw.get("preset")
+        if preset_name is not None:
+            if preset_name not in PROSE_PRESETS:
+                raise ValueError(
+                    f"Unknown prose preset {preset_name!r}. Allowed: {sorted(PROSE_PRESETS)}"
+                )
+            values = dict(PROSE_PRESETS[preset_name])
+            values.update({k: v for k, v in raw.items() if k != "preset"})
+        else:
+            values = dict(raw)
+        return cls(
+            target_grade_level_min=float(values.get("target_grade_level_min", 10.0)),
+            target_grade_level_max=float(values.get("target_grade_level_max", 18.0)),
+            long_sentence_threshold=int(values.get("long_sentence_threshold", 35)),
+            citation_density_min_per_1000=float(values.get("citation_density_min_per_1000", 0.0)),
+            require_h1_per_section=bool(values.get("require_h1_per_section", True)),
+            forbid_skipped_levels=bool(values.get("forbid_skipped_levels", True)),
+            preset=preset_name,
+        )
 
     def __post_init__(self) -> None:
         if self.target_grade_level_min >= self.target_grade_level_max:
@@ -131,14 +187,7 @@ class ProjectConfig:
             authors=list(data.get("authors") or []),
             keywords=list(data.get("keywords") or []),
             manuscript_dir=str(data.get("manuscript_dir") or "manuscript"),
-            prose=ProseAnalysisConfig(
-                target_grade_level_min=float(prose_raw.get("target_grade_level_min", 10.0)),
-                target_grade_level_max=float(prose_raw.get("target_grade_level_max", 18.0)),
-                long_sentence_threshold=int(prose_raw.get("long_sentence_threshold", 35)),
-                citation_density_min_per_1000=float(prose_raw.get("citation_density_min_per_1000", 0.0)),
-                require_h1_per_section=bool(prose_raw.get("require_h1_per_section", True)),
-                forbid_skipped_levels=bool(prose_raw.get("forbid_skipped_levels", True)),
-            ),
+            prose=ProseAnalysisConfig.from_dict(prose_raw),
             bibliography=BibliographyConfig(
                 references_path=str(bib_raw.get("references_path") or "manuscript/references.bib"),
                 fail_on_missing=bool(bib_raw.get("fail_on_missing", True)),
