@@ -25,6 +25,7 @@ keywords:
 analysis:
   scripts:
     - 01_generate_release_artifacts.py
+    - 02_build_figures.py
 render:
   engine: "pandoc"
   number_sections: true

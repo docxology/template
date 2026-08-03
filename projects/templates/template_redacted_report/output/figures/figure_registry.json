@@ -1,0 +1,30 @@
+{
+  "fig:disclosure_control_matrix": {
+    "caption": "Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur). Every one of the sixteen cells applies the identical source-safe redaction decisions, so visual presentation stays orthogonal to the release gate.",
+    "figure_id": "figure_001",
+    "filename": "disclosure_control_matrix.png",
+    "generated_by": "redacted_report.figures.build_figures",
+    "label": "fig:disclosure_control_matrix",
+    "metadata": {
+      "alt_text": "A four-by-four grid of redaction style tokens (blackout, whiteout, grayout, blur) on PDF backgrounds (white, gray, black, blur), with the note that all sixteen variants apply identical source-safe redaction decisions.",
+      "source": "template_redacted_report analysis pipeline"
+    },
+    "placement": "h",
+    "section": "Results",
+    "width": "0.9\\textwidth"
+  },
+  "fig:redaction_flow": {
+    "caption": "Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the visual layer renders the 4x4 proof matrix with optional steganography and Kmyth TPM sidecars.",
+    "figure_id": "figure_000",
+    "filename": "redaction_flow.png",
+    "generated_by": "redacted_report.figures.build_figures",
+    "label": "fig:redaction_flow",
+    "metadata": {
+      "alt_text": "Two-layer flow diagram. Layer one runs disclosure control: typed fixture load, classification ceiling and span validation, orphan and coverage checks, then an in-memory sanitized packet. Layer two projects a text-free audit and hashed release ledger, then renders the 4x4 visual proof matrix with steganography and optional Kmyth TPM sidecar sealing.",
+      "source": "template_redacted_report analysis pipeline"
+    },
+    "placement": "h",
+    "section": "Architecture",
+    "width": "0.9\\textwidth"
+  }
+}
