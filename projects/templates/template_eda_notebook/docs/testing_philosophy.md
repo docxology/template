@@ -61,6 +61,8 @@ exist.
 | `TestProjectOutputDirs` | `test_project_paths.py` | Output directory map under a root |
 | `TestResolveProjectRoot` | `test_project_paths.py` | Module-attribute override and default fallback |
 | `TestEdaAnalysisScript` | `test_eda_analysis_script.py` | `run_eda()` artifact writing |
+| `TestGenerateMeasurements` | `test_generate_measurements_data.py` | Deterministic generator binds to the shipped fixture contract (schema, size, missingness, correlations) |
+| `TestGenerateMeasurementsScript` | `test_generate_measurements_data.py` | `generate_measurements_file()` artifact writing |
 | `TestNotebookStructure` | `test_notebook.py` | Valid nbformat; markdown + code cells present |
 | `TestNotebookSrcBinding` | `test_notebook.py` | Imports resolve to `src.__all__`; no logic in cells |
 

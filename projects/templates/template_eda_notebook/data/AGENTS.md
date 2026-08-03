@@ -12,6 +12,13 @@ cells that exercise the missing-data path. Treat it as a fixture: if it is ever
 replaced, keep the replacement deterministic (fixed seed, checked in) and
 update `DatasetSchema` if the columns change.
 
+A deterministic **sibling** of this fixture can be regenerated with
+`scripts/generate_measurements_data.py` (writes
+`output/data/measurements_generated.csv` via `src/eda/generate.py`); the
+generator reproduces the fixture's schema, size, missingness pattern, and
+correlation sign structure from a fixed seed rather than cloning its exact
+random draw order.
+
 ## `claim_ledger.yaml`
 
 Evidence-registry for manuscript claims that are intentionally sourced from

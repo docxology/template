@@ -3,8 +3,9 @@
 ## Purpose
 
 Tested exploratory-data-analysis primitives: dataset loading, cleaning,
-descriptive statistics, correlation ranking, and plot-ready figure data. The
-walkthrough notebook and the thin scripts import from here.
+descriptive statistics, correlation ranking, plot-ready figure data, and
+deterministic fixture generation. The walkthrough notebook and the thin
+scripts import from here.
 
 ## Rules
 

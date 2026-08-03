@@ -16,6 +16,7 @@ shell glue, so the EDA workflow is reproducible and unit-tested.
 | `statistics.py` | Per-column descriptive statistics and per-group means via `pandas`. |
 | `correlation.py` | Pearson correlation matrix and ranked strongest off-diagonal feature pairs. |
 | `figures.py` | Plot-ready figure data (histogram bins, heatmap matrix, group counts); no matplotlib. |
+| `generate.py` | Deterministic synthetic sibling of the shipped CSV fixture (fixed seed; no file I/O). |
 
 ## See Also
 

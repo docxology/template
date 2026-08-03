@@ -34,6 +34,7 @@ flowchart LR
     EDA --> ST[statistics.py<br/>summary_statistics · group_means]
     EDA --> CO[correlation.py<br/>correlation_matrix · strongest_pairs]
     EDA --> FG[figures.py<br/>histogram/heatmap/group figure-data]
+    EDA --> GN[generate.py<br/>deterministic fixture generator]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef code fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -96,6 +97,7 @@ uv run pytest projects/templates/template_eda_notebook/tests -k "TestCorrelation
 | `eda/statistics.py` | `ColumnSummary`, `summary_statistics`, `group_means` |
 | `eda/correlation.py` | `correlation_matrix`, `strongest_pairs` |
 | `eda/figures.py` | Plot-ready dataclasses/functions plus `EDA_FIGURE_SPECS`, the label/filename provenance contract consumed by the analysis script |
+| `eda/generate.py` | `generate_measurements` — deterministic sibling of the shipped CSV fixture (authoring utility; not in `__all__`) |
 | `project_paths.py` | `project_output_dirs`, `resolve_project_root` (orchestration plumbing; not in `__all__`) |
 
 ## See Also

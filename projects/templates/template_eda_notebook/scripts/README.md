@@ -10,6 +10,9 @@ from `src/eda/`, plot the returned data with matplotlib, and write artifacts to
 # Run the EDA analysis pipeline
 uv run python scripts/eda_analysis.py
 
+# Regenerate the deterministic dataset sibling
+uv run python scripts/generate_measurements_data.py
+
 # View generated outputs
 ls -la ../output/figures/
 cat ../output/data/summary_statistics.csv
@@ -20,10 +23,12 @@ cat ../output/data/summary_statistics.csv
 | Script | Role | Pipeline |
 | --- | --- | --- |
 | `eda_analysis.py` | Loads + cleans the dataset, plots three figures, writes the summary CSV | Required |
+| `generate_measurements_data.py` | Regenerates a deterministic sibling of the shipped CSV under `output/data/` | Discovered (stage 02) |
 
-`run_eda(project_root=...)` accepts an output-root override so tests can run it
-against a temporary directory; `main()` runs it against the real project root
-and prints each output path for manifest collection.
+`run_eda(project_root=...)` and `generate_measurements_file(project_root=...)`
+accept an output-root override so tests can run them against a temporary
+directory; `main()` runs them against the real project root and prints each
+output path for manifest collection.
 
 ## Architecture
 

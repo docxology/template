@@ -28,6 +28,7 @@ uv run pytest tests/ --cov=src --cov-fail-under=90
 | `test_figures.py` | `histogram_data`, `correlation_heatmap_data`, `group_count_data` |
 | `test_project_paths.py` | `project_output_dirs`, `resolve_project_root` |
 | `test_eda_analysis_script.py` | thin script `run_eda()` artifact writing |
+| `test_generate_measurements_data.py` | deterministic generator + script binding to the shipped fixture contract |
 | `test_notebook.py` | notebook nbformat + src-binding + no-logic-in-cells |
 
 Live test count and coverage: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
@@ -43,6 +44,8 @@ graph TD
     FG[test_figures.py] --> M5[src/eda/figures.py]
     PP[test_project_paths.py] --> M6[src/project_paths.py]
     SC[test_eda_analysis_script.py] --> S1[scripts/eda_analysis.py]
+    GN[test_generate_measurements_data.py] --> S2[scripts/generate_measurements_data.py]
+    GN[test_generate_measurements_data.py] --> M7[src/eda/generate.py]
     NB[test_notebook.py] --> N1[notebooks/eda_walkthrough.ipynb]
 ```
 

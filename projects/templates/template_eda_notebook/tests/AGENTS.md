@@ -29,6 +29,7 @@ flowchart LR
     T --> TFG[test_figures.py]
     T --> TPP[test_project_paths.py]
     T --> TSC[test_eda_analysis_script.py]
+    T --> TGN[test_generate_measurements_data.py]
     T --> TNB[test_notebook.py]
     T --> DOCS[PATTERNS.md · AGENTS.md · README.md]
 
@@ -69,6 +70,7 @@ These classes exist in `tests/` (keep in sync with `docs/testing_philosophy.md`
 - `test_figures.py`: `TestHistogramData`, `TestCorrelationHeatmapData`, `TestGroupCountData`
 - `test_project_paths.py`: `TestProjectOutputDirs`, `TestResolveProjectRoot`
 - `test_eda_analysis_script.py`: `TestEdaAnalysisScript`
+- `test_generate_measurements_data.py`: `TestGenerateMeasurements`, `TestGenerateMeasurementsScript`
 - `test_notebook.py`: `TestNotebookStructure`, `TestNotebookSrcBinding`
 
 ## Zero-mock policy

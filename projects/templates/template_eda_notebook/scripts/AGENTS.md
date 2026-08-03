@@ -22,6 +22,7 @@ returned data with matplotlib, and write artifacts to `output/`.
 flowchart LR
     SC[scripts/]
     SC --> EDA[eda_analysis.py<br/>EDA pipeline: figures + summary CSV]
+    SC --> GEN[generate_measurements_data.py<br/>deterministic fixture regeneration]
     SC --> INIT[__init__.py<br/>package marker]
     SC --> DOCS[AGENTS.md · README.md · CONVENTIONS.md]
 
@@ -52,6 +53,19 @@ This script:
    `src/eda/figures.py`, after verifying all three PNGs exist.
 6. Prints every output path for manifest collection.
 
+### generate_measurements_data.py
+
+Regenerates a deterministic **sibling** of the shipped dataset fixture
+(`data/measurements.csv`) — same schema, 120 rows, same missingness pattern
+(1 height / 2 weight / 1 resting), same group labels, and the same correlation
+sign structure — from a fixed NumPy seed (`src/eda/generate.py::generate_measurements`).
+The original fixture's random draw order is not recoverable, so the generator
+reproduces the fixture's *family*, not a byte-exact clone. Writes
+`output/data/measurements_generated.csv` and prints the path for manifest
+collection. Because stage 02 discovers every non-underscore script, this
+utility runs on each canonical pipeline run — the generated CSV is therefore a
+deterministic, regenerable artifact, not a hand-maintained snapshot.
+
 ## API Reference
 
 ### eda_analysis.py
@@ -61,9 +75,17 @@ This script:
 | `run_eda(project_root=None)` | Runs the full pipeline; returns three PNGs, the summary CSV, and the figure registry. Accepts an output-root override for tests. |
 | `main()` | Calls `run_eda()` against the real project root and prints each path. |
 
-All analysis logic is in `src/eda/`; this script only orchestrates. Tested by
-[`../tests/test_eda_analysis_script.py`](../tests/test_eda_analysis_script.py),
-which runs `run_eda()` against a temporary output root.
+### generate_measurements_data.py
+
+| Function | Role |
+| --- | --- |
+| `generate_measurements_file(project_root=None)` | Writes `measurements_generated.csv` under `output/data/`. Accepts an output-root override for tests. |
+| `main()` | Calls `generate_measurements_file()` against the real project root and prints the path. |
+
+All analysis logic is in `src/eda/`; these scripts only orchestrate. Tested by
+[`../tests/test_eda_analysis_script.py`](../tests/test_eda_analysis_script.py)
+and [`../tests/test_generate_measurements_data.py`](../tests/test_generate_measurements_data.py),
+which run the orchestrator functions against a temporary output root.
 
 ## Configuration
 

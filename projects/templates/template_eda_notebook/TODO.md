@@ -30,6 +30,18 @@ general feature ideas.
   headlessly end-to-end from BOTH launch locations (120 rows → 4 dropped →
   116; correlations +0.720 / −0.121 / −0.083, matching the Results prose).
   Stray `htmlcov/` and `dist/` build junk were removed from the tree.
+- Deterministic dataset generator (2026-08-02): added
+  `src/eda/generate.py::generate_measurements` (pure, fixed seed) and the thin
+  `scripts/generate_measurements_data.py` orchestrator (writes
+  `output/data/measurements_generated.csv`; discovered by stage 02), plus
+  `tests/test_generate_measurements_data.py` binding the generated sibling to
+  the shipped fixture's contract (schema, 120 rows, missingness 1/2/1, group
+  labels, correlation sign structure, same-family statistics). Suite grew to
+  **77 passed, 0 failed, 0 skipped**; coverage **99.16%** on `src/`. Honest
+  scope note: the generator reproduces the fixture's *family*, not a byte-exact
+  clone — the original fixture's random draw order is not recoverable, so
+  byte-exact regeneration is recorded as intentionally out of scope (see Test
+  and validator gaps).
 
 ## Integrity and template-status gaps
 
@@ -60,6 +72,12 @@ general feature ideas.
 - Add an exact-value assertion whenever a new figure-data preparer or statistic
   is introduced.
 - Keep the notebook-binding test in sync as the public `src` surface grows.
+- Byte-exact regeneration of `data/measurements.csv` remains intentionally out
+  of scope: the original fixture's random draw order is not recoverable, and
+  the generator (`src/eda/generate.py`) deliberately reproduces the fixture's
+  documented contract (schema, size, missingness, correlation signs) rather
+  than claiming a false byte-exact clone. If the dataset is ever regenerated
+  from scratch, check in the new CSV and keep `DatasetSchema` in sync.
 - Add a real generator script (e.g. `scripts/generate_measurements_data.py`)
   with a fixed NumPy seed that reproduces `data/measurements.csv` exactly, plus
   a test binding the script's output to the shipped CSV, to strengthen the

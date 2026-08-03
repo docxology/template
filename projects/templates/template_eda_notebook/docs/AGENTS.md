@@ -71,6 +71,7 @@ grep -rnE "^(from|import) infrastructure" \
 | `tests/` (all `test_*.py`) | REQUIRED | 90% coverage gate (per-project and root pipeline) |
 | `tests/conftest.py` | REQUIRED | Pins `MPLBACKEND=Agg` + `src/` `sys.path` |
 | `scripts/eda_analysis.py` | REQUIRED | Pipeline analysis entry point; writes figures + summary CSV |
+| `scripts/generate_measurements_data.py` | AESTHETIC (discovered by stage 02) | Regenerates a deterministic sibling of the shipped CSV under `output/data/` |
 | `notebooks/eda_walkthrough.ipynb` | REQUIRED (exemplar) | The archetype this template demonstrates; `tests/test_notebook.py` |
 | `manuscript/config.yaml` | REQUIRED | Loaded by `infrastructure.rendering`; pipeline aborts without it |
 | `manuscript/*.md` | REQUIRED | Pandoc reads these during the PDF stage |
