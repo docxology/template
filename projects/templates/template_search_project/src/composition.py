@@ -258,11 +258,14 @@ def compose_literature_review(
         resolved_dir.joinpath(out_path.name).write_text(composed_text, encoding="utf-8")
 
     summary = {
-        "output_path": str(out_path),
+        # Paths are written relative to the repository root using the
+        # `<repo-root>` placeholder so tracked publication evidence stays
+        # clone-independent (never machine-local).
+        "output_path": str(out_path).replace(str(project_root.resolve()), "<repo-root>"),
         "keywords": keywords,
         "unique_papers": len(unique_papers),
         "per_paper_notes_integrated": len(per_paper_notes),
-        "bibtex_path": str(bib_path),
+        "bibtex_path": str(bib_path).replace(str(project_root.resolve()), "<repo-root>"),
         "bibtex_keys": len(bib_keys),
         "missing_citation_keys": missing_keys,
     }

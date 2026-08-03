@@ -415,7 +415,10 @@ def write_aggregate_report(
     lines.append("")
 
     if artifacts.bibtex_path is not None:
-        lines.append(f"_BibTeX written to:_ `{artifacts.bibtex_path}`")
+        # `<repo-root>`-relative so the tracked report stays clone-independent.
+        project_root = out_dir.parent.parent
+        portable = str(artifacts.bibtex_path).replace(str(project_root.resolve()), "<repo-root>")
+        lines.append(f"_BibTeX written to:_ `{portable}`")
         lines.append("")
 
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")

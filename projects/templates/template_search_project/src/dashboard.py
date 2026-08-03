@@ -155,10 +155,20 @@ def build_dashboard(
         project_name="template_search_project",
         repo_root=repo_root,
     )
+
+    def _portable(path: Path | None) -> str | None:
+        if path is None:
+            return None
+        text = str(path.resolve())
+        root = str(repo_root.resolve())
+        return text.replace(root, "<repo-root>") if text.startswith(root) else text
+
     d.set_hyperparameters(
         {
-            "corpus_path": str(args.corpus),
-            "aggregate_path": str(args.aggregate) if aggregate is not None else None,
+            # Paths use the `<repo-root>` placeholder so the self-contained
+            # dashboard HTML stays clone-independent (never machine-local).
+            "corpus_path": _portable(args.corpus),
+            "aggregate_path": _portable(args.aggregate) if aggregate is not None else None,
             "year_min_filter": args.year_min,
             "year_max_filter": args.year_max,
             "doi_floor": args.doi_floor,
