@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>09_scope_and_related_work.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -193,12 +192,11 @@ chatbots but source-owned report generators, literate-programming
 documents, static-site data templates, and reproducible manuscript
 pipelines. <code>template_madlib</code> contributes a deliberately small
 version of that idea for research manuscripts.</p>
-<p>Publication metadata remains conservative. The local
+<p>Publication metadata remains bounded. The local
 <code>CITATION.cff</code>, <code>.zenodo.json</code>, and
-<code>codemeta.json</code> describe this exemplar inside the shared
-template repository; they do not claim a live standalone DOI, external
-release, or empirical validation outside the generated local
-artifacts.</p>
+<code>codemeta.json</code> record the declared repository and deposited
+identifiers when present, but those metadata do not turn the generated
+manuscript into empirical validation or reader-quality evidence.</p>
 </main>
 </body>
 </html>

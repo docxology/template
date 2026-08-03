@@ -4,7 +4,7 @@ The evaluation section is configured to name readiness criteria, connect criteri
 
 The active criteria use analysis, copy, pytest, validation as gate labels and inspect artifacts such as token-injection flow, quality-gate matrix, configured-field figures. A passing run means the exemplar is locally render-ready: placeholders resolve, token provenance is present, figure references are registered, evidence scanning has not found unsupported numbers, and project design overlays remain internally consistent.
 
-That readiness is deliberately narrower than publication readiness. A local pass does not imply a standalone DOI, external release, reader preference result, or empirical validation. It means the tracked project tree can regenerate the committed artifact surface through its declared pipeline.
+That readiness is deliberately narrower than publication readiness. A local pass does not imply reader-preference results or empirical validation. It means the tracked project tree can regenerate the committed artifact surface through its declared pipeline.
 
 The QA probes are Method row completeness, Field-origin visibility, Placeholder survival, Provenance completeness, Section-switch observability, Figure registry coverage, Method-figure alignment, Evidence cleanliness, Fork readiness, Copied-output parity, Digest invariant review, Claim-ledger alignment, Review packet completeness, Fork migration sufficiency. They are phrased as questions so they can be reused by reviewers and by forks of the exemplar: did the placeholder disappear, did the provenance survive, did the figure registry cover every reference, and did copied outputs preserve the same evidence surface that validation inspected?
 

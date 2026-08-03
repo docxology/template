@@ -26,15 +26,15 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 
 | Claim | Boundary |
 | --- | --- |
-| A Mad Lib manuscript can remain reproducible when the lexicon is treated as data. | Local exemplar claim; no live DOI or standalone release implied. |
-| Conditional IMRAD section bodies can be rendered without shared renderer changes. | Local exemplar claim; no live DOI or standalone release implied. |
-| Large-grain manuscript variables can preserve author-readable source files while still producing a complete manuscript. | Local exemplar claim; no live DOI or standalone release implied. |
-| Token provenance can connect playful lexical substitution to serious publication hygiene. | Local exemplar claim; no live DOI or standalone release implied. |
-| A generated Methods section can be methodologically useful when protocol rows, phases, figures, and validation gates share one config-owned source. | Local exemplar claim; no live DOI or standalone release implied. |
-| Configured-field origin tracking can make loader defaults visible enough for reviewers and downstream forks. | Local exemplar claim; no live DOI or standalone release implied. |
-| Pipeline-owned output regeneration can keep PDF, HTML, slides, data, reports, and copied deliverables aligned without hand-editing generated artifacts. | Local exemplar claim; no live DOI or standalone release implied. |
-| A generated-method exemplar can make review handoff auditable when the review packet includes source config, data artifacts, figures, validation results, and copy statistics. | Local exemplar claim; no live DOI or standalone release implied. |
-| Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; no live DOI or standalone release implied. |
+| A Mad Lib manuscript can remain reproducible when the lexicon is treated as data. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Conditional IMRAD section bodies can be rendered without shared renderer changes. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Large-grain manuscript variables can preserve author-readable source files while still producing a complete manuscript. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Token provenance can connect playful lexical substitution to serious publication hygiene. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| A generated Methods section can be methodologically useful when protocol rows, phases, figures, and validation gates share one config-owned source. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Configured-field origin tracking can make loader defaults visible enough for reviewers and downstream forks. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Pipeline-owned output regeneration can keep PDF, HTML, slides, data, reports, and copied deliverables aligned without hand-editing generated artifacts. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| A generated-method exemplar can make review handoff auditable when the review packet includes source config, data artifacts, figures, validation results, and copy statistics. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
 
 
 
@@ -48,7 +48,7 @@ The method is conditional section hydration. Each slot combines the seed, slot n
 
 The deterministic digest recipe is deliberately narrow. It does not sample from ambient prose, project history, or renderer state; it uses only the committed seed, the slot declaration, the category name, the ordinal for repeated slots, and the ordered category inventory. A fork can therefore explain a changed token choice as a changed seed, slot, or lexicon row rather than as an opaque generation event.
 
-The first review scenario is declared before generation. The project names its scope as a local exemplar, records enabled sections, keeps DOI and publication claims blank, and treats the copy stage as a review handoff. That ordering matters because a reader should know the allowed claim boundary before inspecting fluent generated text.
+The first review scenario is declared before generation. The project names its scope as a local exemplar, records enabled sections, treats any publication identifiers as metadata rather than method evidence, and treats the copy stage as a review handoff. That ordering matters because a reader should know the allowed claim boundary before inspecting fluent generated text.
 
 The governing constraint is publication claims stay local until release. The source manuscript is intentionally sparse: it contains section titles and large-grain placeholders, not generated claims. The project script first validates the `madlib:` block, expands slots into a `TokenPlan`, builds section bodies, writes artifact JSON, emits a figure registry, and only then writes hydrated Markdown under `output/manuscript/`.
 
@@ -501,7 +501,7 @@ The evaluation section is configured to name readiness criteria, connect criteri
 
 The active criteria use analysis, copy, pytest, validation as gate labels and inspect artifacts such as token-injection flow, quality-gate matrix, configured-field figures. A passing run means the exemplar is locally render-ready: placeholders resolve, token provenance is present, figure references are registered, evidence scanning has not found unsupported numbers, and project design overlays remain internally consistent.
 
-That readiness is deliberately narrower than publication readiness. A local pass does not imply a standalone DOI, external release, reader preference result, or empirical validation. It means the tracked project tree can regenerate the committed artifact surface through its declared pipeline.
+That readiness is deliberately narrower than publication readiness. A local pass does not imply reader-preference results or empirical validation. It means the tracked project tree can regenerate the committed artifact surface through its declared pipeline.
 
 The QA probes are Method row completeness, Field-origin visibility, Placeholder survival, Provenance completeness, Section-switch observability, Figure registry coverage, Method-figure alignment, Evidence cleanliness, Fork readiness, Copied-output parity, Digest invariant review, Claim-ledger alignment, Review packet completeness, Fork migration sufficiency. They are phrased as questions so they can be reused by reviewers and by forks of the exemplar: did the placeholder disappear, did the provenance survive, did the figure registry cover every reference, and did copied outputs preserve the same evidence surface that validation inspected?
 
@@ -552,7 +552,7 @@ The protocol emits MadlibConfig, review scenario, explicit/default path inventor
 
 The copied root output is therefore a consequence of local source and config. Generated files remain disposable; the durable contract is the ability to regenerate them from the tracked project tree and to observe the same validation gates passing.
 
-- Config hash: `377db49c4154479a`
+- Config hash: `f40365faffaeb743`
 - Generated: `not-recorded (set SOURCE_DATE_EPOCH)` (derived from `SOURCE_DATE_EPOCH`; an
   explicit `not-recorded` marker is emitted when the reproducible timestamp is
   not supplied)
@@ -603,7 +603,7 @@ The exemplar is a pipeline testbed, not a natural-language quality benchmark. It
 
 The configured scope moves are distinguish generation from truth, limit publication claims, point to local evidence, and explain responsible forking. The closest related systems are not general-purpose chatbots but source-owned report generators, literate-programming documents, static-site data templates, and reproducible manuscript pipelines. `template_madlib` contributes a deliberately small version of that idea for research manuscripts.
 
-Publication metadata remains conservative. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` describe this exemplar inside the shared template repository; they do not claim a live standalone DOI, external release, or empirical validation outside the generated local artifacts.
+Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` record the declared repository and deposited identifiers when present, but those metadata do not turn the generated manuscript into empirical validation or reader-quality evidence.
 
 
 

@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A public exemplar for source-owned lexical composition" />
   <title>Template Madlib: Deterministic Token Injection for Conditional
 IMRAD Manuscripts</title>
   <style>
@@ -43,7 +44,6 @@ IMRAD Manuscripts</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -181,6 +181,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -205,11 +219,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -340,7 +349,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -349,7 +360,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -359,8 +375,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -580,60 +606,60 @@ class="header-section-number">2.1</span> Contribution Ledger</h2>
 <tr>
 <td>A Mad Lib manuscript can remain reproducible when the lexicon is
 treated as data.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>Conditional IMRAD section bodies can be rendered without shared
 renderer changes.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>Large-grain manuscript variables can preserve author-readable source
 files while still producing a complete manuscript.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>Token provenance can connect playful lexical substitution to serious
 publication hygiene.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>A generated Methods section can be methodologically useful when
 protocol rows, phases, figures, and validation gates share one
 config-owned source.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>Configured-field origin tracking can make loader defaults visible
 enough for reviewers and downstream forks.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>Pipeline-owned output regeneration can keep PDF, HTML, slides, data,
 reports, and copied deliverables aligned without hand-editing generated
 artifacts.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>A generated-method exemplar can make review handoff auditable when
 the review packet includes source config, data artifacts, figures,
 validation results, and copy statistics.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 <tr>
 <td>Fork migration guidance can reduce overclaiming when it names the
 source, test, validator, and evidence surfaces that must change before
 domain use.</td>
-<td>Local exemplar claim; no live DOI or standalone release
-implied.</td>
+<td>Local exemplar claim; publication status remains config-declared and
+does not imply empirical validation.</td>
 </tr>
 </tbody>
 </table>
@@ -655,10 +681,11 @@ ordinal for repeated slots, and the ordered category inventory. A fork
 can therefore explain a changed token choice as a changed seed, slot, or
 lexicon row rather than as an opaque generation event.</p>
 <p>The first review scenario is declared before generation. The project
-names its scope as a local exemplar, records enabled sections, keeps DOI
-and publication claims blank, and treats the copy stage as a review
-handoff. That ordering matters because a reader should know the allowed
-claim boundary before inspecting fluent generated text.</p>
+names its scope as a local exemplar, records enabled sections, treats
+any publication identifiers as metadata rather than method evidence, and
+treats the copy stage as a review handoff. That ordering matters because
+a reader should know the allowed claim boundary before inspecting fluent
+generated text.</p>
 <p>The governing constraint is publication claims stay local until
 release. The source manuscript is intentionally sparse: it contains
 section titles and large-grain placeholders, not generated claims. The
@@ -2974,10 +3001,9 @@ figure references are registered, evidence scanning has not found
 unsupported numbers, and project design overlays remain internally
 consistent.</p>
 <p>That readiness is deliberately narrower than publication readiness. A
-local pass does not imply a standalone DOI, external release, reader
-preference result, or empirical validation. It means the tracked project
-tree can regenerate the committed artifact surface through its declared
-pipeline.</p>
+local pass does not imply reader-preference results or empirical
+validation. It means the tracked project tree can regenerate the
+committed artifact surface through its declared pipeline.</p>
 <p>The QA probes are Method row completeness, Field-origin visibility,
 Placeholder survival, Provenance completeness, Section-switch
 observability, Figure registry coverage, Method-figure alignment,
@@ -3223,7 +3249,7 @@ config. Generated files remain disposable; the durable contract is the
 ability to regenerate them from the tracked project tree and to observe
 the same validation gates passing.</p>
 <ul>
-<li>Config hash: <code>377db49c4154479a</code></li>
+<li>Config hash: <code>f40365faffaeb743</code></li>
 <li>Generated: <code>not-recorded (set SOURCE_DATE_EPOCH)</code>
 (derived from <code>SOURCE_DATE_EPOCH</code>; an explicit
 <code>not-recorded</code> marker is emitted when the reproducible
@@ -3401,12 +3427,11 @@ chatbots but source-owned report generators, literate-programming
 documents, static-site data templates, and reproducible manuscript
 pipelines. <code>template_madlib</code> contributes a deliberately small
 version of that idea for research manuscripts.</p>
-<p>Publication metadata remains conservative. The local
+<p>Publication metadata remains bounded. The local
 <code>CITATION.cff</code>, <code>.zenodo.json</code>, and
-<code>codemeta.json</code> describe this exemplar inside the shared
-template repository; they do not claim a live standalone DOI, external
-release, or empirical validation outside the generated local
-artifacts.</p>
+<code>codemeta.json</code> record the declared repository and deposited
+identifiers when present, but those metadata do not turn the generated
+manuscript into empirical validation or reader-quality evidence.</p>
 <hr />
 <h1 data-number="11"
 id="authoring-contract-human-review-and-forking-obligations"><span

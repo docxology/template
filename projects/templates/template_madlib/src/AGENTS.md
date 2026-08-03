@@ -21,6 +21,7 @@ The `src/` package is the project-local generation engine. Keep it free of `infr
 | `analysis_reports.py` | JSON data artifacts and Markdown summary/configured-field reports. |
 | `artifact_writers.py` | Registry-driven JSON and Markdown artifact writers (`write_core_artifacts`). |
 | `manuscript_variables.py` | Flat `{{TOKEN}}` map via `build_run()` and `markdown_tables` (no import from `analysis`). |
+| `output_validator.py` | Deterministic project-local validation of regenerated outputs: hydrated placeholders, token provenance, figure registry, configured-field origins, declared artifact inventory, and authoring-contract binding; writes `output/reports/output_validation.json`. |
 
 Add tests for every schema or generation change before changing manuscript shells. Keep prose composition deterministic and sourced from config, token plan, or generated artifact state.
 

@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 570,
+  "fact_count": 685,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 176,
+    "artifact": 177,
     "boundary": 3,
     "citation": 1,
-    "figure": 10,
-    "number": 380
+    "figure": 9,
+    "number": 495
   },
-  "omitted_fact_count": 370,
+  "omitted_fact_count": 485,
   "sample_facts": [
     {
       "active": true,
@@ -265,6 +265,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[2].ordinal",
+      "source_field": "$.ordered_inputs[2].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "3"
+    },
+    {
+      "active": true,
       "checked_at": "2026-06-20T05:27:09+00:00",
       "kind": "number",
       "source": "projects/templates/template_madlib/src/config.py REQUIRED_LEXICON_CATEGORIES",
@@ -433,6 +445,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[2].ordinal (numeric variant)",
+      "source_field": "$.ordered_inputs[2].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.03"
+    },
+    {
+      "active": true,
       "checked_at": "2026-06-20T05:27:09+00:00",
       "kind": "number",
       "source": "projects/templates/template_madlib/src/config.py REQUIRED_LEXICON_CATEGORIES (numeric variant)",
@@ -553,6 +577,102 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/output_validation.json:$.issue_count",
+      "source_field": "$.issue_count",
+      "source_path": "output/reports/output_validation.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.project.failed",
+      "source_field": "$.project.failed",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.project.skipped",
+      "source_field": "$.project.skipped",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.project.warnings",
+      "source_field": "$.project.warnings",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.project.exit_code",
+      "source_field": "$.project.exit_code",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.project.collection_errors",
+      "source_field": "$.project.collection_errors",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.summary.total_failed",
+      "source_field": "$.summary.total_failed",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/test_results.json:$.summary.total_skipped",
+      "source_field": "$.summary.total_skipped",
+      "source_path": "output/reports/test_results.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T04:08:26+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.madlib.slots[3].count",
@@ -601,6 +721,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].ordinal",
+      "source_field": "$.ordered_inputs[3].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "4"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T04:08:26+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.madlib.slots[3].count (numeric variant)",
@@ -642,6 +774,18 @@
       "source": "output/data/token_inventory.json:$[10].ordinal (numeric variant)",
       "source_field": "$[10].ordinal",
       "source_path": "output/data/token_inventory.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.04"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[3].ordinal (numeric variant)",
+      "source_field": "$.ordered_inputs[3].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
@@ -913,6 +1057,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[1].ordinal",
+      "source_field": "$.ordered_inputs[1].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "2"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T04:08:26+00:00",
       "kind": "number",
       "source": "manuscript/config.yaml:$.madlib.slots[7].count (numeric variant)",
@@ -1177,6 +1333,18 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[1].ordinal (numeric variant)",
+      "source_field": "$.ordered_inputs[1].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "0.02"
+    },
+    {
+      "active": true,
       "checked_at": "2026-07-12T04:08:26+00:00",
       "kind": "number",
       "source": "pyproject.toml:$.project.requires-python",
@@ -1197,7 +1365,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "3.1"
+      "value": "0.031"
     },
     {
       "active": true,
@@ -1209,7 +1377,7 @@
       "source_tier": "configuration",
       "stale": false,
       "tolerance": 0.0,
-      "value": "0.031"
+      "value": "3.1"
     },
     {
       "active": true,
@@ -1693,6 +1861,30 @@
     },
     {
       "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[0].ordinal",
+      "source_field": "$.ordered_inputs[0].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/output_validation.json:$.schema_version",
+      "source_field": "$.schema_version",
+      "source_path": "output/reports/output_validation.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "1"
+    },
+    {
+      "active": true,
       "checked_at": "2026-06-20T05:27:09+00:00",
       "kind": "number",
       "source": "output/data/token_inventory.json:$[0].ordinal (numeric variant)",
@@ -1701,7 +1893,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1713,7 +1905,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1725,7 +1917,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1737,7 +1929,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1749,7 +1941,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1761,7 +1953,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1773,7 +1965,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1785,7 +1977,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1797,7 +1989,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1809,7 +2001,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1821,7 +2013,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1833,7 +2025,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1845,7 +2037,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1857,7 +2049,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1869,7 +2061,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1881,7 +2073,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1893,7 +2085,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1905,7 +2097,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1917,7 +2109,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1929,7 +2121,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1941,7 +2133,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
@@ -1953,11 +2145,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/data/section_plan.json:$.section_token_counts.configuration (numeric variant)",
       "source_field": "$.section_token_counts.configuration",
@@ -1965,11 +2157,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..md (numeric variant)",
       "source_field": "$.directories.pdf.extensions..md",
@@ -1977,11 +2169,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..aux (numeric variant)",
       "source_field": "$.directories.pdf.extensions..aux",
@@ -1989,11 +2181,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..blg (numeric variant)",
       "source_field": "$.directories.pdf.extensions..blg",
@@ -2001,11 +2193,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..bib (numeric variant)",
       "source_field": "$.directories.pdf.extensions..bib",
@@ -2013,11 +2205,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..pdf (numeric variant)",
       "source_field": "$.directories.pdf.extensions..pdf",
@@ -2025,11 +2217,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..tex (numeric variant)",
       "source_field": "$.directories.pdf.extensions..tex",
@@ -2037,11 +2229,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..toc (numeric variant)",
       "source_field": "$.directories.pdf.extensions..toc",
@@ -2049,11 +2241,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.pdf.extensions..bbl (numeric variant)",
       "source_field": "$.directories.pdf.extensions..bbl",
@@ -2061,11 +2253,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.web.extensions..md (numeric variant)",
       "source_field": "$.directories.web.extensions..md",
@@ -2073,11 +2265,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.figures.extensions..json (numeric variant)",
       "source_field": "$.directories.figures.extensions..json",
@@ -2085,11 +2277,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.directories.reports.extensions..txt (numeric variant)",
       "source_field": "$.directories.reports.extensions..txt",
@@ -2097,11 +2289,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.file_counts_by_type..blg (numeric variant)",
       "source_field": "$.file_counts_by_type..blg",
@@ -2109,11 +2301,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.file_counts_by_type..bib (numeric variant)",
       "source_field": "$.file_counts_by_type..bib",
@@ -2121,11 +2313,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.file_counts_by_type..bbl (numeric variant)",
       "source_field": "$.file_counts_by_type..bbl",
@@ -2133,11 +2325,11 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
     },
     {
       "active": true,
-      "checked_at": "2026-07-12T16:17:16+00:00",
+      "checked_at": "2026-08-03T00:36:21+00:00",
       "kind": "number",
       "source": "output/reports/output_statistics.json:$.file_counts_by_type..txt (numeric variant)",
       "source_field": "$.file_counts_by_type..txt",
@@ -2145,7 +2337,31 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100%"
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/manuscript_composition.json:$.ordered_inputs[0].ordinal (numeric variant)",
+      "source_field": "$.ordered_inputs[0].ordinal",
+      "source_path": "output/reports/manuscript_composition.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T00:36:21+00:00",
+      "kind": "number",
+      "source": "output/reports/output_validation.json:$.schema_version (numeric variant)",
+      "source_field": "$.schema_version",
+      "source_path": "output/reports/output_validation.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "100"
     },
     {
       "active": true,
@@ -2157,7 +2373,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -2169,7 +2385,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -2181,7 +2397,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     },
     {
       "active": true,
@@ -2193,223 +2409,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[7].ordinal (numeric variant)",
-      "source_field": "$[7].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[11].ordinal (numeric variant)",
-      "source_field": "$[11].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[12].ordinal (numeric variant)",
-      "source_field": "$[12].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[13].ordinal (numeric variant)",
-      "source_field": "$[13].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[15].ordinal (numeric variant)",
-      "source_field": "$[15].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[17].ordinal (numeric variant)",
-      "source_field": "$[17].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[20].ordinal (numeric variant)",
-      "source_field": "$[20].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[22].ordinal (numeric variant)",
-      "source_field": "$[22].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[23].ordinal (numeric variant)",
-      "source_field": "$[23].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[25].ordinal (numeric variant)",
-      "source_field": "$[25].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[26].ordinal (numeric variant)",
-      "source_field": "$[26].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[29].ordinal (numeric variant)",
-      "source_field": "$[29].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[31].ordinal (numeric variant)",
-      "source_field": "$[31].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[33].ordinal (numeric variant)",
-      "source_field": "$[33].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[36].ordinal (numeric variant)",
-      "source_field": "$[36].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[37].ordinal (numeric variant)",
-      "source_field": "$[37].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[38].ordinal (numeric variant)",
-      "source_field": "$[38].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-06-20T05:27:09+00:00",
-      "kind": "number",
-      "source": "output/data/token_inventory.json:$[39].ordinal (numeric variant)",
-      "source_field": "$[39].ordinal",
-      "source_path": "output/data/token_inventory.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "100"
+      "value": "100%"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
@@ -2417,7 +2417,7 @@
     "artifact": 169,
     "bibliography": 1,
     "configuration": 38,
-    "generated_metric": 344,
+    "generated_metric": 459,
     "project_source": 18
   }
 }

@@ -36,7 +36,7 @@ class TokenPlan:
         """Tally how many resolved token choices came from each lexicon category.
 
         Used by the analysis/figure layer to show category distribution
-        (e.g. how many "villain", "setting", or "tone" tokens were injected)
+        (e.g. how many "adjectives", "nouns", or "verbs" tokens were injected)
         without re-walking `choices` at each call site.
         """
         return dict(Counter(choice.category for choice in self.choices))

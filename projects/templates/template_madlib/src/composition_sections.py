@@ -347,9 +347,8 @@ def _evaluation(config: MadlibConfig, token_plan: TokenPlan) -> str:
             ),
             (
                 "That readiness is deliberately narrower than publication readiness. A local pass does not imply "
-                "a standalone DOI, external release, reader preference result, or empirical validation. It means "
-                "the tracked project tree can regenerate the committed artifact surface through its declared "
-                "pipeline."
+                "reader-preference results or empirical validation. It means the tracked project tree can "
+                "regenerate the committed artifact surface through its declared pipeline."
             ),
             (
                 f"The QA probes are {probes}. They are phrased as questions so they can be reused by reviewers "
@@ -430,7 +429,7 @@ def _scope(config: MadlibConfig) -> str:
             (
                 "Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` "
                 "record the declared repository and deposited identifiers when present, but those metadata do not "
-                "turn the generated manuscript into empirical validation or reader-quality evidence.
+                "turn the generated manuscript into empirical validation or reader-quality evidence."
             ),
         ]
     )

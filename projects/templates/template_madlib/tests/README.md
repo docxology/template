@@ -8,6 +8,7 @@ Tests import project code as `src.<module>` (see `tests/conftest.py` and `pyproj
 | `test_tokens.py` | Deterministic token selection, digest invariants, provenance, and TokenPlan property coverage. |
 | `test_composition_and_analysis.py` | Section composition, tables, configured-field inventory, artifact JSON, figure registry, disabled-visualization branches, `analysis_fields`, and `src` public API surface. |
 | `test_manuscript_variables.py` | Token map, title/table/figure variables, manuscript cross-reference, and hydration script. |
+| `test_output_validator.py` | Project-local output validator: accepted committed outputs, placeholder/provenance/figure/field/origin/inventory/variable binding failures, and report round-trip. |
 
 Run:
 

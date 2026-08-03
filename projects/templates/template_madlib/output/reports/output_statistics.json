@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "1.22",
-      "total_size_bytes": 1278536,
+      "size_mb": "1.21",
+      "total_size_bytes": 1266476,
       "largest_files": [
         {
           "name": "template_madlib_combined.pdf",
-          "size_mb": "0.96",
+          "size_mb": "0.94",
           "path": "pdf/template_madlib_combined.pdf"
         },
         {
@@ -36,13 +36,13 @@
     },
     "web": {
       "exists": true,
-      "file_count": 14,
+      "file_count": 15,
       "size_mb": "0.31",
-      "total_size_bytes": 324427,
+      "total_size_bytes": 329792,
       "largest_files": [
         {
           "name": "index.html",
-          "size_mb": "0.10",
+          "size_mb": "0.11",
           "path": "web/index.html"
         },
         {
@@ -58,28 +58,29 @@
       ],
       "extensions": {
         ".md": 1,
+        ".ico": 1,
         ".html": 13
       }
     },
     "slides": {
       "exists": true,
       "file_count": 94,
-      "size_mb": "1.88",
-      "total_size_bytes": 1970872,
+      "size_mb": "1.87",
+      "total_size_bytes": 1965463,
       "largest_files": [
         {
           "name": "03_results_slides.pdf",
-          "size_mb": "0.29",
+          "size_mb": "0.27",
           "path": "slides/03_results_slides.pdf"
         },
         {
           "name": "05_experimental_setup_slides.pdf",
-          "size_mb": "0.22",
+          "size_mb": "0.24",
           "path": "slides/05_experimental_setup_slides.pdf"
         },
         {
           "name": "06_evaluation_slides.pdf",
-          "size_mb": "0.17",
+          "size_mb": "0.16",
           "path": "slides/06_evaluation_slides.pdf"
         }
       ],
@@ -97,12 +98,12 @@
     "figures": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.83",
-      "total_size_bytes": 867104,
+      "size_mb": "0.81",
+      "total_size_bytes": 853599,
       "largest_files": [
         {
           "name": "madlib_cover_overview.png",
-          "size_mb": "0.16",
+          "size_mb": "0.15",
           "path": "figures/madlib_cover_overview.png"
         },
         {
@@ -111,9 +112,9 @@
           "path": "figures/quality_gate_matrix.png"
         },
         {
-          "name": "provenance_trace_map.png",
-          "size_mb": "0.10",
-          "path": "figures/provenance_trace_map.png"
+          "name": "section_configuration_heatmap.png",
+          "size_mb": "0.11",
+          "path": "figures/section_configuration_heatmap.png"
         }
       ],
       "extensions": {
@@ -125,7 +126,7 @@
       "exists": true,
       "file_count": 5,
       "size_mb": "0.14",
-      "total_size_bytes": 147404,
+      "total_size_bytes": 147811,
       "largest_files": [
         {
           "name": "manuscript_variables.json",
@@ -149,9 +150,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.10",
-      "total_size_bytes": 104116,
+      "file_count": 14,
+      "size_mb": "0.13",
+      "total_size_bytes": 139112,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -159,20 +160,20 @@
           "path": "reports/evidence_registry.json"
         },
         {
-          "name": "injection_trace.json",
-          "size_mb": "0.01",
-          "path": "reports/injection_trace.json"
+          "name": "artifact_manifest.json",
+          "size_mb": "0.02",
+          "path": "reports/artifact_manifest.json"
         },
         {
-          "name": "output_statistics.json",
+          "name": "validation_report.json",
           "size_mb": "0.01",
-          "path": "reports/output_statistics.json"
+          "path": "reports/validation_report.json"
         }
       ],
       "extensions": {
-        ".json": 5,
+        ".json": 9,
         ".txt": 1,
-        ".md": 3
+        ".md": 4
       }
     },
     "simulations": {
@@ -194,36 +195,36 @@
       "total_size_bytes": 0
     }
   },
-  "total_files": 142,
-  "total_size_mb": 4.4750776290893555,
+  "total_files": 148,
+  "total_size_mb": 4.484417915344238,
   "largest_files": [
     {
       "name": "template_madlib_combined.pdf",
-      "size_mb": "0.96",
+      "size_mb": "0.94",
       "category": "pdf",
       "path": "pdf/template_madlib_combined.pdf"
     },
     {
       "name": "03_results_slides.pdf",
-      "size_mb": "0.29",
+      "size_mb": "0.27",
       "category": "slides",
       "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "05_experimental_setup_slides.pdf",
-      "size_mb": "0.22",
+      "size_mb": "0.24",
       "category": "slides",
       "path": "slides/05_experimental_setup_slides.pdf"
     },
     {
       "name": "06_evaluation_slides.pdf",
-      "size_mb": "0.17",
+      "size_mb": "0.16",
       "category": "slides",
       "path": "slides/06_evaluation_slides.pdf"
     },
     {
       "name": "madlib_cover_overview.png",
-      "size_mb": "0.16",
+      "size_mb": "0.15",
       "category": "figures",
       "path": "figures/madlib_cover_overview.png"
     },
@@ -235,15 +236,15 @@
     },
     {
       "name": "index.html",
-      "size_mb": "0.10",
+      "size_mb": "0.11",
       "category": "web",
       "path": "web/index.html"
     },
     {
-      "name": "provenance_trace_map.png",
-      "size_mb": "0.10",
+      "name": "section_configuration_heatmap.png",
+      "size_mb": "0.11",
       "category": "figures",
-      "path": "figures/provenance_trace_map.png"
+      "path": "figures/section_configuration_heatmap.png"
     },
     {
       "name": "_combined_manuscript.tex",
@@ -264,15 +265,15 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 1.2193069458007812,
-    "web": 0.30939769744873047,
-    "slides": 1.8795700073242188,
-    "figures": 0.826934814453125,
-    "data": 0.14057540893554688,
-    "reports": 0.09929275512695312
+    "pdf": 1.2078056335449219,
+    "web": 0.31451416015625,
+    "slides": 1.8744115829467773,
+    "figures": 0.8140554428100586,
+    "data": 0.14096355438232422,
+    "reports": 0.13266754150390625
   },
   "file_counts_by_type": {
-    ".md": 5,
+    ".md": 6,
     ".log": 14,
     ".aux": 13,
     ".blg": 1,
@@ -281,12 +282,13 @@
     ".tex": 14,
     ".toc": 13,
     ".bbl": 1,
+    ".ico": 1,
     ".html": 13,
     ".nav": 12,
     ".vrb": 9,
     ".snm": 12,
     ".png": 9,
-    ".json": 11,
+    ".json": 15,
     ".txt": 1
   }
 }

@@ -4,4 +4,4 @@ The exemplar is a pipeline testbed, not a natural-language quality benchmark. It
 
 The configured scope moves are distinguish generation from truth, limit publication claims, point to local evidence, and explain responsible forking. The closest related systems are not general-purpose chatbots but source-owned report generators, literate-programming documents, static-site data templates, and reproducible manuscript pipelines. `template_madlib` contributes a deliberately small version of that idea for research manuscripts.
 
-Publication metadata remains conservative. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` describe this exemplar inside the shared template repository; they do not claim a live standalone DOI, external release, or empirical validation outside the generated local artifacts.
+Publication metadata remains bounded. The local `CITATION.cff`, `.zenodo.json`, and `codemeta.json` record the declared repository and deposited identifiers when present, but those metadata do not turn the generated manuscript into empirical validation or reader-quality evidence.

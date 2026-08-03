@@ -10,6 +10,7 @@ same forkability contract as the older exemplars.
 - Project tests and coverage: 148 passed, 99.93% coverage (required floor: 90%).
 - Generated artifacts come from `scripts/01_generate_madlib_artifacts.py` and `scripts/z_generate_manuscript_variables.py`.
 - Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_madlib --strict` — no drift detected.
+- Project-local output validator: `scripts/02_validate_outputs.py` → `src.output_validator.validate_generated_outputs`, declared third analysis script; writes `output/reports/output_validation.json`.
 - Live test counts and coverage are read from
   [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
   here; keep every `src/` module (config, composition, tokens, analysis,
@@ -18,6 +19,7 @@ same forkability contract as the older exemplars.
 ## Integrity and template-status gaps
 
 - Fixed in this pass: corrected publication-boundary prose that falsely claimed deposited DOIs were blank, synchronized version markers to `0.1.1`, added the missing `.agents/` catalog READMEs, created `docs/README.md` and `data/README.md`, and documented `00_preflight.py` in `scripts/AGENTS.md`.
+- Fixed in this pass: added the project-local output validator (`src/output_validator.py`) with declared-artifact stale guard wired into `analysis.scripts`; corrected Evaluation readiness prose and cover figure text that still enumerated a live DOI/external release as absent; replaced stale `tokens.py` docstring examples.
 
 - Keep the lexicon, conditional section plan, token provenance, and authoring contract as generated evidence, not prose-only claims.
 - Keep digest invariants, claim-ledger alignment, review-packet assembly, and fork-migration obligations config-owned and test-covered.
@@ -37,8 +39,8 @@ same forkability contract as the older exemplars.
 
 ## Test and validator gaps
 
-- Add a project-local output validator if Stage 04 cannot catch token provenance, figure registry, and authoring-contract regressions together.
-- Add a stale-artifact check if generated artifact names or report schemas grow beyond the current fixture coverage.
+- ~~Add a project-local output validator if Stage 04 cannot catch token provenance, figure registry, and authoring-contract regressions together.~~ ✓ Implemented as `src/output_validator.py` + `scripts/02_validate_outputs.py`, wired into `manuscript/config.yaml` `analysis.scripts`; covered by `tests/test_output_validator.py`.
+- ~~Add a stale-artifact check if generated artifact names or report schemas grow beyond the current fixture coverage.~~ ✓ The validator's declared inventory (`DECLARED_FIGURE_FILES`, `PROJECT_OWNED_DATA_FILES`, `PROJECT_OWNED_REPORT_FILES`) fails on undeclared or missing project-owned artifacts.
 - Preserve review-packet assertions if future copied-output layout changes make output statistics, validation reports, or copied data/report/figure categories optional.
 - Consider adding hypothesis-based property tests for the SHA-256 digest invariant if the lexicon format changes (current determinism is verified with parametric seed/lexicon tests).
 

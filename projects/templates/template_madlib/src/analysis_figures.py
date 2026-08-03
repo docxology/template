@@ -124,7 +124,7 @@ def write_cover_overview_figure(
     ax.text(
         0.05,
         0.065,
-        "No external validation, DOI, or reader-quality result is implied by this local render.",
+        "No external validation or reader-quality result is implied by this local render.",
         fontsize=8.5,
         color=_AMBER,
     )

@@ -88,6 +88,7 @@ infrastructure, pipeline stages, or cross-template validation.
 | `src/analysis_figures.py` | Writes the nine figure PNGs (cover overview, token density, injection flow, section allocation, provenance map, quality-gate matrix, configured-field matrix, section heatmap, origin summary) and the figure registry. |
 | `src/analysis_reports.py` | Writes the JSON data artifacts (token inventory, section plan, configured-field inventory, injection trace) and the Markdown summary/configured-field reports. |
 | `src/manuscript_variables.py` | Emits the flat `{{TOKEN}}` replacement map consumed by manuscript injection. |
+| `src/output_validator.py` | Deterministic project-local output validation: hydrated placeholders, token provenance, figure registry, configured-field origins, declared artifact inventory, and authoring-contract binding; writes `output/reports/output_validation.json`. |
 | `manuscript/*.md` | Keeps author-readable section shells; generated prose belongs only under `output/manuscript/`. |
 
 ## Method Protocol Contract
@@ -134,6 +135,7 @@ Stage 02 writes:
 - `output/figures/section_configuration_heatmap.png`
 - `output/figures/field_origin_summary.png`
 - `output/figures/figure_registry.json`
+- `output/reports/output_validation.json` (project-local validator report)
 
 The hydrated manuscript includes Abstract, Introduction, Methods, Results, Discussion, Configuration, Evaluation, Reproducibility, Limitations, Scope, Authoring Contract, and References. Methods is deliberately long because it is the exemplar's main contribution: it binds schema validation, review-scenario declaration, explicit/default field tracking, deterministic token planning, invariant review, slot-to-section allocation, conditional section hydration, visual audit figures, claim-ledger alignment, operational phases, review-packet assembly, evidence artifacts, validation gates, and failure-mode checks into one source-owned protocol. Evaluation adds explicit QA probes, while the Authoring Contract states what a human reviewer or downstream fork must still do before treating generated prose as reader-ready.
 

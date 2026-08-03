@@ -23,7 +23,7 @@ This file contains LaTeX packages and commands that are automatically injected i
 \usepackage{array}
 
 % Algorithm typesetting (for pseudocode in §2 Methodology)
-\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\IfFileExists{algorithm2e.sty}{\usepackage[ruled,vlined,linesnumbered]{algorithm2e}}{}
 
 % Code listings
 \usepackage{listings}
@@ -31,7 +31,7 @@ This file contains LaTeX packages and commands that are automatically injected i
 % Typography and formatting
 \usepackage{microtype}
 \usepackage{xcolor}
-\usepackage[binary-units]{siunitx}
+\IfFileExists{siunitx.sty}{\usepackage[binary-units]{siunitx}}{}
 
 % Cross-references and citations
 \usepackage{hyperref}

@@ -7,6 +7,7 @@ Do not add Madlib business logic here. Put schema parsing in `src/config.py`, to
 | Script | Calls |
 | --- | --- |
 | `00_preflight.py` | Runs shared manuscript preflight checks before rendering. |
+| `02_validate_outputs.py` | Runs `src.output_validator.validate_generated_outputs` and writes `output/reports/output_validation.json`; fails the stage when token provenance, figure registry, field origins, or the declared artifact inventory drift. |
 | `_bootstrap.py` | Adds project root and repo root to `sys.path` for `from src…` imports. |
 | `01_generate_madlib_artifacts.py` | `src.analysis.generate_artifacts` |
 | `z_generate_manuscript_variables.py` | `src.manuscript_variables.generate_variables` plus shared injection |

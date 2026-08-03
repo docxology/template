@@ -71,6 +71,7 @@ analysis:
   scripts:
     - 01_generate_madlib_artifacts.py
     - z_generate_manuscript_variables.py
+    - 02_validate_outputs.py
 
 madlib:
   seed: 431

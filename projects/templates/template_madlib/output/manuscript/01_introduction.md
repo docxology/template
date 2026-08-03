@@ -12,12 +12,12 @@ This exemplar is useful for protocols, educational scaffolds, review forms, temp
 
 | Claim | Boundary |
 | --- | --- |
-| A Mad Lib manuscript can remain reproducible when the lexicon is treated as data. | Local exemplar claim; no live DOI or standalone release implied. |
-| Conditional IMRAD section bodies can be rendered without shared renderer changes. | Local exemplar claim; no live DOI or standalone release implied. |
-| Large-grain manuscript variables can preserve author-readable source files while still producing a complete manuscript. | Local exemplar claim; no live DOI or standalone release implied. |
-| Token provenance can connect playful lexical substitution to serious publication hygiene. | Local exemplar claim; no live DOI or standalone release implied. |
-| A generated Methods section can be methodologically useful when protocol rows, phases, figures, and validation gates share one config-owned source. | Local exemplar claim; no live DOI or standalone release implied. |
-| Configured-field origin tracking can make loader defaults visible enough for reviewers and downstream forks. | Local exemplar claim; no live DOI or standalone release implied. |
-| Pipeline-owned output regeneration can keep PDF, HTML, slides, data, reports, and copied deliverables aligned without hand-editing generated artifacts. | Local exemplar claim; no live DOI or standalone release implied. |
-| A generated-method exemplar can make review handoff auditable when the review packet includes source config, data artifacts, figures, validation results, and copy statistics. | Local exemplar claim; no live DOI or standalone release implied. |
-| Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; no live DOI or standalone release implied. |
+| A Mad Lib manuscript can remain reproducible when the lexicon is treated as data. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Conditional IMRAD section bodies can be rendered without shared renderer changes. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Large-grain manuscript variables can preserve author-readable source files while still producing a complete manuscript. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Token provenance can connect playful lexical substitution to serious publication hygiene. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| A generated Methods section can be methodologically useful when protocol rows, phases, figures, and validation gates share one config-owned source. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Configured-field origin tracking can make loader defaults visible enough for reviewers and downstream forks. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Pipeline-owned output regeneration can keep PDF, HTML, slides, data, reports, and copied deliverables aligned without hand-editing generated artifacts. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| A generated-method exemplar can make review handoff auditable when the review packet includes source config, data artifacts, figures, validation results, and copy statistics. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
+| Fork migration guidance can reduce overclaiming when it names the source, test, validator, and evidence surfaces that must change before domain use. | Local exemplar claim; publication status remains config-declared and does not imply empirical validation. |
