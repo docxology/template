@@ -42,7 +42,7 @@ This enables post-hoc verification: anyone with the manifest can verify that the
 
 A semi-transparent overlay is merged onto every page of the hardened PDF:
 
-- **Watermark overlay**: in the default `text` mode, a configurable string (default `CONFIDENTIAL`) is repeated diagonally at 45° across the page; in `qr` mode a tiled QR overlay replaces it. The overlay is rendered at low opacity — the default is 8% (`overlay_opacity: 0.08`), configurable from 0.02 (subtle) to 0.30 (strong) — to be invisible during normal viewing but detectable through image analysis.
+- **Watermark overlay**: in the default `text` mode, a configurable string (default `CONFIDENTIAL`) is repeated diagonally across the page; in `qr` mode a tiled QR overlay replaces it. The overlay is rendered at low opacity — the default is 8% (`overlay_opacity: 0.08`), configurable from 0.02 (subtle) to 0.30 (strong) — to be invisible during normal viewing but detectable through image analysis.
 - **Provenance footer**: every page additionally receives a footer carrying the document identifier, page number / total pages, a digest prefix, title, authors, and source filename/size.
 - **Invisible text layer**: the first page embeds a hidden text string with the machine-readable payload:
 

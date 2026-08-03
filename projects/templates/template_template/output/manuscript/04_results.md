@@ -9,7 +9,7 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 | Project | Effective core stages¹ | Discovered tests | Declared project floor |
 |---------|-----------------------|-----------------:|-----------------------:|
 | `template_code_project` | 8 | 242 | 90% |
-| `template_prose_project` | 8 | 120 | 90% |
+| `template_prose_project` | 8 | 134 | 90% |
 | `template_autoresearch_project` | 8 | 300 | 90% |
 
 ¹“Core-only” excludes LLM-tagged and other opt-in stages according to the YAML stage tags. A fresh run must be used to establish completion status or wall-clock performance for a particular machine and dependency set.

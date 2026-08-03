@@ -520,397 +520,259 @@ through Publication</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
-<li><a href="#abstract" id="toc-abstract"><span
-class="toc-section-number">1</span> Abstract</a></li>
-<li><a href="#introduction" id="toc-introduction"><span
-class="toc-section-number">2</span> Introduction</a>
-<ul>
-<li><a href="#research-tools-as-epistemic-infrastructure"
-id="toc-research-tools-as-epistemic-infrastructure"><span
-class="toc-section-number">2.1</span> Research Tools as Epistemic
-Infrastructure</a></li>
-<li><a href="#related-work" id="toc-related-work"><span
-class="toc-section-number">2.2</span> Related Work</a>
-<ul>
-<li><a href="#workflow-managers" id="toc-workflow-managers"><span
-class="toc-section-number">2.2.1</span> Workflow Managers</a></li>
-<li><a href="#literate-programming-and-publication-tools"
-id="toc-literate-programming-and-publication-tools"><span
-class="toc-section-number">2.2.2</span> Literate Programming and
-Publication Tools</a></li>
-<li><a href="#containerization-and-environment-capture"
-id="toc-containerization-and-environment-capture"><span
-class="toc-section-number">2.2.3</span> Containerization and Environment
-Capture</a></li>
-<li><a href="#best-practice-frameworks-and-data-standards"
-id="toc-best-practice-frameworks-and-data-standards"><span
-class="toc-section-number">2.2.4</span> Best-Practice Frameworks and
-Data Standards</a></li>
-<li><a href="#the-gap" id="toc-the-gap"><span
-class="toc-section-number">2.2.5</span> The Gap</a></li>
-<li><a href="#summary-gaps-left-by-existing-tools"
-id="toc-summary-gaps-left-by-existing-tools"><span
-class="toc-section-number">2.2.6</span> Summary: Gaps Left by Existing
-Tools</a></li>
-</ul></li>
-<li><a href="#template-an-integrated-solution"
-id="toc-template-an-integrated-solution"><span
-class="toc-section-number">2.3</span> <code>template/</code>: An
-Integrated Solution</a></li>
-<li><a href="#scope-and-contributions"
-id="toc-scope-and-contributions"><span
-class="toc-section-number">2.4</span> Scope and Contributions</a></li>
-<li><a href="#paper-organization" id="toc-paper-organization"><span
-class="toc-section-number">2.5</span> Paper Organization</a></li>
-</ul></li>
 <li><a href="#methods" id="toc-methods"><span
-class="toc-section-number">3</span> Methods</a>
+class="toc-section-number">1</span> Methods</a>
 <ul>
 <li><a href="#the-two-layer-architecture"
 id="toc-the-two-layer-architecture"><span
-class="toc-section-number">3.1</span> The Two-Layer
+class="toc-section-number">1.1</span> The Two-Layer
 Architecture</a></li>
 <li><a href="#the-standalone-project-paradigm"
 id="toc-the-standalone-project-paradigm"><span
-class="toc-section-number">3.2</span> The Standalone Project
+class="toc-section-number">1.2</span> The Standalone Project
 Paradigm</a></li>
 <li><a href="#the-thin-orchestrator-pattern"
 id="toc-the-thin-orchestrator-pattern"><span
-class="toc-section-number">3.3</span> The Thin Orchestrator
+class="toc-section-number">1.3</span> The Thin Orchestrator
 Pattern</a></li>
 <li><a href="#dag-pipeline-declared-by-pipeline.yaml"
 id="toc-dag-pipeline-declared-by-pipeline.yaml"><span
-class="toc-section-number">3.4</span> DAG Pipeline Declared by
+class="toc-section-number">1.4</span> DAG Pipeline Declared by
 <code>pipeline.yaml</code></a>
 <ul>
 <li><a href="#stage-highlights" id="toc-stage-highlights"><span
-class="toc-section-number">3.4.1</span> Stage Highlights</a></li>
+class="toc-section-number">1.4.1</span> Stage Highlights</a></li>
 <li><a href="#interactive-orchestration"
 id="toc-interactive-orchestration"><span
-class="toc-section-number">3.4.2</span> Interactive
+class="toc-section-number">1.4.2</span> Interactive
 Orchestration</a></li>
 </ul></li>
 <li><a href="#documentation-duality-and-ai-collaboration"
 id="toc-documentation-duality-and-ai-collaboration"><span
-class="toc-section-number">3.5</span> Documentation Duality and AI
+class="toc-section-number">1.5</span> Documentation Duality and AI
 Collaboration</a></li>
 <li><a href="#agentic-skill-architecture"
 id="toc-agentic-skill-architecture"><span
-class="toc-section-number">3.6</span> Agentic Skill Architecture</a>
+class="toc-section-number">1.6</span> Agentic Skill Architecture</a>
 <ul>
 <li><a href="#the-three-tier-skill-protocol"
 id="toc-the-three-tier-skill-protocol"><span
-class="toc-section-number">3.6.1</span> The Three-Tier Skill
+class="toc-section-number">1.6.1</span> The Three-Tier Skill
 Protocol</a></li>
 <li><a href="#module-skill-coverage"
 id="toc-module-skill-coverage"><span
-class="toc-section-number">3.6.2</span> Module Skill Coverage</a></li>
+class="toc-section-number">1.6.2</span> Module Skill Coverage</a></li>
 <li><a href="#mcp-server-mapping" id="toc-mcp-server-mapping"><span
-class="toc-section-number">3.6.3</span> MCP Server Mapping</a></li>
+class="toc-section-number">1.6.3</span> MCP Server Mapping</a></li>
 </ul></li>
 <li><a href="#fair-alignment-and-research-infrastructure-as-code"
 id="toc-fair-alignment-and-research-infrastructure-as-code"><span
-class="toc-section-number">3.7</span> FAIR Alignment and Research
+class="toc-section-number">1.7</span> FAIR Alignment and Research
 Infrastructure as Code</a>
 <ul>
 <li><a href="#principle-by-principle-alignment"
 id="toc-principle-by-principle-alignment"><span
-class="toc-section-number">3.7.1</span> Principle-by-Principle
+class="toc-section-number">1.7.1</span> Principle-by-Principle
 Alignment</a></li>
 <li><a href="#infrastructure-as-code-for-research"
 id="toc-infrastructure-as-code-for-research"><span
-class="toc-section-number">3.7.2</span> Infrastructure as Code for
+class="toc-section-number">1.7.2</span> Infrastructure as Code for
 Research</a></li>
 </ul></li>
 <li><a href="#quality-assurance" id="toc-quality-assurance"><span
-class="toc-section-number">3.8</span> Quality Assurance</a>
+class="toc-section-number">1.8</span> Quality Assurance</a>
 <ul>
 <li><a href="#zero-mock-testing-policy"
 id="toc-zero-mock-testing-policy"><span
-class="toc-section-number">3.8.1</span> Zero-Mock Testing
+class="toc-section-number">1.8.1</span> Zero-Mock Testing
 Policy</a></li>
 <li><a href="#coverage-thresholds" id="toc-coverage-thresholds"><span
-class="toc-section-number">3.8.2</span> Coverage Thresholds</a></li>
+class="toc-section-number">1.8.2</span> Coverage Thresholds</a></li>
 <li><a href="#test-suite-composition"
 id="toc-test-suite-composition"><span
-class="toc-section-number">3.8.3</span> Test Suite Composition</a></li>
+class="toc-section-number">1.8.3</span> Test Suite Composition</a></li>
 <li><a href="#visualization-standards"
 id="toc-visualization-standards"><span
-class="toc-section-number">3.8.4</span> Visualization Standards</a></li>
+class="toc-section-number">1.8.4</span> Visualization Standards</a></li>
 </ul></li>
-</ul></li>
-<li><a href="#results" id="toc-results"><span
-class="toc-section-number">4</span> Results</a>
-<ul>
-<li><a href="#multi-project-pipeline-execution"
-id="toc-multi-project-pipeline-execution"><span
-class="toc-section-number">4.1</span> Multi-Project Pipeline
-Execution</a></li>
-<li><a href="#infrastructure-test-suite"
-id="toc-infrastructure-test-suite"><span
-class="toc-section-number">4.2</span> Infrastructure Test Suite</a></li>
-<li><a href="#infrastructure-module-inventory"
-id="toc-infrastructure-module-inventory"><span
-class="toc-section-number">4.3</span> Infrastructure Module
-Inventory</a></li>
-<li><a href="#agentic-skill-documentation-coverage"
-id="toc-agentic-skill-documentation-coverage"><span
-class="toc-section-number">4.4</span> Agentic Skill Documentation
-Coverage</a></li>
-<li><a href="#dag-reference-declarative-executor"
-id="toc-dag-reference-declarative-executor"><span
-class="toc-section-number">4.5</span> DAG Reference (Declarative
-Executor)</a></li>
-<li><a href="#steganographic-performance-boundary"
-id="toc-steganographic-performance-boundary"><span
-class="toc-section-number">4.6</span> Steganographic Performance
-Boundary</a></li>
-<li><a href="#self-referential-analysis"
-id="toc-self-referential-analysis"><span
-class="toc-section-number">4.7</span> Self-Referential Analysis</a></li>
-<li><a href="#comparative-feature-analysis"
-id="toc-comparative-feature-analysis"><span
-class="toc-section-number">4.8</span> Comparative Feature
-Analysis</a></li>
-<li><a href="#test-quality-metrics" id="toc-test-quality-metrics"><span
-class="toc-section-number">4.9</span> Test Quality Metrics</a></li>
 </ul></li>
 <li><a href="#discussion" id="toc-discussion"><span
-class="toc-section-number">5</span> Discussion</a>
+class="toc-section-number">2</span> Discussion</a>
 <ul>
 <li><a href="#the-zero-mock-tradeoff"
 id="toc-the-zero-mock-tradeoff"><span
-class="toc-section-number">5.1</span> The Zero-Mock Tradeoff</a>
+class="toc-section-number">2.1</span> The Zero-Mock Tradeoff</a>
 <ul>
 <li><a href="#when-mocks-are-not-the-problem"
 id="toc-when-mocks-are-not-the-problem"><span
-class="toc-section-number">5.1.1</span> When Mocks Are Not the
+class="toc-section-number">2.1.1</span> When Mocks Are Not the
 Problem</a></li>
 <li><a href="#practical-implementation"
 id="toc-practical-implementation"><span
-class="toc-section-number">5.1.2</span> Practical
+class="toc-section-number">2.1.2</span> Practical
 Implementation</a></li>
-</ul></li>
-<li><a href="#scalability-from-1-to-n-projects"
-id="toc-scalability-from-1-to-n-projects"><span
-class="toc-section-number">5.2</span> Scalability: From 1 to N
-Projects</a>
-<ul>
-<li><a href="#multi-project-orchestration"
-id="toc-multi-project-orchestration"><span
-class="toc-section-number">5.2.1</span> Multi-Project
-Orchestration</a></li>
-<li><a href="#scaling-metrics" id="toc-scaling-metrics"><span
-class="toc-section-number">5.2.2</span> Scaling Metrics</a></li>
 </ul></li>
 <li><a href="#comparison-to-existing-tools"
 id="toc-comparison-to-existing-tools"><span
-class="toc-section-number">5.3</span> Comparison to Existing Tools</a>
+class="toc-section-number">2.2</span> Comparison to Existing Tools</a>
 <ul>
 <li><a href="#fair4rs-evolution-20242026"
 id="toc-fair4rs-evolution-20242026"><span
-class="toc-section-number">5.3.1</span> FAIR4RS Evolution
+class="toc-section-number">2.2.1</span> FAIR4RS Evolution
 (2024–2026)</a></li>
 </ul></li>
 <li><a href="#the-ai-collaboration-model"
 id="toc-the-ai-collaboration-model"><span
-class="toc-section-number">5.4</span> The AI Collaboration
+class="toc-section-number">2.3</span> The AI Collaboration
 Model</a></li>
 <li><a href="#the-learning-curve" id="toc-the-learning-curve"><span
-class="toc-section-number">5.5</span> The Learning Curve</a></li>
+class="toc-section-number">2.4</span> The Learning Curve</a></li>
 <li><a href="#limitations" id="toc-limitations"><span
-class="toc-section-number">5.6</span> Limitations</a></li>
+class="toc-section-number">2.5</span> Limitations</a></li>
 <li><a href="#future-directions" id="toc-future-directions"><span
-class="toc-section-number">5.7</span> Future Directions</a></li>
+class="toc-section-number">2.6</span> Future Directions</a></li>
 <li><a href="#conclusion" id="toc-conclusion"><span
-class="toc-section-number">5.8</span> Conclusion</a></li>
+class="toc-section-number">2.7</span> Conclusion</a></li>
 </ul></li>
 <li><a href="#infrastructure-module-reference"
 id="toc-infrastructure-module-reference"><span
-class="toc-section-number">6</span> Infrastructure Module Reference</a>
+class="toc-section-number">3</span> Infrastructure Module Reference</a>
 <ul>
 <li><a href="#alphabetical-summaries"
 id="toc-alphabetical-summaries"><span
-class="toc-section-number">6.1</span> Alphabetical summaries</a>
+class="toc-section-number">3.1</span> Alphabetical summaries</a>
 <ul>
 <li><a href="#infrastructure.autoresearch-10-files"
 id="toc-infrastructure.autoresearch-10-files"><span
-class="toc-section-number">6.1.1</span>
+class="toc-section-number">3.1.1</span>
 <code>infrastructure.autoresearch</code> (10 files)</a></li>
 <li><a href="#infrastructure.benchmark-4-files"
 id="toc-infrastructure.benchmark-4-files"><span
-class="toc-section-number">6.1.2</span>
+class="toc-section-number">3.1.2</span>
 <code>infrastructure.benchmark</code> (4 files)</a></li>
 <li><a href="#infrastructureconfig-non-package-subdirectory"
 id="toc-infrastructureconfig-non-package-subdirectory"><span
-class="toc-section-number">6.1.3</span>
+class="toc-section-number">3.1.3</span>
 <code>infrastructure/config</code> (non-package subdirectory)</a></li>
 <li><a href="#infrastructure.core-120-files"
 id="toc-infrastructure.core-120-files"><span
-class="toc-section-number">6.1.4</span> <code>infrastructure.core</code>
+class="toc-section-number">3.1.4</span> <code>infrastructure.core</code>
 (120 files)</a></li>
 <li><a href="#infrastructure.doctor-14-files"
 id="toc-infrastructure.doctor-14-files"><span
-class="toc-section-number">6.1.5</span>
+class="toc-section-number">3.1.5</span>
 <code>infrastructure.doctor</code> (14 files)</a></li>
 <li><a href="#infrastructure.docker-0-files"
 id="toc-infrastructure.docker-0-files"><span
-class="toc-section-number">6.1.6</span>
+class="toc-section-number">3.1.6</span>
 <code>infrastructure.docker</code> (0 files)</a></li>
 <li><a href="#infrastructure.documentation-14-files"
 id="toc-infrastructure.documentation-14-files"><span
-class="toc-section-number">6.1.7</span>
+class="toc-section-number">3.1.7</span>
 <code>infrastructure.documentation</code> (14 files)</a></li>
 <li><a href="#infrastructure.fonds-6-files"
 id="toc-infrastructure.fonds-6-files"><span
-class="toc-section-number">6.1.8</span>
+class="toc-section-number">3.1.8</span>
 <code>infrastructure.fonds</code> (6 files)</a></li>
 <li><a href="#infrastructure.llm-55-files"
 id="toc-infrastructure.llm-55-files"><span
-class="toc-section-number">6.1.9</span> <code>infrastructure.llm</code>
+class="toc-section-number">3.1.9</span> <code>infrastructure.llm</code>
 (55 files)</a></li>
 <li><a href="#infrastructure.methods-5-files"
 id="toc-infrastructure.methods-5-files"><span
-class="toc-section-number">6.1.10</span>
+class="toc-section-number">3.1.10</span>
 <code>infrastructure.methods</code> (5 files)</a></li>
 <li><a href="#infrastructure.orchestration-12-files"
 id="toc-infrastructure.orchestration-12-files"><span
-class="toc-section-number">6.1.11</span>
+class="toc-section-number">3.1.11</span>
 <code>infrastructure.orchestration</code> (12 files)</a></li>
 <li><a href="#infrastructure.project-41-files"
 id="toc-infrastructure.project-41-files"><span
-class="toc-section-number">6.1.12</span>
+class="toc-section-number">3.1.12</span>
 <code>infrastructure.project</code> (41 files)</a></li>
 <li><a href="#infrastructure.prose-9-files"
 id="toc-infrastructure.prose-9-files"><span
-class="toc-section-number">6.1.13</span>
+class="toc-section-number">3.1.13</span>
 <code>infrastructure.prose</code> (9 files)</a></li>
 <li><a href="#infrastructure.provenance-7-files"
 id="toc-infrastructure.provenance-7-files"><span
-class="toc-section-number">6.1.14</span>
+class="toc-section-number">3.1.14</span>
 <code>infrastructure.provenance</code> (7 files)</a></li>
 <li><a href="#infrastructure.publishing-81-files"
 id="toc-infrastructure.publishing-81-files"><span
-class="toc-section-number">6.1.15</span>
+class="toc-section-number">3.1.15</span>
 <code>infrastructure.publishing</code> (81 files)</a></li>
 <li><a href="#infrastructure.reference-16-files"
 id="toc-infrastructure.reference-16-files"><span
-class="toc-section-number">6.1.16</span>
+class="toc-section-number">3.1.16</span>
 <code>infrastructure.reference</code> (16 files)</a></li>
 <li><a href="#infrastructure.rendering-65-files"
 id="toc-infrastructure.rendering-65-files"><span
-class="toc-section-number">6.1.17</span>
+class="toc-section-number">3.1.17</span>
 <code>infrastructure.rendering</code> (65 files)</a></li>
 <li><a href="#infrastructure.reporting-57-files"
 id="toc-infrastructure.reporting-57-files"><span
-class="toc-section-number">6.1.18</span>
+class="toc-section-number">3.1.18</span>
 <code>infrastructure.reporting</code> (57 files)</a></li>
 <li><a href="#infrastructure.research-3-files"
 id="toc-infrastructure.research-3-files"><span
-class="toc-section-number">6.1.19</span>
+class="toc-section-number">3.1.19</span>
 <code>infrastructure.research</code> (3 files)</a></li>
 <li><a href="#infrastructure.rules-6-files"
 id="toc-infrastructure.rules-6-files"><span
-class="toc-section-number">6.1.20</span>
+class="toc-section-number">3.1.20</span>
 <code>infrastructure.rules</code> (6 files)</a></li>
 <li><a href="#infrastructure.scientific-4-files"
 id="toc-infrastructure.scientific-4-files"><span
-class="toc-section-number">6.1.21</span>
+class="toc-section-number">3.1.21</span>
 <code>infrastructure.scientific</code> (4 files)</a></li>
 <li><a href="#infrastructure.search-62-files"
 id="toc-infrastructure.search-62-files"><span
-class="toc-section-number">6.1.22</span>
+class="toc-section-number">3.1.22</span>
 <code>infrastructure.search</code> (62 files)</a></li>
 <li><a href="#infrastructure.sia-10-files"
 id="toc-infrastructure.sia-10-files"><span
-class="toc-section-number">6.1.23</span> <code>infrastructure.sia</code>
+class="toc-section-number">3.1.23</span> <code>infrastructure.sia</code>
 (10 files)</a></li>
 <li><a href="#infrastructure.skills-8-files"
 id="toc-infrastructure.skills-8-files"><span
-class="toc-section-number">6.1.24</span>
+class="toc-section-number">3.1.24</span>
 <code>infrastructure.skills</code> (8 files)</a></li>
 <li><a href="#infrastructure.steganography-13-files"
 id="toc-infrastructure.steganography-13-files"><span
-class="toc-section-number">6.1.25</span>
+class="toc-section-number">3.1.25</span>
 <code>infrastructure.steganography</code> (13 files)</a></li>
 <li><a href="#infrastructure.tools-6-files"
 id="toc-infrastructure.tools-6-files"><span
-class="toc-section-number">6.1.26</span>
+class="toc-section-number">3.1.26</span>
 <code>infrastructure.tools</code> (6 files)</a></li>
 <li><a href="#infrastructure.validation-80-files"
 id="toc-infrastructure.validation-80-files"><span
-class="toc-section-number">6.1.27</span>
+class="toc-section-number">3.1.27</span>
 <code>infrastructure.validation</code> (80 files)</a></li>
 <li><a href="#infrastructurelogrotate.d-0-files"
 id="toc-infrastructurelogrotate.d-0-files"><span
-class="toc-section-number">6.1.28</span>
+class="toc-section-number">3.1.28</span>
 <code>infrastructure/logrotate.d</code> (0 files)</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#security-and-provenance"
-id="toc-security-and-provenance"><span
-class="toc-section-number">7</span> Security and Provenance</a>
-<ul>
-<li><a href="#threat-model" id="toc-threat-model"><span
-class="toc-section-number">7.1</span> Threat Model</a></li>
-<li><a href="#steganographic-layers"
-id="toc-steganographic-layers"><span
-class="toc-section-number">7.2</span> Steganographic Layers</a>
-<ul>
-<li><a href="#layer-1-pdf-metadata-injection"
-id="toc-layer-1-pdf-metadata-injection"><span
-class="toc-section-number">7.2.1</span> Layer 1: PDF Metadata
-Injection</a></li>
-<li><a href="#layer-2-cryptographic-hashing"
-id="toc-layer-2-cryptographic-hashing"><span
-class="toc-section-number">7.2.2</span> Layer 2: Cryptographic
-Hashing</a></li>
-<li><a href="#layer-3-alpha-channel-overlay-footer-and-invisible-text"
-id="toc-layer-3-alpha-channel-overlay-footer-and-invisible-text"><span
-class="toc-section-number">7.2.3</span> Layer 3: Alpha-Channel Overlay,
-Footer, and Invisible Text</a></li>
-<li><a href="#layer-4-qr-and-barcode-injection"
-id="toc-layer-4-qr-and-barcode-injection"><span
-class="toc-section-number">7.2.4</span> Layer 4: QR and Barcode
-Injection</a></li>
-</ul></li>
-<li><a href="#the-secure_run.sh-orchestrator"
-id="toc-the-secure_run.sh-orchestrator"><span
-class="toc-section-number">7.3</span> The <code>secure_run.sh</code>
-Orchestrator</a></li>
-<li><a href="#tamper-detection" id="toc-tamper-detection"><span
-class="toc-section-number">7.4</span> Tamper Detection</a></li>
-<li><a href="#limitations-1" id="toc-limitations-1"><span
-class="toc-section-number">7.5</span> Limitations</a></li>
-<li><a href="#relationship-to-software-supply-chain-integrity"
-id="toc-relationship-to-software-supply-chain-integrity"><span
-class="toc-section-number">7.6</span> Relationship to Software Supply
-Chain Integrity</a></li>
-<li><a href="#relationship-to-fair-and-formal-provenance-standards"
-id="toc-relationship-to-fair-and-formal-provenance-standards"><span
-class="toc-section-number">7.7</span> Relationship to FAIR and Formal
-Provenance Standards</a></li>
-</ul></li>
 <li><a href="#appendices" id="toc-appendices"><span
-class="toc-section-number">8</span> Appendices</a>
+class="toc-section-number">4</span> Appendices</a>
 <ul>
 <li><a href="#appendix-pipeline" id="toc-appendix-pipeline"><span
-class="toc-section-number">8.1</span> Appendix: Pipeline Stage
+class="toc-section-number">4.1</span> Appendix: Pipeline Stage
 Reference</a></li>
 <li><a href="#appendix-config" id="toc-appendix-config"><span
-class="toc-section-number">8.2</span> Appendix: Configuration
+class="toc-section-number">4.2</span> Appendix: Configuration
 Reference</a></li>
 <li><a href="#appendix-directory" id="toc-appendix-directory"><span
-class="toc-section-number">8.3</span> Appendix: Repository Directory
+class="toc-section-number">4.3</span> Appendix: Repository Directory
 Structure</a></li>
-<li><a href="#appendix-exemplars" id="toc-appendix-exemplars"><span
-class="toc-section-number">8.4</span> Appendix: Exemplar Project
-Summary</a></li>
 <li><a href="#appendix-docs" id="toc-appendix-docs"><span
-class="toc-section-number">8.5</span> Appendix: Documentation
+class="toc-section-number">4.4</span> Appendix: Documentation
 Inventory</a></li>
 <li><a href="#appendix-matrix" id="toc-appendix-matrix"><span
-class="toc-section-number">8.6</span> Appendix: Comparative Tool
+class="toc-section-number">4.5</span> Appendix: Comparative Tool
 Matrix</a></li>
 </ul></li>
 </ul>
@@ -991,557 +853,8 @@ alt="Publication pairing flow" />
 manifest on → <code>./secure_run.sh</code></p>
 <!-- BEGINNING OF TRANSMISSION -->
 <hr />
-<h1 data-number="1" id="abstract"><span
-class="header-section-number">1</span> Abstract</h1>
-<p>The reproducibility problem in computational research is partly
-structural: research artifacts are often distributed across editors,
-notebooks, scripts, and manual publication steps without a shared
-mechanism that keeps code, data, and manuscript synchronized. Existing
-tools address important parts of this lifecycle: workflow managers
-orchestrate computation, literate-programming systems render documents,
-and data-versioning tools track artifacts. <code>template/</code>
-combines those concerns with test and provenance gates by applying
-Infrastructure as Code to the research lifecycle. Its Two-Layer
-Architecture separates 28 infrastructure subdirectories (25 importable
-Python packages, ~708 modules, validated by ~9,557 tests) from
-self-contained project workspaces. A YAML-declared pipeline (16 stages;
-10 in a default full run) coordinates environment checks, test
-execution, analysis, Pandoc/XeLaTeX rendering, SHA-256 hashing with
-optional steganographic watermarking, structural validation, and
-optional LLM review. The declared quality floors—90% for project source
-and 60% for infrastructure source—are injected from executable
-configuration rather than copied into the manuscript. Documentation
-Duality equips repository directories with human-facing
-<code>README.md</code> and agent-facing <code>AGENTS.md</code> files;
-skill-enabled infrastructure packages additionally expose structured
-<code>SKILL.md</code> descriptors so agents can discover supported
-capabilities from versioned interfaces.</p>
-<p>The generated public exemplar roster
-(<code>templates/template_active_inference</code>,
-<code>templates/template_advanced_literature_review</code>,
-<code>templates/template_autopoiesis</code>,
-<code>templates/template_autoresearch_project</code>,
-<code>templates/template_autoscientists</code>,
-<code>templates/template_code_project</code>,
-<code>templates/template_data_descriptor</code>,
-<code>templates/template_eda_notebook</code>,
-<code>templates/template_formal</code>,
-<code>templates/template_gold_refinement</code>,
-<code>templates/template_literature_meta_analysis</code>,
-<code>templates/template_madlib</code>,
-<code>templates/template_methods_paper</code>,
-<code>templates/template_newspaper</code>,
-<code>templates/template_pitch_deck</code>,
-<code>templates/template_pools_rules_tools</code>,
-<code>templates/template_prose_project</code>,
-<code>templates/template_redacted_report</code>,
-<code>templates/template_registered_report</code>,
-<code>templates/template_search_project</code>,
-<code>templates/template_sia</code>,
-<code>templates/template_storybook</code>,
-<code>templates/template_template</code>,
-<code>templates/template_textbook</code>) supplies heterogeneous
-control-positive layouts, including optimization
-(<code>template_code_project</code>, 242 discovered tests), prose
-(<code>template_prose_project</code>, 120 discovered tests), and
-AutoResearch readiness (<code>template_autoresearch_project</code>, 300
-discovered tests). Each declares the same 90% project-source floor and
-consumes the shared pipeline without project-to-project imports. This
-manuscript adds a reflexive artifact: <code>template_template</code>
-(143 discovered tests) follows the same analysis and render path while
-injecting repository counters and figures from live introspection. The
-result is a self-documenting build whose quantitative repository claims
-are generated artifacts, whose manuscript claims are checked against an
-evidence registry, and whose output can be validated and optionally
-watermarked. A versioned comparative matrix situates
-<code>template/</code> against peer tools across the capabilities
-represented in Figure 4. Code is released under the Apache License 2.0
-at <code>github.com/docxology/template</code>; the work remains
-open-ended.</p>
-<hr />
-<h1 data-number="2" id="introduction"><span
-class="header-section-number">2</span> Introduction</h1>
-<h2 data-number="2.1"
-id="research-tools-as-epistemic-infrastructure"><span
-class="header-section-number">2.1</span> Research Tools as Epistemic
-Infrastructure</h2>
-<p>Scientific research operates through a layered ecology of tools,
-documents, and practices—each shaping what can be known, communicated,
-and verified. When these layers are fragmented, manuscripts, data, code,
-and figures can drift out of alignment, creating gaps that are
-structural rather than incidental. Survey and economic evidence
-documents the practical cost of failed reproduction attempts <span
-class="citation"
-data-cites="baker2016reproducibility freedman2015economics">(<a
-href="#ref-baker2016reproducibility" role="doc-biblioref">Baker
-2016</a>; <a href="#ref-freedman2015economics"
-role="doc-biblioref">Freedman et al. 2015</a>)</span>, but
-reproducibility is only the most visible face of a broader problem.
-Research software engineering, epistemic integrity, and the coordination
-between human researchers and AI collaborators all depend on whether the
-tools that produce research artifacts can themselves be transparent,
-testable, and self-documenting. Nosek et al. <span class="citation"
-data-cites="nosek2018preregistration">(<a
-href="#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
-2018</a>)</span> argue that committing to analytical plans before data
-collection is a necessary structural reform; we extend this logic to the
-research build pipeline.</p>
-<p>One root cause is fragmentation—of attention (in the mind) as well as
-in the cyberphysical niche (documents, versions, and reproducibility
-artefacts). A typical research project scatters its artifacts across
-disconnected tools: LaTeX editors <span class="citation"
-data-cites="lamport1994latex">(<a href="#ref-lamport1994latex"
-role="doc-biblioref">Lamport 1994</a>)</span> for prose, Jupyter
-notebooks for analysis, ad-hoc shell scripts for figure generation, and
-manual copy-paste for integrating results into manuscripts. Each
-boundary between tools is a potential locus of desynchronization. The
-version of a figure embedded in a PDF may not match the code that
-ostensibly generated it, while tests may exercise analysis code without
-exercising the rendering path. Pimentel et al. <span class="citation"
-data-cites="pimentel2019jupyter">(<a href="#ref-pimentel2019jupyter"
-role="doc-biblioref">Pimentel et al. 2019</a>)</span> studied a corpus
-described as 1.4 million Jupyter notebooks; in the valid execution
-subset, 24.11% ran without errors and 4.03% reproduced the recorded
-results. Those distinctions matter: execution success is not equivalent
-to result reproduction. Peng <span class="citation"
-data-cites="peng2011reproducible">(<a href="#ref-peng2011reproducible"
-role="doc-biblioref">Peng 2011</a>)</span> argues that reproducibility
-in computational science requires, at minimum, that the data and code
-underlying a published result be available for independent verification.
-Barba <span class="citation" data-cites="barba2018terminologies">(<a
-href="#ref-barba2018terminologies" role="doc-biblioref">Barba
-2018</a>)</span> further documents how “reproducibility,”
-“replicability,” and “repeatability” carry conflicting definitions
-across disciplines, complicating cross-field standards.</p>
-<h2 data-number="2.2" id="related-work"><span
-class="header-section-number">2.2</span> Related Work</h2>
-<p>Gentleman and Temple Lang <span class="citation"
-data-cites="gentleman2007research">(<a href="#ref-gentleman2007research"
-role="doc-biblioref">Gentleman and Temple Lang 2007</a>)</span>
-introduced the concept of a <em>research compendium</em>—a single unit
-of scholarly communication bundling code, data, and narrative. This
-vision has driven two decades of tooling, which can be grouped into four
-categories: workflow managers, literate programming systems,
-containerization approaches, and best-practice frameworks.</p>
-<h3 data-number="2.2.1" id="workflow-managers"><span
-class="header-section-number">2.2.1</span> Workflow Managers</h3>
-<p><strong>Snakemake</strong> <span class="citation"
-data-cites="koster2012snakemake">(<a href="#ref-koster2012snakemake"
-role="doc-biblioref">Köster and Rahmann 2012</a>)</span> uses a
-rule-based, Python-derived DSL to specify computational workflows as
-directed acyclic graphs of file-producing steps. It supports
-containerized execution and an extension architecture for execution and
-storage backends, while its central scope remains computational pipeline
-orchestration rather than this repository’s combined manuscript, test,
-and document-provenance contract.</p>
-<p><strong>Nextflow</strong> <span class="citation"
-data-cites="ditommaso2017nextflow">(<a href="#ref-ditommaso2017nextflow"
-role="doc-biblioref">Di Tommaso et al. 2017</a>)</span> employs a
-dataflow programming paradigm with native support for container-based
-execution across heterogeneous computing environments (local, SLURM,
-AWS). Like Snakemake, Nextflow excels at bioinformatics pipeline
-parallelism but does not address manuscript production, document
-integrity, or the testing–publication coupling that characterizes
-research reproducibility.</p>
-<p><strong>CWL</strong> (Common Workflow Language) <span
-class="citation" data-cites="amstutz2016cwl">(<a
-href="#ref-amstutz2016cwl" role="doc-biblioref">Amstutz et al.
-2016</a>)</span> provides a portable, YAML-based standard for describing
-computational workflows and their dependencies. Its strength lies in
-interoperability across execution engines (cwltool, Toil, Arvados), but
-it requires external tooling for manuscript generation and offers no
-built-in testing or provenance framework.</p>
-<h3 data-number="2.2.2"
-id="literate-programming-and-publication-tools"><span
-class="header-section-number">2.2.2</span> Literate Programming and
-Publication Tools</h3>
-<p>Knuth’s literate programming <span class="citation"
-data-cites="knuth1984literate">(<a href="#ref-knuth1984literate"
-role="doc-biblioref">Knuth 1984</a>)</span> established the principle
-that programs should be authored as documents intended for human
-comprehension. Schulte et al. <span class="citation"
-data-cites="schulte2012multilanguage">(<a
-href="#ref-schulte2012multilanguage" role="doc-biblioref">Schulte et al.
-2012</a>)</span> extended this to multi-language computing environments
-(Org-mode), demonstrating that literate programming could span languages
-and output formats.</p>
-<p><strong>Quarto</strong> <span class="citation"
-data-cites="allaire2024quarto">(<a href="#ref-allaire2024quarto"
-role="doc-biblioref">Allaire et al. 2024</a>)</span> extends the R
-Markdown tradition to support Python, Julia, and Observable, rendering
-to PDF, HTML, and Word. Quarto integrates code execution with document
-rendering, achieving a modern form of literate programming, but it does
-not enforce testing thresholds, manage multi-project repositories, or
-provide cryptographic provenance.</p>
-<p><strong>Jupyter Book</strong> <span class="citation"
-data-cites="kluyver2016jupyter">(<a href="#ref-kluyver2016jupyter"
-role="doc-biblioref">Kluyver et al. 2016</a>)</span> builds on Jupyter
-notebooks to produce publication-quality documents via Sphinx. While
-powerful for interactive exploration, Jupyter’s notebook format
-introduces execution-order fragility <span class="citation"
-data-cites="pimentel2019jupyter">(<a href="#ref-pimentel2019jupyter"
-role="doc-biblioref">Pimentel et al. 2019</a>)</span> and does not
-naturally support the separation of logic from orchestration that
-characterizes maintainable research software.</p>
-<p><strong>R Markdown</strong> <span class="citation"
-data-cites="xie2018dynamic">(<a href="#ref-xie2018dynamic"
-role="doc-biblioref">Xie et al. 2018</a>)</span> pioneered knitr-based
-dynamic documents that weave code and prose. Its ecosystem is rich but
-R-centric, and it lacks the multi-project management, infrastructure
-testing, and provenance embedding that characterize
-<code>template/</code>.</p>
-<p><strong>Typst</strong> <span class="citation"
-data-cites="madje2023typst">(<a href="#ref-madje2023typst"
-role="doc-biblioref">Mädje and Haug 2023</a>)</span> is an emerging
-markup-based typesetting system with incremental compilation and a
-programmable scripting layer. While Typst offers faster compilation than
-LaTeX and a more modern authoring experience, it does not integrate
-testing, provenance, or multi-project pipeline management.</p>
-<h3 data-number="2.2.3"
-id="containerization-and-environment-capture"><span
-class="header-section-number">2.2.3</span> Containerization and
-Environment Capture</h3>
-<p><strong>Docker</strong> <span class="citation"
-data-cites="boettiger2015docker">(<a href="#ref-boettiger2015docker"
-role="doc-biblioref">Boettiger 2015</a>)</span> addresses
-reproducibility at the environment level—packaging operating system,
-libraries, and code into portable containers. While Docker solves the
-“works on my machine” problem, containerization is complementary to, not
-a replacement for, the architectural concerns addressed here: Docker
-does not enforce testing, embed provenance, or manage multi-project
-manuscript workflows.</p>
-<h3 data-number="2.2.4"
-id="best-practice-frameworks-and-data-standards"><span
-class="header-section-number">2.2.4</span> Best-Practice Frameworks and
-Data Standards</h3>
-<p>Wilson et al. <span class="citation" data-cites="wilson2017good">(<a
-href="#ref-wilson2017good" role="doc-biblioref">Wilson et al.
-2017</a>)</span> define “good enough” practices for scientific
-computing, emphasizing version control, testing, and documentation.
-Sandve et al. <span class="citation" data-cites="sandve2013ten">(<a
-href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
-2013</a>)</span> propose ten rules for reproducible computational
-research. Piccolo and Frampton <span class="citation"
-data-cites="piccolo2016tools">(<a href="#ref-piccolo2016tools"
-role="doc-biblioref">Piccolo and Frampton 2016</a>)</span>
-systematically survey tools for computational reproducibility, finding
-that environment isolation, workflow automation, and documentation
-generation address complementary but non-overlapping reproducibility
-concerns—yet no single tool unifies all three. Stodden et al. <span
-class="citation" data-cites="stodden2016enhancing">(<a
-href="#ref-stodden2016enhancing" role="doc-biblioref">Stodden et al.
-2016</a>)</span> advocate for enhanced computational method
-transparency. The FAIR principles <span class="citation"
-data-cites="wilkinson2016fair">(<a href="#ref-wilkinson2016fair"
-role="doc-biblioref"><span class="nocase">Wilkinson et al.</span>
-2016</a>)</span>—Findable, Accessible, Interoperable, Reusable—establish
-a standard for data stewardship that has been widely adopted by funding
-agencies and journals. Lamprecht et al. <span class="citation"
-data-cites="lamprecht2020towards">(<a href="#ref-lamprecht2020towards"
-role="doc-biblioref">Lamprecht et al. 2020</a>)</span> formalize
-“Towards FAIR Principles for Research Software,” providing the
-conceptual scaffolding that Barker et al. <span class="citation"
-data-cites="barker2022fair4rs">(<a href="#ref-barker2022fair4rs"
-role="doc-biblioref">Barker et al. 2022</a>)</span> would soon
-operationalize as the FAIR4RS initiative—recognizing that software has
-execution, composability, and dependency-management requirements that
-data-centric FAIR does not address. Cohen et al. <span class="citation"
-data-cites="cohen2021four">(<a href="#ref-cohen2021four"
-role="doc-biblioref">Cohen et al. 2021</a>)</span> characterize the four
-pillars of research software engineering (software sustainability,
-software quality, community building, and policy advocacy), situating
-formal testing and provenance practices within a broader RSE governance
-framework. Garijo et al. <span class="citation"
-data-cites="garijo2024fairsoft">(<a href="#ref-garijo2024fairsoft"
-role="doc-biblioref"><span class="nocase">Garijo et al.</span>
-2024</a>)</span> operationalize FAIR4RS through the FAIRsoft evaluator,
-an automated assessment framework that scores research software against
-17+ quality indicators including executability, metadata richness, and
-documentation completeness. Goble et al. <span class="citation"
-data-cites="goble2020fair">(<a href="#ref-goble2020fair"
-role="doc-biblioref">Goble et al. 2020</a>)</span> extend FAIR to
-computational workflows specifically, arguing that workflow provenance
-requires first-class treatment in scientific computing infrastructure.
-Nüst et al. <span class="citation"
-data-cites="nust2017containerization">(<a
-href="#ref-nust2017containerization" role="doc-biblioref">Nüst et al.
-2017</a>)</span> introduce the <em>executable research compendium</em>
-(ERC), extending Gentleman and Temple Lang’s compendium concept with
-containerized, interactive reproduction environments. The W3C PROV data
-model <span class="citation" data-cites="moreau2013provdm">(<a
-href="#ref-moreau2013provdm" role="doc-biblioref">Moreau and Missier
-2013</a>)</span> provides a formal vocabulary for expressing provenance
-records, while in-toto <span class="citation"
-data-cites="torresarias2019intoto">(<a href="#ref-torresarias2019intoto"
-role="doc-biblioref">Torres-Arias et al. 2019</a>)</span> provides a
-framework for end-to-end software supply chain integrity verification,
-and SLSA <span class="citation" data-cites="openssf2023slsa">(<a
-href="#ref-openssf2023slsa" role="doc-biblioref">Open Source Security
-Foundation 2023</a>)</span> (Supply-chain Levels for Software Artifacts)
-extends this to graduated, attestation-based supply-chain security
-levels for build pipelines. These frameworks articulate <em>what</em>
-reproducible research requires but do not provide an integrated
-<em>how</em>—they lack the tooling, enforcement mechanisms, and
-architectural patterns that translate standards into practice.</p>
-<h3 data-number="2.2.5" id="the-gap"><span
-class="header-section-number">2.2.5</span> The Gap</h3>
-<p>Despite advances in FAIR4RS principles <span class="citation"
-data-cites="barker2022fair4rs lamprecht2020towards">(<a
-href="#ref-barker2022fair4rs" role="doc-biblioref">Barker et al.
-2022</a>; <a href="#ref-lamprecht2020towards"
-role="doc-biblioref">Lamprecht et al. 2020</a>)</span>, automated FAIR
-software assessment <span class="citation"
-data-cites="garijo2024fairsoft">(<a href="#ref-garijo2024fairsoft"
-role="doc-biblioref"><span class="nocase">Garijo et al.</span>
-2024</a>)</span>, FAIR computational workflow standards <span
-class="citation" data-cites="goble2020fair">(<a
-href="#ref-goble2020fair" role="doc-biblioref">Goble et al.
-2020</a>)</span>, supply-chain attestation frameworks <span
-class="citation" data-cites="torresarias2019intoto openssf2023slsa">(<a
-href="#ref-torresarias2019intoto" role="doc-biblioref">Torres-Arias et
-al. 2019</a>; <a href="#ref-openssf2023slsa" role="doc-biblioref">Open
-Source Security Foundation 2023</a>)</span>, and the preregistration
-revolution <span class="citation"
-data-cites="nosek2018preregistration">(<a
-href="#ref-nosek2018preregistration" role="doc-biblioref">Nosek et al.
-2018</a>)</span>, no existing system integrates six cross-cutting
-concerns into a single enforced pipeline: (1) end-to-end pipeline
-orchestration with testing enforcement, (2) multi-format manuscript
-rendering, (3) cryptographic provenance embedding, (4) multi-project
-repository management, (5) FAIR-aligned software stewardship, and (6)
-AI-agent collaboration via structured documentation. Each existing
-framework addresses a subset; none provides the unified enforcement
-mechanism. The detailed tool-by-tool comparison is developed in the <a
-href="05c_comparison.md#comparison-to-existing-tools">Comparison to
-Existing Tools</a> section; the summary table below captures the gap
-landscape.</p>
-<h3 data-number="2.2.6" id="summary-gaps-left-by-existing-tools"><span
-class="header-section-number">2.2.6</span> Summary: Gaps Left by
-Existing Tools</h3>
-<p>The six concerns identified above map onto existing tool categories
-as follows:</p>
-<table>
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 40%" />
-<col style="width: 37%" />
-</colgroup>
-<thead>
-<tr>
-<th>Gap</th>
-<th>Partially Addressed By</th>
-<th>Not Addressed By</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pipeline orchestration</td>
-<td>Snakemake, Nextflow, CWL</td>
-<td>Quarto, Jupyter Book, R Markdown, Typst, Overleaf, Prism</td>
-</tr>
-<tr>
-<td>Manuscript rendering</td>
-<td>Quarto, Jupyter Book, R Markdown, Typst, Overleaf, Prism</td>
-<td>Snakemake, Nextflow, CWL, DVC</td>
-</tr>
-<tr>
-<td>Testing enforcement</td>
-<td>—</td>
-<td>All existing tools</td>
-</tr>
-<tr>
-<td>Cryptographic provenance</td>
-<td>SLSA (build-level attestation only)</td>
-<td>All research-focused tools</td>
-</tr>
-<tr>
-<td>Multi-project management</td>
-<td>—</td>
-<td>All existing tools</td>
-</tr>
-<tr>
-<td>AI-agent documentation</td>
-<td>Overleaf (partial co-author AI), Prism (partial context
-reasoning)</td>
-<td>All pipeline/workflow tools</td>
-</tr>
-<tr>
-<td>Agentic skill protocol (MCP-aligned)</td>
-<td>—</td>
-<td>All existing tools</td>
-</tr>
-</tbody>
-</table>
-<p>No existing system addresses all six concerns within a single
-enforced pipeline.</p>
-<h2 data-number="2.3" id="template-an-integrated-solution"><span
-class="header-section-number">2.3</span> <code>template/</code>: An
-Integrated Solution</h2>
-<p><code>template/</code> was conceived as a structural antidote to this
-fragmentation. Rather than adding reproducibility as an afterthought—a
-Docker container wrapping an already-disjointed workflow <span
-class="citation" data-cites="boettiger2015docker">(<a
-href="#ref-boettiger2015docker" role="doc-biblioref">Boettiger
-2015</a>)</span>—the template enforces integrity at the architectural
-level. It realizes Gentleman and Temple Lang’s research compendium
-vision <span class="citation" data-cites="gentleman2007research">(<a
-href="#ref-gentleman2007research" role="doc-biblioref">Gentleman and
-Temple Lang 2007</a>)</span> at repository scale, bundling code, data,
-tests, manuscripts, and provenance into a single, pipeline-enforced
-system with version-controlled infrastructure <span class="citation"
-data-cites="ram2013git">(<a href="#ref-ram2013git"
-role="doc-biblioref">Ram 2013</a>)</span>. It stands on four primary
-pillars:</p>
-<ol type="1">
-<li><p><strong>Ergonomic Modularity</strong>: A Two-Layer Architecture
-cleanly separates globally shared infrastructure (logging, rendering,
-validation, steganography) from project-specific logic (manuscripts,
-scripts, data). 28 infrastructure subdirectories (25 importable
-packages) comprising ~708 Python modules provide reusable services;
-projects consume them without modification.</p></li>
-<li><p><strong>Execution Integrity</strong>: Pipeline advancement is
-contingent on test passage. The configured source-coverage floors are
-60% for infrastructure and 90% for each project. The static gate rejects
-prohibited mock-framework imports, while the suites exercise real
-filesystem and subprocess behavior and use local protocol servers or
-explicitly enabled live services for network boundaries. ~9,557
-infrastructure tests and 5440+ project tests are discovered by the
-introspection build.</p></li>
-<li><p><strong>Automated Provenance</strong>: Steganographic
-watermarking and cryptographic hashing are integrated directly into the
-rendering pipeline. Every generated PDF carries SHA-256 (and, when
-enabled, SHA-512) fingerprints, an alpha-channel watermark (configurable
-text or QR overlay), per-page provenance footers and barcode strips, and
-embedded PDF metadata recording the build timestamp, document
-identifier, and Git commit hash. Provenance is not asserted by policy;
-it is enforced by architecture.</p></li>
-<li><p><strong>AI-Agent Collaboration and Skill-Based Agentic
-Operations</strong>: A three-tier documentation architecture enables AI
-agents to operate at every level of the system. At the system level,
-<code>CLAUDE.md</code> asserts global architectural constraints. At the
-structural level, <code>AGENTS.md</code> files at every directory expose
-local API surfaces, file inventories, and integration contracts. At the
-module level, <code>SKILL.md</code> files—written to a discoverable
-YAML+Markdown schema aligned with the Model Context Protocol <span
-class="citation" data-cites="anthropic2024mcp">(<a
-href="#ref-anthropic2024mcp" role="doc-biblioref">Anthropic
-2024</a>)</span>—define each infrastructure module as a reusable,
-self-describing tool. An agent invoking
-<code>infrastructure.rendering</code> does not need to read source code:
-it reads the <code>rendering/SKILL.md</code>, which declares the
-module’s name, description, key imports, and example invocations in a
-machine-parseable YAML frontmatter block. This architecture is the
-practical realization of the skill-library paradigm established in the
-agent literature: Yao et al.’s ReAct framework <span class="citation"
-data-cites="yao2023react">(<a href="#ref-yao2023react"
-role="doc-biblioref">Yao et al. 2023</a>)</span> demonstrated that
-interleaving reasoning traces with tool invocations dramatically
-improves LLM reliability; Schick et al.’s Toolformer <span
-class="citation" data-cites="schick2023toolformer">(<a
-href="#ref-schick2023toolformer" role="doc-biblioref">Schick et al.
-2023</a>)</span> showed that self-supervised tool use can be
-bootstrapped from natural language; Wang et al.’s Voyager <span
-class="citation" data-cites="wang2023voyager">(<a
-href="#ref-wang2023voyager" role="doc-biblioref">Wang et al.
-2023</a>)</span> proved that growing skill libraries enable open-ended
-autonomous exploration in complex environments. <code>template/</code>
-instantiates this vision in the domain of scientific research
-infrastructure: each <code>SKILL.md</code> is a Voyager-style skill,
-each pipeline stage is a ReAct action, and the full infrastructure layer
-constitutes a composable, protocol-aligned skill library for scientific
-computation.</p></li>
-</ol>
-<h2 data-number="2.4" id="scope-and-contributions"><span
-class="header-section-number">2.4</span> Scope and Contributions</h2>
-<p>This paper is itself a product of the template it describes. The
-metrics populating its tables were computed by the introspection module
-documented in the <a href="03a_architecture.md#methods">Methods</a>; the
-figures were rendered by the visualization code validated by the test
-suite described in <a href="03e_quality.md#quality-assurance">Quality
-Assurance</a>; the PDF carrying these words was assembled by the same
-YAML-declared pipeline whose architecture is the subject of the <a
-href="04_results.md#results">Results</a>. This self-productive
-loop—where the system that is described is also the system that produces
-the description—is not incidental but structural, a concrete
-demonstration that <code>template/</code> can sustain the full lifecycle
-from source code to published artifact within a single,
-version-controlled, pipeline-enforced repository. Our contributions
-are:</p>
-<ul>
-<li>A formal description of the Two-Layer Architecture and Standalone
-Project Paradigm that enables N independent research projects to share
-infrastructure without coupling.</li>
-<li>A detailed specification of the 16-stage DAG in
-<code>infrastructure/core/pipeline/pipeline.yaml</code>: default full
-runs use 10 stages; <code>--core-only</code> runs 8; opt-in ebook,
-metadata, bundle, and archival stages via <code>--tags</code>.</li>
-<li>A comparative analysis positioning <code>template/</code> against
-nine peer tools—Snakemake, Nextflow, CWL, Quarto, Jupyter Book, R
-Markdown, DVC, Overleaf, OpenAI Prism—across fourteen feature
-dimensions, demonstrating that <code>template/</code> uniquely bundles
-the eleven capabilities it supports (testing, provenance, documentation,
-and orchestration enforcement) of the fourteen surveyed dimensions
-enumerated in §Results.</li>
-<li>An empirical evaluation across the canonical exemplar projects under
-<code>projects/templates/</code>
-(<code>templates/template_active_inference</code>,
-<code>templates/template_advanced_literature_review</code>,
-<code>templates/template_autopoiesis</code>,
-<code>templates/template_autoresearch_project</code>,
-<code>templates/template_autoscientists</code>,
-<code>templates/template_code_project</code>,
-<code>templates/template_data_descriptor</code>,
-<code>templates/template_eda_notebook</code>,
-<code>templates/template_formal</code>,
-<code>templates/template_gold_refinement</code>,
-<code>templates/template_literature_meta_analysis</code>,
-<code>templates/template_madlib</code>,
-<code>templates/template_methods_paper</code>,
-<code>templates/template_newspaper</code>,
-<code>templates/template_pitch_deck</code>,
-<code>templates/template_pools_rules_tools</code>,
-<code>templates/template_prose_project</code>,
-<code>templates/template_redacted_report</code>,
-<code>templates/template_registered_report</code>,
-<code>templates/template_search_project</code>,
-<code>templates/template_sia</code>,
-<code>templates/template_storybook</code>,
-<code>templates/template_template</code>,
-<code>templates/template_textbook</code>)—including this meta manuscript
-from <code>projects/templates/template_template</code>, which exercises
-introspection-derived metrics.</li>
-<li>A security analysis of the steganographic provenance layer,
-including a formal threat model and tamper-detection capabilities
-aligned with the W3C PROV data model <span class="citation"
-data-cites="moreau2013provdm">(<a href="#ref-moreau2013provdm"
-role="doc-biblioref">Moreau and Missier 2013</a>)</span> and SLSA <span
-class="citation" data-cites="openssf2023slsa">(<a
-href="#ref-openssf2023slsa" role="doc-biblioref">Open Source Security
-Foundation 2023</a>)</span>.</li>
-<li>An open-source reference implementation available at
-<code>github.com/docxology/template</code>.</li>
-</ul>
-<h2 data-number="2.5" id="paper-organization"><span
-class="header-section-number">2.5</span> Paper Organization</h2>
-<p>The <a href="03a_architecture.md#methods">Methods</a> describe the
-Two-Layer Architecture, Thin Orchestrator pattern, pipeline stages, and
-AI collaboration model. <a href="04_results.md#results">Results</a>
-present quantitative metrics from multi-project execution, coverage
-analysis, and steganographic benchmarks. The <a
-href="05a_zeromock_tradeoff.md#the-zero-mock-tradeoff">Discussion</a>
-addresses the Zero-Mock tradeoff, scalability implications, a detailed
-tool comparison, and future directions. The <a
-href="06_infrastructure_modules.md#infrastructure-module-reference">Infrastructure
-Module Reference</a> provides detailed documentation for all 28
-subdirectories. <a
-href="07_security_provenance.md#security-and-provenance">Security and
-Provenance</a> describes the steganographic and cryptographic integrity
-layer. The <a
-href="08a_appendix_pipeline.md#appendix-pipeline">Appendices</a> provide
-pipeline, configuration, and comparative references.</p>
-<hr />
-<h1 data-number="3" id="methods"><span
-class="header-section-number">3</span> Methods</h1>
+<h1 data-number="1" id="methods"><span
+class="header-section-number">1</span> Methods</h1>
 <p>The <code>template/</code> architecture is deliberately bifurcated
 into a globally shared <code>infrastructure/</code> layer and
 project-specific <code>projects/</code> silos. This section describes
@@ -1549,8 +862,8 @@ the four core design patterns, the YAML-declared pipeline (16 stages;
 default full 10) pipeline that operationalizes them, and the AI
 collaboration model that distinguishes this system from conventional
 research templates.</p>
-<h2 data-number="3.1" id="the-two-layer-architecture"><span
-class="header-section-number">3.1</span> The Two-Layer Architecture</h2>
+<h2 data-number="1.1" id="the-two-layer-architecture"><span
+class="header-section-number">1.1</span> The Two-Layer Architecture</h2>
 <p>The repository is organized into two strictly separated layers:</p>
 <p><strong>Infrastructure Layer</strong> (<code>infrastructure/</code>):
 28 infrastructure subdirectories—25 of them independently-importable
@@ -1606,8 +919,8 @@ Self-contained research workspaces. Each project directory contains:</p>
 filesystem paths. No project modifies infrastructure code; no
 infrastructure module references a specific project by name (except via
 runtime project discovery).</p>
-<h2 data-number="3.2" id="the-standalone-project-paradigm"><span
-class="header-section-number">3.2</span> The Standalone Project
+<h2 data-number="1.2" id="the-standalone-project-paradigm"><span
+class="header-section-number">1.2</span> The Standalone Project
 Paradigm</h2>
 <p>Projects are designed to be completely self-contained. Adding a new
 project requires no changes to the infrastructure layer, no
@@ -1651,8 +964,8 @@ hosts its public canonical exemplars under
 <code>templates/template_textbook</code>), including this
 meta-manuscript at
 <code>projects/templates/template_template/</code>.</p>
-<h2 data-number="3.3" id="the-thin-orchestrator-pattern"><span
-class="header-section-number">3.3</span> The Thin Orchestrator
+<h2 data-number="1.3" id="the-thin-orchestrator-pattern"><span
+class="header-section-number">1.3</span> The Thin Orchestrator
 Pattern</h2>
 <p>All scripts in <code>scripts/</code> (both infrastructure-level and
 project-level) follow the Thin Orchestrator pattern <span
@@ -1699,8 +1012,8 @@ by the Zero-Mock test suite, and can be independently imported, tested,
 and reused—whereas the anti-pattern buries logic in a script that is
 invisible to coverage tools.</p>
 <hr />
-<h2 data-number="3.4" id="dag-pipeline-declared-by-pipeline.yaml"><span
-class="header-section-number">3.4</span> DAG Pipeline Declared by
+<h2 data-number="1.4" id="dag-pipeline-declared-by-pipeline.yaml"><span
+class="header-section-number">1.4</span> DAG Pipeline Declared by
 <code>pipeline.yaml</code></h2>
 <p>Single-project pipelines read
 <code>infrastructure/core/pipeline/pipeline.yaml</code>.
@@ -1764,8 +1077,8 @@ KPIs dashboards.</p>
 (e.g., copy executes after validation even though stage
 <code>stage_05_copy.py</code> precedes
 <code>stage_06_llm_review.py</code> lexically).</p>
-<h3 data-number="3.4.1" id="stage-highlights"><span
-class="header-section-number">3.4.1</span> Stage Highlights</h3>
+<h3 data-number="1.4.1" id="stage-highlights"><span
+class="header-section-number">1.4.1</span> Stage Highlights</h3>
 <p><strong>Infrastructure vs project tests.</strong> Splitting pytest
 invocations isolates flaky infra regressions
 (<code>MAX_TEST_FAILURES</code> knobs) from zero-tolerance gates on
@@ -1782,11 +1095,11 @@ optimization plots; and <code>template_prose_project</code> triggers
 structural validation scaffolding. The pipeline shape is identical
 across all four—only the Stage 02 payload differs—which is exactly what
 lets one orchestrator serve heterogeneous research domains.</p>
-<h3 data-number="3.4.2" id="interactive-orchestration"><span
-class="header-section-number">3.4.2</span> Interactive
+<h3 data-number="1.4.2" id="interactive-orchestration"><span
+class="header-section-number">1.4.2</span> Interactive
 Orchestration</h3>
-<h4 data-number="3.4.2.1" id="run.sh"><span
-class="header-section-number">3.4.2.1</span> <code>run.sh</code></h4>
+<h4 data-number="1.4.2.1" id="run.sh"><span
+class="header-section-number">1.4.2.1</span> <code>run.sh</code></h4>
 <p>Thin wrapper invoking
 <code>python -m infrastructure.orchestration</code>. Offers:</p>
 <ul>
@@ -1799,8 +1112,8 @@ class="header-section-number">3.4.2.1</span> <code>run.sh</code></h4>
 <p>Selecting <strong><code>d</code> alone</strong> after a passing
 multi-project run exits immediately once summaries print—avoiding
 repetitive menu redraw.</p>
-<h4 data-number="3.4.2.2" id="secure_run.sh"><span
-class="header-section-number">3.4.2.2</span>
+<h4 data-number="1.4.2.2" id="secure_run.sh"><span
+class="header-section-number">1.4.2.2</span>
 <code>secure_run.sh</code></h4>
 <p>Executes Python <code>secure</code> path: standard pipeline artefact
 reproduction <strong>then</strong> invokes
@@ -1809,9 +1122,9 @@ reproduction <strong>then</strong> invokes
 immutable; hardened companions carry QR overlays plus hash manifests
 sidecars.</p>
 <hr />
-<h2 data-number="3.5"
+<h2 data-number="1.5"
 id="documentation-duality-and-ai-collaboration"><span
-class="header-section-number">3.5</span> Documentation Duality and AI
+class="header-section-number">1.5</span> Documentation Duality and AI
 Collaboration</h2>
 <p>Every directory at every level of the repository hierarchy contains
 two documentation files:</p>
@@ -1844,8 +1157,8 @@ conventions that apply globally. This creates a three-tier documentation
 architecture: per-directory <code>AGENTS.md</code> for local context,
 root <code>README.md</code> and <code>CLAUDE.md</code> for global
 constraints, and <code>README.md</code> for human navigation.</p>
-<h2 data-number="3.6" id="agentic-skill-architecture"><span
-class="header-section-number">3.6</span> Agentic Skill Architecture</h2>
+<h2 data-number="1.6" id="agentic-skill-architecture"><span
+class="header-section-number">1.6</span> Agentic Skill Architecture</h2>
 <p>The <a
 href="#documentation-duality-and-ai-collaboration">Documentation
 Duality</a> standard addresses human and AI navigation at the directory
@@ -1853,8 +1166,8 @@ level. A complementary layer operates at the <em>module</em> level:
 every infrastructure subpackage carries two additional machine-readable
 files that transform it from a passive code library into an active,
 protocol-aligned skill endpoint.</p>
-<h3 data-number="3.6.1" id="the-three-tier-skill-protocol"><span
-class="header-section-number">3.6.1</span> The Three-Tier Skill
+<h3 data-number="1.6.1" id="the-three-tier-skill-protocol"><span
+class="header-section-number">1.6.1</span> The Three-Tier Skill
 Protocol</h3>
 <p><code>template/</code> implements a progression of agent-facing
 documentation, escalating in specificity from global constraints to
@@ -1923,8 +1236,8 @@ href="#ref-schick2023toolformer" role="doc-biblioref">Schick et al.
 2023</a>)</span>—rather than a language model learning tool APIs from
 training data, the APIs are encoded directly in version-controlled,
 co-located skill files that evolve with the codebase.</p>
-<h3 data-number="3.6.2" id="module-skill-coverage"><span
-class="header-section-number">3.6.2</span> Module Skill Coverage</h3>
+<h3 data-number="1.6.2" id="module-skill-coverage"><span
+class="header-section-number">1.6.2</span> Module Skill Coverage</h3>
 <p>Each infrastructure subdirectory surfaced by
 <code>discover_infrastructure_modules()</code> carries paired
 <code>README.md</code> + <code>AGENTS.md</code>; agent-facing
@@ -1935,8 +1248,8 @@ manifests (regenerated via
 <p>Promotion policy: new Layer‑1 directories must ship human +
 machine-readable docs (<code>README.md</code>, <code>AGENTS.md</code>)
 immediately; Tier‑3 SKILL assets follow once APIs stabilize.</p>
-<h3 data-number="3.6.3" id="mcp-server-mapping"><span
-class="header-section-number">3.6.3</span> MCP Server Mapping</h3>
+<h3 data-number="1.6.3" id="mcp-server-mapping"><span
+class="header-section-number">1.6.3</span> MCP Server Mapping</h3>
 <p>The mapping from <code>SKILL.md</code> descriptors to MCP server
 endpoints is intentional but not yet automated; it represents the
 principal next integration step. In the MCP architecture <span
@@ -1999,9 +1312,9 @@ supply the tool-use layer, the declarative DAG of <code>16</code>
 <code>10</code>) supplies the planning scaffold, and the per-criterion
 checkpoint system supplies the memory layer.</p>
 <hr />
-<h2 data-number="3.7"
+<h2 data-number="1.7"
 id="fair-alignment-and-research-infrastructure-as-code"><span
-class="header-section-number">3.7</span> FAIR Alignment and Research
+class="header-section-number">1.7</span> FAIR Alignment and Research
 Infrastructure as Code</h2>
 <p>The template’s design aligns with both the original FAIR principles
 <span class="citation" data-cites="wilkinson2016fair">(<a
@@ -2013,8 +1326,8 @@ role="doc-biblioref">Barker et al. 2022</a>)</span> at the repository
 level. FAIR4RS recognizes that software has requirements distinct from
 data—executability, composability, and dependency management—and the
 template addresses each.</p>
-<h3 data-number="3.7.1" id="principle-by-principle-alignment"><span
-class="header-section-number">3.7.1</span> Principle-by-Principle
+<h3 data-number="1.7.1" id="principle-by-principle-alignment"><span
+class="header-section-number">1.7.1</span> Principle-by-Principle
 Alignment</h3>
 <p><strong>Findability.</strong> Outputs are <em>Findable</em> through
 standardized directory structures, manifest files, and machine-readable
@@ -2047,8 +1360,8 @@ class="nocase">Garijo et al.</span> 2024</a>)</span>. The pipeline’s
 automated testing and coverage enforcement directly operationalize the
 FAIR4RS executability requirement: software that cannot pass its own
 test suite cannot produce publishable output.</p>
-<h3 data-number="3.7.2" id="infrastructure-as-code-for-research"><span
-class="header-section-number">3.7.2</span> Infrastructure as Code for
+<h3 data-number="1.7.2" id="infrastructure-as-code-for-research"><span
+class="header-section-number">1.7.2</span> Infrastructure as Code for
 Research</h3>
 <p>At a higher level of abstraction, <code>template/</code> applies the
 DevOps principle of <em>Infrastructure as Code</em> (IaC) to the
@@ -2083,10 +1396,10 @@ publication metadata <span class="citation"
 data-cites="katz2021software">(<a href="#ref-katz2021software"
 role="doc-biblioref">Katz et al. 2021</a>)</span>.</p>
 <hr />
-<h2 data-number="3.8" id="quality-assurance"><span
-class="header-section-number">3.8</span> Quality Assurance</h2>
-<h3 data-number="3.8.1" id="zero-mock-testing-policy"><span
-class="header-section-number">3.8.1</span> Zero-Mock Testing Policy</h3>
+<h2 data-number="1.8" id="quality-assurance"><span
+class="header-section-number">1.8</span> Quality Assurance</h2>
+<h3 data-number="1.8.1" id="zero-mock-testing-policy"><span
+class="header-section-number">1.8.1</span> Zero-Mock Testing Policy</h3>
 <p>The repository policy prohibits mock frameworks such as
 <code>unittest.mock</code>, <code>MagicMock</code>, and
 <code>patch</code> decorators <span class="citation"
@@ -2123,8 +1436,8 @@ against the real repository root. There are no mock objects substituting
 for the directory walk, no patched YAML parsers, and no synthetic return
 values—the test passes only if the infrastructure modules genuinely
 exist and are discoverable at their expected paths.</p>
-<h3 data-number="3.8.2" id="coverage-thresholds"><span
-class="header-section-number">3.8.2</span> Coverage Thresholds</h3>
+<h3 data-number="1.8.2" id="coverage-thresholds"><span
+class="header-section-number">1.8.2</span> Coverage Thresholds</h3>
 <p>The pipeline enforces two coverage tiers:</p>
 <table>
 <colgroup>
@@ -2167,8 +1480,8 @@ test run below its declared 90% floor fails before downstream
 publication stages. This manuscript deliberately does not quote an
 achieved coverage percentage unless a fresh coverage artifact supplies
 it.</p>
-<h3 data-number="3.8.3" id="test-suite-composition"><span
-class="header-section-number">3.8.3</span> Test Suite Composition</h3>
+<h3 data-number="1.8.3" id="test-suite-composition"><span
+class="header-section-number">1.8.3</span> Test Suite Composition</h3>
 <p>The repository maintains three test suites:</p>
 <ul>
 <li><strong>Infrastructure tests</strong> (<code>tests/</code>): ~9,557
@@ -2188,8 +1501,8 @@ tests, these exercise full pipeline stages against real manuscript
 inputs, validating end-to-end behavior from Markdown source to rendered
 PDF.</li>
 </ul>
-<h3 data-number="3.8.4" id="visualization-standards"><span
-class="header-section-number">3.8.4</span> Visualization Standards</h3>
+<h3 data-number="1.8.4" id="visualization-standards"><span
+class="header-section-number">1.8.4</span> Visualization Standards</h3>
 <p>All generated figures must meet accessibility requirements:</p>
 <ul>
 <li>Shared 16pt font constant for primary text elements, with compact
@@ -2210,536 +1523,10 @@ render-resolution values above are injected from
 drifting even though visual accessibility still requires human
 inspection of rendered figures.</p>
 <hr />
-<h1 data-number="4" id="results"><span
-class="header-section-number">4</span> Results</h1>
-<p>This section reports repository facts produced by the meta-project’s
-live introspection pass. Test counts, module inventories, pipeline-stage
-counts, and figure data are injected from generated artifacts. Runtime
-and achieved-coverage claims are intentionally omitted when no versioned
-benchmark or coverage artifact backs them.</p>
-<h2 data-number="4.1" id="multi-project-pipeline-execution"><span
-class="header-section-number">4.1</span> Multi-Project Pipeline
-Execution</h2>
-<p>The <code>./run.sh</code> interactive orchestrator can execute the
-public roster through the shared DAG. The table below is a structural
-snapshot, not a timing benchmark: counts come from repository
-introspection, and the coverage column states each exemplar’s declared
-policy floor rather than an unversioned observed percentage.</p>
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 31%" />
-<col style="width: 24%" />
-<col style="width: 32%" />
-</colgroup>
-<thead>
-<tr>
-<th>Project</th>
-<th>Effective core stages¹</th>
-<th style="text-align: right;">Discovered tests</th>
-<th style="text-align: right;">Declared project floor</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>template_code_project</code></td>
-<td>8</td>
-<td style="text-align: right;">242</td>
-<td style="text-align: right;">90%</td>
-</tr>
-<tr>
-<td><code>template_prose_project</code></td>
-<td>8</td>
-<td style="text-align: right;">120</td>
-<td style="text-align: right;">90%</td>
-</tr>
-<tr>
-<td><code>template_autoresearch_project</code></td>
-<td>8</td>
-<td style="text-align: right;">300</td>
-<td style="text-align: right;">90%</td>
-</tr>
-</tbody>
-</table>
-<p>¹“Core-only” excludes LLM-tagged and other opt-in stages according to
-the YAML stage tags. A fresh run must be used to establish completion
-status or wall-clock performance for a particular machine and dependency
-set.</p>
-<h2 data-number="4.2" id="infrastructure-test-suite"><span
-class="header-section-number">4.2</span> Infrastructure Test Suite</h2>
-<table>
-<colgroup>
-<col style="width: 53%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Test files</td>
-<td>557+</td>
-</tr>
-<tr>
-<td>Total tests</td>
-<td>~9,557</td>
-</tr>
-<tr>
-<td>Infrastructure coverage gate</td>
-<td>≥60% configured floor</td>
-</tr>
-<tr>
-<td>Prohibited mock-framework imports</td>
-<td>Checked by the static no-mocks gate</td>
-</tr>
-</tbody>
-</table>
-<p>Exercises Pandoc/XeLaTeX paths, steganography hashing, telemetry,
-YAML-driven pipeline DAG resolution, HTTPS-bound optional suites
-(<code>pytest-httpserver</code>), and local Ollama-gated subsets.</p>
-<h2 data-number="4.3" id="infrastructure-module-inventory"><span
-class="header-section-number">4.3</span> Infrastructure Module
-Inventory</h2>
-<p>The introspection module
-(<code>template_template.introspection</code>) emits the authoritative
-table below—every row reflects
-<code>discover_infrastructure_modules(REPO_ROOT)</code>.</p>
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 20%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 20%" />
-</colgroup>
-<thead>
-<tr>
-<th>Module</th>
-<th style="text-align: center;">Python Files</th>
-<th style="text-align: center;">Has AGENTS.md</th>
-<th style="text-align: center;">Has README.md</th>
-<th>Key Exports</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>autoresearch</code></td>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>build_autoresearch_plan</code>, readiness validation CLI</td>
-</tr>
-<tr>
-<td><code>benchmark</code></td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Template harness scoring + comparative gates</td>
-</tr>
-<tr>
-<td><code>config</code></td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Repository defaults + hardened templates</td>
-</tr>
-<tr>
-<td><code>core</code></td>
-<td style="text-align: center;">120</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>get_logger</code>, <code>load_config</code>,
-<code>TemplateError</code></td>
-</tr>
-<tr>
-<td><code>docker</code></td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Containerisation scaffolding</td>
-</tr>
-<tr>
-<td><code>doctor</code></td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Checkout diagnose/fix/undo repairs</td>
-</tr>
-<tr>
-<td><code>documentation</code></td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>FigureManager</code>, <code>generate_glossary</code></td>
-</tr>
-<tr>
-<td><code>fonds</code></td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>llm</code></td>
-<td style="text-align: center;">55</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Ollama helpers, sanitization, review + translation pipelines</td>
-</tr>
-<tr>
-<td><code>logrotate.d</code></td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Rotation snippets (documentation-first)</td>
-</tr>
-<tr>
-<td><code>methods</code></td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>build_methods_orchestration_plan</code>, methods-stage
-contracts + validation</td>
-</tr>
-<tr>
-<td><code>orchestration</code></td>
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>PipelineRunner</code>, entry point for
-<code>./run.sh</code></td>
-</tr>
-<tr>
-<td><code>project</code></td>
-<td style="text-align: center;">41</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>discover_projects</code>, workspace management</td>
-</tr>
-<tr>
-<td><code>prose</code></td>
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Markdown readability + prose tooling</td>
-</tr>
-<tr>
-<td><code>provenance</code></td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>publishing</code></td>
-<td style="text-align: center;">81</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Zenodo, executable bundle, archival targets</td>
-</tr>
-<tr>
-<td><code>reference</code></td>
-<td style="text-align: center;">16</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>BibTeX models, parsers, converters</td>
-</tr>
-<tr>
-<td><code>rendering</code></td>
-<td style="text-align: center;">65</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>PDF/HTML/slide rendering, Pandoc filters</td>
-</tr>
-<tr>
-<td><code>reporting</code></td>
-<td style="text-align: center;">57</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Coverage parsers, dashboards, executive artefacts</td>
-</tr>
-<tr>
-<td><code>research</code></td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>rules</code></td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>scientific</code></td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>check_numerical_stability</code>,
-<code>benchmark_function</code></td>
-</tr>
-<tr>
-<td><code>search</code></td>
-<td style="text-align: center;">62</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>infrastructure.search.literature</code> clients + cache</td>
-</tr>
-<tr>
-<td><code>sia</code></td>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Self-Improving-AI loop: task validation, harness, metric
-capture</td>
-</tr>
-<tr>
-<td><code>skills</code></td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td><code>discover_skills</code>, SKILL manifest regeneration</td>
-</tr>
-<tr>
-<td><code>steganography</code></td>
-<td style="text-align: center;">13</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>Watermark overlays + hash manifests</td>
-</tr>
-<tr>
-<td><code>tools</code></td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>—</td>
-</tr>
-<tr>
-<td><code>validation</code></td>
-<td style="text-align: center;">80</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td>PDF + Markdown + integrity CLIs</td>
-</tr>
-</tbody>
-</table>
-<p>All 28 enumerated subdirectories carry Tier‑1/<code>README.md</code>
-and Tier‑2/<code>AGENTS.md</code> coverage wherever the Documentation
-Duality standard applies; subsets ship Tier‑3 <code>SKILL.md</code>
-descriptors for MCP routing (<code>infrastructure/skills</code> manifest
-generation).</p>
-<h2 data-number="4.4" id="agentic-skill-documentation-coverage"><span
-class="header-section-number">4.4</span> Agentic Skill Documentation
-Coverage</h2>
-<table>
-<colgroup>
-<col style="width: 53%" />
-<col style="width: 46%" />
-</colgroup>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>System prompts</td>
-<td>Root <code>CLAUDE.md</code>, README policy</td>
-</tr>
-<tr>
-<td>Structural</td>
-<td><code>AGENTS.md</code> directories</td>
-</tr>
-<tr>
-<td>Skills</td>
-<td>Optional <code>SKILL.md</code> manifests + generated
-<code>.cursor/skill_manifest.json</code></td>
-</tr>
-<tr>
-<td>PAI capsule</td>
-<td>Repository level <code>PAI.md</code> narratives</td>
-</tr>
-</tbody>
-</table>
-<p><code>404+</code> Markdown shards under <code>docs/</code> capture
-operational knowledge without duplicating auto-generated
-inventories.</p>
-<h2 data-number="4.5" id="dag-reference-declarative-executor"><span
-class="header-section-number">4.5</span> DAG Reference (Declarative
-Executor)</h2>
-<p>Stages below mirror <code>pipeline.yaml</code> (executor-topological
-order—not strict numeric script filenames). Scripts live under
-<code>scripts/</code>.</p>
-<table>
-<colgroup>
-<col style="width: 9%" />
-<col style="width: 37%" />
-<col style="width: 25%" />
-<col style="width: 28%" />
-</colgroup>
-<thead>
-<tr>
-<th>Name</th>
-<th>Typical script / method</th>
-<th>Responsibility</th>
-<th>Failure semantics</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Clean Output Directories</td>
-<td><code>_run_clean_outputs</code></td>
-<td>Deletes stale <code>output/</code> trees</td>
-<td>Blocking</td>
-</tr>
-<tr>
-<td>Environment Setup</td>
-<td><code>scripts/pipeline/stage_00_setup.py</code></td>
-<td>Validates tooling, PYTHONPATH scaffolding</td>
-<td>Blocking</td>
-</tr>
-<tr>
-<td>Infrastructure Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --infra-only</code></td>
-<td>Infra pytest + coverage gates</td>
-<td>Tunable thresholds</td>
-</tr>
-<tr>
-<td>Project Tests</td>
-<td><code>scripts/pipeline/stage_01_test.py --project-only</code></td>
-<td>Project pytest + coverage gates</td>
-<td>Zero failures default</td>
-</tr>
-<tr>
-<td>Project Analysis</td>
-<td><code>scripts/pipeline/stage_02_analysis.py</code></td>
-<td>Executes <code>projects/&lt;name&gt;/scripts/*.py</code></td>
-<td>Blocking</td>
-</tr>
-<tr>
-<td>PDF Rendering</td>
-<td><code>scripts/pipeline/stage_03_render.py</code></td>
-<td>Pandoc → XeLaTeX manuscripts</td>
-<td>Blocking</td>
-</tr>
-<tr>
-<td>Output Validation</td>
-<td><code>scripts/pipeline/stage_04_validate.py</code></td>
-<td>Structural PDF/markdown probes</td>
-<td>Blocking / warnings</td>
-</tr>
-<tr>
-<td>LLM Scientific Review</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --reviews-only</code></td>
-<td>Local Ollama reviews</td>
-<td>Skippable / exit 2 tolerated</td>
-</tr>
-<tr>
-<td>LLM Translations</td>
-<td><code>scripts/pipeline/stage_06_llm_review.py --translations-only</code></td>
-<td>Optional translations</td>
-<td>Skippable</td>
-</tr>
-<tr>
-<td>Copy Outputs</td>
-<td><code>scripts/pipeline/stage_05_copy.py</code></td>
-<td>Mirrors deliverables → <code>output/&lt;project&gt;/</code></td>
-<td>Soft-fail surfaced in logs</td>
-</tr>
-</tbody>
-</table>
-<p><code>scripts/pipeline/stage_07_executive_report.py</code> is
-<strong>multi-project orchestration glue</strong> invoked after
-iterating active projects—not a tenth DAG node for single-repo runs
-(<code>execute_pipeline.py</code>).</p>
-<h2 data-number="4.6" id="steganographic-performance-boundary"><span
-class="header-section-number">4.6</span> Steganographic Performance
-Boundary</h2>
-<p>The steganography path exposes metadata injection, SHA-256 hashing,
-overlay generation, and optional QR-code insertion as separately
-testable operations. This revision makes no latency claim because the
-project does not currently generate a versioned benchmark artifact
-recording hardware, input PDF, warm-up policy, repetitions, and
-dispersion. A future performance table should be compiled from such an
-artifact rather than copied from an ad-hoc workstation run.</p>
-<h2 data-number="4.7" id="self-referential-analysis"><span
-class="header-section-number">4.7</span> Self-Referential Analysis</h2>
-<p>Rendered via <code>projects/templates/template_template</code>
-(<code>generate_manuscript_metrics.py</code> → injected tokens such as
-<code>28</code>). Architecture figures stem from <a
-href="../src/template_template/architecture_viz.py"><code>template_template.architecture_viz</code></a>—font
-sizes constrained by §QA.</p>
-<p><img src="../figures/architecture_overview.png"
-alt="Two-Layer Architecture Overview" /> <strong>Figure 1.</strong> Live
-rendering of the Two-Layer Architecture from repository introspection:
-the infrastructure layer (top) holds the <code>28</code> reusable
-subpackages, each annotated with its Python file count and a four-slot
-documentation badge—<code>A</code> AGENTS.md, <code>R</code> README.md,
-<code>S</code> SKILL.md, <code>P</code> PAI.md, with <code>·</code>
-marking an absent file—so a fully documented module reads
-<code>[ARSP]</code>. A YAML DAG arrow connects it to the project layer
-(bottom) of public exemplars labelled with chapter and test counts. The
-takeaway: documentation-duality coverage is near-uniform across the
-infrastructure, and every box was placed from the same live data the
-prose cites.</p>
-<p><img src="../figures/pipeline_stages.png"
-alt="Pipeline Stage Flow" /> <strong>Figure 2.</strong> Pipeline DAG
-with 16 YAML-declared stages (core, LLM, ebook, metadata, bundle,
-archival tags).</p>
-<p><img src="../figures/module_inventory.png"
-alt="Infrastructure Module Inventory" /> <strong>Figure 3.</strong>
-Horizontal file-count histogram of every infrastructure subdirectory,
-sorted largest-first. The long tail of small, single-purpose packages
-beside a handful of larger ones (<code>core</code>,
-<code>validation</code>, <code>publishing</code>) is the visual
-signature of the Unix-philosophy modularity the architecture section
-argues for—capability concentrated where it compounds, not spread evenly
-by fiat.</p>
-<h2 data-number="4.8" id="comparative-feature-analysis"><span
-class="header-section-number">4.8</span> Comparative Feature
-Analysis</h2>
-<p>Figure 4 summarizes the Appendix F capability matrix.</p>
-<p><img src="../figures/comparative_feature_matrix.png"
-alt="Comparative Feature Analysis Heatmap" /> <strong>Figure 4.</strong>
-14 × 10 heatmap annotated in appendix text—green <strong>✓</strong> full
-native capability, yellow <strong>◐</strong> partial / plugin-hosted,
-red <strong>—</strong> unavailable. Rows group <em>Core Pipeline</em>,
-<em>Quality &amp; Security</em>, then <em>Ecosystem</em>.</p>
-<p>¹ Nextflow lineage records exist at workflow scope, not per rendered
-PDF citation graph.</p>
-<p>² DVC: content-addressed artifacts without native prose
-rendering.</p>
-<p>³ DVC: remote object stores (S3, GCS, Azure) without turnkey CI
-manuscript gates.</p>
-<h2 data-number="4.9" id="test-quality-metrics"><span
-class="header-section-number">4.9</span> Test Quality Metrics</h2>
-<ul>
-<li><p><strong>Zero mocks:</strong> repository policy bans
-<code>unittest.mock</code> / patching frameworks in tests.</p></li>
-<li><p><strong>Filesystem + subprocess realism:</strong> ephemeral
-directories + actual CLI binaries.</p></li>
-<li><p><strong>HTTP realism:</strong> infra suites favour
-<code>pytest-httpserver</code>; literature tests hit recorded
-fixtures.</p></li>
-<li><p><strong><code>template_code_project</code></strong> focuses on
-numerical reproducibility assertions.</p></li>
-<li><p><strong><code>template_autoresearch_project</code></strong>
-exercises the AutoResearch readiness planner
-(<code>infrastructure/autoresearch/</code>).
-<strong><code>template_search_project</code></strong> exercises
-literature-search workflows.</p></li>
-</ul>
-<hr />
-<h1 data-number="5" id="discussion"><span
-class="header-section-number">5</span> Discussion</h1>
-<h2 data-number="5.1" id="the-zero-mock-tradeoff"><span
-class="header-section-number">5.1</span> The Zero-Mock Tradeoff</h2>
+<h1 data-number="2" id="discussion"><span
+class="header-section-number">2</span> Discussion</h1>
+<h2 data-number="2.1" id="the-zero-mock-tradeoff"><span
+class="header-section-number">2.1</span> The Zero-Mock Tradeoff</h2>
 <p>The <a href="03e_quality.md#zero-mock-testing-policy">Zero-Mock
 testing policy</a> is <code>template/</code>’s most distinctive design
 decision. By prohibiting all mock objects, we gain confidence that tests
@@ -2777,8 +1564,8 @@ href="#ref-garijo2024fairsoft" role="doc-biblioref"><span
 class="nocase">Garijo et al.</span> 2024</a>)</span> identifies
 <em>executability</em> as a primary quality indicator; the Zero-Mock
 policy operationalizes executability at the unit level.</p>
-<h3 data-number="5.1.1" id="when-mocks-are-not-the-problem"><span
-class="header-section-number">5.1.1</span> When Mocks Are Not the
+<h3 data-number="2.1.1" id="when-mocks-are-not-the-problem"><span
+class="header-section-number">2.1.1</span> When Mocks Are Not the
 Problem</h3>
 <p>It is important to distinguish the Zero-Mock policy from a naive
 rejection of all test isolation techniques. Fowler’s classification
@@ -2793,8 +1580,8 @@ distinction matters because mock-based assertions encode implementation
 assumptions (“method X must be called with argument Y”) that become
 invisible coupling between tests and production code, creating the
 illusion of coverage without testing real behavior.</p>
-<h3 data-number="5.1.2" id="practical-implementation"><span
-class="header-section-number">5.1.2</span> Practical Implementation</h3>
+<h3 data-number="2.1.2" id="practical-implementation"><span
+class="header-section-number">2.1.2</span> Practical Implementation</h3>
 <p>The template enforces zero-mock compliance at three levels:</p>
 <ol type="1">
 <li><strong>Code review</strong>: <code>AGENTS.md</code> at every
@@ -2825,128 +1612,8 @@ dependency (which mock objects do, hiding failures) and
 <em>skipping</em> a test when a dependency is absent (which markers do,
 preserving transparency).</p>
 <hr />
-<h2 data-number="5.2" id="scalability-from-1-to-n-projects"><span
-class="header-section-number">5.2</span> Scalability: From 1 to N
-Projects</h2>
-<p>The Standalone Project Paradigm enables horizontal scaling: adding a
-new project requires creating a directory with
-<code>manuscript/config.yaml</code> and nothing else. No infrastructure
-code changes, no <code>pyproject.toml</code> modifications, no CI
-configuration updates. The <code>run.sh</code> orchestrator
-automatically discovers new projects and presents them in its
-interactive menu.</p>
-<p>We have validated scaling with 24 canonical exemplars under
-<code>projects/templates/</code>—always present for onboarding and
-tooling—and with this manuscript from
-<code>projects/templates/template_template</code> (143 tests) as a
-git-tracked public exemplar in the same automated discovery menus.</p>
-<p>Canonical trio:</p>
-<ul>
-<li><strong><code>template_code_project</code></strong>: Numerical
-optimization example with gradient-descent narration and 242 discovered
-tests. Its <code>pyproject.toml</code> declares the 90% project-source
-floor. Minimal footprint: compact <code>src/</code>, scripted analysis,
-short manuscript sections.</li>
-<li><strong><code>template_prose_project</code></strong>: Prose-heavy
-manuscript emphasizing narrative structure and bibliography discipline,
-with 120 discovered tests and the same declared project-source floor;
-tests exercise rendering and Markdown integrity without heavyweight
-numerics.</li>
-<li><strong><code>template_autoresearch_project</code></strong>:
-AutoResearch readiness workflow — bounded ML task loop (deterministic
-MNIST run), plan validation (<code>infrastructure.autoresearch</code>),
-evidence-registry reports, and manuscript hydration; its own scripts
-(<code>run_autoresearch_loop.py</code>,
-<code>z_generate_manuscript_variables.py</code>) stay thin over
-<code>src/</code> logic.
-<strong><code>template_search_project</code></strong> exercises
-literature-search workflows (remote corpus JSON fusion,
-<code>y_generate_search_figures.py</code>, review reports).</li>
-</ul>
-<p>Meta manuscript
-(<strong><code>projects/templates/template_template</code></strong>)
-analyzes the repository via <code>src/template_template/</code>
-introspection metrics; it now lives alongside the other public exemplars
-under <code>projects/templates/</code>.</p>
-<p>These workspaces share no project-level code—only Layer 1 (28
-infrastructure subdirectories, ~708 Python files)—validating insulation
-between domain repos and reusable services.</p>
-<h3 data-number="5.2.1" id="multi-project-orchestration"><span
-class="header-section-number">5.2.1</span> Multi-Project
-Orchestration</h3>
-<p>When the <code>--all-projects</code> flag is passed to
-<code>run.sh</code>, the pipeline executes each discovered project
-sequentially, running infrastructure tests once at the start and
-skipping them for individual projects to avoid redundant validation.
-After all projects complete, a cross-project executive report aggregates
-metrics (test counts, coverage percentages, page counts, rendering
-durations) into a unified dashboard with both JSON and Markdown output
-formats. This executive reporting stage provides repository-level
-visibility without requiring any project-specific reporting code.</p>
-<h3 data-number="5.2.2" id="scaling-metrics"><span
-class="header-section-number">5.2.2</span> Scaling Metrics</h3>
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 25%" />
-<col style="width: 41%" />
-<col style="width: 19%" />
-</colgroup>
-<thead>
-<tr>
-<th>Metric</th>
-<th style="text-align: center;"><code>template_code_project</code></th>
-<th style="text-align: center;"><code>template_prose_project</code></th>
-<th
-style="text-align: center;"><code>template_autoresearch_project</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Source modules</td>
-<td style="text-align: center;">26</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">60</td>
-</tr>
-<tr>
-<td>Test files</td>
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">20</td>
-</tr>
-<tr>
-<td>Test count</td>
-<td style="text-align: center;">242</td>
-<td style="text-align: center;">120</td>
-<td style="text-align: center;">300</td>
-</tr>
-<tr>
-<td>Manuscript chapters</td>
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">6</td>
-</tr>
-<tr>
-<td>Analysis scripts</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">5</td>
-</tr>
-<tr>
-<td>Figures (auto-generated)</td>
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">27</td>
-</tr>
-</tbody>
-</table>
-<p>The infrastructure overhead per project is constant regardless of
-project size: the same 28 modules, the same 13 pipeline stages, the same
-rendering and validation logic. This O(1) infrastructure cost is the
-architectural payoff of the Two-Layer separation.</p>
-<hr />
-<h2 data-number="5.3" id="comparison-to-existing-tools"><span
-class="header-section-number">5.3</span> Comparison to Existing
+<h2 data-number="2.2" id="comparison-to-existing-tools"><span
+class="header-section-number">2.2</span> Comparison to Existing
 Tools</h2>
 <p>The <a href="02_introduction.md#the-gap">gap analysis</a> established
 that no single tool integrates all six cross-cutting concerns. Here we
@@ -3021,8 +1688,8 @@ href="03c_documentation.md#documentation-duality-and-ai-collaboration">Documenta
 Duality</a>, <a
 href="05d_ai_collaboration.md#the-ai-collaboration-model">AI
 Collaboration</a>).</p>
-<h3 data-number="5.3.1" id="fair4rs-evolution-20242026"><span
-class="header-section-number">5.3.1</span> FAIR4RS Evolution
+<h3 data-number="2.2.1" id="fair4rs-evolution-20242026"><span
+class="header-section-number">2.2.1</span> FAIR4RS Evolution
 (2024–2026)</h3>
 <p>Since the FAIR4RS principles were published <span class="citation"
 data-cites="barker2022fair4rs">(<a href="#ref-barker2022fair4rs"
@@ -3065,8 +1732,8 @@ environments; <code>template/</code> complements containerization by
 adding the testing enforcement, multi-project management, and provenance
 embedding layers that ERCs do not address.</p>
 <hr />
-<h2 data-number="5.4" id="the-ai-collaboration-model"><span
-class="header-section-number">5.4</span> The AI Collaboration Model</h2>
+<h2 data-number="2.3" id="the-ai-collaboration-model"><span
+class="header-section-number">2.3</span> The AI Collaboration Model</h2>
 <p>The <a
 href="03c_documentation.md#documentation-duality-and-ai-collaboration">Documentation
 Duality</a> standard and three-tier skill architecture represent an
@@ -3113,8 +1780,8 @@ introspection—the manuscript refuses to quote a documentation total it
 cannot recompute—and it represents a deliberate commitment to
 machine-readable context that shrinks the surface on which an agent can
 hallucinate.</p>
-<h2 data-number="5.5" id="the-learning-curve"><span
-class="header-section-number">5.5</span> The Learning Curve</h2>
+<h2 data-number="2.4" id="the-learning-curve"><span
+class="header-section-number">2.4</span> The Learning Curve</h2>
 <p>The Thin Orchestrator pattern imposes a cognitive overhead on
 researchers accustomed to writing monolithic scripts. The requirement to
 factor all logic into <code>src/</code> modules and use scripts only as
@@ -3136,8 +1803,8 @@ provides a TUI menu that abstracts pipeline complexity.</li>
 beginner, intermediate, advanced, and expert guides alongside a
 comprehensive new-project setup checklist.</li>
 </ol>
-<h2 data-number="5.6" id="limitations"><span
-class="header-section-number">5.6</span> Limitations</h2>
+<h2 data-number="2.5" id="limitations"><span
+class="header-section-number">2.5</span> Limitations</h2>
 <ul>
 <li><strong>LaTeX dependency</strong>: The rendering pipeline requires a
 full TeX distribution (TeX Live or MiKTeX), which is a 4–6 GB install.
@@ -3170,8 +1837,8 @@ editing. The <code>infrastructure.llm</code> module provides LLM review
 as a pipeline stage but not as an interactive writing environment.</li>
 </ul>
 <hr />
-<h2 data-number="5.7" id="future-directions"><span
-class="header-section-number">5.7</span> Future Directions</h2>
+<h2 data-number="2.6" id="future-directions"><span
+class="header-section-number">2.6</span> Future Directions</h2>
 <ol type="1">
 <li><strong>Supply-chain provenance</strong>: Integration with software
 supply chain frameworks such as in-toto <span class="citation"
@@ -3263,8 +1930,8 @@ href="#ref-katz2021software" role="doc-biblioref">Katz et al.
 2021</a>)</span> software citation principles at the infrastructure
 level.</li>
 </ol>
-<h2 data-number="5.8" id="conclusion"><span
-class="header-section-number">5.8</span> Conclusion</h2>
+<h2 data-number="2.7" id="conclusion"><span
+class="header-section-number">2.7</span> Conclusion</h2>
 <p><code>template/</code> demonstrates that high-integrity, reproducible
 research need not be onerous. By embedding provenance, testing, and
 documentation into the architecture itself—rather than layering them
@@ -3311,8 +1978,8 @@ repository it inhabits, its figures rendered by the code it documents—is
 not a rhetorical device but a structural proof: the system works because
 you are reading its output.</p>
 <hr />
-<h1 data-number="6" id="infrastructure-module-reference"><span
-class="header-section-number">6</span> Infrastructure Module
+<h1 data-number="3" id="infrastructure-module-reference"><span
+class="header-section-number">3</span> Infrastructure Module
 Reference</h1>
 <p>This section inventories every Layer‑1 subdirectory returned by
 <code>28</code> <code>discover_infrastructure_modules(repo_root)</code>.
@@ -3542,94 +2209,94 @@ capture</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="6.1" id="alphabetical-summaries"><span
-class="header-section-number">6.1</span> Alphabetical summaries</h2>
+<h2 data-number="3.1" id="alphabetical-summaries"><span
+class="header-section-number">3.1</span> Alphabetical summaries</h2>
 <p>Below, <code>${module_*_python_file_count}</code> placeholders expand
 per subdirectory at render-time.</p>
-<h3 data-number="6.1.1" id="infrastructure.autoresearch-10-files"><span
-class="header-section-number">6.1.1</span>
+<h3 data-number="3.1.1" id="infrastructure.autoresearch-10-files"><span
+class="header-section-number">3.1.1</span>
 <code>infrastructure.autoresearch</code> (10 files)</h3>
 <p>Readiness planner, validation CLI, and report models for
 AutoResearch-style project promotion
 (<code>infrastructure/autoresearch/</code>).</p>
-<h3 data-number="6.1.2" id="infrastructure.benchmark-4-files"><span
-class="header-section-number">6.1.2</span>
+<h3 data-number="3.1.2" id="infrastructure.benchmark-4-files"><span
+class="header-section-number">3.1.2</span>
 <code>infrastructure.benchmark</code> (4 files)</h3>
 <p>Template harness scoring and comparative gate helpers exercised in CI
 smoke paths.</p>
-<h3 data-number="6.1.3"
+<h3 data-number="3.1.3"
 id="infrastructureconfig-non-package-subdirectory"><span
-class="header-section-number">6.1.3</span>
+class="header-section-number">3.1.3</span>
 <code>infrastructure/config</code> (non-package subdirectory)</h3>
 <p>Repository-wide YAML templates and secure manifests
 (<code>.env.template</code>, hardened defaults referenced by Docker +
 CLI). <code>config/</code> carries no <code>__init__.py</code>, so it is
 a configuration subdirectory rather than an importable package.</p>
-<h3 data-number="6.1.4" id="infrastructure.core-120-files"><span
-class="header-section-number">6.1.4</span>
+<h3 data-number="3.1.4" id="infrastructure.core-120-files"><span
+class="header-section-number">3.1.4</span>
 <code>infrastructure.core</code> (120 files)</h3>
 <p>Checkpointing, logging, pipeline YAML parsing, telemetry bridges,
 filesystem helpers, hardened exceptions. Everything else imports logging
 + error taxonomy from here first.</p>
-<h3 data-number="6.1.5" id="infrastructure.doctor-14-files"><span
-class="header-section-number">6.1.5</span>
+<h3 data-number="3.1.5" id="infrastructure.doctor-14-files"><span
+class="header-section-number">3.1.5</span>
 <code>infrastructure.doctor</code> (14 files)</h3>
 <p>Checkout diagnose/fix/undo repairs for broken local workspace
 states.</p>
-<h3 data-number="6.1.6" id="infrastructure.docker-0-files"><span
-class="header-section-number">6.1.6</span>
+<h3 data-number="3.1.6" id="infrastructure.docker-0-files"><span
+class="header-section-number">3.1.6</span>
 <code>infrastructure.docker</code> (0 files)</h3>
 <p>Pinned images / compose scaffolding for reproducible CI + remote
 builds.</p>
-<h3 data-number="6.1.7" id="infrastructure.documentation-14-files"><span
-class="header-section-number">6.1.7</span>
+<h3 data-number="3.1.7" id="infrastructure.documentation-14-files"><span
+class="header-section-number">3.1.7</span>
 <code>infrastructure.documentation</code> (14 files)</h3>
 <p>Figure registries plus glossary tooling feeding manuscript
 automation.</p>
-<h3 data-number="6.1.8" id="infrastructure.fonds-6-files"><span
-class="header-section-number">6.1.8</span>
+<h3 data-number="3.1.8" id="infrastructure.fonds-6-files"><span
+class="header-section-number">3.1.8</span>
 <code>infrastructure.fonds</code> (6 files)</h3>
 <p>Resource pool management for curated fonds (tracked reference
 datasets, bibliographic collections, and evidence corpora). Fonds mirror
 <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars and sidecar-linked private lifecycle
 folders.</p>
-<h3 data-number="6.1.9" id="infrastructure.llm-55-files"><span
-class="header-section-number">6.1.9</span>
+<h3 data-number="3.1.9" id="infrastructure.llm-55-files"><span
+class="header-section-number">3.1.9</span>
 <code>infrastructure.llm</code> (55 files)</h3>
 <p>Ollama integrations, sanitization adapters, templated reviewer flows.
 <strong>Literature ingestion now lives primarily in
 <code>search/literature</code> + citation helpers in
 <code>reference/</code>.</strong></p>
-<h3 data-number="6.1.10" id="infrastructure.methods-5-files"><span
-class="header-section-number">6.1.10</span>
+<h3 data-number="3.1.10" id="infrastructure.methods-5-files"><span
+class="header-section-number">3.1.10</span>
 <code>infrastructure.methods</code> (5 files)</h3>
 <p>Deterministic methods-orchestration contracts
 (<code>MethodStage</code>, <code>MethodsOrchestrationPlan</code>,
 <code>MethodsIssue</code>): builds and validates an ordered methods plan
 for a research project so the manuscript’s “Methods” track stays bound
 to executable stages.</p>
-<h3 data-number="6.1.11"
+<h3 data-number="3.1.11"
 id="infrastructure.orchestration-12-files"><span
-class="header-section-number">6.1.11</span>
+class="header-section-number">3.1.11</span>
 <code>infrastructure.orchestration</code> (12 files)</h3>
 <p><code>python -m infrastructure.orchestration</code> exposes
 interactive menus, subprocess wiring for thin shell wrappers
 (<code>run.sh</code>, <code>secure_run.sh</code>), and stubs used in CI
 for menu parsing tests.</p>
-<h3 data-number="6.1.12" id="infrastructure.project-41-files"><span
-class="header-section-number">6.1.12</span>
+<h3 data-number="3.1.12" id="infrastructure.project-41-files"><span
+class="header-section-number">3.1.12</span>
 <code>infrastructure.project</code> (41 files)</h3>
 <p>Canonical discovery (<code>discover_projects</code>) enforcing
 <code>src/</code> + <code>tests/</code>, slug validation, nested WIP
 namespaces.</p>
-<h3 data-number="6.1.13" id="infrastructure.prose-9-files"><span
-class="header-section-number">6.1.13</span>
+<h3 data-number="3.1.13" id="infrastructure.prose-9-files"><span
+class="header-section-number">3.1.13</span>
 <code>infrastructure.prose</code> (9 files)</h3>
 <p>Readability metrics + Markdown tooling for prose-centric manuscripts
 / CI gates.</p>
-<h3 data-number="6.1.14" id="infrastructure.provenance-7-files"><span
-class="header-section-number">6.1.14</span>
+<h3 data-number="3.1.14" id="infrastructure.provenance-7-files"><span
+class="header-section-number">3.1.14</span>
 <code>infrastructure.provenance</code> (7 files)</h3>
 <p>Content-addressed provenance DAG. Records artifact lineage (which run
 produced which file, from which inputs) as a verifiable graph of
@@ -3638,28 +2305,28 @@ produced/consumed/derived-from/supports/refutes edges. Includes a
 structured Review system with severity (blocking/major/minor/info) and
 verdict (refutes/supports). Features a CLI and pipeline integration
 hooks for automatic lineage recording after every stage.</p>
-<h3 data-number="6.1.15" id="infrastructure.publishing-81-files"><span
-class="header-section-number">6.1.15</span>
+<h3 data-number="3.1.15" id="infrastructure.publishing-81-files"><span
+class="header-section-number">3.1.15</span>
 <code>infrastructure.publishing</code> (81 files)</h3>
 <p>Metadata models, APA/BibTeX/MLA formatters, optional Zenodo
 clients.</p>
-<h3 data-number="6.1.16" id="infrastructure.reference-16-files"><span
-class="header-section-number">6.1.16</span>
+<h3 data-number="3.1.16" id="infrastructure.reference-16-files"><span
+class="header-section-number">3.1.16</span>
 <code>infrastructure.reference</code> (16 files)</h3>
 <p>Citation/BibTeX parsing + conversion utilities leveraged by
 manuscripts and retrieval scripts.</p>
-<h3 data-number="6.1.17" id="infrastructure.rendering-65-files"><span
-class="header-section-number">6.1.17</span>
+<h3 data-number="3.1.17" id="infrastructure.rendering-65-files"><span
+class="header-section-number">3.1.17</span>
 <code>infrastructure.rendering</code> (65 files)</h3>
 <p>Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide
 exporters.</p>
-<h3 data-number="6.1.18" id="infrastructure.reporting-57-files"><span
-class="header-section-number">6.1.18</span>
+<h3 data-number="3.1.18" id="infrastructure.reporting-57-files"><span
+class="header-section-number">3.1.18</span>
 <code>infrastructure.reporting</code> (57 files)</h3>
 <p>Parses pytest + coverage artefacts for dashboards; pairs with
 Stage 01 summaries and downstream executive exports.</p>
-<h3 data-number="6.1.19" id="infrastructure.research-3-files"><span
-class="header-section-number">6.1.19</span>
+<h3 data-number="3.1.19" id="infrastructure.research-3-files"><span
+class="header-section-number">3.1.19</span>
 <code>infrastructure.research</code> (3 files)</h3>
 <p>Seven-stage research workflow
 (SCOPE→LITERATURE→REASON→DESIGN→COMPUTE→SYNTHESIZE→WRITE) defined as
@@ -3667,20 +2334,20 @@ typed ResearchStage data classes with explicit outputs, skills, and
 template commands per stage. Includes a full PRISMA-adapted literature
 review prompt and a research workflow prompt referencing template/
 infrastructure commands.</p>
-<h3 data-number="6.1.20" id="infrastructure.rules-6-files"><span
-class="header-section-number">6.1.20</span>
+<h3 data-number="3.1.20" id="infrastructure.rules-6-files"><span
+class="header-section-number">3.1.20</span>
 <code>infrastructure.rules</code> (6 files)</h3>
 <p>Governance rules layer for validating project lifecycle transitions,
 sidecar sync policies, and pipeline gate orchestration. Rules mirror
 <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars.</p>
-<h3 data-number="6.1.21" id="infrastructure.scientific-4-files"><span
-class="header-section-number">6.1.21</span>
+<h3 data-number="3.1.21" id="infrastructure.scientific-4-files"><span
+class="header-section-number">3.1.21</span>
 <code>infrastructure.scientific</code> (4 files)</h3>
 <p>Stability probing, benchmarking hooks—consumed heavily by
 optimization exemplars (<code>template_code_project</code> scripts).</p>
-<h3 data-number="6.1.22" id="infrastructure.search-62-files"><span
-class="header-section-number">6.1.22</span>
+<h3 data-number="3.1.22" id="infrastructure.search-62-files"><span
+class="header-section-number">3.1.22</span>
 <code>infrastructure.search</code> (62 files)</h3>
 <p>Two-tier search architecture: the <code>literature/</code> client
 stack (client.py, backends, caches) powers literature search with arXiv,
@@ -3690,36 +2357,36 @@ exposes the built-in scientific database adapters through a uniform
 Scholar, European PMC, bioRxiv, and other registered adapters share
 list/search CLI commands with HTTP timeout, retry, and TTL caching. The
 live registry, not this prose, is authoritative for connector count.</p>
-<h3 data-number="6.1.23" id="infrastructure.sia-10-files"><span
-class="header-section-number">6.1.23</span>
+<h3 data-number="3.1.23" id="infrastructure.sia-10-files"><span
+class="header-section-number">3.1.23</span>
 <code>infrastructure.sia</code> (10 files)</h3>
 <p>Generic Self-Improving-AI loop utilities: task-layout validation,
 execution harness, and metric capture reused by
 <code>template_sia</code> (fixture-replay by default).</p>
-<h3 data-number="6.1.24" id="infrastructure.skills-8-files"><span
-class="header-section-number">6.1.24</span>
+<h3 data-number="3.1.24" id="infrastructure.skills-8-files"><span
+class="header-section-number">3.1.24</span>
 <code>infrastructure.skills</code> (8 files)</h3>
 <p>Discovers <code>SKILL.md</code> frontmatter →
 <code>.cursor/skill_manifest.json</code>.</p>
-<h3 data-number="6.1.25"
+<h3 data-number="3.1.25"
 id="infrastructure.steganography-13-files"><span
-class="header-section-number">6.1.25</span>
+class="header-section-number">3.1.25</span>
 <code>infrastructure.steganography</code> (13 files)</h3>
 <p>Watermark overlays, hashing companions triggered by secure pipeline
 path.</p>
-<h3 data-number="6.1.26" id="infrastructure.tools-6-files"><span
-class="header-section-number">6.1.26</span>
+<h3 data-number="3.1.26" id="infrastructure.tools-6-files"><span
+class="header-section-number">3.1.26</span>
 <code>infrastructure.tools</code> (6 files)</h3>
 <p>Invocable tool definitions registered by resource-pool governance;
 tools mirror <code>projects/templates/</code> with git-tracked
 <code>templates/*</code> exemplars.</p>
-<h3 data-number="6.1.27" id="infrastructure.validation-80-files"><span
-class="header-section-number">6.1.27</span>
+<h3 data-number="3.1.27" id="infrastructure.validation-80-files"><span
+class="header-section-number">3.1.27</span>
 <code>infrastructure.validation</code> (80 files)</h3>
 <p>Markdown + PDF + integrity CLIs underpinning Stage 04
 diagnostics.</p>
-<h3 data-number="6.1.28" id="infrastructurelogrotate.d-0-files"><span
-class="header-section-number">6.1.28</span>
+<h3 data-number="3.1.28" id="infrastructurelogrotate.d-0-files"><span
+class="header-section-number">3.1.28</span>
 <code>infrastructure/logrotate.d</code> (0 files)</h3>
 <p>Operational templates for deployments (documentation-first;
 intentionally minimal Python footprint).</p>
@@ -3735,276 +2402,10 @@ data-cites="garijo2024fairsoft">(<a href="#ref-garijo2024fairsoft"
 role="doc-biblioref"><span class="nocase">Garijo et al.</span>
 2024</a>)</span>.</p>
 <hr />
-<h1 data-number="7" id="security-and-provenance"><span
-class="header-section-number">7</span> Security and Provenance</h1>
-<p>Research integrity requires more than reproducibility; it requires
-verifiable authorship. In an era of generative AI, automated scraping,
-and synthetic media, the ability to prove that a document was produced
-by a specific pipeline at a specific time is a critical defense against
-fabrication and misattribution. The W3C PROV data model <span
-class="citation" data-cites="moreau2013provdm">(<a
-href="#ref-moreau2013provdm" role="doc-biblioref">Moreau and Missier
-2013</a>)</span> establishes a formal vocabulary for expressing
-provenance records—entities, activities, and agents connected by
-derivation, generation, and attribution relations. Digital watermarking,
-pioneered by Cox et al. <span class="citation"
-data-cites="cox1997secure">(<a href="#ref-cox1997secure"
-role="doc-biblioref">Cox et al. 1997</a>)</span> for multimedia
-integrity verification, provides the foundational signal-processing
-theory for embedding imperceptible provenance markers within artifacts.
-<code>template/</code> implements a domain-specific provenance layer
-that embeds these relations directly into the PDF artifact itself, using
-four complementary steganographic and cryptographic mechanisms.</p>
-<h2 data-number="7.1" id="threat-model"><span
-class="header-section-number">7.1</span> Threat Model</h2>
-<p>The steganography subsystem defends against three classes of
-threats:</p>
-<ol type="1">
-<li><strong>Unauthorized redistribution</strong>: A manuscript is
-scraped and republished without attribution. The steganographic
-watermark survives the redistribution and can be used to prove original
-authorship.</li>
-<li><strong>Content tampering</strong>: Figures or text are modified
-after publication. The SHA-256 hash embedded in the PDF metadata detects
-any modification to the file contents.</li>
-<li><strong>Provenance forgery</strong>: An attacker claims to have
-produced a document they did not author. The build timestamp, commit
-hash, and pipeline metadata embedded in the watermark provide a
-verifiable chain of custody.</li>
-</ol>
-<h2 data-number="7.2" id="steganographic-layers"><span
-class="header-section-number">7.2</span> Steganographic Layers</h2>
-<p>The system applies four complementary layers of provenance
-information:</p>
-<h3 data-number="7.2.1" id="layer-1-pdf-metadata-injection"><span
-class="header-section-number">7.2.1</span> Layer 1: PDF Metadata
-Injection</h3>
-<p>The <code>inject_pdf_metadata</code> function writes structured
-metadata into both the PDF Info dictionary and an XMP (Extensible
-Metadata Platform) packet:</p>
-<ul>
-<li><code>/Creator</code>:
-<code>Research Template Steganography Module</code></li>
-<li><code>/Producer</code>: Module path
-(<code>infrastructure.steganography</code>)</li>
-<li><code>/CreationDate</code> / <code>/ModDate</code>: UTC timestamp in
-<code>ISO 8601</code> format</li>
-<li><code>/Author</code>: From <code>config.yaml</code></li>
-<li><code>/Title</code>: From <code>config.yaml</code></li>
-<li><code>/Subject</code>: document identifier, plus
-<code>/DocumentID</code></li>
-<li>Dedicated <code>/Hash_&lt;ALGO&gt;</code> fields for each computed
-digest (e.g. <code>/Hash_SHA256</code>)</li>
-<li>Custom fields: <code>GitCommit</code>,
-<code>GitCommitAvailable</code>,
-<code>/SteganographyTimestamp</code></li>
-<li>An embedded <code>stego_manifest.json</code> attachment carrying the
-document id, digests, title, and git commit</li>
-</ul>
-<h3 data-number="7.2.2" id="layer-2-cryptographic-hashing"><span
-class="header-section-number">7.2.2</span> Layer 2: Cryptographic
-Hashing</h3>
-<p>Before watermarking, SHA-256 (and SHA-512 when configured) digests of
-the original PDF are computed and stored in:</p>
-<ul>
-<li>A JSON hash manifest sidecar (<code>&lt;pdf&gt;.hashes.json</code>,
-e.g. <code>output/pdf/&lt;name&gt;_combined.hashes.json</code>)</li>
-<li>Dedicated PDF metadata fields (<code>/Hash_SHA256</code>,
-<code>/Hash_SHA512</code>)</li>
-<li>The embedded <code>stego_manifest.json</code> attachment</li>
-</ul>
-<p>This enables post-hoc verification: anyone with the manifest can
-verify that the PDF has not been modified since rendering.</p>
-<h3 data-number="7.2.3"
-id="layer-3-alpha-channel-overlay-footer-and-invisible-text"><span
-class="header-section-number">7.2.3</span> Layer 3: Alpha-Channel
-Overlay, Footer, and Invisible Text</h3>
-<p>A semi-transparent overlay is merged onto every page of the hardened
-PDF:</p>
-<ul>
-<li><strong>Watermark overlay</strong>: in the default <code>text</code>
-mode, a configurable string (default <code>CONFIDENTIAL</code>) is
-repeated diagonally at 45° across the page; in <code>qr</code> mode a
-tiled QR overlay replaces it. The overlay is rendered at low opacity —
-the default is 8% (<code>overlay_opacity: 0.08</code>), configurable
-from 0.02 (subtle) to 0.30 (strong) — to be invisible during normal
-viewing but detectable through image analysis.</li>
-<li><strong>Provenance footer</strong>: every page additionally receives
-a footer carrying the document identifier, page number / total pages, a
-digest prefix, title, authors, and source filename/size.</li>
-<li><strong>Invisible text layer</strong>: the first page embeds a
-hidden text string with the machine-readable payload:</li>
-</ul>
-<pre><code>STEG_ID:&lt;document-id&gt;|TITLE:&lt;title&gt;|HASHES:&lt;hash-prefix&gt;</code></pre>
-<p>The build timestamp and Git commit hash (short SHA) are recorded in
-the PDF metadata and the hash manifest rather than in the visible
-watermark text itself. Together these fields allow a verifier to
-reconstruct—from the hardened PDF alone—which version of the code, at
-which moment in time, produced the document.</p>
-<h3 data-number="7.2.4" id="layer-4-qr-and-barcode-injection"><span
-class="header-section-number">7.2.4</span> Layer 4: QR and Barcode
-Injection</h3>
-<p>When barcodes are enabled, a bottom-of-page barcode strip (QR code +
-Code128 label) is merged onto <strong>every</strong> page, encoding the
-document identifier and page number
-(<code>ID:&lt;doc-id-prefix&gt;|P:&lt;page&gt;</code>). In
-<code>overlay_mode: "qr"</code>, a tiled QR overlay covers the full page
-in place of the text watermark. Both are configurable via the
-<code>steganography:</code> block in <code>manuscript/config.yaml</code>
-(or the repo-level <code>secure_config.yaml</code> defaults).</p>
-<h2 data-number="7.3" id="the-secure_run.sh-orchestrator"><span
-class="header-section-number">7.3</span> The <code>secure_run.sh</code>
-Orchestrator</h2>
-<p>The steganographic pipeline is orchestrated by
-<code>secure_run.sh</code>, a Bash script that wraps the standard
-<code>run.sh</code> pipeline with post-processing steganography:</p>
-<ol type="1">
-<li>Execute the standard YAML-declared pipeline (16 stages; default full
-10) pipeline for the target project.</li>
-<li>The <code>secure_run.sh</code> script invokes
-<code>SteganographyProcessor</code>.</li>
-<li>Apply metadata injection, hashing, text overlay, and QR code
-injection.</li>
-<li>Save the secured PDF alongside the original.</li>
-<li>Generate a steganography report in JSON format.</li>
-</ol>
-<p>The orchestrator processes either a single specified project or all
-discovered projects sequentially.</p>
-<h2 data-number="7.4" id="tamper-detection"><span
-class="header-section-number">7.4</span> Tamper Detection</h2>
-<p>Verification is performed by comparing the stored SHA-256 hash
-against a freshly computed hash of the distributed PDF. Any
-modification—even a single bit flip—produces a hash mismatch. The
-alpha-channel overlay provides a secondary, visual verification channel
-that does not require access to the original hash.</p>
-<h2 data-number="7.5" id="limitations-1"><span
-class="header-section-number">7.5</span> Limitations</h2>
-<ul>
-<li>Alpha-channel overlays are stripped by some PDF optimization tools
-(e.g., <code>qpdf --optimize</code>).</li>
-<li>QR codes are visible and may be removed by a determined
-attacker.</li>
-<li>The system does not provide non-repudiation in the cryptographic
-sense—it does not use digital signatures with private keys. Future
-versions may integrate GPG or X.509 signing.</li>
-<li>The provenance model is pipeline-centric rather than fully
-PROV-compliant. The path from <code>template/</code>’s current
-metadata-based provenance to full W3C PROV-compliant traces involves
-four steps: (1) <em>entity identification</em>—assigning stable
-identifiers (URIs or SWHIDs) to each pipeline input (manuscript files,
-data, config); (2) <em>activity logging</em>—recording each pipeline
-stage as a PROV Activity with start/end timestamps (already encoded in
-the watermark overlay); (3) <em>agent attribution</em>—binding each
-Activity to the pipeline version and Git commit hash (already encoded in
-the overlay and PDF metadata); (4) <em>PROV-O
-serialization</em>—emitting the provenance graph as OWL-RDF (PROV-O) or
-text (PROV-N) alongside the PDF. Steps (2) and (3) are already
-implemented; steps (1) and (4) are the primary remaining gaps. A future
-<code>infrastructure.provenance</code> module would close both gaps
-automatically.</li>
-</ul>
-<h2 data-number="7.6"
-id="relationship-to-software-supply-chain-integrity"><span
-class="header-section-number">7.6</span> Relationship to Software Supply
-Chain Integrity</h2>
-<p>The steganographic provenance layer operates at the <em>document
-level</em>—it certifies the integrity of a specific PDF artifact. A
-complementary concern is <em>build-level</em> provenance: certifying
-that the pipeline itself was executed with verified source code and
-dependencies. Frameworks such as in-toto <span class="citation"
-data-cites="torresarias2019intoto">(<a href="#ref-torresarias2019intoto"
-role="doc-biblioref">Torres-Arias et al. 2019</a>)</span> and SLSA
-(Supply-chain Levels for Software Artifacts) address this concern by
-defining attestation chains from source commit through build steps to
-final artifact. The NTIA’s minimum elements for a Software Bill of
-Materials (SBOM) <span class="citation" data-cites="ntia2021sbom">(<a
-href="#ref-ntia2021sbom" role="doc-biblioref">National
-Telecommunications and Information Administration 2021</a>)</span>
-further standardize the enumeration of software components and
-dependencies—essential for establishing the provenance lineage of build
-environments. SLSA defines four graduated levels of build integrity:</p>
-<table>
-<colgroup>
-<col style="width: 27%" />
-<col style="width: 29%" />
-<col style="width: 43%" />
-</colgroup>
-<thead>
-<tr>
-<th style="text-align: center;">SLSA Level</th>
-<th>Requirement</th>
-<th><code>template/</code> Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center;">1</td>
-<td>Provenance document exists</td>
-<td>✓ SHA-256 manifest + steganographic metadata</td>
-</tr>
-<tr>
-<td style="text-align: center;">2</td>
-<td>Version-controlled build scripts</td>
-<td>✓ All scripts in git</td>
-</tr>
-<tr>
-<td style="text-align: center;">3</td>
-<td>Isolated build environment</td>
-<td>~ Docker support exists but not enforced in CI</td>
-</tr>
-<tr>
-<td style="text-align: center;">4</td>
-<td>Hermetic, reproducible builds</td>
-<td>N – future work</td>
-</tr>
-</tbody>
-</table>
-<p>Future versions of <code>template/</code> may generate
-SLSA-compatible provenance attestations alongside the steganographic
-watermarks, creating a two-layer provenance model: in-toto attests that
-the build pipeline was executed with the claimed source code, while the
-steganographic layer attests that the PDF was produced by that pipeline
-at a specific time.</p>
-<h2 data-number="7.7"
-id="relationship-to-fair-and-formal-provenance-standards"><span
-class="header-section-number">7.7</span> Relationship to FAIR and Formal
-Provenance Standards</h2>
-<p>The steganographic layer supports the FAIR for Research Software
-(FAIR4RS) principles <span class="citation"
-data-cites="barker2022fair4rs">(<a href="#ref-barker2022fair4rs"
-role="doc-biblioref">Barker et al. 2022</a>)</span> at the artifact
-level. PDFs carry embedded metadata (Findability) in standardized XMP
-format (Interoperability). The SHA-256 hash manifest enables persistent
-integrity verification (a prerequisite for Reusability). The
-Documentation Duality standard ensures that the software producing the
-artifact is inspectable and well-documented (satisfying FAIRsoft <span
-class="citation" data-cites="garijo2024fairsoft">(<a
-href="#ref-garijo2024fairsoft" role="doc-biblioref"><span
-class="nocase">Garijo et al.</span> 2024</a>)</span> metadata and
-documentation indicators). Full PROV-compliant provenance
-traces—capturing the derivation chain from source data through analysis
-scripts to rendered PDF—are a natural extension and a primary target for
-future development.</p>
-<p>Software Heritage <span class="citation"
-data-cites="cosmo2020softwareheritage">(<a
-href="#ref-cosmo2020softwareheritage" role="doc-biblioref">Di Cosmo et
-al. 2020</a>)</span> complements this picture at the source-code level:
-by archiving the <code>template/</code> repository and assigning a
-reproducible SWHID (Software Hash Identifier) to each commit, Software
-Heritage makes the pipeline itself—not just its output—a citable,
-persistent digital artifact. A published SWHID alongside the PDF DOI
-creates a complete, two-artifact citation record: the paper’s content is
-versioned via DOI; the code that generated it is versioned via SWHID.
-This combination satisfies the Katz et al. <span class="citation"
-data-cites="katz2021software">(<a href="#ref-katz2021software"
-role="doc-biblioref">Katz et al. 2021</a>)</span> software citation
-principles’ requirement that software used in research be independently
-citable and permanently accessible.</p>
-<hr />
-<h1 data-number="8" id="appendices"><span
-class="header-section-number">8</span> Appendices</h1>
-<h2 data-number="8.1" id="appendix-pipeline"><span
-class="header-section-number">8.1</span> Appendix: Pipeline Stage
+<h1 data-number="4" id="appendices"><span
+class="header-section-number">4</span> Appendices</h1>
+<h2 data-number="4.1" id="appendix-pipeline"><span
+class="header-section-number">4.1</span> Appendix: Pipeline Stage
 Reference</h2>
 <table>
 <colgroup>
@@ -4144,68 +2545,68 @@ Reference</h2>
 <code>execute_multi_project.py</code> aggregates pipelines—supplying
 cross-project KPI dashboards absent from lone-project checkpoints.</p>
 <hr />
-<h2 data-number="8.2" id="appendix-config"><span
-class="header-section-number">8.2</span> Appendix: Configuration
+<h2 data-number="4.2" id="appendix-config"><span
+class="header-section-number">4.2</span> Appendix: Configuration
 Reference</h2>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paper</span><span class="kw">:</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Paper Title&quot;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Optional Subtitle&quot;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0&quot;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-03-19&quot;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">authors</span><span class="kw">:</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Author Name&quot;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">orcid</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;0000-0000-0000-0000&quot;</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">email</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;author@example.com&quot;</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">affiliation</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Institution&quot;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">corresponding</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">publication</span><span class="kw">:</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">doi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;10.5281/zenodo.XXXXXX&quot;</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version_doi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;10.5281/zenodo.XXXXXX&quot;</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version_record</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://zenodo.org/records/XXXXXX&quot;</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">github_repository</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;owner/repository&quot;</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">repository_url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://github.com/owner/repository&quot;</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">published_artifacts</span><span class="kw">:</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">github_pages</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://owner.github.io/repository/&quot;</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">software_heritage</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://archive.softwareheritage.org/...&quot;</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pypi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://test.pypi.org/project/...&quot;</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">osf</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://osf.io/...&quot;</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">huggingface_hub</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://huggingface.co/datasets/owner/repository&quot;</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">netlify</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://...&quot;</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ipfs_pinata</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://gateway.pinata.cloud/ipfs/...&quot;</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">transmission_bookends</span><span class="kw">:</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">max_prior_releases</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">show_steganography</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">journal</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Target Journal&quot;</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">volume</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1&quot;</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pages</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1-10&quot;</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">year</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026&quot;</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="fu">keywords</span><span class="kw">:</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;keyword1&quot;</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;keyword2&quot;</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">license</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Apache License 2.0&quot;</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">language</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;en&quot;</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="fu">llm</span><span class="kw">:</span></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">reviews</span><span class="kw">:</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">executive_summary</span><span class="kw">,</span><span class="at"> quality_review</span><span class="kw">]</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">translations</span><span class="kw">:</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="fu">testing</span><span class="kw">:</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_infra_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_project_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paper</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Paper Title&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">subtitle</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Optional Subtitle&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1.0&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026-03-19&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">authors</span><span class="kw">:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Author Name&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">orcid</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;0000-0000-0000-0000&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">email</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;author@example.com&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">affiliation</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Institution&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">corresponding</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">publication</span><span class="kw">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">doi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;10.5281/zenodo.XXXXXX&quot;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version_doi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;10.5281/zenodo.XXXXXX&quot;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version_record</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://zenodo.org/records/XXXXXX&quot;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">github_repository</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;owner/repository&quot;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">repository_url</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://github.com/owner/repository&quot;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">published_artifacts</span><span class="kw">:</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">github_pages</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://owner.github.io/repository/&quot;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">software_heritage</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://archive.softwareheritage.org/...&quot;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">pypi</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://test.pypi.org/project/...&quot;</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">osf</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://osf.io/...&quot;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">huggingface_hub</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://huggingface.co/datasets/owner/repository&quot;</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">netlify</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://...&quot;</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ipfs_pinata</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;https://gateway.pinata.cloud/ipfs/...&quot;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">transmission_bookends</span><span class="kw">:</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">max_prior_releases</span><span class="kw">:</span><span class="at"> </span><span class="dv">5</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">show_steganography</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">journal</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Target Journal&quot;</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">volume</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1&quot;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pages</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;1-10&quot;</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">year</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;2026&quot;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="fu">keywords</span><span class="kw">:</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;keyword1&quot;</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;keyword2&quot;</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">license</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Apache License 2.0&quot;</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">language</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;en&quot;</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="fu">llm</span><span class="kw">:</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">reviews</span><span class="kw">:</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">executive_summary</span><span class="kw">,</span><span class="at"> quality_review</span><span class="kw">]</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">translations</span><span class="kw">:</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">enabled</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="fu">testing</span><span class="kw">:</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_infra_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">3</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">max_project_test_failures</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span></span></code></pre></div>
 <hr />
-<h2 data-number="8.3" id="appendix-directory"><span
-class="header-section-number">8.3</span> Appendix: Repository Directory
+<h2 data-number="4.3" id="appendix-directory"><span
+class="header-section-number">4.3</span> Appendix: Repository Directory
 Structure</h2>
 <pre class="text"><code>template/
 ├── infrastructure/
@@ -4236,91 +2637,8 @@ Structure</h2>
 slugs
 (<code>uv run python scripts/docgen/active_projects.py</code>).</p>
 <hr />
-<h2 data-number="8.4" id="appendix-exemplars"><span
-class="header-section-number">8.4</span> Appendix: Exemplar Project
-Summary</h2>
-<p>The full public exemplar roster is:
-<code>templates/template_active_inference</code>,
-<code>templates/template_advanced_literature_review</code>,
-<code>templates/template_autopoiesis</code>,
-<code>templates/template_autoresearch_project</code>,
-<code>templates/template_autoscientists</code>,
-<code>templates/template_code_project</code>,
-<code>templates/template_data_descriptor</code>,
-<code>templates/template_eda_notebook</code>,
-<code>templates/template_formal</code>,
-<code>templates/template_gold_refinement</code>,
-<code>templates/template_literature_meta_analysis</code>,
-<code>templates/template_madlib</code>,
-<code>templates/template_methods_paper</code>,
-<code>templates/template_newspaper</code>,
-<code>templates/template_pitch_deck</code>,
-<code>templates/template_pools_rules_tools</code>,
-<code>templates/template_prose_project</code>,
-<code>templates/template_redacted_report</code>,
-<code>templates/template_registered_report</code>,
-<code>templates/template_search_project</code>,
-<code>templates/template_sia</code>,
-<code>templates/template_storybook</code>,
-<code>templates/template_template</code>,
-<code>templates/template_textbook</code>. The three rows below are a
-representative sample; a future <code>exemplar_summary_table</code>
-token in <code>build_manuscript_metrics_dict</code> would let this table
-cover every exemplar without hand-editing.</p>
-<table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 13%" />
-<col style="width: 18%" />
-<col style="width: 10%" />
-<col style="width: 36%" />
-</colgroup>
-<thead>
-<tr>
-<th>Project slug</th>
-<th>Purpose</th>
-<th>Highlights</th>
-<th style="text-align: center;">Tests</th>
-<th style="text-align: left;">Figures (Stage 02 hint)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>template_code_project</code></td>
-<td>Optimization tutorial</td>
-<td>Convex demo figures, scripted tables</td>
-<td style="text-align: center;">242 discovered tests; 90% declared
-gate</td>
-<td style="text-align: left;">Controlled matplotlib exports</td>
-</tr>
-<tr>
-<td><code>template_prose_project</code></td>
-<td>Prose-heavy workflow</td>
-<td>Validates narrative-only repos</td>
-<td style="text-align: center;">120</td>
-<td style="text-align: left;">Lightweight / optional plots</td>
-</tr>
-<tr>
-<td><code>template_autoresearch_project</code></td>
-<td>AutoResearch readiness</td>
-<td>Planner + validation CLI</td>
-<td style="text-align: center;">300</td>
-<td style="text-align: left;">Readiness reports from Stage 02</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Meta manuscript location:</strong> introspective study lives
-in <code>projects/templates/template_template/</code> beside the public
-exemplar set. Discovery now follows the typed <code>projects/</code>
-layout—<code>projects/templates/**</code> and
-<code>projects/active/**</code> are discovered/rendered, while
-<code>projects/working/**</code>, <code>projects/published/**</code>,
-<code>projects/archive/**</code>, and <code>projects/other/**</code>
-remain non-rendered—see root <code>CLAUDE.md</code> for invocation
-patterns (<code>resolve_project_root</code>).</p>
-<hr />
-<h2 data-number="8.5" id="appendix-docs"><span
-class="header-section-number">8.5</span> Appendix: Documentation
+<h2 data-number="4.4" id="appendix-docs"><span
+class="header-section-number">4.4</span> Appendix: Documentation
 Inventory</h2>
 <p>The repository maintains documentation at three levels:</p>
 <table>
@@ -4399,8 +2717,8 @@ to whatever code they are editing; AI agents additionally read each
 module’s <code>SKILL.md</code> to locate capabilities without guessing
 API signatures.</p>
 <hr />
-<h2 data-number="8.6" id="appendix-matrix"><span
-class="header-section-number">8.6</span> Appendix: Comparative Tool
+<h2 data-number="4.5" id="appendix-matrix"><span
+class="header-section-number">4.5</span> Appendix: Comparative Tool
 Matrix</h2>
 <p><strong>Symbol key</strong> (applies to all cells):
 <strong>Y</strong> = full native support · <strong>~</strong> = partial
@@ -4661,29 +2979,11 @@ Anthropic. 2024. <em>Introducing the Model Context Protocol</em>.
 Anthropic Engineering Blog. <a
 href="https://www.anthropic.com/news/model-context-protocol">https://www.anthropic.com/news/model-context-protocol</a>.
 </div>
-<div id="ref-baker2016reproducibility" class="csl-entry"
-role="listitem">
-Baker, Monya. 2016. <span>“1,500 Scientists Lift the Lid on
-Reproducibility.”</span> <em>Nature</em> 533 (7604): 452–54. <a
-href="https://doi.org/10.1038/533452a">https://doi.org/10.1038/533452a</a>.
-</div>
-<div id="ref-barba2018terminologies" class="csl-entry" role="listitem">
-Barba, Lorena A. 2018. <span>“Terminologies for Reproducible
-Research.”</span> <em>arXiv Preprint arXiv:1802.03311</em>, ahead of
-print. <a
-href="https://doi.org/10.48550/arXiv.1802.03311">https://doi.org/10.48550/arXiv.1802.03311</a>.
-</div>
 <div id="ref-barker2022fair4rs" class="csl-entry" role="listitem">
 Barker, Michelle, Neil P. Chue Hong, Daniel S. Katz, et al. 2022.
 <span>“Introducing the <span>FAIR</span> Principles for Research
 Software.”</span> <em>Scientific Data</em> 9 (1): 622. <a
 href="https://doi.org/10.1038/s41597-022-01710-x">https://doi.org/10.1038/s41597-022-01710-x</a>.
-</div>
-<div id="ref-boettiger2015docker" class="csl-entry" role="listitem">
-Boettiger, Carl. 2015. <span>“An Introduction to Docker for Reproducible
-Research.”</span> <em>ACM SIGOPS Operating Systems Review</em> 49 (1):
-71–79. <a
-href="https://doi.org/10.1145/2723872.2723882">https://doi.org/10.1145/2723872.2723882</a>.
 </div>
 <div id="ref-cohen2021four" class="csl-entry" role="listitem">
 Cohen, Jeremy, Daniel S. Katz, Michelle Barker, Neil P. Chue Hong,
@@ -4691,12 +2991,6 @@ Robert Haines, and Caroline Jay. 2021. <span>“The Four Pillars of
 Research Software Engineering.”</span> <em>IEEE Software</em> 38 (1):
 97–105. <a
 href="https://doi.org/10.1109/MS.2020.2973362">https://doi.org/10.1109/MS.2020.2973362</a>.
-</div>
-<div id="ref-cox1997secure" class="csl-entry" role="listitem">
-Cox, Ingemar J., Joe Kilian, F. Thomson Leighton, and Talal Shamoon.
-1997. <span>“Secure Spread Spectrum Watermarking for Multimedia.”</span>
-<em>IEEE Transactions on Image Processing</em> 6 (12): 1673–87. <a
-href="https://doi.org/10.1109/83.650120">https://doi.org/10.1109/83.650120</a>.
 </div>
 <div id="ref-cosmo2020softwareheritage" class="csl-entry"
 role="listitem">
@@ -4712,12 +3006,6 @@ Emilio Palumbo, and Cedric Notredame. 2017. <span>“Nextflow Enables
 Reproducible Computational Workflows.”</span> <em>Nature
 Biotechnology</em> 35 (4): 316–19. <a
 href="https://doi.org/10.1038/nbt.3820">https://doi.org/10.1038/nbt.3820</a>.
-</div>
-<div id="ref-freedman2015economics" class="csl-entry" role="listitem">
-Freedman, Leonard P., Iain M. Cockburn, and Timothy S. Simcoe. 2015.
-<span>“The Economics of Reproducibility in Preclinical Research.”</span>
-<em>PLOS Biology</em> 13 (6): e1002165. <a
-href="https://doi.org/10.1371/journal.pbio.1002165">https://doi.org/10.1371/journal.pbio.1002165</a>.
 </div>
 <div id="ref-gamma1995design" class="csl-entry" role="listitem">
 Gamma, Erich, Richard Helm, Ralph Johnson, and John Vlissides. 1995.
@@ -4736,12 +3024,6 @@ Gentleman, Robert, and Duncan Temple Lang. 2007. <span>“Statistical
 Analyses and Reproducible Research.”</span> <em>Journal of Computational
 and Graphical Statistics</em> 16 (1): 1–23. <a
 href="https://doi.org/10.1198/106186007X178663">https://doi.org/10.1198/106186007X178663</a>.
-</div>
-<div id="ref-goble2020fair" class="csl-entry" role="listitem">
-Goble, Carole, Sarah Cohen-Boulakia, Stian Soiland-Reyes, et al. 2020.
-<span>“<span>FAIR</span> Computational Workflows.”</span> <em>Data
-Intelligence</em> 2 (1–2): 108–21. <a
-href="https://doi.org/10.1162/dint_a_00033">https://doi.org/10.1162/dint_a_00033</a>.
 </div>
 <div id="ref-google2025a2a" class="csl-entry" role="listitem">
 Google. 2025. <em>Agent2Agent (<span>A2A</span>) Protocol
@@ -4778,13 +3060,6 @@ Katz, Daniel S., Neil P. Chue Hong, Tim Clark, et al. 2021.
 Guide.”</span> <em>F1000Research</em> 9: 1257. <a
 href="https://doi.org/10.12688/f1000research.26932.2">https://doi.org/10.12688/f1000research.26932.2</a>.
 </div>
-<div id="ref-kluyver2016jupyter" class="csl-entry" role="listitem">
-Kluyver, Thomas, Benjamin Ragan-Kelley, Fernando Pérez, et al. 2016.
-<span>“Jupyter Notebooks — a Publishing Format for Reproducible
-Computational Workflows.”</span> <em>Positioning and Power in Academic
-Publishing: Players, Agents and Agendas</em>, 87–90. <a
-href="https://doi.org/10.3233/978-1-61499-649-1-87">https://doi.org/10.3233/978-1-61499-649-1-87</a>.
-</div>
 <div id="ref-knuth1984literate" class="csl-entry" role="listitem">
 Knuth, Donald E. 1984. <span>“Literate Programming.”</span> <em>The
 Computer Journal</em> 27 (2): 97–111. <a
@@ -4795,10 +3070,6 @@ Köster, Johannes, and Sven Rahmann. 2012. <span>“Snakemake—a Scalable
 Bioinformatics Workflow Engine.”</span> <em>Bioinformatics</em> 28 (19):
 2520–22. <a
 href="https://doi.org/10.1093/bioinformatics/bts480">https://doi.org/10.1093/bioinformatics/bts480</a>.
-</div>
-<div id="ref-lamport1994latex" class="csl-entry" role="listitem">
-Lamport, Leslie. 1994. <em><span>LaTeX</span>: A Document Preparation
-System</em>. 2nd ed. Addison-Wesley.
 </div>
 <div id="ref-lamprecht2020towards" class="csl-entry" role="listitem">
 Lamprecht, Anna-Lena, Leyla Garcia, Mateusz Kuzak, et al. 2020.
@@ -4832,18 +3103,6 @@ Craftsmanship</em>. Prentice Hall.
 <div id="ref-meszaros2007xunit" class="csl-entry" role="listitem">
 Meszaros, Gerard. 2007. <em>xUnit Test Patterns: Refactoring Test
 Code</em>. Addison-Wesley.
-</div>
-<div id="ref-moreau2013provdm" class="csl-entry" role="listitem">
-Moreau, Luc, and Paolo Missier. 2013. <em><span>PROV-DM</span>: The
-<span>PROV</span> Data Model</em>. W3C Recommendation. World Wide Web
-Consortium. <a
-href="https://www.w3.org/TR/prov-dm/">https://www.w3.org/TR/prov-dm/</a>.
-</div>
-<div id="ref-ntia2021sbom" class="csl-entry" role="listitem">
-National Telecommunications and Information Administration. 2021.
-<em>The Minimum Elements for a Software Bill of Materials
-(<span>SBOM</span>)</em>. U.S. Department of Commerce. <a
-href="https://www.ntia.gov/sites/default/files/publications/sbom_minimum_elements_report_0.pdf">https://www.ntia.gov/sites/default/files/publications/sbom_minimum_elements_report_0.pdf</a>.
 </div>
 <div id="ref-nosek2018preregistration" class="csl-entry"
 role="listitem">
@@ -4881,26 +3140,6 @@ Peng, Roger D. 2011. <span>“Reproducible Research in Computational
 Science.”</span> <em>Science</em> 334 (6060): 1226–27. <a
 href="https://doi.org/10.1126/science.1213847">https://doi.org/10.1126/science.1213847</a>.
 </div>
-<div id="ref-piccolo2016tools" class="csl-entry" role="listitem">
-Piccolo, Stephen R., and Michael B. Frampton. 2016. <span>“Tools and
-Techniques for Computational Reproducibility.”</span>
-<em>GigaScience</em> 5 (1): 30. <a
-href="https://doi.org/10.1186/s13742-016-0135-4">https://doi.org/10.1186/s13742-016-0135-4</a>.
-</div>
-<div id="ref-pimentel2019jupyter" class="csl-entry" role="listitem">
-Pimentel, João Felipe, Leonardo Murta, Vanessa Braganholo, and Juliana
-Freire. 2019. <span>“A Large-Scale Study about Quality and
-Reproducibility of <span>Jupyter</span> Notebooks.”</span>
-<em>Proceedings of the 35th IEEE/ACM International Conference on
-Software Maintenance and Evolution (ICSME)</em>, 507–17. <a
-href="https://doi.org/10.1109/ICSME.2019.00080">https://doi.org/10.1109/ICSME.2019.00080</a>.
-</div>
-<div id="ref-ram2013git" class="csl-entry" role="listitem">
-Ram, Karthik. 2013. <span>“Git Can Facilitate Greater Reproducibility
-and Increased Transparency in Science.”</span> <em>Source Code for
-Biology and Medicine</em> 8 (1): 7. <a
-href="https://doi.org/10.1186/1751-0473-8-7">https://doi.org/10.1186/1751-0473-8-7</a>.
-</div>
 <div id="ref-resa2024actionable" class="csl-entry" role="listitem">
 Research Software Alliance. 2024. <em>Developing Actionable Guidelines
 for <span>FAIR</span> Research Software</em>. ReSA Task Force. <a
@@ -4919,14 +3158,6 @@ Schick, Timo, Jane Dwivedi-Yu, Roberto Dessì, et al. 2023.
 arXiv preprint arXiv:2302.04761. <a
 href="https://doi.org/10.48550/arXiv.2302.04761">https://doi.org/10.48550/arXiv.2302.04761</a>.
 </div>
-<div id="ref-schulte2012multilanguage" class="csl-entry"
-role="listitem">
-Schulte, Eric, Dan Davison, Thomas Dye, and Carsten Dominik. 2012.
-<span>“A Multi-Language Computing Environment for Literate Programming
-and Reproducible Research.”</span> <em>Journal of Statistical
-Software</em> 46 (3): 1–24. <a
-href="https://doi.org/10.18637/jss.v046.i03">https://doi.org/10.18637/jss.v046.i03</a>.
-</div>
 <div id="ref-simmons2011falsepositive" class="csl-entry"
 role="listitem">
 Simmons, Joseph P., Leif D. Nelson, and Uri Simonsohn. 2011.
@@ -4934,12 +3165,6 @@ Simmons, Joseph P., Leif D. Nelson, and Uri Simonsohn. 2011.
 Collection and Analysis Allows Presenting Anything as
 Significant.”</span> <em>Psychological Science</em> 22 (11): 1359–66. <a
 href="https://doi.org/10.1177/0956797611417632">https://doi.org/10.1177/0956797611417632</a>.
-</div>
-<div id="ref-stodden2016enhancing" class="csl-entry" role="listitem">
-Stodden, Victoria, Marcia McNutt, David H. Bailey, et al. 2016.
-<span>“Enhancing Reproducibility for Computational Methods.”</span>
-<em>Science</em> 354 (6317): 1240–41. <a
-href="https://doi.org/10.1126/science.aah6168">https://doi.org/10.1126/science.aah6168</a>.
 </div>
 <div id="ref-torresarias2019intoto" class="csl-entry" role="listitem">
 Torres-Arias, Santiago, Hammad Afzali, Trishank Karthik Kuppusamy, Reza
