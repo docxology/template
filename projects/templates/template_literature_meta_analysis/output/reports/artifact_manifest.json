@@ -669,8 +669,8 @@
     {
       "contract_match": true,
       "path": "output/pdf/template_literature_meta_analysis_combined.pdf",
-      "sha256": "7dfe6d0c386c61d7f56e49d3a2f7bf9a2e5a6b442927ca74a46627f8f42ff4ba",
-      "size_bytes": 7250329,
+      "sha256": "372a6ad6cff6b932a477b6b4826ec6cbb3a5f9e13761a6ee2ba1318c408fc9e5",
+      "size_bytes": 7250328,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""

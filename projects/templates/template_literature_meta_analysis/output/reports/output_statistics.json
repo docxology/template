@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "7.19",
-      "total_size_bytes": 7543945,
+      "total_size_bytes": 7543944,
       "largest_files": [
         {
           "name": "template_literature_meta_analysis_combined.pdf",
@@ -66,7 +66,7 @@
       "exists": true,
       "file_count": 162,
       "size_mb": "8.88",
-      "total_size_bytes": 9314132,
+      "total_size_bytes": 9314217,
       "largest_files": [
         {
           "name": "03c_results_text_analytics_slides.pdf",
@@ -156,7 +156,7 @@
       "exists": true,
       "file_count": 22,
       "size_mb": "0.17",
-      "total_size_bytes": 178789,
+      "total_size_bytes": 178819,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -212,7 +212,7 @@
     }
   },
   "total_files": 266,
-  "total_size_mb": 40.77525997161865,
+  "total_size_mb": 40.77536869049072,
   "largest_files": [
     {
       "name": "template_literature_meta_analysis_combined.pdf",
@@ -280,12 +280,12 @@
     "llm/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 7.194466590881348,
+    "pdf": 7.194465637207031,
     "web": 0.3715496063232422,
-    "slides": 8.882648468017578,
+    "slides": 8.882729530334473,
     "figures": 7.631800651550293,
     "data": 16.523411750793457,
-    "reports": 0.17050647735595703,
+    "reports": 0.17053508758544922,
     "logs": 0.0008764266967773438
   },
   "file_counts_by_type": {

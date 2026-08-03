@@ -4,7 +4,7 @@
       "rendered_path": "output/manuscript/00_abstract.md",
       "rendered_sha256": "f1c3931ac911b21b4b098f6437e1f0bd177ae2fea2f371b6b16764ddbc97606d",
       "source_path": "manuscript/00_abstract.md",
-      "source_sha256": "b435f2ed267c3d11abb7b61b3d99792a75f66fc1b4040608ebb82835a348d313"
+      "source_sha256": "65599bbb6d5fa188dde2743d09472c5a4cfe6f228664dc6a371b835e984fa66f"
     },
     {
       "rendered_path": "output/manuscript/01_introduction.md",
@@ -58,7 +58,7 @@
       "rendered_path": "output/manuscript/03a_results_field_overview.md",
       "rendered_sha256": "97bca262aa324833a9257c2824fdffa7264db5c2b836c1c519f55facbf7d5996",
       "source_path": "manuscript/03a_results_field_overview.md",
-      "source_sha256": "c306a991ebc67aad5b2a7dd30fb808073a93c4ea94c35a4a7ea1d8b7c60ccb58"
+      "source_sha256": "ac06f57930bfc9f1e3e1fc206c41235a646a727438e736171b84b5b6c85e5288"
     },
     {
       "rendered_path": "output/manuscript/03b_results_subfields.md",
@@ -70,7 +70,7 @@
       "rendered_path": "output/manuscript/03c_results_text_analytics.md",
       "rendered_sha256": "13067ec4838f29db87be51aa46e13c92104cab1258f8730b9ab086d6348c1c61",
       "source_path": "manuscript/03c_results_text_analytics.md",
-      "source_sha256": "6f2f6a30792e797e6a82ef07afe1e1d0bebded17f98ca305e4c0ae4a7c6ff709"
+      "source_sha256": "13206e569784cb69e64b7cd098c3b64d36c85c319d74e20e1a133acf39deba20"
     },
     {
       "rendered_path": "output/manuscript/03d_results_citation_network.md",
@@ -94,7 +94,7 @@
       "rendered_path": "output/manuscript/05_conclusion.md",
       "rendered_sha256": "f1cd0c7609597bc482408dc1f63195c0f18f9758dd4aef3de700b815c798319c",
       "source_path": "manuscript/05_conclusion.md",
-      "source_sha256": "d5335c848b24e0fe9036931e0d456aa1aa4d03d36e3cb566fdaf97b47a1d55a7"
+      "source_sha256": "2e61cf504e1ae85a6b7f811ba39a4888985ff0ba2f2ccb1faeddd1c735f275d5"
     },
     {
       "rendered_path": "output/manuscript/06_appendix_tooling.md",
@@ -112,7 +112,7 @@
       "rendered_path": "output/manuscript/08_appendix_accessibility.md",
       "rendered_sha256": "b5efa72a4c6e6c9ca4a3c66d53d1e658225c4aa5613cd833af2f0a3bd03c9fa4",
       "source_path": "manuscript/08_appendix_accessibility.md",
-      "source_sha256": "ea290dd2da303a8077d06cae222e1159345f4fdcec68a9c6514249c82df5bcee"
+      "source_sha256": "57a8c98e0b69e4a82bba60d06b6a2c364484c214fe99a5275e9bfa68d788aecf"
     },
     {
       "rendered_path": "output/manuscript/98_symbols_glossary.md",
@@ -130,7 +130,7 @@
   "evidence_files": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "ca3633554202855f69642dcb76cedd9c722733c9a64f07ec8c4d05dc099478d3",
+      "sha256": "573f18e02346bd82e0264860c5fd9b94b0ff032006d39209dd1d0817c670de28",
       "size_bytes": 37842
     },
     "combined_manuscript": {
@@ -145,8 +145,8 @@
     },
     "validation_report": {
       "path": "output/reports/validation_report.json",
-      "sha256": "72fc020b96f1c848a83ae34e268983555a2356376099c85ea020e4f0222ee64b",
-      "size_bytes": 12951
+      "sha256": "dc82a512f3ceba929d6d2616266d893da806a5a9a71ce595710e2d36c6987f1f",
+      "size_bytes": 12950
     }
   },
   "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
@@ -157,11 +157,11 @@
     },
     "output": {
       "file_count": 125,
-      "sha256": "5271da1dfaf8eaf64e063f47409fefc2ee2cfc1a0185e950eee03428c44aee7d"
+      "sha256": "8d4190f41f41da5829f2e67fd06298180199d0dc1d2c14ea2eaf972a286fed81"
     },
     "source": {
       "file_count": 138,
-      "sha256": "57dd9d9d53a81b60cda1e40ebcabf20b6096cbfc67b67aed7b83d69c95a6dc63"
+      "sha256": "97a49bcdcad57f9dacbf65107a080916d9fe71dfa2626463c47c7bf293d6729e"
     },
     "stage": {
       "file_count": 1080,

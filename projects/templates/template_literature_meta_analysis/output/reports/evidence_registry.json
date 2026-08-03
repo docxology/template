@@ -1,17 +1,17 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 15603,
+  "fact_count": 15619,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 292,
+    "artifact": 293,
     "citation": 15,
     "equation": 1,
     "figure": 40,
-    "number": 15252,
+    "number": 15267,
     "string": 2,
     "table": 1
   },
-  "omitted_fact_count": 15403,
+  "omitted_fact_count": 15419,
   "sample_facts": [
     {
       "active": true,
@@ -1457,18 +1457,6 @@
       "active": true,
       "checked_at": "2026-08-03T00:39:17+00:00",
       "kind": "number",
-      "source": "output/reports/output_statistics.json:$.sizes_by_category.reports (numeric variant)",
-      "source_field": "$.sizes_by_category.reports",
-      "source_path": "output/reports/output_statistics.json",
-      "source_tier": "generated_metric",
-      "stale": false,
-      "tolerance": 0.0,
-      "value": "0.1"
-    },
-    {
-      "active": true,
-      "checked_at": "2026-08-03T00:39:17+00:00",
-      "kind": "number",
       "source": "output/reports/output_statistics.json:$.sizes_by_category.logs (numeric variant)",
       "source_field": "$.sizes_by_category.logs",
       "source_path": "output/reports/output_statistics.json",
@@ -2412,15 +2400,27 @@
       "stale": false,
       "tolerance": 0.0,
       "value": "3"
+    },
+    {
+      "active": true,
+      "checked_at": "2026-08-03T01:02:01+00:00",
+      "kind": "number",
+      "source": "output/data/embedding_analysis.json:$.cluster_assignments.doi:10.1016/j.bpsc.2024.11.010",
+      "source_field": "$.cluster_assignments.doi:10.1016/j.bpsc.2024.11.010",
+      "source_path": "output/data/embedding_analysis.json",
+      "source_tier": "generated_metric",
+      "stale": false,
+      "tolerance": 0.0,
+      "value": "3"
     }
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 334,
+    "artifact": 335,
     "bibliography": 15,
     "configuration": 100,
     "fixture": 1,
-    "generated_metric": 15141,
+    "generated_metric": 15156,
     "project_config": 3,
     "project_source": 9
   }
