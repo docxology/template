@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_methods_overview.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -216,7 +215,7 @@ scripts.</p>
 <li><p><strong>Retrieval</strong> (<code>01_literature_search.py</code>)
 — dispatch the configured query across 10 engines (arXiv, OpenAlex,
 Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into
+bioRxiv, and medRxiv), merge, and de-duplicate into
 <code>corpus.jsonl</code>. Each engine is an isolated adapter exposing a
 uniform <code>search(query) -&gt; list[Paper]</code> interface; engines
 that are keyless need no credentials, while Semantic Scholar uses a key

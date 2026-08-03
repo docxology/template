@@ -14,6 +14,31 @@ uv run python scripts/docgen/exemplar_roster.py --check
 
 Live test counts and coverage snapshots belong in `../../../docs/_generated/COUNTS.md`.
 
+### 2026-08-02 publication-pass evidence
+
+- Pre-render validation passed: no render-blocking pitfalls or undefined citations.
+- Project tests passed: 1,162 passed, 0 failed, 0 skipped; coverage 94.10% (required 90%).
+- Stage 02 analysis completed successfully and regenerated the offline fixture outputs.
+- Stage 03 rendered the combined PDF, web manuscript, slides, and figure outputs. The
+  compiled TeX contained all 18 figure labels, with 0 literal `{{#fig:...}}` leaks and
+  0 LaTeX `!` errors; the committed PDF contained 0 unresolved `??` references and
+  was 40 pages. The three captions not exposed by `pdftotext` were present in the
+  compiled `.aux` figure-label records (figures 3, 6, and 8).
+- Stage 04 validation passed after refreshing the integrity manifest; all checks passed,
+  including PDF, Markdown, figure registry (21 registered / 18 referenced), evidence,
+  design overlays, artifact manifest, and rendered provenance inputs.
+- Stage 05 copied 265 outputs, including the 7.01 MB combined PDF, to the root output
+  tree. Template drift check passed with no drift detected.
+
+### Fixed in this publication pass
+
+- Replaced invalid double-braced pandoc-crossref figure labels with single-braced labels.
+- Reconciled the ten configured retrieval engines in the claim ledger and documentation.
+- Corrected stale citation, figure-count, hypothesis-token, and subfield-token claims.
+- Updated script/figure inventories and added the missing `.agents` README signposts.
+- Removed the unsupported SHA-256 figure-registry claim and documented the actual registry
+  fields; removed the unused validation block from `config.yaml.example`.
+
 ## Integrity and template-status gaps
 
 - Keep the fixture corpus clearly marked as synthetic in README, manuscript, and generated-output prose.

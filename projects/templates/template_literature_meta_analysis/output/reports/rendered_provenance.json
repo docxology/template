@@ -1,0 +1,173 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/manuscript/00_abstract.md",
+      "rendered_sha256": "f1c3931ac911b21b4b098f6437e1f0bd177ae2fea2f371b6b16764ddbc97606d",
+      "source_path": "manuscript/00_abstract.md",
+      "source_sha256": "b435f2ed267c3d11abb7b61b3d99792a75f66fc1b4040608ebb82835a348d313"
+    },
+    {
+      "rendered_path": "output/manuscript/01_introduction.md",
+      "rendered_sha256": "44a7e74e8e7c7339b346fc0cdb6e6af186043ccf119443acfb8e5d7133e761fb",
+      "source_path": "manuscript/01_introduction.md",
+      "source_sha256": "6d85d403376746f8f662a9c0a19446ab03fdf4e61c9392d5bc415b8b94004d8a"
+    },
+    {
+      "rendered_path": "output/manuscript/02_methods_overview.md",
+      "rendered_sha256": "5882fdd9990aab64daf4962f108b6f7aca320a4f600177b517c71c0b347617f1",
+      "source_path": "manuscript/02_methods_overview.md",
+      "source_sha256": "86db3a05be450d24bde6b2e6414488def0fdf4568d267371b66a8219382ea72c"
+    },
+    {
+      "rendered_path": "output/manuscript/02a_methods_retrieval.md",
+      "rendered_sha256": "4761b2151bc1827e7226e42c30782579f90a0b76e098d27f2882cc2547dc1532",
+      "source_path": "manuscript/02a_methods_retrieval.md",
+      "source_sha256": "5705130cdeec2374b4666ec3a46a9a2de083d818464b95f7d7a9204706dbd378"
+    },
+    {
+      "rendered_path": "output/manuscript/02b_methods_extraction.md",
+      "rendered_sha256": "6f4d035c58544499dd60c4dd1e5c9e4c1626453cad4d8570641924ae40d36c18",
+      "source_path": "manuscript/02b_methods_extraction.md",
+      "source_sha256": "a97f6b475de3dd9a41cee498aa207a77ddbbd5c714efd619cf4fb33e5e914da1"
+    },
+    {
+      "rendered_path": "output/manuscript/02c_methods_bibliometrics.md",
+      "rendered_sha256": "e6702f2c01aff025f16537abadcf7a03c84f1ae7fc5a0251ad9f247633c4e11d",
+      "source_path": "manuscript/02c_methods_bibliometrics.md",
+      "source_sha256": "c6fb01ab4be0b67e751326b0e97bf2464ce39dcc69825d4855e3d8f4717913b1"
+    },
+    {
+      "rendered_path": "output/manuscript/02d_methods_knowledge_graph.md",
+      "rendered_sha256": "2864beadf4acce175af617cc60c81c5ff1b0c31297db086349b2e7cf386ec61f",
+      "source_path": "manuscript/02d_methods_knowledge_graph.md",
+      "source_sha256": "d802d8536446f1ad68ebec60438e03b7e37d3555672f886e84ee3cc47223f9d2"
+    },
+    {
+      "rendered_path": "output/manuscript/02e_methods_viz_injection.md",
+      "rendered_sha256": "74596021255053c00350aeddd58907f431835401309f7b6b946031b05d12c1e5",
+      "source_path": "manuscript/02e_methods_viz_injection.md",
+      "source_sha256": "c5600322873fcfccd812dd78990f863459ce33b34bc16ce3fb75769274c14165"
+    },
+    {
+      "rendered_path": "output/manuscript/03_results_hypothesis.md",
+      "rendered_sha256": "0584c868cda8c2a156836df0c5e79d349082a2d2fda61643bc92baf8483da404",
+      "source_path": "manuscript/03_results_hypothesis.md",
+      "source_sha256": "a92353c734be05fef99f1d9ad4d3496e26dbbaae6a63ac14fe0b9a265ee57219"
+    },
+    {
+      "rendered_path": "output/manuscript/03a_results_field_overview.md",
+      "rendered_sha256": "97bca262aa324833a9257c2824fdffa7264db5c2b836c1c519f55facbf7d5996",
+      "source_path": "manuscript/03a_results_field_overview.md",
+      "source_sha256": "c306a991ebc67aad5b2a7dd30fb808073a93c4ea94c35a4a7ea1d8b7c60ccb58"
+    },
+    {
+      "rendered_path": "output/manuscript/03b_results_subfields.md",
+      "rendered_sha256": "43fc87710da373ccc99d7741507d248b3f2aa2d7751c7cc6cf21501d04071d43",
+      "source_path": "manuscript/03b_results_subfields.md",
+      "source_sha256": "9120561e51887c4a451e6e500f075bf28142ff7ec6e135a68cb19fc456f5882b"
+    },
+    {
+      "rendered_path": "output/manuscript/03c_results_text_analytics.md",
+      "rendered_sha256": "13067ec4838f29db87be51aa46e13c92104cab1258f8730b9ab086d6348c1c61",
+      "source_path": "manuscript/03c_results_text_analytics.md",
+      "source_sha256": "6f2f6a30792e797e6a82ef07afe1e1d0bebded17f98ca305e4c0ae4a7c6ff709"
+    },
+    {
+      "rendered_path": "output/manuscript/03d_results_citation_network.md",
+      "rendered_sha256": "c1d250bf2302369b86fec41f40d415b7bf757e8b835edc7dc5e7817896fdf7ba",
+      "source_path": "manuscript/03d_results_citation_network.md",
+      "source_sha256": "2b5c99545e1652be8041a308e85daecbb1de01d68097f075064446becb361f3c"
+    },
+    {
+      "rendered_path": "output/manuscript/03e_results_reproducibility.md",
+      "rendered_sha256": "2d19ee2c5c28004d22bc9515733d90c0bf5b1840eaaf9606f585a62c465a2ec8",
+      "source_path": "manuscript/03e_results_reproducibility.md",
+      "source_sha256": "e8ba5745ff0678cb4fa2ac96c00661af2d80afb7a7bdb37f7cd5a4a4ddb00b10"
+    },
+    {
+      "rendered_path": "output/manuscript/04_discussion.md",
+      "rendered_sha256": "1921b2ea133b8396b6f7ba5fa793cd5642a503e70bc156d6dc00509f70f026b7",
+      "source_path": "manuscript/04_discussion.md",
+      "source_sha256": "411e9d1845d2bf1218220c085b411580c255c1ec51c0a327e9e3ea3f24b056b1"
+    },
+    {
+      "rendered_path": "output/manuscript/05_conclusion.md",
+      "rendered_sha256": "f1cd0c7609597bc482408dc1f63195c0f18f9758dd4aef3de700b815c798319c",
+      "source_path": "manuscript/05_conclusion.md",
+      "source_sha256": "d5335c848b24e0fe9036931e0d456aa1aa4d03d36e3cb566fdaf97b47a1d55a7"
+    },
+    {
+      "rendered_path": "output/manuscript/06_appendix_tooling.md",
+      "rendered_sha256": "974e81fd0f00692eab5c0978c18493c7c35e3659e94d56a0e286f2ab95bc4c10",
+      "source_path": "manuscript/06_appendix_tooling.md",
+      "source_sha256": "974e81fd0f00692eab5c0978c18493c7c35e3659e94d56a0e286f2ab95bc4c10"
+    },
+    {
+      "rendered_path": "output/manuscript/07_appendix_technical.md",
+      "rendered_sha256": "ed8e3de10592f660f34ac98a761b575bf14706ba91b279e7e856e62d751b0de4",
+      "source_path": "manuscript/07_appendix_technical.md",
+      "source_sha256": "3695a578e3cd5d64b06f9011ec4535bac11cb29c7f4ae49b06ab15db0dd79274"
+    },
+    {
+      "rendered_path": "output/manuscript/08_appendix_accessibility.md",
+      "rendered_sha256": "b5efa72a4c6e6c9ca4a3c66d53d1e658225c4aa5613cd833af2f0a3bd03c9fa4",
+      "source_path": "manuscript/08_appendix_accessibility.md",
+      "source_sha256": "ea290dd2da303a8077d06cae222e1159345f4fdcec68a9c6514249c82df5bcee"
+    },
+    {
+      "rendered_path": "output/manuscript/98_symbols_glossary.md",
+      "rendered_sha256": "630115bfb727d486f3d3319e740fd5bfb50c99415474ee96a4ff425226f470ae",
+      "source_path": "manuscript/98_symbols_glossary.md",
+      "source_sha256": "6136a36872d183b20fea9ba53c6778ab8a849c56dd0bd5e366e0cf6c851946fb"
+    },
+    {
+      "rendered_path": "output/manuscript/99_references.md",
+      "rendered_sha256": "879c12f7b980811e2ed42f8e32f8b24cdd3ae6772d20b23a2d74b7046b10451b",
+      "source_path": "manuscript/99_references.md",
+      "source_sha256": "879c12f7b980811e2ed42f8e32f8b24cdd3ae6772d20b23a2d74b7046b10451b"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "ca3633554202855f69642dcb76cedd9c722733c9a64f07ec8c4d05dc099478d3",
+      "size_bytes": 37842
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "807f2d6d2c01ec03a4813089d5c810c2a2ef5360d6f7b0cc05a7c72d4e7c18eb",
+      "size_bytes": 70878
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "51afff3e5941921164a86e846a10d5edfe9de347d9f957bf2d11483a5e104108",
+      "size_bytes": 4832
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "72fc020b96f1c848a83ae34e268983555a2356376099c85ea020e4f0222ee64b",
+      "size_bytes": 12951
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 22,
+      "sha256": "6117db7bb844fd6d61f7907bd69a89b4eaa00a215038ff288b13ea4e59b5d82c"
+    },
+    "output": {
+      "file_count": 125,
+      "sha256": "5271da1dfaf8eaf64e063f47409fefc2ee2cfc1a0185e950eee03428c44aee7d"
+    },
+    "source": {
+      "file_count": 138,
+      "sha256": "57dd9d9d53a81b60cda1e40ebcabf20b6096cbfc67b67aed7b83d69c95a6dc63"
+    },
+    "stage": {
+      "file_count": 1080,
+      "sha256": "4656d7f60294af04af76b57c4f88d2b37f9077db94ea19897b1628bbaee4748f"
+    }
+  },
+  "project": "templates/template_literature_meta_analysis",
+  "schema_version": "template-rendered-provenance-v2"
+}
