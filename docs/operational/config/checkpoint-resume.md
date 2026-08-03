@@ -46,8 +46,8 @@ Checkpoints are automatically saved after each successful stage:
 ### Python Script (`execute_pipeline.py`)
 
 ```bash
-# Resume from checkpoint
-uv run python scripts/runner/execute_pipeline.py --resume
+# Resume from checkpoint (--project is required)
+uv run python scripts/runner/execute_pipeline.py --project {name} --resume
 
 # Start fresh (clears checkpoint on success)
 uv run python scripts/runner/execute_pipeline.py --project {name} --core-only

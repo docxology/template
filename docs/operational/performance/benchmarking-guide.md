@@ -141,7 +141,7 @@ Metrics appear in:
 | Memory growth | <100MB increase per 1k data points | psutil or memray |
 | Test suite total | <5min (infra), <10min (project) | `pytest --durations=10` |
 
-**Slow Stage Detection:** Pipeline automatically warns if a stage exceeds `slow_stage_multiplier` × median duration (configurable in `pipeline.yaml` telemetry section).
+**Slow Stage Detection:** Pipeline automatically warns if a stage exceeds `slow_stage_multiplier` × the pipeline average duration (configurable in `pipeline.yaml` telemetry section).
 
 ---
 

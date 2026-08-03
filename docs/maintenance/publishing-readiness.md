@@ -1,7 +1,7 @@
 # Publishing readiness — what we can upload today vs. what needs a token
 
-> Status snapshot: 2026-06-27. Covers the full 12-platform publishing surface in
-> `infrastructure/publishing/` and a concrete per-platform assessment of the
+> Status snapshot: 2026-06-27. Covers the full 13-adapter publishing surface (12
+> distinct platforms) in `infrastructure/publishing/` and a concrete per-platform assessment of the
 > `template_gold_refinement` exemplar. Re-verify external state before citing as live.
 
 ## TL;DR
@@ -57,7 +57,7 @@ only**, which is safe and repeatable.
 
 ## Validation performed (no account needed)
 
-- **All 12 adapters** dry-run clean (correct endpoints/URLs, no network side
+- **All 13 adapters** dry-run clean (correct endpoints/URLs, no network side
   effects).
 - **PyPI pipeline** proven end-to-end except the push: `python -m build`
   produces sdist + wheel and `twine check` **PASSES**.
@@ -103,9 +103,10 @@ now builds and `twine check` **PASSES clean** (no warnings).
 | **arXiv (post)** | ⛔ Endorsement required | See Tier C |
 | **Web3.Storage** | ⛔ Adapter needs Storacha update | See Tier C |
 
-**Net:** gold_refinement can target **11 of 13** platforms. 2 are live/ready with
-no token (Zenodo done, Software Heritage one-click), the remaining 8 each need a
-single free token, and only arXiv-posting and Web3.Storage are genuinely blocked.
+**Net:** gold_refinement can target **11 of 13** adapters. 2 are publishable today
+with no token (Software Heritage one-click, arXiv *prepare*), 9 each need a single
+free token (Zenodo and GitHub Releases are already exercised in production), and
+only arXiv *posting* and Web3.Storage are genuinely blocked.
 
 ## Exact commands once a token is in `.env`
 

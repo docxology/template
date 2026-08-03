@@ -94,11 +94,11 @@ artifacts. Each stage writes to `projects/<name>/output/`:
 
 | Stage | Output location | Format |
 |---|---|---|
-| Stage 5: PDF Rendering | `output/pdf/` | `<name>_combined.pdf` |
-| Stage 10: EPUB/MOBI | `output/ebook/` | `<name>.epub`, `<name>.mobi` |
-| Stage 11: Metadata package | `output/metadata/` | `onix.xml`, `metadata.json`, `content.opf` |
+| PDF rendering (`stage_03_render.py`) | `output/pdf/` | `<name>_combined.pdf` |
+| EPUB/MOBI (`stage_11_ebook.py`, opt-in) | `output/ebook/` | `<name>.epub`, `<name>.mobi` |
+| Metadata package (`stage_12_metadata.py`, opt-in) | `output/metadata/` | `onix.xml`, `metadata.json`, `content.opf` |
 
-Stage 10 and Stage 11 are opt-in stages (tagged `ebook` and `metadata`
+EPUB and metadata are opt-in stages (tagged `ebook` and `metadata`
 respectively; both are filtered out of default pipeline runs — see
 `infrastructure/core/pipeline/pipeline.yaml`). Invoke them explicitly:
 
@@ -107,8 +107,8 @@ uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
 uv run python scripts/pipeline/stage_12_metadata.py --project templates/<name>
 ```
 
-(Stage 12 Executable Bundle and Stage 13 Archival Publication — tagged
-`bundle` and `archival` — are the separate `scripts/runner/bundle_executable.py` /
+(The executable bundle and archival publication — tagged `bundle` and
+`archival` — are the separate opt-in `scripts/runner/bundle_executable.py` /
 `scripts/runner/archive_publication.py` scripts; see
 [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) and
 [`archival-targets.md`](archival-targets.md).)

@@ -72,7 +72,7 @@
 | 0:25 | **`./run.sh`** — show menu, then or instead `--pipeline` |
 | 0:40 | **`./secure_run.sh --project <name>`** — narrate pipeline phase vs stego phase (`--project` required unless steg-only) |
 | 0:52 | Quality gates + docs map |
-| 0:62 | Paper pointer + Q&A |
+| 1:02 | Paper pointer + Q&A |
 
 Adjust spacing if you run **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** for a shorter middle act.
 

@@ -902,6 +902,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 13 | `security` | `lint` | always | Frozen dependency audit plus Bandit over the generated public source scope |
 | 14 | `docs-lint` | `lint` | always | Mermaid render + relative-link resolution + doc-pair + consistency |
 | 15 | `performance` | `test-infra`, `test-project` | always | Benchmarks + coverage-history dashboard (informational) |
+| 16 | `public-matrix-receipt` | — | schedule · manual dispatch | Uploads the public-matrix coverage receipt artifact (fail-closed output-drift) |
 
 **Required status checks** for branch protection on `main` are documented in [`AGENTS.md`](AGENTS.md) (the conditional jobs `setup-hook-windows-smoke` / `fep-lean` must NOT be required — they are skipped, not failed, when their project is absent). Reproduce every gate locally with the commands in [`AGENTS.md`](AGENTS.md) → "Local CI parity" and the root [`CLAUDE.md`](../CLAUDE.md) Quick Reference.
 

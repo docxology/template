@@ -30,7 +30,7 @@ Performance Metrics:
 Each stage reports:
 - Execution time
 - Percentage of total time
-- Bottleneck warnings (if >10s and >20% of total)
+- Bottleneck warnings (flagged when a stage exceeds 10s; the percentage is reported for context)
 
 ## Identifying Bottlenecks
 
