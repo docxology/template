@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="From Ore to Nine-Nines Purity via Mega-Madlib Token Injection" />
   <title>Refinement of Gold: A Metallurgical Analogy for Scientific
 Manuscript Composition</title>
   <style>
@@ -43,7 +44,6 @@ Manuscript Composition</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -265,6 +265,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -289,11 +303,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -324,11 +333,38 @@ body {
   overflow-x: visible;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 @media (max-width: 600px) {
   body {
     width: 100%;
     max-width: 100%;
     padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
@@ -368,6 +404,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -375,7 +416,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -392,7 +433,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -401,7 +444,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -411,8 +459,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -452,7 +510,7 @@ mjx-container[display="true"] {
 </style>
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Refinement of Gold: A Metallurgical Analogy for
 Scientific Manuscript Composition</h1>
@@ -679,6 +737,7 @@ class="toc-section-number">10.2</span> Fork checklist</a></li>
 </ul></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="sec:abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This paper presents a deterministic, artifact-based methods
@@ -721,7 +780,7 @@ href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
 2013</a>)</span>. The project-local claim assay reports 9/9 supported
 contribution claims (100.00%, passing), while the integrity model
 exposes 9 source-owned risk dimensions and the shared template evidence
-registry contributes 283 source-tiered facts when the validation gate
+registry contributes 1113 source-tiered facts when the validation gate
 has run.</p>
 <p><strong>Results:</strong> The canonical run reaches 99.9999999%
 (nine-nines) (24K (nine-nines certified)), with a designed total gain of
@@ -812,18 +871,10 @@ class="header-section-number">2.2</span> The analogy as pipeline</h2>
 <li><ol type="1">
 <li>ore (9K)</li>
 </ol></li>
-<li><ol start="2" type="1">
-<li>smelting (18K)</li>
-</ol></li>
-<li><ol start="3" type="1">
-<li>assaying (22K)</li>
-</ol></li>
-<li><ol start="4" type="1">
-<li>cupellation (24K)</li>
-</ol></li>
-<li><ol start="5" type="1">
-<li>certification (24K (nine-nines certified))</li>
-</ol></li>
+<li>2. smelting (18K)</li>
+<li>3. assaying (22K)</li>
+<li>4. cupellation (24K)</li>
+<li>5. certification (24K (nine-nines certified))</li>
 </ul>
 <p>Each stage has a metallurgical operation, a manuscript operation, an
 input purity, and an output purity. Purity increases monotonically,
@@ -1394,7 +1445,8 @@ claim boundaries</td>
 <tr>
 <td>Manuscript hydration</td>
 <td>manuscript shells and manuscript_variables.json</td>
-<td>Resolve {{TOKEN}} placeholders into output/manuscript/</td>
+<td>Resolve <code>{{TOKEN}}</code> placeholders into
+output/manuscript/</td>
 <td>hydrated Markdown manuscript</td>
 <td>unresolved-token scan</td>
 </tr>
@@ -2326,7 +2378,7 @@ claim-ledger facts, bibliography records, source code, or disposable
 artifacts.</p>
 <p>The ladder complements the risk matrix by counting source tiers
 rather than plotting risks. When the shared evidence registry is
-available, the manuscript can report 283 source-tiered facts to the
+available, the manuscript can report 1113 source-tiered facts to the
 validation surface. When that registry is not available, the same figure
 falls back to the integrity model’s configured tiers. Either way, the
 reader sees the evidentiary mix instead of receiving an undifferentiated
@@ -2360,19 +2412,24 @@ registry when available.</caption>
 </thead>
 <tbody>
 <tr>
-<td>artifact</td>
-<td>125</td>
-<td>Generated artifacts exposed to readers</td>
+<td>generated_metric</td>
+<td>881</td>
+<td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
-<td>generated_metric</td>
-<td>94</td>
-<td>Numbers regenerated from project analysis</td>
+<td>artifact</td>
+<td>121</td>
+<td>Generated artifacts exposed to readers</td>
 </tr>
 <tr>
 <td>bibliography</td>
 <td>47</td>
 <td>Reference records and citation metadata</td>
+</tr>
+<tr>
+<td>configuration</td>
+<td>47</td>
+<td>Evidence source tier</td>
 </tr>
 <tr>
 <td>claim_ledger</td>
@@ -2554,7 +2611,7 @@ class="header-section-number">4.16</span> Shared evidence registry
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 283.</p>
+available to this variable pass: 1113.</p>
 <table id="tbl:shared_evidence_kinds">
 <caption>Table 6: Shared evidence-registry fact kinds when
 available.</caption>
@@ -2567,7 +2624,7 @@ available.</caption>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>80</td>
+<td>77</td>
 </tr>
 <tr>
 <td>citation</td>
@@ -2579,11 +2636,11 @@ available.</caption>
 </tr>
 <tr>
 <td>figure</td>
-<td>29</td>
+<td>28</td>
 </tr>
 <tr>
 <td>number</td>
-<td>102</td>
+<td>936</td>
 </tr>
 <tr>
 <td>section</td>
@@ -2634,18 +2691,18 @@ figure specs.</caption>
 <td>claim_evidence_assay</td>
 <td>yes</td>
 <td>yes</td>
-<td>3952x2038</td>
-<td>0.217</td>
-<td>0.06027576</td>
+<td>3947x2038</td>
+<td>0.218</td>
+<td>0.06041014</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3349x1332</td>
-<td>0.223</td>
-<td>0.05598645</td>
+<td>3420x1447</td>
+<td>0.110</td>
+<td>0.04011442</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2654,43 +2711,43 @@ figure specs.</caption>
 <td>yes</td>
 <td>3315x1797</td>
 <td>0.140</td>
-<td>0.04434550</td>
+<td>0.04409869</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>implementation_circuit</td>
 <td>yes</td>
 <td>yes</td>
-<td>2966x1843</td>
+<td>2966x1842</td>
 <td>0.068</td>
-<td>0.02205485</td>
+<td>0.02214905</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_gate_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>1818x2060</td>
-<td>0.409</td>
-<td>0.16204936</td>
+<td>1833x2060</td>
+<td>0.406</td>
+<td>0.16147143</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>integrity_risk_matrix</td>
 <td>yes</td>
 <td>yes</td>
-<td>2499x1910</td>
-<td>0.380</td>
-<td>0.01852528</td>
+<td>2499x1909</td>
+<td>0.379</td>
+<td>0.01892053</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>karat_grading</td>
 <td>yes</td>
 <td>yes</td>
-<td>2961x1698</td>
+<td>2956x1699</td>
 <td>0.279</td>
-<td>0.07300982</td>
+<td>0.07296687</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2699,43 +2756,43 @@ figure specs.</caption>
 <td>yes</td>
 <td>2850x1461</td>
 <td>0.070</td>
-<td>0.02178809</td>
+<td>0.02170098</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_claim_scatter</td>
 <td>yes</td>
 <td>yes</td>
-<td>2336x1744</td>
+<td>2343x1745</td>
 <td>0.034</td>
-<td>0.01607749</td>
+<td>0.01594966</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>purity_progression</td>
 <td>yes</td>
 <td>yes</td>
-<td>3024x2125</td>
+<td>3029x2125</td>
 <td>0.182</td>
-<td>0.03967814</td>
+<td>0.03971092</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_density</td>
 <td>yes</td>
 <td>yes</td>
-<td>3289x1856</td>
+<td>3288x1858</td>
 <td>0.234</td>
-<td>0.06699486</td>
+<td>0.06696808</td>
 <td>pass</td>
 </tr>
 <tr>
 <td>token_heatmap</td>
 <td>yes</td>
 <td>yes</td>
-<td>2397x2399</td>
-<td>0.627</td>
-<td>0.12908659</td>
+<td>2406x2412</td>
+<td>0.621</td>
+<td>0.12867696</td>
 <td>pass</td>
 </tr>
 </tbody>
@@ -3089,7 +3146,7 @@ class="header-section-number">6.1</span> Summary</h2>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
 <li>24 tokens generated deterministically from seed 431</li>
-<li>Config hash: 8d3efef5bcbe8b23</li>
+<li>Config hash: 4cb6b4b7930a03c2</li>
 <li>7 source-owned formalisms with equation labels:
 eq:purity_functional, eq:monotone_refinery, eq:token_digest,
 eq:claim_support, eq:integrity_vector, eq:certification_predicate,
@@ -3169,8 +3226,8 @@ format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> 8d3efef5bcbe8b23</li>
-<li><strong>Generation timestamp:</strong> 2026-07-11T04:09:00Z</li>
+<li><strong>Config hash:</strong> 4cb6b4b7930a03c2</li>
+<li><strong>Generation timestamp:</strong> 2026-08-03T00:26:48Z</li>
 <li><strong>Python version:</strong> 3.12.13</li>
 </ul>
 <h2 data-number="7.2" id="artifact-inventory"><span
@@ -3193,11 +3250,11 @@ class="header-section-number">7.2</span> Artifact inventory</h2>
 </tr>
 <tr>
 <td>Reports</td>
-<td>12</td>
+<td>14</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td>41</td>
+<td>43</td>
 </tr>
 </tbody>
 </table>
@@ -3213,7 +3270,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
 <p>A reproduction report should record command exit status, the source
-revision, <code>8d3efef5bcbe8b23</code>, Python 3.12.13, and whether the
+revision, <code>4cb6b4b7930a03c2</code>, Python 3.12.13, and whether the
 generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted
@@ -3231,7 +3288,7 @@ visible before execution instead of burying it in shell glue or
 prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>8d3efef5bcbe8b23</code>; analysis writes
+generation records <code>4cb6b4b7930a03c2</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>
@@ -3619,7 +3676,8 @@ class="header-section-number">9.2</span> Audit rules</h2>
 </tr>
 <tr>
 <td>Token coverage</td>
-<td>Every manuscript {{TOKEN}} must have a generated variable</td>
+<td>Every manuscript <code>{{TOKEN}}</code> must have a generated
+variable</td>
 <td>tests/test_manuscript_variables.py</td>
 </tr>
 <tr>
@@ -3797,14 +3855,16 @@ exemplar.</td>
 before publication claims are expanded.</td>
 </tr>
 <tr>
-<td>Tool disclosure</td>
-<td>Disclose AI, template, and automation assistance when it materially
-affects writing, analysis, or review.</td>
+<td>AI and template disclosure</td>
+<td>Disclose material AI, template, and automation assistance, and keep
+responsibility for accuracy and claim boundaries with named human
+authors.</td>
 </tr>
 <tr>
-<td>Software citation</td>
-<td>Cite the exact software, template release, and executable package
-used to generate the manuscript.</td>
+<td>Software and package citation</td>
+<td>Cite the exact software/template release and preserve enough
+metadata for readers to identify and rebuild the executable manuscript
+object.</td>
 </tr>
 <tr>
 <td>Security evidence boundary</td>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02_methodology.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -187,7 +200,8 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:methodology">Methodology: The Refinery Pipeline</h1>
 <h2 id="research-design">Research design</h2>
 <p>We conducted a deterministic, artifact-based methods demonstration.
@@ -351,14 +365,18 @@ p_{\text{in}}^{(i+1)} = p_{\text{out}}^{(i)} \quad \forall i \in \{1,
 the shortest ordered prefix whose terminal output reaches a requested
 purity. Prefix restriction is essential: later stages depend on earlier
 states and cannot be selected as an unordered set. The full progression
-is reported in [fig:purity_progression] (see [sec:results]). Because the
-values are constructed, the analysis is descriptive and deterministic;
-no uncertainty interval or significance test is appropriate.</p>
+is reported in <span class="citation"
+data-cites="fig:purity_progression">[@fig:purity_progression]</span>
+(see <span class="citation"
+data-cites="sec:results">[@sec:results]</span>). Because the values are
+constructed, the analysis is descriptive and deterministic; no
+uncertainty interval or significance test is appropriate.</p>
 <h2 id="formalism-registry">Formalism registry</h2>
 <p>The formal layer is generated from <code>src/formalisms.py</code>,
-not hand-numbered prose. [tbl:formalism_registry] lists the source
-evidence for each equation, and the equation blocks below are
-auto-numbered by the renderer.</p>
+not hand-numbered prose. <span class="citation"
+data-cites="tbl:formalism_registry">[@tbl:formalism_registry]</span>
+lists the source evidence for each equation, and the equation blocks
+below are auto-numbered by the renderer.</p>
 <table id="tbl:formalism_registry">
 <caption>Source-owned formalism registry.</caption>
 <colgroup>
@@ -379,43 +397,50 @@ auto-numbered by the renderer.</p>
 <tr>
 <td>F1</td>
 <td>Purity functional</td>
-<td>[eq:purity_functional]</td>
+<td><span class="citation"
+data-cites="eq:purity_functional">[@eq:purity_functional]</span></td>
 <td><code>src/purity.py::format_purity</code></td>
 </tr>
 <tr>
 <td>F2</td>
 <td>Monotone refinement</td>
-<td>[eq:monotone_refinery]</td>
+<td><span class="citation"
+data-cites="eq:monotone_refinery">[@eq:monotone_refinery]</span></td>
 <td><code>src/purity.py::assert_monotone_increase</code></td>
 </tr>
 <tr>
 <td>F3</td>
 <td>Token-selection digest</td>
-<td>[eq:token_digest]</td>
+<td><span class="citation"
+data-cites="eq:token_digest">[@eq:token_digest]</span></td>
 <td><code>src/composition.py::_choose_value</code></td>
 </tr>
 <tr>
 <td>F4</td>
 <td>Claim-support fraction</td>
-<td>[eq:claim_support]</td>
+<td><span class="citation"
+data-cites="eq:claim_support">[@eq:claim_support]</span></td>
 <td><code>src/evidence.py::EvidenceRegistry.support_rate</code></td>
 </tr>
 <tr>
 <td>F5</td>
 <td>Integrity vector</td>
-<td>[eq:integrity_vector]</td>
+<td><span class="citation"
+data-cites="eq:integrity_vector">[@eq:integrity_vector]</span></td>
 <td><code>manuscript/config.yaml#gold_refinement.audit_rules</code></td>
 </tr>
 <tr>
 <td>F6</td>
 <td>Certification predicate</td>
-<td>[eq:certification_predicate]</td>
+<td><span class="citation"
+data-cites="eq:certification_predicate">[@eq:certification_predicate]</span></td>
 <td><code>src/refinery.py::RefineryResult.is_nine_nines_certified</code></td>
 </tr>
 <tr>
 <td>F7</td>
 <td>Adversarial assay</td>
-<td>[eq:adversarial_assay]</td>
+<td><span class="citation"
+data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span></td>
 <td><code>src/security_assay.py::build_security_assay</code></td>
 </tr>
 </tbody>
@@ -506,9 +531,10 @@ category, section, ordinal, and configuration path. This record permits
 exact replay and source tracing but does not imply that the selected
 synonym is semantically superior. Selected metallurgical terms are
 assaying, parting, and smelting; selected manuscript terms are evidence
-and evidence. [eq:token_digest] formalizes the rule, while evidence
-validation, figure registry check, and citation validation name the
-corresponding validation surfaces.</p>
+and evidence. <span class="citation"
+data-cites="eq:token_digest">[@eq:token_digest]</span> formalizes the
+rule, while evidence validation, figure registry check, and citation
+validation name the corresponding validation surfaces.</p>
 <h2 id="config-owned-lexicon">Config-owned lexicon</h2>
 <table>
 <colgroup>
@@ -585,7 +611,9 @@ configured grade whose threshold does not exceed the stage purity. The
 nine-nines label is a deliberately stringent local predicate. It is
 neither a continuous measure of manuscript quality nor an assertion
 about a universal gold-market threshold. The grading chart appears in
-[fig:karat_grading] (see [sec:results]).</p>
+<span class="citation"
+data-cites="fig:karat_grading">[@fig:karat_grading]</span> (see <span
+class="citation" data-cites="sec:results">[@sec:results]</span>).</p>
 <h2 id="execution-procedure">Execution procedure</h2>
 <table>
 <colgroup>
@@ -653,7 +681,8 @@ claim boundaries</td>
 <tr>
 <td>Manuscript hydration</td>
 <td>manuscript shells and manuscript_variables.json</td>
-<td>Resolve {{TOKEN}} placeholders into output/manuscript/</td>
+<td>Resolve <code>{{TOKEN}}</code> placeholders into
+output/manuscript/</td>
 <td>hydrated Markdown manuscript</td>
 <td>unresolved-token scan</td>
 </tr>
@@ -689,8 +718,9 @@ its source definition, generated variables, visualizations, and
 validators together.</p>
 <h2 id="traceability-and-artifact-lineage">Traceability and artifact
 lineage</h2>
-<p>The implementation circuit shown in [fig:implementation_circuit] is
-the method’s wiring diagram. It distinguishes three ownership layers.
+<p>The implementation circuit shown in <span class="citation"
+data-cites="fig:implementation_circuit">[@fig:implementation_circuit]</span>
+is the method’s wiring diagram. It distinguishes three ownership layers.
 First, authored sources own intent: config declares vocabulary and
 claims, <code>src/</code> owns computation, and the claim ledger
 registers evidence facts. Second, generated artifacts own observation:
@@ -712,19 +742,24 @@ criteria</h2>
 assessed against predeclared local invariants: complete token hydration,
 valid stage ordering and monotonicity, registered claim support,
 resolvable citations and cross-references, registry-aligned figures,
-successful rendering, and explicit security-claim boundaries.
-[eq:integrity_vector] retains these outcomes as a vector so one strong
-surface cannot compensate for a failed required gate. [eq:claim_support]
-reports the proportion of locally registered contribution claims with
-resolvable evidence pointers; it does not score the truth or importance
-of those claims.</p>
-<p>The terminal predicate in [eq:certification_predicate] requires the
-configured final purity threshold and successful required gates.
-Consequently, “certified” means internally consistent and reproducibly
-generated under this project’s declared rules. It does not mean peer
-reviewed, externally replicated, historically authoritative, secure, or
-compliant with a reporting standard. Detailed probes and audit rules are
-reported in [sec:evaluation].</p>
+successful rendering, and explicit security-claim boundaries. <span
+class="citation"
+data-cites="eq:integrity_vector">[@eq:integrity_vector]</span> retains
+these outcomes as a vector so one strong surface cannot compensate for a
+failed required gate. <span class="citation"
+data-cites="eq:claim_support">[@eq:claim_support]</span> reports the
+proportion of locally registered contribution claims with resolvable
+evidence pointers; it does not score the truth or importance of those
+claims.</p>
+<p>The terminal predicate in <span class="citation"
+data-cites="eq:certification_predicate">[@eq:certification_predicate]</span>
+requires the configured final purity threshold and successful required
+gates. Consequently, “certified” means internally consistent and
+reproducibly generated under this project’s declared rules. It does not
+mean peer reviewed, externally replicated, historically authoritative,
+secure, or compliant with a reporting standard. Detailed probes and
+audit rules are reported in <span class="citation"
+data-cites="sec:evaluation">[@sec:evaluation]</span>.</p>
 <h3 id="adversarial-assay">Adversarial assay</h3>
 <p>The implementation trace handles accidental drift: missing tokens,
 unsupported claims, malformed citations, stale figures, or broken
@@ -741,11 +776,13 @@ cisa_secure_by_design].</p>
 <code>gold_refinement.security_assay</code> and generated records from
 <code>src/security_assay.py</code>. Each row must name a threat,
 standard or guidance source, local evidence surface, validator, and
-claim boundary, as specified by [eq:adversarial_assay] and reported in
-[tbl:security_assay]. This study did not run Codex Security or Deep
-Security Scan and reports no vulnerability findings. Completeness of the
-assay schema therefore supports scope disclosure, not security
-compliance.</p>
+claim boundary, as specified by <span class="citation"
+data-cites="eq:adversarial_assay">[@eq:adversarial_assay]</span> and
+reported in <span class="citation"
+data-cites="tbl:security_assay">[@tbl:security_assay]</span>. This study
+did not run Codex Security or Deep Security Scan and reports no
+vulnerability findings. Completeness of the assay schema therefore
+supports scope disclosure, not security compliance.</p>
 <h3 id="scientific-integrity-risk-model">Scientific-integrity risk
 model</h3>
 <p>The integrity model converts manuscript risks into source-owned
@@ -917,7 +954,8 @@ figure to an owning source and generated record. Negative controls in
 the test suite exercise malformed configuration and invalid refinery
 states; figure checks assess file presence, registry parity, dimensions,
 nonblank content, and color variance. Environment and regeneration
-details are given in [sec:reproducibility].</p>
+details are given in <span class="citation"
+data-cites="sec:reproducibility">[@sec:reproducibility]</span>.</p>
 <p>Four validity limits govern interpretation. First, <strong>construct
 validity</strong> is limited because purity is a designed workflow
 state, not a validated measure of writing quality. Second,

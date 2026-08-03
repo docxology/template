@@ -23,7 +23,7 @@ Evaluation uses three noninterchangeable levels. **Invariant tests** reject inva
 |------|-------|------|
 | Purity monotonicity | Purity must strictly increase from stage to stage | tests/test_refinery.py |
 | Token determinism | Same seed and lexicon must produce same token plan | tests/test_composition.py |
-| Token coverage | Every manuscript {{TOKEN}} must have a generated variable | tests/test_manuscript_variables.py |
+| Token coverage | Every manuscript `{{TOKEN}}` must have a generated variable | tests/test_manuscript_variables.py |
 | Config validation | Invalid config must raise GoldRefinementConfigError | tests/test_config.py |
 | Figure generation | All figure generators must produce non-blank PNGs | tests/test_figures.py |
 | Integrity model coverage | Integrity dimensions must have unique IDs, owners, validators, and evidence surfaces | tests/test_integrity.py |

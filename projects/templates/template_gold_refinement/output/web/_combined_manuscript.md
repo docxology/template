@@ -4,7 +4,7 @@ This paper presents a deterministic, artifact-based methods demonstration that m
 
 The analogy is load-bearing in a restricted, testable sense: each stage has an executable owner, ordered input and output states, generated evidence, and a failure condition. A reverse assay identifies the shortest ordered stage prefix that reaches a requested target, while a multi-objective purity vector keeps stage completion, claim support, token provenance, and figure quality distinct. The mega-madlib engine selects 24 configured terms by a seeded SHA-256 digest, recording each choice with its slot, category, ordinal, section, and source path.
 
-The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 283 source-tiered facts when the validation gate has run.
+The contribution is also formalized: 7 equation-backed formalisms define purity, monotone refinement, token selection, claim support, gate vectors, and certification. This positions the manuscript as a research-compendium artifact in the lineage of literate programming, dynamic reports, and reproducible computational research [@knuth1984literate; @leisch2002sweave; @peng2011reproducible; @sandve2013ten]. The project-local claim assay reports 9/9 supported contribution claims (100.00%, passing), while the integrity model exposes 9 source-owned risk dimensions and the shared template evidence registry contributes 1113 source-tiered facts when the validation gate has run.
 
 **Results:** The canonical run reaches 99.9999999% (nine-nines) (24K (nine-nines certified)), with a designed total gain of 90.00%; local nine-nines predicate: Yes. The project-local claim assay reports 9/9 registered claims supported. These are internal workflow results, not estimates of reader-perceived quality, scientific truth, security compliance, or external validity.
 
@@ -226,7 +226,7 @@ Karat grades map purity fractions to a gold-fineness vocabulary used here as an 
 | Figure generation | RefineryResult and TokenPlan | Generate purity progression, karat grading, and token density figures | ../figures/*.png | nonblank figure tests |
 | Integrity risk modeling | audit rules, failure modes, claims, and shared evidence registry | Score integrity dimensions and summarize evidence tiers | integrity tables and risk visualizations | tests/test_integrity.py |
 | Security assay | gold_refinement.security_assay | Map adversarial threats and standards to source-owned evidence and claim boundaries | security assay table and variables | tests/test_security_assay.py |
-| Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve {{TOKEN}} placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
+| Manuscript hydration | manuscript shells and manuscript_variables.json | Resolve `{{TOKEN}}` placeholders into output/manuscript/ | hydrated Markdown manuscript | unresolved-token scan |
 | Render and validate | output/manuscript | Render PDF, HTML through shared template pipeline | output/pdf and output/web | render command |
 
 For each run, the procedure is:
@@ -571,7 +571,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 283 source-tiered facts to the validation
+can report 1113 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -590,9 +590,10 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| artifact | 125 | Generated artifacts exposed to readers |
-| generated_metric | 94 | Numbers regenerated from project analysis |
+| generated_metric | 881 | Numbers regenerated from project analysis |
+| artifact | 121 | Generated artifacts exposed to readers |
 | bibliography | 47 | Reference records and citation metadata |
+| configuration | 47 | Evidence source tier |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
 : Evidence tiers used by the integrity model and shared registry when available. {#tbl:evidence_tiers}
 
@@ -627,15 +628,15 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 283.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 1113.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 80 |
+| artifact | 77 |
 | citation | 47 |
 | equation | 8 |
-| figure | 29 |
-| number | 102 |
+| figure | 28 |
+| number | 936 |
 | section | 10 |
 | table | 7 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
@@ -646,18 +647,18 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
-| claim_evidence_assay | yes | yes | 3952x2038 | 0.217 | 0.06027576 | pass |
-| evidence_tier_ladder | yes | yes | 3349x1332 | 0.223 | 0.05598645 | pass |
-| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04434550 | pass |
-| implementation_circuit | yes | yes | 2966x1843 | 0.068 | 0.02205485 | pass |
-| integrity_gate_matrix | yes | yes | 1818x2060 | 0.409 | 0.16204936 | pass |
-| integrity_risk_matrix | yes | yes | 2499x1910 | 0.380 | 0.01852528 | pass |
-| karat_grading | yes | yes | 2961x1698 | 0.279 | 0.07300982 | pass |
-| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02178809 | pass |
-| purity_claim_scatter | yes | yes | 2336x1744 | 0.034 | 0.01607749 | pass |
-| purity_progression | yes | yes | 3024x2125 | 0.182 | 0.03967814 | pass |
-| token_density | yes | yes | 3289x1856 | 0.234 | 0.06699486 | pass |
-| token_heatmap | yes | yes | 2397x2399 | 0.627 | 0.12908659 | pass |
+| claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
+| evidence_tier_ladder | yes | yes | 3420x1447 | 0.110 | 0.04011442 | pass |
+| formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
+| implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
+| integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
+| integrity_risk_matrix | yes | yes | 2499x1909 | 0.379 | 0.01892053 | pass |
+| karat_grading | yes | yes | 2956x1699 | 0.279 | 0.07296687 | pass |
+| provenance_sankey | yes | yes | 2850x1461 | 0.070 | 0.02170098 | pass |
+| purity_claim_scatter | yes | yes | 2343x1745 | 0.034 | 0.01594966 | pass |
+| purity_progression | yes | yes | 3029x2125 | 0.182 | 0.03971092 | pass |
+| token_density | yes | yes | 3288x1858 | 0.234 | 0.06696808 | pass |
+| token_heatmap | yes | yes | 2406x2412 | 0.621 | 0.12867696 | pass |
 : Figure-quality report generated from source-owned figure specs. {#tbl:figure_quality}
 
 
@@ -748,7 +749,7 @@ The gold-refinery pipeline demonstrates that a metallurgical analogy can be made
 - 5 refinery stages from ore (9K) to certification (nine-nines)
 - Final purity: 99.9999999% (nine-nines) (24K (nine-nines certified))
 - 24 tokens generated deterministically from seed 431
-- Config hash: 8d3efef5bcbe8b23
+- Config hash: 4cb6b4b7930a03c2
 - 7 source-owned formalisms with equation labels: eq:purity_functional, eq:monotone_refinery, eq:token_digest, eq:claim_support, eq:integrity_vector, eq:certification_predicate, eq:adversarial_assay
 - Claim-support status: 9/9 supported (passing)
 - 9 integrity dimensions with residual-risk scoring and owner/validator links.
@@ -786,8 +787,8 @@ The refinery pipeline is fully deterministic. Given the same `manuscript/config.
 Executable-publication scholarship sharpens that norm. Executable research compendia and executable papers treat an article as a package of narrative, code, data, environment, and rendered outputs rather than as a static document with detachable supplements [@nuest2017erc; @lasser2020executable]. The present exemplar is smaller and more template-specific: it does not provide a universal executable-paper format, but it does make the manuscript variables, figures, reports, and rendered PDF/HTML products rebuildable from source-owned inputs.
 
 - **Seed:** 431
-- **Config hash:** 8d3efef5bcbe8b23
-- **Generation timestamp:** 2026-07-11T04:09:00Z
+- **Config hash:** 4cb6b4b7930a03c2
+- **Generation timestamp:** 2026-08-03T00:26:48Z
 - **Python version:** 3.12.13
 
 ## Artifact inventory
@@ -796,8 +797,8 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 |----------|-------|
 | Figures | 26 |
 | Data files | 3 |
-| Reports | 12 |
-| **Total** | 41 |
+| Reports | 14 |
+| **Total** | 43 |
 
 ## Regeneration commands
 
@@ -812,7 +813,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 ```
 
-A reproduction report should record command exit status, the source revision, `8d3efef5bcbe8b23`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `4cb6b4b7930a03c2`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
@@ -820,7 +821,7 @@ All vocabulary, slots, section conditions, steganography toggles, and optional L
 
 `src/pipeline_policy.py` turns those policy blocks into an explicit secure-pipeline hook. That keeps the optional hardening path visible before execution instead of burying it in shell glue or prose.
 
-The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `8d3efef5bcbe8b23`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
+The reproducibility spine uses fact registry and figure registry as generated artifacts rather than reader trust signals. Variable generation records `4cb6b4b7930a03c2`; analysis writes refinery, token, claim-support, dashboard, and figure artifacts; validation may add the shared evidence registry used by template scientific-integrity checks.
 
 The implementation circuit gives a reproducibility checklist for future forks. A reader should be able to start at any rendered figure or claim, follow it to a generated variable or report, follow that artifact to `src/` or `manuscript/config.yaml`, and rerun the same stage command. If that path is broken, the fork has produced a static illustration rather than a reproducible refinement pipeline.
 
@@ -921,7 +922,7 @@ Evaluation uses three noninterchangeable levels. **Invariant tests** reject inva
 |------|-------|------|
 | Purity monotonicity | Purity must strictly increase from stage to stage | tests/test_refinery.py |
 | Token determinism | Same seed and lexicon must produce same token plan | tests/test_composition.py |
-| Token coverage | Every manuscript {{TOKEN}} must have a generated variable | tests/test_manuscript_variables.py |
+| Token coverage | Every manuscript `{{TOKEN}}` must have a generated variable | tests/test_manuscript_variables.py |
 | Config validation | Invalid config must raise GoldRefinementConfigError | tests/test_config.py |
 | Figure generation | All figure generators must produce non-blank PNGs | tests/test_figures.py |
 | Integrity model coverage | Integrity dimensions must have unique IDs, owners, validators, and evidence surfaces | tests/test_integrity.py |
@@ -961,8 +962,8 @@ Figure review follows the same rule. File existence and nonblank pixels are nece
 | Config ownership | Keep lexicon and slots in config.yaml, not in generated prose. |
 | Regeneration contract | Regenerate outputs through the pipeline, not by hand-editing. |
 | Risk review | Treat high-residual-risk integrity dimensions as fork obligations before publication claims are expanded. |
-| Tool disclosure | Disclose AI, template, and automation assistance when it materially affects writing, analysis, or review. |
-| Software citation | Cite the exact software, template release, and executable package used to generate the manuscript. |
+| AI and template disclosure | Disclose material AI, template, and automation assistance, and keep responsibility for accuracy and claim boundaries with named human authors. |
+| Software and package citation | Cite the exact software/template release and preserve enough metadata for readers to identify and rebuild the executable manuscript object. |
 | Security evidence boundary | Treat security standards and Codex Security scan phases as scoped guidance unless generated scan artifacts and receipts are present. |
 
 The authoring boundary tokens for this section are analogy boundary and non-claim. They mark the point where an author must either add new evidence and validators or lower the claim from certification to analogy.

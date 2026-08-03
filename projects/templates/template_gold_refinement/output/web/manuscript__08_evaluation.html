@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>08_evaluation.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -177,7 +176,8 @@
 <link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:evaluation">Quality Probes</h1>
 <h2 id="qa-probes">QA probes</h2>
 <table>
@@ -308,7 +308,8 @@ another.</p>
 </tr>
 <tr>
 <td>Token coverage</td>
-<td>Every manuscript {{TOKEN}} must have a generated variable</td>
+<td>Every manuscript <code>{{TOKEN}}</code> must have a generated
+variable</td>
 <td>tests/test_manuscript_variables.py</td>
 </tr>
 <tr>
@@ -362,9 +363,11 @@ guidance unless generated scan artifacts exist</td>
 </tr>
 </tbody>
 </table>
-<p>The audit rules are summarized visually in
-[fig:integrity_gate_matrix] and algebraically in [eq:integrity_vector].
-A failed audit rule should block certification language even if the PDF
+<p>The audit rules are summarized visually in <span class="citation"
+data-cites="fig:integrity_gate_matrix">[@fig:integrity_gate_matrix]</span>
+and algebraically in <span class="citation"
+data-cites="eq:integrity_vector">[@eq:integrity_vector]</span>. A failed
+audit rule should block certification language even if the PDF
 renders.</p>
 <p>Scholarship adds one more gate: citation validity and claim-boundary
 discipline. A source can support a relation, a practice, or a caution
@@ -398,28 +401,33 @@ cross-platform portability, reviewer workload, or reader comprehension;
 those would require separate empirical studies.</p>
 <p>The adversarial assay adds a security-specific evaluation target: can
 a reader distinguish declared threat scope from actual scan evidence?
-[tbl:security_assay] maps zero-trust, secure-development, supply-chain,
-SBOM, attack-path, and secure-by-design guidance to local evidence
-surfaces and validators [nist_sp800_207_zero_trust; nist_sp800_218_ssdf;
-slsa_v1_2; sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
+<span class="citation"
+data-cites="tbl:security_assay">[@tbl:security_assay]</span> maps
+zero-trust, secure-development, supply-chain, SBOM, attack-path, and
+secure-by-design guidance to local evidence surfaces and validators
+[nist_sp800_207_zero_trust; nist_sp800_218_ssdf; slsa_v1_2;
+sigstore_docs; mitre_attack; cyclonedx_spec; spdx_spec;
 cisa_secure_by_design]. The passing condition is bounded: the table must
 be complete and the prose must not claim compliance or Codex Security
 findings unless future scan artifacts are generated and integrated.</p>
-<p>The risk model adds prioritization to the gate list.
-[fig:integrity_risk_matrix] separates easy-to-detect implementation
-failures from severe boundary failures that need clearer ownership. This
-keeps the evaluation surface from becoming a checklist of equally
-weighted boxes: token coverage, citation validity, claim support, and
-render readiness all matter, but a high-severity low-detectability
-failure should shape the next source edit before cosmetic manuscript
-polish.</p>
+<p>The risk model adds prioritization to the gate list. <span
+class="citation"
+data-cites="fig:integrity_risk_matrix">[@fig:integrity_risk_matrix]</span>
+separates easy-to-detect implementation failures from severe boundary
+failures that need clearer ownership. This keeps the evaluation surface
+from becoming a checklist of equally weighted boxes: token coverage,
+citation validity, claim support, and render readiness all matter, but a
+high-severity low-detectability failure should shape the next source
+edit before cosmetic manuscript polish.</p>
 <p>Figure review follows the same rule. File existence and nonblank
 pixels are necessary but not sufficient. The figure caption, encoding
 declaration, source data, and prose interpretation must describe the
 same measurement. This criterion specifically prohibits inferring a
-stagewise trend from a project-level aggregate, which is why
-[fig:purity_claim_scatter] repeats one observed claim-support rate
-rather than inventing cumulative values.</p>
+stagewise trend from a project-level aggregate, which is why <span
+class="citation"
+data-cites="fig:purity_claim_scatter">[@fig:purity_claim_scatter]</span>
+repeats one observed claim-support rate rather than inventing cumulative
+values.</p>
 </main>
 </body>
 </html>
