@@ -18,7 +18,8 @@ and boundary I/O.
    assertions and phase-aware hypothesis evidence; disabled or unmeasured LLM outputs
    remain explicitly pending.
 4. **Visualization** (`04_generate_figures.py`) renders figures from analysis artifacts
-   and records source paths, hashes, captions, and alt text in the figure registry.
+   and records each figure's label, caption, filename, and generating stage in the
+   figure registry.
 5. **Manuscript hydration** (`05_inject_variables.py`) computes variables from outputs
    and writes rendered Markdown without changing source sections.
 6. **Full-text assessment** (`06_fulltext_assessment.py`) records abstract, open-access,
