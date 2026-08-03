@@ -23,6 +23,7 @@ function the compiler calls — gates never run out of order.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from .model import Method
@@ -123,3 +124,16 @@ def run_all_gates(method: Method) -> tuple[GateResult, ...]:
     if not (structural.passed and semantic.passed):
         return (structural, semantic)
     return (structural, semantic, plan_gate(method), target_gate(method))
+
+
+# The four staged gates in the exact fixed order ``run_all_gates`` executes.
+# Declared once here so the gate count (and the manuscript ``{{DSL_GATE_COUNT}}``
+# token) derives from the actual gate functions instead of a transcribed
+# literal that would drift if a gate were added or removed.
+GATE_SEQUENCE: tuple[Callable[[Method], GateResult], ...] = (
+    structural_gate,
+    semantic_gate,
+    plan_gate,
+    target_gate,
+)
+GATE_COUNT: int = len(GATE_SEQUENCE)

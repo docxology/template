@@ -47,10 +47,19 @@ from .export import (
 from .model import Method, MethodModelError, Parameter, Resource, Step
 from .trust import ProvenanceTier, StateRecord, append_record, demo_chain_report, verify_chain
 from .units import Dimension, DimensionError, Quantity, check_compatible, dimension_of, known_units
-from .validation import GateResult, plan_gate, run_all_gates, semantic_gate, structural_gate, target_gate
+from .validation import (
+    GATE_COUNT,
+    GateResult,
+    plan_gate,
+    run_all_gates,
+    semantic_gate,
+    structural_gate,
+    target_gate,
+)
 from .vocabulary import StepKind, Target, target_accepts
 
 __all__ = [
+    "GATE_COUNT",
     "CycleError",
     "Dimension",
     "DimensionError",

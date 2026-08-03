@@ -20,6 +20,7 @@ here so callers (scripts, tests, manuscript variable generation) can write
 from __future__ import annotations
 
 from .methods_dsl import (
+    GATE_COUNT,
     CycleError,
     Dimension,
     DimensionError,
@@ -65,6 +66,7 @@ from .methods_dsl import (
 )
 
 __all__ = [
+    "GATE_COUNT",
     "CycleError",
     "Dimension",
     "DimensionError",

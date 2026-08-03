@@ -12,8 +12,17 @@ from pathlib import Path
 import pytest
 import yaml
 
-from src.manuscript_variables import CONFIG_HASH_LENGTH, generate_variables, save_variables
-from src.methods_dsl import Dimension
+from src.manuscript_variables import CONFIG_HASH_LENGTH, PLAN_HASH_TRUNCATION, generate_variables, save_variables
+from src.methods_dsl import (
+    GATE_COUNT,
+    Dimension,
+    ProvenanceTier,
+    StepKind,
+    Target,
+    append_record,
+    demo_chain_report,
+    target_accepts,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -106,5 +115,14 @@ def test_claim_ledger_constants_match_live_source() -> None:
     payload = yaml.safe_load((PROJECT_ROOT / "data" / "claim_ledger.yaml").read_text(encoding="utf-8"))
     claims = {claim["claim_id"]: claim["value"] for claim in payload["claims"]}
 
+    assert claims["validation-gate-count"] == GATE_COUNT
+    assert claims["plan-hash-truncation-length"] == PLAN_HASH_TRUNCATION
+    assert claims["genesis-hash-length"] == len(
+        append_record((), "k", "v", ProvenanceTier.DECLARED)[0].prev_hash
+    )
+    assert claims["automated-only-step-kind-count"] == sum(
+        1 for kind in StepKind if not target_accepts(Target.HUMAN, kind)
+    )
+    assert claims["demo-trust-chain-length"] == demo_chain_report()["chain_length"]
     assert claims["controlled-dimension-count"] == len(Dimension)
     assert claims["config-hash-prefix-length"] == CONFIG_HASH_LENGTH

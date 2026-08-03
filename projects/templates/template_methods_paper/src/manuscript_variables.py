@@ -30,9 +30,19 @@ from typing import Any
 
 import yaml
 
-from .methods_dsl import StepKind, Target, all_example_methods, compile_method, known_units
+from .methods_dsl import (
+    GATE_COUNT,
+    StepKind,
+    Target,
+    all_example_methods,
+    compile_method,
+    known_units,
+)
 
 CONFIG_HASH_LENGTH = 16
+
+# Display truncation length for plan-hash tokens in the manuscript (first N hex chars).
+PLAN_HASH_TRUNCATION = 12
 
 
 def _build_timestamp() -> str:
@@ -144,7 +154,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     variables["DSL_UNIT_COUNT"] = str(len(known_units()))
     variables["DSL_STEP_KIND_COUNT"] = str(len(StepKind))
     variables["DSL_TARGET_COUNT"] = str(len(Target))
-    variables["DSL_GATE_COUNT"] = "4"
+    variables["DSL_GATE_COUNT"] = str(GATE_COUNT)
 
     # ---- Live determinism check — the manuscript's central reproducibility claim ----
     examples = all_example_methods()
@@ -157,7 +167,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     pbs = by_name.get("PBSPreparation")
     if pbs:
         variables["PBS_STEP_COUNT"] = str(pbs["step_count"])
-        variables["PBS_PLAN_HASH"] = str(pbs["plan_hash"])[:12]
+        variables["PBS_PLAN_HASH"] = str(pbs["plan_hash"])[:PLAN_HASH_TRUNCATION]
         variables["PBS_TARGET"] = str(pbs["target"])
     else:
         variables["PBS_STEP_COUNT"] = "N/A"
@@ -167,7 +177,7 @@ def generate_variables(project_root: Path, *, require_analysis_outputs: bool = F
     calibration = by_name.get("SensorCalibrationSweep")
     if calibration:
         variables["CALIBRATION_STEP_COUNT"] = str(calibration["step_count"])
-        variables["CALIBRATION_PLAN_HASH"] = str(calibration["plan_hash"])[:12]
+        variables["CALIBRATION_PLAN_HASH"] = str(calibration["plan_hash"])[:PLAN_HASH_TRUNCATION]
         variables["CALIBRATION_TARGET"] = str(calibration["target"])
     else:
         variables["CALIBRATION_STEP_COUNT"] = "N/A"
