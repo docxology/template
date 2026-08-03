@@ -23,7 +23,9 @@ publication:
   version_doi: ""
   version_record: ""
   github_repository: ""
+  repository_url: ""
   year: "2026"
+  published_artifacts: {}
 
 keywords:
   - "agent coordination"

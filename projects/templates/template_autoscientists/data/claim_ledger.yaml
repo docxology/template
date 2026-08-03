@@ -8,8 +8,8 @@ claims:
     artifact_path: output/data/ablation.json
   - claim_id: confirmation-noise-seeds
     kind: number
-    value: 5
-    source: projects/templates/template_autoscientists/src/confirmation.py confirm_improvement default seeds
+    value: 3
+    source: projects/templates/template_autoscientists/src/search.py SearchConfig default confirmation seeds
     source_tier: project_source
     freshness: active
     artifact_path: output/data/ablation.json

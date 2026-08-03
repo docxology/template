@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03_results.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -173,11 +172,36 @@
       vertical-align: middle;
     }
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
-  type="text/javascript"></script>
+  <script data-template-mathjax-config>
+window.MathJax = window.MathJax || {};
+window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
+  fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
+  dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
+});
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
+</script>
+<script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
+  type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
+
+<link data-template-favicon rel="icon" href="favicon.ico">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content" tabindex="-1">
 <h1 id="sec:results">Results</h1>
 <p>All numbers below are produced by the analysis scripts in
 <code>scripts/</code> and written to <code>output/data/</code> as
@@ -194,8 +218,8 @@ class="math inline">\(60\)</span>-experiment budget. The two curves
 track each other and converge to the same value.</p>
 <figure id="fig:comparison">
 <img src="../figures/search_comparison.png"
-alt="Champion metric (higher is better) versus experiment index for coordinated teams (solid) and the single-thread baseline (dashed) under a matched experiment budget. Coordinated teams partition the same sequential budget as the baseline rather than adding parallel compute, so this is a robustness/efficiency comparison, not a speedup. Produced by run_search_comparison.py." />
-<figcaption aria-hidden="true">Champion metric (higher is better) versus
+alt="Champion metric (higher is better) versus experiment index for coordinated teams (solid) and the single-thread baseline (dashed) under a matched experiment budget." />
+<figcaption>Champion metric (higher is better) versus
 experiment index for coordinated teams (solid) and the single-thread
 baseline (dashed) under a matched experiment budget. Coordinated teams
 partition the same sequential budget as the baseline rather than adding
@@ -275,8 +299,8 @@ mechanism at a time starting from the full coordinated
 configuration.</p>
 <figure id="fig:ablation">
 <img src="../figures/ablation.png"
-alt="Reported versus clean (ground-truth) champion metric for the full configuration and each single-mechanism ablation. A reported-greater-than-clean gap is accepted noise. Removing noise-band confirmation inflates the gap roughly thirteenfold while the clean metric is unchanged. Produced by run_ablation.py." />
-<figcaption aria-hidden="true">Reported versus clean (ground-truth)
+alt="Reported versus clean (ground-truth) champion metric for the full configuration and each single-mechanism ablation." />
+<figcaption>Reported versus clean (ground-truth)
 champion metric for the full configuration and each single-mechanism
 ablation. A reported-greater-than-clean gap is accepted noise. Removing
 noise-band confirmation inflates the gap roughly thirteenfold while the
@@ -374,8 +398,8 @@ class="math inline">\(0.0000\)</span> — the registry buys a leaner
 search, not a better answer.</p>
 <figure id="fig:ablation_efficiency">
 <img src="../figures/ablation_efficiency.png"
-alt="Experiments used and redundant re-probes of retired directions per configuration. Only the dead-end-registry ablation changes the profile: without the registry the search wastes 36 experiments re-exploring known-dead directions and never halts early. Produced by run_ablation.py." />
-<figcaption aria-hidden="true">Experiments used and redundant re-probes
+alt="Experiments used and redundant re-probes of retired directions per configuration." />
+<figcaption>Experiments used and redundant re-probes
 of retired directions per configuration. Only the dead-end-registry
 ablation changes the profile: without the registry the search wastes
 <span class="math inline">\(36\)</span> experiments re-exploring
@@ -415,5 +439,6 @@ unchanged.</li>
 ablatable, but do not by themselves change any measured quantity on this
 objective — a result we report rather than obscure.</li>
 </ol>
+</main>
 </body>
 </html>

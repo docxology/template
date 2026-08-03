@@ -1,6 +1,6 @@
 # Abstract {#sec:abstract}
 
-Recent work on *AutoScientists* [gao2026autoscientists] coordinates self-organizing teams of language-model agents through a small set of shared mechanisms: a champion-and-experiment-log shared state, a registry of retired dead-end directions, effect-size ranking of candidate directions, noise-band confirmation of claimed improvements, and stagnation-driven reorganization of teams. This exemplar provides a deterministic, standalone reference implementation of those mechanisms and studies them honestly as a *testbed* rather than as a performance claim.
+Recent work on *AutoScientists* [@gao2026autoscientists] coordinates self-organizing teams of language-model agents through a small set of shared mechanisms: a champion-and-experiment-log shared state, a registry of retired dead-end directions, effect-size ranking of candidate directions, noise-band confirmation of claimed improvements, and stagnation-driven reorganization of teams. This exemplar provides a deterministic, standalone reference implementation of those mechanisms and studies them honestly as a *testbed* rather than as a performance claim.
 
 We make the comparison fair by holding the total number of objective evaluations fixed: coordinated teams *partition* a single sequential experiment budget rather than adding parallel compute. Under that matched budget, coordination cannot — and in our results does not — beat a single-thread baseline on the final champion metric; we report the actual numbers and claim no speedup. What the testbed *does* demonstrate are two distinct, independently measurable benefits. First, noise-robustness: because the objective is stochastic, a single observed gain can be a draw of evaluation noise, so we separate the *reported* champion metric from the *clean* noise-free ground truth and show that noise-band confirmation shrinks the gap between them by roughly an order of magnitude — with confirmation on, the final champion's reported metric sits $0.0012$ above its clean value, against $0.0156$ with confirmation removed, while every configuration reaches the same clean optimum. Second, search hygiene: the dead-end registry, consulted by the proposer, cuts redundant re-probes of retired directions from $36$ to $0$ and halts at $36$ of the $60$ experiments — the same clean answer, reached with less waste. A per-mechanism ablation isolates each component's contribution, and the language-model proposer is a clean plug-in seam: a deterministic rule-based agent drives the reproducible figures, and a live Hermes agent (served by Ollama) can be swapped in without touching the coordination loop.
 
@@ -14,7 +14,7 @@ We make the comparison fair by holding the total number of objective evaluations
 
 ## Motivation
 
-Long-running scientific experimentation — tuning a model, searching a design space, optimizing a noisy objective over many trials — has become a target for multi-agent language-model systems. *AutoScientists* [gao2026autoscientists] frames this as a coordination problem: several agent teams share a running record of what has been tried, retire directions that repeatedly fail, prioritize directions with large observed effects, confirm claimed improvements against evaluation noise, and reorganize when progress stalls. These are appealing ideas, but they are easy to *describe* and hard to *attribute*: when a coordinated system performs well, which mechanism deserves the credit, and how much of an apparent gain is simply noise?
+Long-running scientific experimentation — tuning a model, searching a design space, optimizing a noisy objective over many trials — has become a target for multi-agent language-model systems. *AutoScientists* [@gao2026autoscientists] frames this as a coordination problem: several agent teams share a running record of what has been tried, retire directions that repeatedly fail, prioritize directions with large observed effects, confirm claimed improvements against evaluation noise, and reorganize when progress stalls. These are appealing ideas, but they are easy to *describe* and hard to *attribute*: when a coordinated system performs well, which mechanism deserves the credit, and how much of an apparent gain is simply noise?
 
 This exemplar exists to make those questions answerable on a small, fully reproducible artifact. It is one of a family of research-project templates in this repository, each pairing a tested computational core with a rendered manuscript. Here the core is a deterministic re-implementation of the AutoScientists coordination mechanisms, and the manuscript is an honest report of what they do.
 
@@ -263,7 +263,7 @@ The noise-band confirmation estimator is generic. A synchronized copy lives at `
 
 ## What this exemplar claims
 
-- The five AutoScientists coordination mechanisms [gao2026autoscientists] are re-implemented faithfully enough to be **individually ablatable**, and each is independently tested.
+- The five AutoScientists coordination mechanisms [@gao2026autoscientists] are re-implemented faithfully enough to be **individually ablatable**, and each is independently tested.
 - Under a **matched sequential experiment budget**, coordinated teams reach the same clean optimum as a single-thread baseline (advantage $= 0.0000$).
 - **Noise-band confirmation** produces a measurable, reproducible reduction in accepted evaluation noise (a $\sim 13\times$ smaller reported-vs-clean gap on this objective).
 - The **dead-end registry** produces a measurable, reproducible search-hygiene gain: consulted by the proposer, it cuts redundant re-probes of retired directions from $36$ to $0$ and halts the search at $36$ of $60$ experiments, with the clean optimum unchanged.
@@ -277,11 +277,11 @@ The noise-band confirmation estimator is generic. A synchronized copy lives at `
 
 ## Relationship to AutoScientists
 
-The original system [gao2026autoscientists] runs real language-model agent teams on real, expensive scientific tasks and reports end-to-end performance. This exemplar deliberately strips that to a deterministic core so the *mechanisms* can be attributed and the noise behavior measured in isolation. It is a complement — a microscope on the coordination primitives — not a reproduction of the full system or its empirical results.
+The original system [@gao2026autoscientists] runs real language-model agent teams on real, expensive scientific tasks and reports end-to-end performance. This exemplar deliberately strips that to a deterministic core so the *mechanisms* can be attributed and the noise behavior measured in isolation. It is a complement — a microscope on the coordination primitives — not a reproduction of the full system or its empirical results.
 
 ## Related context
 
-The confirmation mechanism is an application of standard effect-size and standard-error reasoning [cohen1988statistical] to online acceptance decisions. The dead-end registry, effect-size ranking, and reorganization are coordination heuristics whose lineage runs through population- and restart-based search [whitley2001overview]; the contribution here is not the heuristics but their honest, ablatable measurement. The broader setting — teams of language-model agents pursuing a long-running objective — sits within the rapidly growing literature on LLM-based autonomous agents [wang2023survey]. Throughout, the emphasis on regenerable figures, fixed seeds, and a tested core follows the reproducible-research tradition [peng2011reproducible].
+The confirmation mechanism is an application of standard effect-size and standard-error reasoning [@cohen1988statistical] to online acceptance decisions. The dead-end registry, effect-size ranking, and reorganization are coordination heuristics whose lineage runs through population- and restart-based search [@whitley2001overview]; the contribution here is not the heuristics but their honest, ablatable measurement. The broader setting — teams of language-model agents pursuing a long-running objective — sits within the rapidly growing literature on LLM-based autonomous agents [@wang2023survey]. Throughout, the emphasis on regenerable figures, fixed seeds, and a tested core follows the reproducible-research tradition [@peng2011reproducible].
 
 
 
@@ -291,7 +291,7 @@ The confirmation mechanism is an application of standard effect-size and standar
 
 # Conclusion {#sec:conclusion}
 
-This exemplar re-implements the AutoScientists coordination mechanisms [gao2026autoscientists] as a deterministic, ablatable testbed and reports what they actually do under a fair, matched experiment budget. The central methodological commitment is honesty about the comparison: coordinated teams partition one sequential budget rather than adding parallel compute, so we neither expect nor observe a speedup, and we say so. The clean-metric advantage of coordination over a single-thread baseline is exactly zero.
+This exemplar re-implements the AutoScientists coordination mechanisms [@gao2026autoscientists] as a deterministic, ablatable testbed and reports what they actually do under a fair, matched experiment budget. The central methodological commitment is honesty about the comparison: coordinated teams partition one sequential budget rather than adding parallel compute, so we neither expect nor observe a speedup, and we say so. The clean-metric advantage of coordination over a single-thread baseline is exactly zero.
 
 Two results are worth keeping. The first is the noise-robustness measurement: by separating the reported champion metric from the clean ground-truth metric — possible only because the objective is synthetic — the testbed quantifies noise-band confirmation as a roughly thirteenfold reduction in accepted noise, with the clean optimum reached either way. The second is search hygiene: the dead-end registry, consulted by the proposer, drives redundant re-probes of retired directions from $36$ to $0$ and lets the search halt at $36$ of the $60$ experiments instead of burning the full budget — without changing the clean answer. The remaining structural mechanisms (effect-size ranking, stagnation reorganization) are correctly implemented and independently testable, but on this separable objective they reshape the search path without changing its destination, noise, or efficiency within the budget; we report that rather than overstate it.
 
@@ -305,7 +305,7 @@ Two properties make the artifact reusable. First, every mechanism is gated behin
 
 # References {#sec:references}
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
+Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
 
 To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
 

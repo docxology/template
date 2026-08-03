@@ -4,15 +4,15 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: output
 
-Total Files: 55
+Total Files: 47
 Total Size: 0.88 MB
 
 Files by Category:
   • pdf: 10 files (0.41 MB)
-  • web: 11 files (0.16 MB)
+  • web: 12 files (0.18 MB)
   • figures: 4 files (0.16 MB)
   • data: 3 files (0.00 MB)
-  • reports: 26 files (0.15 MB)
+  • reports: 17 files (0.13 MB)
   • logs: 1 files (0.00 MB)
 
 Largest Files:
@@ -23,13 +23,13 @@ Largest Files:
   • ablation_efficiency.png: 0.05 MB (figures)
 
 File Types:
-  • .json: 20 file(s)
-  • .html: 11 file(s)
-  • .md: 7 file(s)
+  • .json: 18 file(s)
+  • .html: 10 file(s)
+  • .md: 4 file(s)
   • .log: 3 file(s)
   • .png: 3 file(s)
-  • .txt: 3 file(s)
   • .pdf: 1 file(s)
   • .aux: 1 file(s)
   • .blg: 1 file(s)
   • .bib: 1 file(s)
+  • .tex: 1 file(s)

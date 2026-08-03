@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 10,
       "size_mb": "0.41",
-      "total_size_bytes": 431788,
+      "total_size_bytes": 433519,
       "largest_files": [
         {
           "name": "template_autoscientists_combined.pdf",
@@ -36,9 +36,9 @@
     },
     "web": {
       "exists": true,
-      "file_count": 11,
-      "size_mb": "0.16",
-      "total_size_bytes": 172600,
+      "file_count": 12,
+      "size_mb": "0.18",
+      "total_size_bytes": 185719,
       "largest_files": [
         {
           "name": "index.html",
@@ -52,13 +52,14 @@
         },
         {
           "name": "manuscript__03_results.html",
-          "size_mb": "0.01",
+          "size_mb": "0.02",
           "path": "web/manuscript__03_results.html"
         }
       ],
       "extensions": {
         ".html": 10,
-        ".md": 1
+        ".md": 1,
+        ".ico": 1
       }
     },
     "slides": {
@@ -100,7 +101,7 @@
       "exists": true,
       "file_count": 3,
       "size_mb": "0.00",
-      "total_size_bytes": 3359,
+      "total_size_bytes": 3427,
       "largest_files": [
         {
           "name": "ablation.json",
@@ -124,9 +125,9 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 26,
-      "size_mb": "0.15",
-      "total_size_bytes": 154412,
+      "file_count": 17,
+      "size_mb": "0.13",
+      "total_size_bytes": 133948,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -134,22 +135,20 @@
           "path": "reports/evidence_registry.json"
         },
         {
+          "name": "validation_report.json",
+          "size_mb": "0.01",
+          "path": "reports/validation_report.json"
+        },
+        {
           "name": "artifact_manifest.json",
           "size_mb": "0.01",
           "path": "reports/artifact_manifest.json"
-        },
-        {
-          "name": "pipeline_report.json",
-          "size_mb": "0.01",
-          "path": "reports/pipeline_report.json"
         }
       ],
       "extensions": {
-        ".json": 16,
-        ".jsonl": 1,
-        ".txt": 3,
-        ".md": 5,
-        ".html": 1
+        ".json": 14,
+        ".txt": 1,
+        ".md": 2
       }
     },
     "simulations": {
@@ -172,7 +171,7 @@
       "exists": true,
       "file_count": 1,
       "size_mb": "0.00",
-      "total_size_bytes": 163,
+      "total_size_bytes": 160,
       "largest_files": [
         {
           "name": "pipeline.log",
@@ -185,8 +184,8 @@
       }
     }
   },
-  "total_files": 55,
-  "total_size_mb": 0.8832330703735352,
+  "total_files": 47,
+  "total_size_mb": 0.8779411315917969,
   "largest_files": [
     {
       "name": "template_autoscientists_combined.pdf",
@@ -244,26 +243,26 @@
     },
     {
       "name": "manuscript__03_results.html",
-      "size_mb": "0.01",
+      "size_mb": "0.02",
       "category": "web",
       "path": "web/manuscript__03_results.html"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 0.4117851257324219,
-    "web": 0.16460418701171875,
+    "pdf": 0.4134359359741211,
+    "web": 0.17711544036865234,
     "slides": 0.0,
     "figures": 0.15622615814208984,
-    "data": 0.0032033920288085938,
-    "reports": 0.14725875854492188,
+    "data": 0.0032682418823242188,
+    "reports": 0.12774276733398438,
     "simulations": 0.0,
     "llm": 0.0,
-    "logs": 0.00015544891357421875
+    "logs": 0.000152587890625
   },
   "file_counts_by_type": {
     ".pdf": 1,
-    ".md": 7,
+    ".md": 4,
     ".log": 3,
     ".aux": 1,
     ".blg": 1,
@@ -271,10 +270,10 @@
     ".tex": 1,
     ".toc": 1,
     ".bbl": 1,
-    ".html": 11,
+    ".html": 10,
+    ".ico": 1,
     ".png": 3,
-    ".json": 20,
-    ".jsonl": 1,
-    ".txt": 3
+    ".json": 18,
+    ".txt": 1
   }
 }

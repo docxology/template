@@ -22,7 +22,7 @@ where $\varepsilon(x, s)$ is derived deterministically from a hash of the rounde
 
 ## Shared state
 
-The deterministic core mirrors the AutoScientists shared state: an immutable **champion** record $p^\*$ (parameters, metric, originating experiment index) plus an append-only **experiment log** $L$ of structured outcomes. Recording an outcome appends it to $L$ and promotes the champion only when the outcome *improved* — i.e. it was confirmed and beat the incumbent. The champion metric is the value plotted against experiment count.
+The deterministic core mirrors the AutoScientists shared state: an immutable **champion** record $p^{\ast}$ (parameters, metric, originating experiment index) plus an append-only **experiment log** $L$ of structured outcomes. Recording an outcome appends it to $L$ and promotes the champion only when the outcome *improved* — i.e. it was confirmed and beat the incumbent. The champion metric is the value plotted against experiment count.
 
 ## The five mechanisms
 
