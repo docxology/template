@@ -6,7 +6,7 @@ The figures are intentionally simple and accessibility-aware: a
 colour-blind-safe palette, descriptive titles, and 300 dpi exports.
 
 Like the rest of ``src/``, no script logic lives here. The
-``scripts/generate_search_figures.py`` orchestrator imports these
+``scripts/y_generate_search_figures.py`` orchestrator imports these
 functions and prints the resulting paths.
 """
 

@@ -90,13 +90,23 @@ def run_deep_search_cli(
             print(str(kr.output_dir / "papers.json"))
             print(str(kr.output_dir / "reading_report.md"))
 
-    # Run summary.
+    # Run summary. Paths are written relative to the repository root using
+    # the `<repo-root>` placeholder so tracked publication evidence stays
+    # clone-independent (matches `output/run_summary.json` from the standard
+    # pipeline). Never embed machine-local absolute paths in evidence.
+    def _portable(path: Path | None) -> str | None:
+        if path is None:
+            return None
+        text = str(path.resolve())
+        root = str(project_root.resolve())
+        return text.replace(root, "<repo-root>") if text.startswith(root) else text
+
     summary = {
         "keywords": [kr.keyword for kr in artifacts.keyword_results],
         "total_papers": artifacts.total_papers,
         "unique_papers": artifacts.unique_papers,
-        "bibtex": str(artifacts.bibtex_path) if artifacts.bibtex_path else None,
-        "aggregate_report": (str(artifacts.aggregate_report_path) if artifacts.aggregate_report_path else None),
+        "bibtex": _portable(artifacts.bibtex_path),
+        "aggregate_report": _portable(artifacts.aggregate_report_path),
         "llm_used": deep_cfg.llm_per_paper and llm is not None,
         "errors_per_keyword": {kr.keyword: dict(kr.search_result.errors) for kr in artifacts.keyword_results},
     }

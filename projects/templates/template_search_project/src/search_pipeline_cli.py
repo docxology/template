@@ -112,15 +112,24 @@ def run_search_pipeline_cli(
     )
     print(str(report_path))
 
-    # Persist a small run summary for downstream tooling.
+    # Persist a small run summary for downstream tooling. Artifact paths use
+    # the `<repo-root>` placeholder relative to the project root so tracked
+    # publication evidence stays clone-independent (never machine-local).
+    def _portable(path: Path | None) -> str | None:
+        if path is None:
+            return None
+        text = str(path.resolve())
+        root = str(project_root.resolve())
+        return text.replace(root, "<repo-root>") if text.startswith(root) else text
+
     summary = {
         "query": config.search.query,
         "papers": len(artifacts.papers),
         "per_source_counts": artifacts.result.per_source_counts,
         "errors": artifacts.result.errors,
-        "bibtex": str(artifacts.bibtex_path) if artifacts.bibtex_path else None,
-        "corpus": str(artifacts.corpus_path) if artifacts.corpus_path else None,
-        "report": str(report_path),
+        "bibtex": _portable(artifacts.bibtex_path),
+        "corpus": _portable(artifacts.corpus_path),
+        "report": _portable(report_path),
         "llm_used": llm is not None,
         "evidence_scope": (
             "bundled_deterministic_fixture"
