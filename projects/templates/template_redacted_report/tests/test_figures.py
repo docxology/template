@@ -90,16 +90,33 @@ def test_figure_types_match_domain_profile() -> None:
 
 
 def test_committed_figures_match_regenerated_bytes() -> None:
-    """The tracked publication evidence must equal a fresh deterministic build."""
+    """The tracked publication evidence must equal a fresh canonical-pipeline build.
+
+    The canonical Stage 02 producer runs the figure builder through the
+    project's own environment (``uv run`` from the project root), so this test
+    spawns that exact producer instead of importing under the test runner's
+    environment — figure bytes depend on the matplotlib version the project
+    resolves, not the runner's.
+    """
+    import subprocess
     import tempfile
 
     with tempfile.TemporaryDirectory(prefix="redacted-fig-check-") as tmp:
-        build_figures(Path(tmp))
-        registry = json.loads((Path(tmp) / "figure_registry.json").read_text(encoding="utf-8"))
+        out_dir = Path(tmp) / "figures"
+        completed = subprocess.run(
+            ["uv", "run", "python", "scripts/02_build_figures.py", "--output-dir", str(out_dir)],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=300,
+        )
+        assert completed.returncode == 0, completed.stderr
+        registry = json.loads((out_dir / "figure_registry.json").read_text(encoding="utf-8"))
         on_disk_registry = json.loads((FIGURES_DIR / "figure_registry.json").read_text(encoding="utf-8"))
         assert registry == on_disk_registry, "tracked figure_registry.json drifted from source"
         for spec in FIGURE_SPECS:
             name = spec["name"]
-            assert (Path(tmp) / f"{name}.png").read_bytes() == (FIGURES_DIR / f"{name}.png").read_bytes(), (
-                f"tracked {name}.png drifted from a fresh deterministic build"
+            assert (out_dir / f"{name}.png").read_bytes() == (FIGURES_DIR / f"{name}.png").read_bytes(), (
+                f"tracked {name}.png drifted from the canonical pipeline build"
             )
