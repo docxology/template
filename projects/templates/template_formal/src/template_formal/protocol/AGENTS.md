@@ -29,4 +29,4 @@ needs a paired fault-injected negative control (ISC-25) — add it to
 `tests/network/test_handshake_over_bus.py`, not just `tests/protocol/`.
 
 See the project [`AGENTS.md`](../../../AGENTS.md) and [`ISA.md`](../../../ISA.md)
-for the full map and ISC-1..92 criteria.
+for the full map and ISC-1..122 criteria.

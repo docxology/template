@@ -25,8 +25,8 @@ def test_live_fixture_and_documentation_surfaces_are_synchronized() -> None:
     tests_readme = (PROJECT_ROOT / "tests" / "README.md").read_text(encoding="utf-8")
     results = (PROJECT_ROOT / "manuscript" / "05_results_discussion.md").read_text(encoding="utf-8")
     assert "six known-bad" in abstract
-    assert "eight pre-registered analyses" in abstract
-    assert "95.28%" in tests_readme
+    assert "eleven pre-registered analyses" in abstract
+    assert "95.29%" in tests_readme
     assert "three pre-registered" not in results.lower()
 
     # The collected-test total used to be pinned in prose here ("279 tests"), which
@@ -62,7 +62,7 @@ def test_live_fixture_and_documentation_surfaces_are_synchronized() -> None:
         assert f"[`{name}/`]({name}/)" in tests_readme, name
 
     root_readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    assert root_readme.count("95.28%") == 2
+    assert root_readme.count("95.29%") == 2
     assert "95.91%" not in root_readme
 
 

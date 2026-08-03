@@ -53,4 +53,4 @@ uv run pytest projects/templates/template_formal/tests/ --cov=projects/templates
 - [`../src/template_formal/AGENTS.md`](../src/template_formal/AGENTS.md) —
   the honesty-line discipline these tests exist to enforce.
 - [`../ISA.md`](../ISA.md) — ISC numbers cited throughout this suite's
-  docstrings (ISC-1..92).
+  docstrings (ISC-1..122).

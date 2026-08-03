@@ -59,5 +59,5 @@ for the canonical statement of every current claim's scope.
   layer this package sits inside (src-layout rationale).
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) — how each subpackage is
   exercised (no-mocks policy, mypy-oracle harness, coverage gate).
-- [`../../ISA.md`](../../ISA.md) — the full 92-ISC build history this
-  package's docstrings cite by number (ISC-1..92).
+- [`../../ISA.md`](../../ISA.md) — the full 122-ISC build history this
+  package's docstrings cite by number (ISC-1..122).

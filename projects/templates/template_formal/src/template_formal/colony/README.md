@@ -5,7 +5,7 @@ rounds: round one shipped the shared pheromone substrate and a single
 deterministic demo; round two added the statistical-rigor trial harness,
 descriptive stats, and figure rendering; round three (scientific-depth) added
 a random-choice null-model baseline and a generic parameter-sweep runner to
-back eight pre-registered analyses grouped across three experiment families. Eight files, each with one distinct
+back eleven pre-registered analyses grouped across three experiment families. Nine files, each with one distinct
 responsibility — read this map before adding a new one, since it is easy to
 misplace new logic into the wrong file once the package has this many
 adjacent concerns.
@@ -22,6 +22,7 @@ adjacent concerns.
 | `visualization.py` | Matplotlib figure rendering, moved out of `scripts/` for the same reason: `write_demo_convergence_figure` (two-panel plot of the deterministic demo) and `write_convergence_tick_histogram` (histogram + ECDF of a trial batch's `consensus_tick` distribution, honestly skipped below `MIN_CONVERGED_FOR_HISTOGRAM=5` converged trials). They return `None` only when the requested distribution is unplottable; expected render or artifact-quality failures raise so publication figures cannot silently disappear. |
 | `nullmodel.py` | The random-choice baseline: `NullModelTrialConfig`/`NullModelTrialResult`, `run_null_model_trial` — each agent picks `random.Random(seed).choice(locations)` every tick. Structurally isolated by construction: this module never imports the pheromone field, `Agent`, or `BeliefState`, proven by a source-text grep test, not just a docstring claim. Reuses only `find_sustained_consensus_tick` from `experiment.py`, so a rate comparison against the real mechanism is apples-to-apples under an identical "converged" definition. |
 | `sweep.py` | The generic parameter-sweep runner: `SweepPointResult`, `run_parameter_sweep` — runs `n_per_value` real `run_colony_trial` calls at each of several values of one `ColonyTrialConfig` field, aggregating each point via `convergence_rate`/`wilson_score_interval`. `param_name` is validated eagerly against `ColonyTrialConfig`'s real dataclass field names (rejecting `seed` itself and any typo), and every sweep point reuses the identical seed sequence in its own subdirectory (a deliberate paired-samples variance-reduction design, not an accident). |
+| `cover_art.py` | The deterministic, seeded procedural cover-art generator for the manuscript title page (`generate_cover_art` — matplotlib-only, byte-identical for a fixed seed, no network/AI image API) and its fail-closed wrapper `require_cover_art` (raises on an unwritable destination; bound to the committed `manuscript/figures/cover_colony.png`). |
 
 ## Public API (`__init__.py`)
 
@@ -80,7 +81,7 @@ collisions across seeds).
 
 ## Tests
 
-`tests/colony/` — eleven files, each paired to one or more modules above:
+`tests/colony/` — twelve files, each paired to one or more modules above:
 
 | Test file | Covers |
 | --- | --- |
@@ -94,7 +95,8 @@ collisions across seeds).
 | `test_visualization.py` | `visualization.py` — real non-empty PNG output and the honest below-minimum skip. |
 | `test_nullmodel.py` | `nullmodel.py` — determinism, the structural-isolation grep/AST tests (ISC-85). |
 | `test_sweep.py` | `sweep.py` — `param_name` validation, hand-derivable Wilson bounds, disjoint sweep-point subdirectories (ISC-86). |
-| `test_colony_experiments_extended.py` | The eight pre-registered analyses' pinned real numbers (ISC-87–ISC-113). |
+| `test_colony_experiments_extended.py` | The eleven pre-registered analyses' pinned real numbers (ISC-87–ISC-113). |
+| `test_cover_art.py` | `cover_art.py` — same-seed byte-identical determinism, different-seed difference, valid PNG dimensions/color diversity, parent-dir creation, and the `require_cover_art` blocked-destination negative control (ISC-98, ISC-118). |
 
 ## ISA cross-reference
 

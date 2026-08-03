@@ -4,12 +4,24 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 
 ## Current validation evidence
 
-- Project tests and coverage:
+- Project tests and coverage (2026-08-02):
   `uv run pytest projects/templates/template_storybook/tests/ --cov=projects/templates/template_storybook/src --cov-fail-under=90`
-- Stage-02 storybook render:
-  `uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_storybook`
-- Stage-03 manuscript render:
-  `uv run python scripts/pipeline/stage_03_render.py --project templates/template_storybook`
+  → 21 passed, 0 failed, 0 skipped; coverage 95.68% (pytest) / 94.4% (stage-01
+  project-tests run, `scripts/pipeline/stage_01_test.py --project-only --project templates/template_storybook`).
+- Pre-render validation:
+  `uv run python -m infrastructure.validation.cli prerender projects/templates/template_storybook/manuscript --repo-root .`
+  → no render-blocking pitfalls or undefined citations.
+- Stage-02 storybook render: 15/15 analysis scripts passed; primary PDF
+  `output/pdf/the-shape-between.pdf` (14 pages) + contact sheet + manifest
+  regenerated.
+- Stage-03 manuscript render: `template_storybook_combined.pdf` (8 pages) plus
+  HTML and 6 Beamer slide decks; 0 `^! ` lines in `output/pdf/*.log`, 0 `??`
+  in both PDFs.
+- Stage-04 validation: all checks passed; rendered provenance receipt written.
+- Stage-05 copy: outputs copied to repo `output/templates/template_storybook/`.
+- Template drift (2026-08-02):
+  `uv run python scripts/audit/check_template_drift.py --project templates/template_storybook --strict`
+  → no drift detected.
 
 ## Integrity and template-status gaps
 
@@ -19,6 +31,12 @@ Forward-only backlog for the full-page illustrated storybook exemplar.
 - Page-level accessibility alt text is now generated in
   `output/data/storybook_manifest.json`; keep it descriptive when page content
   changes.
+- 2026-08-02 pass: enumerated the actual script and test files in
+  `scripts/AGENTS.md` and `tests/AGENTS.md` so the listings can be compared
+  against disk; completed the `docs/README.md` index (added `style_guide.md`
+  and `agent_instructions.md`); added `.agents/README.md` and
+  `.agents/skills/README.md` orientation files to complete the shared
+  `.agents/` skill-catalog surface.
 
 ## Configurable-surface gaps
 

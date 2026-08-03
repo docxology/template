@@ -6,10 +6,11 @@ exactly-checkable arithmetic, hand-verified in
 [`tests/colony/test_colony_stats_unit.py`](../tests/colony/test_colony_stats_unit.py)
 against expectations computed independently of the function under test.
 
-## The five functions in `colony/stats.py`
+## The six functions in `colony/stats.py`
 
 | Function | What it computes | Why it exists |
 | --- | --- | --- |
+| [`convergence_rate`](../src/template_formal/colony/stats.py) | Fraction of converged trials over a batch (`sum(outcomes) / len(outcomes)`), raising `ValueError` on an empty sequence. | Turns "N trials, R converged" into the point estimate every Wilson-bounded rate below is built from. |
 | [`wilson_score_interval`](../src/template_formal/colony/stats.py) | Closed-form Wilson score confidence interval for a binomial proportion, using `statistics.NormalDist().inv_cdf` for the exact critical value (not a hardcoded `1.96`). | Turns "N trials, R converged" into a statistically honest claim about the *true* rate, not a point estimate that could be one batch's coincidence. Stays well-behaved near `phat` close to 0 or 1 — exactly the regime a high-convergence claim lives in. |
 | [`consensus_tick_summary`](../src/template_formal/colony/stats.py) | Mean/median/stdev/p25/p50/p75/p90 over a batch of converged trials' consensus ticks. Returns `Err(EmptySummaryError(...))` on zero converged trials rather than letting `statistics.mean` raise. | Descriptive statistics for the histogram figure ([`colony/visualization.py`](../src/template_formal/colony/visualization.py)) and manuscript prose. |
 | [`pearson_r`](../src/template_formal/colony/stats.py) | Hand-derived Pearson correlation coefficient; returns `0.0` (documented, not a silent NaN) when either series has zero variance. | Used as one deliberately weak, exploratory check (see below) — never as a hard-bound claim. |
@@ -21,9 +22,9 @@ reports a rate *and* its Wilson 95% interval, never a bare point estimate.
 
 ## The pre-registered-hypothesis discipline
 
-`tests/colony/test_colony_experiments_extended.py` runs eight real, seeded
-experiments (lettered A-H in the module's own section-comment headers,
-literally `a` through `h`), each following the same discipline: **state
+`tests/colony/test_colony_experiments_extended.py` runs eleven real, seeded
+experiments (lettered A-K in the module's own section-comment headers,
+literally `a` through `k`), each following the same discipline: **state
 the hypothesis and its falsification criterion in a comment block before
 the test that produces the result**, then report the real, unrounded
 numbers. This mirrors what
@@ -248,7 +249,7 @@ gross behavioral prediction.
 
 ### What's explicitly *not* shown
 
-All eight experiments hold `num_agents=8`, two `locations`, `num_ticks=30`
+All eleven experiments hold `num_agents=8`, two `locations`, `num_ticks=30`
 fixed — none of the results is evidence about other colony sizes, location
 counts, or tick horizons. Cross-seed-base robustness for the heterogeneity
 and decay sweeps is now a **gated regression test** (Experiments E and F

@@ -37,9 +37,12 @@ authors:
 # Consumed by: `infrastructure.publishing.publish_to_zenodo` (in `infrastructure/publishing/platforms.py`)
 publication:
   doi: ""  # Concept DOI — stable citation; PDF cover and CITATION.cff use this field only
+  doi_status: ""  # e.g. "DOI published" once a real deposit exists — never fabricated
   version_doi: ""  # Latest Zenodo version DOI; updated by publish_project_release.py when split layout is used
   version_record: ""  # https://zenodo.org/records/{id} for the latest deposit
   github_repository: ""  # Pre-release bookends; e.g. docxology/template_formal
+  repository_url: ""  # https://github.com/{owner}/{repo} — rendered on the PDF title page
+  repository_label: ""  # Display label for the repository link, e.g. docxology/template_formal
   transmission_bookends:
     enabled: false
     max_prior_releases: 5
@@ -59,6 +62,8 @@ keywords:
   - "category theory"
   - "active inference"
   - "multiagent systems"
+  - "affine types"
+  - "illegal state unrepresentable"
 
 metadata:
   license: "Apache-2.0"
@@ -79,6 +84,7 @@ steganography:
 analysis:
   scripts:
     - 02_run_analysis.py
+    - zz_generate_cover_art.py
 
 # Consumed by: `infrastructure.llm.LLMClient` (in `infrastructure/llm/core/client.py`)
 llm:

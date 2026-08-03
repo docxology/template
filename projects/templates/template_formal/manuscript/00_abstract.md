@@ -44,7 +44,7 @@ mechanism (deliberately not overclaimed as "emergence" — see
 proves vs. what is a runtime discipline" section (@sec:honesty-line) that
 pins every strong claim to the ISC (Ideal-State Criterion) number of its
 paired negative-control test, so the claim-to-evidence mapping is
-auditable rather than asserted. Empirically: eight pre-registered analyses
+auditable rather than asserted. Empirically: eleven pre-registered analyses
 grouped across three experiment families,
 falsifiable experiments (@sec:results-discussion) — a decay-rate sweep
 revealing a real, non-monotonic threshold effect (near-zero convergence

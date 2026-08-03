@@ -10,7 +10,7 @@ lines when appending; do not overwrite sections you did not author.
 
 - mypy-as-oracle: `uv run mypy --strict projects/templates/template_formal/src` must exit 0; `tests/test_mypy_oracle.py` also runs this as a subprocess and separately asserts non-zero exit + matching error substring on each `tests/mypy_fixtures/*.py` negative-control fixture.
 - Project tests and coverage: `uv run pytest projects/templates/template_formal/tests/ --cov=projects/templates/template_formal/src --cov-fail-under=90`.
-- Latest full regression run: 279 tests exercised with 95.91% coverage; the sole initial mypy-oracle failure from the new analysis type boundary was fixed and its exact oracle lane re-passed.
+- Latest full regression run: 279 tests exercised with 95.29% coverage (authoritative gate: `stage_01_test.py --project-only` → 279/279 passed); the sole initial mypy-oracle failure from the new analysis type boundary was fixed and its exact oracle lane re-passed.
 - Zero mocks: `grep -rn "MagicMock\|mocker.patch\|unittest.mock" projects/templates/template_formal/tests/` must return nothing.
 - Optional formal side-spec: `scripts/check_formal_specs.sh` runs the Lean 4 `lake build` and the TLA+ TLC model check as real subprocesses; both are non-default (require `lake`/`elan` and a Java runtime respectively) and are not part of the core pipeline.
 - Manuscript honesty gate: grep for `"dependent type"` and `"linear type"` outside the manuscript's explicit "What mypy --strict proves" scoping section must return zero matches (ISC-44).

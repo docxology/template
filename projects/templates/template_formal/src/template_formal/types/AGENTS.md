@@ -20,4 +20,4 @@ marker, it must be added to `PhaseT`'s `TypeVar` bound and to every
 in the same change, not left to drift.
 
 See the project [`AGENTS.md`](../../../AGENTS.md) and [`ISA.md`](../../../ISA.md)
-for the full map and ISC-1..92 criteria.
+for the full map and ISC-1..122 criteria.

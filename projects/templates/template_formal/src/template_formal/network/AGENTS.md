@@ -21,4 +21,4 @@ never repurpose it for an expected network fault; expected faults are always
 either silent (drop) or a decode-side `Result.Err`.
 
 See the project [`AGENTS.md`](../../../AGENTS.md) and [`ISA.md`](../../../ISA.md)
-for the full map and ISC-1..92 criteria.
+for the full map and ISC-1..122 criteria.

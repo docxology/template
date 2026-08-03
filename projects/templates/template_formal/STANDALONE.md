@@ -109,7 +109,7 @@ does not apply to your domain.
 Do not claim a wider mypy-oracle detection class, a wider fault-injection
 coverage, or a wider colony-convergence result than the fixtures and tests
 actually exercise. `tests/mypy_fixtures/` covers six specific known-bad
-patterns (ISC-2/4/15/18/19/31) — it is not evidence about bug classes those
+patterns (ISC-2/4/15/18/31/32) — it is not evidence about bug classes those
 fixtures do not construct. The colony integration test's emergent
 convergence result is specific to its three-agent, two-location, five-tick
 configuration; widening any of these claims in a fork requires a new

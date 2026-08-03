@@ -26,4 +26,4 @@ constraint violation — a new method following that pattern should catch
 propagate.
 
 See the project [`AGENTS.md`](../../../AGENTS.md) and [`ISA.md`](../../../ISA.md)
-for the full map and ISC-1..92 criteria.
+for the full map and ISC-1..122 criteria.

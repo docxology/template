@@ -25,4 +25,4 @@ division), so a new belief type skipping it is a regression, not a new
 finding.
 
 See the project [`AGENTS.md`](../../../AGENTS.md) and [`ISA.md`](../../../ISA.md)
-for the full map and ISC-1..92 criteria.
+for the full map and ISC-1..122 criteria.

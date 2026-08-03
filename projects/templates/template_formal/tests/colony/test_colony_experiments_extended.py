@@ -6,7 +6,7 @@ Each experiment below states its hypothesis and falsification criterion
 *before* the result, then reports the real, deterministically-reproduced
 numbers this test module actually computed (not rounded, not interpolated,
 not fabricated) -- see ``manuscript/05_results_discussion.md``'s
-"Eight pre-registered analyses" section for the prose account and the
+"Eleven pre-registered analyses" section for the prose account and the
 honesty hedges (correlation vs. causation, single-config vs.
 robust-across-configs, what is NOT shown).
 

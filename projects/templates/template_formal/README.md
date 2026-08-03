@@ -210,9 +210,9 @@ Real expected output (per ISA.md's own authoritative-invocation binding —
 a bare root-venv `uv run pytest` is not equivalent, see `ISA.md` Changelog):
 
 ```text
-Required test coverage of 90% reached. Total coverage: 95.28%
+Required test coverage of 90% reached. Total coverage: 95.29%
 279 passed (timing is machine-dependent)
-Project: ✓ PASSED (279/279 tests, 95.28% coverage)
+Project: ✓ PASSED (279/279 tests, 95.29% coverage)
 ```
 
 **mypy --strict, the authoritative form.** The bare `uv run mypy --strict

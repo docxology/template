@@ -10,12 +10,13 @@ No mocks anywhere — every test uses a real SQLite file (or the one documented
 | Directory / file | What it tests |
 | --- | --- |
 | [`agent/`](agent/) | `Agent[StateT]` — hand-computed expected-free-energy numerics (`test_agent_free_energy.py`), structural proof that one agent's SQLite file is unreachable via another agent's public API (`test_agent_isolation.py`), and storage/tick/protocol-endpoint behavior (`test_agent_lifecycle.py`). |
-| [`colony/`](colony/) | The multi-agent coordination layer: pheromone-field Protocol conformance (`test_pheromone.py`), the fixed-symmetric-config emergent-convergence demo (`test_colony_integration.py`), pure-function unit tests for `stats.py`/`find_sustained_consensus_tick` (`test_colony_stats_unit.py`), `ColonyTrialConfig.__post_init__` runtime guards (`test_colony_experiment_config.py`), the N=150 statistical-rigor claim plus its process-CPU benchmark (`test_colony_convergence_statistics.py`), the random-choice null-model baseline's determinism and structural isolation (`test_nullmodel.py`), the generic parameter-sweep runner (`test_sweep.py`), eight pre-registered analyses grouped across three experiment families (`test_colony_experiments_extended.py`), and the demo/visualization runners (`test_demo.py`, `test_visualization.py`). |
+| [`colony/`](colony/) | The multi-agent coordination layer: pheromone-field Protocol conformance (`test_pheromone.py`), the fixed-symmetric-config emergent-convergence demo (`test_colony_integration.py`), pure-function unit tests for `stats.py`/`find_sustained_consensus_tick` (`test_colony_stats_unit.py`), `ColonyTrialConfig.__post_init__` runtime guards (`test_colony_experiment_config.py`), the N=150 statistical-rigor claim plus its process-CPU benchmark (`test_colony_convergence_statistics.py`), the random-choice null-model baseline's determinism and structural isolation (`test_nullmodel.py`), the generic parameter-sweep runner (`test_sweep.py`), eleven pre-registered analyses grouped across three experiment families (`test_colony_experiments_extended.py`), the demo/visualization runners (`test_demo.py`, `test_visualization.py`), the source-owned publication analysis contract (`test_analysis.py`), and the deterministic cover-art generator (`test_cover_art.py`). |
 | [`network/`](network/) | The in-process fault-injectable bus (`test_bus.py`: seeded determinism, each fault mode actually firing) and an end-to-end handshake driven through it (`test_handshake_over_bus.py`). |
 | [`protocol/`](protocol/) | The session-typed state machine and its wire codec (`test_session.py`). |
 | [`storage/`](storage/) | Schema-to-DDL generation (`test_storage_schema.py`), the real on-disk `QueryBuilder` (`test_storage_db.py`), and the affine-discipline `TransactionHandle` (`test_storage_transaction.py`). |
 | [`mypy_fixtures/`](mypy_fixtures/) | Not pytest tests themselves — real Python source files, each encoding one illegal or (for `good_*.py`) legal state, driven by `test_mypy_oracle.py` below. |
 | [`test_mypy_oracle.py`](test_mypy_oracle.py) | Runs `mypy --strict` as a real subprocess against every fixture and the real `src/` tree — see "mypy-oracle harness" below. |
+| [`test_project_surface_sync.py`](test_project_surface_sync.py) | The project-surface synchronization gate: experiment-plan figures vs manuscript labels, live fixture roster vs abstract/README claims, fork-surface command sync, documented script paths resolving on disk, figure-registry completeness, and claim-ledger row resolvability. |
 | [`test_types_ids.py`](test_types_ids.py), [`test_types_result.py`](test_types_result.py) | The two leaf `types/` modules that have no natural subpackage test directory of their own. |
 | [`conftest.py`](conftest.py) | Puts repo root, project root, and `src/` onto `sys.path` (see [`../src/AGENTS.md`](../src/AGENTS.md)) — no fixtures beyond path wiring. |
 
@@ -41,7 +42,7 @@ in this project:
 ## Coverage gate
 
 90% floor (`pyproject.toml`'s `[tool.coverage.report] fail_under = 90`),
-currently **95.28%** measured this session via:
+currently **95.29%** measured this session via:
 
 ```bash
 uv run pytest tests -q --cov=src/template_formal --cov-report=term-missing

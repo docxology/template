@@ -261,7 +261,7 @@ consistent with (not proof of) the heterogeneity-sweep finding below that
 wider preference spread makes consensus harder, not a second confirmed
 result.
 
-## Eight pre-registered analyses across three experiment families
+## Eleven pre-registered analyses across three experiment families
 
 The N=150 statistical claim above answers one question — does the real
 mechanism converge reliably at *one* calibrated configuration — and
@@ -754,9 +754,9 @@ further; that is named as future work, not silently resolved. Gated by
 `test_wide_condition_clears_the_null_model_baseline_at_both_seed_bases` in
 `test_colony_experiments_extended.py`.
 
-### Honesty hedges common to all eight analyses
+### Honesty hedges common to all eleven analyses
 
-All eight analyses hold `num_agents=8`, two `locations`, and
+All eleven analyses hold `num_agents=8`, two `locations`, and
 `num_ticks=30` fixed — none of the results above is evidence about
 convergence at other colony sizes, other numbers of candidate locations,
 or other tick horizons, matching the scoping already stated for the N=150
