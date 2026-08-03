@@ -89,6 +89,41 @@ remain in each canonical exemplar's `TODO.md`.
 | `TRACKED-OUTPUT-BUDGET-1` | Minor | The generated-artifacts guard has a 50MB blind spot per file and relies on a path allowlist that may not cover new exemplars. | Add per-file advisory ceiling; make budget check fail-closed on any tracked binary approaching the hard cap. | `check_tracked_generated_artifacts.py` flags single files near the cap. | SHIPPED: `PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES = 20MB` advisory ceiling wired into `public_template_output_budget_findings()`; test added. |
 | `NO-MOCK-WORDING-1` | Minor | The README "No mocks" claim uses `pytest-httpserver` as an example of a permitted mock, which contradicts the headline. | Reword `README.md:525` to `README.md:535` to say "No unit-level mock frameworks; HTTP boundaries use an in-process test server." | README phrasing is scoped and the contradiction is resolved. | Minor documentation accuracy. |
 
+## Scoped improvement backlog (2026-08-03)
+
+Deep review of the template repo across source/architecture, tests/coverage,
+docs/generated facts, and CI/gates/security (supplemented by a 4-agent
+parallel review pass). Findings are tiered **Major / Medium / Minor**; each
+carries a stable ID, exact path, problem, smallest next step, and acceptance
+evidence. Verify measured counts from source before starting any item (the
+`module_line_count_check --include-tests` numbers below are snapshots).
+
+### Major (high-impact, larger effort)
+
+| ID | Problem and impact | Smallest next step | Acceptance evidence |
+| --- | --- | --- | --- |
+| `MODULARITY-MAJ-1` | Two public exemplar `src/` modules exceed the 800-line advisory ceiling and grow unboundedly: `template_advanced_literature_review/src/multi_phase/search.py` (826), `template_pools_rules_tools/src/figures.py` (815). Splitting keeps exemplars maintainable and the advisory gate honest. | Split each into cohesive submodules (e.g. `search.py` → query/rerank/filter; `figures.py` → per-chart modules) with __init__ re-exports; keep `module_line_count_check` WARN-free; add a composition smoke test. | `module_line_count_check.py` emits zero WARN for those two files; exemplar project test suites still green. |
+| `REPRODUCIBLE-PDF-MAJ-1` | `REPRODUCIBLE-PDF-1` is marked SHIPPED but its acceptance evidence ("full two-run LaTeX byte-diff") remains a *manual* verification — the deterministic-pipeline claim is not machine-proven. `test_determinism.py` covers `SOURCE_DATE_EPOCH` injection only. | Add an automated two-run rendered-output snapshot-diff test that renders `--core-only` twice on the same commit and asserts byte-identical PDF/digests, wired into CI. | Two automated runs on one SHA produce byte-identical PDFs; new test is a required gate. |
+| `TEST-SPLIT-MAJ-1` | 17 test modules exceed the 800-line advisory ceiling (largest: `template_formal/tests/colony/test_colony_experiments_extended.py` 1826, `test_check_template_drift.py` 1360, `template_madlib/tests/test_composition_and_analysis.py` 1157). Monolithic test files slow collection and obscure failure isolation. | Split the top 5–6 test files by concern (rename classes, keep public test names), run each sub-file independently. | `module_line_count_check --include-tests` WARN count drops materially; full suite green. |
+
+### Medium (focused, moderate effort)
+
+| ID | Problem and impact | Smallest next step | Acceptance evidence |
+| --- | --- | --- | --- |
+| `SECRET-DEDUP-MED-1` | Credential-env regex and stripping are duplicated in `infrastructure/core/runtime/_python_env.py:18` (`_SECRET_ENV_NAME`) and `infrastructure/core/execution_boundary.py:38` (`_SECRET_ENV_NAME` + `build_bounded_env`). Two sources can drift, silently weakening one boundary. | Extract a single shared secret-name predicate/env-stripping helper (e.g. `infrastructure/core/secrets.py`), have both modules delegate; drop the duplicate regex. | `grep _SECRET_ENV_NAME infrastructure/ --include=*.py | wc -l` == 1; existing secret-strip tests pass. |
+| `BOUNDARY-TEST-MED-1` | `run_bounded_subprocess(capture_output=False)` timeout path (used by `analysis_pipeline.run_analysis_script` with `float("inf")`) has no direct timeout negative-control test; only the `capture_output=True` path is covered. | Add a `capture_output=False` spawn-that-sleeps + timeout test asserting `timed_out=True` and no surviving descendant. | New test passes; existing analysis_pipeline tests still green. |
+| `GATE-ADVISORY-MED-1` | `module_line_count_check` emits only advisory WARNs (exit 0) for oversized src/test modules, so the "thin module" discipline is unenforced. | Introduce a bounded ratchet: fail on any *source* module ≥950 lines (already the fail threshold) and on regressions above an allowlist; keep test WARNs advisory. | Gate still green on current tree but fails if `search.py`/`figures.py` grow further; documented in `scripts/gates/AGENTS.md`. |
+| `STATUS-REFRESH-MED-1` | `STATUS.md` "Last updated" is 2026-07-22, but six subsystem rows (orchestration, rendering, validation, steganography, secure-run, discovery) were last manually verified **2026-05-21**, approaching/over the 6-month dormancy refresh target. | Re-run each subsystem's verification step (per `STATUS.md` "How to refresh a row") and update dates/evidence; add an automated freshness check. | `STATUS.md` shows no row older than 6 months; a gate flags future staleness. |
+| `DOC-COVER-MED-1` | New security modules (`execution_boundary.py`) and earlier hardening modules are documented in `AGENTS.md` but `docs/_generated/active_projects.md` (Jul 22) and `publication_records.md` (Jul 22) predate more recent regeneration (Aug 3) — generated-facts drift risk. | Regenerate all `docs/_generated/*` from source via their generators and commit; add a `--check` CI lane. | `docs/_generated/active_projects.md` + `publication_records.md` timestamps align with siblings; `check_template_drift --strict` clean. |
+
+### Minor (small, low-risk)
+
+| ID | Problem and impact | Smallest next step | Acceptance evidence |
+| --- | --- | --- | --- |
+| `DOC-NEG-CONTROL-MIN-1` | The doc audit (`scripts/audit/audit_documentation.py`) emits 59 advisory `gate-negative-control` findings across docs that claim a gate enforces behavior without naming a negative-control fixture. Advisory-only today, but several reflect genuinely weak claims. | Triage the 59 (sample read each); fix the ones that describe testable gates (add "negative control: X fails"), leave genuine prose noise flagged-advisory. | Advisory count drops; no doc-lint/template-drift regression. |
+| `INSTALLER-PIN-MIN-1` | `RELEASE-METADATA-1` "pin mutable installers" gap: docs/doctor reference `curl … | sh` installers (e.g. `astral.sh/uv/install.sh` at `infrastructure/doctor/detectors/tooling.py:25`, `docs/guides/getting-started.md:75`) without a checksum. | Document the pinned version + expected SHA-256 for the referenced uv installer; add a note to the dependency-management doc; no functional change. | No repo-shipped installer guidance references an unverifiable `curl|sh` without a checksum note. |
+| `BAK-ARTIFACT-MIN-1` | Cleanup hygiene: older `.bak`-style or stray build artifacts (e.g. in `infrastructure/steganography/kmyth/`, cleared earlier) — confirm none remain and the generated-artifacts guard covers new exemplars' output. | Re-run `check_tracked_generated_artifacts.py` and `scripts/audit/check_staged_secrets.py`; grep for `*.bak` outside gitignored vendored dirs. | Zero stray `.bak`/build artifacts in tracked tree; guards pass. |
+
 ## Backlog conventions
 
 - IDs are stable and are never silently reused. Each active item must retain a
