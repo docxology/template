@@ -145,8 +145,11 @@ embed_steganography(Path("paper.pdf"), config=config, title="My Paper")
 
 ### Kmyth / TPM Sealing (optional)
 
-- The upstream `NationalSecurityAgency/kmyth` repository is mounted as
-  `infrastructure/steganography/kmyth`.
+- The `docxology/kmyth` fork (of upstream `NationalSecurityAgency/kmyth`)
+  is mounted as `infrastructure/steganography/kmyth` on the
+  `docxology/macos-build-stubs` branch, which carries the macOS build
+  stubs (network/KMIP no-ops) and the FlushContext fix documented in
+  `AGENTS.md`.
 - `secure_run.sh --validate-kmyth` checks for `kmyth-seal` and
   `kmyth-unseal` in either `kmyth_binary_dir`, the submodule's `bin/`
   directory, or `PATH`.

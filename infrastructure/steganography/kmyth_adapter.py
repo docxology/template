@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-KMYTH_REPOSITORY_URL = "https://github.com/NationalSecurityAgency/kmyth"
+KMYTH_REPOSITORY_URL = "https://github.com/docxology/kmyth"
 KMYTH_SUBMODULE_DIRNAME = "kmyth"
 KMYTH_SEAL = "kmyth-seal"
 KMYTH_UNSEAL = "kmyth-unseal"
