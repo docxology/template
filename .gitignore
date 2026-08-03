@@ -188,6 +188,8 @@ projects/templates/template_advanced_literature_review/**/__pycache__/
 !projects/templates/template_registered_report/**
 !projects/templates/template_active_inference/
 !projects/templates/template_active_inference/**
+# Re-exclude the fingerprint cache inside the re-included exemplar tree
+projects/templates/template_active_inference/output/.fingerprint_cache.sha256
 !projects/templates/template_autoresearch_project/
 !projects/templates/template_autoresearch_project/**
 !projects/templates/template_autopoiesis/

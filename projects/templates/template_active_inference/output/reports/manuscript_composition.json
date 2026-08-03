@@ -1,0 +1,121 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "6f851d7fe99fb7f4f3a7172a1a81a785a1207c5a7e28fd40b41a1ddaf9efe1da",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "506ad197b21630fb7bcb10405b37d9385fdaf89aa9ee5e3b934f2ab2aba9a9f7",
+  "combined_size_bytes": 128994,
+  "input_root_kind": "hydrated",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "output/manuscript/00_00_transmission_begin.md",
+      "sha256": "6a3a1f1c580efc6c24f237f4e1b55a67f87d99a0d34d1ebab4a3c83d63dc38cf",
+      "size_bytes": 1517
+    },
+    {
+      "ordinal": 2,
+      "path": "output/manuscript/00_00_sheaf_coverage.md",
+      "sha256": "802b264d10ff7b601b4b1db5e3e40a7b09196aaaf0305cf6963ee691ff6613d3",
+      "size_bytes": 1866
+    },
+    {
+      "ordinal": 3,
+      "path": "output/manuscript/00_abstract.md",
+      "sha256": "3a969013cddaf4abecd58789225d9bc5c7b908fec0ab62766ba0e4eb1f7770fe",
+      "size_bytes": 1201
+    },
+    {
+      "ordinal": 4,
+      "path": "output/manuscript/02_intro_motivation.md",
+      "sha256": "4b470db73e51910dbe5599fd55d11f1d60199e389ee14d56fda0484a9a8466a9",
+      "size_bytes": 1567
+    },
+    {
+      "ordinal": 5,
+      "path": "output/manuscript/03_intro_contributions.md",
+      "sha256": "e0966cdde925ba9a9e4e136cb33d6eff637fecfe9815374726a0b5bf19c9bc0a",
+      "size_bytes": 2046
+    },
+    {
+      "ordinal": 6,
+      "path": "output/manuscript/05_methods_analytical.md",
+      "sha256": "0ec70d1e93158bb29e466e94ec4cde62259d5314ef48d0dbd9d5602e27440046",
+      "size_bytes": 5116
+    },
+    {
+      "ordinal": 7,
+      "path": "output/manuscript/06_methods_pymdp.md",
+      "sha256": "5bec086a03a0190f489d8c8868169f8610fd3d454e3200b39f845e96fa87fc64",
+      "size_bytes": 4110
+    },
+    {
+      "ordinal": 8,
+      "path": "output/manuscript/07_methods_lean.md",
+      "sha256": "8f2cf5d8c724dd8c0834f3df506b06f3b11ed1761223bd13ddf84abe1b9f4d73",
+      "size_bytes": 3385
+    },
+    {
+      "ordinal": 9,
+      "path": "output/manuscript/08_methods_sheaf.md",
+      "sha256": "2d1ec2f66344e4bcfaf2def3d1a6b44fbf52f36dc97dd5c08fb926c17e8c27d4",
+      "size_bytes": 64024
+    },
+    {
+      "ordinal": 10,
+      "path": "output/manuscript/10_results_mi_sweep.md",
+      "sha256": "fba301ed89b1118b528c36c166bc1bd7b47b2301c60716d5b1bf7d1bb200cad6",
+      "size_bytes": 1581
+    },
+    {
+      "ordinal": 11,
+      "path": "output/manuscript/11_results_free_energy.md",
+      "sha256": "589332a3aa93f7b59bd776f044645b347be3a517612cb5d9aa43bf837348db62",
+      "size_bytes": 1846
+    },
+    {
+      "ordinal": 12,
+      "path": "output/manuscript/12_results_si_tmaze.md",
+      "sha256": "d363b4977d9be5fa3d7f46ae129f23bd0183888ec80d06100bb62cc9c30019dd",
+      "size_bytes": 11128
+    },
+    {
+      "ordinal": 13,
+      "path": "output/manuscript/13_results_invariants.md",
+      "sha256": "b8f3b4d9af657f740977d5a015cce99c84014a9b69f2a825cdc4f17b56ef0305",
+      "size_bytes": 3747
+    },
+    {
+      "ordinal": 14,
+      "path": "output/manuscript/15_discussion_outlook.md",
+      "sha256": "aca8942a4d63a2fc083aee86455d0e9e4383de06c1dea062d59bc93c02f9e5c6",
+      "size_bytes": 3747
+    },
+    {
+      "ordinal": 15,
+      "path": "output/manuscript/16_appendix_full_sheaf.md",
+      "sha256": "4dd32b8c3d9daf7bc02c4b5514fe27f869bd98d3882cbaf98e25bac7aee34244",
+      "size_bytes": 20202
+    },
+    {
+      "ordinal": 16,
+      "path": "output/manuscript/17_conclusion.md",
+      "sha256": "ec0e22d7161f3777f606e927758f67ddfa977ef2a9563410fa257d64b88b909f",
+      "size_bytes": 1143
+    },
+    {
+      "ordinal": 17,
+      "path": "output/manuscript/99_references.md",
+      "sha256": "c346c9a1c6ca9f2e822c7a3663b4a9fd590d56c9f1bd32bf84176215b45c1661",
+      "size_bytes": 103
+    },
+    {
+      "ordinal": 18,
+      "path": "output/manuscript/99_zz_transmission_end.md",
+      "sha256": "b3779d5e30783e0134569b8ed3c789b2c12af3ee27ebb13ba99b8146929c8bc5",
+      "size_bytes": 509
+    }
+  ],
+  "ordered_inputs_sha256": "41028f648904f50ad5867af3b4a46aae670cd5d784ced9fecd72d0ad6b989cc1",
+  "project": "templates/template_active_inference",
+  "schema_version": "template-manuscript-composition-v1"
+}

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>12_results_si_tmaze.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -196,11 +209,14 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <code>state_inference</code> mode is belief filtering with a
 goal-seeking action rule; sophisticated policy inference (an
 expected-free-energy policy posterior) is selectable via
-<code>mode: policy_inference</code> ([sec:methods_pymdp]). Summary
+<code>mode: policy_inference</code> (<span class="citation"
+data-cites="sec:methods_pymdp">[@sec:methods_pymdp]</span>). Summary
 metrics land in <code>output/data/si_tmaze_summary.json</code>.</p>
 <p>Steps recorded: 2. Mean belief entropy: 0.3251. Belief entropy over
-the rollout is traced in [fig:si_belief_entropy_curve]; the paired
-observation and action indices are in [fig:si_obs_action_trace].
+the rollout is traced in <span class="citation"
+data-cites="fig:si_belief_entropy_curve">[@fig:si_belief_entropy_curve]</span>;
+the paired observation and action indices are in <span class="citation"
+data-cites="fig:si_obs_action_trace">[@fig:si_obs_action_trace]</span>.
 <code>output/data/analysis_statistics.json</code> now records the trace
 as a small statistical object rather than a caption-only trace: action
 switches 1 times (rate 1.000 over adjacent steps), observation diversity
@@ -223,26 +239,30 @@ checks under finite-horizon discrete active-inference assumptions
 external behavioral datasets. Graph-world extension rows: 4 over 4
 nodes, with goal-reached flag 1.</p>
 <p>The expected free energy that scores those policies decomposes in
-closed form ([fig:efe_decomposition]). Across the 4 length-2 policies on
-the T-maze generative model, the expected-free-energy-minimising policy
-is <code>00</code> with <span class="math inline">\(G\)</span> = 2.2539
-nats, splitting into risk 1.6037 (the pragmatic deviation of predicted
-outcomes from preferences) and ambiguity 0.6502 (the expected likelihood
-entropy) nats. The same <span class="math inline">\(G\)</span> splits
-equivalently into pragmatic value -2.2539 (expected log-preference) and
-epistemic value 0.0000 (state-outcome mutual information) nats — the
-term that drives information-seeking. The two forms are exactly equal:
-risk + ambiguity + pragmatic + epistemic vanishes to within 0.0e+00
-across every policy, the action-selection twin of the analytical
-free-energy decomposition identity ([sec:results_free_energy]).</p>
+closed form (<span class="citation"
+data-cites="fig:efe_decomposition">[@fig:efe_decomposition]</span>).
+Across the 4 length-2 policies on the T-maze generative model, the
+expected-free-energy-minimising policy is <code>00</code> with <span
+class="math inline">\(G\)</span> = 2.2539 nats, splitting into risk
+1.6037 (the pragmatic deviation of predicted outcomes from preferences)
+and ambiguity 0.6502 (the expected likelihood entropy) nats. The same
+<span class="math inline">\(G\)</span> splits equivalently into
+pragmatic value -2.2539 (expected log-preference) and epistemic value
+0.0000 (state-outcome mutual information) nats — the term that drives
+information-seeking. The two forms are exactly equal: risk + ambiguity +
+pragmatic + epistemic vanishes to within 0.0e+00 across every policy,
+the action-selection twin of the analytical free-energy decomposition
+identity (<span class="citation"
+data-cites="sec:results_free_energy">[@sec:results_free_energy]</span>).</p>
 <p>Precision controls how sharply that expected free energy is acted on:
 the policy posterior is the softmax-weighted <span
 class="math inline">\(q(\pi) \propto \exp(-\gamma\,G(\pi))\)</span>, and
 sweeping the inverse temperature <span
 class="math inline">\(\gamma\)</span> across 33 grid points up to 16
-sharpens it monotonically ([fig:precision_sweep]). Posterior entropy
-falls from <span class="math inline">\(\ln 4\)</span> at <span
-class="math inline">\(\gamma\)</span>=0 to 1.1458 nats at <span
+sharpens it monotonically (<span class="citation"
+data-cites="fig:precision_sweep">[@fig:precision_sweep]</span>).
+Posterior entropy falls from <span class="math inline">\(\ln 4\)</span>
+at <span class="math inline">\(\gamma\)</span>=0 to 1.1458 nats at <span
 class="math inline">\(\gamma\)</span>=1, then saturates at the floor
 0.6931 nats rather than reaching zero: the absorbing goal makes the
 second action irrelevant once reached, so 2 policies tie at the
@@ -253,22 +273,25 @@ selection becomes effectively deterministic — optimal-set mass exceeding
 <p>The minimal two-state maze above is, by construction, too small for
 information-seeking to matter: the reward location is observable from
 the start, so a greedy pragmatic rule and an expected-free-energy rule
-reach the goal equally often. The cue-then-reward variant
-([fig:cue_tmaze_advantage]) removes that degeneracy. Across 8 joint
-position-by-context states the reward location is an uninformative
-latent (50/50 at the start) that is hidden until the agent visits a CUE
-location, at which point a single sample resolves it: the cue carries
-0.6931 nats of information (<span class="math inline">\(= \ln
-2\)</span>, the entropy of the unknown context). An agent that samples
-the cue and then takes the contingent arm reaches reward with expected
-log-preference -0.0538 nats, against -4.0538 nats for a greedy agent
-that commits to an arm before sampling — a measured behavioural
-advantage of 4.0000 nats that vanishes only if epistemic value is
-removed from the objective. The advantage is sophisticated, not flat:
-the closed-form flat decomposition of [sec:results_si_tmaze] scores the
-cue-first and greedy policies as identical because it propagates beliefs
-through the transition model without conditioning them on the cue
-observation. Resolving the latent therefore requires an
+reach the goal equally often. The cue-then-reward variant (<span
+class="citation"
+data-cites="fig:cue_tmaze_advantage">[@fig:cue_tmaze_advantage]</span>)
+removes that degeneracy. Across 8 joint position-by-context states the
+reward location is an uninformative latent (50/50 at the start) that is
+hidden until the agent visits a CUE location, at which point a single
+sample resolves it: the cue carries 0.6931 nats of information (<span
+class="math inline">\(= \ln 2\)</span>, the entropy of the unknown
+context). An agent that samples the cue and then takes the contingent
+arm reaches reward with expected log-preference -0.0538 nats, against
+-4.0538 nats for a greedy agent that commits to an arm before sampling —
+a measured behavioural advantage of 4.0000 nats that vanishes only if
+epistemic value is removed from the objective. The advantage is
+sophisticated, not flat: the closed-form flat decomposition of <span
+class="citation"
+data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span> scores
+the cue-first and greedy policies as identical because it propagates
+beliefs through the transition model without conditioning them on the
+cue observation. Resolving the latent therefore requires an
 observation-conditioned (sophisticated-inference) evaluation, and under
 that evaluation cue-sampling is strictly necessary rather than merely
 available.</p>
@@ -278,8 +301,9 @@ column of <span class="math inline">\(A\)</span> and accumulating
 observation-state counts <span class="math inline">\(c\)</span> gives
 the conjugate update <span class="math inline">\(pA \leftarrow pA +
 c\)</span> with expected likelihood <span class="math inline">\(E[A] =
-pA / \sum_o pA\)</span> ([fig:dirichlet_convergence]). Driven by a
-fixed, sampling-free expected-count stream, <span
+pA / \sum_o pA\)</span> (<span class="citation"
+data-cites="fig:dirichlet_convergence">[@fig:dirichlet_convergence]</span>).
+Driven by a fixed, sampling-free expected-count stream, <span
 class="math inline">\(\mathrm{KL}(A_{\text{true}} \,\|\,
 A_{\text{learned}})\)</span> falls monotonically from 0.7361 nats at the
 uniform prior to 1.29e-03 nats, reaching the convergence tolerance at

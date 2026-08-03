@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>06_methods_pymdp.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -193,13 +206,16 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <!-- sheaf-track:prose -->
 <p><strong>Sophisticated inference (planning horizon).</strong> The
 pymdp method is a deterministic state-inference harness on a minimal
-T-maze ([fig:tmaze_schematic]) with planning horizon
-<code>policy_len = 2</code>. The discrete-state framing follows finite
-POMDP active-inference treatments and sophisticated-inference analyses
-[dacosta2020discrete; smith2022tutorial; friston2021sophisticated;
-dacosta2023reward], and the implementation anchor is the pymdp software
-paper [pymdp2024]. The default <code>state_inference</code> rollout
-writes the summary/trace artifacts used in [sec:results_si_tmaze]; mean
+T-maze (<span class="citation"
+data-cites="fig:tmaze_schematic">[@fig:tmaze_schematic]</span>) with
+planning horizon <code>policy_len = 2</code>. The discrete-state framing
+follows finite POMDP active-inference treatments and
+sophisticated-inference analyses [dacosta2020discrete;
+smith2022tutorial; friston2021sophisticated; dacosta2023reward], and the
+implementation anchor is the pymdp software paper [pymdp2024]. The
+default <code>state_inference</code> rollout writes the summary/trace
+artifacts used in <span class="citation"
+data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>; mean
 belief entropy is 0.3251.</p>
 <p>The method keeps runtime, posterior, and extension evidence separate.
 <code>output/data/si_policy_comparison.json</code> compares
@@ -225,14 +241,17 @@ class="math inline">\(A,B,C,D\)</span>, pymdp computes state beliefs
 horizon <span class="math inline">\(H =\)</span> 2, which defines the
 <strong>policy depth</strong> used when constructing candidate policies
 (logged as <code>num_policies</code> in the SI summary artifact; see
-[sec:results_si_tmaze]).</p>
+<span class="citation"
+data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>).</p>
 <p>The default harness records belief entropy per step; extending to
 full expected-free-energy policy selection (<code>infer_policies</code>)
-is documented as a follow-on track in [sec:discussion_outlook].</p>
+is documented as a follow-on track in <span class="citation"
+data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
 <!-- sheaf-track:pymdp -->
 <p>SI artifacts (summary, trace, optional JSONL log) record step count,
-actions, observations, and belief entropy for [sec:results_si_tmaze].
-Steps recorded: 2. Branching-time and variational formulations of active
+actions, observations, and belief entropy for <span class="citation"
+data-cites="sec:results_si_tmaze">[@sec:results_si_tmaze]</span>. Steps
+recorded: 2. Branching-time and variational formulations of active
 inference planning are treated here as related planning context
 [champion2021branching; nuijten2026efeplanning]; the live evidence
 remains the finite local artifacts <code>si_policy_grid.json</code>,

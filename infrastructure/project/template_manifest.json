@@ -46,7 +46,7 @@
       "qualified_name": "templates/template_data_descriptor",
       "title": "template_data_descriptor",
       "use_when": "Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication.",
-      "test_file_count": 4,
+      "test_file_count": 5,
       "coverage_floor": 90
     },
     {
@@ -54,7 +54,7 @@
       "qualified_name": "templates/template_eda_notebook",
       "title": "EDA Notebook — Exploratory Data Analysis Exemplar",
       "use_when": "Use this template for **exploratory data analysis on tabular data**: load a dataset, surface missingness, compute descriptive statistics and per-group means, rank features by correlation, and produce a few diagnostic figures.",
-      "test_file_count": 8,
+      "test_file_count": 9,
       "coverage_floor": 90
     },
     {
@@ -78,7 +78,7 @@
       "qualified_name": "templates/template_madlib",
       "title": "Template Madlib — Deterministic Token-Injection Exemplar",
       "use_when": "Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts.",
-      "test_file_count": 4,
+      "test_file_count": 5,
       "coverage_floor": 90
     },
     {
@@ -102,7 +102,7 @@
       "qualified_name": "templates/template_prose_project",
       "title": "template_prose_project",
       "use_when": "Use this template for **manuscript-focused editorial pipelines**: readability gates (Flesch-Kincaid bands), structural checking, citation/BibTeX validation, and prose-quality review workflows where the document itself is the artifact under test.",
-      "test_file_count": 8,
+      "test_file_count": 10,
       "coverage_floor": 90
     },
     {
@@ -134,7 +134,7 @@
       "qualified_name": "templates/template_redacted_report",
       "title": "template_redacted_report",
       "use_when": "Use this template when a report needs **formal redaction before release**: classification ceilings, source-control markings, redaction decisions, authority review, reviewer approvals, source-safe hash ledgers, residual-risk checks, mosaic-risk checks, and a public audit packet must be validated before any sanitized narrative is published.",
-      "test_file_count": 4,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {

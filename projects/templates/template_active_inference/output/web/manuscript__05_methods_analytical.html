@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>05_methods_analytical.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -179,6 +178,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -192,15 +205,18 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
 <h1 id="sec:methods_analytical">Bernoulli–Ising analytical model</h1>
 <!-- sheaf-track:prose -->
 <p>The analytical method is a finite <strong>K=2 Bernoulli /
-Ising</strong> oracle. The entangled joint [eq:entangled_joint] gives
+Ising</strong> oracle. The entangled joint <span class="citation"
+data-cites="eq:entangled_joint">[@eq:entangled_joint]</span> gives
 closed-form mutual information <span
 class="math inline">\(I(\lambda)\)</span>;
 <code>output/data/parameter_sweep.csv</code> then checks the same curve
 by an independent exact total-correlation recomputation before the value
-is used in [sec:results_mi_sweep]. GNN and ontology rows share the same
-symbol surface ([fig:gnn_ontology_concordance]), so the derivation,
-sweep, and model notation are one audited toy contract rather than
-parallel descriptions.</p>
+is used in <span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>. GNN
+and ontology rows share the same symbol surface (<span class="citation"
+data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>),
+so the derivation, sweep, and model notation are one audited toy
+contract rather than parallel descriptions.</p>
 <p>The scope is intentionally small: finite variational quantities only,
 no sampling, and no empirical generalization. “Free energy” here means
 exactly computed variational functionals on this tiny discrete
@@ -238,8 +254,10 @@ so the derivation is auditable rather than asserted.</p>
 <p>The analytical track writes a parameter sweep comparing closed-form
 mutual information with an independent exact recomputation of it (via
 total correlation) across <span class="math inline">\(\lambda \in [0,
-4]\)</span> on 21 grid points ([sec:results_mi_sweep],
-[fig:ising_mi_curve]).</p>
+4]\)</span> on 21 grid points (<span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span>, <span
+class="citation"
+data-cites="fig:ising_mi_curve">[@fig:ising_mi_curve]</span>).</p>
 <!-- sheaf-track:assumption_index -->
 <p>The <code>assumption_index</code> fragment makes the analytical
 equations inspectable as a generated artifact instead of relying on
@@ -275,12 +293,15 @@ the Bernoulli–Ising toy (GNN v1.1).</figcaption>
 <!-- sheaf-track:gnn -->
 <p>The Bernoulli toy is declared in
 <code>gnn/bernoulli_toy.gnn.md</code> (GNN v1.1), following the GNN
-notation role described by Smekal and Friedman [gnn2023].
-[fig:gnn_ontology_concordance] links GNN variables to Active Inference
-Ontology terms bound in the analytical ontology fragment; round-trip
-parity is checked before render.</p>
-<p>Measured MI and sweep artifacts in [sec:results_mi_sweep] ground the
-same symbol map used in the concordance diagram.</p>
+notation role described by Smekal and Friedman [gnn2023]. <span
+class="citation"
+data-cites="fig:gnn_ontology_concordance">[@fig:gnn_ontology_concordance]</span>
+links GNN variables to Active Inference Ontology terms bound in the
+analytical ontology fragment; round-trip parity is checked before
+render.</p>
+<p>Measured MI and sweep artifacts in <span class="citation"
+data-cites="sec:results_mi_sweep">[@sec:results_mi_sweep]</span> ground
+the same symbol map used in the concordance diagram.</p>
 <!-- sheaf-track:ontology -->
 <h3 id="ontology-bindings">Ontology bindings</h3>
 <ul>

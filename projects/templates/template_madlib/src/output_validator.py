@@ -22,6 +22,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import cast
 
 from .config import SECTION_KEYS, MadlibConfig, MadlibConfigError, load_madlib_config
 
@@ -120,7 +121,7 @@ def _issue(result: OutputValidationResult, code: str, message: str) -> None:
 
 def _read_json(path: Path) -> object | None:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return cast(object, json.loads(path.read_text(encoding="utf-8")))
     except (OSError, ValueError):
         return None
 
@@ -302,8 +303,8 @@ def _validate_figure_registry(result: OutputValidationResult, figures_dir: Path,
     if manuscript_dir.is_dir():
         refs: set[str] = set()
         for path in manuscript_dir.glob("*.md"):
-            refs.update(FIGURE_REF_PATTERN.findall(path.read_text(encoding="utf-8")))
-        unregistered = sorted({filename for _, filename in refs} - filenames)
+            refs.update(filename for _, filename in FIGURE_REF_PATTERN.findall(path.read_text(encoding="utf-8")))
+        unregistered = sorted(refs - filenames)
         if unregistered:
             _issue(
                 result,

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>08_methods_sheaf.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -244,6 +243,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -264,7 +277,8 @@ paper role, and paper-specific use statement; the composer then flattens
 the binding set into one Markdown section for PDF and web output.</p>
 <p>The operational claim is auditable binding. Analytical, simulation,
 pymdp, visualization, Lean, GNN, ontology, scholarship, and optional
-media fragments attach to IMRAD rows under [eq:coverage_cell]
+media fragments attach to IMRAD rows under <span class="citation"
+data-cites="eq:coverage_cell">[@eq:coverage_cell]</span>
 (<strong>P</strong> present, <strong>—</strong> unbound,
 <strong>M</strong> missing). This is an applied local-to-global
 consistency contract in the spirit of cellular sheaf and
@@ -272,10 +286,12 @@ sheaf-signal-processing work [curry2014sheaves;
 robinson2014topological], instantiated here as a finite artifact gate
 rather than a cohomology claim.</p>
 <h2 id="coverage-and-figures">Coverage and figures</h2>
-<p>[fig:sheaf_layers_overview] summarizes 34 fragment types and their
-IMRAD bindings. Generated tables below list every track definition and
-section×track binding at compose time. The visualization track is gated
-by <code>output/reports/visualization_quality_audit.json</code>: 23 / 23
+<p><span class="citation"
+data-cites="fig:sheaf_layers_overview">[@fig:sheaf_layers_overview]</span>
+summarizes 34 fragment types and their IMRAD bindings. Generated tables
+below list every track definition and section×track binding at compose
+time. The visualization track is gated by
+<code>output/reports/visualization_quality_audit.json</code>: 23 / 23
 registered figures render, 23 are source-mapped, and 23 have sufficient
 alt/caption metadata; the all-quality flag is <code>true</code>.</p>
 <p>The visualization gate is deliberately row-level. It requires
@@ -298,8 +314,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <p>Each run emits <code>output/data/sheaf_coverage_matrix.json</code>
 and regenerates coverage artifacts. Partial compose
 (<code>--section</code>) is draft-only; the matrix always reflects the
-full manifest. Coverage totals appear on [sec:sheaf_coverage];
-discussion scope is in [sec:discussion_outlook].</p>
+full manifest. Coverage totals appear on <span class="citation"
+data-cites="sec:sheaf_coverage">[@sec:sheaf_coverage]</span>; discussion
+scope is in <span class="citation"
+data-cites="sec:discussion_outlook">[@sec:discussion_outlook]</span>.</p>
 <h2 id="law-verification">Law verification</h2>
 <p><code>--validate-only --strict</code> runs the structural gate before
 any fragment is glued. Beyond per-cell coverage, it invokes the
@@ -322,10 +340,10 @@ about a shared symbol or measured claim. The visualization-quality audit
 is one of those restrictions, so a missing source map, missing
 statistical bridge source, missing hash, blank render, non-RGB render,
 undersized figure, or unbound section breaks the same semantic contract
-that checks statistics and theorem witnesses.
-[fig:semantic_gluing_graph] renders the configured producers, generated
-evidence artifacts, and validation consumers that read each shared
-symbol.</p>
+that checks statistics and theorem witnesses. <span class="citation"
+data-cites="fig:semantic_gluing_graph">[@fig:semantic_gluing_graph]</span>
+renders the configured producers, generated evidence artifacts, and
+validation consumers that read each shared symbol.</p>
 <!-- sheaf-track:formalism -->
 <h3 id="base-poset-and-presheaf">Base poset and presheaf</h3>
 <p>The manuscript is modelled as a coverage sheaf over a finite base
@@ -381,9 +399,10 @@ machine-checked. The oracle <code>verify_sheaf_laws</code>
 (<code>src/manuscript/sheaf/laws.py</code>) verifies 6 laws, and the
 regenerated build reports 6/6 satisfied:</p>
 <ol type="1">
-<li><strong>Poset.</strong> The IMRAD blocks form the chain of
-[eq:imrad_chain]; compose order is monotone in block rank and every
-composing section’s block carries a group row.</li>
+<li><strong>Poset.</strong> The IMRAD blocks form the chain of <span
+class="citation" data-cites="eq:imrad_chain">[@eq:imrad_chain]</span>;
+compose order is monotone in block rank and every composing section’s
+block carries a group row.</li>
 <li><strong>Presheaf (functoriality).</strong> Every bound track lies in
 <span class="math inline">\(\mathcal{T}\)</span>; <span
 class="math inline">\(\pi\)</span> is a strict total order; and each
@@ -569,16 +588,18 @@ records 85 rows, with license-safe status <code>true</code>.</p>
 method surface rather than decorative bibliography.
 <code>output/data/scholarship_source_matrix.json</code> records 21
 source rows across 21 method roles and 10 source families, including 3
-quantitative/statistical or visualization-quality method roles;
-[fig:scholarship_source_map] renders the resulting source-to-artifact
-map with 1 locator kinds. The row set connects foundational free-energy
-and active-inference references [friston2010fep; buckley2017mathreview;
-dacosta2020discrete; parr2022active; smith2022tutorial], planning
-context [champion2021branching; nuijten2026efeplanning], implementation
-and notation anchors [pymdp2024; gnn2023], and applied
-sheaf/local-to-global sources [curry2014sheaves;
-robinson2014topological; bosca2026localglobal] to the exact artifact or
-method role they support.</p>
+quantitative/statistical or visualization-quality method roles; <span
+class="citation"
+data-cites="fig:scholarship_source_map">[@fig:scholarship_source_map]</span>
+renders the resulting source-to-artifact map with 1 locator kinds. The
+row set connects foundational free-energy and active-inference
+references [friston2010fep; buckley2017mathreview; dacosta2020discrete;
+parr2022active; smith2022tutorial], planning context
+[champion2021branching; nuijten2026efeplanning], implementation and
+notation anchors [pymdp2024; gnn2023], and applied sheaf/local-to-global
+sources [curry2014sheaves; robinson2014topological;
+bosca2026localglobal] to the exact artifact or method role they
+support.</p>
 <p>The validation claim is deliberately narrow: every row must have a
 bibliography entry with a DOI or URL, a manuscript citation, registered
 sheaf tracks, bound manifest consumer sections, an existing evidence

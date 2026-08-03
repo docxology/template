@@ -19,10 +19,27 @@ Forward-only backlog for the deterministic coordination-mechanism testbed exempl
 - Repaired manuscript champion notation with `$p^{\ast}$`, eliminating invalid escaped-star LaTeX (`Missing {`/`Missing }` recoverable errors).
 - Regenerated figures, data, PDF/HTML manuscript outputs, validation reports, output statistics, composition, and provenance evidence; refreshed the artifact manifest snapshot.
 
-## Remaining gaps (forward-only ladder)
+## Integrity and template-status gaps
 
-1. Keep deterministic fixture replay green under the project coverage gate.
-2. Keep `manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
-3. Add a script-level config summary only if analysis scripts begin reading YAML directly.
-4. Promote the live agent path only with offline transcript fixtures, stale-transcript detection, and a no-network default validation.
-5. The single-stage rendered-provenance bridge remains sensitive to `git check-ignore` under concurrent repo churn; full `PipelineExecutor` runs are the manifest-authoritative path. Any further hardening belongs in shared infrastructure, not this exemplar.
+- The single-stage rendered-provenance bridge remains sensitive to `git check-ignore` under concurrent repo churn; full `PipelineExecutor` runs are the manifest-authoritative path. Any further hardening belongs in shared infrastructure, not this exemplar.
+- Keep deterministic fixture replay green under the project coverage gate so the exemplar never ships a red baseline.
+
+## Configurable-surface gaps
+
+- Keep `manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
+- Add a script-level config summary only if analysis scripts begin reading YAML directly.
+
+## Documentation and signposting gaps
+
+- None outstanding beyond keeping `tests/AGENTS.md` file listings and manuscript notation (`$p^{\ast}$`) in lockstep with source as gates evolve.
+
+## Test and validator gaps
+
+- Keep deterministic fixture replay covered by the project coverage gate.
+- Promote the live agent path only with offline transcript fixtures, stale-transcript detection, and a no-network default validation.
+
+## Ordered improvement ladder
+
+1. Keep the deterministic fixture-replay baseline green and coverage-gated (integrity).
+2. Keep `manuscript/config.yaml.example` shape-synced with live `SearchConfig` defaults (configurable surface).
+3. Promote the live agent path only when offline fixtures + no-network default validation exist (test/validator boundary).

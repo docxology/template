@@ -22,12 +22,20 @@ uv run pytest tests/test_figures.py tests/test_figure_style.py tests/test_semant
 COVERAGE_FILE=/tmp/template_ai_publication.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q
 ```
 
-The publication-readiness pass regenerated animation, integration-audit,
+Observed in this pass: prerender, PDF render, output validation, output copy,
+and strict template-drift checks passed. The combined PDF rendered as 61 pages
+with zero `^! ` LaTeX log errors and zero unresolved `??` references. The
+publication-readiness pass regenerated animation, integration-audit,
 sheaf-track, manuscript-variable, scholarship, figure, and method-inventory
-artifacts before validation. `validate_outputs.py` is green for the current
+artifacts before validation. The canonical output validation is green for the current
 artifact tree, including the 23 registered figures, GIF evidence, auxiliary
 visualization classification, 21 connected scholarship rows, and toy-only
-scope-boundary checks. The full suite runs via
+scope-boundary checks. The source artifact contract now records exhaustive
+finite model-checking witnesses and refreshes provenance after final artifact
+writes, preventing fixed-point hash drift. A full suite run is retained as a
+slow end-to-end gate; the first concurrent run observed 781 passed, 4 failed,
+1 skipped, with 93.58% coverage, while later focused refresh tests remained
+resource-sensitive under the shared 24-agent workload. The full suite runs via
 `uv run pytest tests/ --cov=src --cov-fail-under=90` (from the project
 directory; prefix both paths with the exemplar folder when running from the
 template root); live test counts, coverage, and timings are read from
