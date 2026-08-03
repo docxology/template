@@ -5,7 +5,8 @@ never mock the validators, the demonstration analysis, or the figure renderers.
 
 - `test_protocol.py` — registration freezing, required-section validation,
   duplicate-hypothesis and outcome checks, deviation classification,
-  sensitivity-table validation, and review packets.
+  sensitivity-table validation, review packets, manuscript prose binding for the
+  sensitivity row and deviation ledger, and review-artifact regeneration binding.
 - `test_demo_study.py` — the deterministic demonstration study (dataset,
   permutation test, plan-driven analysis binding, diagram-data helpers, and
   manuscript-prose binding against live analysis numbers).

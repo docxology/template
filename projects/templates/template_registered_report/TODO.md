@@ -12,10 +12,11 @@
 - Added the missing `.agents/README.md` and `.agents/skills/README.md` orientation files per the shared exemplar contract.
 - Verified version consistency across `pyproject.toml`, `manuscript/config.yaml`, `CITATION.cff`, `codemeta.json`, and `.zenodo.json` (all `0.1.0`, DOI `10.5281/zenodo.21298892`, repository `docxology/template_registered_report`); verified the manuscript's registration-hash prefix (`96a34a11d132`) and every quoted statistic against a fresh `run_registered_analysis` / review-packet regeneration.
 - Regenerated figures, analysis data, review artifacts, and the combined PDF through the canonical pipeline; no source defects found.
+- Second pass (same day): shipped the manuscript sensitivity-analysis surface — `04_results.md` now renders the registered sensitivity row (bound to the frozen registration's `sensitivity_analyses`, the source `build_review_packet` consumes) and the abstract names the preregistered sensitivity check. Added binding tests: the sensitivity row and deviation-ledger prose are re-derived against live code, and `test_review_artifacts_match_fresh_regeneration` asserts the committed `output/reports/*.json` artifacts equal a fresh `scripts/generate_review_artifacts.py`-equivalent regeneration. This closes the "Add rendered sensitivity-analysis tables" test/validator gap and the "keep review artifacts regenerated" integrity gap.
 
 ## Integrity and template-status gaps
 
-- Keep rendered manuscript outputs and registered-report review artifacts regenerated after fixture, deviation, or sensitivity-analysis changes.
+- Keep rendered manuscript outputs and registered-report review artifacts regenerated after fixture, deviation, or sensitivity-analysis changes (now enforced by `test_review_artifacts_match_fresh_regeneration` for the committed artifacts).
 
 ## Configurable-surface gaps
 
@@ -27,7 +28,7 @@
 
 ## Test and validator gaps
 
-- Add rendered sensitivity-analysis tables once manuscript table generation consumes the review packet.
+- (Closed 2026-08-02) Rendered sensitivity-analysis tables — shipped in manuscript/test surface.
 
 ## Ordered improvement ladder
 

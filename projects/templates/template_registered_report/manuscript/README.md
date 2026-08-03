@@ -9,7 +9,8 @@ Registered-report manuscript for the exemplar. Sections render in filename order
 - `03_methods.md` — frozen registration, analysis plan, and deterministic
   demonstration data (embeds `fig:analysis_dag`).
 - `04_results.md` — confirmatory outcome bound to `output/data/demo_analysis.json`
-  (embeds `fig:permutation_result`).
+  (embeds `fig:permutation_result`) and the registered sensitivity-analysis row
+  bound to the frozen registration's `sensitivity_analyses`.
 - `05_deviations.md` — deviation register and severity classification (embeds
   `fig:deviation_timeline`).
 - `06_discussion.md` — scope, limitations, and fork guidance.

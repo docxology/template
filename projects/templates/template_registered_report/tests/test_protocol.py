@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, cast
+
+import pytest
 
 from registered_report import (
     build_deviation_ledger,
@@ -165,3 +168,86 @@ def test_registration_validation_covers_empty_and_malformed_sections() -> None:
     assert "missing_seed" in empty_codes
     assert "bad_hypothesis" in malformed_codes
     assert "bad_outcome" in malformed_codes
+
+
+def test_sensitivity_table_prose_matches_registered_analyses() -> None:
+    frozen = freeze_registration(load_registration())
+    rows = cast("list[dict[str, Any]]", frozen.get("sensitivity_analyses", []))
+    assert rows  # the fixture ships a registered sensitivity row
+
+    findings = validate_sensitivity_table(frozen, rows)
+    assert findings == ()
+
+    text = (PROJECT_ROOT / "manuscript" / "04_results.md").read_text(encoding="utf-8")
+    normalized = " ".join(text.split())
+    for row in rows:
+        assert str(row["name"]) in normalized
+        assert str(row["target"]) in normalized
+        assert str(row["model"]) in normalized
+        assert str(row["decision"]) in normalized
+    assert "no findings" in normalized
+
+
+def test_deviation_ledger_prose_matches_live_ledger() -> None:
+    frozen = freeze_registration(load_registration())
+    executed = {"outcomes": ["primary_score", "secondary_score"], "primary_model": "linear_model"}
+    deviations = [
+        {"kind": "outcome", "target": "secondary_score", "rationale": "exploratory robustness endpoint"},
+        {"kind": "model", "target": "linear_model", "rationale": "robustness sensitivity"},
+    ]
+
+    ledger = build_deviation_ledger(frozen, executed, deviations)
+    report = compare_analysis_to_registration(frozen, executed, deviations)
+    text = (PROJECT_ROOT / "manuscript" / "05_deviations.md").read_text(encoding="utf-8")
+
+    assert f"{report.integrity_score:.1f}" in text
+    assert f"{report.integrity_score:.1f}" == "0.9"
+    for row in ledger:
+        assert row.target in text
+        assert row.severity in text
+
+
+def test_review_artifacts_match_fresh_regeneration() -> None:
+    """Committed review artifacts must equal a fresh deterministic regeneration.
+
+    Mirrors ``scripts/generate_review_artifacts.py`` exactly so the committed
+    packet, ledger, sensitivity findings, and adherence report cannot silently
+    drift from the frozen registration and executed-analysis fixtures.
+    """
+    output_dir = PROJECT_ROOT / "output" / "reports"
+    if not (output_dir / "frozen_registration.json").is_file():
+        pytest.skip("review artifacts are disposable outputs; run scripts/generate_review_artifacts.py first")
+
+    registration = load_registration()
+    frozen = freeze_registration(registration)
+    sensitivity_rows = cast("list[dict[str, Any]]", frozen.get("sensitivity_analyses", []))
+    executed = {"outcomes": ["primary_score", "secondary_score"], "primary_model": "linear_model"}
+    deviations = [
+        {"kind": "outcome", "target": "secondary_score", "rationale": "exploratory robustness endpoint"},
+        {"kind": "model", "target": "linear_model", "rationale": "robustness sensitivity"},
+    ]
+    adherence = compare_analysis_to_registration(frozen, executed, deviations)
+    ledger = build_deviation_ledger(frozen, executed, deviations)
+    sensitivity_findings = validate_sensitivity_table(frozen, sensitivity_rows)
+    packet = build_review_packet(frozen, executed, deviations, sensitivity_rows)
+
+    fresh = {
+        "frozen_registration.json": frozen,
+        "registered_report_review_packet.json": packet,
+        "deviation_ledger.json": {
+            "registration_hash": packet["registration_hash"],
+            "rows": tuple(asdict(row) for row in ledger),
+        },
+        "sensitivity_findings.json": {
+            "registration_hash": packet["registration_hash"],
+            "findings": tuple(asdict(finding) for finding in sensitivity_findings),
+        },
+        "adherence_report.json": {
+            **asdict(adherence),
+            "findings": tuple(asdict(finding) for finding in adherence.findings),
+        },
+    }
+    for filename, payload in fresh.items():
+        stored = json.loads((output_dir / filename).read_text(encoding="utf-8"))
+        normalized = json.loads(json.dumps(payload, sort_keys=True))
+        assert stored == normalized, f"{filename} drifted from a fresh regeneration"

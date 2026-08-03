@@ -4,7 +4,9 @@ Real-data, no-mock tests across four files:
 
 - `test_protocol.py` — registration freezing, section validation, deviation
   classification, sensitivity-table checks, review packets, and analysis-plan
-  drift.
+  drift; plus prose-binding tests for the manuscript's sensitivity row and
+  deviation ledger, and a test that the committed review artifacts under
+  `output/reports/` equal a fresh deterministic regeneration.
 - `test_demo_study.py` — the deterministic demonstration study, grouped into
   `TestDemoDataset`, `TestPermutationTest`, `TestRegisteredAnalysis`, and
   `TestDiagramData`. These pin the seeded statistics the manuscript quotes and

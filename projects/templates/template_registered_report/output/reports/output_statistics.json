@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 10,
-      "size_mb": "0.38",
-      "total_size_bytes": 400596,
+      "size_mb": "0.39",
+      "total_size_bytes": 405890,
       "largest_files": [
         {
           "name": "template_registered_report_combined.pdf",
-          "size_mb": "0.26",
+          "size_mb": "0.27",
           "path": "pdf/template_registered_report_combined.pdf"
         },
         {
@@ -38,7 +38,7 @@
       "exists": true,
       "file_count": 11,
       "size_mb": "0.11",
-      "total_size_bytes": 114648,
+      "total_size_bytes": 119179,
       "largest_files": [
         {
           "name": "index.html",
@@ -51,9 +51,9 @@
           "path": "web/_combined_manuscript.md"
         },
         {
-          "name": "manuscript__99_references.html",
+          "name": "manuscript__04_results.html",
           "size_mb": "0.01",
-          "path": "web/manuscript__99_references.html"
+          "path": "web/manuscript__04_results.html"
         }
       ],
       "extensions": {
@@ -65,8 +65,8 @@
     "slides": {
       "exists": true,
       "file_count": 65,
-      "size_mb": "0.94",
-      "total_size_bytes": 982888,
+      "size_mb": "0.95",
+      "total_size_bytes": 991071,
       "largest_files": [
         {
           "name": "04_results_slides.pdf",
@@ -142,7 +142,7 @@
       "exists": true,
       "file_count": 15,
       "size_mb": "0.11",
-      "total_size_bytes": 120332,
+      "total_size_bytes": 120318,
       "largest_files": [
         {
           "name": "evidence_registry.json",
@@ -186,11 +186,11 @@
     }
   },
   "total_files": 107,
-  "total_size_mb": 1.7394371032714844,
+  "total_size_mb": 1.7565975189208984,
   "largest_files": [
     {
       "name": "template_registered_report_combined.pdf",
-      "size_mb": "0.26",
+      "size_mb": "0.27",
       "category": "pdf",
       "path": "pdf/template_registered_report_combined.pdf"
     },
@@ -255,12 +255,12 @@
     "logs/ directory"
   ],
   "sizes_by_category": {
-    "pdf": 0.3820381164550781,
-    "web": 0.10933685302734375,
-    "slides": 0.9373550415039062,
+    "pdf": 0.3870868682861328,
+    "web": 0.11365795135498047,
+    "slides": 0.9451589584350586,
     "figures": 0.19556045532226562,
     "data": 0.00038909912109375,
-    "reports": 0.11475753784179688
+    "reports": 0.11474418640136719
   },
   "file_counts_by_type": {
     ".md": 4,

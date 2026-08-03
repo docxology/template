@@ -15,6 +15,8 @@ registered test yields an observed mean difference of `1.003` with a two-sided
 permutation p-value of `0.0005` (`0` of `2000` shuffles at least as extreme),
 significant at the preregistered `alpha = 0.05`. A deliberately introduced
 secondary endpoint and an alternative model are carried only as **documented
-deviations**, keeping the confirmatory claim boundary intact. The purpose is to
+deviations**, keeping the confirmatory claim boundary intact, and a
+preregistered sensitivity analysis on the primary outcome is validated and
+reported alongside the confirmatory result. The purpose is to
 give forks a working, auditable skeleton in which planned analyses, frozen
 hypotheses, deviations, and post-run claims are separable and machine-checkable.
