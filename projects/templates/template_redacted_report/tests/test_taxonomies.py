@@ -110,7 +110,6 @@ def test_each_policy_blocks_unknown_classifications(policy_name: str) -> None:
     policies = {policy.name: policy for policy in declared_release_policies()}
     policy = policies[policy_name]
     segments = [RedactionSegment("s1", "NOT_A_CLASSIFICATION", "text", ())]
-    findings: list[RedactionFinding] = []
 
     audit = audit_release_packet(
         segments,
