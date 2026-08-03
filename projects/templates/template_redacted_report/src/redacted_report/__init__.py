@@ -11,6 +11,7 @@ from redacted_report.artifacts import (
     load_release_fixture,
     write_release_artifacts,
 )
+from redacted_report.figures import FIGURE_SPECS, build_figure_registry, build_figures
 from redacted_report.redaction import (
     ClassificationTaxonomy,
     DEFAULT_TAXONOMY,
@@ -62,6 +63,7 @@ __all__ = [
     "DEFAULT_POLICY",
     "DEFAULT_RESIDUAL_PATTERNS",
     "DEFAULT_TAXONOMY",
+    "FIGURE_SPECS",
     "LEDGER_SCHEMA",
     "PublicReleaseArtifacts",
     "RedactionDecision",
@@ -83,6 +85,8 @@ __all__ = [
     "SECURITY_METHODS",
     "audit_release_packet",
     "build_comprehensive_release_packet",
+    "build_figure_registry",
+    "build_figures",
     "build_public_release_artifacts",
     "build_redaction_ledger",
     "build_release_packet",
