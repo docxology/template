@@ -1,0 +1,307 @@
+{
+  "algorithm": "web-renderer-combine-v1",
+  "binding_sha256": "95beb1a081d5310c651d8b69f4b4668fbaf70cede8ae529b46c9d399f42358d1",
+  "combined_path": "output/web/_combined_manuscript.md",
+  "combined_sha256": "fb6d249443fcfcf40c3987cc3098c662314504f943d4f4ffa156637c51365eda",
+  "combined_size_bytes": 110801,
+  "input_root_kind": "source",
+  "ordered_inputs": [
+    {
+      "ordinal": 1,
+      "path": "manuscript/front_matter.md",
+      "sha256": "2a28655e25e3da1c43ba08cec0617f4c8169c3b922bb58469f56de006418f606",
+      "size_bytes": 4584
+    },
+    {
+      "ordinal": 2,
+      "path": "manuscript/preface.md",
+      "sha256": "6629442c58e97816c104802d5f2ad9cf834d0c2b0c64cbec7bc29e69172b605e",
+      "size_bytes": 2753
+    },
+    {
+      "ordinal": 3,
+      "path": "manuscript/part_0/unit_intro.md",
+      "sha256": "e09a97f931a42a3f983949d039f7e7e42a27d366ebc3badc227ecdc033056388",
+      "size_bytes": 512
+    },
+    {
+      "ordinal": 4,
+      "path": "manuscript/part_0/orientation.md",
+      "sha256": "df11c0374a5bd0529953f27e095b84de177bdf68978bb099fa6e94399e49334b",
+      "size_bytes": 3690
+    },
+    {
+      "ordinal": 5,
+      "path": "manuscript/part_0/core_methods.md",
+      "sha256": "e185fa63f2844e1af4bef33ec7df1009e991f95535788753b596027ffa20f4c2",
+      "size_bytes": 3691
+    },
+    {
+      "ordinal": 6,
+      "path": "manuscript/part_0/quantitative_foundations.md",
+      "sha256": "61fea16605c0053df6d3e6ff36932409219eff7cc5deb7f8656d40e06d89b9a1",
+      "size_bytes": 3864
+    },
+    {
+      "ordinal": 7,
+      "path": "manuscript/part_I/unit_intro.md",
+      "sha256": "05d8f4fb9853f855241f280c2d9a55b0e610b1ac4f8b8cd512a272938011412a",
+      "size_bytes": 471
+    },
+    {
+      "ordinal": 8,
+      "path": "manuscript/part_I/first_principles.md",
+      "sha256": "2182cda2a34529106b496b33a39115591ead9ff75237e49f34c60a5f29b2eb4f",
+      "size_bytes": 7597
+    },
+    {
+      "ordinal": 9,
+      "path": "manuscript/part_I/building_blocks.md",
+      "sha256": "215b6349c90a5db665678f2fcc8ed5a80fb0bc7fb6eae507fd0aab34648dc70e",
+      "size_bytes": 3723
+    },
+    {
+      "ordinal": 10,
+      "path": "manuscript/part_I/structure_and_form.md",
+      "sha256": "e5feea5107b8d811a6765a89746a40800cc0c377f0a49e1da6fe9ed5fe5b1787",
+      "size_bytes": 3768
+    },
+    {
+      "ordinal": 11,
+      "path": "manuscript/part_II/unit_intro.md",
+      "sha256": "caa7c4082a813ad87f4b6e7a226a885c99a82a43ea8bb1b5596e34056fc17d9d",
+      "size_bytes": 493
+    },
+    {
+      "ordinal": 12,
+      "path": "manuscript/part_II/systems_overview.md",
+      "sha256": "13f6815c02ac00fa54d42ac36f63b279a259c7ea6f8313218754a7f696e19220",
+      "size_bytes": 3747
+    },
+    {
+      "ordinal": 13,
+      "path": "manuscript/part_II/dynamics_and_change.md",
+      "sha256": "0ccafc2e4ee21727b0e0c53862073321a8b1607dac9f4eed6237699e2fce083f",
+      "size_bytes": 3825
+    },
+    {
+      "ordinal": 14,
+      "path": "manuscript/part_II/regulation_and_control.md",
+      "sha256": "75623338ae9ba13a31ffd091d712f10e18ca684a02caaab2c72433b861dace2d",
+      "size_bytes": 3861
+    },
+    {
+      "ordinal": 15,
+      "path": "manuscript/part_III/unit_intro.md",
+      "sha256": "1842ec9d08721b9829f227a957a752beffbc50fab22ecdd470e0e74c8650014e",
+      "size_bytes": 501
+    },
+    {
+      "ordinal": 16,
+      "path": "manuscript/part_III/applied_models.md",
+      "sha256": "1f1392a869d0a646b19907c24e2b3d42c5a6be825fb261d8b07a87840a29b11c",
+      "size_bytes": 3726
+    },
+    {
+      "ordinal": 17,
+      "path": "manuscript/part_III/case_studies.md",
+      "sha256": "48b2359edd3f77d2c2d281adaa29dbcee0f55dcd9ca176c5b866ed39d4dbac96",
+      "size_bytes": 6743
+    },
+    {
+      "ordinal": 18,
+      "path": "manuscript/part_III/frontiers.md",
+      "sha256": "1d4f15257031df4e7486ba036449a61176bb151a50021d8dcbc5346fb8ea71b4",
+      "size_bytes": 3707
+    },
+    {
+      "ordinal": 19,
+      "path": "manuscript/labs/part_0/lab_orientation.md",
+      "sha256": "83268176d894bb0eb46ec6b021615191d7d65354ddfe75a05461c033bbe5aae7",
+      "size_bytes": 768
+    },
+    {
+      "ordinal": 20,
+      "path": "manuscript/labs/part_0/lab_core_methods.md",
+      "sha256": "b9ca3524bfb632d55944434e3af22ed1a9484d1a1c56c4d2e08094df9a993d2a",
+      "size_bytes": 768
+    },
+    {
+      "ordinal": 21,
+      "path": "manuscript/labs/part_0/lab_quantitative_foundations.md",
+      "sha256": "996254f8e2128b0713c333102e78dc81b083063b95d7629ce80b055ae52e5be6",
+      "size_bytes": 794
+    },
+    {
+      "ordinal": 22,
+      "path": "manuscript/labs/part_I/lab_first_principles.md",
+      "sha256": "5ed1fe786c5e3f17433ae7f83be75be9b4172d52c5bc15d009610c2962012df0",
+      "size_bytes": 2290
+    },
+    {
+      "ordinal": 23,
+      "path": "manuscript/labs/part_I/lab_building_blocks.md",
+      "sha256": "9199e3b15ea57217396879b78e4c45c5b4ca3a72bf25f264d3f66ad4005bf1f3",
+      "size_bytes": 767
+    },
+    {
+      "ordinal": 24,
+      "path": "manuscript/labs/part_I/lab_structure_and_form.md",
+      "sha256": "10d7fa1265d20f2fbfeed466b4eb59383296434f3f458efdd703312c8d07dfc5",
+      "size_bytes": 776
+    },
+    {
+      "ordinal": 25,
+      "path": "manuscript/labs/part_II/lab_systems_overview.md",
+      "sha256": "a919b2e1d76a93372587a9148cf3087e52f61361c05f352a3acb8d3ac325a042",
+      "size_bytes": 772
+    },
+    {
+      "ordinal": 26,
+      "path": "manuscript/labs/part_II/lab_dynamics_and_change.md",
+      "sha256": "b243bb024054647e579642efc2f0293a3fb108471a9cf776d8f4d7bf627b22b8",
+      "size_bytes": 781
+    },
+    {
+      "ordinal": 27,
+      "path": "manuscript/labs/part_II/lab_regulation_and_control.md",
+      "sha256": "933cd3d77cce3642cfcd46d49ffde9b490dde2a426c3ba4d8ff94cd25804b01b",
+      "size_bytes": 790
+    },
+    {
+      "ordinal": 28,
+      "path": "manuscript/labs/part_III/lab_applied_models.md",
+      "sha256": "7a2d99c6ec82865db1decfdc05b8b42e0e92e33ded19c4dc46a35a6501a8bd2e",
+      "size_bytes": 768
+    },
+    {
+      "ordinal": 29,
+      "path": "manuscript/labs/part_III/lab_case_studies.md",
+      "sha256": "93d1b47d9673ad830300fb3e68ab3b815aceee931da21eb28dbeaa0abd74dbc7",
+      "size_bytes": 2360
+    },
+    {
+      "ordinal": 30,
+      "path": "manuscript/labs/part_III/lab_frontiers.md",
+      "sha256": "ef13089bded13accc08070bc14cd0449e61fb82329807d77ea24f1b98ab3d664",
+      "size_bytes": 771
+    },
+    {
+      "ordinal": 31,
+      "path": "manuscript/questions/part_0/q_orientation.md",
+      "sha256": "f5eb22f6cc7bc93a93763069f70f4564ae09b1bef623a1dcfc14337aef5e8fab",
+      "size_bytes": 456
+    },
+    {
+      "ordinal": 32,
+      "path": "manuscript/questions/part_0/q_core_methods.md",
+      "sha256": "62cef79a98ac3994a45ceb9a61ba7ef707e04c08ccc57cc0fb19ce9fa4c6ab4b",
+      "size_bytes": 456
+    },
+    {
+      "ordinal": 33,
+      "path": "manuscript/questions/part_0/q_quantitative_foundations.md",
+      "sha256": "c8b6f5fb84ecdb4811e11e7c2c63ea164e2f0bd9b10054c7ccc24e70e130eb6c",
+      "size_bytes": 482
+    },
+    {
+      "ordinal": 34,
+      "path": "manuscript/questions/part_I/q_first_principles.md",
+      "sha256": "0390fdf3ac30c7e384022769c5a1745d4917348a49514d76f3ef6d96a4ed34f1",
+      "size_bytes": 1657
+    },
+    {
+      "ordinal": 35,
+      "path": "manuscript/questions/part_I/q_building_blocks.md",
+      "sha256": "2479b880424b9695f8e40b214702e2a40a59333df8daa7700fd79e96b352cb5e",
+      "size_bytes": 455
+    },
+    {
+      "ordinal": 36,
+      "path": "manuscript/questions/part_I/q_structure_and_form.md",
+      "sha256": "90d54a9460ecce288a8af3b46a35db1097315024e35f3a188548175b1396cdec",
+      "size_bytes": 464
+    },
+    {
+      "ordinal": 37,
+      "path": "manuscript/questions/part_II/q_systems_overview.md",
+      "sha256": "3b6c7955cf19f60eae433a47744a11d4cbc47265439a2758bae32c4cce64f63a",
+      "size_bytes": 460
+    },
+    {
+      "ordinal": 38,
+      "path": "manuscript/questions/part_II/q_dynamics_and_change.md",
+      "sha256": "e4f3ae19de54561617881b347ede1b7af647861cb37203cb0e6cd8ec5aa0cde2",
+      "size_bytes": 469
+    },
+    {
+      "ordinal": 39,
+      "path": "manuscript/questions/part_II/q_regulation_and_control.md",
+      "sha256": "6aaf61fef279b8db0ca57c0226b3b1e0fc81efb07d38fe2b7ed05163e85d1504",
+      "size_bytes": 478
+    },
+    {
+      "ordinal": 40,
+      "path": "manuscript/questions/part_III/q_applied_models.md",
+      "sha256": "164097473617bd61c63ec0f4da6449bdfdd55af22026a6dc6ecd2faee8ce96f0",
+      "size_bytes": 456
+    },
+    {
+      "ordinal": 41,
+      "path": "manuscript/questions/part_III/q_case_studies.md",
+      "sha256": "d969420cd21c3804bd11565cad511dd12cccfd08a142d03671ba9a0f2797a4d8",
+      "size_bytes": 1864
+    },
+    {
+      "ordinal": 42,
+      "path": "manuscript/questions/part_III/q_frontiers.md",
+      "sha256": "242d3d5622212f7c5eff71075eadec0c14c57b0ca10b639ee02291eb2d4fa546",
+      "size_bytes": 459
+    },
+    {
+      "ordinal": 43,
+      "path": "manuscript/appendices/appendix_authoring_guide.md",
+      "sha256": "f0c93a0ebb760e7749ac283ace49693c7ce84282dcc00ed0bdf010e98cf1f28f",
+      "size_bytes": 5756
+    },
+    {
+      "ordinal": 44,
+      "path": "manuscript/appendices/appendix_notation.md",
+      "sha256": "bc01edc9b37c84fdc4a3c9ad6665ad581143912303fa6c2c7538d0052a22c271",
+      "size_bytes": 1942
+    },
+    {
+      "ordinal": 45,
+      "path": "manuscript/appendices/appendix_math_review.md",
+      "sha256": "8469646aeee7e15a510aa1e43baa5e04c861efd75f8af776289a9f2e084372df",
+      "size_bytes": 2014
+    },
+    {
+      "ordinal": 46,
+      "path": "manuscript/appendices/appendix_formalisms.md",
+      "sha256": "0fd94d201ccc49bf6ec455ead6ac1aa643ccecb9b4aae081883a751c4bed9ceb",
+      "size_bytes": 4995
+    },
+    {
+      "ordinal": 47,
+      "path": "manuscript/appendices/appendix_format_gallery.md",
+      "sha256": "e520e5289917ae499692fae920a80efcd193853c04449682cb0a861fe9ae44d5",
+      "size_bytes": 10752
+    },
+    {
+      "ordinal": 48,
+      "path": "manuscript/glossary.md",
+      "sha256": "0f14237b094fd34d90d11ffacd4848d6cca75f1b335ea621152b7be0ebe420bf",
+      "size_bytes": 1876
+    },
+    {
+      "ordinal": 49,
+      "path": "manuscript/appendices/appendix_index.md",
+      "sha256": "266842a13cdd884238cc3a96ecfdd2ba2298cea861d006fcd25f0fc76a7c2bbe",
+      "size_bytes": 1353
+    }
+  ],
+  "ordered_inputs_sha256": "3e9a8c569177d8b44261efb55dd8790fa79679f8823b5473b2379f92b9f884df",
+  "project": "templates/template_textbook",
+  "schema_version": "template-manuscript-composition-v1"
+}
