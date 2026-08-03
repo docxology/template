@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03d_results_citation_network.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -317,12 +316,25 @@ cited by other corpus members. Hub papers, which cite many other corpus
 members, serve as integrative reviews or meta-analyses that connect
 disparate threads of the literature.</p>
 <!-- FIGURE: citation_network.png -->
-<p><img src="../figures/citation_network.png" title="Citation Network"
-alt="Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1416 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility." />{{#fig:citation_network}}</p>
+<figure id="fig:citation_network">
+<img src="../figures/citation_network.png" title="Citation Network"
+alt="Citation network for Modafinil." />
+<figcaption>Citation network for Modafinil. Nodes
+represent papers; directed edges represent citation links. Node colours
+indicate community membership (1416 communities detected by modularity
+optimization). Layout uses a spring-based algorithm with a fixed seed
+for reproducibility.</figcaption>
+</figure>
 <!-- FIGURE: degree_distribution.png -->
-<p><img src="../figures/degree_distribution.png"
+<figure id="fig:degree_distribution">
+<img src="../figures/degree_distribution.png"
 title="Degree Distribution"
-alt="Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks." />{{#fig:degree_distribution}}</p>
+alt="Degree distribution for the Modafinil citation network." />
+<figcaption>Degree distribution for the Modafinil
+citation network. The histogram shows the frequency of each in-degree
+value on a log-linear scale, revealing the heavy-tailed structure
+characteristic of citation networks.</figcaption>
+</figure>
 <p>The heavy-tailed degree distribution is characteristic of citation
 networks: a small number of highly-cited papers anchor the structure,
 while the long tail of low-degree nodes represents newer or peripheral

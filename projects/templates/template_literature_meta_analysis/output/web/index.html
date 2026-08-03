@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Multi-Engine Retrieval, De-duplication, Embeddings, and Bibliometrics for a Single Search Term" />
@@ -43,7 +43,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -792,9 +791,9 @@ framework that takes a single search term and produces a complete
 quantitative portrait of its literature. For this instance the term is
 <strong>Modafinil</strong>. The pipeline dispatches across 10 literature
 engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv), each
-degrading gracefully to a skipped source when an API key or the network
-is unavailable, then merges and de-duplicates records by a canonical
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv), each degrading
+gracefully to a skipped source when an API key or the network is
+unavailable, then merges and de-duplicates records by a canonical
 identifier hierarchy (DOI <span class="math inline">\(&gt;\)</span>
 arXiv ID <span class="math inline">\(&gt;\)</span> Semantic Scholar ID
 <span class="math inline">\(&gt;\)</span> OpenAlex ID <span
@@ -893,10 +892,10 @@ class="header-section-number">2.2</span> Contributions</h2>
 <li><p><strong>Multiple-engine retrieval with graceful
 degradation.</strong> Records are gathered from 10 independent engines
 (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). An engine with no
-API key or no network reports a <em>skipped</em> status; the run
-completes from whatever engines remain plus a committed offline corpus.
-Each new retrieval persists per-engine outcome and count provenance in
+ChinaRxiv, Europe PMC, bioRxiv, and medRxiv). An engine with no API key
+or no network reports a <em>skipped</em> status; the run completes from
+whatever engines remain plus a committed offline corpus. Each new
+retrieval persists per-engine outcome and count provenance in
 <code>output/data/retrieval_report.json</code>; the merged corpus alone
 is never used to infer which engine supplied a record.</p></li>
 <li><p><strong>Record de-duplication.</strong> Heterogeneous records are
@@ -936,7 +935,7 @@ class="header-section-number">3.1</span> Pipeline Stages</h2>
 <li><p><strong>Retrieval</strong> (<code>01_literature_search.py</code>)
 — dispatch the configured query across 10 engines (arXiv, OpenAlex,
 Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-bioRxiv/medRxiv, and medrxiv), merge, and de-duplicate into
+bioRxiv, and medRxiv), merge, and de-duplicate into
 <code>corpus.jsonl</code>. Each engine is an isolated adapter exposing a
 uniform <code>search(query) -&gt; list[Paper]</code> interface; engines
 that are keyless need no credentials, while Semantic Scholar uses a key
@@ -1012,8 +1011,8 @@ license, repository URL</li>
 class="header-section-number">4</span> Retrieval and De-duplication</h1>
 <p>Retrieval dispatches the configured query across 10 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each
-engine is an isolated adapter exposing a uniform
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv). Each engine is
+an isolated adapter exposing a uniform
 <code>search(query) -&gt; list[Record]</code> interface; engines that
 are keyless — arXiv, OpenAlex <span class="citation"
 data-cites="priem2022openalex">(<a href="#ref-priem2022openalex"
@@ -1181,9 +1180,7 @@ requiring any download, so the offline default still reports coverage.
 For this run:</p>
 <ul>
 <li><strong>Abstract coverage</strong>: 61.6% of records (1437 of
-<ol start="2334" type="1">
-<li>carry an abstract; 897 records lack one.</li>
-</ol></li>
+2334) carry an abstract; 897 records lack one.</li>
 <li><strong>Open-access status</strong>: 24.6% of records are open
 access (574 records); the remainder are closed or unknown.</li>
 <li><strong>PDF availability</strong>: 54.6% of records (1275) have a
@@ -1385,8 +1382,9 @@ word cloud; Figure topic term bars; Figure pca embeddings; Figure term
 heatmap; Figure dendrogram; Figure cooccurrence matrix))</li>
 </ul>
 <p>Each figure is registered in <code>figure_registry.json</code> with
-its source data file, generation parameters, and SHA-256 hash, binding
-the visual output to the exact pipeline run.</p>
+its label, caption, and the producing script, so downstream rendering
+and validation resolve the same figure set that the pipeline
+generated.</p>
 <h2 data-number="8.2" id="variable-injection"><span
 class="header-section-number">8.2</span> Variable Injection</h2>
 <p>The manuscript itself is generated, not hand-maintained. A variable
@@ -1514,9 +1512,15 @@ transient adverse effects. This underpins its clinical acceptability
 relative to alternative wakefulness agents.</p></li>
 </ul>
 <!-- FIGURE: hypothesis_dashboard.png -->
-<p><img src="../figures/hypothesis_dashboard.png"
+<figure id="fig:hypothesis_dashboard">
+<img src="../figures/hypothesis_dashboard.png"
 title="Hypothesis Dashboard"
-alt="Hypothesis dashboard for Modafinil. The dashboard summarizes the evidence scores across the 6 configured hypotheses, showing the direction and magnitude of citation-weighted assertion evidence." />{{#fig:hypothesis_dashboard}}</p>
+alt="Figure 1: Hypothesis dashboard for Modafinil." />
+<figcaption>Figure 1: Hypothesis dashboard for
+Modafinil. The dashboard summarizes the evidence scores across the 6
+configured hypotheses, showing the direction and magnitude of
+citation-weighted assertion evidence.</figcaption>
+</figure>
 <hr />
 <h1 data-number="10" id="results-field-overview"><span
 class="header-section-number">10</span> Results: Field Overview</h1>
@@ -1527,9 +1531,14 @@ class="header-section-number">10</span> Results: Field Overview</h1>
 2025 with 147 records that year. The growth curve is the first-order
 signal that the literature is active rather than dormant.</p>
 <!-- FIGURE: growth_curve.png -->
-<p><img src="../figures/growth_curve.png"
-title="Publication Growth Curve"
-alt="Publication growth curve for Modafinil. Annual publication counts (bars) and cumulative total (line) show sustained growth from 2000 through 2026, peaking in 2025." />{{#fig:growth_curve}}</p>
+<figure id="fig:growth_curve">
+<img src="../figures/growth_curve.png" title="Publication Growth Curve"
+alt="Figure 2: Publication growth curve for Modafinil." />
+<figcaption>Figure 2: Publication growth curve for
+Modafinil. Annual publication counts (bars) and cumulative total (line)
+show sustained growth from 2000 through 2026, peaking in
+2025.</figcaption>
+</figure>
 <h2 data-number="10.1" id="rq1-field-size-and-growth"><span
 class="header-section-number">10.1</span> RQ1: Field Size and
 Growth</h2>
@@ -1642,15 +1651,32 @@ disorder, and obstructive sleep apnea.</p>
 </tbody>
 </table>
 <!-- FIGURE: field_summary.png -->
-<p><img src="../figures/field_summary.png" title="Field Summary"
-alt="Field summary dashboard for Modafinil. The dashboard combines corpus size, temporal range, subfield distribution, and key bibliometric indicators in a single overview panel." />{{#fig:field_summary}}</p>
+<figure id="fig:field_summary">
+<img src="../figures/field_summary.png" title="Field Summary"
+alt="Figure 3: Field summary dashboard for Modafinil." />
+<figcaption>Figure 3: Field summary dashboard for
+Modafinil. The dashboard combines corpus size, temporal range, subfield
+distribution, and key bibliometric indicators in a single overview
+panel.</figcaption>
+</figure>
 <!-- FIGURE: subfield_distribution.png -->
-<p><img src="../figures/subfield_distribution.png"
+<figure id="fig:subfield_distribution">
+<img src="../figures/subfield_distribution.png"
 title="Subfield Distribution"
-alt="Subfield distribution for Modafinil. The 6-bucket taxonomy shows the relative weight of each configured sub-area, with Clinical Sleep dominant at 63.0%." />{{#fig:subfield_distribution}}</p>
+alt="Figure 4: Subfield distribution for Modafinil." />
+<figcaption>Figure 4: Subfield distribution for
+Modafinil. The 6-bucket taxonomy shows the relative weight of each
+configured sub-area, with Clinical Sleep dominant at 63.0%.</figcaption>
+</figure>
 <!-- FIGURE: subfield_timeline.png -->
-<p><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
-alt="Subfield timeline for Modafinil. Stacked annual publication counts by subfield show how each sub-area has evolved over time, revealing emerging and declining research threads." />{{#fig:subfield_timeline}}</p>
+<figure id="fig:subfield_timeline">
+<img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+alt="Figure 5: Subfield timeline for Modafinil." />
+<figcaption>Figure 5: Subfield timeline for
+Modafinil. Stacked annual publication counts by subfield show how each
+sub-area has evolved over time, revealing emerging and declining
+research threads.</figcaption>
+</figure>
 <h2 data-number="10.3" id="identifier-and-full-text-coverage"><span
 class="header-section-number">10.3</span> Identifier and Full-Text
 Coverage</h2>
@@ -1704,9 +1730,16 @@ literature.</p>
 </tbody>
 </table>
 <!-- FIGURE: citation_distribution.png -->
-<p><img src="../figures/citation_distribution.png"
+<figure id="fig:citation_distribution">
+<img src="../figures/citation_distribution.png"
 title="Citation Distribution"
-alt="Citation distribution for Modafinil. The histogram shows the number of papers in each citation-count bucket, with the Gini coefficient annotated. The heavy-tailed distribution is characteristic of scientific citation networks." />{{#fig:citation_distribution}}</p>
+alt="Figure 6: Citation distribution for Modafinil." />
+<figcaption>Figure 6: Citation distribution for
+Modafinil. The histogram shows the number of papers in each
+citation-count bucket, with the Gini coefficient annotated. The
+heavy-tailed distribution is characteristic of scientific citation
+networks.</figcaption>
+</figure>
 <p><strong>Table 4. Top publication venues.</strong></p>
 <table>
 <thead>
@@ -1759,8 +1792,14 @@ alt="Citation distribution for Modafinil. The histogram shows the number of pape
 </tbody>
 </table>
 <!-- FIGURE: top_venues.png -->
-<p><img src="../figures/top_venues.png" title="Top Venues"
-alt="Top publication venues for Modafinil. The horizontal bar chart shows the 15 venues with the most papers in the corpus, revealing where the modafinil literature is published." />{{#fig:top_venues}}</p>
+<figure id="fig:top_venues">
+<img src="../figures/top_venues.png" title="Top Venues"
+alt="Figure 7: Top publication venues for Modafinil." />
+<figcaption>Figure 7: Top publication venues for
+Modafinil. The horizontal bar chart shows the 15 venues with the most
+papers in the corpus, revealing where the modafinil literature is
+published.</figcaption>
+</figure>
 <p><strong>Table 5. Top authors by publication count.</strong></p>
 <table>
 <thead>
@@ -1824,9 +1863,15 @@ alt="Top publication venues for Modafinil. The horizontal bar chart shows the 15
 </tbody>
 </table>
 <!-- FIGURE: author_productivity.png -->
-<p><img src="../figures/author_productivity.png"
+<figure id="fig:author_productivity">
+<img src="../figures/author_productivity.png"
 title="Author Productivity"
-alt="Author productivity for Modafinil. The horizontal bar chart shows the 20 authors with the most papers in the corpus, revealing the most prolific contributors to the modafinil literature." />{{#fig:author_productivity}}</p>
+alt="Figure 8: Author productivity for Modafinil." />
+<figcaption>Figure 8: Author productivity for
+Modafinil. The horizontal bar chart shows the 20 authors with the most
+papers in the corpus, revealing the most prolific contributors to the
+modafinil literature.</figcaption>
+</figure>
 <hr />
 <h1 data-number="11" id="results-subfield-structure"><span
 class="header-section-number">11</span> Results: Subfield Structure</h1>
@@ -1931,8 +1976,14 @@ addresses fatigue in psychiatric populations. These topics cross-cut the
 keyword-based subfield taxonomy, revealing connections that the explicit
 classification does not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
-<p><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
-alt="Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the \mathbf{H} matrix." />{{#fig:topic_term_bars}}</p>
+<figure id="fig:topic_term_bars">
+<img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
+alt="Figure 9: Topic-term bar charts for Modafinil." />
+<figcaption>Figure 9: Topic-term bar charts for
+Modafinil. Each panel shows the top weighted terms for one of 5 NMF
+topics, with bar length proportional to the topic-term weight in the
+<span class="math inline">\(\mathbf{H}\)</span> matrix.</figcaption>
+</figure>
 <h2 data-number="12.2" id="document-embeddings"><span
 class="header-section-number">12.2</span> Document Embeddings</h2>
 <p>Offline deterministic embeddings (TF-IDF followed by truncated SVD)
@@ -1941,19 +1992,40 @@ the same text twice yields identical vectors, so the derived similarity
 matrix, nearest-neighbour lists, clusters, and two-dimensional
 projection are all reproducible.</p>
 <!-- FIGURE: pca_embeddings.png -->
-<p><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
-alt="PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy." />{{#fig:pca_embeddings}}</p>
+<figure id="fig:pca_embeddings">
+<img src="../figures/pca_embeddings.png" title="PCA Embeddings"
+alt="Figure 10: PCA projection of document embeddings for Modafinil." />
+<figcaption>Figure 10: PCA projection of document
+embeddings for Modafinil. Each point represents one document projected
+onto the first two principal components of the TF-IDF/SVD embedding.
+Colours indicate subfield assignment, showing how the topical geography
+relates to the keyword taxonomy.</figcaption>
+</figure>
 <!-- FIGURE: dendrogram.png -->
-<p><img src="../figures/dendrogram.png" title="Document Dendrogram"
-alt="Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters." />{{#fig:dendrogram}}</p>
+<figure id="fig:dendrogram">
+<img src="../figures/dendrogram.png" title="Document Dendrogram"
+alt="Figure 11: Hierarchical clustering dendrogram of document embeddings." />
+<figcaption>Figure 11: Hierarchical clustering
+dendrogram of document embeddings. The tree shows the similarity
+structure of the corpus: documents that join low in the tree are
+semantically similar, while high-level splits separate the major topical
+clusters.</figcaption>
+</figure>
 <h2 data-number="12.3" id="term-analysis"><span
 class="header-section-number">12.3</span> Term Analysis</h2>
 <p>The TF-IDF term heatmap reveals which terms discriminate between
 subfields: terms with high between-subfield variance (rather than high
 global mean) are selected for display.</p>
 <!-- FIGURE: term_heatmap.png -->
-<p><img src="../figures/term_heatmap.png" title="Term Heatmap"
-alt="Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms." />{{#fig:term_heatmap}}</p>
+<figure id="fig:term_heatmap">
+<img src="../figures/term_heatmap.png" title="Term Heatmap"
+alt="Figure 12: Term heatmap for Modafinil." />
+<figcaption>Figure 12: Term heatmap for Modafinil.
+Each cell shows the mean TF-IDF weight of a term within a subfield.
+Terms are selected by between-subfield variance to highlight
+discriminative vocabulary rather than globally frequent
+terms.</figcaption>
+</figure>
 <h2 data-number="12.4" id="named-entity-analysis"><span
 class="header-section-number">12.4</span> Named Entity Analysis</h2>
 <p>Named entity extraction over the 1437 abstracts identified 30 unique
@@ -2031,8 +2103,14 @@ pharmacological vocabulary of the modafinil literature.</p>
 </tbody>
 </table>
 <!-- FIGURE: entity_bar_chart.png -->
-<p><img src="../figures/entity_bar_chart.png" title="Named Entities"
-alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature." />{{#fig:entity_bar_chart}}</p>
+<figure id="fig:entity_bar_chart">
+<img src="../figures/entity_bar_chart.png" title="Named Entities"
+alt="Figure 13: Top named entities for Modafinil." />
+<figcaption>Figure 13: Top named entities for
+Modafinil. The horizontal bar chart shows the 20 most frequently
+extracted named entities from abstracts, revealing the dominant drugs,
+conditions, and concepts in the literature.</figcaption>
+</figure>
 <p><strong>Table 5. Top keyphrases by TF-IDF score.</strong></p>
 <table>
 <thead>
@@ -2180,16 +2258,32 @@ reveal the most closely related works in the corpus.</p>
 </tbody>
 </table>
 <!-- FIGURE: similarity_heatmap.png -->
-<p><img src="../figures/similarity_heatmap.png"
+<figure id="fig:similarity_heatmap">
+<img src="../figures/similarity_heatmap.png"
 title="Similar Document Pairs"
-alt="Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content." />{{#fig:similarity_heatmap}}</p>
+alt="Figure 14: Document similarity for Modafinil." />
+<figcaption>Figure 14: Document similarity for
+Modafinil. The horizontal bar chart shows the 15 most similar document
+pairs ranked by cosine similarity of their TF-IDF/SVD embeddings.
+High-similarity pairs share topical and lexical content.</figcaption>
+</figure>
 <!-- FIGURE: word_cloud.png -->
-<p><img src="../figures/word_cloud.png" title="Term Cloud"
-alt="Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary." />{{#fig:word_cloud}}</p>
+<figure id="fig:word_cloud">
+<img src="../figures/word_cloud.png" title="Term Cloud"
+alt="Figure 15: Term cloud for Modafinil." />
+<figcaption>Figure 15: Term cloud for Modafinil. Term
+sizes are proportional to their TF-IDF weights across the corpus,
+providing a visual summary of the dominant vocabulary.</figcaption>
+</figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
-<p><img src="../figures/cooccurrence_matrix.png"
-title="Term Co-occurrence"
-alt="Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature." />{{#fig:cooccurrence_matrix}}</p>
+<figure id="fig:cooccurrence_matrix">
+<img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+alt="Figure 16: Term co-occurrence matrix for Modafinil." />
+<figcaption>Figure 16: Term co-occurrence matrix for
+Modafinil. Each cell shows the normalized co-occurrence frequency of two
+terms within the same document, revealing which concepts tend to appear
+together in the literature.</figcaption>
+</figure>
 <p>These embeddings support semantic retrieval over the corpus and the
 visual map of the literature’s topical geography.</p>
 <hr />
@@ -2340,12 +2434,25 @@ cited by other corpus members. Hub papers, which cite many other corpus
 members, serve as integrative reviews or meta-analyses that connect
 disparate threads of the literature.</p>
 <!-- FIGURE: citation_network.png -->
-<p><img src="../figures/citation_network.png" title="Citation Network"
-alt="Citation network for Modafinil. Nodes represent papers; directed edges represent citation links. Node colours indicate community membership (1416 communities detected by modularity optimization). Layout uses a spring-based algorithm with a fixed seed for reproducibility." />{{#fig:citation_network}}</p>
+<figure id="fig:citation_network">
+<img src="../figures/citation_network.png" title="Citation Network"
+alt="Figure 17: Citation network for Modafinil." />
+<figcaption>Figure 17: Citation network for
+Modafinil. Nodes represent papers; directed edges represent citation
+links. Node colours indicate community membership (1416 communities
+detected by modularity optimization). Layout uses a spring-based
+algorithm with a fixed seed for reproducibility.</figcaption>
+</figure>
 <!-- FIGURE: degree_distribution.png -->
-<p><img src="../figures/degree_distribution.png"
+<figure id="fig:degree_distribution">
+<img src="../figures/degree_distribution.png"
 title="Degree Distribution"
-alt="Degree distribution for the Modafinil citation network. The histogram shows the frequency of each in-degree value on a log-linear scale, revealing the heavy-tailed structure characteristic of citation networks." />{{#fig:degree_distribution}}</p>
+alt="Figure 18: Degree distribution for the Modafinil citation network." />
+<figcaption>Figure 18: Degree distribution for the
+Modafinil citation network. The histogram shows the frequency of each
+in-degree value on a log-linear scale, revealing the heavy-tailed
+structure characteristic of citation networks.</figcaption>
+</figure>
 <p>The heavy-tailed degree distribution is characteristic of citation
 networks: a small number of highly-cited papers anchor the structure,
 while the long tail of low-degree nodes represents newer or peripheral
@@ -2546,12 +2653,11 @@ that turns a single search term into a complete, evidence-bound portrait
 of its literature. Applied to <strong>Modafinil</strong>, it retrieved
 and de-duplicated 2334 records across 10 engines (arXiv, OpenAlex,
 Semantic Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-bioRxiv/medRxiv, and medrxiv), classified them into 6 configurable
-subfields (with <strong>Clinical Sleep</strong> dominant at 63.0%),
-extracted 5 topics over a 500-feature vocabulary, computed reproducible
-document embeddings, mapped the citation network (2234 nodes, 8,623
-edges, 1416 communities), and framed 6 hypotheses for optional evidence
-scoring.</p>
+bioRxiv, and medRxiv), classified them into 6 configurable subfields
+(with <strong>Clinical Sleep</strong> dominant at 63.0%), extracted 5
+topics over a 500-feature vocabulary, computed reproducible document
+embeddings, mapped the citation network (2234 nodes, 8,623 edges, 1416
+communities), and framed 6 hypotheses for optional evidence scoring.</p>
 <h2 data-number="16.1" id="key-findings"><span
 class="header-section-number">16.1</span> Key Findings</h2>
 <p>The analysis answers the four research questions posed in the
@@ -2573,11 +2679,9 @@ field.</p></li>
 <li><p><strong>RQ4 (Citations)</strong>: The citation network of 2234
 nodes and 8,623 edges has a resolution rate of 22.4%, 1416 communities,
 and a maximum in-degree of</p>
-<ol start="163" type="1">
-<li>The heavy-tailed degree distribution is characteristic of citation
-networks, with a small number of foundational works anchoring the
-structure.</li>
-</ol></li>
+<p>163. The heavy-tailed degree distribution is characteristic of
+citation networks, with a small number of foundational works anchoring
+the structure.</p></li>
 </ol>
 <h2 data-number="16.2" id="architectural-contribution"><span
 class="header-section-number">16.2</span> Architectural
@@ -2857,6 +2961,12 @@ are disposable and regenerable:</p>
 <td>06</td>
 <td>Abstract/OA/PDF coverage report</td>
 </tr>
+<tr>
+<td><code>fulltext/fulltext_inventory.json</code></td>
+<td>06</td>
+<td>Provider metadata, declared licenses, and local PDF SHA-256
+checksums; no license is inferred from OA status</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -2953,9 +3063,9 @@ de-duplication and citation resolution.</td>
 <tr>
 <td><strong>Engine</strong></td>
 <td>An independent literature source adapter (arXiv, OpenAlex, Semantic
-Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC,
-bioRxiv/medRxiv, and medrxiv) with a uniform search interface and
-graceful skip-on-failure.</td>
+Scholar, Crossref, PubMed, SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv,
+and medRxiv) with a uniform search interface and graceful
+skip-on-failure.</td>
 </tr>
 <tr>
 <td><strong>Subfield</strong></td>

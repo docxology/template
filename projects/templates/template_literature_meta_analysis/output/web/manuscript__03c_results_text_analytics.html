@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>03c_results_text_analytics.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -261,8 +260,14 @@ addresses fatigue in psychiatric populations. These topics cross-cut the
 keyword-based subfield taxonomy, revealing connections that the explicit
 classification does not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
-<p><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
-alt="Topic-term bar charts for Modafinil. Each panel shows the top weighted terms for one of 5 NMF topics, with bar length proportional to the topic-term weight in the \mathbf{H} matrix." />{{#fig:topic_term_bars}}</p>
+<figure id="fig:topic_term_bars">
+<img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
+alt="Topic-term bar charts for Modafinil." />
+<figcaption>Topic-term bar charts for Modafinil. Each
+panel shows the top weighted terms for one of 5 NMF topics, with bar
+length proportional to the topic-term weight in the <span
+class="math inline">\(\mathbf{H}\)</span> matrix.</figcaption>
+</figure>
 <h2 id="document-embeddings">Document Embeddings</h2>
 <p>Offline deterministic embeddings (TF-IDF followed by truncated SVD)
 place every document in a shared 50-dimensional vector space. Embedding
@@ -270,18 +275,38 @@ the same text twice yields identical vectors, so the derived similarity
 matrix, nearest-neighbour lists, clusters, and two-dimensional
 projection are all reproducible.</p>
 <!-- FIGURE: pca_embeddings.png -->
-<p><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
-alt="PCA projection of document embeddings for Modafinil. Each point represents one document projected onto the first two principal components of the TF-IDF/SVD embedding. Colours indicate subfield assignment, showing how the topical geography relates to the keyword taxonomy." />{{#fig:pca_embeddings}}</p>
+<figure id="fig:pca_embeddings">
+<img src="../figures/pca_embeddings.png" title="PCA Embeddings"
+alt="PCA projection of document embeddings for Modafinil." />
+<figcaption>PCA projection of document embeddings for
+Modafinil. Each point represents one document projected onto the first
+two principal components of the TF-IDF/SVD embedding. Colours indicate
+subfield assignment, showing how the topical geography relates to the
+keyword taxonomy.</figcaption>
+</figure>
 <!-- FIGURE: dendrogram.png -->
-<p><img src="../figures/dendrogram.png" title="Document Dendrogram"
-alt="Hierarchical clustering dendrogram of document embeddings. The tree shows the similarity structure of the corpus: documents that join low in the tree are semantically similar, while high-level splits separate the major topical clusters." />{{#fig:dendrogram}}</p>
+<figure id="fig:dendrogram">
+<img src="../figures/dendrogram.png" title="Document Dendrogram"
+alt="Hierarchical clustering dendrogram of document embeddings." />
+<figcaption>Hierarchical clustering dendrogram of
+document embeddings. The tree shows the similarity structure of the
+corpus: documents that join low in the tree are semantically similar,
+while high-level splits separate the major topical
+clusters.</figcaption>
+</figure>
 <h2 id="term-analysis">Term Analysis</h2>
 <p>The TF-IDF term heatmap reveals which terms discriminate between
 subfields: terms with high between-subfield variance (rather than high
 global mean) are selected for display.</p>
 <!-- FIGURE: term_heatmap.png -->
-<p><img src="../figures/term_heatmap.png" title="Term Heatmap"
-alt="Term heatmap for Modafinil. Each cell shows the mean TF-IDF weight of a term within a subfield. Terms are selected by between-subfield variance to highlight discriminative vocabulary rather than globally frequent terms." />{{#fig:term_heatmap}}</p>
+<figure id="fig:term_heatmap">
+<img src="../figures/term_heatmap.png" title="Term Heatmap"
+alt="Term heatmap for Modafinil." />
+<figcaption>Term heatmap for Modafinil. Each cell
+shows the mean TF-IDF weight of a term within a subfield. Terms are
+selected by between-subfield variance to highlight discriminative
+vocabulary rather than globally frequent terms.</figcaption>
+</figure>
 <h2 id="named-entity-analysis">Named Entity Analysis</h2>
 <p>Named entity extraction over the 1437 abstracts identified 30 unique
 entities. The most frequent entities reflect the clinical and
@@ -358,8 +383,14 @@ pharmacological vocabulary of the modafinil literature.</p>
 </tbody>
 </table>
 <!-- FIGURE: entity_bar_chart.png -->
-<p><img src="../figures/entity_bar_chart.png" title="Named Entities"
-alt="Top named entities for Modafinil. The horizontal bar chart shows the 20 most frequently extracted named entities from abstracts, revealing the dominant drugs, conditions, and concepts in the literature." />{{#fig:entity_bar_chart}}</p>
+<figure id="fig:entity_bar_chart">
+<img src="../figures/entity_bar_chart.png" title="Named Entities"
+alt="Top named entities for Modafinil." />
+<figcaption>Top named entities for Modafinil. The
+horizontal bar chart shows the 20 most frequently extracted named
+entities from abstracts, revealing the dominant drugs, conditions, and
+concepts in the literature.</figcaption>
+</figure>
 <p><strong>Table 5. Top keyphrases by TF-IDF score.</strong></p>
 <table>
 <thead>
@@ -506,16 +537,32 @@ reveal the most closely related works in the corpus.</p>
 </tbody>
 </table>
 <!-- FIGURE: similarity_heatmap.png -->
-<p><img src="../figures/similarity_heatmap.png"
+<figure id="fig:similarity_heatmap">
+<img src="../figures/similarity_heatmap.png"
 title="Similar Document Pairs"
-alt="Document similarity for Modafinil. The horizontal bar chart shows the 15 most similar document pairs ranked by cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs share topical and lexical content." />{{#fig:similarity_heatmap}}</p>
+alt="Document similarity for Modafinil." />
+<figcaption>Document similarity for Modafinil. The
+horizontal bar chart shows the 15 most similar document pairs ranked by
+cosine similarity of their TF-IDF/SVD embeddings. High-similarity pairs
+share topical and lexical content.</figcaption>
+</figure>
 <!-- FIGURE: word_cloud.png -->
-<p><img src="../figures/word_cloud.png" title="Term Cloud"
-alt="Term cloud for Modafinil. Term sizes are proportional to their TF-IDF weights across the corpus, providing a visual summary of the dominant vocabulary." />{{#fig:word_cloud}}</p>
+<figure id="fig:word_cloud">
+<img src="../figures/word_cloud.png" title="Term Cloud"
+alt="Term cloud for Modafinil." />
+<figcaption>Term cloud for Modafinil. Term sizes are
+proportional to their TF-IDF weights across the corpus, providing a
+visual summary of the dominant vocabulary.</figcaption>
+</figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
-<p><img src="../figures/cooccurrence_matrix.png"
-title="Term Co-occurrence"
-alt="Term co-occurrence matrix for Modafinil. Each cell shows the normalized co-occurrence frequency of two terms within the same document, revealing which concepts tend to appear together in the literature." />{{#fig:cooccurrence_matrix}}</p>
+<figure id="fig:cooccurrence_matrix">
+<img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+alt="Term co-occurrence matrix for Modafinil." />
+<figcaption>Term co-occurrence matrix for Modafinil.
+Each cell shows the normalized co-occurrence frequency of two terms
+within the same document, revealing which concepts tend to appear
+together in the literature.</figcaption>
+</figure>
 <p>These embeddings support semantic retrieval over the corpus and the
 visual map of the literature’s topical geography.</p>
 </main>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02a_methods_retrieval.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -206,8 +205,8 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 <h1 id="retrieval-and-de-duplication">Retrieval and De-duplication</h1>
 <p>Retrieval dispatches the configured query across 10 independent
 literature engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed,
-SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv/medRxiv, and medrxiv). Each
-engine is an isolated adapter exposing a uniform
+SovietRxiv, ChinaRxiv, Europe PMC, bioRxiv, and medRxiv). Each engine is
+an isolated adapter exposing a uniform
 <code>search(query) -&gt; list[Record]</code> interface; engines that
 are keyless — arXiv, OpenAlex [priem2022openalex], Crossref
 [hendricks2020crossref], PubMed/Entrez [sayers2022entrez], SovietRxiv /

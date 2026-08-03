@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>02e_methods_viz_injection.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -229,8 +228,9 @@ word cloud; Figure topic term bars; Figure pca embeddings; Figure term
 heatmap; Figure dendrogram; Figure cooccurrence matrix))</li>
 </ul>
 <p>Each figure is registered in <code>figure_registry.json</code> with
-its source data file, generation parameters, and SHA-256 hash, binding
-the visual output to the exact pipeline run.</p>
+its label, caption, and the producing script, so downstream rendering
+and validation resolve the same figure set that the pipeline
+generated.</p>
 <h2 id="variable-injection">Variable Injection</h2>
 <p>The manuscript itself is generated, not hand-maintained. A variable
 computation step reads the configuration and the pipeline outputs and
