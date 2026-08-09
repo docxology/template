@@ -8,6 +8,7 @@ whether the tracked snapshot happens to read as stale on a given CI leg.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -74,6 +75,8 @@ def test_stale_artifact_triggers_full_settlement(copied_root: Path) -> None:
     assert paths, "settlement must report written artifact paths"
     assert target.is_file(), "the deleted artifact must be regenerated"
     assert _validate_fixed_point(copied_root) == []
+    model_checking = copied_root / "output" / "reports" / "model_checking_witnesses.json"
+    assert json.loads(model_checking.read_text(encoding="utf-8"))["witness_count"] == 12
     expected = {key: path.resolve() for key, path in _existing_fixed_point_paths(copied_root).items()}
     assert {key: path.resolve() for key, path in paths.items()} == expected
 

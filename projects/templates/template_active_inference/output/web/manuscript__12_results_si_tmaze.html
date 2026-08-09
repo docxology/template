@@ -198,6 +198,270 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: min(100%, 800px);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #1f6f8b;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: #8f1d1d;
+}
+
+a:hover {
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #4b5563;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -315,9 +579,9 @@ decomposition above.</p>
 run log: <code>output/logs/pymdp_runs.jsonl</code>.</p>
 <!-- sheaf-track:visualization -->
 <figure id="fig:cue_tmaze_advantage">
-<img src="../figures/cue_tmaze_advantage.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/cue_tmaze_advantage.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/cue_tmaze_advantage.png" style="width:95.0%"
 data-fig-alt="Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the cue information gain I(context; observation) in nats and the expected reward log-preference for an epistemic agent that samples the cue versus a greedy agent that commits to an arm, demonstrating a positive behavioural advantage for cue-sampling. The right panel shows the flat Expected Free Energy of the cue-first and greedy policies, which are identical, illustrating that flat EFE propagation cannot reward cue-sampling and the sophisticated observation- conditioned evaluator is required."
-alt="Cue-then-reward T-maze where epistemic value is strictly necessary." />
+alt="Cue-then-reward T-maze where epistemic value is strictly necessary." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Cue-then-reward T-maze where epistemic
 value is strictly necessary. Left: the cue carries 0.6931 nats of
 information and the cue-sampling agent reaches reward with a measured
@@ -327,9 +591,9 @@ so the sophisticated observation- conditioned evaluator is what makes
 information-seeking required. Closed form (no sampling).</figcaption>
 </figure>
 <figure id="fig:efe_decomposition">
-<img src="../figures/efe_decomposition.png" style="width:95.0%"
+<a class="figure-full-size-link" href="../figures/efe_decomposition.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/efe_decomposition.png" style="width:95.0%"
 data-fig-alt="Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar&#39;s height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic)."
-alt="Closed-form Expected Free Energy decomposition over the finite T-maze policies." />
+alt="Closed-form Expected Free Energy decomposition over the finite T-maze policies." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Closed-form Expected Free Energy
 decomposition over the finite T-maze policies. Left: <span
 class="math inline">\(G(\pi)\)</span> = risk + ambiguity (stacked), with
@@ -339,9 +603,9 @@ forms are computed in closed form (no sampling) and satisfy risk +
 ambiguity + pragmatic + epistemic = 0 to machine precision.</figcaption>
 </figure>
 <figure id="fig:precision_sweep">
-<img src="../figures/precision_sweep.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/precision_sweep.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/precision_sweep.png" style="width:90.0%"
 data-fig-alt="Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G) sharpens as the precision gamma increases from 0 to 16. The left axis plots the Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and saturating at the ln(|optimal set|) floor (a dashed reference line) because two policies tie at the expected-free-energy minimum. The right axis plots the probability mass placed on the expected-free-energy optimal policy set, rising from 0.5 toward 1 and crossing the selection threshold; the precision at which it crosses is marked."
-alt="Precision sweep over the closed-form T-maze policy posterior q(pi)proptoexp(-gamma G) across 33 grid points up to gamma =16." />
+alt="Precision sweep over the closed-form T-maze policy posterior q(pi)proptoexp(-gamma G) across 33 grid points up to gamma =16." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Precision sweep over the closed-form
 T-maze policy posterior <span
 class="math inline">\(q(\pi)\propto\exp(-\gamma G)\)</span> across 33
@@ -355,9 +619,9 @@ class="math inline">\(\gamma\)</span>=1 is 1.1458 nats. Computed in
 closed form (no sampling).</figcaption>
 </figure>
 <figure id="fig:dirichlet_convergence">
-<img src="../figures/dirichlet_convergence.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/dirichlet_convergence.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/dirichlet_convergence.png" style="width:85.0%"
 data-fig-alt="Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling)."
-alt="Dirichlet model learning: KL (A_texttrue \,\|\, A_textlearned) versus concentration-update step." />
+alt="Dirichlet model learning: KL (A_texttrue \,\|\, A_textlearned) versus concentration-update step." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Dirichlet model learning: KL<span
 class="math inline">\((A_{\text{true}} \,\|\,
 A_{\text{learned}})\)</span> versus concentration-update step. The
@@ -368,23 +632,23 @@ the run reaches the convergence tolerance at step 3 with final KL
 byte-reproducible.</figcaption>
 </figure>
 <figure id="fig:si_belief_entropy_curve">
-<img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/si_belief_entropy_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
 data-fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode."
-alt="Belief entropy over time for the T-maze rollout (mean 0.3251 nats)." />
+alt="Belief entropy over time for the T-maze rollout (mean 0.3251 nats)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Belief entropy over time for the T-maze
 rollout (mean 0.3251 nats).</figcaption>
 </figure>
 <figure id="fig:si_obs_action_trace">
-<img src="../figures/si_obs_action_trace.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/si_obs_action_trace.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/si_obs_action_trace.png" style="width:90.0%"
 data-fig-alt="Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1."
-alt="Observation and action traces for the T-maze rollout (action diversity 2)." />
+alt="Observation and action traces for the T-maze rollout (action diversity 2)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Observation and action traces for the
 T-maze rollout (action diversity 2).</figcaption>
 </figure>
 <figure id="fig:si_tmaze_actions">
-<img src="../figures/si_tmaze_actions.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/si_tmaze_actions.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/si_tmaze_actions.png" style="width:90.0%"
 data-fig-alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps."
-alt="Discrete action index over time for the pymdp T-maze rollout (policy length 2)." />
+alt="Discrete action index over time for the pymdp T-maze rollout (policy length 2)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Discrete action index over time for the
 pymdp T-maze rollout (policy length 2).</figcaption>
 </figure>

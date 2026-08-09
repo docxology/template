@@ -121,7 +121,7 @@ Result: **588** project-scope infrastructure tests collected and **740** publish
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 786 | 92.95 % |
+| `template_active_inference` | 787 | 92.95 % |
 | `template_advanced_literature_review` | 77 | 93.26 % |
 | `template_autopoiesis` | 512 | 97.84 % |
 | `template_autoresearch_project` | 370 | 96.46 % |

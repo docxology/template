@@ -5,10 +5,12 @@ import stat
 
 import pytest
 from reportlab.pdfgen import canvas
+from pypdf import PdfWriter
 
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.latex_utils import (
+    canonicalize_pdf_for_determinism,
     compile_latex,
     ensure_pdf_at,
     normalize_latex_sidecars,
@@ -28,6 +30,22 @@ def _write_valid_pdf(path) -> None:
     c.showPage()
     c.save()
     assert validate_pdf_structure(path), "fixture PDF must be structurally valid"
+
+
+def test_canonicalize_pdf_adds_identifier_when_source_omits_one(tmp_path, monkeypatch):
+    """Valid PDFs without a trailer ID still receive deterministic metadata."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    pdf = tmp_path / "without-id.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=72, height=72)
+    writer.write(pdf)
+    assert b"/ID" not in pdf.read_bytes()
+
+    canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+
+    content = pdf.read_bytes()
+    assert b"/ID [ <" in content
+    assert validate_pdf_structure(pdf)
 
 
 def test_ensure_pdf_at_noop_when_paths_match(tmp_path):

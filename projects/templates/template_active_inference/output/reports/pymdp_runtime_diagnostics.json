@@ -236,8 +236,8 @@
       "unexpected_warnings": [],
       "versions": {
         "inferactively_pymdp": "1.0.1",
-        "jax": "0.9.2",
-        "jaxlib": "0.9.2"
+        "jax": "uv.lock Python-marker selection",
+        "jaxlib": "uv.lock Python-marker selection"
       }
     },
     {
@@ -267,8 +267,8 @@
       "unexpected_warnings": [],
       "versions": {
         "inferactively_pymdp": "1.0.1",
-        "jax": "0.9.2",
-        "jaxlib": "0.9.2"
+        "jax": "uv.lock Python-marker selection",
+        "jaxlib": "uv.lock Python-marker selection"
       }
     },
     {
@@ -296,8 +296,8 @@
       "unexpected_warnings": [],
       "versions": {
         "inferactively_pymdp": "1.0.1",
-        "jax": "0.9.2",
-        "jaxlib": "0.9.2"
+        "jax": "uv.lock Python-marker selection",
+        "jaxlib": "uv.lock Python-marker selection"
       }
     },
     {
@@ -327,8 +327,8 @@
       "unexpected_warnings": [],
       "versions": {
         "inferactively_pymdp": "1.0.1",
-        "jax": "0.9.2",
-        "jaxlib": "0.9.2"
+        "jax": "uv.lock Python-marker selection",
+        "jaxlib": "uv.lock Python-marker selection"
       }
     }
   ],
@@ -343,7 +343,7 @@
   "unexpected_warning_count": 0,
   "versions": {
     "inferactively_pymdp": "1.0.1",
-    "jax": "0.9.2",
-    "jaxlib": "0.9.2"
+    "jax": "uv.lock Python-marker selection",
+    "jaxlib": "uv.lock Python-marker selection"
   }
 }

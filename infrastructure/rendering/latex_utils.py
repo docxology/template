@@ -172,12 +172,13 @@ def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None =
     reader = PdfReader(str(pdf_path))
     writer = PdfWriter(clone_from=str(pdf_path))
     # PDF identifiers are optional.  Some valid compiler outputs omit the
-    # trailer /ID, and pypdf preserves that omission when cloning.  Seed a
-    # deterministic placeholder so canonicalization can still derive and
-    # install a content-based identifier instead of rejecting a valid PDF.
-    if writer._ID is None:  # pypdf has no public setter for trailer IDs.
-        placeholder = ByteStringObject(b"\x00" * 16)
-        writer._ID = ArrayObject([placeholder, placeholder])
+    # trailer /ID, while others expose a non-hex or otherwise unmatchable ID
+    # through pypdf when cloning.  Replace either form with a deterministic
+    # placeholder so canonicalization can always derive and install a
+    # content-based identifier instead of rejecting a valid PDF.  pypdf has no
+    # public setter for trailer IDs.
+    placeholder = b"\x00" * 16
+    writer._ID = ArrayObject([ByteStringObject(placeholder), ByteStringObject(placeholder)])
     _canonicalize_pdf_objects(writer._objects)  # pypdf has no public tree mutator
 
     metadata = {

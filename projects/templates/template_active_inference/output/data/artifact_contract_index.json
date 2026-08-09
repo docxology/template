@@ -246,7 +246,7 @@
       "copied_parity_ok": true,
       "copied_path": "data/artifact_contract_index.json",
       "copied_required": true,
-      "copied_sha256": "0865e37b22ea51417e0c415546ff9d0a33f966f8417b3925331a1a5048207520",
+      "copied_sha256": "bafdb0c35ab534eca72e4103c5a347e6ca702ffaefa3b573ef32d66a99fa0def",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -263,7 +263,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "962063103c43c212acccaee0e8a1bb5d60164c6a71cbb482ffbc57f49fe1ce93",
+      "source_sha256": "a26dfd060bff2f3c57523cbe7b0b7fae5c34beea6f33ad86e90eb53747137996",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -281,7 +281,7 @@
       "copied_parity_ok": true,
       "copied_path": "data/artifact_provenance.json",
       "copied_required": true,
-      "copied_sha256": "d6a5193c4e84b1b9598a1dbc60653cddc0ca46ce37bca116a9eb07c98937b5a0",
+      "copied_sha256": "a2f70918ff1005be267031902e0de9226f4fbd7e2ca229586ced3aa2f59050bf",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -302,7 +302,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "5dfc922b001a111f69df51dbd5669d7329f879e462f389c18ad0efb9e7fbbb46",
+      "source_sha256": "715c6a36b60b287b8f817432cb462653b03e124833a715c968930f72d851ddc0",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -1732,8 +1732,8 @@
       "copied_parity_ok": true,
       "copied_path": "figures/artifact_contract_map.png",
       "copied_required": true,
-      "copied_sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc",
-      "copied_status": "deferred",
+      "copied_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/artifact_contract_map.png"
@@ -1764,8 +1764,8 @@
       "copied_parity_ok": true,
       "copied_path": "figures/causal_ablation_heatmap.png",
       "copied_required": true,
-      "copied_sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9",
-      "copied_status": "deferred",
+      "copied_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/causal_ablation_heatmap.png"
@@ -1828,8 +1828,8 @@
       "copied_parity_ok": true,
       "copied_path": "figures/scholarship_source_map.png",
       "copied_required": true,
-      "copied_sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
-      "copied_status": "deferred",
+      "copied_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/scholarship_source_map.png"
@@ -1896,8 +1896,8 @@
       "copied_parity_ok": true,
       "copied_path": "figures/semantic_gluing_graph.png",
       "copied_required": true,
-      "copied_sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
-      "copied_status": "deferred",
+      "copied_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/semantic_gluing_graph.png"
@@ -1995,8 +1995,8 @@
       "copied_parity_ok": true,
       "copied_path": "figures/si_belief_trajectory.gif",
       "copied_required": true,
-      "copied_sha256": "40f442d5411cf6f0f27f6b9238e16bed7b3c32129294a76b94ac42191968d599",
-      "copied_status": "deferred",
+      "copied_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "copied_status": "matched",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
         "output/figures/si_belief_trajectory.gif"
@@ -2025,8 +2025,8 @@
       "copied_parity_ok": true,
       "copied_path": "figures/theorem_traceability_graph.png",
       "copied_required": true,
-      "copied_sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
-      "copied_status": "deferred",
+      "copied_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/theorem_traceability_graph.png"
@@ -2058,7 +2058,7 @@
       "copied_parity_ok": true,
       "copied_path": "reports/ablation_sensitivity_report.json",
       "copied_required": true,
-      "copied_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+      "copied_sha256": "3d075037bef51a4a660db40b82cd275a2b5135efdc3346dfde2a89ad4c5d35af",
       "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
@@ -2075,7 +2075,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+      "source_sha256": "3d075037bef51a4a660db40b82cd275a2b5135efdc3346dfde2a89ad4c5d35af",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2132,8 +2132,8 @@
       "copied_parity_ok": true,
       "copied_path": "reports/artifact_diffoscope.json",
       "copied_required": true,
-      "copied_sha256": "5f56e4523685f47b1ae2665958f002307ec760d0089dd4fc383cd4de5bacf047",
-      "copied_status": "deferred",
+      "copied_sha256": "1db2b23dee2b8cbf49bb1c56cf10d638d4172637287e5210e2b10615c369759d",
+      "copied_status": "matched",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
         "output/reports/artifact_diffoscope.json",
@@ -2154,7 +2154,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "56f2210bf73549e0ec8639b833f831cd4011041220547acbff6173fdf8d40f4e",
+      "source_sha256": "1db2b23dee2b8cbf49bb1c56cf10d638d4172637287e5210e2b10615c369759d",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2652,7 +2652,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "04238557fa15b65fe42c07d24a5aed424911b064ad3811ddaae7a10deb0fdb10",
+      "source_sha256": "961ee790dc7aea7c8020e92e3d98e5e26f4118c026c926334a649510a1f37226",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2669,7 +2669,7 @@
       "copied_parity_ok": true,
       "copied_path": "reports/release_attestation.json",
       "copied_required": true,
-      "copied_sha256": "bac1d4ce638d89875ad7c79ce48487ceaca81d5def08375b2eb68d3e69540358",
+      "copied_sha256": "e23d6303223bf8935b3e0f956b701127d806fe6199055d80d5f3176ea4481b39",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -2686,7 +2686,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "fe20415adc6f23ed09bb5418dde17ad0fd671b0bdd08dca7434d5e5e8a9708f7",
+      "source_sha256": "d235efe16070cd07a3623f89f0b884eb424cdeac48f1104d7b6c93b795d75be7",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2725,7 +2725,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "f6c24267036815e927a4c5e982225d226f5546b4d0e570f6f4faec7b347eacd1",
+      "source_sha256": "85525c3dbcbb8cd30ea4620895681bf9f62528668371d38b5d61552f3b34b24c",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2781,7 +2781,7 @@
       "copied_parity_ok": true,
       "copied_path": "reports/replay_matrix.json",
       "copied_required": true,
-      "copied_sha256": "07f6b3e2e20c73b58504890b821199a837876cc89e91409c750f09edf5039cd3",
+      "copied_sha256": "7a8f5e16c72023fca385a341246d4b0f4cc196342dfd8b74ec7818daaad879c5",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -2803,7 +2803,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "fb7fa7981ecb0d24359e69ec7998bf7a5bea30e97faf76ab6a559faf8ca944ff",
+      "source_sha256": "0db2e228b9347da71beb02c64b2a1299fb2b16d7ae1beb180ecd0a5b7663b9ec",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2886,8 +2886,8 @@
       "copied_parity_ok": true,
       "copied_path": "reports/security_posture_audit.json",
       "copied_required": true,
-      "copied_sha256": "faa7bf1f9687eed888a3623b58def53b69b3c38c1df83853ec9ecb203e27757b",
-      "copied_status": "deferred",
+      "copied_sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/security_posture_audit.json",
@@ -3036,7 +3036,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "192d5ebeaf683061c2c29b335f6db01c300927261d09eb39c91da570f99810e4",
+      "source_sha256": "7a63f99fc69b8d2730efd3ec82d4fb8d3bf340af6cbd3aeea1d8983039a88042",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3054,8 +3054,8 @@
       "copied_parity_ok": true,
       "copied_path": "reports/visualization_quality_audit.json",
       "copied_required": true,
-      "copied_sha256": "36026ba1244fbeb7875586ca57739f09e47656204f16bc9438954edbee938f64",
-      "copied_status": "deferred",
+      "copied_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/visualization_quality_audit.json",

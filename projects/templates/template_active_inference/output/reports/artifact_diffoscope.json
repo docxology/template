@@ -415,9 +415,9 @@
       "equal": true,
       "jsonpath": "$",
       "live_content_sha256": "",
-      "live_sha256": "04238557fa15b65fe42c07d24a5aed424911b064ad3811ddaae7a10deb0fdb10",
+      "live_sha256": "961ee790dc7aea7c8020e92e3d98e5e26f4118c026c926334a649510a1f37226",
       "saved_content_sha256": "",
-      "saved_sha256": "04238557fa15b65fe42c07d24a5aed424911b064ad3811ddaae7a10deb0fdb10",
+      "saved_sha256": "961ee790dc7aea7c8020e92e3d98e5e26f4118c026c926334a649510a1f37226",
       "source": "output/data/artifact_provenance.json"
     },
     {

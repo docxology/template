@@ -53,9 +53,13 @@ def _write_semantic_core(root: Path) -> dict[str, Path]:
 
 
 def _write_contract_artifacts(root: Path) -> dict[str, Path]:
-    from roadmap_tracks.formal_interop import write_formal_interop_artifacts
-
-    result: dict[str, Path] = write_formal_interop_artifacts(root)
+    # Formal artifacts are written immediately before the canonical sheaf
+    # writer in each fixed-point pass.  Re-running the base formal writer here
+    # would overwrite the enriched 12-row model-checking artifact emitted by
+    # ``write_sheaf_track_artifacts(finalize=False)`` and leave its saved hash
+    # stale.  Keep this helper limited to the integration/supplemental writers
+    # that do not compete for the formal artifact paths.
+    result: dict[str, Path] = {}
     from roadmap_tracks.integration_audit import write_integration_audit_artifacts
 
     result.update(write_integration_audit_artifacts(root))
@@ -161,11 +165,9 @@ def _write_fixed_point_pass(root: Path, *, require_analysis_outputs: bool) -> di
 
 def _write_final_validation_pass(root: Path, *, require_analysis_outputs: bool) -> dict[str, Path]:
     """Refresh self-referential reports and write the certificate from the final live state."""
-    from roadmap_tracks.formal_interop import write_formal_interop_artifacts
     from roadmap_tracks.supplemental import write_supplemental_artifacts
 
     paths: dict[str, Path] = {}
-    paths.update(write_formal_interop_artifacts(root))
     paths.update(_write_sheaf_owned_artifacts(root))
     paths.update(_refresh_animation_outputs(root))
     paths.update(_refresh_hydrated_manuscript(root, require_analysis_outputs=require_analysis_outputs))

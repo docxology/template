@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "92.95 %",
-      "source_hash": "698a15dca9340c51da51458b2eea1bae47975effa9077b7d902017a8312fb791"
+      "source_hash": "7ef2ab02484c210ee115fb1b5aa1ea43ad34777f94236cf6f1fa000ecb3991a9"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "93.26 %",
@@ -99,5 +99,5 @@
     }
   },
   "schema_version": 2,
-  "source_commit": "330fb0feb6d185344b019eade1336ac7a4d7bcf4"
+  "source_commit": "dd2cca80c441fd3fee12a968bc221d4d11b572a4"
 }
