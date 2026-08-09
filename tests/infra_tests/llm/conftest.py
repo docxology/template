@@ -55,16 +55,19 @@ def test_client(test_config):
 
 
 @pytest.fixture
-def default_config():
+def default_config(request):
     """Create a default OllamaClientConfig for testing with auto_inject disabled.
 
-    Pins ``default_model`` to the discovered small/fast model when an Ollama
-    daemon is reachable, so ``requires_ollama`` integration tests query a model
-    that is actually pulled (the bare ``OllamaClientConfig`` default is
-    ``gemma3:4b``, which a contributor may not have installed). Falls back to the
-    config default for unit tests with no daemon — those never issue a real
-    query, so the model name is immaterial there.
+    Pins ``default_model`` to the discovered small/fast model for
+    ``requires_ollama`` integration tests, so they query a model that is
+    actually pulled (the bare ``OllamaClientConfig`` default is ``gemma3:4b``,
+    which a contributor may not have installed). Pure tests never issue a real
+    query, so probing a daemon during their setup only adds latency and makes
+    the fast tier environment-dependent.
     """
+    if request.node.get_closest_marker("requires_ollama") is None:
+        return OllamaClientConfig(auto_inject_system_prompt=False)
+
     from infrastructure.llm.utils.models import select_small_fast_model
 
     model = select_small_fast_model()
@@ -102,19 +105,34 @@ def clean_llm_env(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
-def patch_llm_client_for_tests(request, ollama_test_server, monkeypatch):
+def patch_llm_client_for_tests(request, monkeypatch):
     """Redirect LLMClient to test server via environment variables.
 
     Sets OLLAMA_HOST to the test server URL so that OllamaClientConfig.from_env()
     naturally discovers the test server. No class patching required —
     fully compliant with the zero-mocks policy.
 
-    Skips environment redirection if test is marked with 'no_patch_llm_client'
+    The HTTP server is acquired lazily. Most LLM tests exercise configuration or
+    context logic and do not need a listening socket; starting one for every
+    test made the fast tier pay the cost of a real server even when no request
+    could be made. Tests that need the stub request it explicitly through the
+    ``ollama_test_server`` fixture, which also makes their network boundary
+    visible in the test signature.
+
+    Skips environment redirection if test is marked with ``no_patch_llm_client``
     to allow testing real default configuration.
     """
     # Check if test needs real default behavior
     if request.node.get_closest_marker("no_patch_llm_client"):
         return  # Skip — test will use real default config
+
+    # Do not start pytest-httpserver for pure unit tests. ``fixturenames`` is
+    # pytest's resolved fixture closure, so this also handles fixtures that
+    # depend on ``ollama_test_server`` without eagerly constructing it here.
+    if "ollama_test_server" not in request.fixturenames:
+        return
+
+    ollama_test_server = request.getfixturevalue("ollama_test_server")
 
     # Set environment variables so OllamaClientConfig.from_env() picks up test server
     monkeypatch.setenv("OLLAMA_HOST", ollama_test_server.url_for("/"))

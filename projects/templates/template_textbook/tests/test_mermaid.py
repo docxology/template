@@ -56,6 +56,7 @@ def test_renderer_writes_mmd_fallback_when_no_mmdc(tmp_path):
         assert result.path.read_text(encoding="utf-8").startswith("graph TD")
 
 
+@pytest.mark.slow
 def test_generate_all_diagrams(tmp_path):
     results = diagrams.generate_all_diagrams(tmp_path)
     specs = diagrams.load_specs()
@@ -272,6 +273,7 @@ def test_all_spec_names_are_unique():
 
 
 @pytest.mark.skipif(os.name != "posix", reason="process groups differ on Windows")
+@pytest.mark.slow
 def test_mmdc_timeout_reaps_descendant_processes():
     """The Mermaid timeout boundary must clean up browser-like descendants."""
     with pytest.raises(subprocess.TimeoutExpired):

@@ -586,6 +586,7 @@ def test_verifier_checks_kmyth_sidecars_and_surfaces_kmyth_warning(stego_dir_cop
 # --- Render smoke via a real throwaway pdftoppm on PATH ---
 
 
+@pytest.mark.slow
 def test_render_smoke_passes_with_working_pdftoppm(
     stego_dir_copy: Path,
     tmp_path: Path,
@@ -681,6 +682,7 @@ def test_kmyth_helpers_report_failures_oserrors_and_missing_sidecars(tmp_path: P
     assert visuals._kmyth_seal_probe_error(missing, timeout_seconds=10) != ""
 
 
+@pytest.mark.slow
 def test_kmyth_seal_probe_times_out_on_hung_tool(tmp_path: Path) -> None:
     sleeper = _write_executable(tmp_path / "kmyth-sleep", "import time\ntime.sleep(5)\n")
 

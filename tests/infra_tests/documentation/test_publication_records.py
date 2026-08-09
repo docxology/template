@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path
 
+import pytest
+
 from infrastructure.documentation.publication_records import (
     PublicationRecord,
     README_BLOCK_BEGIN,
@@ -203,6 +205,7 @@ def test_standalone_publication_block_inserts_and_updates_idempotently(tmp_path:
     assert "github_pages" in inserted
 
 
+@pytest.mark.slow
 def test_check_publication_records_doc_accepts_refreshed_external_columns(tmp_path: Path) -> None:
     for name in PUBLIC_PROJECT_NAMES:
         _scaffold_publication_project(tmp_path, name)
@@ -239,6 +242,7 @@ def test_external_status_cannot_call_missing_release_verified(tmp_path: Path) ->
     assert "GitHub release 404" in record.external_status
 
 
+@pytest.mark.slow
 def test_check_publication_records_doc_reports_source_owned_drift(tmp_path: Path) -> None:
     for name in PUBLIC_PROJECT_NAMES:
         _scaffold_publication_project(tmp_path, name)

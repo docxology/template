@@ -159,6 +159,7 @@ def test_format_gallery_figure_refs_match_generator():
     assert missing == set(), f"format gallery references non-producible figures: {missing}"
 
 
+@pytest.mark.slow
 def test_every_chapter_figure_resolves_and_is_producible(tmp_path):
     """Every chapter's `![](...png)` must (1) resolve under output/figures/ from the
     chapter's own location and (2) be produced by a figure generator.

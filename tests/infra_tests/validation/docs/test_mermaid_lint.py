@@ -134,6 +134,7 @@ def test_validate_blocks_empty_input_returns_empty_list() -> None:
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
+@pytest.mark.slow
 def test_validate_blocks_timeout_kills_mmdc_process_tree(tmp_path: Path) -> None:
     md = tmp_path / "p.md"
     _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")

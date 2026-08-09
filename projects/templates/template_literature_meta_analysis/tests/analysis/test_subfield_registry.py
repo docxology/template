@@ -67,6 +67,7 @@ subfield_keywords:
     after = get_pattern_cache()
     assert len(fields) == 1
     assert "C2_robotics" in after
-    assert len(after) == 1 or len(after) != before
+    assert set(after) == {"C2_robotics"}
+    assert len(after) != before
     configure_subfields(None)
     assert len(registry.SUBFIELDS) == len(DEFAULT_SUBFIELDS)

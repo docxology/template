@@ -11,6 +11,7 @@ from infrastructure.rendering.web_renderer import WebRenderer
 
 
 @pytest.mark.requires_latex
+@pytest.mark.slow
 def test_pdf_renderer(test_config, tmp_path, skip_if_no_latex):
     """Test PDF renderer with real LaTeX compilation."""
     renderer = PDFRenderer(test_config)
@@ -32,6 +33,7 @@ Test PDF rendering.
 
 
 @pytest.mark.requires_latex
+@pytest.mark.slow
 def test_slides_renderer_beamer(test_config, tmp_path, skip_if_no_latex):
     """Test Beamer slides renderer with real compilation."""
     if not shutil.which("pandoc"):

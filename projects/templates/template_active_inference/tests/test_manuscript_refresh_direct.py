@@ -31,6 +31,7 @@ def copied_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return copy_project_tree(tmp_path_factory.mktemp("refresh_tree"))
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_refresh_manuscript_pipeline_pre_compose_writes_all_artifacts(copied_root: Path) -> None:
     paths = refresh_manuscript_pipeline(
@@ -44,6 +45,7 @@ def test_refresh_manuscript_pipeline_pre_compose_writes_all_artifacts(copied_roo
     assert staleness, "staleness report must be non-empty"
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_refresh_manuscript_pipeline_post_compose_skips_pre_write(copied_root: Path) -> None:
     variables_path = copied_root / "output" / "data" / "manuscript_variables.json"
@@ -56,9 +58,13 @@ def test_refresh_manuscript_pipeline_post_compose_skips_pre_write(copied_root: P
     # POST_COMPOSE still rewrites the final variables snapshot; the phase only
     # controls whether a pre-compose write happens first.
     assert json.loads(variables_path.read_text(encoding="utf-8"))
-    assert before == b"" or variables_path.read_bytes()
+    after = variables_path.read_bytes()
+    assert after, "POST_COMPOSE must leave a non-empty variables artifact"
+    if before:
+        assert json.loads(after.decode("utf-8")) == json.loads(before.decode("utf-8"))
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_settle_manuscript_artifacts_is_pre_compose(copied_root: Path) -> None:
     paths = settle_manuscript_artifacts(copied_root)
@@ -66,6 +72,7 @@ def test_settle_manuscript_artifacts_is_pre_compose(copied_root: Path) -> None:
     assert all(path.exists() for path in paths.values())
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_semantic_refresh_hydrates_manuscript(copied_root: Path) -> None:
     variables_path = copied_root / "output" / "data" / "manuscript_variables.json"
@@ -74,6 +81,7 @@ def test_semantic_refresh_hydrates_manuscript(copied_root: Path) -> None:
     assert json.loads(variables_path.read_text(encoding="utf-8"))
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_semantic_refresh_rewrites_contract_outputs(copied_root: Path) -> None:
     from roadmap_tracks.sheaf_tracks import CANONICAL_ARTIFACTS
@@ -84,6 +92,7 @@ def test_semantic_refresh_rewrites_contract_outputs(copied_root: Path) -> None:
     assert replay and contract
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_semantic_refresh_animation_outputs_written(copied_root: Path) -> None:
     gif = copied_root / "output" / "figures" / "si_belief_trajectory.gif"

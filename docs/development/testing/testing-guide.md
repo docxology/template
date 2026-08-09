@@ -49,18 +49,22 @@ selected project's full coverage suite and then render/validate real outputs.
 
 Tests are categorized by execution speed:
 - **Fast tests**: Unit tests, configuration tests, validation tests (< 1 second)
-- **Slow tests**: Integration tests using `ollama_test_server` (network calls, LLM queries)
+- **Slow tests**: Real-artifact, subprocess, rendering, and LLM integration checks
 
 ### Default Test Selection
 
-By default, pytest deselects slow, benchmark, private-project, and external-fixture tests to keep the maintained public gate deterministic:
+The maintained pipeline defaults to the quick profile, which deselects slow,
+benchmark, private-project, and external-fixture tests to keep the public inner
+loop deterministic. Direct pytest is unfiltered unless a marker expression is
+provided:
 
 ```bash
 # Normal test run
 uv run python scripts/pipeline/stage_01_test.py
 
-# pytest directly uses the same marker selection from pyproject.toml
-uv run pytest tests/
+# Direct pytest runs are intentionally explicit; use the orchestrator when you
+# want its profile marker selection.
+uv run pytest tests/ -m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture"
 ```
 
 ### Typed Test Profiles
@@ -73,6 +77,13 @@ The orchestrators share one additive profile registry:
   excludes long-running and live-service lanes.
 - `exhaustive` adds long-running tests; live services and benchmarks remain
   explicit opt-ins.
+
+Expensive real-artifact tests should carry `slow` (and, for the Active
+Inference gate cache, `requires_gate_artifacts`) so quick selection remains a
+meaningful inner loop. Release selection still executes those tests. The
+collection-only discovery preflight is diagnostic and opt-in via
+`TEMPLATE_TEST_DISCOVERY_PREFLIGHT=1`; normal runs parse the count from the
+real pytest subprocess output.
 
 ```bash
 uv run python scripts/pipeline/stage_01_test.py --profile quick

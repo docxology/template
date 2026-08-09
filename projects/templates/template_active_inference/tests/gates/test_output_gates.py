@@ -15,7 +15,7 @@ from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
-pytestmark = [pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
 
 
 @pytest.fixture

@@ -11,6 +11,7 @@ import pytest
 from infrastructure.rendering import render_all_cli
 
 
+@pytest.mark.slow
 class TestRenderAllCliMain:
     """Test suite for render_all_cli main function."""
 
@@ -38,11 +39,11 @@ class TestRenderAllCliMain:
         with caplog.at_level(logging.INFO):
             try:
                 render_all_cli.main()
-                # Should have logged something during rendering
-                assert len(caplog.text) > 0
-            except Exception:
-                # LaTeX compilation may fail - that's real behavior
-                assert len(caplog.text) > 0 or True  # Accept any outcome
+            except Exception as exc:
+                outcome = f"{caplog.text}\n{exc}".lower()
+                assert any(token in outcome for token in ("render", "latex", "pandoc", "error"))
+            else:
+                assert (tmp_path / "output" / "pdf" / "main.pdf").is_file()
 
     def test_main_empty_manuscript_dir(self, tmp_path, monkeypatch):
         """Test with empty manuscript directory using real execution."""
@@ -52,13 +53,8 @@ class TestRenderAllCliMain:
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
 
-        # Use real execution
-        try:
-            render_all_cli.main()
-        except SystemExit:
-            pass  # May exit if no files found
-        except Exception:
-            pass  # May raise other exceptions
+        render_all_cli.main()
+        assert not (tmp_path / "output").exists()
 
 
 class TestRenderAllCliModule:

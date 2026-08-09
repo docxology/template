@@ -8,10 +8,13 @@ import sys
 from pathlib import Path
 from zipfile import ZipFile
 
+import pytest
+
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.executor import PipelineConfig, PipelineExecutor
 
 
+@pytest.mark.slow
 def test_built_wheel_contains_canonical_pipeline_yaml(tmp_path: Path) -> None:
     """Installed-wheel fallback data must exist, not merely work in a checkout."""
     repo_root = Path(__file__).parents[4]

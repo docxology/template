@@ -152,6 +152,7 @@ def test_render_one_length_raises_on_uncited_fact_slide(tmp_path: Path, repo_roo
     assert not (tmp_path / "pdf").exists() or not list((tmp_path / "pdf").glob("*.pdf"))
 
 
+@pytest.mark.slow
 def test_render_all_decks_writes_real_artifacts(repo_root):
     """Six artifacts (PDF+PPTX) when python-pptx is installed, three (PDF-only)
     when it isn't — PPTX is an opt-in dependency (`uv sync --group rendering-pptx`),

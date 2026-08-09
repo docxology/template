@@ -156,6 +156,8 @@ def test_group_rows_skip_compose(tmp_path: Path) -> None:
 
 
 @pytest.mark.timeout(900)
+@pytest.mark.slow
+@pytest.mark.requires_gate_artifacts
 def test_validate_manuscript_strict_coverage() -> None:
     root = Path(__file__).resolve().parents[1]
     ensure_gate_artifacts(root)

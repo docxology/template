@@ -87,6 +87,7 @@ def test_ensure_ollama_ready_dead_port_no_auto_start() -> None:
     assert ensure_ollama_ready(DEAD_HOST, auto_start=False) is False
 
 
+@pytest.mark.slow
 def test_ensure_ollama_ready_dead_port_auto_start_fails() -> None:
     """ensure_ollama_ready returns False when the daemon is down and auto-start fails.
 
@@ -229,6 +230,7 @@ def test_generate_response_direct_dead_port_raises() -> None:
         client._generate_response_direct("testmodel", [{"role": "user", "content": "hi"}])
 
 
+@pytest.mark.slow
 def test_generate_response_direct_dead_port_with_retries_raises() -> None:
     """_generate_response_direct with retries still raises after exhausting them."""
     client = _FakeClient(DEAD_HOST, timeout=0.3)
@@ -239,6 +241,7 @@ def test_generate_response_direct_dead_port_with_retries_raises() -> None:
 # --- LLMClient.query: offline path raises after fallbacks exhausted ---------
 
 
+@pytest.mark.slow
 def test_llm_client_query_dead_port_raises_after_fallbacks() -> None:
     """LLMClient.query against a dead port raises LLMConnectionError.
 

@@ -382,7 +382,7 @@ def test_expand_to_json():
     import json
 
     d = json.loads(j)
-    assert "spec_hash" not in d or True  # spec_hash is a property, may not be in to_dict
+    assert "spec_hash" not in d  # spec_hash is a derived property, not serialized state
     assert "seed" in d
 
 

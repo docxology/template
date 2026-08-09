@@ -37,6 +37,9 @@ python_files = ["test_*.py"]
 python_functions = ["test_*"]
 # `--strict-markers` prevents typos in marker definitions
 addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: subprocess and full-pipeline integration checks kept for release profiles",
+]
 
 [tool.coverage.run]
 # Core Template Rule: We only calculate coverage for primary source code (`src/`),

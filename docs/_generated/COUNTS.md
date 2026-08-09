@@ -121,7 +121,7 @@ Result: **588** project-scope infrastructure tests collected and **740** publish
 
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
-| `template_active_inference` | 787 | 92.95 % |
+| `template_active_inference` | 787 | 92.96 % |
 | `template_advanced_literature_review` | 77 | 93.26 % |
 | `template_autopoiesis` | 512 | 97.84 % |
 | `template_autoresearch_project` | 370 | 96.46 % |
@@ -130,7 +130,7 @@ Result: **588** project-scope infrastructure tests collected and **740** publish
 | `template_data_descriptor` | 54 | 97.82 % |
 | `template_eda_notebook` | 77 | 99.13 % |
 | `template_formal` | 279 | 95.28 % |
-| `template_gold_refinement` | 328 | 92.57 % |
+| `template_gold_refinement` | 328 | 92.64 % |
 | `template_literature_meta_analysis` | 1162 | 94.05 % |
 | `template_madlib` | 181 | 99.00 % |
 | `template_methods_paper` | 90 | 98.99 % |

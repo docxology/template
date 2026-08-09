@@ -35,6 +35,7 @@ markers = [
     "requires_pymdp: tests that import inferactively-pymdp",
     "long_running: end-to-end or heavy test families that take minutes",
     "slow: tests retained for release profiles but omitted from the quick inner loop",
+    "requires_gate_artifacts: tests that consume the real-tree hydrated gate-artifact cache",
     "timeout(seconds): per-test timeout for artifact write/validate isolation checks",
 ]
 

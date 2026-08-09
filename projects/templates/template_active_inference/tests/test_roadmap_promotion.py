@@ -25,7 +25,7 @@ from gate_support import (
 # module a wide per-test ceiling (a marker overrides the CLI --timeout value). 600s covers
 # the heaviest negative control on the slowest leg without masking a real hang. These are
 # release-lane artifact refreshes, not quick contract checks.
-pytestmark = [pytest.mark.slow, pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 def _load(path: Path) -> dict:

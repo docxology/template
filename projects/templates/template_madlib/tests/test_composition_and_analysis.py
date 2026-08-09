@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
 from src.analysis import generate_artifacts
@@ -138,6 +139,7 @@ def test_generated_methods_body_explains_method_contract(tmp_path: Path) -> None
     assert "Fork migration" in methods
 
 
+@pytest.mark.slow
 def test_generate_artifacts_writes_data_reports_and_figure(tmp_path: Path) -> None:
     write_config(tmp_path, base_payload())
 

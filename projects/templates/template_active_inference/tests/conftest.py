@@ -6,7 +6,8 @@ wall-time cost. Use the fast dev loop to skip it entirely:
     uv run bash scripts/run_ai_direct_fast.sh
 
 That runs only the test_*_direct.py family (105+ tests, ~25-40s).
-The full suite (777 tests, ~280-600s) only needs to run before release.
+The full release profile keeps the real-tree artifact and publication gates
+explicitly marked as slow; it remains the lane to run before release.
 """
 
 from __future__ import annotations
@@ -68,10 +69,11 @@ def pytest_collection_modifyitems(
     signature cache this pre-warm populates is keyed on ``output/`` artifacts
     only (see ``_REQUIRED_GATE_ARTIFACTS``), not manuscript source, so
     restoring the manuscript files does not invalidate it.
-    Focused ``test_*_direct.py`` runs operate exclusively on isolated project
-    copies and never consume the real-tree gate cache.  Skipping the unrelated
-    research-pipeline prewarm for those selections keeps their setup bounded;
-    mixed and full-suite selections retain the one-time prewarm.
+    Gate-consuming tests opt into the ``requires_gate_artifacts`` marker. This
+    keeps the prewarm tied to the actual consumer rather than to the filename
+    of every non-direct test. Gate consumers are also marked ``slow``; a quick
+    profile therefore skips both the tests and their prewarm, while release and
+    unfiltered diagnostic runs retain the one-time bootstrap.
     """
 
     # The repo wrapper performs a separate ``pytest --collect-only`` probe
@@ -80,13 +82,27 @@ def pytest_collection_modifyitems(
     # session option object is exposed to the helper.
     if getattr(config.option, "collectonly", False):
         return
-    if _selection_needs_gate_prewarm(items):
+    markexpr = str(getattr(config.option, "markexpr", "") or "")
+    if _selection_needs_gate_prewarm(items, markexpr=markexpr):
         _prewarm_gate_artifacts(session)
 
 
-def _selection_needs_gate_prewarm(items: list[pytest.Item]) -> bool:
-    """Return whether a selection contains any real-tree contract test."""
-    return any(not item.path.name.endswith("_direct.py") for item in items)
+def _selection_needs_gate_prewarm(items: list[pytest.Item], *, markexpr: str = "") -> bool:
+    """Return whether selected items explicitly consume real gate artifacts.
+
+    ``pytest_collection_modifyitems`` can run before another plugin applies a
+    ``-m`` deselection, so account for the quick profile here as well. This
+    prevents a slow gate's prewarm from leaking into the quick lane while
+    still allowing an unfiltered or release run to prepare the shared cache.
+    """
+    for item in items:
+        marker_getter = getattr(item, "get_closest_marker", None)
+        if marker_getter is None or marker_getter("requires_gate_artifacts") is None:
+            continue
+        if "not slow" in markexpr and marker_getter("slow") is not None:
+            continue
+        return True
+    return False
 
 
 def _prewarm_gate_artifacts(

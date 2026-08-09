@@ -206,6 +206,7 @@ class TestMultiProjectOrchestrator:
 
         assert orchestrator.config == config
 
+    @pytest.mark.slow
     def test_execute_all_projects_full_success(self):
         """Test successful full pipeline execution for all projects."""
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -255,6 +256,7 @@ class TestMultiProjectOrchestrator:
             assert len(result.project_results["project1"]) > 0
             assert len(result.project_results["project2"]) > 0
 
+    @pytest.mark.slow
     def test_execute_all_projects_core_success(self):
         """Test successful core pipeline execution for all projects."""
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -336,6 +338,7 @@ sys.exit(0)
             assert args_log.exists()
             assert f"--project {qualified_name}" in args_log.read_text(encoding="utf-8")
 
+    @pytest.mark.slow
     def test_execute_all_projects_full_no_infra_success(self):
         """Test successful full pipeline execution without infrastructure tests."""
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -372,6 +375,7 @@ sys.exit(0)
             assert "project1" in result.project_results
             assert len(result.project_results["project1"]) > 0
 
+    @pytest.mark.slow
     def test_execute_all_projects_with_failure(self):
         """Test execution when some projects fail."""
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -487,6 +491,7 @@ sys.exit(1)
 
             assert result is False
 
+    @pytest.mark.slow
     def test_timing_measurement(self):
         """Test that timing is measured correctly."""
         with tempfile.TemporaryDirectory() as tmp_dir:

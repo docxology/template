@@ -26,6 +26,7 @@ from infrastructure.core.pytest_orchestration import (
     build_profile_marker_expression,
     build_project_pytest_command,
     build_pythonpath,
+    discovery_preflight_enabled,
     enforce_project_suite_guards,
     log_discovered_tests,
     parse_test_discovery_timeout,
@@ -136,13 +137,14 @@ def run_infrastructure_tests(
     env["PYTHONPATH"] = build_pythonpath(repo_root, project_root)
     prepend_uv_to_path(env)
 
-    log_discovered_tests(
-        cmd,
-        repo_root,
-        env,
-        f"infrastructure ({scope})",
-        timeout_seconds=parse_test_discovery_timeout(scope),
-    )
+    if discovery_preflight_enabled(env=env):
+        log_discovered_tests(
+            cmd,
+            repo_root,
+            env,
+            f"infrastructure ({scope})",
+            timeout_seconds=parse_test_discovery_timeout(scope),
+        )
 
     try:
         config = TestSuiteConfig(
@@ -290,13 +292,14 @@ def _run_project_tests_impl(
     # parametrized tests. Use the full-suite discovery budget here; the former
     # 30-second default produced a misleading warning even when collection
     # completed successfully moments later.
-    log_discovered_tests(
-        cmd,
-        repo_root,
-        env,
-        f"project '{project_name}'",
-        timeout_seconds=parse_test_discovery_timeout("full"),
-    )
+    if discovery_preflight_enabled(env=env):
+        log_discovered_tests(
+            cmd,
+            repo_root,
+            env,
+            f"project '{project_name}'",
+            timeout_seconds=parse_test_discovery_timeout("full"),
+        )
 
     try:
         config = TestSuiteConfig(

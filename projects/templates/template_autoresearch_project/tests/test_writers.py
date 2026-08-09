@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 import shutil
 
+import pytest
+
 from infrastructure.autoresearch import BudgetPolicy, ReviewGate
 
 from src.config import AutoResearchLoopConfig, HumanReviewState
@@ -190,6 +192,7 @@ def test_schema_and_research_object_manifests_are_local(project_root: Path, tmp_
     assert "RO-Crate" in research_object["claim_boundary"]
 
 
+@pytest.mark.slow
 def test_write_ml_task_artifacts_writes_results_report_and_figure(project_root: Path, tmp_path: Path) -> None:
     result = run_bounded_ml_task(project_root, BudgetPolicy(max_iterations=4))
     shutil.copy(project_root / "mnist_task.yaml", tmp_path / "mnist_task.yaml")

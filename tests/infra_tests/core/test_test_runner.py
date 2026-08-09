@@ -311,6 +311,7 @@ def test_discovered_project_roster_is_sorted_by_qualified_name(synthetic_repo: P
     ]
 
 
+@pytest.mark.slow
 def test_run_per_project_pytest_continues_after_timeout(synthetic_repo: Path) -> None:
     marker_file = synthetic_repo / "beta-ran.txt"
     _write_project(

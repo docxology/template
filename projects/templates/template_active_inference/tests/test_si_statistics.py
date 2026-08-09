@@ -96,6 +96,7 @@ def test_summarize_sweep(tmp_path: Path) -> None:
     assert stats["rmse_mi"] > 0.0
 
 
+@pytest.mark.slow
 def test_write_analysis_statistics(project_root: Path, tmp_path: Path) -> None:
     from analysis import run_analysis
     from simulation.si_runner import pymdp_available, run_and_persist

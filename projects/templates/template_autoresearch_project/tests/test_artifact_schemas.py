@@ -5,9 +5,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from src.models import AutoResearchLoopResult
 
 
+@pytest.mark.slow
 def test_generated_json_artifacts_have_schema_or_documented_exemption(
     project_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,
@@ -33,6 +36,7 @@ def test_generated_json_artifacts_have_schema_or_documented_exemption(
     assert "output/reports/evidence_registry.json" in schema_paths
 
 
+@pytest.mark.slow
 def test_research_object_manifest_records_local_boundaries(
     project_root: Path,
     autoresearch_loop_result: AutoResearchLoopResult,

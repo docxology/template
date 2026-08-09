@@ -13,41 +13,43 @@ class TestCheckLinksCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        assert check_links is not None
+        assert check_links.__name__ == "infrastructure.validation.integrity.check_links"
+        assert callable(check_links.main)
 
     def test_has_link_checking_functions(self):
         """Test that module has link checking functions."""
-        module_funcs = [
-            a for a in dir(check_links) if not a.startswith("_") and callable(getattr(check_links, a, None))
-        ]
-        assert len(module_funcs) > 0
+        expected = {
+            "check_file_reference",
+            "extract_links",
+            "validate_python_imports",
+            "run_link_audit",
+        }
+        assert expected <= set(check_links.__all__)
+        assert all(callable(getattr(check_links, name)) for name in expected)
 
 
 class TestLinkValidation:
     """Test link validation functionality."""
 
-    def test_check_internal_link_valid(self, tmp_path):
-        """Test valid internal link checking."""
+    def test_check_file_reference_valid(self, tmp_path):
+        """Test a valid relative file reference."""
         target = tmp_path / "target.md"
         target.write_text("# Target")
+        source = tmp_path / "source.md"
+        source.write_text("[Target](target.md)")
 
-        if hasattr(check_links, "check_internal_link"):
-            result = check_links.check_internal_link("target.md", tmp_path)
-            assert result is not None
+        result, message = check_links.check_file_reference("target.md", source, tmp_path)
+        assert result is True
+        assert message == "target.md"
 
-    def test_check_internal_link_invalid(self, tmp_path):
-        """Test invalid internal link checking."""
-        if hasattr(check_links, "check_internal_link"):
-            result = check_links.check_internal_link("nonexistent.md", tmp_path)
-            assert result is not None
+    def test_check_file_reference_missing(self, tmp_path):
+        """Test that a missing relative file reference is rejected."""
+        source = tmp_path / "source.md"
+        source.write_text("[Missing](nonexistent.md)")
 
-    def test_check_external_link(self, http_test_server):
-        """Test external link checking."""
-        if hasattr(check_links, "check_external_link"):
-            # Use real HTTP call to test server
-            test_url = http_test_server.url_for("/")
-            result = check_links.check_external_link(test_url)
-            assert result is not None
+        result, message = check_links.check_file_reference("nonexistent.md", source, tmp_path)
+        assert result is False
+        assert "does not exist" in message.lower()
 
 
 class TestFileReferenceValidation:
@@ -60,18 +62,17 @@ class TestFileReferenceValidation:
         source = tmp_path / "doc.md"
         source.write_text("Link to file.txt")
 
-        if hasattr(check_links, "check_file_reference"):
-            result = check_links.check_file_reference("file.txt", source, tmp_path)
-            assert result is not None
+        result = check_links.check_file_reference("file.txt", source, tmp_path)
+        assert result == (True, "file.txt")
 
     def test_check_file_reference_missing(self, tmp_path):
         """Test file reference for missing file."""
         source = tmp_path / "doc.md"
         source.write_text("Link to missing.txt")
 
-        if hasattr(check_links, "check_file_reference"):
-            result = check_links.check_file_reference("missing.txt", source, tmp_path)
-            assert result is not None
+        result = check_links.check_file_reference("missing.txt", source, tmp_path)
+        assert result[0] is False
+        assert "does not exist" in result[1].lower()
 
     def test_check_image_reference(self, tmp_path):
         """Test image reference checking."""
@@ -79,9 +80,8 @@ class TestFileReferenceValidation:
         img.write_bytes(b"\x89PNG")
         source = tmp_path / "doc.md"
 
-        if hasattr(check_links, "check_file_reference"):
-            result = check_links.check_file_reference("img.png", source, tmp_path)
-            assert result is not None
+        result = check_links.check_file_reference("img.png", source, tmp_path)
+        assert result == (True, "img.png")
 
 
 class TestMarkdownLinkExtraction:
@@ -96,64 +96,46 @@ class TestMarkdownLinkExtraction:
 [Link 2](https://example.com)
 ![Image](img.png)
 """
-        if hasattr(check_links, "extract_links"):
-            # extract_links returns tuple of 3 lists
-            result = check_links.extract_links(md_content, md_file)
-            assert isinstance(result, tuple)
-            assert len(result) == 3
-            internal_links, external_links, file_refs = result
-            assert isinstance(external_links, list)
-            assert isinstance(file_refs, list)
+        result = check_links.extract_links(md_content, md_file)
+        assert isinstance(result, tuple)
+        assert len(result) == 3
+        internal_links, external_links, file_refs = result
+        assert internal_links == []
+        assert [link["target"] for link in external_links] == ["https://example.com"]
+        assert [link["target"] for link in file_refs] == ["file.md", "img.png"]
 
     def test_extract_links_external(self, tmp_path):
         """Test extracting external links from markdown."""
         md_file = tmp_path / "test.md"
         md_content = "[External](https://example.com)"
 
-        if hasattr(check_links, "extract_links"):
-            internal, external, file_refs = check_links.extract_links(md_content, md_file)
-            assert len(external) == 1
-            assert external[0]["target"] == "https://example.com"
+        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        assert internal == []
+        assert len(external) == 1
+        assert external[0]["target"] == "https://example.com"
+        assert file_refs == []
 
     def test_extract_links_internal(self, tmp_path):
         """Test extracting internal anchor links from markdown."""
         md_file = tmp_path / "test.md"
         md_content = "[Section](#section-1)"
 
-        if hasattr(check_links, "extract_links"):
-            internal, external, file_refs = check_links.extract_links(md_content, md_file)
-            assert len(internal) == 1
-            assert internal[0]["target"] == "#section-1"
+        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        assert len(internal) == 1
+        assert internal[0]["target"] == "#section-1"
+        assert external == []
+        assert file_refs == []
 
     def test_extract_links_file_ref(self, tmp_path):
         """Test extracting file references from markdown."""
         md_file = tmp_path / "test.md"
         md_content = "[Other Doc](other.md)"
 
-        if hasattr(check_links, "extract_links"):
-            internal, external, file_refs = check_links.extract_links(md_content, md_file)
-            assert len(file_refs) == 1
-            assert file_refs[0]["target"] == "other.md"
-
-
-class TestRelativePathResolution:
-    """Test relative path resolution."""
-
-    def test_resolve_relative_path(self, tmp_path):
-        """Test resolving relative paths."""
-        source = tmp_path / "docs" / "file.md"
-        source.parent.mkdir()
-        source.write_text("")
-
-        if hasattr(check_links, "resolve_relative_path"):
-            result = check_links.resolve_relative_path("../README.md", source)
-            assert result is not None
-
-    def test_normalize_path(self):
-        """Test path normalization."""
-        if hasattr(check_links, "normalize_path"):
-            result = check_links.normalize_path("./docs/../README.md")
-            assert result is not None
+        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+        assert internal == []
+        assert external == []
+        assert len(file_refs) == 1
+        assert file_refs[0]["target"] == "other.md"
 
 
 class TestCheckFileReferenceEdgeCasesAdditional:
@@ -172,7 +154,8 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         result, msg = check_links.check_file_reference(str(outside_target), source, tmp_path)
 
         # Should fail because path resolves outside repository
-        assert result is False or "outside" in msg.lower() or "does not exist" in msg.lower()
+        assert result is False
+        assert "outside" in msg.lower() or "does not exist" in msg.lower()
 
     def test_path_with_many_parent_refs(self, tmp_path):
         """Test path with multiple ../ references going outside repo."""
@@ -230,10 +213,9 @@ class TestCheckFileReferenceEdgeCasesAdditional:
         source = tmp_path / "source.md"
         source.write_text("content")
 
-        # Reference without extension
         result, msg = check_links.check_file_reference("target", source, tmp_path)
-        # Should find target.md
-        assert result is True or "does not exist" in msg.lower()
+        assert result is True, msg
+        assert msg == "target.md"
 
 
 class TestExtractHeadingsAdditional:

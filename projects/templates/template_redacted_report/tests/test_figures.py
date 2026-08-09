@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from redacted_report import FIGURE_SPECS, build_figures
@@ -14,6 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIGURES_DIR = PROJECT_ROOT / "output" / "figures"
 
 
+@pytest.mark.slow
 def test_build_figures_writes_expected_files(tmp_path: Path) -> None:
     build_figures(tmp_path)
 
@@ -89,6 +91,7 @@ def test_figure_types_match_domain_profile() -> None:
     assert built_names == declared_types, f"figures {built_names} != domain_profile {declared_types}"
 
 
+@pytest.mark.slow
 def test_committed_figures_match_regenerated_geometry() -> None:
     """Tracked evidence must match the fresh pipeline's registry and geometry.
 

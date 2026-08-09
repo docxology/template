@@ -33,8 +33,10 @@ class TestRepositoryScannerIntegration:
         scanner = RepositoryScanner(tmp_path)
         results = scanner.scan_all()
 
-        assert results is not None
         assert isinstance(results, RepoScanResults)
+        assert results.statistics["repo_modules"] == 1
+        assert results.statistics["script_files"] == 1
+        assert results.statistics["test_files"] == 1
 
     def test_scan_with_repo_utilities(self, tmp_path):
         """Test scanning with repo_utilities directory."""
@@ -45,8 +47,7 @@ class TestRepositoryScannerIntegration:
         scanner = RepositoryScanner(tmp_path)
         scanner._discover_structure()
 
-        # repo_utilities scripts should be discovered
-        assert len(scanner.script_files) >= 0  # May or may not find scripts
+        assert scanner.script_files == [repo_utils / "helper.py"]
 
     def test_scan_with_docs_directory(self, tmp_path):
         """Test scanning with docs directory."""
@@ -66,8 +67,7 @@ class TestRepositoryScannerIntegration:
         scanner._find_documented_modules()
         scanner._check_documented_commands()
 
-        # Should complete without errors
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
 
 class TestRepositoryScannerMethods:
@@ -108,8 +108,7 @@ import numpy as np
         scanner = RepositoryScanner(tmp_path)
         imports = scanner._extract_imports(script)
 
-        # Should handle gracefully
-        assert imports is not None
+        assert imports == {}
 
 
 class TestRepositoryScannerCheckCode:
@@ -130,8 +129,7 @@ class TestRepositoryScannerCheckCode:
         scanner._discover_structure()
         scanner._check_code_accuracy()
 
-        # Should complete without error
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
     def test_check_code_accuracy_with_project_imports(self, tmp_path):
         """Test code accuracy checking with project-local imports."""
@@ -167,24 +165,30 @@ class TestRepositoryScannerCompleteness:
         (docs / "guide.md").write_text("# Guide\n\nThe example module...")
 
         scanner = RepositoryScanner(tmp_path)
-        scanner.src_modules = {"example"}
+        scanner.repo_modules = {"src.example"}
         scanner.documented_modules = {"example"}
+        scanner.test_files = [tmp_path / "tests" / "test_example.py"]
         scanner._check_completeness()
 
-        # Should complete without error
-        assert scanner.results is not None
+        assert scanner.results.completeness_gaps == []
 
     def test_check_completeness_undocumented(self, tmp_path):
         """Test completeness with undocumented modules."""
         scanner = RepositoryScanner(tmp_path)
-        scanner.src_modules = {"module_a", "module_b"}
+        scanner.repo_modules = {"src.module_a", "src.module_b"}
         scanner.documented_modules = {"module_a"}
+        tests = tmp_path / "tests"
+        tests.mkdir()
+        test_module_a = tests / "test_module_a.py"
+        test_module_b = tests / "test_module_b.py"
+        test_module_a.write_text("def test_module_a(): pass")
+        test_module_b.write_text("def test_module_b(): pass")
+        scanner.test_files = [test_module_a, test_module_b]
         scanner._check_completeness()
 
-        # module_b should be flagged as undocumented
-        [g for g in scanner.results.completeness_gaps if "module_b" in g.item]
-        # May or may not find gaps depending on implementation
-        assert scanner.results is not None
+        module_b_gaps = [g for g in scanner.results.completeness_gaps if g.item.endswith(".module_b")]
+        assert len(module_b_gaps) == 1
+        assert module_b_gaps[0].category == "documentation"
 
 
 class TestRepositoryScannerTestCoverage:
@@ -205,17 +209,18 @@ class TestRepositoryScannerTestCoverage:
         scanner.test_files = [tests / "test_example.py"]
         scanner._check_test_coverage()
 
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
-    def test_check_test_coverage_missing(self, tmp_path):
-        """Test coverage checking with missing tests."""
+    def test_check_completeness_missing_test(self, tmp_path):
+        """Missing dedicated tests are reported as a testing gap."""
         scanner = RepositoryScanner(tmp_path)
-        scanner.src_modules = {"module_without_test"}
+        scanner.repo_modules = {"src.module_without_test"}
         scanner.test_files = []
-        scanner._check_test_coverage()
+        scanner._check_completeness()
 
-        # Should flag missing test
-        assert scanner.results is not None
+        testing_gaps = [g for g in scanner.results.completeness_gaps if g.category == "testing"]
+        assert len(testing_gaps) == 1
+        assert testing_gaps[0].item.endswith("module_without_test")
 
 
 class TestRepositoryScannerConfiguration:
@@ -234,15 +239,14 @@ dependencies = ["pytest"]
         scanner = RepositoryScanner(tmp_path)
         scanner._check_configuration()
 
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
     def test_check_configuration_missing(self, tmp_path):
         """Test missing configuration files."""
         scanner = RepositoryScanner(tmp_path)
         scanner._check_configuration()
 
-        # Should handle missing configs
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
 
 class TestRepositoryScannerThinOrchestrator:
@@ -265,7 +269,7 @@ print(result)
         scanner.script_files = [scripts / "good.py"]
         scanner._check_thin_orchestrator_pattern()
 
-        assert scanner.results is not None
+        assert scanner.results.accuracy_issues == []
 
     def test_check_thin_orchestrator_non_compliant(self, tmp_path):
         """Test checking non-compliant script."""
@@ -289,8 +293,9 @@ data = complex_calculation(1, 2, 3)
         scanner.script_files = [scripts / "bad.py"]
         scanner._check_thin_orchestrator_pattern()
 
-        # Should potentially flag this
-        assert scanner.results is not None
+        architecture_issues = [issue for issue in scanner.results.accuracy_issues if issue.category == "architecture"]
+        assert len(architecture_issues) == 1
+        assert "thin orchestrator" in architecture_issues[0].message
 
 
 class TestRepositoryScannerFullScan:
@@ -322,8 +327,10 @@ class TestRepositoryScannerFullScan:
         scanner = RepositoryScanner(tmp_path)
         results = scanner.scan_all()
 
-        assert results is not None
         assert isinstance(results, ScanResults)
+        assert results.statistics["repo_modules"] == 1
+        assert results.statistics["script_files"] == 1
+        assert results.statistics["test_files"] == 1
 
 
 class TestRepositoryScannerEdgeCases:
@@ -356,60 +363,13 @@ class TestRepoScannerCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        assert repo_scanner is not None
+        assert repo_scanner.__name__ == "infrastructure.validation.repo.scanner"
+        assert callable(repo_scanner.main)
 
     def test_has_scanner_functionality(self):
         """Test that module has scanning functionality."""
-        module_attrs = [a for a in dir(repo_scanner) if not a.startswith("_")]
-        assert len(module_attrs) > 0
-
-
-class TestRepositoryScanning:
-    """Test repository scanning functionality."""
-
-    def test_scan_repository(self, tmp_path):
-        """Test scanning a repository structure."""
-        # Create repo structure
-        (tmp_path / "src").mkdir()
-        (tmp_path / "tests").mkdir()
-        (tmp_path / "README.md").write_text("# Project")
-
-        if hasattr(repo_scanner, "scan_repository"):
-            results = repo_scanner.scan_repository(str(tmp_path))
-            assert results is not None
-
-    def test_check_structure(self, tmp_path):
-        """Test structure checking."""
-        (tmp_path / "src").mkdir()
-
-        if hasattr(repo_scanner, "check_structure"):
-            result = repo_scanner.check_structure(tmp_path)
-            assert result is not None
-
-
-class TestFileOrganization:
-    """Test file organization validation."""
-
-    def test_check_organization(self, tmp_path):
-        """Test organization checking."""
-        (tmp_path / "src" / "module.py").parent.mkdir(parents=True)
-        (tmp_path / "src" / "module.py").write_text("# Module")
-
-        if hasattr(repo_scanner, "check_file_organization"):
-            result = repo_scanner.check_file_organization(tmp_path)
-            assert result is not None
-
-
-class TestNamingConventions:
-    """Test naming convention validation."""
-
-    def test_validate_naming(self, tmp_path):
-        """Test naming convention validation."""
-        (tmp_path / "properly_named.py").write_text("# Code")
-
-        if hasattr(repo_scanner, "validate_naming_conventions"):
-            result = repo_scanner.validate_naming_conventions(tmp_path)
-            assert result is not None
+        assert callable(repo_scanner.RepositoryScanner)
+        assert callable(repo_scanner.main)
 
 
 class TestRepoScannerIntegration:
@@ -422,11 +382,14 @@ class TestRepoScannerIntegration:
         (tmp_path / "tests").mkdir()
         (tmp_path / "docs").mkdir()
         (tmp_path / "src" / "__init__.py").write_text("")
-        (tmp_path / "tests" / "test_example.py").write_text("def test(): pass")
+        (tmp_path / "src" / "example.py").write_text("def example(): return 1")
+        (tmp_path / "tests" / "test_example.py").write_text("def test_example(): assert True")
         (tmp_path / "README.md").write_text("# Project")
 
-        # Module should be importable
-        assert repo_scanner is not None
+        results = RepositoryScanner(tmp_path).scan_all()
+
+        assert results.statistics["repo_modules"] == 1
+        assert results.statistics["test_files"] == 1
 
 
 if __name__ == "__main__":

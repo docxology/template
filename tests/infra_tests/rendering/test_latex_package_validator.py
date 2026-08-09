@@ -45,7 +45,7 @@ class TestFindKpsewhich:
         # Real execution - may or may not find kpsewhich
         if result.returncode == 0 and result.stdout.strip():
             kpsewhich_path = Path(result.stdout.strip())
-            assert kpsewhich_path.exists() or True  # May exist or not
+            assert kpsewhich_path.exists(), result.stdout
         else:
             # kpsewhich not found via which - that's valid
             assert result.returncode != 0 or not result.stdout.strip()

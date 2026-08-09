@@ -10,7 +10,7 @@ from manuscript.variables import generate_variables
 
 # The full variable/semantic fixed point is a release-lane refresh. Keep the
 # timeout explicit while excluding it from the quick inner loop.
-pytestmark = [pytest.mark.slow, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
 
 
 def test_generate_variables_with_outputs() -> None:

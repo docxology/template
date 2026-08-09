@@ -128,6 +128,7 @@ def test_manifest_rejects_report_from_another_commit() -> None:
     assert manifest.acceptance_passed is False
 
 
+@pytest.mark.slow
 def test_cli_refuses_dirty_checkout_before_running_health(tmp_path: Path) -> None:
     checkout = tmp_path / "dirty-checkout"
     checkout.mkdir()

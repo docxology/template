@@ -53,6 +53,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: full deck rendering checks kept for release profiles",
+]
 
 [tool.coverage.run]
 source = ["src"]

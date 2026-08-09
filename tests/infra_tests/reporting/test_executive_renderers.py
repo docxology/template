@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from infrastructure.reporting._executive_renderers import (
     generate_executive_summary,
     save_executive_summary,
@@ -105,6 +107,7 @@ class TestSaveExecutiveSummary:
         assert len(md) > 100
         assert "test_proj" in md
 
+    @pytest.mark.slow
     def test_html_has_content(self, tmp_path):
         summary = _make_summary(tmp_path)
         out = tmp_path / "report_out"

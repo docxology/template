@@ -197,6 +197,7 @@ class TestRunLinkAudit:
         assert run_link_audit(tmp_path) == 1
 
 
+@pytest.mark.slow
 class TestLinkAuditPerformance:
     """Pin the link-audit walk fast on large trees and equivalent in behavior."""
 

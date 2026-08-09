@@ -83,6 +83,7 @@ class RepositoryScanner:
 
         logger.info("[6/6] Checking thin orchestrator pattern compliance...")
         self._check_thin_orchestrator_pattern()
+        self._update_statistics()
 
         return self.results
 
@@ -123,7 +124,11 @@ class RepositoryScanner:
 
     def _discover_scripts(self) -> None:
         """Discover runnable scripts across the repository."""
-        script_roots = [self.repo_root / "scripts"]
+        # ``repo_utilities`` is a supported legacy script location used by the
+        # documentation scanners and documented-command resolver. Keep this
+        # inventory in sync so a full repository scan does not silently omit
+        # those files from its completeness and architecture checks.
+        script_roots = [self.repo_root / "scripts", self.repo_root / "repo_utilities"]
         projects_dir = self.repo_root / "projects"
         if projects_dir.is_dir():
             script_roots.extend(projects_dir.glob("*/scripts"))
@@ -139,6 +144,17 @@ class RepositoryScanner:
         for entry_point in (self.repo_root / "run.sh", self.repo_root / "secure_run.sh"):
             if entry_point.exists():
                 self.script_files.append(entry_point)
+
+    def _update_statistics(self) -> None:
+        """Record stable aggregate counts for the completed scan."""
+        self.results.statistics = {
+            "repo_modules": len(self.repo_modules),
+            "script_files": len(self.script_files),
+            "test_files": len(self.test_files),
+            "documented_modules": len(self.documented_modules),
+            "accuracy_issues": len(self.results.accuracy_issues),
+            "completeness_gaps": len(self.results.completeness_gaps),
+        }
 
     def _discover_tests(self) -> None:
         """Discover test files across the repository."""

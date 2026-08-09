@@ -13,14 +13,27 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 
 from infrastructure.rendering import cli
 
 
+def _assert_cli_result(result: subprocess.CompletedProcess[str], *, success_text: str | None = None) -> None:
+    """Require an observable CLI outcome even when optional tools are absent."""
+    combined = f"{result.stdout}\n{result.stderr}".strip()
+    assert result.returncode in (0, 1)
+    assert combined, "CLI must report either generated output or a failure reason"
+    if result.returncode == 0 and success_text is not None:
+        assert success_text in combined
+    if result.returncode == 1:
+        assert any(token in combined.lower() for token in ("error", "failed", "not found"))
+
+
+@pytest.mark.slow
 class TestRenderPdfCommand:
     """Test suite for render_pdf_command using real RenderManager."""
 
-    def test_render_pdf_basic(self, tmp_path, caplog):
+    def test_render_pdf_basic(self, tmp_path, caplog, capsys):
         """Test basic PDF rendering with real RenderManager."""
         tex_file = tmp_path / "test.tex"
         tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
@@ -30,11 +43,13 @@ class TestRenderPdfCommand:
         # Use real RenderManager - may fail if LaTeX not available, but tests real behavior
         with caplog.at_level(logging.INFO):
             try:
-                cli.render_pdf_command(args)
-                assert "rendering" in caplog.text.lower() or "generated" in caplog.text.lower() or len(caplog.text) > 0
-            except Exception:
-                # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert "rendering" in caplog.text.lower() or "error" in caplog.text.lower() or True
+                rc = cli.render_pdf_command(args)
+            except Exception as exc:
+                outcome = f"{caplog.text}\n{exc}".lower()
+                assert any(token in outcome for token in ("render", "latex", "pandoc", "error"))
+            else:
+                assert rc == 0
+                assert "Generated:" in capsys.readouterr().out
 
     def test_render_pdf_nonexistent_source(self, tmp_path, caplog):
         """Test PDF rendering with nonexistent source."""
@@ -47,10 +62,11 @@ class TestRenderPdfCommand:
         assert "error" in caplog.text.lower() or "not found" in caplog.text.lower()
 
 
+@pytest.mark.slow
 class TestRenderAllCommand:
     """Test suite for render_all_command using real RenderManager."""
 
-    def test_render_all_basic(self, tmp_path, caplog):
+    def test_render_all_basic(self, tmp_path, caplog, capsys):
         """Test rendering all formats with real RenderManager."""
         tex_file = tmp_path / "test.tex"
         tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
@@ -60,11 +76,13 @@ class TestRenderAllCommand:
         # Use real RenderManager - may fail if LaTeX not available, but tests real behavior
         with caplog.at_level(logging.INFO):
             try:
-                cli.render_all_command(args)
-                assert "rendering" in caplog.text.lower() or "generated" in caplog.text.lower() or len(caplog.text) > 0
-            except Exception:
-                # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert "rendering" in caplog.text.lower() or "error" in caplog.text.lower() or True
+                rc = cli.render_all_command(args)
+            except Exception as exc:
+                outcome = f"{caplog.text}\n{exc}".lower()
+                assert any(token in outcome for token in ("render", "latex", "pandoc", "error"))
+            else:
+                assert rc == 0
+                assert "Generated:" in capsys.readouterr().out
 
     def test_render_all_nonexistent_source(self, tmp_path, capsys):
         """Test render all with nonexistent source."""
@@ -74,10 +92,11 @@ class TestRenderAllCommand:
         assert rc == 1  # handlers now return an exit code instead of raising SystemExit
 
 
+@pytest.mark.slow
 class TestRenderSlidesCommand:
     """Test suite for render_slides_command using real RenderManager."""
 
-    def test_render_slides_beamer(self, tmp_path, caplog):
+    def test_render_slides_beamer(self, tmp_path, caplog, capsys):
         """Test Beamer slide rendering with real RenderManager."""
         md_file = tmp_path / "slides.md"
         md_file.write_text("# Slide 1\n\n## Content")
@@ -87,11 +106,13 @@ class TestRenderSlidesCommand:
         # Use real RenderManager - may fail if LaTeX not available, but tests real behavior
         with caplog.at_level(logging.INFO):
             try:
-                cli.render_slides_command(args)
-                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or len(caplog.text) > 0
-            except Exception:
-                # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or True
+                rc = cli.render_slides_command(args)
+            except Exception as exc:
+                outcome = f"{caplog.text}\n{exc}".lower()
+                assert any(token in outcome for token in ("beamer", "render", "latex", "pandoc", "error"))
+            else:
+                assert rc == 0
+                assert "Generated:" in capsys.readouterr().out
 
     def test_render_slides_revealjs(self, tmp_path, capsys):
         """Test reveal.js slide rendering with real RenderManager."""
@@ -106,7 +127,7 @@ class TestRenderSlidesCommand:
         captured = capsys.readouterr()
         assert "revealjs" in captured.out or "Generated" in captured.out or "Rendering slides" in captured.out
 
-    def test_render_slides_default_format(self, tmp_path, caplog):
+    def test_render_slides_default_format(self, tmp_path, caplog, capsys):
         """Test slides with default format (beamer) using real RenderManager."""
         md_file = tmp_path / "slides.md"
         md_file.write_text("# Slide")
@@ -116,12 +137,13 @@ class TestRenderSlidesCommand:
         # Use real RenderManager - should default to beamer, may fail if LaTeX not available
         with caplog.at_level(logging.INFO):
             try:
-                cli.render_slides_command(args)
-                # Should log beamer or rendering slides
-                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or len(caplog.text) > 0
-            except Exception:
-                # LaTeX compilation may fail - that's real behavior, just verify command was attempted
-                assert "beamer" in caplog.text.lower() or "rendering" in caplog.text.lower() or True
+                rc = cli.render_slides_command(args)
+            except Exception as exc:
+                outcome = f"{caplog.text}\n{exc}".lower()
+                assert any(token in outcome for token in ("beamer", "render", "latex", "pandoc", "error"))
+            else:
+                assert rc == 0
+                assert "Generated:" in capsys.readouterr().out
 
     def test_render_slides_nonexistent_source(self, tmp_path, capsys):
         """Test slides with nonexistent source."""
@@ -155,6 +177,7 @@ class TestRenderWebCommand:
         assert rc == 1  # handlers now return an exit code instead of raising SystemExit
 
 
+@pytest.mark.slow
 class TestMainCli:
     """Test suite for main CLI entry point using real subprocess execution."""
 
@@ -178,8 +201,7 @@ class TestMainCli:
             timeout=30,
         )
 
-        # Accept success or failure depending on LaTeX availability
-        assert result.returncode in [0, 1]
+        _assert_cli_result(result, success_text="Generated:")
 
     def test_main_with_all_command(self, tmp_path):
         """Test main with all subcommand via real subprocess."""
@@ -201,8 +223,7 @@ class TestMainCli:
             timeout=30,
         )
 
-        # Accept success or failure depending on dependencies
-        assert result.returncode in [0, 1]
+        _assert_cli_result(result, success_text="Generated:")
 
     def test_main_with_slides_command(self, tmp_path):
         """Test main with slides subcommand via real subprocess."""
@@ -224,8 +245,7 @@ class TestMainCli:
             timeout=30,
         )
 
-        # Accept success or failure depending on pandoc availability
-        assert result.returncode in [0, 1]
+        _assert_cli_result(result, success_text="Generated:")
 
     def test_main_with_web_command(self, tmp_path):
         """Test main with web subcommand via real subprocess."""
@@ -241,8 +261,7 @@ class TestMainCli:
             timeout=30,
         )
 
-        # Accept success or failure depending on pandoc availability
-        assert result.returncode in [0, 1]
+        _assert_cli_result(result, success_text="Generated:")
 
     def test_main_without_command(self):
         """Test main without any subcommand via real subprocess."""
@@ -256,6 +275,7 @@ class TestMainCli:
 
         # Should exit with error code when no command provided
         assert result.returncode == 1
+        assert "usage:" in result.stdout.lower()
 
     def test_main_with_exception(self, tmp_path):
         """Test main when command raises an exception via real execution."""
@@ -263,14 +283,15 @@ class TestMainCli:
         tex_file = tmp_path / "test.tex"
         tex_file.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
 
-        # Run real CLI - may succeed or fail depending on environment
+        # Use an invalid source so the exception-to-exit-code boundary is
+        # deterministic regardless of the installed rendering toolchain.
         result = subprocess.run(
             [
                 sys.executable,
                 "-m",
                 "infrastructure.rendering.cli",
                 "pdf",
-                str(tex_file),
+                str(tmp_path / "missing.tex"),
             ],
             capture_output=True,
             text=True,
@@ -278,8 +299,9 @@ class TestMainCli:
             timeout=30,
         )
 
-        # Accept any return code - real execution may succeed or fail
-        assert result.returncode in [0, 1]
+        assert result.returncode == 1
+        combined = f"{result.stdout}\n{result.stderr}".lower()
+        assert "source file not found" in combined
 
     def test_main_slides_with_format_option(self, tmp_path):
         """Test main with slides format option via real subprocess."""
@@ -303,9 +325,7 @@ class TestMainCli:
             timeout=30,
         )
 
-        # Accept success or failure depending on pandoc availability
-        # The command should complete (either succeed or fail gracefully)
-        assert result.returncode in [0, 1]
+        _assert_cli_result(result, success_text="Generated:")
 
 
 class TestCliModuleStructure:
@@ -335,40 +355,26 @@ class TestRenderAllCliCore:
         """Test that module imports correctly."""
         from infrastructure.rendering import render_all_cli
 
-        assert render_all_cli is not None
+        assert render_all_cli.__name__ == "infrastructure.rendering.render_all_cli"
 
     def test_has_main_function(self):
         """Test that module has main function."""
         from infrastructure.rendering import render_all_cli
 
-        assert hasattr(render_all_cli, "main") or hasattr(render_all_cli, "render_all_cli")
+        assert callable(render_all_cli.main)
 
 
 class TestRenderCommands:
     """Test render command functionality."""
 
-    def test_render_pdf_command_exists(self):
-        """Test that render PDF command exists."""
+    def test_render_all_entrypoint_is_callable(self):
+        """The wrapper exposes one callable entrypoint for all formats."""
         from infrastructure.rendering import render_all_cli
 
-        if hasattr(render_all_cli, "render_pdf_command"):
-            assert callable(render_all_cli.render_pdf_command)
-
-    def test_render_html_command_exists(self):
-        """Test that render HTML command exists."""
-        from infrastructure.rendering import render_all_cli
-
-        if hasattr(render_all_cli, "render_html_command"):
-            assert callable(render_all_cli.render_html_command)
-
-    def test_render_all_command_exists(self):
-        """Test that render all command exists."""
-        from infrastructure.rendering import render_all_cli
-
-        if hasattr(render_all_cli, "render_all_command"):
-            assert callable(render_all_cli.render_all_command)
+        assert callable(render_all_cli.main)
 
 
+@pytest.mark.slow
 class TestRenderCliParsing:
     """Test CLI argument parsing via real subprocess."""
 
@@ -389,28 +395,7 @@ class TestRenderCliParsing:
                 timeout=30,
             )
 
-            # May succeed or fail depending on dependencies
-            assert result.returncode in [0, 1, 2]
-
-    def test_parse_args_with_output(self, tmp_path):
-        """Test parsing with output option via real subprocess."""
-        from tempfile import TemporaryDirectory
-
-        with TemporaryDirectory() as tmp_dir:
-            pdf = Path(tmp_dir) / "source.md"
-            pdf.write_text("# Test")
-
-            # Run real CLI command via subprocess
-            result = subprocess.run(
-                [sys.executable, "-m", "infrastructure.rendering.cli", "pdf", str(pdf)],
-                capture_output=True,
-                text=True,
-                cwd=Path(__file__).parent.parent.parent.parent,
-                timeout=30,
-            )
-
-            # May succeed or fail
-            assert result.returncode in [0, 1, 2]
+            _assert_cli_result(result, success_text="Generated:")
 
 
 class TestSlidesRendering:
@@ -420,15 +405,13 @@ class TestSlidesRendering:
         """Test Beamer slides command."""
         from infrastructure.rendering import render_all_cli
 
-        if hasattr(render_all_cli, "render_slides_command"):
-            assert callable(render_all_cli.render_slides_command)
+        assert not hasattr(render_all_cli, "render_slides_command")
 
     def test_slides_revealjs_command(self):
         """Test reveal.js slides command."""
         from infrastructure.rendering import render_all_cli
 
-        if hasattr(render_all_cli, "render_revealjs_command"):
-            assert callable(render_all_cli.render_revealjs_command)
+        assert not hasattr(render_all_cli, "render_revealjs_command")
 
 
 class TestSchemaSubcommand:
@@ -469,6 +452,7 @@ class TestSchemaSubcommand:
         assert "subcommands" in payload
 
 
+@pytest.mark.slow
 class TestRenderCliMain:
     """Test main entry point using real subprocess execution."""
 
@@ -483,8 +467,8 @@ class TestRenderCliMain:
             timeout=30,
         )
 
-        # Should exit with error when no args provided
-        assert result.returncode in [1, 2]
+        assert result.returncode == 1
+        assert "usage:" in result.stdout.lower()
 
     def test_main_with_pdf(self, tmp_path):
         """Test main with PDF command via real subprocess."""
@@ -506,5 +490,4 @@ class TestRenderCliMain:
             timeout=30,
         )
 
-        # May succeed or fail depending on LaTeX availability
-        assert result.returncode in [0, 1, 2]
+        _assert_cli_result(result, success_text="Generated:")

@@ -14,34 +14,42 @@ class TestPublishingAPI:
 
     def test_api_module_exists(self):
         """Test API module is importable."""
-        assert api is not None
+        assert api.__name__ == "infrastructure.publishing.api"
+        assert api.__all__ == ["DepositionResult", "REQUEST_TIMEOUT", "ZenodoClient", "ZenodoConfig"]
 
     def test_zenodo_client_available(self):
         """Test Zenodo API client is available."""
-        # Should have Zenodo integration
-        assert hasattr(api, "zenodo") or True
+        assert api.ZenodoClient is ZenodoClient
+        assert api.ZenodoConfig is ZenodoConfig
 
     def test_arxiv_client_available(self):
-        """Test arXiv API client is available."""
-        # Should have arXiv integration
-        assert hasattr(api, "arxiv") or True
+        """Test arXiv helpers stay on the package boundary, not ``api.py``."""
+        import infrastructure.publishing as publishing
+
+        assert callable(publishing.prepare_arxiv_submission)
+        assert not hasattr(api, "arxiv")
 
     def test_github_client_available(self):
-        """Test GitHub API client is available."""
-        # Should have GitHub integration
-        assert hasattr(api, "github") or True
+        """Test GitHub helpers stay on the package boundary, not ``api.py``."""
+        import infrastructure.publishing as publishing
+
+        assert callable(publishing.create_github_release)
+        assert not hasattr(api, "github")
 
     def test_api_authentication(self):
         """Test API authentication handling."""
-        assert api is not None
+        client = ZenodoClient(ZenodoConfig(access_token="test-token"))
+        assert client.headers == {"Authorization": "Bearer test-token"}
 
     def test_api_error_handling(self):
         """Test API error handling."""
-        assert api is not None
+        with pytest.raises(ImportError, match="requests"):
+            ZenodoClient(ZenodoConfig(access_token="test-token"), requests_available=False)
 
-    def test_api_retry_logic(self):
-        """Test API retry logic."""
-        assert api is not None
+    def test_api_timeout_constant_is_positive(self):
+        """The compatibility API exposes a bounded request timeout."""
+        assert isinstance(api.REQUEST_TIMEOUT, (int, float))
+        assert api.REQUEST_TIMEOUT > 0
 
 
 class TestPublishingApiCore:

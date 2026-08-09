@@ -566,6 +566,7 @@ def test_interactive_change_project_then_quit(fake_repo: Path) -> None:
     assert rc == 0
 
 
+@pytest.mark.slow
 def test_interactive_invalid_then_quit(fake_repo: Path, capsys) -> None:
     from infrastructure.orchestration.cli import _interactive
 
@@ -637,6 +638,7 @@ def test_interactive_dispatch_multi_keys(fake_repo: Path) -> None:
     assert spy.multi_runs[3].skip_llm is True
 
 
+@pytest.mark.slow
 def test_interactive_multi_d_alone_exits_without_second_prompt(fake_repo: Path, capsys) -> None:
     """Successful sole menu key ``d`` ends the interactive session (no menu redraw)."""
     from infrastructure.orchestration.cli import _interactive

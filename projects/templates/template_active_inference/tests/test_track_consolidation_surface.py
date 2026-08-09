@@ -22,7 +22,7 @@ from track_consolidation_support import (
     _write,
 )
 
-pytestmark = [pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 def test_sheaf_track_source_commit_times_out_to_unknown(project_root: Path) -> None:

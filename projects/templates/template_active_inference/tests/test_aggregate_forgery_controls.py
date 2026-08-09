@@ -15,7 +15,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from gate_support import ensure_gate_artifacts, temporary_json_mutation
+
+
+pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts]
 
 
 def _assert_forgery_caught(path: Path, mutate, validator, expected_issue: str, project_root: Path) -> None:

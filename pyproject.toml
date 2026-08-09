@@ -262,6 +262,7 @@ markers = [
     "bench: performance benchmark tests",
     "private_project: tests for private sidecar project tooling",
     "external_fixture: tests requiring downloaded external fixture trees",
+    "requires_gate_artifacts: tests that consume a hydrated project gate-artifact cache",
 ]
 # pytest-asyncio configuration
 asyncio_mode = "strict"

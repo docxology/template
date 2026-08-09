@@ -23,7 +23,7 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.exceptions import CompilationError, RenderingError
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
@@ -41,6 +41,7 @@ def _require_beamer_toolchain() -> str:
         pytest.skip("No LaTeX compiler available")
 
 
+@pytest.mark.slow
 @pytest.mark.requires_latex
 def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
     """A single long section must split across slides and produce a real PDF.
@@ -217,6 +218,7 @@ Context after the table.
 
         assert renderer.config == config
 
+    @pytest.mark.slow
     def test_render_with_revealjs(self, tmp_path):
         """Test render() method with revealjs format using real execution."""
         config = RenderingConfig(output_dir=tmp_path, slides_dir=tmp_path / "slides")
@@ -227,15 +229,14 @@ Context after the table.
         source = tmp_path / "slides.md"
         source.write_text("# Slide 1\n\n---\n\n# Slide 2")
 
-        # Use real execution - may fail if pandoc not available
-        try:
-            result = renderer.render(source, output_format="revealjs")
-            # If successful, should return a path
-            assert result is not None or isinstance(result, Path)
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
-            # Expected to fail if pandoc not available
-            pass
+        if not shutil.which("pandoc"):
+            pytest.skip("Pandoc not installed")
 
+        result = renderer.render(source, output_format="revealjs")
+        assert result.is_file()
+        assert "Slide 1" in result.read_text(encoding="utf-8")
+
+    @pytest.mark.slow
     def test_render_with_beamer(self, tmp_path):
         """Test render() method with beamer format using real execution."""
         config = RenderingConfig(output_dir=tmp_path, slides_dir=tmp_path / "slides")
@@ -245,15 +246,14 @@ Context after the table.
         source = tmp_path / "slides.md"
         source.write_text("# Slide 1")
 
-        # Use real execution - may fail if LaTeX not available
-        try:
-            result = renderer.render(source, output_format="beamer")
-            # If successful, should return a path
-            assert result is not None or isinstance(result, Path)
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-            pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
+        compiler = _require_beamer_toolchain()
+        config.latex_compiler = compiler
+        result = renderer.render(source, output_format="beamer")
+        assert result.is_file()
+        assert result.stat().st_size > 1_000
 
 
+@pytest.mark.slow
 class TestRevealJsRendering:
     """Test reveal.js rendering using real execution."""
 
@@ -266,13 +266,12 @@ class TestRevealJsRendering:
         source.write_text("# Test Slide")
         output = tmp_path / "slides.html"
 
-        # Use real execution - may fail if pandoc not available
-        try:
-            result = renderer._render_revealjs(source, output)
-            assert result == output or isinstance(result, Path)
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
-            # Expected to fail if pandoc not available
-            pass
+        if not shutil.which("pandoc"):
+            pytest.skip("Pandoc not installed")
+
+        result = renderer._render_revealjs(source, output)
+        assert result == output
+        assert output.is_file()
 
     def test_render_revealjs_failure(self, tmp_path):
         """Test reveal.js rendering failure handling with real execution."""
@@ -283,16 +282,19 @@ class TestRevealJsRendering:
         source.write_text("# Test Slide")
         output = tmp_path / "slides.html"
 
-        # Use real execution - may succeed or fail depending on pandoc
-        try:
+        def fail_pandoc(*args, **kwargs):
+            raise subprocess.CalledProcessError(
+                returncode=1,
+                cmd=["pandoc"],
+                stderr="simulated reveal.js failure",
+            )
+
+        renderer = SlidesRenderer(config, process_runner=fail_pandoc)
+        with pytest.raises(RenderingError, match="Failed to render slides"):
             renderer._render_revealjs(source, output)
-            # Real post-condition: a successful render must produce the output file
-            assert output.exists(), "_render_revealjs returned without producing the output file"
-        except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
-            # Expected when pandoc / reveal.js dependencies are unavailable
-            pass
 
 
+@pytest.mark.slow
 class TestBeamerRendering:
     """Test Beamer rendering using real execution."""
 
@@ -435,133 +437,12 @@ class TestSlidesRendererCore:
 
     def test_module_imports(self):
         """Test that module imports correctly."""
-        assert slides_renderer is not None
+        assert slides_renderer.__name__ == "infrastructure.rendering.slides_renderer"
 
     def test_has_render_functions(self):
         """Test that module has render functions."""
-        module_funcs = [
-            a for a in dir(slides_renderer) if not a.startswith("_") and callable(getattr(slides_renderer, a, None))
-        ]
-        assert len(module_funcs) > 0
-
-
-class TestBeamerRenderingAdditional:
-    """Test Beamer slides rendering using real execution."""
-
-    def test_render_beamer(self, tmp_path):
-        """Test Beamer rendering using real execution."""
-        md = tmp_path / "slides.md"
-        md.write_text("# Slide 1\n\n---\n\n# Slide 2")
-
-        if hasattr(slides_renderer, "render_beamer"):
-            # Use real execution
-            try:
-                result = slides_renderer.render_beamer(str(md))
-                assert result is not None or isinstance(result, Path)
-            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-                pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
-
-    def test_render_beamer_with_theme(self, tmp_path):
-        """Test Beamer rendering with theme using real execution."""
-        md = tmp_path / "slides.md"
-        md.write_text("# Slide 1")
-
-        if hasattr(slides_renderer, "render_beamer"):
-            # Use real execution
-            try:
-                result = slides_renderer.render_beamer(str(md), theme="Madrid")
-                assert result is not None or isinstance(result, Path)
-            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError) as e:
-                pytest.skip(f"Required Beamer/LaTeX tool not available: {e}")
-
-
-class TestRevealJsRenderingAdditional:
-    """Test reveal.js slides rendering using real execution."""
-
-    def test_render_revealjs(self, tmp_path):
-        """Test reveal.js rendering using real execution."""
-        md = tmp_path / "slides.md"
-        md.write_text("# Slide 1\n\n---\n\n# Slide 2")
-
-        if hasattr(slides_renderer, "render_revealjs"):
-            # Use real execution
-            try:
-                result = slides_renderer.render_revealjs(str(md))
-                assert result is not None or isinstance(result, Path)
-            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
-                # Expected to fail if pandoc not available
-                pass
-
-    def test_render_revealjs_with_options(self, tmp_path):
-        """Test reveal.js with options using real execution."""
-        md = tmp_path / "slides.md"
-        md.write_text("# Slide 1")
-
-        if hasattr(slides_renderer, "render_revealjs"):
-            # Use real execution
-            try:
-                result = slides_renderer.render_revealjs(str(md), theme="moon")
-                assert result is not None or isinstance(result, Path)
-            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
-                # Expected to fail if pandoc not available
-                pass
-
-
-class TestSlidesParsing:
-    """Test slides parsing functionality."""
-
-    def test_parse_slides(self):
-        """Test parsing slide content."""
-        content = "# Slide 1\n\n---\n\n# Slide 2\n\n---\n\n# Slide 3"
-
-        if hasattr(slides_renderer, "parse_slides"):
-            slides = slides_renderer.parse_slides(content)
-            assert isinstance(slides, list)
-
-    def test_extract_slide_metadata(self):
-        """Test extracting slide metadata."""
-        content = "---\ntitle: Test\n---\n\n# Slide 1"
-
-        if hasattr(slides_renderer, "extract_metadata"):
-            metadata = slides_renderer.extract_metadata(content)
-            assert metadata is not None
-
-
-class TestSlideTemplates:
-    """Test slide template functionality."""
-
-    def test_apply_template(self, tmp_path):
-        """Test applying template using real execution."""
-        md = tmp_path / "slides.md"
-        md.write_text("# Slide 1")
-
-        if hasattr(slides_renderer, "apply_template"):
-            # Use real execution
-            try:
-                result = slides_renderer.apply_template(str(md), template="default")
-                assert result is not None
-            except (CompilationError, RenderingError, OSError, subprocess.SubprocessError):
-                # Expected to fail if function not available
-                pass
-
-    def test_list_templates(self):
-        """Test listing available templates."""
-        if hasattr(slides_renderer, "list_templates"):
-            templates = slides_renderer.list_templates()
-            assert isinstance(templates, (list, tuple))
-
-
-class TestSlidesRendererIntegration:
-    """Integration tests for slides renderer."""
-
-    def test_full_render_workflow(self, tmp_path):
-        """Test complete rendering workflow."""
-        # Create test slides
-        md = tmp_path / "slides.md"
-        md.write_text("# Title Slide\n\n---\n\n# Content\n\n- Item 1\n- Item 2")
-
-        # Module should be importable
-        assert slides_renderer is not None
+        assert callable(slides_renderer.SlidesRenderer)
+        assert callable(slides_renderer.split_long_slide_frames)
 
 
 class TestSlidesMathHeaderInjection:
@@ -754,133 +635,64 @@ class TestSlidesRendererModule:
 
     def test_module_imports(self):
         """Test module imports correctly."""
-        assert slides_renderer is not None
+        assert slides_renderer.__name__ == "infrastructure.rendering.slides_renderer"
 
     def test_module_has_functions(self):
-        """Test module has expected functions."""
-        funcs = [a for a in dir(slides_renderer) if not a.startswith("_")]
-        assert len(funcs) > 0
+        """Test the module exports the renderer and pure frame helpers."""
+        assert slides_renderer.SlidesRenderer is SlidesRenderer
+        assert callable(slides_renderer.split_long_slide_frames)
 
 
 class TestSlidesRendererClassFromSlidesRendererComprehensive:
     """Test SlidesRenderer class if it exists."""
 
     def test_class_exists(self):
-        """Test SlidesRenderer class exists."""
-        if hasattr(slides_renderer, "SlidesRenderer"):
-            assert slides_renderer.SlidesRenderer is not None
+        """Test SlidesRenderer exposes the real render contract."""
+        assert slides_renderer.SlidesRenderer is SlidesRenderer
+        assert callable(SlidesRenderer.render)
 
-    def test_renderer_init(self, tmp_path):
-        """Test renderer initialization."""
-        if hasattr(slides_renderer, "SlidesRenderer"):
-            try:
-                renderer = slides_renderer.SlidesRenderer()
-                assert renderer is not None
-            except TypeError:
-                pass  # May require arguments
+    def test_renderer_init(self, test_config):
+        """Test renderer initialization with its required configuration."""
+        renderer = SlidesRenderer(test_config)
+        assert renderer.config is test_config
 
 
+@pytest.mark.slow
 class TestBeamerSlides:
     """Test Beamer slides rendering."""
 
     def test_render_beamer_exists(self):
         """Test render_beamer function exists."""
-        assert (
-            hasattr(slides_renderer, "render_beamer")
-            or hasattr(slides_renderer, "render_beamer_slides")
-            or hasattr(slides_renderer, "SlidesRenderer")
-        )
+        assert callable(SlidesRenderer.render)
 
-    def test_render_beamer(self, tmp_path):
+    def test_render_beamer(self, tmp_path, test_config):
         """Test rendering Beamer slides using real execution."""
+        _require_beamer_toolchain()
         md = tmp_path / "slides.md"
         md.write_text("# Slide 1\n\n---\n\n# Slide 2")
 
-        if hasattr(slides_renderer, "render_beamer"):
-            # Use real execution - may fail if pandoc/LaTeX not available
-            try:
-                result = slides_renderer.render_beamer(str(md))
-                # If successful, should return a path
-                assert result is not None or True
-            except Exception:
-                # Expected to fail if dependencies not available
-                pass
+        result = SlidesRenderer(test_config).render(md, output_format="beamer")
+
+        assert result.is_file()
+        assert result.stat().st_size > 1_000
 
 
+@pytest.mark.slow
 class TestRevealJsSlides:
     """Test reveal.js slides rendering."""
 
     def test_render_revealjs_exists(self):
         """Test render_revealjs function exists."""
-        assert (
-            hasattr(slides_renderer, "render_revealjs")
-            or hasattr(slides_renderer, "render_reveal_slides")
-            or hasattr(slides_renderer, "SlidesRenderer")
-        )
+        assert callable(SlidesRenderer.render)
 
-    def test_render_revealjs(self, tmp_path):
+    def test_render_revealjs(self, tmp_path, test_config):
         """Test rendering reveal.js slides."""
+        if not shutil.which("pandoc"):
+            pytest.skip("Pandoc not installed")
         md = tmp_path / "slides.md"
         md.write_text("# Slide 1\n\n---\n\n# Slide 2")
 
-        if hasattr(slides_renderer, "render_revealjs"):
-            try:
-                slides_renderer.render_revealjs(str(md))
-            except Exception:
-                pass
+        result = SlidesRenderer(test_config).render(md, output_format="revealjs")
 
-
-class TestSlidesParsingFromSlidesRendererComprehensive:
-    """Test slides parsing functionality."""
-
-    def test_parse_slide_content(self):
-        """Test parsing slide content."""
-        content = "# Slide 1\n\n---\n\n# Slide 2\n\n---\n\n# Slide 3"
-
-        if hasattr(slides_renderer, "parse_slides"):
-            slides = slides_renderer.parse_slides(content)
-            assert isinstance(slides, list)
-
-    def test_extract_slide_metadata(self):
-        """Test extracting slide metadata."""
-        content = """---
-title: Test Slides
-author: Test Author
----
-
-# Slide 1
-"""
-
-        if hasattr(slides_renderer, "extract_metadata"):
-            metadata = slides_renderer.extract_metadata(content)
-            assert metadata is not None
-
-
-class TestSlidesRendererIntegrationFromSlidesRendererComprehensive:
-    """Integration tests for slides renderer."""
-
-    def test_module_structure(self):
-        """Test module has expected structure."""
-        assert slides_renderer is not None
-
-    def test_full_render_workflow(self, tmp_path):
-        """Test complete render workflow."""
-        md = tmp_path / "slides.md"
-        md.write_text(
-            """# Title Slide
-
----
-
-# Content
-
-- Point 1
-- Point 2
-
----
-
-# Conclusion
-"""
-        )
-
-        # Module should be usable
-        assert slides_renderer is not None
+        assert result.is_file()
+        assert "Slide 1" in result.read_text(encoding="utf-8")

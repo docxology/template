@@ -677,6 +677,7 @@ def test_protected_names_are_public_exemplars(name: str) -> None:
     assert name in public_short_names
 
 
+@pytest.mark.slow
 def test_legacy_sync_active_links_wrapper_syncs_all_lifecycles(tmp_path: Path) -> None:
     """The old public function name remains lifecycle-aware for compatibility."""
     repo = _make_repo(tmp_path)
@@ -696,6 +697,7 @@ def test_legacy_sync_active_links_wrapper_syncs_all_lifecycles(tmp_path: Path) -
     assert (repo / "projects" / "archive" / "old").is_symlink()
 
 
+@pytest.mark.slow
 def test_nonactive_lifecycle_links_are_not_default_discovered(tmp_path: Path) -> None:
     """Working/archive projects are visible locally but not rendered by default."""
     repo = _make_repo(tmp_path)

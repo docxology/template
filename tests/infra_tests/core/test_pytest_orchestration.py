@@ -15,6 +15,7 @@ import pytest
 
 from infrastructure.core.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
+    ENV_DISCOVERY_PREFLIGHT,
     ENV_XDIST_WORKERS,
     PIPELINE_SMOKE_INFRA_TEST_PATHS,
     TEST_PROFILE_NAMES,
@@ -22,6 +23,7 @@ from infrastructure.core.pytest_orchestration import (
     build_project_pytest_command,
     build_profile_marker_expression,
     build_union_pytest_command,
+    discovery_preflight_enabled,
     enforce_project_suite_guards,
     log_discovered_tests,
     parse_discovery_count,
@@ -104,6 +106,20 @@ def test_resolve_coverage_file_default_when_env_unset(monkeypatch: pytest.Monkey
 def test_test_profile_registry_names_are_stable() -> None:
     assert DEFAULT_TEST_PROFILE == "quick"
     assert TEST_PROFILE_NAMES == ("quick", "release", "exhaustive")
+
+
+def test_discovery_preflight_is_disabled_by_default() -> None:
+    assert discovery_preflight_enabled(env={}) is False
+
+
+@pytest.mark.parametrize("raw", ["1", "true", "YES", "on"])
+def test_discovery_preflight_accepts_explicit_true_values(raw: str) -> None:
+    assert discovery_preflight_enabled(env={ENV_DISCOVERY_PREFLIGHT: raw}) is True
+
+
+@pytest.mark.parametrize("raw", ["0", "false", "off", "", "unexpected"])
+def test_discovery_preflight_rejects_false_or_unknown_values(raw: str) -> None:
+    assert discovery_preflight_enabled(env={ENV_DISCOVERY_PREFLIGHT: raw}) is False
 
 
 def test_quick_profile_matches_current_default_lane() -> None:
@@ -211,6 +227,7 @@ def test_validate_coverage_parallel_allows_linux_worker_count() -> None:
     validate_coverage_parallel(4, platform_name="Linux")
 
 
+@pytest.mark.slow
 def test_discovery_with_parallel_execution_command_does_not_run_tests(tmp_path: Path) -> None:
     """The count preflight must not execute a suite when xdist is enabled."""
     sentinel = tmp_path / "executed"

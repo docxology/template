@@ -29,6 +29,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: artifact-generation and manuscript integration checks kept for release profiles",
+]
 
 [tool.coverage.run]
 source = ["src"]

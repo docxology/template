@@ -209,6 +209,7 @@ class TestValidationAndRegistration:
         assert payload["fig:convergence"]["metadata"]["alt_text"]
 
 
+@pytest.mark.slow
 class TestMainPipelineSmoke:
     def test_main_writes_core_artifacts(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         import shutil
@@ -451,8 +452,9 @@ class TestCompareAlgorithms:
         # Two step sizes with notably different iteration counts
         cfg = ExperimentConfig(step_sizes=(0.01, 0.9), max_iterations=5000)
         result = compare_algorithms(config=cfg, stability_check=False, time_runs=False)
-        # With 2 converged variants, fastest ≠ slowest (or at least one is set)
-        assert result.fastest_convergence != "none" or result.slowest_convergence != "none"
+        assert result.fastest_convergence != "none"
+        assert result.slowest_convergence != "none"
+        assert result.fastest_convergence != result.slowest_convergence
 
 
 # ---------------------------------------------------------------------------

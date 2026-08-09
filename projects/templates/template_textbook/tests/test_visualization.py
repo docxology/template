@@ -50,6 +50,7 @@ def test_generate_chapter_placeholders_matches_config(tmp_path):
         _png_is_nonempty(path)
 
 
+@pytest.mark.slow
 def test_generate_all_figures(tmp_path):
     worked = plots.generate_worked_figures(tmp_path)
     paths = plots.generate_all_figures(tmp_path)
@@ -69,6 +70,7 @@ def test_figure_registry_entries_match_manuscript_labels(tmp_path):
     assert "fig:part_III_case_studies" in labels
 
 
+@pytest.mark.slow
 def test_figure_registry_validates_manuscript_references(tmp_path):
     paths = plots.generate_all_figures(tmp_path)
     from visualization.gallery import generate_gallery_figures

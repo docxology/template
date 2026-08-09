@@ -74,11 +74,21 @@ def test_collection_hook_skips_collect_only_before_selection() -> None:
 
 def test_direct_only_selection_skips_gate_prewarm() -> None:
     project_conftest = _load_tests_conftest()
-    direct_items = [SimpleNamespace(path=Path("tests/test_fixed_point_direct.py"))]
-    mixed_items = [*direct_items, SimpleNamespace(path=Path("tests/gates/test_manuscript_gates.py"))]
+
+    class Item:
+        def __init__(self, *markers: str) -> None:
+            self.markers = set(markers)
+
+        def get_closest_marker(self, name: str) -> object | None:
+            return object() if name in self.markers else None
+
+    direct_items = [Item()]
+    gate_items = [Item("slow", "requires_gate_artifacts")]
 
     assert project_conftest._selection_needs_gate_prewarm(direct_items) is False
-    assert project_conftest._selection_needs_gate_prewarm(mixed_items) is True
+    assert project_conftest._selection_needs_gate_prewarm(gate_items) is True
+    assert project_conftest._selection_needs_gate_prewarm(gate_items, markexpr="not slow") is False
+    assert project_conftest._selection_needs_gate_prewarm(gate_items, markexpr="not long_running") is True
 
 
 def test_mutable_output_snapshot_includes_gate_contract_artifacts() -> None:

@@ -13,6 +13,9 @@ import yaml
 from gate_support import ensure_gate_artifacts
 
 
+pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts]
+
+
 def _ensure_validation_spine_inputs(project_root: Path) -> None:
     from validation_spine.artifacts import CORE_ARTIFACT_PRODUCERS
 

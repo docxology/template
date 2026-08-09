@@ -464,5 +464,4 @@ class TestErrorHandling:
 
         result = validate_copied_outputs(nonexistent)
 
-        # Should handle gracefully
-        assert result is False or result is True  # Graceful handling
+        assert result is False

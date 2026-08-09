@@ -63,6 +63,14 @@ XDIST_DISTRIBUTION: str = "loadscope"
 # Values that mean "run serially" regardless of source (arg or env).
 _XDIST_SERIAL_TOKENS: frozenset[str] = frozenset({"", "0", "1", "none", "serial", "off"})
 
+# The test subprocess itself reports its collected count.  A second
+# ``--collect-only`` subprocess is useful when diagnosing a surprising
+# collection change, but it doubles collection work for every normal pipeline
+# run (and is especially costly for the public project matrix).  Keep the
+# diagnostic escape hatch explicit and opt-in.
+ENV_DISCOVERY_PREFLIGHT = "TEMPLATE_TEST_DISCOVERY_PREFLIGHT"
+_TRUE_ENV_VALUES: frozenset[str] = frozenset({"1", "true", "yes", "on"})
+
 PIPELINE_SMOKE_INFRA_TEST_PATHS = (
     Path("tests/infra_tests/git_hook_smoke"),
     Path("tests/infra_tests/core/test_pipeline.py"),
@@ -418,6 +426,18 @@ def parse_test_discovery_timeout(scope: InfrastructureTestScope) -> float:
     return 120.0 if scope == "full" else 30.0
 
 
+def discovery_preflight_enabled(*, env: Mapping[str, str] | None = None) -> bool:
+    """Return whether the optional collection-only diagnostic should run.
+
+    The real pytest subprocess already records ``discovery_count`` from its
+    own output.  This preflight exists for troubleshooting collection or
+    command-line issues and is intentionally disabled in ordinary runs so it
+    cannot become an invisible second test-suite startup cost.
+    """
+    values = os.environ if env is None else env
+    return values.get(ENV_DISCOVERY_PREFLIGHT, "").strip().lower() in _TRUE_ENV_VALUES
+
+
 def parse_discovery_count(combined_output: str) -> int | None:
     """Extract a collected-test count from pytest --collect-only output."""
     for pattern in DISCOVERY_PATTERNS:
@@ -710,6 +730,7 @@ __all__ = [
     "DEFAULT_PROJECT_MATRIX_MAX_WORKERS",
     "MACOS_COVERAGE_XDIST_MAX_WORKERS",
     "DISCOVERY_PATTERNS",
+    "ENV_DISCOVERY_PREFLIGHT",
     "ENV_XDIST_WORKERS",
     "ENV_PROJECT_MATRIX_WORKERS",
     "INFRASTRUCTURE_TEST_SCOPES",
@@ -727,6 +748,7 @@ __all__ = [
     "build_union_pytest_command",
     "build_pythonpath",
     "enforce_project_suite_guards",
+    "discovery_preflight_enabled",
     "log_discovered_tests",
     "make_coverage_subprocess_env",
     "parse_discovery_count",

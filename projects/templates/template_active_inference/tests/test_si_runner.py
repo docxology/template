@@ -42,6 +42,7 @@ def test_sampling_rejects_non_finite_probability() -> None:
 
 
 @pytest.mark.requires_pymdp
+@pytest.mark.slow
 def test_si_tmaze_rollout(project_root, tmp_path) -> None:
     if not pymdp_available():
         pytest.skip("pymdp not installed")
@@ -99,6 +100,8 @@ def test_simulate_cli_help(project_root) -> None:
 
 
 @pytest.mark.requires_pymdp
+@pytest.mark.requires_pymdp
+@pytest.mark.slow
 def test_run_and_persist(project_root) -> None:
     if not pymdp_available():
         pytest.skip("pymdp not installed")

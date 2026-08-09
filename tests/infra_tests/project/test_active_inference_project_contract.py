@@ -122,6 +122,7 @@ def test_full_sheaf_appendix_binds_registry_tracks() -> None:
     assert required <= found, f"missing required track markers in appendix: {required - found!r}"
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(60)
 def test_coverage_json_schema_on_clean_tree(isolated_project: Path) -> None:
     root = isolated_project
@@ -161,6 +162,7 @@ def test_methods_sheaf_layers_in_composed_manuscript() -> None:
     assert "<!-- sheaf-layers:legend -->" in text
 
 
+@pytest.mark.slow
 def test_build_lean_when_present_must_succeed(isolated_project: Path) -> None:
     """Build the Lean package when lake is installed and the project ships one.
 
@@ -178,6 +180,7 @@ def test_build_lean_when_present_must_succeed(isolated_project: Path) -> None:
     assert code == 0, msg
 
 
+@pytest.mark.slow
 @pytest.mark.timeout(60)
 def test_z_generate_writes_resolved_manuscript_without_tokens(isolated_project: Path) -> None:
     root = isolated_project

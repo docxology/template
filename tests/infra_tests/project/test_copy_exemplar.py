@@ -16,6 +16,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize("project_name", PUBLIC_PROJECT_NAMES)
 def test_every_public_exemplar_exports_as_a_standalone_tree(tmp_path: Path, project_name: str) -> None:
     """Every declared exemplar must survive the same clean export contract."""

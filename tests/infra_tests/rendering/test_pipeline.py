@@ -756,6 +756,7 @@ def test_render_pipeline_impl_render_manager_init_raises_exits_one(
     assert rc == 1
 
 
+@pytest.mark.slow
 def test_render_pipeline_impl_failed_files_exits_one(
     tmp_path: Path,
 ) -> None:

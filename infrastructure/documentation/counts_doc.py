@@ -79,7 +79,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # Every row is measured in the project's own environment with the shared
     # release profile. This keeps project-local dependency and coverage settings
     # authoritative while making the snapshot comparable to the public matrix.
-    ExemplarSnapshot("template_active_inference", "92.95 %"),
+    ExemplarSnapshot("template_active_inference", "92.96 %"),
     ExemplarSnapshot("template_advanced_literature_review", "93.26 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
@@ -88,7 +88,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_data_descriptor", "97.82 %"),
     ExemplarSnapshot("template_eda_notebook", "99.13 %"),
     ExemplarSnapshot("template_formal", "95.28 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.57 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.64 %"),
     ExemplarSnapshot("template_literature_meta_analysis", "94.05 %"),
     ExemplarSnapshot("template_madlib", "99.00 %"),
     ExemplarSnapshot("template_methods_paper", "98.99 %"),

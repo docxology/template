@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from src.config import build_loop_config, load_manuscript_loop_settings
 from src.loop import build_claims, run_autoresearch_loop
@@ -415,6 +416,7 @@ def test_build_claims_only_supports_existing_files(project_root: Path, repo_root
     assert missing_path.exists() is False
 
 
+@pytest.mark.slow
 def test_run_autoresearch_loop_on_clean_scaffold(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[4]
     project = tmp_path / "template_autoresearch_project"
