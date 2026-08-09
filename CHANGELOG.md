@@ -27,6 +27,14 @@ not to the contents of any specific workspace.
 - Refreshed external publication metadata records and validated the complete
   24-lane release-profile public-matrix receipt at 95.39% combined coverage.
 
+### Hosted CI correctness (2026-08-08)
+
+- Repaired the hosted XML-parser policy step so its Python guard is executed
+  from a stable heredoc, and made regression collection validation match
+  pytest's current quiet collector output (55 claim-binding tests locally).
+- Updated the workflow runbook to describe the fail-closed collection contract
+  rather than the obsolete empty-tier exit-code tolerance.
+
 ### Cross-cutting hardening and maintainability (2026-08-08)
 
 - Added a shared secret-environment policy (`infrastructure/core/secrets.py`)

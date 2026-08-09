@@ -177,16 +177,20 @@ jobs:
       # XML parser policy (DEP-DEFUSEDXML-1): enforced by Bandit B313-B320 in
       # the security job, but this AST-level guard is explicit and independent.
       - name: XML parser policy — defusedxml only
-        run: >-
-          uv run python -c "
-          from pathlib import Path;
-          from infrastructure.validation.xml_parser_policy import validate_xml_parser_policy;
-          import sys;
-          violations = validate_xml_parser_policy(Path('.') / 'infrastructure', Path('.'));
+        run: |
+          uv run python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          from infrastructure.validation.xml_parser_policy import (
+              validate_xml_parser_policy,
+          )
+
+          violations = validate_xml_parser_policy(Path('.') / 'infrastructure', Path('.'))
           if violations:
-            print('XML parser policy violations:', *violations, sep='\\n');
-            sys.exit(1)
-          "
+              print('XML parser policy violations:', *violations, sep='\n')
+              sys.exit(1)
+          PY
 
       # Enforce the module-size composability budget as a hard gate (fails at
       # >=950 infra / >=250 project-script lines). It also runs inside the
@@ -433,7 +437,7 @@ jobs:
       # collection-order-sensitive (see docs/maintenance/regression-testing.md).
       - name: Run claim-binding regression tier
         run: >-
-          uv run pytest tests/regression/ -q --no-cov --timeout=120
+          uv run pytest tests/regression/ --no-cov --timeout=120
           --collect-only -q | tee /tmp/regression-collect.txt
           && uv run pytest tests/regression/ -q --no-cov --timeout=120
 

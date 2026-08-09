@@ -146,7 +146,7 @@ behaviorally equivalent to the dedicated documentation job.
 - **Depends on:** `verify-no-mocks`, `timeout-minutes: 20`, ubuntu-only.
 - **Sync:** `uv sync --group public-exemplars`.
 - **What it runs:** `uv run pytest tests/regression/ -q --no-cov --timeout=120`, serial (no `-n auto`) — see [`docs/maintenance/regression-testing.md`](../../docs/maintenance/regression-testing.md) for why (exemplars ship colliding top-level `src` packages resolved via per-project aliases + temporary `sys.meta_path` finders whose isolation is collection-order-sensitive).
-- **Exit-code tolerance:** exit `5` (no tests collected on a clean scaffold) is treated as success so a future empty tier doesn't hard-fail the build; any real failure (exit `1`) still fails the job. A separate "Assert regression tier is not empty" step fails the job when fewer than 3 tests collect, so the claim-binding pins cannot silently vanish behind the tolerance.
+- **Collection contract:** the collection pass must succeed and emit node IDs (`--collect-only -q`) before the behavioral run. A separate "Assert regression tier is not empty" step counts those IDs and fails the job when fewer than 3 tests collect, so claim-binding pins cannot silently vanish behind a vacuous success.
 
 #### 5. Project Tests (`test-project`)
 
