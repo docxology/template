@@ -83,7 +83,7 @@ apt-get install pandoc       # Linux
 
 **If `uv` missing:**
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](../../operational/build/dependency-management.md#installing-uv).
 ```
 
 **Gate:** All three tools on PATH → continue.

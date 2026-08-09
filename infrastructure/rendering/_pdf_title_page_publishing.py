@@ -185,11 +185,11 @@ def _publication_doi_line(config: dict[str, Any]) -> str:
     publication = config.get("publication", {}) or {}
     if not isinstance(publication, dict):
         return ""
-    doi = str(publication.get("doi", "")).strip()
+    doi = str(publication.get("doi") or "").strip()
     if doi:
         doi_target = _latex_href_url(f"https://doi.org/{doi}")
         return r"DOI: \href{" + doi_target + r"}{" + _latex_text(doi) + r"}"
-    doi_status = str(publication.get("doi_status", "")).strip()
+    doi_status = str(publication.get("doi_status") or "").strip()
     if doi_status:
         return r"DOI: " + _latex_text(doi_status)
     return ""
@@ -214,6 +214,10 @@ def _paper_cover_author_lines(config: dict[str, Any]) -> list[str]:
                 + orcid
                 + r"}\par}"
             )
+        else:
+            lines.append(
+                r"{\small\sffamily ORCID: " + _latex_text(author.get("orcid_status", "not-provided")) + r"\par}"
+            )
         lines.append(r"\vspace{0.08em}")
     if not lines:
         lines.append(r"{\large\sffamily\bfseries Project Author\par}")
@@ -231,7 +235,7 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
     publication = config.get("publication", {}) or {}
     if not isinstance(publication, dict):
         publication = {}
-    doi = str(publication.get("doi", ""))
+    doi = str(publication.get("doi") or "")
     title = _latex_text(metadata["title"])
     subtitle = _latex_text(metadata["subtitle"])
     edition = _latex_text(metadata["edition"])
@@ -255,6 +259,10 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
                 + r"}{ORCID: "
                 + orcid
                 + r"}}\\[0.5em]"
+            )
+        else:
+            author_lines.append(
+                r"{\normalsize ORCID: " + _latex_text(author.get("orcid_status", "not-provided")) + r"}\\[0.5em]"
             )
     if not author_lines:
         author_lines.append(r"{\Large\bfseries Project Author}\\[0.5em]")

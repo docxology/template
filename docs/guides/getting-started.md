@@ -71,8 +71,10 @@ uv sync
 sudo apt-get update
 sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
 
-# Install uv and Python dependencies
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Install uv and Python dependencies. Use the checksum-verified instructions
+# in docs/operational/build/dependency-management.md, or your OS package manager.
+# macOS: brew install uv
+# Linux: install uv with your distribution package manager or pipx
 uv sync
 ```
 

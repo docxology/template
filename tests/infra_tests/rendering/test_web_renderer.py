@@ -358,6 +358,46 @@ def test_responsive_variant_uses_mobile_sibling_when_present(tmp_path: Path) -> 
     assert 'srcset="../figures/graphical_mobile.png"' in content
 
 
+def test_figure_images_link_to_full_resolution_assets_idempotently(tmp_path: Path) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
+        'alt="Dense scientific figure"><figcaption>Dense figure.</figcaption></figure></body></html>',
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert content.count('class="figure-full-size-link"') == 1
+    assert 'href="../figures/dense.png"' in content
+    assert 'target="_blank"' in content
+    assert 'rel="noopener"' in content
+    assert 'aria-label="Open full-size figure"' in content
+    assert 'class="figure-full-size-label"' in content
+
+
+def test_individual_render_embeds_publication_css_and_full_resolution_figure_link(tmp_path: Path) -> None:
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source = manuscript_dir / "03_results.md"
+    source.write_text(
+        "# Results\n\n![Dense figure](../figures/dense.png){#fig:dense width=100%}\n",
+        encoding="utf-8",
+    )
+    web_dir = tmp_path / "output" / "web"
+    renderer = WebRenderer(RenderingConfig(web_dir=str(web_dir), output_dir=str(tmp_path / "output")))
+
+    result = renderer.render(source)
+
+    content = result.read_text(encoding="utf-8")
+    assert "--brand-1" in content
+    assert "width: min(100%, 800px)" in content
+    assert 'class="figure-full-size-link"' in content
+    assert 'href="../figures/dense.png"' in content
+
+
 def test_individual_render_output_names_include_parent_context(tmp_path: Path) -> None:
     renderer = _make_renderer(tmp_path)
     source_a = tmp_path / "manuscript" / "parts" / "alpha" / "00-overview.md"
@@ -528,6 +568,9 @@ class TestEmbedCss:
         assert "text-decoration: none" not in content
         assert "min-height: 28px" in content
         assert "#TOC a" in content
+        assert ".figure-full-size-link" in content
+        assert "cursor: zoom-in" in content
+        assert "width: min(1080px, calc(100vw - 3rem))" in content
 
 
 class TestTheoremBlocks:
@@ -613,6 +656,15 @@ class TestTheoremBlocks:
         assert "$G(\\pi)$" in out
         assert "$$G(\\pi) = \\mathbb{E}[F]$$" in out
         assert "\\(" not in out and "\\[" not in out
+
+    def test_theorem_name_preserves_math_and_texttt(self):
+        """Optional theorem names use the same safe path as theorem bodies."""
+        src = "\\begin{theorem}[KL/NLL/\\(\\beta=0\\), \\texttt{log_linear_pool}]\nThe identity holds.\n\\end{theorem}"
+        out = WebRenderer._html_theorem_blocks(src)
+        assert "KL/NLL/$\\beta=0$" in out
+        assert "`log_linear_pool`" in out
+        assert "\\(" not in out
+        assert "\\texttt" not in out
 
     def test_texttt_and_math_outside_theorem_bodies_are_untouched(self):
         # The cleaner is theorem-body-scoped: surrounding prose keeps its raw

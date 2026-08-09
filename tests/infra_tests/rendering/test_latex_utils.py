@@ -8,7 +8,11 @@ from reportlab.pdfgen import canvas
 
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
-from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
+from infrastructure.rendering.latex_utils import (
+    compile_latex,
+    ensure_pdf_at,
+    normalize_latex_sidecars,
+)
 
 
 def test_compile_latex_disables_shell_escape() -> None:
@@ -59,6 +63,22 @@ def test_ensure_pdf_at_replaces_existing_target(tmp_path):
     assert target.read_bytes().startswith(b"%PDF-1.4")
 
 
+def test_normalize_latex_sidecars_removes_only_named_text_whitespace(tmp_path):
+    """Generated text sidecars normalize without touching unrelated files."""
+    aux = tmp_path / "deck.aux"
+    log = tmp_path / "deck.log"
+    other = tmp_path / "other.aux"
+    aux.write_text("\\relax  \nline\t\n", encoding="utf-8")
+    log.write_text("diagnostic  \n", encoding="utf-8")
+    other.write_text("leave me  \n", encoding="utf-8")
+
+    normalize_latex_sidecars(tmp_path, "deck")
+
+    assert aux.read_text(encoding="utf-8") == "\\relax\nline\n"
+    assert log.read_text(encoding="utf-8") == "diagnostic\n"
+    assert other.read_text(encoding="utf-8") == "leave me  \n"
+
+
 @pytest.mark.requires_latex
 def test_compile_latex_success(tmp_path, skip_if_no_latex):
     """Test LaTeX compilation with real compiler."""
@@ -82,6 +102,27 @@ Test document for compilation.
     assert result == output_dir / "test.pdf"
     assert result.exists()
     assert result.stat().st_size > 0
+
+
+@pytest.mark.requires_latex
+@pytest.mark.timeout(30)
+def test_compile_latex_is_byte_reproducible_with_pinned_epoch(tmp_path, skip_if_no_latex, monkeypatch):
+    """Two real LaTeX runs with the same epoch produce identical PDF bytes."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    tex_file = tmp_path / "reproducible.tex"
+    tex_file.write_text(
+        r"""\documentclass{article}
+\begin{document}
+Pinned deterministic publication build.
+\end{document}
+""",
+        encoding="utf-8",
+    )
+
+    first = compile_latex(tex_file, tmp_path / "run-one", passes=2)
+    second = compile_latex(tex_file, tmp_path / "run-two", passes=2)
+
+    assert first.read_bytes() == second.read_bytes()
 
 
 def test_compile_latex_missing_file(tmp_path):
@@ -120,6 +161,7 @@ attempt_file.write_text(str(attempt))
 
 pdf = out_dir / f"{tex.stem}.pdf"
 log = out_dir / f"{tex.stem}.log"
+aux = out_dir / f"{tex.stem}.aux"
 if attempt == 1:
     pdf.write_bytes(b"%PDF-1.4\npartial\n")
     log.write_text("xdvipdfmx:fatal: Image inclusion failed\n", encoding="utf-8")
@@ -127,6 +169,7 @@ if attempt == 1:
 
 pdf.write_bytes(b"%PDF-1.4\nok\nstartxref\n1\n%%EOF\n")
 log.write_text("Output written on test.pdf\n", encoding="utf-8")
+aux.write_text("\\relax  \n", encoding="utf-8")
 """,
         encoding="utf-8",
     )
@@ -140,6 +183,7 @@ log.write_text("Output written on test.pdf\n", encoding="utf-8")
     assert result == output_dir / "test.pdf"
     assert result.exists()
     assert (output_dir / "attempts.txt").read_text(encoding="utf-8") == "2"
+    assert (output_dir / "test.aux").read_text(encoding="utf-8") == "\\relax\n"
 
 
 @pytest.mark.requires_latex

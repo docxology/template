@@ -363,6 +363,23 @@ class TestExecuteValidationPipeline:
         result = mod.execute_validation_pipeline("test", repo_root=tmp_path)
         assert isinstance(result, int)
 
+    def test_summary_logs_the_persisted_report_timestamp(self, tmp_path, caplog):
+        project_dir = tmp_path / "projects" / "active" / "test"
+        (project_dir / "output").mkdir(parents=True)
+        expected_timestamp = "1970-01-01T00:00:00Z"
+
+        def write_report(*args, **kwargs):
+            return {"timestamp": expected_timestamp}
+
+        with caplog.at_level("INFO"):
+            mod.execute_validation_pipeline(
+                "test",
+                repo_root=tmp_path,
+                report_writer=write_report,
+            )
+
+        assert f"Timestamp: {expected_timestamp}" in caplog.text
+
     def test_with_valid_pdfs(self, tmp_path, monkeypatch):
         project_dir = tmp_path / "projects" / "active" / "test"
         pdf_dir = project_dir / "output" / "pdf"

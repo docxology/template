@@ -101,8 +101,8 @@ repository root.
 root `CLAUDE.md` — is `uv`-only; never bootstrap `uv` through `pip`):
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-# or: brew install uv
+Follow the [checksum-verified uv installation instructions](../../../../docs/operational/build/dependency-management.md#installing-uv),
+or install it with Homebrew on macOS.
 ```
 
 ## Coverage gate fails (under 90%)

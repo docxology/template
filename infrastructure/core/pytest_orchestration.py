@@ -26,6 +26,12 @@ from infrastructure.core.project_pyproject import (
     resolve_project_cov_config,
 )
 from infrastructure.core.runtime.environment import get_python_command, resolve_test_python
+from infrastructure.core.worker_policy import (
+    DEFAULT_PROJECT_MATRIX_MAX_WORKERS,
+    ENV_PROJECT_MATRIX_WORKERS,
+    ENV_XDIST_WORKERS,
+    resolve_bounded_workers,
+)
 
 logger = get_logger(__name__)
 
@@ -45,13 +51,6 @@ TEST_RUNNER_BASE_DEPS: tuple[str, ...] = (
     "pytest-benchmark",
 )
 
-# Environment variable that opts a local test run into pytest-xdist parallelism
-# when no explicit ``parallel`` argument is threaded through. Mirrors the
-# opt-in ``MULTI_PROJECT_MAX_WORKERS`` convention used by the cross-project
-# parallel runner (``infrastructure.core.pipeline.multi_project_parallel``).
-ENV_XDIST_WORKERS: str = "PYTEST_XDIST_WORKERS"
-ENV_PROJECT_MATRIX_WORKERS: str = "TEMPLATE_PROJECT_WORKERS"
-DEFAULT_PROJECT_MATRIX_MAX_WORKERS: int = 4
 MACOS_COVERAGE_XDIST_MAX_WORKERS: int = 2
 # ``worksteal`` maximizes scheduler throughput, but it also concentrates
 # subprocess-heavy tests from unrelated modules onto the same worker at the
@@ -206,20 +205,12 @@ def build_profile_marker_expression(profile: TestProfileSpec) -> str | None:
 
 def resolve_project_matrix_workers(*, env: Mapping[str, str] | None = None) -> int:
     """Resolve the bounded adaptive worker count for public project matrices."""
-    source_env = os.environ if env is None else env
-    configured = source_env.get(ENV_PROJECT_MATRIX_WORKERS)
-    if configured:
-        try:
-            value = int(configured)
-        except ValueError as exc:
-            raise ValueError(
-                f"Invalid {ENV_PROJECT_MATRIX_WORKERS} value {configured!r}: use a positive integer"
-            ) from exc
-        if value < 1:
-            raise ValueError(f"Invalid {ENV_PROJECT_MATRIX_WORKERS} value {configured!r}: use a positive integer")
-        return value
-    cpu_count = os.cpu_count() or 1
-    return max(1, min(DEFAULT_PROJECT_MATRIX_MAX_WORKERS, cpu_count - 1 or 1))
+    return resolve_bounded_workers(
+        env_name=ENV_PROJECT_MATRIX_WORKERS,
+        env=env,
+        default_cap=DEFAULT_PROJECT_MATRIX_MAX_WORKERS,
+        cpu_reserve=1,
+    )
 
 
 def parse_project_workers(

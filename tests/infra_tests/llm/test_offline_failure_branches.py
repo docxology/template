@@ -35,7 +35,13 @@ DEAD_HOST = "http://127.0.0.1:1"
 # A secondary dead port for variety.
 DEAD_HOST_ALT = "http://127.0.0.1:2"
 
-pytestmark = pytest.mark.no_patch_llm_client
+pytestmark = [
+    pytest.mark.no_patch_llm_client,
+    # Real retry/auto-start negative controls are bounded but can exceed the
+    # repository-wide 10-second limit when coverage and other subprocess tests
+    # contend for the same machine.
+    pytest.mark.timeout(30),
+]
 
 
 # --- helpers ----------------------------------------------------------------

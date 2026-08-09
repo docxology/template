@@ -107,6 +107,11 @@ The Core module provides fundamental foundation utilities used across the entire
 - Owns matched serial/parallel Stage-01 test commands and fail-closed performance manifests for the fast `pipeline-smoke` lane, the full infrastructure lane, or the public project matrix.
 - `scripts/maintenance/benchmark_tests.py` writes provenance-bound JSON evidence; it refuses dirty checkouts and requires both lanes to pass with identical selection and commit.
 
+**worker_policy.py**
+- Shared bounded worker resolution for the outer public-project matrix and inner pytest-xdist lanes.
+- `resolve_bounded_workers` applies explicit values, environment overrides, CPU-aware defaults, and a hard safety cap without allowing invalid or oversubscribed counts.
+- Environment controls: `TEMPLATE_PROJECT_WORKERS` / `MULTI_PROJECT_MAX_WORKERS` for outer project concurrency and `PYTEST_XDIST_WORKERS` for inner test workers.
+
 **project_test_matrix.py**
 - Shared bounded subprocess service for public readiness, per-project union coverage, and parallel documentation counts. ``run_project_test_matrix(tasks, workers=...)`` isolates each task, applies a hard timeout, continues after failure/timeout, captures bounded diagnostics when requested, and returns results in canonical input order regardless of completion order. Outer project workers must not be combined with inner pytest-xdist workers; the higher-level orchestration validators enforce that boundary.
 

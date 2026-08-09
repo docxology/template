@@ -43,13 +43,15 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Sequence, TextIO
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.worker_policy import ENV_MULTI_PROJECT_WORKERS, resolve_bounded_workers
 
 if TYPE_CHECKING:
     from infrastructure.project.project_info import ProjectInfo
 
 logger = get_logger(__name__)
 
-ENV_MAX_WORKERS = "MULTI_PROJECT_MAX_WORKERS"
+# Compatibility alias retained for callers that import the established name.
+ENV_MAX_WORKERS = ENV_MULTI_PROJECT_WORKERS
 
 
 @dataclass(frozen=True)
@@ -245,22 +247,11 @@ def _resolve_max_workers(num_projects: int, override: int | None) -> int:
     """
     if override is not None and override > 0:
         return min(override, max(num_projects, 1))
-
-    env_value = os.environ.get(ENV_MAX_WORKERS, "").strip()
-    if env_value:
-        try:
-            parsed = int(env_value)
-            if parsed > 0:
-                return min(parsed, max(num_projects, 1))
-        except ValueError:
-            logger.warning(
-                "Ignoring non-integer %s=%r; falling back to default.",
-                ENV_MAX_WORKERS,
-                env_value,
-            )
-
-    cpu = os.cpu_count() or 1
-    return max(1, min(num_projects, cpu))
+    return resolve_bounded_workers(
+        env_name=ENV_MAX_WORKERS,
+        item_count=num_projects,
+        invalid="fallback",
+    )
 
 
 def _spec_for(

@@ -25,25 +25,13 @@ from __future__ import annotations
 
 import contextlib
 import os
-import re
 import signal
 import subprocess  # nosec B404
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Sequence
 
-# Variable-name markers treated as credentials. Mirrors
-# ``infrastructure.core.runtime._python_env._SECRET_ENV_NAME`` so both
-# code paths agree on what counts as a secret.
-_SECRET_ENV_NAME = re.compile(
-    r"(?:API[_-]?KEY|TOKEN|SECRET|PASSWORD|PRIVATE[_-]?KEY|CREDENTIAL)",
-    re.IGNORECASE,
-)
-
-# Environment variables that are never credentials but contain the word
-# "secret" (e.g. a matplotlib cache dir, or CI_* plumbing). Kept separate so
-# the aggressive regex above can be tuned without touching allow-lists.
-_KNOWN_BENIGN = frozenset({"MPLCONFIGDIR", "CI", "CIRCLECI", "GITHUB_ACTIONS"})
+from infrastructure.core.secrets import strip_secret_env
 
 
 @dataclass(frozen=True)
@@ -142,10 +130,6 @@ def validate_hook_root(
     return resolved
 
 
-def _is_credential(name: str) -> bool:
-    return bool(_SECRET_ENV_NAME.search(name)) and name not in _KNOWN_BENIGN
-
-
 def build_bounded_env(
     base_env: dict[str, str] | None = None,
     *,
@@ -164,14 +148,11 @@ def build_bounded_env(
         A new environment dictionary with secrets removed unless they are in
         ``allow_secret_names`` or ``passthrough``.
     """
-    env = dict(os.environ if base_env is None else base_env)
-    allowed = set(allow_secret_names) | set(passthrough)
-    for key in tuple(env):
-        if key in passthrough:
-            continue
-        if key not in allowed and _is_credential(key):
-            env.pop(key, None)
-    return env
+    return strip_secret_env(
+        base_env,
+        allow_secret_names=allow_secret_names,
+        passthrough=passthrough,
+    )
 
 
 @dataclass

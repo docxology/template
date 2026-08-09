@@ -66,6 +66,20 @@ def test_latex_pass_zero_exit_allows_output(tmp_path: Path) -> None:
     assert _check_fatal_error(result, log, tex, pdf, 1) is False
 
 
+@pytest.mark.parametrize("returncode", [-13, 141])
+def test_latex_sigpipe_exit_is_tolerated_on_posix_wrappers(tmp_path: Path, returncode: int) -> None:
+    """macOS and shell wrappers expose the same benign SIGPIPE differently."""
+    tex = tmp_path / "book.tex"
+    pdf = tmp_path / "book.pdf"
+    log = tmp_path / "book.log"
+    tex.write_text(r"\documentclass{article}\begin{document}OK\end{document}", encoding="utf-8")
+    pdf.write_bytes(b"%PDF-1.7\nok\nstartxref\n1\n%%EOF\n")
+    log.write_text("Output written on book.pdf (1 page).", encoding="utf-8")
+    result: subprocess.CompletedProcess[bytes] = subprocess.CompletedProcess(args=["xelatex"], returncode=returncode)
+
+    assert _check_fatal_error(result, log, tex, pdf, 1) is False
+
+
 def test_latex_pass_nonzero_exit_with_output_continues(tmp_path: Path) -> None:
     tex = tmp_path / "book.tex"
     pdf = tmp_path / "book.pdf"

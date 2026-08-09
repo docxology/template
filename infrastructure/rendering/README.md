@@ -145,14 +145,47 @@ authors:
 
 publication:
   doi: "10.5281/zenodo.XXXXXXX"  # DOI goes here, NOT in 'paper' section
+  doi_status: "registered"
   journal: "Zenodo Preprints"
   year: "2026"
 
 # CAUTION: If you create a 'projects/{project_name}/manuscript/preamble.md' with \date{}, \title{}, or \author{} commands,
 # they will OVERRIDE these configuration values in the final PDF.
+### DOI and ORCID status
+
+Publication identifiers are rendered from configuration rather than embedded
+in a title-page template. A project may leave an identifier unset while
+keeping its state explicit:
+
+```yaml
+authors:
+  - name: "Author Name"
+    orcid: null
+    orcid_status: "not-provided"
+publication:
+  doi: null
+  doi_status: "pending"
 ```
 
-```
+Use a DOI only after the issuing registry supplies it, and use an ORCID only
+after the author confirms it. The title-page helpers preserve the value-plus-
+status distinction across paper and book covers; they do not fabricate a
+placeholder or convert `null` into the string `None`. Projects that need
+fail-closed metadata should validate the configuration before calling the
+renderer and include its normalized digest in their own artifact receipt.
+For a source-bound candidate whose date is not part of the metadata contract,
+set `rendering.include_date: false`; this suppresses the renderer's otherwise
+automatic `\today` value and keeps repeated renders deterministic.
+
+### Cross-format formalism numbering
+
+For equations and other labelled formalisms, pass `pandoc-crossref` as a
+filter or configure the renderer's cross-reference path. The HTML, PDF, DOCX,
+EPUB, and Beamer helpers share the same labelled source; the renderer should
+fail closed when the filter is required but unavailable rather than silently
+emitting an unnumbered export. Beamer rendering includes the filter when it is
+available and retains a diagnostic warning when a caller intentionally uses a
+fallback environment.
 
 ### Add Bibliography and Citations
 
@@ -302,7 +335,7 @@ graph TD
 |--------|---------|----------------------|-------------|
 | **core.py** | Main rendering orchestration | `RenderManager` - Unified API for all formats | All other modules |
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
-| **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; passes `--slide-level=2` and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
+| **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration | pandoc |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
 | **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |

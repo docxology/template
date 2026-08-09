@@ -9,6 +9,7 @@ from pathlib import Path
 from infrastructure.validation.line_count import (
     LineCountThresholds,
     LineCountRatchet,
+    SOURCE_LINE_COUNT_RATCHETS,
     count_lines,
     scan_line_counts,
     scan_project_scripts,
@@ -107,3 +108,12 @@ def test_gate_fails_on_syntax_invalid_counted_module(tmp_path: Path) -> None:
     (tmp_path / "infrastructure" / "broken.py").write_text("def broken(:\n", encoding="utf-8")
 
     assert line_count_gate_main(["--repo-root", str(tmp_path)]) == 1
+
+
+def test_source_ratchets_cover_current_oversize_advisories() -> None:
+    """Known source warnings are ratcheted rather than allowed to grow."""
+    assert set(SOURCE_LINE_COUNT_RATCHETS) == {
+        "infrastructure/rendering/slides_renderer.py",
+        "projects/templates/template_advanced_literature_review/src/multi_phase/search.py",
+        "projects/templates/template_pools_rules_tools/src/figures.py",
+    }

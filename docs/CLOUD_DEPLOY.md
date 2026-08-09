@@ -53,7 +53,7 @@ python3 --version   # requires 3.10+  # noqa: docs-lint
 non-interactive flag (e.g. `--pipeline`). To install manually:
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](operational/build/dependency-management.md#installing-uv), then run `uv sync`.
 source "$HOME/.local/bin/env"   # add uv to PATH for this session
 ```
 

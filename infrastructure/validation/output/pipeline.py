@@ -10,7 +10,6 @@ This module coordinates the validation stage by:
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -581,11 +580,12 @@ def execute_validation_pipeline(
                 "size_mb": size_mb,
             }
 
+    report_timestamp: str | None = None
     if report_writer is None:
         from infrastructure.validation.rendered_snapshot import RenderedSnapshotError
 
         try:
-            generate_validation_report(
+            validation_report = generate_validation_report(
                 results,
                 figure_issues,
                 output_statistics,
@@ -593,6 +593,7 @@ def execute_validation_pipeline(
                 repo_root=repo_root,
                 bind_rendered_inputs=True,
             )
+            report_timestamp = validation_report.get("timestamp")
         except RenderedSnapshotError as exc:
             logger.error("Cannot bind validation report to rendered inputs [%s]: %s", exc.code, exc)
             results.append(("Rendered provenance inputs", False))
@@ -600,7 +601,7 @@ def execute_validation_pipeline(
                 "code": exc.code,
                 "message": str(exc),
             }
-            generate_validation_report(
+            validation_report = generate_validation_report(
                 results,
                 figure_issues,
                 output_statistics,
@@ -608,14 +609,25 @@ def execute_validation_pipeline(
                 repo_root=repo_root,
                 bind_rendered_inputs=False,
             )
+            report_timestamp = validation_report.get("timestamp")
     else:
-        report_writer(results, figure_issues, output_statistics, project_name, repo_root=repo_root)
+        validation_report = report_writer(
+            results,
+            figure_issues,
+            output_statistics,
+            project_name,
+            repo_root=repo_root,
+        )
+        report_timestamp = validation_report.get("timestamp")
+
+    if not isinstance(report_timestamp, str) or not report_timestamp:
+        report_timestamp = resolve_build_timestamp(repo_root=repo_root)
 
     logger.info("\n" + "=" * BANNER_WIDTH)
     logger.info("VALIDATION SUMMARY")
     logger.info("=" * BANNER_WIDTH)
     logger.info(f"Project: {project_name}")
-    logger.info(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"Timestamp: {report_timestamp}")
     logger.info("")
 
     all_passed = True

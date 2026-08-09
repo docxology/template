@@ -26,6 +26,7 @@ set than the full manuscript.
 """
 
 import re
+import shutil
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
@@ -52,6 +53,191 @@ from infrastructure.rendering.latex_texttt import (
 from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
+
+_FRAME_RE = re.compile(
+    r"(?P<open>\\begin\{frame\}(?:\[[^\]]*\])?(?:\{.*?\})?\n)"
+    r"(?P<body>.*?)"
+    r"(?P<close>\\end\{frame\})",
+    re.DOTALL,
+)
+_ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
+_ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
+_ISOLATE_SLIDE_ENVS = frozenset({"description", "enumerate", "figure", "itemize", "longtable", "table"})
+_FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
+
+
+def _append_framebreak(lines: list[str]) -> None:
+    """Append one frame break unless the generated TeX already has one."""
+    if lines and lines[-1].rstrip().endswith(r"\framebreak"):
+        return
+    lines.append(_FRAMEBREAK_MARKER)
+
+
+def _brace_delta(line: str) -> int:
+    """Return the unescaped TeX-brace balance contributed by one source line."""
+    delta = 0
+    escaped = False
+    for character in line:
+        if character == "{" and not escaped:
+            delta += 1
+        elif character == "}" and not escaped:
+            delta -= 1
+        if character == "\\" and not escaped:
+            escaped = True
+        else:
+            escaped = False
+    return delta
+
+
+def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
+    """Split safe top-level blocks inside one Beamer ``allowframebreaks`` frame.
+
+    Pandoc emits figures and longtables as unbreakable environments. A frame can
+    therefore overflow even when it has ``allowframebreaks``. This pass isolates
+    those environments and adds breaks only between top-level paragraphs once a
+    frame segment is dense enough; it never inserts a break inside a list,
+    theorem, equation, figure, or table environment.
+    """
+    source_lines = body.splitlines(keepends=True)
+    output: list[str] = []
+    environment_stack: list[str] = []
+    segment_length = 0
+    segment_has_content = False
+    isolate_ended = False
+    table_wrapper_open = False
+    brace_depth = 0
+
+    for index, line in enumerate(source_lines):
+        stripped = line.strip()
+        events = sorted(
+            [
+                *(("begin", match) for match in _ENV_BEGIN_RE.finditer(stripped)),
+                *(("end", match) for match in _ENV_END_RE.finditer(stripped)),
+            ],
+            key=lambda event: event[1].start(),
+        )
+
+        if not environment_stack and stripped.startswith(r"{\def\LTcaptype"):
+            if segment_has_content:
+                _append_framebreak(output)
+            output.append(line)
+            segment_length = 0
+            segment_has_content = False
+            table_wrapper_open = True
+            isolate_ended = False
+            continue
+
+        if events:
+            for kind, event in events:
+                if kind == "begin":
+                    name = event.group("name")
+                    if (
+                        not environment_stack
+                        and name in _ISOLATE_SLIDE_ENVS
+                        and segment_has_content
+                        and not table_wrapper_open
+                    ):
+                        _append_framebreak(output)
+                        segment_length = 0
+                        segment_has_content = False
+                    environment_stack.append(name)
+                    isolate_ended = False
+                    continue
+                if environment_stack and event.group("name") == environment_stack[-1]:
+                    ended = environment_stack.pop()
+                    if not environment_stack and ended in _ISOLATE_SLIDE_ENVS:
+                        isolate_ended = True
+                        segment_length = 0
+                        segment_has_content = False
+            output.append(line)
+            continue
+
+        if (
+            not environment_stack
+            and stripped
+            and isolate_ended
+            and not stripped.startswith(r"\end{frame}")
+            and not stripped.startswith("}")
+        ):
+            _append_framebreak(output)
+            segment_length = 0
+            segment_has_content = False
+            isolate_ended = False
+
+        output.append(line)
+        if environment_stack:
+            segment_length += len(line)
+            segment_has_content = True
+            continue
+
+        if stripped == r"\framebreak":
+            segment_length = 0
+            segment_has_content = False
+            isolate_ended = False
+            continue
+        if not environment_stack and table_wrapper_open and stripped == "}":
+            table_wrapper_open = False
+            isolate_ended = True
+            segment_length = 0
+            segment_has_content = False
+            continue
+        if stripped:
+            segment_length += len(line)
+            segment_has_content = True
+            brace_depth += _brace_delta(line)
+            next_nonempty = next(
+                (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
+                "",
+            )
+            safe_line_boundary = (
+                brace_depth == 0
+                and bool(next_nonempty)
+                and not stripped.endswith((r"\\", "&"))
+                and not stripped.startswith((r"\label", r"\caption"))
+                and not next_nonempty.startswith(("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ")", "]", ","))
+                and not next_nonempty.startswith((r"\end{frame}", "}"))
+            )
+            if segment_length >= paragraph_threshold and safe_line_boundary:
+                _append_framebreak(output)
+                segment_length = 0
+                segment_has_content = False
+                brace_depth = 0
+            continue
+
+        next_nonempty = next(
+            (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
+            "",
+        )
+        if (
+            segment_length >= (paragraph_threshold // 2)
+            and next_nonempty
+            and not next_nonempty.startswith(r"\end{frame}")
+        ):
+            _append_framebreak(output)
+            segment_length = 0
+            segment_has_content = False
+
+    return "".join(output)
+
+
+def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
+    """Split dense generated Beamer frames into independently sized frames."""
+    changed = 0
+
+    def replace_frame(match: re.Match[str]) -> str:
+        nonlocal changed
+        if "allowframebreaks" not in match.group("open"):
+            return match.group(0)
+        body = match.group("body")
+        updated = _split_frame_body(body)
+        if updated != body:
+            changed += 1
+        segments = updated.split(_FRAMEBREAK_MARKER)
+        if len(segments) == 1:
+            return f"{match.group('open')}{updated}{match.group('close')}"
+        return "\n\n".join(f"{match.group('open')}{segment}{match.group('close')}" for segment in segments)
+
+    return _FRAME_RE.sub(replace_frame, tex_content), changed
 
 
 class SlidesRenderer:
@@ -157,13 +343,14 @@ class SlidesRenderer:
         # Create temporary LaTeX file
         temp_tex = output_dir / f"{source_file.stem}_slides.tex"
 
-        # Build pandoc command to convert markdown to LaTeX.
-        # ``--slide-level=2`` makes every h2 start its own Beamer frame
-        # (h1 becomes a section break) so a single h1 with several h2
-        # subsections renders as several slides instead of one huge
-        # overflowing frame. Combined with the allowframebreaks Lua
-        # filter below, even h2 sections with long body text split
-        # cleanly across multiple slides.
+        # Build pandoc command to convert markdown to LaTeX. A fixed slide
+        # level is not safe for manuscript sections: when a source contains
+        # h3/h4 headings, treating those headings as Beamer blocks wraps a
+        # whole results section in one unbreakable box. Choose the deepest
+        # present heading (capped at h4) so the source's semantic breaks
+        # become frames; the Lua filter below then lets each frame split when
+        # its body is still too long.
+        slide_level = self._slide_level_for_source(source_file)
         cmd = [
             self.config.pandoc_path,
             str(source_file),
@@ -172,7 +359,7 @@ class SlidesRenderer:
             "-o",
             str(temp_tex),
             "--standalone",
-            "--slide-level=2",
+            f"--slide-level={slide_level}",
         ]
 
         # Apply the allowframebreaks Lua filter so that long sections
@@ -181,6 +368,36 @@ class SlidesRenderer:
         allowframebreaks_filter = Path(__file__).with_name("_beamer_allowframebreaks.lua")
         if allowframebreaks_filter.exists():
             cmd.extend(["--lua-filter", str(allowframebreaks_filter)])
+
+        # Keep formalism/equation labels source-owned and automatically
+        # numbered in the slide deck just as they are in HTML/PDF/DOCX/EPUB.
+        crossref = shutil.which("pandoc-crossref")
+        if crossref:
+            cmd.extend(["--filter", crossref])
+        else:
+            logger.warning("pandoc-crossref not on PATH; Beamer formalism numbers may remain unresolved.")
+
+        # Beamer does not run citeproc implicitly. Without this pair, every
+        # manuscript citation survives as literal ``[@key]`` text in the
+        # reviewer-facing PDF. Use the project bibliography when available;
+        # small renderer unit tests and standalone decks without one retain
+        # Pandoc's normal no-bibliography behavior.
+        bibliography = manuscript_dir / "references.bib" if manuscript_dir else None
+        if bibliography is not None and bibliography.exists():
+            # Process citations for readable in-text author/year labels, but
+            # suppress the bibliography block in each standalone section deck.
+            # The full reference list has its own 99_references deck and the
+            # combined PDF; embedding it in every deck creates one enormous,
+            # unbreakable final frame.
+            cmd.extend(
+                [
+                    "--citeproc",
+                    "--bibliography",
+                    str(bibliography),
+                    "--metadata",
+                    "suppress-bibliography=true",
+                ]
+            )
 
         # Inject the math-font subset of the manuscript preamble so
         # \mid, \ll, \gg etc. render cleanly in slide decks without
@@ -216,6 +433,11 @@ class SlidesRenderer:
 
             tex_content = self._resolve_cross_deck_refs(tex_content)
 
+            # Latin Modern's text face does not provide a literal U+2265 glyph
+            # in every size used by Beamer. Keep the semantic comparison while
+            # routing it through the math font in either text or math mode.
+            tex_content = tex_content.replace("≥", r"\ensuremath{\ge}")
+
             tex_content, texttt_replacements = make_long_texttt_breakable(tex_content)
             if texttt_replacements:
                 logger.info("Made %d long monospace path span(s) breakable in slides", texttt_replacements)
@@ -231,9 +453,19 @@ class SlidesRenderer:
                     reference_replacements,
                 )
 
-            tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.46")
+            # A long scientific caption is part of an unbreakable figure
+            # environment. Keep the image legible but leave vertical room for
+            # its accessibility/source caption on the same frame.
+            tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.40")
             if graphics_replacements:
                 logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
+
+            tex_content, framebreak_replacements = split_long_slide_frames(tex_content)
+            if framebreak_replacements:
+                logger.info(
+                    "Inserted safe frame breaks in %d dense slide frame(s)",
+                    framebreak_replacements,
+                )
 
             # Write fixed LaTeX back
             _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
@@ -301,6 +533,22 @@ class SlidesRenderer:
                 },
             ) from e
 
+    @staticmethod
+    def _slide_level_for_source(source_file: Path) -> int:
+        """Choose a frame-producing heading level for one markdown source.
+
+        Pandoc turns headings below ``--slide-level`` into Beamer blocks. A
+        deep manuscript section can therefore become one enormous block and
+        overflow even when the source contains natural subheadings. Heading
+        levels 2--4 are the useful presentation range: h1-only legacy decks
+        retain the historical level-2 behavior, while h3/h4-heavy results
+        sections get actual frame boundaries. Deeper headings remain block
+        content rather than creating a pathological one-frame-per-line deck.
+        """
+        source = source_file.read_text(encoding="utf-8")
+        levels = [len(match.group(1)) for match in re.finditer(r"^(#{1,6})[ \t]+", source, flags=re.MULTILINE)]
+        return max(2, min(4, max(levels, default=2)))
+
     def _resolve_cross_deck_refs(self, tex_content: str) -> str:
         """Resolve cross-deck ``\\ref``/``\\eqref`` against the combined PDF's aux.
 
@@ -314,27 +562,54 @@ class SlidesRenderer:
         references are untouched (Beamer numbers them natively), labels
         missing from the aux are left as-is and noted in the render log,
         and a missing aux (e.g. first-ever render, before any combined
-        build) skips the pass entirely. Never fails the slide build.
+        build) skips only the numeric lookup. Section references still become
+        visible labels, so the first standalone render cannot ship ``??``.
+        Never fails the slide build.
         """
         aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
         label_numbers = parse_aux_label_numbers(aux_path)
-        if not label_numbers:
-            logger.debug("No combined-manuscript aux label map at %s; cross-deck refs left as-is", aux_path)
-            return tex_content
+        if label_numbers:
+            tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
+            if replaced:
+                logger.info(
+                    "Resolved %d cross-deck reference(s) in slides from %s",
+                    replaced,
+                    aux_path.name,
+                )
+            if unresolved:
+                logger.warning(
+                    "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
+                    len(unresolved),
+                    aux_path.name,
+                    ", ".join(unresolved),
+                )
+        else:
+            logger.debug("No combined-manuscript aux label map at %s; numeric refs left as-is", aux_path)
+        # Pandoc-crossref emits ``\ref`` for section labels. Beamer does not
+        # assign numbers to every subsection level used as a slide boundary,
+        # so a same-deck section label can otherwise remain ``??`` even after
+        # the normal two-pass compile. Preserve the target identifier as a
+        # visible, breakable token rather than shipping an unresolved marker.
+        section_ref_re = re.compile(r"\\(?:ref|eqref)\{(?P<label>sec:[^}]+)\}")
 
-        tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
-        if replaced:
+        def _render_section_label(match: re.Match[str]) -> str:
+            # Pandoc section identifiers may contain underscores. They are
+            # ordinary characters inside the ``\texttt`` argument, but TeX
+            # treats an unescaped underscore as a math-mode subscript and
+            # aborts the standalone slide deck. Keep the visible identifier
+            # unchanged while escaping the only special character permitted
+            # by the section-label grammar that is unsafe here.
+            label = match.group("label").replace("_", r"\_")
+            return rf"\texttt{{{label}}}"
+
+        tex_content, section_replacements = section_ref_re.subn(
+            _render_section_label,
+            tex_content,
+        )
+        if section_replacements:
             logger.info(
-                "Resolved %d cross-deck reference(s) in slides from %s",
-                replaced,
-                aux_path.name,
-            )
-        if unresolved:
-            logger.warning(
-                "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
-                len(unresolved),
-                aux_path.name,
-                ", ".join(unresolved),
+                "Rendered %d unnumbered section reference(s) as visible labels",
+                section_replacements,
             )
         return tex_content
 
@@ -391,7 +666,34 @@ class SlidesRenderer:
             "\\hfuzz=1pt\n"
             "\\setlength{\\tabcolsep}{2pt}\n"
             "\\AtBeginEnvironment{longtable}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
-            "\\AtBeginEnvironment{tabular}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n\n"
+            "\\AtBeginEnvironment{tabular}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
+            "\\AtBeginEnvironment{equation}{\\tiny}\n"
+            "\\AtBeginEnvironment{equation*}{\\tiny}\n"
+            "\\AtBeginEnvironment{align}{\\tiny}\n"
+            "\\AtBeginEnvironment{align*}{\\tiny}\n"
+            "\\AtBeginEnvironment{itemize}{\\footnotesize}\n"
+            "\\AtBeginEnvironment{enumerate}{\\footnotesize}\n"
+            "\\AtBeginEnvironment{description}{\\footnotesize}\n"
+            "\\setbeamerfont{caption}{size=\\tiny}\n"
+            "\\setbeamerfont{caption name}{size=\\tiny}\n"
+            "\\setbeamerfont{normal text}{size=\\small}\n"
+            "\\setbeamerfont{frametitle}{size=\\small}\n"
+            "\\setbeamerfont{section title}{size=\\footnotesize}\n"
+            "\\setbeamerfont{subsection title}{size=\\footnotesize}\n"
+            "\\setbeamertemplate{section page}{%\n"
+            "  \\centering\n"
+            "  \\begin{beamercolorbox}[sep=12pt,center,wd=\\paperwidth]{section title}\n"
+            "    \\parbox{0.86\\paperwidth}{\\centering\\usebeamerfont{section title}\\insertsection\\par}\n"
+            "  \\end{beamercolorbox}\n"
+            "}\n"
+            "\\setbeamertemplate{subsection page}{%\n"
+            "  \\centering\n"
+            "  \\begin{beamercolorbox}[sep=8pt,center,wd=\\paperwidth]{subsection title}\n"
+            "    \\parbox{0.86\\paperwidth}{\\centering\\usebeamerfont{subsection title}\\insertsubsection\\par}\n"
+            "  \\end{beamercolorbox}\n"
+            "}\n"
+            "\\setlength{\\abovecaptionskip}{2pt}\n"
+            "\\setlength{\\belowcaptionskip}{0pt}\n\n"
             "% Natbib and cross-reference fallbacks — slides don't load natbib\n"
             "% or cleveref, but combined-PDF manuscript prose may emit these\n"
             "% commands. The fallback renders citations as a bracketed key list\n"

@@ -477,7 +477,7 @@ Fast Python package manager used as default for this template. Alternative to pi
 - `uv sync` - Install dependencies
 - `uv run pytest` - Run tests
 
-**Install**: `brew install uv` (macOS) or `curl -LsSf https://astral.sh/uv/install.sh | sh` (Linux/macOS)
+**Install**: `brew install uv` (macOS), or follow the [checksum-verified installation instructions](../operational/build/dependency-management.md#installing-uv).
 
 ## V
 

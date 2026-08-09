@@ -573,4 +573,6 @@ uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pd
 tail -f logs/validation_*.log
 ```
 
-For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.md).
+Evidence-registry timestamps honor `SOURCE_DATE_EPOCH`, so deterministic
+validation runs do not introduce wall-clock drift. For detailed function
+signatures and API documentation, see [AGENTS.md](AGENTS.md).

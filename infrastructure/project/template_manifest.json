@@ -62,7 +62,7 @@
       "qualified_name": "templates/template_formal",
       "title": "Formal — Strongly-Typed Multiagent Ant-Robot Colony Exemplar",
       "use_when": "Use this template when the research subject *is* the type architecture itself: illegal-state-unrepresentable design, session-typed protocols, affine/linear resource-handle discipline, or a decentralized (no-shared-global-state) multiagent simulation that needs its own local storage and local networking per agent.",
-      "test_file_count": 25,
+      "test_file_count": 28,
       "coverage_floor": 90
     },
     {
@@ -70,7 +70,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 66,
+      "test_file_count": 68,
       "coverage_floor": 90
     },
     {
@@ -78,7 +78,7 @@
       "qualified_name": "templates/template_madlib",
       "title": "Template Madlib — Deterministic Token-Injection Exemplar",
       "use_when": "Use this template when you need **configuration-driven manuscript generation with auditable token provenance, conditional section structure, explicit/default field visibility, failure-boundary reporting, and a reviewer-visible authoring contract**: lexicon categories, section titles, narrative moves, method steps, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and slots are declared in YAML; `src/` deterministically expands those declarations; and the manuscript receives large-grain `{{TOKEN}}` bodies only after the source code has generated the supporting artifacts.",
-      "test_file_count": 5,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {

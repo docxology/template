@@ -23,13 +23,21 @@ The template uses `uv` for fast and reliable dependency management. The `uv` too
 **macOS/Linux:**
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -fsSL https://astral.sh/uv/0.12.0/install.sh -o uv-install.sh
+echo 'b67e385074fddc9b99cd152b838fd91046d9fbc261b2c45f448a983ad23b8764  uv-install.sh' | shasum -a 256 -c -
+sh uv-install.sh
+rm uv-install.sh
 ```
+
+The installer is pinned to uv `0.12.0`; the SHA-256 line is mandatory before
+execution. If `shasum` is unavailable on Linux, use
+`sha256sum` with the same expected digest. The repository's automatic shell
+bootstrap performs the same version and digest check.
 
 **Windows:**
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+winget install --id=astral-sh.uv -e
 ```
 
 **Verify installation:**

@@ -491,6 +491,18 @@ def test_write_evidence_registry_report(tmp_path: Path) -> None:
     assert report_path == tmp_path / "reports" / "evidence_registry.json"
 
 
+def test_new_fact_timestamp_honors_reproducible_build_epoch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+    fact = EvidenceFact(
+        kind="citation",
+        value="smith2026",
+        source="manuscript/references.bib",
+    )
+    assert fact.checked_at == "1970-01-01T00:00:00Z"
+
+
 def test_write_evidence_registry_report_preserves_stable_fact_timestamps(tmp_path: Path) -> None:
     first = VerifiedEvidenceRegistry()
     first.add(

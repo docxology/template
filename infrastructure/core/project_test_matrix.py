@@ -11,6 +11,8 @@ from pathlib import Path
 from time import monotonic
 from typing import Mapping, Sequence
 
+from infrastructure.core.worker_policy import clamp_worker_count
+
 
 @dataclass(frozen=True)
 class ProjectTestTask:
@@ -121,12 +123,13 @@ def run_project_test_matrix(
     caller's canonical roster order, while a failed or timed-out task never
     prevents independent tasks from finishing.
     """
-    if workers < 1:
-        raise ValueError("project matrix workers must be positive")
     ordered_tasks = tuple(tasks)
     if not ordered_tasks:
         return ()
-    if workers == 1 or len(ordered_tasks) == 1:
+    if workers < 1:
+        raise ValueError("project matrix workers must be positive")
+    workers = clamp_worker_count(workers, len(ordered_tasks))
+    if workers == 1:
         return tuple(_run_task(task) for task in ordered_tasks)
 
     results: dict[int, ProjectTestResult] = {}

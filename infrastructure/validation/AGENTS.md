@@ -32,6 +32,9 @@ running project science or rendering stages itself.
 - Do not weaken diagnostic codes. Stable dotted codes are downstream contracts.
 - Validation may inspect generated artifacts, but should not hand-edit them.
   Fix the source producer and regenerate.
+- New evidence facts derive `checked_at` from the deterministic build epoch;
+  preserve existing fact timestamps and carry one `SOURCE_DATE_EPOCH` through
+  render and validation.
 - Link checks must respect local-only private mirrors and generated-output skip
   policies.
 

@@ -138,7 +138,7 @@ agents must be able to find the referenced code.
 Our pipeline computes readability and validates citations automatically.
 ```
 
-**Correct (concrete, anchored to `src/pipeline/`)**: 
+**Correct (concrete, anchored to `src/pipeline/`)**:
 ```markdown
 `projects/templates/template_prose_project/scripts/run_prose_pipeline.py` computes
 readability via `infrastructure.prose.analyze_manuscript` and validates

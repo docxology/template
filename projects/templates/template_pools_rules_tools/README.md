@@ -36,6 +36,7 @@ template_pools_rules_tools/
 │   ├── strong_rule_evaluator.py  # Evaluate strong (hard-constraint) rules
 │   ├── tools_invoker.py       # Discover tools from tools/templates/
 │   ├── integration.py         # Integration orchestrator; generate_figure_data()
+│   ├── figure_support.py     # Figure themes, status maps, and provenance specs
 │   ├── figures.py             # Figure façade and shared manuscript figures
 │   ├── cover_figure.py        # Cover-art renderer
 │   ├── rule_hierarchy_figure.py # Rule-hierarchy renderer

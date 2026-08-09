@@ -185,3 +185,12 @@ class TestSlidesRendererHook:
         tex = r"Theorem \ref{thm:belief-sharing-recovery} stands."
 
         assert renderer._resolve_cross_deck_refs(tex) == tex
+
+    def test_section_reference_escapes_underscores_for_latex(self, test_config):
+        renderer = SlidesRenderer(test_config)
+
+        tex = r"See \ref{sec:experimental_setup} for the run configuration."
+
+        assert renderer._resolve_cross_deck_refs(tex) == (
+            r"See \texttt{sec:experimental\_setup} for the run configuration."
+        )

@@ -32,6 +32,12 @@ from infrastructure.documentation.counts_doc import (
 from infrastructure.project.public_scope import public_project_names
 
 
+# Several cases create temporary Git trees and exercise subprocess-backed
+# provenance discovery. They are bounded, but can exceed the repository's
+# 10-second default when the complete coverage suite is under load.
+pytestmark = pytest.mark.timeout(30)
+
+
 def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 

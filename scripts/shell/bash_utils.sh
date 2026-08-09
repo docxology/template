@@ -516,18 +516,51 @@ ensure_uv() {
     log_info "See: https://docs.astral.sh/uv/getting-started/installation/"
 
     local uv_install_version="${UV_INSTALL_VERSION:-0.12.0}"
+    local uv_install_sha256="${UV_INSTALL_SHA256:-}"
+    if [[ "$uv_install_version" == "0.12.0" && -z "$uv_install_sha256" ]]; then
+        uv_install_sha256="b67e385074fddc9b99cd152b838fd91046d9fbc261b2c45f448a983ad23b8764"
+    elif [[ -z "$uv_install_sha256" ]]; then
+        log_error "Cannot verify uv ${uv_install_version}: set UV_INSTALL_SHA256 to the official installer digest."
+        return 1
+    fi
     local installer_url="https://astral.sh/uv/${uv_install_version}/install.sh"
+    local installer_file
+    installer_file="$(mktemp "${TMPDIR:-/tmp}/uv-install.XXXXXX")" || return 1
     local install_failed=0
     if command -v curl >/dev/null 2>&1; then
-        curl -LsSf "$installer_url" | sh || install_failed=1
+        curl -fsSL "$installer_url" -o "$installer_file" || install_failed=1
     elif command -v wget >/dev/null 2>&1; then
-        wget -qO- "$installer_url" | sh || install_failed=1
+        wget -qO "$installer_file" "$installer_url" || install_failed=1
     else
         log_error "Cannot install uv: neither curl nor wget is available."
         log_info "Install curl (e.g. apt-get install -y curl) then re-run."
+        rm -f "$installer_file"
         return 1
     fi
 
+    if [[ $install_failed -ne 0 ]]; then
+        log_error "uv installer script returned an error."
+        rm -f "$installer_file"
+        return 1
+    fi
+
+    local actual_sha256
+    if command -v shasum >/dev/null 2>&1; then
+        actual_sha256="$(shasum -a 256 "$installer_file" | awk '{print $1}')"
+    elif command -v sha256sum >/dev/null 2>&1; then
+        actual_sha256="$(sha256sum "$installer_file" | awk '{print $1}')"
+    else
+        log_error "Cannot verify uv installer: shasum/sha256sum is unavailable."
+        rm -f "$installer_file"
+        return 1
+    fi
+    if [[ "$actual_sha256" != "$uv_install_sha256" ]]; then
+        log_error "uv installer checksum mismatch for ${uv_install_version}."
+        rm -f "$installer_file"
+        return 1
+    fi
+    sh "$installer_file" || install_failed=1
+    rm -f "$installer_file"
     if [[ $install_failed -ne 0 ]]; then
         log_error "uv installer script returned an error."
         return 1

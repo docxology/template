@@ -1,9 +1,14 @@
 """LaTeX compilation utilities."""
 
+import hashlib
+import re
 import subprocess
 import time
+from collections.abc import Sequence
+from datetime import datetime, timezone
 from pathlib import Path
 
+from infrastructure.core.determinism import deterministic_subprocess_env, resolve_source_date_epoch
 from infrastructure.core.exceptions import CompilationError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
@@ -22,6 +27,7 @@ _STALE_AUX_EXTENSIONS = (
     ".toc",
     ".vrb",
 )
+_TEXT_SIDECAR_EXTENSIONS = (*_STALE_AUX_EXTENSIONS, ".log")
 
 _SIGPIPE_RETURNCODES = {-13, 141}
 
@@ -33,6 +39,9 @@ _SIGPIPE_RETURNCODES = {-13, 141}
 # when the produced PDF exists and passes structural validation. Any other
 # error signature, a missing PDF, or a structurally invalid PDF still fails.
 _BEAMER_RESERVED_A_SIGNATURE = r"Illegal parameter number in definition of \reserved@a"
+_PDF_ID_RE = re.compile(rb"/ID\s*\[\s*<([0-9A-Fa-f]{32})>\s*<([0-9A-Fa-f]{32})>\s*\]")
+_FONT_SUBSET_RE = re.compile(r"^/[A-Z]{6}\+(?P<font>.+)$")
+_FONT_SUBSET_BYTES_RE = re.compile(rb"[A-Z]{6}\+")
 
 
 def _is_tolerable_beamer_reserved_a(
@@ -66,6 +75,126 @@ def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
         if stale_file.exists():
             stale_file.unlink()
             logger.debug(f"Removed stale LaTeX sidecar: {stale_file.name}")
+
+
+def normalize_latex_sidecars(output_dir: Path, tex_stem: str) -> None:
+    """Remove trailing horizontal whitespace from generated LaTeX text files.
+
+    TeX may leave spaces immediately before newlines in ``.aux`` and related
+    sidecars. They are semantically redundant, but make deterministic
+    publication snapshots fail repository whitespace checks. Normalize only
+    the named compilation's UTF-8 text sidecars; PDFs and unrelated files are
+    never touched.
+    """
+    for extension in _TEXT_SIDECAR_EXTENSIONS:
+        sidecar = output_dir / f"{tex_stem}{extension}"
+        if not sidecar.exists():
+            continue
+        try:
+            content = sidecar.read_text(encoding="utf-8", errors="replace")
+            normalized = "\n".join(line.rstrip(" \t") for line in content.splitlines())
+            if content:
+                normalized += "\n"
+            if normalized != content:
+                sidecar.write_text(normalized, encoding="utf-8")
+        except OSError as exc:
+            logger.debug("LaTeX sidecar normalization skipped for %s: %s", sidecar, exc)
+
+
+def _canonicalize_pdf_objects(objects: Sequence[object]) -> None:
+    """Remove TeX's random six-letter font-subset prefixes in-place."""
+    try:
+        from pypdf.generic import ArrayObject, DictionaryObject, NameObject, StreamObject
+    except ImportError as exc:  # pragma: no cover - exercised in minimal installs
+        raise CompilationError(
+            "Deterministic PDF canonicalization requires the rendering extra (pypdf).",
+            context={"dependency": "pypdf"},
+        ) from exc
+
+    def visit(value: object) -> None:
+        if isinstance(value, StreamObject):
+            stream_data = value.get_data()
+            canonical_data = _FONT_SUBSET_BYTES_RE.sub(b"AAAAAA+", stream_data)
+            if canonical_data != stream_data:
+                value.set_data(canonical_data)
+            return
+        if isinstance(value, DictionaryObject):
+            for key, child in list(value.items()):
+                if str(key) in {"/BaseFont", "/FontName"} and isinstance(child, NameObject):
+                    match = _FONT_SUBSET_RE.match(str(child))
+                    if match:
+                        value[key] = NameObject(f"/AAAAAA+{match.group('font')}")
+                else:
+                    visit(child)
+        elif isinstance(value, ArrayObject):
+            for child in value:
+                visit(child)
+
+    for obj in objects:
+        visit(obj)
+
+
+def _normalize_pdf_identifier(pdf_bytes: bytes) -> bytes:
+    """Replace a compiler-generated PDF ID with a content-derived stable ID."""
+    match = _PDF_ID_RE.search(pdf_bytes)
+    if match is None:
+        raise CompilationError("Deterministic PDF canonicalization found no PDF file identifier")
+
+    placeholder = b"/ID [ <" + (b"0" * 32) + b"> <" + (b"0" * 32) + b"> ]"
+    without_id = pdf_bytes[: match.start()] + placeholder + pdf_bytes[match.end() :]
+    stable_id = hashlib.sha256(without_id).hexdigest()[:32].encode("ascii")
+    replacement = b"/ID [ <" + stable_id + b"> <" + stable_id + b"> ]"
+    return pdf_bytes[: match.start()] + replacement + pdf_bytes[match.end() :]
+
+
+def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None = None) -> Path:
+    """Canonicalize compiler-random PDF metadata when a build epoch is pinned.
+
+    TeX Live's current XeTeX/xdvipdfmx stack honors ``SOURCE_DATE_EPOCH`` for
+    ``/CreationDate`` but still varies the PDF identifier, Creator timestamp,
+    and six-letter font-subset prefixes. Rewriting those narrow fields through
+    the pinned rendering dependency makes the full PDF byte-stable while
+    leaving page content and layout unchanged.
+    """
+    epoch = resolve_source_date_epoch(repo_root=repo_root)
+    if epoch is None:
+        return pdf_path
+
+    try:
+        from pypdf import PdfReader, PdfWriter
+    except ImportError as exc:  # pragma: no cover - exercised in minimal installs
+        raise CompilationError(
+            "Deterministic PDF builds require the rendering extra (pypdf).",
+            context={"dependency": "pypdf", "pdf": str(pdf_path)},
+        ) from exc
+
+    reader = PdfReader(str(pdf_path))
+    writer = PdfWriter(clone_from=str(pdf_path))
+    _canonicalize_pdf_objects(writer._objects)  # pypdf has no public tree mutator
+
+    metadata = {
+        key: str(value)
+        for key, value in (reader.metadata or {}).items()
+        if key in {"/Producer", "/Keywords", "/Subject", "/Title"} and value is not None
+    }
+    metadata["/Creator"] = "XeTeX deterministic output"
+    metadata["/CreationDate"] = datetime.fromtimestamp(epoch, tz=timezone.utc).strftime("D:%Y%m%d%H%M%SZ")
+    writer.add_metadata(metadata)
+
+    temporary_path = pdf_path.with_name(f".{pdf_path.name}.deterministic")
+    try:
+        with temporary_path.open("wb") as handle:
+            writer.write(handle)
+        temporary_path.write_bytes(_normalize_pdf_identifier(temporary_path.read_bytes()))
+        temporary_path.replace(pdf_path)
+    except OSError as exc:
+        raise CompilationError(
+            "Deterministic PDF canonicalization could not replace the compiled PDF",
+            context={"pdf": str(pdf_path), "temporary": str(temporary_path)},
+        ) from exc
+    finally:
+        temporary_path.unlink(missing_ok=True)
+    return pdf_path
 
 
 def _is_recoverable_compile_failure(
@@ -154,6 +283,7 @@ def compile_latex(
                 text=True,
                 timeout=timeout,
                 cwd=tex_path.parent,  # Run in file directory for imports
+                env=deterministic_subprocess_env(repo_root=tex_path.parent),
             )
 
             pass_duration = time.time() - pass_start
@@ -180,6 +310,7 @@ def compile_latex(
                         text=True,
                         timeout=timeout,
                         cwd=tex_path.parent,
+                        env=deterministic_subprocess_env(repo_root=tex_path.parent),
                     )
                     log_content = log_file.read_text(encoding="utf-8", errors="replace") if log_file.exists() else ""
                     pdf_exists = pdf_file_temp.exists()
@@ -270,6 +401,8 @@ def compile_latex(
         if not validate_pdf_structure(pdf_file):
             raise CompilationError("PDF generated but failed structural validation", context={"pdf": str(pdf_file)})
 
+        canonicalize_pdf_for_determinism(pdf_file, repo_root=tex_path.parent)
+        normalize_latex_sidecars(out_dir, tex_path.stem)
         total_duration = time.time() - start_time
         logger.info(f"LaTeX compilation completed in {total_duration:.2f}s")
 

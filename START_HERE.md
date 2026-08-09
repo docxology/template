@@ -27,10 +27,7 @@ git --version       # need any recent version
 
 `uv` manages Python itself, all dependencies, and virtualenvs. It replaces pip, pipenv, pyenv, and conda for this repo.
 
-**macOS / Linux (recommended — installs or upgrades to latest):**
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+**macOS / Linux:** follow the [checksum-verified uv installation instructions](docs/operational/build/dependency-management.md#installing-uv).
 
 **macOS via Homebrew:**
 ```bash
@@ -44,10 +41,9 @@ brew upgrade uv
 uv --version   # should print 0.4.x or later
 ```
 
-**Already have uv but it's old?** Run the installer again — it upgrades in place:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+**Already have uv but it's old?** Upgrade it with Homebrew on macOS, your OS
+package manager on Linux, or the pinned installer in the dependency-management
+guide.
 
 You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.12 via `.python-version`, and the supported range is 3.10–3.13 (`requires-python = ">=3.10"` in `pyproject.toml`, CI matrix 3.10/3.11/3.12/3.13).
 
@@ -225,7 +221,7 @@ docs/               Documentation corpus (300+ files, hierarchy in docs/AGENTS.m
 
 | Symptom | Fix |
 |---------|-----|
-| `uv: command not found` | `curl -LsSf https://astral.sh/uv/install.sh \| sh` then restart terminal |
+| `uv: command not found` | Follow the [checksum-verified uv installation instructions](docs/operational/build/dependency-management.md#installing-uv), then restart the terminal |
 | `uv` is outdated / install fails | Run the installer again — it upgrades in place |
 | `xelatex: command not found` | `brew install --cask basictex` then `sudo tlmgr install multirow cleveref doi newunicodechar` |
 | `pandoc: command not found` | `brew install pandoc` or `sudo apt-get install pandoc` |

@@ -10,6 +10,7 @@ import pytest
 from infrastructure.rendering.dockerfile_gen import (
     DEFAULT_BASE_IMAGE,
     DEFAULT_LATEX_PACKAGES,
+    DEFAULT_UV_INSTALL_SHA256,
     DEFAULT_UV_VERSION,
     DockerfileConfig,
     build_compose_yaml,
@@ -62,11 +63,33 @@ def test_build_dockerfile_pins_uv_version_by_default() -> None:
     # Default config pins uv: the installer URL is versioned, not the floating endpoint.
     assert f"https://astral.sh/uv/{DEFAULT_UV_VERSION}/install.sh" in text
     assert "https://astral.sh/uv/install.sh" not in text
+    assert DEFAULT_UV_INSTALL_SHA256 in text
+    assert "sha256sum -c -" in text
+    assert "curl -fsSL" in text
+    assert "curl -fsSL https://astral.sh/uv/0.12.0/install.sh | sh" not in text
 
 
 def test_build_dockerfile_latest_uses_unversioned_installer() -> None:
     text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_version="latest"))
     assert "https://astral.sh/uv/install.sh" in text
+    assert "latest is intentionally floating" in text
+
+
+def test_build_dockerfile_requires_digest_for_concrete_custom_uv() -> None:
+    with pytest.raises(ValueError, match="uv_sha256"):
+        build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_version="0.13.0", uv_sha256=None))
+
+    with pytest.raises(ValueError, match="64 hexadecimal"):
+        build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12", uv_sha256="not-a-digest"))
+
+
+def test_build_dockerfile_accepts_digest_for_concrete_custom_uv() -> None:
+    digest = "a" * 64
+    text = build_dockerfile(
+        DockerfileConfig(project_name="x", python_version="3.12", uv_version="0.13.0", uv_sha256=digest)
+    )
+    assert "https://astral.sh/uv/0.13.0/install.sh" in text
+    assert digest in text
 
 
 def test_build_dockerfile_is_deterministic_no_timestamp() -> None:

@@ -82,6 +82,134 @@ def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
 class TestSlidesRendererClass:
     """Test SlidesRenderer class using real implementations."""
 
+    def test_split_long_slide_frames_isolates_unbreakable_figure(self):
+        tex = (
+            r"\begin{frame}[allowframebreaks]{Dense}" + "\n"
+            "Before the figure.\n\n"
+            r"\begin{figure}" + "\n"
+            r"\includegraphics{plot.png}" + "\n"
+            r"\caption{A dense caption.}" + "\n"
+            r"\end{figure}" + "\n\n"
+            "After the figure.\n"
+            r"\end{frame}" + "\n"
+        )
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        assert changed == 1
+        assert updated.count(r"\begin{frame}") == 3
+        assert r"\framebreak" not in updated
+        assert updated.index(r"Before the figure.") < updated.index(r"\end{frame}")
+        assert updated.index(r"\end{figure}") < updated.rindex(r"\end{frame}")
+        assert updated.index(r"\end{figure}") < updated.index(r"After the figure.")
+        assert updated.index(r"After the figure.") < updated.rindex(r"\end{frame}")
+
+    def test_split_long_slide_frames_breaks_top_level_paragraphs_only(self):
+        tex = (
+            r"\begin{frame}[allowframebreaks]{Dense}" + "\n" + ("A long top-level paragraph. " * 80) + "\n\n"
+            r"\begin{itemize}" + "\n"
+            r"\item " + ("A long list item. " * 120) + "\n"
+            r"\end{itemize}" + "\n"
+            r"\end{frame}" + "\n"
+        )
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        assert changed == 1
+        assert updated.count(r"\begin{frame}") >= 2
+        assert r"\framebreak" not in updated
+        list_start = updated.index(r"\begin{itemize}")
+        list_end = updated.index(r"\end{itemize}")
+        assert r"\framebreak" not in updated[list_start:list_end]
+
+    def test_split_long_slide_frames_leaves_non_breakable_frame_unchanged(self):
+        tex = (
+            r"\begin{frame}{Dense}" + "\n" + ("A long paragraph. " * 200) + "\n"
+            r"\end{frame}" + "\n"
+        )
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        assert changed == 0
+        assert updated == tex
+
+    def test_split_long_slide_frames_pops_wrapped_equation_environment(self):
+        tex = (
+            r"\begin{frame}[allowframebreaks]{Equation}" + "\n"
+            "Context before the equation.\n\n"
+            r"\begin{equation}\protect\phantomsection\label{eq:test}{" + "\n"
+            r"q(s) = \mathrm{softmax}(x(s))." + "\n"
+            r"}\end{equation}"
+            + "\n\n"
+            + ("A continuation line that must remain visible.\n" * 50)
+            + r"\end{frame}"
+            + "\n"
+        )
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        assert changed == 1
+        assert updated.count(r"\begin{frame}") >= 2
+        assert r"\framebreak" not in updated
+        assert r"\end{equation}" in updated
+        assert "A continuation line" in updated.rsplit(r"\begin{frame}", 1)[1]
+
+    def test_split_long_slide_frames_matches_wrapped_frame_titles(self):
+        tex = (
+            r"\begin{frame}[allowframebreaks]{A title that wraps" + "\n"
+            r"across source lines}" + "\n" + ("A long paragraph. " * 120) + "\n\n"
+            "A second paragraph.\n"
+            r"\end{frame}" + "\n"
+        )
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        assert changed == 1
+        assert updated.count(r"\begin{frame}") == 2
+        assert r"\framebreak" not in updated
+
+    def test_split_long_slide_frames_never_breaks_longtable_alignment(self):
+        tex = r"""\begin{frame}[allowframebreaks]{Table}
+Context before the table.
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}A\end{minipage} & \begin{minipage}[b]{\linewidth}B\end{minipage} \\
+\midrule\noalign{}
+\endhead
+A & B \\
+\end{longtable}
+}
+
+Context after the table.
+\end{frame}
+"""
+
+        updated, _ = slides_renderer.split_long_slide_frames(tex)
+
+        table_start = updated.index(r"\begin{longtable}")
+        table_end = updated.index(r"\end{longtable}")
+        assert r"\framebreak" not in updated[table_start:table_end]
+
+    def test_slide_level_follows_deepest_source_heading(self, tmp_path):
+        shallow = tmp_path / "shallow.md"
+        shallow.write_text("# Title\n\n## Section\n\nText.\n", encoding="utf-8")
+        deep = tmp_path / "deep.md"
+        deep.write_text(
+            "# Title\n\n## Results\n\n### Sweep\n\n#### Axis\n\nText.\n",
+            encoding="utf-8",
+        )
+
+        assert SlidesRenderer._slide_level_for_source(shallow) == 2
+        assert SlidesRenderer._slide_level_for_source(deep) == 4
+
+    def test_slide_level_caps_pathological_heading_depth(self, tmp_path):
+        source = tmp_path / "deep.md"
+        source.write_text("###### Detail\n\nText.\n", encoding="utf-8")
+
+        assert SlidesRenderer._slide_level_for_source(source) == 4
+
     def test_slides_renderer_initialization(self, tmp_path):
         """Test SlidesRenderer initialization."""
         config = RenderingConfig(output_dir=tmp_path)

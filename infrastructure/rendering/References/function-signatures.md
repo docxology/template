@@ -422,10 +422,10 @@ thousands of points; xelatex then aborts with driver code 256 and
 leaves a 15-byte PDF stub on disk. `SlidesRenderer._render_beamer_with_paths`
 defends against this on two complementary axes:
 
-1. **`--slide-level=2`**: forces every h2 heading to start its own frame
-   (h1 becomes a section divider). A single h1 with several h2
-   subsections renders as several slides instead of one massive
-   overflowing frame.
+1. **Adaptive `--slide-level` (2–4)**: chooses the deepest useful heading
+   level present in the source, capped at h4. This gives dense sections real
+   frame boundaries while preserving the legacy level-2 behavior for shallow
+   sources.
 2. **`--lua-filter _beamer_allowframebreaks.lua`**: the filter tags
    every h1/h2 with the `allowframebreaks` class, so Pandoc emits
    `\begin{frame}[allowframebreaks]` and Beamer splits any remaining

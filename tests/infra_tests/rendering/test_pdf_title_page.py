@@ -118,10 +118,18 @@ class TestBody:
         )
         assert options == {
             "section_breaks": False,
+            "include_date": True,
             "figure_height_fraction": "0.5",
             "cover_height_fraction": "0.6",
             "front_matter_figure_height_fraction": "0.64",
         }
+
+    def test_preamble_can_suppress_non_source_bound_today(self, tmp_path: Path) -> None:
+        cfg = 'paper:\n  title: "T"\nauthors:\n  - name: "A"\nrendering:\n  include_date: false\n'
+        d = _manuscript(tmp_path, cfg)
+        out = generate_title_page_preamble(d)
+        assert r"\date{}" in out
+        assert r"\today" not in out
 
     def test_book_config_uses_book_cover_body(self, tmp_path: Path) -> None:
         book_cfg = PAPER_CONFIG + 'book:\n  title: "A Complete Book"\n'

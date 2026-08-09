@@ -225,6 +225,59 @@ def add_responsive_image_variants(html_file: Path) -> None:
     write_if_changed(html_file, re.sub(r"<img\b[^>]*>", _image, content, flags=re.IGNORECASE))
 
 
+def add_full_resolution_figure_links(html_file: Path) -> None:
+    """Make each rendered figure image a visible, keyboard-accessible full-size link.
+
+    Publication figures are intentionally high-resolution so axes, annotations,
+    and uncertainty marks remain inspectable.  A responsive HTML layout can
+    legitimately reduce them to a reading-column width, however.  This
+    post-processing pass preserves that in-page layout while giving every
+    ``<figure>`` image an explicit route to the original asset.  It is
+    idempotent and leaves author-supplied image links alone.
+    """
+
+    content = html_file.read_text(encoding="utf-8")
+    figure_re = re.compile(
+        r"(?P<open><figure\b[^>]*>)(?P<body>.*?)(?P<close></figure>)",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    image_re = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
+    source_re = re.compile(
+        r"\bsrc\s*=\s*(?:\"(?P<double>[^\"]*)\"|'(?P<single>[^']*)')",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    def _figure(match: re.Match[str]) -> str:
+        figure_body = match.group("body")
+        if "figure-full-size-link" in figure_body:
+            return match.group(0)
+        # Do not introduce a nested link when the author already supplied a
+        # destination for the figure image.
+        if re.search(r"<a\b[^>]*>.*?<img\b", figure_body, flags=re.IGNORECASE | re.DOTALL):
+            return match.group(0)
+
+        def _image(image_match: re.Match[str]) -> str:
+            source_match = source_re.search(image_match.group("attrs"))
+            if source_match is None:
+                return image_match.group(0)
+            source = html.unescape(source_match.group("double") or source_match.group("single") or "")
+            if not source:
+                return image_match.group(0)
+            href = html.escape(source, quote=True)
+            return (
+                '<a class="figure-full-size-link" '
+                f'href="{href}" target="_blank" rel="noopener" '
+                'aria-label="Open full-size figure">'
+                f"{image_match.group(0)}"
+                '<span class="figure-full-size-label" aria-hidden="true">'
+                "Open full-size figure</span></a>"
+            )
+
+        return match.group("open") + image_re.sub(_image, figure_body) + match.group("close")
+
+    write_if_changed(html_file, figure_re.sub(_figure, content))
+
+
 def harden_mathjax_script(html_file: Path) -> None:
     """Add SRI integrity and crossorigin attributes to the MathJax CDN script tag and inject the config script."""
     content = html_file.read_text(encoding="utf-8")

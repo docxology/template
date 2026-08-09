@@ -11,13 +11,19 @@ import json
 import os
 import re
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+
+from infrastructure.core.determinism import resolve_build_timestamp
 
 EVIDENCE_REGISTRY_REPORT_SCHEMA = "template-evidence-registry-report-v1"
 EVIDENCE_REGISTRY_FULL_ENV = "TEMPLATE_EVIDENCE_REGISTRY_FULL"
 DEFAULT_COMPACT_SAMPLE_LIMIT = 200
+
+
+def _evidence_checked_at() -> str:
+    """Return the build epoch, honoring deterministic ``SOURCE_DATE_EPOCH``."""
+    return resolve_build_timestamp(repo_root=Path.cwd())
 
 
 @dataclass(frozen=True)
@@ -31,7 +37,7 @@ class EvidenceFact:
     source_field: str = ""
     source_tier: str = "artifact"
     tolerance: float = 0.0
-    checked_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    checked_at: str = field(default_factory=_evidence_checked_at)
     active: bool = True
     stale: bool = False
 

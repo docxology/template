@@ -28,7 +28,9 @@ pre-commit --version    # installed via uv; check after uv sync
 **macOS:**
 ```bash
 # uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Follow the checksum-verified instructions in
+# docs/operational/build/dependency-management.md, or use Homebrew:
+brew install uv
 # OR: brew install uv
 
 # pandoc
@@ -47,7 +49,8 @@ brew install --cask mactex
 ```bash
 sudo apt-get update
 sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Install uv with your distribution package manager or pipx; see
+# docs/operational/build/dependency-management.md for the pinned installer.
 ```
 
 **Verify LaTeX packages:**

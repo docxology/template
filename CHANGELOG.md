@@ -9,6 +9,36 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Cross-cutting hardening and maintainability (2026-08-08)
+
+- Added a shared secret-environment policy (`infrastructure/core/secrets.py`)
+  and routed both Python runtime and bounded-subprocess environments through
+  it; added a real no-capture timeout negative control for process-group
+  cleanup.
+- Centralized bounded worker resolution in
+  `infrastructure/core/worker_policy.py` and delegated multi-project,
+  project-matrix, and per-project pytest execution to the same capped policy.
+- Added a fail-closed `status-freshness` health gate and an expiring downward
+  source-size ratchet, keeping oversized test files advisory while preventing
+  source growth beyond accepted baselines.
+- Split the largest five test surfaces by concern without weakening their real
+  fixtures or assertions. The formal-colony experiment fixtures now share a
+  session-scoped test conftest, and the resulting modules remain independently
+  runnable.
+- Split the advanced literature multi-phase layer into a `search.py` façade
+  plus `models.py` and `llm_filter.py`; split pools figure provenance support
+  into `figure_support.py` while preserving the public figure façade.
+- Added an automated real XeLaTeX two-run byte-reproducibility test under a
+  pinned `SOURCE_DATE_EPOCH`, with deterministic PDF metadata, identifiers,
+  and font-subset canonicalization.
+- Pinned the automatic uv bootstrap to `0.12.0` with SHA-256 verification and
+  routed repository setup guidance through the checksum-verified dependency
+  instructions. Mutable Dockerfile `uv_version="latest"` remains an explicit
+  caller opt-out.
+- Regenerated and reconciled source-facing documentation for the new module
+  boundaries; the remaining status-ledger end-to-end refresh and external
+  release metadata/branch-protection actions remain explicitly operator-owned.
+
 ### Secure execution boundary (2026-08-03)
 
 - Added `infrastructure/core/execution_boundary.py` implementing the

@@ -118,7 +118,7 @@ before compilation.
 
 ```bash
 # macOS / Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](../../../../docs/operational/build/dependency-management.md#installing-uv).
 
 # Homebrew (macOS)
 brew install uv

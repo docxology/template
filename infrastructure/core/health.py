@@ -296,6 +296,10 @@ def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
             ["uv", "run", "python", "scripts/docgen/publication_records.py", "--check"],
         ),
         (
+            "status-freshness",
+            ["uv", "run", "python", "scripts/gates/status_freshness.py"],
+        ),
+        (
             "methods-plan",
             [
                 "uv",

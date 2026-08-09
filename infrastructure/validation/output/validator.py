@@ -388,6 +388,12 @@ def validate_output_structure(output_dir: Path) -> OutputStructureResult:
         projects_idx = len(path_parts) - 1 - path_parts[::-1].index("projects")
         project_parts = path_parts[projects_idx + 1 : -1]
         project_name = "/".join(project_parts) if project_parts else output_dir.parent.name
+    elif output_dir.name == "output":
+        # A project checkout passes its canonical ``<project>/output``
+        # directory here.  The previous branches handled copied output trees
+        # but left this common source layout with no project name, causing a
+        # valid PDF in output/pdf/ to be reported as missing.
+        project_name = output_dir.parent.name
     elif output_dir.parent.name == "output" and output_dir.name != "output":
         # Handle copied root directory (e.g. output/{name})
         project_name = output_dir.name

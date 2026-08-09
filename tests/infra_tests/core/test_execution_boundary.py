@@ -183,6 +183,32 @@ class TestRunBoundedSubprocess:
         leftover = sp.run(["pgrep", "-f", "sleep 300"], capture_output=True, text=True)
         assert "sleep 300" not in leftover.stdout
 
+    @pytest.mark.skipif(not POSIX, reason="process-group timeout semantics are POSIX-only")
+    def test_timeout_without_capture_still_kills_process_group(self, tmp_path: Path) -> None:
+        """The analysis-script mode cannot leave descendants when output is uncaptured."""
+        marker = tmp_path / "leaked.txt"
+        child_body = f"import pathlib,time; time.sleep(2); pathlib.Path({str(marker)!r}).write_text('leaked')"
+        script = tmp_path / "uncaptured_timeout.py"
+        _write_executable(
+            script,
+            f"import subprocess,sys,time\nsubprocess.Popen([sys.executable, '-c', {child_body!r}])\ntime.sleep(30)\n",
+        )
+
+        result = run_bounded_subprocess(
+            [sys.executable, str(script)],
+            cwd=tmp_path,
+            env=build_bounded_env(),
+            timeout=1,
+            capture_output=False,
+        )
+
+        assert result.timed_out
+        assert result.returncode == -signal.SIGKILL
+        import time as _time
+
+        _time.sleep(2.2)
+        assert not marker.exists()
+
     def test_egress_check_can_refuse_launch(self, tmp_path: Path) -> None:
         def _refuse(argv, cwd, env):
             raise RuntimeError("egress blocked")

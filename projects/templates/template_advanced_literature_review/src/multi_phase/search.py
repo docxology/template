@@ -14,114 +14,24 @@ import argparse
 import json
 import logging
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-import requests
 import yaml
 
 from config_loader import _load_yaml
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.search_runner import run_literature_search
+from multi_phase.llm_filter import LLMFilterEngine
+from multi_phase.models import PhasedPaper, PhaseMetadata
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PHASE_ARTIFACT_MANIFEST_SCHEMA = "advanced-literature-review/phase-artifact-manifest/1"
 CROSS_PHASE_ANALYSIS_SCHEMA = "advanced-literature-review/cross-phase-analysis/1"
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class PhaseMetadata:
-    """Metadata for a search phase execution."""
-
-    phase_id: str
-    name: str
-    description: str
-    start_time: float
-    end_time: float | None = None
-    queries_executed: list[str] = field(default_factory=list)
-    papers_discovered: int = 0
-    papers_after_deterministic_filters: int = 0
-    papers_after_llm_filters: int = 0
-    papers_final: int = 0
-    deterministic_filters_applied: dict[str, Any] = field(default_factory=dict)
-    llm_filters_applied: list[str] = field(default_factory=list)
-    depends_on: list[str] = field(default_factory=list)
-
-
-@dataclass
-class PhasedPaper:
-    """A paper plus the phase-level provenance accumulated for it."""
-
-    paper: Paper
-    discovered_in_phase: str
-    phases_found_in: list[str] = field(default_factory=list)
-    deterministic_filters_passed: dict[str, bool] = field(default_factory=dict)
-    llm_filters_passed: dict[str, str] = field(default_factory=dict)
-    cross_phase_citations: dict[str, int] = field(default_factory=dict)
-
-    def __post_init__(self) -> None:
-        """Ensure the discovery phase is always present in provenance."""
-        if self.discovered_in_phase not in self.phases_found_in:
-            self.phases_found_in.insert(0, self.discovered_in_phase)
-
-
-class LLMFilterEngine:
-    """Engine for applying LLM-based content filters to papers."""
-
-    def __init__(self, llm_config: dict[str, Any]):
-        """Initialize the LLM filter engine from a config dict.
-
-        Args:
-            llm_config: Configuration with optional keys ``model``,
-                ``base_url``, ``temperature``, ``timeout_seconds``, and
-                ``max_retries``.
-        """
-        self.model: str = llm_config.get("model", "gemma3:4b")
-        self.base_url: str = llm_config.get("base_url", "http://localhost:11434")
-        self.temperature: float = llm_config.get("temperature", 0.1)
-        self.timeout: int = llm_config.get("timeout_seconds", 120)
-        self.max_retries: int = llm_config.get("max_retries", 3)
-
-    def apply_filter(self, paper: Paper, filter_config: dict[str, Any]) -> str:
-        """Apply an LLM filter to a paper's abstract. Returns the classification."""
-        if not paper.abstract or not paper.abstract.strip():
-            return "no_abstract"
-
-        prompt = filter_config["prompt"].format(abstract=paper.abstract)
-
-        for attempt in range(self.max_retries):
-            try:
-                response = requests.post(
-                    f"{self.base_url}/api/generate",
-                    json={
-                        "model": self.model,
-                        "prompt": prompt,
-                        "stream": False,
-                        "options": {"temperature": self.temperature},
-                    },
-                    timeout=self.timeout,
-                )
-                response.raise_for_status()
-                result = response.json()
-                answer = str(result.get("response", "")).strip().lower()
-
-                # Clean up common single-label response punctuation without
-                # altering punctuation inside a legitimate category name.
-                answer = answer.strip(" \t\r\n\"'.")
-
-                return answer
-
-            except (requests.RequestException, ValueError, TypeError) as exc:
-                logger.warning("LLM filter attempt %d failed: %s", attempt + 1, exc)
-                if attempt == self.max_retries - 1:
-                    return "error"
-                time.sleep(2**attempt)
-
-        return "error"
 
 
 class MultiPhaseSearchRunner:

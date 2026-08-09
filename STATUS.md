@@ -2,7 +2,7 @@
 
 > Per-subsystem heartbeat. Each row records the **last time the subsystem was manually verified end-to-end** by a maintainer (not just "tests pass" — the gates can be wrong; see `MEMORY` lessons and `docs/maintenance/regression-testing.md`).
 >
-> Refresh target: every 6 months. Anything older than **365 days** should be treated as potentially dormant.
+> Refresh target: every 6 months. Anything older than **183 days** should be treated as potentially dormant.
 
 **Last updated:** 2026-07-22
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))

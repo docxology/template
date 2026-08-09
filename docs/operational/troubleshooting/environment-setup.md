@@ -99,7 +99,7 @@ uv sync
 
 ```bash
 # Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
+Follow the [checksum-verified uv installation instructions](../build/dependency-management.md#installing-uv).
 
 # Add to PATH
 export PATH="$HOME/.cargo/bin:$PATH"

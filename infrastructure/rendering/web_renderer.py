@@ -145,8 +145,12 @@ class WebRenderer:
                 self._harden_mathjax_script(output_file)
                 self._embed_favicon(output_file)
                 self._write_favicon_file(output_file.parent)
+                # Per-section pages must receive the same reading-width and
+                # figure-detail styling as the combined publication page.
+                self._embed_css(output_file)
                 self._normalize_figure_paths_in_file(output_file)
                 self._enhance_accessibility(output_file)
+                self._add_full_resolution_figure_links(output_file)
                 self._add_responsive_image_variants(output_file)
             return output_file
 
@@ -328,6 +332,7 @@ class WebRenderer:
                 output_file,
                 language=self._manuscript_language(manuscript_dir),
             )
+            self._add_full_resolution_figure_links(output_file)
             self._add_responsive_image_variants(output_file)
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
 
@@ -555,7 +560,8 @@ class WebRenderer:
         convention. The PDF path never sees this — it consumes the original
         ``\\begin{theorem}`` against the LaTeX preamble.
 
-        Theorem bodies are additionally cleaned via ``_clean_theorem_body`` so
+        Theorem names and bodies are additionally cleaned via
+        ``_clean_theorem_body`` so
         content that pandoc's HTML path would otherwise drop or degrade survives:
         ``\\texttt{X}`` becomes a markdown code span (``\\_`` unescaped) and
         ``\\(...\\)`` / ``\\[...\\]`` math delimiters become ``$...$`` /
@@ -578,7 +584,8 @@ class WebRenderer:
             counter["n"] += 1
             label = f"**{cls._THEOREM_ENVS[env]} {counter['n']}**"
             if name and name.strip():
-                label += f" ({name.strip()})"
+                clean_name = cls._clean_theorem_body(name.strip())
+                label += f" ({clean_name})"
             attrs = f".theorem-box .{env}"
             if anchor and anchor.strip():
                 attrs += f" #{anchor.strip()}"
@@ -657,6 +664,10 @@ class WebRenderer:
     @staticmethod
     def _add_responsive_image_variants(html_file: Path) -> None:
         web_postprocess.add_responsive_image_variants(html_file)
+
+    @staticmethod
+    def _add_full_resolution_figure_links(html_file: Path) -> None:
+        web_postprocess.add_full_resolution_figure_links(html_file)
 
     @staticmethod
     def _write_if_changed(path: Path, content: str) -> None:

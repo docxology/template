@@ -22,7 +22,8 @@ def detect_uv_available(repo_root: Path) -> list[Finding]:
                 healthy=False,
                 description=(
                     "The repository's setup, testing, and rendering all run "
-                    "via ``uv``. Install via `curl -LsSf https://astral.sh/uv/install.sh | sh`."
+                    "via ``uv``. Install the pinned 0.12.0 release with the "
+                    "checksum-verified command in ``docs/operational/build/dependency-management.md``."
                 ),
                 evidence={"PATH": os.environ.get("PATH", "")},
                 # No automatic fixer — installing system tooling is out of

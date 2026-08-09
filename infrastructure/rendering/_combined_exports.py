@@ -223,12 +223,16 @@ def render_combined_epub(
     if bibliography is not None:
         extra_args.extend(["--citeproc", f"--bibliography={bibliography}"])
 
-    from infrastructure.rendering._pdf_title_page import _load_render_config, build_pandoc_metadata
+    from infrastructure.rendering._pdf_title_page import (
+        _cover_image_path,
+        _load_render_config,
+        build_pandoc_metadata,
+    )
 
     title: str | None = None
     author: str | None = None
     language = "en"
-    config, _ = _load_render_config(manuscript_dir)
+    config, config_file = _load_render_config(manuscript_dir)
     if isinstance(config, dict):
         metadata = build_pandoc_metadata(config)
         if metadata.get("title"):
@@ -241,6 +245,9 @@ def render_combined_epub(
         raw_metadata = config.get("metadata") or {}
         if isinstance(raw_metadata, dict) and raw_metadata.get("language"):
             language = str(raw_metadata["language"])
+        cover_image = _cover_image_path(config, config_file) if config_file is not None else None
+    else:
+        cover_image = None
 
     logger.debug("\n" + "=" * BANNER_WIDTH)
     logger.info("Generating combined EPUB manuscript...")
@@ -251,6 +258,7 @@ def render_combined_epub(
             bibliography=None,
             title=title,
             author=author,
+            cover_image=cover_image,
             language=language,
             pandoc_path=manager.config.pandoc_path,
             extra_args=extra_args,
