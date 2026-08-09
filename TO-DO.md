@@ -20,10 +20,10 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   regenerated from source. Its fixture phase replay is now part of the normal
   project analysis sequence; live retrieval remains an explicit opt-in path.
 - Generated checks for counts, coverage provenance, exemplar roster, and
-  publication records were refreshed on 2026-08-08.
+  publication records were refreshed and revalidated on 2026-08-09.
 - The release-profile public matrix was rerun across all 24 canonical
   exemplars in the generated public scope (see
-  [`active_projects.md`](docs/_generated/active_projects.md)) on 2026-08-08.
+  [`active_projects.md`](docs/_generated/active_projects.md)) on 2026-08-09.
   All 24 lanes passed their declared project floors and the combined matrix
   coverage was 95.39%; the validated receipt was produced with
   `stage_01_test.py --project-only --all-projects --public-projects --receipt`.
@@ -31,6 +31,8 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   the full release-profile matrix and output-isolation receipt are now current.
 - Configured mypy passes with zero errors across 1,496 source files; the
   public-scope ratchet remains a separate gate.
+- Root and all 24 canonical public-exemplar all-extras exports pass the
+  blocking pip-audit audit; all 25 lockfiles pass `uv lock --check`.
 - Roadmap, status, contribution-map, regression-testing, and threat-model
   surfaces were reconciled against the current generated facts and active IDs;
   historical changelog entries remain unchanged.
@@ -66,7 +68,7 @@ been verified.
 
 | ID | Problem and scope | Acceptance evidence |
 | --- | --- | --- |
-| `PUBLIC-MATRIX-1` | Public matrix receipt module with fail-closed output-drift detection; post-coverage output isolation; CLI arg; real-subprocess negative controls. | **SHIPPED 2026-08-08** — release-profile receipt validates 24/24 lanes, all declared floors, zero exit failures, and output isolation; combined coverage is 95.39%. |
+| `PUBLIC-MATRIX-1` | Public matrix receipt module with fail-closed output-drift detection; post-coverage output isolation; CLI arg; real-subprocess negative controls. | **SHIPPED 2026-08-09** — release-profile receipt validates 24/24 lanes, all declared floors, zero exit failures, and output isolation; combined coverage is 95.39%. |
 | `RENDERED-PROVENANCE-1` | Rendered provenance: stage/source/config/output fingerprints plus strict rendered publication validation. Atomic confined writes via `secure_write.py`. Snapshots walk source/config/output with symlink confinement and Git-cache filtering. Wired into Stage 04 validation, publication audit (`check_rendered_provenance`), and CI preflight. | 32 rendered provenance tests + 47 artifact-finalization/web-renderer tests pass. Rendered strict audit returns zero review-required findings on canonical exemplars. |
 | `CONFIG-FAIL-CLOSED-1` | Placeholder-token and unconsumed-markdown checkers in publication audit, wired into SOURCE/RENDERED_CHECKERS. | `{{TOKEN}}`, `${token}`, stale chapters, unconsumed Markdown fail release command. |
 | `SECRET-SCAN-1` | Index-blob scanner: reads exact A/C/M/R blobs from Git index; verified-gitlink handling; fail-closed unreadable-blob behavior; pre-commit/manual hook; tracked pre-push defense; rotation handoff. | Real-Git partial-stage controls pass in both directions; findings contain only path, line, and kind. |

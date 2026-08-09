@@ -35,6 +35,8 @@ requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6.0,<7.0",
     "matplotlib>=3.7,<4.0",
+    "pillow>=12.3.0",
+    "idna>=3.15",
     # `infrastructure/search/literature/backends.py` imports
     # `defusedxml.ElementTree` directly. Workspace mode picks it up
     # transitively through `py-serializable`; project-local venvs (used
@@ -54,12 +56,13 @@ dev = [
 # and `uv sync --group llm` install the same deps when this project is
 # used standalone. Keep these in sync with the root pyproject.toml.
 rendering = [
-    "pypdf>=5.0",
+    "pypdf>=6.15.0",
     "reportlab>=4.0.0",
 ]
 llm = [
     "ollama>=0.3.0",
     "requests>=2.31.0",
+    "urllib3>=2.7.0",
 ]
 
 [tool.setuptools]

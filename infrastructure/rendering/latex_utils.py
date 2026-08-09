@@ -162,6 +162,7 @@ def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None =
 
     try:
         from pypdf import PdfReader, PdfWriter
+        from pypdf.generic import ArrayObject, ByteStringObject
     except ImportError as exc:  # pragma: no cover - exercised in minimal installs
         raise CompilationError(
             "Deterministic PDF builds require the rendering extra (pypdf).",
@@ -170,6 +171,13 @@ def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None =
 
     reader = PdfReader(str(pdf_path))
     writer = PdfWriter(clone_from=str(pdf_path))
+    # PDF identifiers are optional.  Some valid compiler outputs omit the
+    # trailer /ID, and pypdf preserves that omission when cloning.  Seed a
+    # deterministic placeholder so canonicalization can still derive and
+    # install a content-based identifier instead of rejecting a valid PDF.
+    if writer._ID is None:  # pypdf has no public setter for trailer IDs.
+        placeholder = ByteStringObject(b"\x00" * 16)
+        writer._ID = ArrayObject([placeholder, placeholder])
     _canonicalize_pdf_objects(writer._objects)  # pypdf has no public tree mutator
 
     metadata = {

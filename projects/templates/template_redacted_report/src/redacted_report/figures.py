@@ -9,7 +9,7 @@ figures never disagree with the release-audit source of truth.
 Matplotlib is imported lazily inside the builder functions so module import
 stays cheap for tests that only need the registry helpers. The Agg backend is
 forced before any pyplot use so figure generation works headless and is
-byte-deterministic for a fixed matplotlib version.
+byte-deterministic within a fixed rendering environment.
 """
 
 from __future__ import annotations

@@ -16,7 +16,7 @@ dependencies = [
     "matplotlib",
     "pyyaml",
     "qrcode",
-    "pillow",
+    "pillow>=12.3.0",
 ]
 
 [project.optional-dependencies]

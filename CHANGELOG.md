@@ -26,6 +26,25 @@ not to the contents of any specific workspace.
   findings.
 - Refreshed external publication metadata records and validated the complete
   24-lane release-profile public-matrix receipt at 95.39% combined coverage.
+- Raised the root and affected public-exemplar dependency floors to
+  `cryptography>=50.0.0` and `pypdf>=6.15.0`, regenerated all impacted locks,
+  and confirmed the complete root export has no known pip-audit vulnerabilities
+  (the unpinned `desloppify` URL remains an explicit audit skip reason).
+- Raised the public-exemplar Pillow floor to `>=12.3.0` and repaired the
+  remaining nested lock advisories for Pygments, pytest, Torch, Setuptools,
+  idna, and urllib3; every canonical public-exemplar all-extras export is now
+  covered by the blocking CI dependency audit.
+
+### Final local release validation (2026-08-09)
+
+- Re-ran the 24-lane public release profile on the updated lockfiles: all lanes
+  passed with 95.39% combined coverage and an output-isolation receipt.
+- Re-ran the hosted-equivalent infrastructure selection: 9,656 passed, 9
+  skipped, and one expected numerical-stability warning; the unfiltered local
+  run's only failures were the intentionally service-backed Ollama tests.
+- Revalidated the repository health registry, including mypy across 1,496
+  source files, docs lint, generated facts, capability parity, Bandit, and the
+  no-mocks gate.
 
 ### Hosted CI correctness (2026-08-08)
 
@@ -34,6 +53,11 @@ not to the contents of any specific workspace.
   pytest's current quiet collector output (55 claim-binding tests locally).
 - Updated the workflow runbook to describe the fail-closed collection contract
   rather than the obsolete empty-tier exit-code tolerance.
+- Repaired the hosted Python 3.10/3.11–3.13 contracts: portable TOML and ISO
+  timestamp tests, a parseable LaTeX recovery fixture, environment-independent
+  current-output snapshot assertions, and deterministic PDF-ID handling for
+  valid PDFs that omit `/ID`; the redacted-figure gate now separates
+  same-environment byte determinism from cross-platform raster geometry.
 
 ### Cross-cutting hardening and maintainability (2026-08-08)
 

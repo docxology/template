@@ -758,15 +758,35 @@ jobs:
             [ -z "$line" ] && continue
             PIP_AUDIT_ARGS+=(--ignore-vuln "$line")
           done < "$IGNORE_FILE"
-          for attempt in 1 2 3; do
-            if uv run pip-audit --requirement "$LOCK_REQUIREMENTS" \
-              --no-deps --disable-pip "${PIP_AUDIT_ARGS[@]}"; then
-              exit 0
-            fi
-            echo "pip-audit attempt ${attempt} failed; retrying in 15s..." >&2
-            sleep 15
+          audit_requirements() {
+            local requirement_file="$1"
+            for attempt in 1 2 3; do
+              if uv run pip-audit --requirement "$requirement_file" \
+                --no-deps --disable-pip "${PIP_AUDIT_ARGS[@]}"; then
+                return 0
+              fi
+              if [[ "$attempt" -lt 3 ]]; then
+                echo "pip-audit attempt ${attempt} failed for ${requirement_file}; retrying in 15s..." >&2
+                sleep 15
+              fi
+            done
+            return 1
+          }
+
+          # Audit the complete root export and every canonical public exemplar
+          # export. A clean root environment does not prove that an isolated
+          # project's own lockfile is safe.
+          audit_requirements "$LOCK_REQUIREMENTS"
+          PUBLIC_REQUIREMENTS_DIR="${RUNNER_TEMP}/template-public-requirements"
+          mkdir -p "$PUBLIC_REQUIREMENTS_DIR"
+          for project in ${{ steps.security-scope.outputs.names }}; do
+            slug="${project//\//-}"
+            requirement_file="$PUBLIC_REQUIREMENTS_DIR/${slug}.txt"
+            uv export --project "projects/$project" --all-extras --frozen \
+              --no-hashes --no-emit-project --output-file "$requirement_file"
+            echo "Auditing public exemplar export: $project"
+            audit_requirements "$requirement_file"
           done
-          exit 1
 
       - name: Code security scan (Bandit MEDIUM+ severity)
         run: |

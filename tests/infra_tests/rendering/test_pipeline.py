@@ -253,16 +253,16 @@ def test_run_override_script_non_zero_exit_code(tmp_path: Path) -> None:
 
 
 def test_run_override_script_subprocess_error(tmp_path: Path) -> None:
-    """Returns 1 when the script cannot be executed (non-Python binary content)."""
+    """Returns a non-zero code when the interpreter rejects malformed source."""
     override = tmp_path / "scripts" / "_render_pdf_override.py"
     override.parent.mkdir(parents=True)
-    # Write a script that immediately raises a SyntaxError so the interpreter
-    # exits non-zero — this exercises the failure path without needing OSError.
-    override.write_bytes(b"\x00\x01\x02\x03\xff\xfe")  # Invalid UTF-8 / binary
+    # A syntax error is portable across Python versions; arbitrary invalid
+    # bytes were accepted as an empty script by one supported interpreter.
+    override.write_text("def broken(:\n", encoding="utf-8")
 
     result = _run_override_script(tmp_path, override)
 
-    # A binary file run through Python will fail (exit non-zero or raise)
+    # Malformed source run through Python must fail (exit non-zero or raise).
     assert result != 0
 
 

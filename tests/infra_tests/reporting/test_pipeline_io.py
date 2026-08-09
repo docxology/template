@@ -103,7 +103,7 @@ class TestSaveValidationReport:
         # Round-trip parse to ISO8601 to confirm well-formedness.
         from datetime import datetime as _dt
 
-        _dt.fromisoformat(ts)
+        _dt.fromisoformat(ts.replace("Z", "+00:00"))
 
     def test_preserves_caller_supplied_timestamp(self, tmp_path):
         """A caller-supplied non-empty timestamp must survive the write."""
@@ -122,7 +122,7 @@ class TestSaveValidationReport:
         assert isinstance(ts, str) and ts
         from datetime import datetime as _dt
 
-        _dt.fromisoformat(ts)
+        _dt.fromisoformat(ts.replace("Z", "+00:00"))
 
 
 class TestGenerateValidationMarkdown:

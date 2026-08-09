@@ -8,7 +8,7 @@
 # citation/temporal meta-analysis, and an auto-injected rendered manuscript.
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -24,6 +24,7 @@ dependencies = [
     "numpy>=1.24.0",
     "scipy>=1.10.0",
     "matplotlib>=3.7.0",
+    "pillow>=12.3.0",
     "pandas>=2.0.0",
     "networkx>=3.0",
     "requests>=2.31.0",
@@ -36,16 +37,19 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.4.0",
+    "pytest>=9.0.3",
     "pytest-cov>=4.1.0",
     "pytest-httpserver>=1.0.8",
-    "pypdf>=6.12.0",
+    "pygments>=2.20.0",
+    "pypdf>=6.15.0",
     "reportlab>=4.0.0",
 ]
 # Optional real-transformer embeddings upgrade (not required for the deterministic
 # offline default, which uses hashing/TF-IDF -> SVD).
 embeddings = [
     "sentence-transformers>=2.2.0",
+    "torch>=2.13.0",
+    "setuptools>=83.0.0",
 ]
 # Optional LLM-backed knowledge-graph extraction (requires a running Ollama server).
 llm = [

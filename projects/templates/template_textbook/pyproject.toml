@@ -30,7 +30,7 @@ dev = [
     "pytest-cov>=4.1.0",
 ]
 visuals = [
-    "pillow>=10.0",
+    "pillow>=12.3.0",
 ]
 
 [tool.pytest.ini_options]

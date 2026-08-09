@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
+    "pillow>=12.3.0",
     "pyyaml>=6.0",
     "scipy>=1.11.0",
     "inferactively-pymdp==1.0.1",

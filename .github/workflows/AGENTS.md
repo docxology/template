@@ -180,7 +180,7 @@ behaviorally equivalent to the dedicated documentation job.
 #### 8. Security Scan (`security`)
 
 - **Runner:** `ubuntu-latest` / Python 3.12
-- **pip-audit:** blocking; builds `--ignore-vuln` args from [`.github/pip-audit-ignore.txt`](../pip-audit-ignore.txt); retries up to **3** times with backoff on failure (transient OSV/network issues)
+- **pip-audit:** blocking; audits the root all-groups/all-extras export and every canonical public-exemplar all-extras export, builds `--ignore-vuln` args from [`.github/pip-audit-ignore.txt`](../pip-audit-ignore.txt), and retries each export up to **3** times with backoff on failure (transient OSV/network issues)
 - **bandit:** `bandit -c bandit.yaml -r -ll`, covers `infrastructure/`, `scripts/`, `projects/`; path exclusions are in `bandit.yaml` (`exclude_dirs`, including archive/WIP roots and `.venv` / `site-packages` so local trees are not scanned)
 
 #### 9. Documentation Lint (`docs-lint`)
@@ -303,7 +303,18 @@ while IFS= read -r raw || [ -n "$raw" ]; do
   [ -z "$line" ] && continue
   IGNORE_ARGS+=(--ignore-vuln "$line")
 done < .github/pip-audit-ignore.txt
-uv run pip-audit "${IGNORE_ARGS[@]}"
+AUDIT_DIR="$(mktemp -d /tmp/template-public-audit.XXXXXX)"
+uv export --all-groups --all-extras --frozen --no-hashes \
+  --no-emit-project --output-file "$AUDIT_DIR/root.txt"
+uv run pip-audit --requirement "$AUDIT_DIR/root.txt" \
+  --no-deps --disable-pip "${IGNORE_ARGS[@]}"
+for project in $(uv run python -m infrastructure.project.public_scope project-names); do
+  slug="${project//\//-}"
+  uv export --project "projects/$project" --all-extras --frozen --no-hashes \
+    --no-emit-project --output-file "$AUDIT_DIR/${slug}.txt"
+  uv run pip-audit --requirement "$AUDIT_DIR/${slug}.txt" \
+    --no-deps --disable-pip "${IGNORE_ARGS[@]}"
+done
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 ```
 

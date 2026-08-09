@@ -954,7 +954,7 @@ See [`workflows/AGENTS.md`](workflows/AGENTS.md) for step-level detail (`pip-aud
 | Exports audit | `infrastructure.skills check-all-exports` | zero violations |
 | Infra coverage | pytest-cov | **≥ 60%** |
 | Project coverage | pytest-cov | **≥ 90%** |
-| pip-audit | blocking | zero unignored vulns |
+| pip-audit | blocking | zero unignored vulns in the root and every canonical public-exemplar export |
 | Security | Bandit `-c bandit.yaml` MEDIUM+ | zero findings |
 | Docs lint | `scripts/audit/lint_docs.py` | Mermaid, links, consistency, and doc pairs clean |
 | Performance | import timer | **≤ 5 s** |

@@ -358,7 +358,10 @@ def test_documented_module_invocation_writes_report(tmp_path: Path) -> None:
 
     # Assert a NON-static, repo-derived field so a fully-degraded report can't
     # green-wash this: the report's release version must reflect the real repo.
-    import tomllib
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # Python 3.10 uses the declared tomli backport.
+        import tomli as tomllib  # type: ignore[no-redef]
 
     version = tomllib.loads((repo_root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
     assert version in text, f"expected repo version {version} in the rendered report"

@@ -17,14 +17,16 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
+    "pillow>=12.3.0",
     "pyyaml>=6.0",
     "defusedxml>=0.7.1",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.4.0",
+    "pytest>=9.0.3",
     "pytest-cov>=4.1.0",
+    "pygments>=2.20.0",
 ]
 
 [tool.pytest.ini_options]

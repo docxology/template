@@ -4,7 +4,7 @@
 >
 > Refresh target: every 6 months. Anything older than **183 days** should be treated as potentially dormant.
 
-**Last updated:** 2026-07-22
+**Last updated:** 2026-08-09
 **Maintained by:** Daniel Ari Friedman (see [MAINTAINERS.md](MAINTAINERS.md))
 
 ## Verification ledger
@@ -12,7 +12,7 @@
 | Subsystem | Last verified | Verified by | Verification scope | Health |
 | --- | --- | --- | --- | --- |
 | Pipeline orchestration (`infrastructure/orchestration/`) | 2026-05-21 | Daniel | `./run.sh --pipeline --project template_code_project --core-only --skip-infra` and `./run.sh --pipeline --project template_prose_project --core-only --skip-infra` run to completion; both named exemplars green | 🟢 healthy |
-| Test runner (`scripts/pipeline/stage_01_test.py`, `tests/infra_tests/`) | 2026-07-22 | Daniel (agent session) | Canonical migration/focused lanes passed 239 tests. The uncached full infrastructure rerun was intentionally stopped at 62% by the user before a final total; an earlier complete baseline had 8,930 passed and 8 stale-wrapper failures, all addressed in the focused migration. Configured mypy passes across 1,470 source files. | 🟡 focused contract verified; final full-lane total and external branch-protection setting remain open |
+| Test runner (`scripts/pipeline/stage_01_test.py`, `tests/infra_tests/`) | 2026-08-09 | Daniel (agent session) | Hosted-equivalent infrastructure gate (`-m "not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance"`) passed 9,656 tests with 9 expected skips and one numerical-stability warning. The unfiltered local run passed 9,725 tests with 9 skips; its only failures were the intentionally service-backed Ollama tests. Configured mypy passes across 1,496 source files. | 🟢 CI-equivalent contract verified; service-backed Ollama evidence remains opt-in |
 | PDF rendering (`infrastructure/rendering/`) | 2026-05-21 | Daniel | Stage 5 rendered combined PDF/HTML/DOCX/slides for `template_code_project` and `template_prose_project`; `template_code_project` also rendered EPUB | 🟢 healthy |
 | Output validation (`infrastructure/validation/`) | 2026-05-21 | Daniel | Stage 6 validation passed 7/7 checks for `template_code_project` and `template_prose_project` after full core renders | 🟢 healthy |
 | LLM stages (`infrastructure/llm/`, Stages 7+8) | 2026-07-01 | Daniel (agent session) | Model pin `gemma3:4b` re-verified pullable/available (`ollama pull gemma3:4b` succeeded, 3.3GB); live `pytest tests/infra_tests/llm/ -m requires_ollama` — 50/51 passed (1 failure was a 20s timeout on `smollm2:latest` under local load, an environmental flake unrelated to the `gemma3:4b` pin, not a gate defect); "draft assistance" framing from 2026-05-20 confirmed still accurate in `infrastructure/llm/README.md` | 🟢 healthy |

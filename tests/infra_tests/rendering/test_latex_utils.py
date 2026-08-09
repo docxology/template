@@ -149,6 +149,8 @@ Recovered document.
 import pathlib
 import sys
 
+from pypdf import PdfWriter
+
 out_dir = pathlib.Path(".")
 for arg in sys.argv[1:]:
     if arg.startswith("-output-directory="):
@@ -167,7 +169,9 @@ if attempt == 1:
     log.write_text("xdvipdfmx:fatal: Image inclusion failed\n", encoding="utf-8")
     sys.exit(1)
 
-pdf.write_bytes(b"%PDF-1.4\nok\nstartxref\n1\n%%EOF\n")
+writer = PdfWriter()
+writer.add_blank_page(width=72, height=72)
+writer.write(pdf)
 log.write_text("Output written on test.pdf\n", encoding="utf-8")
 aux.write_text("\\relax  \n", encoding="utf-8")
 """,

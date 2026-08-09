@@ -109,7 +109,9 @@ class TestPublicSurface:
         workflow = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
         assert "continue-on-error: ${{ runner.os == 'macOS' }}" not in workflow
         assert "uv export --all-groups --all-extras --frozen" in workflow
-        assert 'pip-audit --requirement "$LOCK_REQUIREMENTS"' in workflow
+        assert 'audit_requirements "$LOCK_REQUIREMENTS"' in workflow
+        assert 'uv run pip-audit --requirement "$requirement_file"' in workflow
+        assert 'uv export --project "projects/$project" --all-extras --frozen' in workflow
         assert "--no-deps --disable-pip" in workflow
         assert 'targets+=("projects/$project")' in workflow
 

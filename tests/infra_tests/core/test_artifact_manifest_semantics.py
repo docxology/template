@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from infrastructure.core.pipeline.artifacts import (
     aggregate_artifact_manifests,
     snapshot_current_artifact_manifest,
@@ -78,7 +80,13 @@ def test_validation_self_reports_are_not_attested_recursively(tmp_path: Path) ->
     assert validate_artifact_manifest(aggregate, project_dir=project).issues == ()
 
 
-def test_current_output_snapshot_rebaselines_without_inventing_stage_provenance(tmp_path: Path) -> None:
+def test_current_output_snapshot_rebaselines_without_inventing_stage_provenance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The CI setup exports SOURCE_DATE_EPOCH for deterministic build products,
+    # but this snapshot contract deliberately omits even deterministic stage
+    # timestamps: it is a current-output baseline, not stage provenance.
+    monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
     project = tmp_path / "repo" / "projects" / "p"
     artifact = project / "output" / "data" / "result.json"
     cached_fulltext = project / "output" / "fulltext" / "provider-paper.txt"
