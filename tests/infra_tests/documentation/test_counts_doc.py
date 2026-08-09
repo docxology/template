@@ -18,6 +18,7 @@ import pytest
 from infrastructure.documentation.counts_doc import (
     COVERAGE_PROVENANCE_RELATIVE_PATH,
     COVERAGE_PROVENANCE_SCHEMA_VERSION,
+    COVERAGE_MEASUREMENT_TIMEOUT_SECONDS,
     DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
@@ -108,6 +109,19 @@ def test_exemplar_snapshot_covers_public_scope() -> None:
     expected = {name.split("/")[-1] for name in public_project_names(_repo_root())}
     documented = {s.name for s in EXEMPLAR_SNAPSHOT}
     assert documented == expected
+
+
+def test_coverage_measurement_uses_bounded_release_profile() -> None:
+    """Coverage receipts must use the shared release selection and timeout policy."""
+    from infrastructure.documentation.counts_doc import _coverage_measurement_command
+
+    command = _coverage_measurement_command(Path("/tmp/project"))
+    marker = command[command.index("-m") + 1]
+
+    assert "not requires_ollama" in marker
+    assert "not long_running" in marker
+    assert "not bench" in marker
+    assert COVERAGE_MEASUREMENT_TIMEOUT_SECONDS == 1800
 
 
 def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:

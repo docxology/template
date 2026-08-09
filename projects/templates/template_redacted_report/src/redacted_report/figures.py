@@ -110,6 +110,7 @@ def _draw_flow_figure(spec: Mapping[str, str], output_png: Path, output_svg: Pat
     ax.axis("off")
 
     def box(x: float, y: float, w: float, h: float, text: str, *, fill: tuple[float, float, float]) -> None:
+        """Draw one rounded flow-chart box with centered wrapped text."""
         patch = FancyBboxPatch(
             (x, y),
             w,
@@ -123,6 +124,7 @@ def _draw_flow_figure(spec: Mapping[str, str], output_png: Path, output_svg: Pat
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=8.2, wrap=True)
 
     def arrow(x1: float, y1: float, x2: float, y2: float) -> None:
+        """Draw one directed flow-chart connector between two coordinates."""
         ax.add_patch(
             FancyArrowPatch(
                 (x1, y1),

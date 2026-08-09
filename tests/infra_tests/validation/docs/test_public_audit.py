@@ -79,6 +79,19 @@ def test_gate_claim_audit_accepts_nearby_negative_control(tmp_path: Path) -> Non
     assert find_gate_claims_without_negative_controls(tmp_path) == []
 
 
+def test_gate_claim_audit_ignores_tables_and_historical_records(tmp_path: Path) -> None:
+    _write(
+        tmp_path / "docs/rules.md",
+        "| Rule | The schema validator enforces every record. |\n",
+    )
+    _write(
+        tmp_path / "CHANGELOG.md",
+        "The schema validator enforces every record.\n",
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
 def test_symbol_documentation_audit_scans_every_def_and_class(tmp_path: Path) -> None:
     _write(tmp_path / "infrastructure/pkg/__init__.py", "")
     _write(

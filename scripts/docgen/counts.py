@@ -55,8 +55,9 @@ def main(argv: list[str] | None = None) -> int:
         "--verify-coverage",
         action="store_true",
         help=(
-            "re-measure every exemplar's standalone coverage and compare against the "
-            "recorded percentage (slow — runs every suite); combine with --write to "
+            "re-measure every exemplar's standalone release-profile coverage and "
+            "compare against the recorded percentage (slow — runs every release "
+            "profile suite); combine with --write to "
             "rewrite the recorded values from the measurement"
         ),
     )

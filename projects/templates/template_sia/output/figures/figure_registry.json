@@ -19,7 +19,7 @@
       "label": "fig:sia-generation-heatmap"
     },
     {
-      "caption": "Generation-over-generation metric delta (\u0394accuracy) for the SIA loop, showing the fixture replay's flat threshold-robustness control.",
+      "caption": "Generation-over-generation metric delta (\u0394accuracy) for the SIA fixture replay; the flat trace confirms threshold robustness and prevents a fabricated improvement claim.",
       "filename": "sia_improvement_delta.png",
       "generated_by": "src.figures",
       "label": "fig:sia-improvement-delta"

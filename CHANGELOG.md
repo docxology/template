@@ -9,6 +9,24 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Release evidence and exemplar corrections (2026-08-08)
+
+- Rebased `COUNTS.md` and coverage provenance on the shared release-profile
+  measurement contract, with a bounded 30-minute per-exemplar subprocess; all
+  24 public coverage rows now have current source hashes and measured values.
+- Corrected the SIA claim ledger from an obsolete train-split proportion to the
+  measured six-row public fixture, added a real regression test, and regenerated
+  its Stage 04 PDF/HTML/evidence artifacts.
+- Restored the pools/rules/tools figure metadata re-exports required by its
+  registry publisher; the gold-refinement and pools/rules/tools release suites
+  now pass independently.
+- Tightened the documentation audit so historical policy, inventory-table, and
+  generated-fact prose is not misclassified as active policy; the current audit
+  reports 149 active gate advisories and no volatile-fact or undocumented-symbol
+  findings.
+- Refreshed external publication metadata records and validated the complete
+  24-lane release-profile public-matrix receipt at 95.39% combined coverage.
+
 ### Cross-cutting hardening and maintainability (2026-08-08)
 
 - Added a shared secret-environment policy (`infrastructure/core/secrets.py`)

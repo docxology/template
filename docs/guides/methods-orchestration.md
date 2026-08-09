@@ -34,7 +34,9 @@ surfaces:
 uv run python -m infrastructure.methods plan --project templates/template_code_project --format json --check
 ```
 
-Audit all 24 public exemplars at the source or rendered boundary:
+Audit all public exemplars in the generated roster
+([`active_projects.md`](../_generated/active_projects.md)) at the source or
+rendered boundary:
 
 ```bash
 uv run python -m infrastructure.methods plan --all-public --artifact-mode source --format json

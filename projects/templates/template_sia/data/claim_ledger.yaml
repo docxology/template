@@ -6,10 +6,10 @@ claims:
     source_tier: project_source
     freshness: active
     artifact_path: output/runs/run_1/run_summary.json
-  - claim_id: public-train-split
+  - claim_id: public-train-rows
     kind: number
-    value: 0.7
-    source: projects/templates/template_sia/tasks/mini_classify/public/ public train fraction
+    value: 6
+    source: tasks/mini_classify/data/public/train.csv data row count
     source_tier: project_source
     freshness: active
     artifact_path: tasks/mini_classify/data/public/train.csv

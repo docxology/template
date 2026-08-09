@@ -64,14 +64,11 @@ This template must stay honest about fixture replay versus live subprocess runs.
 - **Shipped:** stale claim-ledger artifact paths were corrected to the current
   run-summary, task-data, and reference-agent locations; Stage 04 now checks
   those paths fail-closed.
-- **Known gap:** `data/claim_ledger.yaml` declares `public-train-split: 0.7`,
-  but no 70/30 split exists — `tasks/mini_classify/data/public/train.csv` and
-  `tasks/mini_classify/data/private/labels.csv` both hold the same 6 rows and
-  evaluation covers all 6. The measured fact is `public-train-rows: 6`, and the
-  row's `source` string still names the stale path `tasks/mini_classify/public/`
-  (should be `tasks/mini_classify/data/public/`). No test or prose binds this
-  claim, so it is inert; correct the row (and regenerate the evidence registry
-  via `stage_04_validate.py`) before the next ledger-touching edit.
+- **Shipped:** the claim ledger now records the measured
+  `public-train-rows: 6` fact from
+  `tasks/mini_classify/data/public/train.csv`, rather than implying a
+  nonexistent 70/30 split. A real-data regression test binds that claim to the
+  committed CSV, and Stage 04 regenerated the evidence registry.
 
 ## Ordered improvement ladder
 

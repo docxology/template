@@ -1,12 +1,12 @@
 {
-  "measured_at": "2026-07-22",
+  "measured_at": "2026-08-08",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "93.23 %",
+      "coverage_pct": "92.95 %",
       "source_hash": "698a15dca9340c51da51458b2eea1bae47975effa9077b7d902017a8312fb791"
     },
     "template_advanced_literature_review": {
-      "coverage_pct": "93.07 %",
+      "coverage_pct": "93.26 %",
       "source_hash": "c73ae6ea7f1c303c9ff834315d8541a8a5b8e0f058d5d77eb05980af3509c471"
     },
     "template_autopoiesis": {
@@ -26,11 +26,11 @@
       "source_hash": "622136d913fd14c766dbb678fb00e52b42ec51fe37697877a9c041c6ac6de7c3"
     },
     "template_data_descriptor": {
-      "coverage_pct": "98.75 %",
+      "coverage_pct": "97.82 %",
       "source_hash": "edf038b1ee7c574d32cd5de8cb5179e57f2c0683906ec8040e913cee5069f407"
     },
     "template_eda_notebook": {
-      "coverage_pct": "98.97 %",
+      "coverage_pct": "99.13 %",
       "source_hash": "f49b29215f20df7eeb7a30dd5c7e706d1ab5d3f8e1ab9e55bdff22f2b0c05598"
     },
     "template_formal": {
@@ -38,19 +38,19 @@
       "source_hash": "afbc574702fb7981923e654e1fb72e8eb93ce0e1b4127afa35079a0de25a2075"
     },
     "template_gold_refinement": {
-      "coverage_pct": "92.64 %",
+      "coverage_pct": "92.57 %",
       "source_hash": "99736210e49b2546f655b18a995cd3a70bd806133af58992e143febb71d03c83"
     },
     "template_literature_meta_analysis": {
-      "coverage_pct": "94.10 %",
+      "coverage_pct": "94.05 %",
       "source_hash": "ddd70bc35eba392b58a56edbe59a179d784b9d47cbaea95b8ce16dcb6b435311"
     },
     "template_madlib": {
-      "coverage_pct": "99.67 %",
+      "coverage_pct": "99.00 %",
       "source_hash": "3efaaf5cacd5b4933a0679226bff00f6c457c2e22ac7c81bec5c2927d35b9a66"
     },
     "template_methods_paper": {
-      "coverage_pct": "98.98 %",
+      "coverage_pct": "98.99 %",
       "source_hash": "b7e2710a26254fc6ed18abee59f83443da5b46897481ffe692391fed376cecb2"
     },
     "template_newspaper": {
@@ -62,28 +62,28 @@
       "source_hash": "5840addddf3f88fcfbc676af4f5f0844ed971aa834d8b0f5d37db18031e44511"
     },
     "template_pools_rules_tools": {
-      "coverage_pct": "94.88 %",
-      "source_hash": "14ad61184f4b012f47feed22b40ce72b1f1ce39956db23b3dfe90a545eb2b820"
+      "coverage_pct": "94.91 %",
+      "source_hash": "bce6efc6dd6aad24eed2bb9302a5655e572935fc1c9a9581f93dabd21f1a3158"
     },
     "template_prose_project": {
-      "coverage_pct": "99.57 %",
+      "coverage_pct": "99.58 %",
       "source_hash": "68d724ec58fa736555304ae1dea1aecf4b433436e2a52f4493775c775dcee879"
     },
     "template_redacted_report": {
-      "coverage_pct": "97.53 %",
-      "source_hash": "d9734aeadc4d0d1cfa1d9fde847e9cb430008111b3b46bad3d51c2bbf46e9d9a"
+      "coverage_pct": "97.30 %",
+      "source_hash": "e72a58fab02a47511329bae12609106974ff0164f6035bba290a84f65f10ce11"
     },
     "template_registered_report": {
-      "coverage_pct": "96.42 %",
+      "coverage_pct": "96.61 %",
       "source_hash": "bb33abc40d170b3d3e1115cdde61e379acd1af97f23f0f1b97792c47b96153aa"
     },
     "template_search_project": {
-      "coverage_pct": "97.69 %",
+      "coverage_pct": "97.44 %",
       "source_hash": "e63aa7680647f0203edc4fee9158a395dfa610cd032cea56df62eda2b0c5a435"
     },
     "template_sia": {
       "coverage_pct": "99.69 %",
-      "source_hash": "ee217cdfbbd6d76f5aa7a32d9b07a93c9b52051546d1b0d6ef582059db020587"
+      "source_hash": "4bf033feb0e6f81916f137c7c2110042550a1951a5c1f99fc7fc4244ee14e6a3"
     },
     "template_storybook": {
       "coverage_pct": "94.40 %",
@@ -94,10 +94,10 @@
       "source_hash": "76fcd86b88eb5602713e3108ca325aee073135c58ad26799a17ab488a53c027a"
     },
     "template_textbook": {
-      "coverage_pct": "96.19 %",
+      "coverage_pct": "96.61 %",
       "source_hash": "dda94c1eef4418ee9b1fecda4032e7b2bfcf67b644fce71a5e50ebf1b691a661"
     }
   },
   "schema_version": 2,
-  "source_commit": "49b6b205836beaf62b2e4755b1c6e26c223200c7"
+  "source_commit": "a4084f98d7851abc99b15619e30571c48b678f35"
 }

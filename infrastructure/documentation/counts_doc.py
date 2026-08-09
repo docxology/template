@@ -22,6 +22,9 @@ back out via the markers ``Last refreshed count: **N**`` and
 Per-exemplar collection totals are derived live with ``pytest --collect-only``.
 Coverage remains a separately labelled measured snapshot because recomputing all
 24 coverage gates during every documentation check would be prohibitively slow.
+The snapshot verifier uses the shared ``release`` test profile (slow tests are
+included; long-running, benchmark, and live-service tests remain explicit) so
+its method matches the public release matrix and has a bounded subprocess.
 """
 
 from __future__ import annotations
@@ -36,7 +39,12 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
-from infrastructure.core.pytest_orchestration import build_project_pytest_command, parse_project_workers
+from infrastructure.core.pytest_orchestration import (
+    build_profile_marker_expression,
+    build_project_pytest_command,
+    parse_project_workers,
+    resolve_test_profile,
+)
 from infrastructure.core.runtime.environment import get_subprocess_env
 from infrastructure.project.public_scope import public_project_names
 
@@ -45,10 +53,16 @@ COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-07-22"
+GENERATED_DATE = "2026-08-08"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-07-22"
+EXEMPLAR_SNAPSHOT_DATE = "2026-08-08"
+
+# Keep a full snapshot refresh bounded even when a project accidentally grows a
+# pathological test or rendering loop.  The release matrix itself has its own
+# per-project timeout; this standalone verifier needs an explicit wall-clock
+# bound because it invokes each project's pytest directly.
+COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 
 
 @dataclass(frozen=True)
@@ -62,46 +76,33 @@ class ExemplarSnapshot:
 # Measured per-exemplar coverage snapshot. Collection totals are intentionally
 # absent here and are derived in isolated project environments on every run.
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    # template_active_inference coverage is re-derived in its OWN environment
-    # (its project-local .venv pins a numpy/Python ABI the repo-root interpreter
-    # cannot exercise). It is the only exemplar carrying `long_running` tests, so
-    # it is also the only one where test SELECTION moves the number, and the two
-    # readings must not be confused:
-    #   whole suite (what `--verify-coverage` runs, and what every other row
-    #     here is measured with)                          -> 93.23 %
-    #   routine gate with long_running deselected
-    #     (`stage_01_test.py --project-only`)             -> ~90.35 %
-    # The whole-suite figure is recorded so all 24 rows share one method and the
-    # value is reproducible with the shipped verifier; expect the day-to-day gate
-    # to report the lower number.
-    ExemplarSnapshot("template_active_inference", "93.23 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "93.07 %"),
+    # Every row is measured in the project's own environment with the shared
+    # release profile. This keeps project-local dependency and coverage settings
+    # authoritative while making the snapshot comparable to the public matrix.
+    ExemplarSnapshot("template_active_inference", "92.95 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "93.26 %"),
     ExemplarSnapshot("template_autopoiesis", "97.84 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
     ExemplarSnapshot("template_autoscientists", "99.28 %"),
     ExemplarSnapshot("template_code_project", "96.98 %"),
-    ExemplarSnapshot("template_data_descriptor", "98.75 %"),
-    ExemplarSnapshot("template_eda_notebook", "98.97 %"),
+    ExemplarSnapshot("template_data_descriptor", "97.82 %"),
+    ExemplarSnapshot("template_eda_notebook", "99.13 %"),
     ExemplarSnapshot("template_formal", "95.28 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.64 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "94.10 %"),
-    ExemplarSnapshot("template_madlib", "99.67 %"),
-    ExemplarSnapshot("template_methods_paper", "98.98 %"),
-    # Reverified 2026-07-20 after strict manifest/page-loader hardening:
-    # 150 tests, 99.70 % line+branch coverage in the project lane.
+    ExemplarSnapshot("template_gold_refinement", "92.57 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "94.05 %"),
+    ExemplarSnapshot("template_madlib", "99.00 %"),
+    ExemplarSnapshot("template_methods_paper", "98.99 %"),
     ExemplarSnapshot("template_newspaper", "99.70 %"),
     ExemplarSnapshot("template_pitch_deck", "97.73 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "94.88 %"),
-    ExemplarSnapshot("template_prose_project", "99.57 %"),
-    # Reverified 2026-07-20 in the Python 3.12 public-readiness matrix:
-    # 113 tests, 97.53 % line+branch coverage.
-    ExemplarSnapshot("template_redacted_report", "97.53 %"),
-    ExemplarSnapshot("template_registered_report", "96.42 %"),
-    ExemplarSnapshot("template_search_project", "97.69 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "94.91 %"),
+    ExemplarSnapshot("template_prose_project", "99.58 %"),
+    ExemplarSnapshot("template_redacted_report", "97.30 %"),
+    ExemplarSnapshot("template_registered_report", "96.61 %"),
+    ExemplarSnapshot("template_search_project", "97.44 %"),
     ExemplarSnapshot("template_sia", "99.69 %"),
     ExemplarSnapshot("template_storybook", "94.40 %"),
     ExemplarSnapshot("template_template", "99.14 %"),
-    ExemplarSnapshot("template_textbook", "96.19 %"),
+    ExemplarSnapshot("template_textbook", "96.61 %"),
 )
 
 
@@ -278,8 +279,28 @@ def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
     return "\n".join(rows)
 
 
+def _coverage_measurement_command(project_dir: Path) -> list[str]:
+    """Build the bounded release-profile pytest command for one exemplar."""
+    profile = resolve_test_profile("release")
+    marker_expression = build_profile_marker_expression(profile)
+    command = [
+        "uv",
+        "run",
+        "--directory",
+        str(project_dir),
+        "pytest",
+        "tests/",
+        "--cov=src",
+        "--cov-report=",
+        "-q",
+    ]
+    if marker_expression:
+        command.extend(["-m", marker_expression])
+    return command
+
+
 def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
-    """Run one exemplar's canonical standalone coverage gate and return its total.
+    """Run one exemplar's release-profile coverage gate and return its total.
 
     The canonical measurement is the STANDALONE one — pytest invoked from inside
     the project directory, so the project's own ``[tool.coverage.run]`` applies.
@@ -293,7 +314,8 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
     several exemplars set ``precision = 0`` and would otherwise report a rounded
     whole percent.
 
-    Returns a string like ``"93.07 %"``. Raises ``RuntimeError`` if the run fails.
+    Returns a string like ``"93.07 %"``. Raises ``RuntimeError`` if the run fails
+    or exceeds :data:`COVERAGE_MEASUREMENT_TIMEOUT_SECONDS`.
     """
     project_dir = repo_root / "projects" / "templates" / name
     if not project_dir.is_dir():
@@ -301,14 +323,23 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
     data_file = project_dir / f".coverage.measure_{name}"
     env = dict(get_subprocess_env())
     env["COVERAGE_FILE"] = str(data_file)
+    profile = resolve_test_profile("release")
+    command = _coverage_measurement_command(project_dir)
     try:
-        run = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["uv", "run", "--directory", str(project_dir), "pytest", "tests/", "--cov=src", "--cov-report=", "-q"],
-            capture_output=True,
-            text=True,
-            env=env,
-            check=False,
-        )
+        try:
+            run = subprocess.run(  # noqa: S603 - fixed argv, no shell
+                command,
+                capture_output=True,
+                text=True,
+                env=env,
+                check=False,
+                timeout=COVERAGE_MEASUREMENT_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(
+                f"coverage run timed out for {name} after {COVERAGE_MEASUREMENT_TIMEOUT_SECONDS}s "
+                f"using the {profile.name} profile"
+            ) from exc
         if run.returncode != 0:
             tail = "\n".join((run.stdout + run.stderr).splitlines()[-8:])
             raise RuntimeError(f"coverage run failed for {name} (exit {run.returncode}):\n{tail}")
@@ -620,11 +651,11 @@ uv run pytest tests/infra_tests/publishing/ --collect-only -q --no-cov
 
 Result: **{facts.project_tests}** project-scope infrastructure tests collected and **{facts.publishing_tests}** publishing tests collected. Full behavioral gates still live in CI and in the verification commands listed by the relevant `AGENTS.md` files.
 
-**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; `template_active_inference` coverage was re-derived in its project-local environment — see note below):
+**Exemplar `pytest --collect-only` totals** (derived live in each project's declared environment; coverage snapshot last updated {EXEMPLAR_SNAPSHOT_DATE}; coverage values use the shared `release` test profile in each project's environment):
 
 {_exemplar_table(facts.exemplar_tests)}
 
-Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from the latest per-project coverage gates (`uv run pytest projects/templates/<name>/tests/ --cov=projects/templates/<name>/src`). After changing project `src/` or tests, rerun that project's coverage gate and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when source hashes no longer match. `template_active_inference` pins its own `.venv`/toolchain, so its coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
+Collection counts come from per-project `uv run pytest tests/ --collect-only -q --no-cov` runs; coverage values come from `uv run python scripts/docgen/counts.py --verify-coverage`, which invokes each project's own `uv` environment with the shared `release` marker profile and a bounded subprocess. After changing project `src/` or tests, rerun the coverage verifier and then explicitly refresh provenance with `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails when source hashes no longer match. `template_active_inference` pins its own `.venv`/toolchain, so its release-profile coverage is re-derived in that environment, not from the repo-root interpreter. Orchestration modules (`analysis.py`, `figures.py`, `dashboard.py`, `manuscript_variables.py`) are in the coverage denominator for the code exemplar; `experiment_config.py` is the shared loader for `manuscript/config.yaml` → `experiment:`.
 
 Drift-checker coverage: `uv run python scripts/audit/check_template_drift.py --strict`. Repo `scripts/` fat files emit **WARNING**; project `scripts/` fat files emit **ERROR** through the thin-orchestrator detectors. Per-exemplar detectors include function name drift, test class drift, `__all__` doc drift, coverage floor drift, dead links, oversize `src/*.py`, blanket `except Exception`, mocks in tests, and canonical-file presence.
 

@@ -43,7 +43,7 @@ _PROJECT_COUNT_RE = re.compile(
 _GENERATED_FACT_LINK_RE = re.compile(
     r"docs/_generated/(?:active_projects|COUNTS|publication_records)\.md|"
     r"_generated/|PUBLIC_PROJECT_NAMES|generate_publication_records_doc\.py|"
-    r"\$\{public_exemplar_list\}|\$\{project_count\}",
+    r"LOCAL_ONLY_TEMPLATE_NAMES|\$\{public_exemplar_list\}|\$\{project_count\}",
     re.I,
 )
 # Roster-context phrasing ("current/active/public set", "under projects/templates/")
@@ -63,6 +63,17 @@ _GATE_CLAIM_RE = re.compile(
     r"\b(?:must|requires?|enforces?|validates?|certifies?|proves?|guarantees?|blocks?|fails?)\b"
     r".{0,100}\b(?:validator|verifier|schema|quality gate|gate|checker|linter|lint|rule)\b",
     re.IGNORECASE,
+)
+
+# These files are retained as historical evidence, not maintained as current
+# policy contracts.  Auditing their old claims as though they were current
+# guarantees creates findings that cannot be repaired without rewriting the
+# historical record.  ``ISA.md`` is used by several exemplars as an iteration
+# journal, so the basename is intentionally handled for every public exemplar.
+_HISTORICAL_POLICY_NAMES: frozenset[str] = frozenset({"CHANGELOG.md", "ISA.md", "PREMORTEM_ADVERSARIAL_REVIEW.md"})
+_HISTORICAL_POLICY_PREFIXES: tuple[str, ...] = (
+    "docs/plans/",
+    "docs/maintenance/review-remediation-",
 )
 # Negative-control / known-wrong terminology — evidence that a gate claim is
 # backed by an adversarial test rather than asserted.
@@ -176,7 +187,22 @@ def collect_public_markdown(repo_root: Path) -> list[PublicDocRecord]:
 
 def _iter_policy_docs(repo_root: Path) -> list[Path]:
     excluded = set(DEFAULT_EXCLUDE_PARTS) | {"_generated", "audit", "streams"}
-    return iter_markdown_files(doc_roots(repo_root), exclude_parts=excluded)
+    return [
+        path
+        for path in iter_markdown_files(doc_roots(repo_root), exclude_parts=excluded)
+        if not _is_historical_policy_doc(path, repo_root)
+    ]
+
+
+def _is_historical_policy_doc(path: Path, repo_root: Path) -> bool:
+    """Return whether *path* is retained history rather than active policy."""
+    relative = _relative(path, repo_root)
+    return path.name in _HISTORICAL_POLICY_NAMES or relative.startswith(_HISTORICAL_POLICY_PREFIXES)
+
+
+def _is_markdown_table_row(line: str) -> bool:
+    """Return whether a line is a Markdown table row, not a prose contract."""
+    return line.lstrip().startswith("|")
 
 
 def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
@@ -194,6 +220,8 @@ def find_volatile_fact_claims(repo_root: Path) -> list[AuditFinding]:
             if in_generated_block:
                 if "<!-- END:" in line:
                     in_generated_block = False
+                continue
+            if _is_markdown_table_row(line):
                 continue
             window = "\n".join(lines[max(0, line_no - 4) : min(len(lines), line_no + 5)])
             if _GENERATED_FACT_LINK_RE.search(window):
@@ -227,6 +255,8 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
             continue
         lines = blank_fences(text).splitlines()
         for line_no, line in enumerate(lines, 1):
+            if _is_markdown_table_row(line):
+                continue
             if not _GATE_CLAIM_RE.search(line):
                 continue
             window = "\n".join(lines[max(0, line_no - 4) : min(len(lines), line_no + 4)])
@@ -240,7 +270,7 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
                     severity="advisory",
                     detail=(
                         "claims a verifier, gate, schema, or rule enforces behavior, "
-                        "but nearby prose does not name a negative control or known-wrong fixture"
+                        "but nearby active prose does not name a negative control or known-wrong fixture"
                     ),
                 )
             )
@@ -417,7 +447,9 @@ def format_audit_markdown(audit: PublicDocumentationAudit, *, max_findings: int 
         "",
         "This report is advisory. Blocking checks remain in `scripts/audit/lint_docs.py` and",
         "`scripts/audit/check_template_drift.py`; this surface inventories documentation and",
-        "highlights likely false-certification risks for follow-up hardening.",
+        "highlights likely false-certification risks for follow-up hardening. Historical",
+        "changelogs, iteration journals, review archives, and Markdown table rows are",
+        "inventory-only and are not treated as active policy claims.",
         "",
         "## Inventory",
         "",

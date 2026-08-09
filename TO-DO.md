@@ -20,15 +20,16 @@ exemplar's local `TODO.md`. The root backlog is intentionally named
   regenerated from source. Its fixture phase replay is now part of the normal
   project analysis sequence; live retrieval remains an explicit opt-in path.
 - Generated checks for counts, coverage provenance, exemplar roster, and
-  publication records were refreshed on 2026-07-30.
-- The bounded public matrix was rerun across all 24 canonical exemplars on
-  2026-07-30. Twenty-three lanes passed their declared project floors; the
-  `template_active_inference` lane ran 683 tests with 1 skipped and 51
-  deselected, but measured 89.35% against its 90% floor. The combined matrix
-  coverage was 94.47%.
+  publication records were refreshed on 2026-08-08.
+- The release-profile public matrix was rerun across all 24 canonical
+  exemplars in the generated public scope (see
+  [`active_projects.md`](docs/_generated/active_projects.md)) on 2026-08-08.
+  All 24 lanes passed their declared project floors and the combined matrix
+  coverage was 95.39%; the validated receipt was produced with
+  `stage_01_test.py --project-only --all-projects --public-projects --receipt`.
 - The receipt module is shipped (`infrastructure/core/public_matrix_receipt.py`);
-  a full matrix run with `--receipt` is the remaining step.
-- Configured mypy passes with zero errors across 1,476 source files; the
+  the full release-profile matrix and output-isolation receipt are now current.
+- Configured mypy passes with zero errors across 1,496 source files; the
   public-scope ratchet remains a separate gate.
 - Roadmap, status, contribution-map, regression-testing, and threat-model
   surfaces were reconciled against the current generated facts and active IDs;
@@ -65,7 +66,7 @@ been verified.
 
 | ID | Problem and scope | Acceptance evidence |
 | --- | --- | --- |
-| `PUBLIC-MATRIX-1` | Public matrix receipt module with fail-closed output-drift detection; post-coverage output isolation; CLI arg; real-subprocess negative controls. 90% floor pending gate rebuild. | `public_matrix_receipt.py` shipped; 23/24 lanes pass; test output-churn controls verified. |
+| `PUBLIC-MATRIX-1` | Public matrix receipt module with fail-closed output-drift detection; post-coverage output isolation; CLI arg; real-subprocess negative controls. | **SHIPPED 2026-08-08** — release-profile receipt validates 24/24 lanes, all declared floors, zero exit failures, and output isolation; combined coverage is 95.39%. |
 | `RENDERED-PROVENANCE-1` | Rendered provenance: stage/source/config/output fingerprints plus strict rendered publication validation. Atomic confined writes via `secure_write.py`. Snapshots walk source/config/output with symlink confinement and Git-cache filtering. Wired into Stage 04 validation, publication audit (`check_rendered_provenance`), and CI preflight. | 32 rendered provenance tests + 47 artifact-finalization/web-renderer tests pass. Rendered strict audit returns zero review-required findings on canonical exemplars. |
 | `CONFIG-FAIL-CLOSED-1` | Placeholder-token and unconsumed-markdown checkers in publication audit, wired into SOURCE/RENDERED_CHECKERS. | `{{TOKEN}}`, `${token}`, stale chapters, unconsumed Markdown fail release command. |
 | `SECRET-SCAN-1` | Index-blob scanner: reads exact A/C/M/R blobs from Git index; verified-gitlink handling; fail-closed unreadable-blob behavior; pre-commit/manual hook; tracked pre-push defense; rotation handoff. | Real-Git partial-stage controls pass in both directions; findings contain only path, line, and kind. |
@@ -82,7 +83,7 @@ remain in each canonical exemplar's `TODO.md`.
 
 | ID | Priority | Problem and impact | Smallest next step | Acceptance evidence | Status / Scope |
 | --- | --- | --- | --- | --- | --- |
-| `RELEASE-METADATA-1` | Medium | DOI/GitHub metadata freshness, installer pinning, live branch protection not fully provable by repo-only gates. | Add credential-free external metadata receipts; pin mutable installers with checksums. | Release preflight records external checks or operator blocker; no mutable curl|sh remains. | External services operator-owned; not simulated locally. |
+| `RELEASE-METADATA-1` | Medium | DOI/GitHub metadata freshness, installer pinning, live branch protection not fully provable by repo-only gates. | Keep the credential-free external metadata receipt current and obtain administrator confirmation of branch protection. | Release preflight records external checks or operator blocker; no mutable curl|sh remains. | **PARTIAL 2026-08-08** — publication records and `.github/README.md` were refreshed from live GitHub/Zenodo checks; installer pinning is shipped; branch-protection confirmation remains administrator-owned. |
 | `REPRODUCIBLE-PDF-1` | Medium | LaTeX PDF builds embed runner timestamps (`\today`, `/CreationDate`, intermediate `.log`) which vary run-to-run on the same commit. The deterministic pipeline claims byte-for-byte reproducibility but lacked a real compiled-output proof. | Export `SOURCE_DATE_EPOCH` in the composite CI setup action; add a rendered-output snapshot-diff test that fails on byte drift. | Two `--core-only` runs on the same commit produce byte-identical PDFs. | **SHIPPED 2026-08-08**: `SOURCE_DATE_EPOCH` is propagated from the git commit timestamp; real XeLaTeX is compiled twice in `test_compile_latex_is_byte_reproducible_with_pinned_epoch`; deterministic PDF canonicalization stabilizes metadata, identifiers, and font subset names before the byte comparison. |
 | `RELEASE-TEST-GATE-1` | Medium | The release workflow ran only static contracts (root contract, capability manifest, export smoke, rendered audit) — a release tag could be cut while the commit's test matrix was red. | Add a bounded executable test gate to the release workflow; wire the public-matrix receipt into CI. | Release runs pipeline-smoke infra lane + no-mocks gate on the exact tagged SHA before publishing; receipt produced by scheduled CI job. | SHIPPED: release.yml gained "Verify core test contract on tagged SHA" step; CI lint gained strict template-drift gate; regression tier now asserts non-empty collection (55 tests); new scheduled `public-matrix-receipt` CI job uploads the receipt artifact. |
 | `NO-MOCK-CLAIM-1` | Medium | The "No mocks or fakes" README claim is lexically true but semantically weak against hand-rolled stubs. | Add a hand-rolled-fake heuristic to the advisory inventory; reword the README claim. | `verify_no_mocks.py --inventory` reports hand-rolled fakes; README uses scoped wording. | SHIPPED: `scan_hand_rolled_fakes()` heuristic (Fake*/Stub*/Dummy* patterns) wired into `verify_no_mocks.py --inventory`; README scoped. |
@@ -121,7 +122,7 @@ evidence. Verify measured counts from source before starting any item (the
 
 | ID | Problem and impact | Smallest next step | Acceptance evidence |
 | --- | --- | --- | --- |
-| `DOC-NEG-CONTROL-MIN-1` | The doc audit (`scripts/audit/audit_documentation.py`) emits 203 advisory `gate-negative-control` findings across docs that claim a gate enforces behavior without naming a negative-control fixture. Advisory-only today, but several reflect genuinely weak claims. | Triage the 203 findings by distinguishing normative gate contracts from historical/prose references; add named negative controls to the normative claims and retain genuine prose noise as advisory. | The advisory baseline is explicitly reported; normative gate claims gain named negative controls without doc-lint/template-drift regression. |
+| `DOC-NEG-CONTROL-MIN-1` | The doc audit (`scripts/audit/audit_documentation.py`) emits advisory `gate-negative-control` findings across docs that claim a gate enforces behavior without naming a negative-control fixture. Advisory-only today, but several reflect genuinely weak claims. | Triage the remaining 149 active-prose findings by distinguishing normative gate contracts from genuine prose; add named negative controls to the normative claims and retain residual noise as advisory. | **PARTIAL 2026-08-08** — historical policy documents, inventory tables, and generated-fact rows are excluded from the active audit; the live audit reports 149 gate advisories and zero volatile-fact or undocumented-symbol findings. |
 | `INSTALLER-PIN-MIN-1` | `RELEASE-METADATA-1` "pin mutable installers" gap: live docs and automatic bootstrap needed an auditable uv installer pin. | Pin uv `0.12.0`, verify the official installer SHA-256 before execution in both shell bootstraps, and route setup guidance through the checksum-verified dependency guide. | **SHIPPED 2026-08-08** — no live repo-shipped setup guidance uses an unverifiable uv `curl|sh`; the Dockerfile generator retains an explicit `uv_version="latest"` opt-out for callers that knowingly accept a floating build. |
 | `BAK-ARTIFACT-MIN-1` | Cleanup hygiene required an explicit recheck for backup/stray artifacts and generated-output guards. | Re-run artifact/secret guards and scan tracked source for `*.bak`, `*.orig`, and `*~`. | **SHIPPED 2026-08-08** — no matching stray artifacts remain; guard reruns are included in the release validation pass. |
 

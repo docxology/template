@@ -42,7 +42,19 @@ from .figure_support import (
     TEAL_LIGHT,
     WHITE,
 )
+from .figure_support import (
+    FIGURE_REGISTRY_SCHEMA as _FIGURE_REGISTRY_SCHEMA,
+)
+from .figure_support import (
+    INTEGRATION_FIGURE_SPECS as _INTEGRATION_FIGURE_SPECS,
+)
 from .rule_hierarchy_figure import generate_rule_hierarchy
+
+# Registry metadata is re-exported from this compatibility façade because the
+# figure publisher and downstream project scripts historically import the
+# complete figure contract from ``src.figures``.
+FIGURE_REGISTRY_SCHEMA = _FIGURE_REGISTRY_SCHEMA
+INTEGRATION_FIGURE_SPECS = _INTEGRATION_FIGURE_SPECS
 
 logger = logging.getLogger(__name__)
 
