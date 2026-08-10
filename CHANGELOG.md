@@ -49,7 +49,7 @@ not to the contents of any specific workspace.
 
 ### Triple-check and committed-tree validation (2026-08-09)
 
-- Bound coverage provenance to committed revision `abae0e721`; the root
+- Bound coverage provenance to committed revision `25169a501`; the root
   infrastructure release profile passed 9,842 tests, skipped 9 optional/tool
   cases, and reached 84.29% infrastructure coverage.
 - Re-ran all 24 public exemplar lanes with two isolated outer workers and no

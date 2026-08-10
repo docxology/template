@@ -1331,3 +1331,25 @@ passed all 24 public lanes with no inner xdist, collected 5,960 tests, and
 reported 94.7116% combined coverage with output-isolation digests. Receipt
 SHA-256:
 `984b4c33b9c2592d4e3895e627cc402ffb73ef0ca5d54936d062708a973ed1e7`.
+
+## Root backlog closures 2026-08-09
+
+These root rows were removed from `TO-DO.md` after the final committed-tree
+acceptance pass. The remaining root rows are intentionally future work or
+external/tool blockers; no closure below implies that live publication,
+administrator authority, or private-sidecar promotion occurred.
+
+| ID | Former status | Evidence | Acceptance and negative control |
+| --- | --- | --- | --- |
+| `STATUS-REFRESH-MED-1` | partial | `docs/_generated/status_evidence.json`; stable status IDs with typed command, scope, owner, date, mode, receipt, and health fields | `status_evidence.py --check` and `status_freshness.py --as-of 2026-08-09` passed; fixtures for missing receipts, stale/future dates, and mismatched health fail |
+| `PUBLIC-PUBLISH-MANIFEST-MED-1` | partial | `template-publication-payload/v1` immutable manifest and provider handoff in `infrastructure/publishing/preflight.py` and archival orchestration | Documentation/publishing suites passed; local-only roots, symlink escapes, duplicate paths, credential-shaped metadata, changed payloads, and invalid targets are rejected before provider I/O |
+| `TEST-DISCOVERY-PERF-MED-1` | partial | [`test-performance-evidence.json`](test-performance-evidence.json), schema `template-test-performance-v1`, benchmarked commit `db7b3b061`, 204 matched tests per lane | `scripts/maintenance/benchmark_tests.py --target pipeline-smoke --profile quick --parallel-workers 2 --minimum-improvement 30` passed at 34.24% improvement; dirty/staged/untracked source changes invalidate the evidence and serial diagnostics remain available |
+| `MODULARITY-MED-1` | open | Madlib `config_models.py` and Redacted Report `kmyth_support.py` splits preserve import façades; root health and the public matrix remain green | `module_line_count_check.py` passed; focused import/behavior tests and the no-mocks inventory passed; oversized modules and removed re-exports remain negative controls |
+| `COVERAGE-SNAPSHOT-MED-1` | partial | `docs/_generated/coverage_snapshot.json` schema 3, source-tree identity, and all 24 regenerated public rows; source revision `25169a501` | `counts.py --check` and the 24-lane release profile passed; newly tracked/untracked source or test files and legacy provenance schema are rejected |
+| `REGRESSION-SIGNPOST-MIN-1` | partial | `tests/regression/README.md`, `docs/maintenance/regression-testing.md`, and the full-roster claim manifest | `uv run pytest tests/regression/ -q --no-cov --timeout=120` passed with 55 tests; empty collection, stale roster, missing claim path, and undocumented state fail |
+| `BUNDLE-ENTRYPOINT-MIN-1` | partial | Discoverable bundle/archive commands in runner help, orchestration menu, and `docs/RUN_GUIDE.md`; rehearsal CLI is dry-run by default | `bundle_executable.py --help`, `archive_publication.py --help`, and `release_rehearsal.py --help` passed; missing projects/bundles fail and default core execution does not build or publish |
+
+The committed benchmark snapshot intentionally omits subprocess output tails;
+the raw local receipt was hashed separately during review, while the committed
+summary retains the comparable timings, selection, revision, and acceptance
+decision without machine-local paths.

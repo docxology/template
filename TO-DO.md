@@ -84,14 +84,7 @@ states are explicit blockers.
 | `EXECUTABLE-BUNDLE-MAJ-1` | partial | Major | Claim receipt, lockfiles, container policy | Complete immutable bundle and offline-container verification; attach owner/tool receipts where unavailable | executable-bundle receipt | `uv run python scripts/runner/bundle_executable.py --help` | path escape, stale payload, or missing lock must fail preflight |
 | `CLEAN-CHECKOUT-MAJ-1` | partial | Major | Release commands and generated receipts | Expand the two-run rehearsal to health, matrix, render, cleanliness, and optional bundle lanes | clean-checkout receipt | `uv run python scripts/maintenance/release_rehearsal.py --help` | dirty output or changed revision must fail the rehearsal |
 | `RELEASE-METADATA-1` | partial | Medium | Typed release receipt schema | Bind command, scope, owner, date, health, and verification mode to generated evidence | release metadata receipt | `uv run python scripts/docgen/publication_records.py --check` | receipt without revision or owner status must fail |
-| `STATUS-REFRESH-MED-1` | partial | Medium | Status ledger and release receipt | Add stable IDs and receipt links to every active status row, then run freshness and receipt checks | status evidence receipt | `uv run python scripts/gates/status_freshness.py --as-of 2026-08-09` | future, stale, or receipt-less status must fail |
-| `PUBLIC-PUBLISH-MANIFEST-MED-1` | partial | Medium | Immutable payload manifest and provider API | Pass one preflight manifest through every provider and reject changed payloads | publication payload manifest | `uv run python scripts/audit/check_public_template_contract.py --strict` | symlink escape, duplicate path, credential, or changed content must fail |
-| `TEST-DISCOVERY-PERF-MED-1` | partial | Medium | Isolated project matrix and impact planner | Measure quick feedback, add cache/resource/phase receipts, and prove the speed target without reducing release scope | test-impact and benchmark receipt | `uv run python scripts/audit/test_impact.py` | untracked or staged source changes must not be omitted |
-| `MODULARITY-MED-1` | open | Medium | Module-line-count findings and import contracts | Split the three warning hubs, preserve re-exports, and attach size/import/no-mocks receipts | modularity receipt | `uv run python scripts/gates/module_line_count_check.py` | removed re-export or new oversized hub must fail |
-| `COVERAGE-SNAPSHOT-MED-1` | partial | Medium | Per-project gates and source inventory | Re-run all public lanes and regenerate versioned coverage provenance from the final source tree | coverage provenance receipt | `uv run python scripts/docgen/counts.py --check` | new source/test file or changed tree identity must fail |
 | `DOC-NEG-CONTROL-MIN-1` | partial | Minor | Documentation audit classification | Classify active, generated, inventory, normative, and historical advisories; gate only active normative claims | documentation audit receipt | `uv run python scripts/audit/audit_documentation.py --format json` | a normative gate claim without a real negative control must fail |
-| `REGRESSION-SIGNPOST-MIN-1` | partial | Minor | Claim-binding manifest and live counts | Reconcile regression guidance with the current roster and generated receipt | regression contract receipt | `uv run pytest tests/regression/ -q --no-cov --timeout=120` | empty collection or stale roster must fail |
-| `BUNDLE-ENTRYPOINT-MIN-1` | partial | Minor | Opt-in runner scripts | Document discoverable dry-run bundle and rehearsal commands without changing defaults | command discoverability check | `uv run python scripts/runner/bundle_executable.py --help` | default pipeline must not build or publish a bundle |
 | `COVERAGE-GAPS-MIN-1` | partial | Minor | Generated coverage snapshot | Replace copied coverage-gap counts with links and source-derived status | coverage-gap receipt | `uv run python scripts/docgen/counts.py --check` | copied stale measurement must fail drift |
 | `ARCHIVAL-TRACKER-MIN-1` | partial | Minor | Publication records and provider receipts | Reconcile archival tracking from live receipts and record unavailable providers distinctly | archival tracking receipt | `uv run python scripts/runner/archive_publication.py --help` | missing credential or provider must not report success |
 | `SECURITY-OWNERSHIP-1` | blocked-external | Medium | Administrator branch-protection and CODEOWNERS receipt | Obtain administrator evidence for branch protection and required review; until then remain blocked | administrator authority receipt | `uv run python scripts/gates/security_scan.py --help` | local files must not imply remote protection exists |
@@ -252,107 +245,6 @@ receipt fails offline; a network outage produces an explicit external-check
 blocker; a refreshed receipt names the exact release commit and check date; no
 mutable installer command remains in maintained setup guidance.
 
-### `STATUS-REFRESH-MED-1` — turn subsystem freshness into evidence receipts
-
-**Current state.** `scripts/gates/status_freshness.py` checks dates and future
-values, but it cannot tell whether a green row's command actually ran or whether
-its artifact is the one being described.
-
-**Scope.** Extend the status contract, keeping `STATUS.md` human-readable, with
-stable row IDs and machine-readable fields for verification command, working
-scope, owner, as-of date, receipt/artifact path, and health decision. Add a
-validator/generator that resolves commands and paths, rejects future or stale
-dates, rejects a healthy row without evidence, and distinguishes `manual`,
-`external`, `optional-tool`, and `automated` verification. Preserve historical
-dates; do not rewrite them to make the ledger green.
-
-**Acceptance evidence.** A fixture with a missing command, missing receipt,
-future date, stale date, wrong project path, or mismatched health decision fails
-with a stable diagnostic. A valid current ledger passes the health gate and
-renders a compact evidence index. The publishing row remains explicitly
-credential-blocked until a real deposit is authorized and performed.
-
-### `PUBLIC-PUBLISH-MANIFEST-MED-1` — make non-dry-run payloads explicit
-
-**Problem and impact.** The publication threat model still calls for a stronger
-path manifest at the boundary where local artifacts and credentials become
-external deposits. A dry-run receipt must describe the exact payload that a
-future `--commit` invocation would send.
-
-**Scope.** Centralize publication payload enumeration for
-`scripts/publish/`, `scripts/runner/archive_publication.py`, and the provider
-adapters. The manifest must enforce an allowed output root, symlink confinement,
-public-project identity, duplicate/path collision checks, source/config/output
-hashes, metadata redaction, provider target, and dry-run/commit mode. Pass an
-immutable manifest object into providers rather than re-walking the checkout.
-
-**Acceptance evidence.** Offline tests prove that a local-only project,
-symlinked private file, stale generated artifact, duplicate path, token-shaped
-metadata, changed payload after preflight, and unexpected provider target all
-fail before network I/O. A valid dry-run receipt's path/hash set is identical to
-the set handed to a provider in an instrumented local adapter. Existing
-credential and publication tests remain green without live secrets.
-
-### `TEST-DISCOVERY-PERF-MED-1` — shorten repository-wide feedback safely
-
-**Problem and impact.** The repository now has explicit test profiles and
-isolated project processes, but the pre-push documentation contract still
-re-collects every canonical exemplar serially and is a large fraction of local
-feedback time.
-
-**Scope.** Instrument the docs-contract phases
-(`check_template_drift`, API/reference generation checks, roster/counts/
-publication checks, and the one project-surface test) and record phase timing.
-Parallelize only independent read-only phases or isolated project collection;
-reuse the central worker policy and unique temporary roots. Any cache must be
-keyed by commit/tree hash, interpreter, lockfile, profile, and tool version and
-must be invalidated for a dirty staged tree. Preserve one deterministic serial
-diagnostic mode and the current fail-closed semantics.
-
-**Acceptance evidence.** A same-machine baseline and post-change benchmark are
-checked into a machine-readable report, with no correctness gate removed. A
-deliberately changed exemplar, generated doc, or project marker invalidates the
-fast path and is detected by the serial oracle. Project `conftest.py` package
-collisions remain impossible, and failure output identifies the phase/project
-that failed.
-
-### `MODULARITY-MED-1` — split warning hubs without changing import surfaces
-
-**Problem and impact.** Three infrastructure modules remain warning-sized
-coordination hubs. Their public imports are stable, but their mixed discovery,
-receipt, and validation responsibilities make focused testing and review slower
-than necessary.
-
-**Scope.** Split the three measured warning hubs at responsibility boundaries,
-preserve re-export/import compatibility, keep scripts thin, and add module-size
-and import-surface regression receipts. Rename environment-isolation test
-helpers that are called `Fake` when they are real probes or injected hosts so
-the no-mocks inventory describes intent accurately.
-
-**Acceptance evidence.** The module-line-count gate reports no new warning hub,
-public imports and behavior are unchanged, and the focused infrastructure and
-no-mocks suites pass. A temporary oversized module and a removed re-export must
-fail their respective controls.
-
-### `COVERAGE-SNAPSHOT-MED-1` — make coverage-gap guidance source-bound
-
-**Problem and impact.** `docs/development/coverage-gaps.md` is a useful manual
-classification of shims, optional-tool paths, and first-party logic, but its
-verification date and module rows can lag behind the current root and exemplar
-gates. Stale gap prose encourages line chasing or hides a real branch gap.
-
-**Scope.** Generate or validate the coverage-gap inventory from the documented
-coverage oracle and current source tree. Classify entry-point shims separately
-from first-party logic, record the command/profile/interpreter/date, link each
-target row to a test or an explicit rationale, and retain a term-missing excerpt
-for actionable branches. Add a freshness check without turning every low
-coverage CLI shim into a false defect.
-
-**Acceptance evidence.** The gap document passes from a clean checkout, stale
-dates or nonexistent modules fail, every below-floor first-party row has a
-named next test or an explicit external-tool reason, and the generated counts
-remain owned by `docs/_generated/COUNTS.md`.
-
 ## Minor improvements
 
 ### `DOC-NEG-CONTROL-MIN-1` — triage documentation gate advisories
@@ -374,48 +266,23 @@ remaining advisory set is categorized and reproducible; active gate claims name
 real negative controls; `uv run python scripts/audit/audit_documentation.py
 --format json` reports zero volatile-fact and undocumented-symbol findings.
 
-### `REGRESSION-SIGNPOST-MIN-1` — reconcile the regression documentation surface
-
-**Problem and impact.** `tests/regression/manifest.json`,
-`tests/regression/README.md`, and `docs/maintenance/regression-testing.md`
-describe different maturity levels and historical example rosters. That makes
-it easy for a contributor to add a pin in the wrong location or mistake
-collection coverage for complete claim coverage.
-
-**Scope.** Update the two guides from the live manifest and public roster,
-document the explicit `bound`/`not_applicable`/`external_data` states from
-`CLAIM-BINDING-MAJ-1`, and add a consistency check for required paths, schema
-version, and “next step” language. Keep historical rationale in the maintenance
-record, not the active backlog.
-
-**Acceptance evidence.** A generated/check mode fails on a missing test file,
-stale project roster, undocumented manifest state, or claim path that does not
-exist. The guides contain no obsolete “first slice only” claim after the check
-passes.
-
-### `BUNDLE-ENTRYPOINT-MIN-1` — make the opt-in bundle discoverable
-
-**Scope.** Add the smallest safe convenience surface for the existing bundle
-runner: help text, menu/command documentation, explicit output path, and a
-negative control for a missing or local-only project. Keep it opt-in and do not
-silently add container builds or archival publication to the default pipeline.
-
-**Acceptance evidence.** `--help`, the documented dry-run command, and the
-missing-bundle/missing-project failures agree across `run.sh`,
-`infrastructure.orchestration`, `docs/RUN_GUIDE.md`, and the runner scripts;
-the default `--core-only` plan is unchanged.
-
 ### `COVERAGE-GAPS-MIN-1` — remove stale manual snapshots
 
-**Scope.** As an interim measure before `COVERAGE-SNAPSHOT-MED-1`, refresh the
-coverage-gap document's verification date and rows from one recorded oracle,
-remove claims about tests or modules that no longer exist, and link low rows to
-the current test or explicit rationale. Do not copy generated percentages into
-the root backlog.
+**Current state.** The document now separates the historical infrastructure
+baseline from current source-bound public coverage provenance and labels CLI,
+optional-tool, and first-party rows by their testing contract. The remaining
+gap is an automated module-level receipt for the root infrastructure run.
+
+**Scope.** Generate the module-gap inventory from one recorded infrastructure
+coverage oracle, retain the command/profile/interpreter/date, and link each
+target row to a test or explicit external-tool rationale. Do not copy generated
+percentages into the root backlog or treat thin CLI shims as first-party defects.
 
 **Acceptance evidence.** The documented oracle runs successfully, the source
 and test paths named by the document exist, the root counts check passes, and a
 second reviewer can reproduce the row classification from the recorded command.
+The next implementation must add a stale-module and missing-test negative
+control before this row can be closed.
 
 ### `ARCHIVAL-TRACKER-MIN-1` — keep external archival state honest
 
@@ -463,16 +330,23 @@ GitHub administrator can complete them.
 
 ## Sequencing and dependency graph
 
-1. `COVERAGE-GAPS-MIN-1`, `REGRESSION-SIGNPOST-MIN-1`, and
-   `DOC-NEG-CONTROL-MIN-1` establish accurate inputs and contributor guidance.
-2. `STATUS-REFRESH-MED-1`, `RELEASE-METADATA-1`,
-   `PUBLIC-PUBLISH-MANIFEST-MED-1`, and `TEST-DISCOVERY-PERF-MED-1` can proceed
-   in parallel once their current baselines are recorded.
-3. `CLAIM-BINDING-MAJ-1` consumes the corrected regression and generated-doc
-   contracts; it is the evidence dependency for `EXECUTABLE-BUNDLE-MAJ-1`.
+1. `COVERAGE-GAPS-MIN-1` and `DOC-NEG-CONTROL-MIN-1` establish accurate inputs
+   and contributor guidance; their remaining work is source-bound inventory and
+   real controls, not more copied counts.
+2. `RELEASE-METADATA-1` and `ARCHIVAL-TRACKER-MIN-1` can proceed in parallel,
+   but external metadata and provider states remain explicitly non-green until
+   their receipts are supplied.
+3. `CLAIM-BINDING-MAJ-1` is the evidence dependency for
+   `EXECUTABLE-BUNDLE-MAJ-1`; both must preserve the public/private boundary.
 4. `CLEAN-CHECKOUT-MAJ-1` is the final integration rehearsal for any new
    release gate. `SECURITY-OWNERSHIP-1` and
    `SECURITY-PRIVATE-PROMOTION-1` remain external acceptance prerequisites.
+
+The status ledger, immutable publication preflight, test-impact/performance
+lane, module splits, coverage provenance, regression signposts, and opt-in
+bundle/rehearsal discoverability were closed on 2026-08-09; their evidence is
+retained in [`docs/maintenance/exemplar-backlog-history.md`](docs/maintenance/exemplar-backlog-history.md)
+and the generated receipts.
 
 ## Backlog operating rules
 

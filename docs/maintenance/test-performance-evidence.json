@@ -1,0 +1,33 @@
+{
+  "acceptance_passed": true,
+  "benchmarked_commit": "db7b3b061ba7fc633c9499ac07f450320f52d512",
+  "both_runs_passed": true,
+  "clean_checkout": true,
+  "improvement_percent": 34.24,
+  "minimum_improvement_percent": 30.0,
+  "parallel": {
+    "axis": "parallel",
+    "selected_tests": 204,
+    "wall_elapsed_seconds": 12.368,
+    "workers": 2
+  },
+  "profile": "quick",
+  "provenance_matches": true,
+  "schema_version": "template-test-performance-v1",
+  "selection": [
+    "pipeline-smoke",
+    "quick"
+  ],
+  "serial": {
+    "axis": "serial",
+    "selected_tests": 204,
+    "wall_elapsed_seconds": 18.808,
+    "workers": 1
+  },
+  "target": "pipeline-smoke",
+  "notes": [
+    "Both lanes passed with identical selection and committed revision.",
+    "Output tails are intentionally omitted from this committed receipt to avoid machine-local paths.",
+    "The public release matrix remains isolated per project with no nested inner xdist."
+  ]
+}

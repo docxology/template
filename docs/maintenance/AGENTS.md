@@ -30,6 +30,7 @@ LaTeX). These docs are decade-scale planning, not day-of operations.
 | [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Adversarial-review remediation plan — open design/multi-step items |
 | [`release-boundary.md`](release-boundary.md) | Root package/tag release surface vs. the standalone publication lane |
 | [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `>=3.10` floor, 3.12 default, 3.13 readiness lane |
+| [`test-performance-evidence.json`](test-performance-evidence.json) | Committed redacted benchmark receipt for the quick-feedback performance contract |
 
 ## When to edit
 
