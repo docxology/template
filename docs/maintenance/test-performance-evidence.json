@@ -1,14 +1,14 @@
 {
   "acceptance_passed": true,
-  "benchmarked_commit": "db7b3b061ba7fc633c9499ac07f450320f52d512",
+  "benchmarked_commit": "3769380fc7c79c0495898b73e01bdbde271ad667",
   "both_runs_passed": true,
   "clean_checkout": true,
-  "improvement_percent": 34.24,
+  "improvement_percent": 36.1,
   "minimum_improvement_percent": 30.0,
   "parallel": {
     "axis": "parallel",
     "selected_tests": 204,
-    "wall_elapsed_seconds": 12.368,
+    "wall_elapsed_seconds": 12.243,
     "workers": 2
   },
   "profile": "quick",
@@ -21,7 +21,7 @@
   "serial": {
     "axis": "serial",
     "selected_tests": 204,
-    "wall_elapsed_seconds": 18.808,
+    "wall_elapsed_seconds": 19.159,
     "workers": 1
   },
   "target": "pipeline-smoke",

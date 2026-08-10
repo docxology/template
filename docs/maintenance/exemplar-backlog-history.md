@@ -1398,3 +1398,25 @@ active TODO wording; residual external and optional-tool work remains active:
 
 These entries are source-contract evidence only; they do not promote optional
 LLM, network, renderer, publication, or owner-authority paths.
+
+## Final committed revision revalidation 2026-08-10
+
+Commit `3769380fc7c79c0495898b73e01bdbde271ad667` passed the two-worker
+isolated public release matrix: all 24 lanes passed, 94.6359% combined
+coverage exceeded the 75% union floor, and there were no skips, timeouts,
+nonzero exits, or output-isolation failures. The receipt uses
+`template-public-matrix/v3` with `outer=2, inner=none`; its local review digest
+is `c5b5c5c904f5a2605bd37522b20237b21aaacc1cf90696e6afa84eed70a31dae`.
+
+The same revision passed the infrastructure release gate with 9,851 tests
+passed, 9 optional/tool skips, 73 deselected tests, and 84.29% coverage
+against the 60% floor. The clean-checkout quick-feedback benchmark ran 204
+matched tests per lane, passed both serial and two-worker runs, and improved
+from 19.159 seconds to 12.243 seconds (36.10% against the 30% target). Its
+redacted receipt digest is
+`f3ac4b40d8f4185882669d09c4b8806be398fae229039cc71cf6739451c0de4b`.
+
+These are local deterministic and hosted-command-contract results only;
+administrator branch protection, CODEOWNERS review, private-sidecar
+promotion, hosted Linux rehearsal, and real publication remain external
+release blockers.
