@@ -137,6 +137,24 @@ class TestMarkdownLinkExtraction:
         assert len(file_refs) == 1
         assert file_refs[0]["target"] == "other.md"
 
+    def test_extract_links_ignores_inline_code_examples_after_fences(self, tmp_path):
+        """Illustrative Markdown syntax in a table is not a live link."""
+        md_file = tmp_path / "test.md"
+        md_content = """```bash
+echo example
+```
+
+| Meaning |
+| --- |
+| `![alt](path)` |
+"""
+
+        internal, external, file_refs = check_links.extract_links(md_content, md_file)
+
+        assert internal == []
+        assert external == []
+        assert file_refs == []
+
 
 class TestCheckFileReferenceEdgeCasesAdditional:
     """Test edge cases in check_file_reference function."""

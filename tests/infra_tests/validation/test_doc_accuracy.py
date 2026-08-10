@@ -57,6 +57,18 @@ class TestExtractHeadings:
         result = extract_headings(content)
         assert "custom-anchor" in result
 
+    def test_explicit_html_anchor_is_extracted(self):
+        """GitHub-facing HTML signposts are valid in-page destinations."""
+        content = '<a id="issue--pr-templates"></a>\n\n# Templates\n'
+        result = extract_headings(content)
+        assert "issue--pr-templates" in result
+
+    def test_gfm_slug_preserves_removed_punctuation_spacing(self):
+        """GFM-compatible slugs keep the double separator around removed punctuation."""
+        content = "### [LAYER 1: INFRASTRUCTURE] Generic Build & Validation Tools\n"
+        result = extract_headings(content)
+        assert "layer-1-infrastructure-generic-build--validation-tools" in result
+
     def test_explicit_anchor_overrides_auto_anchor(self):
         """Both the explicit anchor and auto-generated anchor may be present."""
         content = "# My Heading {#my-id}\n"

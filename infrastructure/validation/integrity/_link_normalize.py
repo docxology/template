@@ -116,6 +116,6 @@ def _is_real_path_item(item_name: str) -> bool:
     """Check if a directory tree item looks like a real file/directory."""
     if any(skip in item_name.lower() for skip in ["...", "etc", "files", "more"]):
         return False
-    if "{" in item_name and "}" in item_name:
+    if ("{" in item_name and "}" in item_name) or ("<" in item_name and ">" in item_name):
         return False
     return True

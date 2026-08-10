@@ -10,7 +10,7 @@ class AnchorLinkPolicy:
     """Rules for when anchor links should skip heading validation."""
 
     manuscript_path_token: str = "manuscript"
-    cross_ref_prefixes: tuple[str, ...] = ("fig:", "sec:", "eq:", "table:", "tab:")
+    cross_ref_prefixes: tuple[str, ...] = ("fig:", "sec:", "eq:", "table:", "tab:", "gl:")
     common_sections: tuple[str, ...] = (
         "methodology",
         "experimental_results",

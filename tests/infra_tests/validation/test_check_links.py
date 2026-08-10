@@ -75,6 +75,14 @@ class TestValidateDirectoryStructures:
         (tmp_path / "src").mkdir()
         assert validate_directory_structures("```\n├── src/\n```", tmp_path / "test.md", tmp_path) == []
 
+    def test_tree_diagram_rejects_missing_repo_qualified_path(self, tmp_path):
+        """Root-qualified paths remain actionable even when bare branches are illustrative."""
+        (tmp_path / "infrastructure").mkdir()
+        content = "```\n├── infrastructure/does_not_exist.py\n```"
+        issues = validate_directory_structures(content, tmp_path / "README.md", tmp_path)
+        assert len(issues) == 1
+        assert issues[0]["target"] == "infrastructure/does_not_exist.py"
+
 
 class TestValidatePythonImports:
     def test_valid_import(self, tmp_path):
@@ -114,6 +122,12 @@ class TestValidatePlaceholderConsistency:
     def test_skip_agent_files(self, tmp_path):
         content = "Use {name} for the project."
         fp = tmp_path / "AGENTS.md"
+        assert validate_placeholder_consistency(content, fp, tmp_path) == []
+
+    def test_command_placeholders_are_reusable(self, tmp_path):
+        """Generic project arguments in executable examples are intentional."""
+        content = "```bash\nuv run --project {name}\n```"
+        fp = tmp_path / "docs" / "guide.md"
         assert validate_placeholder_consistency(content, fp, tmp_path) == []
 
 
@@ -245,6 +259,22 @@ class TestLinkAuditPerformance:
         assert not any(
             part in {".git", ".venv", "node_modules", "output", "__pycache__"} for f in pruned for part in f.parts
         )
+
+    def test_discovery_excludes_agent_docs_and_declared_submodules(self, tmp_path):
+        """Operational skill trees and third-party submodules stay out of the audit."""
+        from infrastructure.validation.integrity.link_audit_core import discover_link_audit_files
+
+        (tmp_path / ".agents").mkdir()
+        (tmp_path / ".agents" / "example.md").write_text("[missing](nope.md)\n")
+        vendor = tmp_path / "vendor" / "upstream"
+        vendor.mkdir(parents=True)
+        (vendor / "INSTALL.md").write_text("[missing](nope.md)\n")
+        (tmp_path / ".gitmodules").write_text('[submodule "upstream"]\n\tpath = vendor/upstream\n')
+        (tmp_path / "README.md").write_text("# Public\n")
+
+        files = discover_link_audit_files(tmp_path)
+
+        assert files == [tmp_path / "README.md"]
 
     @pytest.mark.timeout(120)
     def test_audit_finds_only_known_broken_link_under_budget(self, tmp_path):

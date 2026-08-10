@@ -19,6 +19,7 @@ from urllib.parse import unquote, urlsplit
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs._io import read_markdown
+from infrastructure.validation.docs.accuracy import heading_slug
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
@@ -169,9 +170,6 @@ _NON_ANCHOR_FRAGMENT_PREFIXES: tuple[str, ...] = ("gl:",)
 _ATX_HEADING_RE = re.compile(r"^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$", re.MULTILINE)
 _EXPLICIT_ID_RE = re.compile(r"""<a\s+(?:id|name)\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
 _CURLY_ID_RE = re.compile(r"\{#([A-Za-z0-9_:.-]+)\}")
-_INLINE_CODE_RE = re.compile(r"`([^`]*)`")
-_MD_LINK_TEXT_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
-_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
 def _blank_fences(text: str) -> str:
@@ -186,30 +184,6 @@ def _blank_fences(text: str) -> str:
         return "".join("\n" if ch == "\n" else " " for ch in match.group(0))
 
     return _FENCE_RE.sub(_blank, text)
-
-
-def heading_slug(text: str) -> str:
-    """Return the GitHub-Flavored-Markdown anchor slug for a heading's text.
-
-    Mirrors ``github-slugger``: render-then-slug. Markup is reduced to its text
-    content, the result is lowercased, characters outside ``[\\w\\s-]`` are dropped,
-    and spaces become hyphens.
-
-    Two behaviours matter and are easy to get wrong:
-
-    * A leading emoji is dropped but the space after it is not, so
-      ``## 🚀 Quick Start`` slugs to ``-quick-start`` (leading hyphen), NOT
-      ``quick-start``.
-    * Intra-word underscores are not emphasis in GFM and survive into the slug,
-      so ``secure_run.sh`` contributes ``secure_runsh``.
-    """
-    s = _INLINE_CODE_RE.sub(r"\1", text.strip())
-    s = _MD_LINK_TEXT_RE.sub(r"\1", s)
-    s = _HTML_TAG_RE.sub("", s)
-    s = re.sub(r"[*~]+", "", s)
-    s = s.lower()
-    s = re.sub(r"[^\w\s-]", "", s, flags=re.UNICODE)
-    return s.replace(" ", "-")
 
 
 def collect_anchors(md_file: Path) -> frozenset[str]:

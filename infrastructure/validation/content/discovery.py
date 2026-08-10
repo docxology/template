@@ -9,24 +9,43 @@ from infrastructure.core.exceptions import FileNotFoundError, NotADirectoryError
 
 MarkdownDiscoveryScope = Literal["tree", "repo", "link_audit"]
 
+# Keep the legacy integrity-audit scope aligned with the canonical repository
+# documentation scope. This is repeated here rather than imported from the
+# ``docs`` package because ``infrastructure.validation.content`` is imported by
+# that package during initialization; a module-level import would create a
+# circular dependency. Update both lists together when adding a local-only
+# documentation tree.
 _LINK_AUDIT_EXCLUDE_PARTS: frozenset[str] = frozenset(
     {
+        ".agents",
+        ".benchmarks",
+        ".cache",
+        ".claude",
+        ".codegraph",
+        ".codex",
+        ".cursor",
         ".git",
+        ".mypy_cache",
         ".omo",
+        ".provenance",
         ".pytest_cache",
+        ".ruff_cache",
+        ".tox",
+        ".venv",
+        "_skill-eval",
         "__pycache__",
+        "archive",
+        "build",
+        "dist",
         "htmlcov",
         "node_modules",
-        "output",
-        # Non-rendered typed project subfolders (private symlinked work). Keep in
-        # sync with discovery.NON_RENDERED_SUBDIRS.
-        "archive",
+        "ongoing",
         "other",
+        "output",
         "published",
-        "working",
         "site-packages",
-        ".venv",
         "venv",
+        "working",
     }
 )
 

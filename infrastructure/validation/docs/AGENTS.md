@@ -68,6 +68,8 @@ Shared via [`scan_scope.py`](scan_scope.py) (`DEFAULT_EXCLUDE_PARTS`, `SKILL_EVA
 | Path component | Rationale |
 | --- | --- |
 | `output/`, `projects/archive/`, `projects/working/` | Regenerated or non-executed trees |
+| `.agents/`, `.cursor/` | Tracked agent/IDE distribution metadata; validated by their own manifest/reachability gates |
+| Declared Git submodules | Third-party source trees owned by their upstream repository |
 | `_generated/` | Machine-generated snippets |
 | `_skill-eval/` | Regenerated skill-eval harness fixtures under `docs/prompts/_skill-eval/` |
 

@@ -16,6 +16,9 @@ _CONFIG_REF_RE = re.compile(
     r"`([a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)+)`",
     re.IGNORECASE,
 )
+_INLINE_CODE_RE = re.compile(r"`([^`]*)`")
+_MD_LINK_TEXT_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 _TERMINOLOGY_RULES: tuple[tuple[re.Pattern[str], str, str], ...] = (
     (
@@ -31,24 +34,40 @@ _TERMINOLOGY_RULES: tuple[tuple[re.Pattern[str], str, str], ...] = (
 )
 
 
+def heading_slug(text: str) -> str:
+    """Return the GitHub-Flavored-Markdown anchor slug for heading text."""
+    rendered = _INLINE_CODE_RE.sub(r"\1", text.strip())
+    rendered = _MD_LINK_TEXT_RE.sub(r"\1", rendered)
+    rendered = _HTML_TAG_RE.sub("", rendered)
+    rendered = re.sub(r"[*~]+", "", rendered).lower()
+    rendered = re.sub(r"[^\w\s-]", "", rendered, flags=re.UNICODE)
+    return rendered.replace(" ", "-")
+
+
 def extract_headings(content: str) -> set[str]:
-    """Extract all heading anchors from markdown."""
-    headings = set()
+    """Extract GitHub-compatible heading and explicit HTML anchors.
 
-    # Pattern for headings with explicit anchors
-    anchor_pattern = re.compile(r"^#+\s+.*\{#([^}]+)\}", re.MULTILINE)
-    for match in anchor_pattern.finditer(content):
-        headings.add(match.group(1))
+    The blocking cross-link linter and the legacy integrity audit must agree on
+    anchors.  In addition to ATX headings, GitHub-rendered documents commonly
+    use explicit ``<a id=...>`` signposts and ``{#custom-id}`` attributes.
+    Fenced examples are blanked before parsing so illustrative headings do not
+    become live destinations.
+    """
+    headings: set[str] = set()
+    fenced = re.compile(r"^[ \t]*(?P<fence>`{3,}|~{3,}).*?\n.*?\n[ \t]*(?P=fence)", re.MULTILINE | re.DOTALL)
+    scrubbed = fenced.sub(lambda match: "\n" * match.group(0).count("\n"), content)
+    headings.update(re.findall(r"<a\s+(?:id|name)\s*=\s*[\"']([^\"']+)[\"']", scrubbed, re.IGNORECASE))
 
-    # Pattern for regular headings (convert to anchor format)
-    heading_pattern = re.compile(r"^(#+)\s+(.+)$", re.MULTILINE)
-    for match in heading_pattern.finditer(content):
-        heading_text = match.group(2).strip()
-        # Convert to anchor format
-        anchor = re.sub(r"[^\w\s-]", "", heading_text.lower())
-        anchor = re.sub(r"[-\s]+", "-", anchor)
-        anchor = anchor.strip("-")
-        if anchor:
+    heading_pattern = re.compile(r"^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$", re.MULTILINE)
+    explicit_pattern = re.compile(r"\{#([^}]+)\}")
+    for match in heading_pattern.finditer(scrubbed):
+        heading_text = match.group(2)
+        explicit = explicit_pattern.search(heading_text)
+        if explicit:
+            headings.add(explicit.group(1))
+            heading_text = explicit_pattern.sub("", heading_text)
+        anchor = heading_slug(heading_text)
+        if anchor and re.search(r"\w", anchor):
             headings.add(anchor)
 
     return headings
