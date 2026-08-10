@@ -19,6 +19,7 @@ import pytest
 
 from infrastructure.core.test_runner import (
     DEFAULT_COVERAGE_FILE,
+    _output_tree_digest,
     DEFAULT_FAIL_UNDER,
     run_per_project_pytest,
 )
@@ -626,6 +627,29 @@ def test_receipt_rejects_test_generated_output_drift(synthetic_repo: Path, monke
     assert receipt.lanes[0].exit_code == 0
     assert receipt.lanes[0].output_isolation_ok is False
     assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]
+
+
+def test_output_digest_ignores_ignored_runtime_files_but_tracks_visible_files(tmp_path: Path) -> None:
+    """Fresh-checkout runtime caches do not mask visible output mutations."""
+    project_root = tmp_path / "projects" / "alpha"
+    output_dir = project_root / "output"
+    output_dir.mkdir(parents=True)
+    (tmp_path / ".gitignore").write_text("projects/alpha/output/runtime.log\n", encoding="utf-8")
+    tracked = output_dir / "result.txt"
+    tracked.write_text("baseline\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)  # noqa: S603
+    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)  # noqa: S603
+
+    before = _output_tree_digest(project_root)
+    (output_dir / "runtime.log").write_text("local cache\n", encoding="utf-8")
+    assert _output_tree_digest(project_root) == before
+
+    (output_dir / "new-visible.txt").write_text("must be reported\n", encoding="utf-8")
+    assert _output_tree_digest(project_root) != before
+
+    (output_dir / "new-visible.txt").unlink()
+    tracked.write_text("mutated\n", encoding="utf-8")
+    assert _output_tree_digest(project_root) != before
 
 
 def test_receipt_rejects_output_drift_after_project_process_exits(
