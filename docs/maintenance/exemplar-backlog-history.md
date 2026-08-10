@@ -1368,3 +1368,12 @@ the raw local receipt digest is
 `e3ed676727af37a7929193534562253901f9db1d16daf11147f69397dd0b9f70`.
 Hosted Linux, optional bundle verification, and owner/administrator receipts
 were not available in this run.
+
+## Final HEAD public-matrix revalidation 2026-08-09
+
+After the fresh-checkout evidence was recorded, the final committed tree at
+`0f749358073eabd3b3dec59db50b6d0e058c0d75` was rerun through the two-worker
+isolated release profile. All 24 public lanes passed, with 5,960 collected
+tests, 94.711585% combined coverage, no skips or timeouts, no inner xdist, and
+all output-isolation checks passing. The receipt SHA-256 is
+`21fd8bddeaa4429786778e522b3e2fa764eb0d42f96757fd2c9a6afff945b9b9`.
