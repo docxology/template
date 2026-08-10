@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -35,18 +35,20 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AS-REPLAY-1` | Minor | Offline fixture runner | no-network replay report | default project gate | network-only replay path must be unavailable by default |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AS-TRANSCRIPT-1` | Medium | Transcript schema and provenance | stale-transcript audit receipt | project replay tests | changed transcript revision must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Backlog status

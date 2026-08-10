@@ -140,6 +140,8 @@ class CleanCheckoutReceipt:
                 errors.append("passing clean-checkout receipts require two deterministic runs")
             if any(run.status != "pass" for run in self.runs[:2]):
                 errors.append("the first two clean-checkout runs must pass")
+            if len(self.runs) >= 2 and self.runs[0].output_sha256 != self.runs[1].output_sha256:
+                errors.append("the first two clean-checkout runs produced different deterministic output digests")
             if not self.output_clean:
                 errors.append("passing clean-checkout receipts require clean outputs")
         return errors

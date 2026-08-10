@@ -15,22 +15,33 @@ from infrastructure.core.test_impact import classify_changed_paths  # noqa: E402
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy  # noqa: E402
 
 
-def _git_changed_paths() -> list[str]:
-    """Return unstaged and staged paths from git without shell expansion."""
-    result = run_with_policy(
-        ["git", "diff", "--name-only", "HEAD"],
-        cwd=REPO_ROOT,
-        env=None,
-        policy=SubprocessPolicy(
-            policy_id="test-impact-git",
-            source_path="scripts/audit/test_impact.py",
-            timeout_seconds=30,
-            capture_output=True,
-        ),
+def _git_changed_paths(repo_root: Path = REPO_ROOT) -> list[str]:
+    """Return staged, unstaged, deleted, and non-ignored untracked paths."""
+    policy = SubprocessPolicy(
+        policy_id="test-impact-git",
+        source_path="scripts/audit/test_impact.py",
+        timeout_seconds=30,
+        capture_output=True,
     )
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr.strip() or result.command_error or "git diff failed")
-    return [line for line in result.stdout.splitlines() if line]
+    diff = run_with_policy(
+        ["git", "diff", "--name-only", "HEAD", "--"],
+        cwd=repo_root,
+        env=None,
+        policy=policy,
+    )
+    if diff.returncode != 0:
+        raise RuntimeError(diff.stderr.strip() or diff.command_error or "git diff failed")
+    untracked = run_with_policy(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z", "--"],
+        cwd=repo_root,
+        env=None,
+        policy=policy,
+    )
+    if untracked.returncode != 0:
+        raise RuntimeError(untracked.stderr.strip() or untracked.command_error or "git ls-files failed")
+    paths = [line for line in diff.stdout.splitlines() if line]
+    paths.extend(item for item in untracked.stdout.split("\0") if item)
+    return sorted(set(paths))
 
 
 def main(argv: list[str] | None = None) -> int:

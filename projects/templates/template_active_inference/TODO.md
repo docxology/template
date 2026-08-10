@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -102,17 +102,20 @@ unchanged.
 
 ## Minor upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics; isolated project refresh | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests plus `--durations=20` comparison | Source-only mutation passes without exercising the matching contract |
-| `MEDIUM-SUBPROCESS-POLICY-1` | Medium | Test ergonomics; release wrappers | future subprocess-wrapper policy audit generated from source-owned declarations | policy audit and a focused mutation of one wrapper policy field | Wrapper without timeout, cwd, check, or useful failure text passes the policy audit |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Backlog status

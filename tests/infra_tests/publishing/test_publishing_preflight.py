@@ -5,7 +5,7 @@ import hashlib
 
 import pytest
 
-from infrastructure.publishing.preflight import publishing_preflight
+from infrastructure.publishing.preflight import PublicationPayloadManifest, publishing_preflight
 
 
 def _public_project(
@@ -168,3 +168,51 @@ def test_preflight_refuses_symlinked_payload_even_when_target_is_inside(tmp_path
 
     with pytest.raises(ValueError, match="symlink"):
         publishing_preflight(tmp_path, "templates/template_code_project", [alias], {})
+
+
+def test_manifest_rejects_changed_payload_after_preflight(tmp_path: Path) -> None:
+    """A provider cannot upload bytes that were not in the immutable manifest."""
+    _project, pdf = _public_project(tmp_path)
+    result = publishing_preflight(
+        tmp_path,
+        "templates/template_code_project",
+        [pdf],
+        {"github": "not-required"},
+    )
+    manifest = PublicationPayloadManifest.from_dict(result)
+    pdf.write_bytes(b"%PDF-1.7 changed\n")
+
+    with pytest.raises(ValueError, match="content changed"):
+        manifest.validate_current(pdf)
+
+
+def test_manifest_rejects_duplicate_or_traversal_entries() -> None:
+    entry = {"path": "paper.pdf", "bytes": 1, "sha256": hashlib.sha256(b"x").hexdigest()}
+    base = {
+        "schema_version": "template-publication-payload/v1",
+        "project": "templates/template_code_project",
+        "payload_root": "project",
+        "credential_sources": {},
+        "targets": {},
+    }
+    with pytest.raises(ValueError, match="duplicate"):
+        PublicationPayloadManifest.from_dict({**base, "payload": [entry, entry]})
+    with pytest.raises(ValueError, match="unsafe"):
+        PublicationPayloadManifest.from_dict({**base, "payload": [{**entry, "path": "../secret"}]})
+
+
+def test_manifest_rejects_symlinked_nested_payload(tmp_path: Path) -> None:
+    _project, pdf = _public_project(tmp_path)
+    bundle = tmp_path / "output/templates/template_code_project/bundle"
+    bundle.mkdir(parents=True)
+    link = bundle / "private"
+    link.symlink_to(pdf.parent, target_is_directory=True)
+    result = publishing_preflight(
+        tmp_path,
+        "templates/template_code_project",
+        [pdf],
+        {"github": "not-required"},
+    )
+    manifest = PublicationPayloadManifest.from_dict(result)
+    with pytest.raises(ValueError, match="symlink"):
+        manifest.validate_current(bundle)

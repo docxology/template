@@ -13,10 +13,50 @@ from typing import Sequence
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.publishing.release_receipts import CleanCheckoutReceipt, CommandReceipt, ReceiptStatus
 
+REHEARSAL_RECEIPT_TOKEN = "__REHEARSAL_RECEIPT__"
+
 DEFAULT_REHEARSAL_COMMANDS: tuple[tuple[str, ...], ...] = (
     ("uv", "sync", "--locked", "--offline"),
+    (
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "infrastructure.core.health",
+        "--json",
+        "--quiet",
+        "--workers",
+        "2",
+    ),
+    ("uv", "run", "python", "scripts/docgen/counts.py", "--check"),
+    ("uv", "run", "python", "scripts/docgen/status_evidence.py", "--check"),
     ("uv", "run", "python", "scripts/audit/check_claim_bindings.py"),
     ("uv", "run", "python", "scripts/audit/check_backlog.py"),
+    ("uv", "run", "python", "scripts/audit/check_public_template_contract.py", "--strict"),
+    (
+        "uv",
+        "run",
+        "python",
+        "scripts/pipeline/stage_01_test.py",
+        "--project-only",
+        "--all-projects",
+        "--public-projects",
+        "--profile",
+        "release",
+        "--project-workers",
+        "serial",
+        "--receipt",
+        REHEARSAL_RECEIPT_TOKEN,
+    ),
+    (
+        "uv",
+        "run",
+        "python",
+        "scripts/pipeline/stage_03_render.py",
+        "--project",
+        "templates/template_code_project",
+        "--skip-manuscript-hydration",
+    ),
 )
 
 
@@ -89,6 +129,11 @@ def _run_command(command: Sequence[str], cwd: Path, *, timeout_seconds: float = 
     )
 
 
+def _materialize_command(command: Sequence[str], receipt_path: Path) -> tuple[str, ...]:
+    """Resolve the disposable receipt token outside the fresh checkout."""
+    return tuple(str(receipt_path) if part == REHEARSAL_RECEIPT_TOKEN else str(part) for part in command)
+
+
 def run_clean_checkout_rehearsal(
     repo_root: Path | str,
     plan: CleanCheckoutPlan,
@@ -129,8 +174,10 @@ def run_clean_checkout_rehearsal(
                 )
                 output_clean = False
                 continue
+            receipt_path = parent / f"public-matrix-rehearsal-{index}.json"
             command_receipts = [
-                _run_command(command, checkout, timeout_seconds=timeout_seconds) for command in plan.commands
+                _run_command(_materialize_command(command, receipt_path), checkout, timeout_seconds=timeout_seconds)
+                for command in plan.commands
             ]
             failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)
             status: ReceiptStatus = "pass" if failed is None else "blocked"
@@ -177,6 +224,7 @@ def run_clean_checkout_rehearsal(
 __all__ = [
     "CleanCheckoutPlan",
     "DEFAULT_REHEARSAL_COMMANDS",
+    "REHEARSAL_RECEIPT_TOKEN",
     "build_clean_checkout_plan",
     "run_clean_checkout_rehearsal",
 ]

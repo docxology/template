@@ -186,6 +186,25 @@ def test_exemplar_source_hash_ignores_untracked_build_metadata(tmp_path: Path) -
     assert exemplar_source_hash(tmp_path, "demo") == before
 
 
+def test_exemplar_source_hash_tracks_untracked_source_before_staging(tmp_path: Path) -> None:
+    """A new source file changes provenance before it crosses the staging boundary."""
+    project = tmp_path / "projects" / "templates" / "demo"
+    source = project / "src" / "demo.py"
+    test_file = project / "tests" / "test_demo.py"
+    source.parent.mkdir(parents=True)
+    test_file.parent.mkdir(parents=True)
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    test_file.write_text("def test_value():\n    assert True\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "--", source, test_file], cwd=tmp_path, check=True)
+
+    before = exemplar_source_hash(tmp_path, "demo")
+    new_source = project / "src" / "new_surface.py"
+    new_source.write_text("VALUE = 2\n", encoding="utf-8")
+
+    assert exemplar_source_hash(tmp_path, "demo") != before
+
+
 def test_exemplar_source_hash_tracks_linked_shared_source(tmp_path: Path) -> None:
     """Tracked project symlinks include their in-repository target content."""
     project = tmp_path / "projects" / "templates" / "demo"
@@ -226,7 +245,25 @@ def test_coverage_provenance_rejects_legacy_hash_schema(tmp_path: Path) -> None:
     with pytest.raises(RuntimeError, match="schema mismatch"):
         validate_coverage_provenance(tmp_path)
 
-    assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 2
+    assert COVERAGE_PROVENANCE_SCHEMA_VERSION == 3
+
+
+def test_coverage_provenance_requires_source_tree_identity(tmp_path: Path) -> None:
+    path = tmp_path / COVERAGE_PROVENANCE_RELATIVE_PATH
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": COVERAGE_PROVENANCE_SCHEMA_VERSION,
+                "source_inventory_mode": "tracked-and-nonignored-working-tree",
+                "projects": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RuntimeError, match="source-tree identity"):
+        validate_coverage_provenance(tmp_path)
 
 
 @pytest.mark.timeout(300)

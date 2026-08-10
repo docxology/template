@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -146,22 +146,21 @@ behavior; use tiny local fixtures instead.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AR-REVIEW-BOUNDARY-1` | Minor | Human approval boundary | self-approval regression receipt | project review-artifact tests | generated approval without `human_review.yaml` must fail |
-| `AR-MODULE-WATCH-1` | Minor | Module-size drift gate | module-size report | strict drift gate | oversized logic hub must fail the gate |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AR-REVIEW-PACKET-V2` | Medium | Review-packet schema v1 | migration and v2 receipt | packet compatibility tests | v2 self-approval or unknown version must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AR-METHOD-ADAPTER-1` | Major | Stable loop/report schemas | second deterministic adapter receipt | project suite and evidence validation | network or generated-code adapter must be unavailable |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 

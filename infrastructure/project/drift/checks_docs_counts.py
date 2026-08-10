@@ -92,6 +92,14 @@ _COVERAGE_RE = re.compile(
 _POLICY_COVERAGE_VALUES = {60.0, 75.0, 89.0, 90.0}
 _COUNT_NOQA_RE = re.compile(r"<!--\s*noqa:\s*(?:docs-lint|drift-counts)", re.IGNORECASE)
 
+# This file is an immutable audit trail, not current guidance.  Its measured
+# totals are intentionally preserved so reviewers can reconstruct what a
+# historical release actually claimed; applying the live-count rule to it
+# would either erase that evidence or require one-line escape hatches on
+# every record.  Keep this list explicit and narrow so ordinary archival
+# prose remains subject to drift review.
+HISTORICAL_EVIDENCE_RELATIVE_PATHS = frozenset({"docs/maintenance/exemplar-backlog-history.md"})
+
 
 def _scan_hardcoded_counts_in_text(
     text: str,
@@ -159,6 +167,12 @@ def check_docs_hardcoded_counts(repo_root: Path, report: Report) -> None:
 
     def _include(md: Path) -> bool:
         if any(part in skip_dir_names for part in md.parts):
+            return False
+        try:
+            relative = md.resolve().relative_to(repo_root.resolve()).as_posix()
+        except ValueError:
+            relative = ""
+        if relative in HISTORICAL_EVIDENCE_RELATIVE_PATHS:
             return False
         # When git is available, only scan tracked files so untracked local-only
         # dirs (e.g. a sibling private project) cannot redden the gate off-CI.

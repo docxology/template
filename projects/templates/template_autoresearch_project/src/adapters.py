@@ -24,6 +24,7 @@ class AdapterResult:
     offline: bool = True
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the adapter result into the versioned evidence envelope."""
         return {
             "schema": ADAPTER_RESULT_SCHEMA,
             "adapter_id": self.adapter_id,
@@ -49,6 +50,7 @@ def run_quadratic_adapter(*, budget: int = 3) -> AdapterResult:
     evaluated = candidates[:budget]
 
     def score(value: float) -> float:
+        """Return the deterministic fixture objective for one candidate."""
         return -((value - 1.0) ** 2)
 
     selected = max(evaluated, key=score)

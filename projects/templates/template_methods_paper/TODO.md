@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -51,18 +51,20 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `METHODS-DSL-EXACT-1` | Minor | Existing staged DSL | exact-value test matrix | project test suite | changed numeric literal must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `METHODS-EXPORTER-1` | Medium | Deterministic compiler/exporter | versioned export receipt | compiler, prerender, and drift gates | malformed export must fail closed |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Backlog status

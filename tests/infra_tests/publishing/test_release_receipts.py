@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 from infrastructure.core.subprocess_policy import SubprocessPolicyRecord
@@ -19,7 +20,13 @@ from infrastructure.publishing.release_receipts import (
 
 
 def _passing_command(label: str) -> CommandReceipt:
-    return CommandReceipt(("python", "-c", label), "pass", 0, 0.1)
+    return CommandReceipt(
+        ("python", "-c", label),
+        "pass",
+        0,
+        0.1,
+        output_sha256=hashlib.sha256(label.encode("utf-8")).hexdigest(),
+    )
 
 
 def test_release_metadata_never_inferrs_authority() -> None:
@@ -36,10 +43,19 @@ def test_clean_checkout_requires_two_runs_and_clean_outputs() -> None:
         "abc123",
         "darwin-arm64",
         "pass",
-        (_passing_command("one"), _passing_command("two")),
+        (_passing_command("same"), _passing_command("same")),
         output_clean=True,
     )
     assert complete.validate() == []
+
+    nondeterministic = CleanCheckoutReceipt(
+        "abc123",
+        "darwin-arm64",
+        "pass",
+        (_passing_command("one"), _passing_command("two")),
+        output_clean=True,
+    )
+    assert any("different deterministic output digests" in error for error in nondeterministic.validate())
 
 
 def test_skipped_receipt_requires_reason() -> None:

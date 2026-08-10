@@ -38,9 +38,9 @@ skip list, marker expression) is configurable, and all subprocess work
 happens through the shared process-group/timeout policy — no mocking.
 """
 
-from dataclasses import dataclass
 import hashlib
 import io
+from dataclasses import dataclass
 from pathlib import Path
 from time import monotonic
 from typing import Sequence
@@ -59,6 +59,7 @@ from infrastructure.core.public_matrix_receipt import (
     determine_worker_info,
 )
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
+from infrastructure.core.test_runner_cache import _cache_identity_inputs, _resolve_roster_revision
 from infrastructure.core.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     TestProfileName,
@@ -311,15 +312,16 @@ def _measure_coverage_percent(coverage_file: Path) -> float | None:
 
 
 def _output_tree_digest(project_root: Path) -> str:
-    """Return a content digest of the project's ``output/`` tree, or ``""``.
+    """Return a content digest of the project's ``output/`` tree.
 
     Used to detect test-generated output churn: the digest is computed before
     and after a project lane, and the lane fails output isolation when they
-    differ. Missing output trees digest to ``""`` (no churn possible).
+    differ. A missing output tree uses the SHA-256 digest of the empty tree so
+    every executed lane carries an explicit output-isolation identity.
     """
     output_dir = project_root / "output"
     if not output_dir.is_dir():
-        return ""
+        return hashlib.sha256(b"").hexdigest()
     digest = hashlib.sha256()
     for path in sorted(output_dir.rglob("*")):
         if path.is_file():
@@ -328,27 +330,6 @@ def _output_tree_digest(project_root: Path) -> str:
             digest.update(path.read_bytes())
             digest.update(b"\0")
     return digest.hexdigest()
-
-
-def _resolve_roster_revision(repo_root: Path) -> str:
-    """Return the current git commit SHA, or ``"unknown"`` outside a checkout."""
-    try:
-        completed = run_with_policy(
-            ["git", "rev-parse", "HEAD"],
-            cwd=repo_root,
-            env=None,
-            policy=SubprocessPolicy(
-                policy_id="git-metadata-test-runner",
-                source_path="infrastructure/core/test_runner.py",
-                timeout_seconds=30,
-                capture_output=True,
-            ),
-        )
-    except (OSError, ValueError):
-        return "unknown"
-    if completed.returncode != 0:
-        return "unknown"
-    return completed.stdout.strip() or "unknown"
 
 
 def _write_public_matrix_receipt(
@@ -391,12 +372,23 @@ def _write_public_matrix_receipt(
 
     worker_info = determine_worker_info(project_workers, parallel)
     roster_revision = _resolve_roster_revision(repo_root)
+    cache_inputs = _cache_identity_inputs(
+        repo_root,
+        profile=profile,
+        marker_expr=marker_expr,
+        worker_info=worker_info,
+        project_names=[spec.project_name for spec in specs] + list((skip_reasons or {}).keys()),
+    )
     cache_key = build_public_matrix_cache_key(
         roster_revision=roster_revision,
         profile=profile,
         marker_expression=marker_expr,
         worker_info=worker_info,
         project_names=[spec.project_name for spec in specs] + list((skip_reasons or {}).keys()),
+        source_tree_identity=cache_inputs["index_worktree"],
+        interpreter_identity=cache_inputs["interpreter"],
+        lockfile_identity=cache_inputs["lockfiles"],
+        tool_versions=dict(item.split("=", 1) for item in cache_inputs["tool_versions"].split(";") if "=" in item),
     )
     lanes = []
     for result, spec, coverage_percent in lane_context:
@@ -413,6 +405,12 @@ def _write_public_matrix_receipt(
                 skip_reason="",
                 collection_count=result.collection_count,
                 cache_key=cache_key,
+                output_isolation_digest=_output_tree_digest(spec.project_root),
+                resource_limits={
+                    "subprocess_timeout_seconds": DEFAULT_SUBPROCESS_TIMEOUT_SECONDS,
+                    "outer_project_workers": str(project_workers or "serial"),
+                    "inner_xdist_workers": str(parallel or "serial"),
+                },
             )
         )
     for project_name, reason in sorted((skip_reasons or {}).items()):
@@ -431,6 +429,11 @@ def _write_public_matrix_receipt(
                 resource_profile=worker_info,
                 skip_reason=reason,
                 cache_key=cache_key,
+                resource_limits={
+                    "subprocess_timeout_seconds": DEFAULT_SUBPROCESS_TIMEOUT_SECONDS,
+                    "outer_project_workers": str(project_workers or "serial"),
+                    "inner_xdist_workers": str(parallel or "serial"),
+                },
             )
         )
     receipt = build_public_matrix_receipt(
@@ -450,6 +453,7 @@ def _write_public_matrix_receipt(
         },
         skip_reasons=dict(skip_reasons or {}),
         cache_key=cache_key,
+        cache_inputs=cache_inputs,
     )
     receipt.write(receipt_path)
     log_substep(f"Public-matrix receipt written: {receipt_path}", logger)

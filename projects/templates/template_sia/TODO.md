@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -47,21 +47,21 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `SIA-TYPED-LOOP-1` | Minor | Typed `project_config.sia` loader | loop configuration receipt | project tests and config validation | unknown loop key must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `SIA-STALE-FIXTURE-1` | Medium | Recorded loop transcript schema | stale-fixture/non-mutation report | project replay gate | changed fixture revision must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `SIA-APPROVAL-FORK-1` | Major | Sandbox, diff, rollback, human approval | fork guidance and approval receipt | explicit opt-in live lane | mutation without approval must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `SIA-APPROVAL-FORK-1` | blocked-external | Major | Sandbox, diff, rollback, human approval | Obtain the required owner or external receipt to unblock; run explicit opt-in live lane and attach fork guidance and approval receipt. | fork guidance and approval receipt | `uv run pytest tests -q --no-cov --timeout=120` | mutation without approval must fail |
 
 ## Backlog status
 

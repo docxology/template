@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -39,19 +39,20 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `CODE-OPTIMIZER-NEG-1` | Minor | Deterministic objective fixtures | optimizer claim negative-control test | `uv run pytest tests/regression/projects/template_code_project -q --no-cov` | changing the objective must fail the pinned claim |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `CODE-DASHBOARD-SCHEMA-1` | Medium | Dashboard producer schema | dashboard schema receipt | project test gate and artifact validator | missing chart field must fail schema validation |
-| `CODE-SUBPROCESS-1` | Medium | Shared subprocess policy | wrapper inventory row | `uv run python scripts/audit/check_claim_bindings.py` plus project gate | missing timeout/cwd policy must fail the inventory |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Backlog status

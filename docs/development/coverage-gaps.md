@@ -4,7 +4,17 @@ This document tracks infrastructure test coverage gaps by Layer-1 module. The
 global infrastructure gate remains 60%; the rows below are targets and notes,
 not new CI gates.
 
-**Last verified:** 2026-07-22
+**Last verified:** 2026-08-09 (source-bound guidance; current measurements are
+read from the generated coverage receipts below rather than copied into this
+document).
+
+**Current evidence:** the 24 public-exemplar coverage rows and source-tree
+identities are maintained in
+[`docs/_generated/coverage_snapshot.json`](../_generated/coverage_snapshot.json)
+and checked by `uv run python scripts/docgen/counts.py --check`. The current
+infrastructure aggregate is reported by the live infrastructure coverage gate
+and its receipt; no stale aggregate is asserted here until that receipt is
+available.
 
 **Coverage oracle:** full infrastructure gate:
 
@@ -20,10 +30,16 @@ The uncached serial diagnostic oracle uses the same command with the xdist
 flags removed; it is the comparison baseline for performance claims.
 ```
 
-**Overall infrastructure coverage:** 83.38% (gate: >= 60%)
+## Historical infrastructure baseline (2026-07-22)
+
+The following values are preserved as historical evidence from the dated
+oracle run. They are not current release claims and must not be copied into
+new documentation without a new receipt:
+
+**Overall infrastructure coverage:** 83.38% (gate: >= 60%) <!-- noqa: drift-counts -->
 **Tests:** 9066 passed on the 2026-07-22 oracle run. <!-- noqa: drift-counts -->
 One existing NumPy overflow warning in the scientific stability edge-case test.
-**Total statements measured:** 52,607
+**Total statements measured:** 52,607 <!-- noqa: drift-counts -->
 
 The 2026-07-22 uncached local run used two macOS xdist workers with
 `--dist loadscope` and completed in 554.50 seconds. Higher-worker coverage is
@@ -172,7 +188,7 @@ no `*_coverage.py`, `*_full.py`, or duplicate supplement files were introduced.
 
 ## Coverage Gates
 
-- **Infrastructure:** >= 60% (current 83.38%).
+- **Infrastructure:** >= 60%; current aggregate comes from the live coverage receipt.
 - **Projects:** >= 90% per project, with rotating-project exceptions documented
   in CI and project-local `AGENTS.md` files.
 - **Per-module targets:** documented here only; they are not CI gates.

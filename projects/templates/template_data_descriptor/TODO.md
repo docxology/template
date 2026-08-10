@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -33,19 +33,21 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `DATA-PUBLICATION-1` | Medium | A real fork and owner receipt | publication receipt + standalone replay | project tests and standalone export check | fabricated publication receipt must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `DATA-PUBLICATION-1` | blocked-external | Medium | A real fork and owner receipt | Obtain the required owner or external receipt to unblock; run project tests and standalone export check and attach publication receipt + standalone replay. | publication receipt + standalone replay | `uv run pytest tests -q --no-cov --timeout=120` | fabricated publication receipt must fail |
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `DATA-MEDIA-1` | Major | Real licensed non-CSV fixture | media checksum/row manifest | descriptor validator with declared media type | unsupported media or wrong checksum must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `DATA-MEDIA-1` | blocked-external | Major | Real licensed non-CSV fixture | Obtain the required owner or external receipt to unblock; run descriptor validator with declared media type and attach media checksum/row manifest. | media checksum/row manifest | `uv run pytest tests -q --no-cov --timeout=120` | unsupported media or wrong checksum must fail |
 
 ## Backlog status
 

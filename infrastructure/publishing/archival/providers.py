@@ -18,6 +18,7 @@ from typing import Any, Protocol, runtime_checkable
 
 from infrastructure.core.exceptions import PublishingError, UploadError
 from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
+from infrastructure.publishing.preflight import PublicationPayloadManifest
 from infrastructure.publishing.zenodo.client import ZenodoClient
 from infrastructure.publishing.zenodo.config import ZenodoConfig
 
@@ -51,7 +52,13 @@ class ArchivalProvider(Protocol):
 
     """Deposit a payload to the archival service."""
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a bundle to the archival service, returning a receipt."""
         ...
 
@@ -84,8 +91,16 @@ class ZenodoProvider:
         self._token = token
         self._base_url = base_url.rstrip("/")
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -172,8 +187,16 @@ class IPFSPinataProvider:
         self._session_arg = session  # None → lazily created on first network call
         self._timeout = timeout
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -262,8 +285,16 @@ class IPFSWeb3StorageProvider:
         self._session_arg = session
         self._timeout = timeout
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
 
         if dry_run:
@@ -362,8 +393,16 @@ class SoftwareHeritageProvider:
         self._session_arg = session
         self._timeout = timeout
 
-    def deposit(self, bundle: Path, *, dry_run: bool) -> ArchivalReceipt:
+    def deposit(
+        self,
+        bundle: Path,
+        *,
+        dry_run: bool,
+        manifest: PublicationPayloadManifest | None = None,
+    ) -> ArchivalReceipt:
         """Deposit a payload to the archival service."""
+        if manifest is not None:
+            manifest.validate_current(bundle)
         sha = _bundle_sha256(bundle)
         repo_url = self._resolve_repo_url(bundle)
 

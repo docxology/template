@@ -963,3 +963,362 @@ The following pre-normalization sections were archived on 2026-08-09:
 | `DECK-SECOND-SUBJECT-1` | Medium | Generalized content schema | second deterministic deck | project render and slide QA | subject-specific hard-code must fail schema coverage |
 | `DECK-AUDIT-1` | Medium | Transactional slide audit | all-length audit receipt | project tests and PPTX/image QA | partial audit state must fail |
 | `DECK-QR-1` | Minor | Publication-aware sequencing | QR/link manifest | slide content and publication checks | QR emitted before publication target exists must fail |
+
+## Archived 2026-08-09 future-only backlog migration
+
+### `template_active_inference`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `MEDIUM-TEST-PERF-1` | open | Medium | Test ergonomics; isolated project refresh | Implement the scoped change; run focused gate tests plus `--durations=20` comparison and attach cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test. | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests plus `--durations=20` comparison | Source-only mutation passes without exercising the matching contract |
+| `MEDIUM-SUBPROCESS-POLICY-1` | open | Medium | Test ergonomics; release wrappers | Implement the scoped change; run policy audit and a focused mutation of one wrapper policy field and attach future subprocess-wrapper policy audit generated from source-owned declarations. | future subprocess-wrapper policy audit generated from source-owned declarations | `uv run pytest tests -q --no-cov --timeout=120` | Wrapper without timeout, cwd, check, or useful failure text passes the policy audit |
+
+
+### `template_advanced_literature_review`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `ARL-PHASE-VALIDATION-1` | open | Minor | Phase configuration schema | Implement the scoped change; run phase configuration tests and replay gate and attach phase-boundary validation receipt. | phase-boundary validation receipt | `uv run pytest tests -q --no-cov --timeout=120` | invalid temporal bounds must fail before replay |
+| `ARL-LLM-FILTER-1` | open | Medium | Calibration corpus and opt-in provider | Implement the scoped change; run LLM filter tests with known positive/negative examples and attach calibration fixture bundle. | calibration fixture bundle | `uv run pytest tests -q --no-cov --timeout=120` | unavailable provider must report skip, not pass |
+
+
+### `template_autoresearch_project`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `AR-REVIEW-BOUNDARY-1` | open | Minor | Human approval boundary | Implement the scoped change; run project review-artifact tests and attach self-approval regression receipt. | self-approval regression receipt | `uv run pytest tests -q --no-cov --timeout=120` | generated approval without `human_review.yaml` must fail |
+| `AR-MODULE-WATCH-1` | open | Minor | Module-size drift gate | Implement the scoped change; run strict drift gate and attach module-size report. | module-size report | `uv run pytest tests -q --no-cov --timeout=120` | oversized logic hub must fail the gate |
+| `AR-REVIEW-PACKET-V2` | open | Medium | Review-packet schema v1 | Implement the scoped change; run packet compatibility tests and attach migration and v2 receipt. | migration and v2 receipt | `uv run pytest tests -q --no-cov --timeout=120` | v2 self-approval or unknown version must fail |
+| `AR-METHOD-ADAPTER-1` | open | Major | Stable loop/report schemas | Implement the scoped change; run project suite and evidence validation and attach second deterministic adapter receipt. | second deterministic adapter receipt | `uv run pytest tests -q --no-cov --timeout=120` | network or generated-code adapter must be unavailable |
+
+
+### `template_autopoiesis`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `AUTOPOIESIS-MUTATION-1` | open | Medium | Existing mutation meta-gate | Implement the scoped change; run `uv run pytest projects/templates/template_autopoiesis/tests -q` and attach per-domain mutation report. | per-domain mutation report | `uv run pytest tests -q --no-cov --timeout=120` | removing a domain guard must fail the mutated case |
+| `AUTOPOIESIS-ARCHETYPE-1` | open | Medium | Config schema extension | Implement the scoped change; run project validator plus generated-child integrity tests and attach filtered child manifest. | filtered child manifest | `uv run pytest tests -q --no-cov --timeout=120` | unknown archetype filter must fail closed |
+
+
+### `template_code_project`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `CODE-OPTIMIZER-NEG-1` | open | Minor | Deterministic objective fixtures | Implement the scoped change; run `uv run pytest tests/regression/projects/template_code_project -q --no-cov` and attach optimizer claim negative-control test. | optimizer claim negative-control test | `uv run pytest tests/regression/projects/template_code_project -q --no-cov` | changing the objective must fail the pinned claim |
+| `CODE-DASHBOARD-SCHEMA-1` | open | Medium | Dashboard producer schema | Implement the scoped change; run project test gate and artifact validator and attach dashboard schema receipt. | dashboard schema receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing chart field must fail schema validation |
+| `CODE-SUBPROCESS-1` | open | Medium | Shared subprocess policy | Implement the scoped change; run `uv run python scripts/audit/check_claim_bindings.py` plus project gate and attach wrapper inventory row. | wrapper inventory row | `uv run python scripts/audit/check_claim_bindings.py` plus project gate | missing timeout/cwd policy must fail the inventory |
+
+
+### `template_eda_notebook`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `EDA-STATISTICS-1` | open | Minor | Existing deterministic fixture | Implement the scoped change; run `uv run pytest projects/templates/template_eda_notebook/tests -q` and attach exact-statistic assertion matrix. | exact-statistic assertion matrix | `uv run pytest tests -q --no-cov --timeout=120` | one altered source statistic must fail |
+| `EDA-NOTEBOOK-BINDING-1` | open | Medium | Notebook extraction contract | Implement the scoped change; run notebook binding gate and project coverage and attach notebook-to-source binding receipt. | notebook-to-source binding receipt | `uv run pytest tests -q --no-cov --timeout=120` | changed notebook cell without source update must fail |
+
+
+### `template_formal`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `FORMAL-ABLATION-1` | open | Medium | Existing colony experiment fixtures | Implement the scoped change; run project tests plus deterministic manuscript binding and attach calibrated ablation matrix. | calibrated ablation matrix | `uv run pytest tests -q --no-cov --timeout=120` | omitted axis must fail the experiment registry |
+| `FORMAL-INVARIANT-1` | open | Medium | Typed runtime protocol surface | Implement the scoped change; run strict mypy oracle and runtime test and attach typed-invariant negative-control fixture. | typed-invariant negative-control fixture | strict mypy oracle and runtime test | illegal state fixture must fail mypy/runtime checks |
+
+
+### `template_literature_meta_analysis`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `LIT-KG-CALIBRATION-1` | open | Medium | Knowledge-graph extraction schema | Implement the scoped change; run KG parser/scorer tests preserve score direction and attach calibration fixture bundle. | calibration fixture bundle | `uv run pytest tests -q --no-cov --timeout=120` | inverted score direction must fail |
+
+
+### `template_madlib`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `MADLIB-DIGEST-PROPERTY-1` | open | Minor | Deterministic token digest contract | Implement the scoped change; run focused token tests and attach digest invariant cases. | digest invariant cases | `uv run pytest tests -q --no-cov --timeout=120` | reordered/altered lexicon must change the digest |
+| `MADLIB-MIGRATION-1` | open | Medium | Current config schema | Implement the scoped change; run `uv run pytest projects/templates/template_madlib/tests -q` and attach versioned migration fixture. | versioned migration fixture | `uv run pytest tests -q --no-cov --timeout=120` | old schema with dropped field must fail or migrate explicitly |
+
+
+### `template_newspaper`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `NEWSPAPER-FIXTURE-LENGTH-1` | open | Minor | Content schema | Implement the scoped change; run project render and byte/dimension checks and attach small/medium/long deterministic editions. | small/medium/long deterministic editions | `uv run pytest tests -q --no-cov --timeout=120` | truncated or overset edition must fail |
+| `NEWSPAPER-LAYOUT-AUDIT-1` | open | Medium | ReportLab geometry and raster fixtures | Implement the scoped change; run project tests plus rendered audit and attach glyph-collision/layout audit JSON. | glyph-collision/layout audit JSON | `uv run pytest tests -q --no-cov --timeout=120` | overlapped glyph fixture must fail |
+
+
+### `template_pools_rules_tools`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `POOLS-EVALUATOR-1` | open | Minor | Existing strong-rule fixtures | Implement the scoped change; run focused no-mock project tests and attach expanded evaluator coverage report. | expanded evaluator coverage report | `uv run pytest tests -q --no-cov --timeout=120` | malformed rule/context must fail |
+| `POOLS-RESOURCE-SCHEMA-1` | open | Medium | Typed resource loaders | Implement the scoped change; run project evaluator and drift gates and attach fonds/rules/tools schema receipt. | fonds/rules/tools schema receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing required resource field must fail |
+
+
+### `template_prose_project`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `PROSE-REPORT-SCHEMA-1` | open | Minor | Stable evidence-summary schema | Implement the scoped change; run schema and manuscript-binding tests and attach versioned report schema. | versioned report schema | `uv run pytest tests -q --no-cov --timeout=120` | unknown report field/version must fail |
+
+
+### `template_autoscientists`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `AS-REPLAY-1` | open | Minor | Offline fixture runner | Implement the scoped change; run default project gate and attach no-network replay report. | no-network replay report | `uv run pytest tests -q --no-cov --timeout=120` | network-only replay path must be unavailable by default |
+| `AS-TRANSCRIPT-1` | open | Medium | Transcript schema and provenance | Implement the scoped change; run project replay tests and attach stale-transcript audit receipt. | stale-transcript audit receipt | `uv run pytest tests -q --no-cov --timeout=120` | changed transcript revision must fail |
+
+
+### `template_gold_refinement`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `GOLD-BOOKEND-1` | open | Medium | Transmission/page validator | Implement the scoped change; run project render and publication tests and attach transmission bookend receipt. | transmission bookend receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing first/last page must fail |
+| `GOLD-PURITY-1` | open | Medium | Configured reverse assay and purity vector | Implement the scoped change; run project tests and manuscript binding and attach typed assay/report manifest. | typed assay/report manifest | `uv run pytest tests -q --no-cov --timeout=120` | altered purity vector must fail |
+| `GOLD-ANALOGY-1` | open | Major | Formal boundary statement | Implement the scoped change; run formal/infrastructure validation when enabled and attach analogy-boundary theorem + validator. | analogy-boundary theorem + validator | `uv run pytest tests -q --no-cov --timeout=120` | analogy crossing without evidence must fail |
+
+
+### `template_methods_paper`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `METHODS-DSL-EXACT-1` | open | Minor | Existing staged DSL | Implement the scoped change; run project test suite and attach exact-value test matrix. | exact-value test matrix | `uv run pytest tests -q --no-cov --timeout=120` | changed numeric literal must fail |
+| `METHODS-EXPORTER-1` | open | Medium | Deterministic compiler/exporter | Implement the scoped change; run compiler, prerender, and drift gates and attach versioned export receipt. | versioned export receipt | `uv run pytest tests -q --no-cov --timeout=120` | malformed export must fail closed |
+
+
+### `template_redacted_report`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `REDACTED-AUDIT-BIND-1` | open | Medium | Existing source/audit ledger | Implement the scoped change; run strict project validation and attach manuscript-to-audit binding receipt. | manuscript-to-audit binding receipt | `uv run pytest tests -q --no-cov --timeout=120` | changed audit value without source update must fail |
+
+
+### `template_registered_report`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `REGISTERED-MIGRATION-1` | open | Minor | Frozen registration schema | Implement the scoped change; run project protocol tests and attach compatibility fixture. | compatibility fixture | `uv run pytest tests -q --no-cov --timeout=120` | dropped registration field must fail |
+
+
+### `template_search_project`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `SEARCH-DEEP-1` | open | Minor | Deep-search query plan | Implement the scoped change; run byte-repeat and claim tests and attach deterministic deep-search manifest. | deterministic deep-search manifest | `uv run pytest tests -q --no-cov --timeout=120` | changed query order must change receipt |
+| `SEARCH-CACHE-1` | open | Medium | Offline cache schema | Implement the scoped change; run project tests with network disabled and attach cache identity/age receipt. | cache identity/age receipt | `uv run pytest tests -q --no-cov --timeout=120` | stale cache must degrade explicitly |
+| `SEARCH-FULLTEXT-1` | open | Medium | Full-text fixture/license boundary | Implement the scoped change; run focused retrieval validators and attach full-text coverage report. | full-text coverage report | `uv run pytest tests -q --no-cov --timeout=120` | missing full text must not count as retrieved |
+
+
+### `template_sia`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `SIA-TYPED-LOOP-1` | open | Minor | Typed `project_config.sia` loader | Implement the scoped change; run project tests and config validation and attach loop configuration receipt. | loop configuration receipt | `uv run pytest tests -q --no-cov --timeout=120` | unknown loop key must fail |
+| `SIA-STALE-FIXTURE-1` | open | Medium | Recorded loop transcript schema | Implement the scoped change; run project replay gate and attach stale-fixture/non-mutation report. | stale-fixture/non-mutation report | `uv run pytest tests -q --no-cov --timeout=120` | changed fixture revision must fail |
+
+
+### `template_storybook`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `STORYBOOK-CAPTION-1` | open | Minor | Caption-zone schema | Implement the scoped change; run deterministic image/PDF QA and attach per-page caption placement receipt. | per-page caption placement receipt | `uv run pytest tests -q --no-cov --timeout=120` | caption overflow must fail |
+| `STORYBOOK-TRIM-1` | open | Medium | Configurable page geometry | Implement the scoped change; run project render and raster checks and attach trim-size manifest. | trim-size manifest | `uv run pytest tests -q --no-cov --timeout=120` | unsupported trim size must fail |
+| `STORYBOOK-ACCESSIBILITY-1` | open | Medium | Page metadata producer | Implement the scoped change; run project accessibility gate and attach accessibility metadata report. | accessibility metadata report | `uv run pytest tests -q --no-cov --timeout=120` | missing alt/title metadata must fail |
+
+
+### `template_template`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `META-MATRIX-1` | open | Minor | Public roster generator | Implement the scoped change; run generated-doc and roster gates and attach matrix lockstep report. | matrix lockstep report | `uv run pytest tests -q --no-cov --timeout=120` | roster drift must fail |
+| `META-STEG-1` | open | Minor | Steganography config producer | Implement the scoped change; run metadata/visual tests and attach deterministic metadata revalidation. | deterministic metadata revalidation | `uv run pytest tests -q --no-cov --timeout=120` | changed default must invalidate stale evidence |
+| `META-SCHEMA-1` | open | Medium | Generated metric schema | Implement the scoped change; run meta-template tests and attach schema-versioned metrics receipt. | schema-versioned metrics receipt | `uv run pytest tests -q --no-cov --timeout=120` | stale metric key must fail |
+
+
+### `template_textbook`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `TEXTBOOK-CONFIG-MIGRATION-1` | open | Minor | Live/example config shape | Implement the scoped change; run textbook config tests and attach compatibility key-set receipt. | compatibility key-set receipt | `uv run pytest tests -q --no-cov --timeout=120` | orphaned or dropped config key must fail |
+| `TEXTBOOK-STALE-DIAGRAM-1` | open | Medium | Diagram inventory | Implement the scoped change; run audit and render gates and attach stale/orphan diagram report. | stale/orphan diagram report | `uv run pytest tests -q --no-cov --timeout=120` | unreferenced diagram must fail |
+| `TEXTBOOK-FACT-REGISTRY-1` | open | Medium | Worked-example source data | Implement the scoped change; run manuscript evidence gate and attach numeric-fact registry. | numeric-fact registry | `uv run pytest tests -q --no-cov --timeout=120` | changed numeric fact without registry update must fail |
+
+
+### `template_pitch_deck`
+
+The following pre-normalization sections were archived on 2026-08-09:
+
+## Closed active rows 2026-08-09
+
+The following rows were removed after the same-revision acceptance and negative-control pass.
+Closure evidence: release matrix template-public-matrix/v3; command stage_01_test.py --project-only --all-projects --public-projects --profile release --project-workers serial; receipt_digest=e8317bb5fa42be6588de2f8e378996fdd0fc61449fc731dbf8938152f2141b43; 24/24 lanes passed, 5960 tests collected, combined coverage 94.7101%, 2026-08-09
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `DECK-QR-1` | open | Minor | Publication-aware sequencing | Implement the scoped change; run slide content and publication checks and attach QR/link manifest. | QR/link manifest | `uv run pytest tests -q --no-cov --timeout=120` | QR emitted before publication target exists must fail |
+| `DECK-SECOND-SUBJECT-1` | open | Medium | Generalized content schema | Implement the scoped change; run project render and slide QA and attach second deterministic deck. | second deterministic deck | `uv run pytest tests -q --no-cov --timeout=120` | subject-specific hard-code must fail schema coverage |
+| `DECK-AUDIT-1` | open | Medium | Transactional slide audit | Implement the scoped change; run project tests and PPTX/image QA and attach all-length audit receipt. | all-length audit receipt | `uv run pytest tests -q --no-cov --timeout=120` | partial audit state must fail |
+
+## Post-refactor revalidation 2026-08-09
+
+The archived closures above were revalidated after the Madlib configuration
+model and Redacted Report Kmyth-support module split. The same isolated
+release-profile command passed all 24 public lanes, collected 5,960 tests, and
+reported 94.7101% combined coverage. Receipt SHA-256:
+`fd00581decf60b62bf98a36777bd66931273d50a20383078a27045c23909f9a2`.

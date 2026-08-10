@@ -174,7 +174,7 @@ def build_test_performance_manifest(
     benchmarked_commit: str,
     serial_argv: tuple[str, ...],
     parallel_argv: tuple[str, ...],
-    minimum_improvement_percent: float = 10.0,
+    minimum_improvement_percent: float = 30.0,
     current_checkout_clean: bool = True,
 ) -> TestPerformanceManifest:
     """Compare owned run summaries and compute a fail-closed acceptance result."""
@@ -230,7 +230,7 @@ def run_test_benchmark(
     target: TestBenchmarkTarget = "pipeline-smoke",
     profile: str = "quick",
     parallel_workers: int | None = None,
-    minimum_improvement_percent: float = 10.0,
+    minimum_improvement_percent: float = 30.0,
     timeout_seconds: float = 3600.0,
 ) -> TestPerformanceManifest:
     """Own both test executions and return their provenance-bound manifest."""
@@ -311,7 +311,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--profile", choices=("quick", "release", "exhaustive"), default="quick")
     parser.add_argument("--parallel-workers", type=int, default=None)
-    parser.add_argument("--minimum-improvement", type=float, default=10.0)
+    parser.add_argument("--minimum-improvement", type=float, default=30.0)
     parser.add_argument("--timeout", type=float, default=3600.0)
     parser.add_argument("--output", type=Path, required=True)
     return parser

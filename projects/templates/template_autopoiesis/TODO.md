@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -48,20 +48,21 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AUTOPOIESIS-MUTATION-1` | Medium | Existing mutation meta-gate | per-domain mutation report | `uv run pytest projects/templates/template_autopoiesis/tests -q` | removing a domain guard must fail the mutated case |
-| `AUTOPOIESIS-ARCHETYPE-1` | Medium | Config schema extension | filtered child manifest | project validator plus generated-child integrity tests | unknown archetype filter must fail closed |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `AUTOPOIESIS-SPEC-1` | Major | Grammar/spec lockstep | `SPEC.md` Phase 10 checklist | strict drift and spec-contract tests | fenced preamble/spec mismatch must fail validation |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `AUTOPOIESIS-SPEC-1` | open | Major | Grammar/spec lockstep | Implement the scoped change; run strict drift and spec-contract tests and attach `SPEC.md` Phase 10 checklist. | `SPEC.md` Phase 10 checklist | `uv run pytest tests -q --no-cov --timeout=120` | fenced preamble/spec mismatch must fail validation |
 
 ## Backlog status
 

@@ -15,6 +15,7 @@ related modules.
 | `architecture_overview.py` | Architecture `.md`/`.mmd`/`.svg` from live state |
 | `coverage_history.py` | Coverage-history page from CI artefacts |
 | `counts.py` | Line/module count stats (`docs/_generated/COUNTS.md`) |
+| `status_evidence.py` | Typed `STATUS.md` evidence receipt and freshness validation |
 | `stage_table.py` | Canonical pipeline stage table (marker block) |
 | `exemplar_roster.py` | Public exemplar roster doc |
 | `publication_records.py` | Publication-records doc, GitHub README table, and per-exemplar `STANDALONE.md` identity blocks |

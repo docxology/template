@@ -21,6 +21,7 @@ validation gates (those live in [`scripts/gates/`](../gates/)).
 | `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts` | Rebaseline integrity manifests after intentional targeted renders; records `current-output-snapshot`, not stage provenance, and methods audits report that distinction |
 | `refresh_rendered_provenance.py` | `infrastructure.validation.publication.rendered_provenance` | Bind an already-green output snapshot to deterministic stage/source/config/output and manuscript-consumption fingerprints |
 | `normalize_backlogs.py` | `infrastructure.documentation.backlog_normalizer` | Normalize public exemplar TODO files into future-only typed tables and archive removed historical sections |
+| `normalize_status.py` | `scripts.docgen.status_evidence` | Normalize the root status ledger into stable, machine-readable evidence rows |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Run serial/parallel clean-checkout health and write an acceptance manifest |
 | `benchmark_tests.py` | `infrastructure.core.test_performance` | Run matched serial/parallel evidence for the infrastructure or public quick test lane |
 

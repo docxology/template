@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -39,21 +39,21 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `POOLS-EVALUATOR-1` | Minor | Existing strong-rule fixtures | expanded evaluator coverage report | focused no-mock project tests | malformed rule/context must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `POOLS-RESOURCE-SCHEMA-1` | Medium | Typed resource loaders | fonds/rules/tools schema receipt | project evaluator and drift gates | missing required resource field must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `POOLS-FOURTH-FOND-1` | Major | Owner-approved fourth fond exemplar | public fond manifest and registry update | public-scope and standalone gates | absent exemplar must remain blocked, not skipped as pass |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `POOLS-FOURTH-FOND-1` | blocked-external | Major | Owner-approved fourth fond exemplar | Obtain the required owner or external receipt to unblock; run public-scope and standalone gates and attach public fond manifest and registry update. | public fond manifest and registry update | `uv run pytest tests -q --no-cov --timeout=120` | absent exemplar must remain blocked, not skipped as pass |
 
 ## Backlog status
 

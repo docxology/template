@@ -11,8 +11,20 @@ from datetime import date, timedelta
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-_LEDGER_ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
+_LEDGER_HEADER = (
+    "id",
+    "subsystem",
+    "last verified",
+    "verified by",
+    "verification scope",
+    "command",
+    "receipt",
+    "mode",
+    "health",
+)
 _LAST_UPDATED = re.compile(r"^\*\*Last updated:\*\*\s*(\d{4}-\d{2}-\d{2})\s*$", re.MULTILINE)
+_EXECUTABLE = re.compile(r"(?:`[^`]+`|\b(?:uv\s+run|pytest|python|ruff|mypy|bash|git\s+|scripts/))", re.I)
+_VERIFICATION_MODES = {"automated", "manual", "external", "optional-tool"}
 
 
 @dataclass(frozen=True)
@@ -22,20 +34,44 @@ class StatusRow:
     subsystem: str
     verified_on: date
     line_number: int
+    identifier: str = ""
+    verified_by: str = ""
+    verification_scope: str = ""
+    command: str = ""
+    receipt: str = ""
+    mode: str = ""
+    health: str = ""
 
 
 def parse_status_rows(text: str) -> list[StatusRow]:
-    """Parse dated rows from the verification ledger table."""
+    """Parse dated rows from the versioned verification ledger table."""
     rows: list[StatusRow] = []
     for line_number, line in enumerate(text.splitlines(), start=1):
-        match = _LEDGER_ROW.match(line)
-        if match is None or match.group(1).strip().lower() == "subsystem":
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = tuple(cell.strip() for cell in line.strip().strip("|").split("|"))
+        if len(cells) != len(_LEDGER_HEADER) or tuple(cell.casefold() for cell in cells) == _LEDGER_HEADER:
+            continue
+        if all(set(cell) <= {"-", "—"} for cell in cells):
             continue
         try:
-            verified_on = date.fromisoformat(match.group(2))
+            verified_on = date.fromisoformat(cells[2])
         except ValueError:
             continue
-        rows.append(StatusRow(match.group(1).strip(), verified_on, line_number))
+        rows.append(
+            StatusRow(
+                subsystem=cells[1],
+                verified_on=verified_on,
+                line_number=line_number,
+                identifier=cells[0],
+                verified_by=cells[3],
+                verification_scope=cells[4],
+                command=cells[5],
+                receipt=cells[6],
+                mode=cells[7],
+                health=cells[8],
+            )
+        )
     return rows
 
 
@@ -54,6 +90,34 @@ def freshness_findings(
     if not rows:
         findings.append("STATUS.md has no dated subsystem verification rows")
         return findings
+
+    header = next(
+        (
+            tuple(cell.strip().casefold() for cell in line.strip().strip("|").split("|"))
+            for line in text.splitlines()
+            if line.lstrip().startswith("|")
+        ),
+        (),
+    )
+    if header != _LEDGER_HEADER:
+        findings.append("STATUS.md verification ledger must use the nine-field ID/command/receipt/mode schema")
+    for row in rows:
+        required = {
+            "stable ID": row.identifier,
+            "verified by": row.verified_by,
+            "verification scope": row.verification_scope,
+            "command": row.command,
+            "receipt": row.receipt,
+            "verification mode": row.mode,
+            "health": row.health,
+        }
+        for label, value in required.items():
+            if not value.strip():
+                findings.append(f"{row.subsystem}: missing {label} (line {row.line_number})")
+        if row.command.strip() and not _EXECUTABLE.search(row.command):
+            findings.append(f"{row.subsystem}: command is not executable (line {row.line_number})")
+        if row.mode.strip() and row.mode.casefold() not in _VERIFICATION_MODES:
+            findings.append(f"{row.subsystem}: unsupported verification mode {row.mode!r} (line {row.line_number})")
 
     threshold = effective_date - timedelta(days=max_age_days)
     for row in rows:

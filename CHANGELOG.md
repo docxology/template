@@ -37,8 +37,9 @@ not to the contents of any specific workspace.
 
 ### Final local release validation (2026-08-09)
 
-- Re-ran the 24-lane public release profile on the updated lockfiles: all lanes
-  passed with 95.39% combined coverage and an output-isolation receipt.
+- Re-ran the 24-lane public release profile on the updated lockfiles: all 24
+  lanes passed, collecting 5,960 tests with 94.71% combined coverage and an
+  output-isolation receipt (`fd00581decf60b62bf98a36777bd66931273d50a20383078a27045c23909f9a2`).
 - Re-ran the hosted-equivalent infrastructure selection: 9,656 passed, 9
   skipped, and one expected numerical-stability warning; the unfiltered local
   run's only failures were the intentionally service-backed Ollama tests.
@@ -422,6 +423,14 @@ not to the contents of any specific workspace.
   `template_advanced_literature_review/TODO.md` and consolidated 5 shipped
   items (`AR-SOURCE-FRESHNESS-1`, `AR-LOOP-PHASES-1`, and 3 medium rows) in
   `template_autoresearch_project/TODO.md` under a single "Shipped" section.
+
+- 🔎 **Backlog-history reconciliation (2026-08-09).** The preceding release
+  note is retained as historical evidence from its original checkout. A later
+  audit found that `ARL-PHASE-VALIDATION-1` had been restored to the active
+  TODO during subsequent edits; the current future-only backlog keeps it
+  active until the same-revision acceptance receipt closes it, and project
+  troubleshooting now points only to the genuinely remaining cross-phase
+  validator work.
 
 - 🔧 **Health gate ruff version pinning.** Changed `ruff` and `ruff-format`
   health gates from `uvx ruff` (latest version, unpinned) to `uv run ruff`

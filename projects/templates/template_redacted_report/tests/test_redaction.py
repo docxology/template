@@ -197,15 +197,17 @@ def test_dev_variant_output_verifier_enforces_filenames_and_hashes(
 
 
 def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None:
-    class FakeAvailability:
-        seal_path = Path("/tmp/kmyth-seal")  # nosec B108 - fake path constant on a test double, never touched
-        unseal_path = Path("/tmp/kmyth-unseal")  # nosec B108 - fake path constant on a test double, never touched
+    class AvailabilityProbe:
+        """Real injected availability probe used to exercise optional-tool branches."""
+
+        seal_path = Path("/tmp/kmyth-seal")  # nosec B108 - test-only path constant, never touched
+        unseal_path = Path("/tmp/kmyth-unseal")  # nosec B108 - test-only path constant, never touched
 
         def __init__(self, available: bool) -> None:
             self.available = available
 
         def summary(self) -> str:
-            return "fake kmyth summary"
+            return "test kmyth summary"
 
     skipped = visuals._resolve_kmyth_status(
         include_kmyth=False,
@@ -215,7 +217,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None
     assert skipped["requested"] is False
     assert skipped["summary"] == "Kmyth not requested."
 
-    unavailable = FakeAvailability(False)
+    unavailable = AvailabilityProbe(False)
     missing = visuals._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",
@@ -225,7 +227,7 @@ def test_kmyth_status_resolution_distinguishes_tool_and_seal_readiness() -> None
     assert missing["available"] is False
     assert missing["tools_runnable"] is False
 
-    available = FakeAvailability(True)
+    available = AvailabilityProbe(True)
     no_tpm = visuals._resolve_kmyth_status(
         include_kmyth=True,
         binary_dir="bin",

@@ -27,6 +27,12 @@ Future work only.
 ## Backlog operating rules
 
 ### `ROOT-ONE-1`
+
+## Active root backlog
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `ROOT-ONE-1` | open | Minor | fixture | Implement the fixture and attach the receipt | receipt | `uv run pytest tests -q` | changed fixture fails |
 """,
     )
     project = root / "projects" / "templates" / "example"
@@ -51,9 +57,9 @@ Forward-only backlog.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `EXAMPLE-ONE-1` | Minor | fixture | receipt | `pytest tests` | changed fixture fails |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `EXAMPLE-ONE-1` | open | Minor | fixture | Implement the fixture and attach the receipt | receipt | `uv run pytest tests -q` | changed fixture fails |
 """,
     )
     report = validate_public_backlogs(root, public_names=("templates/example",))
@@ -84,8 +90,8 @@ projects/working/private_project
     assert "rotating_path" in rules
 
 
-def test_public_backlog_contract_reports_historical_sections_as_warnings(tmp_path: Path) -> None:
-    """Historical notes are visible for migration without hiding real errors."""
+def test_public_backlog_contract_rejects_historical_sections(tmp_path: Path) -> None:
+    """Completed evidence cannot remain in an active backlog."""
     root = tmp_path
     _write_backlog(
         root / "TO-DO.md",
@@ -97,14 +103,18 @@ Future work only.
 
 ## Backlog operating rules
 
+## Active root backlog
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
 ## Shipped
 
 - old
 """,
     )
     report = validate_public_backlogs(root, public_names=())
-    assert report.errors == ()
-    assert any(finding.rule == "historical_section" for finding in report.warnings)
+    assert any(finding.rule == "historical_section" for finding in report.errors)
 
 
 def test_public_backlog_contract_rejects_empty_stable_row(tmp_path: Path) -> None:
@@ -143,9 +153,9 @@ Forward-only backlog.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `EXAMPLE-ONE-1` | Medium |  | receipt | `pytest tests` | changed fixture fails |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `EXAMPLE-ONE-1` | open | Medium |  | implement and attach receipt | receipt | `uv run pytest tests -q` | changed fixture fails |
 """,
     )
     report = validate_public_backlogs(root, public_names=("templates/example",))
@@ -164,9 +174,9 @@ This backlog is future-only.
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `EXAMPLE-ONE-1` | Minor | fixture | receipt | `pytest tests` | changed fixture fails |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `EXAMPLE-ONE-1` | open | Minor | fixture | Implement the fixture and attach the receipt | receipt | `uv run pytest tests -q` | changed fixture fails |
 
 ## Ordered improvement ladder
 

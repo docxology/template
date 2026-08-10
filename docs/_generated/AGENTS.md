@@ -11,7 +11,8 @@ This directory holds **generator output** plus **maintainer-written** index file
 | [`active_projects.md`](active_projects.md) | **Generated** — `uv run python scripts/docgen/active_projects.py` |
 | [`architecture_overview.md`](architecture_overview.md) / [`architecture_overview.svg`](architecture_overview.svg) / `.mmd` | **Generated** — `uv run python scripts/docgen/architecture_overview.py` |
 | [`coverage_history.md`](coverage_history.md) | **Generated** — `uv run python scripts/docgen/coverage_history.py --from-dir=<dir>` (offline) or `--from-gh --days=30` (online, needs `gh`) |
-| [`coverage_snapshot.json`](coverage_snapshot.json) | **Generated** — `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; source-commit/source-hash provenance for the COUNTS.md coverage table, validated fail-closed |
+| [`coverage_snapshot.json`](coverage_snapshot.json) | **Generated** — `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; versioned source-commit/source-tree/source-hash provenance for the COUNTS.md coverage table, validated fail-closed |
+| [`status_evidence.json`](status_evidence.json) | **Generated** — `uv run python scripts/docgen/status_evidence.py --write`; source hash and typed command/scope/owner/date/health/mode receipt for `STATUS.md` |
 | [`COUNTS.md`](COUNTS.md) | **Generated** — `uv run python scripts/docgen/counts.py --write` (`--check` gates CI and pre-commit); ground-truthed test counts, gates, and roster notes (see [`README.md`](README.md)) |
 | [`exemplar_roster.md`](exemplar_roster.md) | **Generated** — `uv run python scripts/docgen/exemplar_roster.py` (`--check` gates CI and pre-commit) |
 | [`hermes_knowledge_audit.json`](hermes_knowledge_audit.json) | **Historical snapshot** — legacy external audit metadata; do not use for current counts |

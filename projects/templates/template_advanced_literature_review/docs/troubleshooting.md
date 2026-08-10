@@ -23,9 +23,10 @@ assuming a bug. Widen the phase's `queries` or `deterministic_filters` in
 3. Re-run `scripts/01_multi_phase_search.py` so citation metadata is
    recomputed against the current corpus, not a stale snapshot.
 
-This is a known open validator gap — see `TODO.md` → `ARL-CROSS-PHASE-1` and
-`ARL-PHASE-VALIDATION-1`: negative controls for boundary/conflict cases are
-tracked follow-up work, not yet a hard gate.
+This remains a known cross-phase validator gap — see `TODO.md` →
+`ARL-CROSS-PHASE-1`: conflict-case negative controls are tracked follow-up
+work, while phase-boundary validation is now covered by the closed
+`ARL-PHASE-VALIDATION-1` acceptance record and must remain a hard gate.
 
 ## Literal `{{TOKEN}}` Appears
 

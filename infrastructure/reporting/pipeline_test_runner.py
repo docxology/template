@@ -76,7 +76,10 @@ def run_infrastructure_tests(
     start_time = time.time()
     project_root = resolve_project_root(repo_root, project_name)
 
-    clean_coverage_files(repo_root)
+    # Infrastructure coverage belongs to the repository root. Do not recurse
+    # into lifecycle sidecars or active private projects that may be running
+    # their own isolated test producer in the same checkout.
+    clean_coverage_files(repo_root, recursive=False)
 
     testing_config = get_testing_config(repo_root)
     full_scope = scope == "full"

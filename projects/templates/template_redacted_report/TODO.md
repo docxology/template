@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -36,19 +36,21 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `REDACTED-AUDIT-BIND-1` | Medium | Existing source/audit ledger | manuscript-to-audit binding receipt | strict project validation | changed audit value without source update must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `REDACTED-VISUAL-1` | Major | Stable raster toolchain | pixel regression manifest | explicit visual gate only when tooling is pinned | missing raster tool must report unavailable, not pass |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `REDACTED-VISUAL-1` | blocked-tool | Major | Stable raster toolchain | Install or pin the required tool, or record its unavailable status to unblock; run explicit visual gate only when tooling is pinned and attach pixel regression manifest. | pixel regression manifest | `uv run pytest tests -q --no-cov --timeout=120` | missing raster tool must report unavailable, not pass |
 
 ## Backlog status
 

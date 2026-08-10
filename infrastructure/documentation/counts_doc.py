@@ -29,7 +29,6 @@ its method matches the public release matrix and has a bounded subprocess.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import re
@@ -40,70 +39,63 @@ from pathlib import Path
 
 from infrastructure.core.project_test_matrix import ProjectTestTask, run_project_test_matrix
 from infrastructure.core.pytest_orchestration import (
-    build_profile_marker_expression,
     build_project_pytest_command,
     parse_project_workers,
-    resolve_test_profile,
 )
 from infrastructure.core.runtime.environment import get_subprocess_env
+from infrastructure.documentation.counts_coverage import (
+    COVERAGE_MEASUREMENT_TIMEOUT_SECONDS,
+    COVERAGE_PROVENANCE_RELATIVE_PATH,
+    COVERAGE_PROVENANCE_SCHEMA_VERSION,
+    COVERAGE_SOURCE_INVENTORY_MODE,
+    EXEMPLAR_SNAPSHOT,
+    EXEMPLAR_SNAPSHOT_DATE,
+    ExemplarSnapshot,
+    _coverage_measurement_command,
+    _coverage_measurement_data_file,
+    _rewrite_exemplar_snapshot,
+    build_coverage_provenance,
+    exemplar_source_hash,
+    measure_exemplar_coverage,
+    validate_coverage_provenance,
+    verify_exemplar_coverage,
+    write_coverage_provenance,
+)
 from infrastructure.project.public_scope import public_project_names
 
+__all__ = [
+    "COVERAGE_MEASUREMENT_TIMEOUT_SECONDS",
+    "COVERAGE_PROVENANCE_RELATIVE_PATH",
+    "COVERAGE_PROVENANCE_SCHEMA_VERSION",
+    "COVERAGE_SOURCE_INVENTORY_MODE",
+    "DOC_RELATIVE_PATH",
+    "EXEMPLAR_SNAPSHOT",
+    "EXEMPLAR_SNAPSHOT_DATE",
+    "ExemplarSnapshot",
+    "CountsFacts",
+    "_coverage_measurement_command",
+    "_coverage_measurement_data_file",
+    "_rewrite_exemplar_snapshot",
+    "build_coverage_provenance",
+    "check_counts_doc",
+    "collect_facts",
+    "exemplar_source_hash",
+    "infrastructure_packages",
+    "measure_exemplar_coverage",
+    "project_test_count",
+    "publishing_test_count",
+    "render_counts_doc",
+    "tracked_infra_python_count",
+    "validate_coverage_provenance",
+    "verify_exemplar_coverage",
+    "write_counts_doc",
+    "write_coverage_provenance",
+]
+
 DOC_RELATIVE_PATH = Path("docs/_generated/COUNTS.md")
-COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
-COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
 GENERATED_DATE = "2026-08-09"
-
-# Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-08-09"
-
-# Keep a full snapshot refresh bounded even when a project accidentally grows a
-# pathological test or rendering loop.  The release matrix itself has its own
-# per-project timeout; this standalone verifier needs an explicit wall-clock
-# bound because it invokes each project's pytest directly.
-COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
-
-
-@dataclass(frozen=True)
-class ExemplarSnapshot:
-    """One measured coverage row; collection count is always derived live."""
-
-    name: str
-    coverage_pct: str  # rendered as-is, e.g. "96.96 %"
-
-
-# Measured per-exemplar coverage snapshot. Collection totals are intentionally
-# absent here and are derived in isolated project environments on every run.
-EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    # Every row is measured in the project's own environment with the shared
-    # release profile. This keeps project-local dependency and coverage settings
-    # authoritative while making the snapshot comparable to the public matrix.
-    ExemplarSnapshot("template_active_inference", "92.85 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "94.65 %"),
-    ExemplarSnapshot("template_autopoiesis", "97.60 %"),
-    ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
-    ExemplarSnapshot("template_autoscientists", "97.56 %"),
-    ExemplarSnapshot("template_code_project", "95.84 %"),
-    ExemplarSnapshot("template_data_descriptor", "95.81 %"),
-    ExemplarSnapshot("template_eda_notebook", "92.21 %"),
-    ExemplarSnapshot("template_formal", "94.39 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.19 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "93.97 %"),
-    ExemplarSnapshot("template_madlib", "98.79 %"),
-    ExemplarSnapshot("template_methods_paper", "99.00 %"),
-    ExemplarSnapshot("template_newspaper", "99.24 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.19 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "93.67 %"),
-    ExemplarSnapshot("template_prose_project", "92.85 %"),
-    ExemplarSnapshot("template_redacted_report", "94.77 %"),
-    ExemplarSnapshot("template_registered_report", "94.13 %"),
-    ExemplarSnapshot("template_search_project", "96.71 %"),
-    ExemplarSnapshot("template_sia", "96.39 %"),
-    ExemplarSnapshot("template_storybook", "93.54 %"),
-    ExemplarSnapshot("template_template", "97.66 %"),
-    ExemplarSnapshot("template_textbook", "93.35 %"),
-)
 
 
 def tracked_infra_python_count(repo_root: Path) -> int:
@@ -277,307 +269,6 @@ def _exemplar_table(exemplar_tests: dict[str, int]) -> str:
         if row.name in exemplar_tests:
             rows.append(f"| `{row.name}` | {exemplar_tests[row.name]} | {row.coverage_pct} |")
     return "\n".join(rows)
-
-
-def _coverage_measurement_command(project_dir: Path) -> list[str]:
-    """Build the bounded release-profile pytest command for one exemplar."""
-    profile = resolve_test_profile("release")
-    marker_expression = build_profile_marker_expression(profile)
-    command = [
-        "uv",
-        "run",
-        "--directory",
-        str(project_dir),
-        "pytest",
-        "tests/",
-        "--cov=src",
-        "--cov-report=",
-        "-q",
-    ]
-    if marker_expression:
-        command.extend(["-m", marker_expression])
-    return command
-
-
-def _coverage_measurement_data_file(repo_root: Path, name: str) -> Path:
-    """Return an absolute, project-local coverage data path.
-
-    Coverage resolves relative ``COVERAGE_FILE`` values from the subprocess
-    working directory.  Keeping this path construction in one helper makes
-    that cwd-sensitive contract explicit and testable.
-    """
-    project_dir = repo_root.resolve() / "projects" / "templates" / name
-    return project_dir / f".coverage.measure_{name}"
-
-
-def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
-    """Run one exemplar's release-profile coverage gate and return its total.
-
-    The canonical measurement is the STANDALONE one — pytest invoked from inside
-    the project directory, so the project's own ``[tool.coverage.run]`` applies.
-    Measuring from the repo root gives a different, wrong number: the root config
-    omits nothing while each exemplar omits ``*/__init__.py``, and a root-cwd
-    ``--cov=<path>`` can sweep a far larger statement set (measured 2026-07-27:
-    ``template_advanced_literature_review`` reports 38 % over 3489 statements from
-    the root versus 93.07 % over 423 standalone).
-
-    Percentages are re-read through ``coverage report --precision=2`` because
-    several exemplars set ``precision = 0`` and would otherwise report a rounded
-    whole percent.
-
-    Returns a string like ``"93.07 %"``. Raises ``RuntimeError`` if the run fails
-    or exceeds :data:`COVERAGE_MEASUREMENT_TIMEOUT_SECONDS`.
-    """
-    # Resolve before exporting ``COVERAGE_FILE``.  The coverage tool resolves a
-    # relative data-file path from the project cwd (the subprocess deliberately
-    # runs there), which otherwise creates a nested
-    # ``projects/templates/<name>/projects/templates/<name>/`` tree and leaves
-    # ignored build artifacts behind after the caller removes the repo-relative
-    # path.  Absolute paths also make this receipt-producing subprocess safe for
-    # callers that pass ``Path('.')`` or another relative checkout root.
-    project_dir = repo_root.resolve() / "projects" / "templates" / name
-    if not project_dir.is_dir():
-        raise RuntimeError(f"exemplar not checked out: {name}")
-    data_file = _coverage_measurement_data_file(repo_root, name)
-    env = dict(get_subprocess_env())
-    env["COVERAGE_FILE"] = str(data_file)
-    profile = resolve_test_profile("release")
-    command = _coverage_measurement_command(project_dir)
-    try:
-        try:
-            run = subprocess.run(  # noqa: S603 - fixed argv, no shell
-                command,
-                capture_output=True,
-                text=True,
-                env=env,
-                check=False,
-                timeout=COVERAGE_MEASUREMENT_TIMEOUT_SECONDS,
-            )
-        except subprocess.TimeoutExpired as exc:
-            raise RuntimeError(
-                f"coverage run timed out for {name} after {COVERAGE_MEASUREMENT_TIMEOUT_SECONDS}s "
-                f"using the {profile.name} profile"
-            ) from exc
-        if run.returncode != 0:
-            tail = "\n".join((run.stdout + run.stderr).splitlines()[-8:])
-            raise RuntimeError(f"coverage run failed for {name} (exit {run.returncode}):\n{tail}")
-        report = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["uv", "run", "--directory", str(project_dir), "coverage", "report", "--precision=2"],
-            capture_output=True,
-            text=True,
-            env=env,
-            check=False,
-        )
-        for line in report.stdout.splitlines():
-            if line.startswith("TOTAL"):
-                return f"{line.split()[-1].rstrip('%')} %"
-        raise RuntimeError(f"no TOTAL row in coverage report for {name}")
-    finally:
-        data_file.unlink(missing_ok=True)
-
-
-def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
-    """Re-measure every exemplar's coverage and compare against the recorded value.
-
-    This is the missing half of the coverage provenance system.
-    :func:`validate_coverage_provenance` only proves the *source has not changed
-    since the number was recorded* — it never re-derives the number itself, so a
-    percentage that was wrong when written stays wrong forever. Measured
-    2026-07-27: ``template_search_project`` recorded 96.40 % against an actual
-    97.69 %, and ``template_advanced_literature_review`` recorded 92.48 % against
-    an actual 93.07 %; neither gap was visible to any gate.
-
-    With ``rewrite=True`` the measured values are written back into this module's
-    ``EXEMPLAR_SNAPSHOT`` block, so refreshing them is one command rather than a
-    hand-edit per exemplar.
-
-    Returns ``(all_match, report_text)``. Deliberately not wired into CI: it runs
-    every exemplar's suite and takes minutes.
-    """
-    measured: dict[str, str] = {}
-    failures: list[str] = []
-    for row in EXEMPLAR_SNAPSHOT:
-        try:
-            measured[row.name] = measure_exemplar_coverage(repo_root, row.name)
-        except RuntimeError as exc:
-            failures.append(f"{row.name}: {exc}")
-
-    lines = [f"{'exemplar':44} {'recorded':>10} {'measured':>10}  status"]
-    mismatched: list[tuple[str, str, str]] = []
-    for row in EXEMPLAR_SNAPSHOT:
-        actual = measured.get(row.name)
-        if actual is None:
-            lines.append(f"{row.name:44} {row.coverage_pct:>10} {'-':>10}  NOT MEASURED")
-            continue
-        ok = actual.replace(" ", "") == row.coverage_pct.replace(" ", "")
-        if not ok:
-            mismatched.append((row.name, row.coverage_pct, actual))
-        lines.append(f"{row.name:44} {row.coverage_pct:>10} {actual:>10}  {'ok' if ok else 'DRIFTED'}")
-
-    if rewrite and measured:
-        _rewrite_exemplar_snapshot(measured)
-        lines.append(f"\nrewrote EXEMPLAR_SNAPSHOT with {len(measured)} measured values")
-
-    for failure in failures:
-        lines.append(f"MEASUREMENT FAILED — {failure}")
-    lines.append(f"\n{len(mismatched)} drifted, {len(failures)} failed, {len(measured)} measured")
-    return (not mismatched and not failures), "\n".join(lines)
-
-
-def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | None = None) -> None:
-    """Rewrite an ``EXEMPLAR_SNAPSHOT`` tuple with measured percentages.
-
-    ``source_path`` defaults to this module and exists so the rewrite can be
-    exercised against a scratch file — the repo forbids dependency replacement in
-    tests, so the seam is a real parameter rather than a patched ``__file__``.
-    """
-    source_path = source_path or Path(__file__)
-    text = source_path.read_text(encoding="utf-8")
-
-    def _replace(match: re.Match[str]) -> str:
-        name = match.group("name")
-        actual = measured.get(name)
-        return match.group(0) if actual is None else f'ExemplarSnapshot("{name}", "{actual}")'
-
-    updated = re.sub(
-        r'ExemplarSnapshot\(\s*"(?P<name>[^"]+)"\s*,\s*"[^"]*"\s*\)',
-        _replace,
-        text,
-    )
-    if updated != text:
-        source_path.write_text(updated, encoding="utf-8")
-
-
-def exemplar_source_hash(repo_root: Path, name: str) -> str:
-    """Hash tracked source and tests that determine one exemplar's coverage."""
-    project_root = repo_root / "projects" / "templates" / name
-    digest = hashlib.sha256()
-    relative_roots = [(project_root / root_name).relative_to(repo_root).as_posix() for root_name in ("src", "tests")]
-    tracked = subprocess.run(  # noqa: S603 - fixed git command and paths
-        ["git", "ls-files", "--", *relative_roots],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if tracked.returncode == 0:
-        files = sorted((repo_root / relative, repo_root / relative) for relative in tracked.stdout.splitlines())
-    else:
-        # Unit callers may supply a temporary non-Git tree. Production
-        # repositories always take the tracked-file branch above so ignored
-        # build metadata cannot contaminate cross-platform provenance.
-        files = sorted(
-            (path, path)
-            for root_name in ("src", "tests")
-            for path in (project_root / root_name).rglob("*")
-            if path.is_file() and "__pycache__" not in path.parts
-        )
-    for logical_path, physical_path in files:
-        # Git records directory symlinks as a path without a trailing slash.
-        # The advanced literature exemplar intentionally reuses sibling source
-        # directories, so hash the in-repository target files under the symlink's
-        # logical project path.
-        if physical_path.is_symlink() and physical_path.is_dir():
-            for child_logical, child_physical in _tracked_symlink_children(repo_root, logical_path, physical_path):
-                digest.update(child_logical.relative_to(project_root).as_posix().encode("utf-8"))
-                digest.update(b"\0")
-                digest.update(child_physical.read_bytes())
-                digest.update(b"\0")
-            continue
-        if not physical_path.is_file():
-            continue
-        digest.update(logical_path.relative_to(project_root).as_posix().encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(physical_path.read_bytes())
-        digest.update(b"\0")
-    return digest.hexdigest()
-
-
-def _tracked_symlink_children(repo_root: Path, logical_path: Path, symlink_path: Path) -> list[tuple[Path, Path]]:
-    """Return tracked regular files reached through an in-repository directory symlink."""
-    repo_root = repo_root.resolve()
-    target_root = symlink_path.resolve()
-    try:
-        target_rel = target_root.relative_to(repo_root).as_posix()
-    except ValueError:
-        return []
-    tracked = subprocess.run(  # noqa: S603 - fixed git command and repo-local path
-        ["git", "ls-files", "--", target_rel],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if tracked.returncode == 0:
-        physical_files = sorted((repo_root / relative).resolve() for relative in tracked.stdout.splitlines())
-    else:
-        physical_files = sorted(path for path in target_root.rglob("*") if path.is_file())
-    return [
-        (logical_path / physical.relative_to(target_root), physical)
-        for physical in physical_files
-        if physical.is_file()
-    ]
-
-
-def build_coverage_provenance(repo_root: Path) -> dict[str, object]:
-    """Build provenance for the checked-in coverage percentages."""
-    source_commit = subprocess.run(  # noqa: S603 - fixed git command
-        ["git", "rev-parse", "HEAD"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        check=True,
-    ).stdout.strip()
-    return {
-        "schema_version": COVERAGE_PROVENANCE_SCHEMA_VERSION,
-        "measured_at": EXEMPLAR_SNAPSHOT_DATE,
-        "source_commit": source_commit,
-        "projects": {
-            row.name: {
-                "coverage_pct": row.coverage_pct,
-                "source_hash": exemplar_source_hash(repo_root, row.name),
-            }
-            for row in EXEMPLAR_SNAPSHOT
-        },
-    }
-
-
-def write_coverage_provenance(repo_root: Path) -> Path:
-    """Write coverage source provenance after coverage gates have run."""
-    target = repo_root / COVERAGE_PROVENANCE_RELATIVE_PATH
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(
-        json.dumps(build_coverage_provenance(repo_root), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    return target
-
-
-def validate_coverage_provenance(repo_root: Path) -> None:
-    """Fail closed when a coverage percentage is stale for its source tree."""
-    path = repo_root / COVERAGE_PROVENANCE_RELATIVE_PATH
-    if not path.is_file():
-        raise RuntimeError(f"missing coverage provenance: {COVERAGE_PROVENANCE_RELATIVE_PATH}")
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise RuntimeError("coverage provenance root must be a mapping")
-    if payload.get("schema_version") != COVERAGE_PROVENANCE_SCHEMA_VERSION:
-        raise RuntimeError(f"coverage provenance schema mismatch: expected {COVERAGE_PROVENANCE_SCHEMA_VERSION}")
-    projects = payload.get("projects")
-    if not isinstance(projects, dict):
-        raise RuntimeError("coverage provenance has no projects mapping")
-    expected_names = {row.name for row in EXEMPLAR_SNAPSHOT}
-    if set(projects) != expected_names:
-        raise RuntimeError("coverage provenance project roster does not match the public snapshot")
-    for row in EXEMPLAR_SNAPSHOT:
-        record = projects.get(row.name)
-        if not isinstance(record, dict) or record.get("coverage_pct") != row.coverage_pct:
-            raise RuntimeError(f"coverage provenance percentage mismatch: {row.name}")
-        if record.get("source_hash") != exemplar_source_hash(repo_root, row.name):
-            raise RuntimeError(
-                f"stale coverage snapshot for {row.name}: source hash changed; "
-                "rerun its coverage gate, then refresh coverage provenance"
-            )
 
 
 def render_counts_doc(facts: CountsFacts) -> str:

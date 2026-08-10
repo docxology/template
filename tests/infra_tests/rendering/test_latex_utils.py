@@ -1,10 +1,14 @@
 """Tests for latex_utils module."""
 
 import inspect
+import io
 import stat
 
 import pytest
+from PIL import Image
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+from pypdf import PdfReader
 from pypdf import PdfWriter
 
 from infrastructure.core.exceptions import CompilationError
@@ -46,6 +50,27 @@ def test_canonicalize_pdf_adds_identifier_when_source_omits_one(tmp_path, monkey
     content = pdf.read_bytes()
     assert b"/ID [ <" in content
     assert validate_pdf_structure(pdf)
+
+
+def test_canonicalize_pdf_preserves_raster_image_streams(tmp_path, monkeypatch):
+    """Metadata canonicalization must not rewrite XeTeX-style raster streams."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    image = Image.new("RGB", (32, 16), (20, 140, 220))
+    image.putpixel((31, 15), (240, 30, 80))
+    image_buffer = io.BytesIO()
+    image.save(image_buffer, format="PNG")
+
+    pdf = tmp_path / "image.pdf"
+    document = canvas.Canvas(str(pdf), pagesize=(144, 72))
+    document.drawImage(ImageReader(io.BytesIO(image_buffer.getvalue())), 0, 0, width=144, height=72)
+    document.showPage()
+    document.save()
+
+    before = PdfReader(str(pdf)).pages[0].images[0].data
+    canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+    after = PdfReader(str(pdf)).pages[0].images[0].data
+
+    assert after == before
 
 
 def test_ensure_pdf_at_noop_when_paths_match(tmp_path):

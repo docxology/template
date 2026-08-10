@@ -75,6 +75,7 @@ _HISTORICAL_POLICY_PREFIXES: tuple[str, ...] = (
     "docs/plans/",
     "docs/maintenance/review-remediation-",
 )
+_HISTORICAL_POLICY_PATHS: frozenset[str] = frozenset({"docs/maintenance/exemplar-backlog-history.md"})
 # Negative-control / known-wrong terminology — evidence that a gate claim is
 # backed by an adversarial test rather than asserted.
 _NEGATIVE_CONTROL_RE = re.compile(
@@ -114,6 +115,7 @@ class AuditFinding:
     category: str
     severity: str
     detail: str
+    role: str = "active"
 
 
 @dataclass(frozen=True)
@@ -128,6 +130,7 @@ class PublicDocumentationAudit:
     records: list[PublicDocRecord]
     symbol_records: list[SymbolDocRecord]
     findings: list[AuditFinding]
+    advisory_roles: dict[str, int]
 
 
 def _relative(path: Path, repo_root: Path) -> str:
@@ -197,7 +200,35 @@ def _iter_policy_docs(repo_root: Path) -> list[Path]:
 def _is_historical_policy_doc(path: Path, repo_root: Path) -> bool:
     """Return whether *path* is retained history rather than active policy."""
     relative = _relative(path, repo_root)
-    return path.name in _HISTORICAL_POLICY_NAMES or relative.startswith(_HISTORICAL_POLICY_PREFIXES)
+    return (
+        path.name in _HISTORICAL_POLICY_NAMES
+        or relative in _HISTORICAL_POLICY_PATHS
+        or relative.startswith(_HISTORICAL_POLICY_PREFIXES)
+    )
+
+
+def _advisory_role(path: Path, repo_root: Path) -> str:
+    """Classify a document before deciding whether a gate claim needs a control."""
+    relative = _relative(path, repo_root)
+    if _is_historical_policy_doc(path, repo_root) or "/archived/" in f"/{relative}":
+        return "historical"
+    if relative.startswith("docs/_generated/"):
+        return "generated"
+    lower = relative.lower()
+    if path.name in {"README.md", "SKILL.md"} or any(
+        token in lower for token in ("inventory", "catalog", "roster", "index")
+    ):
+        return "inventory"
+    if relative.startswith((".github/", "docs/rules/", "docs/security/")) or path.name in {
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CONTRIBUTING.md",
+        "MAINTAINERS.md",
+        "SECURITY.md",
+        "TO-DO.md",
+    }:
+        return "normative"
+    return "active"
 
 
 def _is_markdown_table_row(line: str) -> bool:
@@ -253,6 +284,12 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
         text = read_markdown(path)
         if text is None:
             continue
+        role = _advisory_role(path, repo_root)
+        # Generated, inventory, and historical prose describes a contract or
+        # records an outcome; it is not the active normative gate itself. Only
+        # active/normative policy surfaces require an adversarial control.
+        if role in {"generated", "inventory", "historical"}:
+            continue
         lines = blank_fences(text).splitlines()
         for line_no, line in enumerate(lines, 1):
             if _is_markdown_table_row(line):
@@ -272,6 +309,7 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
                         "claims a verifier, gate, schema, or rule enforces behavior, "
                         "but nearby active prose does not name a negative control or known-wrong fixture"
                     ),
+                    role=role,
                 )
             )
     return findings
@@ -417,6 +455,13 @@ def build_public_documentation_audit(repo_root: Path) -> PublicDocumentationAudi
     ]
 
     role_counts = Counter(record.role for record in records)
+    advisory_roles = Counter(finding.role for finding in findings if finding.severity == "advisory")
+    # Keep this machine-readable contract stable when a category currently has
+    # no findings; consumers should not infer whether an omitted key means zero
+    # or an older schema.
+    advisory_roles = Counter(
+        {role: advisory_roles.get(role, 0) for role in ("active", "generated", "inventory", "normative", "historical")}
+    )
     undocumented = sum(1 for record in symbols if not record.has_docstring)
     return PublicDocumentationAudit(
         doc_count=len(records),
@@ -427,6 +472,7 @@ def build_public_documentation_audit(repo_root: Path) -> PublicDocumentationAudi
         records=records,
         symbol_records=symbols,
         findings=findings,
+        advisory_roles=dict(sorted(advisory_roles.items())),
     )
 
 
@@ -465,6 +511,11 @@ def format_audit_markdown(audit: PublicDocumentationAudit, *, max_findings: int 
         lines.append(f"- `{role}`: {count}")
 
     lines.extend(["", "## Findings", ""])
+    if audit.advisory_roles:
+        lines.append(
+            "Advisory roles: " + ", ".join(f"`{role}`={count}" for role, count in audit.advisory_roles.items()) + "."
+        )
+        lines.append("")
     if not audit.findings:
         lines.append("No advisory findings.")
     else:

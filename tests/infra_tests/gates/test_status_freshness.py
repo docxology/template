@@ -12,9 +12,9 @@ def _status_text(last_updated: str, row_date: str) -> str:
 
 **Last updated:** {last_updated}
 
-| Subsystem | Last verified | Verified by | Verification scope | Health |
-| --- | --- | --- | --- | --- |
-| Pipeline | {row_date} | Maintainer | real run | healthy |
+| ID | Subsystem | Last verified | Verified by | Verification scope | Command | Receipt | Mode | Health |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| STATUS-PIPELINE-1 | Pipeline | {row_date} | Maintainer | real run | `uv run pytest tests -q` | docs/_generated/status_evidence.json | automated | healthy |
 """
 
 
@@ -59,3 +59,9 @@ def test_freshness_requires_ledger_rows() -> None:
 def test_freshness_rejects_invalid_header_date() -> None:
     findings = freshness_findings(_status_text("2026-02-30", "2026-08-07"), as_of=date(2026, 8, 8))
     assert findings == ["STATUS.md **Last updated:** date is invalid"]
+
+
+def test_freshness_rejects_missing_typed_status_evidence() -> None:
+    text = _status_text("2026-08-08", "2026-08-07").replace("docs/_generated/status_evidence.json", "")
+    findings = freshness_findings(text, as_of=date(2026, 8, 8))
+    assert any("missing receipt" in finding for finding in findings)

@@ -16,7 +16,13 @@ logger = get_logger(__name__)
 _TRACKED_COVERAGE_PROVENANCE = Path("docs/_generated/coverage_snapshot.json")
 
 
-def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, scope_dir: Path | None = None) -> bool:
+def clean_coverage_files(
+    repo_root: Path,
+    patterns: list[str] | None = None,
+    scope_dir: Path | None = None,
+    *,
+    recursive: bool = True,
+) -> bool:
     """Clean coverage database files to prevent corruption.
 
     Removes coverage database files that can become corrupted during parallel
@@ -37,6 +43,10 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
             invocation had just unlinked its mid-write ``.coverage.project``).
             The active ``COVERAGE_FILE`` and its parallel-worker shards are
             always preserved, even when they match a cleanup pattern.
+        recursive: Whether wildcard patterns should search descendants of
+            ``scope_dir``. Repository-level infrastructure runs set this to
+            ``False`` so they cannot remove a private or active project's
+            coverage database while cleaning their own root-level reports.
 
     Returns:
         True if cleanup successful, False otherwise
@@ -80,8 +90,12 @@ def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None, sco
         # Clean each pattern
         for pattern in patterns:
             if "*" in pattern:
-                # Glob pattern - search for matching files recursively
+                # Glob pattern - search recursively by default. A root-level
+                # infrastructure cleanup can opt out to protect unrelated
+                # lifecycle projects that share this checkout.
                 glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
+                if not recursive:
+                    glob_pattern = glob_pattern.removeprefix("**/")
                 for file_path in search_root.glob(glob_pattern):
                     label = relative_or_self(file_path, repo_root)
                     removed, locked = _remove_file(file_path, label)

@@ -44,6 +44,7 @@ def build_metrics_receipt(metrics: dict[str, Any]) -> dict[str, object]:
 
 
 def validate_metrics_receipt(metrics: dict[str, Any], receipt: dict[str, Any]) -> None:
+    """Reject a metrics receipt unless it matches the current payload digest."""
     expected = build_metrics_receipt(metrics)
     if receipt != expected:
         raise ValueError("metrics receipt is stale or schema-incompatible")
@@ -90,6 +91,7 @@ def build_steganography_defaults_receipt(config_path: Path) -> dict[str, object]
 
 
 def validate_steganography_defaults_receipt(config_path: Path, receipt: dict[str, object]) -> None:
+    """Reject a steganography receipt when executable defaults have changed."""
     if receipt != build_steganography_defaults_receipt(config_path):
         raise ValueError("steganography defaults receipt is stale")
 

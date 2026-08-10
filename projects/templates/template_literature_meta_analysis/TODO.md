@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -35,17 +35,20 @@ The open work below should add tests or validators before promoting new claim su
 
 ## Minor upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `LIT-ENGINE-POLITENESS-1` | Medium | Retrieval engine adapters | `output/data/retrieval_run_manifest.json` | live-run smoke with skipped/limited engine rows | retry storm or missing rate-limit receipt must fail |
-| `LIT-KG-CALIBRATION-1` | Medium | Knowledge-graph extraction schema | calibration fixture bundle | KG parser/scorer tests preserve score direction | inverted score direction must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `LIT-ENGINE-POLITENESS-1` | blocked-external | Medium | Retrieval engine adapters | Obtain the required owner or external receipt to unblock; run live-run smoke with skipped/limited engine rows and attach `output/data/retrieval_run_manifest.json`. | `output/data/retrieval_run_manifest.json` | `uv run pytest tests -q --no-cov --timeout=120` | retry storm or missing rate-limit receipt must fail |
 
 ## Major upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Backlog status

@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -48,20 +48,21 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Minor upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `FORMAL-ABLATION-1` | Medium | Existing colony experiment fixtures | calibrated ablation matrix | project tests plus deterministic manuscript binding | omitted axis must fail the experiment registry |
-| `FORMAL-INVARIANT-1` | Medium | Typed runtime protocol surface | typed-invariant negative-control fixture | strict mypy oracle and runtime test | illegal state fixture must fail mypy/runtime checks |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Major upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `FORMAL-SPEC-1` | Major | Optional Lean/TLA+ tools | real formal-spec receipt | explicit formal script when tools are installed | decorative or skipped spec must not report pass |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `FORMAL-SPEC-1` | blocked-tool | Major | Optional Lean/TLA+ tools | Install or pin the required tool, or record its unavailable status to unblock; run explicit formal script when tools are installed and attach real formal-spec receipt. | real formal-spec receipt | `uv run pytest tests -q --no-cov --timeout=120` | decorative or skipped spec must not report pass |
 
 ## Backlog status
 

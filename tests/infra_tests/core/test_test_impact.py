@@ -1,6 +1,9 @@
 """Tests for changed-surface test guidance."""
 
+import subprocess
+
 from infrastructure.core.test_impact import classify_changed_paths
+from scripts.audit.test_impact import _git_changed_paths
 
 
 def test_independent_public_projects_can_use_outer_parallelism() -> None:
@@ -39,3 +42,20 @@ def test_local_only_changes_are_marked_for_private_boundary_review() -> None:
     plan = classify_changed_paths(["projects/working/private_project/src/model.py"])
     assert plan.local_only_changed is True
     assert plan.project_names == ()
+
+
+def test_git_impact_includes_nonignored_untracked_source(tmp_path) -> None:
+    """The CLI planner must see a new source file before it is staged."""
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test Runner"], cwd=tmp_path, check=True)
+    tracked = tmp_path / "README.md"
+    tracked.write_text("baseline\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-qm", "baseline"], cwd=tmp_path, check=True)
+
+    source = tmp_path / "projects" / "templates" / "example" / "src" / "new.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+
+    assert _git_changed_paths(tmp_path) == ["projects/templates/example/src/new.py"]

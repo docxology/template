@@ -119,7 +119,14 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
     ),
     SubprocessPolicy(
         policy_id="git-metadata-test-runner",
-        source_path="infrastructure/core/test_runner.py",
+        source_path="infrastructure/core/test_runner_cache.py",
+        timeout_seconds=30,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
+        policy_id="git-cache-identity",
+        source_path="infrastructure/core/test_runner_cache.py",
         timeout_seconds=30,
         check=False,
         capture_output=True,
@@ -176,6 +183,27 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
     SubprocessPolicy(
         policy_id="test-impact-git",
         source_path="scripts/audit/test_impact.py",
+        timeout_seconds=30,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
+        policy_id="coverage-measurement",
+        source_path="infrastructure/documentation/counts_coverage.py",
+        timeout_seconds=1800,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
+        policy_id="coverage-report",
+        source_path="infrastructure/documentation/counts_coverage.py",
+        timeout_seconds=300,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
+        policy_id="coverage-source-inventory",
+        source_path="infrastructure/documentation/counts_coverage.py",
         timeout_seconds=30,
         check=False,
         capture_output=True,

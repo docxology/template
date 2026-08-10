@@ -113,6 +113,14 @@ def _canonicalize_pdf_objects(objects: Sequence[object]) -> None:
 
     def visit(value: object) -> None:
         if isinstance(value, StreamObject):
+            # Never decode/re-encode raster image streams during metadata
+            # canonicalization.  pypdf's get_data() path can rewrite
+            # XeTeX/dvipdfmx image filters and silently corrupt wide PNGs
+            # (including horizontal tiling and RGB channels) even though the
+            # source PDF is structurally valid.  Font subset prefixes live in
+            # font streams and content streams, not image payloads.
+            if str(value.get("/Subtype", "")) == "/Image":
+                return
             stream_data = value.get_data()
             canonical_data = _FONT_SUBSET_BYTES_RE.sub(b"AAAAAA+", stream_data)
             if canonical_data != stream_data:

@@ -87,6 +87,18 @@ class TestCleanCoverageFiles:
         assert not own_coverage.exists()
         assert sibling_coverage.exists()
 
+    def test_nonrecursive_root_cleanup_leaves_nested_project_coverage(self, tmp_path):
+        """Root infrastructure cleanup must not unlink lifecycle-project data."""
+        root_coverage = tmp_path / ".coverage.infra"
+        nested_coverage = tmp_path / "projects" / "working" / "private" / ".coverage"
+        nested_coverage.parent.mkdir(parents=True)
+        root_coverage.write_text("root data", encoding="utf-8")
+        nested_coverage.write_text("private data", encoding="utf-8")
+
+        assert clean_coverage_files(tmp_path, recursive=False) is True
+        assert not root_coverage.exists()
+        assert nested_coverage.exists()
+
     def test_scope_dir_outside_repo_root_does_not_raise(self, tmp_path):
         """A scope_dir resolved outside repo_root (e.g. a private-sidecar
         symlink target on a separate filesystem path) must not crash the

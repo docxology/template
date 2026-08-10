@@ -92,6 +92,34 @@ def test_gate_claim_audit_ignores_tables_and_historical_records(tmp_path: Path) 
     assert find_gate_claims_without_negative_controls(tmp_path) == []
 
 
+def test_gate_claim_audit_labels_active_and_normative_roles(tmp_path: Path) -> None:
+    _write(tmp_path / "docs/guide.md", "The gate validates all docs.\n")
+    _write(tmp_path / "docs/rules/policy.md", "The gate validates all policy docs.\n")
+
+    findings = find_gate_claims_without_negative_controls(tmp_path)
+
+    assert {finding.role for finding in findings} == {"active", "normative"}
+
+
+def test_public_audit_exposes_zero_counts_for_suppressed_roles(tmp_path: Path) -> None:
+    _write(tmp_path / "README.md", "The schema validator enforces every record.\n")
+    _write(tmp_path / "docs/_generated/report.md", "The schema validator enforces every record.\n")
+    _write(
+        tmp_path / "docs/maintenance/exemplar-backlog-history.md",
+        "The schema validator enforces every record.\n",
+    )
+
+    audit = build_public_documentation_audit(tmp_path)
+
+    assert audit.advisory_roles == {
+        "active": 0,
+        "generated": 0,
+        "historical": 0,
+        "inventory": 0,
+        "normative": 0,
+    }
+
+
 def test_symbol_documentation_audit_scans_every_def_and_class(tmp_path: Path) -> None:
     _write(tmp_path / "infrastructure/pkg/__init__.py", "")
     _write(

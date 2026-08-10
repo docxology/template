@@ -7,6 +7,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Mapping, Sequence, cast
 
 from infrastructure.core.config.loader import load_config
@@ -14,6 +15,7 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 _GITHUB_REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 PUBLICATION_MANIFEST_SCHEMA = "template-publication-payload/v1"
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 @dataclass(frozen=True)
@@ -55,6 +57,118 @@ class PublicationPayloadManifest:
         """Return a content digest suitable for a release receipt."""
         raw = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":")).encode("utf-8")
         return hashlib.sha256(raw).hexdigest()
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, object]) -> "PublicationPayloadManifest":
+        """Rehydrate one preflight manifest without trusting its digest field."""
+        if payload.get("schema_version") != PUBLICATION_MANIFEST_SCHEMA:
+            raise ValueError(f"publication manifest schema must be {PUBLICATION_MANIFEST_SCHEMA}")
+        entries = payload.get("payload")
+        if not isinstance(entries, list):
+            raise ValueError("publication manifest payload must be a list")
+        parsed: list[PublicationPayloadEntry] = []
+        seen: set[str] = set()
+        for item in entries:
+            if not isinstance(item, Mapping):
+                raise ValueError("publication manifest entries must be objects")
+            path = item.get("path")
+            byte_count = item.get("bytes")
+            sha256 = item.get("sha256")
+            if not isinstance(path, str) or not _is_safe_manifest_path(path):
+                raise ValueError(f"publication manifest entry path is unsafe: {path!r}")
+            if path in seen:
+                raise ValueError(f"publication manifest contains duplicate path: {path}")
+            if isinstance(byte_count, bool) or not isinstance(byte_count, int) or byte_count < 0:
+                raise ValueError(f"publication manifest byte count is invalid for {path}")
+            if not isinstance(sha256, str) or not _SHA256_RE.fullmatch(sha256):
+                raise ValueError(f"publication manifest SHA-256 is invalid for {path}")
+            seen.add(path)
+            parsed.append(
+                PublicationPayloadEntry(
+                    path=path,
+                    bytes=byte_count,
+                    sha256=sha256,
+                )
+            )
+        credential_sources = payload.get("credential_sources", {})
+        targets = payload.get("targets", {})
+        if not isinstance(credential_sources, Mapping) or not isinstance(targets, Mapping):
+            raise ValueError("publication manifest credential_sources and targets must be objects")
+        project = payload.get("project")
+        payload_root = payload.get("payload_root")
+        if not isinstance(project, str) or not project.strip():
+            raise ValueError("publication manifest project is required")
+        if not isinstance(payload_root, str) or not payload_root.strip():
+            raise ValueError("publication manifest payload_root is required")
+        if any(not isinstance(key, str) or not isinstance(value, str) for key, value in credential_sources.items()):
+            raise ValueError("publication manifest credential sources must be string pairs")
+        if any(not isinstance(key, str) or not isinstance(value, str) for key, value in targets.items()):
+            raise ValueError("publication manifest targets must be string pairs")
+        return cls(
+            project=project,
+            payload_root=payload_root,
+            payload=tuple(parsed),
+            credential_sources=dict(credential_sources),
+            targets=dict(targets),
+            schema_version=PUBLICATION_MANIFEST_SCHEMA,
+        )
+
+    def validate_current(self, bundle: Path) -> None:
+        """Reject any changed, missing, duplicate, or symlinked payload file."""
+        if self.schema_version != PUBLICATION_MANIFEST_SCHEMA:
+            raise ValueError(f"publication manifest schema must be {PUBLICATION_MANIFEST_SCHEMA}")
+        if len({entry.path for entry in self.payload}) != len(self.payload):
+            raise ValueError("publication manifest contains duplicate paths")
+        if any(not _is_safe_manifest_path(entry.path) for entry in self.payload):
+            raise ValueError("publication manifest contains an unsafe path")
+        expected = {entry.path: entry for entry in self.payload}
+        actual: dict[str, Path] = {}
+        if not bundle.exists():
+            raise ValueError(f"publication payload changed after preflight: bundle is missing: {bundle}")
+        if bundle.is_symlink():
+            raise ValueError(f"publication payload changed to a symlink: {bundle}")
+        if bundle.is_file() and len(expected) != 1:
+            raise ValueError("single-file publication payload must have exactly one manifest entry")
+        if bundle.is_file():
+            candidates = [bundle]
+        else:
+            all_paths = sorted(bundle.rglob("*"))
+            for path in all_paths:
+                if path.is_symlink():
+                    raise ValueError(f"publication payload changed to a symlink: {path}")
+            candidates = [path for path in all_paths if path.is_file()]
+        for path in candidates:
+            _reject_symlink_components(bundle.resolve() if bundle.is_dir() else bundle.resolve().parent, path)
+            if bundle.is_file():
+                relative = next(iter(expected))
+            else:
+                relative_candidates = (
+                    path.resolve().relative_to(bundle.resolve()).as_posix(),
+                    path.resolve().relative_to(bundle.resolve().parent).as_posix(),
+                )
+                relative = next((candidate for candidate in relative_candidates if candidate in expected), "")
+                if not relative:
+                    relative = relative_candidates[0]
+            if relative in actual:
+                raise ValueError(f"publication payload contains a duplicate path: {relative}")
+            actual[relative] = path
+        if set(actual) != set(expected):
+            missing = sorted(set(expected) - set(actual))
+            changed = sorted(set(actual) - set(expected))
+            raise ValueError(f"publication payload changed after preflight: missing={missing}, unexpected={changed}")
+        for relative, path in actual.items():
+            entry = expected[relative]
+            content = path.read_bytes()
+            if len(content) != entry.bytes or hashlib.sha256(content).hexdigest() != entry.sha256:
+                raise ValueError(f"publication payload content changed after preflight: {relative}")
+
+
+def _is_safe_manifest_path(path: str) -> bool:
+    """Return whether a manifest path is a normalized, relative POSIX path."""
+    if not path or path.startswith("/") or "\\" in path:
+        return False
+    parts = PurePosixPath(path).parts
+    return bool(parts) and "." not in parts and ".." not in parts
 
 
 def _normalize_github_repository(value: object, *, source: str) -> str:

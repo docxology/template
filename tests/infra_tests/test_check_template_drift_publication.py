@@ -558,6 +558,24 @@ def test_docs_hardcoded_counts_noqa_does_not_leak_to_other_lines(drift_module, t
     assert "999 tests" in messages[0]
 
 
+def test_docs_hardcoded_counts_exempts_the_explicit_backlog_history_file(drift_module, tmp_path):
+    """Immutable backlog evidence is exempt, while other tracked docs remain live-checked."""
+    history = tmp_path / "docs" / "maintenance" / "exemplar-backlog-history.md"
+    history.parent.mkdir(parents=True)
+    history.write_text("The historical run recorded 362 tests and 91.2% coverage.\n", encoding="utf-8")
+    other_history = tmp_path / "docs" / "maintenance" / "other-history.md"
+    other_history.write_text("A different record reported 361 tests.\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "docs"], cwd=tmp_path, check=True)
+
+    rep = drift_module.Report()
+    drift_module.check_docs_hardcoded_counts(tmp_path, rep)
+
+    messages = [f.message for f in rep.findings]
+    assert not any("exemplar-backlog-history.md" in message for message in messages)
+    assert any("other-history.md" in message for message in messages)
+
+
 def test_docs_hardcoded_counts_reports_line_numbers(drift_module, tmp_path):
     """Findings must cite a line, not a byte offset, to be actionable."""
     (tmp_path / "README.md").write_text("intro\n\nWe run 500 tests.\n", encoding="utf-8")

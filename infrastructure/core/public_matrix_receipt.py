@@ -33,7 +33,7 @@ import hashlib
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Sequence
+from typing import Mapping, Sequence
 
 
 @dataclass(frozen=True)
@@ -51,6 +51,8 @@ class PublicMatrixLaneResult:
     skip_reason: str = ""
     cache_key: str = ""
     collection_count: int | None = None
+    output_isolation_digest: str = ""
+    resource_limits: dict[str, str | int | float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -72,11 +74,12 @@ class PublicMatrixReceipt:
     combined_coverage_percent: float | None = None
     combined_floor: int = 75
     overall_exit: int = 0
-    schema_version: str = "template-public-matrix/v2"
+    schema_version: str = "template-public-matrix/v3"
     phase_durations: dict[str, float] = field(default_factory=dict)
     collection_counts: dict[str, int] = field(default_factory=dict)
     skip_reasons: dict[str, str] = field(default_factory=dict)
     cache_key: str = ""
+    cache_inputs: dict[str, str] = field(default_factory=dict)
 
     def write(self, path: Path | str) -> Path:
         """Write deterministic JSON (sorted keys, no extraneous whitespace).
@@ -103,6 +106,7 @@ class PublicMatrixReceipt:
         data.setdefault("collection_counts", {})
         data.setdefault("skip_reasons", {})
         data.setdefault("cache_key", "")
+        data.setdefault("cache_inputs", {})
         return cls(lanes=lanes, **data)
 
     def digest(self) -> str:
@@ -136,6 +140,15 @@ class PublicMatrixReceipt:
                 errors.append(f"MISSING-PROJECT: roster entry '{name}' has no lane result")
 
         # Negative control 2: lane errors
+        if not self.phase_durations:
+            errors.append("MISSING-PHASE-TIMING: receipt has no phase durations")
+        elif any(duration < 0 for duration in self.phase_durations.values()):
+            errors.append("INVALID-PHASE-TIMING: phase duration cannot be negative")
+        if not self.cache_key:
+            errors.append("MISSING-CACHE-IDENTITY: receipt has no cache key")
+        if not self.cache_inputs:
+            errors.append("MISSING-CACHE-INPUTS: receipt has no cache identity inputs")
+
         for lane in self.lanes:
             if lane.skip_reason:
                 if lane.collection_count is not None:
@@ -145,8 +158,21 @@ class PublicMatrixReceipt:
                 if lane.skip_reason.startswith("error:") and lane.exit_code == 0:
                     errors.append(f"SKIP-STATUS: error skip for '{lane.project_name}' cannot have exit=0")
                 continue
-            if lane.collection_count is not None and lane.collection_count <= 0 and lane.exit_code == 0:
-                errors.append(f"EMPTY-COLLECTION: project '{lane.project_name}' reported zero collected tests")
+            if lane.exit_code == 0:
+                if lane.collection_count is None:
+                    errors.append(f"MISSING-COLLECTION: project '{lane.project_name}' has no collection count")
+                elif lane.collection_count <= 0:
+                    errors.append(f"EMPTY-COLLECTION: project '{lane.project_name}' reported zero collected tests")
+                if lane.duration_seconds <= 0:
+                    errors.append(f"MISSING-LANE-TIMING: project '{lane.project_name}' has no duration")
+                if not lane.cache_key:
+                    errors.append(f"MISSING-LANE-CACHE: project '{lane.project_name}' has no cache key")
+                if not lane.output_isolation_digest:
+                    errors.append(
+                        f"MISSING-OUTPUT-DIGEST: project '{lane.project_name}' has no output-isolation digest"
+                    )
+                if not lane.resource_limits:
+                    errors.append(f"MISSING-RESOURCE-LIMITS: project '{lane.project_name}' has no resource limits")
             if lane.timed_out:
                 errors.append(f"TIMEOUT: project '{lane.project_name}' timed out")
             if lane.exit_code != 0:
@@ -199,6 +225,7 @@ def build_public_matrix_receipt(
     collection_counts: dict[str, int] | None = None,
     skip_reasons: dict[str, str] | None = None,
     cache_key: str = "",
+    cache_inputs: dict[str, str] | None = None,
 ) -> PublicMatrixReceipt:
     """Factory that builds a sorted-lane receipt from per-project results."""
     return PublicMatrixReceipt(
@@ -215,6 +242,7 @@ def build_public_matrix_receipt(
         collection_counts=dict(collection_counts or {}),
         skip_reasons=dict(skip_reasons or {}),
         cache_key=cache_key,
+        cache_inputs=dict(cache_inputs or {}),
     )
 
 
@@ -225,6 +253,10 @@ def build_public_matrix_cache_key(
     marker_expression: str | None,
     worker_info: str,
     project_names: Sequence[str],
+    source_tree_identity: str = "",
+    interpreter_identity: str = "",
+    lockfile_identity: str = "",
+    tool_versions: Mapping[str, str] | None = None,
 ) -> str:
     """Build a stable cache identity for a public-matrix execution plan."""
     payload = "\n".join(
@@ -233,6 +265,10 @@ def build_public_matrix_cache_key(
             profile,
             marker_expression or "",
             worker_info,
+            source_tree_identity,
+            interpreter_identity,
+            lockfile_identity,
+            *(f"{key}={value}" for key, value in sorted((tool_versions or {}).items())),
             *sorted(project_names),
         )
     ).encode("utf-8")

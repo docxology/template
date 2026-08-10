@@ -6,9 +6,9 @@ must remain mechanically reliable without turning prose planning into an
 issue tracker: required sections, unique stable identifiers, and the absence
 of references to projects outside the public roster.
 
-Historical evidence is reported as a warning during migration and is blocking
-under ``--strict``; the canonical public backlogs are expected to contain only
-future work after the migration window.
+Historical evidence is not accepted in active TODO files. It is preserved in a
+dated maintenance record or a source-owned receipt, while active rows remain
+explicitly scoped and machine-checkable.
 """
 
 from __future__ import annotations
@@ -21,6 +21,10 @@ from typing import Iterable, Literal
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 Severity = Literal["error", "warning"]
+BacklogStatus = Literal["open", "partial", "blocked-external", "blocked-tool"]
+
+ALLOWED_BACKLOG_STATUSES: frozenset[str] = frozenset({"open", "partial", "blocked-external", "blocked-tool"})
+ALLOWED_BACKLOG_SIZES: frozenset[str] = frozenset({"minor", "medium", "major"})
 
 _HEADING_ID = re.compile(r"^#{3,4}\s+`?([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)`?(?:\s|$)")
 _TABLE_ID = re.compile(r"^\s*\|\s*`?([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)`?\s*\|")
@@ -32,8 +36,10 @@ _HISTORICAL_HEADING = re.compile(
 _ROTATING_PROJECT = re.compile(r"projects/(?:active|working|ongoing|archive|published|other)/")
 _BACKLOG_TABLE_HEADER = (
     "id",
+    "status",
     "size",
     "dependency",
+    "next action / unblock condition",
     "proving artifact",
     "acceptance command",
     "negative control",
@@ -50,6 +56,16 @@ _REQUIRED_EXEMPLAR_SECTIONS = (
 _REMOVED_HISTORY_SECTION = re.compile(
     r"^##\s+(?:Current validation evidence|Ordered improvement ladder|Promotion Rule|"
     r"Promotion rule|Active backlog index)$",
+    re.IGNORECASE,
+)
+_EXECUTABLE_COMMAND = re.compile(
+    r"(?:`[^`]+`|\b(?:uv\s+run|pytest|python(?:3)?|ruff|mypy|bandit|bash|sh|make|git\s+|"
+    r"scripts/|check_[A-Za-z0-9_./-]+|--check\b))",
+    re.IGNORECASE,
+)
+_BLOCKER_LANGUAGE = re.compile(
+    r"(?:unblock|blocked|owner|approval|receipt|tool|install|external|network|provider|fork|"
+    r"license|licen[cs]e|credential|available|availability|authority)",
     re.IGNORECASE,
 )
 
@@ -111,6 +127,7 @@ def _validate_file(
 ) -> tuple[list[BacklogFinding], tuple[str, ...]]:
     findings: list[BacklogFinding] = []
     identifiers: list[str] = []
+    heading_identifiers: list[str] = []
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
@@ -131,6 +148,7 @@ def _validate_file(
             findings.append(_finding(path, 1, "error", "required_section", f"missing required section: {section}"))
 
     has_backlog_table = False
+    table_identifiers: set[str] = set()
     for line_number, line in enumerate(lines, start=1):
         if line.startswith("|"):
             cells = tuple(cell.strip().casefold() for cell in line.strip().strip("|").split("|"))
@@ -141,9 +159,11 @@ def _validate_file(
         heading_match = _HEADING_ID.match(line)
         table_match = _TABLE_ID.match(line)
         if heading_match:
-            identifiers.append(heading_match.group(1))
+            heading_identifiers.append(heading_match.group(1))
         if table_match:
-            identifiers.append(table_match.group(1))
+            identifier = table_match.group(1)
+            identifiers.append(identifier)
+            table_identifiers.add(identifier)
             cells = tuple(cell.strip() for cell in line.strip().strip("|").split("|"))
             if len(cells) != len(_BACKLOG_TABLE_HEADER):
                 findings.append(
@@ -152,8 +172,8 @@ def _validate_file(
                         line_number,
                         "error",
                         "backlog_row_shape",
-                        "stable backlog rows must have ID, size, dependency, proving artifact, "
-                        "acceptance command, and negative control",
+                        "stable backlog rows must have ID, status, size, dependency, next action / "
+                        "unblock condition, proving artifact, acceptance command, and negative control",
                     )
                 )
             else:
@@ -170,14 +190,59 @@ def _validate_file(
                             f"stable backlog row has empty field(s): {', '.join(empty_fields)}",
                         )
                     )
+                status = cells[1].casefold()
+                size = cells[2].casefold()
+                if status not in ALLOWED_BACKLOG_STATUSES:
+                    findings.append(
+                        _finding(
+                            path,
+                            line_number,
+                            "error",
+                            "invalid_status",
+                            f"stable backlog row has invalid status {cells[1]!r}; allowed values are "
+                            f"{', '.join(sorted(ALLOWED_BACKLOG_STATUSES))}",
+                        )
+                    )
+                if size not in ALLOWED_BACKLOG_SIZES:
+                    findings.append(
+                        _finding(
+                            path,
+                            line_number,
+                            "error",
+                            "invalid_size",
+                            f"stable backlog row has invalid size {cells[2]!r}; allowed values are "
+                            "Minor, Medium, Major",
+                        )
+                    )
+                if not _EXECUTABLE_COMMAND.search(cells[6]):
+                    findings.append(
+                        _finding(
+                            path,
+                            line_number,
+                            "error",
+                            "acceptance_command",
+                            "stable backlog row acceptance command must contain an executable invocation",
+                        )
+                    )
+                if status in {"blocked-external", "blocked-tool"} and not _BLOCKER_LANGUAGE.search(cells[4]):
+                    findings.append(
+                        _finding(
+                            path,
+                            line_number,
+                            "error",
+                            "blocker_condition",
+                            "blocked backlog rows must state an explicit owner, tool, external, or "
+                            "receipt unblock condition",
+                        )
+                    )
         if _HISTORICAL_HEADING.match(line):
             findings.append(
                 _finding(
                     path,
                     line_number,
-                    "warning",
+                    "error",
                     "historical_section",
-                    "completed or dated evidence should move to CHANGELOG.md or a review record",
+                    "completed or dated evidence must move to CHANGELOG.md or a review record",
                 )
             )
         if _REMOVED_HISTORY_SECTION.match(line):
@@ -201,11 +266,18 @@ def _validate_file(
                 )
             )
 
-    seen: set[str] = set()
-    for identifier in identifiers:
-        if identifier in seen:
+    heading_seen: set[str] = set()
+    for identifier in heading_identifiers:
+        if identifier in heading_seen:
             findings.append(_finding(path, 1, "error", "duplicate_id", f"duplicate backlog identifier: {identifier}"))
-        seen.add(identifier)
+        heading_seen.add(identifier)
+    table_seen: set[str] = set()
+    for identifier in identifiers:
+        if identifier in table_seen:
+            findings.append(_finding(path, 1, "error", "duplicate_id", f"duplicate backlog identifier: {identifier}"))
+        elif not is_root and identifier in heading_seen:
+            findings.append(_finding(path, 1, "error", "duplicate_id", f"duplicate backlog identifier: {identifier}"))
+        table_seen.add(identifier)
 
     known_names = set(public_names)
     for line_number, line in enumerate(lines, start=1):
@@ -225,20 +297,33 @@ def _validate_file(
                     )
                 )
 
-    if not identifiers:
+    if not identifiers and not has_backlog_table:
         findings.append(
             _finding(path, 1, "warning", "stable_ids", "backlog has no machine-readable stable identifiers yet")
         )
-    if not is_root and not has_backlog_table:
+    if not has_backlog_table:
         findings.append(
             _finding(
                 path,
                 1,
                 "error",
                 "stable_table",
-                "public exemplar backlog must contain the six-field stable backlog table header",
+                "backlog must contain the eight-field stable backlog table header",
             )
         )
+    if is_root:
+        missing_root_rows = sorted(set(heading_identifiers) - table_identifiers)
+        if missing_root_rows:
+            findings.append(
+                _finding(
+                    path,
+                    1,
+                    "error",
+                    "root_metadata",
+                    "root stable headings must have matching rows in the active metadata table: "
+                    + ", ".join(missing_root_rows),
+                )
+            )
     return findings, tuple(identifiers)
 
 
@@ -272,6 +357,22 @@ def validate_public_backlogs(
         file_findings, file_ids = _validate_file(path, is_root=path == root / "TO-DO.md", public_names=present_public)
         findings.extend(file_findings)
         identifiers[path] = file_ids
+    owners: dict[str, Path] = {}
+    for path, file_ids in identifiers.items():
+        for identifier in file_ids:
+            previous = owners.get(identifier)
+            if previous is not None:
+                findings.append(
+                    _finding(
+                        path,
+                        1,
+                        "error",
+                        "global_duplicate_id",
+                        f"backlog identifier {identifier} is also declared in {previous}",
+                    )
+                )
+            else:
+                owners[identifier] = path
     return BacklogReport(files=paths, findings=tuple(findings), identifiers=identifiers)
 
 
@@ -291,6 +392,9 @@ def format_backlog_report(report: BacklogReport) -> str:
 __all__ = [
     "BacklogFinding",
     "BacklogReport",
+    "ALLOWED_BACKLOG_SIZES",
+    "ALLOWED_BACKLOG_STATUSES",
+    "BacklogStatus",
     "format_backlog_report",
     "public_backlog_paths",
     "validate_public_backlogs",

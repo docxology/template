@@ -37,10 +37,12 @@ measured coverage and discovery facts are in
 - The root package boundary is `3.6.0`/`v3.6.0`; the checkout remains under
   `[Unreleased]`. Release work must preserve the distinction between root
   package releases and separately published exemplar repositories.
-- `tests/regression/` contains a real source-derived claim-binding lane, but its
-  manifest does not yet cover every public exemplar and its documentation still
-  describes the original first slice. This is an open reproducibility gap, not
-  a reason to lower coverage or accept shape-only tests.
+- `tests/regression/` contains a real source-derived claim-binding lane. Every
+  canonical public exemplar now has an explicit `bound`, `not_applicable`, or
+  `external_data` state; the remaining work is to deepen source-derived pins
+  and mutation controls rather than to expand a missing roster entry. This is
+  an open reproducibility gap, not a reason to lower coverage or accept
+  shape-only tests.
 - Executable Bundle and Archival Publication are opt-in stages. Their current
   direct scripts and dry-run paths are useful foundations, but container
   cross-testing, data/licence policy, and a stable CI decision have not yet been
@@ -68,6 +70,32 @@ measured coverage and discovery facts are in
 - **Major:** a repository-wide claim, release boundary, public matrix, or
   long-horizon artifact contract; requires a design note, staged rollout,
   migration/rollback plan, and clean-checkout or hosted evidence.
+
+## Active root backlog
+
+The table below is the machine-readable index for the stable headings in this
+file. A row remains active until its acceptance command and negative control
+pass against the same source revision; external authority and unavailable-tool
+states are explicit blockers.
+
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `CLAIM-BINDING-MAJ-1` | partial | Major | Public roster and source-owned claim inventory | Finish the full-roster pins and mutation controls, then attach the release receipt | claim-binding receipt | `uv run pytest tests/regression/ -q --no-cov --timeout=120` | missing pin or changed producer must fail |
+| `EXECUTABLE-BUNDLE-MAJ-1` | partial | Major | Claim receipt, lockfiles, container policy | Complete immutable bundle and offline-container verification; attach owner/tool receipts where unavailable | executable-bundle receipt | `uv run python scripts/runner/bundle_executable.py --help` | path escape, stale payload, or missing lock must fail preflight |
+| `CLEAN-CHECKOUT-MAJ-1` | partial | Major | Release commands and generated receipts | Expand the two-run rehearsal to health, matrix, render, cleanliness, and optional bundle lanes | clean-checkout receipt | `uv run python scripts/maintenance/release_rehearsal.py --help` | dirty output or changed revision must fail the rehearsal |
+| `RELEASE-METADATA-1` | partial | Medium | Typed release receipt schema | Bind command, scope, owner, date, health, and verification mode to generated evidence | release metadata receipt | `uv run python scripts/docgen/publication_records.py --check` | receipt without revision or owner status must fail |
+| `STATUS-REFRESH-MED-1` | partial | Medium | Status ledger and release receipt | Add stable IDs and receipt links to every active status row, then run freshness and receipt checks | status evidence receipt | `uv run python scripts/gates/status_freshness.py --as-of 2026-08-09` | future, stale, or receipt-less status must fail |
+| `PUBLIC-PUBLISH-MANIFEST-MED-1` | partial | Medium | Immutable payload manifest and provider API | Pass one preflight manifest through every provider and reject changed payloads | publication payload manifest | `uv run python scripts/audit/check_public_template_contract.py --strict` | symlink escape, duplicate path, credential, or changed content must fail |
+| `TEST-DISCOVERY-PERF-MED-1` | partial | Medium | Isolated project matrix and impact planner | Measure quick feedback, add cache/resource/phase receipts, and prove the speed target without reducing release scope | test-impact and benchmark receipt | `uv run python scripts/audit/test_impact.py` | untracked or staged source changes must not be omitted |
+| `MODULARITY-MED-1` | open | Medium | Module-line-count findings and import contracts | Split the three warning hubs, preserve re-exports, and attach size/import/no-mocks receipts | modularity receipt | `uv run python scripts/gates/module_line_count_check.py` | removed re-export or new oversized hub must fail |
+| `COVERAGE-SNAPSHOT-MED-1` | partial | Medium | Per-project gates and source inventory | Re-run all public lanes and regenerate versioned coverage provenance from the final source tree | coverage provenance receipt | `uv run python scripts/docgen/counts.py --check` | new source/test file or changed tree identity must fail |
+| `DOC-NEG-CONTROL-MIN-1` | partial | Minor | Documentation audit classification | Classify active, generated, inventory, normative, and historical advisories; gate only active normative claims | documentation audit receipt | `uv run python scripts/audit/audit_documentation.py --format json` | a normative gate claim without a real negative control must fail |
+| `REGRESSION-SIGNPOST-MIN-1` | partial | Minor | Claim-binding manifest and live counts | Reconcile regression guidance with the current roster and generated receipt | regression contract receipt | `uv run pytest tests/regression/ -q --no-cov --timeout=120` | empty collection or stale roster must fail |
+| `BUNDLE-ENTRYPOINT-MIN-1` | partial | Minor | Opt-in runner scripts | Document discoverable dry-run bundle and rehearsal commands without changing defaults | command discoverability check | `uv run python scripts/runner/bundle_executable.py --help` | default pipeline must not build or publish a bundle |
+| `COVERAGE-GAPS-MIN-1` | partial | Minor | Generated coverage snapshot | Replace copied coverage-gap counts with links and source-derived status | coverage-gap receipt | `uv run python scripts/docgen/counts.py --check` | copied stale measurement must fail drift |
+| `ARCHIVAL-TRACKER-MIN-1` | partial | Minor | Publication records and provider receipts | Reconcile archival tracking from live receipts and record unavailable providers distinctly | archival tracking receipt | `uv run python scripts/runner/archive_publication.py --help` | missing credential or provider must not report success |
+| `SECURITY-OWNERSHIP-1` | blocked-external | Medium | Administrator branch-protection and CODEOWNERS receipt | Obtain administrator evidence for branch protection and required review; until then remain blocked | administrator authority receipt | `uv run python scripts/gates/security_scan.py --help` | local files must not imply remote protection exists |
+| `SECURITY-PRIVATE-PROMOTION-1` | blocked-external | Major | Owner private-sidecar promotion receipt | Obtain owner authorization, redaction, and export evidence before any private promotion | owner promotion receipt | `uv run python scripts/audit/check_tracked_all.py` | private path or sidecar content must fail public guards |
 
 ## Major improvements
 
@@ -287,6 +315,24 @@ deliberately changed exemplar, generated doc, or project marker invalidates the
 fast path and is detected by the serial oracle. Project `conftest.py` package
 collisions remain impossible, and failure output identifies the phase/project
 that failed.
+
+### `MODULARITY-MED-1` — split warning hubs without changing import surfaces
+
+**Problem and impact.** Three infrastructure modules remain warning-sized
+coordination hubs. Their public imports are stable, but their mixed discovery,
+receipt, and validation responsibilities make focused testing and review slower
+than necessary.
+
+**Scope.** Split the three measured warning hubs at responsibility boundaries,
+preserve re-export/import compatibility, keep scripts thin, and add module-size
+and import-surface regression receipts. Rename environment-isolation test
+helpers that are called `Fake` when they are real probes or injected hosts so
+the no-mocks inventory describes intent accurately.
+
+**Acceptance evidence.** The module-line-count gate reports no new warning hub,
+public imports and behavior are unchanged, and the focused infrastructure and
+no-mocks suites pass. A temporary oversized module and a removed re-export must
+fail their respective controls.
 
 ### `COVERAGE-SNAPSHOT-MED-1` — make coverage-gap guidance source-bound
 

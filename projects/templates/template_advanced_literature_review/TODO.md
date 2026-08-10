@@ -3,7 +3,7 @@
 This backlog is future-only. Completed validation and dated review evidence are preserved in
 [`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
 or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
-proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+next action, proving artifact, acceptance command, and negative control; absence of an owner or external receipt
 keeps a capability blocked rather than silently promoting it.
 
 ## Backlog operating rules
@@ -49,20 +49,21 @@ The open work below should add tests or validators before promoting new claim su
 
 ## Minor upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `ARL-PHASE-VALIDATION-1` | Minor | Phase configuration schema | phase-boundary validation receipt | phase configuration tests and replay gate | invalid temporal bounds must fail before replay |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+No active rows are currently scoped at this size.
 
 ## Medium upcoming
 
-| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
-| --- | --- | --- | --- | --- | --- |
-| `ARL-CROSS-PHASE-1` | Medium | Cross-phase evidence schema | cross-phase conflict receipt | cross-phase validation test with conflicting evidence | structural overlap must not count as causal support |
-| `ARL-LLM-FILTER-1` | Medium | Calibration corpus and opt-in provider | calibration fixture bundle | LLM filter tests with known positive/negative examples | unavailable provider must report skip, not pass |
-| `ARL-PHASE-PROVENANCE-1` | Medium | Phase artifact manifest | all `output/` artifacts with phase metadata | provenance audit across full pipeline | artifact without phase provenance must fail |
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `ARL-CROSS-PHASE-1` | partial | Medium | Cross-phase evidence schema | Complete the remaining scoped work; run cross-phase validation test with conflicting evidence and attach cross-phase conflict receipt. | cross-phase conflict receipt | `uv run pytest tests -q --no-cov --timeout=120` | structural overlap must not count as causal support |
+| `ARL-PHASE-PROVENANCE-1` | partial | Medium | Phase artifact manifest | Complete the remaining scoped work; run provenance audit across full pipeline and attach all `output/` artifacts with phase metadata. | all `output/` artifacts with phase metadata | `uv run pytest tests -q --no-cov --timeout=120` | artifact without phase provenance must fail |
 
 ## Major upcoming
 
+| ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 No active rows are currently scoped at this size.
 
 ## Backlog status
