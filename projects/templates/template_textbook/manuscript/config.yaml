@@ -156,6 +156,10 @@ project_config:
     default_lab_minutes: 60
     extended_case_study_lab_minutes: 75
 
+evidence:
+  numeric_fact_registry: data/numeric_facts.yaml
+  diagram_specs: src/mermaid/diagram_specs.yaml
+
 # ---------------------------------------------------------------------------
 # UNITS (a.k.a. parts) — the structure. Chapters number sequentially across the
 # whole book. The live key is `units:` (the loader also accepts `parts:`).

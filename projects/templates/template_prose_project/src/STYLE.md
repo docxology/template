@@ -160,6 +160,7 @@ sync with the actual file — drift in this listing is caught by
 
 ```python
 from .config import ProjectConfig, load_project_config
+from .config import LLMReviewConfig
 from .figures import (
     generate_all_figures,
     plot_citation_density,
@@ -174,14 +175,18 @@ from .manuscript_variables import (
 )
 from .pipeline import ProseRunArtifacts, run_prose_pipeline
 from .report import write_review_report
+from .llm_review import build_llm_review_receipt, validate_transcript
 
 __all__ = [
     # Config
     "ProjectConfig",
+    "LLMReviewConfig",
     "load_project_config",
     # Pipeline
     "ProseRunArtifacts",
     "run_prose_pipeline",
+    "build_llm_review_receipt",
+    "validate_transcript",
     # Figures
     "generate_all_figures",
     "plot_readability_metrics",

@@ -7,7 +7,7 @@ from .rendering import (
     render_story_number,
     render_story_page,
 )
-from .story import load_storybook, storybook_variables
+from .story import TRIM_SIZES, load_storybook, storybook_variables, validate_accessibility_metadata
 from .text_layout import audit_rendered_text_contrast, contrast_ratio, validate_text_contrast
 
 __all__ = [
@@ -22,10 +22,12 @@ __all__ = [
     "generate_cast",
     "generate_character",
     "load_storybook",
+    "TRIM_SIZES",
     "render_all_images",
     "render_story_number",
     "render_story_page",
     "storybook_variables",
+    "validate_accessibility_metadata",
     "audit_rendered_text_contrast",
     "contrast_ratio",
     "validate_text_contrast",

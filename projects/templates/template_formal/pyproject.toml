@@ -27,6 +27,7 @@ dev = [
     "pytest-cov>=4.1.0",
     "pytest-xdist>=3.6.0",
     "mypy>=1.17.1",
+    "types-PyYAML>=6.0.12",
 ]
 
 [tool.pytest.ini_options]

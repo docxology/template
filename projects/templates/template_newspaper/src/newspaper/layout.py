@@ -35,6 +35,23 @@ class PageRender:
 
     number: int
     overset_flowables: int
+    layout_issues: tuple[str, ...] = ()
+
+
+def audit_column_layout(grid: ColumnGrid, top: float, bottom: float) -> tuple[str, ...]:
+    """Return structural column/glyph-well findings before flowables are drawn."""
+    issues: list[str] = []
+    if top <= bottom:
+        issues.append("column well has non-positive height")
+    if grid.column_width <= 0:
+        issues.append("column width must be positive")
+    rectangles = [(grid.column_x(index), grid.column_x(index) + grid.column_width) for index in range(grid.n_columns)]
+    for index, (left, right) in enumerate(rectangles):
+        if right <= left:
+            issues.append(f"column {index} has non-positive width")
+        if index and left < rectangles[index - 1][1]:
+            issues.append(f"columns {index - 1} and {index} overlap")
+    return tuple(issues)
 
 
 def _make_frames(grid: ColumnGrid, top: float, bottom: float) -> list[Frame]:
@@ -173,6 +190,7 @@ def render_page(
 
     F.draw_column_rules(c, main_grid, main_top, body_bottom)
     main_frames = _make_frames(main_grid, main_top, body_bottom)
+    layout_issues = audit_column_layout(main_grid, main_top, body_bottom)
 
     if config.draft_grid:  # pragma: no cover - debug only
         overlay = ([rail_frame] if rail_frame else []) + main_frames
@@ -214,7 +232,7 @@ def render_page(
         )
     overset += _flow(c, main_frames, main_flowables)
 
-    return PageRender(number=page.number, overset_flowables=overset)
+    return PageRender(number=page.number, overset_flowables=overset, layout_issues=layout_issues)
 
 
-__all__ = ["PageRender", "render_page"]
+__all__ = ["PageRender", "audit_column_layout", "render_page"]

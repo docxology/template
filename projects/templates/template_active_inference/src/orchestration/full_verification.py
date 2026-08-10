@@ -11,6 +11,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Literal
 
+from .portable_execution import build_bounded_env, run_bounded_subprocess
+
 VerificationProfile = Literal["quick", "release", "exhaustive"]
 
 
@@ -70,9 +72,11 @@ def _generator_name(command: list[str]) -> str | None:
 class _RefreshCache:
     """In-run fixed-point cache for idempotent generator commands."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, clock: Callable[[], float] = time.perf_counter) -> None:
         """Initialize an empty in-run refresh cache."""
         self._last_outputs: dict[str, str] = {}
+        self._clock = clock
+        self._events: list[dict[str, object]] = []
 
     def run(
         self,
@@ -90,14 +94,57 @@ class _RefreshCache:
         """
         generator = _generator_name(command)
         if generator is None:
+            started = self._clock()
             command_runner(project_root, command, label)
+            self._events.append(
+                {
+                    "label": label,
+                    "generator": None,
+                    "action": "ran",
+                    "elapsed_seconds": round(self._clock() - started, 6),
+                }
+            )
             return
         before = _project_state_fingerprint(project_root)
         if self._last_outputs.get(generator) == before:
             print(f"\n==> {label}\n    fixed point unchanged; skipped {generator}")
+            self._events.append({"label": label, "generator": generator, "action": "skipped", "elapsed_seconds": 0.0})
             return
+        started = self._clock()
         command_runner(project_root, command, label)
         self._last_outputs[generator] = _project_state_fingerprint(project_root)
+        self._events.append(
+            {
+                "label": label,
+                "generator": generator,
+                "action": "ran",
+                "elapsed_seconds": round(self._clock() - started, 6),
+            }
+        )
+
+    def receipt(self, *, baseline_seconds: float | None = None) -> dict[str, object]:
+        """Return timing/cache evidence without making a performance claim."""
+        elapsed_values: list[float] = []
+        for event in self._events:
+            elapsed = event.get("elapsed_seconds")
+            if not isinstance(elapsed, (int, float)) or isinstance(elapsed, bool):
+                raise ValueError("refresh receipt elapsed_seconds must be numeric")
+            elapsed_values.append(float(elapsed))
+        observed = round(sum(elapsed_values), 6)
+        reduction = None
+        target_met = None
+        if baseline_seconds is not None and baseline_seconds > 0:
+            reduction = round(1.0 - observed / baseline_seconds, 6)
+            target_met = reduction >= 0.30
+        return {
+            "schema_version": "template-active-inference/refresh-receipt/1",
+            "events": tuple(self._events),
+            "observed_seconds": observed,
+            "baseline_seconds": baseline_seconds,
+            "reduction_fraction": reduction,
+            "target_reduction_fraction": 0.30,
+            "target_met": target_met,
+        }
 
 
 def _all_test_modules(project_root: Path) -> list[str]:
@@ -200,7 +247,7 @@ def _run(
     label: str,
     *,
     env: dict[str, str] | None = None,
-    process_runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    process_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
     clock: Callable[[], float] = time.perf_counter,
 ) -> None:
     print(f"\n==> {label}")
@@ -212,17 +259,31 @@ def _run(
     process_env.setdefault("TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES", "2")
     if env:
         process_env.update(env)
-    result = process_runner(
-        cmd,
-        cwd=project_root,
-        env=process_env,
-        text=True,
-        check=False,
-    )
+    if process_runner is not None:
+        result = process_runner(
+            cmd,
+            cwd=project_root,
+            env=process_env,
+            text=True,
+            check=False,
+        )
+        returncode = result.returncode
+        detail = ""
+    else:
+        bounded = run_bounded_subprocess(
+            cmd,
+            cwd=project_root,
+            env=build_bounded_env(process_env),
+            timeout=1800,
+            capture_output=True,
+        )
+        returncode = bounded.returncode
+        detail = bounded.command_error or bounded.stderr.strip() or bounded.stdout.strip()
     elapsed = clock() - start
-    print(f"    status: {result.returncode}  elapsed: {elapsed:.1f}s")
-    if result.returncode != 0:
-        raise RuntimeError(f"{label} failed with return code {result.returncode}")
+    print(f"    status: {returncode}  elapsed: {elapsed:.1f}s")
+    if returncode != 0:
+        suffix = f": {detail[-1000:]}" if detail else ""
+        raise RuntimeError(f"{label} failed with return code {returncode}{suffix}")
 
 
 def run_verification(

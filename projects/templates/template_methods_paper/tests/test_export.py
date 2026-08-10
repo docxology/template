@@ -7,6 +7,8 @@ import json
 
 from src.methods_dsl.compiler import compile_method
 from src.methods_dsl.export import (
+    EXPORT_RECEIPT_SCHEMA,
+    export_receipt,
     to_csv_rows,
     to_json,
     to_mermaid,
@@ -71,6 +73,18 @@ def test_to_json_round_trips_and_matches_plan_hash_input(linear_method):
     assert payload == plan.to_canonical_dict()
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     assert hashlib.sha256(canonical.encode("utf-8")).hexdigest() == plan.plan_hash
+
+
+def test_export_receipt_pins_exact_schema_and_surface(linear_method):
+    plan = compile_method(linear_method)
+    assert export_receipt(plan) == {
+        "schema": EXPORT_RECEIPT_SCHEMA,
+        "method_name": "LinearDemo",
+        "method_version": "1.0",
+        "plan_hash": plan.plan_hash,
+        "step_count": 3,
+        "formats": ["markdown", "csv", "mermaid", "json"],
+    }
 
 
 def test_write_json_writes_file(linear_method, tmp_path):

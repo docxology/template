@@ -1,44 +1,28 @@
 # template_pitch_deck TODO
 
-Forward-only integrity backlog for the pitch-deck generation exemplar.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Prerender passed with no render-blocking pitfalls or undefined citations.
-- Project tests: `uv run python -m pytest projects/templates/template_pitch_deck/tests --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90 -q` — 125 passed, 98.43% coverage.
-- Analysis: `stage_02_analysis.py --project templates/template_pitch_deck` — 5/5 scripts passed; token/cliché audit clean (40/102/170 text fields), diagrams/charts regenerated, diligence coverage 5/5, 9/9, 11/11. Its isolated project environment lacks optional `python-pptx`, so the six artifacts were regenerated from the repo environment with `20_render_decks.py`.
-- Manuscript render, output validation, and output copy stages all passed; 44 files copied to `output/templates/template_pitch_deck/`.
-- Render quality: six pitch-deck artifacts present; PDF pages 11/37/56, combined manuscript PDF 8 pages; PDF logs contain 0 `^! ` lines; extracted PDFs contain 0 `??` markers.
-- Drift passed: `check_template_drift.py --project templates/template_pitch_deck --strict`.
-- Relative-link audit: 36 Markdown files / 20 relative links, all resolve.
-
-## Fixes completed in this pass
-
-- Corrected stale deck-length comments to observed 11/37/56 counts and shared budgets.
-- Removed the empty Methods heading and corrected the reproducibility commands.
-- Replaced the fork template's fake publication repository with `publication: {}`.
-- Completed the `.agents/` catalog contract with outer, skills, and hyphenated-skill README/AGENTS files.
-- Regenerated diagrams, charts, pitch PDFs/PPTX, manuscript outputs, validation/evidence reports, and standalone slide pages.
-
-<!-- Historical validation notes follow. Keep new evidence above this line. -->
-
-- Project tests and coverage: `uv run pytest projects/templates/template_pitch_deck/tests/ --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90` (derive the live result; do not copy an old count here).
-- Infra rendering tests: `uv run pytest tests/infra_tests/rendering/test_slide_deck.py tests/infra_tests/rendering/test_pptx_deck.py tests/infra_tests/rendering/test_pptx_determinism.py`.
-- Content audit: `uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py` — token resolution + cliche lint, all three lengths clean (170 text fields in the long deck alone).
-- Diligence audit: `uv run python projects/templates/template_pitch_deck/scripts/30_audit_diligence.py` — 100% fact-citation coverage across all three lengths (this check also runs *inside* `render_orchestration.py` as a real `DiligenceAuditFailure` gate, added session 3).
-- Render: `uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py` — six real artifacts (short/medium/long × PDF/PPTX) + one standalone `.md` page per slide (104 total: 11+37+56), PDF↔PPTX slide-count parity verified.
-- Full real pipeline gate: `uv run python scripts/pipeline/stage_01_test.py --project templates/template_pitch_deck --project-only`.
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_pitch_deck --strict` — no drift detected (session 4 found and fixed a real thin-orchestrator violation: `scripts/16_generate_charts.py` grew to 202 lines/3 non-trivial functions before the drift checker caught it — moved the actual plotting logic to `src/chart_rendering.py`, leaving the script as a thin fetch→render→save dispatcher).
-- Session 3: Advisor (`Inference.ts --level smart`) flagged 5 precision issues in the "Scientific integrity" content (all fixed); Cato (`codex exec --sandbox read-only`, MANDATORY E4 gate) found a real bug (`DiligenceAuditFailure` not caught in `20_render_decks.py` — fixed) plus 3 more precision issues (all fixed). Session 2's Forge in-family fallback (2 MEDIUM + 5 LOW, 5/5 fixed) remains documented in `ISA.md` Decisions.
-- Session 4 (font size, chart variety, infrastructure/ introspection, expanded ask): three new visualizations (test-count-vs-coverage scatter, infrastructure/ subpackage donut), a new `src/infra_facts.py` module reusing `infrastructure.documentation.counts_doc`'s own introspection functions, and an expanded "ask" (funding conversations + consulting availability, all three lengths) with no fabricated numbers or committed terms.
-- Session 5 (this deck's own DOI, full-roster case study): new `PITCH_DECK_DOI_STATUS` token — reads `template_pitch_deck`'s own `manuscript/config.yaml` `publication.doi` live, honestly reporting "not yet reserved" (verified: no `ZENODO_TOKEN` credential is configured in this environment, so a real DOI cannot be minted right now — the mechanism is built and will pick up a real value automatically the moment a deposit is recorded, exactly like every other live-sourced token in this deck). New `EXEMPLAR_ROSTER` token (all 20 exemplar names, sorted) replaces the prior single-cherry-picked `{{SECOND_EXEMPLAR_NAME}}` case-study framing across all three lengths — the "Case study: X" slides are now "The full roster, not one cherry-picked example," citing `docs/_generated/active_projects.md`. Added a new "Cite this deck" slide to all three lengths.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
-- **Shipped 2026-07-11:** PPTX output is byte-reproducible. `pptx_deck.render_pptx()` normalizes every OOXML ZIP-member timestamp, a real archive regression test proves differing source timestamps collapse to identical bytes, and two complete pitch-deck renders separated in time produced identical PDF and PPTX SHA-256 digests.
-- **Verified 2026-07-11:** all three PPTX lengths were rasterized through LibreOffice into five thumbnail grids and visually inspected. Slide counts were 11, 37, and 56; no clipping or overlap was visible at grid scale.
+- Keep PPTX ZIP-member timestamps normalized and require two-run PDF/PPTX
+  digest equality in the deterministic artifact gate.
+- Keep all three lengths in the raster QA matrix and fail on clipping or overlap
+  when the configured raster toolchain is available.
 - Mermaid diagram rendering requires `mmdc` (mermaid-cli) + a resolvable Chrome/Chromium on PATH; `scripts/15_generate_diagrams.py` degrades to a logged warning (not a hard failure) when unavailable, so a fresh clone without those tools still renders all six artifacts, just without the diagram figure embedded. Confirmed this degradation path fires correctly (session 4): `mmdc` itself started hanging past its internal 90s timeout in this dev environment mid-session (traced to ~190 leaked Chrome/puppeteer processes accumulated across many `15_generate_diagrams.py` invocations this long session — each successful run's Chrome subprocess wasn't being reaped) — the script logged the timeout and continued rather than crashing, exactly as designed. Killing the stray processes (`pkill -9 -f "Chrome for Testing"` / `puppeteer_dev_chrome_profile"`) is the fix when this recurs; the existing `output/figures/*.png` files remain valid (unchanged Mermaid source) even when a given regeneration attempt can't complete.
-- Publication status (updated 2026-07-10): this deck now HAS a published concept DOI (`10.5281/zenodo.21281509`, version `10.5281/zenodo.21281510`) and a public standalone repo (`docxology/template-pitch-deck`) recorded in `manuscript/config.yaml`'s `publication:` block; the README PUBLISHING-STATUS block reflects it and `PITCH_DECK_DOI_STATUS` resolves to the live DOI. Historical note: earlier sessions deliberately kept the block empty rather than shipping a placeholder that would falsely flip the status to published.
+- Keep publication DOI/repository metadata source-bound and distinguish an
+  unavailable deposit from a real owner-authorized publication receipt.
 - PPTX content-slide figure placement is fixed-position while PDF's is flow-positioned below the bullet list (Forge LOW-2) — latent, not currently triggered (all current figures are on `diagram`-kind slides, none on `content`-kind), but a future content slide combining many bullets + a figure would overlap in PPTX only. Fix when content grows: flow the PPTX figure below the body textbox instead of a fixed y-offset.
 - QR codes were verified structurally (real annotation/click-action URLs match the intended target exactly, in both PDF and PPTX) but not visually decoded with a QR reader — no `pyzbar`/`cv2`/zbar-based decoder is installed in this environment. The rendered QR's finder-pattern structure was visually raster-checked (page screenshot) and looks correct; a real phone-camera scan test is still recommended before relying on this in an actual presentation.
 - Per-slide QR codes link to `output/slides_standalone/*.md` pages that are currently local-only — the deck's own content is explicit about this ("the QR only resolves once it is actually published"), but the QR won't actually scan-through to anything until this project's `output/` directory is committed and pushed to the real GitHub remote. Not a code gap — a publication-sequencing dependency to remember before presenting the deck as-is.
@@ -57,14 +41,30 @@ Forward-only integrity backlog for the pitch-deck generation exemplar.
 
 ## Test and validator gaps
 
-- **Shipped:** deterministic generated-sequence tests prove budget filtering is
+- Keep deterministic generated-sequence tests proving budget filtering is
   prefix-preserving and non-mutating across boundary and oversized decks.
 - `mermaid_figure.py`'s real-render tests are skipped when `mmdc` is absent; CI coverage of that path depends on the runner having mermaid-cli installed.
-- **Shipped:** generated adversarial uppercase token sequences assert complete
-  resolution without leaked braces.
+- Keep adversarial token sequences in the regression suite so generated decks
+  cannot leak unresolved braces.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Add the second pitch-subject deck (a broader meta-science-group pitch) to prove the schema generalizes beyond `template_template`.
-2. Add a `docs/architecture.md` walkthrough of the theme/slide-kind/diligence system.
-3. Add hypothesis-based property tests for budget filtering and token resolution.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `DECK-QR-1` | Minor | Publication-aware sequencing | QR/link manifest | slide content and publication checks | QR emitted before publication target exists must fail |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `DECK-SECOND-SUBJECT-1` | Medium | Generalized content schema | second deterministic deck | project render and slide QA | subject-specific hard-code must fail schema coverage |
+| `DECK-AUDIT-1` | Medium | Transactional slide audit | all-length audit receipt | project tests and PPTX/image QA | partial audit state must fail |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

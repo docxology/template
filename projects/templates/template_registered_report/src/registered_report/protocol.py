@@ -18,6 +18,8 @@ _REGISTERED_REPORT_STAGES = {
 }
 _ETHICS_STATUSES = {"not_required", "approved", "exempt", "pending"}
 _SENSITIVITY_DECISIONS = {"robust", "fragile", "exploratory", "not_applicable"}
+REGISTRATION_SCHEMA_VERSION = "template-registered-report/2"
+_LEGACY_REGISTRATION_SCHEMA_VERSION = "template-registered-report/1"
 
 
 @dataclass(frozen=True)
@@ -57,9 +59,26 @@ def registration_hash(registration: dict[str, Any]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def migrate_registration(registration: dict[str, Any]) -> dict[str, Any]:
+    """Upgrade a legacy registration without inventing missing evidence.
+
+    Version 1 fixtures predate an explicit schema marker. Migration only adds
+    that marker and preserves every registered field; structural validation
+    remains responsible for rejecting dropped hypotheses, outcomes, or plans.
+    """
+    migrated = copy.deepcopy(registration)
+    schema = migrated.get("schema_version")
+    if schema in (None, _LEGACY_REGISTRATION_SCHEMA_VERSION):
+        migrated["schema_version"] = REGISTRATION_SCHEMA_VERSION
+        return migrated
+    if schema != REGISTRATION_SCHEMA_VERSION:
+        raise ValueError(f"Unsupported registration schema: {schema!r}")
+    return migrated
+
+
 def freeze_registration(registration: dict[str, Any]) -> dict[str, Any]:
     """Return an immutable-by-convention copy with a self hash."""
-    frozen = copy.deepcopy(registration)
+    frozen = migrate_registration(registration)
     frozen.pop("registration_hash", None)
     frozen["registration_hash"] = registration_hash(frozen)
     return frozen
@@ -68,6 +87,11 @@ def freeze_registration(registration: dict[str, Any]) -> dict[str, Any]:
 def validate_registration(registration: dict[str, Any]) -> tuple[RegistrationFinding, ...]:
     """Validate preregistration completeness before results are known."""
     findings: list[RegistrationFinding] = []
+    schema = registration.get("schema_version")
+    if schema not in (None, REGISTRATION_SCHEMA_VERSION, _LEGACY_REGISTRATION_SCHEMA_VERSION):
+        findings.append(RegistrationFinding("error", "unsupported_schema", f"unsupported schema: {schema}"))
+    elif schema == _LEGACY_REGISTRATION_SCHEMA_VERSION:
+        findings.append(RegistrationFinding("warning", "legacy_schema", "registration should be migrated to v2"))
     for section in _REQUIRED_SECTIONS:
         if section not in registration:
             findings.append(RegistrationFinding("error", "missing_section", f"missing section: {section}"))
@@ -231,6 +255,7 @@ def build_review_packet(
     registered = _registered_outcomes(registration)
     executed_outcomes = set(str(name) for name in executed.get("outcomes", []))
     return {
+        "schema_version": REGISTRATION_SCHEMA_VERSION,
         "title": str(registration.get("title", "")),
         "registration_hash": adherence.registration_hash,
         "valid": not errors,
@@ -241,6 +266,39 @@ def build_review_packet(
         "deviation_ledger": tuple(row.__dict__ for row in build_deviation_ledger(registration, executed, deviations)),
         "sensitivity_analyses": tuple(dict(row) for row in sensitivity_rows if isinstance(row, dict)),
         "findings": tuple(finding.__dict__ for finding in findings),
+    }
+
+
+def build_publication_receipt(
+    payload: dict[str, Any],
+    *,
+    artifact_digest: str,
+    authority_receipt: dict[str, str] | None = None,
+) -> dict[str, str]:
+    """Build a publication receipt only when an external authority approves it.
+
+    The synthetic exemplar intentionally has no owner authority. A DOI or
+    local status string is not sufficient evidence and therefore fails closed.
+    """
+    if not authority_receipt:
+        raise ValueError("publication receipt requires an explicit owner authority receipt")
+    required = {"status", "authority", "receipt_id", "repository", "payload_digest"}
+    missing = sorted(required - set(authority_receipt))
+    if missing:
+        raise ValueError(f"owner authority receipt missing fields: {missing}")
+    if authority_receipt["status"] != "approved":
+        raise ValueError("publication authority status must be approved")
+    if authority_receipt["payload_digest"] != artifact_digest:
+        raise ValueError("publication authority payload digest does not match artifact payload")
+    if not all(str(authority_receipt[key]).strip() for key in required):
+        raise ValueError("publication authority receipt fields must be non-empty")
+    return {
+        "schema_version": "template-registered-report/publication-receipt/1",
+        "status": "approved",
+        "authority": authority_receipt["authority"],
+        "receipt_id": authority_receipt["receipt_id"],
+        "repository": authority_receipt["repository"],
+        "payload_digest": artifact_digest,
     }
 
 

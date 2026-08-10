@@ -1,18 +1,18 @@
 # template_template TODO
 
-Forward-only backlog for the autopoietic meta-template that introspects the
-infrastructure and the public exemplar roster.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Manuscript pre-render gate:
-  `uv run python -m infrastructure.validation.cli prerender projects/templates/template_template/manuscript --repo-root .`
-  → no render-blocking pitfalls or undefined citations (2026-08-02).
-- Project tests and coverage:
-  `uv run pytest projects/templates/template_template/tests/ --cov=projects/templates/template_template/src --cov-fail-under=90`
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project template_template --strict`
-- Live test counts and coverage snapshots belong in
-  `../../../docs/_generated/COUNTS.md`, not hardcoded here.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -41,9 +41,8 @@ infrastructure and the public exemplar roster.
 ## Test and validator gaps
 
 - Add negative controls for stale generated metrics and accidental inclusion of
-  local-only project paths. **Shipped:** `tests/test_stale_metrics_control.py`
-  verifies metrics dict key presence, positive counts, generated-vs-live
-  consistency, and absence of private path segments.
+  local-only project paths; keep `tests/test_stale_metrics_control.py` bound to
+  the generated metric schema and live public-scope paths.
 - Add schema tests before changing the metrics JSON consumed by the manuscript.
 - Keep the manuscript evidence-contract test green as new generated metrics or
   cited empirical values are introduced; live counts remain token-injected, and
@@ -57,16 +56,24 @@ infrastructure and the public exemplar roster.
   fallback, the redundant `is_dir()` re-check, and the `ImportError` version
   fallback) in `tests/AGENTS.md` rather than covering them with mocks.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep confidentiality and metrics tests green under coverage.
-2. Add stale-metric detection for any new generated field.
-3. Expand architecture visualization only with deterministic inputs and
-   documented omissions.
-4. Refresh generated docs after public-roster or metric-surface changes.
-5. Keep the appendix matrix and figure data in lockstep (the 08f table and
-   `figure_comparative_matrix.py` share the 14×10 shape; verify the container
-   row's `~` stays aligned with the data module's 0.5 value).
-6. Re-verify chapter 07 steganography prose whenever `infrastructure/steganography`
-   defaults change (`overlay_opacity`, `overlay_text`, hash algorithms,
-   barcode placement).
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `META-MATRIX-1` | Minor | Public roster generator | matrix lockstep report | generated-doc and roster gates | roster drift must fail |
+| `META-STEG-1` | Minor | Steganography config producer | deterministic metadata revalidation | metadata/visual tests | changed default must invalidate stale evidence |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `META-SCHEMA-1` | Medium | Generated metric schema | schema-versioned metrics receipt | meta-template tests | stale metric key must fail |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

@@ -23,6 +23,15 @@ def test_load_sia_settings():
     assert settings.live is False
 
 
+def test_settings_reject_string_true_false_coercion(tmp_path: Path, copy_project_sandbox: Copy):
+    project = tmp_path / "project"
+    copy_project_sandbox(project)
+    config = project / "manuscript" / "config.yaml"
+    config.write_text(config.read_text(encoding="utf-8").replace("live: false", 'live: "false"'), encoding="utf-8")
+
+    assert load_sia_settings(project).live is False
+
+
 def test_fixtures_dir_exists():
     root = fixtures_dir(PROJECT_ROOT)
     assert root.is_dir()

@@ -30,7 +30,10 @@ def main() -> int:
     """CLI entry point."""
     from composition import generate_token_plan
     from config import load_gold_refinement_config
-    from refinery import run_refinery
+    from analogy_boundary import validate_analogy_boundary
+    from domain_adapter import load_domain_profile
+    from refinery import run_refinery, stages_to_target
+    from transmission import validate_transmission_bookends
 
     root = _PROJECT_ROOT
 
@@ -52,6 +55,7 @@ def main() -> int:
         "total_purity_gain": result.total_purity_gain,
         "is_nine_nines_certified": result.is_nine_nines_certified,
         "purity_sequence": list(result.purity_sequence),
+        "reverse_assay_target": gr_config.reverse_assay_target,
         "stages": [
             {
                 "order": s.order,
@@ -83,6 +87,29 @@ def main() -> int:
     plan_path = reports_dir / "token_plan.json"
     plan_path.write_text(json.dumps(plan_data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Wrote {plan_path}")
+
+    reverse_prefix = stages_to_target(gr_config.reverse_assay_target, result.stages)
+    reverse_data = {
+        "schema_version": 1,
+        "target_purity": gr_config.reverse_assay_target,
+        "stage_names": [stage.name for stage in reverse_prefix],
+        "terminal_purity": reverse_prefix[-1].output_purity if reverse_prefix else result.stages[0].input_purity,
+        "prefix_constrained": True,
+    }
+    reverse_path = root / gr_config.reverse_assay_report_path
+    reverse_path.parent.mkdir(parents=True, exist_ok=True)
+    reverse_path.write_text(json.dumps(reverse_data, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Wrote {reverse_path}")
+
+    transmission = validate_transmission_bookends(root / "manuscript")
+    transmission_path = reports_dir / "transmission_bookends.json"
+    transmission_path.write_text(json.dumps(transmission, indent=2), encoding="utf-8")
+    print(f"Wrote {transmission_path}")
+
+    analogy = validate_analogy_boundary(load_domain_profile(root))
+    analogy_path = reports_dir / "analogy_boundary_receipt.json"
+    analogy_path.write_text(json.dumps(analogy, indent=2), encoding="utf-8")
+    print(f"Wrote {analogy_path}")
 
     # Generate figures
     from figures import generate_all_figures

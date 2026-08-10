@@ -168,3 +168,15 @@ def test_manifest_archival_receipts_passthrough(pinned_values_file: Path, tmp_pa
         archival_receipts=receipts,
     )
     assert manifest.archival_receipts == receipts
+
+
+def test_manifest_defaults_to_deterministic_epoch_timestamp(
+    pinned_values_file: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
+    first = build_manifest(project_name="example", repo_dir=tmp_path, pinned_values_path=pinned_values_file)
+    second = build_manifest(project_name="example", repo_dir=tmp_path, pinned_values_path=pinned_values_file)
+    assert first.rendered_at == "1970-01-01T00:00:00Z"
+    assert first.to_dict() == second.to_dict()

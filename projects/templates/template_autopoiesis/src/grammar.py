@@ -85,6 +85,7 @@ class Grammar:
     seed: int
     slots: tuple[GrammarSlot, ...]
     deps: tuple[str, ...]
+    archetype_filters: tuple[tuple[str, tuple[str, ...]], ...] = ()
     source_path: Optional[str] = field(default=None, compare=False, hash=False)
 
     # ------------------------------------------------------------------
@@ -130,12 +131,18 @@ class Grammar:
                 return s
         raise KeyError(f"No slot named '{name}'")
 
+    @property
+    def filter_mapping(self) -> dict[str, tuple[str, ...]]:
+        """Return configured archetype filters as a plain mapping."""
+        return {name: values for name, values in self.archetype_filters}
+
     def canonical(self) -> str:
         """JSON-stable canonical representation used for hashing."""
         obj = {
             "seed": self.seed,
             "slots": [{"name": s.name, "options": list(s.options)} for s in self.slots],
             "deps": list(self.deps),
+            "archetype_filters": {name: list(values) for name, values in self.archetype_filters},
         }
         return json.dumps(obj, sort_keys=True, separators=(",", ":"))
 
@@ -188,10 +195,31 @@ def parse_grammar(block: dict, source_path: Optional[str] = None) -> Grammar:
         if d not in VENDORABLE_DEPS:
             raise GrammarError(f"Unknown dep '{d}'. Known: {VENDORABLE_DEPS}")
 
+    raw_filters = block.get("archetype_filters", {})
+    if raw_filters is None:
+        raw_filters = {}
+    if not isinstance(raw_filters, dict):
+        raise GrammarError("Grammar archetype_filters must be a mapping")
+    slot_options = {slot.name: set(slot.options) for slot in slots}
+    archetype_filters: list[tuple[str, tuple[str, ...]]] = []
+    for name, raw_values in raw_filters.items():
+        if name not in slot_options:
+            raise GrammarError(f"Unknown archetype filter slot '{name}'")
+        if isinstance(raw_values, (str, bytes)) or not isinstance(raw_values, (list, tuple)):
+            raise GrammarError(f"Archetype filter for {name} must be a list")
+        if not raw_values or any(not isinstance(value, str) or not value.strip() for value in raw_values):
+            raise GrammarError(f"Archetype filter for {name} must contain ≥1 non-empty string")
+        values = tuple(dict.fromkeys(raw_values))
+        invalid = sorted(set(values) - slot_options[name])
+        if invalid:
+            raise GrammarError(f"Unknown archetype value(s) for {name}: {', '.join(invalid)}")
+        archetype_filters.append((name, tuple(sorted(values))))
+
     return Grammar(
         seed=seed,
         slots=tuple(slots),
         deps=tuple(raw_deps),
+        archetype_filters=tuple(sorted(archetype_filters)),
         source_path=source_path,
     )
 
@@ -217,6 +245,7 @@ def force_domain(grammar: Grammar, domain: str) -> Grammar:
         seed=grammar.seed,
         slots=tuple(new_slots),
         deps=grammar.deps,
+        archetype_filters=grammar.archetype_filters,
         source_path=grammar.source_path,
     )
 

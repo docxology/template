@@ -35,6 +35,8 @@ DEFAULT_SECTION_TITLES: dict[str, str] = {
 }
 REQUIRED_LEXICON_CATEGORIES: tuple[str, ...] = ("adjectives", "nouns", "verbs")
 COMPOSITION_DEPTHS: frozenset[str] = frozenset({"compact", "standard", "deep"})
+MADLIB_CONFIG_SCHEMA_VERSION = 2
+LEGACY_MADLIB_CONFIG_SCHEMA_VERSION = 1
 VISUALIZATION_FIELDS: tuple[str, ...] = (
     "enabled",
     "configured_field_matrix",
@@ -46,6 +48,7 @@ VISUALIZATION_FIELDS: tuple[str, ...] = (
     "quality_gate_matrix",
 )
 MADLIB_SCHEMA_FIELDS: tuple[str, ...] = (
+    "schema_version",
     "seed",
     "composition_depth",
     "hypothesis",
@@ -240,6 +243,8 @@ class MadlibConfig:
     """Data container for MadlibConfig."""
 
     title: str
+    schema_version: int
+    source_schema_version: int
     seed: int
     composition_depth: str
     hypothesis: str
@@ -281,6 +286,7 @@ def load_madlib_config(project_root: Path | str) -> MadlibConfig:
 
     paper = _mapping(loaded.get("paper"), "paper")
     madlib = _mapping(loaded.get("madlib"), "madlib")
+    source_schema_version = _read_schema_version(madlib.get("schema_version"))
     title = str(paper.get("title") or "Template Madlib").strip()
     seed = int(madlib.get("seed", 0))
     composition_depth = str(madlib.get("composition_depth", "standard")).strip().lower()
@@ -300,6 +306,8 @@ def load_madlib_config(project_root: Path | str) -> MadlibConfig:
 
     return MadlibConfig(
         title=title,
+        schema_version=MADLIB_CONFIG_SCHEMA_VERSION,
+        source_schema_version=source_schema_version,
         seed=seed,
         composition_depth=composition_depth,
         hypothesis=str(
@@ -342,6 +350,24 @@ def load_madlib_config(project_root: Path | str) -> MadlibConfig:
         ),
         config_path=config_path,
     )
+
+
+def _read_schema_version(value: Any) -> int:
+    """Read and gate the config schema version, including legacy v1."""
+    if value is None:
+        return LEGACY_MADLIB_CONFIG_SCHEMA_VERSION
+    if isinstance(value, bool):
+        raise MadlibConfigError("madlib.schema_version must be an integer")
+    try:
+        version = int(value)
+    except (TypeError, ValueError) as exc:
+        raise MadlibConfigError("madlib.schema_version must be an integer") from exc
+    if version not in {LEGACY_MADLIB_CONFIG_SCHEMA_VERSION, MADLIB_CONFIG_SCHEMA_VERSION}:
+        raise MadlibConfigError(
+            f"Unsupported madlib.schema_version={version}; supported versions are "
+            f"{LEGACY_MADLIB_CONFIG_SCHEMA_VERSION} and {MADLIB_CONFIG_SCHEMA_VERSION}"
+        )
+    return version
 
 
 def _mapping(value: Any, key: str) -> dict[str, Any]:

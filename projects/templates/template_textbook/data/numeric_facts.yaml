@@ -1,0 +1,66 @@
+schema_version: template-textbook-numeric-facts-v1
+
+# This registry binds load-bearing worked-example numbers to the exact source
+# snippet that carries them. Documentation-only rows are still registered so a
+# formatting example cannot silently become an uncited quantitative claim.
+facts:
+  - fact_id: worked-logistic-rate
+    source: manuscript/part_I/first_principles.md
+    needle: "$r = 0.8"
+    value: 0.8
+    status: bound
+    rationale: "Worked logistic example uses the rate in its parameter table and code."
+  - fact_id: worked-logistic-capacity
+    source: manuscript/part_I/first_principles.md
+    needle: "$K = 100"
+    value: 100
+    status: bound
+    rationale: "Worked logistic example defines the carrying capacity."
+  - fact_id: worked-logistic-initial
+    source: manuscript/part_I/first_principles.md
+    needle: "$N_0 = 5"
+    value: 5
+    status: bound
+    rationale: "Worked logistic example defines the initial value."
+  - fact_id: worked-logistic-output
+    source: manuscript/part_I/first_principles.md
+    needle: "N(10) = 99.37"
+    value: 99.37
+    status: bound
+    rationale: "Displayed trajectory result is checked against the tested model."
+  - fact_id: gallery-alpha-row
+    source: manuscript/appendices/appendix_format_gallery.md
+    needle: "| alpha     |    1     |     10.0 |"
+    value: "1 and 10.0"
+    status: documentation_only
+    rationale: "The appendix demonstrates table formatting, not an empirical claim."
+  - fact_id: gallery-beta-row
+    source: manuscript/appendices/appendix_format_gallery.md
+    needle: "| beta      |    22    |      2.5 |"
+    value: "22 and 2.5"
+    status: documentation_only
+    rationale: "The appendix demonstrates table formatting, not an empirical claim."
+  - fact_id: gallery-gamma-row
+    source: manuscript/appendices/appendix_format_gallery.md
+    needle: "| gamma     |   333    |    0.125 |"
+    value: "333 and 0.125"
+    status: documentation_only
+    rationale: "The appendix demonstrates table formatting, not an empirical claim."
+  - fact_id: gallery-sample-size
+    source: src/visualization/gallery.py
+    needle: "data = rng.normal(50, 12, 600)"
+    value: 600
+    status: documentation_only
+    rationale: "The gallery sample size is a deterministic rendering fixture."
+  - fact_id: figure-dpi
+    source: src/visualization/_scaffold.py
+    needle: "DPI = 150"
+    value: 150
+    status: bound
+    rationale: "Raster resolution is part of the reproducible visual contract."
+  - fact_id: lecture-default-minutes
+    source: manuscript/config.yaml
+    needle: "default_lecture_minutes: 45"
+    value: 45
+    status: bound
+    rationale: "Teaching-time metadata is configuration-backed rather than a prose literal."

@@ -9,6 +9,7 @@ from typing import Any
 from textbook import content
 from textbook.config import (
     ChapterRef,
+    declared_appendix_paths,
     UnitIntroRef,
     declared_chapter_paths,
     declared_unit_intro_paths,
@@ -110,6 +111,10 @@ def _audit_chapter(
                 f"missing {label} file: {path.relative_to(project_dir)}",
                 require_present=require_present,
             )
+        elif require_complete:
+            companion_stubs = content.count_stub_markers(path.read_text(encoding="utf-8"))
+            if companion_stubs:
+                problems.append(f"{path.relative_to(project_dir)}: {companion_stubs} stub markers remaining")
 
     status = _section_status(
         section=f"{chapter.part_id}/{chapter.file}",
@@ -208,6 +213,15 @@ def run_manuscript_audit(
 
     for orphan in orphan_part_markdown_paths(manuscript_dir, config):
         problems.append(f"orphan markdown under part directory: {orphan.relative_to(project_dir)}")
+
+    for category in ("reference", "labs", "questions"):
+        for appendix_path in declared_appendix_paths(manuscript_dir, config, category):
+            if not appendix_path.exists():
+                _record_problem(
+                    problems,
+                    f"missing configured {category} file: {appendix_path.relative_to(project_dir)}",
+                    require_present=effective_require_present,
+                )
 
     return AuditReport(
         problems=tuple(problems),

@@ -81,6 +81,7 @@ def render_one_length(
     source_base_url: str,
     render_pptx_fn,
     logger: logging.Logger,
+    content_prefix: str = "deck_content",
 ) -> list[Path]:
     """Audit, resolve, budget-filter, and render one deck length. Returns written paths.
 
@@ -93,7 +94,7 @@ def render_one_length(
     `DiligenceAuditFailure` on a fact-bearing slide with no `source` citation
     — both before any PDF/PPTX bytes are written.
     """
-    content_path = manuscript_dir / f"deck_content_{length}.yaml"
+    content_path = manuscript_dir / f"{content_prefix}_{length}.yaml"
     raw = load_deck_yaml(content_path)
 
     result = audit_deck(length, raw, tokens)
@@ -138,7 +139,41 @@ def render_one_length(
     return written
 
 
-def render_all_decks(project_root: Path, repo_root: Path, logger: logging.Logger) -> list[Path]:
+def _subject_content_prefix(deck_config: dict, pitch_subject: str) -> str:
+    """Resolve a configured subject to a safe local deck-content prefix."""
+    subjects = deck_config.get("subjects", {})
+    if isinstance(subjects, dict):
+        subject_config = subjects.get(pitch_subject, {})
+        if isinstance(subject_config, dict):
+            prefix = subject_config.get("content_prefix", "deck_content")
+            if isinstance(prefix, str) and prefix and "/" not in prefix and "\\" not in prefix:
+                return prefix
+    return "deck_content"
+
+
+def _preflight_all_lengths(
+    *, manuscript_dir: Path, repo_root: Path, tokens: dict[str, str], content_prefix: str
+) -> None:
+    """Audit every configured length before any generated output is written."""
+    for length in DECK_LENGTHS:
+        raw = load_deck_yaml(manuscript_dir / f"{content_prefix}_{length}.yaml")
+        result = audit_deck(length, raw, tokens)
+        if not result.ok:
+            raise DeckAuditFailure(f"[{length}] audit failed: {result.unresolved_error or result.cliche_hits}")
+        uncited = uncited_fact_slides(raw, repo_root)
+        if uncited:
+            titles = ", ".join(row["title"] or f"slide {row['index']}" for row in uncited)
+            raise DiligenceAuditFailure(
+                f"[{length}] {len(uncited)} fact-bearing slide(s) with no source citation: {titles}"
+            )
+
+
+def render_all_decks(
+    project_root: Path,
+    repo_root: Path,
+    logger: logging.Logger,
+    pitch_subject: str | None = None,
+) -> list[Path]:
     """Render all three lengths. Raises `DeckAuditFailure`/`RenderingError` on any failure."""
     manuscript_dir = project_root / "manuscript"
     figures_dir = project_root / "output" / "figures"
@@ -150,7 +185,15 @@ def render_all_decks(project_root: Path, repo_root: Path, logger: logging.Logger
     deck_config = load_deck_config(project_root)
     theme = _resolve_theme(deck_config)
     source_base_url = deck_config.get("source_base_url", "")
-    tokens = build_deck_tokens(repo_root)
+    selected_subject = pitch_subject or str(deck_config.get("pitch_subject", "template_template"))
+    tokens = build_deck_tokens(repo_root, pitch_subject=selected_subject)
+    content_prefix = _subject_content_prefix(deck_config, selected_subject)
+    _preflight_all_lengths(
+        manuscript_dir=manuscript_dir,
+        repo_root=repo_root,
+        tokens=tokens,
+        content_prefix=content_prefix,
+    )
 
     render_pptx_fn = _try_import_render_pptx()
     if render_pptx_fn is None:
@@ -175,6 +218,7 @@ def render_all_decks(project_root: Path, repo_root: Path, logger: logging.Logger
                 source_base_url=source_base_url,
                 render_pptx_fn=render_pptx_fn,
                 logger=logger,
+                content_prefix=content_prefix,
             )
         )
 
@@ -189,6 +233,8 @@ __all__ = [
     "DECK_LENGTHS",
     "DeckAuditFailure",
     "DiligenceAuditFailure",
+    "_preflight_all_lengths",
+    "_subject_content_prefix",
     "load_deck_config",
     "render_one_length",
     "render_all_decks",

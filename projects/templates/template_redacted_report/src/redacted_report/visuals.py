@@ -194,6 +194,60 @@ def expected_dev_variant_filenames(
     return tuple(names)
 
 
+def evaluate_pixel_regression_gate(
+    output_dir: Path,
+    *,
+    manifest_path: Path | None = None,
+    executable_resolver: Callable[[str], str | None] = shutil.which,
+) -> dict[str, object]:
+    """Evaluate an opt-in pixel gate without treating missing tooling as green.
+
+    The base exemplar does not pin a raster implementation. Therefore a
+    missing executable or manifest is reported as ``unavailable``. A pinned
+    manifest is checked against current PNG bytes and returns ``pass`` only
+    when every declared artifact matches.
+    """
+    tool = executable_resolver("pdftoppm")
+    manifest = (manifest_path or (output_dir / "pixel_regression_manifest.json")).resolve()
+    if not tool:
+        return {"status": "unavailable", "reason": "raster_tool_unavailable", "tool": "pdftoppm"}
+    if not manifest.is_file():
+        return {"status": "unavailable", "reason": "manifest_not_pinned", "tool": "pdftoppm"}
+    try:
+        payload = json.loads(manifest.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {"status": "fail", "reason": f"invalid_manifest: {exc}"}
+    if not isinstance(payload, dict):
+        return {"status": "fail", "reason": "manifest_root_not_object"}
+    if payload.get("schema_version") != "template-redacted-report/pixel-regression/1":
+        return {"status": "fail", "reason": "unsupported_manifest_schema"}
+    if payload.get("tool") != "pdftoppm" or not str(payload.get("tool_version", "")).strip():
+        return {"status": "fail", "reason": "raster_tool_not_pinned"}
+    files = payload.get("files")
+    if not isinstance(files, dict) or not files:
+        return {"status": "fail", "reason": "manifest_files_missing"}
+    mismatches: list[str] = []
+    for relative, expected in files.items():
+        if not isinstance(relative, str) or Path(relative).is_absolute() or ".." in Path(relative).parts:
+            mismatches.append(str(relative))
+            continue
+        path = (output_dir / relative).resolve()
+        try:
+            path.relative_to(output_dir.resolve())
+        except ValueError:
+            mismatches.append(relative)
+            continue
+        if not path.is_file() or not isinstance(expected, str) or _file_sha256(path) != expected:
+            mismatches.append(relative)
+    return {
+        "status": "pass" if not mismatches else "fail",
+        "tool": "pdftoppm",
+        "tool_version": payload["tool_version"],
+        "checked": len(files),
+        "mismatches": tuple(sorted(mismatches)),
+    }
+
+
 def verify_dev_variant_outputs(
     output_dir: Path,
     *,

@@ -126,7 +126,10 @@ The declared Executable Bundle stage depends on PDF rendering and is filtered ou
 
 Implemented pieces:
 
-1. `scripts/runner/bundle_executable.py` builds `output/<project>/executable_bundle/`.
+1. `scripts/runner/bundle_executable.py` builds `output/<project>/executable_bundle/`
+   only for the canonical public roster, rejects source symlinks, requires the
+   root lockfile, clears stale generated bundle content, and writes a
+   deterministic `bundle_receipt.json` payload manifest.
 2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
 3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`.
 4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
@@ -138,6 +141,13 @@ Remaining hardening:
 2. Cross-test the public canonical exemplars in CI with the generated container.
 3. Decide whether reproducibility should be byte-identical or content-equivalent when timestamps are present.
 4. Add a dedicated CI job once container runtime availability is stable.
+
+The bundle remains opt-in and dry-run by default. Before any external
+publication, use `uv run python scripts/runner/bundle_executable.py --project
+templates/<name>` and review `bundle_receipt.json`; the command performs no
+upload. Fresh-checkout release rehearsal is separately discoverable through
+`uv run python scripts/maintenance/release_rehearsal.py` and is also a dry-run
+unless `--execute` is supplied.
 
 ## Out of scope for v1
 

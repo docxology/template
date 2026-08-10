@@ -16,12 +16,13 @@ flowchart LR
     T --> GGEN[test_glossary_gen.py<br/>API glossary generation]
     T --> IMG[test_image_manager.py<br/>Image management]
     T --> MD[test_markdown_integration.py<br/>Markdown integration]
+    T --> BL[test_backlog.py<br/>Backlog contract]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef test fill:#1e3a8a,stroke:#0f172a,color:#fff
     classDef doc fill:#0f766e,stroke:#0f172a,color:#fff
     class T d
-    class FIG,GFIG,GCLI,GGEN,IMG,MD test
+    class FIG,GFIG,GCLI,GGEN,IMG,MD,BL test
     class META doc
 ```
 

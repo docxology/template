@@ -32,6 +32,11 @@ def main() -> int:
         action="store_true",
         help="Fail when any audited unit intro or chapter still contains stub markers.",
     )
+    parser.add_argument(
+        "--check-generated",
+        action="store_true",
+        help="Also reject stale or missing generated Mermaid diagram artifacts.",
+    )
     args = parser.parse_args()
 
     config = load_config(PROJECT_DIR / "manuscript")
@@ -42,11 +47,19 @@ def main() -> int:
         require_complete=args.require_complete,
     )
 
+    generated_problems: tuple[str, ...] = ()
+    if args.check_generated:
+        from mermaid.diagrams import load_specs
+        from textbook.contracts import validate_diagram_inventory
+
+        generated_problems = validate_diagram_inventory(load_specs(), PROJECT_DIR / "output" / "figures" / "mermaid")
+
     print(format_audit_table(report.rows, report.total_words, report.total_stubs))
 
-    if report.problems:
-        print(f"\n{len(report.problems)} problem(s):")
-        for problem in report.problems:
+    problems = (*report.problems, *generated_problems)
+    if problems:
+        print(f"\n{len(problems)} problem(s):")
+        for problem in problems:
             print(f"  ✗ {problem}")
         return 1
     if args.require_complete:

@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.logging.constants import BANNER_WIDTH
 
 SEVERITY_LEVELS = ("LOW", "MEDIUM", "HIGH")
@@ -16,15 +16,25 @@ OPTIONAL_TOOLS = ("safety",)
 TOOLS = (*REQUIRED_TOOLS, *OPTIONAL_TOOLS)
 
 
-def _run_bandit(repo_root: Path) -> dict[str, Any]:
-    try:
-        subprocess.run(
-            ["uv", "run", "bandit", "--version"],
+def _run_security_command(repo_root: Path, argv: list[str], *, tool: str, timeout: int = 300):
+    """Run a security tool through the shared bounded credential-free policy."""
+    return run_with_policy(
+        argv,
+        cwd=repo_root,
+        env=None,
+        policy=SubprocessPolicy(
+            policy_id=f"security-{tool}",
+            source_path="infrastructure/validation/security_gate.py",
+            timeout_seconds=timeout,
             capture_output=True,
-            text=True,
-            check=True,
-        )
-    except (subprocess.CalledProcessError, FileNotFoundError):
+            credential_free=True,
+        ),
+    )
+
+
+def _run_bandit(repo_root: Path) -> dict[str, Any]:
+    probe = _run_security_command(repo_root, ["uv", "run", "bandit", "--version"], tool="bandit-probe", timeout=30)
+    if probe.returncode != 0 or probe.timed_out:
         print("WARNING: bandit not installed, skipping")
         return {"status": "skipped", "reason": "bandit not installed", "tool": "bandit"}
 
@@ -43,37 +53,27 @@ def _run_bandit(repo_root: Path) -> dict[str, Any]:
         str(repo_root / "scripts"),
         str(repo_root / "projects"),
     ]
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-        output = result.stdout if result.stdout else result.stderr
-        try:
-            data = json.loads(output)
-        except json.JSONDecodeError:
-            print("WARNING: bandit output not valid JSON")
-            return {"status": "skipped", "reason": "bandit output not valid JSON", "tool": "bandit"}
-        findings = data.get("results", [])
-        summary: dict[str, int] = {"total": len(findings)}
-        for severity in SEVERITY_LEVELS:
-            summary[severity.lower()] = sum(1 for f in findings if f.get("issue_severity", "").upper() == severity)
-        print(f"bandit: {summary.get('total', 0)} issues found")
-        return {"findings": findings, "summary": summary, "tool": "bandit"}
-    except subprocess.TimeoutExpired:
+    result = _run_security_command(repo_root, cmd, tool="bandit")
+    if result.timed_out:
         print("WARNING: bandit timed out")
         return {"status": "skipped", "reason": "bandit timed out", "tool": "bandit"}
-    except OSError as exc:
-        print(f"WARNING: bandit execution error: {exc}")
-        return {"status": "skipped", "reason": str(exc), "tool": "bandit"}
+    output = result.stdout if result.stdout else result.stderr
+    try:
+        data = json.loads(output)
+    except json.JSONDecodeError:
+        print("WARNING: bandit output not valid JSON")
+        return {"status": "skipped", "reason": "bandit output not valid JSON", "tool": "bandit"}
+    findings = data.get("results", [])
+    summary: dict[str, int] = {"total": len(findings)}
+    for severity in SEVERITY_LEVELS:
+        summary[severity.lower()] = sum(1 for f in findings if f.get("issue_severity", "").upper() == severity)
+    print(f"bandit: {summary.get('total', 0)} issues found")
+    return {"findings": findings, "summary": summary, "tool": "bandit"}
 
 
 def _run_safety(repo_root: Path) -> dict[str, Any]:
-    try:
-        subprocess.run(
-            ["safety", "--version"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    probe = _run_security_command(repo_root, ["safety", "--version"], tool="safety-probe", timeout=30)
+    if probe.returncode != 0 or probe.timed_out:
         print("WARNING: safety not installed, skipping")
         return {"status": "skipped", "reason": "safety not installed", "tool": "safety"}
 
@@ -82,36 +82,31 @@ def _run_safety(repo_root: Path) -> dict[str, Any]:
         return {"status": "skipped", "reason": "no dependency files found", "tool": "safety"}
 
     cmd = ["safety", "check", "--json", "--full-report", "-r", str(repo_root / "pyproject.toml")]
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-        try:
-            data = json.loads(result.stdout) if result.stdout else {}
-        except json.JSONDecodeError:
-            print("WARNING: safety output not valid JSON")
-            return {"status": "skipped", "reason": "safety output not valid JSON", "tool": "safety"}
-        vulns = data.get("vulnerabilities", [])
-        summary: dict[str, int] = {"total": len(vulns)}
-        for severity in SEVERITY_LEVELS:
-            summary[severity.lower()] = sum(1 for v in vulns if v.get("severity", "").upper() == severity)
-        print(f"safety: {summary.get('total', 0)} vulnerabilities found")
-        return {"findings": vulns, "summary": summary, "tool": "safety"}
-    except subprocess.TimeoutExpired:
+    result = _run_security_command(repo_root, cmd, tool="safety")
+    if result.timed_out:
         print("WARNING: safety timed out")
         return {"status": "skipped", "reason": "safety timed out", "tool": "safety"}
-    except OSError as exc:
-        print(f"WARNING: safety execution error: {exc}")
-        return {"status": "skipped", "reason": str(exc), "tool": "safety"}
+    try:
+        data = json.loads(result.stdout) if result.stdout else {}
+    except json.JSONDecodeError:
+        print("WARNING: safety output not valid JSON")
+        return {"status": "skipped", "reason": "safety output not valid JSON", "tool": "safety"}
+    vulns = data.get("vulnerabilities", [])
+    summary: dict[str, int] = {"total": len(vulns)}
+    for severity in SEVERITY_LEVELS:
+        summary[severity.lower()] = sum(1 for v in vulns if v.get("severity", "").upper() == severity)
+    print(f"safety: {summary.get('total', 0)} vulnerabilities found")
+    return {"findings": vulns, "summary": summary, "tool": "safety"}
 
 
 def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
-    try:
-        subprocess.run(
-            ["uv", "run", "pip-audit", "--version"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    probe = _run_security_command(
+        repo_root,
+        ["uv", "run", "pip-audit", "--version"],
+        tool="pip-audit-probe",
+        timeout=30,
+    )
+    if probe.returncode != 0 or probe.timed_out:
         print("WARNING: pip-audit not installed, skipping")
         return {"status": "skipped", "reason": "pip-audit not installed", "tool": "pip_audit"}
 
@@ -126,28 +121,24 @@ def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
         "--desc",
         *_pip_audit_ignore_args(repo_root),
     ]
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-        try:
-            data = json.loads(result.stdout) if result.stdout else {}
-        except json.JSONDecodeError:
-            try:
-                data = json.loads(result.stderr) if result.stderr else {}
-            except json.JSONDecodeError:
-                print("WARNING: pip-audit output not valid JSON")
-                return {"status": "skipped", "reason": "pip-audit output not valid JSON", "tool": "pip_audit"}
-        vulns = _pip_audit_vulnerabilities(data)
-        summary: dict[str, int] = {"total": len(vulns)}
-        for severity in SEVERITY_LEVELS:
-            summary[severity.lower()] = sum(1 for v in vulns if v.get("severity", "").lower() == severity.lower())
-        print(f"pip-audit: {summary.get('total', 0)} vulnerabilities found")
-        return {"findings": vulns, "summary": summary, "tool": "pip_audit"}
-    except subprocess.TimeoutExpired:
+    result = _run_security_command(repo_root, cmd, tool="pip-audit")
+    if result.timed_out:
         print("WARNING: pip-audit timed out")
         return {"status": "skipped", "reason": "pip-audit timed out", "tool": "pip_audit"}
-    except OSError as exc:
-        print(f"WARNING: pip-audit execution error: {exc}")
-        return {"status": "skipped", "reason": str(exc), "tool": "pip_audit"}
+    try:
+        data = json.loads(result.stdout) if result.stdout else {}
+    except json.JSONDecodeError:
+        try:
+            data = json.loads(result.stderr) if result.stderr else {}
+        except json.JSONDecodeError:
+            print("WARNING: pip-audit output not valid JSON")
+            return {"status": "skipped", "reason": "pip-audit output not valid JSON", "tool": "pip_audit"}
+    vulns = _pip_audit_vulnerabilities(data)
+    summary: dict[str, int] = {"total": len(vulns)}
+    for severity in SEVERITY_LEVELS:
+        summary[severity.lower()] = sum(1 for v in vulns if v.get("severity", "").lower() == severity.lower())
+    print(f"pip-audit: {summary.get('total', 0)} vulnerabilities found")
+    return {"findings": vulns, "summary": summary, "tool": "pip_audit"}
 
 
 def _pip_audit_ignore_args(repo_root: Path) -> list[str]:

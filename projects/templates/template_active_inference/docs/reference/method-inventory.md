@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 816
+Total documented definitions: 820
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -130,8 +130,8 @@ Total documented definitions: 816
 | 286 | `function` | `check_project_local_commands` | docstring | Reject stale root-shaped commands in project-local documentation. |
 | 307 | `function` | `_paragraphs` | inventory fallback | Inventory fallback for function `_paragraphs` defined at `src/gates/documentation_contract.py:307`. |
 | 311 | `function` | `check_historical_test_evidence` | docstring | Keep stale suite-count evidence clearly archived and current evidence singular. |
-| 392 | `function` | `check_reference_signposts` | docstring | Require canonical verification and reference signposts in reader docs. |
-| 442 | `function` | `check_documentation_contract` | docstring | Run all documentation contract checks. |
+| 393 | `function` | `check_reference_signposts` | docstring | Require canonical verification and reference signposts in reader docs. |
+| 443 | `function` | `check_documentation_contract` | docstring | Run all documentation contract checks. |
 
 ## `src/gates/lean.py`
 
@@ -571,19 +571,20 @@ Total documented definitions: 816
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 17 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:17`. |
-| 32 | `function` | `_project_state_fingerprint` | docstring | Return a deterministic source/output fingerprint for refresh caching. |
-| 59 | `function` | `_generator_name` | docstring | Return the refreshable script name in a command, if any. |
-| 70 | `class` | `_RefreshCache` | docstring | In-run fixed-point cache for idempotent generator commands. |
-| 73 | `function` | `_RefreshCache.__init__` | docstring | Initialize an empty in-run refresh cache. |
-| 77 | `function` | `_RefreshCache.run` | docstring | Run a generator command, skipping it when the project state is unchanged. |
-| 103 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:103`. |
-| 107 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:107`. |
-| 145 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:145`. |
-| 152 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
-| 176 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:176`. |
-| 197 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:197`. |
-| 228 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
+| 19 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:19`. |
+| 34 | `function` | `_project_state_fingerprint` | docstring | Return a deterministic source/output fingerprint for refresh caching. |
+| 61 | `function` | `_generator_name` | docstring | Return the refreshable script name in a command, if any. |
+| 72 | `class` | `_RefreshCache` | docstring | In-run fixed-point cache for idempotent generator commands. |
+| 75 | `function` | `_RefreshCache.__init__` | docstring | Initialize an empty in-run refresh cache. |
+| 81 | `function` | `_RefreshCache.run` | docstring | Run a generator command, skipping it when the project state is unchanged. |
+| 125 | `function` | `_RefreshCache.receipt` | docstring | Return timing/cache evidence without making a performance claim. |
+| 150 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:150`. |
+| 154 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:154`. |
+| 192 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:192`. |
+| 199 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
+| 223 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:223`. |
+| 244 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:244`. |
+| 289 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
 
 ## `src/orchestration/pipeline_manifest.py`
 
@@ -591,6 +592,14 @@ Total documented definitions: 816
 | ---: | --- | --- | --- | --- |
 | 10 | `class` | `ScriptStep` | docstring | Data container for ScriptStep. |
 | 34 | `function` | `analysis_scripts` | docstring | Process analysis scripts. |
+
+## `src/orchestration/portable_execution.py`
+
+| line | kind | name | documentation source | summary |
+| ---: | --- | --- | --- | --- |
+| 21 | `class` | `PortableSubprocessResult` | docstring | Result of one bounded standalone subprocess. |
+| 31 | `function` | `build_bounded_env` | docstring | Return an environment without credential-shaped variable names. |
+| 38 | `function` | `run_bounded_subprocess` | docstring | Run a command in a process group and kill descendants on timeout. |
 
 ## `src/roadmap_tracks/figure_provenance.py`
 

@@ -126,6 +126,12 @@ uv run python projects/templates/template_template/scripts/generate_manuscript_m
 
 See [`docs/VERIFICATION.md`](docs/VERIFICATION.md) for the full gate checklist.
 
+The metrics payload carries a schema-versioned receipt, and the comparative
+matrix is checked in lockstep against the manuscript capability rows. The
+steganography defaults receipt records that executable configuration is
+disabled unless explicitly requested; missing optional tooling is reported as
+unavailable rather than silently promoted to a successful publication claim.
+
 ## Template integrity
 
 - Forward backlog: [`TODO.md`](TODO.md).

@@ -35,14 +35,14 @@ The runner:
 
 The runner is a thin orchestrator: business logic (fail-under threshold,
 skip list, marker expression) is configurable, and all subprocess work
-happens via real ``subprocess.run`` calls — no mocking.
+happens through the shared process-group/timeout policy — no mocking.
 """
 
 from dataclasses import dataclass
 import hashlib
 import io
-import subprocess  # nosec B404
 from pathlib import Path
+from time import monotonic
 from typing import Sequence
 
 from infrastructure.core.logging.utils import (
@@ -55,8 +55,10 @@ from infrastructure.core.project_test_matrix import ProjectTestTask, run_project
 from infrastructure.core.public_matrix_receipt import (
     PublicMatrixLaneResult,
     build_public_matrix_receipt,
+    build_public_matrix_cache_key,
     determine_worker_info,
 )
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.core.pytest_orchestration import (
     DEFAULT_TEST_PROFILE,
     TestProfileName,
@@ -119,6 +121,8 @@ class ProjectPytestResult:
     coverage_file: Path
     timed_out: bool = False
     detail: str = ""
+    duration_seconds: float = 0.0
+    collection_count: int | None = None
 
 
 def discover_skip_combined_pytest_projects(repo_root: Path) -> tuple[str, ...]:
@@ -135,7 +139,7 @@ def _discover_project_test_dirs(
     repo_root: Path,
     projects: Sequence[str] | None,
     skip_projects: Sequence[str],
-) -> list[tuple[str, Path, Path]]:
+) -> tuple[list[tuple[str, Path, Path]], dict[str, str]]:
     """Return ``(project_name, project_root, tests_dir)`` for every runnable project.
 
     When ``projects`` is ``None`` the list is built from
@@ -144,6 +148,7 @@ def _discover_project_test_dirs(
     ``templates/template_code_project`` work.
     """
     pairs: list[tuple[str, Path, Path]] = []
+    skip_reasons: dict[str, str] = {}
     skip_set = set(skip_projects)
 
     if projects is None:
@@ -152,9 +157,11 @@ def _discover_project_test_dirs(
             qualified_name = info.qualified_name
             if qualified_name in skip_set or info.name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", qualified_name)
+                skip_reasons[qualified_name] = "configured skip_projects"
                 continue
             if not _contains_tests(tests_dir):
                 logger.warning("Discovered project '%s' has no runnable test files at %s", qualified_name, tests_dir)
+                skip_reasons[qualified_name] = "error: no runnable test files"
                 continue
             pairs.append((qualified_name, info.path, tests_dir))
         pairs.sort(key=lambda item: item[0])
@@ -164,13 +171,15 @@ def _discover_project_test_dirs(
             tests_dir = project_root / "tests"
             if name in skip_set or Path(name).name in skip_set:
                 logger.info("Skipping project '%s' (in skip_projects)", name)
+                skip_reasons[name] = "configured skip_projects"
                 continue
             if not _contains_tests(tests_dir):
                 logger.error("Requested project '%s' has no runnable test files at %s", name, tests_dir)
+                skip_reasons[name] = "error: no runnable test files"
                 continue
             pairs.append((name, project_root, tests_dir))
 
-    return pairs
+    return pairs, skip_reasons
 
 
 def _contains_tests(tests_dir: Path) -> bool:
@@ -184,6 +193,7 @@ def _execute_project_pytest_matrix(
     *,
     project_workers: int,
     subprocess_timeout_seconds: int,
+    capture_output: bool = False,
 ) -> list[ProjectPytestResult]:
     """Run the shared bounded project matrix and adapt its result contract."""
     tasks = tuple(
@@ -194,6 +204,7 @@ def _execute_project_pytest_matrix(
             cwd=repo_root,
             env=spec.env,
             timeout_seconds=subprocess_timeout_seconds,
+            capture_output=capture_output,
         )
         for spec in specs
     )
@@ -207,6 +218,8 @@ def _execute_project_pytest_matrix(
             coverage_file=coverage_by_index[result.index],
             timed_out=result.timed_out,
             detail=result.detail,
+            duration_seconds=result.duration_seconds,
+            collection_count=result.collection_count,
         )
         for result in results
     ]
@@ -221,14 +234,19 @@ def _run_combined_coverage_gate(
     log_substep(f"Running combined coverage gate (--fail-under={fail_under})", logger)
     cmd = get_python_command() + ["-m", "coverage", "report", f"--fail-under={fail_under}"]
     try:
-        completed = subprocess.run(  # nosec B603
+        completed = run_with_policy(
             cmd,
-            cwd=str(repo_root),
+            cwd=repo_root,
             env=env,
-            check=False,
+            policy=SubprocessPolicy(
+                policy_id="coverage-gate",
+                source_path="infrastructure/core/test_runner.py",
+                timeout_seconds=300,
+                capture_output=False,
+            ),
         )
         return int(completed.returncode)
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError) as exc:
         logger.error("coverage gate invocation failed: %s", exc)
         return 1
 
@@ -255,14 +273,19 @@ def _combine_project_coverage(
     combine_env = dict(env)
     combine_env["COVERAGE_FILE"] = str(combined_file)
     try:
-        completed = subprocess.run(  # nosec B603
+        completed = run_with_policy(
             cmd,
-            cwd=str(repo_root),
+            cwd=repo_root,
             env=combine_env,
-            check=False,
+            policy=SubprocessPolicy(
+                policy_id="coverage-combine",
+                source_path="infrastructure/core/test_runner.py",
+                timeout_seconds=300,
+                capture_output=False,
+            ),
         )
         return int(completed.returncode)
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError) as exc:
         logger.error("coverage combine invocation failed: %s", exc)
         return 1
 
@@ -310,15 +333,18 @@ def _output_tree_digest(project_root: Path) -> str:
 def _resolve_roster_revision(repo_root: Path) -> str:
     """Return the current git commit SHA, or ``"unknown"`` outside a checkout."""
     try:
-        completed = subprocess.run(  # nosec B603
+        completed = run_with_policy(
             ["git", "rev-parse", "HEAD"],
-            cwd=str(repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=10,
+            cwd=repo_root,
+            env=None,
+            policy=SubprocessPolicy(
+                policy_id="git-metadata-test-runner",
+                source_path="infrastructure/core/test_runner.py",
+                timeout_seconds=30,
+                capture_output=True,
+            ),
         )
-    except (OSError, subprocess.SubprocessError):
+    except (OSError, ValueError):
         return "unknown"
     if completed.returncode != 0:
         return "unknown"
@@ -339,6 +365,8 @@ def _write_public_matrix_receipt(
     combined_coverage_percent: float | None,
     combined_floor: int,
     overall_exit: int,
+    phase_durations: dict[str, float] | None = None,
+    skip_reasons: dict[str, str] | None = None,
 ) -> int:
     """Finalize output isolation and write a requested public-matrix receipt."""
     if receipt_path is None:
@@ -361,6 +389,15 @@ def _write_public_matrix_receipt(
             )
             overall_exit = 1
 
+    worker_info = determine_worker_info(project_workers, parallel)
+    roster_revision = _resolve_roster_revision(repo_root)
+    cache_key = build_public_matrix_cache_key(
+        roster_revision=roster_revision,
+        profile=profile,
+        marker_expression=marker_expr,
+        worker_info=worker_info,
+        project_names=[spec.project_name for spec in specs] + list((skip_reasons or {}).keys()),
+    )
     lanes = []
     for result, spec, coverage_percent in lane_context:
         lanes.append(
@@ -371,17 +408,48 @@ def _write_public_matrix_receipt(
                 timed_out=result.timed_out,
                 coverage_percent=coverage_percent,
                 output_isolation_ok=output_isolation[spec.index],
+                duration_seconds=result.duration_seconds,
+                resource_profile=worker_info,
+                skip_reason="",
+                collection_count=result.collection_count,
+                cache_key=cache_key,
+            )
+        )
+    for project_name, reason in sorted((skip_reasons or {}).items()):
+        is_error = reason.startswith("error:")
+        if is_error:
+            overall_exit = overall_exit or 1
+        lanes.append(
+            PublicMatrixLaneResult(
+                project_name=project_name,
+                declared_floor=None,
+                exit_code=1 if is_error else 0,
+                timed_out=False,
+                coverage_percent=None,
+                output_isolation_ok=True,
+                duration_seconds=0.0,
+                resource_profile=worker_info,
+                skip_reason=reason,
+                cache_key=cache_key,
             )
         )
     receipt = build_public_matrix_receipt(
-        roster_revision=_resolve_roster_revision(repo_root),
+        roster_revision=roster_revision,
         profile=profile,
         marker_expression=marker_expr,
-        worker_info=determine_worker_info(project_workers, parallel),
+        worker_info=worker_info,
         lanes=lanes,
         combined_coverage_percent=combined_coverage_percent,
         combined_floor=combined_floor,
         overall_exit=overall_exit,
+        phase_durations=phase_durations,
+        collection_counts={
+            result.project_name: result.collection_count
+            for result, _, _ in lane_context
+            if result.collection_count is not None
+        },
+        skip_reasons=dict(skip_reasons or {}),
+        cache_key=cache_key,
     )
     receipt.write(receipt_path)
     log_substep(f"Public-matrix receipt written: {receipt_path}", logger)
@@ -455,14 +523,34 @@ def run_per_project_pytest(
 
     outer_workers = validate_project_matrix_concurrency(project_workers, parallel)
 
-    pairs = _discover_project_test_dirs(repo_root, projects, effective_skip)
+    pairs, skip_reasons = _discover_project_test_dirs(repo_root, projects, effective_skip)
     if not pairs:
         message = "No runnable projects with test modules were found."
+        empty_reason = "configured empty run" if allow_empty else f"error: {message}"
+        skip_reasons = dict(skip_reasons)
+        skip_reasons["<no-runnable-projects>"] = empty_reason
         if allow_empty:
             logger.warning("%s Empty runs were explicitly allowed.", message)
-            return 0
-        logger.error("%s", message)
-        return 1
+        else:
+            logger.error("%s", message)
+        if receipt_path is not None:
+            _write_public_matrix_receipt(
+                repo_root,
+                receipt_path,
+                specs=(),
+                results=(),
+                output_digests_before={},
+                profile=profile,
+                marker_expr=marker_expr,
+                project_workers=project_workers,
+                parallel=parallel,
+                combined_coverage_percent=None,
+                combined_floor=fail_under,
+                overall_exit=0 if allow_empty else 1,
+                phase_durations={"project_matrix": 0.0, "coverage_combine": 0.0, "coverage_gate": 0.0},
+                skip_reasons=skip_reasons,
+            )
+        return 0 if allow_empty else 1
 
     resolved_markers = marker_expr
     if resolved_markers is None:
@@ -537,12 +625,15 @@ def run_per_project_pytest(
     if receipt_path is not None:
         output_digests_before = {spec.project_name: _output_tree_digest(spec.project_root) for spec in specs}
 
+    matrix_started = monotonic()
     results = _execute_project_pytest_matrix(
         repo_root,
         specs,
         project_workers=outer_workers,
         subprocess_timeout_seconds=subprocess_timeout_seconds,
+        capture_output=receipt_path is not None,
     )
+    matrix_duration = round(monotonic() - matrix_started, 3)
     overall_exit = 0
     if len(results) != len(specs):
         logger.error("Project test matrix returned %d result(s) for %d project(s)", len(results), len(specs))
@@ -566,11 +657,15 @@ def run_per_project_pytest(
             )
             overall_exit = 1
 
+    combine_started = monotonic()
     combine_rc = _combine_project_coverage(repo_root, cf_path, project_coverage_files, base_env)
+    combine_duration = round(monotonic() - combine_started, 3)
     if combine_rc != 0:
         overall_exit = overall_exit or combine_rc
     final_env = make_coverage_subprocess_env(str(cf_path), repo_root)
+    coverage_started = monotonic()
     cov_rc = _run_combined_coverage_gate(repo_root, final_env, fail_under)
+    coverage_duration = round(monotonic() - coverage_started, 3)
     if cov_rc == 0:
         log_success(f"Combined coverage gate passed (>= {fail_under}%)", logger)
     else:
@@ -594,6 +689,12 @@ def run_per_project_pytest(
         combined_coverage_percent=combined_pct,
         combined_floor=fail_under,
         overall_exit=overall_exit,
+        phase_durations={
+            "project_matrix": matrix_duration,
+            "coverage_combine": combine_duration,
+            "coverage_gate": coverage_duration,
+        },
+        skip_reasons=skip_reasons,
     )
 
     return 0 if overall_exit == 0 else 1

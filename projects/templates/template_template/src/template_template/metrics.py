@@ -20,6 +20,7 @@ from infrastructure.core.project_pyproject import project_declared_coverage_floo
 from infrastructure.project.public_scope import public_project_names
 
 from .introspection import ModuleInfo, build_infrastructure_report
+from .contracts import METRICS_SCHEMA_VERSION, validate_metrics_payload
 from .viz_palette import FIGURE_DPI, FONT_FLOOR
 
 logger = get_logger(__name__)
@@ -238,6 +239,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         },
         "module_inventory_table": build_module_inventory_table(report.modules),
         "generated_at": _generated_timestamp(os.environ.get("SOURCE_DATE_EPOCH")),
+        "metrics_schema_version": METRICS_SCHEMA_VERSION,
     }
 
     logger.info(
@@ -247,6 +249,7 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         total_infra_py,
         sum(len(v) for v in project_metrics.values()),
     )
+    validate_metrics_payload(metrics)
     return metrics
 
 

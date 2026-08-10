@@ -14,6 +14,9 @@ from pathlib import Path
 from .compiler import Plan
 
 
+EXPORT_RECEIPT_SCHEMA = "template-methods-paper-export-receipt-v1"
+
+
 def to_worklist_markdown(plan: Plan) -> str:
     """Render *plan* as a numbered, human-readable worklist."""
     lines = [f"# Worklist: {plan.method_name} v{plan.method_version} ({plan.target})", ""]
@@ -53,6 +56,18 @@ def to_mermaid(plan: Plan) -> str:
 def to_json(plan: Plan) -> str:
     """Return the canonical JSON encoding :data:`Plan.plan_hash` was computed over."""
     return json.dumps(plan.to_canonical_dict(), sort_keys=True, indent=2) + "\n"
+
+
+def export_receipt(plan: Plan) -> dict[str, object]:
+    """Return a typed, deterministic receipt for the available export forms."""
+    return {
+        "schema": EXPORT_RECEIPT_SCHEMA,
+        "method_name": plan.method_name,
+        "method_version": plan.method_version,
+        "plan_hash": plan.plan_hash,
+        "step_count": len(plan.steps),
+        "formats": ["markdown", "csv", "mermaid", "json"],
+    }
 
 
 def write_json(plan: Plan, path: Path) -> Path:

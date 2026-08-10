@@ -16,6 +16,7 @@ verifier. An agent in 2036 reading the manifest can:
 from __future__ import annotations
 
 import json
+import os
 import platform
 import subprocess
 from dataclasses import dataclass, field
@@ -174,6 +175,7 @@ def build_manifest(
     entry_points: dict[str, str] | None = None,
     external_data: tuple[dict[str, object], ...] = (),
     archival_receipts: dict[str, str] | None = None,
+    rendered_at: str | None = None,
 ) -> Manifest:
     """Build a Manifest for a single project's executable bundle.
 
@@ -194,6 +196,10 @@ def build_manifest(
         Records of external data dependencies (URL + SHA-256 + size).
     archival_receipts
         Map of provider → identifier (DOI, CID, SWHID) for the published artifacts.
+    rendered_at
+        Explicit ISO timestamp for an operator-owned release record. When
+        omitted, use ``SOURCE_DATE_EPOCH`` when supplied, otherwise the epoch
+        so executable bundles remain byte-stable by default.
     """
 
     pinned = _load_pinned_values(pinned_values_path)
@@ -206,11 +212,19 @@ def build_manifest(
         "verify_claims": "docker compose run verify",
     }
 
+    timestamp = rendered_at
+    if timestamp is None:
+        epoch = os.environ.get("SOURCE_DATE_EPOCH", "0")
+        try:
+            timestamp = datetime.fromtimestamp(int(epoch), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        except (ValueError, OverflowError, OSError):
+            timestamp = "1970-01-01T00:00:00Z"
+
     return Manifest(
         schema_version=SCHEMA_VERSION,
         project_name=project_name,
         commit_hash=_git_commit_hash(repo_dir),
-        rendered_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        rendered_at=timestamp,
         renderer=renderer,
         python_version=platform.python_version(),
         platform=f"{platform.system()}-{platform.machine()}",

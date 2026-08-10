@@ -121,3 +121,14 @@ __all__ = [
     "ToolEntryWithValidation",
     "ToolValidationResult",
 ]
+from .resource_schema import (
+    build_resource_schema_receipt,
+    validate_resource_directory,
+    validate_resource_manifest,
+)
+
+__all__ = [
+    "build_resource_schema_receipt",
+    "validate_resource_directory",
+    "validate_resource_manifest",
+]

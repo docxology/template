@@ -169,22 +169,24 @@ def build_compose_yaml(project_name: str) -> str:
     bundle is self-describing.
     """
 
+    image_name = project_name.replace("/", "-").replace("\\", "-")
+    project_slug = project_name.rsplit("/", 1)[-1]
     return (
         "# Auto-generated docker-compose.yml — see manifest.json entry_points.\n"
         "services:\n"
         "  reproduce:\n"
         "    build:\n"
         "      context: .\n"
-        f"    image: template-bundle-{project_name}:latest\n"
+        f"    image: template-bundle-{image_name}:latest\n"
         "    environment:\n"
         "      - MPLBACKEND=Agg\n"
         "  tests:\n"
-        f"    image: template-bundle-{project_name}:latest\n"
+        f"    image: template-bundle-{image_name}:latest\n"
         f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_01_test.py --project {project_name}"]\n'
         "  render:\n"
-        f"    image: template-bundle-{project_name}:latest\n"
+        f"    image: template-bundle-{image_name}:latest\n"
         f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_03_render.py --project {project_name}"]\n'
         "  verify:\n"
-        f"    image: template-bundle-{project_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run pytest tests/regression/projects/{project_name} -v"]\n'
+        f"    image: template-bundle-{image_name}:latest\n"
+        f'    command: ["bash", "-lc", "uv run pytest tests/regression/projects/{project_slug} -v"]\n'
     )

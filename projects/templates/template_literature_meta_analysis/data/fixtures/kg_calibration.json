@@ -1,0 +1,26 @@
+{
+  "schema_version": "template-literature-kg-calibration-fixture-v1",
+  "cases": [
+    {
+      "case_id": "support-only",
+      "hypothesis_id": "PRIMARY_EFFICACY",
+      "expected": "positive",
+      "assertions": [{"assertion_type": "supports", "confidence": 1.0, "citation_count": 10}]
+    },
+    {
+      "case_id": "contradiction-only",
+      "hypothesis_id": "PRIMARY_EFFICACY",
+      "expected": "negative",
+      "assertions": [{"assertion_type": "contradicts", "confidence": 1.0, "citation_count": 10}]
+    },
+    {
+      "case_id": "balanced",
+      "hypothesis_id": "PRIMARY_EFFICACY",
+      "expected": "zero",
+      "assertions": [
+        {"assertion_type": "supports", "confidence": 1.0, "citation_count": 10},
+        {"assertion_type": "contradicts", "confidence": 1.0, "citation_count": 10}
+      ]
+    }
+  ]
+}

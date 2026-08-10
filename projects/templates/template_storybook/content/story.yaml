@@ -1,6 +1,7 @@
 storybook:
   title: "The Shape Between"
   subtitle: "A geometric fable of belonging, bracing, and reciprocal form"
+  trim_size: portrait
   output_pdf: "output/pdf/the-shape-between.pdf"
   page_width: 1275
   page_height: 1650

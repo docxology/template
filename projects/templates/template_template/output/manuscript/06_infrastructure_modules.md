@@ -1,25 +1,25 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `28` `discover_infrastructure_modules(repo_root)`. File totals use `708` Python sources across infra + `9,557` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `28` `discover_infrastructure_modules(repo_root)`. File totals use `718` Python sources across infra + `9,631` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
 | `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 120 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 125 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 14 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 15 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `llm` | 55 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
 | `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |
 | `methods` | 5 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 12 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
-| `project` | 41 | ✓ | ✓ | `discover_projects`, workspace management |
+| `project` | 42 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
 | `provenance` | 7 | ✓ | ✓ | — |
-| `publishing` | 81 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
 | `rendering` | 65 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
@@ -31,7 +31,7 @@ This section inventories every Layer‑1 subdirectory returned by `28` `discover
 | `skills` | 8 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
-| `validation` | 80 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 81 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 ## Alphabetical summaries
 
@@ -49,7 +49,7 @@ Template harness scoring and comparative gate helpers exercised in CI smoke path
 
 Repository-wide YAML templates and secure manifests (`.env.template`, hardened defaults referenced by Docker + CLI). `config/` carries no `__init__.py`, so it is a configuration subdirectory rather than an importable package.
 
-### `infrastructure.core` (120 files)
+### `infrastructure.core` (125 files)
 
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges, filesystem helpers, hardened exceptions. Everything else imports logging + error taxonomy from here first.
 
@@ -61,7 +61,7 @@ Checkout diagnose/fix/undo repairs for broken local workspace states.
 
 Pinned images / compose scaffolding for reproducible CI + remote builds.
 
-### `infrastructure.documentation` (14 files)
+### `infrastructure.documentation` (15 files)
 
 Figure registries plus glossary tooling feeding manuscript automation.
 
@@ -81,7 +81,7 @@ Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrat
 
 `python -m infrastructure.orchestration` exposes interactive menus, subprocess wiring for thin shell wrappers (`run.sh`, `secure_run.sh`), and stubs used in CI for menu parsing tests.
 
-### `infrastructure.project` (41 files)
+### `infrastructure.project` (42 files)
 
 Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug validation, nested WIP namespaces.
 
@@ -93,7 +93,7 @@ Readability metrics + Markdown tooling for prose-centric manuscripts / CI gates.
 
 Content-addressed provenance DAG. Records artifact lineage (which run produced which file, from which inputs) as a verifiable graph of artifact/run/source/claim nodes connected by produced/consumed/derived-from/supports/refutes edges. Includes a structured Review system with severity (blocking/major/minor/info) and verdict (refutes/supports). Features a CLI and pipeline integration hooks for automatic lineage recording after every stage.
 
-### `infrastructure.publishing` (81 files)
+### `infrastructure.publishing` (83 files)
 
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
@@ -141,7 +141,7 @@ Watermark overlays, hashing companions triggered by secure pipeline path.
 
 Invocable tool definitions registered by resource-pool governance; tools mirror `projects/templates/` with git-tracked `templates/*` exemplars.
 
-### `infrastructure.validation` (80 files)
+### `infrastructure.validation` (81 files)
 
 Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.
 

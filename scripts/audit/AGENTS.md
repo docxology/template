@@ -13,6 +13,9 @@ these run in the default `./run.sh` pipeline — invoke them directly when neede
 | `lint_docs.py` | `infrastructure.validation.docs.lint_runner` | Run mermaid + cross-link + consistency linters |
 | `check_module_doc_coverage.py` | `infrastructure.validation.docs.module_coverage` | Fail when a package's `AGENTS.md` omits public modules |
 | `audit_documentation.py` | `infrastructure.validation.docs` | Advisory RedTeam documentation audit |
+| `check_backlog.py` | `infrastructure.documentation.backlog` | Root/public future-work and stable-ID contract |
+| `check_claim_bindings.py` | `infrastructure.validation.claims` | Complete public claim-binding inventory and source-pin contract |
+| `check_public_template_contract.py` | `infrastructure.project.public_template_contract` | Roster-wide public exemplar structure and non-vacuous test-scope gate |
 | `verify_no_mocks.py` | `infrastructure.validation.output.no_mock_audit` | Enforced lexical mock-framework gate plus zero-dependency-replacement semantic inventory |
 | `audit_filepaths.py` | `infrastructure.validation.filepaths` | Repository filepath audit |
 | `check_template_drift.py` | `infrastructure.project.drift` | Exemplar doc/code drift check |

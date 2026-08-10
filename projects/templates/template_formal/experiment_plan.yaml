@@ -1,3 +1,5 @@
+schema_version: 1
+
 conditions:
   - name: happy_path_protocol
     role: reference
@@ -21,3 +23,24 @@ baselines:
   - happy_path_protocol
 ablations:
   - fault_injected_protocol
+
+# These axes are the typed configuration dimensions exercised by the real
+# colony harness. Each value is a requested trial value, not an interpolated
+# manuscript result; the linked experiment tests remain the executable proof.
+ablation_axes:
+  - name: deposit-channel
+    parameter: deposit_amount
+    values: [0.0, 1.0]
+    negative_control: "zero deposit preserves the decision loop but removes pheromone feedback"
+  - name: decay-response
+    parameter: decay
+    values: [0.1, 0.46, 0.97]
+    negative_control: "extreme decay must remain distinguishable from the calibrated baseline"
+  - name: sensing-noise
+    parameter: sensing_noise_std
+    values: [0.5, 4.0]
+    negative_control: "high sensing noise must not be reported as a mechanism improvement"
+  - name: sensor-cap
+    parameter: sensed_concentration_cap
+    values: [12.5, 15.0, 20.0]
+    negative_control: "a cap outside the binding range must differ from a binding cap"

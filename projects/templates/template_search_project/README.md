@@ -88,11 +88,11 @@ uv run python projects/templates/template_search_project/scripts/run_search_pipe
     --corpus path/to/corpus.json
 
 # ── Deep search (multi-keyword) ─────────────────────────────────────
-# Reads `deep_search:` block from config.yaml. Each keyword runs its
-# own search (max 100 by default, see the Configuration table below),
-# every paper is fully enriched (abstract + fulltext), and each paper
-# gets a multi-section LLM reading note. See manuscript/07_deep_search.md
-# for details.
+# Reads `deep_search:` block from config.yaml. It is disabled by default;
+# enable it only after selecting a provenance-backed source. Each keyword
+# then runs its own search (max 100 by default, see the Configuration table
+# below). Enrichment and LLM notes are independent opt-in switches. See
+# manuscript/07_deep_search.md for details.
 uv run python projects/templates/template_search_project/scripts/run_deep_search.py --enable
 
 # Override keyword list from the CLI:
@@ -186,7 +186,7 @@ live provider source and retain its provenance before making substantive claims.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `fetch_abstracts` | `true` | Use `AbstractFetcher` (arXiv export API + on-disk cache). |
+| `fetch_abstracts` | `false` | Network-backed abstract retrieval is opt-in; local fixture metadata remains offline. |
 | `fetch_fulltext` | `false` | Use `FulltextFetcher` (needs the optional `pypdf` dependency). |
 | `abstract_cache_dir` | `output/cache/abs` | Per-paper `<safe_id>.txt` cache. |
 | `fulltext_cache_dir` | `output/cache/pdf` | Per-paper `<safe_id>.{pdf,txt}` cache. |
@@ -216,20 +216,20 @@ live provider source and retain its provenance before making substantive claims.
 | `include_per_paper` | `true` | Include per-paper LLM notes in the final report. |
 | `include_corpus_synthesis` | `true` | Include the corpus-level synthesis section. |
 
-### `project_config.deep_search:` (multi-keyword fan-out; enabled by default)
+### `project_config.deep_search:` (multi-keyword fan-out; opt-in)
 
 | Key | Default | Meaning |
 |---|---|---|
-| `enabled` | `true` | Run end-to-end on every pipeline invocation. |
+| `enabled` | `false` | Skip the live/deep-search stage unless explicitly enabled. |
 | `keywords` | `[convex optimization, stochastic gradient descent, reproducible research]` | One `SearchQuery` per keyword. |
 | `max_results_per_keyword` | `100` | Per-keyword cap honoured by the aggregator. |
-| `sources` | `['arxiv', 'crossref']` | Backend list. `paperclip` is deliberately omitted from the default — `PaperclipBackend` construction raises `RuntimeError` (fail-fast, tested in `tests/test_deep_search.py`) when `PAPERCLIP_API_KEY` is unset; it does not degrade gracefully. Add `paperclip` only alongside a real key. |
+| `sources` | `[]` | No backend is selected by default. Add a provenance-backed source explicitly; `paperclip` also requires `PAPERCLIP_API_KEY`. |
 | `year_min` / `year_max` | `null` | Optional inclusive year filter. |
 | `crossref_mailto` | `you@example.org` | Polite-pool identifier. |
-| `fetch_abstracts` | `true` | Enrich every paper with its abstract. |
-| `fetch_fulltext` | `true` | Enrich every paper with its PDF fulltext. |
+| `fetch_abstracts` | `false` | Network-backed abstract enrichment is opt-in. |
+| `fetch_fulltext` | `false` | Network-backed PDF enrichment is opt-in. |
 | `max_fulltext_chars` | `400000` | Hard cap fed to the per-paper LLM block. |
-| `llm_per_paper` | `true` | Generate seven-section reading notes when Ollama is reachable. |
+| `llm_per_paper` | `false` | Generate seven-section reading notes only when local LLM use is explicitly enabled. |
 | `llm_model` | `gemma3:4b` | Ollama model. |
 | `llm_seed` / `llm_temperature` | `42` / `0.0` | Pinned for reproducibility. |
 | `llm_context_window` / `llm_long_max_tokens` / `llm_max_input_length` / `llm_review_timeout` | `null` | Per-stage Ollama overrides; `null` inherits from the `llm:` block. |

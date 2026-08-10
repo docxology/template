@@ -7,7 +7,15 @@ from pathlib import Path
 
 import yaml
 
-from redacted_report import AUDIT_SCHEMA, LEDGER_SCHEMA, load_release_fixture, write_release_artifacts
+from redacted_report import (
+    AUDIT_SCHEMA,
+    LEDGER_SCHEMA,
+    build_manuscript_audit_binding,
+    evaluate_pixel_regression_gate,
+    load_release_fixture,
+    validate_manuscript_audit_binding,
+    write_release_artifacts,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANUSCRIPT_DIR = PROJECT_ROOT / "manuscript"
@@ -89,3 +97,29 @@ def test_stage_two_allowlist_matches_on_disk_scripts() -> None:
     assert allowlisted == ["01_generate_release_artifacts.py", "02_build_figures.py"]
     for script in allowlisted:
         assert (PROJECT_ROOT / "scripts" / script).is_file()
+
+
+def test_manuscript_audit_binding_detects_source_and_audit_drift(tmp_path: Path) -> None:
+    audit = _regenerated_audit(tmp_path)
+    binding = build_manuscript_audit_binding(RESULTS_MD, audit)
+    validate_manuscript_audit_binding(binding, RESULTS_MD, audit)
+    changed = dict(audit)
+    changed["segment_count"] = int(changed["segment_count"]) + 1
+    try:
+        validate_manuscript_audit_binding(binding, RESULTS_MD, changed)
+    except ValueError as exc:
+        assert "binding drift" in str(exc)
+    else:
+        raise AssertionError("changed audit value must invalidate manuscript binding")
+
+
+def test_pixel_gate_reports_unavailable_without_pinned_raster_tool(tmp_path: Path) -> None:
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=lambda _name: None)
+    assert result["status"] == "unavailable"
+    assert result["reason"] == "raster_tool_unavailable"
+
+
+def test_pixel_gate_does_not_pass_without_manifest(tmp_path: Path) -> None:
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=lambda _name: "/usr/bin/pdftoppm")
+    assert result["status"] == "unavailable"
+    assert result["reason"] == "manifest_not_pinned"

@@ -55,6 +55,9 @@ class TestLoadConfig:
         assert cfg.composition_depth == "deep"
         assert "metallurgical_terms" in cfg.lexicon
         assert len(cfg.slots) > 0
+        assert cfg.reverse_assay_target == pytest.approx(0.9167)
+        assert cfg.reverse_assay_report_path == "output/reports/reverse_assay.json"
+        assert "claim_support" in cfg.purity_vector_dimensions
 
     def test_project_configured_rows_survive_parsing(self):
         project_root = Path(__file__).resolve().parent.parent
@@ -440,4 +443,20 @@ class TestConfigBranchEdgeCases:
     def test_config_row_must_be_mapping(self, tmp_path):
         root = self._make_cfg_yaml(tmp_path, {"audit_rules": ["not_a_mapping"]})
         with pytest.raises(GoldRefinementConfigError, match="audit_rules\\[1\\] must be a mapping"):
+            load_gold_refinement_config(root)
+
+    def test_reverse_assay_path_traversal_is_rejected(self, tmp_path):
+        root = self._make_cfg_yaml(
+            tmp_path,
+            {"reverse_assay": {"target_purity": 0.9, "report_path": "../escape.json"}},
+        )
+        with pytest.raises(GoldRefinementConfigError, match="relative .json path"):
+            load_gold_refinement_config(root)
+
+    def test_unknown_purity_vector_dimension_is_rejected(self, tmp_path):
+        root = self._make_cfg_yaml(
+            tmp_path,
+            {"purity_vector": {"dimensions": ["claim_support", "invented_dimension"]}},
+        )
+        with pytest.raises(GoldRefinementConfigError, match="unknown purity-vector"):
             load_gold_refinement_config(root)

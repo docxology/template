@@ -20,6 +20,7 @@ validation gates (those live in [`scripts/gates/`](../gates/)).
 | `codegraph_local.py` | `infrastructure.project.codegraph` | Local CodeGraph index helper commands (optional, not a CI dependency) |
 | `refresh_artifact_manifests.py` | `infrastructure.core.pipeline.artifacts` | Rebaseline integrity manifests after intentional targeted renders; records `current-output-snapshot`, not stage provenance, and methods audits report that distinction |
 | `refresh_rendered_provenance.py` | `infrastructure.validation.publication.rendered_provenance` | Bind an already-green output snapshot to deterministic stage/source/config/output and manuscript-consumption fingerprints |
+| `normalize_backlogs.py` | `infrastructure.documentation.backlog_normalizer` | Normalize public exemplar TODO files into future-only typed tables and archive removed historical sections |
 | `benchmark_health.py` | `infrastructure.core.health_benchmark` | Run serial/parallel clean-checkout health and write an acceptance manifest |
 | `benchmark_tests.py` | `infrastructure.core.test_performance` | Run matched serial/parallel evidence for the infrastructure or public quick test lane |
 
@@ -40,3 +41,7 @@ The wheel ships only `infrastructure` (`[tool.hatch.build.targets.wheel]
 packages`), so `scripts/` is never installed into the venv; each script puts the
 repo root (`parents[2]` from here) on `sys.path` before importing
 `infrastructure`.
+
+`release_rehearsal.py` is intentionally dry-run by default. Pass `--execute`
+only when local clones and locked dependency setup are authorized; pass
+`--receipt` to persist the resulting typed receipt.

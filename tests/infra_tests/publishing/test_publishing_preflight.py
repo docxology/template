@@ -145,3 +145,26 @@ def test_preflight_does_not_require_github_target_when_skipped(tmp_path: Path) -
     )
 
     assert result["targets"] == {}
+
+
+def test_preflight_manifest_is_typed_and_digestable(tmp_path: Path) -> None:
+    _project, pdf = _public_project(tmp_path)
+
+    result = publishing_preflight(
+        tmp_path,
+        "templates/template_code_project",
+        [pdf],
+        {"github": "not-required"},
+    )
+
+    assert result["schema_version"] == "template-publication-payload/v1"
+    assert len(result["manifest_sha256"]) == 64
+
+
+def test_preflight_refuses_symlinked_payload_even_when_target_is_inside(tmp_path: Path) -> None:
+    _project, pdf = _public_project(tmp_path)
+    alias = pdf.with_name("alias.pdf")
+    alias.symlink_to(pdf)
+
+    with pytest.raises(ValueError, match="symlink"):
+        publishing_preflight(tmp_path, "templates/template_code_project", [alias], {})

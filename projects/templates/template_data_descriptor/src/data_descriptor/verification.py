@@ -15,6 +15,7 @@ failures — verification is only asserted for bytes that are actually present.
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -23,6 +24,8 @@ STATUS_VERIFIED = "verified"
 STATUS_ABSENT = "absent"
 STATUS_CHECKSUM_MISMATCH = "checksum_mismatch"
 STATUS_ROW_MISMATCH = "row_mismatch"
+STATUS_UNSUPPORTED_MEDIA = "unsupported_media"
+STATUS_UNSAFE_PATH = "unsafe_path"
 
 
 @dataclass(frozen=True)
@@ -82,6 +85,29 @@ def count_csv_rows(path: Path) -> int:
     return len(lines) - 1
 
 
+def count_rows(path: Path, media_type: str) -> int:
+    """Count records for a supported media type without adding runtime deps.
+
+    CSV and JSON are supported by the base exemplar. Parquet remains an
+    explicit, justified publication extension: it is rejected here unless a
+    fork supplies a real reader and its own contract rather than silently
+    treating binary bytes as CSV rows.
+    """
+    if media_type == "text/csv":
+        return count_csv_rows(path)
+    if media_type == "application/json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, list):
+            return len(payload)
+        if isinstance(payload, dict):
+            for key in ("rows", "data", "records"):
+                rows = payload.get(key)
+                if isinstance(rows, list):
+                    return len(rows)
+        raise ValueError("JSON dataset must be a list or contain a rows/data/records list")
+    raise NotImplementedError(f"row counting is not enabled for media type {media_type!r}")
+
+
 def verify_descriptor_files(descriptor: dict[str, Any], base_dir: Path) -> tuple[FileVerification, ...]:
     """Verify every declared file against the bytes present under ``base_dir``.
 
@@ -117,7 +143,11 @@ def verification_summary(verifications: tuple[FileVerification, ...]) -> dict[st
     """
     verified = sum(1 for v in verifications if v.status == STATUS_VERIFIED)
     absent = sum(1 for v in verifications if v.status == STATUS_ABSENT)
-    mismatch = sum(1 for v in verifications if v.status in (STATUS_CHECKSUM_MISMATCH, STATUS_ROW_MISMATCH))
+    mismatch = sum(
+        1
+        for v in verifications
+        if v.status in (STATUS_CHECKSUM_MISMATCH, STATUS_ROW_MISMATCH, STATUS_UNSUPPORTED_MEDIA, STATUS_UNSAFE_PATH)
+    )
     return {
         "total": len(verifications),
         "verified": verified,
@@ -130,7 +160,21 @@ def _verify_one(item: dict[str, Any], base_dir: Path) -> FileVerification:
     path = str(item.get("path", ""))
     declared_checksum = str(item.get("checksum", ""))
     declared_rows = int(item.get("rows", 0) or 0)
-    resolved = base_dir / path
+    base = Path(base_dir).resolve()
+    resolved = (base / path).resolve()
+    try:
+        resolved.relative_to(base)
+    except ValueError:
+        return FileVerification(
+            path=path,
+            status=STATUS_UNSAFE_PATH,
+            declared_checksum=declared_checksum,
+            actual_checksum="",
+            declared_rows=declared_rows,
+            actual_rows=-1,
+            checksum_ok=False,
+            rows_ok=False,
+        )
     if not path or not resolved.is_file():
         return FileVerification(
             path=path,
@@ -143,7 +187,20 @@ def _verify_one(item: dict[str, Any], base_dir: Path) -> FileVerification:
             rows_ok=False,
         )
     actual_checksum = compute_file_digest(resolved)
-    actual_rows = count_csv_rows(resolved)
+    media_type = str(item.get("media_type", ""))
+    try:
+        actual_rows = count_rows(resolved, media_type)
+    except (NotImplementedError, ValueError, json.JSONDecodeError):
+        return FileVerification(
+            path=path,
+            status=STATUS_UNSUPPORTED_MEDIA,
+            declared_checksum=declared_checksum,
+            actual_checksum=actual_checksum,
+            declared_rows=declared_rows,
+            actual_rows=-1,
+            checksum_ok=actual_checksum == declared_checksum,
+            rows_ok=False,
+        )
     checksum_ok = actual_checksum == declared_checksum
     rows_ok = actual_rows == declared_rows
     if checksum_ok and rows_ok:

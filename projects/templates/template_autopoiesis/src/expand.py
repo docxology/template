@@ -11,7 +11,7 @@ import itertools
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Mapping, Optional, Sequence
 
 from .common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
 from .grammar import Grammar, GrammarError
@@ -137,8 +137,8 @@ def derive_seed(base_seed: int, index: int) -> int:
 # ---------------------------------------------------------------------------
 
 
-def enumerate_all(grammar: Grammar) -> list[dict]:
-    """Return one dict per cell in the full grammar product space."""
+def enumerate_all(grammar: Grammar, archetype_filters: Mapping[str, Sequence[str]] | None = None) -> list[dict]:
+    """Return grammar cells, optionally restricted by explicit archetype filters."""
     slot_options = [(s.name, s.options) for s in grammar.slots]
     results = []
     for combo in itertools.product(*[opts for _, opts in slot_options]):
@@ -146,7 +146,38 @@ def enumerate_all(grammar: Grammar) -> list[dict]:
         for (name, _), value in zip(slot_options, combo):
             entry[name] = value
         results.append(entry)
-    return results
+    filters = grammar.filter_mapping if archetype_filters is None else archetype_filters
+    return filter_archetypes(grammar, results, filters)
+
+
+def filter_archetypes(
+    grammar: Grammar,
+    entries: Sequence[dict],
+    filters: Mapping[str, Sequence[str]] | None = None,
+) -> list[dict]:
+    """Filter generated cells by known slot values, failing closed on typos."""
+    if filters is None:
+        return list(entries)
+    known_slots = {slot.name: set(slot.options) for slot in grammar.slots}
+    unknown = sorted(set(filters) - set(known_slots))
+    if unknown:
+        raise GrammarError(f"Unknown archetype filter slot(s): {', '.join(unknown)}")
+    normalized: dict[str, set[str]] = {}
+    for slot_name, values in filters.items():
+        if isinstance(values, (str, bytes)):
+            raise GrammarError(f"Archetype filter for {slot_name} must be a sequence, not a string")
+        allowed = {str(value) for value in values}
+        invalid = sorted(allowed - known_slots[slot_name])
+        if invalid:
+            raise GrammarError(f"Unknown archetype value(s) for {slot_name}: {', '.join(invalid)}")
+        if not allowed:
+            raise GrammarError(f"Archetype filter for {slot_name} must not be empty")
+        normalized[slot_name] = allowed
+    return [
+        entry
+        for entry in entries
+        if all(str(entry.get(slot_name, "")) in allowed for slot_name, allowed in normalized.items())
+    ]
 
 
 def sample(grammar: Grammar, count: int, base_seed: Optional[int] = None) -> list[Spec]:

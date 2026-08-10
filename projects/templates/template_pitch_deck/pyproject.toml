@@ -42,6 +42,8 @@ dev = [
     # Test fixtures build a real matplotlib figure to exercise the
     # `Slide.figure_path` embedding path (no-mocks policy).
     "matplotlib>=3.7.0",
+    # Property tests exercise all-length transactional audit combinations.
+    "hypothesis>=6.100.0",
 ]
 
 [tool.setuptools.packages.find]

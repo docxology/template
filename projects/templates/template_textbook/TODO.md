@@ -1,56 +1,18 @@
 # template_textbook TODO
 
-Forward-only backlog for the modular, fillable book-length manuscript scaffold
-(config-driven parts, chapters, and labs).
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Manuscript pre-render gate:
-  `uv run python -m infrastructure.validation.cli prerender projects/templates/template_textbook/manuscript --repo-root .`
-  → **clean** (no render-blocking pitfalls, no undefined citations).
-- Project tests and coverage:
-  `uv run pytest projects/templates/template_textbook/tests/ --cov=projects/templates/template_textbook/src --cov-fail-under=90`
-  → **192 passed, coverage 96.19%** (last measured run; ≥90% floor met).
-- Canonical pipeline stages (2026-08-02 pass):
-  - `stage_02_analysis.py` → 3/3 scripts, exit 0 (figures, diagrams, worked-model summary).
-  - `stage_03_render.py` → `template_textbook_combined.pdf`, 98 pages,
-    0 LaTeX errors (`^! ` in logs), **0 unresolved `??`** in extracted text.
-  - `stage_04_validate.py` → clean; `stage_05_copy.py` → outputs copied.
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_textbook --strict`
-  → **no drift detected**.
-- Structural integrity is driven by `manuscript/config.yaml`, chapter stubs,
-  figure generation, and the unified audit gate
-  (`textbook.audit.run_manuscript_audit`): default mode validates the fillable
-  scaffold, while `--require-complete` fails on nonzero per-section stub
-  counts and reports the total.
-- Live test counts and coverage snapshots belong in
-  `../../../docs/_generated/COUNTS.md`, not hardcoded here.
-
-## Pass 2026-08-02 — accuracy and docs-completeness fixes
-
-- `manuscript/config.yaml.example` re-synced to the live `config.yaml` shape:
-  4 units × 3 chapters, appendices `reference`/`labs`/`questions` blocks,
-  `publication.published_artifacts`, `front_matter` page-two quote and
-  acknowledgements, placeholder-safe values; `validate_config(example)` is
-  clean and the key shape matches the live config exactly.
-- `tests/AGENTS.md` and `docs/testing_guide.md` now list all 11 test modules on
-  disk (added `test_analysis.py`, `test_audit.py`, `test_gallery.py`).
-- `scripts/AGENTS.md` now names `_bootstrap.py` and `__init__.py` as the
-  remaining module files, so the listing matches the on-disk inventory.
-- Cross-reference fix: the saturating-response discussion lives in
-  `appendix_math_review`, but `part_III/case_studies.md` and
-  `labs/part_III/lab_case_studies.md` pointed at `part_I_first_principles`;
-  both now cite `[@sec:appendix_math_review]`.
-- Render-quality fix: the `{#tbl:gallery_alignment}` caption was separated from
-  its table by a paragraph, so pandoc-crossref could not bind it and the
-  rendered PDF showed `??` in two places; the caption now sits directly above
-  the table and the PDF extracts with **0 `??`**.
-- Added `.agents/README.md` and `.agents/skills/README.md` (skill catalog
-  files required by the shared `.agents/` contract).
-- Verified worked numbers against `src/textbook/models.py` and
-  `assets/data/sample_dataset.csv`: logistic growth `[5.00, 20.68, 74.18,
-  99.37]`; linear fit slope 1.375, intercept 2.175, R² 0.999; population SD
-  1.13. No mismatches found.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -90,16 +52,28 @@ Forward-only backlog for the modular, fillable book-length manuscript scaffold
   `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
   serves this role — it writes a current-output snapshot manifest labeled
   `current-output-snapshot` without requiring a full `PipelineExecutor` run.
-- **Shipped:** the optional external Mermaid `mmdc` boundary uses a bounded
-  timeout, isolated process group, descendant cleanup, and a deterministic
-  `.mmd` fallback; keep the policy synchronized with infrastructure Mermaid
-  renderers.
+- Keep the optional external Mermaid `mmdc` boundary bounded by timeout,
+  isolated process group, descendant cleanup, and deterministic `.mmd` fallback;
+  synchronize its policy with infrastructure Mermaid renderers.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep scaffold, figure, diagram, and manuscript-integrity tests green.
-2. Add structured scaffold audit output and stale-file detection.
-3. Add copy-and-customize examples for short course notes and full textbook
-   shapes.
-4. Promote a filled textbook fork only after
-   `audit_textbook_quality.py --require-complete` reports zero stubs.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `TEXTBOOK-CONFIG-MIGRATION-1` | Minor | Live/example config shape | compatibility key-set receipt | textbook config tests | orphaned or dropped config key must fail |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `TEXTBOOK-STALE-DIAGRAM-1` | Medium | Diagram inventory | stale/orphan diagram report | audit and render gates | unreferenced diagram must fail |
+| `TEXTBOOK-FACT-REGISTRY-1` | Medium | Worked-example source data | numeric-fact registry | manuscript evidence gate | changed numeric fact without registry update must fail |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

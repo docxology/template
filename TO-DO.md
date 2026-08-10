@@ -1,142 +1,445 @@
-# Repo TO-DO - upcoming cross-cutting work
+# Repo TO-DO — future cross-cutting work
 
 > **Design ethos:** modular, intelligent, functional, logged, tested, and
 > documented. Real methods only; never mocks or fakes. Every release ships with
-> green tests and accurate docs.
+> green tests, source-bound evidence, and accurate documentation.
 
-This file contains only future work for the template repository as a whole.
-Completed work belongs in [`CHANGELOG.md`](CHANGELOG.md); generated facts belong
-to their generators; project-specific future work remains in each public
-exemplar's local `TODO.md`. The root backlog is intentionally named
-`TO-DO.md`.
+This file is the root repository backlog. It contains **future work only**:
+cross-cutting infrastructure, CI, documentation, release, security, and
+reproducibility improvements. Completed work belongs in
+[`CHANGELOG.md`](CHANGELOG.md) or the dated review record; generated facts
+belong to their generators; project-specific work belongs in each public
+exemplar's local `TODO.md`.
 
-## Current baseline
+IDs are stable. A row may be closed only after the implementation diff, the
+relevant generated artifacts, the named acceptance commands, and the negative
+controls all exist in the same verification pass. Do not turn this file into a
+second changelog.
 
-- Public scope is generated from `infrastructure.project.public_scope` and
-  currently contains 24 canonical exemplars. Consult
-  [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
-  rather than copying the roster here.
-- The deterministic advanced-literature release lane has been repaired and
-  regenerated from source. Its fixture phase replay is now part of the normal
-  project analysis sequence; live retrieval remains an explicit opt-in path.
-- Generated checks for counts, coverage provenance, exemplar roster, and
-  publication records were refreshed and revalidated on 2026-08-09.
-- The release-profile public matrix was rerun across all 24 canonical
-  exemplars in the generated public scope (see
-  [`active_projects.md`](docs/_generated/active_projects.md)) on 2026-08-09.
-  All 24 lanes passed their declared project floors and the combined matrix
-  coverage was 95.39%; the validated receipt was produced with
-  `stage_01_test.py --project-only --all-projects --public-projects --receipt`.
-- The receipt module is shipped (`infrastructure/core/public_matrix_receipt.py`);
-  the full release-profile matrix and output-isolation receipt are now current.
-- Configured mypy passes with zero errors across 1,496 source files; the
-  public-scope ratchet remains a separate gate.
-- Root and all 24 canonical public-exemplar all-extras exports pass the
-  blocking pip-audit audit; all 25 lockfiles pass `uv lock --check`.
-- Roadmap, status, contribution-map, regression-testing, and threat-model
-  surfaces were reconciled against the current generated facts and active IDs;
-  historical changelog entries remain unchanged.
-- The root release boundary is explicit: package/tag `3.6.0`/`v3.6.0` is the
-  last root release, the current checkout remains `[Unreleased]`, and the
-  separately published standalone `v1.0.1` release is not treated as root
-  changelog parity. See [`docs/maintenance/release-boundary.md`](docs/maintenance/release-boundary.md).
-- The external GitHub branch-protection requirement for the `Regression Tier`
-  check remains an administrator-owned acceptance item; repository files alone
-  cannot prove that setting. The branch-protection checklist is now documented
-  at [`docs/security/branch-protection-checklist.md`](docs/security/branch-protection-checklist.md).
-- The health sweep now has a bounded four-worker implementation with a serial
-  diagnostic mode; the final-tree benchmark reduced wall time from 104.45s
-  serial to 70.02s parallel for the same 22 gates. A clean-checkout benchmark
-  remains the final acceptance evidence.
-- Publication, LLM-boundary, hostile-render, and provenance-metadata controls
-  are now shipped and covered by offline negative tests; ownership and private-
-  sidecar promotion governance follow-ups remain externally dependent.
-- Python 3.10 remains the declared floor through the 3.6.x minor line; Python
-  3.13 now has an infrastructure readiness lane. The breaking-release rule is
-  recorded in [`docs/maintenance/python-runtime-support.md`](docs/maintenance/python-runtime-support.md).
-- All four root backlog items (`SECURITY-OWNERSHIP-1`,
-  `SECURITY-PRIVATE-PROMOTION-1`, `COVERAGE-BASELINE-1`, `CI-ERGONOMICS-1`)
-  have their repository-side deliverables shipped as of 2026-07-24. Only
-  external administrator/operator action remains for the two security items;
-  the coverage and CI-ergonomics items are fully complete.
+## Live baseline and constraints
 
-## Completed cross-cutting work (2026-07-31)
+Re-derive all counts before planning or closing work. The authoritative public
+roster is [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md);
+measured coverage and discovery facts are in
+[`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md).
 
-The following items from the prior Mahakala adversarial review and all-exemplar
-audit have been shipped. Each item's acceptance evidence exists on disk and has
-been verified.
+- The public release matrix, root health gates, generated-document checks, and
+  per-exemplar coverage gates were last verified on 2026-08-09. Reproduce the
+  matrix with:
 
-| ID | Problem and scope | Acceptance evidence |
-| --- | --- | --- |
-| `PUBLIC-MATRIX-1` | Public matrix receipt module with fail-closed output-drift detection; post-coverage output isolation; CLI arg; real-subprocess negative controls. | **SHIPPED 2026-08-09** — release-profile receipt validates 24/24 lanes, all declared floors, zero exit failures, and output isolation; combined coverage is 95.39%. |
-| `RENDERED-PROVENANCE-1` | Rendered provenance: stage/source/config/output fingerprints plus strict rendered publication validation. Atomic confined writes via `secure_write.py`. Snapshots walk source/config/output with symlink confinement and Git-cache filtering. Wired into Stage 04 validation, publication audit (`check_rendered_provenance`), and CI preflight. | 32 rendered provenance tests + 47 artifact-finalization/web-renderer tests pass. Rendered strict audit returns zero review-required findings on canonical exemplars. |
-| `CONFIG-FAIL-CLOSED-1` | Placeholder-token and unconsumed-markdown checkers in publication audit, wired into SOURCE/RENDERED_CHECKERS. | `{{TOKEN}}`, `${token}`, stale chapters, unconsumed Markdown fail release command. |
-| `SECRET-SCAN-1` | Index-blob scanner: reads exact A/C/M/R blobs from Git index; verified-gitlink handling; fail-closed unreadable-blob behavior; pre-commit/manual hook; tracked pre-push defense; rotation handoff. | Real-Git partial-stage controls pass in both directions; findings contain only path, line, and kind. |
-| `PUBLIC-CAPABILITY-PARITY-1` | Versioned 24-project capability manifest; 48 exact CI lanes; normalized unique package identity; full-minor Python checks; confined hydration smoke; declared-feature probes. | `test_public_capabilities.py` — 34 tests pass in 98s. |
-| `MODULARITY-1` | Module line-count compliance: `checks_publication.py` split 932→748 via `checks_publication_validators.py`. | `module_line_count_check.py` reports zero advisory warnings; API and behavior tests green. |
-| `SECURE-RUN-1` | Subprocess executor boundary with secret stripping, root confinement, and process-group cleanup for project hooks and analysis scripts. | `infrastructure/core/execution_boundary.py`: `run_bounded_subprocess` (fresh process group, `killpg` on timeout so no orphaned descendants), `build_bounded_env` (credential stripping), `validate_hook_root` (root confinement), `classify_lifecycle_link`. Wired into `setup_hook.run_project_setup_hook` and `pipeline.hooks.run_stage_hooks` and `analysis_pipeline.run_analysis_script`. 14 boundary + 4 setup_hook + existing pipeline/analysis tests pass; hostile hook cannot read credentials or outlive a timed-out run. |
-| `PROJECT-EXECUTION-BOUNDARY-1` | Centralized lifecycle-link classification and project-hook execution with explicit traversal, symlink, secret, egress, and hook-root policy. | `execution_boundary.classify_lifecycle_link` + `validate_hook_root` negative controls (traversal, symlink escape, hook-root) pass; `secret_env` allow-list honored; egress_check refuses launch in negative control. |
+  ```bash
+  uv run python scripts/pipeline/stage_01_test.py \
+    --project-only --all-projects --public-projects \
+    --profile release --receipt /tmp/public-matrix-receipt.json
+  uv run python -m infrastructure.core.health --json --quiet
+  ```
 
-## Open cross-cutting work (2026-07-31)
+- The root package boundary is `3.6.0`/`v3.6.0`; the checkout remains under
+  `[Unreleased]`. Release work must preserve the distinction between root
+  package releases and separately published exemplar repositories.
+- `tests/regression/` contains a real source-derived claim-binding lane, but its
+  manifest does not yet cover every public exemplar and its documentation still
+  describes the original first slice. This is an open reproducibility gap, not
+  a reason to lower coverage or accept shape-only tests.
+- Executable Bundle and Archival Publication are opt-in stages. Their current
+  direct scripts and dry-run paths are useful foundations, but container
+  cross-testing, data/licence policy, and a stable CI decision have not yet been
+  closed.
+- `STATUS.md` has a freshness gate, but a dated row is not the same thing as a
+  reproducible verification receipt. Rows that claim a subsystem is healthy
+  still need command, scope, owner, and artifact evidence.
+- The documentation RedTeam audit currently reports advisory
+  `gate-negative-control` findings. Treat the finding count as a re-derived
+  audit input, not a hard-coded backlog fact; distinguish normative gate claims
+  from historical, generated, and inventory prose before editing.
+- Branch protection, sensitive-area review, and private-sidecar promotion are
+  external authority boundaries. Repository code can validate their receipts
+  and fail closed, but it cannot pretend that GitHub settings or an owner
+  attestation exist.
 
-The following items remain open. Shipped fixes are recorded in the completed
-section above and in [`CHANGELOG.md`](CHANGELOG.md); project-local improvements
-remain in each canonical exemplar's `TODO.md`.
+## Priority and sizing rules
 
-| ID | Priority | Problem and impact | Smallest next step | Acceptance evidence | Status / Scope |
-| --- | --- | --- | --- | --- | --- |
-| `RELEASE-METADATA-1` | Medium | DOI/GitHub metadata freshness, installer pinning, live branch protection not fully provable by repo-only gates. | Keep the credential-free external metadata receipt current and obtain administrator confirmation of branch protection. | Release preflight records external checks or operator blocker; no mutable curl|sh remains. | **PARTIAL 2026-08-08** — publication records and `.github/README.md` were refreshed from live GitHub/Zenodo checks; installer pinning is shipped; branch-protection confirmation remains administrator-owned. |
-| `REPRODUCIBLE-PDF-1` | Medium | LaTeX PDF builds embed runner timestamps (`\today`, `/CreationDate`, intermediate `.log`) which vary run-to-run on the same commit. The deterministic pipeline claims byte-for-byte reproducibility but lacked a real compiled-output proof. | Export `SOURCE_DATE_EPOCH` in the composite CI setup action; add a rendered-output snapshot-diff test that fails on byte drift. | Two `--core-only` runs on the same commit produce byte-identical PDFs. | **SHIPPED 2026-08-08**: `SOURCE_DATE_EPOCH` is propagated from the git commit timestamp; real XeLaTeX is compiled twice in `test_compile_latex_is_byte_reproducible_with_pinned_epoch`; deterministic PDF canonicalization stabilizes metadata, identifiers, and font subset names before the byte comparison. |
-| `RELEASE-TEST-GATE-1` | Medium | The release workflow ran only static contracts (root contract, capability manifest, export smoke, rendered audit) — a release tag could be cut while the commit's test matrix was red. | Add a bounded executable test gate to the release workflow; wire the public-matrix receipt into CI. | Release runs pipeline-smoke infra lane + no-mocks gate on the exact tagged SHA before publishing; receipt produced by scheduled CI job. | SHIPPED: release.yml gained "Verify core test contract on tagged SHA" step; CI lint gained strict template-drift gate; regression tier now asserts non-empty collection (55 tests); new scheduled `public-matrix-receipt` CI job uploads the receipt artifact. |
-| `NO-MOCK-CLAIM-1` | Medium | The "No mocks or fakes" README claim is lexically true but semantically weak against hand-rolled stubs. | Add a hand-rolled-fake heuristic to the advisory inventory; reword the README claim. | `verify_no_mocks.py --inventory` reports hand-rolled fakes; README uses scoped wording. | SHIPPED: `scan_hand_rolled_fakes()` heuristic (Fake*/Stub*/Dummy* patterns) wired into `verify_no_mocks.py --inventory`; README scoped. |
-| `TRACKED-OUTPUT-BUDGET-1` | Minor | The generated-artifacts guard has a 50MB blind spot per file and relies on a path allowlist that may not cover new exemplars. | Add per-file advisory ceiling; make budget check fail-closed on any tracked binary approaching the hard cap. | `check_tracked_generated_artifacts.py` flags single files near the cap. | SHIPPED: `PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES = 20MB` advisory ceiling wired into `public_template_output_budget_findings()`; test added. |
-| `NO-MOCK-WORDING-1` | Minor | The README "No mocks" claim uses `pytest-httpserver` as an example of a permitted mock, which contradicts the headline. | Reword `README.md:525` to `README.md:535` to say "No unit-level mock frameworks; HTTP boundaries use an in-process test server." | README phrasing is scoped and the contradiction is resolved. | Minor documentation accuracy. |
+- **Minor:** one bounded surface; no new persistent schema or release gate;
+  acceptance is normally a focused test, generator check, or documentation
+  contract.
+- **Medium:** multiple modules or one new machine-checkable contract;
+  acceptance needs offline negative controls, generated-artifact review, and a
+  focused CI/local reproduction.
+- **Major:** a repository-wide claim, release boundary, public matrix, or
+  long-horizon artifact contract; requires a design note, staged rollout,
+  migration/rollback plan, and clean-checkout or hosted evidence.
 
-## Scoped improvement backlog (2026-08-03)
+## Major improvements
 
-Deep review of the template repo across source/architecture, tests/coverage,
-docs/generated facts, and CI/gates/security (supplemented by a 4-agent
-parallel review pass). Findings are tiered **Major / Medium / Minor**; each
-carries a stable ID, exact path, problem, smallest next step, and acceptance
-evidence. Verify measured counts from source before starting any item (the
-`module_line_count_check --include-tests` numbers below are snapshots).
+### `CLAIM-BINDING-MAJ-1` — complete quantitative claim binding
 
-### Major (high-impact, larger effort)
+**Problem and impact.** The template claims reproducible research, but the
+claim-binding lane is still a partial inventory. A figure/table can remain
+shape-valid while a numeric manuscript statement drifts from the function and
+inputs that produced it. The current sources of truth are split across
+`tests/regression/manifest.json`, `tests/regression/pinned_values/`, project
+manuscripts, figure registries, and evidence registries.
 
-| ID | Problem and impact | Smallest next step | Acceptance evidence |
-| --- | --- | --- | --- |
-| `MODULARITY-MAJ-1` | Two public exemplar `src/` modules exceeded the 800-line advisory ceiling: advanced literature search and pools figure orchestration. | Split each into focused submodules with façade re-exports and composition coverage. | **SHIPPED 2026-08-08** — `search.py` is 736 lines with `models.py`/`llm_filter.py`; `figures.py` is 717 lines with `figure_support.py`; advanced literature (77) and pools (261) project suites passed. |
-| `REPRODUCIBLE-PDF-MAJ-1` | The deterministic-pipeline claim lacked machine-proven byte identity for real LaTeX output. | Add an automated two-run rendered-output comparison on a fixed `SOURCE_DATE_EPOCH`. | **SHIPPED 2026-08-08** — `test_compile_latex_is_byte_reproducible_with_pinned_epoch` runs real XeLaTeX twice; PDF canonicalization stabilizes metadata, identifiers, and font subset names before the byte comparison. |
-| `TEST-SPLIT-MAJ-1` | The largest test modules were monolithic, slowing collection and obscuring failure isolation. | Split the top five modules by concern while preserving real fixtures and public test names. | **SHIPPED 2026-08-08** — formal colony experiments, template drift, madlib composition, literature variables, and pipeline-control tests are now concern-based modules; oversized-test warnings fell from 18 to 13 and the split suites passed independently. |
-| `PARALLEL-WORKERS-MAJ-1` | Worker-count resolution was spread across multi-project, matrix, and per-project pytest execution. | Centralize bounded worker resolution with one explicit-cap/env/CPU policy and negative controls. | **SHIPPED 2026-08-08** — `infrastructure/core/worker_policy.py` is the sole owner of the worker environment names and clamping rules; matrix, parallel, and pytest orchestration delegate to it. |
+**Scope.**
 
-### Medium (focused, moderate effort)
+1. Build a source-owned inventory of quantitative claims from the manuscript,
+   figure/table registries, and evidence registries. Classify counts,
+   proportions, coefficients, rates, p-values, effect sizes, and ratios
+   separately from qualitative or interpretive prose.
+2. Extend the regression manifest with an explicit state for every public
+   exemplar: `bound`, `not_applicable` with a reviewer reason, or
+   `external_data` with a source/license/hash boundary. Missing entries must be
+   visible rather than silently omitted.
+3. Add source-derived pins and verifiers in waves: finish the guaranteed
+   `template_code_project` figure/table surface first, then add deterministic
+   public exemplars without inventing values from rendered output.
+4. Require every pin to carry manuscript location, producing function or
+   command, input/config identity, tolerance rationale, pin date, and source
+   revision. Add mutation controls that alter the producing calculation and
+   prove the test fails.
+5. Update the regression README, maintenance guide, generated manifest, and CI
+   collection contract together. Keep interpretive/causal claims explicitly
+   outside the numeric pinning contract.
 
-| ID | Problem and impact | Smallest next step | Acceptance evidence |
-| --- | --- | --- | --- |
-| `SECRET-DEDUP-MED-1` | Credential-env matching and stripping were duplicated across runtime and subprocess boundaries. | Extract one shared secret-name predicate/env-stripping helper. | **SHIPPED 2026-08-08** — `infrastructure/core/secrets.py` owns the predicate and both boundaries delegate; existing secret-strip coverage remains green. |
-| `BOUNDARY-TEST-MED-1` | The `capture_output=False` timeout path lacked a direct descendant-cleanup negative control. | Spawn a real sleeping child, time it out, and assert no marker survives. | **SHIPPED 2026-08-08** — the POSIX negative control now exercises the no-capture path and asserts timeout, process-group termination, and no surviving marker. |
-| `GATE-ADVISORY-MED-1` | Source-size warnings needed a bounded ratchet without turning test-size guidance into a brittle blocker. | Fail on source growth beyond expiring baselines while retaining advisory test warnings. | **SHIPPED 2026-08-08** — downward-only ratchets are enforced for the previously oversized source modules and documented in `scripts/gates/AGENTS.md`; source scan is clean. |
-| `STATUS-REFRESH-MED-1` | The status ledger needed a machine-enforced freshness boundary so stale rows cannot silently age out. | Add a fail-closed date/row freshness gate and retain end-to-end subsystem refresh as maintainer-owned evidence. | **PARTIAL 2026-08-08** — `scripts/gates/status_freshness.py` is wired into unified health and passes the current ledger; row-specific end-to-end refresh remains explicit operator work where the ledger says so. |
-| `DOC-COVER-MED-1` | New security modules (`execution_boundary.py`) and earlier hardening modules are documented in `AGENTS.md` but generated project/publication inventories can drift from source. | Regenerate all generated inventories from source and keep their idempotence checks in the release validation pass. | **SHIPPED 2026-08-08**: active-project, exemplar-roster, publication-record, API-reference, and counts generators/checks are current; module-doc coverage and strict template-drift gates pass. |
+**Out of scope.** Live literature retrieval, proving that an interpretation is
+scientifically true, widening tolerances to suppress failures, and updating a
+pin without a documented investigation of the changed result.
 
-### Minor (small, low-risk)
+**Dependencies.** Current public-scope discovery, stable figure/evidence
+registries, and the clean-checkout rehearsal below.
 
-| ID | Problem and impact | Smallest next step | Acceptance evidence |
-| --- | --- | --- | --- |
-| `DOC-NEG-CONTROL-MIN-1` | The doc audit (`scripts/audit/audit_documentation.py`) emits advisory `gate-negative-control` findings across docs that claim a gate enforces behavior without naming a negative-control fixture. Advisory-only today, but several reflect genuinely weak claims. | Triage the remaining 149 active-prose findings by distinguishing normative gate contracts from genuine prose; add named negative controls to the normative claims and retain residual noise as advisory. | **PARTIAL 2026-08-08** — historical policy documents, inventory tables, and generated-fact rows are excluded from the active audit; the live audit reports 149 gate advisories and zero volatile-fact or undocumented-symbol findings. |
-| `INSTALLER-PIN-MIN-1` | `RELEASE-METADATA-1` "pin mutable installers" gap: live docs and automatic bootstrap needed an auditable uv installer pin. | Pin uv `0.12.0`, verify the official installer SHA-256 before execution in both shell bootstraps, and route setup guidance through the checksum-verified dependency guide. | **SHIPPED 2026-08-08** — no live repo-shipped setup guidance uses an unverifiable uv `curl|sh`; the Dockerfile generator retains an explicit `uv_version="latest"` opt-out for callers that knowingly accept a floating build. |
-| `BAK-ARTIFACT-MIN-1` | Cleanup hygiene required an explicit recheck for backup/stray artifacts and generated-output guards. | Re-run artifact/secret guards and scan tracked source for `*.bak`, `*.orig`, and `*~`. | **SHIPPED 2026-08-08** — no matching stray artifacts remain; guard reruns are included in the release validation pass. |
+**Acceptance evidence.**
 
-## Backlog conventions
+- A generator/check reports every current public project and every classified
+  quantitative claim as bound or explicitly reviewed as not applicable/external.
+- A deliberately mutated producer, missing pin, mismatched manuscript location,
+  and stale source revision each fail with actionable diagnostics.
+- `uv run pytest tests/regression/ -q --no-cov --timeout=120` passes with a
+  non-empty collection, and the release receipt records the exact roster and
+  revision.
+- No project output tree is modified by the regression lane; no unit-level mock
+  framework or semantic stand-in is introduced.
 
-- IDs are stable and are never silently reused. Each active item must retain a
-  problem, impact, smallest next step, acceptance command/evidence, and scope
-  boundary.
-- Retire an item only after its command, diff, generated artifact, and relevant
-  regression evidence exist on disk in the same verification pass.
-- Re-baseline measured facts instead of copying old numbers into this file.
-- Keep private or rotating project names out of public docs; link to the
-  generated active-project roster.
-- Preserve the no-mocks policy, project coverage floors, confidentiality
-  guards, and generated-artifact guard when closing work.
+### `EXECUTABLE-BUNDLE-MAJ-1` — make the executable artifact a verifiable release lane
+
+**Problem and impact.** `scripts/runner/bundle_executable.py` and
+`archive_publication.py` provide opt-in foundations, but the bundle is not yet a
+portable, container-verified reproduction contract. Without a tested manifest,
+data policy, and stable runtime decision, the long-horizon artifact remains a
+documentation promise.
+
+**Scope.**
+
+1. Freeze the bundle schema and decide which fields are byte-deterministic
+   versus content-equivalent (timestamps, compiler metadata, font subsets, and
+   provider receipts must be classified rather than silently normalized).
+2. Make the bundle manifest enumerate source/config/data/lockfile hashes,
+   licence or external-data obligations, claim verifiers, entry points, and
+   the exact producing revision. Refuse path traversal, symlink escape,
+   local-only project roots, missing required locks, and unreviewed external
+   data.
+3. Add a small convenience entry point (`--bundle-only` or an equivalent
+   documented command) without changing the default core pipeline.
+4. Build and run a representative public bundle in an isolated container with
+   network disabled: execute tests, re-derive claim pins, render the primary
+   artifact, and validate the manifest. Run a second build to check the chosen
+   determinism contract.
+5. Add a scheduled/manual CI lane with an explicit tool-unavailable result;
+   never convert a missing container runtime into a silent green release gate.
+   Keep live deposits credential-gated and dry-run by default.
+
+**Out of scope.** GPU support, cross-project bundles, re-execution of optional
+LLM stages, and real provider deposits in default CI.
+
+**Dependencies.** `CLAIM-BINDING-MAJ-1`, the existing reproducible-PDF
+contract, pinned project lockfiles, and an agreed external-data/licence policy.
+
+**Acceptance evidence.**
+
+- A clean temporary checkout builds the bundle without private symlinks or
+  network access; the container runs the declared tests and claim verifiers.
+- Missing locks, changed source, unsafe paths, stale data, and an invalid claim
+  pin each fail before a provider or container command is launched.
+- Two runs satisfy the documented byte/content-equivalence rule, and the
+  manifest validator reports the same source revision, inputs, outputs, and
+  claim outcomes.
+- `archive_publication.py` produces a complete dry-run receipt from the bundle;
+  non-dry-run paths still require an explicit owner and credentials.
+
+### `CLEAN-CHECKOUT-MAJ-1` — add a release rehearsal from zero local state
+
+**Problem and impact.** Final-tree tests and hosted CI can pass while a local
+private symlink, warm cache, installed optional tool, generated output, or
+untracked file supplies hidden state. The repository still needs a repeatable
+proof that a fresh clone can reproduce its own release evidence.
+
+**Scope.** Add a read-only or disposable-worktree rehearsal that records the
+exact commit, interpreter/tool versions, environment profile, public roster,
+and generated-artifact diff. The rehearsal must:
+
+- clone or materialize the exact target revision into a fresh directory with no
+  private lifecycle links;
+- run locked dependency setup, root health, generated-doc checks, the public
+  release-profile matrix, and a representative core render;
+- run the claim-binding lane and, when enabled, the executable-bundle smoke;
+- verify the worktree and public output roots are clean after each lane;
+- emit a bounded JSON receipt with command, exit status, duration, skip reason,
+  and artifact hashes; distinguish unavailable optional tools from failures.
+
+Run the rehearsal on the primary local platform and the hosted Linux platform,
+then repeat the deterministic portions twice to expose cache/time dependence.
+Do not include credentials, real publication, or private project paths.
+
+**Acceptance evidence.** A fresh-clone receipt is complete for the generated
+public roster, both platform lanes agree on required outcomes, repeated runs
+agree on deterministic fields, and a deliberate missing-project/private-symlink
+fixture fails closed. The receipt is linked from release validation without
+hard-coding its counts into prose.
+
+## Medium improvements
+
+### `RELEASE-METADATA-1` — close the metadata and release-boundary receipt
+
+**Current state.** Repository-side metadata and installer checks are present,
+but live DOI/GitHub metadata freshness and branch-protection confirmation remain
+external. Keep this ID because release/security documentation already references
+it.
+
+**Scope.**
+
+- Define one credential-free metadata receipt containing repository identity,
+  root package version/tag, DOI/repository links, release commit, installer pin,
+  check date, and source URLs; redact tokens and credentialed URLs.
+- Make the offline release contract validate receipt schema, version/tag
+  consistency, and expiry without requiring network access. Its named
+  negative-control fixtures are a malformed receipt, a tag/version mismatch,
+  an expired receipt, and a credential-bearing URL. A live refresh may update a
+  receipt only through an explicit maintainer command.
+- Record the administrator-owned branch-protection result separately rather than
+  marking it green from repository files. Keep the required-check list sourced
+  from `.github/workflows/ci.yml` and the branch-protection checklist.
+
+**Acceptance evidence.** A stale, mismatched, malformed, or credential-bearing
+receipt fails offline; a network outage produces an explicit external-check
+blocker; a refreshed receipt names the exact release commit and check date; no
+mutable installer command remains in maintained setup guidance.
+
+### `STATUS-REFRESH-MED-1` — turn subsystem freshness into evidence receipts
+
+**Current state.** `scripts/gates/status_freshness.py` checks dates and future
+values, but it cannot tell whether a green row's command actually ran or whether
+its artifact is the one being described.
+
+**Scope.** Extend the status contract, keeping `STATUS.md` human-readable, with
+stable row IDs and machine-readable fields for verification command, working
+scope, owner, as-of date, receipt/artifact path, and health decision. Add a
+validator/generator that resolves commands and paths, rejects future or stale
+dates, rejects a healthy row without evidence, and distinguishes `manual`,
+`external`, `optional-tool`, and `automated` verification. Preserve historical
+dates; do not rewrite them to make the ledger green.
+
+**Acceptance evidence.** A fixture with a missing command, missing receipt,
+future date, stale date, wrong project path, or mismatched health decision fails
+with a stable diagnostic. A valid current ledger passes the health gate and
+renders a compact evidence index. The publishing row remains explicitly
+credential-blocked until a real deposit is authorized and performed.
+
+### `PUBLIC-PUBLISH-MANIFEST-MED-1` — make non-dry-run payloads explicit
+
+**Problem and impact.** The publication threat model still calls for a stronger
+path manifest at the boundary where local artifacts and credentials become
+external deposits. A dry-run receipt must describe the exact payload that a
+future `--commit` invocation would send.
+
+**Scope.** Centralize publication payload enumeration for
+`scripts/publish/`, `scripts/runner/archive_publication.py`, and the provider
+adapters. The manifest must enforce an allowed output root, symlink confinement,
+public-project identity, duplicate/path collision checks, source/config/output
+hashes, metadata redaction, provider target, and dry-run/commit mode. Pass an
+immutable manifest object into providers rather than re-walking the checkout.
+
+**Acceptance evidence.** Offline tests prove that a local-only project,
+symlinked private file, stale generated artifact, duplicate path, token-shaped
+metadata, changed payload after preflight, and unexpected provider target all
+fail before network I/O. A valid dry-run receipt's path/hash set is identical to
+the set handed to a provider in an instrumented local adapter. Existing
+credential and publication tests remain green without live secrets.
+
+### `TEST-DISCOVERY-PERF-MED-1` — shorten repository-wide feedback safely
+
+**Problem and impact.** The repository now has explicit test profiles and
+isolated project processes, but the pre-push documentation contract still
+re-collects every canonical exemplar serially and is a large fraction of local
+feedback time.
+
+**Scope.** Instrument the docs-contract phases
+(`check_template_drift`, API/reference generation checks, roster/counts/
+publication checks, and the one project-surface test) and record phase timing.
+Parallelize only independent read-only phases or isolated project collection;
+reuse the central worker policy and unique temporary roots. Any cache must be
+keyed by commit/tree hash, interpreter, lockfile, profile, and tool version and
+must be invalidated for a dirty staged tree. Preserve one deterministic serial
+diagnostic mode and the current fail-closed semantics.
+
+**Acceptance evidence.** A same-machine baseline and post-change benchmark are
+checked into a machine-readable report, with no correctness gate removed. A
+deliberately changed exemplar, generated doc, or project marker invalidates the
+fast path and is detected by the serial oracle. Project `conftest.py` package
+collisions remain impossible, and failure output identifies the phase/project
+that failed.
+
+### `COVERAGE-SNAPSHOT-MED-1` — make coverage-gap guidance source-bound
+
+**Problem and impact.** `docs/development/coverage-gaps.md` is a useful manual
+classification of shims, optional-tool paths, and first-party logic, but its
+verification date and module rows can lag behind the current root and exemplar
+gates. Stale gap prose encourages line chasing or hides a real branch gap.
+
+**Scope.** Generate or validate the coverage-gap inventory from the documented
+coverage oracle and current source tree. Classify entry-point shims separately
+from first-party logic, record the command/profile/interpreter/date, link each
+target row to a test or an explicit rationale, and retain a term-missing excerpt
+for actionable branches. Add a freshness check without turning every low
+coverage CLI shim into a false defect.
+
+**Acceptance evidence.** The gap document passes from a clean checkout, stale
+dates or nonexistent modules fail, every below-floor first-party row has a
+named next test or an explicit external-tool reason, and the generated counts
+remain owned by `docs/_generated/COUNTS.md`.
+
+## Minor improvements
+
+### `DOC-NEG-CONTROL-MIN-1` — triage documentation gate advisories
+
+**Current state.** The advisory audit finds `gate-negative-control` prose that
+claims a verifier, schema, or rule enforces behavior without naming a known-wrong
+fixture. Some findings are genuine weak certification claims; others are
+historical, generated, inventory, or normative prose that should be classified
+instead of rewritten mechanically.
+
+**Scope.** Process findings in bounded batches. For normative live guidance,
+name the exact negative-control fixture, diagnostic, or command. For historical
+or generated prose, add a role/allowlist classification or change the audit
+scope. Do not suppress a finding merely to reach zero, and do not add fake tests
+whose only purpose is to satisfy wording.
+
+**Acceptance evidence.** Each changed finding has a file/line rationale; the
+remaining advisory set is categorized and reproducible; active gate claims name
+real negative controls; `uv run python scripts/audit/audit_documentation.py
+--format json` reports zero volatile-fact and undocumented-symbol findings.
+
+### `REGRESSION-SIGNPOST-MIN-1` — reconcile the regression documentation surface
+
+**Problem and impact.** `tests/regression/manifest.json`,
+`tests/regression/README.md`, and `docs/maintenance/regression-testing.md`
+describe different maturity levels and historical example rosters. That makes
+it easy for a contributor to add a pin in the wrong location or mistake
+collection coverage for complete claim coverage.
+
+**Scope.** Update the two guides from the live manifest and public roster,
+document the explicit `bound`/`not_applicable`/`external_data` states from
+`CLAIM-BINDING-MAJ-1`, and add a consistency check for required paths, schema
+version, and “next step” language. Keep historical rationale in the maintenance
+record, not the active backlog.
+
+**Acceptance evidence.** A generated/check mode fails on a missing test file,
+stale project roster, undocumented manifest state, or claim path that does not
+exist. The guides contain no obsolete “first slice only” claim after the check
+passes.
+
+### `BUNDLE-ENTRYPOINT-MIN-1` — make the opt-in bundle discoverable
+
+**Scope.** Add the smallest safe convenience surface for the existing bundle
+runner: help text, menu/command documentation, explicit output path, and a
+negative control for a missing or local-only project. Keep it opt-in and do not
+silently add container builds or archival publication to the default pipeline.
+
+**Acceptance evidence.** `--help`, the documented dry-run command, and the
+missing-bundle/missing-project failures agree across `run.sh`,
+`infrastructure.orchestration`, `docs/RUN_GUIDE.md`, and the runner scripts;
+the default `--core-only` plan is unchanged.
+
+### `COVERAGE-GAPS-MIN-1` — remove stale manual snapshots
+
+**Scope.** As an interim measure before `COVERAGE-SNAPSHOT-MED-1`, refresh the
+coverage-gap document's verification date and rows from one recorded oracle,
+remove claims about tests or modules that no longer exist, and link low rows to
+the current test or explicit rationale. Do not copy generated percentages into
+the root backlog.
+
+**Acceptance evidence.** The documented oracle runs successfully, the source
+and test paths named by the document exist, the root counts check passes, and a
+second reviewer can reproduce the row classification from the recorded command.
+
+### `ARCHIVAL-TRACKER-MIN-1` — keep external archival state honest
+
+**Scope.** Refresh `docs/maintenance/software-heritage-archival.md` only from
+credential-free queue/browse evidence. Separate accepted, pending, verified,
+not-submitted, rate-limited, and intentionally excluded repositories; never
+claim that automatic harvesting is the same as a verified receipt. Keep private
+repositories and forks out of the public tracker.
+
+**Acceptance evidence.** Every listed repository has an as-of date and one
+allowed status, submitted/verified rows have a receipt or source evidence, and
+the tracker contains no secrets, private paths, or unsupported “complete” claim.
+
+## External release prerequisites
+
+These are intentionally tracked separately from code-completable improvements.
+The repository can validate a supplied receipt, but only an authorized owner or
+GitHub administrator can complete them.
+
+### `SECURITY-OWNERSHIP-1` — administrator-owned branch protection
+
+- **Action:** Configure `main` to require the documented lint, health,
+  no-mocks, infrastructure/project, regression, manuscript, security,
+  documentation, and performance checks; require one approving review and
+  sensitive-path CODEOWNER review; disallow force-push and branch deletion.
+  The known-wrong control is a test PR with a failing required check or a
+  sensitive-file change without the required review, which must be blocked.
+- **Evidence:** Administrator records the settings and a test PR demonstrates
+  that required checks block merge and CODEOWNERS are requested. Conditional
+  jobs remain non-required.
+- **Boundary:** Repository files and a green local run do not prove GitHub
+  settings. Use [`docs/security/branch-protection-checklist.md`](docs/security/branch-protection-checklist.md).
+
+### `SECURITY-PRIVATE-PROMOTION-1` — owner-authorized private promotion
+
+- **Action:** For any private sidecar promotion, record the exact source commit,
+  identity/authorization, redaction, secrets, routes, protocol boundaries,
+  export tests, reviewer, and risk acceptance in the private change record.
+- **Evidence:** Run the offline attestation and candidate checks from
+  [`docs/security/promotion-runbook.md`](docs/security/promotion-runbook.md);
+  require a clean candidate tree, matching `HEAD`, confidentiality,
+  generated-artifact, publication-preflight, and export evidence.
+- **Boundary:** This public repository must not implement private authentication
+  or copy private project paths into its docs, manifests, or tracked trees.
+
+## Sequencing and dependency graph
+
+1. `COVERAGE-GAPS-MIN-1`, `REGRESSION-SIGNPOST-MIN-1`, and
+   `DOC-NEG-CONTROL-MIN-1` establish accurate inputs and contributor guidance.
+2. `STATUS-REFRESH-MED-1`, `RELEASE-METADATA-1`,
+   `PUBLIC-PUBLISH-MANIFEST-MED-1`, and `TEST-DISCOVERY-PERF-MED-1` can proceed
+   in parallel once their current baselines are recorded.
+3. `CLAIM-BINDING-MAJ-1` consumes the corrected regression and generated-doc
+   contracts; it is the evidence dependency for `EXECUTABLE-BUNDLE-MAJ-1`.
+4. `CLEAN-CHECKOUT-MAJ-1` is the final integration rehearsal for any new
+   release gate. `SECURITY-OWNERSHIP-1` and
+   `SECURITY-PRIVATE-PROMOTION-1` remain external acceptance prerequisites.
+
+## Backlog operating rules
+
+- Re-derive measured facts instead of copying old counts into prose.
+- Keep private or rotating project names out of public docs; use the generated
+  active-project roster.
+- Prefer real files, subprocesses, deterministic fixtures, and negative
+  controls over mocks, fakes, or existence-only assertions.
+- Keep business logic in `infrastructure/` or project `src/`; scripts remain
+  thin orchestrators.
+- Preserve project coverage floors, the confidentiality invariant,
+  generated-artifact guard, provenance boundaries, and explicit optional-tool
+  skips.
+- When an item is complete, move its historical evidence to `CHANGELOG.md` or
+  the dated review record and remove the row from this file in the same cleanup
+  pass.

@@ -145,6 +145,9 @@ After the run, look in `output/`:
 * `review_report.md` — the human-readable review.
 * `evidence_summary.json` — versioned diagnostic-only evidence separated into
   readability, citations, bibliography, structure, and quality flags.
+* `llm_review_receipt.json` — an explicit disabled skip by default, or a
+  transcript-bound review receipt when an approved local/compatible provider
+  is configured; the pipeline never contacts a live service implicitly.
 * `figures/{section_word_counts,readability_metrics,citation_density}.png`.
 * `data/manuscript_variables.json` — substitution variables for the abstract.
 * `run_summary.json` — one-line metadata.
@@ -199,6 +202,7 @@ Every knob lives in `manuscript/config.yaml`:
 | `report` | `include_per_file_table` | `true` | Include the per-file words/sentences/FRE/FKGL/Fog table. |
 | `report` | `include_outline` | `true` | Include the per-file heading outline section. |
 | `report` | `include_quality_flags` | `true` | Include the long-sentence/passive/hedge quality-flags section. |
+| `llm.review` | `enabled` | `false` | Opt into transcript-backed review validation; network calls remain the fork's responsibility. |
 
 ## Agentic research overlays
 

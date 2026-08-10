@@ -18,24 +18,74 @@ import json
 import time
 from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 from infrastructure.search.literature.models import Paper, SearchQuery, SearchResult
 
 
-def _query_hash(query: SearchQuery) -> str:
-    """Deterministic short hash of *query*'s identity-defining fields."""
-    payload = json.dumps(
-        {
-            "text": query.text.strip().lower(),
-            "max_results": query.max_results,
-            "year_min": query.year_min,
-            "year_max": query.year_max,
-            "sources": sorted(query.sources or []),
-        },
-        sort_keys=True,
-        ensure_ascii=False,
-    )
+SEARCH_CACHE_SCHEMA_VERSION = 1
+
+
+def query_identity(query: SearchQuery) -> dict[str, Any]:
+    """Return the canonical, receipt-friendly identity of *query*."""
+    return {
+        "text": query.text.strip().lower(),
+        "max_results": query.max_results,
+        "year_min": query.year_min,
+        "year_max": query.year_max,
+        "sources": sorted(query.sources or []),
+    }
+
+
+def query_cache_key(query: SearchQuery) -> str:
+    """Return the deterministic short cache key for *query*."""
+    payload = json.dumps(query_identity(query), sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def validate_cache_payload(payload: Any, query: SearchQuery | None = None) -> list[str]:
+    """Return actionable schema/identity errors for a JSON cache payload.
+
+    Legacy entries without the new metadata remain readable; newly written
+    entries carry both a schema version and an explicit cache key so receipts
+    can prove which query identity was replayed.
+    """
+    errors: list[str] = []
+    if not isinstance(payload, dict):
+        return ["payload must be a mapping"]
+    version = payload.get("_schema_version")
+    if version is not None and version != SEARCH_CACHE_SCHEMA_VERSION:
+        errors.append(f"unsupported _schema_version: {version!r}")
+    stored_query = payload.get("query")
+    if not isinstance(stored_query, dict):
+        errors.append("query must be a mapping")
+    elif query is not None:
+        stored_identity = {
+            "text": str(stored_query.get("text", "")).strip().lower(),
+            "max_results": stored_query.get("max_results"),
+            "year_min": stored_query.get("year_min"),
+            "year_max": stored_query.get("year_max"),
+            "sources": sorted(stored_query.get("sources") or []),
+        }
+        if stored_identity != query_identity(query):
+            errors.append("query identity does not match requested query")
+    stored_key = payload.get("_cache_key")
+    if stored_key is not None and query is not None and stored_key != query_cache_key(query):
+        errors.append("_cache_key does not match requested query")
+    if not isinstance(payload.get("papers", []), list):
+        errors.append("papers must be a list")
+    for field in ("per_source_counts", "errors"):
+        if not isinstance(payload.get(field, {}), dict):
+            errors.append(f"{field} must be a mapping")
+    cached_at = payload.get("_cached_at")
+    if cached_at is not None and (not isinstance(cached_at, (int, float)) or cached_at < 0):
+        errors.append("_cached_at must be a non-negative number")
+    return errors
+
+
+def _query_hash(query: SearchQuery) -> str:
+    """Backward-compatible private alias for the canonical cache key."""
+    return query_cache_key(query)
 
 
 class SearchCache:
@@ -65,6 +115,8 @@ class SearchCache:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             return None
+        if validate_cache_payload(payload, query):
+            return None
         if self.ttl_seconds is not None:
             ts = payload.get("_cached_at", 0)
             if time.time() - ts > self.ttl_seconds:
@@ -85,6 +137,8 @@ class SearchCache:
         """Process put."""
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         payload = result.to_dict()
+        payload["_schema_version"] = SEARCH_CACHE_SCHEMA_VERSION
+        payload["_cache_key"] = query_cache_key(result.query)
         payload["_cached_at"] = time.time()
         # Use vanilla json so the dataclass nesting is plain dicts.
         # SearchQuery → dict was already done by `to_dict()`; just confirm.

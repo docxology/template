@@ -104,9 +104,8 @@ def test_negative_control_distinguished_per_domain(domain):
     genuinely diverges.
     """
     prims = collect_primitives()
-    spec = prims[domain][0]
-    if spec.negative_control is None:
-        pytest.skip(f"Domain {domain} first primitive has no negative control")
+    spec = next((candidate for candidate in prims[domain] if candidate.negative_control is not None), None)
+    assert spec is not None, f"Domain {domain} must expose a negative-control primitive"
 
     normal_result = spec.fn(spec.example_input)
     control_result = spec.negative_control(spec.example_input)

@@ -37,9 +37,9 @@ def test_minimal_config_loads(tmp_path: Path):
     assert config.search.query == "convex optimization"
     assert config.search.max_results == 5
     # Defaults filled in.
-    assert config.search.sources == ["arxiv", "crossref"]
-    assert config.enrichment.fetch_abstracts is True
-    assert config.llm.enabled is True
+    assert config.search.sources == []
+    assert config.enrichment.fetch_abstracts is False
+    assert config.llm.enabled is False
     assert config.llm.seed == 42
 
 

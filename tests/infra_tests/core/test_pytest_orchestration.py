@@ -27,6 +27,7 @@ from infrastructure.core.pytest_orchestration import (
     enforce_project_suite_guards,
     log_discovered_tests,
     parse_discovery_count,
+    parse_test_summary_count,
     parse_project_workers,
     project_declared_coverage_floor,
     project_has_test_files,
@@ -176,6 +177,12 @@ def test_parse_discovery_count_variants() -> None:
     assert parse_discovery_count("collected 42 items") == 42
     assert parse_discovery_count("============== 7 tests collected ==============") == 7
     assert parse_discovery_count("no tests here") is None
+
+
+def test_parse_test_summary_count_sums_selected_outcomes() -> None:
+    summary = "================ 4 passed, 1 skipped, 2 xfailed in 0.42s ================"
+    assert parse_test_summary_count(summary) == 7
+    assert parse_test_summary_count("pytest output without a summary") is None
 
 
 def test_parse_project_workers_accepts_auto_serial_and_positive_ints() -> None:

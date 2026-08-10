@@ -1,50 +1,18 @@
 # template_eda_notebook TODO
 
-Forward-only integrity backlog for the exploratory-data-analysis
-control-positive exemplar. Keep this file focused on template status, not
-general feature ideas.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Project tests and coverage: `uv run pytest projects/templates/template_eda_notebook/tests --cov=projects/templates/template_eda_notebook/src --cov-fail-under=90`
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --strict`
-- Code quality: `uv run ruff check projects/templates/template_eda_notebook/src/` and `uv run mypy projects/templates/template_eda_notebook/src/` must both pass clean.
-- Notebook binding: `tests/test_notebook.py` checks the walkthrough is valid nbformat, binds to `src.__all__`, and carries no logic in cells.
-- Coverage floor: ≥90% on `src/`; live test count and achieved coverage are tracked in `docs/_generated/COUNTS.md` (not hardcoded here).
-
-### 2026-08-02 publication pass (measured, as observed)
-
-- Project suite: **66 passed, 0 failed, 0 skipped**; coverage **99.02%** on
-  `src/` (`--cov-fail-under=90` gate satisfied).
-- Pre-render validation: clean; no render-blocking pitfalls or undefined citations.
-- Template drift (`--project templates/template_eda_notebook --strict`): **no drift detected**.
-- Pipeline stages 02 (analysis), 03 (render), 04 (validate), and 05 (copy): all green.
-- Render quality: **0** `^! ` LaTeX error lines in `output/pdf/*.log`; **0** unresolved `??`; combined PDF = **14 pages**.
-- Accuracy: 120 rows → 4 dropped → 116 complete-case; group counts 38/34/44; 10 histogram bins summing to 116; correlations height–weight ≈ +0.72, height–resting ≈ −0.12, weight–resting ≈ −0.08; ranking order matches Results prose.
-- Version drift: all five version-bearing metadata files declare **1.0.0**; repository URL is consistently `docxology/template_eda_notebook`; figure registry labels/schema match `src/eda/figures.py`.
-- Documentation parity: `tests/AGENTS.md` lists exactly the 8 test modules; `scripts/AGENTS.md` lists both on-disk Python files; required `.agents` README entry points were added.
-- Notebook launch fix (2026-08-02): the walkthrough's path cell previously
-  only resolved `src` when launched from the project directory. It now also
-  locates the project from the monorepo root via the `notebooks/` marker
-  (no hard-coded project name), and all 9 code cells were verified to execute
-  headlessly end-to-end from BOTH launch locations (120 rows → 4 dropped →
-  116; correlations +0.720 / −0.121 / −0.083, matching the Results prose).
-  Stray `htmlcov/` and `dist/` build junk were removed from the tree.
-- Deterministic dataset generator (2026-08-02): added
-  `src/eda/generate.py::generate_measurements` (pure, fixed seed) and the thin
-  `scripts/generate_measurements_data.py` orchestrator (writes
-  `output/data/measurements_generated.csv`; discovered by stage 02), plus
-  `tests/test_generate_measurements_data.py` binding the generated sibling to
-  the shipped fixture's contract (schema, 120 rows, missingness 1/2/1, group
-  labels, correlation sign structure, same-family statistics). Suite grew to
-  **77 passed, 0 failed, 0 skipped**; coverage **99.16%** on `src/`. Honest
-  scope note: the generator reproduces the fixture's *family*, not a byte-exact
-  clone — the original fixture's random draw order is not recoverable, so
-  byte-exact regeneration is recorded as intentionally out of scope (see Test
-  and validator gaps). Manuscript 06_reproducibility.md was updated to list
-  `output/data/measurements_generated.csv` in its artifact registry and to
-  document the generator in its determinism section (re-rendered; still 0
-  `^! ` errors, 0 `??`, 14 pages).
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -83,13 +51,26 @@ general feature ideas.
   from scratch, check in the new CSV and keep `DatasetSchema` in sync.
 - Add a real generator script (e.g. `scripts/generate_measurements_data.py`)
   with a fixed NumPy seed that reproduces `data/measurements.csv` exactly, plus
-  a test binding the script's output to the shipped CSV, to strengthen the
+  a test binding the script's output to the committed CSV, to strengthen the
   dataset's reproducibility story beyond a static fixture.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Preserve the notebook -> tested src extraction contract (no logic in cells).
-2. Add focused tests + a thin script plot for any new figure-data family.
-3. Expand the dataset or cleaning strategies only with deterministic fixtures,
-   exact-value tests, and documented claim boundaries.
-4. Refresh generated docs after any public-surface change.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `EDA-STATISTICS-1` | Minor | Existing deterministic fixture | exact-statistic assertion matrix | `uv run pytest projects/templates/template_eda_notebook/tests -q` | one altered source statistic must fail |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `EDA-NOTEBOOK-BINDING-1` | Medium | Notebook extraction contract | notebook-to-source binding receipt | notebook binding gate and project coverage | changed notebook cell without source update must fail |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

@@ -90,6 +90,10 @@ DISCOVERY_PATTERNS: tuple[str, ...] = (
     r"(\d+)\s+tests?\s+found",
     r"=+\s+(\d+)\s+tests?\s+collected",
 )
+_RESULT_STATUS_PATTERN = re.compile(
+    r"\b(?P<count>\d+)\s+(?P<status>passed|failed|skipped|xfailed|xpassed|errors?|deselected)\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -450,6 +454,30 @@ def parse_discovery_count(combined_output: str) -> int | None:
     return None
 
 
+def parse_test_summary_count(combined_output: str) -> int | None:
+    """Extract the non-vacuous test count from a pytest result summary.
+
+    The normal matrix command uses quiet output, so a second collection-only
+    subprocess would waste the most expensive part of the quick-feedback lane.
+    Pytest's final summary already reports selected outcomes; summing that
+    final summary gives a useful collection/execution count without doubling
+    startup and import work. ``None`` means the output was unavailable or did
+    not contain a recognizable summary and is therefore not treated as zero.
+    """
+    candidates = [
+        line
+        for line in combined_output.splitlines()
+        if _RESULT_STATUS_PATTERN.search(line)
+        and (" in " in line or line.lstrip().startswith("=") or "short test summary" in line.lower())
+    ]
+    if not candidates:
+        return None
+    matches = list(_RESULT_STATUS_PATTERN.finditer(candidates[-1]))
+    if not matches:
+        return None
+    return sum(int(match.group("count")) for match in matches)
+
+
 def log_discovered_tests(
     cmd: list[str],
     repo_root: Path,
@@ -752,6 +780,7 @@ __all__ = [
     "log_discovered_tests",
     "make_coverage_subprocess_env",
     "parse_discovery_count",
+    "parse_test_summary_count",
     "parse_project_workers",
     "resolve_project_matrix_workers",
     "validate_coverage_parallel",

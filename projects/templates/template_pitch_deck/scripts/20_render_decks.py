@@ -22,7 +22,9 @@ logger = get_logger("pitch_deck.render")
 
 
 def main(argv: list[str] | None = None) -> int:
-    argparse.ArgumentParser(description=__doc__).parse_args(argv)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--pitch-subject", default=None, help="Opt-in configured subject to render")
+    args = parser.parse_args(argv)
 
     from paths import locate_repo_root
     from render_orchestration import DeckAuditFailure, DiligenceAuditFailure, render_all_decks
@@ -33,7 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = locate_repo_root(root)
 
     try:
-        written = render_all_decks(root, repo_root, logger)
+        written = render_all_decks(root, repo_root, logger, pitch_subject=args.pitch_subject)
     except (DeckAuditFailure, DiligenceAuditFailure, RenderingError) as exc:
         logger.error(str(exc))
         return 1

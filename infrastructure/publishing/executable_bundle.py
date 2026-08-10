@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -10,6 +12,7 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rendering.dockerfile_gen import (
     DockerfileConfig,
     build_compose_yaml,
@@ -24,11 +27,14 @@ _COMBINED_PDF_SUFFIX = "_combined.pdf"
 
 def _resolve_combined_pdf(repo_root: Path, project_name: str, project_dir: Path) -> Path | None:
     """Return the first existing combined PDF path, or ``None`` if not built yet."""
+    project_slug = Path(project_name).name
     candidates = (
-        repo_root / "output" / project_name / "pdf" / f"{project_name}{_COMBINED_PDF_SUFFIX}",
-        project_dir / "output" / "pdf" / f"{project_name}{_COMBINED_PDF_SUFFIX}",
+        repo_root / "output" / project_name / "pdf" / f"{project_slug}{_COMBINED_PDF_SUFFIX}",
+        project_dir / "output" / "pdf" / f"{project_slug}{_COMBINED_PDF_SUFFIX}",
     )
     for path in candidates:
+        if path.is_symlink():
+            raise ValueError(f"executable bundle refuses symlinked PDF artifact: {path}")
         if path.is_file():
             return path
     return None
@@ -75,10 +81,11 @@ def _copy_pdf_artifact(
 
 
 def _write_bundle_readme(output_dir: Path, project_name: str, *, pdf_copied: bool) -> None:
+    display_name = Path(project_name).name
     pdf_section = (
         "## Delivered PDF\n\n"
         f"The rendered manuscript snapshot lives at "
-        f"``artifacts/pdf/{project_name}{_COMBINED_PDF_SUFFIX}``.\n\n"
+        f"``artifacts/pdf/{display_name}{_COMBINED_PDF_SUFFIX}``.\n\n"
         if pdf_copied
         else "## Delivered PDF\n\n"
         "No combined PDF was bundled — run the render stage before Stage 10 "
@@ -111,6 +118,9 @@ def bundle_project(
     python_version: str = "3.12",
 ) -> Path:
     """Build executable bundle under output/<project>/executable_bundle/."""
+    repo_root = repo_root.resolve()
+    if project_name not in PUBLIC_PROJECT_NAMES:
+        raise ValueError(f"executable bundles are limited to canonical public projects: {project_name}")
     project_dir = repo_root / "projects" / project_name
     if not project_dir.exists():
         logger.warning(
@@ -118,11 +128,18 @@ def bundle_project(
             project_dir,
         )
         sys.exit(2)
+    _reject_symlinks(project_dir)
 
     output_dir = repo_root / "output" / project_name / "executable_bundle"
+    _reject_symlink_components(repo_root, output_dir)
+    if output_dir.is_symlink():
+        raise ValueError(f"refusing to replace symlinked bundle output: {output_dir}")
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    pinned_path = repo_root / "tests" / "regression" / "pinned_values" / f"{project_name}.json"
+    project_slug = Path(project_name).name
+    pinned_path = repo_root / "tests" / "regression" / "pinned_values" / f"{project_slug}.json"
     publication_doi = _load_publication_doi(project_dir)
     archival_receipts: dict[str, str] = {}
     if publication_doi:
@@ -144,13 +161,15 @@ def bundle_project(
     )
 
     lockfile_src = repo_root / "uv.lock"
-    if lockfile_src.exists():
-        lockfile_dst = output_dir / "lockfile"
-        lockfile_dst.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(lockfile_src, lockfile_dst / "uv.lock")
-        pyproject_src = repo_root / "pyproject.toml"
-        if pyproject_src.exists():
-            shutil.copy2(pyproject_src, lockfile_dst / "pyproject.toml")
+    pyproject_src = repo_root / "pyproject.toml"
+    if not lockfile_src.is_file() or not pyproject_src.is_file():
+        raise ValueError("executable bundle requires both root uv.lock and pyproject.toml")
+    lockfile_dst = output_dir / "lockfile"
+    lockfile_dst.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(lockfile_src, lockfile_dst / "uv.lock")
+    shutil.copy2(pyproject_src, lockfile_dst / "pyproject.toml")
+    shutil.copy2(lockfile_src, output_dir / "uv.lock")
+    shutil.copy2(pyproject_src, output_dir / "pyproject.toml")
 
     source_dst = output_dir / "source"
     if source_dst.exists():
@@ -163,4 +182,54 @@ def bundle_project(
 
     pdf_dst = _copy_pdf_artifact(repo_root, project_name, project_dir, output_dir)
     _write_bundle_readme(output_dir, project_name, pdf_copied=pdf_dst is not None)
+    _write_bundle_receipt(output_dir)
     return output_dir
+
+
+def _reject_symlinks(root: Path) -> None:
+    """Reject source trees containing symlinks before copying them."""
+    for path in (root, *root.rglob("*")):
+        if path.is_symlink():
+            raise ValueError(f"executable bundle refuses symlinked source: {path}")
+
+
+def _reject_symlink_components(root: Path, candidate: Path) -> None:
+    """Reject symlinked parent components before bundle cleanup/copying."""
+    root = root.resolve()
+    try:
+        relative = candidate.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"executable bundle path escapes repository root: {candidate}") from exc
+    current = root
+    for component in relative.parts:
+        current = current / component
+        if current.is_symlink():
+            raise ValueError(f"executable bundle path contains symlink component: {current}")
+
+
+def _write_bundle_receipt(output_dir: Path) -> None:
+    """Write an immutable file manifest after bundle assembly."""
+    entries: list[dict[str, object]] = []
+    for path in sorted(output_dir.rglob("*")):
+        if not path.is_file() or path.name == "bundle_receipt.json":
+            continue
+        if path.is_symlink():
+            raise ValueError(f"executable bundle contains symlinked payload: {path}")
+        content = path.read_bytes()
+        entries.append(
+            {
+                "path": path.relative_to(output_dir).as_posix(),
+                "bytes": len(content),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+        )
+    payload = {
+        "schema_version": "template-executable-bundle/v2",
+        "file_count": len(entries),
+        "files": entries,
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    payload["manifest_sha256"] = hashlib.sha256(canonical).hexdigest()
+    (output_dir / "bundle_receipt.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )

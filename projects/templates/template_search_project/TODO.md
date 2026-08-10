@@ -1,64 +1,18 @@
 # template_search_project TODO
 
-Forward-only integrity backlog for the literature-search exemplar. Keep this
-file about template status, validation depth, and forkability — not general
-feature ideas.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-Run from the template repository root:
-
-```bash
-uv run pytest projects/templates/template_search_project/tests/ \
-  --cov=projects/templates/template_search_project/src --cov-fail-under=90
-uv run python scripts/audit/check_template_drift.py --strict --project templates/template_search_project
-uv run python -m infrastructure.validation.cli markdown projects/templates/template_search_project/manuscript/
-```
-
-Live test counts and coverage snapshots belong in
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not this
-file.
-
-- The default pipeline (`project_config.search.sources: [local]`) is fully offline and
-  CI-safe, backed by the bundled `data/corpus.json`.
-- LLM synthesis (`llm.enabled`) defaults to `false` so tests and CI never
-  require an Ollama server.
-- `deep_search` is enabled by default and exercises the multi-keyword
-  arXiv/Crossref fan-out. Paperclip is fail-fast (not graceful) when
-  `PAPERCLIP_API_KEY` is unset and is deliberately omitted from the default
-  `sources` list; add it only alongside a real key.
-
-### Measured 2026-08-02 publication pass
-
-- pytest: **315 passed**, 97.80% coverage (gate `--cov-fail-under=90`).
-- `prerender`, `stage_04_validate` (all checks PASS), `stage_05_copy`,
-  and `check_template_drift --strict` (`no drift detected`) all green.
-- Combined PDF: 60 pages, 0 `??`, 0 `^! ` LaTeX errors; abstract and results
-  now show `300` unique deep-search papers (the previous shipped PDF rendered
-  the `<deep-search not run>` sentinel invisibly).
-
-## 2026-08-02 integrity fixes (publication pass)
-
-- **Path portability.** `src/search_pipeline_cli.py` and `src/deep_search_cli.py`
-  now write `run_summary.json` artifact paths as `<repo-root>`-relative
-  placeholders instead of absolute resolved paths, matching the convention the
-  standard `output/run_summary.json` already used. The deep-search summary
-  previously shipped machine-local paths
-  (`<home>/Documents/Git/HumOS/...`) from a run on another machine.
-- **Dead module reference.** `src/figures.py` docstring named
-  `scripts/generate_search_figures.py`; corrected to
-  `scripts/y_generate_search_figures.py`.
-- **Stale resolved evidence.** The committed `output/data/manuscript_variables.json`
-  and `output/manuscript/*.md` carried `deep_unique_papers: "<deep-search not run>"`
-  while the committed aggregate (`output/deep_search/aggregate.json`, 300 papers)
-  existed — so the shipped PDF rendered the sentinel (invisible in LaTeX) as
-  "with unique paper(s)". Re-running the canonical render with the aggregate
-  present regenerated variables, resolved tree, PDF, slides, and web to the
-  measured `300`.
-- **Agent catalog completion.** Added `.agents/README.md` and
-  `.agents/skills/README.md` (contract listed the files; the tree lacked them).
-- **Test inventory.** `tests/AGENTS.md` now lists all 25 test modules grouped
-  by subsystem so listing drift is detectable.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -94,38 +48,38 @@ file.
 
 ## Test and validator gaps
 
-- `src/review_report.py` was at the 90% coverage floor — 10 additional
-  no-mock tests added in `tests/test_review_report_additional.py` covering
-  `_subprocess_env`, `ensure_review_summary` subprocess paths,
-  `collect_infra_imports` SyntaxError handling, `_bs`, no-infra-imports
-  branch, and stage skipped/disabled/not-materialised statuses. The module
-  now sits comfortably above the gate.
+- Keep `src/review_report.py` above the project coverage floor with no-mock
+  tests for subprocess environment policy, syntax-error handling, import
+  boundaries, and explicit skipped/disabled/not-materialised statuses.
 - Add a negative control before widening retrieval-coverage claims beyond
   the bundled offline corpus.
-- **Shipped:** fixture-honesty validation and an explicit `evidence_scope` in
-  `output/run_summary.json`; extend the allowlisted assertion vocabulary only
-  with a focused negative-control test.
+- Keep fixture-honesty validation and the explicit `evidence_scope` field in
+  `output/run_summary.json`; extend assertion vocabulary only with a focused
+  negative-control test.
 - Keep the byte-identical-across-reruns test
   (`tests/test_pipeline.py::TestRunLiteraturePipeline::test_bibtex_byte_identical_across_reruns`)
   in sync as new pipeline stages are added.
-- **Resolved:** regenerated `manuscript/references_deep.bib` from the committed
-  deep-search aggregate so its 300 citation keys exactly match the 300-paper
-  aggregate. The four stale entries (`anon2019what`, `archibald2020stochastic`,
-  `liu2021diffusion`, `zaslavski2020minimization`) were replaced by the four
-  current keys (`anon2019replication`, `bu2026nonstationary`,
-  `gong2026comparative`, `singer1980minimization`); prerender now reports no
-  undefined citations.
+- Keep `manuscript/references_deep.bib` derived from the committed deep-search
+  aggregate and fail when citation keys or source revisions drift.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Preserve offline-by-default reproducibility and synthetic-fixture honesty.
-2. Add focused validators for any new generated artifact family (search
-   cache, fulltext cache, deep-search aggregate).
-3. Expand live-backend coverage only with graceful degradation and
-   documented claim boundaries.
-4. Refresh generated docs after any public-surface change.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `SEARCH-DEEP-1` | Minor | Deep-search query plan | deterministic deep-search manifest | byte-repeat and claim tests | changed query order must change receipt |
 
-## Promotion Rule
+## Medium upcoming
 
-Move an item out of this file only after its source producer, generated
-artifact, documentation, and focused tests are updated together.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `SEARCH-CACHE-1` | Medium | Offline cache schema | cache identity/age receipt | project tests with network disabled | stale cache must degrade explicitly |
+| `SEARCH-FULLTEXT-1` | Medium | Full-text fixture/license boundary | full-text coverage report | focused retrieval validators | missing full text must not count as retrieved |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

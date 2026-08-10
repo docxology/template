@@ -20,6 +20,17 @@ class SiaLoopSettings:
     target_timeout_sec: int
     llm_model: str
 
+    def __post_init__(self) -> None:
+        """Reject ambiguous loop settings before the harness is invoked."""
+        if not self.task_name.strip():
+            raise ValueError("sia.task_name must be non-empty")
+        if self.run_id < 1:
+            raise ValueError("sia.run_id must be positive")
+        if self.max_generations < 1:
+            raise ValueError("sia.max_generations must be positive")
+        if self.target_timeout_sec < 1:
+            raise ValueError("sia.target_timeout_sec must be positive")
+
     @property
     def task_dir(self) -> str:
         """Process task dir."""
@@ -45,10 +56,23 @@ def load_sia_settings(project_root: Path) -> SiaLoopSettings:
         task_name=str(sia_block.get("task_name", "mini_classify")),
         run_id=int(sia_block.get("run_id", 1)),
         max_generations=int(sia_block.get("max_generations", 3)),
-        live=bool(sia_block.get("live", False)),
+        live=_parse_bool(sia_block.get("live", False), "sia.live"),
         target_timeout_sec=int(sia_block.get("target_timeout_sec", 60)),
         llm_model=str(sia_block.get("llm_model", "")),
     )
+
+
+def _parse_bool(value: Any, field_name: str) -> bool:
+    """Parse YAML booleans without treating the string ``"false"`` as true."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"true", "yes", "on", "1"}:
+            return True
+        if normalized in {"false", "no", "off", "0"}:
+            return False
+    raise ValueError(f"{field_name} must be a boolean")
 
 
 def load_paper_title(project_root: Path) -> str:

@@ -7,6 +7,7 @@ import pytest
 from purity import (
     KARAT_GRADES,
     NINE_NINES_PURITY,
+    PURITY_VECTOR_DIMENSIONS,
     KaratGrade,
     assert_monotone_increase,
     format_purity,
@@ -29,6 +30,22 @@ class TestPurityVector:
     def test_rejects_out_of_bounds_dimension(self):
         with pytest.raises(ValueError, match=r"must be in \[0, 1\]"):
             PurityVector(1.0, 1.1, 1.0, 1.0)
+
+    def test_selects_configured_dimensions_without_aggregation(self):
+        vector = PurityVector(1.0, 0.75, 1.0, 0.9)
+        assert vector.select(("claim_support", "figure_quality")) == {
+            "claim_support": 0.75,
+            "figure_quality": 0.9,
+        }
+        assert not vector.selected_complete(("claim_support",))
+        assert vector.selected_complete(PURITY_VECTOR_DIMENSIONS[:1])
+
+    def test_select_rejects_unknown_or_duplicate_dimension(self):
+        vector = PurityVector(1.0, 1.0, 1.0, 1.0)
+        with pytest.raises(ValueError, match="unknown purity-vector"):
+            vector.select(("not_a_dimension",))
+        with pytest.raises(ValueError, match="must be unique"):
+            vector.select(("claim_support", "claim_support"))
 
 
 class TestKaratForPurity:

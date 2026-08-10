@@ -22,6 +22,7 @@ from infrastructure.documentation.counts_doc import (
     DOC_RELATIVE_PATH,
     EXEMPLAR_SNAPSHOT,
     CountsFacts,
+    _coverage_measurement_data_file,
     _exemplar_collected_count,
     exemplar_source_hash,
     infrastructure_packages,
@@ -122,6 +123,16 @@ def test_coverage_measurement_uses_bounded_release_profile() -> None:
     assert "not long_running" in marker
     assert "not bench" in marker
     assert COVERAGE_MEASUREMENT_TIMEOUT_SECONDS == 1800
+
+
+def test_coverage_measurement_data_file_is_absolute_for_relative_checkout() -> None:
+    """Coverage cleanup must target the same path the subprocess writes."""
+    checkout = Path("relative-checkout")
+
+    data_file = _coverage_measurement_data_file(checkout, "demo")
+
+    assert data_file == checkout.resolve() / "projects" / "templates" / "demo" / ".coverage.measure_demo"
+    assert data_file.is_absolute()
 
 
 def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:

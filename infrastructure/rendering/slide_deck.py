@@ -418,8 +418,14 @@ def _draw_content_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
     if slide.figure_path is not None:
         if slide.figure_path.is_file():
             fig_width = width - 2 * MARGIN
-            fig_height = 1.9 * inch
-            fig_y = max(MARGIN, cursor_y - fig_height - 0.15 * inch)
+            available_height = cursor_y - MARGIN - 0.15 * inch
+            if available_height < 0.6 * inch:
+                raise RenderingError(
+                    "Content slide figure has no non-overlapping space below its bullets",
+                    context={"slide_title": slide.title},
+                )
+            fig_height = min(1.9 * inch, available_height)
+            fig_y = MARGIN
             c.drawImage(
                 str(slide.figure_path),
                 MARGIN,

@@ -15,6 +15,7 @@ tree instead of copying volatile literals into prose.
 | API docs | `api_reference_gen.py`, `glossary_gen.py` | AST-derived public API docs and marker injection. |
 | Pipeline docs | `stage_table.py` | Stage table rendered from `core/pipeline/pipeline.yaml`. |
 | Generated facts | `counts_doc.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, active projects, architecture diagram and accessible topology summary. |
+| Backlog contracts | `backlog.py`, `backlog_normalizer.py` | Future-only root/public TODO validation, stable-ID checks, lifecycle-path hygiene, and idempotent exemplar backlog normalization. |
 | Publication docs | `publication_records.py`, `publication_standalone.py` | DOI/archive/config/GitHub publication matrix plus generated publication-identity blocks in every canonical exemplar's `STANDALONE.md`. |
 
 ## Boundaries
@@ -41,6 +42,7 @@ uv run python scripts/docgen/active_projects.py
 uv run python scripts/docgen/api_reference.py --check
 uv run python scripts/docgen/architecture_overview.py
 uv run python scripts/docgen/publication_records.py
+uv run python scripts/maintenance/normalize_backlogs.py --write
 ```
 
 ## Tests

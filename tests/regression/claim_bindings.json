@@ -1,0 +1,155 @@
+{
+  "schema_version": "template-claim-binding/v1",
+  "projects": [
+    {
+      "project": "templates/template_active_inference",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_active_inference.json",
+      "claim_count": 5,
+      "rationale": "Deterministic analytical-sweep claims are bound to fixture and source producers."
+    },
+    {
+      "project": "templates/template_advanced_literature_review",
+      "state": "not_applicable",
+      "rationale": "No quantitative regression pin lane is declared yet; multi-phase claims remain review-scoped until phase provenance pins are added."
+    },
+    {
+      "project": "templates/template_autoresearch_project",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_autoresearch_project.json",
+      "claim_count": 7,
+      "rationale": "Deterministic candidate-outcome claims are bound to the offline benchmark producer."
+    },
+    {
+      "project": "templates/template_autopoiesis",
+      "state": "not_applicable",
+      "rationale": "The current exemplar claim surface is generated-child integrity and scope evidence; quantitative regression pins are a future lane."
+    },
+    {
+      "project": "templates/template_code_project",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_code_project.json",
+      "claim_count": 7,
+      "rationale": "Optimizer and figure claims are bound to deterministic source producers."
+    },
+    {
+      "project": "templates/template_data_descriptor",
+      "state": "not_applicable",
+      "rationale": "Descriptor and media claims are fixture-integrity claims; a publication-fork pin lane remains future work."
+    },
+    {
+      "project": "templates/template_eda_notebook",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_eda_notebook.json",
+      "claim_count": 5,
+      "rationale": "Notebook-derived statistics are bound to the deterministic fixture and source module."
+    },
+    {
+      "project": "templates/template_formal",
+      "state": "not_applicable",
+      "rationale": "The current claim surface is typed/runtime/formal invariant evidence; quantitative regression pins are not yet declared."
+    },
+    {
+      "project": "templates/template_literature_meta_analysis",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_literature_meta_analysis.json",
+      "claim_count": 7,
+      "rationale": "Offline corpus bibliometric claims are bound to deterministic fixture producers."
+    },
+    {
+      "project": "templates/template_madlib",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_madlib.json",
+      "claim_count": 5,
+      "rationale": "Configuration and generated-token claims are bound to deterministic source producers."
+    },
+    {
+      "project": "templates/template_newspaper",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_newspaper.json",
+      "claim_count": 4,
+      "rationale": "Fictional-edition layout claims are bound to the deterministic content fixture."
+    },
+    {
+      "project": "templates/template_pools_rules_tools",
+      "state": "not_applicable",
+      "rationale": "The resource-pool exemplar currently exposes typed structure and evaluator claims without a quantitative pin file."
+    },
+    {
+      "project": "templates/template_prose_project",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_prose_project.json",
+      "claim_count": 6,
+      "rationale": "Offline editorial metrics are bound to real markdown and bibliography fixtures."
+    },
+    {
+      "project": "templates/template_autoscientists",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_autoscientists.json",
+      "claim_count": 5,
+      "rationale": "Coordination-testbed claims are bound to deterministic transcript fixtures."
+    },
+    {
+      "project": "templates/template_gold_refinement",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_gold_refinement.json",
+      "claim_count": 6,
+      "rationale": "Refinery certification claims are bound to deterministic assay and report producers."
+    },
+    {
+      "project": "templates/template_methods_paper",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_methods_paper.json",
+      "claim_count": 7,
+      "rationale": "Compiled-method claims are bound to the deterministic DSL compiler."
+    },
+    {
+      "project": "templates/template_redacted_report",
+      "state": "not_applicable",
+      "rationale": "The exemplar's claims are release-safety and redaction-boundary claims; quantitative pinning awaits a stable publication payload."
+    },
+    {
+      "project": "templates/template_registered_report",
+      "state": "not_applicable",
+      "rationale": "Registration and deviation claims are currently covered by project-owned review artifacts rather than the regression pin tier."
+    },
+    {
+      "project": "templates/template_search_project",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_search_project.json",
+      "claim_count": 5,
+      "rationale": "Offline search snapshot claims are bound to the committed corpus and cache producers."
+    },
+    {
+      "project": "templates/template_sia",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_sia.json",
+      "claim_count": 5,
+      "rationale": "Fixture-loop generation claims are bound to source and public training fixtures."
+    },
+    {
+      "project": "templates/template_storybook",
+      "state": "not_applicable",
+      "rationale": "The current claim surface is visual layout and accessibility metadata; quantitative pinning is deferred until trim-size variants exist."
+    },
+    {
+      "project": "templates/template_template",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_template.json",
+      "claim_count": 5,
+      "rationale": "Meta-template introspection claims are bound to live roster and pipeline producers."
+    },
+    {
+      "project": "templates/template_textbook",
+      "state": "bound",
+      "pin_file": "tests/regression/pinned_values/template_textbook.json",
+      "claim_count": 5,
+      "rationale": "Textbook structure claims are bound to config and fixture producers."
+    },
+    {
+      "project": "templates/template_pitch_deck",
+      "state": "not_applicable",
+      "rationale": "The current deck exemplar is a visual/presentation scaffold without a declared quantitative regression pin lane."
+    }
+  ]
+}

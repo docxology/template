@@ -20,6 +20,7 @@ from src.expand import (
     derive_seed,
     enumerate_all,
     expand,
+    filter_archetypes,
     sample,
     write_spec,
 )
@@ -251,6 +252,37 @@ def test_parse_grammar_different_seed_different_hash():
     assert g1.grammar_hash != g2.grammar_hash
 
 
+def test_parse_grammar_archetype_filters_are_validated_and_hashed():
+    block = _make_block()
+    block["archetype_filters"] = {"primitive_domain": ["graph", "optimization"]}
+    grammar = parse_grammar(block)
+    assert grammar.filter_mapping == {"primitive_domain": ("graph", "optimization")}
+    assert "archetype_filters" in grammar.canonical()
+
+
+def test_parse_grammar_rejects_unhashable_archetype_filter_values():
+    block = _make_block()
+    block["archetype_filters"] = {"primitive_domain": [["graph"]]}
+    with pytest.raises(GrammarError, match="non-empty string"):
+        parse_grammar(block)
+
+
+@pytest.mark.parametrize(
+    "filters",
+    [
+        {"unknown_slot": ["value"]},
+        {"primitive_domain": ["unknown_domain"]},
+        {"primitive_domain": "optimization"},
+        {"primitive_domain": []},
+    ],
+)
+def test_parse_grammar_rejects_invalid_archetype_filters(filters):
+    block = _make_block()
+    block["archetype_filters"] = filters
+    with pytest.raises(GrammarError):
+        parse_grammar(block)
+
+
 def test_load_grammar_reads_project_config_passthrough(tmp_path):
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
@@ -269,6 +301,28 @@ def test_load_grammar_reads_project_config_passthrough(tmp_path):
 
     assert grammar.seed == 17
     assert grammar.slot("primitive_domain").options == ("optimization",)
+
+
+def test_load_grammar_reads_archetype_filters(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    manuscript.mkdir()
+    manuscript.joinpath("config.yaml").write_text(
+        "project_config:\n"
+        "  autopoiesis:\n"
+        "    seed: 17\n"
+        "    slots:\n"
+        "      - name: primitive_domain\n"
+        "        options: [optimization, graph]\n"
+        "    archetype_filters:\n"
+        "      primitive_domain: [graph]\n"
+        "    deps: []\n",
+        encoding="utf-8",
+    )
+
+    grammar = load_grammar(tmp_path)
+
+    assert grammar.filter_mapping == {"primitive_domain": ("graph",)}
+    assert enumerate_all(grammar) == [{"primitive_domain": "graph"}]
 
 
 # ---------------------------------------------------------------------------
@@ -409,6 +463,28 @@ def test_enumerate_all_contains_all_domains():
     cells = enumerate_all(g)
     seen = {c["primitive_domain"] for c in cells}
     assert seen == set(KNOWN_DOMAINS)
+
+
+def test_enumerate_all_can_filter_archetype_values():
+    g = parse_grammar(_make_block())
+    cells = enumerate_all(g, {"primitive_domain": ["optimization", "graph"], "dep_mode": ["vendor"]})
+    assert cells
+    assert {cell["primitive_domain"] for cell in cells} == {"optimization", "graph"}
+    assert {cell["dep_mode"] for cell in cells} == {"vendor"}
+
+
+def test_archetype_filter_rejects_unknown_slot_and_value():
+    g = parse_grammar(_make_block())
+    with pytest.raises(GrammarError, match="Unknown archetype filter slot"):
+        filter_archetypes(g, [], {"not_a_slot": ["value"]})
+    with pytest.raises(GrammarError, match="Unknown archetype value"):
+        filter_archetypes(g, [], {"primitive_domain": ["not_a_domain"]})
+
+
+def test_archetype_filter_rejects_empty_values():
+    g = parse_grammar(_make_block())
+    with pytest.raises(GrammarError, match="must not be empty"):
+        enumerate_all(g, {"primitive_domain": []})
 
 
 # ---------------------------------------------------------------------------

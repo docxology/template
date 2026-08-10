@@ -346,10 +346,11 @@ def check_historical_test_evidence(project_root: Path) -> list[DocumentationIssu
                 current_evidence.append(location)
         for paragraph in _paragraphs(text):
             lower = paragraph.lower()
+            normalized = " ".join(paragraph.split())
             if (
-                FORWARD_EVIDENCE_COMMAND in paragraph
-                and FORWARD_EVIDENCE_POINTER in paragraph
-                and FORWARD_EVIDENCE_SEAL in lower
+                FORWARD_EVIDENCE_COMMAND in normalized
+                and FORWARD_EVIDENCE_POINTER in normalized
+                and FORWARD_EVIDENCE_SEAL in " ".join(lower.split())
                 and "historical" not in lower
                 and "stale" not in lower
                 and not CURRENT_EVIDENCE_RE.search(paragraph)

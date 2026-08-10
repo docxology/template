@@ -1,25 +1,20 @@
 # template_madlib TODO
 
-Forward-only integrity backlog for the deterministic token-injection manuscript
-exemplar. This tree is part of the public template roster and must satisfy the
-same forkability contract as the older exemplars.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Manuscript pre-render gate: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_madlib/manuscript --repo-root .`
-- Project tests and coverage: 181 passed, 99.22% coverage (required floor: 90%).
-- Generated artifacts come from `scripts/01_generate_madlib_artifacts.py` and `scripts/z_generate_manuscript_variables.py`.
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_madlib --strict` — no drift detected.
-- Project-local output validator: `scripts/02_validate_outputs.py` → `src.output_validator.validate_generated_outputs`, declared third analysis script; writes `output/reports/output_validation.json`.
-- Live test counts and coverage are read from
-  [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
-  here; keep every `src/` module (config, composition, tokens, analysis,
-  artifact_writers, manuscript_variables) branch-covered under the 90% gate.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
-
-- Fixed in this pass: corrected publication-boundary prose that falsely claimed deposited DOIs were blank, synchronized version markers to `0.1.1`, added the missing `.agents/` catalog READMEs, created `docs/README.md` and `data/README.md`, and documented `00_preflight.py` in `scripts/AGENTS.md`.
-- Fixed in this pass: added the project-local output validator (`src/output_validator.py`) with declared-artifact stale guard wired into `analysis.scripts`; corrected Evaluation readiness prose and cover figure text that still enumerated a live DOI/external release as absent; replaced stale `tokens.py` docstring examples.
 
 - Keep the lexicon, conditional section plan, token provenance, and authoring contract as generated evidence, not prose-only claims.
 - Keep digest invariants, claim-ledger alignment, review-packet assembly, and fork-migration obligations config-owned and test-covered.
@@ -39,15 +34,28 @@ same forkability contract as the older exemplars.
 
 ## Test and validator gaps
 
-- ~~Add a project-local output validator if Stage 04 cannot catch token provenance, figure registry, and authoring-contract regressions together.~~ ✓ Implemented as `src/output_validator.py` + `scripts/02_validate_outputs.py`, wired into `manuscript/config.yaml` `analysis.scripts`; covered by `tests/test_output_validator.py`.
-- ~~Add a stale-artifact check if generated artifact names or report schemas grow beyond the current fixture coverage.~~ ✓ The validator's declared inventory (`DECLARED_FIGURE_FILES`, `PROJECT_OWNED_DATA_FILES`, `PROJECT_OWNED_REPORT_FILES`) fails on undeclared or missing project-owned artifacts.
+- Keep the project-local output validator and declared artifact inventory
+  synchronized with any new token, figure, data, or report surface.
 - Preserve review-packet assertions if future copied-output layout changes make output statistics, validation reports, or copied data/report/figure categories optional.
 - Consider adding hypothesis-based property tests for the SHA-256 digest invariant if the lexicon format changes (current determinism is verified with parametric seed/lexicon tests).
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Keep release metadata, module size, tests, and drift gates green as the published canonical exemplar evolves.
-2. ~~Add negative controls for unresolved placeholders and missing token provenance.~~ ✓ Covered in `test_config.py` and `test_tokens.py`.
-3. ~~Add negative controls for digest-invariant drift and missing review-packet artifacts.~~ ✓ Covered in `test_tokens.py` and `test_composition_and_analysis.py`.
-4. Add schema migrations only with compatibility tests from the current config.
-5. Promote domain-fork examples only after they add domain validators and explicit non-claim boundaries.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `MADLIB-DIGEST-PROPERTY-1` | Minor | Deterministic token digest contract | digest invariant cases | focused token tests | reordered/altered lexicon must change the digest |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `MADLIB-MIGRATION-1` | Medium | Current config schema | versioned migration fixture | `uv run pytest projects/templates/template_madlib/tests -q` | old schema with dropped field must fail or migrate explicitly |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

@@ -45,6 +45,9 @@ project_config:
       - name: integrity_profile
         options: [sha256, merkle]
     deps: []
+    # Optional fail-closed subset of the grammar product. Leave empty to
+    # enumerate every cell; values must match declared slot options exactly.
+    archetype_filters: {}
 publication:
   doi: ""
   version_doi: ""

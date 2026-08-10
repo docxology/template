@@ -172,6 +172,8 @@ repos:
             export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH" &&
             export PYTHONDONTWRITEBYTECODE=1 &&
             uv run python scripts/audit/check_template_drift.py --strict &&
+            uv run python scripts/audit/check_backlog.py &&
+            uv run python scripts/audit/check_claim_bindings.py &&
             uv run python scripts/docgen/api_reference.py --check &&
             uv run python scripts/docgen/exemplar_roster.py --check &&
             uv run python scripts/docgen/counts.py --check &&

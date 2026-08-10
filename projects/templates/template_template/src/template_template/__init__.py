@@ -19,6 +19,14 @@ Data classes:
 from __future__ import annotations
 
 from .inject_metrics import load_metrics, render_all_chapters, render_chapter
+from .contracts import (
+    build_metrics_receipt,
+    build_steganography_defaults_receipt,
+    validate_comparative_matrix_lockstep,
+    validate_metrics_payload,
+    validate_metrics_receipt,
+    validate_steganography_defaults_receipt,
+)
 from .introspection import (
     CoverageConfig,
     InfrastructureReport,
@@ -71,6 +79,12 @@ __all__ = [
     "load_metrics",
     "render_chapter",
     "render_all_chapters",
+    "build_metrics_receipt",
+    "build_steganography_defaults_receipt",
+    "validate_comparative_matrix_lockstep",
+    "validate_metrics_payload",
+    "validate_metrics_receipt",
+    "validate_steganography_defaults_receipt",
     # Metrics functions
     "count_test_functions",
     "count_docs_markdown_files",

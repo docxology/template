@@ -15,6 +15,13 @@ import yaml
 
 from literature.corpus import Corpus
 from literature.models import Paper
+from multi_phase.contracts import (
+    score_llm_calibration,
+    validate_cross_phase_conflicts,
+    validate_llm_calibration,
+    validate_phase_artifact_manifest,
+    validate_phase_boundaries,
+)
 from multi_phase.search import (
     LLMFilterEngine,
     MultiPhaseSearchRunner,
@@ -240,6 +247,115 @@ def test_phase_configuration_validation_rejects_invalid_temporal_bounds(tmp_path
     assert report["issues"][0]["code"] == "invalid_year_bounds"
     with pytest.raises(ValueError, match="Invalid phase configuration"):
         runner.replay_fixture(tmp_path / "missing.jsonl")
+
+
+def test_phase_boundary_contract_rejects_non_numeric_and_empty_queries() -> None:
+    issues = validate_phase_boundaries(
+        {
+            "phase": {
+                "queries": [""],
+                "temporal_boundary": {"min_year": "recent", "max_year": 2020},
+            }
+        }
+    )
+    assert {issue["code"] for issue in issues} == {"invalid_queries", "invalid_temporal_bound"}
+
+
+def test_phase_boundary_contract_rejects_malformed_phase_shapes() -> None:
+    """Malformed phase containers fail at the phase boundary, not in search code."""
+    assert validate_phase_boundaries([])[0]["code"] == "phases_not_mapping"
+    issues = validate_phase_boundaries(
+        {
+            "not-a-phase": "text",
+            "bad-filters": {"queries": ["q"], "deterministic_filters": []},
+            "bad-boundary": {"queries": ["q"], "temporal_boundary": []},
+            "none-filters": {"queries": ["q"], "deterministic_filters": None},
+            "bad-year": {"queries": ["q"], "temporal_boundary": {"max_year": 2020.5}},
+        }
+    )
+    assert {issue["code"] for issue in issues} == {
+        "phase_not_mapping",
+        "invalid_filters",
+        "invalid_temporal_boundary",
+        "invalid_temporal_bound",
+    }
+
+
+def test_cross_phase_conflict_contract_requires_explicit_polarity() -> None:
+    assert validate_cross_phase_conflicts(
+        [
+            {"paper_id": "p1", "claim_id": "c1", "polarity": "support"},
+            {"paper_id": "p1", "claim_id": "c1", "polarity": "contradict"},
+        ]
+    ) == ["conflicting polarity for p1/c1: support and contradict"]
+    assert validate_cross_phase_conflicts([{"paper_id": "p1", "claim_id": "c1"}])
+
+
+def test_cross_phase_conflict_contract_rejects_malformed_collections() -> None:
+    """Non-mapping and malformed assertions remain visible diagnostics."""
+    issues = validate_cross_phase_conflicts(["bad", {"paper_id": "p1", "claim_id": "c1", "polarity": "other"}])
+    assert len(issues) == 2
+    assert validate_cross_phase_conflicts({}) == ["assertions must be a list"]
+
+
+def test_llm_calibration_contract_scores_offline_fixture() -> None:
+    cases = [
+        {"id": "yes-1", "abstract": "measured signal", "expected": "yes"},
+        {"id": "no-1", "abstract": "future work", "expected": "no"},
+    ]
+    assert validate_llm_calibration(cases) == []
+    assert score_llm_calibration(cases, {"yes-1": "yes", "no-1": "no"})["accuracy"] == 1.0
+    assert score_llm_calibration(cases, {"yes-1": "yes"})["status"] == "review"
+
+
+def test_llm_calibration_contract_rejects_bad_fixture_and_predictions() -> None:
+    """Calibration fixtures require unique IDs, text, and known labels."""
+    cases = [
+        {"id": "duplicate", "abstract": "text", "expected": "yes"},
+        {"id": "duplicate", "abstract": "", "expected": "maybe"},
+        "not-a-case",
+    ]
+    issues = validate_llm_calibration(cases)
+    assert any("duplicate" in issue for issue in issues)
+    assert any("abstract" in issue for issue in issues)
+    assert any("expected" in issue for issue in issues)
+    assert any("mapping" in issue for issue in issues)
+    assert score_llm_calibration([], {})["status"] == "invalid"
+
+
+def test_phase_artifact_manifest_contract_rejects_duplicate_and_unknown_paths() -> None:
+    manifest = {
+        "phase_order": ["phase_1"],
+        "artifacts": [
+            {"path": "phase_1.jsonl", "phases": ["phase_1"]},
+            {"path": "phase_1.jsonl", "phases": ["phase_2"]},
+        ],
+    }
+    issues = validate_phase_artifact_manifest(manifest)
+    assert any("duplicate artifact path" in issue for issue in issues)
+    assert any("unknown phase" in issue for issue in issues)
+
+
+def test_phase_artifact_manifest_contract_rejects_unsafe_and_malformed_rows() -> None:
+    """Artifact manifests reject traversal, empty attribution, and bad roots."""
+    assert validate_phase_artifact_manifest([]) == ["manifest must be a mapping"]
+    assert validate_phase_artifact_manifest({"phase_order": ["p", "p"], "artifacts": []}) == [
+        "phase_order must be a list of unique phase IDs"
+    ]
+    assert validate_phase_artifact_manifest({"phase_order": ["p"], "artifacts": "bad"}) == ["artifacts must be a list"]
+    issues = validate_phase_artifact_manifest(
+        {
+            "phase_order": ["p"],
+            "artifacts": [
+                "bad",
+                {"path": "../escape.json", "phases": []},
+                {"path": "empty.json", "phases": []},
+            ],
+        }
+    )
+    assert any("mapping" in issue for issue in issues)
+    assert any("unsafe path" in issue for issue in issues)
+    assert any("at least one phase" in issue for issue in issues)
 
 
 def test_llm_phase_filter_records_retained_provenance(

@@ -214,21 +214,59 @@ def _relative_record(record: _FileRecord, root: Path) -> _FileRecord:
     return _FileRecord(record.key.removeprefix(prefix), record.path)
 
 
-def _cached_records(records: Iterable[_FileRecord], repo_root: Path) -> list[_FileRecord]:
-    """Keep files in Git's cached index; retain all files outside a repository."""
-    candidates = list(records)
+def _repository_root_for(path: Path, fallback: Path) -> Path:
+    """Find the nearest Git worktree for *path*, including nested checkouts."""
+    candidate = path.resolve()
+    for directory in (candidate, *candidate.parents):
+        if (directory / ".git").exists():
+            return directory
+        if directory == fallback.resolve():
+            break
+    return fallback
+
+
+def _cached_paths(repo_root: Path) -> set[Path] | None:
+    """Return cached paths for one worktree, independent of global Git helpers."""
     try:
         completed = subprocess.run(  # noqa: S603 - fixed argv, no shell
-            ["git", "-C", str(repo_root), "ls-files", "--cached", "-z"],
+            [
+                "git",
+                "-c",
+                "core.fsmonitor=false",
+                "-c",
+                "core.untrackedcache=false",
+                "-C",
+                str(repo_root),
+                "ls-files",
+                "--cached",
+                "-z",
+            ],
             check=False,
             capture_output=True,
         )
     except OSError:
-        return candidates
+        return None
     if completed.returncode != 0:
+        return None
+    return {(repo_root / raw.decode("utf-8")).absolute() for raw in completed.stdout.split(b"\0") if raw}
+
+
+def _cached_records(records: Iterable[_FileRecord], repo_root: Path) -> list[_FileRecord]:
+    """Keep files cached by their nearest Git worktree, including nested repos."""
+    candidates = list(records)
+    by_root: dict[Path, list[_FileRecord]] = {}
+    for record in candidates:
+        root = _repository_root_for(record.path, repo_root)
+        by_root.setdefault(root, []).append(record)
+    cached_by_root = {root: _cached_paths(root) for root in by_root}
+    if any(paths is None for paths in cached_by_root.values()):
         return candidates
-    cached = {(repo_root / raw.decode("utf-8")).absolute() for raw in completed.stdout.split(b"\0") if raw}
-    return [record for record in candidates if record.path.absolute() in cached]
+    return [
+        record
+        for root, grouped in by_root.items()
+        for record in grouped
+        if record.path.resolve() in (cached_by_root[root] or set())
+    ]
 
 
 def _fingerprint(records: Iterable[_FileRecord]) -> Fingerprint:

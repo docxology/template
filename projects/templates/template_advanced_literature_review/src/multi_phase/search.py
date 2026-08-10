@@ -24,6 +24,7 @@ from config_loader import _load_yaml
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.search_runner import run_literature_search
+from multi_phase.contracts import validate_phase_artifact_manifest, validate_phase_boundaries
 from multi_phase.llm_filter import LLMFilterEngine
 from multi_phase.models import PhasedPaper, PhaseMetadata
 
@@ -59,6 +60,7 @@ class MultiPhaseSearchRunner:
         self.project_config = self.config.get("project_config", {})
         self.search_phases: dict[str, Any] = self.project_config.get("search_phases", {})
         self.llm_filters: dict[str, Any] = self.project_config.get("llm_filters", {})
+        self.llm_phase_status: dict[str, str] = {}
 
         self.phase_metadata: dict[str, PhaseMetadata] = {}
         self.all_phased_papers: dict[str, PhasedPaper] = {}
@@ -102,6 +104,7 @@ class MultiPhaseSearchRunner:
     def apply_llm_filters(self, papers: list[Paper], phase_id: str) -> list[Paper]:
         """Apply LLM filters relevant to a specific phase."""
         if not self.llm_engine or not self.llm_filters:
+            self.llm_phase_status[phase_id] = "skipped_provider_unavailable" if self.llm_filters else "not_configured"
             return papers
 
         filtered = []
@@ -112,6 +115,8 @@ class MultiPhaseSearchRunner:
         else:
             iterator = tqdm(papers, desc=f"LLM filtering {phase_id}")
 
+        error_count = 0
+        applied_count = 0
         for paper in iterator:
             keep_paper = True
             llm_results: dict[str, str] = {}
@@ -122,6 +127,8 @@ class MultiPhaseSearchRunner:
 
                 result = self.llm_engine.apply_filter(paper, filter_config)
                 llm_results[filter_id] = result
+                applied_count += 1
+                error_count += result == "error"
 
                 # Check if this paper should be kept
                 keep_values = filter_config.get("keep_values", [])
@@ -143,6 +150,9 @@ class MultiPhaseSearchRunner:
             if keep_paper:
                 filtered.append(paper)
 
+        self.llm_phase_status[phase_id] = (
+            "completed_with_errors" if error_count else ("completed" if applied_count else "not_applicable")
+        )
         return filtered
 
     @staticmethod
@@ -271,6 +281,7 @@ class MultiPhaseSearchRunner:
         # Apply LLM filters
         llm_filtered_papers = self.apply_llm_filters(filtered_papers, phase_id)
         metadata.papers_after_llm_filters = len(llm_filtered_papers)
+        metadata.llm_filter_status = self.llm_phase_status.get(phase_id, "not_configured")
 
         # Track papers
         self._record_phase_papers(llm_filtered_papers, phase_id)
@@ -431,18 +442,6 @@ class MultiPhaseSearchRunner:
             config = raw_config if isinstance(raw_config, dict) else {}
             if "queries" not in config:
                 issues.append({"phase": phase_id, "code": "missing_queries", "message": "phase has no queries"})
-            filters = config.get("deterministic_filters", {})
-            if isinstance(filters, dict):
-                min_year = filters.get("min_year")
-                max_year = filters.get("max_year")
-                if min_year is not None and max_year is not None and int(min_year) > int(max_year):
-                    issues.append(
-                        {
-                            "phase": phase_id,
-                            "code": "invalid_year_bounds",
-                            "message": f"min_year {min_year} is greater than max_year {max_year}",
-                        }
-                    )
             dependencies = config.get("depends_on", [])
             if not isinstance(dependencies, list):
                 dependencies = [dependencies]
@@ -467,6 +466,7 @@ class MultiPhaseSearchRunner:
                             "message": f"dependency {dependency!r} must be declared before this phase",
                         }
                     )
+        issues.extend(validate_phase_boundaries(self.search_phases))
         return {
             "schema_version": "advanced-literature-review/phase-validation/1",
             "status": "pass" if not issues else "fail",
@@ -518,6 +518,9 @@ class MultiPhaseSearchRunner:
             "phase_order": all_phases,
             "artifacts": artifacts,
         }
+        manifest_issues = validate_phase_artifact_manifest(manifest)
+        if manifest_issues:
+            raise ValueError(f"Invalid phase artifact manifest: {manifest_issues}")
         (output_dir / "phase_artifact_manifest.json").write_text(
             json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
@@ -640,6 +643,7 @@ class MultiPhaseSearchRunner:
                 papers_after_llm_filters=len(filtered),
                 papers_final=len(filtered),
                 deterministic_filters_applied=phase_config.get("deterministic_filters", {}),
+                llm_filter_status="skipped_fixture_replay",
                 depends_on=phase_config.get("depends_on", []),
             )
 

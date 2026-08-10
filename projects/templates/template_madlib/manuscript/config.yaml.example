@@ -34,6 +34,7 @@ analysis:
     - 02_validate_outputs.py
 
 madlib:
+  schema_version: 2
   seed: 1
   composition_depth: "standard"
   hypothesis: "Deterministic token injection can generate a conditional manuscript."

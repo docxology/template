@@ -1,22 +1,25 @@
 # template_autopoiesis TODO
 
-Forward-only backlog for the combinatoric-grammar exemplar that deterministically generates whole runnable child projects (`src/`, `tests/`, `scripts/`, `manuscript/`) with recompute-based provenance verification and a falsifiable honesty manifest.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Project tests and coverage: the exemplar gate collected 512 items; observed 511 passed, 1 skipped, 0 failed, with 96.81% coverage on the exemplar-only run. The one skip is the pre-existing signal-domain first-primitive negative-control parametrization (the second signal primitive supplies that control). The manuscript's `{{TEST_COUNT}}` / `{{COVERAGE_PCT}}` tokens come from the render-time measurement in `src/manuscript_variables.py::measure_test_summary`, never a hand-authored number.
-- Prerender validation passed: no render-blocking pitfalls or undefined citations.
-- Stage-02 analysis completed 7/7 declared scripts (coverage measurement, figure assets, cover art, archetype realization, full-child realization, sealing, manuscript variables).
-- Stage-03 rendered the combined PDF (19 pages) and HTML successfully; render logs contain 0 `^! ` errors and the PDF contains 0 `??` markers.
-- Stage-04 passed PDF, transmission-bookend, Markdown, output-structure, figure-registry, evidence-registry, design-overlay, and artifact-manifest checks.
-- Stage-05 copied 48 publication files to `output/templates/template_autopoiesis/`.
-- Strict template drift reported no drift.
-- The renderer still reports non-blocking preamble-recovery warnings because `preamble.md` is not fenced as one LaTeX block; this remains a cleanup item below.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
 - Keep the grammar the single source of truth in `manuscript/config.yaml` (`autopoiesis:` block) and all generation logic in `src/` (`grammar.py`, `expand.py`, `materialize.py`, `realize.py`, `sealing.py`, `verify.py`, `honesty.py`) — scripts stay thin orchestrators.
-- **Shipped:** materialization consumes `src/emit_templates.py::emit_all` for every child-facing analysis, test, project, and manuscript file, so the standalone emitter and generated child cannot drift silently.
+- Keep materialization routed through `src/emit_templates.py::emit_all` for
+  every child-facing analysis, test, project, and manuscript file so standalone
+  emitters and generated children cannot drift silently.
 - Keep provenance recompute-based: verification must re-derive the tree hash from disk at check time and never trust a recorded manifest hash.
 
 ## Configurable-surface gaps
@@ -27,7 +30,8 @@ Forward-only backlog for the combinatoric-grammar exemplar that deterministicall
 ## Documentation and signposting gaps
 
 - Keep README and `SYNTAX.md` clear that Stage 02 expands the grammar and materializes/verifies children, while Stage 03 renders the descriptive manuscript PDF.
-- Finish the remaining `SPEC.md` Phase 10 items and keep them in step with the shipped grammar surface.
+- Finish the remaining `SPEC.md` Phase 10 items and keep them in step with the
+  declared grammar surface.
 - Consider fencing `manuscript/preamble.md` as a complete LaTeX block to eliminate renderer recovery warnings.
 
 ## Dependency-mode gaps
@@ -36,13 +40,30 @@ Forward-only backlog for the combinatoric-grammar exemplar that deterministicall
 
 ## Test and validator gaps
 
-- **Shipped:** figure fallback handling has no redundant list-shape branch and explicitly labels empty-array summaries; malformed and under-specified grammar shapes fail before expansion with real negative controls.
+- Keep figure fallback handling explicit for empty arrays, and require
+  malformed or under-specified grammar shapes to fail before expansion with real
+  negative controls.
 - Strengthen the mutation meta-gate with an additional stubbed-kernel case per domain, so green-by-construction theater cannot slip through as new domains are added.
 - Eliminate the remaining meta-gate skip by selecting the first available negative-control primitive per domain (the signal domain's first primitive has none).
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Eliminate the remaining test skip by selecting the first available negative-control primitive per domain, then regenerate measured outputs.
-2. Extend mutation meta-gate coverage across all domains and kernels.
-3. Add the archetype-selection filter to the configurable surface.
-4. Finish `SPEC.md` Phase 10 and re-sync it with the shipped grammar.
+No active rows are currently scoped at this size.
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `AUTOPOIESIS-MUTATION-1` | Medium | Existing mutation meta-gate | per-domain mutation report | `uv run pytest projects/templates/template_autopoiesis/tests -q` | removing a domain guard must fail the mutated case |
+| `AUTOPOIESIS-ARCHETYPE-1` | Medium | Config schema extension | filtered child manifest | project validator plus generated-child integrity tests | unknown archetype filter must fail closed |
+
+## Major upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `AUTOPOIESIS-SPEC-1` | Major | Grammar/spec lockstep | `SPEC.md` Phase 10 checklist | strict drift and spec-contract tests | fenced preamble/spec mismatch must fail validation |
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

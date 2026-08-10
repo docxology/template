@@ -376,6 +376,16 @@ def test_allow_empty_requires_explicit_opt_in(synthetic_repo: Path) -> None:
     assert run_per_project_pytest(synthetic_repo, projects=[], fail_under=100, allow_empty=True) == 0
 
 
+def test_empty_matrix_still_writes_an_explicit_failure_receipt(synthetic_repo: Path) -> None:
+    receipt_path = synthetic_repo / "empty-matrix-receipt.json"
+    assert run_per_project_pytest(synthetic_repo, projects=[], receipt_path=receipt_path) == 1
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert receipt.overall_exit == 1
+    assert receipt.skip_reasons["<no-runnable-projects>"].startswith("error:")
+
+
 def test_default_fail_under_constant_matches_repo_threshold() -> None:
     """Combined-union project gate, reconciled to measured reality.
 

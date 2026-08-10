@@ -12,6 +12,7 @@ from pathlib import Path
 from infrastructure.core.public_matrix_receipt import (
     PublicMatrixLaneResult,
     PublicMatrixReceipt,
+    build_public_matrix_cache_key,
     build_public_matrix_receipt,
     determine_worker_info,
 )
@@ -27,6 +28,7 @@ def _passing_lane(name: str, coverage: float = 95.0, floor: int = 90) -> PublicM
         timed_out=False,
         coverage_percent=coverage,
         output_isolation_ok=True,
+        collection_count=1,
     )
 
 
@@ -57,6 +59,7 @@ def test_receipt_round_trip_is_deterministic(tmp_path: Path) -> None:
     loaded = PublicMatrixReceipt.read(path)
     assert loaded == receipt
     assert loaded.lanes == receipt.lanes
+    assert loaded.schema_version == "template-public-matrix/v2"
 
 
 def test_receipt_digest_ignores_generated_at_and_tracks_content(tmp_path: Path) -> None:
@@ -193,3 +196,73 @@ def test_receipt_accepts_unknown_roster_revision() -> None:
     )
     assert receipt.validate(ROSTER) == []
     assert receipt.roster_revision == "unknown"
+
+
+def test_receipt_records_phase_and_cache_metadata() -> None:
+    receipt = _receipt(
+        tuple(_passing_lane(name) for name in ROSTER),
+        phase_durations={"project_matrix": 12.5},
+        collection_counts={"templates/template_a": 10},
+        skip_reasons={"templates/optional": "tool unavailable"},
+        cache_key="abc",
+    )
+    assert receipt.phase_durations == {"project_matrix": 12.5}
+    assert receipt.collection_counts["templates/template_a"] == 10
+    assert receipt.skip_reasons["templates/optional"] == "tool unavailable"
+    assert receipt.cache_key == "abc"
+
+
+def test_validate_rejects_non_vacuous_zero_collection() -> None:
+    lane = PublicMatrixLaneResult(
+        project_name="templates/template_a",
+        declared_floor=90,
+        exit_code=0,
+        timed_out=False,
+        coverage_percent=95.0,
+        output_isolation_ok=True,
+        collection_count=0,
+    )
+    receipt = _receipt((lane, _passing_lane("templates/template_b"), _passing_lane("templates/template_c")))
+    assert receipt.validate(ROSTER) == [
+        "EMPTY-COLLECTION: project 'templates/template_a' reported zero collected tests"
+    ]
+
+
+def test_validate_accepts_explicit_skip_reason_metadata() -> None:
+    lane = PublicMatrixLaneResult(
+        project_name="templates/template_a",
+        declared_floor=None,
+        exit_code=0,
+        timed_out=False,
+        coverage_percent=None,
+        output_isolation_ok=True,
+        skip_reason="optional tool unavailable",
+    )
+    receipt = _receipt((lane, _passing_lane("templates/template_b"), _passing_lane("templates/template_c")))
+    assert receipt.validate(ROSTER) == []
+
+
+def test_matrix_cache_key_is_order_independent_but_plan_bound() -> None:
+    first = build_public_matrix_cache_key(
+        roster_revision="abc",
+        profile="quick",
+        marker_expression="not slow",
+        worker_info="outer=serial, inner=none",
+        project_names=("templates/b", "templates/a"),
+    )
+    reordered = build_public_matrix_cache_key(
+        roster_revision="abc",
+        profile="quick",
+        marker_expression="not slow",
+        worker_info="outer=serial, inner=none",
+        project_names=("templates/a", "templates/b"),
+    )
+    changed = build_public_matrix_cache_key(
+        roster_revision="abc",
+        profile="release",
+        marker_expression="not slow",
+        worker_info="outer=serial, inner=none",
+        project_names=("templates/a", "templates/b"),
+    )
+    assert first == reordered
+    assert first != changed

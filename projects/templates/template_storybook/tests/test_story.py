@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 import yaml
 
 from storybook import child_pair, generate_character, load_storybook
+from storybook.story import validate_accessibility_metadata
 
 
 def test_load_storybook_story_contract(project_root) -> None:
     spec = load_storybook(project_root)
     assert spec.title == "The Shape Between"
     assert spec.subtitle == "A geometric fable of belonging, bracing, and reciprocal form"
+    assert spec.trim_size == "portrait"
     assert spec.page_count == 14
     assert spec.pages[0].slug == "cover"
     assert spec.pages[1].slug == "publication_information"
@@ -68,3 +72,21 @@ def test_invalid_palette_fails(isolated_project) -> None:
     story_path.write_text(yaml.safe_dump(payload), encoding="utf-8")
     with pytest.raises(ValueError):
         load_storybook(isolated_project)
+
+
+def test_known_trim_size_rejects_mismatched_dimensions(isolated_project) -> None:
+    story_path = isolated_project / "content" / "story.yaml"
+    payload = yaml.safe_load(story_path.read_text(encoding="utf-8"))
+    payload["storybook"]["trim_size"] = "square"
+    story_path.write_text(yaml.safe_dump(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="trim_size"):
+        load_storybook(isolated_project)
+
+
+def test_accessibility_metadata_rejects_duplicate_slugs(isolated_project) -> None:
+    spec = load_storybook(isolated_project)
+    duplicate = replace(spec.pages[1], slug=spec.pages[0].slug)
+    altered = replace(spec, pages=(spec.pages[0], duplicate, *spec.pages[2:]))
+
+    assert any("duplicate page slug" in issue for issue in validate_accessibility_metadata(altered))

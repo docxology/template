@@ -273,6 +273,12 @@ under `output/`; `scripts/README.md` names the current producers and
 
 Non-blocking future work is tracked in [`TODO.md`](TODO.md); current publication claims remain confined to deterministic toy Active Inference artifacts.
 
+Refresh orchestration uses the shared bounded subprocess policy (process-group
+cleanup, timeout, and redacted environment) and writes an optional cache
+receipt with phase timings, cache identity, output isolation, and explicit
+skip reasons. Empirical, private-data, network, and LLM lanes remain opt-in
+and cannot be promoted by the deterministic fixture checks alone.
+
 ## Method inventory
 
 Every Python `def` and `class` under `src/` and `scripts/` is documented in the
@@ -285,6 +291,12 @@ uv run python scripts/generate_method_inventory.py --check
 ```
 
 ## Documentation verification
+
+Current release evidence is recertified with
+`uv run pytest tests/ --cov=src --cov-fail-under=90`; live test counts,
+coverage, and timings are read from
+[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
+here.
 
 Run the documentation and artifact contract checks from this project root:
 

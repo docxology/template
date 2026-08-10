@@ -203,6 +203,9 @@ flowchart TD
 | **runtime/function_profiler.py** | Function-level profiling and memory snapshots | `CodeProfiler`, `monitor_performance()`, `profile_memory_usage()` |
 | **pytest_orchestration.py** | Test profiles, coverage-safe subprocess commands, and bounded worker policy | `resolve_xdist_args()`, `parse_project_workers()`, `validate_project_matrix_concurrency()` |
 | **test_performance.py** | Owned serial/parallel test-lane evidence | `run_test_benchmark()`, `build_test_performance_manifest()` |
+| **subprocess_policy.py** | Typed timeout/cwd/credential/process-group policy for intentional wrappers | `SubprocessPolicy`, `run_with_policy()`, `validate_policy_inventory()` |
+| **test_impact.py** | Changed-surface lane guidance with safe isolation rules | `classify_changed_paths()`, `TestImpactPlan` |
+| **public_matrix_receipt.py** | Versioned public test-matrix evidence with timing, collection, cache, and skip metadata | `PublicMatrixReceipt`, `write_public_matrix_receipt()` |
 | **config/cli.py** | Configuration command-line interface | `main()` |
 
 ### Module Dependencies

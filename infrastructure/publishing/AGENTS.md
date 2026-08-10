@@ -30,7 +30,10 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |
 | `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers. `readiness.py`'s `completeness_score` is manuscript PUBLICATION readiness (heading/PDF/citation/figure presence), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper CONTENT reproducibility score — cross-reference only. |
-| `executable_bundle.py` | Stage 12 executable bundle |
+| `executable_bundle.py` | Stage 12 executable bundle with public-roster, path, lock, and deterministic-manifest gates |
+| `preflight.py` | Publication payload and credential/path preflight |
+| `release_receipts.py` | Versioned command, release-authority, coverage-gap, and clean-checkout receipts |
+| `rehearsal.py` | Offline-by-default two-run clean-checkout release rehearsal |
 | `registry.py` | `PLATFORM_REGISTRY`, `list_platforms()`, `get_platform()`, `PublishingTier` — central adapter registry |
 | `status_report.py` | `compile_publishing_status`, `render_status_markdown`, `render_status_block`, `update_readme_block`, `status_report_is_current` — registry + `config.yaml` → regenerable README publishing-status block |
 | `reachability.py` | Opt-in live repository/DOI reachability probes used by publishing-status diagnostics; ordinary CI remains offline |
@@ -307,6 +310,9 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `credential_check.py` | `PROBES`, `run_probe`, `check_all`, `format_results`, `PlatformProbe`, `ProbeResult` | per-platform tokens (read-only probes) |
 | `upload_runner.py` | `UploadTargets`, `UploadRun`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` | `PINATA_JWT`, `HUGGINGFACE_TOKEN`/`HF_TOKEN`, `OSF_TOKEN`, `TESTPYPI_TOKEN`, `GITHUB_TOKEN`, `NETLIFY_AUTH_TOKEN`, `CLOUDFLARE_API_TOKEN` |
 | `executable_bundle.py` | `bundle_project` | — |
+| `preflight.py` | `publishing_preflight` | — |
+| `release_receipts.py` | `ReleaseMetadataReceipt`, `CommandReceipt`, `CleanCheckoutReceipt`, `CoverageGapSnapshot` | — |
+| `rehearsal.py` | `build_clean_checkout_plan`, `run_clean_checkout_rehearsal` | — |
 | `cli.py` | `main`, `publish_zenodo_command`, `extract_metadata_command`, ... | `--token`, `ZENODO_PROD_TOKEN`, `ZENODO_TOKEN` |
 | `publish_cli.py` | `main` | `--token`, `--repo`, `--tag`, `--name` |
 | `scripts/publish/publish_project_release.py` | `run_release_workflow` (via thin script) | `--project`, `--tag`, `--repo`, GitHub + Zenodo tokens |

@@ -85,6 +85,11 @@ gold_refinement:
   seed: 431
   composition_depth: "deep"
   hypothesis: "Your hypothesis here"
+  reverse_assay:
+    target_purity: 0.9167
+    report_path: "output/reports/reverse_assay.json"
+  purity_vector:
+    dimensions: [stage_completion, claim_support, token_provenance, figure_quality]
   section_conditions:
     abstract: true
     introduction: true

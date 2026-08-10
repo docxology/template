@@ -28,11 +28,12 @@ class RenderResult:
     output_path: Path
     page_count: int
     oversets: dict[int, int] = field(default_factory=dict)
+    layout_issues: dict[int, tuple[str, ...]] = field(default_factory=dict)
 
     @property
     def all_pages_fit(self) -> bool:
         """Process all pages fit."""
-        return not self.oversets
+        return not self.oversets and not self.layout_issues
 
     def to_dict(self, *, relative_to: Path | None = None) -> dict[str, object]:
         """Serialize this object to a portable plain dictionary.
@@ -53,6 +54,7 @@ class RenderResult:
             "page_count": self.page_count,
             "all_pages_fit": self.all_pages_fit,
             "oversets": {str(k): v for k, v in self.oversets.items()},
+            "layout_issues": {str(k): list(v) for k, v in self.layout_issues.items()},
         }
 
 
@@ -87,6 +89,7 @@ def render_edition(
 
     spot = config.spot()
     oversets: dict[int, int] = {}
+    layout_issues: dict[int, tuple[str, ...]] = {}
     for page in edition.pages:
         # White page ground (newsprint stays paper-white in this template).
         c.setFillColor(white)
@@ -94,10 +97,17 @@ def render_edition(
         result = render_page(c, page, edition, geom, config, styles, fonts, project_root, spot=spot)
         if result.overset_flowables:
             oversets[page.number] = result.overset_flowables
+        if result.layout_issues:
+            layout_issues[page.number] = result.layout_issues
         c.showPage()
 
     c.save()
-    return RenderResult(output_path=output_path, page_count=edition.page_count, oversets=oversets)
+    return RenderResult(
+        output_path=output_path,
+        page_count=edition.page_count,
+        oversets=oversets,
+        layout_issues=layout_issues,
+    )
 
 
 def build_and_render(

@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from ..config import ProjectConfig
+from ..llm_review import build_llm_review_receipt
 from ..prose_facade import ManuscriptReportLike
 from .checks import (
     CHECK_REGISTRY,
@@ -70,7 +71,7 @@ def build_evidence_summary(
         "citation_count": citation_count,
         "density_per_1000": round(1000.0 * citation_count / max(1, manuscript_report.total_words), 2),
     }
-    return {
+    summary: dict[str, object] = {
         "schema_version": EVIDENCE_SUMMARY_SCHEMA_VERSION,
         "status": "pass" if all(check.passed for check in checks) else "fail",
         "diagnostic_only": True,
@@ -87,6 +88,10 @@ def build_evidence_summary(
         },
         "checks": [check.to_dict() for check in checks],
     }
+    from .report_schema import validate_evidence_summary
+
+    validate_evidence_summary(summary)
+    return summary
 
 
 @dataclass
@@ -106,6 +111,7 @@ class ProseRunArtifacts:
     manuscript_report: ManuscriptReportLike
     report_path: Path | None = None
     evidence_summary_path: Path | None = None
+    llm_review_path: Path | None = None
     checks: list[CheckResult] = field(default_factory=list)
     all_passed: bool = True
 
@@ -126,6 +132,7 @@ class ProseRunArtifacts:
             "total_words": self.total_words,
             "report_path": str(self.report_path) if self.report_path else None,
             "evidence_summary_path": str(self.evidence_summary_path) if self.evidence_summary_path else None,
+            "llm_review_path": str(self.llm_review_path) if self.llm_review_path else None,
             "checks": [c.to_dict() for c in self.checks],
             "manuscript": self.manuscript_report.to_dict(),
         }
@@ -145,6 +152,7 @@ def run_prose_pipeline(
     all_passed = all(c.passed for c in checks)
     report_path: Path | None = None
     evidence_summary_path: Path | None = None
+    llm_review_path: Path | None = None
     if write_outputs:
         report_path = (root / "output" / "manuscript_report.json").resolve()
         report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -165,6 +173,11 @@ def run_prose_pipeline(
             json.dumps(build_evidence_summary(manuscript_report, checks), indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
+        llm_review_path = (root / "output" / "llm_review_receipt.json").resolve()
+        llm_review_path.write_text(
+            json.dumps(build_llm_review_receipt(config.llm, project_root=root), indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
 
     return ProseRunArtifacts(
         manuscript_report=manuscript_report,
@@ -172,4 +185,5 @@ def run_prose_pipeline(
         checks=checks,
         all_passed=all_passed,
         evidence_summary_path=evidence_summary_path,
+        llm_review_path=llm_review_path,
     )

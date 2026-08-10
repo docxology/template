@@ -1,32 +1,27 @@
 # template_advanced_literature_review TODO
 
-Forward-only backlog for the advanced multi-phase literature review exemplar. Keep this file focused on evidence, generated artifacts, and claim boundaries for the multi-phase architecture.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-Run from the template repository root:
-
-```bash
-uv run pytest projects/templates/template_advanced_literature_review/tests/ --cov=projects/templates/template_advanced_literature_review/src --cov-fail-under=90
-uv run python scripts/audit/check_template_drift.py --strict --project templates/template_advanced_literature_review
-uv run python scripts/docgen/exemplar_roster.py --check
-```
-
-Live test counts and coverage snapshots belong in `../../../docs/_generated/COUNTS.md`.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
 - Keep the offline corpus clearly marked as synthetic; live DOI sources require source-tier provenance and attribution in README, manuscript, and generated-output prose.
-- **Shipped in the current lane:** phase validation and
-  `output/data/phase_artifact_manifest.json` record the phase order and the
-  contributing phase set for every phase corpus, combined corpus, metadata,
-  and validation report. Extend the manifest when adding new artifact types.
-- **Shipped in the current lane:** `ARL-CROSS-PHASE-1` now writes
-  `output/data/cross_phase_analysis.json` with deterministic phase membership,
-  overlap, citation sufficiency, conflicting-paper IDs, and an explicit boundary
-  between structural evidence and knowledge-graph hypothesis scores. The
-  knowledge-graph stage attaches scores only when assertion extraction produces
-  them.
+- Keep `output/data/phase_artifact_manifest.json` phase-aware for every corpus,
+  metadata, and validation artifact; extend it before adding a new artifact
+  family.
+- Add cross-phase conflict and knowledge-graph calibration validators without
+  allowing structural evidence to be presented as an empirical result.
 - Keep `data/subfield_defaults_exoplanet.yaml` tied to project-local configuration, not borrowed from sibling exemplars.
 
 ## Configurable-surface gaps
@@ -45,22 +40,6 @@ Live test counts and coverage snapshots belong in `../../../docs/_generated/COUN
 
 The open work below should add tests or validators before promoting new claim surfaces.
 
-| ID | Track | Future improvement | Proving artifact | Gate |
-| --- | --- | --- | --- | --- |
-| `ARL-PHASE-VALIDATION-1` | Multi-phase | **Shipped:** reject invalid temporal bounds before search/replay and write the validation report | `output/data/phase_validation_report.json` | `test_phase_configuration_validation_rejects_invalid_temporal_bounds` |
-| `ARL-CROSS-PHASE-1` | Cross-validation | Persist cross-phase hypothesis validation metadata alongside scoring | `output/data/cross_phase_analysis.json` | Cross-phase validation test with conflicting evidence |
-| `ARL-LLM-FILTER-1` | Filtering | Add calibration fixtures for LLM-based abstract content filtering | calibration fixture bundle | LLM filter tests with known positive/negative examples |
-| `ARL-PHASE-PROVENANCE-1` | Provenance | Ensure all generated artifacts maintain phase-level provenance | all `output/` artifacts with phase metadata | Provenance audit across full pipeline |
-
-## Ordered improvement ladder
-
-1. Preserve multi-phase corpus integrity with explicit fixture/live classification and source provenance.
-2. Add focused validators for phase boundary enforcement and cross-phase consistency checks.
-3. Expand LLM filtering calibration with domain-specific positive/negative controls.
-4. Complete phase provenance tracking across all pipeline stages.
-5. Document advanced multi-phase patterns for replication in other domains.
-6. Refresh generated docs after any multi-phase surface changes.
-
 ## Multi-Phase Specific Considerations
 
 - **Phase Definition Discipline**: New phases should have clear temporal boundaries, distinct methodological focus, and appropriate filtering criteria.
@@ -68,6 +47,25 @@ The open work below should add tests or validators before promoting new claim su
 - **LLM Filter Calibration**: Abstract content filtering requires domain-specific calibration datasets for reliable precision/recall.
 - **Temporal Coherence**: Phase-aware statistics must handle temporal overlaps and methodological transitions gracefully.
 
-## Promotion Rule
+## Minor upcoming
 
-Move an item out of this file only after its source producer, generated artifact, documentation, and focused tests are updated together AND multi-phase provenance is verified throughout the pipeline.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `ARL-PHASE-VALIDATION-1` | Minor | Phase configuration schema | phase-boundary validation receipt | phase configuration tests and replay gate | invalid temporal bounds must fail before replay |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `ARL-CROSS-PHASE-1` | Medium | Cross-phase evidence schema | cross-phase conflict receipt | cross-phase validation test with conflicting evidence | structural overlap must not count as causal support |
+| `ARL-LLM-FILTER-1` | Medium | Calibration corpus and opt-in provider | calibration fixture bundle | LLM filter tests with known positive/negative examples | unavailable provider must report skip, not pass |
+| `ARL-PHASE-PROVENANCE-1` | Medium | Phase artifact manifest | all `output/` artifacts with phase metadata | provenance audit across full pipeline | artifact without phase provenance must fail |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

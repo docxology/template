@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import os
-import signal
-import subprocess  # nosec B404 - fixed argv supplied by repository runners
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
@@ -12,6 +9,8 @@ from time import monotonic
 from typing import Mapping, Sequence
 
 from infrastructure.core.worker_policy import clamp_worker_count
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
+from infrastructure.core.pytest_orchestration import parse_test_summary_count
 
 
 @dataclass(frozen=True)
@@ -38,6 +37,7 @@ class ProjectTestResult:
     detail: str = ""
     output_tail: str = ""
     duration_seconds: float = 0.0
+    collection_count: int | None = None
 
 
 def _run_task(task: ProjectTestTask) -> ProjectTestResult:
@@ -55,54 +55,28 @@ def _run_task(task: ProjectTestTask) -> ProjectTestResult:
 
         return f"{as_text(stdout)}\n{as_text(stderr)}".strip()[-4000:]
 
+    policy = SubprocessPolicy(
+        policy_id=f"project-test:{task.project_name}",
+        source_path="infrastructure/core/project_test_matrix.py",
+        timeout_seconds=task.timeout_seconds,
+        capture_output=task.capture_output,
+        credential_free=True,
+    )
     try:
-        process = subprocess.Popen(  # nosec B603 - command is built by callers
-            list(task.command),
-            cwd=str(task.cwd),
-            env=dict(task.env),
-            stdout=subprocess.PIPE if task.capture_output else None,
-            stderr=subprocess.PIPE if task.capture_output else None,
-            text=task.capture_output,
-            start_new_session=os.name == "posix",
-        )
-        stdout, stderr = process.communicate(timeout=task.timeout_seconds)
-        output = output_tail(stdout, stderr) if task.capture_output else ""
+        result = run_with_policy(task.command, cwd=task.cwd, env=dict(task.env), policy=policy)
+        output = output_tail(result.stdout, result.stderr) if task.capture_output else ""
+        collection_count = parse_test_summary_count(output) if output else None
         return ProjectTestResult(
             task.index,
             task.project_name,
-            int(process.returncode),
+            124 if result.timed_out else result.returncode,
+            timed_out=result.timed_out,
+            detail=result.command_error,
             output_tail=output,
             duration_seconds=round(monotonic() - started, 3),
+            collection_count=collection_count,
         )
-    except subprocess.TimeoutExpired as exc:
-        if os.name == "posix":
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-        else:  # pragma: no cover - Windows CI uses process.kill directly
-            process.kill()
-        try:
-            process.wait(timeout=1)
-        except subprocess.TimeoutExpired:
-            process.kill()
-            process.wait()
-        # A descendant outside the process group can retain an inherited pipe;
-        # never block the matrix while draining a timed-out task's output.
-        for stream in (process.stdout, process.stderr):
-            if stream is not None:
-                stream.close()
-        output = output_tail(exc.stdout, exc.stderr)
-        return ProjectTestResult(
-            task.index,
-            task.project_name,
-            124,
-            timed_out=True,
-            detail=f"timed out after {task.timeout_seconds} seconds: {exc}",
-            output_tail=output,
-            duration_seconds=round(monotonic() - started, 3),
-        )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError) as exc:
         return ProjectTestResult(
             task.index,
             task.project_name,

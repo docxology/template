@@ -1,0 +1,30 @@
+title: "{{PITCH_SUBJECT_TITLE}}"
+subtitle: "A controlled-method specification pitch for reproducible research teams"
+slides:
+  - kind: title
+    title: "{{PITCH_SUBJECT_TITLE}}"
+  - kind: section
+    title: "Why methods drift"
+  - kind: content
+    title: "Prose is necessary but not sufficient"
+    bullets:
+      - "A method description can be readable while leaving stages, units, and acceptance predicates ambiguous."
+      - "The remedy is a small typed contract that can be validated before compilation."
+  - kind: content
+    title: "The controlled pipeline"
+    bullets:
+      - "Parse the method specification, validate staged dependencies, compile deterministic outputs, and emit a receipt."
+      - "Exact-value tests and negative controls protect the surfaces most likely to drift."
+    source: "projects/templates/template_methods_paper/src"
+  - kind: content
+    title: "What remains bounded"
+    bullets:
+      - "A passing compiler proves local method consistency, not scientific truth or external validity."
+      - "Forks must add domain evidence and publication authorization before extending the claim."
+    source: "projects/templates/template_methods_paper/README.md"
+  - kind: content
+    title: "Adoption path"
+    bullets:
+      - "Choose one existing workflow, encode its invariant stages, and compare the receipt across two deterministic runs."
+      - "Use the failed case as the design signal; do not hide it behind a skipped tool."
+    source: "projects/templates/template_methods_paper/tests"

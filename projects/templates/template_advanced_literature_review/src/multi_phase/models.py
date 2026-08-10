@@ -24,6 +24,7 @@ class PhaseMetadata:
     papers_final: int = 0
     deterministic_filters_applied: dict[str, Any] = field(default_factory=dict)
     llm_filters_applied: list[str] = field(default_factory=list)
+    llm_filter_status: str = "not_configured"
     depends_on: list[str] = field(default_factory=list)
 
 

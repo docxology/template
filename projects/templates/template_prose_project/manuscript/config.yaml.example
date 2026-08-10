@@ -103,6 +103,16 @@ report:
   include_outline: true
   include_quality_flags: true
 
+# Optional transcript-backed LLM review. No provider is contacted by the base
+# template; an enabled review must supply output/llm_review.json matching the
+# documented transcript schema.
+llm:
+  review:
+    enabled: false
+    provider: local_transcript
+    model: ""
+    transcript_path: output/llm_review.json
+
 render:
   formats:
     pdf: true

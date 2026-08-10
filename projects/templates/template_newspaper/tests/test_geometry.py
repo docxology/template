@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from newspaper.geometry import INCH, ColumnGrid, PageGeometry
+from newspaper.layout import audit_column_layout
 
 
 def test_tabloid_default_dimensions() -> None:
@@ -79,3 +80,11 @@ def test_column_grid_rejects_bad_input() -> None:
         ColumnGrid(left=0, width=600, n_columns=4).column_x(9)
     with pytest.raises(IndexError):
         ColumnGrid(left=0, width=600, n_columns=4).column_x(-1)
+
+
+def test_layout_audit_rejects_non_positive_glyph_well() -> None:
+    grid = ColumnGrid(left=0.0, width=600.0, n_columns=2, gutter=12.0)
+
+    issues = audit_column_layout(grid, top=100.0, bottom=100.0)
+
+    assert issues == ("column well has non-positive height",)

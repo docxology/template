@@ -17,6 +17,8 @@ from .source_ledger import (
 )
 
 _BENCHMARK_BOUNDARY_SCHEMA = "template-autoresearch-benchmark-boundary-v1"
+REVIEW_PACKET_V1 = "template-autoresearch-review-packet-v1"
+REVIEW_PACKET_V2 = "template-autoresearch-review-packet-v2"
 
 
 def render_loop_markdown(result: AutoResearchLoopResult) -> str:
@@ -79,7 +81,7 @@ def build_review_packet(result: AutoResearchLoopResult) -> dict[str, object]:
     all_claims_supported = all(claim.supported for claim in result.claims)
     human_review_state = result.config.human_review
     return {
-        "schema": "template-autoresearch-review-packet-v1",
+        "schema": REVIEW_PACKET_V1,
         "project_name": result.project_name,
         "generated_at": result.generated_at,
         "topic": result.config.topic,
@@ -104,6 +106,37 @@ def build_review_packet(result: AutoResearchLoopResult) -> dict[str, object]:
         "next_actions": review_next_actions(result),
         "output_paths": list(result.output_paths),
     }
+
+
+def validate_review_packet(packet: object) -> list[str]:
+    """Validate v1/v2 review packets without granting publication approval."""
+    if not isinstance(packet, dict):
+        return ["review packet must be a mapping"]
+    schema = packet.get("schema")
+    if schema not in {REVIEW_PACKET_V1, REVIEW_PACKET_V2}:
+        return [f"unsupported review packet schema: {schema!r}"]
+    human_review = packet.get("human_review")
+    if not isinstance(human_review, dict):
+        return ["human_review must be a mapping"]
+    issues: list[str] = []
+    if human_review.get("publication_approved") and not human_review.get("decision_source_exists"):
+        issues.append("publication approval requires an existing human decision source")
+    if schema == REVIEW_PACKET_V2:
+        compatibility = packet.get("compatibility")
+        if not isinstance(compatibility, dict) or compatibility.get("previous_schema") != REVIEW_PACKET_V1:
+            issues.append("v2 packet must declare v1 compatibility")
+    return issues
+
+
+def build_review_packet_v2(result: AutoResearchLoopResult) -> dict[str, object]:
+    """Build a versioned v2 packet while preserving the v1 field contract."""
+    packet = build_review_packet(result)
+    packet["schema"] = REVIEW_PACKET_V2
+    packet["compatibility"] = {
+        "previous_schema": REVIEW_PACKET_V1,
+        "migration": "v1 fields remain stable; v2 adds an explicit compatibility envelope",
+    }
+    return packet
 
 
 def review_next_actions(result: AutoResearchLoopResult) -> list[str]:

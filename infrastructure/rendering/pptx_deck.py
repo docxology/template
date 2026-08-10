@@ -20,6 +20,7 @@ than a bare traceback.
 from __future__ import annotations
 
 import io
+import math
 import os
 from pathlib import Path
 import tempfile
@@ -317,9 +318,19 @@ def _add_content_slide(prs: Any, layout: Any, slide_content: Slide, theme: DeckT
     header_tf.margin_left = Inches(0.55)
 
     body_top = Inches(1.2)
-    body_box = slide.shapes.add_textbox(
-        Inches(0.55), body_top, prs.slide_width - Inches(1.1), prs.slide_height - body_top - Inches(0.3)
-    )
+    # Reserve figure space based on the actual bullet text before creating the
+    # body box. The previous fixed y=3.1in placement could overlap a long
+    # bullet list even though both shapes were individually valid.
+    estimated_lines = sum(max(1, math.ceil((len(bullet) + 5) / 68)) for bullet in slide_content.bullets)
+    body_height = min(2.8, max(0.8, 0.35 + estimated_lines * 0.28))
+    figure_top = 1.2 + body_height + 0.18
+    figure_height = 5.625 - figure_top - 0.3
+    if slide_content.figure_path is not None and figure_height < 0.6:
+        raise RenderingError(
+            "Content slide figure has no non-overlapping space below its bullets",
+            context={"slide_title": slide_content.title},
+        )
+    body_box = slide.shapes.add_textbox(Inches(0.55), body_top, prs.slide_width - Inches(1.1), Inches(body_height))
     tf = body_box.text_frame
     tf.word_wrap = True
     for i, bullet in enumerate(slide_content.bullets):
@@ -334,8 +345,9 @@ def _add_content_slide(prs: Any, layout: Any, slide_content: Slide, theme: DeckT
             slide.shapes.add_picture(
                 str(slide_content.figure_path),
                 Inches(1.5),
-                Inches(3.1),
+                Inches(figure_top),
                 width=prs.slide_width - Inches(3.0),
+                height=Inches(figure_height),
             )
         else:
             logger.warning(

@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Mapping, Sequence, cast
 
@@ -11,6 +13,48 @@ from infrastructure.core.config.loader import load_config
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 _GITHUB_REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+PUBLICATION_MANIFEST_SCHEMA = "template-publication-payload/v1"
+
+
+@dataclass(frozen=True)
+class PublicationPayloadEntry:
+    """One immutable, project-confined publication payload file."""
+
+    path: str
+    bytes: int
+    sha256: str
+
+    def to_dict(self) -> dict[str, object]:
+        """Return the stable JSON representation of this entry."""
+        return {"path": self.path, "bytes": self.bytes, "sha256": self.sha256}
+
+
+@dataclass(frozen=True)
+class PublicationPayloadManifest:
+    """Typed payload manifest used by every state-changing publication path."""
+
+    project: str
+    payload_root: str
+    payload: tuple[PublicationPayloadEntry, ...]
+    credential_sources: dict[str, str]
+    targets: dict[str, str]
+    schema_version: str = PUBLICATION_MANIFEST_SCHEMA
+
+    def to_dict(self) -> dict[str, object]:
+        """Return deterministic, credential-free manifest data."""
+        return {
+            "schema_version": self.schema_version,
+            "project": self.project,
+            "payload_root": self.payload_root,
+            "payload": [entry.to_dict() for entry in self.payload],
+            "credential_sources": dict(sorted(self.credential_sources.items())),
+            "targets": dict(sorted(self.targets.items())),
+        }
+
+    def digest(self) -> str:
+        """Return a content digest suitable for a release receipt."""
+        raw = json.dumps(self.to_dict(), sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(raw).hexdigest()
 
 
 def _normalize_github_repository(value: object, *, source: str) -> str:
@@ -70,14 +114,18 @@ def publishing_preflight(
             raise ValueError(f"publishing payload root does not exist: {manifest_root}")
         root_label = f"output/{project_name}"
 
-    manifest: list[dict[str, object]] = []
+    _reject_symlink_components(root, root / "projects" / project_name)
+    entries: list[PublicationPayloadEntry] = []
     seen_payloads: set[str] = set()
     for path in payload_paths:
+        if path.is_symlink():
+            raise ValueError(f"publishing payload symlink is not allowed: {path}")
         resolved = path.resolve()
         try:
             relative = resolved.relative_to(manifest_root)
         except ValueError as exc:
             raise ValueError(f"publishing payload is outside canonical project tree: {resolved}") from exc
+        _reject_symlink_components(manifest_root, path)
         if not resolved.is_file():
             raise ValueError(f"publishing payload does not exist: {resolved}")
         relative_path = relative.as_posix()
@@ -89,12 +137,12 @@ def publishing_preflight(
             raise ValueError(f"publishing payload is not a PDF: {resolved}")
         if resolved.suffix.lower() == ".pdf":
             _validate_pdf_metadata(resolved)
-        manifest.append(
-            {
-                "path": relative_path,
-                "bytes": len(content),
-                "sha256": hashlib.sha256(content).hexdigest(),
-            }
+        entries.append(
+            PublicationPayloadEntry(
+                path=relative_path,
+                bytes=len(content),
+                sha256=hashlib.sha256(content).hexdigest(),
+            )
         )
 
     allowed_sources = {"cli", "environment", "local-config", "missing", "not-required"}
@@ -127,13 +175,31 @@ def publishing_preflight(
         targets["github"] = declared_repository
     elif github_repository is not None:
         raise ValueError("GitHub repository target was supplied while GitHub publishing is not required")
-    return {
-        "project": project_name,
-        "payload_root": root_label,
-        "payload": manifest,
-        "credential_sources": redacted_sources,
-        "targets": targets,
-    }
+    manifest = PublicationPayloadManifest(
+        project=project_name,
+        payload_root=root_label,
+        payload=tuple(sorted(entries, key=lambda entry: entry.path)),
+        credential_sources=redacted_sources,
+        targets=targets,
+    )
+    result = manifest.to_dict()
+    result["manifest_sha256"] = manifest.digest()
+    return result
+
+
+def _reject_symlink_components(root: Path, candidate: Path) -> None:
+    """Reject symlink components before resolving a publication path."""
+    root = root.resolve()
+    candidate_path = candidate if candidate.is_absolute() else root / candidate
+    try:
+        relative = candidate_path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"publication path is outside its confined root: {candidate}") from exc
+    current = root
+    for component in relative.parts:
+        current = current / component
+        if current.is_symlink():
+            raise ValueError(f"publication path contains a symlink component: {current}")
 
 
 def _validate_pdf_metadata(path: Path) -> None:
@@ -155,4 +221,9 @@ def _validate_pdf_metadata(path: Path) -> None:
         raise ValueError(f"publishing PDF metadata rejected: {', '.join(issues)}")
 
 
-__all__ = ["publishing_preflight"]
+__all__ = [
+    "PUBLICATION_MANIFEST_SCHEMA",
+    "PublicationPayloadEntry",
+    "PublicationPayloadManifest",
+    "publishing_preflight",
+]

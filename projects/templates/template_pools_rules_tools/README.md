@@ -25,6 +25,11 @@ This project shows agents and developers how to:
 3. **Invoke tools** — enumerate tool manifests and validate entrypoint scripts from `tools/templates/`
 4. **Integrate all three** — orchestrate a combined validation and reporting pipeline
 
+The resource-pool lane now exposes typed resource manifests and a
+schema-versioned validation receipt. Invalid paths, duplicate identities, and
+missing required fields fail closed; local-only pool folders remain outside the
+public tracked exemplar until a fourth fond is deliberately authored.
+
 ## Structure
 
 ```

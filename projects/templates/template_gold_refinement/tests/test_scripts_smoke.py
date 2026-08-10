@@ -28,6 +28,9 @@ class TestRefinementAnalysisScript:
         assert (_PROJECT_ROOT / "output" / "data" / "refinery_results.json").exists()
         assert (_PROJECT_ROOT / "output" / "reports" / "token_plan.json").exists()
         assert (_PROJECT_ROOT / "output" / "reports" / "claim_support_registry.json").exists()
+        assert (_PROJECT_ROOT / "output" / "reports" / "reverse_assay.json").exists()
+        assert (_PROJECT_ROOT / "output" / "reports" / "transmission_bookends.json").exists()
+        assert (_PROJECT_ROOT / "output" / "reports" / "analogy_boundary_receipt.json").exists()
         assert (_PROJECT_ROOT / "output" / "reports" / "figure_quality_report.json").exists()
         # Check figures were generated
         figures_dir = _PROJECT_ROOT / "output" / "figures"

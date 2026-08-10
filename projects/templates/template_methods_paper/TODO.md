@@ -1,54 +1,18 @@
 # template_methods_paper TODO
 
-Forward-only integrity backlog for the methods-paper control-positive
-exemplar. Keep this file focused on template status, not general feature
-ideas.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-- Project tests and coverage: `uv run pytest projects/templates/template_methods_paper/tests --cov=projects/templates/template_methods_paper/src --cov-fail-under=90`
-  — last full run: **90 passed, 0 failed, 99.01% coverage** (2026-08-02).
-- Repo drift gate: `uv run python scripts/audit/check_template_drift.py --project templates/template_methods_paper --strict`
-  — last run: **no drift detected** for this exemplar (2026-08-02). A
-  repo-level `repo_docs_hardcoded_test_count` warning currently fires for
-  `template_storybook/tests/AGENTS.md` (hardcoded '12 tests' from a prior
-  commit); it is outside this exemplar's subtree and is tracked by the
-  storybook lane.
-- Code quality: `uv run ruff check projects/templates/template_methods_paper/src/` and `uv run mypy projects/templates/template_methods_paper/src/` must both pass clean — last run: **ruff clean, mypy clean (14 source files)** (2026-08-02).
-- Prerender: `uv run python -m infrastructure.validation.cli prerender projects/templates/template_methods_paper/manuscript --repo-root .`
-  — last run: **no render-blocking pitfalls or undefined citations** (2026-08-02).
-- Full pipeline (analysis → variables → render → validate → copy):
-  **stage 02 3/3 scripts, stage 03 1/1 PDF (14 pages), stage 04 clean,
-  stage 05 clean**; render log `^! ` count **0**, `??` count **0**
-  (2026-08-02).
-- Determinism: `tests/test_compiler.py::test_compile_method_is_deterministic` recompiles the same `Method` five times and asserts a single `plan_hash`.
-- Coverage floor: ≥90% on `src/`; live test count and achieved coverage are tracked in `docs/_generated/COUNTS.md` (not hardcoded here).
-
-## Pass log
-
-- **2026-08-02 — derive-don't-transcribe hardening.** De-hardcoded
-  `DSL_GATE_COUNT` (was `"4"` literal in `src/manuscript_variables.py`):
-  `validation.py` now declares `GATE_SEQUENCE`/`GATE_COUNT` derived from the
-  actual gate functions, exported through both package facades. Added
-  `PLAN_HASH_TRUNCATION = 12` for the plan-hash display truncation.
-  `tests/test_manuscript_variables.py::test_claim_ledger_constants_match_live_source`
-  now binds **all seven** claim-ledger claims to live source (previously only
-  2 of 7: dimension count and config-hash prefix length). 90 passed, 99.01%
-  coverage, ruff + mypy clean.
-
-- **2026-08-02 — publication pass (accuracy + full re-render).** Deep
-  semantic review of manuscript prose vs `src/methods_dsl/` code and live
-  outputs, doc-completeness sweep (all eight directory levels carry
-  AGENTS.md + README.md; `.agents/` catalog matches the sibling
-  `template-*` hyphenated convention), version-marker agreement
-  (pyproject / config.yaml / CITATION.cff all 1.0.0; figure registry
-  schema matches `src/figure_specs.py`), and a full canonical pipeline
-  re-run. Fixed one prose inaccuracy: `04_conclusion.md` insight #3
-  overclaimed that `SensorCalibrationSweep` "reuses every StepKind and
-  Target" that `PBSPreparation` uses (the only shared kind is VALIDATE);
-  rewrote it to the measured claim (no new StepKind/Target introduced for
-  the second domain). All output artifacts regenerated from source; no
-  `output/` files hand-edited.
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Integrity and template-status gaps
 
@@ -85,13 +49,23 @@ ideas.
   duplicate step id, unknown unit, cycle, target mismatch) in sync as the
   staged-gate surface grows.
 
-## Ordered improvement ladder
+## Minor upcoming
 
-1. Preserve the staged-gate-then-deterministic-compile contract (no gate
-   reordering, no unhashed nondeterminism reaching `plan_hash`).
-2. Add focused tests + a thin script export for any new step kind or
-   exporter format.
-3. Expand the worked examples or controlled vocabulary only with
-   deterministic fixtures, exact-value tests, and documented claim
-   boundaries.
-4. Refresh generated docs after any public-surface change.
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `METHODS-DSL-EXACT-1` | Minor | Existing staged DSL | exact-value test matrix | project test suite | changed numeric literal must fail |
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `METHODS-EXPORTER-1` | Medium | Deterministic compiler/exporter | versioned export receipt | compiler, prerender, and drift gates | malformed export must fail closed |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

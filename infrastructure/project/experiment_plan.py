@@ -21,6 +21,7 @@ _SUPPORTED_KEYS = frozenset(
         "ablations",
     }
 )
+_TYPED_EXTENSION_KEYS = frozenset({"schema_version", "ablation_axes"})
 
 
 @dataclass(frozen=True)
@@ -69,7 +70,10 @@ def load_experiment_plan(project_root: Path) -> ExperimentPlan | None:
     payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(payload, dict):
         raise ValueError(f"experiment_plan.yaml must be a mapping: {path}")
-    unknown = set(payload) - _SUPPORTED_KEYS
+    # Formal and other strongly typed exemplars may add a source-owned
+    # ablation extension. The project validator owns that extension; the
+    # generic forkability contract still validates the shared base fields.
+    unknown = set(payload) - _SUPPORTED_KEYS - _TYPED_EXTENSION_KEYS
     if unknown:
         keys = ", ".join(sorted(str(key) for key in unknown))
         raise ValueError(f"unsupported experiment_plan key(s): {keys}")

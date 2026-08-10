@@ -128,6 +128,40 @@ def test_render_pptx_figure_is_embedded(tmp_path: Path):
     assert len(picture_shapes) == 1
 
 
+def test_render_pptx_content_figure_is_below_estimated_bullet_box(tmp_path: Path):
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig_path = tmp_path / "flow.png"
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 1])
+    fig.savefig(fig_path)
+    plt.close(fig)
+
+    deck = DeckContent(
+        title="Deck",
+        slides=(
+            Slide(
+                title="Long content",
+                bullets=(
+                    "A deliberately long bullet that consumes multiple estimated lines and must reserve figure space.",
+                    "A second long bullet keeps the regression focused on non-overlap rather than a one-line special case.",
+                ),
+                figure_path=fig_path,
+            ),
+        ),
+    )
+    output = render_pptx(deck, tmp_path / "flow.pptx")
+    content_slide = list(Presentation(str(output)).slides)[-1]
+    body = next(
+        shape for shape in content_slide.shapes if shape.has_text_frame and "deliberately long bullet" in shape.text
+    )
+    picture = next(shape for shape in content_slide.shapes if shape.shape_type == 13)
+    assert body.top + body.height <= picture.top
+
+
 def test_render_pptx_stat_slide_shows_value_and_label(tmp_path: Path):
     deck = DeckContent(
         title="Deck",

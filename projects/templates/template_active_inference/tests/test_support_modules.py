@@ -213,3 +213,19 @@ def test_refresh_cache_invalidates_after_a_generator_input_or_output_changes(tmp
     cache.run(tmp_path, command, "third", run)
 
     assert calls == ["first", "second"]
+
+
+def test_refresh_cache_receipt_records_skips_and_reduction_target(tmp_path: Path) -> None:
+    ticks = iter((10.0, 12.0))
+    cache = full_verification._RefreshCache(clock=lambda: next(ticks))
+    command = ["uv", "run", "python", "scripts", "compose_manuscript.py"]
+    calls: list[str] = []
+
+    cache.run(tmp_path, command, "first", lambda _root, _cmd, label: calls.append(label))
+    cache.run(tmp_path, command, "second", lambda _root, _cmd, label: calls.append(label))
+
+    receipt = cache.receipt(baseline_seconds=3.0)
+    assert calls == ["first"]
+    assert receipt["schema_version"] == "template-active-inference/refresh-receipt/1"
+    assert receipt["target_met"] is True
+    assert receipt["events"][1]["action"] == "skipped"

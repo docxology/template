@@ -66,6 +66,11 @@ testing:
 project_config:
   deck:
     pitch_subject: "template_template"
+    subjects:
+      template_template:
+        content_prefix: "deck_content"
+      template_methods_paper:
+        content_prefix: "deck_content_methods"
     lengths: ["short", "medium", "long"]
     formats: ["pdf", "pptx"]
     # Deep-link base for every slide's `source` diligence citation (a

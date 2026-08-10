@@ -4,9 +4,19 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+
+
+def _artifact_timestamp() -> str:
+    """Return a reproducible timestamp or an explicit unavailable marker."""
+    raw = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    if raw.isdigit():
+        return datetime.fromtimestamp(int(raw), tz=timezone.utc).isoformat(timespec="seconds")
+    return "not-recorded (set SOURCE_DATE_EPOCH)"
 
 
 @dataclass(frozen=True)
@@ -19,7 +29,7 @@ class ArtifactManifestEntry:
     stage_num: int
     stage_name: str
     contract_match: bool
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="seconds"))
+    timestamp: str = field(default_factory=_artifact_timestamp)
 
 
 @dataclass(frozen=True)
@@ -35,6 +45,31 @@ class ArtifactManifest:
             "entries": [asdict(entry) for entry in self.entries],
             "issues": list(self.issues),
         }
+
+
+def validate_artifact_manifest(payload: dict[str, object]) -> tuple[str, ...]:
+    """Return path, digest, and duplicate-entry findings for a manifest."""
+    raw_entries = payload.get("entries")
+    if not isinstance(raw_entries, list):
+        return ("entries must be a list",)
+    issues: list[str] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(raw_entries):
+        if not isinstance(raw, dict):
+            issues.append(f"entry {index} must be an object")
+            continue
+        path = str(raw.get("path", ""))
+        if not path or Path(path).is_absolute() or ".." in Path(path).parts:
+            issues.append(f"entry {index} has an unsafe path")
+        if path in seen:
+            issues.append(f"entry {index} duplicates path {path}")
+        seen.add(path)
+        digest = str(raw.get("sha256", ""))
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            issues.append(f"entry {index} has an invalid sha256")
+        if not isinstance(raw.get("size_bytes"), int) or int(raw["size_bytes"]) < 0:
+            issues.append(f"entry {index} has an invalid size_bytes")
+    return tuple(issues)
 
 
 def compute_sha256(path: Path) -> str:
@@ -74,7 +109,9 @@ def write_artifact_manifest(project_root: Path, paths: list[Path]) -> Path:
                 contract_match=True,
             )
         )
-    manifest = ArtifactManifest(entries=tuple(sorted(entries, key=lambda item: item.path)), issues=())
+    ordered = tuple(sorted(entries, key=lambda item: item.path))
+    manifest_payload: dict[str, object] = {"entries": [asdict(entry) for entry in ordered]}
+    manifest = ArtifactManifest(entries=ordered, issues=validate_artifact_manifest(manifest_payload))
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(json.dumps(manifest.to_dict(), indent=2) + "\n", encoding="utf-8")
     return manifest_path
@@ -107,4 +144,11 @@ def collect_run_artifact_paths(project_root: Path, *, run_id: int) -> list[Path]
     return paths
 
 
-__all__ = ["ArtifactManifest", "ArtifactManifestEntry", "collect_run_artifact_paths", "write_artifact_manifest"]
+__all__ = [
+    "ArtifactManifest",
+    "ArtifactManifestEntry",
+    "collect_run_artifact_paths",
+    "compute_sha256",
+    "validate_artifact_manifest",
+    "write_artifact_manifest",
+]

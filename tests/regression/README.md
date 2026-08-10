@@ -4,13 +4,25 @@
 
 ## TL;DR
 
-Every quantitative claim in a manuscript — coefficient, p-value, effect size, count, percentage, ratio — has a corresponding pinned regression test here that:
+Every quantitative claim in a manuscript that is eligible for deterministic
+regression binding — coefficient, p-value, effect size, count, percentage, or
+ratio — is either represented by a pinned regression test here or explicitly
+classified in `claim_bindings.json` as `not_applicable` or `external_data`.
+Bound claims:
 
 1. Re-derives the value from the deterministic pipeline (same code, same data, same seed)
 2. Compares against a pinned ground-truth value in [`pinned_values/`](pinned_values/)
 3. Fails loudly if the value drifts beyond documented tolerance
 
 This is **different from coverage** — coverage tells you "the code ran"; regression tests tell you "the science is still the science."
+
+`claim_bindings.json` is the roster-level receipt consumed by
+`scripts/audit/check_claim_bindings.py`. Every canonical public exemplar must
+declare `bound`, `external_data`, or `not_applicable`; omission is a gate
+failure. Bound pins carry manuscript location, verifier producer,
+inputs/configuration, tolerance, revision, date, and a provenance rationale.
+The explicit non-bound states prevent a scaffold or external-data lane from
+being promoted by an accidental empty collection.
 
 ## Layout
 
@@ -21,13 +33,8 @@ tests/regression/
 ├── conftest.py                        (shared fixtures)
 ├── projects/
 │   ├── template_code_project/
-│   │   ├── __init__.py
-│   │   ├── figures/                   (one test file per manuscript figure)
-│   │   └── tables/                    (one test file per manuscript table)
-│   └── template_prose_project/
-│       ├── __init__.py
-│       ├── figures/
-│       └── tables/
+│   │   └── tables/test_optimization_results_claims.py
+│   └── ...                             (one isolated lane per bound exemplar)
 └── pinned_values/                     (committed ground-truth values)
     ├── template_code_project.json
     └── template_prose_project.json
@@ -80,19 +87,22 @@ See [`tests/regression/projects/template_code_project/figures/test_figure_TEMPLA
 }
 ```
 
-## Status
+## Current status
 
-**First populated slice as of 2026-06-13.** `template_code_project` now has
-source-derived pins for deterministic optimization claims plus three collected
-tests, including a mutation negative control:
+The roster-level inventory is complete for the 24 canonical public exemplars.
+It currently records 15 bound lanes and 9 explicit `not_applicable` lanes;
+there are no `external_data` lanes. Re-derive the live result with:
 
 ```bash
 uv run pytest tests/regression/ --collect-only -q --no-cov
 uv run pytest tests/regression/ -q --no-cov
+uv run python scripts/audit/check_claim_bindings.py --json
 ```
 
-Next step: expand the same pattern across the remaining `template_code_project`
-figures/tables and then the other public exemplar manuscripts.
+The inventory is intentionally separate from coverage. A project can remain
+`not_applicable` while its structural, provenance, or visual claims are tested
+by its own project suite; promoting it to `bound` requires a source-derived
+pin, producer, manuscript location, tolerance, revision, and mutation control.
 
 ## Related
 

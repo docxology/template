@@ -1,62 +1,18 @@
 # template_active_inference TODO
 
-This backlog is future-only. It is not the current artifact contract and does
-not create publication claims. Current claims remain deterministic,
-locally reproducible, public, and toy-only. Completed work belongs in generated
-artifacts, README/AGENTS files, tests, manuscript fragments, and sheaf
-registries rather than in this file.
+This backlog is future-only. Completed validation and dated review evidence are preserved in
+[`docs/maintenance/exemplar-backlog-history.md`](../../../docs/maintenance/exemplar-backlog-history.md)
+or in source-owned generated receipts. Each active row must retain a stable ID, size, dependency,
+proving artifact, acceptance command, and negative control; absence of an owner or external receipt
+keeps a capability blocked rather than silently promoting it.
 
-## Current validation evidence
+## Backlog operating rules
 
-Current evidence (re-run the commands below to refresh; live counts, coverage,
-and timings are read from
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned
-here as a hardcoded date):
-
-```bash
-uv run python scripts/validate_outputs.py
-uv run python scripts/compose_manuscript.py --validate-only --strict
-uv run python scripts/check_documentation_contract.py --check
-uv run python scripts/generate_method_inventory.py --check
-uv run pytest tests/test_figures.py tests/test_figure_style.py tests/test_semantic_extensions.py tests/gates/ -q
-COVERAGE_FILE=/tmp/template_ai_publication.coverage uv run pytest tests/ --cov=src --cov-fail-under=90 --durations=20 -q
-```
-
-Observed in this pass: prerender, PDF render, output validation, output copy,
-and strict template-drift checks passed. The combined PDF rendered as 61 pages
-with zero `^! ` LaTeX log errors and zero unresolved `??` references. The
-publication-readiness pass regenerated animation, integration-audit,
-sheaf-track, manuscript-variable, scholarship, figure, and method-inventory
-artifacts before validation. The canonical output validation is green for the current
-artifact tree, including the 23 registered figures, GIF evidence, auxiliary
-visualization classification, 21 connected scholarship rows, and toy-only
-scope-boundary checks. The source artifact contract now records exhaustive
-finite model-checking witnesses and refreshes provenance after final artifact
-writes, preventing fixed-point hash drift. A full suite run is retained as a
-slow end-to-end gate; the first concurrent run observed 781 passed, 4 failed,
-1 skipped, with 93.58% coverage, while later focused refresh tests remained
-resource-sensitive under the shared 24-agent workload. The full suite runs via
-`uv run pytest tests/ --cov=src --cov-fail-under=90` (from the project
-directory; prefix both paths with the exemplar folder when running from the
-template root); live test counts, coverage, and timings are read from
-[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not pinned here.
-
-## Promotion rule
-
-A future capability becomes live only after it has a configured producer,
-deterministic artifact, manuscript consumer, typed claim evidence, semantic
-restriction, validation gate, and failing negative control. Prefer deepening
-stable canonical tracks over adding versioned `_vN` siblings.
-
-| Requirement | Minimum proof before promotion |
-| --- | --- |
-| Producer | Configured script or renderer in the analysis DAG |
-| Artifact | Deterministic file under `output/data/`, `output/reports/`, or `output/figures/` |
-| Manuscript consumer | Bound IMRAD fragment or generated evidence table |
-| Typed claim evidence | Claim-ledger predicate with explicit field, expected value, tolerance, or list predicate |
-| Semantic restriction | Certificate field that catches disagreement, missing evidence, or stale output |
-| Validation gate | `validate_outputs`, `validate_manuscript`, `lake build`, or project test |
-| Negative control | Test that mutates artifact/config/claim text and proves the gate fails |
+- Keep deterministic and offline defaults unchanged unless an upcoming row explicitly scopes an opt-in.
+- Do not close a row until its producer, artifact, consumer, gate, and failing negative control are present.
+- Treat unavailable network, LLM, container, formal-tool, and publication paths as explicit skips
+  or blockers.
+- Re-derive counts and receipts from live source data; never copy measurements into this planning file.
 
 ## Sizing rubric
 
@@ -114,37 +70,6 @@ proves the matching gate fails closed. Keep long-running full-refresh tests as
 end-to-end sentinels, but prefer narrower row-contract tests for future
 regression coverage when they preserve the same failure mode.
 
-## Ordered improvement ladder
-
-1. Preserve the current deterministic toy claims, schema contracts, and copied
-   output parity through the standard monorepo pipeline.
-2. Tighten existing lane validators and negative controls before expanding the
-   manuscript surface.
-3. Add empirical, network, LLM, private-data, or non-toy claims only after the
-   blocked major-scope ladder below supplies the required provenance,
-   licensing, privacy, and evidence predicates.
-
-## Minor upcoming
-
-These rows are scoped maintenance work. They do not introduce live scientific
-claims, new track IDs, artifact filenames, schema migrations, or figure IDs.
-No active minor rows are currently scoped; keep this table empty until a narrow
-future-only maintenance item has a proving artifact, gate, and negative control.
-
-| ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
-| --- | --- | --- | --- | --- | --- | --- |
-
-## Medium upcoming
-
-These rows are real future verifier or cross-track improvements. Each one needs
-additive artifacts or rows, a failing negative control, regenerated docs, and
-green gates before it can be moved out of this file.
-
-| ID | Size | Track lane | Future improvement | Proving artifact | Gate/predicate | Negative control |
-| --- | --- | --- | --- | --- | --- | --- |
-| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics | Continue splitting repeated full-refresh mutation tests in roadmap-promotion, manuscript-contract, output-gate, and manuscript-variable paths while retaining one fixed-point refresh characterization | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests preserve failures while `--durations=20` shows reduced redundant regeneration in the current slowest rows | Source-only mutation passes without exercising the matching contract |
-| `MEDIUM-SUBPROCESS-POLICY-1` | Medium | Test ergonomics / Release | Centralize timeout, cwd, check, and error-message policy for intentional subprocess wrappers in Lean/lake, rendering, git metadata, validation-spine, and full-verification surfaces without changing public commands | future subprocess-wrapper policy audit generated from source-owned wrapper declarations | policy audit row count matches the intentional wrapper inventory and a focused gate mutates one wrapper policy field | Wrapper without timeout, cwd, check, or useful failure text passes the policy audit |
-
 ## Blocked major scope
 
 These areas remain out of scope until a later plan supplies provenance,
@@ -174,3 +99,23 @@ unchanged.
 | 3 | LLM evidence | Prompt/model/version manifest, deterministic transcript artifact, human-review provenance, and explicit non-authoritative evidence labeling |
 | 4 | Private data | External private-data sidecar, redaction manifest, access-boundary audit, license/privacy approval artifact, and zero private path leakage in public outputs |
 | 5 | Non-toy model claims | Scope-specific model card, expanded state-space/proof obligations, empirical/benchmark provenance, uncertainty calibration, and claim predicates that fail on toy-only evidence |
+
+## Minor upcoming
+
+No active rows are currently scoped at this size.
+
+## Medium upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `MEDIUM-TEST-PERF-1` | Medium | Test ergonomics; isolated project refresh | cheaper source/row-contract negative controls plus one end-to-end artifact-refresh test | focused gate tests plus `--durations=20` comparison | Source-only mutation passes without exercising the matching contract |
+| `MEDIUM-SUBPROCESS-POLICY-1` | Medium | Test ergonomics; release wrappers | future subprocess-wrapper policy audit generated from source-owned declarations | policy audit and a focused mutation of one wrapper policy field | Wrapper without timeout, cwd, check, or useful failure text passes the policy audit |
+
+## Major upcoming
+
+No active rows are currently scoped at this size.
+
+## Backlog status
+
+Rows remain active until the acceptance command and negative control pass in the same source revision.
+A blocked major row is a deliberate boundary, not a skipped success.

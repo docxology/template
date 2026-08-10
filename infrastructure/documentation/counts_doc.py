@@ -53,10 +53,10 @@ COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 2
 
 # Date the volatile-literal counts and module list were last refreshed (UTC).
-GENERATED_DATE = "2026-08-08"
+GENERATED_DATE = "2026-08-09"
 
 # Date the per-exemplar test/coverage snapshot table was last measured.
-EXEMPLAR_SNAPSHOT_DATE = "2026-08-08"
+EXEMPLAR_SNAPSHOT_DATE = "2026-08-09"
 
 # Keep a full snapshot refresh bounded even when a project accidentally grows a
 # pathological test or rendering loop.  The release matrix itself has its own
@@ -79,30 +79,30 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     # Every row is measured in the project's own environment with the shared
     # release profile. This keeps project-local dependency and coverage settings
     # authoritative while making the snapshot comparable to the public matrix.
-    ExemplarSnapshot("template_active_inference", "92.96 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "93.26 %"),
-    ExemplarSnapshot("template_autopoiesis", "97.84 %"),
-    ExemplarSnapshot("template_autoresearch_project", "96.46 %"),
-    ExemplarSnapshot("template_autoscientists", "99.28 %"),
-    ExemplarSnapshot("template_code_project", "96.98 %"),
-    ExemplarSnapshot("template_data_descriptor", "97.82 %"),
-    ExemplarSnapshot("template_eda_notebook", "99.13 %"),
-    ExemplarSnapshot("template_formal", "95.28 %"),
-    ExemplarSnapshot("template_gold_refinement", "92.64 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "94.05 %"),
-    ExemplarSnapshot("template_madlib", "99.00 %"),
-    ExemplarSnapshot("template_methods_paper", "98.99 %"),
-    ExemplarSnapshot("template_newspaper", "99.70 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.73 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "94.91 %"),
-    ExemplarSnapshot("template_prose_project", "99.58 %"),
-    ExemplarSnapshot("template_redacted_report", "97.30 %"),
-    ExemplarSnapshot("template_registered_report", "96.61 %"),
-    ExemplarSnapshot("template_search_project", "97.44 %"),
-    ExemplarSnapshot("template_sia", "99.69 %"),
-    ExemplarSnapshot("template_storybook", "94.40 %"),
-    ExemplarSnapshot("template_template", "99.14 %"),
-    ExemplarSnapshot("template_textbook", "96.61 %"),
+    ExemplarSnapshot("template_active_inference", "92.85 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "94.65 %"),
+    ExemplarSnapshot("template_autopoiesis", "97.60 %"),
+    ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
+    ExemplarSnapshot("template_autoscientists", "97.56 %"),
+    ExemplarSnapshot("template_code_project", "95.84 %"),
+    ExemplarSnapshot("template_data_descriptor", "95.81 %"),
+    ExemplarSnapshot("template_eda_notebook", "92.21 %"),
+    ExemplarSnapshot("template_formal", "94.39 %"),
+    ExemplarSnapshot("template_gold_refinement", "92.19 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "93.97 %"),
+    ExemplarSnapshot("template_madlib", "98.79 %"),
+    ExemplarSnapshot("template_methods_paper", "99.00 %"),
+    ExemplarSnapshot("template_newspaper", "99.24 %"),
+    ExemplarSnapshot("template_pitch_deck", "97.19 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "93.67 %"),
+    ExemplarSnapshot("template_prose_project", "92.85 %"),
+    ExemplarSnapshot("template_redacted_report", "94.77 %"),
+    ExemplarSnapshot("template_registered_report", "94.13 %"),
+    ExemplarSnapshot("template_search_project", "96.71 %"),
+    ExemplarSnapshot("template_sia", "96.39 %"),
+    ExemplarSnapshot("template_storybook", "93.54 %"),
+    ExemplarSnapshot("template_template", "97.66 %"),
+    ExemplarSnapshot("template_textbook", "93.35 %"),
 )
 
 
@@ -299,6 +299,17 @@ def _coverage_measurement_command(project_dir: Path) -> list[str]:
     return command
 
 
+def _coverage_measurement_data_file(repo_root: Path, name: str) -> Path:
+    """Return an absolute, project-local coverage data path.
+
+    Coverage resolves relative ``COVERAGE_FILE`` values from the subprocess
+    working directory.  Keeping this path construction in one helper makes
+    that cwd-sensitive contract explicit and testable.
+    """
+    project_dir = repo_root.resolve() / "projects" / "templates" / name
+    return project_dir / f".coverage.measure_{name}"
+
+
 def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
     """Run one exemplar's release-profile coverage gate and return its total.
 
@@ -317,10 +328,17 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
     Returns a string like ``"93.07 %"``. Raises ``RuntimeError`` if the run fails
     or exceeds :data:`COVERAGE_MEASUREMENT_TIMEOUT_SECONDS`.
     """
-    project_dir = repo_root / "projects" / "templates" / name
+    # Resolve before exporting ``COVERAGE_FILE``.  The coverage tool resolves a
+    # relative data-file path from the project cwd (the subprocess deliberately
+    # runs there), which otherwise creates a nested
+    # ``projects/templates/<name>/projects/templates/<name>/`` tree and leaves
+    # ignored build artifacts behind after the caller removes the repo-relative
+    # path.  Absolute paths also make this receipt-producing subprocess safe for
+    # callers that pass ``Path('.')`` or another relative checkout root.
+    project_dir = repo_root.resolve() / "projects" / "templates" / name
     if not project_dir.is_dir():
         raise RuntimeError(f"exemplar not checked out: {name}")
-    data_file = project_dir / f".coverage.measure_{name}"
+    data_file = _coverage_measurement_data_file(repo_root, name)
     env = dict(get_subprocess_env())
     env["COVERAGE_FILE"] = str(data_file)
     profile = resolve_test_profile("release")

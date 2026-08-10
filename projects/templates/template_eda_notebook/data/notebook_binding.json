@@ -1,0 +1,18 @@
+{
+  "notebook": {
+    "code_digest": "6283d2fcfc987e5287ca1c993a96390471354b0750117f252feb47492218fb54",
+    "path": "notebooks/eda_walkthrough.ipynb"
+  },
+  "refresh_command": "uv run python scripts/refresh_notebook_binding.py",
+  "schema_version": "template-eda-notebook-binding-v1",
+  "source_digest": "b50850e3a97689d21c20936efdb536f71496bb3ffbfebe3cb57273a3c63c2549",
+  "sources": [
+    {"path": "src/eda/__init__.py"},
+    {"path": "src/eda/cleaning.py"},
+    {"path": "src/eda/correlation.py"},
+    {"path": "src/eda/dataset.py"},
+    {"path": "src/eda/figures.py"},
+    {"path": "src/eda/notebook_binding.py"},
+    {"path": "src/eda/statistics.py"}
+  ]
+}

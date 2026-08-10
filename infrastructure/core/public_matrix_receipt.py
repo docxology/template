@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Sequence
 
@@ -47,6 +47,10 @@ class PublicMatrixLaneResult:
     coverage_percent: float | None
     output_isolation_ok: bool
     duration_seconds: float = 0.0
+    resource_profile: str = "default"
+    skip_reason: str = ""
+    cache_key: str = ""
+    collection_count: int | None = None
 
 
 @dataclass(frozen=True)
@@ -68,6 +72,11 @@ class PublicMatrixReceipt:
     combined_coverage_percent: float | None = None
     combined_floor: int = 75
     overall_exit: int = 0
+    schema_version: str = "template-public-matrix/v2"
+    phase_durations: dict[str, float] = field(default_factory=dict)
+    collection_counts: dict[str, int] = field(default_factory=dict)
+    skip_reasons: dict[str, str] = field(default_factory=dict)
+    cache_key: str = ""
 
     def write(self, path: Path | str) -> Path:
         """Write deterministic JSON (sorted keys, no extraneous whitespace).
@@ -89,6 +98,11 @@ class PublicMatrixReceipt:
         path = Path(path) if isinstance(path, str) else path
         data = json.loads(path.read_text(encoding="utf-8"))
         lanes = tuple(PublicMatrixLaneResult(**lane) for lane in data.pop("lanes", []))
+        data.setdefault("schema_version", "template-public-matrix/v1")
+        data.setdefault("phase_durations", {})
+        data.setdefault("collection_counts", {})
+        data.setdefault("skip_reasons", {})
+        data.setdefault("cache_key", "")
         return cls(lanes=lanes, **data)
 
     def digest(self) -> str:
@@ -113,6 +127,8 @@ class PublicMatrixReceipt:
         """
         errors: list[str] = []
         lane_names = {lane.project_name for lane in self.lanes}
+        if len(lane_names) != len(self.lanes):
+            errors.append("DUPLICATE-PROJECT: receipt contains more than one lane for a project")
 
         # Negative control 1: missing project result
         for name in roster:
@@ -121,6 +137,16 @@ class PublicMatrixReceipt:
 
         # Negative control 2: lane errors
         for lane in self.lanes:
+            if lane.skip_reason:
+                if lane.collection_count is not None:
+                    errors.append(
+                        f"SKIP-METADATA: skipped project '{lane.project_name}' must not report a collection count"
+                    )
+                if lane.skip_reason.startswith("error:") and lane.exit_code == 0:
+                    errors.append(f"SKIP-STATUS: error skip for '{lane.project_name}' cannot have exit=0")
+                continue
+            if lane.collection_count is not None and lane.collection_count <= 0 and lane.exit_code == 0:
+                errors.append(f"EMPTY-COLLECTION: project '{lane.project_name}' reported zero collected tests")
             if lane.timed_out:
                 errors.append(f"TIMEOUT: project '{lane.project_name}' timed out")
             if lane.exit_code != 0:
@@ -169,6 +195,10 @@ def build_public_matrix_receipt(
     combined_coverage_percent: float | None = None,
     combined_floor: int = 75,
     overall_exit: int = 0,
+    phase_durations: dict[str, float] | None = None,
+    collection_counts: dict[str, int] | None = None,
+    skip_reasons: dict[str, str] | None = None,
+    cache_key: str = "",
 ) -> PublicMatrixReceipt:
     """Factory that builds a sorted-lane receipt from per-project results."""
     return PublicMatrixReceipt(
@@ -181,12 +211,38 @@ def build_public_matrix_receipt(
         combined_coverage_percent=combined_coverage_percent,
         combined_floor=combined_floor,
         overall_exit=overall_exit,
+        phase_durations=dict(phase_durations or {}),
+        collection_counts=dict(collection_counts or {}),
+        skip_reasons=dict(skip_reasons or {}),
+        cache_key=cache_key,
     )
+
+
+def build_public_matrix_cache_key(
+    *,
+    roster_revision: str,
+    profile: str,
+    marker_expression: str | None,
+    worker_info: str,
+    project_names: Sequence[str],
+) -> str:
+    """Build a stable cache identity for a public-matrix execution plan."""
+    payload = "\n".join(
+        (
+            roster_revision,
+            profile,
+            marker_expression or "",
+            worker_info,
+            *sorted(project_names),
+        )
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
 
 
 __all__ = [
     "PublicMatrixLaneResult",
     "PublicMatrixReceipt",
     "build_public_matrix_receipt",
+    "build_public_matrix_cache_key",
     "determine_worker_info",
 ]

@@ -12,8 +12,12 @@ import pytest
 from src.search_invariants import (
     InvariantResult,
     all_invariants,
+    cache_invariants,
     coverage_invariants,
+    deep_search_invariants,
+    fulltext_invariants,
     keyword_invariants,
+    retrieval_invariants,
     schema_invariants,
     uniqueness_invariants,
     year_invariants,
@@ -163,6 +167,45 @@ class TestKeywordInvariants:
     def test_real_aggregate_passes(self, aggregate, aggregate_min_per_keyword):
         for inv in keyword_invariants(aggregate, min_per_keyword=aggregate_min_per_keyword):
             assert _evaluate(inv), inv.description
+
+
+class TestRetrievalContracts:
+    def test_cache_envelope_requires_identity(self):
+        payload = {
+            "query": {"text": "x"},
+            "papers": [],
+            "per_source_counts": {},
+            "errors": {},
+            "_schema_version": 1,
+            "_cache_key": "abc123",
+        }
+        assert all(_evaluate(inv) for inv in cache_invariants(payload))
+        missing_key = dict(payload)
+        missing_key.pop("_cache_key")
+        assert not _evaluate(next(i for i in cache_invariants(missing_key) if i.name == "cache_identity_present"))
+
+    def test_missing_fulltext_is_not_retrieved(self):
+        invs = fulltext_invariants([{"id": "x", "fulltext": None}], require_fulltext=True)
+        assert not _evaluate(next(i for i in invs if i.name == "fulltext_present_when_required"))
+
+    def test_offline_backend_error_is_actionable(self):
+        assert all(
+            _evaluate(inv) for inv in retrieval_invariants({"errors": {"arxiv": "offline"}, "per_source_counts": {}})
+        )
+        bad = retrieval_invariants({"errors": {"arxiv": ""}, "per_source_counts": {"local": -1}})
+        assert any(not _evaluate(inv) for inv in bad)
+
+    def test_deep_search_citation_keys_are_complete(self):
+        aggregate = {
+            "keywords": ["convex"],
+            "unique_papers": [{"id": "x", "title": "T"}],
+            "citation_keys": {"x": "X2024"},
+        }
+        assert all(_evaluate(inv) for inv in deep_search_invariants(aggregate))
+        aggregate["citation_keys"] = {}
+        assert not _evaluate(
+            next(i for i in deep_search_invariants(aggregate) if i.name == "deep_search_citation_keys_complete")
+        )
 
 
 class TestAllInvariants:

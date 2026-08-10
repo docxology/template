@@ -20,6 +20,7 @@ from redacted_report.redaction import (
 
 AUDIT_SCHEMA = "template_redacted_report/redaction_audit/v1"
 LEDGER_SCHEMA = "template_redacted_report/release_ledger/v1"
+MANUSCRIPT_BINDING_SCHEMA = "template-redacted-report/manuscript-audit-binding/1"
 _PUBLIC_IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$")
 _REVIEW_DECISIONS = frozenset({"approve", "reject", "changes_requested"})
 _FORBIDDEN_PUBLIC_KEYS = frozenset({"text", "source_text", "source_span", "sanitized_text"})
@@ -218,6 +219,39 @@ def _canonical_json(payload: Mapping[str, object]) -> str:
     return json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 
 
+def build_manuscript_audit_binding(
+    manuscript_path: Path,
+    audit_payload: Mapping[str, object],
+) -> dict[str, str]:
+    """Create a source/audit digest pair for rendered manuscript binding."""
+    if not manuscript_path.is_file():
+        raise FileNotFoundError(f"manuscript source not found: {manuscript_path}")
+    schema = audit_payload.get("schema_version")
+    if schema != AUDIT_SCHEMA:
+        raise ReleaseInputError(f"manuscript binding requires audit schema {AUDIT_SCHEMA!r}")
+    source_digest = hashlib.sha256(manuscript_path.read_bytes()).hexdigest()
+    audit_digest = hashlib.sha256(_canonical_json(audit_payload).encode("utf-8")).hexdigest()
+    return {
+        "schema_version": MANUSCRIPT_BINDING_SCHEMA,
+        "manuscript_path": manuscript_path.name,
+        "manuscript_sha256": source_digest,
+        "audit_schema_version": str(schema),
+        "audit_sha256": audit_digest,
+    }
+
+
+def validate_manuscript_audit_binding(
+    binding: Mapping[str, object],
+    manuscript_path: Path,
+    audit_payload: Mapping[str, object],
+) -> None:
+    """Fail closed when either the manuscript or canonical audit has drifted."""
+    expected = build_manuscript_audit_binding(manuscript_path, audit_payload)
+    for key, value in expected.items():
+        if binding.get(key) != value:
+            raise ReleaseInputError(f"manuscript/audit binding drift at {key}: expected {value!r}")
+
+
 def build_public_release_artifacts(fixture: ReleaseFixture) -> PublicReleaseArtifacts:
     """Build text-free audit and hashed-ledger projections of the full packet."""
     packet = build_comprehensive_release_packet(
@@ -284,11 +318,14 @@ def write_release_artifacts(input_path: Path, output_root: Path) -> ReleaseArtif
 __all__ = [
     "AUDIT_SCHEMA",
     "LEDGER_SCHEMA",
+    "MANUSCRIPT_BINDING_SCHEMA",
     "PublicReleaseArtifacts",
     "ReleaseArtifactPaths",
     "ReleaseFixture",
     "ReleaseInputError",
     "build_public_release_artifacts",
+    "build_manuscript_audit_binding",
     "load_release_fixture",
     "write_release_artifacts",
+    "validate_manuscript_audit_binding",
 ]

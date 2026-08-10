@@ -102,6 +102,19 @@ uv run pytest tests/infra_tests/core/test_file_operations.py -v
 
 ## Test Categories
 
+### Subprocess Policy Tests (`test_subprocess_policy.py`)
+
+Real child-process fixtures verify checked exits, descendant cleanup on
+timeout, source-owned policy inventory, and fail-closed invalid declarations.
+
+### Test Impact and Receipt Tests (`test_test_impact.py`, `test_public_matrix_receipt.py`)
+
+Changed-surface classification tests verify that infrastructure/documentation
+changes widen the safe lane and that project-only changes retain one-process
+per-project isolation. Receipt tests cover duration, collection counts, cache
+identity, explicit skip reasons, and the recorded-zero collection negative
+control.
+
 ### Unit Tests
 
 Individual function and class testing:

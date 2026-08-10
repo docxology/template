@@ -42,7 +42,7 @@ def comparative_feature_matrix_data() -> tuple[np.ndarray, list[str], list[str]]
         "Steganographic watermarking",
         "Multi-project management",
         "AI-agent documentation",
-        "Agentic skill protocol (MCP)",
+        "Agentic skill protocol (SKILL.md / MCP)",
         "Interactive TUI",
         "Zero-mock policy",
         "Container support",

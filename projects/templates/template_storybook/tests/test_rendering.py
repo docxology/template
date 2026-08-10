@@ -31,6 +31,7 @@ def _write_single_page_project(project_root: Path, *, page_width: int, page_heig
     payload = yaml.safe_load(story_path.read_text(encoding="utf-8"))
     payload["storybook"]["page_width"] = page_width
     payload["storybook"]["page_height"] = page_height
+    payload["storybook"]["trim_size"] = "custom"
     payload["pages"] = [
         {
             "number": 0,

@@ -154,6 +154,39 @@ def declared_unit_intro_paths(manuscript_dir: Path, config: dict[str, Any]) -> l
     return [intro.path(manuscript_dir) for intro in iter_unit_intros(config)]
 
 
+def declared_appendix_paths(manuscript_dir: Path, config: dict[str, Any], category: str) -> list[Path]:
+    """Return configured appendix, lab, or question-bank paths.
+
+    ``reference`` entries live below ``manuscript/appendices`` (with a
+    root-level fallback for standalone forks). Labs and question banks are
+    grouped below their respective directories by unit id.
+    """
+    appendices = config.get("appendices", {})
+    if not isinstance(appendices, dict):
+        return []
+    entries = appendices.get(category, [])
+    if not isinstance(entries, list):
+        return []
+    paths: list[Path] = []
+    if category == "reference":
+        for entry in entries:
+            if isinstance(entry, dict) and isinstance(entry.get("file"), str):
+                appendix_path = Path(manuscript_dir) / "appendices" / entry["file"]
+                paths.append(appendix_path if appendix_path.exists() else Path(manuscript_dir) / entry["file"])
+        return paths
+    for group in entries:
+        if not isinstance(group, dict) or not isinstance(group.get("unit"), str):
+            continue
+        files = group.get("files", [])
+        if not isinstance(files, list):
+            continue
+        for entry in files:
+            filename = entry.get("file") if isinstance(entry, dict) else entry
+            if isinstance(filename, str):
+                paths.append(Path(manuscript_dir) / category / group["unit"] / filename)
+    return paths
+
+
 def validate_config(config: dict[str, Any]) -> list[str]:
     """Return a list of human-readable structural problems (empty == valid)."""
     issues: list[str] = []
@@ -253,6 +286,7 @@ __all__ = [
     "DEFAULT_MANUSCRIPT",
     "UnitIntroRef",
     "declared_chapter_paths",
+    "declared_appendix_paths",
     "declared_unit_intro_paths",
     "iter_chapters",
     "iter_unit_intros",

@@ -42,6 +42,14 @@ Single source of truth for which projects are public and which paths CI checks. 
 - `public_ci_source_paths(repo_root)` - import-safe public `src/` paths fed to mypy
 - `main(argv=None)` - CLI entry point for `lint-paths`, `source-paths`, and roster subcommands
 
+### Public Template Contract (`public_template_contract.py`)
+
+- `validate_public_template_contract(repo_root, *, public_names=...)` - validate
+  the regular marker files, source/test directories, and non-empty test scope
+  for every canonical public exemplar without following private symlinks.
+- `PublicTemplateContractReport` / `PublicTemplateFinding` - typed structural
+  findings used by `scripts/audit/check_public_template_contract.py`.
+
 ### Sidecar Symlink Sync (`linking.py`)
 
 Implements the private-projects sidecar symlink sync documented in root `CLAUDE.md`. Imported by `orchestration/cli.py`; auto-runs on `run.sh` / `python -m infrastructure.orchestration` unless `TEMPLATE_SKIP_LINK_SYNC=1`.

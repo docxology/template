@@ -35,6 +35,8 @@ from .examples_methods import (
     sensor_calibration_method,
 )
 from .export import (
+    EXPORT_RECEIPT_SCHEMA,
+    export_receipt,
     to_csv_rows,
     to_json,
     to_mermaid,
@@ -81,6 +83,8 @@ __all__ = [
     "append_record",
     "check_compatible",
     "compile_method",
+    "EXPORT_RECEIPT_SCHEMA",
+    "export_receipt",
     "demo_chain_report",
     "dimension_of",
     "known_units",
