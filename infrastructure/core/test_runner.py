@@ -392,12 +392,14 @@ def _visible_output_files(project_root: Path) -> list[Path]:
 
 
 def _output_tree_digest(project_root: Path) -> str:
-    """Return a content digest of the project's ``output/`` tree.
+    """Return a content digest of visible files in the project's ``output/`` tree.
 
     Used to detect test-generated output churn: the digest is computed before
     and after a project lane, and the lane fails output isolation when they
-    differ. A missing output tree uses the SHA-256 digest of the empty tree so
-    every executed lane carries an explicit output-isolation identity.
+    differ. Git-ignored caches, logs, and build intermediates are excluded to
+    match the repository's clean-status contract. A missing output tree uses
+    the SHA-256 digest of the empty tree so every executed lane carries an
+    explicit output-isolation identity.
     """
     output_dir = project_root / "output"
     if not output_dir.is_dir():

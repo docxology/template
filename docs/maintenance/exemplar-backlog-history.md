@@ -1353,3 +1353,18 @@ The committed benchmark snapshot intentionally omits subprocess output tails;
 the raw local receipt was hashed separately during review, while the committed
 summary retains the comparable timings, selection, revision, and acceptance
 decision without machine-local paths.
+
+## Fresh-checkout rehearsal 2026-08-09
+
+The committed revision `d676d67a0e419b5d553765821eaadd5fb8a0d895` was rehearsed twice in independent local
+Darwin checkouts. Both runs passed offline dependency setup, root health,
+generated-document and status checks, claims, backlog, strict public contract,
+the complete 24-project serial release matrix, and the representative
+`template_code_project` render. Both final clean-status checks blocked because
+the render changed tracked canonical output files; this is retained as an
+active release blocker rather than treated as a green rehearsal. The redacted
+summary is [`clean-checkout-evidence.json`](clean-checkout-evidence.json), and
+the raw local receipt digest is
+`e3ed676727af37a7929193534562253901f9db1d16daf11147f69397dd0b9f70`.
+Hosted Linux, optional bundle verification, and owner/administrator receipts
+were not available in this run.

@@ -82,7 +82,7 @@ states are explicit blockers.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `CLAIM-BINDING-MAJ-1` | partial | Major | Public roster and source-owned claim inventory | Finish the full-roster pins and mutation controls, then attach the release receipt | claim-binding receipt | `uv run pytest tests/regression/ -q --no-cov --timeout=120` | missing pin or changed producer must fail |
 | `EXECUTABLE-BUNDLE-MAJ-1` | partial | Major | Claim receipt, lockfiles, container policy | Complete immutable bundle and offline-container verification; attach owner/tool receipts where unavailable | executable-bundle receipt | `uv run python scripts/runner/bundle_executable.py --help` | path escape, stale payload, or missing lock must fail preflight |
-| `CLEAN-CHECKOUT-MAJ-1` | partial | Major | Release commands and generated receipts | Expand the two-run rehearsal to health, matrix, render, cleanliness, and optional bundle lanes | clean-checkout receipt | `uv run python scripts/maintenance/release_rehearsal.py --help` | dirty output or changed revision must fail the rehearsal |
+| `CLEAN-CHECKOUT-MAJ-1` | partial | Major | Release commands and generated receipts | Resolve tracked canonical-output drift after the representative render, then repeat locally and on hosted Linux with bundle/authority receipts | clean-checkout receipt | `uv run python scripts/maintenance/release_rehearsal.py --help` | dirty output or changed revision must fail the rehearsal |
 | `RELEASE-METADATA-1` | partial | Medium | Typed release receipt schema | Bind command, scope, owner, date, health, and verification mode to generated evidence | release metadata receipt | `uv run python scripts/docgen/publication_records.py --check` | receipt without revision or owner status must fail |
 | `DOC-NEG-CONTROL-MIN-1` | partial | Minor | Documentation audit classification | Classify active, generated, inventory, normative, and historical advisories; gate only active normative claims | documentation audit receipt | `uv run python scripts/audit/audit_documentation.py --format json` | a normative gate claim without a real negative control must fail |
 | `COVERAGE-GAPS-MIN-1` | partial | Minor | Generated coverage snapshot | Replace copied coverage-gap counts with links and source-derived status | coverage-gap receipt | `uv run python scripts/docgen/counts.py --check` | copied stale measurement must fail drift |
@@ -216,6 +216,16 @@ public roster, both platform lanes agree on required outcomes, repeated runs
 agree on deterministic fields, and a deliberate missing-project/private-symlink
 fixture fails closed. The receipt is linked from release validation without
 hard-coding its counts into prose.
+
+**Current evidence (2026-08-09).** The two-run Darwin rehearsal at committed
+revision `d676d67a0e419b5d553765821eaadd5fb8a0d895` passed locked setup, root health, generated documents,
+claims, backlog, strict public contract, both 24-project serial release
+matrices, and the representative `template_code_project` render. Both runs
+remain `blocked` at the final clean-status check because that render changes
+tracked canonical output files. The redacted receipt summary is
+[`clean-checkout-evidence.json`](docs/maintenance/clean-checkout-evidence.json);
+hosted Linux, optional bundle verification, and external authority receipts
+remain outstanding.
 
 ## Medium improvements
 
