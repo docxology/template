@@ -144,6 +144,7 @@ def run_clean_checkout_rehearsal(
     """Run two independent local clones for an explicit opt-in rehearsal."""
     root = Path(repo_root).resolve()
     run_receipts: list[CommandReceipt] = []
+    run_command_receipts: list[tuple[CommandReceipt, ...]] = []
     output_clean = True
     with tempfile.TemporaryDirectory(prefix="template-release-rehearsal-") as temp_dir:
         parent = Path(temp_dir)
@@ -162,16 +163,16 @@ def run_clean_checkout_rehearsal(
                 ),
             )
             if clone.returncode != 0 or clone.timed_out:
-                run_receipts.append(
-                    CommandReceipt(
-                        command=("git", "clone", "--revision", plan.revision),
-                        status="blocked",
-                        exit_code=clone.returncode,
-                        duration_seconds=round(monotonic() - clone_started, 3),
-                        output_sha256=_digest_output(clone.stdout, clone.stderr),
-                        skip_reason=clone.command_error or "fresh clone failed",
-                    )
+                clone_receipt = CommandReceipt(
+                    command=("git", "clone", "--revision", plan.revision),
+                    status="blocked",
+                    exit_code=clone.returncode,
+                    duration_seconds=round(monotonic() - clone_started, 3),
+                    output_sha256=_digest_output(clone.stdout, clone.stderr),
+                    skip_reason=clone.command_error or "fresh clone failed",
                 )
+                run_command_receipts.append((clone_receipt,))
+                run_receipts.append(clone_receipt)
                 output_clean = False
                 continue
             receipt_path = parent / f"public-matrix-rehearsal-{index}.json"
@@ -179,21 +180,6 @@ def run_clean_checkout_rehearsal(
                 _run_command(_materialize_command(command, receipt_path), checkout, timeout_seconds=timeout_seconds)
                 for command in plan.commands
             ]
-            failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)
-            status: ReceiptStatus = "pass" if failed is None else "blocked"
-            digest = hashlib.sha256(
-                "\n".join(receipt.output_sha256 for receipt in command_receipts).encode("ascii")
-            ).hexdigest()
-            run_receipts.append(
-                CommandReceipt(
-                    command=("release-rehearsal", f"run-{index + 1}", plan.revision),
-                    status=status,
-                    exit_code=0 if status == "pass" else (failed.exit_code if failed else 1),
-                    duration_seconds=round(monotonic() - clone_started, 3),
-                    output_sha256=digest,
-                    skip_reason="" if status == "pass" else (failed.skip_reason if failed else "command failed"),
-                )
-            )
             clean = run_with_policy(
                 ("git", "status", "--porcelain", "--untracked-files=all"),
                 cwd=checkout,
@@ -205,7 +191,33 @@ def run_clean_checkout_rehearsal(
                     capture_output=True,
                 ),
             )
-            output_clean = output_clean and clean.returncode == 0 and not clean.stdout.strip()
+            clean_ok = clean.returncode == 0 and not clean.stdout.strip()
+            clean_receipt = CommandReceipt(
+                command=("git", "status", "--porcelain", "--untracked-files=all"),
+                status="pass" if clean_ok else "blocked",
+                exit_code=clean.returncode,
+                duration_seconds=0.0,
+                output_sha256=_digest_output(clean.stdout, clean.stderr),
+                skip_reason="" if clean_ok else "fresh checkout produced tracked or untracked output",
+            )
+            command_receipts.append(clean_receipt)
+            failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)
+            status: ReceiptStatus = "pass" if failed is None else "blocked"
+            digest = hashlib.sha256(
+                "\n".join(receipt.output_sha256 for receipt in command_receipts).encode("ascii")
+            ).hexdigest()
+            run_command_receipts.append(tuple(command_receipts))
+            run_receipts.append(
+                CommandReceipt(
+                    command=("release-rehearsal", f"run-{index + 1}", plan.revision),
+                    status=status,
+                    exit_code=0 if status == "pass" else (failed.exit_code if failed else 1),
+                    duration_seconds=round(monotonic() - clone_started, 3),
+                    output_sha256=digest,
+                    skip_reason="" if status == "pass" else (failed.skip_reason if failed else "command failed"),
+                )
+            )
+            output_clean = output_clean and clean_ok
     overall_status: ReceiptStatus = (
         "pass"
         if len(run_receipts) == plan.runs and all(run.status == "pass" for run in run_receipts) and output_clean
@@ -216,6 +228,7 @@ def run_clean_checkout_rehearsal(
         platform=platform_name,
         status=overall_status,
         runs=tuple(run_receipts),
+        run_commands=tuple(run_command_receipts),
         output_clean=output_clean,
         skip_reason="" if overall_status == "pass" else "fresh-checkout command or clean-output check failed",
     )

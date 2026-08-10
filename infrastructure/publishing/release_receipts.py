@@ -123,6 +123,7 @@ class CleanCheckoutReceipt:
     platform: str
     status: ReceiptStatus
     runs: tuple[CommandReceipt, ...] = ()
+    run_commands: tuple[tuple[CommandReceipt, ...], ...] = ()
     output_clean: bool = False
     skip_reason: str = ""
     schema_version: str = RELEASE_RECEIPT_SCHEMA
@@ -135,9 +136,16 @@ class CleanCheckoutReceipt:
             errors.append("revision and platform are required")
         for run in self.runs:
             errors.extend(f"run: {error}" for error in run.validate())
+        for run_index, commands in enumerate(self.run_commands, 1):
+            if not commands:
+                errors.append(f"run_commands[{run_index}] must contain command evidence")
+            for command in commands:
+                errors.extend(f"run_commands[{run_index}]: {error}" for error in command.validate())
         if self.status == "pass":
             if len(self.runs) < 2:
                 errors.append("passing clean-checkout receipts require two deterministic runs")
+            if len(self.run_commands) < 2 or any(not commands for commands in self.run_commands[:2]):
+                errors.append("passing clean-checkout receipts require per-command evidence for two runs")
             if any(run.status != "pass" for run in self.runs[:2]):
                 errors.append("the first two clean-checkout runs must pass")
             if len(self.runs) >= 2 and self.runs[0].output_sha256 != self.runs[1].output_sha256:
@@ -148,7 +156,10 @@ class CleanCheckoutReceipt:
 
     def to_dict(self) -> dict[str, object]:
         """Return deterministic receipt data."""
-        return asdict(self) | {"runs": [run.to_dict() for run in self.runs]}
+        return asdict(self) | {
+            "runs": [run.to_dict() for run in self.runs],
+            "run_commands": [[command.to_dict() for command in commands] for commands in self.run_commands],
+        }
 
 
 @dataclass(frozen=True)

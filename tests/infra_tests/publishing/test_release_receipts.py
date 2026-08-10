@@ -44,6 +44,10 @@ def test_clean_checkout_requires_two_runs_and_clean_outputs() -> None:
         "darwin-arm64",
         "pass",
         (_passing_command("same"), _passing_command("same")),
+        run_commands=(
+            (_passing_command("same"),),
+            (_passing_command("same"),),
+        ),
         output_clean=True,
     )
     assert complete.validate() == []
