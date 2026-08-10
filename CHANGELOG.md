@@ -47,6 +47,19 @@ not to the contents of any specific workspace.
   source files, docs lint, generated facts, capability parity, Bandit, and the
   no-mocks gate.
 
+### Triple-check and committed-tree validation (2026-08-09)
+
+- Bound coverage provenance to committed revision `abae0e721`; the root
+  infrastructure release profile passed 9,842 tests, skipped 9 optional/tool
+  cases, and reached 84.29% infrastructure coverage.
+- Re-ran all 24 public exemplar lanes with two isolated outer workers and no
+  inner xdist: 5,960 collected tests, 94.7116% combined coverage, clean output
+  isolation, and no skips. Receipt SHA-256:
+  `984b4c33b9c2592d4e3895e627cc402ffb73ef0ca5d54936d062708a973ed1e7`.
+- Revalidated documentation/publishing (1,048 passed, 2 skipped), regression
+  claims (55 passed), root health, typed backlog/claim/roster/drift contracts,
+  Ruff, mypy (1,532 source files), Bandit, and both no-mocks inventories.
+
 ### Hosted CI correctness (2026-08-08)
 
 - Repaired the hosted XML-parser policy step so its Python guard is executed

@@ -1322,3 +1322,12 @@ model and Redacted Report Kmyth-support module split. The same isolated
 release-profile command passed all 24 public lanes, collected 5,960 tests, and
 reported 94.7101% combined coverage. Receipt SHA-256:
 `fd00581decf60b62bf98a36777bd66931273d50a20383078a27045c23909f9a2`.
+
+## Final committed-tree revalidation 2026-08-09
+
+The committed tree was revalidated after the documentation inventory and
+root-only coverage-cleanup fixes. The two-worker isolated release profile
+passed all 24 public lanes with no inner xdist, collected 5,960 tests, and
+reported 94.7116% combined coverage with output-isolation digests. Receipt
+SHA-256:
+`984b4c33b9c2592d4e3895e627cc402ffb73ef0ca5d54936d062708a973ed1e7`.
