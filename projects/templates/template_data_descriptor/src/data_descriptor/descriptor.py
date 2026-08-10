@@ -15,7 +15,13 @@ _REQUIRED_FIELD_KEYS = ("name", "type", "nullable")
 _FIELD_TYPES = {"string", "number", "integer", "boolean", "date", "category"}
 _QUANTITATIVE_TYPES = {"number", "integer"}
 _TEXT_TYPES = {"string", "category"}
-_MEDIA_TYPES = {"text/csv", "application/json", "application/parquet", "application/x-parquet"}
+_MEDIA_TYPES = {
+    "text/csv",
+    "application/json",
+    "application/x-ndjson",
+    "application/parquet",
+    "application/x-parquet",
+}
 PUBLICATION_RECEIPT_SCHEMA = "template-data-descriptor/publication-receipt/1"
 
 
@@ -233,7 +239,12 @@ def _check_files(descriptor: dict[str, Any], findings: list[DescriptorFinding]) 
             )
         if not _CHECKSUM_RE.match(str(item.get("checksum", ""))):
             findings.append(DescriptorFinding("error", "bad_checksum", f"{path or '<missing>'} lacks sha256 checksum"))
-        if int(item.get("rows", 0) or 0) <= 0:
+        raw_rows = item.get("rows", 0)
+        if isinstance(raw_rows, bool) or not isinstance(raw_rows, int):
+            findings.append(
+                DescriptorFinding("error", "bad_row_count", f"{path or '<missing>'} rows must be an integer")
+            )
+        elif raw_rows <= 0:
             findings.append(DescriptorFinding("warning", "nonpositive_rows", f"{path or '<missing>'} has no rows"))
 
 
@@ -321,11 +332,13 @@ def _check_numeric_bounds(
 
 
 def _release_file_entry(item: dict[str, Any]) -> dict[str, Any]:
+    raw_rows = item.get("rows", 0)
+    rows = raw_rows if isinstance(raw_rows, int) and not isinstance(raw_rows, bool) else 0
     return {
         "path": str(item.get("path", "")),
         "media_type": str(item.get("media_type", "")),
         "checksum": str(item.get("checksum", "")),
-        "rows": int(item.get("rows", 0) or 0),
+        "rows": rows,
     }
 
 

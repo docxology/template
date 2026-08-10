@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 from pathlib import Path
 
 from infrastructure.core.exceptions import BuildError, ValidationError
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 
 from .models import EvaluationResult
 
@@ -66,20 +66,23 @@ def run_evaluation(
         "--gen-dir",
         str(gen_dir),
     ]
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=str(task_dir),
+    proc = run_with_policy(
+        cmd,
+        cwd=task_dir,
+        env=None,
+        policy=SubprocessPolicy(
+            policy_id="sia-evaluation",
+            source_path="infrastructure/sia/evaluation_runner.py",
+            timeout_seconds=timeout_sec,
             capture_output=True,
-            text=True,
-            timeout=timeout_sec,
-            check=False,
-        )
-    except subprocess.TimeoutExpired as exc:
+            credential_free=True,
+        ),
+    )
+    if proc.timed_out:
         raise BuildError(
             f"evaluate.py timed out after {timeout_sec}s "
             f"(script={evaluate_script.relative_to(task_dir)} gen_dir={gen_dir.name})"
-        ) from exc
+        )
     if proc.returncode != 0:
         stderr_tail = (proc.stderr or proc.stdout or "").strip().splitlines()
         detail = stderr_tail[-1] if stderr_tail else "(no stderr)"

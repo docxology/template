@@ -1,3 +1,4 @@
+% BEGIN TEMPLATE_AUTOPOIESIS_PREAMBLE
 % Page margins are config-driven: manuscript/config.yaml -> metadata.geometry
 % (forwarded to pandoc as `-V geometry:`). Do not declare \geometry{...} here —
 % a second declaration would clash with the pandoc-emitted geometry package.
@@ -25,3 +26,4 @@
 
 \definecolor{brand-teal}{HTML}{0d9488}
 \definecolor{brand-slate}{HTML}{1e293b}
+% END TEMPLATE_AUTOPOIESIS_PREAMBLE

@@ -311,7 +311,7 @@ Prefer `infrastructure.publishing.zenodo` (and sibling subpackages) for new code
 | `upload_runner.py` | `UploadTargets`, `UploadRun`, `CORE_UPLOADERS`, `OPTIONAL_UPLOADERS`, `select_jobs`, `run_uploads` | `PINATA_JWT`, `HUGGINGFACE_TOKEN`/`HF_TOKEN`, `OSF_TOKEN`, `TESTPYPI_TOKEN`, `GITHUB_TOKEN`, `NETLIFY_AUTH_TOKEN`, `CLOUDFLARE_API_TOKEN` |
 | `executable_bundle.py` | `bundle_project` | — |
 | `preflight.py` | `publishing_preflight` | — |
-| `release_receipts.py` | `ReleaseMetadataReceipt`, `CommandReceipt`, `CleanCheckoutReceipt`, `CoverageGapSnapshot` | — |
+| `release_receipts.py` | `ReleaseMetadataReceipt`, `CommandReceipt`, `CleanCheckoutReceipt`, `CoverageGapSnapshot`, `SubprocessPolicyReceipt` | — |
 | `rehearsal.py` | `build_clean_checkout_plan`, `run_clean_checkout_rehearsal` | — |
 | `cli.py` | `main`, `publish_zenodo_command`, `extract_metadata_command`, ... | `--token`, `ZENODO_PROD_TOKEN`, `ZENODO_TOKEN` |
 | `publish_cli.py` | `main` | `--token`, `--repo`, `--tag`, `--name` |

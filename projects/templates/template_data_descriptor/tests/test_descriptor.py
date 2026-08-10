@@ -75,6 +75,12 @@ class TestNegativeControls:
         assert report.valid is False
         assert report.readiness_score < 1.0
 
+    def test_non_integer_rows_are_a_structural_error(self) -> None:
+        descriptor = load_fixture()
+        descriptor["files"][0]["rows"] = "twelve"
+        findings = validate_descriptor(descriptor)
+        assert any(finding.code == "bad_row_count" and finding.severity == "error" for finding in findings)
+
     def test_descriptor_reports_constraint_and_path_gaps(self) -> None:
         descriptor = load_fixture()
         descriptor["files"][0]["path"] = "../private/measurements.csv"

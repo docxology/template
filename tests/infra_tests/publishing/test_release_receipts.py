@@ -13,6 +13,7 @@ from infrastructure.publishing.release_receipts import (
     ReleaseMetadataReceipt,
     SubprocessPolicyReceipt,
     build_coverage_gap_snapshot,
+    build_release_metadata_receipt,
     build_subprocess_policy_receipt,
     receipt_digest,
     write_receipt,
@@ -33,6 +34,42 @@ def test_release_metadata_never_inferrs_authority() -> None:
     receipt = ReleaseMetadataReceipt("owner/repo", "abc123", "v1", "pass")
     assert any("branch protection" in error for error in receipt.validate())
     assert any("private promotion" in error for error in receipt.validate())
+
+
+def test_release_metadata_binds_status_to_command_scope_and_date() -> None:
+    receipt = build_release_metadata_receipt(
+        repository="owner/repo",
+        revision="abc123",
+        version="v1",
+        command=("uv", "run", "python", "scripts/check.py"),
+        scope=("root package", "public roster"),
+        owner="maintainer",
+        checked_at="2026-08-10",
+        health="review required",
+        source_urls=("https://github.com/owner/repo",),
+    )
+    assert receipt.validate() == []
+    payload = receipt.to_dict()
+    assert payload["scope"] == ["root package", "public roster"]
+    assert payload["command"][-1] == "scripts/check.py"
+
+
+def test_release_metadata_rejects_credential_url_and_missing_scope() -> None:
+    receipt = ReleaseMetadataReceipt(
+        "owner/repo",
+        "abc123",
+        "v1",
+        "review_required",
+        scope=(),
+        command=("tool",),
+        owner="maintainer",
+        checked_at="2026-08-10",
+        health="review required",
+        source_urls=("https://example.invalid/?api_key=secret",),
+    )
+    errors = receipt.validate()
+    assert any("non-empty scope" in error for error in errors)
+    assert any("credential-free HTTPS" in error for error in errors)
 
 
 def test_clean_checkout_requires_two_runs_and_clean_outputs() -> None:

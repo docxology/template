@@ -188,6 +188,22 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
         capture_output=True,
     ),
     SubprocessPolicy(
+        policy_id="sia-live-target",
+        source_path="infrastructure/sia/loop_runner.py",
+        timeout_seconds=300,
+        check=False,
+        capture_output=True,
+        credential_free=True,
+    ),
+    SubprocessPolicy(
+        policy_id="sia-evaluation",
+        source_path="infrastructure/sia/evaluation_runner.py",
+        timeout_seconds=300,
+        check=False,
+        capture_output=True,
+        credential_free=True,
+    ),
+    SubprocessPolicy(
         policy_id="coverage-measurement",
         source_path="infrastructure/documentation/counts_coverage.py",
         timeout_seconds=1800,

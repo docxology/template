@@ -39,6 +39,24 @@ Private work stays under `projects/working/` (local-only). Promote to `projects/
 3. Update manuscript tokens and methodology to describe your task — not upstream paper numbers.
 4. Run full core pipeline before claiming publication readiness.
 
+## Approval boundary for real mutation forks
+
+The public exemplar never applies generated feedback to target code. A fork
+that wants to apply mutations must produce a versioned
+`src/approval.py::ApprovalContract` payload first:
+
+1. run the target in a disposable sandbox;
+2. record a SHA-256 digest of the proposed diff and a rollback snapshot;
+3. inspect the diff and evaluation receipt;
+4. obtain an owner approval receipt with a stable ID; and
+5. apply only when the payload is `mode: live_apply` with
+   `approval_status: approved`.
+
+Missing sandbox, diff, rollback, or approval evidence is a hard failure. A
+fixture replay uses `mode: fixture_replay` and must not claim human approval.
+This separation keeps the public harness deterministic and makes a real fork's
+state-changing authority auditable rather than inferred from a local test run.
+
 ## See also
 
 - [`../../../../docs/guides/fork-an-exemplar.md`](../../../../docs/guides/fork-an-exemplar.md)

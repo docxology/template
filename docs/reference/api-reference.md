@@ -1577,6 +1577,16 @@ archive_publication(bundle: Path, *, providers: list[ArchivalProvider], dry_run:
 
 Mirror a publication bundle to N independent archival targets.
 
+### `build_coverage_gap_snapshot`
+
+*function — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+build_coverage_gap_snapshot(*, revision: str, infrastructure_percent: float | None, infrastructure_floor: float, projects: Mapping[str, float | None], project_floors: Mapping[str, float]) -> CoverageGapSnapshot
+```
+
+Build a coverage receipt without coercing unavailable values to zero.
+
 ### `build_dist`
 
 *function — defined in `infrastructure.publishing.pypi.build`*
@@ -1586,6 +1596,26 @@ build_dist(project_root: Path, *, dist_dir: Path | None=None, clean: bool=True) 
 ```
 
 Build wheel + sdist using ``uv build``.
+
+### `build_release_metadata_receipt`
+
+*function — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+build_release_metadata_receipt(*, repository: str, revision: str, version: str, command: tuple[str, ...], scope: tuple[str, ...], owner: str, checked_at: str, health: str, verification_mode: VerificationMode='offline', source_urls: tuple[str, ...]=(), artifact: str='', branch_protection: AuthorityStatus='unavailable', private_promotion: AuthorityStatus='unavailable', status: ReceiptStatus='review_required', skip_reason: str='') -> ReleaseMetadataReceipt
+```
+
+Build a metadata receipt with all reproducibility fields explicit.
+
+### `build_subprocess_policy_receipt`
+
+*function — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+build_subprocess_policy_receipt(repo_root: Path | str | None=None) -> SubprocessPolicyReceipt
+```
+
+Build a receipt from the source-owned intentional-wrapper inventory.
 
 ### `calculate_metadata_complexity_score`
 
@@ -1617,6 +1647,16 @@ class CitationStyle
 
 Container for citation style configuration.
 
+### `CleanCheckoutReceipt`
+
+*class — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+class CleanCheckoutReceipt
+```
+
+Fresh-checkout rehearsal result with explicit unavailable-tool states.
+
 ### `CloudflarePagesAdapter`
 
 *class — defined in `infrastructure.publishing.static_site.cloudflare_pages`*
@@ -1626,6 +1666,26 @@ class CloudflarePagesAdapter(config: SiteDeployConfig)
 ```
 
 Data container for CloudflarePagesAdapter.
+
+### `CommandReceipt`
+
+*class — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+class CommandReceipt
+```
+
+Evidence for one command without recording secret environment values.
+
+### `CoverageGapSnapshot`
+
+*class — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+class CoverageGapSnapshot
+```
+
+Source-bound coverage-floor snapshot for release review.
 
 ### `create_academic_profile_data`
 
@@ -1925,6 +1985,16 @@ class PyPIAdapter(config: PyPIConfig | None=None, *, env: dict[str, str] | None=
 
 Build → check → upload orchestrator for PyPI / TestPyPI.
 
+### `ReleaseMetadataReceipt`
+
+*class — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+class ReleaseMetadataReceipt
+```
+
+Release status plus explicit administrator-owned authority fields.
+
 ### `SiteDeployConfig`
 
 *class — defined in `infrastructure.publishing.static_site.models`*
@@ -1954,6 +2024,16 @@ class SiteHosting(str, Enum)
 ```
 
 Data container for SiteHosting.
+
+### `SubprocessPolicyReceipt`
+
+*class — defined in `infrastructure.publishing.release_receipts`*
+
+```python
+class SubprocessPolicyReceipt
+```
+
+Versioned inventory of intentional subprocess wrappers.
 
 ### `upload_dist`
 

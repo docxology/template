@@ -628,7 +628,15 @@
         "list_platforms",
         "get_platform",
         "first_class_platforms",
-        "documented_platforms"
+        "documented_platforms",
+        "CommandReceipt",
+        "ReleaseMetadataReceipt",
+        "CleanCheckoutReceipt",
+        "CoverageGapSnapshot",
+        "SubprocessPolicyReceipt",
+        "build_release_metadata_receipt",
+        "build_coverage_gap_snapshot",
+        "build_subprocess_policy_receipt"
       ],
       "effect": "mutating"
     },

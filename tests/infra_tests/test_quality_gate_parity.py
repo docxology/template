@@ -55,6 +55,15 @@ def test_ci_workflow_carries_cross_surface_gates() -> None:
         assert command in workflow
 
 
+def test_ci_public_matrix_uses_current_stage_cli_contract() -> None:
+    workflow = (REPO_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+    assert "--project-only --all-projects --public-projects" in workflow
+    assert "--project-workers 2" in workflow
+    assert "--public-scope" not in workflow
+    assert "--workers 2" not in workflow
+
+
 def test_pre_push_carries_cross_surface_gates() -> None:
     hooks = _local_hooks()
     quick = _hook_command(hooks["pre-push-quick"])

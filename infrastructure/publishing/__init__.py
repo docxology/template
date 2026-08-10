@@ -74,6 +74,16 @@ from .registry import (
     first_class_platforms,
     documented_platforms,
 )
+from .release_receipts import (
+    CleanCheckoutReceipt,
+    CommandReceipt,
+    CoverageGapSnapshot,
+    ReleaseMetadataReceipt,
+    SubprocessPolicyReceipt,
+    build_coverage_gap_snapshot,
+    build_release_metadata_receipt,
+    build_subprocess_policy_receipt,
+)
 
 __all__ = [
     # Classes
@@ -130,4 +140,13 @@ __all__ = [
     "get_platform",
     "first_class_platforms",
     "documented_platforms",
+    # Typed release evidence
+    "CommandReceipt",
+    "ReleaseMetadataReceipt",
+    "CleanCheckoutReceipt",
+    "CoverageGapSnapshot",
+    "SubprocessPolicyReceipt",
+    "build_release_metadata_receipt",
+    "build_coverage_gap_snapshot",
+    "build_subprocess_policy_receipt",
 ]

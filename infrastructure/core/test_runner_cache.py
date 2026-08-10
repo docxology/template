@@ -56,18 +56,29 @@ def _cache_identity_inputs(
     project_names: Sequence[str],
 ) -> dict[str, str]:
     """Collect the state that makes a project-matrix result reusable."""
-    changed = _run_git_metadata(repo_root, ["diff", "--binary", "HEAD", "--"])
+    # Keep the three Git states separately addressable.  ``git diff HEAD`` is
+    # useful as a combined digest, but it is not an adequate diagnostic when a
+    # cached result changes: a staged edit and an unstaged edit can otherwise
+    # look identical in a receipt.  The explicit fields also make cache
+    # invalidation auditable for callers that persist matrix receipts.
+    index_diff = _run_git_metadata(repo_root, ["diff", "--cached", "--binary", "--"])
+    worktree_diff = _run_git_metadata(repo_root, ["diff", "--binary", "HEAD", "--"])
     status = _run_git_metadata(repo_root, ["status", "--porcelain=v1", "--untracked-files=all", "-z", "--"])
     untracked = _run_git_metadata(repo_root, ["ls-files", "--others", "--exclude-standard", "-z", "--"])
     source_digest = hashlib.sha256()
-    for payload in (changed, status):
+    for payload in (index_diff, worktree_diff, status):
         source_digest.update(payload.encode("utf-8", errors="replace"))
         source_digest.update(b"\0")
+    untracked_digest = hashlib.sha256()
     ignored_parts = {".venv", "__pycache__", ".pytest_cache", ".mypy_cache"}
     for relative in sorted(item for item in untracked.split("\0") if item):
         path = repo_root / relative
         if not path.is_file() or any(part in ignored_parts for part in path.parts):
             continue
+        untracked_digest.update(relative.encode("utf-8"))
+        untracked_digest.update(b"\0")
+        untracked_digest.update(path.read_bytes())
+        untracked_digest.update(b"\0")
         source_digest.update(relative.encode("utf-8"))
         source_digest.update(b"\0")
         source_digest.update(path.read_bytes())
@@ -78,7 +89,17 @@ def _cache_identity_inputs(
         path.relative_to(repo_root) for path in sorted((repo_root / "projects" / "templates").glob("*/pyproject.toml"))
     )
     tools: dict[str, str] = {}
-    for package in ("pytest", "coverage", "pytest-cov", "pytest-xdist"):
+    for package in (
+        "pytest",
+        "coverage",
+        "pytest-cov",
+        "pytest-xdist",
+        "pytest-timeout",
+        "pytest-benchmark",
+        "ruff",
+        "mypy",
+        "bandit",
+    ):
         try:
             tools[package] = version(package)
         except PackageNotFoundError:
@@ -86,6 +107,9 @@ def _cache_identity_inputs(
     return {
         "commit": _resolve_roster_revision(repo_root),
         "index_worktree": source_digest.hexdigest(),
+        "index_state": hashlib.sha256(index_diff.encode("utf-8", errors="replace")).hexdigest(),
+        "worktree_state": hashlib.sha256(worktree_diff.encode("utf-8", errors="replace")).hexdigest(),
+        "untracked_state": untracked_digest.hexdigest(),
         "interpreter": f"{sys.executable}|{platform.python_implementation()}|{platform.python_version()}",
         "lockfiles": _digest_files(repo_root, lockfiles),
         "profile": profile,

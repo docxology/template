@@ -47,7 +47,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `DATA-MEDIA-1` | blocked-external | Major | Real licensed non-CSV fixture | Obtain the required owner or external receipt to unblock; run descriptor validator with declared media type and attach media checksum/row manifest. | media checksum/row manifest | `uv run pytest tests -q --no-cov --timeout=120` | unsupported media or wrong checksum must fail |
+| `DATA-MEDIA-1` | blocked-external | Major | Real licensed non-CSV fixture | The validator now supports justified JSON Lines in addition to CSV/JSON; obtain a real licensed non-CSV fixture and attach its checksum/row manifest before promoting the media claim. | media checksum/row manifest + license receipt | `uv run pytest projects/templates/template_data_descriptor/tests -q --no-cov --timeout=120` | unsupported media, malformed rows, symlink escape, or wrong checksum must fail |
 
 ## Backlog status
 

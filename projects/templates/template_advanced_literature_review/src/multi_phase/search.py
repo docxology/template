@@ -24,7 +24,11 @@ from config_loader import _load_yaml
 from literature.corpus import Corpus
 from literature.models import Paper
 from literature.search_runner import run_literature_search
-from multi_phase.contracts import validate_phase_artifact_manifest, validate_phase_boundaries
+from multi_phase.contracts import (
+    build_cross_phase_conflict_report,
+    validate_phase_artifact_manifest,
+    validate_phase_boundaries,
+)
 from multi_phase.llm_filter import LLMFilterEngine
 from multi_phase.models import PhasedPaper, PhaseMetadata
 
@@ -381,6 +385,8 @@ class MultiPhaseSearchRunner:
                 if all(result["papers_without_sufficient_citations"] == [] for result in citation_validation.values())
                 else "review"
             )
+        configured_assertions = self.project_config.get("cross_phase_assertions")
+        conflict_validation = build_cross_phase_conflict_report(configured_assertions, phase_ids)
         return {
             "schema_version": CROSS_PHASE_ANALYSIS_SCHEMA,
             "analysis_scope": [
@@ -399,6 +405,7 @@ class MultiPhaseSearchRunner:
                 "status": citation_status,
                 "results": citation_validation,
             },
+            "conflict_validation": conflict_validation,
             "hypothesis_scoring": {
                 "status": "pending_knowledge_graph",
                 "artifact": "hypothesis_scores.json",
@@ -512,11 +519,26 @@ class MultiPhaseSearchRunner:
                 {"path": "cross_phase_analysis.json", "phases": all_phases},
             ]
         )
+        provenance: list[dict[str, str]] = []
+        for artifact in artifacts:
+            phases = artifact.get("phases")
+            if not isinstance(phases, list):
+                continue
+            for phase_id in phases:
+                provenance.append(
+                    {
+                        "phase": str(phase_id),
+                        "artifact": str(artifact["path"]),
+                        "producer": "MultiPhaseSearchRunner",
+                        "source": execution_mode,
+                    }
+                )
         manifest = {
             "schema_version": PHASE_ARTIFACT_MANIFEST_SCHEMA,
             "execution_mode": execution_mode,
             "phase_order": all_phases,
             "artifacts": artifacts,
+            "provenance": provenance,
         }
         manifest_issues = validate_phase_artifact_manifest(manifest)
         if manifest_issues:
@@ -569,6 +591,7 @@ class MultiPhaseSearchRunner:
             "phase_validation": phase_validation,
             "phases": {pid: asdict(meta) for pid, meta in self.phase_metadata.items()},
             "citation_validation": citation_validation,
+            "conflict_validation": cross_phase_analysis["conflict_validation"],
             "total_papers": len(all_paper_list),
             "total_unique_papers": len(self.all_phased_papers),
             "phase_overlap": self._calculate_phase_overlap(),
@@ -666,6 +689,7 @@ class MultiPhaseSearchRunner:
             "phase_validation": phase_validation,
             "phases": {phase_id: asdict(meta) for phase_id, meta in self.phase_metadata.items()},
             "citation_validation": citation_validation,
+            "conflict_validation": cross_phase_analysis["conflict_validation"],
             "total_papers": len(combined),
             "total_unique_papers": len(self.all_phased_papers),
             "phase_overlap": self._calculate_phase_overlap(),

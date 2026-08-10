@@ -62,7 +62,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `AUTOPOIESIS-SPEC-1` | open | Major | Grammar/spec lockstep | Implement the scoped change; run strict drift and spec-contract tests and attach `SPEC.md` Phase 10 checklist. | `SPEC.md` Phase 10 checklist | `uv run pytest tests -q --no-cov --timeout=120` | fenced preamble/spec mismatch must fail validation |
+| `AUTOPOIESIS-SPEC-1` | partial | Major | Grammar/spec lockstep | Run the optional pinned renderer and visual QA when available; attach a tool-qualified Phase 10 receipt. Source readiness, explicit preamble fencing, and P0–P10 checklist validation are complete in this revision. | `SPEC.md` Phase 10 checklist + renderer receipt | `uv run pytest projects/templates/template_autopoiesis/tests -q --no-cov --timeout=120` | fenced preamble/spec mismatch must fail validation |
 
 ## Backlog status
 

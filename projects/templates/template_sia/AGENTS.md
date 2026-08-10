@@ -34,6 +34,9 @@ code modification. Fixture replay records real threshold variants but all score
 1.0 on the toy dataset, so it demonstrates deterministic replay and threshold
 robustness—not measured self-improvement. See
 [`../../../infrastructure/sia/AGENTS.md`](../../../infrastructure/sia/AGENTS.md).
+`project_config.sia.approval_mode` is typed and defaults to `fixture_replay`;
+forks must select `live_proposal` or `live_apply` only alongside the sandbox,
+diff, rollback, and owner-receipt contract in `src/approval.py`.
 The project adapter lives in `src/loop.py`; scripts only parse arguments, call
 that API, and present output paths.
 

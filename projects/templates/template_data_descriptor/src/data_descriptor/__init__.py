@@ -40,6 +40,7 @@ from data_descriptor.verification import (
     count_rows,
     compute_file_digest,
     count_csv_rows,
+    count_jsonl_rows,
     verification_summary,
     verify_descriptor_files,
 )
@@ -66,6 +67,7 @@ __all__ = [
     "compute_file_digest",
     "count_rows",
     "count_csv_rows",
+    "count_jsonl_rows",
     "demo_broken_descriptor",
     "descriptor_figure_spec",
     "descriptor_fingerprint",

@@ -80,6 +80,80 @@ def validate_cross_phase_conflicts(assertions: Any) -> list[str]:
     return issues
 
 
+def validate_phase_provenance(records: Any, phase_order: Any) -> list[str]:
+    """Validate phase ownership for assertion or artifact provenance rows.
+
+    A phase label alone is not provenance.  Every row must identify the phase,
+    artifact, producer, and source mode so a later report cannot silently
+    collapse fixture evidence and live retrieval evidence into one claim.
+    """
+    if not isinstance(phase_order, list) or any(
+        not isinstance(phase, str) or not phase.strip() for phase in phase_order
+    ):
+        return ["phase_order must be a list of phase IDs"]
+    if not phase_order:
+        return [] if records == [] else ["empty phase_order cannot carry provenance records"]
+    known = set(phase_order)
+    if len(known) != len(phase_order):
+        return ["phase_order must contain unique phase IDs"]
+    if not isinstance(records, list) or not records:
+        return ["phase provenance records must be a non-empty list"]
+
+    issues: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for index, raw in enumerate(records):
+        if not isinstance(raw, dict):
+            issues.append(f"provenance[{index}] must be a mapping")
+            continue
+        phase = str(raw.get("phase", "")).strip()
+        artifact = str(raw.get("artifact", "")).strip()
+        producer = str(raw.get("producer", "")).strip()
+        source = str(raw.get("source", "")).strip()
+        if phase not in known:
+            issues.append(f"provenance[{index}] references unknown phase {phase!r}")
+        if not artifact or artifact.startswith("/") or ".." in artifact.split("/"):
+            issues.append(f"provenance[{index}] has an unsafe or empty artifact")
+        if not producer:
+            issues.append(f"provenance[{index}] requires a producer")
+        if not source:
+            issues.append(f"provenance[{index}] requires a source mode or revision")
+        key = (phase, artifact)
+        if key in seen:
+            issues.append(f"duplicate phase provenance: {phase}/{artifact}")
+        seen.add(key)
+    return issues
+
+
+def build_cross_phase_conflict_report(assertions: Any, phase_order: list[str]) -> dict[str, Any]:
+    """Build a reviewable conflict report without converting overlap to support."""
+    if assertions is None:
+        return {
+            "schema_version": "advanced-literature-review/cross-phase-conflicts/1",
+            "status": "not_configured",
+            "conflicts": [],
+            "issues": [],
+        }
+    issues = validate_cross_phase_conflicts(assertions)
+    if isinstance(assertions, list):
+        for index, assertion in enumerate(assertions):
+            if not isinstance(assertion, dict):
+                continue
+            phase = str(assertion.get("phase", "")).strip()
+            source = str(assertion.get("source", "")).strip()
+            if phase not in phase_order:
+                issues.append(f"assertions[{index}] references unknown phase {phase!r}")
+            if not source:
+                issues.append(f"assertions[{index}] requires a source artifact or revision")
+    conflicts = [issue for issue in issues if "conflicting polarity" in issue]
+    return {
+        "schema_version": "advanced-literature-review/cross-phase-conflicts/1",
+        "status": "invalid" if len(conflicts) != len(issues) and issues else ("review" if conflicts else "pass"),
+        "conflicts": sorted(conflicts),
+        "issues": sorted(issues),
+        "assertion_count": len(assertions) if isinstance(assertions, list) else 0,
+    }
+
+
 def validate_llm_calibration(cases: Any, *, allowed_labels: tuple[str, ...] = ("yes", "no")) -> list[str]:
     """Validate a small, offline calibration fixture for an optional LLM filter."""
     if not isinstance(cases, list) or not cases:
@@ -151,13 +225,18 @@ def validate_phase_artifact_manifest(manifest: Any) -> list[str]:
             issues.append(f"artifacts[{index}] must name at least one phase")
         elif any(phase not in known for phase in attributed):
             issues.append(f"artifacts[{index}] references an unknown phase")
+    provenance = manifest.get("provenance")
+    if provenance is not None:
+        issues.extend(validate_phase_provenance(provenance, phases))
     return issues
 
 
 __all__ = [
+    "build_cross_phase_conflict_report",
     "score_llm_calibration",
     "validate_cross_phase_conflicts",
     "validate_llm_calibration",
     "validate_phase_artifact_manifest",
     "validate_phase_boundaries",
+    "validate_phase_provenance",
 ]

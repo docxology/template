@@ -14,6 +14,13 @@ Bound claims:
 2. Compares against a pinned ground-truth value in [`pinned_values/`](pinned_values/)
 3. Fails loudly if the value drifts beyond documented tolerance
 
+The inventory gate also verifies that each declared manuscript location and
+producer resolves to a real, non-symlinked repository file, that revision
+fields are hexadecimal commit identifiers, and that pin files do not escape
+the checkout. Mutation tests cover producer, location, revision, and symlink
+drift; these are source-integrity controls, not evidence that an external or
+live-data claim is true.
+
 This is **different from coverage** — coverage tells you "the code ran"; regression tests tell you "the science is still the science."
 
 `claim_bindings.json` is the roster-level receipt consumed by

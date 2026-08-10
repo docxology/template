@@ -1383,3 +1383,18 @@ The same final tree passed the infrastructure coverage-bearing release gate:
 coverage was 84.28% against the 60% floor. The optional service lane and the
 multi-manuscript-config advisory remained explicit warnings; neither was
 promoted to success.
+
+## Source-contract refinement 2026-08-10
+
+The following source-level portions were completed and removed from their
+active TODO wording; residual external and optional-tool work remains active:
+
+| Exemplar | Completed source surface | Evidence retained | Residual boundary |
+| --- | --- | --- | --- |
+| `template_autopoiesis` | Phase 10 source readiness contract, explicit preamble fences, and P0–P10 `SPEC.md` lockstep checks | `src/manuscript_contract.py`, `tests/test_manuscript_contract.py`, and the project suite | Optional pinned renderer and visual QA receipt |
+| `template_sia` | Typed fixture/live approval mode, sandbox/diff/rollback/approval contract, and shared subprocess policy for live/evaluation wrappers | `src/approval.py`, `src/loop_config.py`, `tests/test_approval.py`, and the fork guide | Real disposable fork and owner approval receipt remain blocked-external |
+| `template_data_descriptor` | Quoted-CSV parsing, justified JSON Lines row counting, integer row-shape checks, and intermediate-symlink rejection | `src/data_descriptor/{descriptor,verification}.py` and focused verification tests | Real licensed non-CSV publication evidence remains blocked-external |
+| `template_advanced_literature_review` | Phase artifact provenance rows and review-only cross-phase conflict reporting | `src/multi_phase/contracts.py`, `src/multi_phase/search.py`, and project contract tests | Full-pipeline provenance and domain calibration remain partial |
+
+These entries are source-contract evidence only; they do not promote optional
+LLM, network, renderer, publication, or owner-authority paths.

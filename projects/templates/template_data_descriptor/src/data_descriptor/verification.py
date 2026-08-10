@@ -15,6 +15,7 @@ failures — verification is only asserted for bytes that are actually present.
 from __future__ import annotations
 
 import hashlib
+import csv
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -79,10 +80,27 @@ def count_csv_rows(path: Path) -> int:
         The number of non-empty rows after the header. An empty (or
         header-only) file yields ``0``.
     """
-    lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    if not lines:
-        return 0
-    return len(lines) - 1
+    try:
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            rows = csv.reader(handle)
+            next(rows, None)  # header
+            return sum(1 for row in rows if any(cell.strip() for cell in row))
+    except (OSError, UnicodeError, csv.Error) as exc:
+        raise ValueError(f"invalid CSV payload: {path}") from exc
+
+
+def count_jsonl_rows(path: Path) -> int:
+    """Count non-empty, independently parseable JSON Lines records."""
+    count = 0
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            json.loads(line)
+            count += 1
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid JSON Lines payload: {path}") from exc
+    return count
 
 
 def count_rows(path: Path, media_type: str) -> int:
@@ -105,6 +123,8 @@ def count_rows(path: Path, media_type: str) -> int:
                 if isinstance(rows, list):
                     return len(rows)
         raise ValueError("JSON dataset must be a list or contain a rows/data/records list")
+    if media_type == "application/x-ndjson":
+        return count_jsonl_rows(path)
     raise NotImplementedError(f"row counting is not enabled for media type {media_type!r}")
 
 
@@ -159,9 +179,22 @@ def verification_summary(verifications: tuple[FileVerification, ...]) -> dict[st
 def _verify_one(item: dict[str, Any], base_dir: Path) -> FileVerification:
     path = str(item.get("path", ""))
     declared_checksum = str(item.get("checksum", ""))
-    declared_rows = int(item.get("rows", 0) or 0)
+    raw_rows = item.get("rows", 0)
+    declared_rows = raw_rows if isinstance(raw_rows, int) and not isinstance(raw_rows, bool) else -1
     base = Path(base_dir).resolve()
-    resolved = (base / path).resolve()
+    candidate = base / path
+    if _path_contains_symlink(base, path):
+        return FileVerification(
+            path=path,
+            status=STATUS_UNSAFE_PATH,
+            declared_checksum=declared_checksum,
+            actual_checksum="",
+            declared_rows=declared_rows,
+            actual_rows=-1,
+            checksum_ok=False,
+            rows_ok=False,
+        )
+    resolved = candidate.resolve()
     try:
         resolved.relative_to(base)
     except ValueError:
@@ -219,3 +252,15 @@ def _verify_one(item: dict[str, Any], base_dir: Path) -> FileVerification:
         checksum_ok=checksum_ok,
         rows_ok=rows_ok,
     )
+
+
+def _path_contains_symlink(base: Path, relative: str) -> bool:
+    """Reject final and intermediate symlinks in descriptor paths."""
+    candidate = base
+    for part in Path(relative).parts:
+        if part in {"", "."}:
+            continue
+        candidate /= part
+        if candidate.is_symlink():
+            return True
+    return False

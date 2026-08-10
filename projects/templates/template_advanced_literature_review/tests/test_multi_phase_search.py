@@ -16,11 +16,13 @@ import yaml
 from literature.corpus import Corpus
 from literature.models import Paper
 from multi_phase.contracts import (
+    build_cross_phase_conflict_report,
     score_llm_calibration,
     validate_cross_phase_conflicts,
     validate_llm_calibration,
     validate_phase_artifact_manifest,
     validate_phase_boundaries,
+    validate_phase_provenance,
 )
 from multi_phase.search import (
     LLMFilterEngine,
@@ -296,6 +298,38 @@ def test_cross_phase_conflict_contract_rejects_malformed_collections() -> None:
     issues = validate_cross_phase_conflicts(["bad", {"paper_id": "p1", "claim_id": "c1", "polarity": "other"}])
     assert len(issues) == 2
     assert validate_cross_phase_conflicts({}) == ["assertions must be a list"]
+
+
+def test_phase_provenance_requires_source_and_rejects_duplicate_rows() -> None:
+    records = [
+        {"phase": "phase_1", "artifact": "phase_1.jsonl", "producer": "runner", "source": "fixture"},
+        {"phase": "phase_1", "artifact": "phase_1.jsonl", "producer": "runner", "source": "fixture"},
+        {"phase": "phase_2", "artifact": "../private.jsonl", "producer": "", "source": ""},
+    ]
+    issues = validate_phase_provenance(records, ["phase_1", "phase_2"])
+    assert any("duplicate phase provenance" in issue for issue in issues)
+    assert any("unsafe" in issue for issue in issues)
+    assert any("requires a producer" in issue for issue in issues)
+    assert any("requires a source" in issue for issue in issues)
+
+
+def test_cross_phase_conflict_report_is_review_not_scientific_support() -> None:
+    report = build_cross_phase_conflict_report(
+        [
+            {"phase": "phase_1", "paper_id": "p1", "claim_id": "c1", "polarity": "support", "source": "a"},
+            {
+                "phase": "phase_2",
+                "paper_id": "p1",
+                "claim_id": "c1",
+                "polarity": "contradict",
+                "source": "b",
+            },
+        ],
+        ["phase_1", "phase_2"],
+    )
+    assert report["status"] == "review"
+    assert report["conflicts"]
+    assert build_cross_phase_conflict_report(None, ["phase_1"])["status"] == "not_configured"
 
 
 def test_llm_calibration_contract_scores_offline_fixture() -> None:

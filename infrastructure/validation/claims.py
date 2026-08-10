@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal, Mapping, cast
@@ -20,6 +21,8 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 CLAIM_BINDING_SCHEMA = "template-claim-binding/v1"
 CLAIM_BINDING_RECEIPT_SCHEMA = "template-claim-binding-receipt/v1"
 ClaimBindingState = Literal["bound", "not_applicable", "external_data"]
+_REVISION_RE = re.compile(r"^[0-9a-fA-F]{7,64}$")
+_LOCATION_SPLIT_RE = re.compile(r"\s*(?:\+|,|;)\s*")
 
 
 @dataclass(frozen=True)
@@ -143,6 +146,8 @@ def _pin_rows(
 ) -> tuple[list[tuple[str, Mapping[str, object]]], Mapping[str, Mapping[str, object]], list[str]]:
     """Load one pin file and return claim rows plus actionable errors."""
     pin_path = (repo_root / record.pin_file).resolve()
+    if (repo_root / record.pin_file).is_symlink():
+        return [], {}, [f"{record.project}: pin file must not be a symlink: {record.pin_file}"]
     try:
         pin_path.relative_to(repo_root.resolve())
     except ValueError:
@@ -188,15 +193,17 @@ def validate_claim_bindings(repo_root: Path | str, manifest_path: Path | str | N
             continue
         if record.claim_count < 0:
             errors.append(f"{record.project}: claim_count must be non-negative")
+        if not record.rationale.strip():
+            errors.append(f"{record.project}: claim-binding rows need a rationale")
         if record.state == "not_applicable":
             if record.claim_count != 0:
                 errors.append(f"{record.project}: not_applicable rows cannot claim bound values")
-            if not record.rationale.strip():
-                errors.append(f"{record.project}: not_applicable rows need a rationale")
             continue
         if record.state == "external_data":
             if not record.external_data_manifest.strip():
                 errors.append(f"{record.project}: external_data rows need a provenance manifest")
+            elif not _safe_repo_file(root, record.external_data_manifest):
+                errors.append(f"{record.project}: external_data manifest must be a repository file")
             continue
         if not record.pin_file:
             errors.append(f"{record.project}: bound rows need pin_file")
@@ -211,6 +218,7 @@ def validate_claim_bindings(repo_root: Path | str, manifest_path: Path | str | N
                 "verifier_function",
                 "verifier_args",
                 "pinned_on",
+                "pinned_by",
                 "pinned_at_commit",
             )
             missing_fields = [field for field in required if not row.get(field)]
@@ -219,10 +227,109 @@ def validate_claim_bindings(repo_root: Path | str, manifest_path: Path | str | N
             pin_provenance = provenance.get(key, {})
             if not (row.get("reason") or row.get("refresh_reason") or row.get("note") or pin_provenance.get("reason")):
                 missing_fields.append("reason|refresh_reason|note")
+            revision = str(row.get("pinned_at_commit", ""))
+            if revision and not _REVISION_RE.fullmatch(revision):
+                missing_fields.append("pinned_at_commit (7-64 hex characters)")
+            verifier_args = row.get("verifier_args")
+            if verifier_args is not None and not isinstance(verifier_args, Mapping):
+                missing_fields.append("verifier_args (mapping)")
+            manuscript_section = str(row.get("manuscript_section", ""))
+            project_root = root / "projects" / record.project
+            manuscript_paths = _declared_location_paths(project_root, manuscript_section)
+            if manuscript_section and not manuscript_paths:
+                missing_fields.append("manuscript_section (existing source file)")
+            producer = str(row.get("verifier_function", ""))
+            if producer and not _producer_source_exists(root, record.project, producer):
+                missing_fields.append("verifier_function (existing producer source)")
             if missing_fields:
                 errors.append(f"{record.project}: pin {index} missing {', '.join(missing_fields)}")
 
     return ClaimBindingReport(CLAIM_BINDING_SCHEMA, tuple(records), tuple(sorted(set(errors))))
+
+
+def _safe_repo_file(root: Path, relative: str) -> bool:
+    """Return whether a declared evidence file is real, confined, and non-symlinked."""
+    if not relative.strip():
+        return False
+    candidate = root / relative
+    if candidate.is_symlink() or not candidate.is_file():
+        return False
+    try:
+        candidate.resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    return True
+
+
+def _declared_location_paths(project_root: Path, section: str) -> tuple[str, ...]:
+    """Return existing source paths named by a pin's compact location field.
+
+    Pin locations intentionally permit a short, human-readable list such as
+    ``manuscript/00_abstract.md, 02_introduction.md``.  Resolve bare names
+    relative to the manuscript directory while still accepting project-root
+    paths such as ``data/claim_ledger.yaml``.  A location is valid only when
+    every declared path is a confined, non-symlinked file.
+    """
+    location = section.split(" / ", 1)[0].strip()
+    if not location:
+        return ()
+    candidates: list[str] = []
+    for token in _LOCATION_SPLIT_RE.split(location):
+        relative = token.strip()
+        if not relative:
+            continue
+        if "/" not in relative:
+            relative = f"manuscript/{relative}"
+        candidates.append(relative)
+    if not candidates or not all(_safe_repo_file(project_root, item) for item in candidates):
+        return ()
+    return tuple(candidates)
+
+
+def _producer_source_exists(root: Path, project: str, producer: str) -> bool:
+    """Resolve a producer and callable suffix to a source file.
+
+    The pin inventory uses both ``module.callable`` and
+    ``module::callable`` spellings.  Resolve the longest existing module
+    prefix without importing optional project code, and support explicit
+    repository-relative paths for infrastructure producers.
+    """
+    raw = producer.strip()
+    if not raw:
+        return False
+    module = raw.split("::", 1)[0].strip()
+    if "::" not in raw:
+        module = _longest_existing_module(module, root, project)
+    if not module:
+        return False
+    if module.startswith("infrastructure.") or module.startswith("scripts."):
+        return _module_file_exists(root, module)
+    project_root = root / "projects" / project
+    if module.startswith("src."):
+        return _module_file_exists(project_root, "src." + module.removeprefix("src."))
+    return _module_file_exists(project_root, "src." + module)
+
+
+def _longest_existing_module(module: str, root: Path, project: str) -> str:
+    """Find the longest module prefix represented by a repository file."""
+    parts = module.split(".")
+    for end in range(len(parts), 0, -1):
+        candidate = ".".join(parts[:end])
+        if candidate.startswith("infrastructure.") or candidate.startswith("scripts."):
+            if _module_file_exists(root, candidate):
+                return candidate
+            continue
+        project_root = root / "projects" / project
+        source_module = candidate.removeprefix("src.") if candidate.startswith("src.") else candidate
+        if _module_file_exists(project_root, "src." + source_module):
+            return candidate
+    return ""
+
+
+def _module_file_exists(root: Path, module: str) -> bool:
+    """Check a dotted module as either a Python file or package initializer."""
+    relative = module.replace(".", "/")
+    return _safe_repo_file(root, relative + ".py") or _safe_repo_file(root, relative + "/__init__.py")
 
 
 def claim_binding_digest(report: ClaimBindingReport) -> str:

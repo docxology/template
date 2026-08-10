@@ -12,6 +12,7 @@ import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass, field
+from datetime import date
 from pathlib import Path
 from typing import Literal, Mapping
 
@@ -24,6 +25,7 @@ from infrastructure.core.subprocess_policy import (
 RELEASE_RECEIPT_SCHEMA = "template-release-receipt/v1"
 ReceiptStatus = Literal["pass", "review_required", "blocked", "skipped"]
 AuthorityStatus = Literal["confirmed", "unavailable", "blocked"]
+VerificationMode = Literal["offline", "hosted", "external", "manual", "automated", "optional-tool"]
 _SECRET_PATTERN = re.compile(r"(?:token|secret|password|api[_-]?key|private[_-]?key)", re.IGNORECASE)
 
 
@@ -92,6 +94,17 @@ class ReleaseMetadataReceipt:
     authority_required: bool = True
     skip_reason: str = ""
     schema_version: str = RELEASE_RECEIPT_SCHEMA
+    # These fields bind a status claim to reproducible evidence.  They are
+    # deliberately separate from the authority fields: a command run locally
+    # can be well documented while still lacking administrator/owner approval.
+    scope: tuple[str, ...] = ()
+    command: tuple[str, ...] = ()
+    owner: str = ""
+    checked_at: str = ""
+    health: str = ""
+    verification_mode: VerificationMode = "offline"
+    source_urls: tuple[str, ...] = ()
+    artifact: str = ""
 
     def validate(self) -> list[str]:
         """Return errors; authority is never inferred from local evidence."""
@@ -103,6 +116,36 @@ class ReleaseMetadataReceipt:
             errors.append(f"invalid branch_protection status: {self.branch_protection!r}")
         if self.private_promotion not in {"confirmed", "unavailable", "blocked"}:
             errors.append(f"invalid private_promotion status: {self.private_promotion!r}")
+        if self.status != "skipped":
+            if not self.scope or any(not item.strip() for item in self.scope):
+                errors.append("release metadata requires a non-empty scope")
+            if not self.command:
+                errors.append("release metadata requires the acceptance command")
+            elif any(_SECRET_PATTERN.search(part) for part in self.command):
+                errors.append("release metadata command contains a credential-like token or option")
+            if not self.owner.strip():
+                errors.append("release metadata requires an owner")
+            if not self.checked_at.strip():
+                errors.append("release metadata requires checked_at")
+            else:
+                try:
+                    date.fromisoformat(self.checked_at[:10])
+                except ValueError:
+                    errors.append("release metadata checked_at must start with an ISO date")
+            if not self.health.strip():
+                errors.append("release metadata requires health")
+            if self.verification_mode not in {
+                "offline",
+                "hosted",
+                "external",
+                "manual",
+                "automated",
+                "optional-tool",
+            }:
+                errors.append(f"invalid verification_mode: {self.verification_mode!r}")
+        for url in self.source_urls:
+            if not url.startswith("https://") or _SECRET_PATTERN.search(url):
+                errors.append("release metadata source URLs must be credential-free HTTPS URLs")
         if self.status == "pass" and self.authority_required:
             if self.branch_protection != "confirmed":
                 errors.append("passing release metadata requires administrator-confirmed branch protection")
@@ -112,7 +155,56 @@ class ReleaseMetadataReceipt:
 
     def to_dict(self) -> dict[str, object]:
         """Return deterministic receipt data."""
-        return asdict(self)
+        return asdict(self) | {
+            "scope": list(self.scope),
+            "command": list(self.command),
+            "source_urls": list(self.source_urls),
+        }
+
+
+def build_release_metadata_receipt(
+    *,
+    repository: str,
+    revision: str,
+    version: str,
+    command: tuple[str, ...],
+    scope: tuple[str, ...],
+    owner: str,
+    checked_at: str,
+    health: str,
+    verification_mode: VerificationMode = "offline",
+    source_urls: tuple[str, ...] = (),
+    artifact: str = "",
+    branch_protection: AuthorityStatus = "unavailable",
+    private_promotion: AuthorityStatus = "unavailable",
+    status: ReceiptStatus = "review_required",
+    skip_reason: str = "",
+) -> ReleaseMetadataReceipt:
+    """Build a metadata receipt with all reproducibility fields explicit.
+
+    The default status is ``review_required`` because local evidence cannot
+    establish administrator branch protection or private-sidecar promotion.
+    Callers must opt into a ``pass`` status and still supply the two authority
+    receipts through the typed status fields.
+    """
+    receipt = ReleaseMetadataReceipt(
+        repository=repository,
+        revision=revision,
+        version=version,
+        status=status,
+        branch_protection=branch_protection,
+        private_promotion=private_promotion,
+        skip_reason=skip_reason,
+        scope=scope,
+        command=command,
+        owner=owner,
+        checked_at=checked_at,
+        health=health,
+        verification_mode=verification_mode,
+        source_urls=source_urls,
+        artifact=artifact,
+    )
+    return receipt
 
 
 @dataclass(frozen=True)
@@ -311,7 +403,9 @@ __all__ = [
     "ReleaseReceiptError",
     "ReceiptStatus",
     "SubprocessPolicyReceipt",
+    "VerificationMode",
     "build_coverage_gap_snapshot",
+    "build_release_metadata_receipt",
     "build_subprocess_policy_receipt",
     "receipt_digest",
     "write_receipt",

@@ -30,7 +30,7 @@
       "qualified_name": "templates/template_autopoiesis",
       "title": "template_autopoiesis",
       "use_when": "Use this template when you need to **generate runnable project trees deterministically** — not a manuscript, but a whole child project (its own `src/`, `tests/`, `scripts/`, and `manuscript/`) selected by a seed from a combinatoric grammar, with recompute-based provenance verification and a falsifiable honesty manifest against green-by-construction test theater.",
-      "test_file_count": 28,
+      "test_file_count": 29,
       "coverage_floor": 90
     },
     {
@@ -158,7 +158,7 @@
       "qualified_name": "templates/template_sia",
       "title": "template_sia",
       "use_when": "Use this template when you need a **self-improvement-agent evaluation harness**: Meta → Target → Feedback generation loops, public/private task splits to detect overfitting, deterministic fixture replay for testability, and fail-closed loop validation.",
-      "test_file_count": 14,
+      "test_file_count": 15,
       "coverage_floor": 90
     },
     {
