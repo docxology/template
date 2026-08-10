@@ -280,6 +280,15 @@ def _book_cover_body(config: dict[str, Any], config_file: Path) -> str:
         doi_target = _latex_href_url(f"https://doi.org/{doi}")
         cover_doi_line = r"{\small DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\par}"
         publishing_doi_line = r"\noindent DOI: \href{" + doi_target + r"}{" + escaped_doi + r"}\\"
+    else:
+        # A reserved-but-unpublished DOI is real yet does not resolve, so it is
+        # carried as plain cover text rather than a doi.org link that would 404.
+        # The paper cover already honors doi_status; the book cover now matches.
+        doi_status = str(publication.get("doi_status", "")).strip()
+        if doi_status:
+            escaped_status = _latex_text(doi_status)
+            cover_doi_line = r"{\small DOI: " + escaped_status + r"\par}"
+            publishing_doi_line = r"\noindent DOI: " + escaped_status + r"\\"
 
     publishing_lines = [
         r"\clearpage",
