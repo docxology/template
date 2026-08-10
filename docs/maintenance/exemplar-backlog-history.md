@@ -1377,3 +1377,9 @@ isolated release profile. All 24 public lanes passed, with 5,960 collected
 tests, 94.711585% combined coverage, no skips or timeouts, no inner xdist, and
 all output-isolation checks passing. The receipt SHA-256 is
 `21fd8bddeaa4429786778e522b3e2fa764eb0d42f96757fd2c9a6afff945b9b9`.
+
+The same final tree passed the infrastructure coverage-bearing release gate:
+9,843 tests passed, 9 were skipped, 73 were deselected, and infrastructure
+coverage was 84.28% against the 60% floor. The optional service lane and the
+multi-manuscript-config advisory remained explicit warnings; neither was
+promoted to success.
