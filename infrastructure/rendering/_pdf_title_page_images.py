@@ -86,7 +86,12 @@ def _image_latex_path(image_path: Path, config_file: Path) -> str:
     manuscript_dir = config_file.parent
     parent = manuscript_dir.parent
     if manuscript_dir.name == "manuscript":
-        output_root = parent if parent.name == "output" else parent / "output"
+        if parent.name == "output":
+            output_root = parent
+        elif parent.name == "docs":
+            output_root = parent.parent / "output"
+        else:
+            output_root = parent / "output"
         latex_dir = output_root / "pdf"
     else:
         latex_dir = manuscript_dir
