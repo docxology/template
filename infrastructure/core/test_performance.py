@@ -18,9 +18,7 @@ from infrastructure.core.pytest_orchestration import resolve_project_matrix_work
 
 TestBenchmarkTarget = Literal["pipeline-smoke", "infrastructure", "public-projects"]
 TEST_BENCHMARK_SCHEMA = "template-test-performance-v1"
-_ABSOLUTE_PATH_RE = re.compile(
-    r"(?<![\w])(?:/(?:[^/\s]+/)*[^/\s]+|[A-Za-z]:\\(?:[^\\\s]+\\)*[^\\\s]+)"
-)
+_ABSOLUTE_PATH_RE = re.compile(r"(?<![\w])(?:/(?:[^/\s]+/)*[^/\s]+|[A-Za-z]:\\(?:[^\\\s]+\\)*[^\\\s]+)")
 
 
 class TestBenchmarkError(ValueError):
