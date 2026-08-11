@@ -1,21 +1,21 @@
 {
   "acceptance_passed": true,
-  "benchmarked_commit": "8ffc11cb30ad2a823e1aee0246a6dc994fe6a9aa",
+  "benchmarked_commit": "497eb755039a39a464cafb5d8aa829c3bc2780ef",
   "both_runs_passed": true,
   "clean_checkout": true,
-  "improvement_percent": 34.29,
+  "improvement_percent": 35.07,
   "minimum_improvement_percent": 30.0,
   "parallel": {
     "axis": "parallel",
     "profile": "quick",
-    "repo_commit": "8ffc11cb30ad2a823e1aee0246a6dc994fe6a9aa",
+    "repo_commit": "497eb755039a39a464cafb5d8aa829c3bc2780ef",
     "returncode": 0,
     "selection": [
       "pipeline-smoke",
       "quick"
     ],
     "target": "pipeline-smoke",
-    "wall_elapsed_seconds": 11.897,
+    "wall_elapsed_seconds": 12.215,
     "workers": 2
   },
   "parallel_argv": [
@@ -37,14 +37,14 @@
   "serial": {
     "axis": "serial",
     "profile": "quick",
-    "repo_commit": "8ffc11cb30ad2a823e1aee0246a6dc994fe6a9aa",
+    "repo_commit": "497eb755039a39a464cafb5d8aa829c3bc2780ef",
     "returncode": 0,
     "selection": [
       "pipeline-smoke",
       "quick"
     ],
     "target": "pipeline-smoke",
-    "wall_elapsed_seconds": 18.104,
+    "wall_elapsed_seconds": 18.814,
     "workers": 1
   },
   "serial_argv": [
