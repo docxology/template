@@ -193,6 +193,83 @@ def is_managed_symlink(path: Path, private_root: Path, config: SidecarLinkConfig
     return False
 
 
+@dataclass(frozen=True)
+class MirrorOffender:
+    """One mirror entry that holds content the syncer does not manage."""
+
+    path: str
+    reason: str
+
+    def __str__(self) -> str:
+        """Render as ``<path>  (<reason>)`` for CLI output."""
+        return f"{self.path}  ({self.reason})"
+
+
+_MIRROR_REASONS: dict[str, str] = {
+    "real-directory": "real directory — private project content living in the checkout",
+    "regular-file": "regular file — mirror dirs hold symlinks only",
+    "foreign-symlink": "symlink resolving outside its private lifecycle subtree",
+}
+
+
+def unmanaged_mirror_entries(
+    repo_root: Path,
+    private_root: Path,
+    config: SidecarLinkConfig,
+) -> list[MirrorOffender]:
+    """Return mirror entries holding content the link syncer does not manage.
+
+    The lifecycle mirror directories under ``<repo_root>/projects/`` are
+    *generated*: every entry should be a managed symlink into the private
+    sidecar, so a fresh clone of this public repo has no private payload and
+    ``link-projects`` can rebuild the mirror from nothing. Real directories are
+    the failure mode that matters — ``sync_private_links`` only ever prunes
+    symlinks, so a real directory dropped into the mirror is invisible to the
+    syncer forever, is versioned by neither repo, and sits one ``git add -f``
+    away from publication.
+
+    ``_Category/`` grouping directories are legitimate containers (the syncer
+    creates managed links beneath them), so they are recursed into rather than
+    reported. An empty grouping directory holds no content and is not an
+    offender; it is merely prunable.
+    """
+    offenders: list[MirrorOffender] = []
+    for link_dir in config.lifecycle_link_dirs.values():
+        _collect_mirror_offenders(repo_root / link_dir, repo_root, private_root, config, offenders)
+    return sorted(offenders, key=lambda item: item.path)
+
+
+def _collect_mirror_offenders(
+    dir_path: Path,
+    repo_root: Path,
+    private_root: Path,
+    config: SidecarLinkConfig,
+    offenders: list[MirrorOffender],
+) -> None:
+    """Append offenders under *dir_path*, recursing into ``_Category/`` groups."""
+    if not dir_path.is_dir():
+        return
+    for entry in sorted(dir_path.iterdir()):
+        name = entry.name
+        if name.startswith(".") or name in config.ignored_lifecycle_entry_names:
+            continue
+        if name in config.protected_names:
+            continue
+        rel = _repo_relative(entry, repo_root)
+        if entry.is_symlink():
+            # A broken managed link is the syncer's to prune, not a content leak.
+            if not is_managed_symlink(entry, private_root, config):
+                offenders.append(MirrorOffender(rel, _MIRROR_REASONS["foreign-symlink"]))
+            continue
+        if entry.is_dir():
+            if name.startswith("_"):
+                _collect_mirror_offenders(entry, repo_root, private_root, config, offenders)
+                continue
+            offenders.append(MirrorOffender(rel, _MIRROR_REASONS["real-directory"]))
+            continue
+        offenders.append(MirrorOffender(rel, _MIRROR_REASONS["regular-file"]))
+
+
 def _symlink_points_to(path: Path, expected: Path) -> bool:
     """Return whether *path* points directly at the expected lifecycle entry."""
     raw = _raw_symlink_target(path)

@@ -168,6 +168,11 @@ jobs:
       - name: Confidentiality guard — only public template resources tracked
         run: uv run python scripts/audit/check_tracked_all.py
 
+      # No-op on a clean CI clone (projects/ has no mirror); it is the local
+      # developer checkout this catches, and CI asserts the guard still runs.
+      - name: Mirror guard — projects/<lifecycle>/ holds managed symlinks only
+        run: uv run python scripts/audit/check_mirror_symlinks.py
+
       # Publication audit is source-only in CI because project output trees are
       # disposable/ignored. Release jobs and local sign-off add --rendered to
       # require artifact manifests, evidence registries, and figure bindings.
