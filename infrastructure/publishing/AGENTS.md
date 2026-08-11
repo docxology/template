@@ -30,7 +30,7 @@ The Publishing module provides tools for academic publishing workflows. It enabl
 | `transmission_page_check.py` | PDF page-span gate (BEGIN page 1, END last page only) |
 | `zenodo_urls.py` | `zenodo_record_url_from_doi` (no rendering import cycle) |
 | `announcement.py`, `checklist.py`, `readiness.py` | Pre-publication helpers. `readiness.py`'s `completeness_score` is manuscript PUBLICATION readiness (heading/PDF/citation/figure presence), distinct from `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper CONTENT reproducibility score — cross-reference only. |
-| `executable_bundle.py` | Stage 12 executable bundle with public-roster, path, lock, and deterministic-manifest gates |
+| `executable_bundle.py` | Stage 14 executable bundle with public-roster, path, lock, and deterministic-manifest gates |
 | `preflight.py` | Publication payload and credential/path preflight |
 | `release_receipts.py` | Versioned command, release-authority, coverage-gap, and clean-checkout receipts |
 | `rehearsal.py` | Offline-by-default two-run clean-checkout release rehearsal |

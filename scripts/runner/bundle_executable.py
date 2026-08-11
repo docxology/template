@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable-bundle stage orchestrator (Stage 10 — opt-in via [bundle] tag)."""
+"""Executable-bundle stage orchestrator (Stage 14 — opt-in via [bundle] tag)."""
 
 from __future__ import annotations
 

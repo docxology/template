@@ -245,15 +245,15 @@ readiness = validate_publication_readiness(markdown_files, pdf_files)  # both li
 checklist = create_submission_checklist(metadata)
 ```
 
-## Executable bundle (Stage 12)
+## Executable bundle (Stage 14)
 
 ```python
 from infrastructure.publishing.executable_bundle import bundle_project
 
-manifest_path = bundle_project(project_root, output_dir)
+bundle_path = bundle_project(project_root, "templates/<project-name>")
 ```
 
-## Multi-target archival (Stage 13)
+## Multi-target archival (Stage 15)
 
 `archival/` is a proper subpackage. The flat `archival.py` shim that used to sit at the package root has been removed; `import infrastructure.publishing.archival` resolves directly to the package.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Archival publication stage orchestrator (Stage 11 — opt-in via [archival] tag).
+"""Archival publication stage orchestrator (Stage 15 — opt-in via [archival] tag).
 
-Thin orchestrator that mirrors the executable bundle (produced by Stage 10)
+Thin orchestrator that mirrors the executable bundle (produced by Stage 14)
 to multiple independent archival providers (Zenodo, Software Heritage, IPFS).
 
 Defaults to dry-run for safety — pass --commit to actually deposit. Reads

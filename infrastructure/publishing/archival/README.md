@@ -1,6 +1,6 @@
 # Archival publishing
 
-Multi-target mirror for long-horizon redundancy (Stage 13). See
+Multi-target mirror for long-horizon redundancy (Stage 15). See
 [`docs/maintenance/archival-targets.md`](../../../docs/maintenance/archival-targets.md)
 for provider rationale and threat scenarios.
 
@@ -63,7 +63,7 @@ uv run python -m infrastructure.publishing.archival_cli \
   --commit
 ```
 
-Pipeline stage: `uv run python scripts/runner/archive_publication.py --project <name>` (expects Stage 12 bundle).
+Pipeline stage: `uv run python scripts/runner/archive_publication.py --project <name>` (expects the Stage 14 executable bundle).
 
 ## Import path
 

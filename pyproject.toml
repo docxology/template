@@ -250,11 +250,11 @@ testpaths = ["tests", "tests/integration"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10"
+addopts = "--tb=short --strict-markers -W ignore::pytest.PytestDeprecationWarning --durations=10 -m \"not requires_ollama and not requires_docker and not network and not slow and not bench and not benchmark and not performance and not long_running and not private_project and not external_fixture\""
 timeout = 10  # Timeout individual tests after 10 seconds to prevent hanging
 timeout_method = "thread"  # Use thread-based timeout (safer for network operations)
 markers = [
-    "requires_ollama: requires running Ollama server (auto-started first; FAILS with setup guidance if unavailable, by design). Opt out: -m 'not requires_ollama'. See docs/development/optional-dependencies.md",
+    "requires_ollama: requires a live Ollama server and model; excluded by default and explicitly opt in with -m requires_ollama. See docs/development/optional-dependencies.md",
     "requires_latex: requires a LaTeX engine (xelatex/pdflatex); SKIPS via skip_if_no_latex when absent. Opt out: -m 'not requires_latex'. See docs/development/optional-dependencies.md",
     "slow: mark test as slow running",
     "integration: mark test as integration test",

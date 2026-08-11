@@ -338,7 +338,7 @@ uv run docpub distribute --platform gumroad --update
 
 - [`scripts/publish/export_for_publishing.py`](../../scripts/publish/export_for_publishing.py) — the bridge script
 - [`scripts/publish/README.md`](../../scripts/publish/README.md) — quick-start guide
-- [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) — Stage 12 design (file kept its original name)
-- [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 13)
+- [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) — Stage 14 design (file kept its original name)
+- [`archival-targets.md`](archival-targets.md) — long-horizon archival (Stage 15)
 - [`private-projects-repo.md`](private-projects-repo.md) — private-projects sidecar contract
 - [`infrastructure/publishing/AGENTS.md`](../../infrastructure/publishing/AGENTS.md) — publishing infrastructure

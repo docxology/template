@@ -1,4 +1,4 @@
-# Stage 10 — Executable Bundle (opt-in stage)
+# Executable Bundle — Stage 14 (opt-in stage)
 
 > Created 2026-05-20. Design document for an opt-in long-horizon artifact path. The stage contract is declared in `pipeline.yaml` for traceability, but `PipelineExecutor` filters `bundle` / `archival` tags out of default runs; invoke `scripts/runner/bundle_executable.py` directly when intentionally producing this artifact. Addresses World-Threat-Model findings at the 5-15-year horizon where PDF-as-primary-deliverable becomes legacy and executable-artifact-as-primary becomes the norm.
 >
@@ -22,26 +22,34 @@ The World Threat Model run identified that:
 - At 10-year horizon (~2036): static PDF is a compatibility output, not the primary deliverable
 - At 15+ year horizon: PDF is the citation fossil; the unit-of-research is a container + code + data + claim graph
 
-The default core pipeline ends with output validation and copy-output delivery. There is no default stage that produces a **container + lockfile + agent-runnable manifest** as a parallel artifact. This is the gap Stage 10 fills when invoked explicitly.
+The default core pipeline ends with output validation and copy-output delivery. There is no default stage that produces a **container + lockfile + agent-runnable manifest** as a parallel artifact. This is the gap Stage 14 fills when invoked explicitly.
 
-## What Stage 10 produces
+## What Stage 14 produces
 
 For each project, a single `output/<project>/executable_bundle/` directory containing:
 
 ```
 executable_bundle/
-├── Dockerfile                       # Reproducible build environment
-├── docker-compose.yml               # One-command run
-├── lockfile/
-│   ├── uv.lock                      # Pinned Python deps
-│   ├── apt-packages.lock            # Pinned OS packages
-│   └── tlmgr-packages.lock          # Pinned LaTeX packages
-├── manifest.json                    # Agent-runnable manifest (see schema below)
-├── data/                            # Snapshot of input data (or pointers + SHA-256s)
-├── source/                          # Snapshot of projects/<project>/{src,scripts,manuscript}
-├── README.md                        # "How to reproduce this publication"
-└── PROVENANCE.json                  # Build environment + commit hash + deterministic seeds
+├── Dockerfile                       # Reproducible build environment definition
+├── docker-compose.yml               # One-command run definitions
+├── lockfile/                         # Root dependency/config copies
+│   ├── uv.lock
+│   └── pyproject.toml
+├── uv.lock                           # Convenience copy used by bundle tooling
+├── pyproject.toml                    # Convenience copy used by bundle tooling
+├── manifest.json                     # Agent-runnable claim and entry-point manifest
+├── source/                           # source snapshot; local caches/build metadata excluded
+├── artifacts/pdf/                    # Optional pre-rendered combined PDF
+├── README.md                         # Reproduction guidance
+└── bundle_receipt.json               # Immutable payload paths, sizes, and SHA-256s
 ```
+
+The current implementation does not silently invent a data snapshot,
+OS-package lock, LaTeX lock, or provenance file. External data records must be
+provided as source-bound manifest inputs, and unavailable artifacts are
+omitted with an explicit README note. The receipt is verified immediately
+after assembly and can be rechecked with `verify_bundle_receipt()` before a
+publication provider receives the payload.
 
 ## Manifest schema
 
@@ -127,13 +135,14 @@ The declared Executable Bundle stage depends on PDF rendering and is filtered ou
 Implemented pieces:
 
 1. `scripts/runner/bundle_executable.py` builds `output/<project>/executable_bundle/`
-   only for the canonical public roster, rejects source symlinks, requires the
-   root lockfile, clears stale generated bundle content, and writes a
-   deterministic `bundle_receipt.json` payload manifest.
+   only for the canonical public roster, rejects source and path-component
+   symlinks, requires the root lockfile, clears stale generated bundle content,
+   writes a deterministic `bundle_receipt.json` payload manifest, and verifies
+   every listed path and content hash before returning.
 2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
 3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`.
 4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
-5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path.
+5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path. The archival command remains dry-run by default and must receive the verified Stage 14 bundle.
 
 Remaining hardening:
 
@@ -145,7 +154,8 @@ Remaining hardening:
 The bundle remains opt-in and dry-run by default. Before any external
 publication, use `uv run python scripts/runner/bundle_executable.py --project
 templates/<name>` and review `bundle_receipt.json`; the command performs no
-upload. Fresh-checkout release rehearsal is separately discoverable through
+upload. A provider preflight must validate the same immutable payload after
+assembly. Fresh-checkout release rehearsal is separately discoverable through
 `uv run python scripts/maintenance/release_rehearsal.py` and is also a dry-run
 unless `--execute` is supplied.
 

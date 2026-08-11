@@ -59,3 +59,24 @@ def test_git_impact_includes_nonignored_untracked_source(tmp_path) -> None:
     source.write_text("VALUE = 1\n", encoding="utf-8")
 
     assert _git_changed_paths(tmp_path) == ["projects/templates/example/src/new.py"]
+
+
+def test_git_impact_unions_staged_and_unstaged_paths(tmp_path) -> None:
+    """The planner must cover both index and worktree changes in one run."""
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test Runner"], cwd=tmp_path, check=True)
+    staged = tmp_path / "infrastructure" / "staged.py"
+    unstaged = tmp_path / "tests" / "unstaged.py"
+    staged.parent.mkdir()
+    unstaged.parent.mkdir()
+    staged.write_text("VALUE = 1\n", encoding="utf-8")
+    unstaged.write_text("VALUE = 1\n", encoding="utf-8")
+    subprocess.run(["git", "add", "infrastructure/staged.py", "tests/unstaged.py"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-qm", "baseline"], cwd=tmp_path, check=True)
+
+    staged.write_text("VALUE = 2\n", encoding="utf-8")
+    subprocess.run(["git", "add", "infrastructure/staged.py"], cwd=tmp_path, check=True)
+    unstaged.write_text("VALUE = 3\n", encoding="utf-8")
+
+    assert _git_changed_paths(tmp_path) == ["infrastructure/staged.py", "tests/unstaged.py"]

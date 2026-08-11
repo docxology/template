@@ -1,6 +1,6 @@
 # `infrastructure/publishing/archival/`
 
-Multi-target archival mirror for long-horizon redundancy (Stage 13). Deposits an
+Multi-target archival mirror for long-horizon redundancy (Stage 15). Deposits an
 executable bundle or publication artifact to independent providers so no single
 provider policy change erases the record.
 

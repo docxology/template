@@ -119,7 +119,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Source-owned typed policy inventory for intentional subprocess wrappers. `SubprocessPolicy` requires a positive timeout, existing source declaration, and process-group boundary; `run_with_policy` delegates to the shared bounded executor and can fail closed on non-zero exits. `INTENTIONAL_SUBPROCESS_POLICIES` covers the project matrix, renderer, git metadata, validation, and optional formal-spec lanes.
 
 **test_impact.py**
-- Read-only changed-surface classifier. `classify_changed_paths()` reports infrastructure, documentation, public-exemplar, and local-only impacts, recommends the smallest safe lanes, and explicitly prohibits nested outer-project parallelism with inner pytest-xdist.
+- Read-only changed-surface classifier. `scripts/audit/test_impact.py` unions staged, unstaged, deleted, and non-ignored untracked paths before `classify_changed_paths()` reports infrastructure, documentation, public-exemplar, and local-only impacts, recommends the smallest safe lanes, and explicitly prohibits nested outer-project parallelism with inner pytest-xdist.
 
 **public_matrix_receipt.py**
 - Deterministic public-matrix receipt for per-project release lanes: records one bounded public-matrix run (per-project coverage floors, pass/fail, duration, resource profile, collection count, cache identity, and explicit skip reason) into a versioned contract, and fails closed when the on-disk output tree would drift from the receipt after the run. Backs the `--receipt` public-matrix mode and the scheduled `public-matrix-receipt` CI job.

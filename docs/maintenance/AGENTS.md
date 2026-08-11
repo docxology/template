@@ -42,7 +42,7 @@ LaTeX). These docs are decade-scale planning, not day-of operations.
 ## When NOT to delete
 
 These guides intentionally document state that *does not yet exist on disk*
-(Stage 10 bundle, archival mirrors, swap paths). Deleting them because
+(Stage 14 bundle, archival mirrors, swap paths). Deleting them because
 "not implemented yet" defeats the purpose — they exist precisely to keep
 the decade-scale plan visible.
 

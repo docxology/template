@@ -66,6 +66,7 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 - `audit/audit_documentation.py` - emits the advisory public documentation RedTeam audit
 - `audit/verify_no_mocks.py` - lexical mock-framework gate; `--inventory` classifies semantic stand-ins
 - `audit/audit_filepaths.py` - repository filepath and reference audit
+- `audit/test_impact.py` - read-only changed-surface planner; unions staged, unstaged, and non-ignored untracked paths and prints isolated test-lane guidance
 - `audit/check_tracked_generated_artifacts.py` - rejects tracked generated outputs and package metadata
 - `shell/ci_local.sh` - local CI reproduction (`act` when available, otherwise a pure-Python CI fallback; see [`../docs/maintenance/ci-local.md`](../docs/maintenance/ci-local.md))
 - Maintenance helpers now live under [`maintenance/`](maintenance/) - `manage_workspace.py`, `show_project_info.py`, `render_working_projects.py`, `rerender_working_pdfs.py`, `organize_executive_outputs.py`, `merge_test_supplements.py`, `batch_cogsec_improve.py`, `setup_pre_commit.py`, `codegraph_local.py`, `refresh_artifact_manifests.py` (see [`maintenance/README.md`](maintenance/README.md) and [`maintenance/AGENTS.md`](maintenance/AGENTS.md)). `show_project_info.py` is a standalone project metadata CLI; it is **not** invoked by `run.sh` (the menu's `i` key prints only the current project name).
@@ -86,8 +87,9 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 | Tracked generated artifacts | `uv run python scripts/audit/check_tracked_generated_artifacts.py` |
 | CodeGraph local scope | `codegraph files "$(pwd)" --json \| uv run python scripts/maintenance/codegraph_local.py verify-scope` |
 | Unified health | `uv run python -m infrastructure.core.health` |
-| Opt-in Stage 10 bundle | `uv run python scripts/runner/bundle_executable.py --project {name}` |
-| Opt-in Stage 11 archival | `uv run python scripts/runner/archive_publication.py --project {name}` |
+| Changed-surface guidance | `uv run python scripts/audit/test_impact.py` |
+| Opt-in Stage 14 executable bundle | `uv run python scripts/runner/bundle_executable.py --project {name}` |
+| Opt-in Stage 15 archival publication | `uv run python scripts/runner/archive_publication.py --project {name}` |
 
 See [`docs/architecture/thin-orchestrator-summary.md`](../docs/architecture/thin-orchestrator-summary.md) and [`gates/AGENTS.md`](gates/AGENTS.md).
 

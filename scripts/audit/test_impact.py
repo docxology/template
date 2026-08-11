@@ -16,38 +16,59 @@ from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_pol
 
 
 def _git_changed_paths(repo_root: Path = REPO_ROOT) -> list[str]:
-    """Return staged, unstaged, deleted, and non-ignored untracked paths."""
+    """Return staged, unstaged, deleted, and non-ignored untracked paths.
+
+    Keep the three sources explicit instead of relying on one combined
+    ``git diff HEAD`` call.  The union is the same for ordinary files, but
+    separate commands preserve the intended contract when an index/worktree
+    transition (for example, a staged rename followed by an unstaged edit)
+    needs to be diagnosed from the planner's input.  ``-z`` also keeps paths
+    containing whitespace or newlines unambiguous.
+    """
     policy = SubprocessPolicy(
         policy_id="test-impact-git",
         source_path="scripts/audit/test_impact.py",
         timeout_seconds=30,
         capture_output=True,
     )
-    diff = run_with_policy(
-        ["git", "diff", "--name-only", "HEAD", "--"],
-        cwd=repo_root,
-        env=None,
-        policy=policy,
+
+    def run_paths(args: list[str], error_label: str) -> list[str]:
+        """Run a NUL-delimited Git path query and decode it safely."""
+        result = run_with_policy(args, cwd=repo_root, env=None, policy=policy)
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr.strip() or result.command_error or f"{error_label} failed")
+        return [item for item in result.stdout.split("\0") if item]
+
+    paths: set[str] = set()
+    paths.update(
+        run_paths(
+            ["git", "diff", "--cached", "--name-only", "--diff-filter=ACDMRTUXB", "-z", "--"],
+            "git staged diff",
+        )
     )
-    if diff.returncode != 0:
-        raise RuntimeError(diff.stderr.strip() or diff.command_error or "git diff failed")
-    untracked = run_with_policy(
-        ["git", "ls-files", "--others", "--exclude-standard", "-z", "--"],
-        cwd=repo_root,
-        env=None,
-        policy=policy,
+    paths.update(
+        run_paths(
+            ["git", "diff", "--name-only", "--diff-filter=ACDMRTUXB", "-z", "--"],
+            "git worktree diff",
+        )
     )
-    if untracked.returncode != 0:
-        raise RuntimeError(untracked.stderr.strip() or untracked.command_error or "git ls-files failed")
-    paths = [line for line in diff.stdout.splitlines() if line]
-    paths.extend(item for item in untracked.stdout.split("\0") if item)
-    return sorted(set(paths))
+    paths.update(
+        run_paths(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z", "--"],
+            "git untracked-file scan",
+        )
+    )
+    return sorted(paths)
 
 
 def main(argv: list[str] | None = None) -> int:
     """Run the impact planner."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("paths", nargs="*", help="changed paths; defaults to git diff --name-only HEAD")
+    parser.add_argument(
+        "paths",
+        nargs="*",
+        help="changed paths; defaults to staged, unstaged, and non-ignored untracked paths",
+    )
     args = parser.parse_args(argv)
     try:
         paths = args.paths or _git_changed_paths()
