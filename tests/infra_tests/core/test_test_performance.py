@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,7 @@ import pytest
 from infrastructure.core.test_performance import (
     TestBenchmarkError,
     TestRunSummary,
+    _redact_output_tail,
     build_test_command,
     build_test_performance_manifest,
 )
@@ -62,8 +64,8 @@ def test_manifest_accepts_matching_passing_runs_with_measured_improvement() -> N
         _summary(axis="serial", workers=1, elapsed=100.0, target="pipeline-smoke"),
         _summary(axis="parallel", workers=4, elapsed=70.0),
         benchmarked_commit="abc123",
-        serial_argv=("serial",),
-        parallel_argv=("4",),
+        serial_argv=("/Users/mini/.venv/bin/python3", "serial"),
+        parallel_argv=("/Users/mini/.venv/bin/python3", "4"),
         minimum_improvement_percent=20.0,
     )
 
@@ -112,3 +114,37 @@ def test_manifest_rejects_invalid_worker_evidence() -> None:
             serial_argv=("serial",),
             parallel_argv=("4",),
         )
+
+
+def test_manifest_receipt_omits_subprocess_output_tails() -> None:
+    serial = _summary(axis="serial", workers=1, elapsed=100.0)
+    parallel = _summary(axis="parallel", workers=4, elapsed=70.0)
+    serial = replace(serial, output_tail="/Users/mini/private-output")
+    parallel = replace(parallel, output_tail="/private/var/folders/secret")
+
+    payload = build_test_performance_manifest(
+        serial,
+        parallel,
+        benchmarked_commit="abc123",
+        serial_argv=("/Users/mini/.venv/bin/python3", "serial"),
+        parallel_argv=("/Users/mini/.venv/bin/python3", "4"),
+    ).to_dict()
+
+    serial_payload = payload["serial"]
+    parallel_payload = payload["parallel"]
+    assert isinstance(serial_payload, dict)
+    assert isinstance(parallel_payload, dict)
+    assert "output_tail" not in serial_payload
+    assert "output_tail" not in parallel_payload
+    assert payload["serial_argv"][0] == "<absolute-path>"
+    assert payload["parallel_argv"][0] == "<absolute-path>"
+
+
+def test_output_tail_redaction_removes_absolute_paths(tmp_path: Path) -> None:
+    output = f"checkout={tmp_path} temp=/private/var/folders/example/checkout"
+
+    redacted = _redact_output_tail(output, tmp_path)
+
+    assert str(tmp_path) not in redacted
+    assert "/private/" not in redacted
+    assert "<absolute-path>" in redacted

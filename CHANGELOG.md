@@ -32,6 +32,9 @@ not to the contents of any specific workspace.
 - Centralized bounded subprocess timeout/process-group cleanup and hardened
   reproduction-bundle and disposable-rehearsal path validation against symlink,
   traversal, duplicate, stale-payload, and non-generated-output hazards.
+- Made quick-feedback benchmark receipts public-safe by keeping subprocess
+  diagnostics in memory only and redacting absolute command paths, with
+  regression coverage for both receipt serialization and diagnostic tails.
 - Converted stale exemplar backlog prose into current contracts, updated drift
   signposts to accept those normalized headings, and labeled the last pipeline
   summary as historical evidence rather than current health.

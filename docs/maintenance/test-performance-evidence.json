@@ -1,33 +1,62 @@
 {
   "acceptance_passed": true,
-  "benchmarked_commit": "3769380fc7c79c0495898b73e01bdbde271ad667",
+  "benchmarked_commit": "c32d4032552917957dc5ef8e48fa5cbb5ad0c346",
   "both_runs_passed": true,
   "clean_checkout": true,
-  "improvement_percent": 36.1,
+  "improvement_percent": 32.85,
   "minimum_improvement_percent": 30.0,
   "parallel": {
     "axis": "parallel",
-    "selected_tests": 204,
-    "wall_elapsed_seconds": 12.243,
+    "profile": "quick",
+    "repo_commit": "c32d4032552917957dc5ef8e48fa5cbb5ad0c346",
+    "returncode": 0,
+    "selection": [
+      "pipeline-smoke",
+      "quick"
+    ],
+    "target": "pipeline-smoke",
+    "wall_elapsed_seconds": 13.003,
     "workers": 2
   },
-  "profile": "quick",
-  "provenance_matches": true,
-  "schema_version": "template-test-performance-v1",
-  "selection": [
+  "parallel_argv": [
+    "<absolute-path>",
+    "scripts/pipeline/stage_01_test.py",
+    "--profile",
+    "quick",
+    "--infra-only",
+    "--infra-scope",
     "pipeline-smoke",
-    "quick"
+    "--parallel",
+    "2"
   ],
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "provenance_matches": true,
+  "python_version": "3.12.12",
+  "schema_version": "template-test-performance-v1",
+  "selection_matches": true,
   "serial": {
     "axis": "serial",
-    "selected_tests": 204,
-    "wall_elapsed_seconds": 19.159,
+    "profile": "quick",
+    "repo_commit": "c32d4032552917957dc5ef8e48fa5cbb5ad0c346",
+    "returncode": 0,
+    "selection": [
+      "pipeline-smoke",
+      "quick"
+    ],
+    "target": "pipeline-smoke",
+    "wall_elapsed_seconds": 19.365,
     "workers": 1
   },
-  "target": "pipeline-smoke",
-  "notes": [
-    "Both lanes passed with identical selection and committed revision.",
-    "Output tails are intentionally omitted from this committed receipt to avoid machine-local paths.",
-    "The public release matrix remains isolated per project with no nested inner xdist."
-  ]
+  "serial_argv": [
+    "<absolute-path>",
+    "scripts/pipeline/stage_01_test.py",
+    "--profile",
+    "quick",
+    "--infra-only",
+    "--infra-scope",
+    "pipeline-smoke",
+    "--parallel",
+    "serial"
+  ],
+  "target": "pipeline-smoke"
 }

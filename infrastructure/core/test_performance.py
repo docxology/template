@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import re
 import subprocess  # nosec B404 - fixed repository entrypoint and argv
 import tempfile
 import sys
@@ -17,6 +18,9 @@ from infrastructure.core.pytest_orchestration import resolve_project_matrix_work
 
 TestBenchmarkTarget = Literal["pipeline-smoke", "infrastructure", "public-projects"]
 TEST_BENCHMARK_SCHEMA = "template-test-performance-v1"
+_ABSOLUTE_PATH_RE = re.compile(
+    r"(?<![\w])(?:/(?:[^/\s]+/)*[^/\s]+|[A-Za-z]:\\(?:[^\\\s]+\\)*[^\\\s]+)"
+)
 
 
 class TestBenchmarkError(ValueError):
@@ -61,7 +65,34 @@ class TestPerformanceManifest:
 
     def to_dict(self) -> dict[str, object]:
         """Serialize the manifest with stable nested dataclass fields."""
-        return asdict(self)
+        payload = asdict(self)
+        # Subprocess output is useful while diagnosing a local run, but it can
+        # contain checkout paths, temporary directories, or tool-specific
+        # environment details.  Keep those diagnostics in memory only; a
+        # committed receipt is a public provenance artifact.
+        for lane in ("serial", "parallel"):
+            lane_payload = payload.get(lane)
+            if isinstance(lane_payload, dict):
+                lane_payload.pop("output_tail", None)
+        for argv_key in ("serial_argv", "parallel_argv"):
+            argv = payload.get(argv_key)
+            if isinstance(argv, (list, tuple)):
+                payload[argv_key] = [_redact_argv_value(value) for value in argv]
+        return payload
+
+
+def _redact_output_tail(output: str, repo_root: Path) -> str:
+    """Return bounded diagnostics without leaking absolute checkout paths."""
+    redacted = output.replace(str(repo_root.resolve()), "<checkout>")
+    redacted = _ABSOLUTE_PATH_RE.sub("<absolute-path>", redacted)
+    return redacted[-4000:]
+
+
+def _redact_argv_value(value: object) -> object:
+    """Redact absolute paths while retaining public command shape."""
+    if not isinstance(value, str):
+        return value
+    return _ABSOLUTE_PATH_RE.sub("<absolute-path>", value)
 
 
 def build_test_command(
@@ -163,7 +194,7 @@ def _run_test_command(
         returncode=process.returncode,
         wall_elapsed_seconds=round(monotonic() - started, 3),
         repo_commit=commit,
-        output_tail=output[-4000:],
+        output_tail=_redact_output_tail(output, repo_root),
     )
 
 
