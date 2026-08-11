@@ -74,5 +74,5 @@ update old imports to the subpackage.
 ## Related
 
 - [`AGENTS.md`](AGENTS.md) — module internals, file list, provider protocol
-- [`../executable_bundle.py`](../executable_bundle.py) — `bundle_project()` for Stage 12
+- [`../executable_bundle.py`](../executable_bundle.py) — `bundle_project()` for YAML stage 14
 - [`../zenodo/`](../zenodo/) — canonical Zenodo HTTP client used by `ZenodoProvider`

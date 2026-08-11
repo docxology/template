@@ -30,7 +30,7 @@
       "mode": "manual",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "PDF rendering (`infrastructure/rendering/`)",
-      "verification_scope": "Stage 5 rendered combined PDF/HTML/DOCX/slides for `template_code_project` and `template_prose_project`; `template_code_project` also rendered EPUB",
+      "verification_scope": "YAML stage 7 (script prefix `stage_03`) rendered combined PDF/HTML/DOCX/slides for `template_code_project` and `template_prose_project`; `template_code_project` also rendered EPUB",
       "verified_by": "Daniel"
     },
     {
@@ -41,7 +41,7 @@
       "mode": "automated",
       "receipt": "docs/_generated/status_evidence.json",
       "subsystem": "Output validation (`infrastructure/validation/`)",
-      "verification_scope": "Stage 6 validation passed 7/7 checks for `template_code_project` and `template_prose_project` after full core renders",
+      "verification_scope": "YAML stage 8 (script prefix `stage_04`) validation passed 7/7 checks for `template_code_project` and `template_prose_project` after full core renders",
       "verified_by": "Daniel"
     },
     {
@@ -179,5 +179,5 @@
   ],
   "schema_version": "template-status-evidence/v1",
   "source_path": "STATUS.md",
-  "source_sha256": "7c9cbabf49a725975a554dbf783976f428d592ef9563f617277d966830a45a72"
+  "source_sha256": "d9fe05da73ce01f9150e49a5844d97e463980939b17c772a6e3b0122e422674f"
 }

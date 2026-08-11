@@ -11,6 +11,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import time
@@ -519,6 +520,12 @@ class MultiPhaseSearchRunner:
                 {"path": "cross_phase_analysis.json", "phases": all_phases},
             ]
         )
+        for artifact in artifacts:
+            artifact_path = output_dir / str(artifact["path"])
+            if not artifact_path.is_file():
+                raise ValueError(f"phase artifact is missing before manifest write: {artifact_path}")
+            artifact["sha256"] = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+            artifact["size_bytes"] = artifact_path.stat().st_size
         provenance: list[dict[str, str]] = []
         for artifact in artifacts:
             phases = artifact.get("phases")
@@ -531,6 +538,7 @@ class MultiPhaseSearchRunner:
                         "artifact": str(artifact["path"]),
                         "producer": "MultiPhaseSearchRunner",
                         "source": execution_mode,
+                        "producer_revision": "working-tree",
                     }
                 )
         manifest = {
@@ -540,7 +548,7 @@ class MultiPhaseSearchRunner:
             "artifacts": artifacts,
             "provenance": provenance,
         }
-        manifest_issues = validate_phase_artifact_manifest(manifest)
+        manifest_issues = validate_phase_artifact_manifest(manifest, artifact_root=output_dir)
         if manifest_issues:
             raise ValueError(f"Invalid phase artifact manifest: {manifest_issues}")
         (output_dir / "phase_artifact_manifest.json").write_text(

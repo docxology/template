@@ -412,9 +412,9 @@ _TEMPLATE_SIGNPOST_GROUPS: dict[str, dict[str, tuple[SignpostOption, ...]]] = {
     "TODO.md": {
         "future-only backlog": ("future work only", "future-only", "forward-only backlog", "forward-only"),
         "integrity and template-status gaps": ("integrity and template-status gaps",),
-        "configurable-surface gaps": ("configurable-surface gaps",),
+        "configurable-surface gaps": ("configurable-surface gaps", "current configurable-surface contract"),
         "documentation and signposting gaps": ("documentation and signposting gaps",),
-        "test and validator gaps": ("test and validator gaps",),
+        "test and validator gaps": ("test and validator gaps", "current test and validator contract"),
         "sized upcoming work": ("minor upcoming", "medium upcoming", "major upcoming"),
     },
 }

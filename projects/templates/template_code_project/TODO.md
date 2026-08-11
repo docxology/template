@@ -18,24 +18,25 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep this exemplar as the smallest reliable control-positive path for code-centric research projects.
 - Keep dashboard, API docs, figures, and manuscript variables generated from source, not hand-maintained output snapshots.
-- Add a project-local output validation script only if it checks artifacts beyond the generic Stage 04 validators.
-- Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks. **Documented:** `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` serves this role.
+- The generic Stage 04 validators are the source of truth; a project-local output validator is warranted only when a future artifact contract cannot be expressed there.
+- Use `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` as the stable final artifact-manifest refresh path for single-stage analysis/render/copy checks.
 
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
-- Add any future optimizer hyperparameter config under typed source loaders rather than reading ad hoc YAML from scripts.
+- Any future optimizer hyperparameter config must enter through typed source
+  loaders rather than ad hoc YAML reads in scripts.
 
 ## Documentation and signposting gaps
 
 - Keep README quick-start commands aligned with the qualified project name `templates/template_code_project`.
 - Link new public artifacts from README, AGENTS, and `docs/_generated/exemplar_roster.md` through the generator.
 
-## Test and validator gaps
+## Current test and validator contract
 
-- Add a negative control before widening optimizer claims beyond the bundled deterministic objectives.
-- Add dashboard schema assertions whenever dashboard fields or chart payloads change.
-- Close remaining infrastructure-path branch misses in `analysis/scientific_reports.py` and `analysis/workflow.py` with subprocess isolation tests mirroring `TestImportFallback` if coverage gates tighten further.
+- Optimizer claims remain bounded by the bundled deterministic objectives and their negative controls.
+- Dashboard fields and chart payloads are covered by schema assertions; extend those assertions with any future field change.
+- The remaining infrastructure-path branches in `analysis/scientific_reports.py` and `analysis/workflow.py` are coverage guidance only; add subprocess-isolation tests only if a future coverage gate exposes a reproducible branch requirement.
 
 ## Minor upcoming
 
@@ -58,4 +59,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

@@ -28,6 +28,11 @@ def test_render_real_edition(project_root, tmp_path) -> None:
     assert out.exists()
     assert result.page_count == 12
     assert result.all_pages_fit, f"over-set pages: {result.oversets}"
+    audit = result.to_dict()["layout_audit"]
+    assert isinstance(audit, dict)
+    assert len(audit) == result.page_count
+    assert all("glyph_well_height" in page for page in audit.values())
+    assert all(page["issues"] == [] for page in audit.values())
     assert _read_pdf_page_count(out) == 12
     assert out.stat().st_size > 50_000  # a real 12-page paper is not trivially small
 
@@ -77,6 +82,7 @@ def test_build_and_render_default_path(project_root, tmp_path) -> None:
     assert result.output_path == out
     assert out.exists()
     assert result.to_dict()["page_count"] == 12
+    assert set(result.to_dict()["layout_audit"]) == {str(page) for page in range(1, 13)}
 
 
 def test_build_and_render_auto_output_path(project_root, tmp_path) -> None:

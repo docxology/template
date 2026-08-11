@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
+import re
 from collections import defaultdict
+from pathlib import Path
 from typing import Any
 
 
@@ -197,13 +200,24 @@ def score_llm_calibration(cases: list[dict[str, Any]], predictions: dict[str, st
     }
 
 
-def validate_phase_artifact_manifest(manifest: Any) -> list[str]:
-    """Validate phase attribution for every generated artifact path."""
+def validate_phase_artifact_manifest(manifest: Any, *, artifact_root: Path | None = None) -> list[str]:
+    """Validate phase attribution and, optionally, on-disk artifact identity.
+
+    ``artifact_root`` turns the structural contract into a source-of-truth
+    check: every declared artifact must be a regular file beneath that root,
+    and its recorded digest and byte count must match the current file.  The
+    root is optional so callers can still validate hand-authored manifests
+    without touching the filesystem.
+    """
     if not isinstance(manifest, dict):
         return ["manifest must be a mapping"]
     phases = manifest.get("phase_order")
     artifacts = manifest.get("artifacts")
-    if not isinstance(phases, list) or len(phases) != len(set(phases)):
+    if (
+        not isinstance(phases, list)
+        or any(not isinstance(phase, str) or not phase.strip() for phase in phases)
+        or len(phases) != len(set(phases))
+    ):
         return ["phase_order must be a list of unique phase IDs"]
     if not isinstance(artifacts, list):
         return ["artifacts must be a list"]
@@ -225,6 +239,36 @@ def validate_phase_artifact_manifest(manifest: Any) -> list[str]:
             issues.append(f"artifacts[{index}] must name at least one phase")
         elif any(phase not in known for phase in attributed):
             issues.append(f"artifacts[{index}] references an unknown phase")
+        digest = artifact.get("sha256")
+        if digest is not None and (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
+            issues.append(f"artifacts[{index}].sha256 must be a lowercase SHA-256 digest")
+        size_bytes = artifact.get("size_bytes")
+        if size_bytes is not None and (
+            isinstance(size_bytes, bool) or not isinstance(size_bytes, int) or size_bytes < 0
+        ):
+            issues.append(f"artifacts[{index}].size_bytes must be a non-negative integer")
+        if artifact_root is not None and not path.startswith("/") and ".." not in path.split("/"):
+            candidate = artifact_root / path
+            if candidate.is_symlink():
+                issues.append(f"artifacts[{index}] must not be a symlink")
+                continue
+            try:
+                resolved = candidate.resolve()
+                resolved.relative_to(artifact_root.resolve())
+            except (OSError, ValueError):
+                issues.append(f"artifacts[{index}] resolves outside the artifact root")
+                continue
+            if not candidate.is_file():
+                issues.append(f"artifacts[{index}] is missing from the artifact root")
+                continue
+            if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+                issues.append(f"artifacts[{index}] requires a digest when artifact_root is supplied")
+            elif hashlib.sha256(candidate.read_bytes()).hexdigest() != digest:
+                issues.append(f"artifacts[{index}] sha256 does not match the current file")
+            if not isinstance(size_bytes, int) or isinstance(size_bytes, bool):
+                issues.append(f"artifacts[{index}] requires size_bytes when artifact_root is supplied")
+            elif candidate.stat().st_size != size_bytes:
+                issues.append(f"artifacts[{index}] size_bytes does not match the current file")
     provenance = manifest.get("provenance")
     if provenance is not None:
         issues.extend(validate_phase_provenance(provenance, phases))

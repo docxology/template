@@ -22,7 +22,8 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` aligned when `SearchConfig` or `SyntheticObjective` defaults change.
-- Add a script-level config summary only if analysis scripts begin reading YAML directly.
+- A script-level config summary is unnecessary while analysis scripts remain
+  config-free; if that boundary changes, add the summary and a scoped row first.
 
 ## Documentation and signposting gaps
 
@@ -31,7 +32,8 @@ keeps a capability blocked rather than silently promoting it.
 ## Test and validator gaps
 
 - Keep deterministic fixture replay covered by the project coverage gate.
-- Promote the live agent path only with offline transcript fixtures, stale-transcript detection, and a no-network default validation.
+- The live agent path remains opt-in; promotion requires offline transcript
+  fixtures, stale-transcript detection, and no-network default validation.
 
 ## Minor upcoming
 
@@ -54,4 +56,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

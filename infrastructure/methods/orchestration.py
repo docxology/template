@@ -361,12 +361,12 @@ def _build_stage(
 def _stage_verification_commands(stage: StageDefinition, project_key: str, project_name: str = "") -> tuple[str, ...]:
     stage_key = stage.key
     if stage.script:
-        args = " ".join(stage.args)
-        spacer = " " if args else ""
         script_path = stage.script.replace("{project}", project_key)
         resolved_name = project_name or project_key
-        project_arg = "" if "--project" in stage.args else f" --project {resolved_name}"
-        commands = [f"uv run python {script_path}{spacer}{args}{project_arg}"]
+        argv = ["uv", "run", "python", script_path, *stage.args]
+        if "--project" not in stage.args:
+            argv.extend(["--project", resolved_name])
+        commands = [shlex.join(argv)]
         if stage_key:
             commands.append(
                 f"uv run python scripts/runner/execute_pipeline.py --project {resolved_name} --stage {stage_key}"

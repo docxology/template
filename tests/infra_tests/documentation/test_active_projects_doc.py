@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
+import sys
 
 from infrastructure.documentation.active_projects_doc import (
     render_active_projects_doc,
@@ -79,3 +81,20 @@ def test_write_active_projects_doc_is_idempotent(tmp_path: Path) -> None:
     second_content = second_path.read_text(encoding="utf-8")
     assert first_content == second_content
     assert first_path == second_path
+
+
+def test_active_projects_check_is_read_only_and_detects_drift(tmp_path: Path) -> None:
+    """The advertised check must not rewrite a stale generated document."""
+    make_project(tmp_path, "template_code_project", program="templates")
+    script = REPO_ROOT / "scripts" / "docgen" / "active_projects.py"
+    subprocess.run([sys.executable, str(script), "--write", "--repo-root", str(tmp_path)], check=True)
+    output = tmp_path / "docs" / "_generated" / "active_projects.md"
+    output.write_text(output.read_text(encoding="utf-8") + "\n# stale\n", encoding="utf-8")
+    before = output.stat().st_mtime_ns
+    result = subprocess.run(
+        [sys.executable, str(script), "--check", "--repo-root", str(tmp_path)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1
+    assert output.stat().st_mtime_ns == before

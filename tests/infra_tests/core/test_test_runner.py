@@ -20,6 +20,7 @@ import pytest
 from infrastructure.core.test_runner import (
     DEFAULT_COVERAGE_FILE,
     _output_tree_digest,
+    _contains_tests,
     DEFAULT_FAIL_UNDER,
     run_per_project_pytest,
 )
@@ -172,6 +173,14 @@ def test_run_per_project_pytest_all_passing(synthetic_repo: Path, monkeypatch: p
 
     coverage_file = synthetic_repo / DEFAULT_COVERAGE_FILE
     assert coverage_file.exists(), "Combined coverage data file should be created"
+
+
+def test_contains_tests_accepts_suffix_test_modules(tmp_path: Path) -> None:
+    """The isolated runner recognizes both supported pytest naming conventions."""
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    (tests_dir / "helpers_test.py").write_text("def test_ok(): pass\n", encoding="utf-8")
+    assert _contains_tests(tests_dir) is True
 
 
 def test_run_per_project_pytest_one_failing(synthetic_repo: Path) -> None:
@@ -626,7 +635,10 @@ def test_receipt_rejects_test_generated_output_drift(synthetic_repo: Path, monke
     assert receipt.overall_exit == 1
     assert receipt.lanes[0].exit_code == 0
     assert receipt.lanes[0].output_isolation_ok is False
-    assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]
+    assert receipt.validate(["alpha"]) == [
+        "OVERALL-EXIT: receipt overall_exit=1",
+        "OUTPUT-ISOLATION: project 'alpha' changed output/",
+    ]
 
 
 def test_output_digest_ignores_ignored_runtime_files_but_tracks_visible_files(tmp_path: Path) -> None:
@@ -714,4 +726,7 @@ def test_receipt_rejects_output_drift_after_project_process_exits(
     assert rc == 1
     assert receipt.overall_exit == 1
     assert receipt.lanes[0].output_isolation_ok is False
-    assert receipt.validate(["alpha"]) == ["OUTPUT-ISOLATION: project 'alpha' changed output/"]
+    assert receipt.validate(["alpha"]) == [
+        "OVERALL-EXIT: receipt overall_exit=1",
+        "OUTPUT-ISOLATION: project 'alpha' changed output/",
+    ]

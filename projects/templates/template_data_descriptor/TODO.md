@@ -27,9 +27,11 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep README, AGENTS, STANDALONE, and the per-directory README/AGENTS pairs aligned with the descriptor validator, verification, and figure modules.
 
-## Test and validator gaps
+## Current test and validator contract
 
-- Add live checks for larger tabular files only after the fixture descriptor is stable; extend verification to non-CSV media types when a real dataset needs them.
+- The deterministic fixture descriptor is covered locally; live checks for larger
+  tables or non-CSV media remain external-data work and are represented by the
+  two blocked Medium rows below.
 
 ## Minor upcoming
 
@@ -42,14 +44,15 @@ No active rows are currently scoped at this size.
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `DATA-PUBLICATION-1` | blocked-external | Medium | A real fork and owner receipt | Obtain the required owner or external receipt to unblock; run project tests and standalone export check and attach publication receipt + standalone replay. | publication receipt + standalone replay | `uv run pytest tests -q --no-cov --timeout=120` | fabricated publication receipt must fail |
+| `DATA-MEDIA-1` | blocked-external | Medium | Real licensed non-CSV fixture | Obtain a real licensed non-CSV fixture and attach its checksum/row manifest before promoting the media claim. | media checksum/row manifest + license receipt | `uv run pytest tests -q --no-cov --timeout=120` | unsupported media, malformed rows, symlink escape, or wrong checksum must fail |
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `DATA-MEDIA-1` | blocked-external | Major | Real licensed non-CSV fixture | The validator now supports justified JSON Lines in addition to CSV/JSON; obtain a real licensed non-CSV fixture and attach its checksum/row manifest before promoting the media claim. | media checksum/row manifest + license receipt | `uv run pytest projects/templates/template_data_descriptor/tests -q --no-cov --timeout=120` | unsupported media, malformed rows, symlink escape, or wrong checksum must fail |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

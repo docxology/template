@@ -24,7 +24,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Extend the discovery adapters in `src/integration.py` when new public fonds/rules/tools ship; do not duplicate the discovered roster in manuscript configuration.
-- Add typed loaders for any new resource-pool category before wiring it into `integration.py`.
+- Any new resource-pool category must enter through a typed loader before it is wired into `integration.py`.
 
 ## Documentation and signposting gaps
 
@@ -47,15 +47,15 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
+| `POOLS-FOURTH-FOND-1` | blocked-external | Medium | Owner-approved fourth fond exemplar | Obtain the required owner or external receipt to unblock; run public-scope and standalone gates and attach public fond manifest and registry update. | public fond manifest and registry update | `uv run pytest tests -q --no-cov --timeout=120` | absent exemplar must remain blocked, not skipped as pass |
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POOLS-FOURTH-FOND-1` | blocked-external | Major | Owner-approved fourth fond exemplar | Obtain the required owner or external receipt to unblock; run public-scope and standalone gates and attach public fond manifest and registry update. | public fond manifest and registry update | `uv run pytest tests -q --no-cov --timeout=120` | absent exemplar must remain blocked, not skipped as pass |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

@@ -186,6 +186,59 @@ def test_verify_fails_closed_on_missing_file(tmp_path: Path) -> None:
     assert missing[0]["reason"] == "missing"
 
 
+def test_verify_rejects_unsafe_duplicate_and_symlink_entries(tmp_path: Path) -> None:
+    """Manifest path controls must fail closed before any payload is trusted."""
+    write_doc(tmp_path / "uv.lock", "# lock\n")
+    outside = tmp_path.parent / "private-repro-input.txt"
+    write_doc(outside, "private\n")
+    (tmp_path / "escape").symlink_to(outside)
+
+    base = {
+        "schema_version": SCHEMA_VERSION,
+        "project": "template_code_project",
+        "generated_at": "2026-06-06T00:00:00+00:00",
+        "reproduce": ["uv run python scripts/runner/execute_pipeline.py"],
+    }
+    for entries, expected_reason in (
+        (
+            [
+                {
+                    "kind": "lockfile",
+                    "path": "uv.lock",
+                    "present": True,
+                    "sha256": "0" * 64,
+                    "size_bytes": 7,
+                },
+                {
+                    "kind": "lockfile",
+                    "path": "uv.lock",
+                    "present": True,
+                    "sha256": "0" * 64,
+                    "size_bytes": 7,
+                },
+            ],
+            "unsafe-or-duplicate-path",
+        ),
+        (
+            [
+                {
+                    "kind": "lockfile",
+                    "path": "escape",
+                    "present": True,
+                    "sha256": "0" * 64,
+                    "size_bytes": 8,
+                }
+            ],
+            "missing",
+        ),
+    ):
+        manifest = tmp_path / f"{expected_reason}.json"
+        manifest.write_text(json.dumps({**base, "entries": entries}), encoding="utf-8")
+        report = verify_repro_bundle(manifest, checkout_root=tmp_path)
+        assert report.ok is False
+        assert any(row["reason"] == expected_reason for row in report.mismatches)
+
+
 def test_cli_build_then_verify(tmp_path: Path) -> None:
     name = "repro_cli"
     _scaffold_repro_project(tmp_path, name)

@@ -59,6 +59,12 @@
     "status": "review"
   },
   "claim_boundary": "Citation structure and phase overlap are provenance diagnostics; they do not establish scientific support, replication, or causality.",
+  "conflict_validation": {
+    "conflicts": [],
+    "issues": [],
+    "schema_version": "advanced-literature-review/cross-phase-conflicts/1",
+    "status": "not_configured"
+  },
   "hypothesis_scoring": {
     "artifact": "hypothesis_scores.json",
     "claim_boundary": "The knowledge-graph stage may attach configured hypothesis scores after assertion extraction; no score is inferred here.",

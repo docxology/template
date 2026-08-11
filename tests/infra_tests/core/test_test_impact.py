@@ -44,6 +44,14 @@ def test_local_only_changes_are_marked_for_private_boundary_review() -> None:
     assert plan.project_names == ()
 
 
+def test_root_controls_and_resource_pools_get_dedicated_lanes() -> None:
+    plan = classify_changed_paths(["pyproject.toml", "fonds/templates/demo/src.py"])
+    assert plan.repository_control_changed is True
+    assert plan.resource_pool_changed is True
+    assert plan.recommended_lanes == ("repository-control", "resource-pool-contract")
+    assert plan.outer_project_parallelism_allowed is False
+
+
 def test_git_impact_includes_nonignored_untracked_source(tmp_path) -> None:
     """The CLI planner must see a new source file before it is staged."""
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)

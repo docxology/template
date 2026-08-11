@@ -1341,7 +1341,7 @@ administrator authority, or private-sidecar promotion occurred.
 
 | ID | Former status | Evidence | Acceptance and negative control |
 | --- | --- | --- | --- |
-| `STATUS-REFRESH-MED-1` | partial | `docs/_generated/status_evidence.json`; stable status IDs with typed command, scope, owner, date, mode, receipt, and health fields | `status_evidence.py --check` and `status_freshness.py --as-of 2026-08-09` passed; fixtures for missing receipts, stale/future dates, and mismatched health fail |
+| `STATUS-REFRESH-MED-1` | partial | `docs/_generated/status_evidence.json`; stable status IDs with typed command, scope, owner, date, mode, receipt, and health fields | `uv run python scripts/docgen/status_evidence.py --check` passed; fixtures for missing receipts, stale/future dates, and mismatched health fail |
 | `PUBLIC-PUBLISH-MANIFEST-MED-1` | partial | `template-publication-payload/v1` immutable manifest and provider handoff in `infrastructure/publishing/preflight.py` and archival orchestration | Documentation/publishing suites passed; local-only roots, symlink escapes, duplicate paths, credential-shaped metadata, changed payloads, and invalid targets are rejected before provider I/O |
 | `TEST-DISCOVERY-PERF-MED-1` | partial | [`test-performance-evidence.json`](test-performance-evidence.json), schema `template-test-performance-v1`, benchmarked commit `db7b3b061`, 204 matched tests per lane | `scripts/maintenance/benchmark_tests.py --target pipeline-smoke --profile quick --parallel-workers 2 --minimum-improvement 30` passed at 34.24% improvement; dirty/staged/untracked source changes invalidate the evidence and serial diagnostics remain available |
 | `MODULARITY-MED-1` | open | Madlib `config_models.py` and Redacted Report `kmyth_support.py` splits preserve import façades; root health and the public matrix remain green | `module_line_count_check.py` passed; focused import/behavior tests and the no-mocks inventory passed; oversized modules and removed re-exports remain negative controls |
@@ -1420,3 +1420,37 @@ These are local deterministic and hosted-command-contract results only;
 administrator branch protection, CODEOWNERS review, private-sidecar
 promotion, hosted Linux rehearsal, and real publication remain external
 release blockers.
+
+## Backlog reconciliation and bounded release blockers 2026-08-11
+
+The root and canonical public TODO files were re-audited at the current
+checkout. Completed source-contract rows were removed from active planning and
+their evidence remains in this record; active rows are now decomposed into
+Minor or Medium slices only. The historical `ARL-PHASE-VALIDATION-1` entry
+above records its original pre-normalization `open` state, but the phase
+boundary implementation and negative controls are now verified and the ID is
+not active in the current advanced-literature backlog.
+
+Closed in this reconciliation after the same-revision focused gates:
+
+| Scope | Evidence | Result |
+| --- | --- | --- |
+| Full public claim inventory | `check_claim_bindings.py --json`, claim-binding inventory tests, 24 explicit states, 15 source-pinned lanes and 9 justified `not_applicable` lanes | Closed as a roster-completeness contract; future quantitative expansion must be separately scoped and cannot silently change a `not_applicable` state |
+| Release metadata, documentation advisories, and coverage snapshot | status/counts generators, documentation and publishing suites, root health, and generated-artifact checks | Closed as repository-side contracts; administrator/external authority remains separate |
+| Executable bundle safety and discoverability | bundle receipt verifier tests, canonical `template_code_project` bundle, path/symlink/duplicate/stale-payload negative controls | Closed as the offline bundle contract; pinned-container execution remains blocked-tool |
+| Advanced literature phase boundaries and provenance | phase conflict, calibration, artifact-manifest, replay, hash, size, and unsafe-path tests | Closed as the deterministic source contract; live retrieval and domain calibration remain external/tool-gated |
+| Newspaper layout and storybook/public-artifact signposting | per-page newspaper layout-audit receipt, glyph-clearance/geometry negative controls, and future-only exemplar TODO normalization | Closed as deterministic local contracts; real-news promotion and optional visual/publication evidence remain gated |
+| Exemplar backlog prose cleanup | all canonical TODOs retain only structured future rows or current invariants; completed rows and stale “next action” prose were moved to this record | Closed as a documentation contract; new work must enter a Minor or Medium row with an acceptance command and negative control |
+
+The remaining active rows are `EXECUTABLE-BUNDLE-MAJ-1` (pinned container),
+`CLEAN-CHECKOUT-MAJ-1` (hosted Linux and owner receipts),
+`ARCHIVAL-TRACKER-MIN-1` (current provider evidence),
+`SECURITY-OWNERSHIP-1` (administrator authority), and
+`SECURITY-PRIVATE-PROMOTION-1` (owner-authorized private promotion), plus the
+exemplar blockers `ARL-CROSS-PHASE-1`, `ARL-PHASE-PROVENANCE-1`,
+`AUTOPOIESIS-SPEC-1`, `DATA-PUBLICATION-1`, `DATA-MEDIA-1`, `FORMAL-SPEC-1`,
+`LIT-ENGINE-POLITENESS-1`, `POOLS-FOURTH-FOND-1`, `PROSE-LLM-REVIEW-1`,
+`REDACTED-VISUAL-1`, `REGISTERED-PUBLICATION-1`, and `SIA-APPROVAL-FORK-1`.
+Their current size is Medium because each is a bounded unblock condition
+rather than an unbounded major feature. No local command can close the
+external or unavailable-tool rows.

@@ -44,7 +44,9 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
   as the default concrete walkthrough; private lifecycle mirrors rotate locally.
 - **CodeGraph is local-only:** `.codegraph/` is generated agent-navigation state; see [`guides/codegraph-local.md`](guides/codegraph-local.md) before documenting or initializing it.
 - Each sub-directory has a `README.md` (user-facing index) and `AGENTS.md` (technical guide)
-- `documentation-index.md` is the comprehensive flat index of all files
+- `documentation-index.md` is a curated flat map of long-lived documentation;
+  generated inventories and source-owned directory guides remain authoritative
+  for their own scopes
 - Cross-references use relative paths with descriptive link text
 - Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
 
@@ -105,7 +107,7 @@ This ensures the pipeline remains reproducible and does not make expensive netwo
 ## See Also
 
 - [README.md](README.md) — Quick navigation with Mermaid diagram
-- [documentation-index.md](documentation-index.md) — Comprehensive file index
+- [documentation-index.md](documentation-index.md) — Curated documentation map
 - [Root AGENTS.md](../AGENTS.md) — System-level documentation
 
 ## Typed-Subfolder Project Lifecycle

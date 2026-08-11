@@ -280,7 +280,7 @@ The pipeline has not been run, or outputs were cleaned. Run:
 ./run.sh --project templates/<name> --pipeline --core-only
 ```
 
-For EPUB/MOBI (Stage 10):
+For EPUB/MOBI (YAML stage 12; script prefix `stage_11`):
 ```bash
 uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
 ```

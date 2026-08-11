@@ -24,11 +24,9 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- `manuscript/config.yaml.example` now mirrors the live shape; add migration
-  tests if `units:` or appendix keys change (the example is currently
-  shape-checked by hand, not by a test).
-- Add a test that pins the example config's key shape to the live config so a
-  future divergence is caught automatically.
+- `manuscript/config.yaml.example` is checked against the live shape by
+  `tests/test_contracts.py::test_live_and_example_config_shapes_are_lockstep`;
+  extend that contract when `units:` or appendix keys change.
 
 ## Documentation and signposting gaps
 
@@ -37,21 +35,20 @@ keeps a capability blocked rather than silently promoting it.
 - Link any new structural config keys from the README, AGENTS, and the
   visualization guide.
 
-## Test and validator gaps
+## Current test and validator contract
 
-- Add negative controls for orphan chapter files, missing labs or questions,
-  and stale Mermaid diagrams. Zero-stub completeness now has library and real
-  CLI negative controls through `--require-complete`.
-- Add deterministic checks for generated cover art and diagrams when visual
-  styles change.
-- Register textbook worked-example numbers, percentages, and appendix-gallery
-  constants as configured facts, or mark them as documentation-only examples,
-  before treating Stage 04 as warning-free.
-- Add or document a stable final artifact-manifest refresh path for
-  single-stage analysis, render, and copy checks. **Documented:**
-  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
-  serves this role — it writes a current-output snapshot manifest labeled
-  `current-output-snapshot` without requiring a full `PipelineExecutor` run.
+- Negative controls for orphan chapter files, missing labs or questions, and
+  stale Mermaid diagrams are covered by the library and real CLI paths through
+  `--require-complete`.
+- Generated cover art and diagrams have deterministic checks; extend those
+  checks with any future visual-style change.
+- Textbook worked-example numbers, percentages, and appendix-gallery constants
+  are either configured facts or explicitly documentation-only examples before
+  Stage 04 is treated as warning-free.
+- Use `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  for single-stage analysis, render, and copy checks. It writes a
+  `current-output-snapshot` manifest without requiring a full
+  `PipelineExecutor` run.
 - Keep the optional external Mermaid `mmdc` boundary bounded by timeout,
   isolated process group, descendant cleanup, and deterministic `.mmd` fallback;
   synchronize its policy with infrastructure Mermaid renderers.
@@ -77,4 +74,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

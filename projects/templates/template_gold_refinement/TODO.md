@@ -23,8 +23,8 @@ keeps a capability blocked rather than silently promoting it.
   (lexicon in config, no hardcoded selections).
 - Keep `src/evidence.py` cross-checking every manuscript contribution claim
   against its evidence source, including dotted Python member paths.
-- Add transmission bookends (`transmission_begin` / `transmission_end`
-  manuscript sections) framing the certified output.
+- Transmission bookends (`transmission_begin` / `transmission_end`) frame the
+  certified output and remain validated as a pair.
 - Preserve the no-mocks / deterministic-seed policy for any new refinery stage
   or assay probe.
 
@@ -34,10 +34,10 @@ keeps a capability blocked rather than silently promoting it.
   (`contribution_claims`, `pipeline_phases`, `audit_rules`, `steganography`,
   `evaluation`, `authoring_contract`, and explicit LLM-review gates) when code
   defaults change.
-- Extend the prefix-constrained reverse assay with an optional
-  config-selected target and generated report surface.
-- Extend the noncompensatory `PurityVector` with domain-selected
-  dimensions only after a fork supplies evidence for those dimensions.
+- The prefix-constrained reverse assay uses the config-selected target and
+  generated report surface; forks must preserve ordered-prefix semantics.
+- The noncompensatory `PurityVector` remains domain-selectable only when a fork
+  supplies evidence for the added dimensions.
 
 ## Documentation and signposting gaps
 
@@ -50,14 +50,13 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Test and validator gaps
 
-- Add references (published or recorded) for the planned documented
-  commercial/book platforms — `amazon_kdp`, `google_play_books`, `gumroad`,
-  `leanpub`, `lulu`, `draft2digital`, `stripe`, `ingramspark` — so the
-  publishing-status block is verifiable rather than aspirational.
-- Add a validator for the analogy-break boundary formalized as a theorem: for
-  what class of manuscript quality processes does the refining analogy hold?
-- Connect the refinery to real manuscript validation infrastructure
-  (`infrastructure.validation`) and measure actual purity on a real paper.
+- Platform references remain an external-evidence concern; do not promote the
+  publishing-status block without source-bound records for each platform.
+- The analogy-boundary theorem is a local design predicate, not evidence of
+  manuscript quality or a substitute for domain validation infrastructure.
+- Integration with real manuscript validation and real-paper measurement is
+  outside this deterministic toy exemplar until a licensed, owner-approved
+  source and claim ledger are supplied.
 
 ## Minor upcoming
 
@@ -80,4 +79,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

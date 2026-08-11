@@ -24,7 +24,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` placeholder-safe while retaining every required schema block a fork needs.
-- Add schema-level validation before adding new optional madlib sections or generated figures.
+- Schema-level validation is required before any new optional madlib section or generated figure enters the public contract.
 
 ## Documentation and signposting gaps
 
@@ -37,7 +37,7 @@ keeps a capability blocked rather than silently promoting it.
 - Keep the project-local output validator and declared artifact inventory
   synchronized with any new token, figure, data, or report surface.
 - Preserve review-packet assertions if future copied-output layout changes make output statistics, validation reports, or copied data/report/figure categories optional.
-- Consider adding hypothesis-based property tests for the SHA-256 digest invariant if the lexicon format changes (current determinism is verified with parametric seed/lexicon tests).
+- The SHA-256 digest invariant is currently covered by parametric seed/lexicon tests; property-based tests are an optional future strengthening only if the lexicon format changes and must then be scoped as a row.
 
 ## Minor upcoming
 
@@ -60,4 +60,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

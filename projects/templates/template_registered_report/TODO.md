@@ -16,7 +16,7 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Integrity and template-status gaps
 
-- Keep rendered manuscript outputs and registered-report review artifacts regenerated after fixture, deviation, or sensitivity-analysis changes (now enforced by `test_review_artifacts_match_fresh_regeneration` for the committed artifacts).
+- Keep rendered manuscript outputs and registered-report review artifacts regenerated after fixture, deviation, or sensitivity-analysis changes; preserve the fresh-regeneration contract when the artifact schema changes.
 
 ## Configurable-surface gaps
 
@@ -52,4 +52,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

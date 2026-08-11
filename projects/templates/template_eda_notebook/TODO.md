@@ -26,8 +26,8 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep `manuscript/config.yaml.example` as the copy-and-customize template with
   the same top-level sections as `config.yaml`, including the `project_config.dataset` block.
-- Add any future EDA parameters (e.g. correlation method, imputation strategy)
-  under typed source loaders rather than reading ad hoc YAML from scripts.
+- Any future EDA parameters (e.g. correlation method, imputation strategy) must
+  enter through typed source loaders rather than ad hoc YAML reads in scripts.
 
 ## Documentation and signposting gaps
 
@@ -36,23 +36,23 @@ keeps a capability blocked rather than silently promoting it.
 - Link any new public artifacts from README, AGENTS, and the generated exemplar
   roster rather than hardcoding paths.
 
-## Test and validator gaps
+## Current test and validator contract
 
-- Add a negative control before widening EDA claims beyond the bundled
-  deterministic dataset.
-- Add an exact-value assertion whenever a new figure-data preparer or statistic
-  is introduced.
-- Keep the notebook-binding test in sync as the public `src` surface grows.
+- EDA claims remain bounded by the bundled deterministic dataset and its negative
+  controls; any future claim expansion requires a scoped row and new evidence.
+- Exact-value assertions cover the current figure-data preparers and statistics;
+  extend them with any future surface change.
+- The notebook-binding test is the current source-to-notebook contract and must
+  remain synchronized as the public `src` surface grows.
 - Byte-exact regeneration of `data/measurements.csv` remains intentionally out
   of scope: the original fixture's random draw order is not recoverable, and
   the generator (`src/eda/generate.py`) deliberately reproduces the fixture's
   documented contract (schema, size, missingness, correlation signs) rather
   than claiming a false byte-exact clone. If the dataset is ever regenerated
   from scratch, check in the new CSV and keep `DatasetSchema` in sync.
-- Add a real generator script (e.g. `scripts/generate_measurements_data.py`)
-  with a fixed NumPy seed that reproduces `data/measurements.csv` exactly, plus
-  a test binding the script's output to the committed CSV, to strengthen the
-  dataset's reproducibility story beyond a static fixture.
+- A future byte-exact fixture replacement would require a fixed-seed generator,
+  a committed replacement CSV, and a binding test; no historical fixture
+  reconstruction is claimed by this exemplar.
 
 ## Minor upcoming
 
@@ -75,4 +75,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

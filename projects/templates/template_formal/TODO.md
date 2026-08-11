@@ -32,7 +32,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` as the richer copy-and-customize template for publication, LLM, testing, and steganography toggles.
-- Add any future fault-injection or protocol-timing parameters under typed source loaders (`network/bus.py::FaultConfig`) rather than reading ad hoc YAML from scripts.
+- Any future fault-injection or protocol-timing parameters must enter through typed source loaders (`network/bus.py::FaultConfig`) rather than ad hoc YAML reads in scripts.
 
 ## Documentation and signposting gaps
 
@@ -41,10 +41,8 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Test and validator gaps
 
-- Add a negative control before widening any new typed-invariant claim beyond the ISC-1..40 surface already covered.
-- Add dashboard/report schema assertions only if a future stage adds a dashboard (none ships in v1 — manuscript + CLI scripts + figures only, per Out of Scope).
-- Registration is complete: `infrastructure/project/public_scope.py`, `docs/_generated/{active_projects,exemplar_roster,COUNTS}.md`, root `.gitignore` (both `projects/templates/template_formal/` and `output/templates/template_formal/` negations), `scripts/audit/check_template_drift.py --strict`, and `scripts/audit/check_tracked_all.py` all pass clean. `CLAUDE.md` and `README.md`'s hand-maintained exemplar lists/tables also mention `template_formal`.
-- Not yet updated (lower-priority, pre-existing staleness predates this template — several of these were already missing `template_pitch_deck` too): `MAINTAINERS.md`'s tracked-project-list sentence, `projects/AGENTS.md`'s "Eighteen projects" paragraph, `projects/README.md`'s exemplar bullets/tables, `projects/templates/AGENTS.md`'s "seventeen" structure list, `projects/PAI.md`'s table. These are prose-only (not gated by `check_template_drift.py`); backfill in a dedicated roster-hygiene pass rather than piecemeal per-template edits.
+- Keep a negative control before widening any typed-invariant claim beyond the ISC-1..40 surface already covered.
+- The public roster and generated documentation are generator-owned; use the current public-scope, drift, tracked-path, and generated-document gates rather than recording registration state in this TODO.
 
 ## Minor upcoming
 
@@ -56,15 +54,15 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
+| `FORMAL-SPEC-1` | blocked-tool | Medium | Optional Lean/TLA+ tools | Install or pin the required tool, or record its unavailable status; run the explicit formal script when available and attach a real formal-spec receipt. | real formal-spec receipt | `uv run pytest tests -q --no-cov --timeout=120` | decorative or skipped spec must not report pass |
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `FORMAL-SPEC-1` | blocked-tool | Major | Optional Lean/TLA+ tools | Install or pin the required tool, or record its unavailable status to unblock; run explicit formal script when tools are installed and attach real formal-spec receipt. | real formal-spec receipt | `uv run pytest tests -q --no-cov --timeout=120` | decorative or skipped spec must not report pass |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

@@ -9,6 +9,8 @@ No mocks used — all tests use real data, real subprocesses, and real function 
 from __future__ import annotations
 
 import os
+import sys
+import time
 from pathlib import Path
 
 from infrastructure.reporting.suite_runner import (
@@ -134,6 +136,30 @@ class TestRunPytestStream:
         exit_code, stdout, stderr = run_pytest_stream(["printf", "line1\nline2\nline3\n"], tmp_path, env, quiet=False)
         assert exit_code == 0
         assert "line1" in stdout
+
+    def test_stream_timeout_kills_descendants(self, tmp_path):
+        """A quiet parent/child hang must return within the declared deadline."""
+        marker = tmp_path / "child-finished"
+        child_code = "import time; time.sleep(5); open(%r, 'w').write('late')" % str(marker)
+        parent_code = (
+            "import subprocess, sys, time; "
+            "subprocess.Popen([sys.executable, '-c', sys.argv[1], sys.argv[2]]); "
+            "time.sleep(5)"
+        )
+        started = time.monotonic()
+        exit_code, _stdout, stderr = run_pytest_stream(
+            [sys.executable, "-c", parent_code, child_code, str(marker)],
+            tmp_path,
+            os.environ.copy(),
+            quiet=True,
+            timeout_seconds=0.2,
+        )
+        elapsed = time.monotonic() - started
+        assert exit_code == 124
+        assert "timed out" in stderr
+        assert elapsed < 2.0
+        time.sleep(0.1)
+        assert not marker.exists()
 
 
 class TestSuiteConfigModel:

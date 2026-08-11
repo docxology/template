@@ -91,7 +91,7 @@ flowchart TB
 
 | Command | Behaviour |
 |---|---|
-| `python scripts/run_search_pipeline.py` | Default config, hits live arXiv + Crossref, runs LLM if Ollama is reachable, writes everything. |
+| `python scripts/run_search_pipeline.py` | Configured live mode; only hits arXiv/Crossref or runs an LLM when those providers are explicitly enabled. The committed default uses the local fixture and no network. |
 | `… --no-llm` | Skip the LLM stage; produce reading report without synthesis. |
 | `… --no-cache` | Bypass cache reads (writes still happen). |
 | `… --corpus path.json` | Required when `project_config.search.sources` includes `local`. |

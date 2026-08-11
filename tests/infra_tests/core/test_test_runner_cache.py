@@ -63,3 +63,18 @@ def test_nonignored_untracked_content_is_part_of_cache_identity(tmp_path: Path) 
 
     assert changed["untracked_state"] != baseline["untracked_state"]
     assert changed["index_worktree"] != baseline["index_worktree"]
+
+
+def test_non_git_checkout_uses_bounded_source_tree_identity(tmp_path: Path) -> None:
+    """A copied/non-Git checkout still invalidates cache identity on source edits."""
+    source = tmp_path / "src" / "example.py"
+    source.parent.mkdir()
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    baseline = _identity(tmp_path)
+
+    assert baseline["commit"] == "unknown"
+    assert len(baseline["source_tree"]) == 64
+
+    source.write_text("VALUE = 2\n", encoding="utf-8")
+    changed = _identity(tmp_path)
+    assert changed["source_tree"] != baseline["source_tree"]

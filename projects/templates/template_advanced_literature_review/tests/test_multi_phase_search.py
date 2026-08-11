@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -390,6 +391,47 @@ def test_phase_artifact_manifest_contract_rejects_unsafe_and_malformed_rows() ->
     assert any("mapping" in issue for issue in issues)
     assert any("unsafe path" in issue for issue in issues)
     assert any("at least one phase" in issue for issue in issues)
+    assert any(
+        "sha256" in issue
+        for issue in validate_phase_artifact_manifest(
+            {
+                "phase_order": ["p"],
+                "artifacts": [{"path": "p.jsonl", "phases": ["p"], "sha256": "bad", "size_bytes": -1}],
+            }
+        )
+    )
+
+
+def test_phase_artifact_manifest_verifies_current_bytes_and_rejects_symlink_escape(tmp_path: Path) -> None:
+    """A passing manifest must describe the files that are actually present."""
+    artifact = tmp_path / "phase.jsonl"
+    artifact.write_text('{"paper": "p1"}\n', encoding="utf-8")
+    manifest = {
+        "phase_order": ["phase_1"],
+        "artifacts": [
+            {
+                "path": artifact.name,
+                "phases": ["phase_1"],
+                "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
+                "size_bytes": artifact.stat().st_size,
+            }
+        ],
+    }
+    assert validate_phase_artifact_manifest(manifest, artifact_root=tmp_path) == []
+
+    artifact.write_text('{"paper": "changed"}\n', encoding="utf-8")
+    assert any(
+        "sha256 does not match" in issue for issue in validate_phase_artifact_manifest(manifest, artifact_root=tmp_path)
+    )
+
+    outside = tmp_path.parent / "outside-phase.jsonl"
+    outside.write_text("private\n", encoding="utf-8")
+    escaped = dict(manifest)
+    escaped["artifacts"] = [{**manifest["artifacts"][0], "path": "escaped.jsonl"}]
+    (tmp_path / "escaped.jsonl").symlink_to(outside)
+    assert any(
+        "must not be a symlink" in issue for issue in validate_phase_artifact_manifest(escaped, artifact_root=tmp_path)
+    )
 
 
 def test_llm_phase_filter_records_retained_provenance(
@@ -580,6 +622,9 @@ def test_phase_pipeline_writes_phase_provenance(tmp_path: Path) -> None:
         "phase_metadata.json",
         "cross_phase_analysis.json",
     }
+    assert all(len(entry["sha256"]) == 64 for entry in manifest["artifacts"])
+    assert all(isinstance(entry["size_bytes"], int) for entry in manifest["artifacts"])
+    assert all(row["producer_revision"] == "working-tree" for row in manifest["provenance"])
     analysis = json.loads((output_dir / "cross_phase_analysis.json").read_text(encoding="utf-8"))
     assert analysis["hypothesis_scoring"]["status"] == "pending_knowledge_graph"
 
@@ -626,6 +671,7 @@ def test_fixture_replay_writes_deterministic_phase_artifacts(tmp_path: Path) -> 
     manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
     assert manifest["execution_mode"] == "fixture"
     assert manifest["phase_order"] == ["phase_1", "phase_2"]
+    assert all(len(entry["sha256"]) == 64 for entry in manifest["artifacts"])
 
 
 def test_unknown_phase_fails_before_network(config_path: Path, tmp_path: Path) -> None:

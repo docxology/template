@@ -29,14 +29,14 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` aligned with the `project_config.sia` block and safe defaults.
-- Add typed config loading for new loop controls before exposing them in README commands.
+- New loop controls must enter through the typed config loader before they are exposed in README commands.
 
 ## Documentation and signposting gaps
 
 - Keep README, AGENTS, and docs explicit that the live mode is illustrative and non-mutating.
 - Keep `tests/AGENTS.md`, `.agents/README.md`, and `.agents/skills/README.md`
   synchronized with the on-disk catalog and test files.
-- Add a fork checklist for turning the harness into a real improvement loop with sandbox and approval boundaries.
+- The fork checklist for a real improvement loop is the documented sandbox, diff-review, rollback, and approval boundary; a future fork must retain each control.
 
 ## Test and validator gaps
 
@@ -55,15 +55,15 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
+| `SIA-APPROVAL-FORK-1` | blocked-external | Medium | Sandbox, diff, rollback, human approval | The typed approval contract and fork guidance are ready; obtain the required owner receipt and a real disposable fork before enabling `live_apply`, then attach the approval receipt. | `src/approval.py` contract + fork guidance + owner receipt | `uv run pytest tests -q --no-cov --timeout=120` | mutation without approval must fail |
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `SIA-APPROVAL-FORK-1` | blocked-external | Major | Sandbox, diff, rollback, human approval | The typed approval contract and fork guidance are ready; obtain the required owner receipt and a real disposable fork before enabling `live_apply`, then attach the approval receipt. | `src/approval.py` contract + fork guidance + owner receipt | `uv run pytest projects/templates/template_sia/tests -q --no-cov --timeout=120` | mutation without approval must fail |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

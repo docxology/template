@@ -9,6 +9,33 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Backlog reconciliation and release-boundary hardening (2026-08-11)
+
+- Re-audited the root backlog and all 24 canonical public exemplar TODO files;
+  active planning is future-only, completed rows are preserved in the dated
+  maintenance record, and active work is decomposed into Minor/Medium slices.
+- Reconciled the historical `ARL-PHASE-VALIDATION-1` state without deleting
+  its original evidence; the current source contract and negative controls are
+  now the authoritative closure evidence.
+- Made fresh-checkout rehearsals restore only explicitly generated
+  representative-render output inside their disposable clone. Any source,
+  private, rename, or other non-generated mutation remains a hard blocker.
+- Added SHA-256 and size fields to advanced-literature phase artifact manifests
+  and validated their generated provenance rows without enabling network or LLM
+  execution by default.
+- Added per-page newspaper geometry/glyph-clearance audit receipts and negative
+  controls, plus source-bound coverage refreshes for the changed ARL, Newspaper,
+  and pitch-deck exemplars.
+- Hardened isolated-matrix receipts with strict lane/phase timing, collection,
+  cache, resource-limit, skip, and output-isolation contracts; cache identity
+  now covers staged, unstaged, untracked, and non-Git source state.
+- Centralized bounded subprocess timeout/process-group cleanup and hardened
+  reproduction-bundle and disposable-rehearsal path validation against symlink,
+  traversal, duplicate, stale-payload, and non-generated-output hazards.
+- Converted stale exemplar backlog prose into current contracts, updated drift
+  signposts to accept those normalized headings, and labeled the last pipeline
+  summary as historical evidence rather than current health.
+
 ### Release evidence and exemplar corrections (2026-08-08)
 
 - Rebased `COUNTS.md` and coverage provenance on the shared release-profile
@@ -437,12 +464,12 @@ not to the contents of any specific workspace.
   items (`AR-SOURCE-FRESHNESS-1`, `AR-LOOP-PHASES-1`, and 3 medium rows) in
   `template_autoresearch_project/TODO.md` under a single "Shipped" section.
 
-- 🔎 **Backlog-history reconciliation (2026-08-09).** The preceding release
-  note is retained as historical evidence from its original checkout. A later
-  audit found that `ARL-PHASE-VALIDATION-1` had been restored to the active
-  TODO during subsequent edits; the current future-only backlog keeps it
-  active until the same-revision acceptance receipt closes it, and project
-  troubleshooting now points only to the genuinely remaining cross-phase
+- 🔎 **Backlog-history reconciliation (2026-08-09 → 2026-08-11).** The
+  preceding release note is retained as historical evidence from its original
+  checkout. A later audit found that `ARL-PHASE-VALIDATION-1` had been
+  restored to the active TODO during subsequent edits; the current
+  future-only backlog now records its same-revision source/test closure, and
+  project troubleshooting points only to the genuinely remaining cross-phase
   validator work.
 
 - 🔧 **Health gate ruff version pinning.** Changed `ruff` and `ruff-format`

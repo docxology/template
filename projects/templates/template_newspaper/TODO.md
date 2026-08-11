@@ -18,22 +18,27 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep edition content fictional unless a fork adds real source provenance and fact-checking validators.
 - Keep ReportLab layout logic in `src/`, with scripts as thin orchestration only.
-- Add a machine-readable layout audit artifact for page-geometry glyph-collision auditing — e.g. detecting when a wrapped headline's descender-heavy last line sits too close to the next flowable. Keep this separate from `all_pages_fit`, overset, and missing-image checks so the new receipt covers the distinct raster-risk class.
+- The machine-readable `layout_audit` artifact records page geometry and
+  glyph-clearance findings separately from `all_pages_fit`, overset, and
+  missing-image checks; keep all four signals distinct.
 
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` aligned with publication metadata and render toggles.
-- Add a content-schema example for a minimal one-page fork if `content/edition.yaml` gains required fields.
+- A minimal one-page fork schema example is required in the same row if
+  `content/edition.yaml` ever gains required fields.
 
 ## Documentation and signposting gaps
 
 - Keep README and docs clear that the newspaper PDF is produced by project scripts, while the manuscript PDF is produced by the monorepo renderer.
 - Link any new content schema fields from `docs/syntax_guide.md` and the README quick-start.
-- Document the platform-dependent `typography.py` `register_fonts()` fallback arc (base-14 path reachable only on Linux CI without macOS fonts) so future reviewers understand why that branch stays uncovered under the no-mocks policy.
+- The platform-dependent `typography.py` `register_fonts()` fallback arc is documented in the README, architecture, and testing guide; its base-14 branch remains uncovered under the no-mocks policy.
 
-## Test and validator gaps
+## Current test and validator contract
 
-- Register or suppress documentation-only README numbers in the evidence pass, and add a stable final artifact-manifest refresh path for single-stage checks. **Documented:** `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` provides the stable refresh path.
+- Documentation-only README numbers are excluded from empirical claims, and
+  `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest`
+  is the stable single-stage refresh path.
 - Keep the platform-only `typography.py` fallback branch documented rather than mock-covered; revisit only if the no-mocks policy or the CI font matrix changes.
 
 ## Minor upcoming
@@ -57,4 +62,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

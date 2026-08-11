@@ -14,8 +14,9 @@ the caller can report an over-set page rather than silently dropping copy.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import cast
 
 from reportlab.lib.styles import StyleSheet1
 from reportlab.pdfgen.canvas import Canvas
@@ -36,6 +37,7 @@ class PageRender:
     number: int
     overset_flowables: int
     layout_issues: tuple[str, ...] = ()
+    layout_audit: dict[str, object] = field(default_factory=dict)
 
 
 def audit_column_layout(grid: ColumnGrid, top: float, bottom: float) -> tuple[str, ...]:
@@ -52,6 +54,48 @@ def audit_column_layout(grid: ColumnGrid, top: float, bottom: float) -> tuple[st
         if index and left < rectangles[index - 1][1]:
             issues.append(f"columns {index - 1} and {index} overlap")
     return tuple(issues)
+
+
+def build_layout_audit(
+    page: Page,
+    grid: ColumnGrid,
+    *,
+    top: float,
+    bottom: float,
+    lead_height: float,
+    has_rail: bool,
+) -> dict[str, object]:
+    """Return a portable geometry and glyph-clearance audit for one page.
+
+    This is a structural raster-risk receipt, not a claim that a PDF renderer
+    has been visually inspected. It records the dimensions that control
+    column collisions and the explicit lead descender clearance protecting
+    the manually drawn headline/deck pair.
+    """
+    issues = list(audit_column_layout(grid, top, bottom))
+    if page.lead is not None and F.LEAD_HEAD_GAP < F.LEAD_MIN_DESCENDER_CLEARANCE:
+        issues.append("lead descender clearance is below the configured minimum")
+    return {
+        "schema_version": "template-newspaper/layout-audit/1",
+        "page": page.number,
+        "template": page.template,
+        "main_columns": grid.n_columns,
+        "main_left": round(grid.left, 3),
+        "main_right": round(grid.right(), 3),
+        "column_width": round(grid.column_width, 3),
+        "gutter": round(grid.gutter, 3),
+        "body_top": round(top, 3),
+        "body_bottom": round(bottom, 3),
+        "glyph_well_height": round(top - bottom, 3),
+        "rail": has_rail,
+        "lead": {
+            "present": page.lead is not None,
+            "consumed_points": round(lead_height, 3),
+            "descender_clearance_points": F.LEAD_HEAD_GAP if page.lead is not None else None,
+            "minimum_descender_clearance_points": (F.LEAD_MIN_DESCENDER_CLEARANCE if page.lead is not None else None),
+        },
+        "issues": issues,
+    }
 
 
 def _make_frames(grid: ColumnGrid, top: float, bottom: float) -> list[Frame]:
@@ -184,13 +228,22 @@ def render_page(
     main_top = body_top
 
     # --- spanning lead headline -------------------------------------------
+    lead_h = 0.0
     if page.lead is not None:
         lead_h = F.draw_lead_headline(c, page.lead, main_left, body_top, main_width, styles, fonts)
         main_top = body_top - lead_h
 
     F.draw_column_rules(c, main_grid, main_top, body_bottom)
     main_frames = _make_frames(main_grid, main_top, body_bottom)
-    layout_issues = audit_column_layout(main_grid, main_top, body_bottom)
+    layout_audit = build_layout_audit(
+        page,
+        main_grid,
+        top=main_top,
+        bottom=body_bottom,
+        lead_height=lead_h,
+        has_rail=rail_frame is not None,
+    )
+    layout_issues = tuple(cast(list[str], layout_audit["issues"]))
 
     if config.draft_grid:  # pragma: no cover - debug only
         overlay = ([rail_frame] if rail_frame else []) + main_frames
@@ -232,7 +285,12 @@ def render_page(
         )
     overset += _flow(c, main_frames, main_flowables)
 
-    return PageRender(number=page.number, overset_flowables=overset, layout_issues=layout_issues)
+    return PageRender(
+        number=page.number,
+        overset_flowables=overset,
+        layout_issues=layout_issues,
+        layout_audit=layout_audit,
+    )
 
 
-__all__ = ["PageRender", "audit_column_layout", "render_page"]
+__all__ = ["PageRender", "audit_column_layout", "build_layout_audit", "render_page"]

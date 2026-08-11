@@ -20,16 +20,16 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Add additional organization-specific marking taxonomies and review-role policies only as cleared, invented fixtures.
+- Organization-specific marking taxonomies and review-role policies are intentionally limited to cleared, invented fixtures; a real policy needs a separately scoped owner-approved row.
 
 ## Documentation and signposting gaps
 
 - Keep public safety boundaries visible in README, AGENTS, and manuscript prose.
 
-## Test and validator gaps
+## Current test and validator contract
 
 - Bind manuscript tables to the canonical audit JSON only if rendering can preserve the text-free projection and fails closed when the audit schema changes.
-- Add pixel-level visual regression only if the repo adopts stable screenshot/PDF raster tooling for exemplar outputs.
+- Pixel-level visual regression remains the explicit blocked-tool row below until the repo adopts stable screenshot/PDF raster tooling for exemplar outputs.
 - Keep year-stable ISO-date residual detection and complete collection-platform
   span coverage under negative controls; contextual labels in explicitly public
   explanatory prose must remain distinct from source-segment residuals.
@@ -44,15 +44,15 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
+| `REDACTED-VISUAL-1` | blocked-tool | Medium | Stable raster toolchain | Install or pin the required tool, or record its unavailable status; run the explicit visual gate only when tooling is pinned and attach a pixel regression manifest. | pixel regression manifest | `uv run pytest tests -q --no-cov --timeout=120` | missing raster tool must report unavailable, not pass |
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `REDACTED-VISUAL-1` | blocked-tool | Major | Stable raster toolchain | Install or pin the required tool, or record its unavailable status to unblock; run explicit visual gate only when tooling is pinned and attach pixel regression manifest. | pixel regression manifest | `uv run pytest tests -q --no-cov --timeout=120` | missing raster tool must report unavailable, not pass |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

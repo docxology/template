@@ -25,14 +25,12 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Keep the placeholder-safe `manuscript/config.yaml.example` synchronized with the live config shape, including the list-form slot and dependency syntax.
-- Add an optional archetype-selection filter so forks can materialize a subset of the combinatoric product space rather than one child per domain.
+- The optional `archetype_filters` mapping is the fork-owned selector for materializing a subset of the combinatoric product space; keep its values schema-validated and included in the grammar digest.
 
 ## Documentation and signposting gaps
 
 - Keep README and `SYNTAX.md` clear that Stage 02 expands the grammar and materializes/verifies children, while Stage 03 renders the descriptive manuscript PDF.
-- Finish the remaining `SPEC.md` Phase 10 items and keep them in step with the
-  declared grammar surface.
-- Consider fencing `manuscript/preamble.md` as a complete LaTeX block to eliminate renderer recovery warnings.
+- `SPEC.md` Phase 10 and `manuscript/preamble.md` are source-owned inputs to the deterministic manuscript contract; keep the checklist, explicit fences, and renderer-qualified receipt synchronized.
 
 ## Dependency-mode gaps
 
@@ -43,8 +41,7 @@ keeps a capability blocked rather than silently promoting it.
 - Keep figure fallback handling explicit for empty arrays, and require
   malformed or under-specified grammar shapes to fail before expansion with real
   negative controls.
-- Strengthen the mutation meta-gate with an additional stubbed-kernel case per domain, so green-by-construction theater cannot slip through as new domains are added.
-- Eliminate the remaining meta-gate skip by selecting the first available negative-control primitive per domain (the signal domain's first primitive has none).
+- Keep mutation coverage per domain and permit an explicit skip only when a domain has no negative-control primitive; a second primitive must be used when available so the meta-gate cannot become green-by-construction.
 
 ## Minor upcoming
 
@@ -56,15 +53,15 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-No active rows are currently scoped at this size.
+| `AUTOPOIESIS-SPEC-1` | blocked-tool | Medium | Pinned renderer and visual QA toolchain | Install or pin the renderer, or record its unavailable receipt; run the explicit Phase 10 visual gate and attach the tool-qualified receipt. | `SPEC.md` Phase 10 checklist + renderer receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing renderer must report blocked-tool; fenced preamble/spec mismatch must fail |
 
 ## Major upcoming
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `AUTOPOIESIS-SPEC-1` | partial | Major | Grammar/spec lockstep | Run the optional pinned renderer and visual QA when available; attach a tool-qualified Phase 10 receipt. Source readiness, explicit preamble fencing, and P0–P10 checklist validation are complete in this revision. | `SPEC.md` Phase 10 checklist + renderer receipt | `uv run pytest projects/templates/template_autopoiesis/tests -q --no-cov --timeout=120` | fenced preamble/spec mismatch must fail validation |
+No active rows are currently scoped at this size.
 
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

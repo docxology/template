@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Mapping, Sequence
@@ -131,8 +132,12 @@ class PublicMatrixReceipt:
         """
         errors: list[str] = []
         lane_names = {lane.project_name for lane in self.lanes}
+        roster_names = set(roster)
         if len(lane_names) != len(self.lanes):
             errors.append("DUPLICATE-PROJECT: receipt contains more than one lane for a project")
+
+        for name in sorted(lane_names - roster_names):
+            errors.append(f"UNEXPECTED-PROJECT: lane '{name}' is not in the declared roster")
 
         # Negative control 1: missing project result
         for name in roster:
@@ -140,9 +145,21 @@ class PublicMatrixReceipt:
                 errors.append(f"MISSING-PROJECT: roster entry '{name}' has no lane result")
 
         # Negative control 2: lane errors
+        if self.overall_exit != 0:
+            errors.append(f"OVERALL-EXIT: receipt overall_exit={self.overall_exit}")
+        if self.combined_coverage_percent is None:
+            if self.overall_exit == 0:
+                errors.append("MISSING-COMBINED-COVERAGE: passing receipt has no combined coverage")
+        elif not math.isfinite(self.combined_coverage_percent):
+            errors.append("INVALID-COMBINED-COVERAGE: combined coverage must be finite")
+        elif self.combined_coverage_percent < self.combined_floor:
+            errors.append(
+                f"COMBINED-COVERAGE-FLOOR: measured {self.combined_coverage_percent:.2f}% < "
+                f"combined floor {self.combined_floor}%"
+            )
         if not self.phase_durations:
             errors.append("MISSING-PHASE-TIMING: receipt has no phase durations")
-        elif any(duration < 0 for duration in self.phase_durations.values()):
+        elif any(not math.isfinite(duration) or duration < 0 for duration in self.phase_durations.values()):
             errors.append("INVALID-PHASE-TIMING: phase duration cannot be negative")
         if not self.cache_key:
             errors.append("MISSING-CACHE-IDENTITY: receipt has no cache key")
@@ -151,6 +168,8 @@ class PublicMatrixReceipt:
 
         for lane in self.lanes:
             if lane.skip_reason:
+                if lane.duration_seconds < 0 or not math.isfinite(lane.duration_seconds):
+                    errors.append(f"INVALID-SKIP-TIMING: skipped project '{lane.project_name}' has invalid duration")
                 if lane.collection_count is not None:
                     errors.append(
                         f"SKIP-METADATA: skipped project '{lane.project_name}' must not report a collection count"
@@ -163,7 +182,7 @@ class PublicMatrixReceipt:
                     errors.append(f"MISSING-COLLECTION: project '{lane.project_name}' has no collection count")
                 elif lane.collection_count <= 0:
                     errors.append(f"EMPTY-COLLECTION: project '{lane.project_name}' reported zero collected tests")
-                if lane.duration_seconds <= 0:
+                if lane.duration_seconds <= 0 or not math.isfinite(lane.duration_seconds):
                     errors.append(f"MISSING-LANE-TIMING: project '{lane.project_name}' has no duration")
                 if not lane.cache_key:
                     errors.append(f"MISSING-LANE-CACHE: project '{lane.project_name}' has no cache key")

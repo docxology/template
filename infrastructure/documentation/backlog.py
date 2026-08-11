@@ -24,7 +24,11 @@ Severity = Literal["error", "warning"]
 BacklogStatus = Literal["open", "partial", "blocked-external", "blocked-tool"]
 
 ALLOWED_BACKLOG_STATUSES: frozenset[str] = frozenset({"open", "partial", "blocked-external", "blocked-tool"})
-ALLOWED_BACKLOG_SIZES: frozenset[str] = frozenset({"minor", "medium", "major"})
+# Active work is deliberately decomposed into reviewable Minor/Medium slices.
+# Repository-wide or release-level initiatives belong in the maintenance plan
+# and are represented here by their current bounded slice or an explicit
+# blocked-external/tool row, never by an unbounded "Major" TODO.
+ALLOWED_BACKLOG_SIZES: frozenset[str] = frozenset({"minor", "medium"})
 
 _HEADING_ID = re.compile(r"^#{3,4}\s+`?([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)`?(?:\s|$)")
 _TABLE_ID = re.compile(r"^\s*\|\s*`?([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)`?\s*\|")
@@ -53,6 +57,10 @@ _REQUIRED_EXEMPLAR_SECTIONS = (
     "Medium upcoming",
     "Major upcoming",
 )
+_EXEMPLAR_SECTION_ALIASES = {
+    "Configurable-surface gaps": frozenset({"Configurable-surface gaps", "Current configurable-surface contract"}),
+    "Test and validator gaps": frozenset({"Test and validator gaps", "Current test and validator contract"}),
+}
 _REMOVED_HISTORY_SECTION = re.compile(
     r"^##\s+(?:Current validation evidence|Ordered improvement ladder|Promotion Rule|"
     r"Promotion rule|Active backlog index)$",
@@ -144,12 +152,16 @@ def _validate_file(
     required = ("Live baseline and constraints", "Backlog operating rules") if is_root else _REQUIRED_EXEMPLAR_SECTIONS
     headings = {line.lstrip("# ").strip() for line in lines if line.startswith("## ")}
     for section in required:
-        if section not in headings:
+        accepted = _EXEMPLAR_SECTION_ALIASES.get(section, frozenset({section}))
+        if not headings.intersection(accepted):
             findings.append(_finding(path, 1, "error", "required_section", f"missing required section: {section}"))
 
     has_backlog_table = False
     table_identifiers: set[str] = set()
+    active_section = ""
     for line_number, line in enumerate(lines, start=1):
+        if line.startswith("## "):
+            active_section = line[3:].strip()
         if line.startswith("|"):
             cells = tuple(cell.strip().casefold() for cell in line.strip().strip("|").split("|"))
             if cells == _BACKLOG_TABLE_HEADER:
@@ -210,10 +222,21 @@ def _validate_file(
                             line_number,
                             "error",
                             "invalid_size",
-                            f"stable backlog row has invalid size {cells[2]!r}; allowed values are "
-                            "Minor, Medium, Major",
+                            f"stable backlog row has invalid size {cells[2]!r}; allowed values are Minor, Medium",
                         )
                     )
+                if not is_root and active_section in {"Minor upcoming", "Medium upcoming", "Major upcoming"}:
+                    expected_size = active_section.split()[0].casefold()
+                    if size != expected_size:
+                        findings.append(
+                            _finding(
+                                path,
+                                line_number,
+                                "error",
+                                "size_section",
+                                f"stable row size {cells[2]!r} must match its {active_section!r} section",
+                            )
+                        )
                 if not _EXECUTABLE_COMMAND.search(cells[6]):
                     findings.append(
                         _finding(

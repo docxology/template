@@ -27,9 +27,8 @@ from infrastructure.publishing.status_report import PublicationState, compile_pu
 #: Pitch subjects and this deck's own project name are always a single path
 #: segment (a directory name under projects/templates/) — never containing
 #: "/" or "..". Enforced before any path construction so a future caller that
-#: makes `pitch_subject` configurable (already signaled by manuscript/config.yaml's
-#: `deck.pitch_subject` field, not yet wired up) can't read/write outside the
-#: intended projects/templates/<name>/ tree (red-team finding, 2026-07-09).
+#: makes `pitch_subject` configurable through manuscript/config.yaml without
+#: allowing reads or writes outside the intended projects/templates/<name>/ tree.
 _SAFE_PROJECT_NAME_RE = re.compile(r"^[\w-]+$")
 
 

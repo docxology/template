@@ -29,6 +29,7 @@ class RenderResult:
     page_count: int
     oversets: dict[int, int] = field(default_factory=dict)
     layout_issues: dict[int, tuple[str, ...]] = field(default_factory=dict)
+    layout_audit: dict[int, dict[str, object]] = field(default_factory=dict)
 
     @property
     def all_pages_fit(self) -> bool:
@@ -55,6 +56,7 @@ class RenderResult:
             "all_pages_fit": self.all_pages_fit,
             "oversets": {str(k): v for k, v in self.oversets.items()},
             "layout_issues": {str(k): list(v) for k, v in self.layout_issues.items()},
+            "layout_audit": {str(k): v for k, v in self.layout_audit.items()},
         }
 
 
@@ -90,6 +92,7 @@ def render_edition(
     spot = config.spot()
     oversets: dict[int, int] = {}
     layout_issues: dict[int, tuple[str, ...]] = {}
+    layout_audit: dict[int, dict[str, object]] = {}
     for page in edition.pages:
         # White page ground (newsprint stays paper-white in this template).
         c.setFillColor(white)
@@ -99,6 +102,7 @@ def render_edition(
             oversets[page.number] = result.overset_flowables
         if result.layout_issues:
             layout_issues[page.number] = result.layout_issues
+        layout_audit[page.number] = result.layout_audit
         c.showPage()
 
     c.save()
@@ -107,6 +111,7 @@ def render_edition(
         page_count=edition.page_count,
         oversets=oversets,
         layout_issues=layout_issues,
+        layout_audit=layout_audit,
     )
 
 

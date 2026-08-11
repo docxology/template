@@ -7,13 +7,16 @@ loop used by both infrastructure and project test suites.
 import collections
 import os
 import select
+import signal
 import subprocess
 import sys
 from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
+from time import monotonic
 from typing import Any
 
+from infrastructure.core.execution_boundary import build_bounded_env
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.logging.progress import log_with_spinner
@@ -88,29 +91,58 @@ def _passes_quiet_filter(char: str, line: str, quiet: bool) -> bool:
     return False
 
 
-def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict[str, str], quiet: bool) -> tuple[int, str, str]:
-    """Run pytest streaming output to console while capturing logs for reporting."""
+def _terminate_stream_process(process: subprocess.Popen[bytes]) -> None:
+    """Terminate a streaming subprocess and all descendants in its session."""
+    if process.poll() is not None:
+        return
+    if os.name == "nt":  # pragma: no cover - the public runner is Unix-first
+        process.kill()
+        return
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+
+
+def run_pytest_stream(
+    cmd: list[str],
+    repo_root: Path,
+    env: dict[str, str],
+    quiet: bool,
+    *,
+    timeout_seconds: float = 1800,
+) -> tuple[int, str, str]:
+    """Run pytest with streaming output, a real deadline, and group cleanup."""
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
     stdout_buf: list[str] = []
     recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
     process = subprocess.Popen(
         cmd,
         cwd=str(repo_root),
-        env=env,
+        env=build_bounded_env(env),
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=False,  # Use binary mode for non-blocking IO
         bufsize=0,
+        start_new_session=(os.name != "nt"),
     )
 
     assert process.stdout is not None
     fd = process.stdout.fileno()
     os.set_blocking(fd, False)
 
+    timed_out = False
+    deadline = monotonic() + timeout_seconds
     try:
         current_line = ""
         while True:
-            reads, _, _ = select.select([fd], [], [], 0.1)
+            remaining = deadline - monotonic()
+            if remaining <= 0:
+                timed_out = True
+                break
+            reads, _, _ = select.select([fd], [], [], min(0.1, remaining))
 
             if fd in reads:
                 raw_chunk = process.stdout.read(4096)
@@ -145,15 +177,24 @@ def run_pytest_stream(cmd: list[str], repo_root: Path, env: dict[str, str], quie
                 sys.stdout.flush()
 
         try:
-            process.wait(timeout=1800)  # 30-minute hard ceiling for any test suite
+            process.wait(timeout=max(0.0, deadline - monotonic()))
         except subprocess.TimeoutExpired:
-            process.kill()
-            process.wait()
+            timed_out = True
     finally:
+        if timed_out:
+            _terminate_stream_process(process)
+            process.wait()
+        elif process.poll() is None:
+            _terminate_stream_process(process)
+            process.wait()
+        if timed_out:
+            stderr_text = f"streaming subprocess timed out after {timeout_seconds:g}s"
+        else:
+            stderr_text = ""
         if process.stdout is not None:
             process.stdout.close()
 
-    return process.returncode, "".join(stdout_buf), ""
+    return (124 if timed_out else process.returncode), "".join(stdout_buf), stderr_text
 
 
 @dataclass
@@ -171,6 +212,7 @@ class TestSuiteConfig:
     quiet: bool = True
     spinner_label: str = ""
     streaming_subprocess: bool = False
+    timeout_seconds: float = 1800.0
     """If True, the wrapped operation streams its stdout to the same TTY (e.g.,
     pytest -v). In that case skip the spinner — its \r animation interleaves
     with the streamed lines and produces visible garble. Default False preserves
@@ -209,7 +251,11 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
             )
             with spinner_ctx:
                 exit_code, stdout_text, stderr_text = run_pytest_stream(
-                    config.cmd, config.repo_root, config.env, config.quiet
+                    config.cmd,
+                    config.repo_root,
+                    config.env,
+                    config.quiet,
+                    timeout_seconds=config.timeout_seconds,
                 )
 
             combined_output = stdout_text + "\n" + stderr_text

@@ -22,9 +22,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any
 
 from infrastructure.core.files.operations import calculate_file_hash
@@ -86,6 +88,16 @@ class VerifyReport:
 def _hash_relpath(checkout_root: Path, relpath: str) -> tuple[str | None, int, bool]:
     """Return ``(sha256, size_bytes, present)`` for *relpath* under *checkout_root*."""
     target = checkout_root / relpath
+    try:
+        resolved = target.resolve()
+        resolved.relative_to(checkout_root.resolve())
+    except (OSError, ValueError):
+        return None, 0, False
+    prefix = checkout_root
+    for part in PurePosixPath(relpath).parts:
+        prefix /= part
+        if prefix.is_symlink():
+            return None, 0, False
     if not target.is_file():
         return None, 0, False
     digest = calculate_file_hash(target)
@@ -315,20 +327,60 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
         matches.
     """
     checkout_root = checkout_root.resolve()
-    raw: Any = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    entries = raw.get("entries", []) if isinstance(raw, dict) else []
-
     mismatches: list[dict[str, Any]] = []
+    try:
+        raw: Any = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return VerifyReport(ok=False, checked=0, mismatches=[{"path": "<manifest>", "reason": f"unreadable: {exc}"}])
+    if not isinstance(raw, dict):
+        return VerifyReport(ok=False, checked=0, mismatches=[{"path": "<manifest>", "reason": "not-a-mapping"}])
+    if raw.get("schema_version") != SCHEMA_VERSION:
+        mismatches.append({"path": "<manifest>", "reason": "unsupported-schema"})
+    if not isinstance(raw.get("project"), str) or not raw["project"].strip():
+        mismatches.append({"path": "<manifest>", "reason": "missing-project"})
+    if not isinstance(raw.get("reproduce"), list) or not raw["reproduce"]:
+        mismatches.append({"path": "<manifest>", "reason": "missing-reproduce-command"})
+    entries = raw.get("entries")
+    if not isinstance(entries, list) or not entries:
+        mismatches.append({"path": "<manifest>", "reason": "empty-or-missing-entries"})
+        return VerifyReport(ok=False, checked=0, mismatches=mismatches)
+
     checked = 0
+    seen_paths: set[str] = set()
     for entry in entries:
         if not isinstance(entry, dict):
             mismatches.append({"path": "<malformed>", "reason": "malformed-entry"})
             continue
-        path = str(entry.get("path", ""))
+        path_value = entry.get("path")
+        path = path_value if isinstance(path_value, str) else ""
         kind = str(entry.get("kind", ""))
         expected = entry.get("sha256")
-        expected_present = bool(entry.get("present", expected is not None))
+        expected_present = entry.get("present", expected is not None)
         checked += 1
+
+        path_obj = PurePosixPath(path)
+        if not path or path_obj.is_absolute() or ".." in path_obj.parts or "\\" in path or path in seen_paths:
+            mismatches.append({"path": path or "<empty>", "reason": "unsafe-or-duplicate-path"})
+            continue
+        seen_paths.add(path)
+        if kind not in {
+            _KIND_LOCKFILE,
+            _KIND_PYPROJECT,
+            _KIND_ARTIFACT_MANIFEST,
+            _KIND_CANONICAL_FACTS,
+            _KIND_OUTPUT_ARTIFACT,
+        }:
+            mismatches.append({"path": path, "reason": "unknown-kind"})
+        if not isinstance(expected_present, bool):
+            mismatches.append({"path": path, "reason": "invalid-present-flag"})
+            continue
+        if expected_present and (not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected)):
+            mismatches.append({"path": path, "reason": "invalid-sha256"})
+            continue
+        size_value = entry.get("size_bytes")
+        if isinstance(size_value, bool) or not isinstance(size_value, int) or size_value < 0:
+            mismatches.append({"path": path, "reason": "invalid-size"})
+            continue
 
         actual, _size, present = _hash_relpath(checkout_root, path)
 
@@ -354,6 +406,8 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
                     "actual": actual,
                 }
             )
+        elif _size != size_value:
+            mismatches.append({"path": path, "reason": "size-changed", "expected": size_value, "actual": _size})
 
     return VerifyReport(ok=not mismatches, checked=checked, mismatches=mismatches)
 

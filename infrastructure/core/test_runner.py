@@ -69,6 +69,7 @@ from infrastructure.core.pytest_orchestration import (
     make_coverage_subprocess_env,
     project_declared_coverage_floor,
     resolve_test_profile,
+    validate_coverage_parallel,
     validate_project_matrix_concurrency,
 )
 from infrastructure.core.runtime._python_env import get_python_command
@@ -186,7 +187,7 @@ def _discover_project_test_dirs(
 
 def _contains_tests(tests_dir: Path) -> bool:
     """Return true only for a real tests directory containing test modules."""
-    return tests_dir.is_dir() and any(tests_dir.rglob("test_*.py"))
+    return tests_dir.is_dir() and (any(tests_dir.rglob("test_*.py")) or any(tests_dir.rglob("*_test.py")))
 
 
 def _execute_project_pytest_matrix(
@@ -612,6 +613,11 @@ def run_per_project_pytest(
     )
 
     outer_workers = validate_project_matrix_concurrency(project_workers, parallel)
+    # Coverage-bearing per-project subprocesses share the union datafile.  On
+    # macOS, xdist workers above the scheduler cap are a known source of
+    # corrupt/unstable coverage runs, so apply the same guard used by the
+    # infrastructure runner here as well.
+    validate_coverage_parallel(parallel, env=os.environ)
 
     pairs, skip_reasons = _discover_project_test_dirs(repo_root, projects, effective_skip)
     if not pairs:

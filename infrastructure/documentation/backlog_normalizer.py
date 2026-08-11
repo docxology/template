@@ -32,11 +32,13 @@ _BLOCKED_EXTERNAL_IDS = frozenset(
         "REGISTERED-PUBLICATION-1",
         "POOLS-FOURTH-FOND-1",
         "SIA-APPROVAL-FORK-1",
+        "ARL-CROSS-PHASE-1",
+        "ARL-PHASE-PROVENANCE-1",
     }
 )
-_BLOCKED_TOOL_IDS = frozenset({"FORMAL-SPEC-1", "PROSE-LLM-REVIEW-1", "REDACTED-VISUAL-1"})
-_PARTIAL_IDS = frozenset({"ARL-CROSS-PHASE-1", "ARL-PHASE-PROVENANCE-1"})
-_OPEN_IDS = frozenset({"AUTOPOIESIS-SPEC-1"})
+_BLOCKED_TOOL_IDS = frozenset({"AUTOPOIESIS-SPEC-1", "FORMAL-SPEC-1", "PROSE-LLM-REVIEW-1", "REDACTED-VISUAL-1"})
+_PARTIAL_IDS: frozenset[str] = frozenset()
+_OPEN_IDS: frozenset[str] = frozenset()
 
 
 def _sections(lines: list[str]) -> list[tuple[str, list[str]]]:
@@ -129,6 +131,11 @@ def _normalize_row(row: tuple[str, ...], *, project_slug: str) -> tuple[str, ...
     """Migrate a legacy six-field row or validate the shape of a new row."""
     if len(row) == 6:
         identifier, size, dependency, artifact, command, negative = row
+        # Active planning is intentionally decomposed into Minor/Medium
+        # slices.  Preserve the stable ID while converting legacy release-
+        # scale rows into a bounded Medium unblock condition.
+        if size.strip().casefold() == "major":
+            size = "Medium"
         status = _status_for(identifier.strip("`"))
         action_prefix = {
             "open": "Implement the scoped change",
@@ -141,9 +148,11 @@ def _normalize_row(row: tuple[str, ...], *, project_slug: str) -> tuple[str, ...
         return (identifier, status, size, dependency, next_action, artifact, acceptance, negative)
     if len(row) == 8:
         identifier, status, size, dependency, next_action, artifact, command, negative = row
+        if size.strip().casefold() == "major":
+            size = "Medium"
         acceptance = _canonical_acceptance_command(command, project_slug)
         if acceptance == command:
-            return row
+            return (identifier, status, size, dependency, next_action, artifact, command, negative)
         return (identifier, status, size, dependency, next_action, artifact, acceptance, negative)
     raise ValueError(f"backlog row must have six legacy or eight current fields: {row!r}")
 
@@ -226,7 +235,7 @@ def normalize_backlog(
             "## Backlog status",
             "",
             "Rows remain active until the acceptance command and negative control pass in the same source revision.",
-            "A blocked major row is a deliberate boundary, not a skipped success.",
+            "A blocked row is a deliberate boundary, not a skipped success.",
             "",
         ]
     )

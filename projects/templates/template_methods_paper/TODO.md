@@ -28,9 +28,9 @@ keeps a capability blocked rather than silently promoting it.
 - Keep `manuscript/config.yaml.example` as the copy-and-customize template
   with the same top-level sections as `config.yaml`, including the `project_config.dsl`
   block.
-- Add any future controlled vocabulary (units, step kinds, targets) under
-  `src/methods_dsl/units.py` / `vocabulary.py`, never as ad hoc YAML read
-  from scripts — the vocabulary is the DSL's contract, not configuration.
+- Any future controlled vocabulary (units, step kinds, targets) must enter under
+  `src/methods_dsl/units.py` / `vocabulary.py`, never as ad hoc YAML read from
+  scripts — the vocabulary is the DSL's contract, not configuration.
 
 ## Documentation and signposting gaps
 
@@ -39,15 +39,15 @@ keeps a capability blocked rather than silently promoting it.
 - Link any new public artifacts from README, AGENTS, and the generated
   exemplar roster rather than hardcoding paths.
 
-## Test and validator gaps
+## Current test and validator contract
 
-- Add a negative control before widening claims beyond the two bundled
-  worked examples (`PBSPreparation`, `SensorCalibrationSweep`).
-- Add an exact-value assertion whenever a new step kind, unit, or gate is
-  introduced.
-- Keep `tests/conftest.py`'s invalid-method fixtures (dangling dependency,
-  duplicate step id, unknown unit, cycle, target mismatch) in sync as the
-  staged-gate surface grows.
+- Claims remain bounded by the two bundled worked examples
+  (`PBSPreparation`, `SensorCalibrationSweep`) and their negative controls.
+- Exact-value assertions cover the current step kinds, units, and gates; extend
+  them with any future DSL surface change.
+- `tests/conftest.py`'s invalid-method fixtures (dangling dependency, duplicate
+  step id, unknown unit, cycle, target mismatch) define the staged-gate contract
+  and must evolve with that contract.
 
 ## Minor upcoming
 
@@ -70,4 +70,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

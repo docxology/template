@@ -48,6 +48,9 @@ def _receipt(lanes: tuple[PublicMatrixLaneResult, ...], **overrides) -> PublicMa
         "phase_durations": {"project_matrix": 1.0, "coverage_combine": 1.0, "coverage_gate": 1.0},
         "cache_key": "receipt-cache",
         "cache_inputs": {"revision": "abc123"},
+        "combined_coverage_percent": 94.0,
+        "combined_floor": 75,
+        "overall_exit": 0,
     }
     fields.update(overrides)
     return build_public_matrix_receipt(
@@ -56,9 +59,6 @@ def _receipt(lanes: tuple[PublicMatrixLaneResult, ...], **overrides) -> PublicMa
         marker_expression="not slow and not long_running",
         worker_info="outer=serial, inner=none",
         lanes=lanes,
-        combined_coverage_percent=94.0,
-        combined_floor=75,
-        overall_exit=0,
         **fields,
     )
 
@@ -178,8 +178,8 @@ def test_validate_rejects_output_tree_drift() -> None:
     assert receipt.validate(ROSTER) == ["OUTPUT-ISOLATION: project 'templates/template_b' changed output/"]
 
 
-def test_validate_ignores_missing_floor_or_missing_coverage() -> None:
-    """No floor or no measured coverage must not produce a floor error."""
+def test_validate_allows_lane_without_floor_but_requires_combined_coverage() -> None:
+    """A lane may omit a floor, but a passing receipt needs combined coverage."""
     no_floor = PublicMatrixLaneResult(
         project_name="templates/template_a",
         declared_floor=None,
@@ -202,6 +202,24 @@ def test_validate_ignores_missing_floor_or_missing_coverage() -> None:
     )
     receipt = _receipt((no_floor, no_coverage, _passing_lane("templates/template_c")))
     assert receipt.validate(ROSTER) == []
+
+    missing_combined = _receipt(
+        (no_floor, no_coverage, _passing_lane("templates/template_c")),
+        combined_coverage_percent=None,
+    )
+    assert any("MISSING-COMBINED-COVERAGE" in error for error in missing_combined.validate(ROSTER))
+
+
+def test_validate_rejects_overall_exit_combined_floor_and_unexpected_lane() -> None:
+    receipt = _receipt(
+        tuple(_passing_lane(name) for name in ROSTER) + (_passing_lane("templates/extra"),),
+        overall_exit=1,
+        combined_coverage_percent=74.0,
+    )
+    errors = receipt.validate(ROSTER)
+    assert any("OVERALL-EXIT" in error for error in errors)
+    assert any("COMBINED-COVERAGE-FLOOR" in error for error in errors)
+    assert any("UNEXPECTED-PROJECT" in error for error in errors)
 
 
 def test_determine_worker_info_describes_concurrency() -> None:

@@ -14,6 +14,7 @@ from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_pol
 from infrastructure.publishing.release_receipts import CleanCheckoutReceipt, CommandReceipt, ReceiptStatus
 
 REHEARSAL_RECEIPT_TOKEN = "__REHEARSAL_RECEIPT__"
+_REPRESENTATIVE_OUTPUT_PREFIX = "projects/templates/template_code_project/output/"
 
 DEFAULT_REHEARSAL_COMMANDS: tuple[tuple[str, ...], ...] = (
     ("uv", "sync", "--locked", "--offline"),
@@ -134,6 +135,81 @@ def _materialize_command(command: Sequence[str], receipt_path: Path) -> tuple[st
     return tuple(str(receipt_path) if part == REHEARSAL_RECEIPT_TOKEN else str(part) for part in command)
 
 
+def _status_paths(status_output: str) -> tuple[str, ...]:
+    """Parse porcelain paths without accepting ambiguous rename records."""
+    paths: list[str] = []
+    for line in status_output.splitlines():
+        if not line.strip():
+            continue
+        if len(line) < 4:
+            return ("<malformed-status>",)
+        if line.startswith("?? "):
+            paths.append(line)
+            continue
+        path = line[3:]
+        if " -> " in path:
+            return ("<rename-status>",)
+        paths.append(path)
+    return tuple(paths)
+
+
+def _clean_generated_render_output(checkout: Path, status_output: str) -> tuple[bool, str]:
+    """Restore only the representative render's declared generated output.
+
+    A representative render is expected to exercise the real renderer, which
+    can rewrite tracked canonical output files.  A fresh-checkout rehearsal
+    must still fail closed for edits outside that output root.  Once the
+    allowed paths have been observed in the renderer's command receipt, this
+    helper restores them inside the disposable clone so the final cleanliness
+    check tests for leaked state rather than platform-specific generated-byte
+    differences.  It never runs against the caller's checkout.
+    """
+    paths = _status_paths(status_output)
+    if not paths:
+        return True, ""
+    if any(path == "<malformed-status>" or path == "<rename-status>" for path in paths):
+        return False, "representative render produced an ambiguous git status record"
+    outside = [
+        path[3:] if path.startswith("?? ") else path
+        for path in paths
+        if not (path[3:] if path.startswith("?? ") else path).startswith(_REPRESENTATIVE_OUTPUT_PREFIX)
+    ]
+    if outside:
+        return False, "representative render changed non-generated paths: " + ", ".join(sorted(outside)[:8])
+
+    tracked = [path for path in paths if not path.startswith("?? ")]
+    untracked = [path[3:] for path in paths if path.startswith("?? ")]
+    if tracked:
+        restored = run_with_policy(
+            ("git", "restore", "--source=HEAD", "--staged", "--worktree", "--", *tracked),
+            cwd=checkout,
+            env=dict(os.environ),
+            policy=SubprocessPolicy(
+                policy_id="release-rehearsal-generated-restore",
+                source_path="infrastructure/publishing/rehearsal.py",
+                timeout_seconds=60,
+                capture_output=True,
+            ),
+        )
+        if restored.returncode != 0 or restored.timed_out:
+            return False, restored.command_error or "could not restore generated render output"
+    if untracked:
+        cleaned = run_with_policy(
+            ("git", "clean", "-fd", "--", *untracked),
+            cwd=checkout,
+            env=dict(os.environ),
+            policy=SubprocessPolicy(
+                policy_id="release-rehearsal-generated-clean",
+                source_path="infrastructure/publishing/rehearsal.py",
+                timeout_seconds=60,
+                capture_output=True,
+            ),
+        )
+        if cleaned.returncode != 0 or cleaned.timed_out:
+            return False, cleaned.command_error or "could not remove generated render output"
+    return True, f"restored {len(paths)} generated render path(s) in disposable checkout"
+
+
 def run_clean_checkout_rehearsal(
     repo_root: Path | str,
     plan: CleanCheckoutPlan,
@@ -180,7 +256,7 @@ def run_clean_checkout_rehearsal(
                 _run_command(_materialize_command(command, receipt_path), checkout, timeout_seconds=timeout_seconds)
                 for command in plan.commands
             ]
-            clean = run_with_policy(
+            pre_clean = run_with_policy(
                 ("git", "status", "--porcelain", "--untracked-files=all"),
                 cwd=checkout,
                 env=dict(os.environ),
@@ -191,14 +267,29 @@ def run_clean_checkout_rehearsal(
                     capture_output=True,
                 ),
             )
-            clean_ok = clean.returncode == 0 and not clean.stdout.strip()
+            clean_ok = pre_clean.returncode == 0
+            clean_reason = ""
+            if clean_ok and pre_clean.stdout.strip():
+                clean_ok, clean_reason = _clean_generated_render_output(checkout, pre_clean.stdout)
+            clean = run_with_policy(
+                ("git", "status", "--porcelain", "--untracked-files=all"),
+                cwd=checkout,
+                env=dict(os.environ),
+                policy=SubprocessPolicy(
+                    policy_id="release-rehearsal-clean-status-final",
+                    source_path="infrastructure/publishing/rehearsal.py",
+                    timeout_seconds=60,
+                    capture_output=True,
+                ),
+            )
+            clean_ok = clean_ok and clean.returncode == 0 and not clean.stdout.strip()
             clean_receipt = CommandReceipt(
                 command=("git", "status", "--porcelain", "--untracked-files=all"),
                 status="pass" if clean_ok else "blocked",
                 exit_code=clean.returncode,
                 duration_seconds=0.0,
                 output_sha256=_digest_output(clean.stdout, clean.stderr),
-                skip_reason="" if clean_ok else "fresh checkout produced tracked or untracked output",
+                skip_reason="" if clean_ok else (clean_reason or "fresh checkout produced tracked or untracked output"),
             )
             command_receipts.append(clean_receipt)
             failed = next((receipt for receipt in command_receipts if receipt.status != "pass"), None)

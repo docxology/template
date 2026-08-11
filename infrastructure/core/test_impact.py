@@ -25,6 +25,8 @@ class TestImpactPlan:
     local_only_changed: bool
     recommended_lanes: tuple[str, ...]
     outer_project_parallelism_allowed: bool
+    repository_control_changed: bool = False
+    resource_pool_changed: bool = False
 
 
 def _project_name(path: PurePosixPath) -> str | None:
@@ -41,6 +43,8 @@ def classify_changed_paths(paths: Iterable[str]) -> TestImpactPlan:
     infrastructure_changed = False
     documentation_changed = False
     local_only_changed = False
+    repository_control_changed = False
+    resource_pool_changed = False
     projects: set[str] = set()
 
     for raw_path in normalized:
@@ -52,6 +56,17 @@ def classify_changed_paths(paths: Iterable[str]) -> TestImpactPlan:
             infrastructure_changed = True
         if path.parts and path.parts[0] in {"docs", ".github"}:
             documentation_changed = True
+        if path.as_posix() in {
+            "pyproject.toml",
+            "uv.lock",
+            "bandit.yaml",
+            ".pre-commit-config.yaml",
+            ".gitignore",
+            "mypy.ini",
+        }:
+            repository_control_changed = True
+        if len(path.parts) >= 2 and path.parts[0] in {"fonds", "rules", "tools"} and path.parts[1] == "templates":
+            resource_pool_changed = True
         if path.name in {"AGENTS.md", "README.md", "CLAUDE.md", "TO-DO.md", "TODO.md"}:
             documentation_changed = True
         if len(path.parts) >= 2 and path.parts[0] in {"projects", "fonds", "rules", "tools"}:
@@ -70,13 +85,23 @@ def classify_changed_paths(paths: Iterable[str]) -> TestImpactPlan:
         lanes.append("infrastructure-serial")
     if documentation_changed:
         lanes.append("documentation-contract")
+    if repository_control_changed:
+        lanes.append("repository-control")
+    if resource_pool_changed:
+        lanes.append("resource-pool-contract")
     lanes.extend(f"project:{name}" for name in sorted(projects))
     if not lanes:
         lanes.append("repository-smoke")
 
     # Docs and infrastructure can affect every project. Independent exemplar
     # lanes may use outer workers only when neither global surface changed.
-    outer_parallel = len(projects) > 1 and not infrastructure_changed and not documentation_changed
+    outer_parallel = (
+        len(projects) > 1
+        and not infrastructure_changed
+        and not documentation_changed
+        and not repository_control_changed
+        and not resource_pool_changed
+    )
     return TestImpactPlan(
         changed_paths=normalized,
         infrastructure_changed=infrastructure_changed,
@@ -85,6 +110,8 @@ def classify_changed_paths(paths: Iterable[str]) -> TestImpactPlan:
         local_only_changed=local_only_changed,
         recommended_lanes=tuple(lanes),
         outer_project_parallelism_allowed=outer_parallel,
+        repository_control_changed=repository_control_changed,
+        resource_pool_changed=resource_pool_changed,
     )
 
 

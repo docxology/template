@@ -47,6 +47,26 @@ def _digest_files(repo_root: Path, relative_paths: Sequence[Path]) -> str:
     return digest.hexdigest()
 
 
+def _digest_non_git_tree(repo_root: Path) -> str:
+    """Hash a bounded non-Git source tree so cache identities cannot collide."""
+    ignored_parts = {".venv", ".git", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+    digest = hashlib.sha256()
+    for path in sorted(repo_root.rglob("*")):
+        if any(part in ignored_parts for part in path.relative_to(repo_root).parts):
+            continue
+        if path.is_dir():
+            continue
+        relative = path.relative_to(repo_root)
+        digest.update(relative.as_posix().encode("utf-8"))
+        digest.update(b"\0")
+        if path.is_symlink():
+            digest.update(str(path.readlink()).encode("utf-8"))
+        elif path.is_file():
+            digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
 def _cache_identity_inputs(
     repo_root: Path,
     *,
@@ -104,8 +124,9 @@ def _cache_identity_inputs(
             tools[package] = version(package)
         except PackageNotFoundError:
             tools[package] = "unavailable"
-    return {
-        "commit": _resolve_roster_revision(repo_root),
+    revision = _resolve_roster_revision(repo_root)
+    identity: dict[str, str] = {
+        "commit": revision,
         "index_worktree": source_digest.hexdigest(),
         "index_state": hashlib.sha256(index_diff.encode("utf-8", errors="replace")).hexdigest(),
         "worktree_state": hashlib.sha256(worktree_diff.encode("utf-8", errors="replace")).hexdigest(),
@@ -118,6 +139,9 @@ def _cache_identity_inputs(
         "project_names": ",".join(sorted(project_names)),
         "tool_versions": ";".join(f"{key}={value}" for key, value in sorted(tools.items())),
     }
+    if revision in {"unknown", "unavailable"}:
+        identity["source_tree"] = _digest_non_git_tree(repo_root)
+    return identity
 
 
 def _resolve_roster_revision(repo_root: Path) -> str:

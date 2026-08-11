@@ -51,8 +51,8 @@ keeps a capability blocked rather than silently promoting it.
 - Keep `src/review_report.py` above the project coverage floor with no-mock
   tests for subprocess environment policy, syntax-error handling, import
   boundaries, and explicit skipped/disabled/not-materialised statuses.
-- Add a negative control before widening retrieval-coverage claims beyond
-  the bundled offline corpus.
+- Retrieval-coverage claims remain bounded by the bundled offline corpus; any
+  widening requires a scoped row, source-bound corpus, and negative control.
 - Keep fixture-honesty validation and the explicit `evidence_scope` field in
   `output/run_summary.json`; extend assertion vocabulary only with a focused
   negative-control test.
@@ -83,4 +83,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

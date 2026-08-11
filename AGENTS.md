@@ -650,12 +650,12 @@ steganography:
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
 9. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
-**Opt-in long-horizon stages** (added 2026-05-20; NOT in default core or `--core-only` runs — enable via `--tags ebook`, `--tags metadata`, `--tags bundle`, or `--tags archival`):
+**Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — enable via `--tags ebook`, `--tags metadata`, `--tags bundle`, or `--tags archival`):
 
-10. **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
-11. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
-12. **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project, parallel to PDF as the durable artifact. Design: [`docs/maintenance/stage-10-executable-bundle.md`](docs/maintenance/stage-10-executable-bundle.md).
-13. **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to multiple independent archival targets (Zenodo, Software Heritage, IPFS via Pinata/Web3.Storage). Defaults to dry-run; pass `--commit` to actually deposit. Design: [`docs/maintenance/archival-targets.md`](docs/maintenance/archival-targets.md).
+12. **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
+13. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
+14. **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project. Invoke the runner directly; it is not under `scripts/pipeline/`.
+15. **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to archival targets. Defaults to dry-run; pass `--commit` only with owner authorization. Invoke the runner directly; it is not under `scripts/pipeline/`.
 
 **Infrastructure Tests Behavior:**
 
@@ -669,7 +669,7 @@ steganography:
 
 **Stage numbering (canonical phrasing — keep in sync with CLAUDE.md and README.md):**
 
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**. YAML stages 5–13 use pipeline-stage scripts; YAML stage 14 (Executable Bundle) and YAML stage 15 (Archival Publication) use their opt-in runner entry points under `scripts/runner/`. YAML stage indices are distinct from script filename prefixes.
 
 ### Manual Execution Options
 

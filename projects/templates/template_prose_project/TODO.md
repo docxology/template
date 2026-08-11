@@ -28,14 +28,14 @@ keeps a capability blocked rather than silently promoting it.
 
 ## Configurable-surface gaps
 
-- Keep `manuscript/config.yaml.example` stricter than the bundled exemplar config so forks see realistic editorial defaults — now **enforced by test** (`test_example_config_parses_and_is_stricter_than_bundled`).
-- Add migration tests if prose threshold names or report output keys change — check-name and schema-shape assertions live in `tests/test_pipeline.py`.
+- Keep `manuscript/config.yaml.example` stricter than the bundled exemplar config so forks see realistic editorial defaults; preserve the existing shape and threshold regression tests when the contract changes.
+- Threshold-name or report-key migrations require the existing check-name and schema-shape assertions in `tests/test_pipeline.py` plus a scoped row when the public contract changes.
 
 ## Documentation and signposting gaps
 
 - Keep README and AGENTS clear that no LLM or Ollama dependency is required for the default review.
 - Link any new report sections from `docs/architecture.md` and `docs/quickstart.md`.
-- `docs/AGENTS.md` per-file line-count inventory re-verified 2026-08-02 against `wc -l` (README 118, AGENTS 169, agent_instructions 203, architecture 80, style_guide 268, syntax_guide 209, testing_philosophy 169, rendering_pipeline 258, output_conventions 66, quickstart 81, troubleshooting 191, faq 237). Re-check after any doc edit.
+- Keep the documentation inventory source-bound; re-run the repository documentation/count gates after any doc edit instead of copying line counts into this backlog.
 
 ## Test and validator gaps
 
@@ -43,8 +43,8 @@ keeps a capability blocked rather than silently promoting it.
   regressions, and missing bibliography entries as the suite grows.
 - Keep claim-ledger sources resolvable and manuscript labels/reference targets
   unique; add focused negative controls for any new report or preset field.
-- Add report-schema tests before downstream docs depend on new report fields.
-- Add or document a stable final artifact-manifest refresh path for single-stage analysis/render/copy checks. **Documented:** `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` serves this role.
+- Report-schema tests are required before downstream docs depend on new report fields.
+- Use `infrastructure.core.pipeline.artifacts.snapshot_current_artifact_manifest` as the stable final artifact-manifest refresh path for single-stage analysis/render/copy checks.
 
 ## Minor upcoming
 
@@ -67,4 +67,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

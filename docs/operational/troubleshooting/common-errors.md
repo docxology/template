@@ -134,7 +134,7 @@ pytest call sites. If you wrote a new test-runner wrapper, set
 
 ---
 
-## Stage 5 — Output Validation
+## YAML stage 8 — Output Validation (script prefix `stage_04`)
 
 **Symptom:** `MARKDOWN.LINK_BAD_TEXT` (non-informative link text).
 
@@ -154,7 +154,7 @@ finds them under `projects/<name>/output/figures/`.
 **Symptom:** `Could not copy output/.../pdf/foo.pdf to output/<project>/pdf/`.
 
 **Cause:** the source PDF wasn't produced (Stage 4 partially failed). Re-run
-Stage 4 with `LOG_LEVEL=0` to find the underlying renderer error.
+YAML stage 7 (script prefix `stage_03`) with `LOG_LEVEL=0` to find the underlying renderer error.
 
 ---
 
@@ -202,8 +202,9 @@ diagnostic-only.
   invocation. Default is `LOG_LEVEL=1` (INFO).
 - `LOG_TERMINAL_VERBOSE=1` to restore the verbose `[ts] [LEVEL] msg` prefix
   on the terminal (the file always has it).
-- `docs/_generated/last-run-summary.md` shows the most recent end-of-run
-  multi-project summary. Diff against a known-good prior run to spot
+- `docs/_generated/last-run-summary.md` shows the last recorded end-of-run
+  multi-project summary; it is historical evidence, not a current health claim.
+  Diff it against a known-good prior run to spot
   regressions.
 - `docs/operational/logging/output-design.md` is the visual-contract
   reference for what each stage should look like.

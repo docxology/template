@@ -102,11 +102,12 @@ Pick the entry point that matches your goal:
 
 **📚 [Documentation Index](docs/documentation-index.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
-The template ships with a large documentation corpus under `docs/`. The full
-hierarchical map (with mermaid diagram) lives in
-[`docs/AGENTS.md`](docs/AGENTS.md); the authoritative per-file index lives in
-[`docs/documentation-index.md`](docs/documentation-index.md) (rely on that
-index, not a hard-coded file count, which drifts). Top-level layout:
+The template ships with a large documentation corpus under `docs/`. The
+hierarchical map (with mermaid diagram) lives in [`docs/AGENTS.md`](docs/AGENTS.md);
+the curated long-lived documentation map lives in
+[`docs/documentation-index.md`](docs/documentation-index.md). Generated rosters
+and measured facts remain authoritative for their own scopes; do not rely on a
+hard-coded file count, which drifts. Top-level layout:
 
 - `docs/core/` — essential reading: how-to-use, architecture, workflow
 - `docs/guides/` — progressive walkthroughs by skill level (1–12)
@@ -547,7 +548,7 @@ mode adds `output/executive_summary/` as a disposable copied-output surface.
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
 `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`.
 
-> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages. Ebook, metadata, bundle, archival, science, and provenance stages are declared for contracts but invoked separately when needed (directly via their `scripts/pipeline/stage_*.py` entry points).
+> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**. YAML stages 5–13 use pipeline-stage scripts; YAML stage 14 (Executable Bundle) and YAML stage 15 (Archival Publication) use their opt-in runner entry points under `scripts/runner/`. YAML stage indices are distinct from script filename prefixes. `--core-only` excludes optional LLM and long-horizon stages.
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
@@ -580,9 +581,10 @@ mapping for `--core-only` live in [`AGENTS.md`](AGENTS.md#pipeline-stages) and
 
 ## 📚 Documentation Index
 
-The full per-file documentation index lives in
-[`docs/documentation-index.md`](docs/documentation-index.md) (authoritative;
-counts drift, so it is not duplicated here). Top-level entry points:
+The curated documentation map lives in
+[`docs/documentation-index.md`](docs/documentation-index.md). It is a maintained
+map, not an exhaustive per-file inventory; generated counts and roster facts
+remain source-bound. Top-level entry points:
 
 - **System reference:** [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md), [`docs/AGENTS.md`](docs/AGENTS.md)
 - **Walkthroughs:** [`docs/guides/getting-started.md`](docs/guides/getting-started.md),

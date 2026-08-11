@@ -55,11 +55,11 @@ Forward-only backlog.
 
 ## Medium upcoming
 
-## Major upcoming
-
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `EXAMPLE-ONE-1` | open | Minor | fixture | Implement the fixture and attach the receipt | receipt | `uv run pytest tests -q` | changed fixture fails |
+| `EXAMPLE-ONE-1` | open | Medium | fixture | Implement the fixture and attach the receipt | receipt | `uv run pytest tests -q` | changed fixture fails |
+
+## Major upcoming
 """,
     )
     report = validate_public_backlogs(root, public_names=("templates/example",))
@@ -193,3 +193,28 @@ This backlog is future-only.
     assert second_archived == ""
     assert first.count("## Minor upcoming") == 1
     assert "Ordered improvement ladder" not in first
+
+
+def test_backlog_normalizer_decomposes_legacy_major_rows(tmp_path: Path) -> None:
+    """Legacy release-scale rows become bounded Medium planning slices."""
+    path = tmp_path / "TODO.md"
+    path.write_text(
+        """# Example TODO
+
+## Integrity and template-status gaps
+## Configurable-surface gaps
+## Documentation and signposting gaps
+## Test and validator gaps
+## Major upcoming
+
+| ID | Size | Dependency | Proving artifact | Acceptance command | Negative control |
+| --- | --- | --- | --- | --- | --- |
+| `EXAMPLE-MAJOR-1` | Major | receipt | report | `uv run pytest tests -q` | mutation fails |
+""",
+        encoding="utf-8",
+    )
+
+    normalized, _ = normalize_backlog(path)
+
+    assert "| `EXAMPLE-MAJOR-1` | open | Medium |" in normalized
+    assert "| `EXAMPLE-MAJOR-1` | open | Major |" not in normalized

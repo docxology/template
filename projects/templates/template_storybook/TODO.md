@@ -19,17 +19,19 @@ keeps a capability blocked rather than silently promoting it.
 - Keep story text in `content/story.yaml` and rendering behavior in `src/storybook/`.
 - Keep every story page as a full-page illustration; no manuscript-style partial
   figures for the primary artifact.
-- Page-level accessibility alt text is now generated in
+- Page-level accessibility alt text is generated in
   `output/data/storybook_manifest.json`; keep it descriptive when page content
   changes.
 - Keep script, test, documentation, and `.agents/` catalog listings generated
   or checked against disk so future forks cannot silently omit a surface.
 
-## Configurable-surface gaps
+## Current configurable-surface contract
 
-- Add optional page trim sizes beyond the current letter-ratio PNG and PDF.
-- Add per-page text placement controls if future forks need top, middle, and
-  bottom caption zones.
+- `trim_size` supports the current configured and custom page dimensions; a
+  future trim variant must add a schema value and a rendering/negative-control
+  test in one scoped row.
+- Per-page caption placement supports the current top, middle, and bottom zones;
+  future zones require a schema, accessibility, and raster-contrast contract.
 
 ## Documentation and signposting gaps
 
@@ -65,4 +67,4 @@ No active rows are currently scoped at this size.
 ## Backlog status
 
 Rows remain active until the acceptance command and negative control pass in the same source revision.
-A blocked major row is a deliberate boundary, not a skipped success.
+A blocked row is a deliberate boundary, not a skipped success.

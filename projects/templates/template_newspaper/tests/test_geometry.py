@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import pytest
 
+from newspaper.content import Page
 from newspaper.geometry import INCH, ColumnGrid, PageGeometry
-from newspaper.layout import audit_column_layout
+from newspaper.layout import audit_column_layout, build_layout_audit
 
 
 def test_tabloid_default_dimensions() -> None:
@@ -88,3 +89,19 @@ def test_layout_audit_rejects_non_positive_glyph_well() -> None:
     issues = audit_column_layout(grid, top=100.0, bottom=100.0)
 
     assert issues == ("column well has non-positive height",)
+
+
+def test_layout_audit_is_portable_and_records_lead_clearance() -> None:
+    grid = ColumnGrid(left=36.0, width=600.0, n_columns=3, gutter=12.0)
+    audit = build_layout_audit(
+        Page(number=4, template="standard", columns=3),
+        grid,
+        top=900.0,
+        bottom=100.0,
+        lead_height=0.0,
+        has_rail=False,
+    )
+    assert audit["schema_version"] == "template-newspaper/layout-audit/1"
+    assert audit["glyph_well_height"] == 800.0
+    assert audit["lead"]["present"] is False
+    assert audit["issues"] == []
