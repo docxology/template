@@ -25,8 +25,9 @@ from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, ite
 logger = get_logger(__name__)
 
 # Project dirs that are tracked in this PUBLIC repo. Everything else under
-# projects/ — including the non-rendered typed subfolders (working/published/
-# archive/other) holding confidential / rotating WIP — is intentionally absent
+# projects/ — including the non-rendered typed subfolders
+# (working/ongoing/archive/) holding confidential / rotating WIP — is
+# intentionally absent
 # from a clean checkout (enforced by .gitignore + scripts/audit/check_tracked_projects.py).
 # Docs may legitimately reference those as "optional / restore-when-needed", so a
 # link into one of those areas is "absent by design", NOT a broken link.
@@ -34,11 +35,9 @@ _TRACKED_PROJECT_DIRS = frozenset(PUBLIC_PROJECT_NAMES)
 _TRACKED_PROJECT_LEAF_DIRS = frozenset(name.split("/")[-1] for name in PUBLIC_PROJECT_NAMES)
 
 #: Typed subfolders whose contents are deliberately absent from a clean checkout.
-_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "published", "archive", "other"})
+_ABSENT_TYPED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "archive"})
 #: All typed subfolders that sit between ``projects/`` and a project dir.
-_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset(
-    {"active", "working", "ongoing", "published", "archive", "other", "templates"}
-)
+_TYPED_PROJECT_SUBDIRS: frozenset[str] = frozenset({"active", "working", "ongoing", "archive", "templates"})
 
 
 def _qualified_project_segments(parts: tuple[str, ...]) -> tuple[str, int] | None:
@@ -328,8 +327,8 @@ def find_broken_links(
                 if 0 < line <= len(raw_lines) and _NOQA_RE.search(raw_lines[line - 1]):
                     continue
                 # A link into a deliberately-untracked project area (the
-                # non-rendered typed subfolders projects/working|published|
-                # archive|other/, or any non-exemplar projects/ name) is absent
+                # non-rendered typed subfolders projects/working|ongoing|archive/, or any
+                # non-exemplar projects/ name) is absent
                 # BY DESIGN in a public/confidential checkout — not a broken link.
                 _base = unquote(target.split("#", 1)[0].split("?", 1)[0])
                 if _base and _is_intentionally_absent_project(md, _base):

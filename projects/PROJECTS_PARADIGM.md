@@ -552,7 +552,7 @@ Non-rendered projects are preserved but not executed by default:
   deliberate restoration into optional `active/`
 
 The simplified private sidecar requires `working/` and `archive/`; optional
-legacy `active/`, `published/`, and `other/` folders are still linked when
+legacy `active/` folder is still linked when
 present.
 
 ### Retiring or resuming a sidecar project

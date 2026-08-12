@@ -75,8 +75,6 @@ def classify_changed_paths(paths: Iterable[str]) -> TestImpactPlan:
                 "ongoing",
                 "archive",
                 "active",
-                "published",
-                "other",
             }:
                 local_only_changed = True
 

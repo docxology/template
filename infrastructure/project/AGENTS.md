@@ -11,7 +11,7 @@ The `infrastructure/project/` module provides project discovery, validation, and
 **Core Functions:**
 
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
-- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
+- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `ongoing/`, `archive/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
 - `validate_project_structure(project_dir)` - Validate required directories exist
 
 ### Private Promotion Contracts (`promotion/`)
@@ -54,7 +54,7 @@ Single source of truth for which projects are public and which paths CI checks. 
 
 Implements the private-projects sidecar symlink sync documented in root `CLAUDE.md`. Imported by `orchestration/cli.py`; auto-runs on `run.sh` / `python -m infrastructure.orchestration` unless `TEMPLATE_SKIP_LINK_SYNC=1`.
 
-- `LIFECYCLE_LINK_DIRS: dict[str, str]` - maps private sidecar subdirs to their `projects/<subfolder>/` link targets (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, optional `active/*`/`published/*`/`other/*`)
+- `LIFECYCLE_LINK_DIRS: dict[str, str]` - maps private sidecar subdirs to their `projects/<subfolder>/` link targets (`working/*` → `projects/working/*`, `archive/*` → `projects/archive/*`, optional `active/*`)
 - `private_projects_root(repo_root)` - resolve the sidecar root (env `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root`, default sibling `../projects`)
 - `is_managed_symlink(path, private_root)` - classify a `projects/` entry as a managed sidecar symlink
 - Env vars: `TEMPLATE_PRIVATE_PROJECTS_ROOT` (root override), `TEMPLATE_SKIP_LINK_SYNC` (disable sync)
@@ -289,7 +289,7 @@ flowchart TB
 
 ### Rendered vs Non-Rendered Subfolders
 
-All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, optional `active/`) and **non-rendered subfolders** (`working/`, `archive/`, plus optional legacy `published/`/`other/`):
+All projects live under typed subfolders of `projects/`. The infrastructure distinguishes between **rendered subfolders** (`templates/`, optional `active/`) and **non-rendered subfolders** (`working/`, `ongoing/`, `archive/`):
 
 #### ✅ **Rendered Subfolders (`projects/templates/`, optional `projects/active/`)**
 - **Scanned** by `discover_projects()` as program directories (projects get qualified names `templates/<name>`, `active/<name>`)
@@ -305,7 +305,7 @@ All projects live under typed subfolders of `projects/`. The infrastructure dist
 
 ```python
 # discover_projects() scans projects/ and treats templates/ + optional active/ as program directories;
-# working/, archive/, and optional legacy published/other/ are skipped (NON_RENDERED_SUBDIRS).
+# working/, ongoing/, archive/ are skipped (NON_RENDERED_SUBDIRS).
 projects = discover_projects(repo_root)
 
 # Advanced: scan a different directory explicitly

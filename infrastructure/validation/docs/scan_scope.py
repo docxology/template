@@ -2,8 +2,8 @@
 
 Documentation and link validators should agree on which local paths are part of
 the long-lived repository surface. Generated outputs, the non-rendered typed
-project subfolders (``projects/working``, ``projects/published``,
-``projects/archive``, ``projects/other`` — private symlinked work), virtual
+project subfolders (``projects/working``, ``projects/ongoing``,
+``projects/archive`` — private symlinked work), virtual
 environments, and agent worktrees are intentionally excluded so local state does
 not create thousands of irrelevant diagnostics.
 """
@@ -40,8 +40,6 @@ DEFAULT_EXCLUDE_PARTS: frozenset[str] = frozenset(
         # Non-rendered typed project subfolders (private symlinked work). Keep in
         # sync with infrastructure.project.discovery.NON_RENDERED_SUBDIRS.
         "archive",
-        "other",
-        "published",
         "working",
         "site-packages",
         "venv",

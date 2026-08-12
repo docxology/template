@@ -232,8 +232,8 @@ private symlinks does not broaden the public tracking boundary.
 `.gitignore` ignores `projects/*` and negates **only** `projects/templates/`
 (the public exemplars) plus the repo-level `projects/*.md` docs. **Every other
 path under `projects/` — optional `active/` hot-seat render set, the `working/`,
-`ongoing/`, and `archive/` sidecar mirrors, optional legacy `published/` and `other/`
-lifecycle folders — is LOCAL-ONLY and must
+`ongoing/`, and `archive/` sidecar mirrors and the optional legacy `active/`
+lifecycle folder — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
 `scripts/audit/check_tracked_all.py` fails the CI `lint` job and the pre-push
 `pre-push-quick` hook on any non-template tracked project (a `git add -f`
@@ -251,8 +251,8 @@ but no longer wired into CI or pre-commit).
 Private work lives outside this public repo, usually at the sibling
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`/`../projects` sidecar. The current simplified
 sidecar uses `working/` and `archive/`; optional `ongoing/` (long-lived
-projects with no publication target) plus legacy `active/`, `published/`,
-and `other/` folders are still supported when present. `run.sh` and
+projects with no publication target) and the legacy `active/` folder are still
+supported when present. `run.sh` and
 `python -m infrastructure.orchestration` auto-sync existing folders as symlinks
 into matching typed subfolders under `projects/`: `working/*` →
 `projects/working/*`, `ongoing/*` → `projects/ongoing/*`, `archive/*` →

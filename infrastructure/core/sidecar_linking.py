@@ -168,9 +168,7 @@ def is_managed_symlink(path: Path, private_root: Path, config: SidecarLinkConfig
     - ``projects/active/*``    resolves into ``private/active/*``
     - ``projects/working/*``   resolves into ``private/working/*``
     - ``projects/ongoing/*``   resolves into ``private/ongoing/*``
-    - ``projects/published/*`` resolves into ``private/published/*``
     - ``projects/archive/*``   resolves into ``private/archive/*``
-    - ``projects/other/*``     resolves into ``private/other/*``
 
     Real directories (``is_symlink`` False), foreign symlinks, and deliberate
     user links into a different lifecycle all return ``False``, so pruning and
@@ -400,9 +398,7 @@ def sync_private_links(
     - ``active/<name>``    -> ``projects/active/<name>``
     - ``working/<name>``   -> ``projects/working/<name>``
     - ``ongoing/<name>``   -> ``projects/ongoing/<name>``
-    - ``published/<name>`` -> ``projects/published/<name>``
     - ``archive/<name>``   -> ``projects/archive/<name>``
-    - ``other/<name>``     -> ``projects/other/<name>``
 
     When *prune* is true, managed symlinks whose source has left its lifecycle
     folder are removed from that lifecycle's local mirror.

@@ -88,16 +88,14 @@ def discover_projects(
             - ``projects/active/``     — hot-seat private projects (rendered)
             - ``projects/working/``    — work-in-progress; NOT discovered
             - ``projects/ongoing/``    — long-lived, no publication target; NOT discovered
-            - ``projects/published/``  — published; NOT discovered
             - ``projects/archive/``    — retired; NOT discovered
-            - ``projects/other/``      — miscellaneous; NOT discovered
 
     Returns:
         List of ProjectInfo objects for valid projects.
 
     Note:
         The lifecycle subfolders in :data:`NON_RENDERED_SUBDIRS`
-        (``working``/``ongoing``/``published``/``archive``/``other``) are deliberately excluded
+        (``working``/``ongoing``/``archive``) are deliberately excluded
         from discovery to prevent accidental execution/rendering.
 
     Examples:
@@ -125,7 +123,7 @@ def discover_projects(
             continue
 
         # Non-rendered lifecycle mirrors are never discovered — they hold
-        # backburner/published/retired/misc work that must stay out of the
+        # backburner/retired/misc work that must stay out of the
         # render set.
         if child_dir.name in NON_RENDERED_SUBDIRS:
             logger.debug(f"Skipping non-rendered lifecycle subfolder: {child_dir.name}")

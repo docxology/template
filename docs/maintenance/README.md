@@ -13,7 +13,7 @@
 | [`archival-targets.md`](archival-targets.md) | Insurance against Zenodo / arXiv / DOI vendor concentration via IPFS + Software Heritage parallel pins | 2026-05-20 |
 | [`ci-local.md`](ci-local.md) | Local reproduction of the GitHub Actions matrix via `act` — defense against CI free-tier compression | 2026-05-20 |
 | [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md) | Design for the opt-in executable-bundle output (container + lockfile + agent-runnable manifest) alongside the rendered PDF — for the 2029+ executable-artifact world (stage indices live only in the generated stage table; this file predates the Ebook/Metadata stage insertion and kept its original name) | 2026-05-20 |
-| [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle (`active/`, `working/`, `published/`, `archive/`, `other/`) and symlink-sync contract for confidential projects | 2026-05-21; expanded 2026-05-24 |
+| [`private-projects-repo.md`](private-projects-repo.md) | Sibling private repo lifecycle (`active/`, `working/`, `ongoing/`, `archive/`) and symlink-sync contract for confidential projects | 2026-05-21; expanded 2026-05-24 |
 | [`local-only-template-exemplars.md`](local-only-template-exemplars.md) | `LOCAL_ONLY_TEMPLATE_NAMES` roster (currently empty — all template exemplars public; source-owned by [`public_scope.py`](../../infrastructure/project/public_scope.py)) and how to promote an exemplar to the public set | 2026-06-03 |
 | [`doc-mega-decomposition.md`](doc-mega-decomposition.md) | Policy for human-authored guides above 800 lines (P1 watch items, not CI failures) | — |
 | [`software-heritage-archival.md`](software-heritage-archival.md) | Which docxology public repos are submitted to Software Heritage "Save code now", and how to finish/verify | 2026-06-27 |
@@ -21,7 +21,7 @@
 | [`publishing-export-pipeline.md`](publishing-export-pipeline.md) | Two-repo publication workflow design: `template/` → `docxology/publishing` marketplace listing | 2026-07-02 |
 | [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Historical adversarial-review remediation record (43 findings confirmed, 3 refuted); repository code items shipped, with external branch-protection administration tracked separately | 2026-07-02 |
 | [`release-boundary.md`](release-boundary.md) | Why the root package/tag release surface and the standalone publication lane's releases must not be treated as interchangeable | 2026-07-17 |
-| [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `requires-python = ">=3.10"` floor, 3.12 default, 3.13 readiness lane, and why dropping the floor needs a breaking release boundary | 2026-07-20 |
+| [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `requires-python = ">=3.10"` floor, 3.14 default, 3.14 readiness lane, and why dropping the floor needs a breaking release boundary | 2026-07-20 |
 | [`test-performance-evidence.json`](test-performance-evidence.json) | Committed, redacted serial/parallel quick-feedback benchmark receipt; generated with `scripts/maintenance/benchmark_tests.py` and bound to its measured revision | 2026-08-11 |
 | [`clean-checkout-evidence.json`](clean-checkout-evidence.json) | Redacted, source-bound two-run fresh-checkout rehearsal receipt; required local phases pass and tracked canonical-output cleanliness remains explicitly blocked | 2026-08-09 |
 
@@ -39,5 +39,5 @@ These guides exist to close that gap by giving every binding a documented swap p
 
 - [`MAINTAINERS.md`](../../MAINTAINERS.md) — who owns what
 - [`STATUS.md`](../../STATUS.md) — per-subsystem heartbeat
-- [`private-projects-repo.md`](private-projects-repo.md) — the implemented sibling private repo (required working/archive sidecar, optional legacy active/published/other mirrors + lifecycle-link mechanism)
+- [`private-projects-repo.md`](private-projects-repo.md) — the implemented sibling private repo (required working/archive sidecar, optional legacy active/ mirror + lifecycle-link mechanism)
 - [`AGENTS.md`](../../AGENTS.md) — full system manual

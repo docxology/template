@@ -293,7 +293,7 @@ autonomous agents.
 projects live outside this public repo at `$TEMPLATE_PRIVATE_PROJECTS_ROOT`.
 The simplified sidecar uses `working/` and `archive/`; optional `ongoing/`
 (long-lived projects with no publication target) plus legacy
-`active/`, `published/`, and `other/` folders are still supported when present.
+`active/` folder is still supported when present.
 `run.sh` and `python -m infrastructure.orchestration` auto-sync existing folders
 into matching typed subfolders under `projects/`: `working/*` into
 `projects/working/*`, `ongoing/*` into `projects/ongoing/*`, `archive/*` into

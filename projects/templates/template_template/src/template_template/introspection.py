@@ -41,8 +41,6 @@ _EXCLUDED_DIRS = frozenset(
         "ongoing",
         "active",
         "archive",
-        "published",
-        "other",
     }
 )
 
@@ -262,10 +260,10 @@ def _project_analysis_from_workspace(child: Path) -> ProjectAnalysis | None:
 
 #: Typed program subfolders under ``projects/``. The public exemplars are
 #: git-tracked under ``projects/templates/``; ``active/`` holds the hot-seat
-#: rendered set; ``working``/``published``/``archive``/``other`` hold non-rendered
+#: rendered set; ``working``/``ongoing``/``archive`` hold non-rendered
 #: rotating work (symlinked from the private lifecycle repo). Keep in sync with
 #: ``infrastructure.project.discovery.NON_RENDERED_SUBDIRS`` (the latter four).
-_TYPED_PROJECT_SUBDIRS = frozenset({"templates", "active", "working", "published", "archive", "other"})
+_TYPED_PROJECT_SUBDIRS = frozenset({"templates", "active", "working", "archive"})
 
 #: On-disk directory name (leaf) of this meta-project's workspace. It is now
 #: git-tracked at ``projects/templates/template_template/``, so the leaf matches
@@ -302,7 +300,7 @@ def discover_projects(repo_root: Path, *, public_only: bool = True) -> list[Proj
     The layout is uniform program-prefix: public exemplars live under
     ``projects/templates/<name>``, the hot-seat rendered set under
     ``projects/active/<name>``, and non-rendered rotating work under
-    ``projects/{working,published,archive,other}/<name>``. Discovery returns the
+    ``projects/{working,ongoing,archive}/<name>``. Discovery returns the
     bare leaf name (e.g. ``template_code_project``) so metric keys remain
     ``project_<leaf>_*``.
 

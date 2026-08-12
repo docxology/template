@@ -161,14 +161,14 @@ def build_manuscript_metrics_dict(repo_root: Path) -> dict[str, Any]:
         }
 
     # CONFIDENTIALITY: there is intentionally NO scan of the non-rendered typed
-    # subfolders (``projects/{working,published,archive,other}/``) here. Those
+    # subfolders (``projects/{working,ongoing,archive}/``) here. Those
     # symlink private/rotating projects (retired research workspaces, client work)
     # whose names must never reach this public meta-template's metrics, figures, or
     # rendered manuscript. The only project metrics that may exist are those produced
     # by ``build_infrastructure_report`` → ``discover_projects``, which is public-only
     # (``PUBLIC_PROJECT_NAMES``, matched by leaf name) and additionally admits this
     # meta-project under its ``template_template`` name for self-introspection.
-    # Re-introducing a working/published/archive/other walk here would leak private
+    # Re-introducing a working/ongoing/archive walk here would leak private
     # names into a public DOI; ``tests/test_confidentiality.py`` is the negative
     # control that keeps this closed.
 

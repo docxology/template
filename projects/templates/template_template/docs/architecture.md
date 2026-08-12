@@ -38,7 +38,7 @@ Exports:
 - **`load_pipeline_stages_from_yaml(repo_root)`**: parses `infrastructure/core/pipeline/pipeline.yaml`
 - **`enumerate_numbered_scripts(scripts_dir)`** / **`count_pipeline_stages`**: `scripts/NN_*.py` inventory only
 - **`resolve_template_repo_root(project_dir)`**: finds Layer-1 repo from WIP/private paths
-- **`discover_projects(repo_root)`**: manuscript workspaces across flat children plus typed subfolders (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`), returning bare leaf names
+- **`discover_projects(repo_root)`**: manuscript workspaces across flat children plus typed subfolders (`templates/`, `active/`, `working/`, `ongoing/`, `archive/`), returning bare leaf names
 
 `InfrastructureReport` properties:
 

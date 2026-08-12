@@ -150,7 +150,7 @@ in the normal menu.
 
 Private work normally lives in the sibling repo configured by
 `$TEMPLATE_PRIVATE_PROJECTS_ROOT`. The simplified sidecar uses `working/` and
-`archive/` by default; optional legacy `active/`, `published/`, and `other/`
+`archive/` by default; optional legacy `active/`
 folders are still linked when present. `run.sh` auto-syncs existing lifecycle
 folders into matching `template/projects/<subfolder>/` symlinks before
 discovery. Use

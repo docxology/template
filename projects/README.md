@@ -20,7 +20,7 @@ and render checkout.
 
 ## Active Projects
 
-Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `published/`, `archive/`, `other/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is mirrored in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md):
+Paths under `projects/` are organized as **typed subfolders** (`templates/`, `active/`, `working/`, `ongoing/`, `archive/`) and **change over time** as projects rotate between lifecycle folders. The set guaranteed to remain as **permanent canonical exemplars** — git-tracked under `projects/templates/` — is mirrored in [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md):
 
 - [`templates/template_code_project/`](templates/template_code_project/) — code-centric exemplar (numerical optimization, dashboards, JSON-backed invariants)
 - [`templates/template_data_descriptor/`](templates/template_data_descriptor/) — dataset descriptor/data-paper exemplar (schema, inventory, provenance, quality checks, license boundary)
@@ -166,7 +166,7 @@ Projects under `projects/templates/` (the tracked exemplars) and `projects/activ
 
 #### 📦 **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
 
-Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**. Optional legacy `projects/published/` and `projects/other/` mirrors are treated the same way when present:
+Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**. The optional legacy `projects/active/` mirror is treated the same way when present:
 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu
@@ -186,7 +186,7 @@ mv ../projects/working/myproject ../projects/active/myproject
 
 For confidential work, prefer the configured external private lifecycle repo:
 the simplified sidecar uses `working/` and `archive/` by default; optional
-legacy `active/`, `published/`, and `other/` folders are linked when present.
+legacy `active/` folder is linked when present.
 Only `templates/` and optional `active/` are discovered/rendered by default; the
 other mirrors are for inspection or explicit targeted work. Move private work
 between lifecycle folders instead of committing it here.
@@ -828,7 +828,7 @@ mv ../projects/working/myproject ../projects/active/myproject
 
 **Solution:**
 
-1. Check if project exists in `projects/archive/` (or `working/`, `other/`)
+1. Check if project exists in `projects/archive/` (or `working/`, `ongoing/`)
 2. Render it explicitly with a qualified name (`archive/<name>` or `working/<name>`) when you do not want default discovery
 3. Validate project structure (must have `src/` and `tests/`)
 4. Move through optional sidecar `active/` only when it should appear in the normal menu and all-project runs

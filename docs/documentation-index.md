@@ -196,13 +196,13 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[development/code-review-checklist.md](development/code-review-checklist.md)** - Eight-criterion review checklist (clarity, composability, functionality/SSOT, testability, validation, documentation, conventions, reproducibility)
 - **[development/optional-dependencies.md](development/optional-dependencies.md)** - Optional dependency + capability matrix (which extras unlock which features)
 - **[maintenance/README.md](maintenance/README.md)** - Maintenance hub index
-- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`, `published/`, `other/`) and symlink sync into `projects/`
+- **[maintenance/private-projects-repo.md](maintenance/private-projects-repo.md)** - Sibling private project lifecycle (required `working/` + `archive/`, optional legacy `active/`) and symlink sync into `projects/`
 - **[maintenance/toolchain-migration.md](maintenance/toolchain-migration.md)** - Toolchain migration notes
 - **[maintenance/regression-testing.md](maintenance/regression-testing.md)** - Regression testing workflow
 - **[maintenance/archival-targets.md](maintenance/archival-targets.md)** - Archival providers for the opt-in archival stage (stage index: see the generated stage table)
 - **[maintenance/ci-local.md](maintenance/ci-local.md)** - Local CI reproduction (`scripts/shell/ci_local.sh`)
 - **[maintenance/release-boundary.md](maintenance/release-boundary.md)** - Root package, tag, changelog, and GitHub release boundary
-- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Supported-Python contract (`requires-python = ">=3.10"` floor, 3.12 default, 3.13 readiness lane)
+- **[maintenance/python-runtime-support.md](maintenance/python-runtime-support.md)** - Supported-Python contract (`requires-python = ">=3.10"` floor, 3.14 default)
 - **[maintenance/stage-10-executable-bundle.md](maintenance/stage-10-executable-bundle.md)** - Executable bundle design for the opt-in bundle stage (file predates the Ebook/Metadata stage insertion; kept its original name, and stage indices live only in the generated stage table)
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files

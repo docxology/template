@@ -25,7 +25,7 @@ Always-present permanent exemplars under `projects/`:
 | `template_template` | Meta-template exemplar | ✅ Permanent exemplar |
 | `template_textbook` | Modular textbook scaffold | ✅ Permanent exemplar |
 
-Rotating projects appear under `projects/active/` in some checkouts and under `projects/archive/`, `projects/working/`, `projects/published/`, or `projects/other/` in others; specific names rotate, so consult the generated roster rather than hard-coding them.
+Rotating projects appear under `projects/active/` in some checkouts and under `projects/archive/`, `projects/working/`, or `projects/ongoing/` in others; specific names rotate, so consult the generated roster rather than hard-coding them.
 
 Authoritative public active roster: [`docs/_generated/active_projects.md`](../docs/_generated/active_projects.md) (regenerated from `infrastructure.project.public_scope`; runtime `discover_projects()` may include local private symlinks).
 

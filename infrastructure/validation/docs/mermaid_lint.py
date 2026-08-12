@@ -117,7 +117,7 @@ def find_mermaid_blocks(roots: Iterable[Path]) -> list[MermaidBlock]:
     """Return every fenced ```mermaid block under *roots*.
 
     *roots* may contain directories or individual ``.md`` files. Excluded directories
-    (``output/``, the non-rendered typed subfolders ``projects/working|published|archive|other/``,
+    (``output/``, the non-rendered typed subfolders ``projects/working|ongoing|archive/``,
     etc.) are skipped.
 
     Blocks containing a ``%% noqa: docs-lint`` mermaid comment are excluded from

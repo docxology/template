@@ -20,7 +20,7 @@ from pathlib import Path
 #: projects with no publication target — visible and qualified-resolvable
 #: (``ongoing/<name>``) but never default-rendered. Keep in sync with
 #: :data:`infrastructure.project.linking.LIFECYCLE_LINK_DIRS`.
-NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "published", "archive", "other"})
+NON_RENDERED_SUBDIRS: frozenset[str] = frozenset({"working", "ongoing", "archive"})
 
 _MANUSCRIPT_SOURCE_SUFFIXES: frozenset[str] = frozenset({".md", ".tex"})
 _MANUSCRIPT_AUXILIARY_NAMES: frozenset[str] = frozenset(

@@ -63,7 +63,7 @@ two names for the same operation.
 
 - `audit/lint_docs.py`, `audit/audit_documentation.py`, `audit/verify_no_mocks.py`
 - `audit/audit_filepaths.py`, `audit/check_template_drift.py`
-- `audit/check_tracked_*` guards, `audit/copy_exemplar.py`
+- `audit/check_tracked_*` guards, `audit/check_mirror_symlinks.py`, `audit/copy_exemplar.py`
 - `audit/check_tracked_secrets.py` scans every tracked blob for high-confidence
   credential formats without printing matched values.
 - `audit/check_staged_secrets.py` scans staged A/C/M/R index blobs without

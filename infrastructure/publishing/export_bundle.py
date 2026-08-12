@@ -148,7 +148,7 @@ def _resolve_project_root(project: str, repo_root: Path) -> Path:
         return candidate
 
     # Bare name — try common lifecycle prefixes
-    for prefix in ("templates", "working", "active", "published"):
+    for prefix in ("templates", "working", "active"):
         candidate = repo_root / "projects" / prefix / project
         if candidate.is_dir():
             return candidate

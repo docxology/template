@@ -120,8 +120,6 @@ Project lifecycle state is expressed as **typed subfolders under `projects/`**. 
 | `projects/active/` | Optional hot-seat render set — symlinks to deliberately reintroduced private `active/` | ✅ Yes when present |
 | `projects/working/` | Simplified sidecar working set — symlinks, explicit targeted renders only | ❌ No |
 | `projects/archive/` | Simplified sidecar archive — symlinks, historical/reference | ❌ No |
-| `projects/published/` | Optional legacy shipped mirror | ❌ No |
-| `projects/other/` | Optional legacy miscellaneous mirror | ❌ No |
 
 **Movement rules:**
 

@@ -27,25 +27,19 @@ PROTECTED_NAMES: frozenset[str] = frozenset(Path(name).name for name in PUBLIC_P
 ACTIVE_SUBDIR = "active"
 WORKING_SUBDIR = "working"
 ONGOING_SUBDIR = "ongoing"
-PUBLISHED_SUBDIR = "published"
 ARCHIVE_SUBDIR = "archive"
-OTHER_SUBDIR = "other"
 LIFECYCLE_SUBDIRS = (
     ACTIVE_SUBDIR,
     WORKING_SUBDIR,
     ONGOING_SUBDIR,
-    PUBLISHED_SUBDIR,
     ARCHIVE_SUBDIR,
-    OTHER_SUBDIR,
 )
 REQUIRED_PRIVATE_ROOT_SUBDIRS = (WORKING_SUBDIR, ARCHIVE_SUBDIR)
 LIFECYCLE_LINK_DIRS: dict[str, str] = {
     ACTIVE_SUBDIR: "projects/active",
     WORKING_SUBDIR: "projects/working",
     ONGOING_SUBDIR: "projects/ongoing",
-    PUBLISHED_SUBDIR: "projects/published",
     ARCHIVE_SUBDIR: "projects/archive",
-    OTHER_SUBDIR: "projects/other",
 }
 CONFIG_FILENAME = ".private_projects_root"
 ENV_VAR = "TEMPLATE_PRIVATE_PROJECTS_ROOT"

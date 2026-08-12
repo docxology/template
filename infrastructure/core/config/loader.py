@@ -204,9 +204,7 @@ def _infer_project_name_from_path(config_path: Path) -> str:
         "active",
         "working",
         "ongoing",
-        "published",
         "archive",
-        "other",
         "templates",
     }
     for idx, part in enumerate(parts):
