@@ -15,6 +15,7 @@ inspectable before publication.
 | Evidence links | `projects/<name>/output/reports/evidence_registry.json` |
 | Artifact hashes and stage outputs | `projects/<name>/output/reports/artifact_manifest.json` |
 | Figure provenance | `projects/<name>/output/figures/figure_registry.json` when present |
+| Injected manuscript values | `projects/<name>/output/data/manuscript_variables.json` plus the project producer/test |
 | Source-backed claims | `projects/<name>/data/claim_ledger.yaml` when present |
 | Experiment/review design | `projects/<name>/experiment_plan.yaml` when present |
 | Validation commands | `infrastructure.methods` generated plan |
@@ -74,7 +75,9 @@ uv run python -m infrastructure.validation.cli publication-audit \
 This flag is intentionally opt-in while existing exemplars are migrated. The
 ordinary publication audit still blocks missing registries and unregistered
 references, and it never treats a missing optional figure registry as proof
-that no figures exist.
+that no figures exist. The flag verifies non-empty accessibility metadata, not
+its descriptive quality; inspect the rendered HTML and PDF with human and
+assistive-technology review.
 
 ## Authoring Rules
 
@@ -86,23 +89,34 @@ that no figures exist.
   failure code, and at least one output artifact.
 - Keep artifact paths repository-relative and free of parent traversal.
 - Explain the method in manuscript source files, not generated `output/`.
+- Generate every result-bearing manuscript value and caption fragment from
+  typed analysis outputs; test token completeness before hydration.
+- Produce in dependency order: source inputs/configuration → analysis tables and
+  figures → manuscript variables/figure registry → hydrated manuscript →
+  rendered artifacts → validation/evidence/artifact receipts.
 - Refresh pipeline outputs before treating artifact manifests or evidence
-  registries as current.
+  registries as current; never hand-edit a downstream registry or receipt to
+  clear a gate.
 - Treat the methods plan as a traceability map: method prose → declared stages
   → generated figures/claims → evidence and artifact reports → rendered output.
 
 ## Publication Gate
 
-A project is not methods-ready when any of these are missing:
+A project is not methods-ready when any of these conditions holds:
 
-- manuscript methods/methodology section
-- artifact manifest
-- artifact manifest hashes match the current output tree
-- evidence registry
-- stage `definition_of_done`
-- declared stage output artifacts
-- executable stage script and verification command
-- no orphaned dependency edges
+- the manuscript methods/methodology section is missing;
+- the artifact manifest is absent, invalid, stale, or does not match the current
+  output tree;
+- the evidence registry is missing or not source-current;
+- a stage lacks `definition_of_done` or declared output artifacts;
+- an executable stage script or verification command is missing/invalid;
+- dependency edges are orphaned;
+- result-bearing tokens are unresolved or not backed by the current analysis;
+- a referenced figure is absent, unregistered, or lacks reviewed accessibility
+  description; or
+- statistical procedures, exclusions, deviations, and limitations are not
+  sufficiently specified to reproduce and interpret the result.
 
-Use this gate alongside claim verification, reproducibility audit, and PDF
-validation.
+Use this gate alongside claim-support/citation review, reproducibility audit,
+rendered accessibility inspection, PDF validation, owner approval, and explicit
+release authority. These are separate outcomes.

@@ -42,7 +42,9 @@ Plus:
 1. **Click "Use this template"** on the [GitHub repository](https://github.com/docxology/template)
 2. **Clone your new repository**
 3. **Install dependencies**: `uv sync`
-4. **Generate your first document**: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
+4. **List available projects**: `./run.sh list-projects`
+5. **Build the public control-positive exemplar**:
+   `./run.sh pipeline --project templates/template_code_project --core-only`
 
 That's it! You now have a research project structure.
 
@@ -53,14 +55,15 @@ That's it! You now have a research project structure.
 - ✅ **Cross-referencing system** for equations and figures
 - ✅ **Automated testing** framework (infrastructure + per-project suites; thresholds in `pyproject.toml`)
 - ✅ **Build pipeline** that validates tests, analysis, PDFs, and outputs before copy
-- ✅ **Terminal output logging** - pipeline logs under `projects/<name>/output/logs/`
+- ✅ **Terminal output logging** - pipeline logs under
+  `projects/<qualified-name>/output/logs/`
 - ✅ **Documentation hub** under `docs/` (see [documentation-index.md](../documentation-index.md))
 
 ## 📖 Guides by Skill Level
 
 ### Levels 1-3: Getting Started
 
-**for**: Users who just want to write documents without programming
+**For**: Users who just want to write documents without programming
 
 **[📘 Read Getting Started Guide](../guides/getting-started.md)**
 
@@ -72,15 +75,13 @@ That's it! You now have a research project structure.
 - Generate publication-ready PDFs
 - Customize project metadata
 
-**Time**: 2-3 hours
-
 **Skills required**: Basic computer skills, text editor
 
 ---
 
 ### Levels 4-6: Intermediate Usage
 
-**for**: Users ready to add custom figures and automation
+**For**: Users ready to add custom figures and automation
 
 **[📗 Read Figures and Analysis Guide](../guides/figures-and-analysis.md)**
 
@@ -92,8 +93,6 @@ That's it! You now have a research project structure.
 - Create data analysis pipelines
 - Automate workflows
 
-**Time**: 1-2 days
-
 **Skills required**: Basic Python, matplotlib knowledge
 
 **Prerequisites**: [Getting Started Guide](../guides/getting-started.md)
@@ -102,7 +101,7 @@ That's it! You now have a research project structure.
 
 ### Levels 7-9: Advanced Usage
 
-**for**: Developers ready for test-driven development
+**For**: Developers ready for test-driven development
 
 **[📕 Read Testing and Reproducibility Guide](../guides/testing-and-reproducibility.md)**
 
@@ -114,8 +113,6 @@ That's it! You now have a research project structure.
 - Implement testing strategies
 - Ensure reproducible research results
 
-**Time**: 1-2 weeks
-
 **Skills required**: Strong Python, testing knowledge
 
 **Prerequisites**: [Figures and Analysis Guide](../guides/figures-and-analysis.md)
@@ -124,7 +121,7 @@ That's it! You now have a research project structure.
 
 ### Levels 10-12: Expert Usage
 
-**for**: Expert developers building custom systems
+**For**: Expert developers building custom systems
 
 **[📙 Read Extending and Automation Guide](../guides/extending-and-automation.md)**
 
@@ -136,8 +133,6 @@ That's it! You now have a research project structure.
 - Implement continuous integration
 - Build automated documentation systems
 - Create research workflow integrations
-
-**Time**: 1-2 months
 
 **Skills required**: Expert Python, DevOps, system design
 
@@ -153,13 +148,13 @@ That's it! You now have a research project structure.
 
 **[📋 One-page essential commands](../reference/quick-start-cheatsheet.md)**
 
-Essential commands, quick syntax reference, troubleshooting, and decision tree. for bookmarking.
+Essential commands, quick syntax reference, troubleshooting, and decision tree.
 
 ### Common Workflows
 
 **[📝 Step-by-step recipes](../reference/common-workflows.md)**
 
-workflows for common tasks:
+Workflows for common tasks:
 
 - Write your first document
 - Add a new section
@@ -179,47 +174,42 @@ workflows for common tasks:
 
 **[📖 Terms and definitions](../reference/glossary.md)**
 
-glossary of all terms and concepts used in the template. Alphabetically organized with cross-references.
+Glossary of terms and concepts used in the template, organized alphabetically
+with cross-references.
 
 ---
 
 ## 🗺️ Learning Path
 
 ```
-Level 1-3: Getting Started (2-3 hours)
+Level 1-3: Getting Started
     ↓
-Level 4-6: Intermediate Usage (1-2 days)
+Level 4-6: Intermediate Usage
     ↓
-Level 7-9: Advanced Usage (1-2 weeks)
+Level 7-9: Advanced Usage
     ↓
-Level 10-12: Expert Usage (1-2 months)
+Level 10-12: Expert Usage
 ```
 
-**Total Time**: 1-3 months to master all levels
-
-**Estimated time to productivity**:
-
-- Basic documents: 2-3 hours
-- With figures: 1-2 days
-- With testing: 1-2 weeks
-- Production systems: 1-2 months
+The time required depends on the project, manuscript, environment, and prior
+experience; this guide does not use a universal completion-time claim.
 
 ## 📊 What Each Level Covers
 
-| Level | Focus | Time | Prerequisites |
-|-------|-------|------|---------------|
-| **1** | Write documents | 30-45 min | None |
-| **2** | Equations & references | 45-60 min | Level 1 |
-| **3** | Customization | 30-45 min | Level 2 |
-| **4** | Basic figures | 3-4 hours | Level 3, Basic Python |
-| **5** | Data analysis | 4-6 hours | Level 4, Python |
-| **6** | Automation | 2-3 hours | Level 5 |
-| **7** | Test-driven dev | 3-5 days | Level 6, Testing |
-| **8** | Complex workflows | 1 week | Level 7 |
-| **9** | Reproducibility | 2-3 days | Level 8 |
-| **10** | Custom architectures | 1-2 weeks | Level 9, System design |
-| **11** | CI/CD automation | 1-2 weeks | Level 10, DevOps |
-| **12** | Research integration | 1-2 weeks | Level 11 |
+| Level | Focus | Prerequisites |
+|-------|-------|---------------|
+| **1** | Write documents | None |
+| **2** | Equations & references | Level 1 |
+| **3** | Customization | Level 2 |
+| **4** | Basic figures | Level 3, basic Python |
+| **5** | Data analysis | Level 4, Python |
+| **6** | Automation | Level 5 |
+| **7** | Test-driven development | Level 6, testing |
+| **8** | Complex workflows | Level 7 |
+| **9** | Reproducibility | Level 8 |
+| **10** | Custom architectures | Level 9, system design |
+| **11** | CI/CD automation | Level 10, DevOps |
+| **12** | Research integration | Level 11 |
 
 ## 🎓 Recommended Learning Sequences
 
@@ -331,6 +321,12 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**Verify locally**: run `uv run python scripts/pipeline/stage_01_test.py --project <name>` for the pipeline test contract, `uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full` for the full infrastructure gate, and `./run.sh --pipeline` (or `--core-only`) for end-to-end timing.
+**Verify locally**: run
+`uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project`
+for the project pipeline test contract,
+`uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full`
+for the full infrastructure gate, and
+`./run.sh pipeline --project templates/template_code_project --core-only` for
+the end-to-end core path.
 
 **Need help?** Start with **[Getting Started Guide](../guides/getting-started.md)** or check the **[FAQ](../reference/faq.md)**

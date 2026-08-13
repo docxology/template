@@ -28,7 +28,8 @@
 
 **A:**
 - **`projects/{name}/src/`** (Layer 2) contains business logic, algorithms, and mathematical implementations with robust test coverage.
-- **`projects/{name}/scripts/`** are thin orchestrators that import use Layer 2 methods to generate specific figures, data, and outputs.
+- **`projects/<qualified-name>/scripts/`** are thin orchestrators that import
+  and use Layer 2 methods to generate figures, data, and outputs.
 - **`scripts/`** (Layer 1 Root) are generic pipeline entry points that discover and execute the project-specific `scripts/`.
 
 ### **Q: What are the test coverage requirements?**
@@ -51,7 +52,11 @@
 
 ### **Q: What if I don't need PDF generation?**
 
-**A:** You can remove the PDF-related utilities and focus on the core project structure. The template is modular, so you can use only the parts you need.
+**A:** Disable PDF with `render.formats.pdf: false` in the project's
+`manuscript/config.yaml`; do not delete shared rendering infrastructure. Note
+that combined DOCX/EPUB currently reuse the combined markdown created by the
+PDF stage and therefore cascade-skip when PDF is disabled. See
+[Output formats](../usage/output-formats.md).
 
 ## 🧪 **Testing & Development**
 
@@ -61,7 +66,9 @@
 
 ### **Q: How do I add tests?**
 
-**A:** Create test files in the `projects/{name}/tests/` directory that follow the naming convention `test_*.py`. Use pytest fixtures and ensure your tests cover all code paths in your `projects/{name}/src/` modules.
+**A:** Create `test_*.py` files in the selected project's `tests/` directory.
+Use real fixtures/data and cover the relevant code paths in that project's
+`src/` modules.
 
 ### **Q: Can I use different testing frameworks?**
 
@@ -75,7 +82,10 @@
 
 ### **Q: Can I add new output formats?**
 
-**A:** Absolutely! The template is designed to be extensible. You can add new output formats by creating new scripts and updating the build pipeline.
+**A:** Extend the rendering package, config/schema, pipeline dispatch, output
+validation, and tests together. A standalone script does not by itself become
+a supported pipeline format. Start with
+[Output formats](../usage/output-formats.md) and the rendering package docs.
 
 ### **Q: How do I integrate with other tools?**
 
@@ -105,9 +115,9 @@
 
 **A:**
 
-1. Run tests with verbose output: `uv run pytest projects/{name}/tests/ -v`
+1. Run tests with verbose output: `uv run pytest projects/<qualified-name>/tests/ -v`
 2. Use pytest's debugging features: `uv run pytest --pdb`
-3. Check coverage reports: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html`
+3. Check coverage reports: `uv run pytest projects/<qualified-name>/tests/ --cov=projects/<qualified-name>/src --cov-report=html`
 4. Review the test output for specific error messages
 
 ## 🌟 **Advanced Usage**
@@ -140,7 +150,10 @@
 
 ### **Q: Where can I find API documentation?**
 
-**A:** API reference for all modules is available in [API Reference](../reference/api-reference.md), including function signatures, parameters, return values, and examples.
+**A:** The generated [Infrastructure API Reference](../reference/api-reference.md)
+lists exported infrastructure symbols. Project APIs are project-specific; use
+the [project-module reference](api-project-modules.md), source docstrings, and
+behavior tests for the selected project.
 
 ## ⚙️ **CI/CD & Automation**
 

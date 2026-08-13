@@ -11,12 +11,13 @@
 ## Quick triage
 
 1. Read the pipeline log: `tail -200 projects/<name>/output/logs/pipeline.log`
-2. Identify the failing stage from the `Stage N failed` line.
-3. Locate the matching section below by stage number.
+2. Identify the stable stage key/name and the script path from the failure.
+3. Locate the matching section below. Script prefixes and display numbers are
+   not stable identifiers: optional stages change the displayed position.
 
 ---
 
-## Stage 0 — Clean output directories
+## `clean` — Clean Output Directories
 
 **Symptom:** `Permission denied` removing files in `output/`.
 
@@ -28,12 +29,14 @@ PermissionError: [Errno 13] Permission denied: 'output/<project>/.../foo.pdf'
 
 - A file is held open in another process (Preview, browser, editor). Close it,
   then re-run.
-- The file was created by `root` (e.g., from a Docker run on Linux). `sudo
-  chown -R "$USER:" output/` then re-run.
+- The file was created by another user (for example, a root-owned Docker
+  output). Inspect exact ownership first. Changing ownership recursively is a
+  privileged, potentially broad mutation; limit any authorized correction to
+  the selected project's generated output tree.
 
 ---
 
-## Stage 1 — Environment Setup
+## `setup` — Environment Setup
 
 **Symptom:** `uv: command not found` or `uv sync` fails.
 
@@ -53,13 +56,13 @@ cleveref doi newunicodechar`.
 
 ---
 
-## Stage 2 — Project tests
+## `infra_tests` / `project_tests` — Tests
 
 See [`test-failures.md`](test-failures.md) for the full catalog. Most-common
 modes:
 
-- **Coverage gate failed** — bump the missing branches; coverage tables live
-  in `output/<project>/htmlcov/index.html`.
+- **Coverage gate failed** — add meaningful behavior and failure-path coverage;
+  do not exempt code or weaken the floor merely to clear the percentage.
 - **`ImportPathMismatchError: ('tests.conftest', ...)`** — the
   `ARCH-CONFTEST-1` collision documented in
   [`../../../TO-DO.md`](../../../TO-DO.md). Run one pytest subprocess per
@@ -67,7 +70,7 @@ modes:
 
 ---
 
-## Stage 3 — Project Analysis
+## `analysis` — Project Analysis
 
 **Symptom:** Analysis script exits 0 but produces no figure files.
 
@@ -77,9 +80,10 @@ modes:
 find projects/<name>/output/figures -type f -newer pyproject.toml
 ```
 
-If empty, the script is silently failing. Re-run with `LOG_LEVEL=0` to surface
-debug output, and confirm the script `print(str(output_path))`-s its outputs
-to stdout for the manifest.
+If empty, determine whether the producer failed, intentionally emitted no
+artifact, or wrote elsewhere. Re-run with `LOG_LEVEL=0`, inspect the declared
+artifact contract, and confirm the script reports produced paths. Do not infer
+silent failure from an empty timestamp query alone.
 
 **Symptom:** Script timeout (`Per-script timeout: 7200s`).
 
@@ -88,7 +92,7 @@ var, or split the script into stages.
 
 ---
 
-## Stage 4 — Multi-format rendering
+## `render_pdf` — Manuscript hydration and multi-format rendering
 
 > The "PDF Rendering" stage actually emits PDF + HTML + Slides + optional
 > DOCX/EPUB. See [`../logging/output-design.md`](../logging/output-design.md)
@@ -134,7 +138,7 @@ pytest call sites. If you wrote a new test-runner wrapper, set
 
 ---
 
-## YAML stage 8 — Output Validation (script prefix `stage_04`)
+## `validate` — Output Validation (`stage_04_validate.py`)
 
 **Symptom:** `MARKDOWN.LINK_BAD_TEXT` (non-informative link text).
 
@@ -149,23 +153,26 @@ finds them under `projects/<name>/output/figures/`.
 
 ---
 
-## Stage 6 — Copy Outputs
+## `copy` — Copy Outputs (`stage_05_copy.py`)
 
 **Symptom:** `Could not copy output/.../pdf/foo.pdf to output/<project>/pdf/`.
 
-**Cause:** the source PDF wasn't produced (Stage 4 partially failed). Re-run
-YAML stage 7 (script prefix `stage_03`) with `LOG_LEVEL=0` to find the underlying renderer error.
+**Cause:** the source PDF was not produced or the source/destination project
+identity disagrees. Re-run the `render_pdf` producer
+(`stage_03_render.py --project <qualified-name>`) with `LOG_LEVEL=0`, then
+validate before copying.
 
 ---
 
-## LLM stages (optional — only when `--no-llm` is not passed)
+## `llm_reviews` / `llm_translations` (optional)
 
 **Symptom:** `Failed to connect to Ollama at http://localhost:11434`.
 
 **Fix:** `ollama serve` (in another shell), then `ollama pull gemma3:4b`. The
 LLM stages are gated; if you don't want them, run `execute_pipeline.py` with
 `--core-only` or `--skip-llm` (the multi-project orchestrator
-`execute_multi_project.py` uses `--no-llm`).
+`execute_multi_project.py` uses `--no-llm`). Record the omitted LLM lanes as
+`not run`, not passed.
 
 **Symptom:** LLM review times out.
 
@@ -185,14 +192,17 @@ Per the [private-projects-repo contract](../../maintenance/private-projects-repo
 only each pool's `templates/` subtree is git-tracked; for `projects/` that is
 the public canonical exemplars listed in
 [`docs/_generated/active_projects.md`](../../_generated/active_projects.md).
-Move the offending paths out of the tracked pool and re-push.
+Preserve the files, remove them from the public index or relocate them to the
+configured external sidecar as appropriate, then re-run all four-pool and
+generated-artifact guards before any push. Do not delete unrelated local work.
 
 **Symptom:** Coverage job `pytest --cov=infrastructure --cov-fail-under=60`
 fails.
 
-A new untested module dropped coverage below 60. Either add tests or move
-the new code under an explicit `# pragma: no cover` if it's intentionally
-diagnostic-only.
+A new or changed path dropped measured coverage below 60%. Add meaningful tests
+or redesign unreachable/dead code. A coverage exclusion requires an explicit,
+reviewed policy justification; it is not routine remediation for a failing
+gate.
 
 ---
 

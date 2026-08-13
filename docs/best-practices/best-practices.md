@@ -20,7 +20,7 @@ flowchart LR
     P --> SC[scripts<br/>Thin orchestrators]
     P --> M[manuscript<br/>Research sections]
     P --> DOC[docs<br/>Documentation]
-    P --> OUT[output<br/>Generated files · disposable]
+    P --> OUT[output<br/>Generated files · publish only per project policy]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef pkg fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -161,7 +161,7 @@ def test_calculate_average():
 **Best Practices:**
 
 - Use deterministic test data
-- Set fixed random seeds
+- Pass explicit local RNG streams and record the seed/generator/environment
 - Create realistic test cases
 - Test actual behavior, not mocks
 
@@ -221,6 +221,55 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 - Comprehensive coverage
 - Well-organized structure
 
+## Research Evidence, Manuscripts, and Figures
+
+### Source-Bound Values
+
+- Generate all result-bearing values—including counts, dates/versions,
+  estimates, uncertainty, percentages, benchmarks, tables, captions, and
+  abstract/conclusion summaries—from typed analysis/configuration outputs.
+- Keep authored uppercase `{{TOKEN_NAME}}` placeholders in manuscript sources;
+  write `output/data/manuscript_variables.json`, hydrate
+  `output/manuscript/`, and test that every token is produced and resolved.
+- Treat the shared injector as a renderer, not a completeness proof: it logs
+  unresolved tokens unless a project test/preflight makes them blocking.
+- Fix a stale or missing value at its producer, then regenerate all downstream
+  tables, figures, variables, manuscript, renders, and receipts. Never hand-edit
+  canonical generated evidence.
+
+### Statistical and Claim Discipline
+
+- State the population/sample, estimand, estimator, units, denominator,
+  exclusions, missing-data policy, transformations, multiplicity handling,
+  uncertainty/interval definition, and software/model version relevant to each
+  reported result.
+- Distinguish zero, missing, unavailable, excluded, not run, and failed. Keep
+  exploratory, confirmatory, simulation, benchmark, and observational results
+  separate, and bound conclusions to the demonstrated design.
+- Validate citation syntax and indexed metadata, then read the primary source
+  to confirm the adjacent wording and current correction/retraction status.
+  Resolver success does not establish claim support, novelty, or consensus.
+
+### Figure and Table Accessibility
+
+- Build figures and captions from the same analysis summary; register stable
+  label, filename, caption, `generated_by`, source metadata, and distinct
+  `metadata.alt_text`.
+- Do not encode meaning by color, position, shape, or styling alone. Include
+  units, direct labels/legends, uncertainty/error-bar meaning, sample size, and
+  exclusions; provide long descriptions or accessible data tables for complex
+  figures.
+- Inspect rendered PDF and HTML. An automated non-empty-alt gate does not prove
+  semantic adequacy, reading order, contrast, or PDF/UA conformance.
+
+### Provenance and Readiness
+
+Produce in dependency order: inputs/configuration → tested analysis → data and
+figures → variables and registries → hydrated manuscript → rendered artifacts →
+validation/provenance/release receipts. Report engineering, scientific,
+accessibility, provenance, owner approval, and release authority as separate
+states.
+
 ## Build System
 
 ### Build Pipeline
@@ -266,10 +315,12 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 
 ```bash
 # Automated validation
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --core-only
 
 # Or validate outputs directly
-uv run python scripts/pipeline/stage_04_validate.py
+uv run python scripts/pipeline/stage_04_validate.py \
+  --project <qualified-name>
 ```
 
 ## Collaboration

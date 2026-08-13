@@ -10,8 +10,10 @@ This document consolidates all build system information: current status, perform
 
 ## 📊 Current System Status
 
-**Build Time:** 84 seconds (without optional LLM review)
-**Status:** ✅ **OPERATIONAL**
+This page describes the build contract; it is not a live status receipt. Build
+time, pass/fail state, output inventory, and coverage are revision- and
+environment-specific. Derive them from a fresh run and bind the result to its
+source commit rather than copying historical timings into this guide.
 
 ### Build Success Metrics
 
@@ -35,128 +37,55 @@ Indicative shape (verify the live numbers via the link above):
 
 ## 🚀 Build Pipeline Stages
 
-The template provides **two pipeline orchestrators** with different scope and stage structures.
+`run.sh` is the thin shell front door; argument parsing and menu behavior live in
+`infrastructure.orchestration`. `scripts/runner/execute_pipeline.py` is the
+direct non-interactive single-project adapter. Both execute the declarative DAG
+from `infrastructure/core/pipeline/pipeline.yaml`; they are not separate stage
+models.
 
-### Core Pipeline: Python Orchestrator (`execute_pipeline.py`)
+Use stable stage keys because numeric display positions change when optional
+stages are filtered or inserted:
 
-**Core mode (`--core-only`) runs the 8 core-tagged stages with no LLM dependencies; the two LLM-tagged stages (Scientific Review, Translations) are excluded. The contiguous core sequence:**
-
-```mermaid
-flowchart TD
-    START([Start execute_pipeline.py --core-only]) --> STAGE0[Stage 0: Clean Output Directories]
-    STAGE0 --> STAGE1[Stage 1: Environment Setup]
-    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests]
-    STAGE2 --> STAGE3[Stage 3: Project Tests]
-    STAGE3 --> STAGE4[Stage 4: Project Analysis]
-    STAGE4 --> STAGE5[Stage 5: PDF Rendering]
-    STAGE5 --> STAGE6[Stage 6: Output Validation]
-    STAGE6 --> STAGE7[Stage 7: Copy Outputs]
-    STAGE7 --> SUCCESS[Build successful]
-
-    STAGE0 -->|Fail| FAIL0[Clean failed]
-    STAGE1 -->|Fail| FAIL1[Setup failed]
-    STAGE2 -->|Fail| FAIL2[Infra tests failed]
-    STAGE3 -->|Fail| FAIL3[Project tests failed]
-    STAGE4 -->|Fail| FAIL4[Analysis failed]
-    STAGE5 -->|Fail| FAIL5[PDF build failed]
-    STAGE6 -->|Fail| FAIL6[Validation failed]
-    STAGE7 -->|Fail| FAIL7[Copy failed]
-
-    FAIL0 --> END([Exit with error])
-    FAIL1 --> END
-    FAIL2 --> END
-    FAIL3 --> END
-    FAIL4 --> END
-    FAIL5 --> END
-    FAIL6 --> END
-    FAIL7 --> END
-
-    SUCCESS --> END
-
-    classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-
-    class SUCCESS success
-    class FAIL0,FAIL1,FAIL2,FAIL3,FAIL4,FAIL5,FAIL6,FAIL7 failure
-    class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7 process
-```
-
-### Extended Pipeline: Interactive Orchestrator (`./run.sh --pipeline`)
-
-**Default full run is 10 stages displayed as `[0/9]` (Clean) then `[1/9]`–`[9/9]`; includes optional LLM features (numbering matches `pipeline.yaml` and the CLAUDE.md stage table):**
-
-- Stage 0: Clean Output Directories
-- Stage 1: Environment Setup
-- Stage 2: Infrastructure Tests (may be skipped)
-- Stage 3: Project Tests
-- Stage 4: Project Analysis
-- Stage 5: PDF Rendering
-- Stage 6: Output Validation
-- Stage 7: LLM Scientific Review (optional, requires Ollama)
-- Stage 8: LLM Translations (optional, requires Ollama)
-- Stage 9: Copy Outputs
+| Stable key | Role | Default behavior |
+| --- | --- | --- |
+| `clean` | Prepare project output root | Core |
+| `setup` | Validate environment/project paths | Core |
+| `infra_tests` | Focused pipeline-smoke infrastructure contract | Core; not the full 60% coverage gate |
+| `project_tests` | Selected project's tests | Core; project `src/` coverage floor is 90% unless CI documents a rotating-project exception |
+| `analysis` | Produce declared data and figures | Core |
+| `render_pdf` | Render manuscript artifacts | Core |
+| `validate` | Validate output, figures, Markdown, and evidence | Core |
+| `copy` | Copy deliverables to the qualified top-level output path | Core |
+| `llm_reviews`, `llm_translations` | Optional model-assisted draft feedback/translation | LLM-tagged; not independent scientific review |
+| `connector_search`, `provenance_record` | Optional source/provenance lanes | Opt-in |
+| `ebook_generation`, `metadata_package`, `executable_bundle`, `archival_publication` | Optional publication/bundle lanes | Opt-in |
 
 ```mermaid
-flowchart TD
-    START([Start ./run.sh --pipeline]) --> CLEAN[Stage 0: Clean Output Directories]
-    CLEAN --> SETUP[Stage 1: Environment Setup]
-    SETUP --> INFRA_TESTS[Stage 2: Infrastructure Tests]
-    INFRA_TESTS --> PROJ_TESTS[Stage 3: Project Tests]
-    PROJ_TESTS --> ANALYSIS[Stage 4: Project Analysis]
-    ANALYSIS --> PDF[Stage 5: PDF Rendering]
-    PDF --> VALIDATE[Stage 6: Output Validation]
-    VALIDATE --> LLM_REVIEW[Stage 7: LLM Scientific Review]
-    LLM_REVIEW --> LLM_TRANSLATE[Stage 8: LLM Translations]
-    LLM_TRANSLATE --> COPY[Stage 9: Copy Outputs]
-    COPY --> SUCCESS[Build successful]
-
-    classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef optional fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-
-    class SUCCESS success
-    class LLM_REVIEW,LLM_TRANSLATE optional
-    class CLEAN,SETUP,INFRA_TESTS,PROJ_TESTS,ANALYSIS,PDF,VALIDATE,COPY process
+flowchart LR
+    Clean["clean"] --> Setup["setup"]
+    Setup --> Infra["infra_tests"]
+    Setup --> Project["project_tests"]
+    Project --> Analysis["analysis"]
+    Analysis --> Render["render_pdf"]
+    Render --> Validate["validate"]
+    Validate --> Copy["copy"]
+    Validate -. optional .-> Review["llm_reviews"]
+    Validate -. optional .-> Translation["llm_translations"]
 ```
 
-### Stage Breakdown Comparison
+Inspect the source-owned plan and current flags rather than copying a stage
+count:
 
-#### Core Pipeline (execute_pipeline.py) - 84 seconds
+```bash
+uv run python scripts/runner/execute_pipeline.py --help
+uv run python scripts/runner/execute_pipeline.py \
+  --project templates/template_code_project --core-only
+```
 
-| Stage | Time | Percentage | Description |
-| ------- | ------ | ------------ | ------------- |
-| **Clean Output Directories** | <1s | <1% | Fresh build state |
-| **Environment Setup** | 1s | 1% | Dependency validation |
-| **Infrastructure + Project Tests** | ~35s | 36% | Pipeline-smoke infrastructure contract + selected project tests |
-| **Project Analysis** | 6s | 7% | Execute project scripts |
-| **PDF Rendering** | 50s | 60% | Generate manuscript PDFs |
-| **Output Validation** | 1s | 1% | Quality checks |
-| **Copy Outputs** | 0s | 0% | Final deliverables |
-| **Total** | **84s** | **100%** | Core pipeline |
-
-#### Extended Pipeline (run.sh) - ~21 minutes
-
-| Stage | Time | Percentage | Description |
-| ------- | ------ | ------------ | ------------- |
-| **Clean Output Directories** | <1s | <1% | Fresh build state |
-| **Setup Environment** | 1s | <1% | Dependency validation |
-| **Infrastructure Tests** | ~20s | 2% | pipeline-smoke contract; full coverage gate is explicit |
-| **Project Tests** | ~5s | <1% | matrix of all active projects with coverage; live counts per exemplar in `COUNTS.md` |
-| **Project Analysis** | 6s | <1% | Execute project scripts |
-| **PDF Rendering** | 50s | 4% | Generate manuscript PDFs |
-| **Output Validation** | 1s | <1% | Quality checks |
-| **Copy Outputs** | 0s | <1% | Final deliverables |
-| **LLM Scientific Review** | ~20m | 95% | AI manuscript analysis |
-| **LLM Translations** | ~30s | <1% | Multi-language abstracts |
-| **Total** | **~21m** | **100%** | Extended pipeline |
-
-**Notes:**
-
-- Core pipeline (`execute_pipeline.py`): Fast, no LLM dependencies, programmatic use
-- Extended pipeline (`./run.sh --pipeline`):, includes AI features
-- LLM stages (7-8: Scientific Review, Translations) are optional and add ~20.5 minutes to execution time
+Measure performance on the intended revision and environment (for example with
+the shell's `time` command) and preserve the result as a dated, source-bound
+receipt. Missing optional tooling, a skipped stage, or a historical benchmark
+must not be reported as a current successful full run.
 
 ---
 
@@ -164,12 +93,11 @@ flowchart TD
 
 For detailed per-stage performance breakdowns, coverage tables, script execution details, and output file inventory, see **[Build Performance Analysis](build-performance.md)**.
 
-**Highlights:**
-
-- Test execution: ~30 seconds aggregate (infra + per-exemplar); current counts → `COUNTS.md`
-- Script execution: 6 seconds (5/5 successful)
-- PDF rendering: 50 seconds (13 modules + combined document)
-- Coverage: infrastructure ≥60% ([`docs/development/coverage-gaps.md`](../../development/coverage-gaps.md)); project exemplars → [`docs/_generated/COUNTS.md`](../../_generated/COUNTS.md)
+Use the dated receipts in that guide only for the revision and environment they
+identify. Current measured counts and coverage belong in `COUNTS.md`; current
+wall-clock measurements belong in a fresh benchmark receipt. The repository
+floors are 60% for infrastructure and 90% for each public project's `src/`
+unless CI explicitly documents a rotating-project exception.
 
 ## 🚨 Troubleshooting
 
@@ -185,7 +113,8 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
    ```bash
    # Run all stages
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py \
+     --project templates/template_code_project --core-only
 
    # Or use unified interactive menu
    ./run.sh
@@ -197,9 +126,23 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
 **Solutions:**
 
-1. Check coverage: `uv run pytest tests/ --cov=src --cov-report=term-missing`
-2. Fix missing coverage (look for lines marked `>>>>>`)
-3. Ensure all tests pass before building
+1. Run the full infrastructure contract:
+
+   ```bash
+   uv run python scripts/pipeline/stage_01_test.py \
+     --infra-only --infra-scope full
+   ```
+
+2. Run one project's tests in its own pytest invocation:
+
+   ```bash
+   uv run python scripts/pipeline/stage_01_test.py \
+     --project templates/template_code_project --project-only
+   ```
+
+3. Diagnose the failing behavior or coverage lines without excluding files or
+   weakening the configured threshold. Do not combine every project's tests in
+   one pytest process because their `tests.conftest` packages can collide.
 
 ### Scripts Fail
 
@@ -223,19 +166,23 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 
    ```bash
    # Run pipeline (includes multiple LaTeX passes)
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   uv run python scripts/runner/execute_pipeline.py \
+     --project templates/template_code_project --core-only
    ```
 
-### Coverage Below 100%
+### Coverage Below the Configured Floor
 
 **Problem:** Test coverage below requirement
 
 **Solutions:**
 
-1. Generate coverage report: `uv run pytest tests/ --cov=src --cov-report=term-missing`
-2. Identify missing lines (marked `>>>>>`)
-3. Add tests for uncovered code paths
-4. Verify improvement
+1. Run the appropriate Stage 01 full-infrastructure or isolated-project command
+   above so coverage is measured against the correct source root.
+2. Identify missing lines in the emitted report.
+3. Add behavior-focused tests; do not hide source with omissions, pragmas, or a
+   reduced threshold.
+4. Verify the applicable 60% infrastructure or 90% project `src/` floor. A
+   threshold pass does not by itself establish scientific claim coverage.
 
 **See [Common Workflows](../../reference/common-workflows.md#fix-coverage-below-requirements) for detailed steps.**
 
@@ -246,16 +193,17 @@ For detailed per-stage performance breakdowns, coverage tables, script execution
 To verify everything works on your system:
 
 ```bash
-# 1. Run pipeline (all 10 stages)
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+# 1. Run the source-owned core plan for one qualified project
+uv run python scripts/runner/execute_pipeline.py \
+  --project templates/template_code_project --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # 2. Expected output:
-# - Build completes (wall-clock varies by hardware; see local `time ./run.sh --pipeline`)
+# - Core plan completes (wall-clock varies by revision, tools, and hardware)
 # - All tests pass — live counts → docs/_generated/COUNTS.md
-# - PDFs generated in projects/{name}/output/pdf/ and copied to output/{name}/pdf/
+# - PDFs generated in the project output and copied under the qualified output path
 # - Final deliverables copied to output/
 # - No critical errors
 
@@ -269,7 +217,9 @@ ls -la output/templates/template_code_project/web/
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 ```
 
-**Expected result:** Professional PDF manuscript with all content properly rendered.
+**Expected result:** the command exits successfully and the named outputs exist.
+Inspect the PDF, captions, statistics, citations, and accessibility semantics;
+successful generation alone does not establish their quality.
 
 ---
 
@@ -305,21 +255,12 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 
 ## ✅ Conclusion
 
-### 🎉 **BUILD STATUS: OPERATIONAL**
+The repository supplies a declarative, inspectable build path. Treat its status
+as unknown until the required commands pass on the intended source revision and
+the resulting artifacts are reviewed. Report core execution, optional-stage
+availability, coverage, rendered-artifact review, scholarship/scientific review,
+owner approval, release, and publication as separate states.
 
-The build system is **production-ready** and performs excellently:
-
-- ✅ **All tests passing** — live counts → [`docs/_generated/COUNTS.md`](../../_generated/COUNTS.md)
-- ✅ **All PDFs generate correctly** (section PDFs + combined per project)
-- ✅ **All scripts execute successfully** (project analysis scripts under `projects/{name}/scripts/`)
-- ✅ **All figures and data generated** (see per-project `output/` inventories)
-- ✅ **Manuscript is and properly formatted**
-- ✅ **Build time** — measure locally (`time ./run.sh --pipeline`; LLM stages optional)
-- ✅ **No critical errors or warnings**
-
-**The system is ready for research use and can generate high-quality academic manuscripts from markdown sources with full automation.**
-
----
-
-**Build Version:** v2.0 (10-stage DAG pipeline, with DAG configuration in pipeline.yaml)
-**Status:** ✅ **APPROVED FOR PRODUCTION USE**
+The live DAG, validation results, and release receipts determine readiness for a
+specific revision. This durable guide does not assign a build version or
+production-approval state.

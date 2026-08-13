@@ -7,36 +7,38 @@
 
 ## Required status checks
 
-The following CI jobs must be configured as required status checks on `main`
-via **Settings → Branches → main → Require status checks to pass before
-merging**:
+Required-check configuration is external state. Before changing it, open a
+fresh pull request and copy the exact display contexts GitHub reports for the
+current workflow; matrix labels and the public project roster can change. The
+always-running blocking jobs declared by the current `ci.yml` are:
 
 | # | Job display name (from `ci.yml` `name:`) | Job id | Conditional? |
 | --- | --- | --- | --- |
-| 1 | Lint & Type Check | `lint` | No — always runs |
-| 2 | Static Health Report | `health` | No — always runs |
-| 3 | Verify No Mocks Policy | `verify-no-mocks` | No — always runs |
-| 4 | Infra Tests (ubuntu-latest, Python 3.10) | `test-infra` | No — matrix cell |
-| 5 | Infra Tests (ubuntu-latest, Python 3.11) | `test-infra` | No — matrix cell |
-| 6 | Infra Tests (ubuntu-latest, Python 3.12) | `test-infra` | No — matrix cell |
-| 7 | Infra Tests (ubuntu-latest, Python 3.13) | `test-infra` | No — matrix cell |
-| 8 | Infra Tests (macos-latest, Python 3.12) | `test-infra` | No — matrix cell |
-| 9 | Regression Tier (claim-binding pins) | `test-regression` | No — always runs |
-| 10 | Project Tests (per exemplar × py3.10/py3.12) | `test-project` | No — matrix expands from `detect-projects` |
-| 11 | Validate Manuscripts | `validate` | No — always runs |
-| 12 | Security Scan | `security` | No — always runs |
-| 13 | Documentation Lint | `docs-lint` | No — always runs |
-| 14 | Performance Check | `performance` | No — always runs |
+| 1 | Detect optional projects | `detect` | No |
+| 2 | Detect public capability matrix | `detect-projects` | No |
+| 3 | Actionlint | `actionlint` | No |
+| 4 | Lint & Type Check | `lint` | No |
+| 5 | Static Health Report | `health` | No |
+| 6 | Verify No Mocks Policy | `verify-no-mocks` | No |
+| 7 | Infra Tests (`<os>`, Python `<version>`) | `test-infra` | Matrix cells; require the contexts present on the fresh PR |
+| 8 | Regression Tier (claim-binding pins) | `test-regression` | No |
+| 9 | Project Tests (`<qualified-project>`, `py<version>`) | `test-project` | Matrix derived by `detect-projects`; require the live contexts |
+| 10 | Validate Manuscripts | `validate` | No |
+| 11 | Security Scan | `security` | No |
+| 12 | Documentation Lint | `docs-lint` | No |
+| 13 | Performance Check | `performance` | No |
 
 **Conditional jobs — must NOT be required:**
 
 | Job display name | Job id | Why not required |
 | --- | --- | --- |
 | Setup hook (Windows smoke) | `setup-hook-windows-smoke` | Skipped (not failed) when no project ships `setup_hook.py` |
-| fep_lean (gauss + lake) | `fep-lean` | Skipped when `projects/fep_lean/lean/lean-toolchain` is absent |
+| fep_lean (gauss + lake) | `fep-lean` | Skipped when the optional local project is absent |
+| Public Matrix Receipt | `public-matrix-receipt` | Runs only for scheduled or manually dispatched CI, not pull requests |
 
-Requiring a skipped job would wedge every PR — GitHub cannot pass a required
-check that never runs.
+Do not require a context that is absent from normal pull-request events. Also
+review the list after workflow or matrix changes: a copied static checklist is
+not evidence that GitHub's configured rules still match the checkout.
 
 ## Required review
 
@@ -90,6 +92,8 @@ After configuring branch protection, verify by:
 2. Confirming that the required checks run and block merging.
 3. Confirming that Code Owners are automatically requested.
 4. Confirming that a PR with failing checks cannot be merged.
+5. Comparing GitHub's configured required contexts with the exact contexts on
+   that PR, including every current matrix cell and `Actionlint`.
 
 ## See also
 

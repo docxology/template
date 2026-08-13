@@ -9,8 +9,14 @@
 The Research Project Template uses a **Two-Layer Architecture** with a **Thin Orchestrator** pattern:
 
 - **Layer 1 — Infrastructure** (`infrastructure/`): Generic, reusable build, validation, rendering, and reporting tools
-- **Layer 2 — Projects** (`projects/{name}/`): Project-specific code, manuscripts, and outputs
-- **Scripts** (`scripts/`, `projects/{name}/scripts/`): Thin orchestrators that import and use `src/` methods — never implement algorithms
+- **Layer 2 — Projects** (`projects/<qualified-name>/`): Project-specific code, manuscripts, and outputs
+- **Scripts** (`scripts/`, `projects/<qualified-name>/scripts/`): Thin orchestrators that import and use `src/` methods — never implement algorithms
+
+A qualified name includes its lifecycle folder, for example
+`templates/template_code_project` or `working/my_project`. Public/default
+discovery is documented in
+[`docs/_generated/active_projects.md`](../_generated/active_projects.md); do
+not infer the current roster from local symlinks.
 
 For the complete architecture guide, see **[Two-Layer Architecture](../architecture/two-layer-architecture.md)**.
 
@@ -20,36 +26,34 @@ For the complete architecture guide, see **[Two-Layer Architecture](../architect
 graph TB
     subgraph "Template Repository"
         INFRA[Infrastructure<br/>infrastructure/] --> |"provides tools"| PROJECT
-        PROJECT[Project Code<br/>projects/*/src/] --> |"imported by"| SCRIPTS[Scripts<br/>projects/*/scripts/]
-        SCRIPTS --> |"generate"| OUTPUTS[Outputs<br/>output/]
-        TESTS[Tests<br/>tests/ & projects/*/tests/] --> |"validate"| PROJECT
-        MANUSCRIPT[Manuscript<br/>projects/*/manuscript/] --> |"references"| OUTPUTS
+        PROJECT[Project Code<br/>projects/&lt;qualified-name&gt;/src/] --> |"imported by"| SCRIPTS[Scripts<br/>projects/&lt;qualified-name&gt;/scripts/]
+        SCRIPTS --> |"generate"| WORKING[Working outputs<br/>projects/&lt;qualified-name&gt;/output/]
+        WORKING --> |"copy stage"| OUTPUTS[Final deliverables<br/>output/&lt;qualified-name&gt;/]
+        TESTS[Tests<br/>tests/ and per-project tests/] --> |"validate"| PROJECT
+        MANUSCRIPT[Manuscript<br/>projects/&lt;qualified-name&gt;/manuscript/] --> |"references"| WORKING
     end
 
     classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
     class INFRA,PROJECT,SCRIPTS,TESTS,MANUSCRIPT core
-    class OUTPUTS output
+    class WORKING,OUTPUTS output
 ```
 
 ## Core pipeline (`--core-only`)
 
-The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) defines a DAG. With **`--core-only`**, stages tagged `llm`, `ebook`, `metadata`, `bundle`, and `archival` are omitted: **eight** core stages run (clean → setup → infra tests → project tests → analysis → PDF render → validate → copy). The **full** graph adds two optional LLM stages (review and translations) for **ten** core+LLM stages on the default full path (`pipeline.yaml` declares four additional opt-in ebook/metadata/bundle/archival stages). `run.sh` displays progress as `[0/9]`–`[9/9]` where stage 0 is the clean step.
+The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml)
+defines the DAG. `--core-only` selects the core-tagged path and omits LLM and
+other opt-in publication lanes. Because the declaration can evolve, use the
+[generated canonical stage table](workflow.md#canonical-stage-table-generated)
+for the current order, tags, and failure modes instead of relying on a copied
+stage count.
 
-| Order | Stage (from `pipeline.yaml`) |
-|-------|------------------------------|
-| 1 | Clean Output Directories |
-| 2 | Environment Setup |
-| 3 | Infrastructure Tests |
-| 4 | Project Tests |
-| 5 | Project Analysis |
-| 6 | PDF Rendering |
-| 7 | Output Validation |
-| 8 | Copy Outputs |
+Coverage gates: 90% for a project `src/` tree and 60% for `infrastructure/`
+(see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)). Full stage
+reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
 
-Coverage gates: 90% for `projects/{name}/src/`, 60% for `infrastructure/` (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)). Full stage reference: [`RUN_GUIDE.md`](../RUN_GUIDE.md).
-
-Run: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`
+Run the public control-positive exemplar:
+`./run.sh pipeline --project templates/template_code_project --core-only`.
 
 ## Key Principles
 
@@ -92,8 +96,11 @@ Run: `uv run python scripts/runner/execute_pipeline.py --project {name} --core-o
 
 **Solution**:
 - Use `uv run python` for proper environment
-- Ensure conftest.py adds src/ to path
-- Check thin orchestrator pattern: scripts import from src/, not implement
+- Run the project suite through its configured environment rather than adding
+  ad hoc `sys.path` mutations
+- Use the import style already exercised by that project's tests and scripts
+- Check the thin-orchestrator pattern: scripts import from `src/`; they do not
+  implement project algorithms
 
 ---
 

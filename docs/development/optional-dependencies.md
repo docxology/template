@@ -29,8 +29,8 @@ optional surface out of a run with one flag.
 
 | Optional dependency | pytest marker | Gate policy when absent | Tests that need it | Template features unavailable without it | Opt-out (deselect) | Setup |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Ollama** (local LLM server) | `requires_ollama` | **fail-loud** (tests FAIL with setup guidance; Ollama is auto-started first) | `tests/infra_tests/llm/` real-daemon smoke tests, `tests/integration/test_module_interoperability.py` | Pipeline YAML stages 9 (LLM Scientific Review) and 10 (LLM Translations); `scripts/pipeline/stage_06_llm_review.py` reviews/translations | `pytest -m "not requires_ollama"` | Install from <https://ollama.ai>, then `ollama serve` and `ollama pull smollm2` (or `gemma3:4b`). See env vars below. |
-| **LaTeX / xelatex** (TeX engine) | `requires_latex` | **skip-if-absent** (via `skip_if_no_latex` fixture) | `tests/infra_tests/rendering/` LaTeX/PDF tests (`test_latex_utils.py`, `test_renderers.py`, `test_core.py`, `test_slides_renderer_core.py`, …) | Pipeline YAML stage 7 PDF rendering (`scripts/pipeline/stage_03_render.py`); Beamer slide generation | `pytest -m "not requires_latex"` | Install TeX Live / MacTeX (provides `xelatex`). Missing packages: `sudo tlmgr install multirow cleveref doi newunicodechar`. |
+| **Ollama** (local LLM server) | `requires_ollama` | **fail-loud when selected** (the harness tries to start Ollama, then fails with setup guidance) | `tests/infra_tests/llm/` real-daemon smoke tests, `tests/integration/test_module_interoperability.py` | Pipeline stage keys `llm_reviews` and `llm_translations`; `scripts/pipeline/stage_06_llm_review.py` | `pytest -m "not requires_ollama"` | Install from <https://ollama.ai>, then `ollama serve` and `ollama pull smollm2` (or the configured model). See env vars below. |
+| **LaTeX / xelatex** (TeX engine) | `requires_latex` | **skip-if-absent** (via `skip_if_no_latex` fixture) | `tests/infra_tests/rendering/` LaTeX/PDF tests (`test_latex_utils.py`, `test_renderers.py`, `test_core.py`, `test_slides_renderer_core.py`, …) | Pipeline stage key `render_pdf` (`scripts/pipeline/stage_03_render.py`); Beamer slide generation | `pytest -m "not requires_latex"` | Install TeX Live / MacTeX. Package requirements are defined by the current CI/container setup; do not assume a copied `tlmgr` list is complete. |
 | **pandoc** (document converter) | _(no dedicated marker; covered by `requires_latex` PDF tests + format-toggle tests)_ | **skip-if-absent** (rendering config sets `pandoc_path=None` when `pandoc` is not on `PATH`; format toggles guard on availability) | `tests/infra_tests/rendering/` markdown→PDF/DOCX/EPUB conversion paths | DOCX/EPUB export and the pandoc-backed markdown→LaTeX combine step | run a non-rendering subset, e.g. `pytest -m "not requires_latex"`, or target non-rendering dirs | Install pandoc: `brew install pandoc` (macOS) or your distro package; CI installs it in the rendering job. |
 
 Markers compose: to skip every optional-dependency surface in one run use
@@ -39,9 +39,10 @@ Markers compose: to skip every optional-dependency surface in one run use
 uv run pytest tests/infra_tests/ -m "not requires_ollama and not requires_latex"
 ```
 
-This is exactly what the automated pipeline and the default CI infra gate do for
-the LLM surface (`-m "not requires_ollama"`), so the core suite stays green on a
-machine with neither Ollama nor a TeX engine.
+The pipeline and hosted CI use broader, source-owned marker expressions than
+this two-capability example. Inspect `pyproject.toml`, the Stage-01 profile, and
+`.github/workflows/ci.yml` for the exact current selection. A skip due to an
+absent tool is `skipped`, not evidence that the capability works.
 
 ## Ollama: fail-loud rationale and opt-out
 

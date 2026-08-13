@@ -3,10 +3,12 @@
 > **Entry point for:** "Can I repurpose the architectures you're using for
 > research?"
 
-**Yes.** The template's architectures are designed for reuse. Every
-infrastructure module is a standalone Python package with no project-specific
-dependencies — you import only what you need. This page maps each reusable
-architecture to the module, the contract, and how to adopt it.
+**Yes.** The template's architectures are designed for reuse. Infrastructure
+packages are project-agnostic, but they can depend on other infrastructure
+packages, root dependency groups, and external tools. Reuse the smallest
+documented dependency closure rather than assuming that one copied file is a
+standalone distribution. This page maps each architecture to its contract and
+adoption boundary.
 
 ## Quick answer: what can I take?
 
@@ -14,14 +16,14 @@ architecture to the module, the contract, and how to adopt it.
 | --- | --- | --- | --- |
 | Declarative DAG pipeline | `infrastructure.core.pipeline` | A 16-stage pipeline from env setup through PDF rendering, validation, and publishing — configured via YAML, not code | Yes — `pipeline.yaml` + `infrastructure.core.pipeline` |
 | Two-layer separation | `infrastructure/` + `projects/` | Generic build tools (Layer 1) never depend on project code (Layer 2); projects import infrastructure, never the reverse | Yes — copy the directory contract |
-| Thin orchestrator pattern | `scripts/` + `infrastructure.orchestration` | Scripts coordinate; all business logic lives in importable packages. Enforced by CI gates and `check_template_drift.py` | Yes — adopt the `scripts/` convention |
+| Thin orchestrator pattern | `scripts/` + `infrastructure.orchestration` | Scripts coordinate; business logic lives in importable packages. Public-exemplar drift checks catch known violations; review still owns semantic placement | Yes — adopt the directory and test contract |
 | Multi-format rendering | `infrastructure.rendering` | Pandoc + XeLaTeX pipeline producing PDF, HTML, slides, DOCX, and EPUB from Markdown manuscripts | Yes — `infrastructure.rendering` + pandoc + texlive |
-| Evidence registry | `infrastructure.validation.evidence_registry` | Every manuscript claim is bound to a registered evidence source; drift is CI-gated | Yes — `infrastructure.validation` |
-| Multi-project discovery | `infrastructure.project` | Drop a `projects/{name}/` directory with `src/` + `tests/` + `manuscript/config.yaml` and it is auto-discovered, tested, analyzed, and rendered | Yes — `infrastructure.project` |
-| Zero-mock testing | `scripts/audit/verify_no_mocks.py` | Lexical + semantic gate that prohibits mock frameworks and dependency replacements | Yes — copy the script + `pyproject.toml` test config |
+| Evidence registry | `infrastructure.validation.evidence_registry` | Builds typed, source-attributed evidence records and scans claims against available evidence; project artifacts and strictness determine the covered surface | Yes — copy the validation package and its dependencies |
+| Multi-project discovery | `infrastructure.project` | Discovers tracked `projects/templates/*` and optional `projects/active/*`; lifecycle-qualified working/archive projects remain explicit targets | Yes — adopt discovery, path resolution, and confidentiality rules together |
+| No-stand-ins testing | `scripts/audit/verify_no_mocks.py` + `infrastructure.validation.output` | Blocking lexical mock-framework check plus a separately invoked semantic dependency-replacement inventory | Only with the backing infrastructure package, policy, tests, and gate commands |
 | Cryptographic provenance | `infrastructure.steganography` + `infrastructure.provenance` | SHA-256/512 hash manifests, alpha-channel PDF watermarking, QR codes, metadata embedding | Yes — `infrastructure.steganography` |
 | MCP server | `infrastructure.mcp_server` | Stdio MCP server exposing operation catalogs, pipeline descriptions, and skill routing to any MCP-speaking agent | Yes — `infrastructure.mcp_server` |
-| Publishing stack | `infrastructure.publishing` | Dry-run-by-default upload to Zenodo, GitHub Releases, PyPI, IPFS, OSF, HuggingFace, Software Heritage | Yes — `infrastructure.publishing` |
+| Publishing stack | `infrastructure.publishing` | Provider adapters with explicit but CLI-specific write boundaries; some runners require `--commit`, while the unified GitHub/Zenodo release command requires `--dry-run` for rehearsal | Yes — adopt the package, authority checks, and each CLI's tested commit semantics |
 | Literature search | `infrastructure.search` | Federated search across arXiv, CrossRef, OpenAlex, Semantic Scholar, Paperclip, with full-text assessment | Yes — `infrastructure.search` |
 | AutoResearch loop | `infrastructure.autoresearch` | Deterministic candidate-evaluation loop: generate, evaluate, rank, and publish ML candidates | Yes — `infrastructure.autoresearch` |
 
@@ -39,15 +41,19 @@ uv sync
 ./run.sh --pipeline --project templates/template_code_project --core-only
 ```
 
-You get the full DAG pipeline, testing, rendering, and validation with zero
-configuration. Delete exemplars you don't need; the `infrastructure/` layer
-works with any `projects/{name}/` that follows the directory contract.
+The tracked control-positive exemplar is ready to exercise the DAG, tests,
+rendering, and validation. Retarget it through the
+[`guides/fork-an-exemplar.md`](guides/fork-an-exemplar.md) workflow. Adding or
+removing a public exemplar also requires updating the public-scope source and
+regenerating the roster/manifests; do not delete template trees ad hoc and
+assume CI discovery will repair itself.
 
 ### Partial: import specific modules
 
-Each infrastructure package is importable independently. The root
-`pyproject.toml` declares all dependencies; copy only the packages you need
-and their dependency lines.
+Infrastructure packages expose importable APIs, but package-to-package imports
+and optional external tools are real dependencies. Start from the package's
+`README.md` and `SKILL.md`, inspect its imports and optional-dependency matrix,
+and carry the complete tested dependency closure.
 
 ```python
 # Example: use only the rendering pipeline
@@ -99,14 +105,17 @@ Deep dive: [`architecture/adrs/002-declarative-dag-pipeline.md`](architecture/ad
 
 ### Two-layer separation
 
-Layer 1 (`infrastructure/`) contains 25 importable Python packages for
-rendering, validation, publishing, search, steganography, and orchestration.
+Layer 1 (`infrastructure/`) contains the reusable packages for rendering,
+validation, publishing, search, steganography, and orchestration. Link
+[`_generated/COUNTS.md`](_generated/COUNTS.md) for the current measured package
+inventory rather than copying a count into prose.
 Layer 2 (`projects/{name}/src/`) contains domain-specific research code.
 The boundary is enforced by:
 
 - `scripts/audit/check_tracked_all.py` — rejects private/local paths in git
-- `scripts/audit/check_template_drift.py` — 10 per-exemplar drift detectors
-- `verify_no_mocks.py` — prohibits mock frameworks in tests
+- `scripts/audit/check_template_drift.py --strict` — executes the live public-exemplar and repo-level drift registry
+- `scripts/audit/verify_no_mocks.py` — rejects prohibited mock-framework syntax
+- `scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0` — blocks semantic dependency-replacement debt
 - Coverage gates: infrastructure >= 60%, each project `src/` >= 90%
 
 Deep dive: [`architecture/two-layer-architecture.md`](architecture/two-layer-architecture.md)
@@ -145,15 +154,17 @@ Deep dive: [`architecture/adrs/003-multi-format-rendering-and-toggles.md`](archi
 
 ### Evidence registry
 
-Every number, citation, and claim in a manuscript is validated against a
-registered evidence source (`data/claim_ledger.yaml`). The registry is
-built per-project and CI-gated — a manuscript with an unsupported number fails
-the build.
+When a project supplies claim ledgers and source artifacts, the evidence
+registry builds typed records and checks manuscript text against that available
+evidence. Coverage is project- and artifact-dependent: a clean registry scan
+does not prove that every statement is true, that a citation entails the prose,
+or that the statistical design supports a causal interpretation. Publication
+review still traces important claims to their producer, source, and limitations.
 
 ```python
 registry = build_project_evidence_registry(project_dir)
 report = validate_text_against_registry(manuscript_text, registry)
-assert not report.errors  # fails CI if any unsupported claims
+assert not report.errors  # focused gate for the registry's covered claim surface
 ```
 
 Deep dive: [`architecture/adrs/005-decision-memory-and-adversarial-validation.md`](architecture/adrs/005-decision-memory-and-adversarial-validation.md)
@@ -170,9 +181,10 @@ The template is **composable** — you can adopt any subset:
 - Don't need literature search? Skip `infrastructure.search`.
 - Don't want the MCP server? Skip `infrastructure.mcp_server.py`.
 
-The pipeline respects `tags` in `pipeline.yaml` — stages tagged `llm`,
-`science`, `ebook`, `bundle`, or `archival` are skipped unless explicitly
-configured.
+The pipeline respects the tags and selection flags in `pipeline.yaml`. The
+default full and `--core-only` selections are documented in
+[`RUN_GUIDE.md`](RUN_GUIDE.md); opt-in science, provenance, ebook, metadata,
+bundle, and archival paths must be selected and configured deliberately.
 
 ## See also
 

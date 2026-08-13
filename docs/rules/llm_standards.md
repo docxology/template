@@ -56,7 +56,7 @@ client = LLMClient(config)
 | `OLLAMA_MODEL` | `gemma3:4b` | Default model (quality-oriented local default) |
 | `LLM_TEMPERATURE` | `0.7` | Generation temperature |
 | `LLM_MAX_TOKENS` | `2048` | Max tokens per response |
-| `LLM_SEED` | `None` | Seed for reproducibility |
+| `LLM_SEED` | `None` | Sampler seed; reduces variation but is not a cross-version/hardware reproducibility guarantee |
 | `LLM_TIMEOUT` | `60` | Request timeout (seconds) |
 
 ### Programmatic Configuration
@@ -117,7 +117,7 @@ completion = client.query_raw("Complete: The quick brown fox")
 ```python
 from infrastructure.llm import GenerationOptions
 
-# Deterministic output
+# Controlled generation; record model/server/runtime and compare repeated runs
 opts = GenerationOptions(
     temperature=0.0,
     seed=42,
@@ -126,11 +126,11 @@ response = client.query(prompt, options=opts)
 
 # Full control
 opts = GenerationOptions(
-    temperature=0.7,      # Creativity (0.0=deterministic, 2.0=creative)
+    temperature=0.7,      # Sampling control; 0.0 can still vary by runtime/model
     max_tokens=4096,      # Max output tokens
     top_p=0.9,            # Nucleus sampling
     top_k=40,             # Top-k sampling
-    seed=42,              # Reproducibility seed
+    seed=42,              # Sampler seed; not a byte-identity guarantee
     stop=["END", "STOP"], # Stop sequences
     format_json=True,     # Force JSON output
     repeat_penalty=1.1,   # Repetition penalty
@@ -277,7 +277,7 @@ client = LLMClient(config)
 options = GenerationOptions(
     temperature=0.3,       # Low temperature for consistency
     max_tokens=4096,       # Allow long responses
-    seed=42,               # Reproducibility
+    seed=42,               # Sampling control; record the full environment
 )
 
 # Use query() directly with detailed templates
@@ -313,6 +313,30 @@ REQUIREMENTS: [structural requirements]
 ```
 
 This structure ensures the LLM focuses on the actual manuscript content.
+
+### Scholarship and Evidence Boundary
+
+Format, length, repetition, and off-topic checks do not validate factual
+accuracy, statistical reasoning, citation support, novelty, or accessibility.
+Treat every LLM response as an untrusted review proposal:
+
+- never let a model invent or directly overwrite manuscript statistics,
+  captions, tables, citations, DOI metadata, claim ledgers, or provenance;
+- inject dynamic values only from typed analysis/configuration outputs through
+  the project manuscript-variable producer;
+- verify quotations and each adjacent claim against the primary source, plus
+  current correction/expression-of-concern/retraction status;
+- require a human/domain reviewer to accept or reject every proposed scholarly
+  change, preserving disagreements and unresolved evidence as explicit states;
+- record model identity/digest, runtime/server version, prompt/template,
+  parameters, input/output hashes, retries, and validation results when an LLM
+  review informs a release; and
+- keep model suggestions out of canonical source/evidence when the required
+  sources or analysis are unavailable.
+
+A fixed seed and temperature reduce sampling variation but do not establish
+identical output across model builds, servers, libraries, or hardware. Make any
+reproducibility statement only after a defined repeated-run comparison.
 
 ### Validation for Different Review Types
 

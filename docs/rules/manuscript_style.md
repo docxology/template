@@ -329,23 +329,35 @@ All figures must use relative paths from the manuscript directory.
 ![Convergence plot showing objective value vs iteration.](../output/figures/convergence_plot.png){#fig:convergence width=90%}
 ```
 
-### Figure Captions
+### Figure Captions, Alt Text, and Long Descriptions
 
-Captions must be descriptive and complete sentences. They appear under the figure in the PDF **and as alt text in HTML/EPUB output**, so they must be self-contained — never "see above" or content that depends on the figure being visible.
+Captions must be descriptive, self-contained sentences. They are visible under
+the figure. They are not interchangeable with alt text: the current HTML
+post-processor derives concise `alt` text from the first caption sentence,
+while the complete caption remains visible. The figure registry also carries
+explicit `metadata.alt_text` for validation and audit. Inspect the final HTML;
+the accessibility gate checks presence, not semantic adequacy.
 
 **Format:**
 
 - Start with capital letter
 - End with period
-- Describe what the figure shows
-- Include key information (method, dataset, result)
+- Make the first sentence a concise identification of what is encoded
+- Include the analysis population, what `n` counts, units, transformations,
+  summary statistic, interval/error-bar meaning, and test or multiplicity
+  correction when they are needed for interpretation
+- State the main visible pattern without overstating causality or certainty
+- Put relationships that cannot fit in concise alt text in nearby prose, a
+  long description, or an equivalent data table
+- Never use "see above", colour alone, or spatial position alone to convey
+  meaning
 
 **Good Examples:**
 
 ```markdown
-![Algorithm convergence comparison showing performance improvement over baseline methods.](../output/figures/convergence.png){#fig:convergence}
-![Experimental setup diagram illustrating the data processing pipeline.](../output/figures/setup.png){#fig:setup}
-![Scalability analysis demonstrating $O(n \log n)$ computational complexity.](../output/figures/scalability.png){#fig:scalability}
+![Objective value by iteration for the declared methods; lines show the per-iteration values and shaded bands show the declared uncertainty interval.](../output/figures/convergence.png){#fig:convergence}
+![Directed processing stages from canonical input through validation output; arrows indicate data dependencies.](../output/figures/setup.png){#fig:setup}
+![Observed runtime by input size for the measured environment; points are observations and the line is the declared fitted model.](../output/figures/scalability.png){#fig:scalability}
 ```
 
 **Bad Examples:**
@@ -410,9 +422,14 @@ As illustrated in [@fig:setup], the system includes...
 
 ### Supported Formats
 
-- PNG (recommended for plots — archival stability, 300 dpi, colourblind-safe palette)
-- PDF (recommended for vector graphics)
-- JPG/JPEG (for photographs)
+- Vector PDF or SVG for line art when every target renderer supports it
+- Lossless PNG for cross-format plots and diagrams; choose resolution from the
+  final physical size (300 ppi is a common print target, not a guarantee)
+- JPG/JPEG for photographs where lossy compression is acceptable
+
+Use a colour-accessible palette with redundant shapes, line styles, direct
+labels, or patterns. Check contrast, grayscale legibility, font size, clipping,
+panel order, and legend-to-mark correspondence in every final format.
 
 ## Tables
 
@@ -566,7 +583,11 @@ Citation keys are case-sensitive and must match entries in `references.bib`.
 
 **Requirements:**
 
-- Keys are defined in `projects/{name}/manuscript/references.bib` (Pandoc merges every `manuscript/*.bib`, so a project with a supplemental bib file like `references_deep.bib` just drops it alongside)
+- Prefer keys in one canonical
+  `projects/{name}/manuscript/references.bib`. The combined PDF unions top-level
+  `.bib` files, but HTML, DOCX, and EPUB currently select narrower bibliography
+  inputs; consolidate supplemental files or verify every enabled format (see
+  [`../usage/output-formats.md`](../usage/output-formats.md#multi-bibliography-boundary)).
 - Use exact key spelling (case-sensitive)
 - Keys typically follow the auto-generator convention `<surname><year><titleword>` — e.g. `boyd2004convex`, `kingma2014adam`
 
@@ -587,7 +608,25 @@ Citation keys are case-sensitive and must match entries in `references.bib`.
 The Adam optimizer [@kingma2014] provides...
 ```
 
-An undefined key surfaces as `[?]` in the rendered PDF and as a warning in the build log — this is the fastest way to spot a typo'd or missing citation.
+An undefined key surfaces as `[?]` in the rendered PDF and as a warning in the
+build log. A resolved key proves only that the bibliography can be rendered; it
+does not prove that the work exists, that its metadata is correct, or that it
+supports the sentence.
+
+Before submission, run both metadata and existence checks:
+
+```bash
+uv run python -m infrastructure.reference.citation.cli validate \
+  projects/<qualified-name>/manuscript/references.bib --strict
+uv run python -m infrastructure.reference.verification verify \
+  projects/<qualified-name>/manuscript/references.bib \
+  --live --as-of-year <manuscript-year>
+```
+
+Treat `unchecked` and `unverifiable` as unresolved review work. Read the
+primary source to verify the adjacent proposition and evidence boundary, and
+check correction, expression-of-concern, and retraction status separately; the
+automated resolver does not perform those scholarly judgments.
 
 ## Section Headings
 
@@ -792,6 +831,89 @@ The algorithm. See [@sec:methodology].  # ❌ Fragmented
 [@fig:results]. Shows results.          # ❌ Fragmented
 ```
 
+## Source-Bound Values and Scientific Claims
+
+### Automatic Variable Injection
+
+Any value that can change with data, configuration, code, environment, or
+release identity is dynamic. This includes counts, sample sizes, exclusions,
+denominators, estimates, uncertainty, p-values, thresholds, parameters,
+versions, dates, table cells, and statistics in captions, alt descriptions, or
+figure annotations. Stable prose and mathematical constants are not dynamic.
+
+For projects with computed results:
+
+1. Keep raw values typed in canonical analysis outputs.
+2. Compute and validate the flat `UPPERCASE_KEY -> rendered string` mapping in
+   importable project code such as `src/manuscript_variables.py`.
+3. Use a thin `scripts/z_generate_manuscript_variables.py` orchestrator to
+   write `output/data/manuscript_variables.json` and call
+   `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()`.
+4. Use `{{TOKEN_NAME}}` at every manuscript consumer. Figure pixels must be
+   generated directly from the same canonical records because token hydration
+   occurs after plotting.
+5. Add a test that extracts every uppercase token from publishable manuscript
+   files and proves that the producer emits it. Reject empty, malformed,
+   non-finite, wrong-unit, and draft-sentinel values.
+6. Regenerate analysis, variables/tables/figures, hydration, renders,
+   provenance, and release receipts in that order. Never hand-edit a generated
+   artifact or receipt.
+
+The shared substitution function warns and preserves unknown tokens; it is not
+a fail-closed release gate by itself. Verify the hydrated tree explicitly:
+
+```bash
+uv run python projects/<qualified-name>/scripts/z_generate_manuscript_variables.py
+if rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' \
+  projects/<qualified-name>/output/manuscript; then
+  echo "Unresolved manuscript token(s)" >&2
+  exit 1
+fi
+uv run python -m infrastructure.validation.cli prerender \
+  projects/<qualified-name>/manuscript --repo-root .
+```
+
+Document each token's semantic definition, canonical source, unit, formatting
+rule, missing-value policy, and consumers. Derive all rounded representations
+from one raw value; do not independently round copied literals.
+
+### Statistical Reporting
+
+- State the estimand, target population, sampling or experimental unit, unit of
+  analysis, comparator, analysis population, and independence assumptions.
+- Distinguish attempted, completed, analyzable, included, excluded, failed,
+  unavailable, and non-converged cases. Define what every `n` counts.
+- Report effect estimates and uncertainty appropriate to the design. When a
+  test is reported, state the test statistic, sidedness, degrees of freedom,
+  interval type and level, multiplicity correction, and implementation.
+- Preserve pairing, clustering, repeated measures, and the correct resampling
+  unit. Disclose missingness, exclusions, stopping, preprocessing, model
+  selection, and sensitivity analyses.
+- Do not equate non-significance with equivalence, association with causation,
+  or a synthetic/historical comparator with current empirical evidence.
+- Keep populations, filters, units, transformations, denominators, estimates,
+  and precision identical across prose, tables, figures, captions, and alt
+  descriptions by deriving them from the same producer.
+
+### Scholarship and Claim Calibration
+
+- Map each substantive claim to current analysis evidence or a primary,
+  verified source. A valid DOI or BibTeX entry does not establish proposition
+  support.
+- Separate established knowledge, current results, interpretation,
+  speculation, exploratory findings, confirmatory findings, and future work.
+- Qualify novelty, priority, causal, comparative, and generalization language
+  to the actual search scope and study design. Report null, failed, and adverse
+  outcomes rather than selecting only successful cases.
+- Verify quotations against the source and avoid citation laundering through a
+  review when the primary result is available. Record databases, queries,
+  dates, filters, deduplication, and inclusion decisions for literature
+  searches.
+- Treat automated manuscript, evidence, reference, and accessibility gates as
+  checks of declared contracts. They do not substitute for statistical review,
+  source reading, visual inspection, semantic accessibility review, or owner
+  release authority.
+
 ## Best Practices
 
 ### Label Naming Conventions
@@ -828,7 +950,8 @@ The algorithm. See [@sec:methodology].  # ❌ Fragmented
 - Verify every `[@eq:]`, `[@fig:]`, `[@tbl:]`, `[@sec:]` target has a matching label somewhere in the manuscript
 - Check label spelling matches exactly
 - Ensure all figures/tables/equations have labels
-- Run validation: `uv run python -m infrastructure.validation.cli markdown manuscript/`
+- Run source validation against the qualified project path:
+  `uv run python -m infrastructure.validation.cli prerender projects/<qualified-name>/manuscript --repo-root .`
 
 ### Figure/Table Placement Guidelines
 
@@ -850,7 +973,10 @@ Pandoc places figures and tables at their position in the source flow (float beh
 - Add all citations to `references.bib` first
 - Use consistent key naming (`authorYYYY` or `authorYYYYkeyword`)
 - Verify keys match exactly (case-sensitive)
-- Keep bibliography file organized
+- Validate syntax and metadata, then run live reference-existence verification
+- Read the cited source and confirm it supports the adjacent claim
+- Keep bibliography file organized and record any curatorial corrections in
+  the canonical source rather than patching a generated copy
 
 ## Common Mistakes to Avoid
 
@@ -952,12 +1078,14 @@ As shown in [@fig:convergence]...             # ✅ Works in every output format
 ### Figure Example
 
 ```markdown
-![Algorithm convergence comparison showing performance improvement
-over baseline methods. The plot demonstrates exponential convergence
-with rate $\rho \approx 0.85$.](../output/figures/convergence_plot.png){#fig:convergence_plot width=90%}
+![Objective value by iteration for the declared methods. Lines show the
+per-iteration statistic over {{FIGURE_RUN_COUNT}} independent runs; bands show
+{{INTERVAL_LEVEL}}% {{INTERVAL_TYPE}} intervals, and the fitted convergence
+rate is $\rho={{CONVERGENCE_RATE}}$.](../output/figures/convergence_plot.png){#fig:convergence_plot width=90%}
 
-As shown in [@fig:convergence_plot], our method achieves
-faster convergence than existing approaches.
+As shown in [@fig:convergence_plot], the estimated between-method difference is
+{{PRIMARY_EFFECT_ESTIMATE}} ({{INTERVAL_LEVEL}}% {{INTERVAL_TYPE}}
+{{PRIMARY_EFFECT_INTERVAL}}) for the prespecified analysis population.
 ```
 
 ### Table Example
@@ -965,14 +1093,14 @@ faster convergence than existing approaches.
 ```markdown
 | Method | Accuracy | Time (s) |
 |--------|:--------:|:--------:|
-| Baseline | 0.85 | 10.2 |
-| Our Method | 0.92 | 8.5 |
+{{PERFORMANCE_TABLE_ROWS}}
 
-: Performance comparison showing accuracy and execution time
-for different optimization methods. {#tbl:performance_comparison}
+: Accuracy and elapsed-time summaries for {{ANALYSIS_CASE_COUNT}} analyzable
+cases; accuracy is {{ACCURACY_SUMMARY_DEFINITION}} and elapsed time is reported
+for {{TIMING_ENVIRONMENT_LABEL}}. {#tbl:performance_comparison}
 
-[@tbl:performance_comparison] demonstrates that our method
-achieves higher accuracy with reduced computation time.
+[@tbl:performance_comparison] reports the prespecified comparison; its
+interpretation is limited to the declared data and execution environment.
 ```
 
 ### Equation Example

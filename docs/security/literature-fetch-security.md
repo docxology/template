@@ -51,9 +51,9 @@ flowchart LR
 | Asset | Threat | Mitigation |
 |---|---|---|
 | Local files | Malicious server returns content that, when written to disk, escapes the cache directory. | All cache paths are derived from `_safe_id(paper.id)` (regex-filtered to `[A-Za-z0-9._-]`); no caller-controlled component reaches `Path(...)` unsanitised. |
-| Local CPU | Server returns a 10 GB body to exhaust memory. | `FulltextFetcher(max_chars=…)` truncates extracted text. Underlying HTTP read is bounded by `urllib`'s default behaviour; for very-large-file resilience set `timeout` low and run inside a process limit. |
-| Local time | Server hangs indefinitely. | Every backend has a `timeout=` argument (defaults: 15 s search, 60 s fulltext). |
-| Process integrity | Server returns a malicious PDF that exploits the parser. | `pypdf` is a pure-Python parser; recent CVEs are around DoS, not RCE. Keep the dependency current via `uv lock --upgrade`. |
+| Local CPU and memory | Server returns an oversized or pathological body. | `FulltextFetcher(max_chars=…)` bounds retained extracted text, but the current `urllib` client reads the complete response before truncation and does not enforce a byte cap. Treat HTTP body size and parser resource isolation as residual risks. |
+| Local time | Server stalls or sends a pathological document. | Backends pass socket timeouts (normally 15 s for search and 60 s for full text), but a socket timeout is not a whole-operation CPU or wall-clock limit. Use an outer process/resource limit for hostile inputs. |
+| Process integrity | Server returns a malicious PDF that targets the parser. | The parser is a dependency, not a security boundary. Keep the lockfile audited and parse untrusted documents in a filesystem/network-constrained process with resource limits. |
 | Outbound traffic | Egress to unintended hosts. | Default base URLs are pinned in code (`api.crossref.org`, `export.arxiv.org`, `paperclip.gxl.ai`); `base_url` overrides are explicit at construction. |
 | Credentials | Paperclip API key leaks via logs. | `PaperclipBackend` reads the key from `api_key=`; the key is never logged, never written to cache files, and never echoed by the CLI. |
 | Replay | A cached `search_*.json` is committed but contains a transient leak (e.g. private email in a hit). | Cache files are pretty-printed JSON — easy to grep before commit. Add a CI check if your domain mandates one. |
@@ -62,8 +62,8 @@ flowchart LR
 
 ### Production deployments
 
-1. **Set explicit timeouts.** The defaults are tuned for interactive use;
-   in batch jobs use lower values (e.g. `timeout=8.0`).
+1. **Set explicit timeouts and an outer resource limit.** Socket timeouts do
+   not bound response bytes, parser memory, parser CPU, or total retries.
 2. **Pin a `mailto`** in `CrossrefBackend(mailto="ops@example.org")`.
    Required for the polite pool; also gives Crossref a contact for abuse.
 3. **Rotate Paperclip keys** on the same cadence as other API tokens.
@@ -108,8 +108,10 @@ If a malicious response is suspected:
 1. Quarantine the cache: `mv output/cache output/cache.suspect`.
 2. Inspect: `find output/cache.suspect -name '*.json' -exec grep -l '<suspicious string>' {} +`.
 3. Rotate any keys that may have been observed (Paperclip).
-4. Re-run with `--no-cache --tolerate-errors` to verify the issue is
-   reproducible vs. cached.
+4. Re-run the applicable literature-search CLI with `--no-cache
+   --tolerate-errors` inside an isolated, network-constrained environment to
+   distinguish a live response from cached state. Do not retry a malicious
+   payload on a trusted workstation merely to reproduce it.
 
 ## See Also
 

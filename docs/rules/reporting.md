@@ -14,8 +14,11 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 ## Usage Patterns
 
 - Prefer high-level helpers (e.g., `generate_pipeline_report`, `get_error_aggregator`) over ad-hoc formatting.
-- Keep reports **deterministic** (fixed ordering, seeded randomness).
-- Include **context**: stage names, timings, counts, failures with categories and suggestions.
+- Keep reports **deterministic** (fixed ordering and canonical serialization;
+  reporting code should not introduce randomness).
+- Include **context**: schema version, run/source/config identity, generation
+  mode, producer, stage names, timings, counts with denominators, failures with
+  categories, and suggested remediation.
 - For HTML/Markdown, reuse shared templates; avoid inline styling drift.
 - Expose clear public API in `__init__.py`; keep helpers private (`_` prefix).
 
@@ -37,6 +40,28 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 - Validate inputs (schemas, file paths) before rendering; fail fast with context.
 - Do not embed secrets or raw stack traces in human-facing outputs.
 - Ensure file writes are atomic where possible; respect existing output directory conventions (`output/`).
+
+## Scientific and Provenance Semantics
+
+- Distinguish `passed`, `failed`, `blocked`, `not_run`, `unavailable`,
+  `excluded`, and `skipped`; never coerce missing/unavailable observations to
+  zero or omit them from a denominator.
+- Label values as observed, derived, configured, or asserted. Include units,
+  population/sample, estimator, aggregation, uncertainty/error-bar definition,
+  and exclusions when a report carries scientific or performance statistics.
+- Preserve stage and artifact lineage: input/config hashes, producer revision,
+  parent artifact identifiers, output hashes, and warnings. A current-output
+  checksum snapshot is integrity evidence, not proof of which stage produced an
+  artifact or that the underlying source was current.
+- Generate result-bearing manuscript variables and figure-caption metadata from
+  the report's typed raw fields. Do not parse rounded display prose or hand-copy
+  report values into manuscript Markdown.
+- Treat engineering, scientific, accessibility, provenance, owner-approval,
+  and release-authority outcomes as separate fields. A green test or readable
+  artifact must not be summarized as publication approval.
+- Keep claim wording bounded to the evidence represented in the report. A
+  citation identifier, source count, or successful metadata lookup does not
+  establish that a cited source supports the claim.
 
 ## Testing
 
@@ -63,6 +88,7 @@ from infrastructure.reporting import (
 )
 
 errors = get_error_aggregator()
+# Illustrative input; real stage records must come from the current run.
 errors.add_error("validation", "missing figure", context={"file": "02_results.md"})
 
 report = generate_pipeline_report(

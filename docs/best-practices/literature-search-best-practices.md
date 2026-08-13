@@ -14,9 +14,9 @@ flowchart TB
     Q2 -- no --> Q3{Domain-specific<br/>preprint server?}
     Q3 -- "arXiv / ML" --> AX[ArxivBackend only]
     Q3 -- "DOI-rich" --> CR[CrossrefBackend with mailto]
-    Q3 -- biomedical --> PC[PaperclipBackend<br/>opt-in · API key]
+    Q3 -- external provider --> PC[PaperclipBackend<br/>opt-in · API key]
 
-    LOCAL --> CACHE[Add SearchCache<br/>commit search_HASH.json files]
+    LOCAL --> CACHE[Add SearchCache<br/>retain a reviewed corpus snapshot]
     COMBO --> CACHE
     AX --> CACHE
     CR --> CACHE
@@ -42,8 +42,8 @@ flowchart TB
 
 | Backend | Identifier | Notes |
 |---|---|---|
-| Crossref | `mailto=` | Accesses the higher-rate "polite pool"; **always set this** in production. |
-| arXiv | (none) | Soft cap ~1 query / 3 s. Cache aggressively. |
+| Crossref | `mailto=` | Identifies the client for polite API use; set a monitored contact address in production. |
+| arXiv | (none) | Respect the service's current API guidance and back off on throttling; cache repeated queries. |
 | Paperclip | `X-API-Key` | Paid; opt-in via `PAPERCLIP_API_KEY`; the adapter posts MCP-style JSON-RPC to `/mcp`. |
 
 ```python
@@ -52,9 +52,14 @@ CrossrefBackend(mailto=os.environ.get("CROSSREF_MAILTO", "ops@you.org"))
 
 ## Cache Like a Reproducibility Activist
 
-* **Commit `output/cache/search_*.json`** when reproducibility matters.
-  These files are deterministic JSON keyed by `(text, max_results,
-  year_*, sorted(sources))`.
+* **Treat `output/**/cache/` as runtime state.** The public template ignores
+  search caches, and cache entries include retrieval-time metadata. Do not
+  force-add them as publication evidence.
+* **Promote a reviewed snapshot explicitly.** When exact replay matters,
+  export the selected records to a project-owned corpus under a tracked,
+  allowlisted source/evidence path (for example `data/curated_corpus.json`),
+  record the query, sources, retrieval date, filters, deduplication and
+  inclusion decisions, and replay it with `LocalBackend`.
 * **Set TTL only when you mean it.** Default `SearchCache` has none —
   reading is a pure file op. Add `ttl_seconds` only for live dashboards
   where freshness > stability.
@@ -70,8 +75,9 @@ CrossrefBackend(mailto=os.environ.get("CROSSREF_MAILTO", "ops@you.org"))
   arrive as JATS XML and require post-processing (handled automatically).
 * **LocalBackend** to pin a curated reading list across runs. Convert any
   `SearchResult` into a corpus with `write_corpus()`.
-* **Paperclip** when you need broad biomedical coverage with full text and
-  agent-native search.
+* **Paperclip** only when its configured external service and returned coverage
+  match the review protocol. It is opt-in and does not, by itself, establish
+  biomedical or full-text completeness.
 
 Combine backends — `LiteratureClient` deduplicates by DOI / arXiv id so
 the same paper from two sources is one entry.
@@ -84,14 +90,18 @@ generate_citation_key(authors=["Cauchy, Augustin-Louis"], year=1847,
 # → "cauchy1847methode"
 ```
 
-The auto-generator works for ~95% of papers. For anonymous works, mass
-collisions, or persistent identifiers used in your manuscript, **pass
-`citation_key=` explicitly** to `paper_to_bibentry` — once a key appears
-in a manuscript draft, never let the generator change it.
+The auto-generator is a convenience, not an accuracy estimate. Inspect
+anonymous/corporate authors, transliteration, same-author/same-year collisions,
+and missing dates. Pass `citation_key=` explicitly to `paper_to_bibentry` when
+needed. Prefer stable keys after drafting starts, but correct a wrong key and
+update every consumer rather than preserving an error.
 
-## Never Hand-Edit `references.bib`
+## Curate the Canonical Bibliography
 
-Run
+Do not patch a generated `references.bib` silently if the next generator run
+will overwrite it. Put corrections in the curated input/override producer, or
+record a deliberate manual correction and then normalize the canonical file.
+Run:
 
 ```bash
 uv run python -m infrastructure.reference.citation.cli format \
@@ -112,6 +122,20 @@ uv run python -m infrastructure.reference.citation.cli validate \
 type (e.g. `article` requires title/author/year). Wire this into your
 pre-merge check.
 
+Formatting and required-field checks do not establish existence or claim
+support. Before submission, run the reference resolver with live access:
+
+```bash
+uv run python -m infrastructure.reference.verification verify \
+    projects/<qualified-name>/manuscript/references.bib \
+    --live --as-of-year <manuscript-year>
+```
+
+Treat `unchecked` and `unverifiable` as unfinished review. The resolver checks
+indexed existence and metadata; a reviewer must still read the primary source,
+confirm the adjacent proposition, assess evidence quality and applicability,
+and check correction, expression-of-concern, and retraction status.
+
 ## Failure Isolation, Not Failure Silence
 
 ```python
@@ -122,9 +146,11 @@ if result.errors:
         raise SystemExit(1)
 ```
 
-The aggregator never raises on per-backend network failures. **You are
-responsible for deciding what "good enough" means** for your run; the
-default is "any data beats no data."
+The aggregator records per-backend failures instead of raising them. **You are
+responsible for defining the minimum source coverage before retrieval.** A
+partial result is not evidence that the search was complete. The CLI exits
+non-zero on backend errors unless `--tolerate-errors` is explicitly supplied;
+do not use that flag in a completeness gate without a documented exception.
 
 ## Enrichment Order
 
@@ -140,12 +166,20 @@ so abstracts-first lets you bail out early on bad-quality returns.
   ones (≤4 k tokens) lower it sharply.
 * **Deduplicate before prompting** — `merge_papers()` removes near-dupes
   to save tokens.
-* **Pin seeds** — `OllamaClientConfig(seed=42, temperature=0.0)` makes
-  synthesis reproducible.
+* **Record, do not overclaim, repeatability** —
+  `OllamaClientConfig(seed=42, temperature=0.0)` reduces one source of
+  variation, but model/runtime versions and hardware can still change output.
+  Record model identity, prompt, parameters, input hashes, and output; do not
+  call the synthesis byte-reproducible without a two-run comparison.
 * **Quote citation keys in the prompt** — the LLM's output mentioning
   `[@kingma2014adam]` (Pandoc bracket-cite syntax, the manuscript convention —
   see [Manuscript Semantics](../guides/manuscript-semantics.md)) is
   downstream-resolvable; bare titles are not.
+* **Treat synthesis as annotation, not evidence** — require every factual or
+  comparative statement to resolve to inspected source text. Never cite an LLM
+  synthesis in place of the underlying paper, and preserve disagreements,
+  nulls, exclusions, and uncertainty instead of optimizing for a smooth
+  narrative.
 
 ## Failure Modes to Watch
 

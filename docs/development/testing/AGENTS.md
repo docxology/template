@@ -6,7 +6,13 @@ Developer-facing testing workflow and policies:
 
 - How to run test suites and enforce coverage thresholds
 - Guidance for integration tests and credentialed tests
-- Patterns aligned with the “no mocks” policy
+- Patterns aligned with the no-mock-framework and zero semantic
+  dependency-replacement policy
+
+Live-network and credentialed actions are never implied by an ordinary test
+request. Keep the default suite hermetic; require explicit operator authority,
+least-privilege credentials, and a disposable sandbox target for any external
+write test.
 
 ### Files
 

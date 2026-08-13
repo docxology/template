@@ -8,9 +8,9 @@ The PDF rendering pipeline uses **three cooperating tools**:
 |------|------|--------------|
 | `formalism.lua` filter | Numbers Definition/Proposition/Theorem blocks and resolves `@def:`, `@prop:`, `@thm:` references | [`infrastructure/rendering/_pandoc_filters.py`](../../infrastructure/rendering/_pandoc_filters.py) — ships with the repo, applied **first** |
 | `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`) — auto-detected on `PATH` |
-| Pandoc with `--natbib` | Converts the remaining `[@key]` to `\cite{}`/`\citep{}`/`\citet{}` | Same file |
+| Pandoc citation backend | Resolves the remaining `[@key]`; the PDF path uses `--natbib`, while HTML/DOCX/EPUB use `--citeproc` | Format-specific renderer |
 
-Order matters. `[@def:x]` and `[@knuth1997]` are both Pandoc *citations*; the formalism filter runs first so it can claim the formalism labels before the citation machinery would emit them as undefined citations. The same three-tool chain is applied to the PDF, HTML, DOCX and EPUB writers, so numbering is identical in every edition.
+Order matters. `[@def:x]` and `[@knuth1997]` are both Pandoc *citations*; the formalism filter runs first so it can claim the formalism labels before the citation machinery would emit them as undefined citations. The renderers request the same formalism/cross-reference filter order, but citation backends and bibliography selection differ by format. `pandoc-crossref` is also an optional external executable. Verify numbering and citations in every enabled edition rather than inferring parity from one render.
 
 Because these tools cooperate, **all citations must use Pandoc bracket-cite syntax** and **all cross-references must use Pandoc-crossref syntax**. Raw `\cite{}` and `\ref{}` work in PDF but break HTML / EPUB rendering and clutter the source.
 
@@ -38,9 +38,32 @@ Because these tools cooperate, **all citations must use Pandoc bracket-cite synt
 ### Rules — 1. Citations
 
 1. **Never use raw `\cite{key}`, `\citep{key}`, or `\citet{key}`** in Markdown — Pandoc emits the right LaTeX automatically under `--natbib`.
-2. Every citation key must resolve in `manuscript/references.bib` (or `manuscript/references_deep.bib` in `template_search_project`). Undefined keys surface as `[?]` in the PDF and as warnings in the build log.
+2. Every citation key must resolve in the bibliography set actually consumed by
+   each enabled format. Undefined keys surface as `[?]` or renderer warnings;
+   inspect every edition.
 3. Citation keys are lowercase alphanumeric with optional underscores. The convention used by the auto-generators is `<surname><year><titleword>` — e.g. `boyd2004convex`, `nocedal2006numerical`, `peng2011reproducible`.
-4. Bibliography files are **always** named `references.bib` (and `references_deep.bib` for the deep-search supplement). The Pandoc invocation merges every `manuscript/*.bib`, so projects with multiple bib files just drop them in.
+4. Use one canonical `references.bib` when cross-format parity matters. The
+   combined PDF currently unions every top-level `manuscript/*.bib`; combined
+   HTML reads `references.bib`; DOCX/EPUB read only the first `.bib` in sorted
+   filename order. Supplemental files such as `references_deep.bib` therefore
+   require consolidation or explicit per-format verification. See
+   [`../usage/output-formats.md`](../usage/output-formats.md#multi-bibliography-boundary).
+5. Syntax and metadata validation do not establish that a source supports the
+   adjacent claim. Before submission, validate the BibTeX, resolve identifiers
+   against scholarly indexes, and inspect the primary source for claim support:
+
+   ```bash
+   uv run python -m infrastructure.reference.citation.cli validate \
+     projects/<qualified-name>/manuscript/references.bib --strict
+   uv run python -m infrastructure.reference.verification verify \
+     projects/<qualified-name>/manuscript/references.bib \
+     --live --as-of-year <manuscript-year>
+   ```
+
+   `unchecked` and `unverifiable` are honest incomplete outcomes, not passes.
+   The resolver checks existence and metadata; it does not prove proposition
+   support, assess study quality, or replace checks for corrections,
+   expressions of concern, and retractions.
 
 ## 2. Equations
 
@@ -82,10 +105,37 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 ### Rules — 3. Figures
 
 1. Image paths are **relative to `manuscript/`** (Pandoc resolves them via `--resource-path`). Use `../output/figures/<name>.png` for figures the analysis pipeline writes.
-2. Labels follow the pattern `{#fig:<lowercase_underscore_name>}`. Do not use dashes (`fig:per-source` is allowed; `fig:per-source-2` invites confusion with the autonumber).
+2. Labels follow the pattern `{#fig:<lowercase_underscore_name>}`. Use stable,
+   descriptive lowercase names with underscores; do not encode a displayed
+   figure number in the label.
 3. Cross-reference with `[@fig:label]` for parenthetical ("see fig. 3") or `@fig:label` for narrative ("Figure 3 shows…").
-4. Captions should be self-contained — they appear under the figure in the PDF and as alt text in the HTML / EPUB output. Avoid "see above"; describe what the figure conveys.
-5. PNG only for archival stability; 300 dpi; colourblind-safe palette (Wong 2011).
+4. Captions must be self-contained, but a caption is not a substitute for all
+   accessibility text. The current HTML post-processor derives a concise image
+   `alt` value from the first caption sentence; the full caption remains
+   visible. Make that first sentence a useful identification of the visual,
+   then put interpretation, methods, denominators, and uncertainty in the
+   remaining caption. Inspect the rendered HTML rather than assuming the
+   conversion is semantically adequate.
+5. Register every generated figure in
+   `output/figures/figure_registry.json`, including a stable label, filename,
+   generator, caption, and explicit `metadata.alt_text`. The accessibility
+   validator checks that the field is present; human review must still check
+   that it conveys the figure's purpose and does not merely repeat its title.
+   Provide a nearby prose or appendix description when the relationships in a
+   complex figure cannot be conveyed concisely.
+6. Do not encode meaning by colour alone. Use a colour-accessible palette plus
+   redundant shapes, line styles, direct labels, or patterns; check contrast,
+   grayscale legibility, type size, clipping, and panel order in the final
+   render.
+7. Prefer vector output for line art when every target format supports it.
+   Otherwise publish a raster at sufficient resolution for its final physical
+   size (300 ppi is a common print target, not a universal guarantee). Use JPEG
+   for photographs and lossless formats for plots or diagrams.
+8. A statistical caption identifies the analysis population, what `n` counts,
+   units, transformations, summary statistic, uncertainty interval or error
+   bar, and any test or multiplicity correction needed to interpret the
+   visual. Dynamic caption values and annotations come from the same analysis
+   outputs as the plotted data; never copy them by hand.
 
 ## 4. Tables
 
@@ -107,7 +157,7 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
 
 1. Use Markdown pipe-tables; the caption attaches via `: <caption text> {#tbl:label}` placed **directly below the table** (no blank line).
 2. Reference with `[@tbl:label]`, not `\ref{tab:label}` or `Table 1`.
-3. For dynamic table bodies, use a `{{TOKEN}}` placeholder (substituted at render time) inside the table — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/manuscript/03_results.md) `RESULT_TABLE_ROWS` for an example.
+3. For dynamic table bodies, use a `{{TOKEN}}` placeholder (substituted at render time) inside the table — see [`template_code_project/manuscript/03_results.md`](../../projects/templates/template_code_project/manuscript/03_results.md) `RESULT_TABLE_ROWS` for an example. Generate the body from typed analysis records, and bind its population, units, rounding, and missing-value policy to those same records.
 
 ## 5. Sections
 
@@ -184,7 +234,7 @@ Set in `manuscript/config.yaml` or a section's YAML block:
 
 ### Relationship to raw-LaTeX theorem environments
 
-Authors may instead write `\begin{theorem}…\end{theorem}` raw LaTeX, which the manuscript preamble's `\newtheorem` definitions number in the PDF and which `web_renderer.py` rewrites **web-only** into `.theorem-box` Divs. That path predates this filter and still works, but it numbers PDF and web independently and offers no `[@label]` resolution. **Prefer the portable `::: {.definition #def:x}` Div form** — it is the only form that produces identical numbering across the PDF, HTML, DOCX and EPUB editions of the same manuscript.
+Authors may instead write `\begin{theorem}…\end{theorem}` raw LaTeX, which the manuscript preamble's `\newtheorem` definitions number in the PDF and which `web_renderer.py` rewrites **web-only** into `.theorem-box` Divs. That path predates this filter and still works, but it numbers PDF and web independently and offers no `[@label]` resolution. **Prefer the portable `::: {.definition #def:x}` Div form** — it is the cross-format path designed to keep numbering aligned. Inspect each rendered format because missing optional filters or format-specific conversion can still break parity.
 
 ## 7. Bibliography Section (`99_references.md`)
 
@@ -196,31 +246,78 @@ Every project has a thin `99_references.md` that points Pandoc-citeproc at the B
 Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc with `--natbib` during PDF render.
 ```
 
-The `99_` prefix ensures lexicographic-order assembly places it last. The Pandoc bibliography backend (natbib) replaces this section with the rendered citation list.
+The `99_` prefix ensures lexicographic-order assembly places it last. The PDF
+path uses natbib; HTML/DOCX/EPUB use citeproc with the format-specific
+bibliography selection described above.
 
 ## 8. Manuscript-variable substitution (`{{TOKEN}}`)
 
-Numeric values that come from analysis outputs **must** use `{{TOKEN_NAME}}` syntax — never hardcode numbers that change with `config.yaml` or analysis runs.
+Every **dynamic manuscript value** must have a source-bound producer. Dynamic
+means any fact that can change with data, configuration, code, environment, or
+release identity: counts, sample sizes, exclusions, denominators, estimates,
+intervals, p-values, thresholds, parameters, versions, dates, artifact counts,
+table cells, and statistics in prose, captions, alt text, or annotations.
+Stable prose and mathematical constants need not be tokenized. Never hardcode a
+second copy of a generated fact.
 
 ```markdown
 The algorithm took {{RESULT_MAX_ITERATIONS}} iterations on the configured grid.
 ```
 
-The pipeline (thin orchestrator pattern):
+The canonical code-exemplar pipeline is:
 
-1. `scripts/z_generate_manuscript_variables.py` delegates to `src/manuscript_variables.py` to compute all token values (pure computation — no I/O).
-2. The script writes `output/data/manuscript_variables.json` (the full `{TOKEN: value}` mapping).
+1. Importable project code in `src/manuscript_variables.py` reads canonical
+   configuration and analysis outputs, validates them, and computes the token
+   mapping. The project script remains a thin I/O orchestrator; the source
+   module need not be I/O-free.
+2. `scripts/z_generate_manuscript_variables.py` writes
+   `output/data/manuscript_variables.json` (the full `{TOKEN: value}` mapping).
 3. `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree()` writes substituted copies of `manuscript/*.md` to `output/manuscript/`. **Documentation-only files (`AGENTS.md`, `README.md`, `SYNTAX.md`) are excluded from the output tree** — their literal `{{TOKEN}}` examples remain unsubstituted in the source.
-4. PDF renderer (stage 03) reads from `output/manuscript/` if present, falling back to `manuscript/`.
+4. Stage 03 runs `z_generate_manuscript_variables.py` when the project provides
+   it, then reads from `output/manuscript/` when hydrated Markdown exists,
+   falling back to the source manuscript otherwise.
 
-The live cross-reference test `test_all_manuscript_tokens_are_generated` in each project's test suite enforces that every `{{TOKEN}}` used in `manuscript/*.md` is produced by the variables module. This catches drift before it ever reaches a PDF.
+`write_resolved_manuscript_tree()` deliberately logs and preserves an unknown
+token; it does **not** fail by itself. Projects that inject values must add a
+completeness test equivalent to the code exemplar's
+`test_all_manuscript_tokens_are_generated`, reject empty/non-finite or
+wrong-type scientific values in the producer, and run strict pre-render and
+publication gates. Draft-only sentinels such as `N/A` must never enter a release
+candidate.
+
+Keep raw scientific values typed in canonical analysis outputs. Apply units and
+presentation precision once at the manuscript-variable boundary. Record, in
+code or a project-owned registry, each token's definition, source field, unit,
+format, missing-value rule, and consumers. Values drawn inside figure pixels
+cannot be hydrated after plotting; their generator must read the same canonical
+records and publish a figure registry that identifies that generator.
+
+Regenerate in dependency order:
+
+```text
+canonical inputs + config
+→ analysis outputs
+→ variables + tables + figures + figure registry
+→ hydrated manuscript
+→ PDF/HTML/DOCX/EPUB
+→ validation, provenance, and release receipts
+```
+
+Do not hand-edit `manuscript_variables.json`, generated tables, figures,
+`output/manuscript/`, rendered documents, or receipts. Fix the producer and
+regenerate all downstream consumers from the same source revision.
 
 To verify all tokens resolved before rendering:
 
 ```bash
-grep -r "{{" projects/<your_project>/output/manuscript/ \
-  && echo "UNRESOLVED — re-run z_generate_manuscript_variables.py" \
-  || echo "All resolved"
+uv run python projects/<qualified-name>/scripts/z_generate_manuscript_variables.py
+if rg -n '\{\{[A-Z][A-Z0-9_]*\}\}' \
+  projects/<qualified-name>/output/manuscript; then
+  echo "Unresolved manuscript token(s)" >&2
+  exit 1
+fi
+uv run python -m infrastructure.validation.cli prerender \
+  projects/<qualified-name>/manuscript --repo-root .
 ```
 
 ## 9. Preamble (`preamble.md`)
@@ -252,22 +349,69 @@ Do not duplicate packages already loaded by `infrastructure/rendering/pdf_render
 | `{{TOKEN}}` literally in PDF | Substitution script not run, or token not defined in `src/manuscript_variables.py::generate_variables()` (code project) / `compute_variables()` (prose/search) | Run `z_generate_manuscript_variables.py`; add missing key to `src/manuscript_variables.py` |
 | `[@def:x]` left verbatim in the output, `reference to undeclared formalism` on stderr | No block declares `#def:x` — usually a typo or a deleted block | Fix the label, or restore the block. The reference stays visible on purpose |
 | Definition numbers disagree between the PDF and the EPUB | A hand-typed `**Definition 3.**` literal instead of a `::: {.definition}` block | Convert to the Div form and let the filter number it |
-| Render aborts with `formalism.lua is missing` | Broken or partial install of `infrastructure/rendering/` | `git checkout -- infrastructure/rendering/formalism.lua`. The render refuses rather than shipping unnumbered output |
+| Render aborts with `formalism.lua is missing` | Broken or partial install of `infrastructure/rendering/` | Preserve local work, then restore the file from the reviewed source revision or reinstall the package. The render refuses rather than shipping unnumbered output. |
 
-## 11. Per-project checklist for new authors
+## 11. Statistics, evidence, and claim limits
+
+- Define the research question, estimand, target population, sampling or
+  experimental unit, unit of analysis, comparator, and analysis population.
+- Report attempted, completed, analyzable, included, excluded, failed,
+  unavailable, and non-converged cases separately. Define what every `n`
+  counts; do not turn missing or unavailable observations into zero.
+- Report an effect estimate and uncertainty appropriate to the design. State
+  the interval type and level, test statistic, sidedness, degrees of freedom,
+  multiplicity correction, and software implementation when applicable.
+- Preserve pairing, clustering, repeated measures, and the correct resampling
+  unit in bootstrap, permutation, and cross-validation procedures. Disclose
+  stopping, exclusion, missingness, preprocessing, and model-selection rules.
+- Do not interpret non-significance as equivalence without a justified margin
+  and equivalence analysis. Separate confirmatory, exploratory, post hoc,
+  synthetic, historical, and current empirical evidence.
+- Use precision justified by measurement and uncertainty. Derive rounded prose,
+  tables, captions, and annotations from one raw value rather than independently
+  rounding copied literals.
+- Map each substantive claim to current analysis evidence or a verified source.
+  Narrow novelty, causal, comparative, and generalization language to the
+  study design and available evidence; report null and adverse outcomes.
+
+The repository can validate registrations, paths, hashes, and selected claim
+records, but automated green checks do not establish study validity or source
+support. Use the evidence gate where the project provides a claim ledger:
+
+```bash
+uv run python -m infrastructure.validation.cli evidence \
+  projects/<qualified-name> --fail-on-issues
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project <qualified-name> --rendered --strict \
+  --require-figure-accessibility --format markdown
+```
+
+## 12. Per-project checklist for new authors
 
 Before committing a manuscript change:
 
 - [ ] Every figure has `{#fig:label}` and is referenced with `[@fig:label]` somewhere in the prose.
+- [ ] Every generated figure is in `output/figures/figure_registry.json` with
+      its generator, self-contained caption, and meaningful explicit alt text;
+      complex figures also have a long description, data table, or equivalent.
 - [ ] Every table has `{#tbl:label}` and is referenced with `[@tbl:label]`.
 - [ ] Every numbered equation has `{#eq:label}` (or `\label{eq:label}` inside a `\begin{equation}` block) and is referenced with `[@eq:label]`.
 - [ ] Every section H1 has `{#sec:label}`.
 - [ ] Every Definition/Proposition/Theorem is a `::: {.definition #def:label}` block — **no hand-typed numbers** — and is referenced with `[@def:label]`.
 - [ ] The build log shows no `formalism.lua: reference to undeclared formalism` or `duplicate label` lines.
 - [ ] Every `[@key]` citation resolves in `references.bib`.
+- [ ] Each citation supports the adjacent proposition; metadata/existence,
+      correction, and retraction checks have explicit outcomes.
 - [ ] Cross-section references use `[@sec:label]`, not Markdown filename links.
 - [ ] No raw `\cite{}` or `\ref{}` in Markdown source (LaTeX is fine inside math/equation environments).
-- [ ] Numeric claims are `{{TOKEN}}`-driven, not hardcoded.
+- [ ] All dynamic values, including caption/table statistics and denominators,
+      are source-generated and `{{TOKEN}}`-driven where they appear in
+      manuscript text; no generated fact has a hand-copied duplicate.
+- [ ] Statistical populations, units, transformations, effect sizes,
+      uncertainty, exclusions, and multiplicity treatment agree across prose,
+      tables, figures, captions, and alt descriptions.
+- [ ] Analysis, hydration, render, provenance, and validation artifacts come
+      from one source/configuration lineage, with no hand-edited output.
 
 ## See also
 

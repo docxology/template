@@ -19,7 +19,14 @@ Define the pipeline as a **declarative DAG in YAML** (`pipeline.yaml`). Each sta
 - **Extensibility:** Projects can override stage definitions
 - **Reusability:** Same executor runs any DAG configuration
 
-### Example — Default DAG (10 stages)
+### Example — Original default selection (10 stages)
+
+This example records the core+LLM selection when the ADR was accepted; it is
+not the live stage inventory. The accepted decision is the YAML-owned DAG, not
+a fixed stage count. The current `pipeline.yaml` declares 16 stages, the normal
+full selection runs 10, and `--core-only` runs eight. Use the generated table in
+[`docs/RUN_GUIDE.md`](../../RUN_GUIDE.md#core-pipeline-stages--executive-reporting)
+for current names, dependencies, tags, and failure modes.
 
 ```yaml
 stages:
@@ -70,7 +77,9 @@ stages:
     tags: [core]
 ```
 
-Running `--core-only` excludes stages with the `llm` tag (leaving eight core stages).
+In this recorded selection, `--core-only` excludes the two `llm` stages and
+leaves eight core stages. New opt-in stages have since been added to the live
+YAML without changing the architectural decision.
 
 ## Consequences
 

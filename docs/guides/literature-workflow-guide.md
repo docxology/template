@@ -2,8 +2,10 @@
 
 This guide walks through three increasingly complete uses of the
 literature-search and reference modules. By the end you will have a working
-pipeline that turns a topic string into a populated `references.bib`,
-cached abstracts/PDFs, and an LLM-summarised reading report.
+pipeline that turns a topic string into a candidate corpus, a curated
+`references.bib`, cached retrieval material, and an LLM-assisted reading report.
+Discovery output and synthesis are inputs to scholarly review, not evidence of
+search completeness or support for manuscript claims.
 
 ```mermaid
 flowchart LR
@@ -39,8 +41,10 @@ uv run python -m infrastructure.search.literature.cli search \
 ```
 
 The output is a `SearchResult` JSON (`{query, papers, per_source_counts,
-errors}`). The `errors` key tells you whether any backend was unreachable;
-the search itself never throws on transient failure.
+errors}`). The `errors` key tells you whether any backend was unreachable. The
+client isolates per-backend failures; the CLI exits non-zero when errors are
+present unless `--tolerate-errors` is explicitly supplied. Preserve that
+failure in a review ledger rather than treating partial results as complete.
 
 Pass `--cache-dir output/search/cache` once and subsequent identical
 queries become deterministic file reads — important for CI.
@@ -90,7 +94,7 @@ for paper in result.papers:
     abstracts.fetch(paper)
     fulltext.fetch(paper)
 
-# Persist a curated corpus + BibTeX.
+# Persist candidate records; curate and verify them before manuscript use.
 write_corpus(result.papers, OUT / "corpus.json")
 db = BibDatabase()
 for paper in result.papers:
@@ -111,21 +115,48 @@ report = llm.query(prompt)  # LLMClient.query(prompt) -> str
 (OUT / "synthesis.md").write_text(report, encoding="utf-8")
 ```
 
+Record the query, backend set, retrieval date, filters, per-source errors,
+deduplication rule, screening decisions, model identity, prompt, parameters,
+and input/output hashes. The LLM report is a derived annotation: every factual
+or comparative statement promoted into the manuscript must be checked against
+the primary source, and disagreements, null results, and exclusions must remain
+visible.
+
+Validate the curated bibliography and then verify indexed existence/metadata:
+
+```bash
+uv run python -m infrastructure.reference.citation.cli validate \
+  projects/<qualified-name>/manuscript/references.bib --strict
+uv run python -m infrastructure.reference.verification verify \
+  projects/<qualified-name>/manuscript/references.bib \
+  --live --as-of-year <manuscript-year>
+```
+
+`unchecked` or `unverifiable` is not a pass. Index resolution still does not
+prove that a source supports an adjacent claim or replace manual correction,
+expression-of-concern, and retraction checks.
+
 ## Reproducibility
 
 Three knobs make this workflow deterministic in CI:
 
 1. **Cache the search.** `SearchCache` keys on `(text, max_results, year_*,
-   sorted(sources))`; commit `output/cache/search_*.json` for stable replay.
+   sorted(sources))`; treat `output/**/cache/` as ignored runtime state. For a
+   citable replay, promote the reviewed records to a tracked, project-owned
+   corpus (for example `data/curated_corpus.json`) and use `LocalBackend`.
 2. **Cache enrichment.** `AbstractFetcher(cache_dir=...)` and
    `FulltextFetcher(cache_dir=...)` write `.txt` / `.pdf` per paper id.
-3. **Pin the LLM seed.** `OllamaClientConfig(seed=42)` ensures the
-   synthesis step replays identically (within Ollama's determinism limits).
+3. **Control and measure the LLM step.** `OllamaClientConfig(seed=42,
+   temperature=0.0)` reduces variation but does not guarantee identical output
+   across model/runtime versions or hardware. Record the environment and
+   compare two runs before making a reproducibility claim.
 
 ## Rate Limits
 
-* **Crossref** — pass `mailto=` for the polite pool; otherwise occasional 429s.
-* **arXiv** — soft cap ≈ 1 query/3 s; cache aggressively.
+* **Crossref** — pass a monitored `mailto=` contact and obey current service
+  guidance; handle 429 responses explicitly.
+* **arXiv** — obey current API guidance, back off when throttled, and cache
+  repeated requests.
 * **Paperclip** — paid; never enabled by default. Set `PAPERCLIP_API_KEY` to
   opt in.
 

@@ -58,7 +58,7 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 
 | | |
 | --- | --- |
-| **Contract** | Discover tests under `tests/` and `projects/*/tests/`; coverage measurement; fixtures; parametrized tests; no-mocks policy (real I/O, real HTTP via `pytest-httpserver`). |
+| **Contract** | Discover infrastructure tests and each public project's tests in isolated pytest invocations; measure coverage; support fixtures and parametrization; prohibit mock frameworks and semantic dependency replacement while permitting local protocol fixtures and environment isolation. |
 | **Current implementation** | `pytest` + `pytest-cov` + `pytest-httpserver`. Coverage floors: 60% infra, 90% per-project, plus a 75% combined union in the local all-project orchestrator. |
 | **Migration path** | `pytest` is unusually durable (active since 2003). If succeeded, the most likely successor is a property-based/agentic test runner; the **no-mocks contract** is the harder thing to preserve — see `docs/maintenance/regression-testing.md` for the long-term direction (regression-pinned numerical outputs as the actual quality binding). |
 
@@ -75,16 +75,16 @@ A maintainer in 2030 should be able to read this guide and know: "ruff is the im
 
 | | |
 | --- | --- |
-| **Contract** | Optional LLM-driven *draft assistance* (not "scientific review") for manuscript structure and language pass; optional translation of technical abstracts (currently zh / hi / ru). Must work offline; must be opt-out; must not gate the rest of the pipeline. |
-| **Current implementation** | Local Ollama with `gemma3:4b` as default. Stages 7 and 8 in pipeline.yaml. |
-| **Disclaimer** | Renamed 2026-05-20 from "LLM Scientific Review" to "LLM Structural Lint (Draft Assistance)" — see `infrastructure/llm/README.md` for why. |
+| **Contract** | Optional LLM-driven draft assistance for manuscript structure/language and optional abstract translation. It is not an independent scientific, statistical, or scholarship review. Core execution must remain available without the LLM stages; when an operator explicitly selects a capability that requires Ollama, missing tooling must fail or report its documented skip state honestly. |
+| **Current implementation** | Local Ollama with the configured project model. The stable pipeline keys are `llm_reviews` and `llm_translations`; numeric positions may change when optional stages are inserted or filtered. |
+| **Disclaimer** | Some implementation and UI labels retain “LLM Scientific Review” for compatibility. Treat the output as model-assisted draft feedback, never as evidence that scientific claims are valid. See `infrastructure/llm/README.md`. |
 | **Migration path** | The model pin (`gemma3:4b`) will be stale within 18 months. The Ollama API is stable; swap to a stronger local model (Qwen3-7B class, Llama-3.x, Gemma-3-larger, etc.) by changing the model name in project config. Re-tune prompts when changing model family. If Ollama-the-product is succeeded by a different local-model runner, the integration boundary is `infrastructure/llm/core/client.py` (and `infrastructure/llm/core/_connection.py`) — port those. |
 
 ## LaTeX / PDF rendering
 
 | | |
 | --- | --- |
-| **Contract** | Markdown manuscript sections → professional PDF with citations, figures, tables, cross-references, and TOC. Deterministic given fixed seeds + `--deterministic` flag. |
+| **Contract** | Markdown manuscript sections → professional PDF with citations, figures, tables, cross-references, and TOC. Repeatability claims must be bound to the particular renderer, source revision, dependency/toolchain receipt, and artifact hash; `--deterministic` on secure execution primarily controls steganographic metadata and does not prove every upstream analysis/render byte is deterministic. |
 | **Current implementation** | Pandoc → LaTeX → PDF pipeline (via `infrastructure/rendering/`). Uses `multirow`, `cleveref`, `doi`, `newunicodechar` from `tlmgr`. |
 | **Migration path** | LaTeX is the most durable component in the stack (50+ year history); migration is unlikely to be forced before 2046. The risk is `tlmgr` package availability — pin package versions when a manuscript is locked for publication; archive a snapshot of the rendering environment as a Docker image (see [`stage-10-executable-bundle.md`](stage-10-executable-bundle.md)). |
 

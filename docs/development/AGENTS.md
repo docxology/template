@@ -24,10 +24,21 @@ Technical guide for `docs/development/` — contribution guidelines, testing, se
 ## Key Conventions
 
 - **Project layout reference**: [`projects/templates/template_code_project/`](../../projects/templates/template_code_project/); discoverable names → [_generated/active_projects.md](../_generated/active_projects.md).
-- All contributions require tests (90% project, 60% infrastructure coverage)
-- No mocks — all tests use real numerical examples
+- All behavior changes require meaningful tests. Coverage floors are 90% for
+  each public project's `src/` and 60% for `infrastructure/`; generated counts
+  and current measurements belong in [`../_generated/COUNTS.md`](../_generated/COUNTS.md).
+- Mock frameworks and semantic dependency replacement are prohibited. Real
+  local fixtures, temporary files, local HTTP servers, and narrowly scoped
+  environment isolation remain valid; verify both the lexical and inventory
+  contracts with `scripts/audit/verify_no_mocks.py`.
 - Thin orchestrator pattern enforced for all scripts
 - Security vulnerabilities reported via `security.md` process
+- Never commit local-only `projects/{active,working,ongoing,archive}/` content
+  or non-template `fonds/`, `rules/`, or `tools/` content. Run
+  `scripts/audit/check_tracked_all.py` before publication-oriented pushes.
+- Local validation, scientific readiness, owner approval, merge, release, and
+  publication are separate states. Documentation must not collapse them into
+  one "passed" claim.
 
 ## See Also
 

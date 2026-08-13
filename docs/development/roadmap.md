@@ -173,22 +173,12 @@ deterministic feedback.
 
 ## Next Up
 
-Use [`TO-DO.md`](../../TO-DO.md) as the authoritative backlog and live snapshot.
-The current open top items are:
-
-- `SECURITY-OWNERSHIP-1`
-- `SECURITY-PRIVATE-PROMOTION-1`
-- `COVERAGE-BASELINE-1`
-- `CI-ERGONOMICS-1`
-
-Shipped and not re-tracked here: the GitHub supply-chain hygiene set
-(`GH-PIN-1`, `GH-ACTIONLINT-1`, `GH-AUTOMERGE-1`), `LOG-CLEAN-1`,
-`READFILE-SAFE-1`, `CI-MATRIX-DYNAMIC-1`, `FMT-BUNDLE-1`, `AI-SPINE-V2`,
-`COVERAGE-REBASE-1`, and the five `v3.3.0` Major capabilities
-(`EVIDENCE-GRAPH-1`, `INCREMENTAL-PIPELINE-1`, `PLUGIN-STAGES-1`,
-`REPRO-BUNDLE-1`, `DASHBOARD-1`), plus pip-audit blocking CI, Bandit LOW triage,
-docs-lint CI, the per-project test runner, and SIA public-exemplar promotion. See
-[`CHANGELOG.md`](../../CHANGELOG.md) for the release history.
+Use [`TO-DO.md`](../../TO-DO.md) as the authoritative future-work backlog and
+[`CHANGELOG.md`](../../CHANGELOG.md) for shipped history. Do not copy a rotating
+list of open IDs into this roadmap: backlog normalization can close, split, or
+rename them without changing this long-horizon document. Before planning work,
+run `uv run python scripts/audit/check_backlog.py` and inspect the current
+source revision.
 
 ---
 

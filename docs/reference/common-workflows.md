@@ -33,7 +33,7 @@
 1. **Edit the abstract**
 
    ```bash
-   vim projects/templates/template_code_project/manuscript/01_abstract.md
+   vim projects/templates/template_code_project/manuscript/00_abstract.md
    ```
 
 2. **Add your content**
@@ -48,13 +48,13 @@
 
    ```bash
    # Run core pipeline (eight stages with --core-only; see RUN_GUIDE.md)
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   ./run.sh pipeline --project templates/template_code_project --core-only
    ```
 
 4. **View the result**
 
    ```bash
-   open output/templates/template_code_project/pdf/01_abstract.pdf  # Individual section PDFs
+   open output/templates/template_code_project/pdf/00_abstract.pdf
    ```
 
 **Expected Result**: Professional PDF with your content formatted
@@ -95,13 +95,13 @@
 4. **Rebuild manuscript**
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   ./run.sh pipeline --project templates/template_code_project --core-only
    ```
 
 5. **Reference from other sections**
 
    ```markdown
-   See Section \ref{sec:limitations} for discussion of constraints.
+   See [@sec:limitations] for discussion of constraints.
    ```
 
 **Expected Result**: New section appears in correct order in combined PDF
@@ -144,7 +144,7 @@
    ```
 
    ```python
-   from projects.template_code_project.src.data_analysis import analyze_data
+   from projects.templates.template_code_project.src.data_analysis import analyze_data
 
    def test_analyze_data():
        result = analyze_data([1, 2, 3, 4, 5])
@@ -167,9 +167,10 @@
 
    ```python
    #!/usr/bin/env python3
-   import os
+   from pathlib import Path
+
    import matplotlib.pyplot as plt
-   from projects.template_code_project.src.data_analysis import analyze_data  # Import from project src/
+   from projects.templates.template_code_project.src.data_analysis import analyze_data
 
    # Use src/ method for computation
    data = [1, 2, 3, 4, 5]
@@ -182,10 +183,11 @@
    ax.set_title('Data Analysis')
 
    # Save to output
-   output_path = 'projects/{name}/output/figures/my_analysis.png'
-   os.makedirs(os.path.dirname(output_path), exist_ok=True)
+   output_path = Path("projects/templates/template_code_project/output/figures/my_analysis.png")
+   output_path.parent.mkdir(parents=True, exist_ok=True)
    fig.savefig(output_path)
-   print(output_path)  # Print for manifest
+   plt.close(fig)
+   print(output_path)
    ```
 
 5. **Run script**
@@ -197,13 +199,12 @@
 6. **Add to manuscript**
 
    ```markdown
-   \begin{figure}[h]
-   \centering
-   \includegraphics[width=0.8\textwidth]{../output/figures/my_analysis.png}
-   \caption{Statistical analysis of dataset}
-   \label{fig:my_analysis}
-   \end{figure}
+   ![Summary statistics for the declared dataset.](../output/figures/my_analysis.png){#fig:my_analysis width=80%}
    ```
+
+   Also declare the figure's filename, caption, generating function, and
+   concise alt text in the project's generated figure registry. If the caption
+   contains changing statistics, inject them from the same analysis output.
 
 **Expected Result**: Figure appears in manuscript with professional formatting
 
@@ -224,32 +225,35 @@
 1. **Write equation with label**
 
    ```markdown
-   \begin{equation}\label{eq:quadratic}
+   $$
    f(x) = ax^2 + bx + c
-   \end{equation}
+   $$ {#eq:quadratic}
    ```
 
 2. **Reference equation in text**
 
    ```markdown
-   The quadratic function \eqref{eq:quadratic} has two solutions.
+   The quadratic function [@eq:quadratic] has two solutions.
    ```
 
 3. **For multiple equations**
 
    ```markdown
-   \begin{align}
-   f(x) &= x^2 + 2x + 1 \label{eq:first} \\
-   g(x) &= x^3 - x \label{eq:second}
-   \end{align}
+   $$
+   f(x) = x^2 + 2x + 1
+   $$ {#eq:first}
 
-   Equations \eqref{eq:first} and \eqref{eq:second} are related.
+   $$
+   g(x) = x^3 - x
+   $$ {#eq:second}
+
+   [@eq:first] and [@eq:second] are related.
    ```
 
 4. **Rebuild**
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   ./run.sh pipeline --project templates/template_code_project --core-only
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -277,42 +281,37 @@
 ```markdown
 # Methodology {#sec:methodology}
 
-As described in Section \ref{sec:methodology}...
+As described in [@sec:methodology]...
 ```
 
 ### Equation References
 
 ```markdown
-\begin{equation}\label{eq:important}
+$$
 E = mc^2
-\end{equation}
+$$ {#eq:important}
 
-From Equation \eqref{eq:important}, we see...
+From [@eq:important], we see...
 ```
 
 ### Figure References
 
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics{../output/figures/plot.png}
-\caption{Results}
-\label{fig:results}
-\end{figure}
+![Results under the declared analysis conditions.](../output/figures/plot.png){#fig:results}
 
-Figure \ref{fig:results} shows...
+[@fig:results] shows...
 ```
 
 ### Table References
 
 ```markdown
-\begin{table}[h]
-\caption{Performance metrics}
-\label{tab:performance}
-...
-\end{table}
+| Metric | Value |
+| --- | ---: |
+| Performance | {{PERFORMANCE_VALUE}} |
 
-Table \ref{tab:performance} summarizes...
+: Performance metrics generated from canonical analysis. {#tbl:performance}
+
+[@tbl:performance] summarizes...
 ```
 
 **Validation**:
@@ -359,7 +358,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
    ```
 
    ```python
-   from projects.template_code_project.src.statistics import calculate_variance, calculate_std_dev
+   from projects.templates.template_code_project.src.statistics import calculate_variance, calculate_std_dev
 
    def test_calculate_variance():
        values = [1, 2, 3, 4, 5]
@@ -381,7 +380,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 4. **Use in scripts (thin orchestrator)**
 
    ```python
-   from projects.template_code_project.src.statistics import calculate_std_dev
+   from projects.templates.template_code_project.src.statistics import calculate_std_dev
 
    data = [1, 2, 3, 4, 5]
    std = calculate_std_dev(data)  # Use src/ method
@@ -446,7 +445,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
    ```
 
 5. **Check for missing lines**
-   - Lines marked with `>>>>>` are not covered
+   - The report's `Missing` column lists uncovered line numbers
    - Add tests to cover all branches
 
 6. **Repeat until ≥90%** (project `src/` gate; see [`COUNTS.md`](../_generated/COUNTS.md))
@@ -472,7 +471,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 1. **Run tests verbosely**
 
    ```bash
-   uv run pytest tests/ -v
+   uv run pytest tests/infra_tests/ -v
    ```
 
 2. **Run specific test**
@@ -490,7 +489,7 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 4. **Check detailed output**
 
    ```bash
-   uv run pytest tests/ -vv --tb=long
+   uv run pytest tests/infra_tests/ -vv --tb=long
    ```
 
 5. **Common issues**:
@@ -527,17 +526,19 @@ uv run pytest -x
 1. **Generate coverage report**
 
    ```bash
-   uv run pytest tests/ --cov=src --cov-report=term-missing
+   uv run pytest projects/templates/template_code_project/tests/ \
+     --cov=projects/templates/template_code_project/src --cov-report=term-missing
    ```
 
 2. **Identify missing lines**
-   - Look for lines marked `>>>>>`
+   - Read the terminal report's `Missing` line-number column
    - Note which functions/branches aren't covered
 
 3. **Analyze uncovered code**
 
    ```bash
-   uv run pytest tests/ --cov=src --cov-report=html
+   uv run pytest projects/templates/template_code_project/tests/ \
+     --cov=projects/templates/template_code_project/src --cov-report=html
    open htmlcov/index.html
    ```
 
@@ -549,7 +550,8 @@ uv run pytest -x
 5. **Verify improvement**
 
    ```bash
-   uv run pytest tests/ --cov=src --cov-report=term-missing
+   uv run pytest projects/templates/template_code_project/tests/ \
+     --cov=projects/templates/template_code_project/src --cov-report=term-missing
    ```
 
 **Example - Covering Conditional**:
@@ -580,20 +582,20 @@ def test_process_negative():
 1. **Run pipeline (recommended)**
 
    ```bash
-   # Standard core build (eight executor stages by default; no LLM)
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   # Standard core build (declared core selection; excludes LLM-tagged stages)
+   ./run.sh pipeline --project templates/template_code_project --core-only
 
    # Or use unified interactive menu
    ./run.sh
 
    # Run individual stage scripts (each requires --project {name})
-   uv run python scripts/pipeline/stage_00_setup.py --project {name}
-   uv run python scripts/pipeline/stage_01_test.py --project {name}
-   uv run python scripts/pipeline/stage_02_analysis.py --project {name}
-   uv run python scripts/pipeline/stage_03_render.py --project {name}
-   uv run python scripts/pipeline/stage_04_validate.py --project {name}
-   uv run python scripts/pipeline/stage_05_copy.py --project {name}
-   # Optional: LLM (06), executive report (07) — see RUN_GUIDE.md
+   uv run python scripts/pipeline/stage_00_setup.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_04_validate.py --project templates/template_code_project
+   uv run python scripts/pipeline/stage_05_copy.py --project templates/template_code_project
+   # Optional and extended stages are declared in pipeline.yaml; see RUN_GUIDE.md
    ```
 
 2. **Check for errors**
@@ -606,13 +608,17 @@ def test_process_negative():
 
    ```bash
    # Combined PDF after copy outputs
-   open output/{name}/pdf/{name}_combined.pdf
+   open output/templates/template_code_project/pdf/template_code_project_combined.pdf
 
    # Or working copy under the project tree
-   open projects/{name}/output/pdf/{name}_combined.pdf
+   open projects/templates/template_code_project/output/pdf/template_code_project_combined.pdf
    ```
 
-**Core pipeline** (`--core-only`, default flags): eight executor stages — clean outputs, environment setup, infrastructure tests, project tests, analysis, PDF rendering, output validation, copy outputs. **Not** part of core: LLM stages (`scripts/pipeline/stage_06_llm_review.py`) and cross-project executive reporting (`scripts/pipeline/stage_07_executive_report.py`).
+**Core pipeline** (`--core-only`) follows the core-tagged path declared in
+`pipeline.yaml`. See the
+[generated stage table](../core/workflow.md#canonical-stage-table-generated)
+for the current order. LLM stages and cross-project executive reporting are
+outside the core selection.
 
 **Total Time**: Varies by project and machine; the sequence above is ordered as in `PipelineExecutor`.
 
@@ -692,7 +698,7 @@ def test_process_negative():
 1. **Create supplemental file**
 
    ```bash
-   vim manuscript/S03_supplemental_figures.md
+   vim projects/templates/template_code_project/manuscript/S03_supplemental_figures.md
    ```
 
 2. **Add content**
@@ -708,13 +714,13 @@ def test_process_negative():
 3. **Reference from main text**
 
    ```markdown
-   See Section \ref{sec:supplemental_figures} for additional figures.
+   See [@sec:supplemental_figures] for additional figures.
    ```
 
 4. **Rebuild**
 
    ```bash
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   ./run.sh pipeline --project templates/template_code_project --core-only
    ```
 
 **Naming Convention**:
@@ -762,14 +768,15 @@ def test_process_negative():
 4. **Run tests**
 
    ```bash
-   uv run pytest tests/ --cov=src --cov-report=term-missing
+   uv run pytest tests/infra_tests/
+   uv run pytest projects/templates/template_code_project/tests/
    ```
 
 5. **Run build**
 
    ```bash
    # Core pipeline (eight stages with --core-only)
-   uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+   ./run.sh pipeline --project templates/template_code_project --core-only
 
    # Or use unified interactive menu
    ./run.sh
@@ -778,7 +785,8 @@ def test_process_negative():
 6. **Commit changes**
 
    ```bash
-   git add .
+   git status --short
+   git add path/to/changed_file.py path/to/changed_test.py path/to/changed_doc.md
    git commit -m "feat: add feature"
    ```
 

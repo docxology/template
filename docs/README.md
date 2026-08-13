@@ -14,6 +14,26 @@ The `docs/` directory contains project documentation organized by purpose and au
 
 Machine-generated snippets (including that authoritative list) live under [`_generated/`](_generated/README.md). Human-written pages should link there instead of copying project rosters.
 
+## Evidence and freshness
+
+Documentation is a view over source-owned facts, not a second place to maintain
+them. Use the narrowest authoritative source for each kind of claim:
+
+| Claim type | Authoritative source | Documentation rule |
+| --- | --- | --- |
+| Runtime behavior, defaults, and precedence | Implementation, schema, and tests | Verify the documented command or code path; do not infer behavior from an older guide. |
+| Repository counts, public roster, coverage, and stage tables | [`_generated/`](_generated/README.md) and its named producers | Link the generated artifact; do not copy volatile literals into prose. |
+| Manuscript metrics and statistical results | Project analysis outputs → `output/data/manuscript_variables.json` → hydrated `output/manuscript/` | Inject `{{TOKEN}}` values at render time; never hand-copy result numbers into manuscript source. |
+| Scholarly claims | Primary sources, project bibliography, and claim/evidence registries where present | Match the strength of the prose to the design and evidence; distinguish observation, association, prediction, and causation. |
+| Figures, captions, and accessibility text | The same analysis artifact plus figure/artifact registries | Keep plot values, caption statistics, labels, units, uncertainty, provenance, and alt text consistent and source-bound. |
+| Publication or release status | Fresh local gates, hosted CI, publication receipts, and the remote commit | Report these separately; a green local check is not proof of publication or remote synchronization. |
+
+The detailed authoring rules live in
+[`rules/documentation_standards.md`](rules/documentation_standards.md), manuscript
+syntax in [`guides/manuscript-semantics.md`](guides/manuscript-semantics.md), and
+the reusable deep-review prompt in
+[`prompts/comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md`](prompts/comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md).
+
 ## Documentation Navigation Map
 
 ```mermaid
@@ -91,8 +111,11 @@ graph TD
 | [`prompts/`](prompts/) | AI prompt templates (see [prompts/AGENTS.md](prompts/AGENTS.md)) | manuscript, registry cross-refs, literature synthesis, code, test, feature, refactor, docs, infra, validation, assessment |
 | [`security/`](security/) | Security & provenance | steganography, hashing, secure execution |
 | [`rules/`](rules/) | Project Rules | AGENTS, README, testing, manuscript, etc. |
+| [`audit/`](audit/) | Generated point-in-time audit records | filepath audit snapshot and its producer contract |
+| [`plans/`](plans/) | Active repo-wide handoffs | scoped plans with acceptance lines; completed history stays in git |
+| [`images/`](images/) | Documentation-only visual assets | small, public, referenced diagrams or screenshots |
 | [`streams/`](streams/) | Livestream & talk notes | timestamped session notes tied to releases or papers |
-| [`_generated/`](_generated/) | Generated snippets | `AGENTS.md`, `active_projects.md` (discover_projects roster) |
+| [`_generated/`](_generated/) | Generated facts and indexes | counts, public roster, coverage/status evidence, architecture, publication records, skills index |
 
 ## Quick Navigation
 
@@ -134,8 +157,30 @@ graph TD
 | Understand modules | [`modules/modules-guide.md`](modules/modules-guide.md) |
 | Publish a project | [`guides/publication-runbook.md`](guides/publication-runbook.md) |
 | Best practices | [`best-practices/best-practices.md`](best-practices/best-practices.md) |
+| Review accessibility | [`accessibility.md`](accessibility.md) |
 | Security policies | [`security/README.md`](security/README.md) |
 | Validate docs | [`../scripts/audit/lint_docs.py`](../scripts/audit/lint_docs.py) |
+
+### Documentation verification
+
+Run these from the repository root after changing documentation or a producer
+that feeds it:
+
+```bash
+uv run python scripts/audit/lint_docs.py --json --repo-root .
+uv run python scripts/audit/audit_documentation.py --format markdown
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/docgen/counts.py --check
+uv run python scripts/docgen/exemplar_roster.py --check
+uv run python scripts/docgen/status_evidence.py --check
+uv run python scripts/docgen/api_reference.py --check
+uv run python -m infrastructure.skills check
+uv run python -m infrastructure.skills check-contracts
+```
+
+`lint_docs.py` and the generated-file checks are blocking correctness checks.
+`audit_documentation.py` is a broad RedTeam inventory whose advisories require
+review and disposition; its raw count is not itself a release verdict.
 
 ## Topic routing (canonical → deep dives)
 

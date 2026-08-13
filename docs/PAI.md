@@ -18,9 +18,9 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 1. **Standardized Structure** — `infrastructure/` for generic tools, `projects/{name}/src/` for domain logic.
 2. **Thin Orchestration** — Scripts coordinate; all business logic lives in src/ modules.
 3. **Multi-Project Support** — Multiple independent research projects in a single repo.
-4. **Zero-Mock Testing** — Absolute prohibition on mocks; tests use real execution only.
+4. **Real-Behavior Testing** — The no-mocks verifier rejects prohibited mock frameworks; tests exercise real behavior and must not add semantic dependency-replacement debt.
 5. **Agent-Friendly Documentation** — Each documented directory carries `README.md` and `AGENTS.md` where the tree policy requires it; PAI-oriented context lives in root-adjacent `PAI.md` files (e.g. this file, [`../infrastructure/PAI.md`](../infrastructure/PAI.md), [`../scripts/PAI.md`](../scripts/PAI.md), [`../tests/PAI.md`](../tests/PAI.md), [`../projects/PAI.md`](../projects/PAI.md)), not in every subdirectory.
-6. **Headless Cloud Deployment** — `./run.sh --pipeline` bootstraps uv automatically on any server.
+6. **Headless Cloud Deployment** — On supported POSIX hosts with network access, `curl` or `wget`, and a SHA-256 tool, `./run.sh --pipeline` can install the pinned, checksum-verified uv bootstrap before syncing the workspace.
 
 ---
 
@@ -72,18 +72,18 @@ flowchart TB
     ROOT --> INFRA[infrastructure<br/>Layer 1 · importable Python packages<br/>see COUNTS.md]
     ROOT --> RUN[run.sh<br/>Thin shell dispatcher → infrastructure.orchestration]
     ROOT --> SCR[scripts<br/>Entry-point orchestrators · thin wrappers]
-    ROOT --> PROJ[projects<br/>Active research projects · Layer 2]
+    ROOT --> PROJ[projects/templates + optional active<br/>Rendered research projects · Layer 2]
     ROOT --> ARCH[projects/archive<br/>Archived · not executed]
     ROOT --> WIP[projects/working<br/>WIP · not discovered]
     ROOT --> T[tests<br/>Infrastructure tests]
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 
-    INFRA --> INFRA_PKGS[autoresearch · benchmark · core · doctor · documentation ·<br/>llm · methods · orchestration · project · prose ·<br/>publishing · reference · rendering · reporting · scientific ·<br/>search · sia · skills · steganography · validation]
+    INFRA --> INFRA_PKGS[Package inventory<br/>generated COUNTS.md + infrastructure/AGENTS.md]
 
-    SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>stage_00_setup → stage_06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
+    SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>pipeline entry points from pipeline.yaml ·<br/>execute_pipeline.py · execute_multi_project.py]
 
-    PROJ --> PROJ_F["template_active_inference · template_autopoiesis · template_autoresearch_project · template_autoscientists · template_code_project · template_data_descriptor · template_eda_notebook · template_gold_refinement · template_literature_meta_analysis · template_madlib · template_methods_paper · template_newspaper · template_pools_rules_tools · template_prose_project · template_redacted_report · template_registered_report · template_search_project · template_sia · template_storybook · template_template · template_textbook<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
+    PROJ --> PROJ_F["Public roster is generated in<br/>docs/_generated/active_projects.md<br/>concrete examples use template_code_project"]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff
@@ -147,7 +147,7 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `MPLBACKEND` | `Agg` | Headless matplotlib (required on servers) |
-| `UV_FROZEN` | `true` | Reproducible locked dependency installs |
+| `UV_FROZEN` | unset locally; `true` in CI/containers | Refuse lockfile mutation in controlled environments. Local `uv run` follows the normal workspace policy unless explicitly frozen. |
 | `LOG_LEVEL` | `1` | 0=DEBUG 1=INFO 2=WARN 3=ERROR |
 | `LOG_TERMINAL_VERBOSE` | unset | Set to restore the verbose `[ts] [LEVEL]` prefix on terminal output (file always has it). See [operational/logging/output-design.md](operational/logging/output-design.md). |
 | `FEP_LEAN_GAUSS_WORKFLOWS` | `1` | OpenGauss Lean session workflows; `--no-lean-workflows` or `0` disables |
@@ -164,15 +164,16 @@ Active project slugs: see [_generated/active_projects.md](_generated/active_proj
 |-------|----------|---------|
 | Infrastructure | `infrastructure/` | Generic, reusable tools — 60%+ test coverage |
 | Projects | `projects/{name}/src/` | Domain-specific science — 90%+ test coverage |
-| Outputs | `output/{name}/` | Final deliverables (git-ignored) |
+| Project outputs | `projects/<scope>/<name>/output/` | Working artifacts; canonical public exemplars may track only the deterministic evidence allowed by the public-output policy. |
+| Collected outputs | `output/<scope>/<name>/` | Final copied deliverables; runtime logs, checkpoints, and intermediates remain local-only. |
 | Entry Points | `scripts/`, `run.sh` | Thin orchestrators only |
 
 ---
 
 ## Constraints
 
-- **No Legacy** — Legacy methods are actively removed.
-- **Real Tests** — No mocks allowed. Verified by `scripts/audit/verify_no_mocks.py`.
+- **Compatibility is explicit** — Preserve documented public compatibility surfaces; retire obsolete paths deliberately instead of maintaining accidental shadow APIs.
+- **Real Tests** — Prohibited mock frameworks and semantic dependency replacements are checked by `scripts/audit/verify_no_mocks.py`; a green verifier is one gate, not evidence that every scientific claim is valid.
 - **Thin Orchestrators** — Scripts must not contain business logic.
 - **Coverage** — Infrastructure ≥ 60%, Projects ≥ 90%.
 - **Shell bootstrap** — `run.sh` / `secure_run.sh` source `scripts/shell/shell_bootstrap.sh`

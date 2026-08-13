@@ -1,425 +1,272 @@
-# Operations Runbook
+# Operations runbook
 
-This runbook defines standard operating procedures for maintaining the Research Project Template infrastructure.
+This runbook covers safe diagnosis and routine verification for the public
+template checkout. It deliberately separates read-only inspection, local
+environment changes, generated-output regeneration, git publication, and
+external release/deposit authority.
 
-## Table of Contents
+## Operating rules
 
-- [Daily Operations](#daily-operations)
-- [Weekly Operations](#weekly-operations)
-- [Monthly Operations](#monthly-operations)
-- [Incident Response](#incident-response)
-- [Health Check Script](#health-check-script)
+1. Read the applicable `AGENTS.md` before acting.
+2. Capture the checkout before changing it: branch, upstream, revision,
+   divergence, dirty paths, untracked paths, and nested repositories.
+3. Preserve unrelated and user-owned work. Do not use `git reset --hard`,
+   `git clean`, destructive checkout, broad recursive deletion, or an
+   unreviewed restore command as incident response.
+4. Treat `projects/{active,working,ongoing,archive}/` and non-template
+   `fonds/`, `rules/`, and `tools/` content as local-only. Runtime discovery
+   does not authorize tracking or publication.
+5. Regenerate outputs from their source producers. Do not hand-edit generated
+   reports, manifests, hydrated manuscripts, PDFs, or receipts to clear a gate.
+6. Report `passed`, `failed`, `blocked`, `not run`, `not applicable`, and
+   `unavailable` distinctly. A skipped optional tool is not a passing result.
+7. Local validation does not grant merge, tag, push, release, deposit, or
+   publication authority.
 
----
+## Baseline capture
 
-## Daily Operations
-
-### System Status Check
-
-Run the pipeline help to confirm `uv`/Python resolve and the orchestrator CLI loads, or run the standalone health check for a fuller readiness signal:
+Run from the repository root:
 
 ```bash
-./run.sh --help        # argparse usage: pipeline/multi/secure/menu/list-projects/link-projects/schema
-bash scripts/shell/health-check.sh   # Python, uv, Ollama, disk space, repo structure — see Health Check Script below
+git status --short --branch
+git remote -v
+git rev-parse HEAD
+git branch --show-current
+git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}'
+git submodule status --recursive
+df -h .
 ```
 
-**Expected output (`--help`):** argparse usage text listing the subcommands above; a non-zero exit or traceback means `uv`/Python/the orchestrator package is broken.
-**Expected output (`health-check.sh`):** a `✅`/`⚠️`/`❌` line per check (Python, uv, Ollama, disk space, Docker, repo structure), ending `=== All checks passed ===` on success.
-
-If Ollama is not running, start it:
+If an upstream is configured, refresh remote-tracking information without
+merging or overwriting local work:
 
 ```bash
-ollama serve
+git fetch origin
+git rev-list --left-right --count HEAD...origin/main
+git rev-parse origin/main
 ```
 
-### Audit Log Review
+Record fetch failures as `unavailable`; do not claim remote synchronization
+from local refs alone. Before pushing, re-check that the intended local SHA and
+remote target are exact and that no local-only path is tracked.
 
-Check the daily audit logs for errors, warnings, and unusual activity. Audit logs are located in two places:
+## Daily checks
 
-1. **Pipeline logs** — project-specific output:
-   ```
-   projects/*/output/logs/
-   ```
+### CLI and repository health
 
-2. **Hermes agent logs** (if applicable):
-   ```
-   ~/.hermes/logs/
-   ```
-
-**Review checklist:**
-- [ ] No ERROR or CRITICAL level entries in the last 24h
-- [ ] All pipeline stages completed successfully
-- [ ] No repeated failures for the same project
-- [ ] Disk space is stable (not rapidly decreasing)
-
-**Quick audit review command:**
+Read-only command discovery:
 
 ```bash
-# Check for errors across all project logs from today
-find projects/*/output/logs -name "*.log" -exec grep -l "ERROR\|CRITICAL" {} \; | head -20
-```
-
----
-
-## Weekly Operations
-
-### Full Pipeline Run
-
-Execute the complete pipeline across all active projects:
-
-```bash
-./run.sh --all-projects --pipeline
-```
-
-This runs:
-- Infrastructure tests
-- All project tests
-- Analysis
-- PDF rendering
-- Validation
-
-Monitor the progress and address any failures immediately. Flagged projects will appear in the console output with `❌` markers.
-
-### Gate Duration Monitoring
-
-Check the gate duration metrics to ensure stages are completing within acceptable time bounds. Stage gates are declared in `infrastructure/core/pipeline/pipeline.yaml` (parsed by `infrastructure/core/pipeline/dag.py`); standalone gate scripts live under `scripts/gates/`.
-
-**Check gate timing:**
-
-```bash
-# Look for timing data in the latest logs
-find projects/*/output/logs -name "*.json" -exec grep -l "\"gate\"" {} \; | xargs jq '.gate' 2>/dev/null | head -30
-```
-
-**Acceptable thresholds:**
-- Stage 1 (Tests): < 60s
-- Stage 2 (Analysis): < 300s
-- Stage 3 (Render): < 120s
-- Stage 4 (Validate): < 30s
-
-If any gate exceeds 150% of its threshold, investigate:
-- Is the project doing excessive work?
-- Are dependencies up to date?
-- Is there a resource bottleneck (CPU, memory, disk)?
-
-### Security Scan Review
-
-Run security scans and review findings:
-
-```bash
-# Run dependency vulnerability scan
-uv sync --quiet && uv pip list | cut -d' ' -f1 | xargs uv pip audit 2>&1 | tee /tmp/security_scan.txt
-
-# If you have trivy installed, scan the Docker image
-trivy image template:latest 2>&1 | tee -a /tmp/security_scan.txt
-```
-
-**Review checklist:**
-- [ ] No HIGH or CRITICAL vulnerabilities in dependencies
-- [ ] Docker image has no critical OS package vulnerabilities
-- [ ] No secrets or credentials exposed in repo (git secrets scan)
-
----
-
-## Monthly Operations
-
-### Audit Log Rotation
-
-Rotate out old audit logs to prevent disk fill. Logs older than 30 days are archived and compressed.
-
-**Rotation script:**
-
-```bash
-#!/usr/bin/env bash
-# docs/operational/scripts/rotate-logs.sh
-
-LOG_DIR="$HOME/.hermes/logs"
-ARCHIVE_DIR="$LOG_DIR/archive"
-DAYS_THRESHOLD=30
-
-mkdir -p "$ARCHIVE_DIR"
-
-# Find and compress logs older than 30 days
-find "$LOG_DIR" -name "*.log" -type f -mtime +$DAYS_THRESHOLD -exec sh -c '
-  for f; do
-    gzip "$f"
-    mv "${f}.gz" "$ARCHIVE_DIR/"
-  done
-' sh {} +
-
-# Also rotate project logs
-find . -path "*/output/logs/*.log" -type f -mtime +$DAYS_THRESHOLD -delete
-```
-
-Run the rotation:
-
-```bash
-./docs/operational/scripts/rotate-logs.sh
-```
-
-### Backup Verification
-
-Verify that backups are current and restorable. The backup strategy uses `rsync` to mirror critical directories.
-
-**Backup locations:**
-- Source: `~/.hermes`, `.cache/`, `output/`
-- Destination: defined in backup configuration (e.g., external drive or remote server)
-
-**Verification steps:**
-
-```bash
-# 1. Check backup freshness
-rsync -avun ~/.hermes/ backup:~/.hermes/ 2>&1 | grep -E "^deleting|^\.\/" | tail -5
-echo "Last backup modification:"
-find backup -type f -printf '%T+ %p\n' | sort -r | head -1
-```
-
-```bash
-# 2. Spot-check file integrity
-diff -r ~/.hermes backup:~/.hermes 2>&1 | head -20
-```
-
-```bash
-# 3. Test restore of a small sample (non-disruptive)
-mkdir -p /tmp/restore-test
-rsync -a backup:~/.hermes/config/ /tmp/restore-test/
-echo "Restore test successful: $(ls /tmp/restore-test | wc -l) files recovered"
-```
-
-**Acceptance criteria:**
-- Backup age < 24h (or per your SLA)
-- No files missing (diff reports 0 differences)
-- Restore test recovers expected files
-
-### Disaster Recovery Drill
-
-Conduct a tabletop or partial recovery drill monthly to ensure procedures work.
-
-**Drill scenario:**
-- Simulate loss of `~/.hermes`
-- Restore from backup to a test directory
-- Start critical services (Hermes, Ollama)
-- Run a smoke test: `./run.sh --project test_project --pipeline`
-
-**Drill checklist:**
-- [ ] Backup restoration completed in < 15 minutes
-- [ ] All services start cleanly
-- [ ] Smoke test passes
-- [ ] Document any issues and update this runbook
-
----
-
-## Incident Response
-
-### Hermes Not Responding
-
-**Symptom:** Hermes agent is unresponsive, timeouts, or returns errors.
-
-Hermes is an external agent-skill-discovery tool this repo integrates with (see
-`.agents/skills/` per template, CLAUDE.md's "Discoverable per-template skills"
-section) — this repo does not ship a `template` CLI or a bundled Hermes
-doctor/restart command. Diagnose and restart Hermes using its own
-documentation/CLI; the steps below are limited to what this repo can inspect.
-
-**Remediation:**
-
-```bash
-# 1. Check Hermes process status
-ps aux | grep -i hermes | grep -v grep
-
-# 2. Check Hermes' own logs (path depends on your Hermes install)
-tail -50 ~/.hermes/logs/hermes.log
-
-# 3. Restart Hermes per its own documentation, then re-verify this repo's
-#    pipeline is unaffected (Hermes is not required for ./run.sh):
 ./run.sh --help
+uv run python scripts/runner/execute_pipeline.py --help
+uv run python -m infrastructure.core.health --help
 ```
 
-**Recovery flow:**
-
-```mermaid
-flowchart TD
-    A[Hermes Unresponsive] --> B[Check process + Hermes logs]
-    B --> C{Issue Identified?}
-    C -->|Config Error| D[Fix Hermes configuration]
-    C -->|Stale Process| E[Kill and restart via Hermes' own tooling]
-    C -->|Network Issue| F[Check Network/API]
-    D --> G[Restart Hermes]
-    E --> G
-    F --> G
-    G --> H[Verify this repo is unaffected: ./run.sh --help]
-    H --> I[Resolved]
-```
-
-### Port Conflicts
-
-**Symptom:** Service fails to start due to port already in use (e.g., “Address already in use”).
-
-**Diagnosis:**
+The standalone health script also runs `uv sync --quiet`, so it can update the
+local environment and may require dependency/network access:
 
 ```bash
-# Identify process using the conflicting port (example: compose maps 8000:8000)
-lsof -i :8000
+bash scripts/shell/health-check.sh
 ```
 
-**Remediation:**
+Its optional Ollama/Docker warnings do not fail the script. Read its individual
+lines; the final exit code establishes only the checks implemented there.
+
+### Logs and disk
+
+Pipeline logs are project-local generated state. Inspect current paths without
+assuming a hard-coded project roster:
 
 ```bash
-# Option 1: Stop the conflicting process
-kill <PID>
-
-# Option 2: Change the port mapping in infrastructure/docker/docker-compose.yml
-# Then restart from infrastructure/docker/: docker compose --profile dev up -d
+find projects -path '*/output/logs/*.log' -type f -print
+find projects -path '*/output/logs/*.log' -type f -exec tail -n 40 {} \;
+du -sh output projects/*/output 2>/dev/null
+df -h .
 ```
 
-For Docker port conflicts:
+Hermes logs under `~/.hermes/logs/` exist only when that external tool is
+installed. Their absence says nothing about this repository's pipeline.
+
+## Change and CI-parity checks
+
+Choose checks based on the changed surface. The hosted workflow remains the
+authority for OS/Python matrices and exact job wiring.
 
 ```bash
-# Stop compose stacks using the project file
-docker compose -f infrastructure/docker/docker-compose.yml down
-docker stop $(docker ps -q --filter "publish=8000") 2>/dev/null || true
+# Static public source surface
+LINT=$(uv run python -m infrastructure.project.public_scope lint-paths)
+SRC=$(uv run python -m infrastructure.project.public_scope source-paths)
+uv run ruff check $LINT
+uv run ruff format --check $LINT
+uv run python scripts/gates/mypy_ratchet.py $SRC
+
+# Coverage-bearing Layer-1 contract
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
+
+# One public project, isolated
+uv run python scripts/pipeline/stage_01_test.py \
+  --project templates/template_code_project --project-only
+
+# Documentation and public-scope contracts
+uv run python scripts/audit/lint_docs.py --quiet
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/audit/check_tracked_all.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+uv run python scripts/audit/check_mirror_symlinks.py
+uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py \
+  --inventory --max-dependency-replacements 0
 ```
 
-### Disk Full
-
-**Symptom:** Write failures, pipeline crashes, or `No space left on device` errors.
-
-**Immediate actions:**
+The full public project matrix is expensive and runs one project per process:
 
 ```bash
-# 1. Identify large directories
-du -sh ~/.hermes .cache output projects/*/output 2>/dev/null | sort -rh | head -10
-
-# 2. Clean temporary/cache files
-rm -rf .cache/tmp/* .cache/downloads/*
-find output -name "*.tmp" -delete
-
-# 3. Remove old Docker artifacts
-docker system prune -af --volumes
-
-# 4. Archive and delete old logs (not yet rotated)
-find . -name "*.log" -size +10M -exec gzip {} \;
+uv run python scripts/pipeline/stage_01_test.py \
+  --project-only --all-projects --public-projects --profile release \
+  --project-workers serial
 ```
 
-**Prevention:** Ensure log rotation is active (see Monthly operations).
+Do not substitute one giant `pytest projects/*/tests` process; project
+`tests.conftest` packages can collide.
 
-### High Gate Latency
+## Security review
 
-**Symptom:** One or more pipeline stages take significantly longer than baseline.
-
-**Diagnosis:**
+Use the repository commands, not a package-list pipeline or a guessed scanner:
 
 ```bash
-# Check gate timing from recent runs
-find projects -name "*.json" -exec grep -l "\"duration\"" {} \; | xargs jq -r '.stage + ": " + (.duration|tostring) + "s"' 2>/dev/null | sort -u
+uv run python scripts/audit/check_staged_secrets.py
+uv run python scripts/audit/check_tracked_secrets.py
+uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
+uv run pip-audit --locked .
+uv run python scripts/gates/security_scan.py
 ```
 
-**Common causes & fixes:**
+`pip-audit` needs current advisory/network data. The optional security gate can
+report missing tools under `skipped_tools`; that is `skipped`, not clean. The
+hosted security job's retry and ignore-file policy in
+[`../../.github/workflows/ci.yml`](../../.github/workflows/ci.yml) is the exact
+CI contract.
 
-| Cause | Investigation | Fix |
-|-------|---------------|-----|
-| Large input data | Check project `data/` directory size | Archive unused datasets |
-| Memory pressure | `htop` → swap usage | Close other apps; increase RAM |
-| Slow disk I/O | `iostat` 1 5 | Move caches to SSD |
-| Stale dependencies | Compare `uv.lock` age | Run `uv sync --upgrade` |
-| Network timeout | Check `OLLAMA_HOST` reachable | Fix network; use local model |
+## Source-current pipeline check
 
-**Escalation:** If latency persists > 2× baseline for 3 consecutive runs, create an incident ticket.
-
-### LLM Provider Outage
-
-**Symptom:** LLM-dependent stages (review, translation) fail with connection errors.
-
-**Diagnosis:**
+For a focused canonical exemplar:
 
 ```bash
-# Check Ollama status
+uv run python scripts/runner/execute_pipeline.py \
+  --project templates/template_code_project --core-only
+```
+
+This can clean and regenerate the selected project's output. Inspect dirty and
+generated paths first. A green core run establishes the implemented engineering
+pipeline only; it does not by itself establish current scholarship, statistical
+claim validity, semantic accessibility, owner approval, or publication.
+
+Use `--resume` only when the checkpoint belongs to the same intended project,
+inputs, configuration, and revision:
+
+```bash
+uv run python scripts/runner/execute_pipeline.py \
+  --project templates/template_code_project --core-only --resume
+```
+
+If checkpoint identity is uncertain, preserve it for diagnosis and create a
+fresh isolated candidate rather than deleting it in place.
+
+## Monthly log rotation
+
+The tracked helper is destructive for old project logs: it compresses and moves
+Hermes `.log` files older than 30 days and deletes project pipeline `.log` files
+older than 90 days. Preview the exact candidates first:
+
+```bash
+find "$HOME/.hermes/logs" -name '*.log' -type f -mtime +30 -print 2>/dev/null
+find . -path '*/output/logs/*.log' -type f -mtime +90 -print
+```
+
+Only after confirming retention policy and backups:
+
+```bash
+bash docs/operational/scripts/rotate-logs.sh
+```
+
+See [`maintenance.md`](maintenance.md) for backup limitations and verification
+requirements.
+
+## Incident triage
+
+### Port or process conflict
+
+Inspect first:
+
+```bash
+lsof -nP -iTCP -sTCP:LISTEN
+docker compose -f infrastructure/docker/docker-compose.yml ps
+ps aux | rg '[o]llama|[h]ermes|execute_pipeline'
+```
+
+Do not kill a process until its owner, command, target project, and recoverable
+state are known. Use the service's normal stop command when authorized.
+
+### Disk pressure
+
+Locate large consumers without deleting them:
+
+```bash
+du -sh .venv .cache output projects/*/output 2>/dev/null | sort -h
+docker system df 2>/dev/null
+find output projects -type f -size +100M -print 2>/dev/null
+```
+
+Move or delete only explicit, verified, regenerable targets. `docker system
+prune`, cache deletion, model removal, and broad `find -delete` operations are
+separate destructive actions and are not default incident steps.
+
+### LLM capability unavailable
+
+```bash
 ollama list
-curl -s http://localhost:11434/api/tags | jq .models 2>/dev/null || echo "Ollama unreachable"
+curl --fail --silent --show-error http://localhost:11434/api/tags
 ```
 
-**Remediation:**
+If LLM stages are not required, select the supported core path:
 
 ```bash
-# Restart Ollama service
-pkill ollama
-ollama serve &
+uv run python scripts/runner/execute_pipeline.py \
+  --project templates/template_code_project --core-only
 ```
 
-**Workaround:** Skip LLM stages and run the core pipeline instead (no other
-env var disables LLM stages — `--core-only` is the supported switch):
+Do not report the omitted LLM review/translation lanes as passed.
 
-```bash
-./run.sh --core-only --project <name> --pipeline
-```
+### Pipeline failure
 
-Note: `FEP_LEAN_GAUSS_WORKFLOWS` (set in `run.sh`) controls the OpenGauss/Lean
-session workflows, not LLM review/translation — do not use it as an LLM
-on/off switch.
+1. Capture the exact command, revision, project, failing stable stage key/name,
+   and exit code.
+2. Inspect the project log and structured report.
+3. Determine whether the failure is code, data, generated-evidence freshness,
+   optional capability, resource exhaustion, or external authority.
+4. Reproduce the smallest source-current lane without weakening a gate.
+5. Preserve failed artifacts and checkpoints needed for diagnosis.
 
----
+See [`troubleshooting/README.md`](troubleshooting/README.md) and
+[`troubleshooting/recovery-procedures.md`](troubleshooting/recovery-procedures.md).
 
-## Health Check Script
+## Backup and restore status
 
-A one-liner to quickly verify system readiness:
+The daily/weekly shell helpers require an operator-configured SSH destination.
+The full-backup/restore pair is currently **unverified and unavailable as a
+recovery gate** because its remote path construction and restored directory
+layout are not mutually consistent. Do not rely on it until the implementation
+is repaired and a source-bound restore receipt exists. Details and safer
+verification guidance are in [`maintenance.md`](maintenance.md).
 
-```bash
-./run.sh --help && echo "✅ OK" || echo "❌ FAIL"
-```
+## Escalation record
 
-Or as a standalone check script `scripts/shell/health-check.sh`:
+For any unresolved incident, record:
 
-```bash
-#!/usr/bin/env bash
-# Quick health check for CI/CD or cron
-
-set -euo pipefail
-
-echo "=== Health Check ==="
-
-# 1. Python environment
-python -c "import sys; print(f'Python {sys.version}')" 2>/dev/null || { echo "❌ Python missing"; exit 1; }
-
-# 2. uv package manager
-uv --version >/dev/null 2>&1 || { echo "❌ uv not found"; exit 1; }
-
-# 3. Ollama (optional but warn)
-if ! command -v ollama &>/dev/null; then
-    echo "⚠️  Ollama not installed (needed for LLM stages)"
-else
-    echo "✅ Ollama present"
-fi
-
-# 4. Disk space (warn if < 5GB free on working dir)
-FREE=$(df . | tail -1 | awk '{print $4}')
-if [ "$FREE" -lt 5242880 ]; then
-    echo "⚠️  Low disk space: $((FREE/1024/1024)) GB remaining"
-fi
-
-# 5. Docker (if using containerized Template)
-docker --version >/dev/null 2>&1 && echo "✅ Docker available" || echo "⚠️  Docker not available"
-
-# 6. Verify repo structure
-for dir in infrastructure projects docs; do
-    [ -d "$dir" ] || { echo "❌ Missing $dir"; exit 1; }
-done
-echo "✅ Repository structure valid"
-
-echo "=== All checks passed ==="
-```
-
-Make it executable:
-
-```bash
-chmod +x scripts/shell/health-check.sh
-```
-
-Integrate into CI or run manually before starting work:
-
-```bash
-./scripts/shell/health-check.sh
-```
-
----
-
-*Last updated: 2026-04-27*
+- checkout path, branch, local SHA, upstream, and remote SHA if fetched;
+- dirty/untracked and nested-repository state;
+- exact command, environment/capability selection, exit status, and timestamps;
+- affected project and canonical input/output paths;
+- logs or receipt paths without secret values;
+- which lanes passed, failed, were blocked, skipped, unavailable, or not run;
+- the next safe action and the person or external authority required.

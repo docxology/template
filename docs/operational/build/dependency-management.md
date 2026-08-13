@@ -113,10 +113,10 @@ Execute Python scripts directly with `uv run python`:
 
 ```bash
 # Run pipeline scripts
-uv run python scripts/pipeline/stage_00_setup.py
-uv run python scripts/pipeline/stage_01_test.py
-uv run python scripts/pipeline/stage_02_analysis.py
-uv run python scripts/pipeline/stage_03_render.py
+uv run python scripts/pipeline/stage_00_setup.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project
 
 # Stage commands should be invoked from the repository root
 ```

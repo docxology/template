@@ -104,7 +104,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[core/how-to-use.md](core/how-to-use.md)** - Usage guide (all 12 levels)
 - **[how-to-use.md](how-to-use.md)** - Signpost stub redirecting to the canonical `core/how-to-use.md`
 - **[core/literature-data-flow.md](core/literature-data-flow.md)** - Literature search and data pipeline overview
-- **[accessibility.md](accessibility.md)** - Accessibility notes for generated documentation and diagrams
+- **[accessibility.md](accessibility.md)** - Source checks, figure/alt-text contract, rendered HTML/PDF/DOCX/EPUB review, and explicit non-certification boundaries
 
 ### Quick Reference
 
@@ -427,9 +427,35 @@ flowchart TB
 
 ## Documentation maintenance notes
 
-- Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
-- Each sub-directory has a `README.md` (user-facing) and `AGENTS.md` (technical guide).
-- Documentation is verified for accuracy and completeness on an ongoing basis.
+- Documentation is intended to be evergreen. Dated plans, audits, streams, and
+  historical notes must identify themselves as snapshots and link current
+  normative guidance when behavior has moved on.
+- Each governed subdirectory has a `README.md` (user-facing index) and
+  `AGENTS.md` (technical guide); the doc-pair linter owns the exact exclusions.
+- Runtime behavior comes from code, schemas, and focused tests. Volatile repo
+  facts come from [`_generated/`](_generated/README.md). Manuscript results come
+  from analysis-owned `output/data/manuscript_variables.json`, not hand-copied
+  literals. See the [docs hub evidence contract](README.md#evidence-and-freshness).
+- Claims that a gate “enforces” a property should name the executable verifier
+  and its known-wrong negative control. Advisory audits must be labeled as
+  advisory rather than promoted to release gates.
+
+Validate the complete documentation surface from the repository root:
+
+```bash
+uv run python scripts/audit/lint_docs.py --json --repo-root .
+uv run python scripts/audit/audit_documentation.py --format markdown
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/docgen/counts.py --check
+uv run python scripts/docgen/exemplar_roster.py --check
+uv run python scripts/docgen/status_evidence.py --check
+uv run python scripts/docgen/api_reference.py --check
+uv run python -m infrastructure.skills check
+uv run python -m infrastructure.skills check-contracts
+```
+
+The RedTeam audit emits heuristic advisories for human disposition; the linter,
+drift checker, generator checks, and skill checks are concrete pass/fail gates.
 
 For the most up-to-date information, see the individual documentation files linked above.
 

@@ -91,8 +91,7 @@ authors:
     affiliation: "University"
     corresponding: true
 
-publication:
-  doi: "10.1000/182.2024.001"
+# DOI omitted until a real deposit assigns one
 
 keywords:
   - "quantum computing"
@@ -117,7 +116,7 @@ graph TB
     subgraph "Key Files"
         PYPROJECT[pyproject.toml<br/>Project config]
         CONFIG[manuscript/config.yaml<br/>Paper + author metadata]
-        RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
+        RENDER[root pipeline<br/>./run.sh pipeline]
     end
 
     ROOT --> SRC
@@ -128,7 +127,7 @@ graph TB
 
     ROOT --> PYPROJECT
     MANUSCRIPT --> CONFIG
-    SCRIPTS --> RENDER
+    ROOT --> RENDER
 
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef file fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -215,63 +214,41 @@ graph LR
     class SCRIPT,IMPORT,USE,USE2,USE3 script
 ```
 
-### Example: Adding ML Optimization Module
+### Example: extending the tested optimizer
 
-> **Note:** The module names below (`ml_optimizer`, `test_ml_optimizer`, `ml_training`) are
-> illustrative example names, not files present in the canonical exemplar. The exemplar's
-> real optimization surface is `src/optimizer.py` + `tests/test_optimizer.py` +
-> `scripts/optimization_analysis.py`; this example shows the *pattern* for adding a module.
-
-1. **Create `projects/templates/template_code_project/src/ml_optimizer.py`:**
+The public exemplar already provides a real optimization API in
+`src/optimizer.py`, with behavior tests in `tests/test_optimizer.py`. A thin
+script can configure and call that API without reimplementing the algorithm:
 
 ```python
-"""Machine learning optimization algorithms."""
+import numpy as np
 
-def gradient_descent(loss_fn, initial_params, learning_rate=0.01, max_iter=1000):
-    """Gradient descent optimization."""
-    # Implementation here
-    pass
+from src.optimizer import gradient_descent, make_quadratic_problem
 
-def adam_optimizer(loss_fn, initial_params, learning_rate=0.001):
-    """Adam optimizer implementation."""
-    # Implementation here
-    pass
+
+def main() -> None:
+    objective, gradient = make_quadratic_problem(
+        A=np.array([[2.0, 0.0], [0.0, 1.0]]),
+        b=np.array([1.0, 1.0]),
+    )
+    result = gradient_descent(
+        initial_point=np.array([4.0, -3.0]),
+        objective_func=objective,
+        gradient_func=gradient,
+        step_size=0.1,
+    )
+    print(result.solution, result.termination_reason)
+
+
+if __name__ == "__main__":
+    main()
 ```
 
-1. **Create `projects/templates/template_code_project/tests/test_ml_optimizer.py`:**
-
-```python
-"""Tests for ML optimizer module."""
-
-def test_gradient_descent():
-    # Test implementation
-    pass
-
-def test_adam_optimizer():
-    # Test implementation
-    pass
-```
-
-1. **Create `projects/templates/template_code_project/scripts/ml_training.py`:**
-
-```python
-#!/usr/bin/env python3
-"""ML training script using src/ methods."""
-
-from ml_optimizer import gradient_descent, adam_optimizer
-from data_processor import load_data, preprocess_data
-
-def main():
-    # Use projects/{name}/src/ methods for computation
-    data = load_data("dataset.csv")
-    processed_data = preprocess_data(data)
-
-    # Train using projects/{name}/src/ optimization methods
-    params = gradient_descent(loss_fn, initial_params)
-
-    # Generate and save results
-    # ... visualization code ...
-```
+If the project needs a genuinely new optimizer, first add behavior tests that
+define convergence, invalid-input, and non-finite-state contracts; then
+implement it under `src/`, expose only the intended public API, and keep data
+loading, plotting, and file output in a thin script. Do not publish placeholder
+implementations or empty tests as evidence.
 
 ## Tips for Successful Configuration
 
@@ -302,10 +279,10 @@ After configuring, ensure:
 
 ### Common Issues
 
-1. **Permission denied**: Make script executable with `chmod +x scripts/runner/execute_pipeline.py`
-2. **Script not found**: Ensure you're in the project root directory
-3. **Build failures**: Check that all dependencies are installed
-4. **Markdown errors**: Validate markdown files after editing
+1. **Script not found**: Ensure you're in the repository root directory
+2. **Build failures**: Check that all dependencies are installed and read the
+   selected project's `output/logs/pipeline.log`
+3. **Markdown errors**: Validate manuscript files after editing
 
 ### Getting Help
 

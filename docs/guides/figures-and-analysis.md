@@ -4,7 +4,7 @@
 
 **Previous**: [Getting Started](getting-started.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](testing-and-reproducibility.md) (Levels 7-9)
 
-This guide covers **Levels 4-6** of the Research Project Template. for users ready to add custom figures, data analysis, and automated workflows.
+This guide covers **Levels 4-6** of the Research Project Template for users ready to add custom figures, data analysis, and automated workflows. Examples use synthetic data; replace them with a documented, source-owned analysis contract before making empirical claims.
 
 ## 📚 What You'll Learn
 
@@ -79,7 +79,8 @@ The template includes example scripts:
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Or run all project scripts via the pipeline stage
-uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py \
+  --project templates/template_code_project
 ```
 
 **What they demonstrate**:
@@ -162,31 +163,60 @@ If computation logic doesn't exist, add it to `projects/{name}/src/` first:
 
 ```python
 # projects/templates/template_code_project/src/statistics.py
-def calculate_variance(values):
-    """Calculate sample variance."""
-    mean = sum(values) / len(values)
-    return sum((x - mean) ** 2 for x in values) / (len(values) - 1)
+import math
+from collections.abc import Sequence
 
-def calculate_std_dev(values):
-    """Calculate standard deviation."""
-    return calculate_variance(values) ** 0.5
+
+def _validated(values: Sequence[float]) -> tuple[float, ...]:
+    data = tuple(float(value) for value in values)
+    if len(data) < 2:
+        raise ValueError("sample statistics require at least two observations")
+    if not all(math.isfinite(value) for value in data):
+        raise ValueError("observations must be finite")
+    return data
+
+
+def calculate_mean(values: Sequence[float]) -> float:
+    """Return the arithmetic mean of a validated sample."""
+    data = _validated(values)
+    return sum(data) / len(data)
+
+
+def calculate_sample_variance(values: Sequence[float]) -> float:
+    """Return variance with the sample denominator, n - 1."""
+    data = _validated(values)
+    mean = sum(data) / len(data)
+    return sum((value - mean) ** 2 for value in data) / (len(data) - 1)
+
+
+def calculate_sample_std_dev(values: Sequence[float]) -> float:
+    """Return sample standard deviation."""
+    return math.sqrt(calculate_sample_variance(values))
 ```
 
 **Step 3: Create tests (coverage required)**
 
 ```python
 # projects/templates/template_code_project/tests/test_statistics.py
-from projects.templates.template_code_project.src.statistics import calculate_variance, calculate_std_dev
+import pytest
 
-def test_calculate_variance():
-    values = [1, 2, 3, 4, 5]
-    var = calculate_variance(values)
-    assert abs(var - 2.5) < 1e-10
+from projects.templates.template_code_project.src.statistics import (
+    calculate_mean,
+    calculate_sample_std_dev,
+    calculate_sample_variance,
+)
 
-def test_calculate_std_dev():
+def test_calculate_sample_statistics():
     values = [1, 2, 3, 4, 5]
-    std = calculate_std_dev(values)
-    assert abs(std - 1.5811388) < 1e-6
+    assert calculate_mean(values) == pytest.approx(3.0)
+    assert calculate_sample_variance(values) == pytest.approx(2.5)
+    assert calculate_sample_std_dev(values) == pytest.approx(1.58113883)
+
+
+@pytest.mark.parametrize("values", [[], [1.0], [1.0, float("nan")]])
+def test_sample_statistics_reject_invalid_inputs(values):
+    with pytest.raises(ValueError):
+        calculate_sample_variance(values)
 ```
 
 **Step 4: Run tests**
@@ -206,21 +236,26 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from projects.templates.template_code_project.src.statistics import calculate_std_dev  # Import from src/
+from projects.templates.template_code_project.src.statistics import (
+    calculate_mean,
+    calculate_sample_std_dev,
+)
 
 def main():
     # Generate sample data
-    np.random.seed(42)  # Reproducible
-    data = np.random.normal(0, 1, 100)
+    rng = np.random.default_rng(42)
+    data = rng.normal(0, 1, 100)
 
     # Use src/ method for computation
-    std = calculate_std_dev(data.tolist())
+    mean = calculate_mean(data.tolist())
+    sample_sd = calculate_sample_std_dev(data.tolist())
 
     # Script handles visualization only
     fig, ax = plt.subplots()
     ax.hist(data, bins=20, alpha=0.7, label='Data')
-    ax.axvline(std, color='r', linestyle='--', label=f'Std Dev: {std:.2f}')
-    ax.axvline(-std, color='r', linestyle='--')
+    ax.axvline(mean, color='black', label=f'Mean: {mean:.2f}')
+    ax.axvline(mean + sample_sd, color='r', linestyle='--', label=f'Mean + SD: {mean + sample_sd:.2f}')
+    ax.axvline(mean - sample_sd, color='r', linestyle='--', label=f'Mean - SD: {mean - sample_sd:.2f}')
     ax.legend()
     ax.set_title('Distribution with Standard Deviation')
 
@@ -245,14 +280,20 @@ uv run python projects/templates/template_code_project/scripts/statistics_figure
 
 **Step 7: Add to manuscript**
 
+Use the portable Markdown figure form. The first bracketed sentence becomes the
+visible caption and is also the current HTML renderer's source for a derived
+`alt` attribute; store a separately authored `metadata.alt_text` in the figure
+registry and inspect both rendered HTML and PDF.
+
 ```markdown
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../output/figures/statistics_figure.png}
-\caption{Data distribution showing one standard deviation}
-\label{fig:statistics}
-\end{figure}
+![Distribution of {{STATISTICS_SAMPLE_SIZE}} synthetic observations. Vertical lines mark the generated sample mean and mean plus or minus one sample standard deviation.](../output/figures/statistics_figure.png){#fig:statistics width=80%}
 ```
+
+Generate the caption tokens from the same analysis record that produced the
+figure. Do not hand-copy sample size, estimates, uncertainty, units, or model
+settings into the manuscript. A statistical caption should also identify the
+population/sample, interval or error-bar definition, and any exclusions or
+transformations needed to interpret the panel.
 
 ### Common Figure Types
 
@@ -354,15 +395,41 @@ def test_linear_regression():
     slope, intercept = linear_regression(x, y)
     assert abs(slope - 2.0) < 1e-10
     assert abs(intercept - 0.0) < 1e-10
+
+
+@pytest.mark.parametrize(
+    ("x", "y"),
+    [([], []), ([1], [2]), ([1, 2], [1]), ([1, 1], [2, 3])],
+)
+def test_regression_rejects_undefined_inputs(x, y):
+    with pytest.raises(ValueError):
+        linear_regression(x, y)
 ```
 
 **Step 3: Implement in `projects/{name}/src/`**
 
 ```python
 # projects/templates/template_code_project/src/correlation.py
-"""Correlation and regression analysis functions."""
+"""Correlation and simple-regression analysis functions."""
 
-def calculate_correlation(x: list[float], y: list[float]) -> float:
+import math
+from collections.abc import Sequence
+
+
+def _validated_pair(
+    x: Sequence[float], y: Sequence[float]
+) -> tuple[tuple[float, ...], tuple[float, ...]]:
+    x_values = tuple(float(value) for value in x)
+    y_values = tuple(float(value) for value in y)
+    if len(x_values) != len(y_values):
+        raise ValueError("x and y must have equal lengths")
+    if len(x_values) < 2:
+        raise ValueError("at least two paired observations are required")
+    if not all(math.isfinite(value) for value in (*x_values, *y_values)):
+        raise ValueError("observations must be finite")
+    return x_values, y_values
+
+def calculate_correlation(x: Sequence[float], y: Sequence[float]) -> float:
     """Calculate Pearson correlation coefficient.
 
     Args:
@@ -372,18 +439,21 @@ def calculate_correlation(x: list[float], y: list[float]) -> float:
     Returns:
         Correlation coefficient between -1 and 1
     """
-    n = len(x)
-    mean_x = sum(x) / n
-    mean_y = sum(y) / n
+    x_values, y_values = _validated_pair(x, y)
+    n = len(x_values)
+    mean_x = sum(x_values) / n
+    mean_y = sum(y_values) / n
 
-    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
-    denominator_x = sum((x[i] - mean_x) ** 2 for i in range(n)) ** 0.5
-    denominator_y = sum((y[i] - mean_y) ** 2 for i in range(n)) ** 0.5
+    numerator = sum((x_values[i] - mean_x) * (y_values[i] - mean_y) for i in range(n))
+    denominator_x = sum((value - mean_x) ** 2 for value in x_values) ** 0.5
+    denominator_y = sum((value - mean_y) ** 2 for value in y_values) ** 0.5
+    if denominator_x == 0 or denominator_y == 0:
+        raise ValueError("correlation is undefined for a constant variable")
 
     return numerator / (denominator_x * denominator_y)
 
-def calculate_r_squared(x: list[float], y: list[float]) -> float:
-    """Calculate R-squared (coefficient of determination).
+def calculate_r_squared(x: Sequence[float], y: Sequence[float]) -> float:
+    """Return squared Pearson correlation for paired observations.
 
     Args:
         x: Independent variable
@@ -395,7 +465,7 @@ def calculate_r_squared(x: list[float], y: list[float]) -> float:
     corr = calculate_correlation(x, y)
     return corr ** 2
 
-def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
+def linear_regression(x: Sequence[float], y: Sequence[float]) -> tuple[float, float]:
     """Perform simple linear regression.
 
     Args:
@@ -405,12 +475,15 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
     Returns:
         Tuple of (slope, intercept)
     """
-    n = len(x)
-    mean_x = sum(x) / n
-    mean_y = sum(y) / n
+    x_values, y_values = _validated_pair(x, y)
+    n = len(x_values)
+    mean_x = sum(x_values) / n
+    mean_y = sum(y_values) / n
 
-    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
-    denominator = sum((x[i] - mean_x) ** 2 for i in range(n))
+    numerator = sum((x_values[i] - mean_x) * (y_values[i] - mean_y) for i in range(n))
+    denominator = sum((value - mean_x) ** 2 for value in x_values)
+    if denominator == 0:
+        raise ValueError("regression is undefined when x is constant")
 
     slope = numerator / denominator
     intercept = mean_y - slope * mean_x
@@ -441,9 +514,9 @@ from projects.templates.template_code_project.src.correlation import calculate_c
 
 def main():
     # Generate sample data
-    np.random.seed(42)
+    rng = np.random.default_rng(42)
     x = np.linspace(0, 10, 50)
-    y = 2 * x + 1 + np.random.normal(0, 1, 50)
+    y = 2 * x + 1 + rng.normal(0, 1, 50)
 
     # Use projects/{name}/src/ methods for computation
     corr = calculate_correlation(x.tolist(), y.tolist())
@@ -451,9 +524,9 @@ def main():
 
     # Script handles visualization only
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.scatter(x, y, alpha=0.5, label='Data')
-    ax.plot(x, slope * x + intercept, 'r-', label=f'y = {slope:.2f}x + {intercept:.2f}')
-    ax.set_title(f'Linear Regression (r = {corr:.3f})')
+    ax.scatter(x, y, alpha=0.5, label='Synthetic observations')
+    ax.plot(x, slope * x + intercept, 'r-', label='Fitted line')
+    ax.set_title('Illustrative simple linear regression')
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.legend()
@@ -474,7 +547,11 @@ if __name__ == '__main__':
 
 ### Saving Data Files
 
-In addition to figures, save the underlying data:
+In addition to figures, save the exact analysis table and a machine-readable
+summary containing the estimator definitions, sample size, units, exclusions,
+seed/stream identity, configuration hash, input hash, and software revision.
+The manuscript-variable producer and figure-caption producer should consume
+that summary rather than recomputing or transcribing display values.
 
 ```python
 import numpy as np
@@ -505,22 +582,30 @@ print('projects/templates/template_code_project/output/data/analysis_data.csv')
 
 ### Understanding the Build Pipeline
 
-The pipeline orchestrator (`scripts/runner/execute_pipeline.py`) orchestrates everything:
+The pipeline orchestrator (`scripts/runner/execute_pipeline.py`) executes the
+project's declared pipeline:
 
 ```bash
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --core-only
 ```
 
-**What happens**:
+Use a qualified name such as `templates/template_code_project` or
+`working/<name>`. The repository/project `pipeline.yaml` is the ground truth for
+stage selection and ordering. A normal core run covers setup, separate
+infrastructure and project tests, analysis, manuscript hydration/rendering,
+validation, and output copying; optional projects can declare additional
+stages. Do not copy measured duration, test counts, or stage counts into prose.
+Record them from the current run when they are relevant evidence.
 
-1. **Tests** (27s) - Validates coverage requirements
-2. **Scripts** (1s) - Executes all figure generation
-3. **Utilities** (1s) - Validates markdown, generates glossary
-4. **Individual PDFs** (32s) - Builds each section
-5. **Combined PDF** (10s) - Assembles document
-6. **Validation** (1s) - Checks for rendering issues
+For result-bearing work, keep the producer order explicit:
 
-**Total**: ~84 seconds (without optional LLM review)
+1. resolve and hash inputs/configuration;
+2. run tested analysis and write data summaries/figure files;
+3. write `manuscript_variables.json` and the figure registry from those outputs;
+4. hydrate `output/manuscript/`;
+5. render; and
+6. validate the rendered artifacts and write provenance/release receipts.
 
 **See [RUN_GUIDE.md](../RUN_GUIDE.md) for pipeline breakdown and stage reference.**
 
@@ -528,24 +613,29 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 ```mermaid
 flowchart TB
-    OUT[output/]
-    OUT --> FIG[figures<br/>PNG files from scripts]
-    OUT --> DATA[data<br/>CSV · NPZ data files]
-    OUT --> PDF[pdf<br/>Individual + combined PDFs]
-    OUT --> TEX[tex<br/>LaTeX source files]
+    OUT[projects/&lt;qualified-name&gt;/output]
+    OUT --> FIG[figures<br/>rendered assets + figure_registry.json]
+    OUT --> DATA[data<br/>analysis tables + manuscript_variables.json]
+    OUT --> MAN[manuscript<br/>hydrated Markdown]
+    OUT --> PDF[pdf<br/>combined PDF + build intermediates]
+    OUT --> WEB[web<br/>rendered HTML]
+    OUT --> PROV[provenance + reports<br/>source-bound evidence]
 
     FIG --> FIG_F[example_figure.png ·<br/>correlation_analysis.png ·<br/>statistics_figure.png]
     DATA --> DATA_F[analysis_data.csv · analysis_data.npz]
-    PDF --> PDF_F[01_abstract.pdf · 02_introduction.pdf · ...<br/>template_code_project_combined.pdf]
-    TEX --> TEX_F[01_abstract.tex · ...]
+    PDF --> PDF_F[&lt;project&gt;_combined.pdf]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
     classDef f fill:#0f766e,stroke:#0f172a,color:#fff
-    class OUT,FIG,DATA,PDF,TEX d
-    class FIG_F,DATA_F,PDF_F,TEX_F f
+    class OUT,FIG,DATA,MAN,PDF,WEB,PROV d
+    class FIG_F,DATA_F,PDF_F f
 ```
 
-**All files in `output/` are disposable** - they can be regenerated anytime.
+Runtime checkpoints, logs, and build intermediates are disposable. A public
+exemplar may intentionally track deterministic final artifacts, figures,
+analysis data, hydrated manuscript sources, and evidence registries. Follow the
+project's output policy: never delete or hand-edit canonical evidence merely
+because it lives under `output/`.
 
 ### Automating Your Workflow
 
@@ -553,7 +643,7 @@ flowchart TB
 
 ```bash
 # 1. Edit source code
-vim projects/{name}/src/my_module.py
+vim projects/<subfolder>/<name>/src/my_module.py
 
 # 2. Write tests
 vim projects/templates/template_code_project/tests/test_my_module.py
@@ -565,7 +655,8 @@ uv run pytest projects/templates/template_code_project/tests/test_my_module.py -
 vim projects/templates/template_code_project/scripts/my_figure.py
 
 # 5. Run build
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --core-only
 
 # 6. View result (top-level output after copy outputs)
 open output/templates/template_code_project/pdf/template_code_project_combined.pdf
@@ -574,49 +665,44 @@ open output/templates/template_code_project/pdf/template_code_project_combined.p
 **Advanced workflow with validation**:
 
 ```bash
-# 1. Full rebuild with validation (recommended — core pipeline, eight stages with --core-only)
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+# 1. Full rebuild with validation (recommended declared core selection)
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
-# Alternative: Manual steps
-# # Pipeline automatically handles cleanup
-# uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
-# uv run python scripts/pipeline/stage_04_validate.py
+# Focused, source-current manuscript preflight
+uv run python -m infrastructure.validation.cli prerender \
+  projects/<subfolder>/<name>/manuscript --repo-root .
+uv run python scripts/pipeline/stage_04_validate.py \
+  --project <qualified-name>
 ```
 
-### Creating Custom Build Scripts
+### Creating Custom Build Entry Points
 
-For specific workflows, create custom scripts:
+Keep a custom entry point thin: select a project/stage and delegate to the
+canonical Python orchestration APIs or stage commands. Do not bypass hydration,
+Pandoc filters, reference processing, provenance, or validation with a raw
+one-file `pandoc` command and then call that artifact publishable. For a focused
+rebuild, use declared stages:
 
 ```bash
-#!/bin/bash
-# custom_build.sh
-
-set -e  # Exit on error
-
-echo "Running custom build pipeline..."
-
-# 1. Run specific tests
-echo "Testing analysis module..."
-uv run pytest projects/templates/template_code_project/tests/test_correlation.py --cov=projects/templates/template_code_project/src
-
-# 2. Generate specific figures
-echo "Generating figures..."
-uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
-
-# 3. Build specific sections
-# NOTE: paths below are illustrative — substitute your actual manuscript section.
-echo "Building results section..."
-pandoc projects/templates/template_code_project/manuscript/04_experimental_results.md \
-    -o projects/templates/template_code_project/output/pdf/04_experimental_results.pdf \
-    --pdf-engine=xelatex  # example output path
-
-echo "Custom build!"
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --stage analysis
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --stage render_pdf
+uv run python scripts/runner/execute_pipeline.py \
+  --project <qualified-name> --stage validate
 ```
 
 ### Batch Processing Multiple Datasets
+
+The following is an architectural sketch, not a drop-in script: implement and
+test `load_data`, `generate_figure`, and `save_results_table` in the project's
+`src/` package, then keep the entry point limited to path resolution and calls.
+Record per-dataset inclusion/exclusion decisions and do not silently omit a
+failed dataset from the reported denominator.
 
 ```python
 # scripts/batch_analysis.py
@@ -705,17 +791,26 @@ export MPLBACKEND=Agg
 
 **Symptom**: Figure reference shows as `??` in compiled PDF
 
-**Cause**: Label not registered with FigureManager
+**Cause**: The manuscript label/reference is missing or mismatched, the figure
+registry lacks that exact label, or the Pandoc cross-reference pass did not run.
+Registering metadata alone does not insert a label into manuscript Markdown.
 
 **Solution**:
-```python
-from infrastructure.documentation import FigureManager
-fm = FigureManager()
-fm.register_figure(
-    filename="my_figure.png",
-    caption="Description",
-    label="fig:my_figure",  # Use in manuscript as [@fig:my_figure]
-)
+```markdown
+![Visible caption.](../output/figures/my_figure.png){#fig:my-figure}
+
+As shown in [@fig:my-figure], ...
+```
+
+Use the identical `fig:my-figure` label in the generated figure registry, then
+run both checks:
+
+```bash
+uv run python -m infrastructure.validation.cli prerender \
+  projects/<subfolder>/<name>/manuscript --repo-root .
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project <qualified-name> --rendered --strict \
+  --require-figure-accessibility --format markdown
 ```
 
 ### Data File Not Found
@@ -725,7 +820,7 @@ fm.register_figure(
 **Solution**: Use absolute paths with project root:
 ```python
 from pathlib import Path
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 data_path = PROJECT_ROOT / "data" / "data.csv"
 ```
 
@@ -772,7 +867,9 @@ with Pool() as pool:
 | **Implementing logic in scripts** | Not testable, duplicated code | Move to `projects/{name}/src/`, test thoroughly |
 | **Not testing edge cases** | Fails on data | Test empty lists, single values, etc. |
 | **Hardcoded paths** | Breaks on other systems | Use `os.path.join()`, relative paths |
-| **Not using seeds** | Non-reproducible results | Set `np.random.seed(42)` |
+| **Resetting global RNG state** | Hidden coupling between tests/analyses | Pass a `numpy.random.Generator` or an explicit seed into tested source code |
+| **Hand-copying statistics into captions** | Figure and prose drift | Generate caption tokens/registry metadata from the analysis summary |
+| **Treating caption as alt text** | Inadequate nonvisual description | Author registry `metadata.alt_text`, add a long description when needed, and inspect rendered outputs |
 | **Ignoring coverage gaps** | Untested code paths | Check `--cov-report=term-missing` |
 
 ### Best Practices
@@ -781,9 +878,11 @@ with Pool() as pool:
 2. ✅ **Test before scripting** - Ensure `projects/{name}/src/` code works first
 3. ✅ **Use descriptive names** - `calculate_correlation` not `calc_corr`
 4. ✅ **Add docstrings** - Document parameters and return values
-5. ✅ **Set random seeds** - Make results reproducible
-6. ✅ **Save both figures and data** - Enable verification
-7. ✅ **Print output paths** - Build system needs them
+5. ✅ **Pass explicit RNG state** - Record seed, stream, generator, and software environment
+6. ✅ **Save figures, data, and estimand metadata** - Enable independent interpretation
+7. ✅ **Generate captions and variables from the same summary** - Prevent transcription drift
+8. ✅ **Register caption, provenance, and distinct alt text** - Validate and inspect accessibility
+9. ✅ **Print output paths** - Let orchestration collect produced artifacts
 
 ### Infrastructure Tools for Figures
 
@@ -792,14 +891,28 @@ The infrastructure layer provides utilities that automate figure management:
 ```python
 from infrastructure.documentation import FigureManager
 
-# Register figures for automatic numbering and cross-referencing
-manager = FigureManager()
+# Register figure metadata at the project-owned path. The manuscript still
+# needs a matching {#fig:convergence} label.
+manager = FigureManager(
+    registry_file="projects/templates/template_code_project/output/figures/figure_registry.json"
+)
 manager.register_figure(
     filename="convergence.png",
-    caption="Gradient descent convergence analysis",
+    caption="Objective value across recorded optimization iterations.",
     label="fig:convergence",
+    generated_by="projects.templates.template_code_project.src.analysis.generate",
+    metadata={
+        "alt_text": "Line chart of objective value by iteration for each configured method.",
+        "source": "analysis summary identifier or hash",
+    },
 )
 ```
+
+For a pipeline-generated set, prefer
+`infrastructure.documentation.publish_generated_figures`: it validates the
+declared filenames before mirroring files and atomically writing the envelope
+registry. The accessibility gate checks that alt text is present; a human must
+still judge whether the text conveys the figure's purpose and salient pattern.
 
 For performance measurement of your analysis code:
 
@@ -807,8 +920,12 @@ For performance measurement of your analysis code:
 from infrastructure.scientific import benchmark_function
 
 result = benchmark_function(my_analysis_func, test_inputs=[data1, data2], iterations=50)
-print(f"Average execution time: {result.execution_time:.4f}s")
+print(f"Observed execution time: {result.execution_time:.4f}s")
 ```
+
+Wall-clock benchmarks are environment-dependent. Record hardware, software,
+warm-up, repetitions, aggregation, and uncertainty; do not promote one local
+observation into a general performance claim.
 
 See the [Documentation Module Guide](../modules/guides/documentation-module.md) and [Scientific Module Guide](../modules/guides/scientific-module.md) for full API details.
 
@@ -851,6 +968,9 @@ After completing this guide, you should be able to:
 - [x] Add new analysis modules to `projects/{name}/src/` with tests
 - [x] Achieve required test coverage for new code
 - [x] Save both figures and data files
+- [x] Generate manuscript variables, captions, and registry metadata from analysis outputs
+- [x] Report statistical definitions, units, denominators, exclusions, and uncertainty
+- [x] Author separate caption and alt text and inspect rendered HTML/PDF
 - [x] Run automated build pipelines
 - [x] Create custom build scripts for specific workflows
 

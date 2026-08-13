@@ -49,11 +49,13 @@ ollama run gemma3:4b "Hello"
 
 ```bash
 # Check script can find Ollama
-uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+uv run python scripts/pipeline/stage_06_llm_review.py \
+  --project templates/template_code_project --reviews-only
 
 # Check with verbose logging
 export LOG_LEVEL=0
-uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+uv run python scripts/pipeline/stage_06_llm_review.py \
+  --project templates/template_code_project --reviews-only
 ```
 
 ## Common Issues and Solutions
@@ -175,7 +177,8 @@ time ollama run llama3-gradient "Generate a short test response"
    ```bash
    # Set longer timeout (in seconds)
    export LLM_REVIEW_TIMEOUT=600  # 10 minutes
-   uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+   uv run python scripts/pipeline/stage_06_llm_review.py \
+     --project templates/template_code_project --reviews-only
    ```
 
 2. **Use faster model:**
@@ -189,7 +192,8 @@ time ollama run llama3-gradient "Generate a short test response"
    ```bash
    # Limit input to LLM (reduces processing time)
    export LLM_MAX_INPUT_LENGTH=250000  # ~62K tokens
-   uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+   uv run python scripts/pipeline/stage_06_llm_review.py \
+     --project templates/template_code_project --reviews-only
    ```
 
 4. **Check system resources:**
@@ -221,7 +225,8 @@ time ollama run llama3-gradient "Generate a short test response"
 ls -la projects/{name}/output/pdf/{name}_combined.pdf
 
 # Check PDF generation
-uv run python scripts/pipeline/stage_03_render.py
+uv run python scripts/pipeline/stage_03_render.py \
+  --project templates/template_code_project
 ```
 
 **Solutions:**
@@ -229,7 +234,8 @@ uv run python scripts/pipeline/stage_03_render.py
 1. **Generate manuscript PDF first:**
    ```bash
    # Run PDF rendering stage
-   uv run python scripts/pipeline/stage_03_render.py
+   uv run python scripts/pipeline/stage_03_render.py \
+     --project templates/template_code_project
 
    # Or run full pipeline up to PDF stage
    uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
@@ -288,7 +294,8 @@ print(f'Text from first page: {reader.pages[0].extract_text()[:100]}')
    ```bash
    # Clean and regenerate
    rm -rf projects/{name}/output/pdf/*
-   uv run python scripts/pipeline/stage_03_render.py
+   uv run python scripts/pipeline/stage_03_render.py \
+     --project templates/template_code_project
    ```
 
 3. **Check PDF encryption:**
@@ -332,7 +339,8 @@ ollama ps
    ```bash
    # Allow longer responses
    export LLM_LONG_MAX_TOKENS=8192
-   uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+   uv run python scripts/pipeline/stage_06_llm_review.py \
+     --project templates/template_code_project --reviews-only
    ```
 
 3. **Check model memory:**
@@ -399,7 +407,8 @@ env | grep TRANSLATION
 3. **Run translations only:**
    ```bash
    # Run translations separately
-   uv run python scripts/pipeline/stage_06_llm_review.py --translations-only
+   uv run python scripts/pipeline/stage_06_llm_review.py \
+     --project templates/template_code_project --translations-only
    ```
 
 ### Issue: "Review types not configured" or "Want to customize which reviews are generated"
@@ -470,7 +479,8 @@ cat projects/{name}/output/llm/quality_review.md
 
 # Check validation logs
 export LOG_LEVEL=0
-uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+uv run python scripts/pipeline/stage_06_llm_review.py \
+  --project templates/template_code_project --reviews-only
 ```
 
 **Solutions:**
@@ -520,14 +530,16 @@ env | grep LLM_MAX_INPUT_LENGTH
    ```bash
    # For models with large context (e.g., llama3-gradient: 256K)
    export LLM_CONTEXT_WINDOW=262144
-   uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+   uv run python scripts/pipeline/stage_06_llm_review.py \
+     --project templates/template_code_project --reviews-only
    ```
 
 2. **Limit input size:**
    ```bash
    # Reduce input to fit smaller models
    export LLM_MAX_INPUT_LENGTH=100000  # ~25K tokens
-   uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+   uv run python scripts/pipeline/stage_06_llm_review.py \
+     --project templates/template_code_project --reviews-only
    ```
 
 3. **Use model with larger context:**
@@ -594,7 +606,8 @@ export LLM_REVIEW_TIMEOUT=600
 export LLM_MAX_INPUT_LENGTH=100000
 
 # Run with custom settings
-uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only
+uv run python scripts/pipeline/stage_06_llm_review.py \
+  --project templates/template_code_project --reviews-only
 ```
 
 ## Diagnostic Commands
@@ -693,7 +706,8 @@ export LLM_REVIEW_TIMEOUT=600  # 10 minutes
 ```bash
 # Enable debug logging
 export LOG_LEVEL=0
-uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only 2>&1 | tee llm_review.log
+uv run python scripts/pipeline/stage_06_llm_review.py \
+  --project templates/template_code_project --reviews-only 2>&1 | tee llm_review.log
 
 # Review log file
 cat llm_review.log | grep -i error

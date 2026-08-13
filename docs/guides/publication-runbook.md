@@ -35,6 +35,15 @@ Before a real release, the project should have:
   `paper.version`, `authors`, `keywords`, and a `publication` block.
 - A rendered combined PDF under either `output/<qualified-name>/pdf/` or
   `projects/<qualified-name>/output/pdf/`.
+- Source-current analysis tables, figures, `manuscript_variables.json`,
+  hydrated manuscript, figure/evidence registries, and provenance receipts
+  produced in dependency order. No result-bearing token may remain unresolved.
+- Reviewed statistical definitions and claim-evidence/citation support,
+  including corrections/retractions and limitations that automated identifier
+  checks cannot establish.
+- A figure registry with distinct caption and alt text, plus human inspection
+  of PDF and HTML for reading order, contrast, color-independent encodings,
+  labels, tables, links, and long descriptions where needed.
 - A public standalone repository such as `docxology/template_code_project`.
 - A GitHub token with repository release permissions.
 - A Zenodo token. Use `ZENODO_SANDBOX_TOKEN` for dry rehearsals and
@@ -61,9 +70,35 @@ PROJECT=templates/template_code_project
 
 uv sync
 uv run python scripts/runner/execute_pipeline.py --project "$PROJECT" --core-only
+uv run python -m infrastructure.validation.cli prerender \
+  "projects/$PROJECT/manuscript" --repo-root .
+uv run python -m infrastructure.reference.citation.cli validate \
+  "projects/$PROJECT/manuscript/references.bib" --strict
+uv run python -m infrastructure.reference.verification verify \
+  "projects/$PROJECT/manuscript/references.bib" \
+  --live --as-of-year "<manuscript-year>"
+uv run python -m infrastructure.validation.cli evidence \
+  "projects/$PROJECT" --fail-on-issues
 uv run python scripts/pipeline/stage_04_validate.py --project "$PROJECT"
+uv run python -m infrastructure.validation.cli publication-audit \
+  --project "$PROJECT" --rendered --strict \
+  --require-figure-accessibility --format markdown
 uv run python -m infrastructure.publishing.credential_check --only github zenodo --env-file .env
 ```
+
+The live reference verifier checks indexed existence/metadata. Treat
+`unchecked` and `unverifiable` as unresolved work, not success; if the network
+is unavailable, record that blocker rather than suppressing it. Independently
+read each cited source to confirm the adjacent bounded claim and current
+correction/expression-of-concern/retraction state.
+
+Before authorizing release, inspect
+`projects/$PROJECT/output/manuscript/` for unresolved uppercase tokens and
+compare every reported number, table, caption, and abstract/conclusion claim to
+the current machine-readable analysis outputs. Confirm units, denominators,
+sample/population, estimator, uncertainty/error-bar meaning, exclusions,
+missing-data treatment, transformations, multiplicity, and model/software
+identity. The pipeline and audits do not replace this scholarly review.
 
 Optional but useful for release notes and release dashboards:
 

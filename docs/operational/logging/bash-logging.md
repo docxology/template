@@ -108,7 +108,7 @@ log_info "This appears in both terminal and log file"
 
 ```bash
 # Standard error handling with troubleshooting
-if ! uv run python scripts/pipeline/stage_03_render.py; then
+if ! uv run python scripts/pipeline/stage_03_render.py --project templates/template_code_project; then
     log_pipeline_error "PDF Rendering" "PDF generation failed" $? \
         "Check LaTeX installation" \
         "Verify manuscript files exist" \
