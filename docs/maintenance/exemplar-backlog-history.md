@@ -1441,6 +1441,7 @@ Closed in this reconciliation after the same-revision focused gates:
 | Advanced literature phase boundaries and provenance | phase conflict, calibration, artifact-manifest, replay, hash, size, and unsafe-path tests | Closed as the deterministic source contract; live retrieval and domain calibration remain external/tool-gated |
 | Newspaper layout and storybook/public-artifact signposting | per-page newspaper layout-audit receipt, glyph-clearance/geometry negative controls, and future-only exemplar TODO normalization | Closed as deterministic local contracts; real-news promotion and optional visual/publication evidence remain gated |
 | Exemplar backlog prose cleanup | all canonical TODOs retain only structured future rows or current invariants; completed rows and stale “next action” prose were moved to this record | Closed as a documentation contract; new work must enter a Minor or Medium row with an acceptance command and negative control |
+| Public-project test-runner modularity | `infrastructure/core/test_runner_outputs.py` now owns Git-visible output inventory and output-isolation digests; `test_runner.py` retains the existing runner surface | Closed as a bounded refactor; focused runner/receipt tests, Ruff, and mypy pass, and the module-size warning is removed |
 
 The remaining active rows are `EXECUTABLE-BUNDLE-MAJ-1` (pinned container),
 `CLEAN-CHECKOUT-MAJ-1` (hosted Linux and owner receipts),

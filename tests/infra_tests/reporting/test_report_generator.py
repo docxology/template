@@ -36,6 +36,12 @@ class TestGenerateTestReport:
         assert "timestamp" in report
         assert "T" in report["timestamp"]
 
+    def test_timestamp_is_byte_stable_without_source_date_epoch(self, tmp_path, monkeypatch):
+        monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
+        first = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        second = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
+        assert first["timestamp"] == second["timestamp"]
+
     def test_coverage_details_from_json_files(self, tmp_path):
         # Create mock coverage JSON files
         infra_cov = {

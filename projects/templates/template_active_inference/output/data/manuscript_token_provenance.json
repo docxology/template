@@ -2518,7 +2518,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "81eb061f43b7bfd7",
+      "expected_value": "133a13df72cfd8d8",
       "generated_output_path": "output/manuscript/15_discussion_outlook.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -3850,7 +3850,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "81eb061f43b7bfd7",
+      "expected_value": "133a13df72cfd8d8",
       "generated_output_path": "output/manuscript/17_conclusion.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -5002,7 +5002,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "81eb061f43b7bfd7",
+      "expected_value": "133a13df72cfd8d8",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,

@@ -27,6 +27,7 @@ ReceiptStatus = Literal["pass", "review_required", "blocked", "skipped"]
 AuthorityStatus = Literal["confirmed", "unavailable", "blocked"]
 VerificationMode = Literal["offline", "hosted", "external", "manual", "automated", "optional-tool"]
 _SECRET_PATTERN = re.compile(r"(?:token|secret|password|api[_-]?key|private[_-]?key)", re.IGNORECASE)
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class ReleaseReceiptError(ValueError):
@@ -72,8 +73,8 @@ class CommandReceipt:
             errors.append("passing command receipts require exit_code=0")
         if self.status == "blocked" and self.exit_code == 0:
             errors.append("blocked command receipts cannot report exit_code=0")
-        if self.output_sha256 and len(self.output_sha256) != 64:
-            errors.append("output_sha256 must be a SHA-256 digest")
+        if self.output_sha256 and not _SHA256_RE.fullmatch(self.output_sha256):
+            errors.append("output_sha256 must be a lowercase SHA-256 digest")
         return errors
 
     def to_dict(self) -> dict[str, object]:
@@ -236,12 +237,13 @@ class CleanCheckoutReceipt:
         if self.status == "pass":
             if len(self.runs) < 2:
                 errors.append("passing clean-checkout receipts require two deterministic runs")
-            if len(self.run_commands) < 2 or any(not commands for commands in self.run_commands[:2]):
-                errors.append("passing clean-checkout receipts require per-command evidence for two runs")
-            if any(run.status != "pass" for run in self.runs[:2]):
-                errors.append("the first two clean-checkout runs must pass")
-            if len(self.runs) >= 2 and self.runs[0].output_sha256 != self.runs[1].output_sha256:
-                errors.append("the first two clean-checkout runs produced different deterministic output digests")
+            if len(self.run_commands) < len(self.runs) or any(not commands for commands in self.run_commands):
+                errors.append("passing clean-checkout receipts require per-command evidence for every run")
+            if any(run.status != "pass" for run in self.runs):
+                errors.append("all clean-checkout runs must pass")
+            output_digests = {run.output_sha256 for run in self.runs}
+            if len(output_digests) != 1:
+                errors.append("clean-checkout runs produced different deterministic output digests")
             if not self.output_clean:
                 errors.append("passing clean-checkout receipts require clean outputs")
         return errors

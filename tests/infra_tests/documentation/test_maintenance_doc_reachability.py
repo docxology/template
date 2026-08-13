@@ -31,7 +31,4 @@ def test_maintenance_hub_links_every_markdown_guide_in_folder() -> None:
             continue
         if md.name not in hub:
             missing.append(md.name)
-    assert missing == [], (
-        "Maintenance guides not linked from docs/maintenance/README.md:\n"
-        + "\n".join(missing)
-    )
+    assert missing == [], "Maintenance guides not linked from docs/maintenance/README.md:\n" + "\n".join(missing)

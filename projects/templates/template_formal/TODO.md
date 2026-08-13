@@ -54,7 +54,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `FORMAL-SPEC-1` | blocked-tool | Medium | Optional Lean/TLA+ tools | Install or pin the required tool, or record its unavailable status; run the explicit formal script when available and attach a real formal-spec receipt. | real formal-spec receipt | `uv run pytest tests -q --no-cov --timeout=120` | decorative or skipped spec must not report pass |
+| `FORMAL-SPEC-1` | blocked-tool | Medium | Optional Lean/TLA+ tools | Install or pin the required tool, or record its unavailable status; run the explicit formal script when available and attach a real formal-spec receipt. | real formal-spec receipt | `uv run pytest projects/templates/template_formal/tests -q --no-cov --timeout=120` | decorative or skipped spec must not report pass |
 
 ## Major upcoming
 

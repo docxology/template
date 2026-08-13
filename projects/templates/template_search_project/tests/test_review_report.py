@@ -173,6 +173,20 @@ def test_generate_review_report_writes_markdown_and_prints_summary(tmp_path: Pat
     assert "DEEP REVIEW SUMMARY" in captured.out
 
 
+def test_generate_review_report_is_byte_stable_and_path_portable(tmp_path: Path):
+    """The offline report must not embed wall-clock or checkout-specific paths."""
+    project_root = _make_isolated_project(tmp_path)
+    review_dir = project_root / "output" / "review"
+    assert generate_review_report(project_root, REPO_ROOT, review_dir) == 0
+    first = (review_dir / "REVIEW_REPORT.md").read_bytes()
+    assert generate_review_report(project_root, REPO_ROOT, review_dir) == 0
+    second = (review_dir / "REVIEW_REPORT.md").read_bytes()
+    assert first == second
+    report = second.decode("utf-8")
+    assert str(tmp_path) not in report
+    assert "SOURCE_DATE_EPOCH unset" in report
+
+
 def _cite_count_in_report(text: str) -> int:
     """Extract the ``## 3.`` section's live-computed inline-citation count."""
     match = re.search(r"\*\*Manuscript inline citations:\*\* (\d+) unique keys", text)

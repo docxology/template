@@ -42,11 +42,15 @@ in this project:
 ## Coverage gate
 
 90% floor (`pyproject.toml`'s `[tool.coverage.report] fail_under = 90`),
-currently **95.29%** measured this session via:
+measured by the project gate via:
 
 ```bash
 uv run pytest tests -q --cov=src/template_formal --cov-report=term-missing
 ```
+
+Current collection and coverage values are generated in the repository
+snapshot [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md), not
+maintained as a second hand-authored number here.
 
 The lowest-covered modules are `storage/db.py` (88.04%, missing a few
 `sqlite3.Error` exception branches that are hard to trigger without a

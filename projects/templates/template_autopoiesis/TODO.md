@@ -53,7 +53,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `AUTOPOIESIS-SPEC-1` | blocked-tool | Medium | Pinned renderer and visual QA toolchain | Install or pin the renderer, or record its unavailable receipt; run the explicit Phase 10 visual gate and attach the tool-qualified receipt. | `SPEC.md` Phase 10 checklist + renderer receipt | `uv run pytest tests -q --no-cov --timeout=120` | missing renderer must report blocked-tool; fenced preamble/spec mismatch must fail |
+| `AUTOPOIESIS-SPEC-1` | blocked-tool | Medium | Pinned renderer and visual QA toolchain | Install or pin the renderer, or record its unavailable receipt; run the explicit Phase 10 visual gate and attach the tool-qualified receipt. | `SPEC.md` Phase 10 checklist + renderer receipt | `uv run pytest projects/templates/template_autopoiesis/tests -q --no-cov --timeout=120` | missing renderer must report blocked-tool; fenced preamble/spec mismatch must fail |
 
 ## Major upcoming
 

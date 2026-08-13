@@ -107,6 +107,12 @@ The Core module provides fundamental foundation utilities used across the entire
 - Owns matched serial/parallel Stage-01 test commands and fail-closed performance manifests for the fast `pipeline-smoke` lane, the full infrastructure lane, or the public project matrix.
 - `scripts/maintenance/benchmark_tests.py` writes provenance-bound JSON evidence; it refuses dirty checkouts and requires both lanes to pass with identical selection and commit.
 
+**test_runner_outputs.py**
+- Owns the Git-visible output-tree inventory and content digest used by the
+  isolated public-project test runner; ignored caches and runtime logs remain
+  outside the receipt boundary, while tracked or non-ignored output changes
+  fail the output-isolation contract.
+
 **worker_policy.py**
 - Shared bounded worker resolution for the outer public-project matrix and inner pytest-xdist lanes.
 - `resolve_bounded_workers` applies explicit values, environment overrides, CPU-aware defaults, and a hard safety cap without allowing invalid or oversubscribed counts.

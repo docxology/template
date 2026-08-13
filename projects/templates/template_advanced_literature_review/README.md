@@ -81,9 +81,16 @@ project config and the generated publication records are refreshed.
          deterministic_filters: {min_year: 2015}
    ```
 
-2. **Run the multi-phase search**:
+2. **Replay the committed fixture (offline default)**:
    ```bash
    uv run python scripts/01_multi_phase_search.py
+   ```
+
+   Live retrieval is an explicit opt-in and never runs from the default
+   command:
+
+   ```bash
+   uv run python scripts/01_multi_phase_search.py --live
    ```
 
 3. **Execute analysis pipeline**:

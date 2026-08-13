@@ -55,7 +55,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `SIA-APPROVAL-FORK-1` | blocked-external | Medium | Sandbox, diff, rollback, human approval | The typed approval contract and fork guidance are ready; obtain the required owner receipt and a real disposable fork before enabling `live_apply`, then attach the approval receipt. | `src/approval.py` contract + fork guidance + owner receipt | `uv run pytest tests -q --no-cov --timeout=120` | mutation without approval must fail |
+| `SIA-APPROVAL-FORK-1` | blocked-external | Medium | Sandbox, diff, rollback, human approval | The typed approval contract and fork guidance are ready; obtain the required owner receipt and a real disposable fork before enabling `live_apply`, then attach the approval receipt. | `src/approval.py` contract + fork guidance + owner receipt | `uv run pytest projects/templates/template_sia/tests -q --no-cov --timeout=120` | mutation without approval must fail |
 
 ## Major upcoming
 

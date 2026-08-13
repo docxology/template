@@ -6,10 +6,10 @@
     "jax_platforms": "cpu"
   },
   "config_hashes": [
-    "0b46afb976bc0639",
-    "4e8521408cb18644",
-    "6c0410672bf58ef6",
-    "81eb061f43b7bfd7"
+    "133a13df72cfd8d8",
+    "4c585d375bbed97a",
+    "f819ac50a128c239",
+    "ff24e5282c92b96b"
   ],
   "construction_count": 4,
   "inference_step_count": 10,
@@ -18,14 +18,14 @@
   "phase_count": 20,
   "phase_rows": [
     {
-      "config_hash": "81eb061f43b7bfd7",
+      "config_hash": "133a13df72cfd8d8",
       "context": "si_tmaze:state_inference:h2:s0",
       "evidence": "pymdp.Agent constructed under captured warnings context",
       "ok": true,
       "phase": "construction"
     },
     {
-      "config_hash": "81eb061f43b7bfd7",
+      "config_hash": "133a13df72cfd8d8",
       "context": "si_tmaze:state_inference:h2:s0",
       "evidence": "inference rollout steps were recorded",
       "ok": true,
@@ -62,14 +62,14 @@
       "phase": "warning"
     },
     {
-      "config_hash": "4e8521408cb18644",
+      "config_hash": "ff24e5282c92b96b",
       "context": "si_tmaze:policy_inference:h2:s0",
       "evidence": "pymdp.Agent constructed under captured warnings context",
       "ok": true,
       "phase": "construction"
     },
     {
-      "config_hash": "4e8521408cb18644",
+      "config_hash": "ff24e5282c92b96b",
       "context": "si_tmaze:policy_inference:h2:s0",
       "evidence": "inference rollout steps were recorded",
       "ok": true,
@@ -108,14 +108,14 @@
       "phase": "warning"
     },
     {
-      "config_hash": "0b46afb976bc0639",
+      "config_hash": "4c585d375bbed97a",
       "context": "si_tmaze:state_inference:h3:s0",
       "evidence": "pymdp.Agent constructed under captured warnings context",
       "ok": true,
       "phase": "construction"
     },
     {
-      "config_hash": "0b46afb976bc0639",
+      "config_hash": "4c585d375bbed97a",
       "context": "si_tmaze:state_inference:h3:s0",
       "evidence": "inference rollout steps were recorded",
       "ok": true,
@@ -152,14 +152,14 @@
       "phase": "warning"
     },
     {
-      "config_hash": "6c0410672bf58ef6",
+      "config_hash": "f819ac50a128c239",
       "context": "si_tmaze:policy_inference:h3:s0",
       "evidence": "pymdp.Agent constructed under captured warnings context",
       "ok": true,
       "phase": "construction"
     },
     {
-      "config_hash": "6c0410672bf58ef6",
+      "config_hash": "f819ac50a128c239",
       "context": "si_tmaze:policy_inference:h3:s0",
       "evidence": "inference rollout steps were recorded",
       "ok": true,
@@ -217,7 +217,7 @@
         "jax_enable_x64": false,
         "jax_platforms": "cpu"
       },
-      "config_hash": "81eb061f43b7bfd7",
+      "config_hash": "133a13df72cfd8d8",
       "context": "si_tmaze:state_inference:h2:s0",
       "inference_mode": "state_inference",
       "inference_step_count": 2,
@@ -246,7 +246,7 @@
         "jax_enable_x64": false,
         "jax_platforms": "cpu"
       },
-      "config_hash": "4e8521408cb18644",
+      "config_hash": "ff24e5282c92b96b",
       "context": "si_tmaze:policy_inference:h2:s0",
       "inference_mode": "policy_inference",
       "inference_step_count": 2,
@@ -277,7 +277,7 @@
         "jax_enable_x64": false,
         "jax_platforms": "cpu"
       },
-      "config_hash": "0b46afb976bc0639",
+      "config_hash": "4c585d375bbed97a",
       "context": "si_tmaze:state_inference:h3:s0",
       "inference_mode": "state_inference",
       "inference_step_count": 3,
@@ -306,7 +306,7 @@
         "jax_enable_x64": false,
         "jax_platforms": "cpu"
       },
-      "config_hash": "6c0410672bf58ef6",
+      "config_hash": "f819ac50a128c239",
       "context": "si_tmaze:policy_inference:h3:s0",
       "inference_mode": "policy_inference",
       "inference_step_count": 3,

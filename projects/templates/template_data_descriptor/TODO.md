@@ -43,8 +43,8 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `DATA-PUBLICATION-1` | blocked-external | Medium | A real fork and owner receipt | Obtain the required owner or external receipt to unblock; run project tests and standalone export check and attach publication receipt + standalone replay. | publication receipt + standalone replay | `uv run pytest tests -q --no-cov --timeout=120` | fabricated publication receipt must fail |
-| `DATA-MEDIA-1` | blocked-external | Medium | Real licensed non-CSV fixture | Obtain a real licensed non-CSV fixture and attach its checksum/row manifest before promoting the media claim. | media checksum/row manifest + license receipt | `uv run pytest tests -q --no-cov --timeout=120` | unsupported media, malformed rows, symlink escape, or wrong checksum must fail |
+| `DATA-PUBLICATION-1` | blocked-external | Medium | A real fork and owner receipt | Obtain the required owner or external receipt to unblock; run project tests and standalone export check and attach publication receipt + standalone replay. | publication receipt + standalone replay | `uv run pytest projects/templates/template_data_descriptor/tests -q --no-cov --timeout=120` | fabricated publication receipt must fail |
+| `DATA-MEDIA-1` | blocked-external | Medium | Real licensed non-CSV fixture | Obtain a real licensed non-CSV fixture and attach its checksum/row manifest before promoting the media claim. | media checksum/row manifest + license receipt | `uv run pytest projects/templates/template_data_descriptor/tests -q --no-cov --timeout=120` | unsupported media, malformed rows, symlink escape, or wrong checksum must fail |
 
 ## Major upcoming
 

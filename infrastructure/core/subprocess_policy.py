@@ -132,6 +132,20 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
         capture_output=True,
     ),
     SubprocessPolicy(
+        policy_id="output-visibility",
+        source_path="infrastructure/core/test_runner_outputs.py",
+        timeout_seconds=30,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
+        policy_id="release-rerender",
+        source_path="infrastructure/publishing/release_workflow.py",
+        timeout_seconds=1800,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
         policy_id="coverage-combine",
         source_path="infrastructure/core/test_runner.py",
         timeout_seconds=300,

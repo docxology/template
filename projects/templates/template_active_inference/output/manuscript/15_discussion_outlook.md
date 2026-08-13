@@ -26,7 +26,7 @@ The discussion ontology binds `coverage_semantics` to the audit matrix in [@sec:
 
 <!-- sheaf-track:simulation -->
 
-Measured pymdp rollout (`state_inference`, config hash `81eb061f43b7bfd7`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
+Measured pymdp rollout (`state_inference`, config hash `133a13df72cfd8d8`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
 
 Analytical sweep residual RMSE 0 nats (max residual 0). Coverage audit: 95 present / 95 bound / 0 missing cells on the IMRAD matrix.
 

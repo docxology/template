@@ -11,7 +11,7 @@ The `infrastructure/project/` module provides project discovery, validation, and
 **Core Functions:**
 
 - `discover_projects(repo_root, projects_dir="projects")` - Find all valid projects in the active projects directory
-- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `ongoing/`, `archive/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, falling back to `projects/active/<name>`
+- `resolve_project_root(repo_root, project_name)` - Resolve a project root. A qualified `<subfolder>/<name>` path (head in `templates/`, `active/`, `working/`, `ongoing/`, `archive/`) resolves directly under `projects/<subfolder>/<name>`. A bare name prefers `projects/active/<name>` (if it carries project markers), then `projects/working/<name>`, then a flat standalone `projects/<name>`, then the public `projects/templates/<name>` exemplar, falling back to `projects/active/<name>`
 - `validate_project_structure(project_dir)` - Validate required directories exist
 
 ### Private Promotion Contracts (`promotion/`)

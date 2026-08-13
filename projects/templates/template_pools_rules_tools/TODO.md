@@ -47,7 +47,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POOLS-FOURTH-FOND-1` | blocked-external | Medium | Owner-approved fourth fond exemplar | Obtain the required owner or external receipt to unblock; run public-scope and standalone gates and attach public fond manifest and registry update. | public fond manifest and registry update | `uv run pytest tests -q --no-cov --timeout=120` | absent exemplar must remain blocked, not skipped as pass |
+| `POOLS-FOURTH-FOND-1` | blocked-external | Medium | Owner-approved fourth fond exemplar | Obtain the required owner or external receipt to unblock; run public-scope and standalone gates and attach public fond manifest and registry update. | public fond manifest and registry update | `uv run pytest projects/templates/template_pools_rules_tools/tests -q --no-cov --timeout=120` | absent exemplar must remain blocked, not skipped as pass |
 
 ## Major upcoming
 

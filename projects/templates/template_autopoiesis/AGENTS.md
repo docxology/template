@@ -93,8 +93,10 @@ uv run pytest projects/templates/template_autopoiesis/tests/ --cov=projects/temp
 
 ## Test Files
 
-The live suite currently collects 512 items (parametrized cases included), as
-measured by `pytest --collect-only`:
+The live suite count is measured by `pytest --collect-only` and published in
+the generated repository snapshot [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md).
+The detailed table below is a historical 2026-08-09 receipt for audit context,
+not a current release claim; refresh the project measurement before citing it:
 
 | Test file | Collected items | What it covers |
 |---|---:|---|
@@ -133,7 +135,9 @@ measured by `pytest --collect-only`:
 
 - **Coverage target**: 90% (`fail_under=90`)
 - **Test count**: measured live by `measure_test_summary()` — see `output/data/manuscript_variables.json` for the value at last render, and [`COUNTS.md`](../../../docs/_generated/COUNTS.md) for the regenerated repo-wide totals (the count drifts upward release to release as tests are added, so it is not pinned here)
-- **Coverage**: 96.28% (measured live — see `output/data/manuscript_variables.json`)
+- **Coverage**: measured live in `output/data/manuscript_variables.json`; use
+  [`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md) for the
+  current repo-wide snapshot.
 - **Grammar seed**: 42
 - **Domains**: optimization, dynamics, statistics, signal, graph
 - **Reserved slots**: figure_profile, qr_profile, integrity_profile

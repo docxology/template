@@ -95,7 +95,7 @@ def test_run_logger_step_records_filters_events(tmp_path: Path) -> None:
 
 def test_run_logger_timed_emits_runtime_ms(tmp_path: Path) -> None:
     """The timed() context manager must append a 'runtime_ms' field to the emitted record."""
-    log = RunLogger(tmp_path / "timed.jsonl")
+    log = RunLogger(tmp_path / "timed.jsonl", timestamped=True)
     log.fresh()
     with log.timed(event="custom_event") as ctx:
         ctx["custom_field"] = "value"
@@ -103,6 +103,20 @@ def test_run_logger_timed_emits_runtime_ms(tmp_path: Path) -> None:
     assert len(records) == 1
     assert "runtime_ms" in records[0]
     assert isinstance(records[0]["runtime_ms"], float)
+
+
+def test_run_logger_default_is_byte_deterministic(tmp_path: Path) -> None:
+    """Default logs omit wall-clock and runtime telemetry."""
+    first = RunLogger(tmp_path / "first.jsonl")
+    second = RunLogger(tmp_path / "second.jsonl")
+    for log in (first, second):
+        log.fresh()
+        log.emit_run_header(config_hash="abc", mode="state_inference", seed=0, policy_len=2)
+        with log.timed(event=STEP_EVENT, step=0, obs=0, action=0, belief_entropy=0.5):
+            pass
+    assert first.path.read_bytes() == second.path.read_bytes()
+    assert "timestamp" not in first.records()[0]
+    assert "runtime_ms" not in first.records()[1]
 
 
 def test_run_logger_from_project_root_default_path(tmp_path: Path) -> None:

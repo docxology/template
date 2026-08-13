@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
+from pathlib import PurePosixPath
 
 import yaml
 
@@ -131,10 +132,29 @@ def validate_tool_scripts_exist(
     tool_dir = tools_root / tool_name
     entrypoints = get_tool_entrypoints(tool_name, templates_root=templates_root)
     missing: list[str] = []
+    root = tool_dir.resolve()
 
     for ep in entrypoints:
-        full_path = tool_dir / ep
-        if not full_path.exists():
+        if not isinstance(ep, str) or not ep.strip():
+            missing.append(str(ep))
+            continue
+        normalized = ep.strip()
+        parts = PurePosixPath(normalized).parts
+        if (
+            normalized.startswith("/")
+            or "\\" in normalized
+            or any(part in {"", ".", ".."} for part in parts)
+        ):
+            missing.append(ep)
+            continue
+        full_path = tool_dir.joinpath(*parts)
+        resolved = full_path.resolve(strict=False)
+        try:
+            resolved.relative_to(root)
+        except ValueError:
+            missing.append(ep)
+            continue
+        if full_path.is_symlink() or not full_path.is_file():
             missing.append(ep)
 
     return ToolValidationResult(

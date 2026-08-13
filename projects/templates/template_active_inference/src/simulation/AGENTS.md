@@ -39,6 +39,10 @@ invariants.
   and ontology bindings; update all three lanes together.
 - Runtime diagnostics distinguish known optional-dependency warnings from
   unexpected warnings. Do not hide unexpected warnings to green validation.
+- `RunLogger` omits wall-clock and runtime fields by default, keeping committed
+  or compared logs byte-deterministic. Set `logging.timestamped: true` only for
+  explicitly requested telemetry; timestamped logs are diagnostic, not release
+  evidence.
 
 ## Commands
 

@@ -43,7 +43,7 @@
   "si_entropy_min": 0.32508314364563223,
   "si_entropy_max": 0.32508314364563223,
   "pymdp_mode": "state_inference",
-  "pymdp_config_hash": "81eb061f43b7bfd7",
+  "pymdp_config_hash": "133a13df72cfd8d8",
   "si_policy_comparison_run_count": 4,
   "si_policy_comparison_goal_reached_count": 3,
   "si_policy_comparison_state_goal_count": 2,

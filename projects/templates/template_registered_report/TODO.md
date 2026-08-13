@@ -41,7 +41,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `REGISTERED-PUBLICATION-1` | blocked-external | Medium | Real fork and owner receipt | Obtain the required owner or external receipt to unblock; run project artifact and preflight gates and attach publication payload receipt. | publication payload receipt | `uv run pytest tests -q --no-cov --timeout=120` | synthetic DOI/receipt must fail |
+| `REGISTERED-PUBLICATION-1` | blocked-external | Medium | Real fork and owner receipt | Obtain the required owner or external receipt to unblock; run project artifact and preflight gates and attach publication payload receipt. | publication payload receipt | `uv run pytest projects/templates/template_registered_report/tests -q --no-cov --timeout=120` | synthetic DOI/receipt must fail |
 
 ## Major upcoming
 

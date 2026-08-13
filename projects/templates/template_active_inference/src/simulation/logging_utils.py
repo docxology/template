@@ -48,6 +48,7 @@ class RunLogger:
 
     path: Path
     enabled: bool = True
+    timestamped: bool = False
 
     def __post_init__(self) -> None:
         self.path = Path(self.path)
@@ -61,11 +62,12 @@ class RunLogger:
         *,
         relative_path: str = "output/logs/pymdp_runs.jsonl",
         enabled: bool | None = None,
+        timestamped: bool = False,
     ) -> RunLogger:
         """Process from project root."""
         if enabled is None:
             enabled = os.environ.get("PYMDP_RUN_LOG_DISABLED", "") != "1"
-        return cls(path=project_root / relative_path, enabled=enabled)
+        return cls(path=project_root / relative_path, enabled=enabled, timestamped=timestamped)
 
     def fresh(self) -> None:
         """Process fresh."""
@@ -77,7 +79,9 @@ class RunLogger:
         """Process emit."""
         if not self.enabled:
             return
-        full = {"timestamp": _now_iso(), **dict(record)}
+        full = dict(record)
+        if self.timestamped:
+            full = {"timestamp": _now_iso(), **full}
         validate_record(full)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as fh:
@@ -110,7 +114,8 @@ class RunLogger:
         try:
             yield ctx
         finally:
-            ctx["runtime_ms"] = round((time.perf_counter() - start) * 1000.0, 3)
+            if self.timestamped:
+                ctx["runtime_ms"] = round((time.perf_counter() - start) * 1000.0, 3)
             self.emit(ctx)
 
     def records(self) -> list[dict[str, Any]]:

@@ -29,5 +29,5 @@
     "entropy_monotone_nonincreasing": true
   },
   "pymdp_mode": "state_inference",
-  "pymdp_config_hash": "81eb061f43b7bfd7"
+  "pymdp_config_hash": "133a13df72cfd8d8"
 }

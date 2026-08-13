@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import re
 import shutil
-import subprocess
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -15,6 +14,8 @@ from typing import Any
 from infrastructure.core.exceptions import MetadataError, PublishingError
 from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.project_paths import validate_project_name
+from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.publishing.abstract_plaintext import (
     DepositCrossLinks,
     build_deposit_description,
@@ -46,6 +47,52 @@ logger = get_logger(__name__)
 RenderFn = Callable[[Path, str], int]
 
 _TAG_PATTERN = re.compile(r"^[^\s/]+$")
+
+_RELEASE_RENDER_POLICY = SubprocessPolicy(
+    policy_id="release-rerender",
+    source_path="infrastructure/publishing/release_workflow.py",
+    timeout_seconds=1800,
+    check=False,
+    capture_output=True,
+)
+
+
+def _confined_release_path(repo_root: Path, project_name: str, *parts: str) -> Path:
+    """Return a project/output path that cannot escape the repository roots."""
+    normalized = validate_project_name(project_name)
+    root = repo_root.resolve()
+    projects_root = root / "projects"
+    raw = projects_root.joinpath(*normalized.split("/"), *parts)
+    resolved = raw.resolve(strict=False)
+    try:
+        resolved.relative_to(projects_root)
+    except ValueError as exc:
+        raise PublishingError(f"release project path escapes projects/: {project_name!r}") from exc
+    current = projects_root
+    for component in (*normalized.split("/"), *parts):
+        current = current / component
+        if current.is_symlink():
+            raise PublishingError(f"release paths may not contain symlinks: {current}")
+    return raw
+
+
+def _confined_output_path(repo_root: Path, project_name: str, *parts: str) -> Path:
+    """Return an output path confined to the repository output tree."""
+    normalized = validate_project_name(project_name)
+    root = repo_root.resolve()
+    output_root = root / "output"
+    raw = output_root.joinpath(*normalized.split("/"), *parts)
+    resolved = raw.resolve(strict=False)
+    try:
+        resolved.relative_to(output_root)
+    except ValueError as exc:
+        raise PublishingError(f"release output path escapes output/: {project_name!r}") from exc
+    current = output_root
+    for component in (*normalized.split("/"), *parts):
+        current = current / component
+        if current.is_symlink():
+            raise PublishingError(f"release output paths may not contain symlinks: {current}")
+    return raw
 
 
 @dataclass
@@ -101,11 +148,12 @@ class ReleaseResult:
 
 def resolve_combined_pdf(repo_root: Path, project_name: str) -> Path | None:
     """Locate the combined manuscript PDF for a project."""
-    short_name = project_name.split("/")[-1]
+    normalized = validate_project_name(project_name)
+    short_name = normalized.split("/")[-1]
     candidates = [
-        repo_root / "projects" / project_name / "output" / "pdf" / f"{short_name}_combined.pdf",
-        repo_root / "output" / project_name / "pdf" / f"{short_name}_combined.pdf",
-        repo_root / "output" / project_name / "pdf" / f"{project_name}_combined.pdf",
+        _confined_release_path(repo_root, normalized, "output", "pdf", f"{short_name}_combined.pdf"),
+        _confined_output_path(repo_root, normalized, "pdf", f"{short_name}_combined.pdf"),
+        _confined_output_path(repo_root, normalized, "pdf", f"{normalized}_combined.pdf"),
     ]
     seen: set[Path] = set()
     for path in candidates:
@@ -120,7 +168,7 @@ def resolve_combined_pdf(repo_root: Path, project_name: str) -> Path | None:
 
 def resolve_config_path(repo_root: Path, project_name: str) -> Path:
     """Return the manuscript config path for a project."""
-    return repo_root / "projects" / project_name / "manuscript" / "config.yaml"
+    return _confined_release_path(repo_root, project_name, "manuscript", "config.yaml")
 
 
 def validate_release_tag(tag: str) -> None:
@@ -175,6 +223,7 @@ def prepare_release_bundle(
     release_context: PublicationReleaseContext | None = None,
 ) -> ReleaseBundle:
     """Copy the combined PDF and write metadata/manifest into a release bundle directory."""
+    validate_project_name(request.project_name)
     pdf_source = resolve_combined_pdf(request.repo_root, request.project_name)
     if pdf_source is None:
         raise PublishingError(
@@ -191,7 +240,7 @@ def prepare_release_bundle(
 
     metadata = release_context.metadata
 
-    bundle_dir = request.repo_root / "output" / request.project_name / "release_bundle"
+    bundle_dir = _confined_output_path(request.repo_root, request.project_name, "release_bundle")
     bundle_dir.mkdir(parents=True, exist_ok=True)
     for stale_pdf in bundle_dir.glob("*.pdf"):
         stale_pdf.unlink()
@@ -302,6 +351,7 @@ def run_github_release(
 
 def default_render_fn(repo_root: Path, project_name: str) -> int:
     """Re-render the project PDF via the standard pipeline script."""
+    validate_project_name(project_name)
     cmd = [
         "uv",
         "run",
@@ -310,7 +360,11 @@ def default_render_fn(repo_root: Path, project_name: str) -> int:
         "--project",
         project_name,
     ]
-    result = subprocess.run(cmd, cwd=repo_root, check=False)
+    result = run_with_policy(cmd, cwd=repo_root, env=None, policy=_RELEASE_RENDER_POLICY)
+    if result.stdout.strip():
+        logger.info("Release re-render output: %s", result.stdout.strip()[-2000:])
+    if result.stderr.strip():
+        logger.warning("Release re-render diagnostics: %s", result.stderr.strip()[-2000:])
     return int(result.returncode)
 
 
@@ -331,7 +385,7 @@ def _update_transmission_artifacts(
     if errors and not request.dry_run:
         return
 
-    project_root = request.repo_root / "projects" / request.project_name
+    project_root = _confined_release_path(request.repo_root, request.project_name)
     receipt_stub = {
         "project": request.project_name,
         "tag": request.tag,
@@ -376,6 +430,7 @@ def run_release_workflow(
 ) -> ReleaseResult:
     """Execute Zenodo publish, GitHub release, DOI config update, and optional re-render."""
     validate_release_tag(request.tag)
+    validate_project_name(request.project_name)
     renderer = render_fn or default_render_fn
 
     config_path = resolve_config_path(request.repo_root, request.project_name)

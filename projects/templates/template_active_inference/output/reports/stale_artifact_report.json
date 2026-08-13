@@ -10,7 +10,7 @@
       "artifact": "output/data/analysis_statistics.json",
       "exists": true,
       "fresh": true,
-      "sha256": "d00535628dfa61a475a882f2c648a135d632c89571b0c5fc611b22cc3bd60ff6"
+      "sha256": "f68a7a557cd11ce22318f40a2f57171c758368a58262712107bbb3ec6135244f"
     },
     {
       "artifact": "output/data/analytical_assumption_index.json",
@@ -130,7 +130,7 @@
       "artifact": "output/data/si_tmaze_summary.json",
       "exists": true,
       "fresh": true,
-      "sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e"
+      "sha256": "d4f160f9f491d38816b7d242e712be215547106eae54d79e82414769990e092e"
     },
     {
       "artifact": "output/data/si_tmaze_trace.json",
@@ -244,7 +244,7 @@
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
       "exists": true,
       "fresh": true,
-      "sha256": "961ee790dc7aea7c8020e92e3d98e5e26f4118c026c926334a649510a1f37226"
+      "sha256": "5bcd007ba20a0977c8db14d22e1403452b69d1dd6963278377b9ffe693f1669f"
     },
     {
       "artifact": "output/reports/reproducibility_replay.json",
@@ -262,7 +262,7 @@
       "artifact": "output/reports/si_tmaze_run_report.json",
       "exists": true,
       "fresh": true,
-      "sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f"
+      "sha256": "ed140aad44e9850357fd39419f7ac77c64e4f8cbb9117823ffe0142609b39683"
     }
   ],
   "schema": "template_active_inference.stale_artifact_report.v1"

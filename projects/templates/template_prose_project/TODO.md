@@ -56,7 +56,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `PROSE-LLM-REVIEW-1` | blocked-tool | Medium | Explicit configured provider and transcript | Install or pin the required tool, or record its unavailable status to unblock; run project tests with LLM disabled by default and attach opt-in review receipt. | opt-in review receipt | `uv run pytest tests -q --no-cov --timeout=120` | enabled review without provider must fail closed |
+| `PROSE-LLM-REVIEW-1` | blocked-tool | Medium | Explicit configured provider and transcript | Install or pin the required tool, or record its unavailable status to unblock; run project tests with LLM disabled by default and attach opt-in review receipt. | opt-in review receipt | `uv run pytest projects/templates/template_prose_project/tests -q --no-cov --timeout=120` | enabled review without provider must fail closed |
 
 ## Major upcoming
 

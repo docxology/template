@@ -702,3 +702,5 @@ def test_thin_cli_runs_from_outside_project(tmp_path: Path) -> None:
     )
     assert completed.returncode == 0, completed.stderr
     assert (output_dir / "phase_metadata.json").is_file()
+    manifest = json.loads((output_dir / "phase_artifact_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["execution_mode"] == "fixture"

@@ -119,6 +119,7 @@ def run_si_tmaze(
         project_root,
         relative_path=cfg.logging.path,
         enabled=cfg.logging.enabled,
+        timestamped=cfg.logging.timestamped,
     )
     log.emit_run_header(
         config_hash=config_hash(cfg),

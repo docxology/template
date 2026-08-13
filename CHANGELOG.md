@@ -75,6 +75,9 @@ autopoiesis `output/children/` tree is regenerable, not forgery — no changes r
 - Centralized bounded subprocess timeout/process-group cleanup and hardened
   reproduction-bundle and disposable-rehearsal path validation against symlink,
   traversal, duplicate, stale-payload, and non-generated-output hazards.
+- Split the public-project runner's output-visibility and digest machinery into
+  `infrastructure/core/test_runner_outputs.py`, preserving the runner's
+  private import surface while removing its module-size warning.
 - Made quick-feedback benchmark receipts public-safe by keeping subprocess
   diagnostics in memory only and redacting absolute command paths, with
   regression coverage for both receipt serialization and diagnostic tails.

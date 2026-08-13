@@ -39,6 +39,7 @@ class LoggingConfig:
 
     enabled: bool = True
     path: str = "output/logs/pymdp_runs.jsonl"
+    timestamped: bool = False
 
 
 @dataclass(frozen=True)
@@ -160,6 +161,7 @@ def _parse_raw(raw: dict[str, Any]) -> PymdpConfig:
         logging=LoggingConfig(
             enabled=bool(logging_raw.get("enabled", True)),
             path=str(logging_raw.get("path", "output/logs/pymdp_runs.jsonl")),
+            timestamped=bool(logging_raw.get("timestamped", False)),
         ),
         comparison=ComparisonConfig(
             horizons=comparison_horizons,
@@ -239,6 +241,7 @@ def config_snapshot(config: PymdpConfig) -> dict[str, Any]:
         "logging": {
             "enabled": config.logging.enabled,
             "path": config.logging.path,
+            "timestamped": config.logging.timestamped,
         },
         "comparison": {
             "horizons": list(config.comparison.horizons),

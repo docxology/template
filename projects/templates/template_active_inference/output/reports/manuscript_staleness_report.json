@@ -1466,7 +1466,7 @@
       "token": "si_goal_reached"
     },
     {
-      "expected": "81eb061f43b7bfd7",
+      "expected": "133a13df72cfd8d8",
       "fresh": true,
       "resolved_path": "output/manuscript/15_discussion_outlook.md",
       "section": "manuscript/15_discussion_outlook.md",
@@ -2243,7 +2243,7 @@
       "token": "pymdp_mode"
     },
     {
-      "expected": "81eb061f43b7bfd7",
+      "expected": "133a13df72cfd8d8",
       "fresh": true,
       "resolved_path": "output/manuscript/17_conclusion.md",
       "section": "manuscript/17_conclusion.md",

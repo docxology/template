@@ -6,7 +6,25 @@ from dataclasses import dataclass
 from collections.abc import Callable
 from importlib import import_module
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any
+
+
+def _validated_relative_path(value: str, *, label: str, filename: bool = False) -> Path:
+    """Return a normalized project-relative path or reject an escape."""
+    if not value or "\x00" in value or "\\" in value:
+        raise ValueError(f"provenance.{label} must be a non-empty relative POSIX path")
+    normalized = value.strip()
+    parts = PurePosixPath(normalized).parts
+    if (
+        not parts
+        or normalized.startswith("/")
+        or any(part in {"", ".", ".."} for part in parts)
+        or (filename and len(parts) != 1)
+    ):
+        suffix = " file" if filename else " path"
+        raise ValueError(f"provenance.{label} must be a confined relative{suffix}")
+    return Path(*parts)
 
 
 @dataclass
@@ -31,7 +49,21 @@ class ProvenanceConfig:
 
     def dag_path(self, project_dir: Path | str) -> Path:
         """Return the absolute path to the DAG JSON file."""
-        return Path(project_dir) / self.output_dir / self.filename
+        root = Path(project_dir).resolve()
+        output_dir = _validated_relative_path(self.output_dir, label="output_dir")
+        filename = _validated_relative_path(self.filename, label="filename", filename=True)
+        raw = root / output_dir / filename
+        resolved = raw.resolve(strict=False)
+        try:
+            resolved.relative_to(root)
+        except ValueError as exc:
+            raise ValueError("provenance DAG path escapes the project root") from exc
+        current = root
+        for component in (*output_dir.parts, filename.name):
+            current = current / component
+            if current.is_symlink():
+                raise ValueError(f"provenance DAG path may not contain symlinks: {current}")
+        return raw
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize this object to a plain dict for JSON output."""
@@ -96,8 +128,16 @@ def load_provenance_config(
     if not isinstance(enabled, bool):
         raise ValueError("provenance.enabled must be a boolean")
 
-    output_dir = str(payload.get("output_dir", "output/provenance"))
-    filename = str(payload.get("filename", "dag.json"))
+    output_dir_value = payload.get("output_dir", "output/provenance")
+    filename_value = payload.get("filename", "dag.json")
+    if not isinstance(output_dir_value, str):
+        raise ValueError("provenance.output_dir must be a string")
+    if not isinstance(filename_value, str):
+        raise ValueError("provenance.filename must be a string")
+    output_dir = output_dir_value
+    filename = filename_value
+    _validated_relative_path(output_dir, label="output_dir")
+    _validated_relative_path(filename, label="filename", filename=True)
 
     auto_hash = payload.get("auto_hash_artifacts", False)
     if not isinstance(auto_hash, bool):

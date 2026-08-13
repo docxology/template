@@ -628,7 +628,7 @@ class MultiPhaseSearchRunner:
         print(f"  Total unique papers: {len(all_paper_list)}")
         print(f"  Combined corpus: {combined_path}")
 
-    def replay_fixture(self, corpus_path: Path) -> None:
+    def replay_fixture(self, corpus_path: Path, specific_phase: str | None = None) -> None:
         """Build phase artifacts from the committed corpus without network access.
 
         The public exemplar keeps a deterministic corpus snapshot so the normal
@@ -643,7 +643,13 @@ class MultiPhaseSearchRunner:
         self.phase_metadata.clear()
         self.all_phased_papers.clear()
 
-        phases = list(self.search_phases.items())
+        if specific_phase is not None and specific_phase not in self.search_phases:
+            raise ValueError(f"Phase '{specific_phase}' not found in configuration")
+        phases = [
+            (phase_id, phase_config)
+            for phase_id, phase_config in self.search_phases.items()
+            if specific_phase is None or phase_id == specific_phase
+        ]
         for index, (phase_id, phase_config) in enumerate(phases):
             queries = [str(query) for query in phase_config.get("queries", [])]
             if index == 0:
@@ -755,6 +761,17 @@ def main() -> None:  # pragma: no cover - exercised through the thin CLI script
         default=PROJECT_ROOT / "output" / "data",
         help="Output directory for results",
     )
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Opt into live retrieval; the default replays the committed offline fixture",
+    )
+    parser.add_argument(
+        "--fixture-corpus",
+        type=Path,
+        default=PROJECT_ROOT / "output" / "data" / "corpus.jsonl",
+        help="Fixture corpus used by the offline default",
+    )
 
     args = parser.parse_args()
 
@@ -765,7 +782,12 @@ def main() -> None:  # pragma: no cover - exercised through the thin CLI script
     )
 
     runner = MultiPhaseSearchRunner(args.config_path, output_dir=args.output_dir)
-    runner.run(specific_phase=args.phase)
+    if args.live:
+        runner.run(specific_phase=args.phase)
+    else:
+        if not args.fixture_corpus.is_file():
+            parser.error(f"offline fixture corpus not found: {args.fixture_corpus}")
+        runner.replay_fixture(args.fixture_corpus, specific_phase=args.phase)
 
 
 if __name__ == "__main__":

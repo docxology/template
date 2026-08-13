@@ -73,7 +73,11 @@ def validate_resource_directory(path: Path, resource_kind: str) -> tuple[str, ..
     issues = list(validate_resource_manifest(manifest, resource_kind))
     if resource_kind == "tools" and isinstance(manifest, Mapping):
         for entrypoint in manifest.get("entrypoints", []):
-            resolved = (root / entrypoint).resolve()
+            candidate = root / entrypoint
+            if candidate.is_symlink():
+                issues.append(f"symlinked tool entrypoint is not allowed: {entrypoint}")
+                continue
+            resolved = candidate.resolve()
             try:
                 resolved.relative_to(root.resolve())
             except ValueError:

@@ -98,6 +98,36 @@ def test_clean_checkout_requires_two_runs_and_clean_outputs() -> None:
     )
     assert any("different deterministic output digests" in error for error in nondeterministic.validate())
 
+    third_run_failure = CleanCheckoutReceipt(
+        "abc123",
+        "darwin-arm64",
+        "pass",
+        (
+            _passing_command("same"),
+            _passing_command("same"),
+            CommandReceipt(
+                ("pytest",),
+                "blocked",
+                2,
+                0.1,
+                skip_reason="tool unavailable",
+                output_sha256=_passing_command("same").output_sha256,
+            ),
+        ),
+        run_commands=(
+            (_passing_command("same"),),
+            (_passing_command("same"),),
+            (CommandReceipt(("pytest",), "blocked", 2, 0.1, skip_reason="tool unavailable"),),
+        ),
+        output_clean=True,
+    )
+    assert any("all clean-checkout runs must pass" in error for error in third_run_failure.validate())
+
+
+def test_command_receipt_rejects_non_hex_sha256() -> None:
+    receipt = CommandReceipt(("tool",), "pass", 0, 0.0, output_sha256="z" * 64)
+    assert any("lowercase SHA-256" in error for error in receipt.validate())
+
 
 def test_skipped_receipt_requires_reason() -> None:
     receipt = CommandReceipt(("tool",), "skipped", None, 0.0)

@@ -26,7 +26,7 @@ def test_live_fixture_and_documentation_surfaces_are_synchronized() -> None:
     results = (PROJECT_ROOT / "manuscript" / "05_results_discussion.md").read_text(encoding="utf-8")
     assert "six known-bad" in abstract
     assert "eleven pre-registered analyses" in abstract
-    assert "95.29%" in tests_readme
+    assert "docs/_generated/COUNTS.md" in tests_readme
     assert "three pre-registered" not in results.lower()
 
     # The collected-test total used to be pinned in prose here ("279 tests"), which
@@ -62,8 +62,8 @@ def test_live_fixture_and_documentation_surfaces_are_synchronized() -> None:
         assert f"[`{name}/`]({name}/)" in tests_readme, name
 
     root_readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    assert root_readme.count("95.29%") == 2
-    assert "95.91%" not in root_readme
+    assert "docs/_generated/COUNTS.md" in root_readme
+    assert not re.search(r"\b\d{2,3}\.\d{2}%\b", root_readme)
 
 
 def test_authoritative_mypy_command_is_synchronized_across_fork_surfaces() -> None:

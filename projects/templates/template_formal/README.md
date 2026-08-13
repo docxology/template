@@ -206,13 +206,15 @@ alone is not proof — confirm tests collected > 0 and coverage ≥ 90%:
 uv run python scripts/pipeline/stage_01_test.py --project templates/template_formal --project-only
 ```
 
-Real expected output (per ISA.md's own authoritative-invocation binding —
-a bare root-venv `uv run pytest` is not equivalent, see `ISA.md` Changelog):
+Illustrative archived output only (per ISA.md's authoritative-invocation
+binding — a bare root-venv `uv run pytest` is not equivalent, see `ISA.md`
+Changelog). Current collection and coverage values are generated in
+[`docs/_generated/COUNTS.md`](../../../docs/_generated/COUNTS.md):
 
 ```text
-Required test coverage of 90% reached. Total coverage: 95.29%
-279 passed (timing is machine-dependent)
-Project: ✓ PASSED (279/279 tests, 95.29% coverage)
+Required test coverage of 90% reached. Total coverage: <measured value>
+<collected tests> passed (timing is machine-dependent)
+Project: ✓ PASSED (<collected tests>/<collected tests> tests, measured coverage)
 ```
 
 **mypy --strict, the authoritative form.** The bare `uv run mypy --strict

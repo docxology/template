@@ -19,7 +19,7 @@ Just cloned the repo? Do this:
 2. `uv sync` (installs the root environment, including deterministic dependencies for all public template exemplars)
 3. `./run.sh` (interactive menu) **or** `./run.sh --pipeline --project templates/template_code_project --core-only` (non-interactive, no LLM)
 4. PDFs land in `output/templates/<project>/pdf/`. Logs in `output/templates/<project>/logs/`.
-5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+5. Run `./run.sh --help` for all flags. The always-present roster is generated from `PUBLIC_PROJECT_NAMES` in [`infrastructure/project/public_scope.py`](infrastructure/project/public_scope.py) and published in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 **Repurposing for your research?** See [`docs/repurposing-architectures.md`](docs/repurposing-architectures.md) — maps every reusable architecture (DAG pipeline, two-layer separation, evidence registry, multi-format rendering, MCP server, publishing stack) to its module and adoption path.
 
@@ -251,9 +251,11 @@ source and the latest rendered public artifacts. Public output files above
 50 MB remain excluded by the generated-artifact guard; private or rotating
 project outputs remain blocked.
 
-Each exemplar also has a standalone `docxology/template_*` GitHub repository
-linked to its Zenodo concept and latest version DOI. The current matrix is
-[`docs/_generated/publication_records.md`](docs/_generated/publication_records.md).
+Where declared, an exemplar has a standalone `docxology/template_*` GitHub
+repository and Zenodo concept/version records. The current declaration and
+verification state is the generated matrix in
+[`docs/_generated/publication_records.md`](docs/_generated/publication_records.md);
+unverified or `n/a` fields are not publication evidence.
 The standalone repository must exist before
 `scripts/publish/publish_project_release.py` can create a release there; the
 release script publishes the GitHub release asset and Zenodo deposit, but it

@@ -1048,14 +1048,14 @@ Total documented definitions: 820
 | 28 | `function` | `_json_default` | inventory fallback | Inventory fallback for function `_json_default` defined at `src/simulation/logging_utils.py:28`. |
 | 34 | `function` | `validate_record` | docstring | Validate record. |
 | 46 | `class` | `RunLogger` | docstring | Data container for RunLogger. |
-| 52 | `function` | `RunLogger.__post_init__` | inventory fallback | Inventory fallback for function `RunLogger.__post_init__` defined at `src/simulation/logging_utils.py:52`. |
-| 58 | `function` | `RunLogger.from_project_root` | docstring | Process from project root. |
-| 70 | `function` | `RunLogger.fresh` | docstring | Process fresh. |
-| 76 | `function` | `RunLogger.emit` | docstring | Process emit. |
-| 86 | `function` | `RunLogger.emit_run_header` | docstring | Process emit run header. |
-| 106 | `function` | `RunLogger.timed` | docstring | Process timed. |
-| 116 | `function` | `RunLogger.records` | docstring | Process records. |
-| 126 | `function` | `RunLogger.step_records` | docstring | Process step records. |
+| 53 | `function` | `RunLogger.__post_init__` | inventory fallback | Inventory fallback for function `RunLogger.__post_init__` defined at `src/simulation/logging_utils.py:53`. |
+| 59 | `function` | `RunLogger.from_project_root` | docstring | Process from project root. |
+| 72 | `function` | `RunLogger.fresh` | docstring | Process fresh. |
+| 78 | `function` | `RunLogger.emit` | docstring | Process emit. |
+| 90 | `function` | `RunLogger.emit_run_header` | docstring | Process emit run header. |
+| 110 | `function` | `RunLogger.timed` | docstring | Process timed. |
+| 121 | `function` | `RunLogger.records` | docstring | Process records. |
+| 131 | `function` | `RunLogger.step_records` | docstring | Process step records. |
 
 ## `src/simulation/precision_sweep.py`
 
@@ -1076,19 +1076,19 @@ Total documented definitions: 820
 | 18 | `class` | `TMazeConfig` | docstring | Data container for TMazeConfig. |
 | 29 | `class` | `AgentConfig` | docstring | Data container for AgentConfig. |
 | 37 | `class` | `LoggingConfig` | docstring | Data container for LoggingConfig. |
-| 45 | `class` | `ComparisonConfig` | docstring | Data container for ComparisonConfig. |
-| 54 | `class` | `PymdpConfig` | docstring | Data container for PymdpConfig. |
-| 67 | `function` | `PymdpConfig.policy_len` | docstring | Process policy len. |
-| 71 | `function` | `PymdpConfig.__post_init__` | docstring | Reject configurations the minimal two-state harness cannot execute. |
-| 76 | `function` | `_coerce_mode` | inventory fallback | Inventory fallback for function `_coerce_mode` defined at `src/simulation/pymdp_config.py:76`. |
-| 85 | `function` | `validate_pymdp_config` | docstring | Validate dimensions, numeric domains, and safe local output paths. |
-| 133 | `function` | `_parse_raw` | inventory fallback | Inventory fallback for function `_parse_raw` defined at `src/simulation/pymdp_config.py:133`. |
-| 172 | `function` | `default_pymdp_config` | docstring | Process default pymdp config. |
-| 177 | `function` | `pymdp_config_path` | docstring | Process pymdp config path. |
-| 182 | `function` | `load_pymdp_config` | docstring | Load pymdp config from a file. |
-| 195 | `function` | `apply_pymdp_overrides` | docstring | Process apply pymdp overrides. |
-| 220 | `function` | `config_snapshot` | docstring | Process config snapshot. |
-| 251 | `function` | `config_hash` | docstring | Process config hash. |
+| 46 | `class` | `ComparisonConfig` | docstring | Data container for ComparisonConfig. |
+| 55 | `class` | `PymdpConfig` | docstring | Data container for PymdpConfig. |
+| 68 | `function` | `PymdpConfig.policy_len` | docstring | Process policy len. |
+| 72 | `function` | `PymdpConfig.__post_init__` | docstring | Reject configurations the minimal two-state harness cannot execute. |
+| 77 | `function` | `_coerce_mode` | inventory fallback | Inventory fallback for function `_coerce_mode` defined at `src/simulation/pymdp_config.py:77`. |
+| 86 | `function` | `validate_pymdp_config` | docstring | Validate dimensions, numeric domains, and safe local output paths. |
+| 134 | `function` | `_parse_raw` | inventory fallback | Inventory fallback for function `_parse_raw` defined at `src/simulation/pymdp_config.py:134`. |
+| 174 | `function` | `default_pymdp_config` | docstring | Process default pymdp config. |
+| 179 | `function` | `pymdp_config_path` | docstring | Process pymdp config path. |
+| 184 | `function` | `load_pymdp_config` | docstring | Load pymdp config from a file. |
+| 197 | `function` | `apply_pymdp_overrides` | docstring | Process apply pymdp overrides. |
+| 222 | `function` | `config_snapshot` | docstring | Process config snapshot. |
+| 254 | `function` | `config_hash` | docstring | Process config hash. |
 
 ## `src/simulation/pymdp_runtime.py`
 
@@ -1111,8 +1111,8 @@ Total documented definitions: 820
 | 31 | `function` | `quantize_replay_floats` | docstring | Round every float in a JSON-serializable payload to the replay grid. |
 | 48 | `function` | `write_si_artifacts` | docstring | Write si artifacts to the output path. |
 | 116 | `function` | `run_and_persist` | docstring | Run and persist. |
-| 134 | `function` | `write_policy_comparison` | docstring | Write deterministic state-vs-policy comparison rows without changing main SI artifacts. |
-| 253 | `function` | `write_policy_posterior_grid` | docstring | Write step-level PyMDP policy posterior normalization evidence. |
+| 135 | `function` | `write_policy_comparison` | docstring | Write deterministic state-vs-policy comparison rows without changing main SI artifacts. |
+| 254 | `function` | `write_policy_posterior_grid` | docstring | Write step-level PyMDP policy posterior normalization evidence. |
 
 ## `src/simulation/si_belief.py`
 

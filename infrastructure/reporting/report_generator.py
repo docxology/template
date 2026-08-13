@@ -5,7 +5,8 @@ and saves them in JSON and Markdown formats.
 """
 
 import json
-from datetime import datetime
+import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -14,6 +15,18 @@ from infrastructure.core.logging.utils import get_logger
 from .coverage_json_parser import parse_coverage_json
 
 logger = get_logger(__name__)
+
+
+def _report_timestamp() -> str:
+    """Return a reproducible timestamp for generated test reports."""
+    raw_epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    if not raw_epoch:
+        return "1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)"
+    try:
+        epoch = int(raw_epoch)
+    except ValueError:
+        return "1970-01-01T00:00:00+00:00 (invalid SOURCE_DATE_EPOCH)"
+    return datetime.fromtimestamp(epoch, tz=timezone.utc).isoformat(timespec="seconds")
 
 
 def generate_test_report(
@@ -31,7 +44,7 @@ def generate_test_report(
     according to the phases executed for the current report.
     """
     report: dict[str, Any] = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": _report_timestamp(),
         "infrastructure": infra_results,
         "project": project_results,
         "summary": {

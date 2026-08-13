@@ -270,7 +270,12 @@ Authoritative slugs: [`docs/_generated/active_projects.md`](../docs/_generated/a
 
 ### Published exemplars — pipeline productivity, advanced provenance, and autopoiesis
 
-The repository ships public template projects under `projects/templates/`. Each canonical exemplar is independently published as its own GitHub repository + Zenodo deposit, while this monorepo remains the source of shared infrastructure and cross-template validation. Each demonstrates the pipeline end-to-end on real, citable artifacts.
+The repository ships public template projects under `projects/templates/`. Some
+canonical exemplars have independently published GitHub/Zenodo records; the
+generated matrix below distinguishes declarations from externally verified
+status. This monorepo remains the source of shared infrastructure and
+cross-template validation. Each exemplar demonstrates the pipeline locally;
+publication claims require a refreshed external receipt.
 
 The table below is auto-injected from public project config files plus optional GitHub/Zenodo API refreshes. Do not hand-edit it.
 

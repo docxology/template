@@ -43,7 +43,7 @@ No active rows are currently scoped at this size.
 
 | ID | Status | Size | Dependency | Next action / unblock condition | Proving artifact | Acceptance command | Negative control |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `LIT-ENGINE-POLITENESS-1` | blocked-external | Medium | Retrieval engine adapters | Obtain the required owner or external receipt to unblock; run live-run smoke with skipped/limited engine rows and attach `output/data/retrieval_run_manifest.json`. | `output/data/retrieval_run_manifest.json` | `uv run pytest tests -q --no-cov --timeout=120` | retry storm or missing rate-limit receipt must fail |
+| `LIT-ENGINE-POLITENESS-1` | blocked-external | Medium | Retrieval engine adapters | Obtain the required owner or external receipt to unblock; run live-run smoke with skipped/limited engine rows and attach `output/data/retrieval_run_manifest.json`. | `output/data/retrieval_run_manifest.json` | `uv run pytest projects/templates/template_literature_meta_analysis/tests -q --no-cov --timeout=120` | retry storm or missing rate-limit receipt must fail |
 
 ## Major upcoming
 

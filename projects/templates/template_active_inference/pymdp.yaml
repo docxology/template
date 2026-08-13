@@ -20,6 +20,8 @@ agent:
 logging:
   enabled: true
   path: output/logs/pymdp_runs.jsonl
+  # Runtime timestamps/timing are opt-in telemetry; false keeps default logs byte-deterministic.
+  timestamped: false
 
 comparison:
   horizons: [2, 3]
