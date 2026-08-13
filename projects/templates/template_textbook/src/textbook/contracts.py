@@ -53,8 +53,17 @@ def compare_config_shapes(live: Any, example: Any, *, path: str = "$") -> tuple[
         return tuple(differences)
 
     if isinstance(live, list) and isinstance(example, list):
-        if not live or not example:
+        if not live and not example:
             return ()
+        # Exactly one side is empty. A scalar list (keywords, languages, …)
+        # may legitimately shrink to empty, but a mapping list that disappears
+        # (or appears) is structural drift in a book configuration and must be
+        # reported so live/example configs cannot silently diverge.
+        if not live or not example:
+            nonempty = live if live else example
+            if all(isinstance(item, Mapping) for item in nonempty):
+                differences.append(f"{path}: mapping-list length differs ({len(live)} != {len(example)})")
+            return tuple(differences)
         live_mapping_items = all(isinstance(item, Mapping) for item in live)
         example_mapping_items = all(isinstance(item, Mapping) for item in example)
         if live_mapping_items != example_mapping_items:
@@ -158,9 +167,21 @@ def validate_numeric_facts(path: Path, *, project_root: Path | None = None) -> t
 
 
 def numeric_fact_receipt(path: Path, *, project_root: Path | None = None) -> dict[str, Any]:
-    """Return a deterministic receipt for a validated numeric-fact registry."""
+    """Return a deterministic receipt for a validated numeric-fact registry.
+
+    When the registry cannot be loaded (missing file or unsupported schema) this
+    still returns a receipt with ``status: "fail"`` and the reason in
+    ``issues`` rather than raising — mirroring :func:`validate_numeric_facts`,
+    so a single call path reports every failure mode deterministically.
+    """
     issues = validate_numeric_facts(path, project_root=project_root)
-    facts = load_numeric_facts(path)
+    try:
+        facts = load_numeric_facts(path)
+    except (OSError, ValueError) as exc:
+        facts = ()
+        reason = str(exc)
+        if reason not in issues:
+            issues = (*issues, reason)
     canonical = [
         {
             "fact_id": fact.fact_id,

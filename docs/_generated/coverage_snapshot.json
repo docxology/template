@@ -43,7 +43,7 @@
     },
     "template_literature_meta_analysis": {
       "coverage_pct": "93.97 %",
-      "source_hash": "2c14254f39e182d52f9546fa005cc04a19d1bf1cb4fb158d0a4e9c771190fa87"
+      "source_hash": "61f14e73972bb7a799db9034a47343402615c56c748a3e74c8741f012136f1c2"
     },
     "template_madlib": {
       "coverage_pct": "98.79 %",
@@ -95,11 +95,11 @@
     },
     "template_textbook": {
       "coverage_pct": "93.35 %",
-      "source_hash": "452c0d8d1dc690e56ba007fa99daac61b1b24838f8da48af274486d7a148f9f3"
+      "source_hash": "27c1b74dbabdb27ddfcb218ebe8dc252223bd76576993dc02bed163d09d4851c"
     }
   },
   "schema_version": 3,
-  "source_commit": "da8d580fe942326334bdfe54e02427b5a2f16043",
+  "source_commit": "388ff7bd839ccc1840bffb9c303aaffade4df315",
   "source_inventory_mode": "tracked-and-nonignored-working-tree",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -115,7 +115,7 @@
       "template_eda_notebook": "24a7ffd96f2eef15fd66c7638d6171b63e27a156d605d0f12f66248581b2d7c7",
       "template_formal": "4dc46840d3d2d697db3660c614a24dd2376670cba40565e057731e96dbc643e7",
       "template_gold_refinement": "c3a0a03ae2f65b5760d330facacf495f8330eb3100b0ba89f3142366f0d9889a",
-      "template_literature_meta_analysis": "2c14254f39e182d52f9546fa005cc04a19d1bf1cb4fb158d0a4e9c771190fa87",
+      "template_literature_meta_analysis": "61f14e73972bb7a799db9034a47343402615c56c748a3e74c8741f012136f1c2",
       "template_madlib": "463fc2be6deb56e31d2fbd92c94a5b0353ae1f5de6746a37efe3aeb7248df5bc",
       "template_methods_paper": "e3f2251ca96953878bf586bf1b54910ffbe7ced9192373c241058e3bb459ebd7",
       "template_newspaper": "284293b48033ccd5f020779a0c960ea951b2040af7ec5f4f029a941241171ba9",
@@ -128,7 +128,7 @@
       "template_sia": "605bdb287a3f705f32fe4d622f89fac87498253acc5c594e4b00b5a5f079d8ba",
       "template_storybook": "3125e477da8eb1ce4c28d1abd8336661d6f0ab3c3f9214f54886b0f21f5c3532",
       "template_template": "883a96381a8c5a87725cc96b6bdbfb9fd3cb5afc594e7d7b6d29a1106c147b63",
-      "template_textbook": "452c0d8d1dc690e56ba007fa99daac61b1b24838f8da48af274486d7a148f9f3"
+      "template_textbook": "27c1b74dbabdb27ddfcb218ebe8dc252223bd76576993dc02bed163d09d4851c"
     }
   }
 }
