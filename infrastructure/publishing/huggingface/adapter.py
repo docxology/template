@@ -37,10 +37,10 @@ from __future__ import annotations
 import base64
 import json
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.determinism import now_utc_iso as _now_utc_iso
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
 
@@ -52,10 +52,6 @@ logger = get_logger(__name__)
 _INLINE_BYTE_CEILING = 10 * 1024 * 1024  # 10 MiB
 
 _PUBLIC_HUB_URL = "https://huggingface.co"
-
-
-def _now_utc_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _hub_available() -> bool:

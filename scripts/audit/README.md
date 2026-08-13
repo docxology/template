@@ -22,6 +22,7 @@ Audit and quality-gate scripts for documentation, filepath, drift, and git-guard
 | `check_tracked_generated_artifacts.py` | Generated-artifact git-index hygiene |
 | `check_tracked_secrets.py` | High-confidence tracked-blob credential scan |
 | `check_staged_secrets.py` | High-confidence staged A/C/M/R index-blob scan |
+| `check_mirror_symlinks.py` | Managed-symlink mirror-shape guard (`projects/<lifecycle>/` holds managed symlinks only) |
 | `copy_exemplar.py` | Copy/update a canonical exemplar |
 
 ## Usage

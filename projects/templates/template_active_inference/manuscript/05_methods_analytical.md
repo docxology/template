@@ -8,7 +8,7 @@
 
 <!-- sheaf-track:prose -->
 
-The analytical method is a finite **K={{bernoulli_state_count}} Bernoulli / Ising** oracle. The entangled joint [@eq:entangled_joint] gives closed-form mutual information $I(\lambda)$; `output/data/parameter_sweep.csv` then checks the same curve by an independent exact total-correlation recomputation before the value is used in [@sec:results_mi_sweep]. GNN and ontology rows share the same symbol surface ([@fig:gnn_ontology_concordance]), so the derivation, sweep, and model notation are one audited toy contract rather than parallel descriptions.
+The analytical method here is a finite **K={{bernoulli_state_count}} Bernoulli / Ising** oracle. The entangled joint [@eq:entangled_joint] gives closed-form mutual information $I(\lambda)$; `output/data/parameter_sweep.csv` then checks the same curve by an independent exact total-correlation recomputation before the value is used in [@sec:results_mi_sweep]. GNN and ontology rows share the same symbol surface ([@fig:gnn_ontology_concordance]), so the derivation, sweep, and model notation are one audited toy contract rather than parallel descriptions.
 
 The scope is intentionally small: finite variational quantities only, no sampling, and no empirical generalization. "Free energy" here means exactly computed variational functionals on this tiny discrete state-space, aligned with mathematical FEP reviews [@buckley2017mathreview], not continuous-time or biological FEP dynamics [@gershman2019fepbrain]. The generated sweep contains {{param_sweep_grid_points}} grid points, and the merged invariant report records {{invariants_passed}} / {{invariants_total}} passing checks.
 

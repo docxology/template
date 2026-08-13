@@ -5,18 +5,14 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-from datetime import datetime, timezone
 from pathlib import Path
 
+from infrastructure.core.determinism import now_utc_iso as _now_utc
 from infrastructure.core.logging.utils import get_logger
 
 from .models import SiteDeployConfig, SiteDeployResult
 
 logger = get_logger(__name__)
-
-
-def _now_utc() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class NetlifyAdapter:

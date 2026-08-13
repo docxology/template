@@ -20,6 +20,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.accuracy import heading_slug
+from infrastructure.validation.docs.consistency._shared import blank_content
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
@@ -149,15 +150,9 @@ def _strip_code(text: str) -> str:
     Whitespace replacement (rather than deletion) keeps line/column offsets correct
     so reported line numbers map to the source file faithfully.
     """
-
-    def _blank(match: re.Match[str]) -> str:
-        s = match.group(0)
-        # Preserve newlines so line counts stay correct.
-        return "".join("\n" if ch == "\n" else " " for ch in s)
-
-    text = _FENCE_RE.sub(_blank, text)
-    text = _DOUBLE_BACKTICK_RE.sub(_blank, text)
-    text = _SINGLE_BACKTICK_RE.sub(_blank, text)
+    text = _FENCE_RE.sub(blank_content, text)
+    text = _DOUBLE_BACKTICK_RE.sub(blank_content, text)
+    text = _SINGLE_BACKTICK_RE.sub(blank_content, text)
     return text
 
 
@@ -178,11 +173,7 @@ def _blank_fences(text: str) -> str:
     GitHub slugs the code's *text content*, so the inline-span blanking used for
     link discovery would mis-slug those headings.
     """
-
-    def _blank(match: re.Match[str]) -> str:
-        return "".join("\n" if ch == "\n" else " " for ch in match.group(0))
-
-    return _FENCE_RE.sub(_blank, text)
+    return _FENCE_RE.sub(blank_content, text)
 
 
 def collect_anchors(md_file: Path) -> frozenset[str]:

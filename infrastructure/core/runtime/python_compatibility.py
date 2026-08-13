@@ -39,8 +39,8 @@ def scan_python_310_compatibility(
 ) -> tuple[PythonCompatibilityIssue, ...]:
     """Scan Python files for 3.10-incompatible syntax and unguarded APIs."""
     issues: list[PythonCompatibilityIssue] = []
-    for source_path in _python_files(paths):
-        display = _display_path(source_path, repo_root)
+    resolved_root = repo_root.resolve()
+    for source_path, display in _python_files_and_displays(paths, resolved_root):
         try:
             source = source_path.read_text(encoding="utf-8")
             tree = ast.parse(source, filename=str(source_path), feature_version=(3, 10))
@@ -62,15 +62,23 @@ def scan_python_310_compatibility(
     return tuple(sorted(issues, key=lambda issue: (issue.path, issue.line, issue.rule)))
 
 
-def _python_files(paths: Iterable[Path]) -> tuple[Path, ...]:
-    files: dict[str, Path] = {}
+def _python_files_and_displays(paths: Iterable[Path], resolved_root: Path) -> tuple[tuple[Path, str], ...]:
+    """Enumerate source files, resolving each path exactly ONCE.
+
+    Each candidate is resolved a single time; the resolved path keys the
+    de-duplication dict and the resolved path + ``resolved_root`` produce the
+    display string, so ``scan_python_310_compatibility`` performs no second
+    filesystem resolution pass over the source tree.
+    """
+    entries: dict[str, tuple[Path, str]] = {}
     for path in paths:
         candidates = (path,) if path.is_file() else path.rglob("*.py") if path.is_dir() else ()
         for candidate in candidates:
             if any(part in {".venv", "__pycache__", "site-packages"} for part in candidate.parts):
                 continue
-            files[candidate.resolve().as_posix()] = candidate
-    return tuple(files[key] for key in sorted(files))
+            resolved = candidate.resolve()
+            entries[resolved.as_posix()] = (resolved, _display_path(resolved, resolved_root))
+    return tuple(entries[key] for key in sorted(entries))
 
 
 def _parent_map(tree: ast.AST) -> dict[ast.AST, ast.AST]:
@@ -129,9 +137,14 @@ def _api_issue(path: str, node: ast.AST, api: str) -> PythonCompatibilityIssue:
     )
 
 
-def _display_path(path: Path, repo_root: Path) -> str:
+def _display_path(path: Path, resolved_root: Path) -> str:
+    """Return *path* (already resolved) relative to *resolved_root*.
+
+    ``resolved_root`` is resolved once by the caller; ``path`` is pre-resolved
+    by ``_python_files_and_displays``, so this performs no filesystem syscalls.
+    """
     try:
-        return path.resolve().relative_to(repo_root.resolve()).as_posix()
+        return path.relative_to(resolved_root).as_posix()
     except ValueError:
         return path.as_posix()
 

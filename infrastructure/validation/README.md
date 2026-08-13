@@ -424,6 +424,7 @@ Validation serves as quality gates in the pipeline:
 1. **PDF Validation Gate**: Ensures rendered PDFs are error-free
 2. **Integrity Gate**: Verifies all output files are consistent and 3. **Cross-reference Gate**: Confirms all references resolve correctly
 4. **Completeness Gate**: Ensures all expected deliverables exist
+5. **Status Freshness Gate**: Backed by `infrastructure/validation/status_freshness.py` to fail closed on a stale `STATUS.md` subsystem ledger (used by `scripts/gates/status_freshness.py`)
 
 ### Error Handling
 

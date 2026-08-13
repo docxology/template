@@ -9,6 +9,49 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### 2026-08-12 — parallel-agent review: performance, de-duplication, thin orchestration, documentation
+
+Comprehensive review of infrastructure/, scripts/, docs/, and all 24 public exemplars,
+executed as three parallel Hermes herdr agents (infra-perf, exemplars, docs-tests) with
+disjoint file ownership, plus an auditor-first baseline. All changes committed with
+byte-identical behavior; gates green (ruff, mypy 1536 files, 2492 infra tests, 55-regression
+tier, all public-contract auditors, no-mocks).
+
+Performance:
+- **Fix O(2N) path resolution in the Python 3.10 compat audit.** `scan_python_310_compatibility`
+  and `_display_path` each called `path.resolve()` per source file (~1000+). Now each path is
+  resolved exactly once and the pre-resolved relative display is threaded through; the public-
+  surface test no longer times out under load in the release infra gate (public-surface suite
+  ~3.3s). Added a regression test pinning repo-relative display paths.
+
+De-duplication (shared-helper extraction, R6-class, infra-internal only):
+- `infrastructure/rendering/_output_text.py` — canonical `_process_output_text`, now imported by
+  docx/epub/mobi renderers (was duplicated in all three).
+- `infrastructure/core/determinism.now_utc_iso` — canonical UTC-stamp helper; the six duplicated
+  `_now_utc`/`_now_utc_iso` bodies in publishing (static_site cloudflare/github/netlify, pypi
+  upload, archival models, huggingface, osf) now delegate to it; added to `__all__`.
+- `infrastructure/validation/docs/consistency/_shared.blank_content` — canonical blanking helper;
+  shared by `blank_fences` and `cross_link_lint._strip_code`/`_blank_fences`.
+- Removed two thin `_normalize_whitespace` wrapper methods (core `_validation`, llm `sanitization`)
+  in favour of the existing `normalize_whitespace`.
+- `scripts/publish/upload_{gold_refinement,template_project}.py` — dropped duplicated
+  `_load_dotenv` wrappers; delegate to `infrastructure.core.credentials.ensure_dotenv_loaded`.
+
+Thin orchestration:
+- Extracted `scripts/gates/status_freshness.py` parsing/findings logic into the new tested module
+  `infrastructure/validation/status_freshness.py`; the gate is now a 23-line thin CLI. Fixed the
+  forward reference in `scripts/docgen/status_evidence.py` to import `parse_status_rows` from the
+  new module. Added function-level tests + README gate entry.
+
+Documentation:
+- Linked the archived `docs/maintenance/exemplar-backlog-history.md` from the maintenance hub and
+  added two reachability regression tests (all maintenance guides must be linked from the hub).
+
+Exemplars (24): full read-everything review found all 24 import clean, offline test suites green,
+no stub methods (all `pass`/`None`/`NotImplementedError` are documented fallbacks/gaps); the
+advanced-literature ↔ meta-analysis duplication is a sanctioned standalone-safe mirror and the
+autopoiesis `output/children/` tree is regenerable, not forgery — no changes required.
+
 ### Backlog reconciliation and release-boundary hardening (2026-08-11)
 
 - Re-audited the root backlog and all 24 canonical public exemplar TODO files;

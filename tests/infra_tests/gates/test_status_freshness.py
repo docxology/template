@@ -1,67 +1,61 @@
-"""Tests for the source-backed subsystem status freshness gate."""
+"""Thin gate-script test for scripts/gates/status_freshness.py.
+
+The gate is an opt-in CLI that wires ``--repo-root`` / ``--as-of`` /
+``--max-age-days`` to :func:`infrastructure.validation.status_freshness.validate_status_file`.
+These tests exercise the thin CLI (exit codes + output) against a real temporary
+``STATUS.md``; the parsing/findings logic itself is covered by
+``tests/infra_tests/validation/test_status_freshness.py``.
+"""
 
 from __future__ import annotations
 
-from datetime import date
+import subprocess
+import sys
+from pathlib import Path
 
-from scripts.gates.status_freshness import freshness_findings, parse_status_rows
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
+_GOOD = """# Subsystem Status
 
-def _status_text(last_updated: str, row_date: str) -> str:
-    return f"""# Subsystem Status
-
-**Last updated:** {last_updated}
+**Last updated:** 2026-08-08
 
 | ID | Subsystem | Last verified | Verified by | Verification scope | Command | Receipt | Mode | Health |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| STATUS-PIPELINE-1 | Pipeline | {row_date} | Maintainer | real run | `uv run pytest tests -q` | docs/_generated/status_evidence.json | automated | healthy |
+| STATUS-PIPELINE-1 | Pipeline | 2026-08-07 | Maintainer | real run | `uv run pytest tests -q` | docs/_generated/status_evidence.json | automated | healthy |
 """
 
 
-def test_parse_status_rows_extracts_subsystem_dates() -> None:
-    rows = parse_status_rows(_status_text("2026-08-08", "2026-08-07"))
-    assert [(row.subsystem, row.verified_on, row.line_number) for row in rows] == [("Pipeline", date(2026, 8, 7), 7)]
-
-
-def test_freshness_accepts_current_ledger() -> None:
-    assert (
-        freshness_findings(
-            _status_text("2026-08-08", "2026-05-21"),
-            as_of=date(2026, 8, 8),
-        )
-        == []
+def _run_gate(status_dir: Path, *, as_of: str) -> "subprocess.CompletedProcess[str]":
+    return subprocess.run(
+        [
+            sys.executable,
+            str(REPO_ROOT / "scripts/gates/status_freshness.py"),
+            "--repo-root",
+            str(status_dir),
+            "--as-of",
+            as_of,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
     )
 
 
-def test_freshness_rejects_stale_row_and_header() -> None:
-    findings = freshness_findings(
-        _status_text("2025-12-01", "2025-12-01"),
-        as_of=date(2026, 8, 8),
-    )
-    assert len(findings) == 2
-    assert "Pipeline" in findings[0]
-    assert "Last updated" in findings[1]
+def test_gate_exits_zero_for_fresh_ledger(tmp_path: Path) -> None:
+    (tmp_path / "STATUS.md").write_text(_GOOD, encoding="utf-8")
+    result = _run_gate(tmp_path, as_of="2026-08-08")
+    assert result.returncode == 0
+    assert "OK" in result.stdout
 
 
-def test_freshness_rejects_future_dates() -> None:
-    findings = freshness_findings(
-        _status_text("2026-08-09", "2026-08-09"),
-        as_of=date(2026, 8, 8),
-    )
-    assert any("future" in finding for finding in findings)
+def test_gate_exits_nonzero_for_stale_ledger(tmp_path: Path) -> None:
+    (tmp_path / "STATUS.md").write_text(_GOOD.replace("2026-08-07", "2025-12-01"), encoding="utf-8")
+    result = _run_gate(tmp_path, as_of="2026-08-08")
+    assert result.returncode != 0
+    assert "FAIL" in result.stdout
 
 
-def test_freshness_requires_ledger_rows() -> None:
-    findings = freshness_findings("**Last updated:** 2026-08-08\n", as_of=date(2026, 8, 8))
-    assert findings == ["STATUS.md has no dated subsystem verification rows"]
-
-
-def test_freshness_rejects_invalid_header_date() -> None:
-    findings = freshness_findings(_status_text("2026-02-30", "2026-08-07"), as_of=date(2026, 8, 8))
-    assert findings == ["STATUS.md **Last updated:** date is invalid"]
-
-
-def test_freshness_rejects_missing_typed_status_evidence() -> None:
-    text = _status_text("2026-08-08", "2026-08-07").replace("docs/_generated/status_evidence.json", "")
-    findings = freshness_findings(text, as_of=date(2026, 8, 8))
-    assert any("missing receipt" in finding for finding in findings)
+def test_gate_reports_cannot_read_missing_file(tmp_path: Path) -> None:
+    result = _run_gate(tmp_path, as_of="2026-08-08")
+    assert result.returncode != 0
+    assert "cannot read" in result.stdout

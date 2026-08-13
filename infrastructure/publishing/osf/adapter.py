@@ -19,10 +19,10 @@ The adapter never raises on a network/credential failure — callers inspect
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from infrastructure.core.determinism import now_utc_iso as _now_utc_iso
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing._adapter_http import iter_bundle_files, lazy_session
 
@@ -31,10 +31,6 @@ from .models import OSFConfig, OSFResult
 logger = get_logger(__name__)
 
 _JSONAPI = "application/vnd.api+json"
-
-
-def _now_utc_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class OSFAdapter:

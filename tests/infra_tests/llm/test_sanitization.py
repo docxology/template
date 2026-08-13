@@ -15,6 +15,7 @@ from infrastructure.llm.core.sanitization import (
     get_input_sanitizer,
     sanitize_llm_input,
 )
+from infrastructure.core._validation import normalize_whitespace
 
 
 class TestInputSanitizer:
@@ -268,10 +269,9 @@ class TestInputSanitizer:
         assert "&gt;" in result
 
     def test_normalize_whitespace(self):
-        """Test the _normalize_whitespace method."""
-        sanitizer = InputSanitizer()
+        """Whitespace normalization collapses runs and strips edges."""
         text = "  Hello    World  \n\n\n\n  Test  "
-        result = sanitizer._normalize_whitespace(text)
+        result = normalize_whitespace(text)
         # Should not have leading/trailing whitespace
         assert not result.startswith(" ")
         assert not result.endswith(" ")

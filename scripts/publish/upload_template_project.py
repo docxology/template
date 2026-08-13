@@ -39,28 +39,19 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 
+from infrastructure.core.credentials import ensure_dotenv_loaded  # noqa: E402
+from infrastructure.core.determinism import now_utc_iso  # noqa: E402
 from infrastructure.publishing.status_report import compile_publishing_status  # noqa: E402
 from infrastructure.publishing.upload_runner import (  # noqa: E402
     UploadTargets,
     run_uploads,
     select_jobs,
 )
-
-
-def _load_dotenv() -> None:
-    # Thin wrapper over the canonical loader (python-dotenv when available, else
-    # a minimal non-overriding parser). The previous inline parser guarded a
-    # dead `infrastructure.core.config.dotenv` import behind a silent
-    # `except Exception` swallow, so it never used the real helper.
-    from infrastructure.core.credentials import ensure_dotenv_loaded
-
-    ensure_dotenv_loaded(REPO / ".env")
 
 
 def _resolve_targets(name: str) -> UploadTargets:
@@ -94,7 +85,7 @@ def main() -> int:
     parser.add_argument("--include-static", action="store_true")
     args = parser.parse_args()
 
-    _load_dotenv()
+    ensure_dotenv_loaded(REPO / ".env")
     targets = _resolve_targets(args.project)
     if not targets.pdf.exists():
         print(
@@ -125,7 +116,7 @@ def main() -> int:
         "project": args.project,
         "mode": run.mode,
         "preflight": run.preflight,
-        "timestamp_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "timestamp_utc": now_utc_iso(),
         "results": run.results,
     }
     out.write_text(json.dumps(payload, indent=2))

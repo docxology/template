@@ -8,7 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from scripts.gates.status_freshness import parse_status_rows
+from infrastructure.validation.status_freshness import parse_status_rows
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = "template-status-evidence/v1"

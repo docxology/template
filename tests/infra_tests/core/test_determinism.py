@@ -16,9 +16,23 @@ from infrastructure.core.determinism import (
     TEMPLATE_DETERMINISTIC_ENV,
     deterministic_subprocess_env,
     is_deterministic_requested,
+    now_utc_iso,
     resolve_build_timestamp,
     resolve_source_date_epoch,
 )
+
+
+def test_now_utc_iso_is_wallclock_strict_iso(monkeypatch) -> None:
+    """``now_utc_iso`` returns a strict ``YYYY-MM-DDTHH:MM:SSZ`` wall-clock stamp.
+
+    It must not be pinned by a preset ``SOURCE_DATE_EPOCH`` — receipt timestamps
+    reflect the moment the operation ran, unlike deterministic build output.
+    """
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    value = now_utc_iso()
+    # Strict ISO-8601 ``Z`` form exactly matching the canonical ``_ISO_Z``.
+    datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    assert value.endswith("Z")
 
 
 def _git_repo_with_commit(root: Path, *, when_epoch: int) -> None:

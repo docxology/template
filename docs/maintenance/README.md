@@ -23,6 +23,7 @@
 | [`release-boundary.md`](release-boundary.md) | Why the root package/tag release surface and the standalone publication lane's releases must not be treated as interchangeable | 2026-07-17 |
 | [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `requires-python = ">=3.10"` floor, 3.14 default, 3.14 readiness lane, and why dropping the floor needs a breaking release boundary | 2026-07-20 |
 | [`test-performance-evidence.json`](test-performance-evidence.json) | Committed, redacted serial/parallel quick-feedback benchmark receipt; generated with `scripts/maintenance/benchmark_tests.py` and bound to its measured revision | 2026-08-11 |
+| [`exemplar-backlog-history.md`](exemplar-backlog-history.md) | Archived completed-work evidence that was removed from the future-only `projects/templates/*/TODO.md` files; preserved so completed work does not return to the active backlog | 2026-08-02 |
 | [`clean-checkout-evidence.json`](clean-checkout-evidence.json) | Redacted, source-bound two-run fresh-checkout rehearsal receipt; required local phases pass and tracked canonical-output cleanliness remains explicitly blocked | 2026-08-09 |
 
 ## The thesis these guides share
