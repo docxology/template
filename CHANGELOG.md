@@ -7,7 +7,7 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
-## [Unreleased]
+## [3.7.0] - 2026-08-12
 
 ### 2026-08-12 — per-exemplar improvement pass (24 dedicated herdr agents)
 
