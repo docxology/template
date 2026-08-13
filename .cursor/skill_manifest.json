@@ -272,8 +272,8 @@
       "path": "docs/prompts/comprehensive-assessment/SKILL.md",
       "cursor_at": "docs/prompts/comprehensive-assessment/SKILL.md",
       "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2026-05-27",
+        "version": "1.0.1",
+        "last_updated": "2026-08-13",
         "status": "active",
         "data_access_level": "raw",
         "task_type": "open-ended",

@@ -4,6 +4,13 @@ Discoverable agent skills for template-compliant work. Each workflow lives in a 
 
 **Hub:** [SKILL.md](SKILL.md) · **Modes:** [MODE_REGISTRY.md](MODE_REGISTRY.md) · **Technical index:** [AGENTS.md](AGENTS.md)
 
+## Copy-paste launch prompts
+
+- [Deep research-software and manuscript review](comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md)
+  — implementation-oriented review across code, tests, documentation,
+  auto-injected manuscript variables, statistics, visualizations, accessibility,
+  scholarship, provenance, and release boundaries.
+
 ## How to invoke
 
 Say what you need in natural language — no slash commands or copy-paste blocks required. Examples:

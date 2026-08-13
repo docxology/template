@@ -379,6 +379,7 @@ subpackage.
 
 ### Prompt reference deep-dives (`prompts/*/references/`)
 
+- **[prompts/comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md](prompts/comprehensive-assessment/references/comprehensive-research-software-manuscript-review-prompt.md)** - Copy-paste, audit-gated prompt for comprehensive research-software, manuscript-variable, statistical, visualization, accessibility, and scholarship remediation
 - **[prompts/code-development/references/patterns.md](prompts/code-development/references/patterns.md)** - Code-development prompt patterns
 - **[prompts/feature-addition/references/checklist.md](prompts/feature-addition/references/checklist.md)** - Feature-addition checklist
 - **[prompts/literature-synthesis/references/prompt-blocks.md](prompts/literature-synthesis/references/prompt-blocks.md)** - Literature-synthesis prompt blocks
