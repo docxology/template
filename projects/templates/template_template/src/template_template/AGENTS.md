@@ -6,7 +6,7 @@ Technical specification for the template project's source code package.
 
 | File | Purpose | Key Exports |
 |------|---------|-------------|
-| `__init__.py` | Public API surface | Introspection, metrics, injection, and visualization entrypoints (32 symbols) |
+| `__init__.py` | Public API surface | Introspection, metrics, injection, and visualization entrypoints (34 symbols) |
 | `introspection.py` | Repository analysis | `discover_infrastructure_modules`, `discover_projects`, `count_pipeline_stages`, `analyze_test_coverage_config`, `build_infrastructure_report` |
 | `metrics.py` | Manuscript metrics computation | `build_manuscript_metrics_dict`, `save_metrics_json`, `build_module_inventory_table`, counters, formatting helpers; never introduce wall-clock output (`SOURCE_DATE_EPOCH` controls `generated_at`) |
 | `inject_metrics.py` | Chapter variable injection | `load_metrics`, `render_chapter`, `render_all_chapters` |
