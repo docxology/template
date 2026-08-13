@@ -79,11 +79,11 @@ flowchart TB
     ROOT --> DOCS[docs/CLOUD_DEPLOY.md<br/>Headless cloud server guide]
     ROOT --> DOCKER[infrastructure/docker<br/>Dockerfile · docker-compose.yml]
 
-    INFRA --> INFRA_PKGS[autoresearch · benchmark · core · doctor · documentation ·<br/>llm · methods · orchestration · project · prose ·<br/>publishing · reference · rendering · reporting · scientific ·<br/>search · sia · skills · steganography · validation]
+    INFRA --> INFRA_PKGS[autoresearch · benchmark · core · doctor · documentation ·<br/>fonds · llm · methods · orchestration · project · prose ·<br/>provenance · publishing · reference · rendering · reporting · research ·<br/>rules · scientific · search · sia · skills · steganography ·<br/>tools · validation]
 
     SCR --> SCR_FILES[shell_bootstrap.sh · bash_utils.sh ops only ·<br/>stage_00_setup → stage_06_llm_review ·<br/>execute_pipeline.py · execute_multi_project.py]
 
-    PROJ --> PROJ_F["template_active_inference · template_autopoiesis · template_autoresearch_project · template_autoscientists · template_code_project · template_data_descriptor · template_eda_notebook · template_gold_refinement · template_literature_meta_analysis · template_madlib · template_methods_paper · template_newspaper · template_pools_rules_tools · template_prose_project · template_redacted_report · template_registered_report · template_search_project · template_sia · template_storybook · template_template · template_textbook<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
+    PROJ --> PROJ_F["template_active_inference · template_advanced_literature_review · template_autopoiesis · template_autoresearch_project · template_autoscientists · template_code_project · template_data_descriptor · template_eda_notebook · template_formal · template_gold_refinement · template_literature_meta_analysis · template_madlib · template_methods_paper · template_newspaper · template_pitch_deck · template_pools_rules_tools · template_prose_project · template_redacted_report · template_registered_report · template_search_project · template_sia · template_storybook · template_template · template_textbook<br/>rotating projects also live here<br/>concrete paths use template_code_project"]
 
     classDef root fill:#0f172a,stroke:#0f172a,color:#fff
     classDef l1 fill:#1e3a8a,stroke:#0f172a,color:#fff

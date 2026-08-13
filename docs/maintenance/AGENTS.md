@@ -28,6 +28,7 @@ LaTeX). These docs are decade-scale planning, not day-of operations.
 | [`publishing-readiness.md`](publishing-readiness.md) | Per-platform upload readiness across the full publishing surface |
 | [`publishing-export-pipeline.md`](publishing-export-pipeline.md) | Two-repo publication workflow: `template/` → `docxology/publishing` |
 | [`review-remediation-2026-07.md`](review-remediation-2026-07.md) | Adversarial-review remediation plan — open design/multi-step items |
+| [`review-remediation-2026-08.md`](review-remediation-2026-08.md) | Parallel-agent comprehensive review + improvement record (infra/scripts/docs + 24 exemplars, v3.7.0) — changes, verification evidence, and reusable incidents/lessons |
 | [`release-boundary.md`](release-boundary.md) | Root package/tag release surface vs. the standalone publication lane |
 | [`python-runtime-support.md`](python-runtime-support.md) | Supported-Python contract: `>=3.10` floor, 3.12 default, 3.13 readiness lane |
 | [`test-performance-evidence.json`](test-performance-evidence.json) | Committed redacted benchmark receipt for the quick-feedback performance contract |

@@ -27,6 +27,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **reporting.md** - Reporting module standards and outputs
 - **refactoring.md** - Refactoring and modularization standards (clean break approach)
 - **memory_and_decision_records.md** - Decision memory, ADRs, local agent memory, and RedTeam negative controls
+- **public-output-policy.md** - Public output policy and tracking rules
 
 ## Key Principles
 

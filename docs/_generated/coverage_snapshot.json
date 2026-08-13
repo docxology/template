@@ -95,11 +95,11 @@
     },
     "template_textbook": {
       "coverage_pct": "93.35 %",
-      "source_hash": "27c1b74dbabdb27ddfcb218ebe8dc252223bd76576993dc02bed163d09d4851c"
+      "source_hash": "88b2ce7cb43379dfed71763de96e34ebe74ebd317bcb4fa309cc168b67a9ec3c"
     }
   },
   "schema_version": 3,
-  "source_commit": "388ff7bd839ccc1840bffb9c303aaffade4df315",
+  "source_commit": "dfe6737497984216a095095704d75fbcc32325cc",
   "source_inventory_mode": "tracked-and-nonignored-working-tree",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -128,7 +128,7 @@
       "template_sia": "605bdb287a3f705f32fe4d622f89fac87498253acc5c594e4b00b5a5f079d8ba",
       "template_storybook": "3125e477da8eb1ce4c28d1abd8336661d6f0ab3c3f9214f54886b0f21f5c3532",
       "template_template": "883a96381a8c5a87725cc96b6bdbfb9fd3cb5afc594e7d7b6d29a1106c147b63",
-      "template_textbook": "27c1b74dbabdb27ddfcb218ebe8dc252223bd76576993dc02bed163d09d4851c"
+      "template_textbook": "88b2ce7cb43379dfed71763de96e34ebe74ebd317bcb4fa309cc168b67a9ec3c"
     }
   }
 }

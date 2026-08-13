@@ -7,6 +7,18 @@ gitignore, or treat those trees as confidential); where entries mention
 `projects/`, they refer to **generic layout and tooling** defined by the template,
 not to the contents of any specific workspace.
 
+## [Unreleased]
+
+### Documentation
+
+- Added [`docs/maintenance/review-remediation-2026-08.md`](docs/maintenance/review-remediation-2026-08.md),
+  a durable record of the 2026-08-12 parallel-agent comprehensive review and
+  improvement (infrastructure/scripts/docs + all 24 exemplars, released in
+  v3.7.0), including the verification evidence and the reusable
+  incidents/lessons from running a large herdr-agent campaign on this repo.
+  Registered in the maintenance hub, `docs/maintenance/AGENTS.md`, and
+  `docs/documentation-index.md`.
+
 ## [3.7.0] - 2026-08-12
 
 ### 2026-08-12 — per-exemplar improvement pass (24 dedicated herdr agents)
