@@ -18,6 +18,7 @@ from render_orchestration import (
     DiligenceAuditFailure,
     load_deck_config,
     _preflight_all_lengths,
+    _subject_content_prefix,
     render_all_decks,
     render_one_length,
 )
@@ -52,6 +53,45 @@ def test_load_deck_config_prefers_nested_schema_and_supports_legacy(tmp_path: Pa
 
     config_path.write_text(yaml.safe_dump({"deck": {"pitch_subject": "legacy"}}), encoding="utf-8")
     assert load_deck_config(tmp_path)["pitch_subject"] == "legacy"
+
+
+def test_subject_content_prefix_returns_configured_prefix_for_known_subject():
+    deck_config = {"subjects": {"template_methods_paper": {"content_prefix": "deck_content_methods"}}}
+    assert _subject_content_prefix(deck_config, "template_methods_paper") == "deck_content_methods"
+
+
+def test_subject_content_prefix_defaults_when_subject_unconfigured():
+    deck_config = {"subjects": {"template_methods_paper": {"content_prefix": "deck_content_methods"}}}
+    assert _subject_content_prefix(deck_config, "template_template") == "deck_content"
+
+
+def test_subject_content_prefix_defaults_when_no_subjects_key_at_all():
+    assert _subject_content_prefix({}, "template_template") == "deck_content"
+
+
+def test_subject_content_prefix_rejects_path_traversal_prefix():
+    """Real reproduction of the documented safety guard: a configured
+    `content_prefix` containing a path separator must fall back to the safe
+    default rather than being threaded into a filesystem path unchecked —
+    this is the exact "safe local deck-content prefix" claim in the
+    function's own docstring, previously unverified by any test."""
+    deck_config = {"subjects": {"evil": {"content_prefix": "../../../../etc/passwd"}}}
+    assert _subject_content_prefix(deck_config, "evil") == "deck_content"
+
+
+def test_subject_content_prefix_rejects_backslash_prefix():
+    deck_config = {"subjects": {"evil": {"content_prefix": "..\\..\\windows"}}}
+    assert _subject_content_prefix(deck_config, "evil") == "deck_content"
+
+
+def test_subject_content_prefix_rejects_non_string_prefix():
+    deck_config = {"subjects": {"weird": {"content_prefix": 42}}}
+    assert _subject_content_prefix(deck_config, "weird") == "deck_content"
+
+
+def test_subject_content_prefix_handles_malformed_subjects_shapes():
+    assert _subject_content_prefix({"subjects": "not-a-dict"}, "x") == "deck_content"
+    assert _subject_content_prefix({"subjects": {"x": "not-a-dict-either"}}, "x") == "deck_content"
 
 
 def test_render_one_length_writes_real_pdf(tmp_path: Path, repo_root):

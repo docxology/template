@@ -168,6 +168,21 @@ class TestKeywordInvariants:
         for inv in keyword_invariants(aggregate, min_per_keyword=aggregate_min_per_keyword):
             assert _evaluate(inv), inv.description
 
+    def test_low_coverage_caught(self):
+        # Negative control: two requested keywords but only one unique
+        # paper in the aggregate — average papers-per-keyword (0.5) falls
+        # below a floor of 5, so the coverage invariant must fail. See
+        # docs/rules/memory_and_decision_records.md: every verifier-like
+        # gate needs at least one negative-control test.
+        aggregate = {
+            "keywords": ["convex optimization", "stochastic gradient descent"],
+            "unique_papers": [{"id": "x", "title": "T"}],
+            "citation_keys": {"x": "X2024"},
+        }
+        invs = keyword_invariants(aggregate, min_per_keyword=5)
+        floor = next(i for i in invs if i.name == "unique_papers_min_per_keyword")
+        assert not _evaluate(floor)
+
 
 class TestRetrievalContracts:
     def test_cache_envelope_requires_identity(self):

@@ -114,6 +114,75 @@ def test_reproducibility_results_aliases_are_populated_from_summary(tmp_path: Pa
     assert variables["REPRO_PAPERS_SCORED"] == "2"
 
 
+def test_phase_variables_extractor_computes_totals_and_llm_filter_rate(tmp_path: Path) -> None:
+    """extract_phase_variables is registered in EXTRACTORS (registry.py) and is
+    named directly in docs/architecture.md's manuscript layer row
+    ("extractors/multi_phase.py") as covered by "manuscript variable test
+    classes", but no test in this suite previously imported or called it.
+    """
+    from manuscript.variables.context import ExtractContext
+    from manuscript.variables.extractors.multi_phase import extract_phase_variables
+
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "phase_metadata.json").write_text(
+        json.dumps(
+            {
+                "total_papers": 42,
+                "phases": {
+                    "phase_1_foundation": {
+                        "name": "Foundation",
+                        "papers_final": 10,
+                        "queries_executed": ["q1", "q2"],
+                        "papers_after_deterministic_filters": 20,
+                        "papers_after_llm_filters": 10,
+                    },
+                    "phase_2_jwst": {
+                        "name": "JWST",
+                        "papers_final": 5,
+                        "queries_executed": ["q3"],
+                        "papers_after_deterministic_filters": 0,
+                        "papers_after_llm_filters": 0,
+                    },
+                },
+                "phase_overlap": {
+                    "phase_1_foundation": {"phase_2_jwst": {"jaccard_similarity": 0.5}},
+                },
+                "citation_validation": {
+                    "phase_2_jwst": {"citation_rate": 0.25},
+                    "phase_1_foundation": {"citation_rate": 0.0},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    ctx = ExtractContext(tmp_path, data_dir, tmp_path, {}, 0)
+
+    variables = extract_phase_variables(ctx)
+
+    assert variables["TOTAL_PHASES"] == "2"
+    assert variables["CORPUS_SIZE"] == "42"
+    assert variables["PHASE_1_NAME"] == "Foundation"
+    assert variables["PHASE_1_PAPERS"] == "10"
+    assert variables["PHASE_1_QUERIES"] == "2"
+    assert variables["PHASE_1_LLM_FILTER_RATE"] == "50.0"
+    assert "PHASE_2_LLM_FILTER_RATE" not in variables  # zero pre-LLM papers skips the rate
+    assert variables["CROSS_PHASE_OVERLAP_PCT"] == "50.0"
+    # Only the non-zero citation rate (0.25) contributes to the average.
+    assert variables["CROSS_PHASE_CITATION_RATE"] == "25.0"
+
+
+def test_phase_variables_extractor_returns_empty_without_metadata(tmp_path: Path) -> None:
+    """The documented degrade-gracefully path: missing phase_metadata.json is
+    not an error, it is an empty variable set (no phase search has run yet).
+    """
+    from manuscript.variables.context import ExtractContext
+    from manuscript.variables.extractors.multi_phase import extract_phase_variables
+
+    ctx = ExtractContext(tmp_path, tmp_path / "data", tmp_path, {}, 0)
+    assert extract_phase_variables(ctx) == {}
+
+
 def test_manuscript_citations_resolve_to_bibliography() -> None:
     citation_keys = {
         key

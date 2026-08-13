@@ -2,7 +2,7 @@
 
 ## Overview
 
-Tests within this directory target the matplotlib figure generation pipelines housed traversing `src/visualization/`. Verification focuses on ensuring clean termination without segmentation faults, correct execution under headless display backends, and data coherence across pandas DataFrame injections.
+Tests within this directory target the matplotlib figure generation pipelines housed traversing `src/visualization/`. Verification focuses on ensuring clean termination without segmentation faults, correct execution under headless display backends, and data coherence across the `numpy` arrays and JSON-derived `dict`/`list` inputs the plotting functions actually consume (no `pandas` DataFrame is constructed anywhere in `src/visualization/` or this test directory).
 
 ## Key Validation Targets
 

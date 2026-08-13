@@ -21,6 +21,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/grammar.py` | Grammar parsing: `parse_grammar()`, `load_grammar()`, `force_domain()` |
 | `src/honesty.py` | Honesty manifest: `build_manifest()`, `verify_honesty()`, `STRUCTURAL_EVIDENCE` |
 | `src/integrity.py` | Integrity hashing: `sha256_text()`, `sha256_bytes()`, `tree_hash_from_content_hashes()`, `merkle_root()` |
+| `src/manuscript_contract.py` | Phase 10 source contract: `validate_phase10_contract()` |
 | `src/manuscript_figures.py` | Manuscript figure writers plus the label/filename provenance specs consumed by `output/figures/figure_registry.json` |
 | `src/manuscript_variables.py` | Manuscript token generation: `generate_variables()`, `save_variables()` |
 | `src/materialize.py` | Child project writer: `materialize()`, `child_name()`, `_build_tree()` |

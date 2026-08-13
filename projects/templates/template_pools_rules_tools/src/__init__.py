@@ -26,6 +26,12 @@ from .integration import (
     generate_figure_data,
     run_integration_demo,
 )
+from .resource_schema import (
+    REQUIRED_MANIFEST_KEYS,
+    build_resource_schema_receipt,
+    validate_resource_directory,
+    validate_resource_manifest,
+)
 from .rules_applier import (
     get_rules_root,
     load_all_manuscript_rules,
@@ -120,14 +126,8 @@ __all__ = [
     "ToolEntry",
     "ToolEntryWithValidation",
     "ToolValidationResult",
-]
-from .resource_schema import (
-    build_resource_schema_receipt,
-    validate_resource_directory,
-    validate_resource_manifest,
-)
-
-__all__ = [
+    # Resource schema
+    "REQUIRED_MANIFEST_KEYS",
     "build_resource_schema_receipt",
     "validate_resource_directory",
     "validate_resource_manifest",

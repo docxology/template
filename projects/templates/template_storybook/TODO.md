@@ -30,8 +30,8 @@ keeps a capability blocked rather than silently promoting it.
 - `trim_size` supports the current configured and custom page dimensions; a
   future trim variant must add a schema value and a rendering/negative-control
   test in one scoped row.
-- Per-page caption placement supports the current top, middle, and bottom zones;
-  future zones require a schema, accessibility, and raster-contrast contract.
+- Per-page caption placement supports the current top and bottom zones; future
+  zones require a schema, accessibility, and raster-contrast contract.
 
 ## Documentation and signposting gaps
 

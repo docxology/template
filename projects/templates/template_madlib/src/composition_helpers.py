@@ -34,7 +34,3 @@ def _sentence_list(items: tuple[str, ...]) -> str:
 def _comma_join(items: Iterable[str]) -> str:
     values = tuple(items)
     return ", ".join(values) if values else "none"
-
-
-def _figure_markdown(alt: str, filename: str, label: str) -> str:
-    return f"![{alt}](../output/figures/{filename}){{#{label}}}"

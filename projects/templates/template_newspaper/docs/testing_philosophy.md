@@ -17,7 +17,7 @@ the render *contract* are covered by `pytest`:
   trim with **no over-set page**, and a synthetic minimal edition exercises every
   template branch.
 
-The 2026-07-20 project lane runs 150 tests at 99.70% line+branch coverage; the
+The 2026-08-13 project lane runs 153 tests at 99.25% line+branch coverage; the
 enforced gate (`fail_under` in `pyproject.toml`) is 90%. The current coverage
 claim is pinned to `output/reports/test_results.json`, so it must be refreshed
 after changing the engine or tests.

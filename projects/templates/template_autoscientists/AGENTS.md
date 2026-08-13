@@ -20,6 +20,8 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | [`search.py`](src/search.py) | `SearchConfig` (toggles + budgets), `SearchResult`, and the `_Runner` propose→filter→evaluate→confirm→promote→reorganize loop. `run_search(objective, proposer, config)` is the entry point. |
 | [`ablation.py`](src/ablation.py) | Canonical single-mechanism ablation matrix, measured rows, and derived noise-inflation ratio used by output generation and tests. |
 | [`comparison.py`](src/comparison.py) | Canonical matched-budget coordinated/baseline experiment and honest result summaries. |
+| [`figures.py`](src/figures.py) | Figure-generation helpers (build/write pairs for the comparison, ablation, and efficiency charts) plus `FIGURE_SPECS`/`write_figure_registry`, so `scripts/` stay thin. |
+| [`transcript.py`](src/transcript.py) | Offline transcript envelope validation (`validate_transcript`, `replay_transcript`) and digesting (`transcript_digest`) — the stale-replay/no-network contract for the opt-in live-agent path. |
 
 ## The coordination loop
 
