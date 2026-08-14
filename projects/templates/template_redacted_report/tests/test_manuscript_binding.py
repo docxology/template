@@ -152,7 +152,9 @@ def test_pixel_gate_fails_closed_when_manifest_root_is_not_an_object(tmp_path: P
 def test_pixel_gate_fails_closed_on_unsupported_schema(tmp_path: Path) -> None:
     manifest = tmp_path / "pixel_regression_manifest.json"
     manifest.write_text(
-        json.dumps({"schema_version": "wrong/schema", "tool": "pdftoppm", "tool_version": "1.0", "files": {"a.png": "x"}}),
+        json.dumps(
+            {"schema_version": "wrong/schema", "tool": "pdftoppm", "tool_version": "1.0", "files": {"a.png": "x"}}
+        ),
         encoding="utf-8",
     )
 

@@ -31,9 +31,6 @@ def test_documented_usage_example_from_src_agents_md():
         export_receipt,
         EXPORT_RECEIPT_SCHEMA,
         run_all_gates,
-        to_csv_rows,
-        to_mermaid,
-        to_worklist_markdown,
     )
 
     method = all_example_methods()[0]

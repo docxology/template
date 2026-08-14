@@ -183,16 +183,12 @@ def test_hypothesis_config_requires_mapping() -> None:
 
 
 def test_hypothesis_entry_must_be_mapping() -> None:
-    issues = validate_hypothesis_config(
-        {"project_config": {"hypothesis_definitions": {"H1": "a string"}}}
-    )
+    issues = validate_hypothesis_config({"project_config": {"hypothesis_definitions": {"H1": "a string"}}})
     assert "Hypothesis H1: must be a mapping" in issues[0]
 
 
 def test_hypothesis_entry_missing_required_fields() -> None:
-    issues = validate_hypothesis_config(
-        {"project_config": {"hypothesis_definitions": {"H1": {"name": "x"}}}}
-    )
+    issues = validate_hypothesis_config({"project_config": {"hypothesis_definitions": {"H1": {"name": "x"}}}})
     assert any("missing required field 'description'" in m for m in issues)
 
 
@@ -218,9 +214,7 @@ def test_llm_string_fields_reject_empty(name: str) -> None:
 
 
 def test_llm_numeric_bounds() -> None:
-    issues = validate_llm_config(
-        {"llm_extraction": {"temperature": -1, "timeout_seconds": 0, "min_confidence": 2}}
-    )
+    issues = validate_llm_config({"llm_extraction": {"temperature": -1, "timeout_seconds": 0, "min_confidence": 2}})
     assert any("Invalid llm_extraction.temperature" in m for m in issues)
     assert any("Invalid llm_extraction.timeout_seconds" in m for m in issues)
     assert any("Invalid llm_extraction.min_confidence" in m for m in issues)
@@ -248,16 +242,12 @@ def test_reproducibility_must_be_mapping() -> None:
 
 
 def test_reproducibility_score_threshold_bound() -> None:
-    issues = validate_reproducibility_config(
-        {"reproducibility_assessment": {"low_score_threshold": 1.5}}
-    )
+    issues = validate_reproducibility_config({"reproducibility_assessment": {"low_score_threshold": 1.5}})
     assert "Invalid reproducibility_assessment.low_score_threshold" in issues[0]
 
 
 def test_reproducibility_llm_string_fields() -> None:
-    issues = validate_reproducibility_config(
-        {"reproducibility_assessment": {"llm_model": "", "llm_url": "  "}}
-    )
+    issues = validate_reproducibility_config({"reproducibility_assessment": {"llm_model": "", "llm_url": "  "}})
     assert any("must be a non-empty string" in m for m in issues)
 
 
@@ -283,9 +273,7 @@ def test_reproducibility_llm_count_fields() -> None:
 
 
 def test_reproducibility_weights_non_mapping() -> None:
-    issues = validate_reproducibility_config(
-        {"reproducibility_assessment": {"content_weights": [1, 2]}}
-    )
+    issues = validate_reproducibility_config({"reproducibility_assessment": {"content_weights": [1, 2]}})
     assert "reproducibility_assessment.content_weights must be a mapping" in issues[0]
 
 

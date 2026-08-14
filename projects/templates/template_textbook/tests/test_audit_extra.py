@@ -15,12 +15,17 @@ from textbook.audit import run_manuscript_audit
 PROJECT = Path(__file__).resolve().parent.parent
 MANUSCRIPT = PROJECT / "manuscript"
 
-_CONFIG_WITH_PROJECT = {"book": {"title": "t"}, "units": [{
-    "id": "part_I",
-    "title": "P",
-    "directory": "part_I",
-    "chapters": [{"file": "a.md", "title": "A"}],
-}]}
+_CONFIG_WITH_PROJECT = {
+    "book": {"title": "t"},
+    "units": [
+        {
+            "id": "part_I",
+            "title": "P",
+            "directory": "part_I",
+            "chapters": [{"file": "a.md", "title": "A"}],
+        }
+    ],
+}
 
 
 def _write_contract_satisfying_chapter(path: Path) -> None:
@@ -76,12 +81,14 @@ def test_run_manuscript_audit_flags_missing_reference_appendix(tmp_path):
     _write_contract_satisfying_chapter(part / "a.md")
     config = {
         "book": {"title": "t"},
-        "units": [{
-            "id": "part_I",
-            "title": "P",
-            "directory": "part_I",
-            "chapters": [{"file": "a.md", "title": "A"}],
-        }],
+        "units": [
+            {
+                "id": "part_I",
+                "title": "P",
+                "directory": "part_I",
+                "chapters": [{"file": "a.md", "title": "A"}],
+            }
+        ],
         "appendices": {
             "reference": [{"file": "appendix_missing.md", "title": "Missing"}],
         },
@@ -105,12 +112,14 @@ def test_run_manuscript_audit_reports_missing_companion_stubs_when_complete(tmp_
 
     config = {
         "book": {"title": "t"},
-        "units": [{
-            "id": "part_I",
-            "title": "P",
-            "directory": "part_I",
-            "chapters": [{"file": "a.md", "title": "A"}],
-        }],
+        "units": [
+            {
+                "id": "part_I",
+                "title": "P",
+                "directory": "part_I",
+                "chapters": [{"file": "a.md", "title": "A"}],
+            }
+        ],
     }
 
     solved = run_manuscript_audit(tmp_path, config, require_complete=False)

@@ -132,6 +132,7 @@ def test_config_shape_reports_both_missing_directions():
     assert any("a: missing from example" in d for d in differences)
     assert any("b: missing from live config" in d for d in differences)
 
+
 def test_config_shape_detects_list_mapping_shape_mismatch():
     differences = compare_config_shapes({"l": [{"id": "x"}]}, {"l": ["not_a_mapping"]})
     assert any("list item mapping shape differs" in d for d in differences)
@@ -312,6 +313,3 @@ def test_diagram_inventory_flags_missing_generated_output(tmp_path):
     issues = validate_diagram_inventory(specs, tmp_path)
     assert "missing generated diagram: absent" in issues
     assert "missing generated diagram: produced" not in issues
-
-
-

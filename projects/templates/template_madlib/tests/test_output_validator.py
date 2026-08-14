@@ -219,9 +219,7 @@ def test_token_inventory_missing_reported(tmp_path: Path) -> None:
 def test_token_inventory_schema_reported(tmp_path: Path) -> None:
     """token_inventory.json must be a JSON list, not any other JSON shape."""
     _write_minimal_outputs(tmp_path)
-    (tmp_path / "output" / "data" / "token_inventory.json").write_text(
-        json.dumps({"not": "a list"}), encoding="utf-8"
-    )
+    (tmp_path / "output" / "data" / "token_inventory.json").write_text(json.dumps({"not": "a list"}), encoding="utf-8")
     assert "token-inventory-schema" in _codes(validate_generated_outputs(tmp_path))
 
 

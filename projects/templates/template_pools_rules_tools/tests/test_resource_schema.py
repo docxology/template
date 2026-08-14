@@ -153,11 +153,7 @@ def test_validate_resource_directory_rejects_symlinked_entrypoint(tmp_path):
     link = tmp_path / "run.py"
     link.symlink_to(real_script)
     (tmp_path / "tools.yaml").write_text(
-        "type: code_executor\n"
-        "description: x\n"
-        "version: '1'\n"
-        "license: MIT\n"
-        "entrypoints: [run.py]\n",
+        "type: code_executor\ndescription: x\nversion: '1'\nlicense: MIT\nentrypoints: [run.py]\n",
         encoding="utf-8",
     )
     issues = validate_resource_directory(tmp_path, "tools")

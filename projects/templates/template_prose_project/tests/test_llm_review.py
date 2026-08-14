@@ -139,7 +139,10 @@ def test_enabled_review_accepts_safe_relative_transcript_path() -> None:
     [
         (lambda p: p.pop("status"), "schema mismatch"),
         (lambda p: p.__setitem__("extra_field", "x"), "schema mismatch"),
-        (lambda p: p.__setitem__("schema_version", "template-prose/llm-transcript/0"), "Unsupported LLM transcript schema"),
+        (
+            lambda p: p.__setitem__("schema_version", "template-prose/llm-transcript/0"),
+            "Unsupported LLM transcript schema",
+        ),
         (lambda p: p.__setitem__("status", "pending"), "status 'completed'"),
         (lambda p: p.__setitem__("provider", "  "), "non-empty string"),
         (lambda p: p.__setitem__("prompt_digest", "not-a-digest"), "SHA-256 digest"),

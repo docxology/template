@@ -266,6 +266,24 @@ def test_inventory(monkeypatch, tmp_path):
         assert result.files_scanned == 1
         assert result.violations
 
+    def test_sys_argv_injection_is_environment_isolation_not_dependency_replacement(self, tmp_path):
+        """setattr(sys, "argv", ...) exercises a CLI entrypoint unchanged.
+
+        The no-mocks policy explicitly permits CLI-arg injection as environment
+        isolation. It must not count toward dependency-replacement debt, which is
+        what blocks a push on a legitimately isolated ``argparse`` entrypoint test.
+        """
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        body = 'import sys\n\ndef test_cli(monkeypatch):\n    monkeypatch.setattr(sys, "argv", ["tool", "--flag"])\n'
+        (tests_dir / "test_cli.py").write_text(body, encoding="utf-8")
+
+        result = scan_semantic_standins(tests_dir, tmp_path)
+        assert result.errors == ()
+        assert len(result.uses) == 1
+        assert result.uses[0].category == StandInCategory.environment_isolation
+        assert result.uses[0].method == "setattr"
+
     def test_scan_error_is_explicit_for_invalid_python(self, tmp_path):
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()

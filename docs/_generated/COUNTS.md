@@ -122,27 +122,27 @@ Result: **598** project-scope infrastructure tests collected and **770** publish
 | Project | Tests collected | `src/` line+branch coverage |
 |---------|-----------------|----------------------------|
 | `template_active_inference` | 789 | 92.85 % |
-| `template_advanced_literature_review` | 88 | 92.14 % |
+| `template_advanced_literature_review` | 92 | 92.14 % |
 | `template_autopoiesis` | 525 | 97.20 % |
 | `template_autoresearch_project` | 373 | 96.33 % |
-| `template_autoscientists` | 120 | 97.56 % |
+| `template_autoscientists` | 122 | 97.56 % |
 | `template_code_project` | 243 | 95.84 % |
-| `template_data_descriptor` | 65 | 95.26 % |
+| `template_data_descriptor` | 68 | 95.26 % |
 | `template_eda_notebook` | 80 | 92.21 % |
 | `template_formal` | 283 | 94.39 % |
 | `template_gold_refinement` | 337 | 92.19 % |
-| `template_literature_meta_analysis` | 1207 | 93.97 % |
-| `template_madlib` | 183 | 98.79 % |
-| `template_methods_paper` | 91 | 99.00 % |
-| `template_newspaper` | 152 | 99.13 % |
-| `template_pitch_deck` | 128 | 97.19 % |
-| `template_pools_rules_tools` | 265 | 93.67 % |
-| `template_prose_project` | 144 | 92.85 % |
-| `template_redacted_report` | 146 | 94.81 % |
-| `template_registered_report` | 39 | 94.13 % |
-| `template_search_project` | 320 | 96.71 % |
+| `template_literature_meta_analysis` | 1211 | 93.97 % |
+| `template_madlib` | 191 | 98.79 % |
+| `template_methods_paper` | 94 | 99.00 % |
+| `template_newspaper` | 153 | 99.13 % |
+| `template_pitch_deck` | 135 | 97.19 % |
+| `template_pools_rules_tools` | 282 | 93.67 % |
+| `template_prose_project` | 161 | 92.85 % |
+| `template_redacted_report` | 154 | 94.81 % |
+| `template_registered_report` | 42 | 94.13 % |
+| `template_search_project` | 321 | 96.71 % |
 | `template_sia` | 75 | 94.80 % |
-| `template_storybook` | 23 | 93.54 % |
+| `template_storybook` | 25 | 93.54 % |
 | `template_template` | 147 | 97.66 % |
 | `template_textbook` | 232 | 93.35 % |
 
