@@ -84,18 +84,18 @@
   overlapping generations of tests plus broken **tuple-membership assertions**
   (`assert "<substr>" in (<tuple>)` checks element-equality, not substring),
   making the suite red, and a stale `REQUIRED_SECTION_HEADINGS` claim. Fixed:
-  consolidated `test_contracts.py` (red → green; 232 tests total), corrected the
+  consolidated `test_contracts.py` (red → green; 232 tests total) <!-- noqa: drift-counts -->, corrected the
   4 tuple-membership assertions to per-element `any(...)` matching, added
   config-shape and audit negative-control tests, corrected the source-bound
   `claim_ledger.yaml` value (9 → 5, matching `constants.py`), documented the
   `contracts` module, fixed manuscript figure-path references (`../` → `../../`),
   and hardened `compare_config_shapes` (empty-vs-one-empty mapping-list drift)
   and `numeric_fact_receipt` (fail-closed receipt instead of raising).
-- **template_literature_meta_analysis** — +296 lines tests-only
+- **template_literature_meta_analysis** — +296 lines tests-only <!-- noqa: drift-counts -->
   config-validation coverage (search engine toggles, hypothesis/sampling/llm/
   knowledge-graph/reproducibility/fulltext categories, `check_config_health`,
   load-error paths) plus `Corpus.summary()` and `filter_by_year` range-guard
-  tests. All 1207 tests pass.
+  tests. All 1207 tests pass. <!-- noqa: drift-counts -->
 - The other 22 exemplars were reviewed read-everything and found healthy (no
   stubs — all `pass`/`None`/`NotImplementedError` are documented fallbacks or
   intentional fail-loud gaps; suites green; docs consistent). No changes were
@@ -109,9 +109,9 @@ Exact gates that were green at release (`v3.7.0`, `dfe673749`):
 
 - `uv run ruff check infrastructure scripts tests/infra_tests docs` → All checks passed
 - `uv run python -m infrastructure.project.public_scope source-paths | xargs uv run mypy` → no issues in 1536 files
-- Combined touched infra suites → **2492 passed, 2 skipped, 44 deselected**
-- `uv run pytest tests/regression/ -q --no-cov --timeout=120` → 55 passed
-- `template_textbook` suite → 232 passed; `template_literature_meta_analysis` → 1207 passed
+- Combined touched infra suites → **2492 passed, 2 skipped, 44 deselected** <!-- noqa: drift-counts -->
+- `uv run pytest tests/regression/ -q --no-cov --timeout=120` → 55 passed <!-- noqa: drift-counts -->
+- `template_textbook` suite → 232 passed; `template_literature_meta_analysis` → 1207 passed <!-- noqa: drift-counts -->
 - All audit gates: `check_public_template_contract --strict`, `check_template_drift --strict`,
   `check_tracked_all`, `check_tracked_generated_artifacts`, `check_tracked_secrets`,
   `check_claim_bindings`, `counts --check`, `verify_no_mocks` → exit 0
