@@ -96,7 +96,7 @@ Follow the [checksum-verified uv installation instructions](../../operational/bu
 uv sync
 ```
 
-**Gate:** Exit 0, no errors → continue. On failure: check a supported Python 3.10–3.13 interpreter is available and re-run.
+**Gate:** Exit 0, no errors → continue. On failure: check a supported Python 3.10–3.14 interpreter is available and re-run.
 
 ---
 

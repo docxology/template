@@ -13,7 +13,7 @@ steps:
   - uses: actions/checkout@<sha>          # REQUIRED first — see below
   - uses: ./.github/actions/setup-python-env
     # with:
-    #   python-version: ${{ matrix.python-version }}   # omit for the 3.12 default
+    #   python-version: ${{ matrix.python-version }}   # omit for the 3.14 default
   - run: uv sync                          # per-job dependency groups stay explicit
 ```
 

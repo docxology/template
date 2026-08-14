@@ -4,7 +4,7 @@
 
 ## Why this guide exists
 
-The repo's infrastructure CI matrix (Ubuntu × Python 3.10–3.13 plus a macOS 3.12 smoke) runs on GitHub Actions free-tier minutes. macOS minutes cost 10× Linux. GitHub's free-tier policy has tightened twice since 2020. On a multi-decade horizon, **the inability to reproduce CI locally is a vendor-lock-in risk** — if the free tier compresses, the project either pays or moves CI providers.
+The repo's infrastructure CI matrix (Ubuntu × Python 3.10–3.14 plus a macOS 3.14 smoke) runs on GitHub Actions free-tier minutes. macOS minutes cost 10× Linux. GitHub's free-tier policy has tightened twice since 2020. On a multi-decade horizon, **the inability to reproduce CI locally is a vendor-lock-in risk** — if the free tier compresses, the project either pays or moves CI providers.
 
 This guide documents the **`act`-based local reproduction path**, which decouples the workflow YAML (the documentation of intent) from the GitHub Actions runtime (the current implementation).
 
@@ -89,8 +89,8 @@ Add `.secrets` to `.gitignore` if you need to test secret-dependent jobs locally
 | CI job | Reproducible via act? | Notes |
 | --- | --- | --- |
 | `lint` (ruff + mypy; also runs the four-pool `check_tracked_all.py` confidentiality guard) | ✅ Yes | Fully Linux-portable |
-| `test-infra` (matrix: ubuntu py3.10/3.11/3.12/3.13 + macos py3.12) | ✅ Yes (ubuntu legs) | Set `--matrix python-version:3.X`; coverage gate runs inside this job |
-| `test-project` (matrix: per-project × py3.10/3.12) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
+| `test-infra` (matrix: ubuntu py3.10/3.11/3.12/3.13/3.14 + macos py3.14) | ✅ Yes (ubuntu legs) | Set `--matrix python-version:3.X`; coverage gate runs inside this job |
+| `test-project` (matrix: per-project × py3.10/3.14) | ✅ Yes | Per-project 90% coverage runs inside this job; macOS not exercised here |
 | `security` (bandit + pip-audit) | ✅ Yes | Fully Linux-portable |
 | `docs-lint` | ✅ Yes | Markdown lint, doc-tree integrity |
 | `validate` (manuscript validation) | ✅ Yes | Pure Python |

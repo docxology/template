@@ -249,7 +249,7 @@ the build.
 | E5 | `run_analysis_pipeline` N=5 | Five trivial scripts in sequence |
 | E25 | `run_analysis_pipeline` N=25 | Twenty-five trivial scripts in sequence |
 
-### Expected order of magnitude (macOS, Apple Silicon, Python 3.12)
+### Expected order of magnitude (macOS, Apple Silicon, Python 3.14)
 
 | Bench | Median |
 | --- | --- |

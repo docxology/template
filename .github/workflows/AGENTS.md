@@ -53,7 +53,7 @@ flowchart TB
     LINT --> SEC[security]
     LINT --> DL[docs-lint<br/>mermaid + cross-links + consistency<br/>installs mmdc + chrome-headless-shell]
     VNM --> SHW[setup-hook-windows-smoke<br/>skipped if no setup_hook.py]
-    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13 + macOS × 3.12<br/>codecov on 3.12/ubuntu only]
+    VNM --> TI[test-infra<br/>matrix: ubuntu × 3.10/3.11/3.12/3.13/3.14 + macOS × 3.14<br/>codecov on 3.14/ubuntu only]
     VNM --> TR[test-regression<br/>claim-binding pins · tests/regression/]
     VNM --> TP[test-project<br/>capability manifest roster × canonical Python versions<br/>stage_01_test.py --project per cell]
     VNM --> FL[fep-lean<br/>ubuntu-only · skipped if no lean-toolchain]
@@ -85,7 +85,7 @@ files only exist after checkout):
 ```yaml
 steps:
   - uses: actions/checkout@<sha>
-  - uses: ./.github/actions/setup-python-env       # defaults to Python 3.12
+  - uses: ./.github/actions/setup-python-env       # defaults to Python 3.14
     # with: { python-version: ${{ matrix.python-version }} }  # matrix jobs only
   - run: uv sync                                    # per-job groups stay explicit
 ```
@@ -135,7 +135,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 4. Infrastructure Tests (`test-infra`)
 
-- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, plus an `include:` of `macos-latest` × `3.12` (5 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.12 cell, so only the 3.12 smoke runs there.
+- **Matrix:** `ubuntu-latest` × `3.10`, `3.11`, `3.12`, `3.13`, `3.14`, plus an `include:` of `macos-latest` × `3.14` (6 cells). macOS legs are ~10x cost and rarely surface OS-specific breakage beyond the 3.14 cell, so only the 3.14 smoke runs there.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
@@ -151,16 +151,16 @@ behaviorally equivalent to the dedicated documentation job.
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group public-exemplars` — the same deterministic dependency union as a fresh local `uv sync`, including the DisCoPy, monitoring, scientific, LLM-client, and PPTX groups used by the public roster. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.12 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 60`.
+- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.14 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 60`.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
 - **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
-- **Codecov upload:** On Python 3.12 only
+- **Codecov upload:** On Python 3.14 only
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
 - **Conditional:** Job is **skipped** unless `projects/fep_lean/lean/lean-toolchain` exists and the `detect` job emits `fep_lean == 'true'`. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/fep_lean` to activate.
-- **Runner:** `ubuntu-latest` / Python 3.12 only; job `timeout-minutes: 60`
+- **Runner:** `ubuntu-latest` / Python 3.14 only; job `timeout-minutes: 60`
 - **Depends on:** `verify-no-mocks`
 - **Working directory (when present):** `projects/fep_lean` for pytest; `projects/fep_lean/lean` for Lake warm-up
 - **Toolchain:** SHA-pinned elan installer (with checksum verification) + pinned

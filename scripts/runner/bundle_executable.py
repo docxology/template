@@ -24,8 +24,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project", required=True, help="Project name under projects/")
     parser.add_argument(
         "--python-version",
-        default="3.12",
-        help="Python version tag for the Dockerfile base (default: 3.12)",
+        default="3.14",
+        help="Python version tag for the Dockerfile base (default: 3.14)",
     )
     args = parser.parse_args(argv)
 

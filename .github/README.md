@@ -899,7 +899,7 @@ The repo-wide `permissions:` is `contents: read`; every job re-declares its own 
 | 5 | `health` | `lint` | always | Blocking unified static-health report; behavioral/platform matrices remain separate |
 | 6 | `verify-no-mocks` | — | always | Enforces prohibited mock-framework syntax and zero semantic dependency replacements (runs in parallel with `lint`) |
 | 7 | `setup-hook-windows-smoke` | `verify-no-mocks`, `detect` | `needs.detect.outputs.setup_hook == 'true'` | Windows smoke test of `projects/**/scripts/setup_hook.py` |
-| 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12/3.13 + macOS × Py 3.12 (5 blocking cells), `UV_PYTHON`-bound runtime, `--cov-fail-under=60` |
+| 8 | `test-infra` | `verify-no-mocks` | always | Infra suite, matrix Ubuntu × Py 3.10/3.11/3.12/3.13/3.14 + macOS × Py 3.14 (6 blocking cells), `UV_PYTHON`-bound runtime, `--cov-fail-under=60` |
 | 9 | `test-regression` | `verify-no-mocks` | always | Claim-binding numerical regression tier |
 | 10 | `test-project` | `verify-no-mocks`, `detect-projects` | always | Capability-manifest project/Python matrix with `UV_PYTHON`-bound moving patches; each project enforces its own ≥90 floor |
 | 11 | `fep-lean` | `verify-no-mocks`, `detect` | `needs.detect.outputs.fep_lean == 'true'` | Lean-toolchain project build + tests (`--cov-fail-under=89` rotating exception) |
@@ -1006,7 +1006,7 @@ Required status checks:
   Infra Tests (macos-latest, Python 3.12)
   # test-project expands from the validated public capability manifest:
   # one check per canonical project/Python lane. Examples:
-  Project Tests (templates/template_active_inference, py3.12)
+  Project Tests (templates/template_active_inference, py3.14)
   Project Tests (templates/template_code_project, py3.10)
   Static Health Report
   Validate Manuscripts · Security Scan · Documentation Lint · Performance Check

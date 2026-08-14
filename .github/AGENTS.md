@@ -70,7 +70,7 @@ in a job `if:` and rejects the whole workflow at parse). 1 further job
 | 5 | `health` | Static Health Report | lint | 3.12 | ubuntu |
 | 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.12 | ubuntu |
 | 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
-| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.13 | ubuntu (×3.10/3.11/3.12/3.13) + macOS (3.12 only) — 5 cells |
+| 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.14 | ubuntu (×3.10/3.11/3.12/3.13/3.14) + macOS (3.14 only) — 6 cells |
 | 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.12 | ubuntu |
 | 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | capability-manifest versions | ubuntu only — exact project/Python include matrix from `public_capabilities.py` |
 | 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
@@ -84,7 +84,7 @@ in a job `if:` and rejects the whole workflow at parse). 1 further job
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
-Coverage is uploaded to **Codecov** after each test job (3.12/ubuntu-latest only).
+Coverage is uploaded to **Codecov** after each test job (3.14/ubuntu-latest only).
 
 The `verify-no-mocks` job runs [`scripts/audit/verify_no_mocks.py`](../scripts/audit/verify_no_mocks.py) at the repository root (not under `.github/`).
 
@@ -182,8 +182,8 @@ severity as the CI `security` job, so contributors hear it before CI does.
 
 Required checks must match the **`name:`** field of each job in [`workflows/ci.yml`](workflows/ci.yml). `main` is currently unprotected, so the contexts below are **illustrative**. Matrix jobs expand to one check per cell:
 
-- **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 5 cells: `ubuntu-latest × 3.10/3.11/3.12/3.13` plus `macos-latest × 3.12`.
-- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — one cell for every entry emitted by the validated capability manifest. Its current canonical versions are py3.10 and py3.12, ubuntu-latest only.
+- **`test-infra`** → **Infra Tests (`<os>`, Python `<ver>`)** — 6 cells: `ubuntu-latest × 3.10/3.11/3.12/3.13/3.14` plus `macos-latest × 3.14`.
+- **`test-project`** → **Project Tests (`<project>`, py`<ver>`)** — one cell for every entry emitted by the validated capability manifest. Its current canonical versions are py3.10 and py3.14, ubuntu-latest only.
 
 Require the combinations you care about, or use GitHub rulesets that treat required checks flexibly.
 
@@ -198,10 +198,10 @@ required_status_checks:
     - "Infra Tests (ubuntu-latest, Python 3.13)"
     - "Infra Tests (macos-latest, Python 3.12)"
     # test-project expands dynamically: "Project Tests (<project>, py<ver>)"
-    # for each live templates/template_* exemplar on py3.10 and py3.12. Examples:
-    - "Project Tests (templates/template_active_inference, py3.12)"
+    # for each live templates/template_* exemplar on py3.10 and py3.14. Examples:
+    - "Project Tests (templates/template_active_inference, py3.14)"
     - "Project Tests (templates/template_code_project, py3.10)"
-    # ... (one check per exemplar × {py3.10, py3.12})
+    # ... (one check per exemplar × {py3.10, py3.14})
     # Optional: only when fep_lean job runs (skipped if no lean-toolchain file)
     # - "fep_lean (gauss + lake)"
     - "Static Health Report"

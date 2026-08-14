@@ -22,7 +22,7 @@ merging**:
 | 7 | Infra Tests (ubuntu-latest, Python 3.13) | `test-infra` | No — matrix cell |
 | 8 | Infra Tests (macos-latest, Python 3.12) | `test-infra` | No — matrix cell |
 | 9 | Regression Tier (claim-binding pins) | `test-regression` | No — always runs |
-| 10 | Project Tests (per exemplar × py3.10/py3.12) | `test-project` | No — matrix expands from `detect-projects` |
+| 10 | Project Tests (per exemplar × py3.10/py3.14) | `test-project` | No — matrix expands from `detect-projects` |
 | 11 | Validate Manuscripts | `validate` | No — always runs |
 | 12 | Security Scan | `security` | No — always runs |
 | 13 | Documentation Lint | `docs-lint` | No — always runs |
