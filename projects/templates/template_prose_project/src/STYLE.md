@@ -202,12 +202,15 @@ __all__ = [
 ]
 ```
 
-Note: `CheckResult` (in `pipeline/checks.py`) and `write_resolved_manuscript_tree`
-(in `manuscript_variables.py`) are intentionally NOT in `__all__` — tests
-import them directly via `from src.pipeline import CheckResult` /
-`from src.manuscript_variables import write_resolved_manuscript_tree`
-because they are stable but not part of the user-facing API surface a
-forker should rely on.
+Note: `CheckResult` (in `pipeline/checks.py`) is intentionally NOT in
+`__all__` — tests import it directly via `from src.pipeline import
+CheckResult` because it is stable but not part of the user-facing API
+surface a forker should rely on. `write_resolved_manuscript_tree` is not
+part of `src/` at all — it lives in
+`infrastructure.rendering.manuscript_injection` and is imported directly
+from there (see `tests/test_manuscript_variables.py` and
+`scripts/z_generate_manuscript_variables.py`); `src/manuscript_variables.py`
+stays infrastructure-free per this file's own boundary table above.
 
 ## See Also
 

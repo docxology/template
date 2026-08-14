@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -123,3 +124,147 @@ def test_pixel_gate_does_not_pass_without_manifest(tmp_path: Path) -> None:
     result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=lambda _name: "/usr/bin/pdftoppm")
     assert result["status"] == "unavailable"
     assert result["reason"] == "manifest_not_pinned"
+
+
+_PIXEL_RESOLVER = lambda _name: "/usr/bin/pdftoppm"  # noqa: E731 - matches gate signature exactly
+
+
+def test_pixel_gate_fails_closed_on_invalid_manifest_json(tmp_path: Path) -> None:
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text("{not valid json", encoding="utf-8")
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert result["reason"].startswith("invalid_manifest")
+
+
+def test_pixel_gate_fails_closed_when_manifest_root_is_not_an_object(tmp_path: Path) -> None:
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(json.dumps(["not", "an", "object"]), encoding="utf-8")
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert result["reason"] == "manifest_root_not_object"
+
+
+def test_pixel_gate_fails_closed_on_unsupported_schema(tmp_path: Path) -> None:
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {"schema_version": "wrong/schema", "tool": "pdftoppm", "tool_version": "1.0", "files": {"a.png": "x"}}
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert result["reason"] == "unsupported_manifest_schema"
+
+
+def test_pixel_gate_fails_closed_when_raster_tool_is_not_pinned(tmp_path: Path) -> None:
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-redacted-report/pixel-regression/1",
+                "tool": "pdftoppm",
+                "tool_version": "   ",
+                "files": {"a.png": "x"},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert result["reason"] == "raster_tool_not_pinned"
+
+
+def test_pixel_gate_fails_closed_on_empty_files_manifest(tmp_path: Path) -> None:
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-redacted-report/pixel-regression/1",
+                "tool": "pdftoppm",
+                "tool_version": "24.08.0",
+                "files": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert result["reason"] == "manifest_files_missing"
+
+
+def test_pixel_gate_rejects_path_traversal_and_absolute_manifest_entries(tmp_path: Path) -> None:
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-redacted-report/pixel-regression/1",
+                "tool": "pdftoppm",
+                "tool_version": "24.08.0",
+                "files": {"../outside.png": "x", "/etc/passwd": "y"},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert set(result["mismatches"]) == {"../outside.png", "/etc/passwd"}
+
+
+def test_pixel_gate_flags_hash_mismatch_against_real_file(tmp_path: Path) -> None:
+    rendered = tmp_path / "page-01.png"
+    rendered.write_bytes(b"rendered pixel bytes")
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-redacted-report/pixel-regression/1",
+                "tool": "pdftoppm",
+                "tool_version": "24.08.0",
+                "files": {"page-01.png": "0" * 64},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "fail"
+    assert result["mismatches"] == ("page-01.png",)
+
+
+def test_pixel_gate_passes_when_pinned_hashes_match_real_files(tmp_path: Path) -> None:
+    rendered = tmp_path / "page-01.png"
+    rendered.write_bytes(b"rendered pixel bytes")
+    digest = hashlib.sha256(rendered.read_bytes()).hexdigest()
+    manifest = tmp_path / "pixel_regression_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-redacted-report/pixel-regression/1",
+                "tool": "pdftoppm",
+                "tool_version": "24.08.0",
+                "files": {"page-01.png": digest},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_pixel_regression_gate(tmp_path, executable_resolver=_PIXEL_RESOLVER)
+
+    assert result["status"] == "pass"
+    assert result["mismatches"] == ()
+    assert result["checked"] == 1

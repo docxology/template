@@ -68,7 +68,7 @@ def validate_resource_directory(path: Path, resource_kind: str) -> tuple[str, ..
         import yaml
 
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, ValueError) as exc:
+    except (OSError, UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
         return (f"cannot read {manifest_name}: {exc}",)
     issues = list(validate_resource_manifest(manifest, resource_kind))
     if resource_kind == "tools" and isinstance(manifest, Mapping):

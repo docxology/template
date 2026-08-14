@@ -437,8 +437,29 @@ def _monkeypatch_aliases(tree: ast.AST) -> set[str]:
     return names
 
 
-def _stand_in_category(method: str) -> StandInCategory:
+def _is_sys_argv_redirect(node: ast.Call) -> bool:
+    """Return True when ``monkeypatch.setattr(sys, "argv", ...)``.
+
+    Injecting CLI arguments into ``sys.argv`` is environment/path isolation for
+    exercising a script's ``argparse`` entrypoint, not a dependency replacement:
+    the unit under test runs unchanged. The template's no-mocks policy explicitly
+    permits ``setattr`` for ``sys.argv`` (CLI-arg injection) as environment
+    isolation, so it must not count against the zero dependency-replacement debt.
+    """
+    args = node.args
+    if len(args) < 2:
+        return False
+    target = args[0]
+    name = args[1]
+    return (
+        isinstance(target, ast.Name) and target.id == "sys" and isinstance(name, ast.Constant) and name.value == "argv"
+    )
+
+
+def _stand_in_category(method: str, node: ast.Call | None = None) -> StandInCategory:
     if method in _ENVIRONMENT_ISOLATION_METHODS:
+        return StandInCategory.environment_isolation
+    if method == "setattr" and node is not None and _is_sys_argv_redirect(node):
         return StandInCategory.environment_isolation
     if method in _IMPORT_PATH_ISOLATION_METHODS:
         return StandInCategory.import_path_isolation
@@ -491,7 +512,7 @@ def scan_semantic_standins(
                     line=line,
                     column=node.col_offset,
                     method=node.func.attr,
-                    category=_stand_in_category(node.func.attr),
+                    category=_stand_in_category(node.func.attr, node),
                     source=source_line,
                 )
             )

@@ -5,6 +5,7 @@ Core generation logic for `template_madlib`.
 | Module | Contract |
 | --- | --- |
 | `config.py` | Parses `madlib:` from `manuscript/config.yaml`; validates lexicon, slots, section conditions, section titles, narrative moves, method protocol, design principles, pipeline phases, evaluation criteria, QA probes, failure modes, authoring obligations, visualization controls, audit rules, and contribution claims; records explicit/default config paths. |
+| `config_models.py` | Typed dataclasses and default schema constants (section keys/titles, schema version, required lexicon categories, composition depths) that `config.py` validates against and returns. |
 | `tokens.py` | Expands slots into deterministic token choices from seed, category, slot name, ordinal, and full category inventory. |
 | `run.py` | Builds a `MadlibRun` session (config + token plan + sections + field counts) consumed by analysis and variable generation. |
 | `composition.py` | Re-exports section bodies, tables, and figure markdown from `composition_*` modules. |

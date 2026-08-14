@@ -22,8 +22,12 @@ flowchart TB
 uv run pytest projects/templates/template_search_project/tests/ -q
 ```
 
-All 301 tests should pass without an internet connection (verify the current
-count with `uv run pytest projects/templates/template_search_project/tests --collect-only -q`).
+All tests should pass without an internet connection. Live test count and
+coverage are tracked in
+[`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md) (see
+[`docs/testing_philosophy.md`](testing_philosophy.md)); locally, confirm the
+current count with
+`uv run pytest projects/templates/template_search_project/tests --collect-only -q`.
 
 ## 2. Run the orchestrator end-to-end (offline)
 

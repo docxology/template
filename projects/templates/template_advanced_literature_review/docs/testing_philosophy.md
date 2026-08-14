@@ -25,9 +25,9 @@ This project's `tests/` directory covers the project-specific surface:
 | File | Representative classes / test count | Covers |
 | --- | --- | --- |
 | `test_advanced_template.py` | `TestConfigValidation`, `TestDeterministicFilters`, `TestPhaseMetadata`, `TestCorpusCoverage`, `TestPhaseOverlap`, `TestMultiPhaseConfig` (33 test methods total) | Multi-phase config validation, per-phase deterministic filtering, phase metadata generation, cross-phase corpus coverage, phase overlap (Jaccard) computation, and end-to-end multi-phase config shape |
-| `test_multi_phase_search.py` | 19 test functions | Phase-aware search façade plus its focused `models.py` and `llm_filter.py` contracts |
-| `test_deep_research_dispatch.py` | 4 test functions | Deterministic offline deep-research replay (`src/deep_research/dispatch.py`) |
-| `test_publication_extensions.py` | 18 test functions | Publication/config extensions specific to the advanced template |
+| `test_multi_phase_search.py` | 30 test functions | Phase-aware search façade plus its focused `models.py` and `llm_filter.py` contracts |
+| `test_deep_research_dispatch.py` | 5 test functions | Deterministic offline deep-research replay (`src/deep_research/dispatch.py`), including the missing- and malformed-fixture fail-closed paths |
+| `test_publication_extensions.py` | 20 test functions | Publication/config extensions specific to the advanced template, including the phase-aware manuscript-variable extractor (`extractors/multi_phase.py`) |
 
 ## Determinism
 

@@ -10,7 +10,7 @@ import pytest
 import yaml
 from PIL import Image
 
-from storybook import build_storybook_pdf, load_storybook, render_story_number, render_story_page
+from storybook import build_storybook_pdf, load_storybook, render_all_images, render_story_number, render_story_page
 from storybook.text_layout import contrast_ratio, validate_text_contrast
 
 
@@ -120,6 +120,33 @@ def test_storybook_manifest_contains_alt_text_and_contact_sheet(isolated_project
 def test_text_overlay_palette_meets_wcag_contrast() -> None:
     assert validate_text_contrast() >= 4.5
     assert contrast_ratio((255, 255, 255), (255, 255, 255)) == 1.0
+
+
+@pytest.mark.slow
+def test_render_all_images_renders_every_page_in_order(isolated_project) -> None:
+    """`render_all_images` is documented public API (exported from both
+    `storybook` and the top-level `src` package) but was never exercised by a
+    script or test: every script calls `render_story_page`/`render_story_number`/
+    `build_storybook_pdf` instead. Cover it directly so its own page-order and
+    stale-cleanup behavior stay verified, not merely inherited from siblings.
+    """
+    spec = load_storybook(isolated_project)
+    image_paths = render_all_images(isolated_project)
+    assert len(image_paths) == spec.page_count
+    assert [path.name for path in image_paths] == [page.filename for page in spec.pages]
+    assert all(path.is_file() for path in image_paths)
+
+
+@pytest.mark.slow
+def test_render_all_images_removes_stale_page_images(isolated_project) -> None:
+    stale_dir = isolated_project / "output" / "figures" / "storybook_pages"
+    stale_dir.mkdir(parents=True)
+    stale = stale_dir / "99_retired_page.png"
+    stale.write_bytes(b"old page")
+
+    render_all_images(isolated_project)
+
+    assert not stale.exists()
 
 
 @pytest.mark.slow

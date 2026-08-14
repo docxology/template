@@ -17,7 +17,7 @@ from infrastructure.validation.content.diagnostic_codes import MarkdownCode
 
 from textbook import content
 from textbook.config import iter_chapters, iter_unit_intros, load_config, validate_config
-from textbook.constants import CITATION_KEYS, GLOSSARY_ANCHORS
+from textbook.constants import CITATION_KEYS, GLOSSARY_ANCHORS, REQUIRED_SECTION_HEADINGS
 
 MANUSCRIPT = Path(__file__).resolve().parent.parent / "manuscript"
 CONFIG = load_config(MANUSCRIPT)
@@ -35,6 +35,11 @@ def test_claim_ledger_structural_counts_match_config():
     claims = {claim["claim_id"]: claim["value"] for claim in ledger["claims"]}
     assert claims["chapter-count"] == len(CHAPTERS)
     assert claims["part-count"] == len(CONFIG["units"])
+    # Structural contract counts must match the constants they are sourced from,
+    # not just the config. Without this, a drifted count records silently.
+    assert claims["citation-key-count"] == len(CITATION_KEYS)
+    assert claims["glossary-anchor-count"] == len(GLOSSARY_ANCHORS)
+    assert claims["required-section-headings"] == len(REQUIRED_SECTION_HEADINGS)
 
 
 def test_all_unit_intros_exist_and_validate():

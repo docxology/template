@@ -358,6 +358,31 @@ def test_llm_calibration_contract_rejects_bad_fixture_and_predictions() -> None:
     assert score_llm_calibration([], {})["status"] == "invalid"
 
 
+def test_tracked_llm_filter_calibration_fixture_is_valid_and_scorable() -> None:
+    """data/llm_filter_calibration.json is a tracked fixture with no prior
+    parser or integration test (data/AGENTS.md requires one for every fixture
+    in this directory). Load it through the real calibration contract used by
+    the LLM-filter pipeline (``src/multi_phase/contracts.py``).
+    """
+    project_root = Path(__file__).resolve().parent.parent
+    fixture_path = project_root / "data" / "llm_filter_calibration.json"
+    payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    assert payload["schema_version"] == "advanced-literature-review/llm-filter-calibration/1"
+    cases = payload["cases"]
+    assert validate_llm_calibration(cases) == []
+
+    perfect_predictions = {case["id"]: case["expected"] for case in cases}
+    result = score_llm_calibration(cases, perfect_predictions)
+    assert result["status"] == "pass"
+    assert result["accuracy"] == 1.0
+    assert result["n"] == len(cases) == 4
+
+    partial = score_llm_calibration(cases, {"positive-1": "yes"})
+    assert partial["status"] == "review"
+    assert "missing predictions" in partial["issues"][0]
+
+
 def test_phase_artifact_manifest_contract_rejects_duplicate_and_unknown_paths() -> None:
     manifest = {
         "phase_order": ["phase_1"],

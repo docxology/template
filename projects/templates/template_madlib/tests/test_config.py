@@ -111,6 +111,25 @@ def test_unknown_schema_version_fails_closed(tmp_path: Path) -> None:
         load_madlib_config(tmp_path)
 
 
+def test_boolean_schema_version_rejected(tmp_path: Path) -> None:
+    """`bool` is an `int` subclass in Python; the loader must reject it explicitly."""
+    payload = base_payload()
+    payload["madlib"]["schema_version"] = True
+    write_config(tmp_path, payload)
+
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an integer"):
+        load_madlib_config(tmp_path)
+
+
+def test_non_numeric_schema_version_rejected(tmp_path: Path) -> None:
+    payload = base_payload()
+    payload["madlib"]["schema_version"] = "not-a-version"
+    write_config(tmp_path, payload)
+
+    with pytest.raises(MadlibConfigError, match="madlib.schema_version must be an integer"):
+        load_madlib_config(tmp_path)
+
+
 def test_visualization_config_tracks_explicit_and_defaulted_flags(tmp_path: Path) -> None:
     payload = base_payload()
     payload["madlib"]["visualizations"] = {

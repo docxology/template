@@ -6,10 +6,11 @@ The `src/` package is the project-local generation engine. Keep it free of `infr
 | --- | --- |
 | *(package)* | Import as `src.<module>` from tests and scripts; modules use relative imports (`from .config import …`). |
 | `config.py` | Validate `manuscript/config.yaml` `madlib:` settings, including expanded manuscript-structure, design-principle, phase, evaluation, QA-probe, failure-mode, authoring-obligation, cover/visualization, and explicit/default-origin controls. |
+| `config_models.py` | Typed dataclasses (`MadlibConfig`, `SlotSpec`, `MethodStep`, `PipelinePhase`, …) and default schema data (`SECTION_KEYS`, `DEFAULT_SECTION_TITLES`, `MADLIB_CONFIG_SCHEMA_VERSION`, …) shared by `config.py` and its loaders. |
 | `tokens.py` | Expand slot declarations into deterministic token choices. |
 | `run.py` | `MadlibRun` session plus `build_run()` — single load of config, token plan, sections, and field inventory for artifact and variable generation. |
 | `composition.py` | Thin re-export facade over the split composition modules (stable import surface for tests and callers). |
-| `composition_helpers.py` | Shared prose helpers, disabled-section bodies, figure markdown fragments. |
+| `composition_helpers.py` | Shared prose helpers and disabled-section bodies. |
 | `composition_tables.py` | Markdown evidence tables (protocol, phases, probes, audit, fields, tokens, …). |
 | `composition_sections.py` | Conditional IMRAD section bodies and section title variables. |
 | `composition_figures.py` | Figure-group markdown for Methods, Results, Configuration, and Evaluation sections. |

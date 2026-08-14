@@ -115,6 +115,20 @@ def test_render_result_serializes_repository_relative_output(project_root) -> No
     assert result.to_dict(relative_to=project_root)["output_path"] == "output/pdf/portable.pdf"
 
 
+def test_render_result_to_dict_keeps_absolute_path_when_not_relative(tmp_path, project_root) -> None:
+    """``to_dict(relative_to=...)`` falls back to the absolute path when
+    ``output_path`` is not beneath ``relative_to`` (e.g. a scratch render
+    outside the checkout), per the documented fallback in
+    :meth:`RenderResult.to_dict` — a caller still needs a usable path rather
+    than a `ValueError` propagating out of report serialization."""
+    output = tmp_path / "elsewhere" / "scratch.pdf"
+    result = RenderResult(output_path=output, page_count=1)
+
+    serialized = result.to_dict(relative_to=project_root)
+
+    assert serialized["output_path"] == output.resolve().as_posix()
+
+
 def test_synthetic_minimal_edition(tmp_path) -> None:
     """A tiny hand-built edition exercises every template branch and renders."""
     pages = [

@@ -26,6 +26,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | [`leann-local.md`](leann-local.md) | Optional local LEANN semantic retrieval for agent navigation, with generated-index guards | Advanced |
 | [`llm-integration-guide.md`](llm-integration-guide.md) | AI-assisted research with Ollama (LLM review, translation) | Expert |
 | [`publishing-guide.md`](publishing-guide.md) | Publishing workflow (DOI, Zenodo, arXiv, citations) | Expert |
+| [`publication-runbook.md`](publication-runbook.md) | Front-door release runbook for standalone public GitHub mirrors, Zenodo DOI minting, new-version releases, status blocks, and archival handoff | Advanced |
 | [`secure-research-guide.md`](secure-research-guide.md) | PDF watermarking, provenance, and integrity | Expert |
 | [`zenodo-doi-strategy.md`](zenodo-doi-strategy.md) | Concept vs version DOI strategy for repeat Zenodo releases | Expert |
 | [`manuscript-semantics.md`](manuscript-semantics.md) | **Canonical** manuscript syntax & semantics — Pandoc citations `[@key]`, cross-refs `[@eq:/@fig:/@sec:]`, `{{TOKEN}}` substitution, preamble. Read before authoring any manuscript. | All levels |

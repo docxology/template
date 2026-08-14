@@ -23,6 +23,9 @@ from infrastructure.project.public_capabilities import (
     validate_unique_package_names,
 )
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+
+_CI_CEILING = CANONICAL_CI_PYTHON_VERSIONS[-1]
+_CI_MINOR = _CI_CEILING.split(".")[1]
 from scripts.gates.public_capabilities import main as capability_gate_main
 from tests._support.projects import make_project, write_doc
 
@@ -315,16 +318,20 @@ def test_ci_python_floor_must_include_every_canonical_version(tmp_path: Path) ->
 
     assert capability.passed is False
     assert any("CI Python 3.10.x series" in issue for issue in capability.issues)
-    assert any("CI Python 3.12.x series" in issue for issue in capability.issues)
+    assert any(
+        f"CI Python {version}.x series" in issue
+        for version in CANONICAL_CI_PYTHON_VERSIONS
+        for issue in capability.issues
+    )
 
 
 @pytest.mark.parametrize(
     ("requires_python", "expected_fragment"),
     [
-        (">=3.10,<=3.12.0", "CI Python 3.12.x series"),
-        (">=3.10,!=3.12.42", "CI Python 3.12.x series"),
+        (f">=3.10,<=3.{_CI_MINOR}.0", f"CI Python {_CI_CEILING}.x series"),
+        (f">=3.10,!={_CI_CEILING}.42", f"CI Python {_CI_CEILING}.x series"),
         (">=3.10,!=3.10.*", "CI Python 3.10.x series"),
-        (">=3.10,<3.12.99", "CI Python 3.12.x series"),
+        (f">=3.10,<{_CI_CEILING}.99", f"CI Python {_CI_CEILING}.x series"),
     ],
 )
 def test_ci_python_contract_rejects_partial_minor_series(
@@ -341,7 +348,7 @@ def test_ci_python_contract_rejects_partial_minor_series(
 
 
 def test_ci_python_contract_accepts_complete_minor_series(tmp_path: Path) -> None:
-    _complete_project(tmp_path, requires_python=">=3.10,<3.13")
+    _complete_project(tmp_path, requires_python=f">=3.10,<3.{int(_CI_MINOR) + 1}")
 
     capability = audit_public_capability(tmp_path, "template_test")
 

@@ -207,6 +207,7 @@ Development standards are documented in **`docs/rules/`**. The Cursor IDE entry 
 - **[maintenance/local-only-template-exemplars.md](maintenance/local-only-template-exemplars.md)** - Local-only exemplar policy (`LOCAL_ONLY_TEMPLATE_NAMES`)
 - **[maintenance/doc-mega-decomposition.md](maintenance/doc-mega-decomposition.md)** - Policy for splitting oversized documentation mega-files
 - **[maintenance/review-remediation-2026-07.md](maintenance/review-remediation-2026-07.md)** - Multi-lens review remediation plan (R1–R18 items with acceptance lines)
+- **[maintenance/review-remediation-2026-08.md](maintenance/review-remediation-2026-08.md)** - Parallel-agent comprehensive review + improvement record (infra/scripts/docs + 24 exemplars, v3.7.0) — changes, evidence, incidents/lessons
 
 ---
 

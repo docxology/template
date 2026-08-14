@@ -19,7 +19,7 @@ from infrastructure.core.pytest_orchestration import (
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
 PUBLIC_READINESS_SCHEMA = "template-public-readiness-v2"
-PUBLIC_READINESS_PYTHON = "3.12"
+PUBLIC_READINESS_PYTHON = "3.14"
 DEFAULT_TIMEOUT_SECONDS = 1200
 PUBLIC_READINESS_STATUSES = frozenset({"pass", "fail", "skip"})
 PUBLIC_READINESS_SKIP_PREFIX = "PUBLIC_READINESS_SKIP:"

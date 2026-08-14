@@ -9,6 +9,43 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Documentation
+
+- Added [`docs/maintenance/review-remediation-2026-08.md`](docs/maintenance/review-remediation-2026-08.md),
+  a durable record of the 2026-08-12 parallel-agent comprehensive review and
+  improvement (infrastructure/scripts/docs + all 24 exemplars, released in
+  v3.7.0), including the verification evidence and the reusable
+  incidents/lessons from running a large herdr-agent campaign on this repo.
+  Registered in the maintenance hub, `docs/maintenance/AGENTS.md`, and
+  `docs/documentation-index.md`.
+
+## [3.7.0] - 2026-08-12
+
+### 2026-08-12 — per-exemplar improvement pass (24 dedicated herdr agents)
+
+Twenty-four dedicated Hermes herdr agents, one per public exemplar project, each strictly
+confined to its own `projects/templates/<name>/` tree (disjoint ownership). All 24 agents
+performed a read-everything review; most concluded the exemplars were already healthy
+(no stubs, consistent docs, offline suites green). Two exemplars received concrete fixes:
+
+- **`template_textbook`** — the agent discovered the exemplar's `test_contracts.py` carried
+  two overlapping generations of tests plus broken tuple-membership assertions
+  (`assert "<substr>" in (<tuple>)` checks element-equality, not substring) that made the
+  suite red, and a stale `REQUIRED_SECTION_HEADINGS` claim. Fixed: consolidated
+  `test_contracts.py` (228 total tests now pass), corrected 4 tuple-membership assertions
+  to per-element substring matching (`any("<substr>" in d for d in ...)`), added focused
+  tests for config-shape edge cases, corrected the `claim_ledger.yaml` source-bound claim
+  (9 → 5, matching `constants.py`), documented the `contracts` module, fixed manuscript
+  figure-path doc references (`../` → `../../`), and hardened `compare_config_shapes`
+  (empty vs one-empty mapping-list drift) and `numeric_fact_receipt` (fail-closed receipt
+  instead of raising).
+- **`template_literature_meta_analysis`** — added 296 lines of tests-only coverage for the
+  config-validation surface (search engine toggles, hypothesis/sampling/llm/knowledge-graph/
+  reproducibility/fulltext categories, `check_config_health`, load-error paths) plus
+  `Corpus.summary()` and `filter_by_year` range-guard tests. All 1207 tests pass.
+
+Coverage provenance and COUNTS.md regenerated to reflect the new exemplar test surfaces.
+
 ### 2026-08-12 — parallel-agent review: performance, de-duplication, thin orchestration, documentation
 
 Comprehensive review of infrastructure/, scripts/, docs/, and all 24 public exemplars,

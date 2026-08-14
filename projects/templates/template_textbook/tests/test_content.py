@@ -54,6 +54,18 @@ def test_scaffolded_lab_and_questions_link_back():
     assert content.count_stub_markers(questions) > 0
 
 
+def test_scaffold_headers_are_driven_by_shared_title_helpers():
+    """The lab/question display titles must come from toc.lab_title /
+    question_bank_title — the single source of truth — not be re-typed inline."""
+    from textbook import toc
+
+    ch = _chapter()
+    lab = content.scaffold_lab(ch)
+    questions = content.scaffold_question_bank(ch)
+    assert lab.lstrip().startswith(f"# {toc.lab_title(ch.title)}")
+    assert questions.lstrip().startswith(f"# {toc.question_bank_title(ch.title)}")
+
+
 def test_validate_chapter_flags_missing_pieces():
     issues = content.validate_chapter("just some text without structure")
     joined = " ".join(issues)

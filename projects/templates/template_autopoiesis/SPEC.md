@@ -1,6 +1,6 @@
 # SPEC.md — template_autopoiesis
 
-> **Public exemplar** — DOI forthcoming
+> **Public exemplar** — [DOI: 10.5281/zenodo.21227869](https://doi.org/10.5281/zenodo.21227869)
 
 ## Design Contract
 

@@ -73,8 +73,10 @@ flowchart TB
   `from_dict`, add a default in `manuscript/config.yaml`. Tests live in
   `tests/test_config.py`.
 
-* `src/pipeline.py::run_literature_pipeline` — the only function that
-  touches `infrastructure.search.*`. Returns a
+* `src/pipeline.py::run_literature_pipeline` — the single-query search →
+  enrich → BibTeX entry point into `infrastructure.search.*` (the
+  multi-keyword fan-out in `src/deep_search.py::run_deep_search` performs
+  the equivalent calls for the deep-search run mode). Returns a
   :class:`LiteratureRunArtifacts` so the script knows where every
   artefact landed without re-deriving paths.
 

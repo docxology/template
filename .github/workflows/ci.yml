@@ -313,7 +313,7 @@ jobs:
           --timeout=120
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.13)
+# Job 3 — Infrastructure Tests (matrix: ubuntu + macos × Python 3.10–3.14)
 # ─────────────────────────────────────────────────────────────────────────────
   test-infra:
     name: "Infra Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})"
@@ -329,14 +329,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # ubuntu covers all four Python versions; macOS runs only the 3.12
+        # ubuntu covers all five Python versions; macOS runs only the 3.14
         # smoke (macOS legs are ~10x cost and rarely surface OS-specific project
         # breakage beyond what the 3.12 cell catches).
         os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         include:
           - os: macos-latest
-            python-version: "3.12"
+            python-version: "3.14"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -361,7 +361,7 @@ jobs:
 
       # TeX Live so the xelatex/bibtex-gated rendering tests run instead of
       # skipping (they assert a real PDF lands on disk). Linux lanes only:
-      # MacTeX is a multi-GB install and macOS breadth is a 3.12 smoke lane.
+      # MacTeX is a multi-GB install and macOS breadth is a 3.14 smoke lane.
       - name: Cache TeX Live packages
         if: runner.os == 'Linux'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -405,7 +405,7 @@ jobs:
           --timeout=120
 
       - name: Upload infrastructure coverage to Codecov
-        if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
+        if: matrix.python-version == '3.14' && matrix.os == 'ubuntu-latest'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: coverage-infra.xml
@@ -430,7 +430,7 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group public-exemplars
@@ -469,7 +469,7 @@ jobs:
     # sum of all public exemplars. Each job enforces that project's own 90% floor via
     # ``scripts/pipeline/stage_01_test.py --project`` (authoritative per CLAUDE.md), which
     # also removes the old code_project/fep_lean conftest plugin-name collision
-    # (every project is already isolated in its own job). py3.10 (floor) + py3.12
+    # (every project is already isolated in its own job). py3.10 (floor) + py3.14
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
     # 60 min backstop — active_inference on py3.10 has exceeded 45 min on loaded runners.
     timeout-minutes: 60
@@ -477,7 +477,7 @@ jobs:
     permissions:
       contents: read
     env:
-      # .python-version requests 3.12 by default; bind uv to this exact matrix
+      # .python-version requests 3.14 by default; bind uv to this exact matrix
       # minor so the capability contract covers the interpreter actually used.
       UV_PYTHON: ${{ matrix.python-version }}
     strategy:
@@ -517,7 +517,7 @@ jobs:
             --project "${{ matrix.project }}" --project-only --include-slow
 
       - name: Upload project coverage to Codecov
-        if: matrix.python-version == '3.12'
+        if: matrix.python-version == '3.14'
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: projects/${{ matrix.project }}/coverage_project.json
@@ -993,7 +993,7 @@ jobs:
 
       - uses: ./.github/actions/setup-python-env
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Sync dependencies (dev + optional test groups)
         run: uv sync --group public-exemplars
