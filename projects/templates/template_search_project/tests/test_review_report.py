@@ -173,8 +173,9 @@ def test_generate_review_report_writes_markdown_and_prints_summary(tmp_path: Pat
     assert "DEEP REVIEW SUMMARY" in captured.out
 
 
-def test_generate_review_report_is_byte_stable_and_path_portable(tmp_path: Path):
+def test_generate_review_report_is_byte_stable_and_path_portable(tmp_path: Path, monkeypatch):
     """The offline report must not embed wall-clock or checkout-specific paths."""
+    monkeypatch.delenv("SOURCE_DATE_EPOCH", raising=False)
     project_root = _make_isolated_project(tmp_path)
     review_dir = project_root / "output" / "review"
     assert generate_review_report(project_root, REPO_ROOT, review_dir) == 0
