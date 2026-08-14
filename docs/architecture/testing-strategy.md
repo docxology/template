@@ -28,12 +28,14 @@ uv run pytest tests/infra_tests/ --cov=infrastructure
 - Verify statistical computations
 - Check data processing
 - Validate visualization output
-- No dependency on build infrastructure
+- May use generic infrastructure APIs, but must test project-owned scientific
+  behavior rather than duplicate infrastructure tests
 
 **Command:**
 
 ```bash
-uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
+uv run python scripts/pipeline/stage_01_test.py \
+  --project templates/template_code_project --project-only --profile release
 ```
 
 ## Integration Tests (`tests/integration/`)
@@ -49,16 +51,20 @@ uv run pytest projects/{name}/tests/ --cov=projects/{name}/src
 uv run pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ```
 
-## Full Test Suite
+## Release test surfaces
 
 ```bash
-# Local all-project union gate (75%); CI project jobs enforce each exemplar's own 90% floor
-uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=75
+# Infrastructure release profile and its 60% aggregate floor
+uv run python scripts/pipeline/stage_01_test.py --infra-only --profile release
 
-# Generate HTML coverage report
-uv run pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
-open htmlcov/index.html
+# Every public project in a separate pytest process; each project keeps its own 90% floor
+uv run python scripts/pipeline/stage_01_test.py \
+  --project-only --all-projects --public-projects --profile release
 ```
+
+Do not concatenate every `projects/*/tests/` path into one pytest invocation:
+several projects intentionally use the same `tests.conftest` package name. The
+stage runner isolates projects and combines only the resulting coverage data.
 
 ## Coverage Requirements
 
@@ -125,12 +131,11 @@ log_info "━━━ LAYER 2: Scientific Computation ━━━"
 
 **Error:** `ModuleNotFoundError: No module named 'project.src'`
 
-**Solution:** Ensure `tests/conftest.py` includes `projects/{name}/` on path:
-
-```python
-import sys
-sys.path.insert(0, os.path.join(repo_root, "projects", project_name))
-```
+**Solution:** Reproduce through the project-aware stage runner shown above. It
+runs pyproject-based projects with `uv run --directory`, injects the test-runner
+dependencies, and preserves the project import root. If the focused command
+still fails, fix the project's package metadata or documented script bootstrap;
+do not hide an invalid install by adding a global ad hoc `sys.path` mutation.
 
 ### Layer Violations
 
@@ -142,8 +147,7 @@ sys.path.insert(0, os.path.join(repo_root, "projects", project_name))
 
 ```bash
 # Find infrastructure imports of project code
-grep -r "from projects\." infrastructure/
-grep -r "import projects\." infrastructure/
+rg "from projects\.|import projects\." infrastructure/
 ```
 
 ### Mixed Concerns

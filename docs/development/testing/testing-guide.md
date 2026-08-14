@@ -13,10 +13,10 @@
 ```bash
 # Run the selected project pipeline test contract:
 # focused infrastructure smoke + project coverage suite
-uv run python scripts/pipeline/stage_01_test.py --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
 
 # Run tests with verbose output (shows all test names)
-uv run python scripts/pipeline/stage_01_test.py --project template_code_project --verbose
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project --verbose
 
 # Run the full coverage-bearing infrastructure gate
 uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
@@ -25,15 +25,17 @@ uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
 uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope pipeline-smoke
 
 # Run including slow tests
-uv run python scripts/pipeline/stage_01_test.py --include-slow --project template_code_project
+uv run python scripts/pipeline/stage_01_test.py --include-slow --project templates/template_code_project
 
 # Run specific test suite
 uv run pytest tests/infra_tests/ -v
 
-# Run with coverage report
-uv run pytest tests/ --cov=src --cov-report=html
+# Run one public project's coverage contract directly
+uv run pytest projects/templates/template_code_project/tests/ \
+  --cov=projects/templates/template_code_project/src --cov-fail-under=90 \
+  --cov-report=html
 
-# Run only slow tests (requires Ollama for LLM tests)
+# Run only slow tests; separately opt into any required external capability
 uv run pytest -m slow
 ```
 
@@ -47,9 +49,13 @@ selected project's full coverage suite and then render/validate real outputs.
 
 ### Overview
 
-Tests are categorized by execution speed:
+Tests are categorized by execution speed and required capability:
 - **Fast tests**: Unit tests, configuration tests, validation tests (< 1 second)
-- **Slow tests**: Real-artifact, subprocess, rendering, and LLM integration checks
+- **Slow tests**: Real-artifact, subprocess, rendering, and some integration checks
+
+`slow` does not imply that Ollama, network, credentials, or another external
+capability is authorized. Capability markers compose independently and must be
+selected deliberately.
 
 ### Default Test Selection
 
@@ -59,8 +65,8 @@ loop deterministic. Direct pytest is unfiltered unless a marker expression is
 provided:
 
 ```bash
-# Normal test run
-uv run python scripts/pipeline/stage_01_test.py
+# Normal project test contract
+uv run python scripts/pipeline/stage_01_test.py --project templates/template_code_project
 
 # Direct pytest runs are intentionally explicit; use the orchestrator when you
 # want its profile marker selection.
@@ -102,7 +108,7 @@ To include slow tests when needed:
 # Include slow tests in orchestrator
 uv run python scripts/pipeline/stage_01_test.py --include-slow
 
-# Run only slow tests (useful for LLM testing)
+# Run only slow tests that do not also require a deselected capability
 uv run pytest -m slow
 
 # Run slow tests with verbose output
@@ -145,6 +151,10 @@ The test orchestrator (`scripts/pipeline/stage_01_test.py`) generates structured
 - **HTML Coverage**: `htmlcov/index.html`
   - Interactive coverage report
   - Line-by-line coverage details
+
+Reports are generated evidence, not source. A prior report does not establish
+the current checkout's status; bind any cited result to the exact command and
+revision that produced it.
 
 ## Test Structure
 
@@ -214,12 +224,17 @@ def test_with_fixture(temp_data_file):
 
 - **90% minimum** for projects/{name}/src/ (see [COUNTS.md](../../_generated/COUNTS.md) for current %)
 - **60% minimum** for infrastructure/ (see [coverage-gaps.md](../coverage-gaps.md) for current %)
-- **ABSOLUTE PROHIBITION**: Never use mock methods - use data only
+- **Mock frameworks are prohibited** and the semantic dependency-replacement
+  ceiling is zero. Real local HTTP servers, temporary files, subprocesses, and
+  narrow environment isolation are valid when they preserve the behavior under
+  review.
 - Test all error paths
 
 ```bash
 # Generate coverage report
-uv run pytest tests/ --cov=src --cov-report=html
+uv run pytest projects/templates/template_code_project/tests/ \
+  --cov=projects/templates/template_code_project/src --cov-fail-under=90 \
+  --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -227,14 +242,16 @@ open htmlcov/index.html
 
 ### Do's ✅
 - Write tests first (TDD)
-- Use data, no mocks
+- Exercise real behavior with deterministic local data and services
 - Test error paths
 - Use descriptive names
 - One assertion per concept
 
 ### Don'ts ❌
-- **ABSOLUTELY FORBIDDEN**: Never use mock methods, MagicMock, mocker.patch, or any mocking
-- Don't skip tests
+- Do not use `MagicMock`, `mocker.patch`, `unittest.mock`, or semantic
+  dependency replacements
+- Do not convert a failure into a skip; capability-driven skips must have an
+  explicit reason and remain separate from a passed result
 - Don't test implementation details
 - Don't ignore coverage gaps
 

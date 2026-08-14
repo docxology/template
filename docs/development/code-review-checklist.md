@@ -16,13 +16,13 @@ accepted.
 | # | Criterion | One-line definition | Authoritative gate |
 |---|-----------|---------------------|--------------------|
 | 1 | **Clarity** | Module purpose obvious from `__init__.py` docstring; public APIs documented; no dead code. | Reviewer reading + `ruff` (E/W/D rules where enabled). |
-| 2 | **Composability** | No sibling-to-sibling coupling; cross-cutting concerns flow *up* through `infrastructure/core/`. No circular imports. | `import-linter` patterns + reviewer judgement. |
+| 2 | **Composability** | Dependency direction follows the owning `AGENTS.md`; cross-cutting behavior belongs at a genuinely shared layer and imports remain cycle-free. | Public import/export gates, focused tests, and reviewer judgement. |
 | 3 | **Functionality (SSOT)** | Business logic lives **only** in `infrastructure/` or `projects/<name>/src/`. Scripts and tests never re-implement it. | [Thin-orchestrator ADR](../architecture/adrs/001-thin-orchestrator-pattern.md) + `scripts/audit/verify_no_mocks.py`-style reviewer scan. |
-| 4 | **Testability / Tested** | Coverage gates met (infra **60%**, project **90%**). No mocks. Deterministic seeds. tmp_path for I/O. `pytest-httpserver` for HTTP. | `uv run pytest --cov-fail-under=...` + [Zero-mock ADR](../architecture/adrs/004-zero-mock-testing-policy.md). |
+| 4 | **Testability / Tested** | Coverage gates met (infra **60%**, project **90%**); mock frameworks and semantic dependency replacements absent; deterministic seeds; `tmp_path` for I/O; local real HTTP for HTTP boundaries. | Stage-01 coverage contracts, both `verify_no_mocks.py` modes, and [Zero-mock ADR](../architecture/adrs/004-zero-mock-testing-policy.md). |
 | 5 | **Validation** | Inputs validated at the system boundary (CLI, public function). No hard-coded host paths. Narrow `except` (not bare `except Exception`). | `bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/` + reviewer. |
 | 6 | **Documentation** | Module has a guide in `docs/modules/guides/<module>-module.md`. Public functions have docstrings. Changes to architecture have an ADR. | `infrastructure/validation/docs/` linters + reviewer. |
 | 7 | **Conventions** | Type hints on public APIs. Consistent error/logging via `infrastructure.core.logging.utils.get_logger`. PEP 8 + project style. | `uv run ruff check` + `uv run mypy` on public CI source paths. |
-| 8 | **Reproducibility** | Deterministic outputs given the same inputs. Fixed RNG seeds. No reliance on wall-clock except through injectable helpers. `MPLBACKEND=Agg` for headless plotting. | Pipeline re-run yields byte-identical artefacts (steganographic checks excepted). |
+| 8 | **Reproducibility** | Declared deterministic outputs bind canonical inputs, configuration, code, and toolchain; fixed RNG seeds and injectable time are used where promised. | Producer-specific negative controls, manifests/freshness receipts, and byte comparison only for artifacts whose contract promises bitwise identity. |
 
 If a change cannot meet a criterion, raise an ADR explaining the deviation — do
 not silently merge.
@@ -49,23 +49,32 @@ claims.
 
 ## Quick Self-Check Before Opening a PR
 
-Run these locally; they mirror CI exactly:
+Run the applicable local contracts below. Hosted platform/version matrices and
+external repository settings remain CI/administrator evidence; no single local
+command mirrors those exactly.
 
 ```bash
+LINT=$(uv run python -m infrastructure.project.public_scope lint-paths)
 SRC=$(uv run python -m infrastructure.project.public_scope source-paths)
-uv run ruff check --fix $SRC tests/ scripts/
-uv run ruff format $SRC tests/ scripts/
-uv run mypy $SRC
+uv run ruff check $LINT
+uv run ruff format --check $LINT
+uv run python scripts/gates/mypy_ratchet.py $SRC
 uv run bandit -c bandit.yaml -r -ll infrastructure/ scripts/ projects/
 uv run python scripts/audit/verify_no_mocks.py
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60
-uv run pytest projects/<name>/tests/ --cov=projects/<name>/src --cov-fail-under=90
-pre-commit run --all-files
-pre-commit run --hook-stage pre-push --all-files
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
+uv run python scripts/pipeline/stage_01_test.py --project templates/<name> --project-only
+uv run python scripts/audit/lint_docs.py --quiet
+uv run python scripts/audit/check_tracked_all.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+pre-commit run --all-files --hook-stage pre-commit
+pre-commit run --all-files --hook-stage pre-push
 ```
 
-A clean pass on all of the above is necessary but not sufficient — a human still
-reads the diff against the eight criteria.
+A clean pass on applicable lanes is necessary but not sufficient. Record
+capability-driven skips and unrun lanes, inspect the diff, and keep engineering,
+scientific, accessibility, owner-approval, merge, release, and publication
+status separate.
 
 ---
 

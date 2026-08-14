@@ -132,26 +132,35 @@ exit_code = execute_test_pipeline(
     repo_root=repo_root,
     run_infra=run_infra,
     run_project=run_project,
+    quiet=args.quiet,
+    include_slow=args.include_slow,
+    include_long_running=args.include_long_running,
+    include_ollama_tests=args.include_ollama_tests,
+    strict=not args.non_strict,
     infra_scope=args.infra_scope,
+    profile=args.profile,
+    include_bench=args.include_bench,
+    parallel=args.parallel,
 )
-save_test_report_to_files(report, output_dir)
+return exit_code  # the infrastructure service writes the project report
 ```
 
 ### 2. **Project Script Import Pattern (projects/{name}/scripts/)**
 
 ```python
-# projects/{name}/scripts/optimization_analysis.py - Project orchestrator (code exemplar)
-from projects.template_code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
-from infrastructure.documentation.figure_manager import FigureManager  # From infrastructure/
+# projects/templates/template_code_project/scripts/optimization_analysis.py
+from pathlib import Path
+import sys
 
-# Use projects/{name}/src/ methods for computation
-data = [1, 2, 3, 4, 5]
-avg = calculate_average(data)  # From projects.template_code_project.src.example
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+for path in (PROJECT_ROOT, PROJECT_ROOT / "src"):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
-# Script handles visualization and output
-fig, ax = plt.subplots()
-ax.plot(data)
-ax.set_title(f"Average: {avg}")
+from src.analysis.workflow import main  # business logic stays in src/
+
+if __name__ == "__main__":
+    main()
 ```
 
 ### 3. **Integration with Build System**
@@ -169,7 +178,7 @@ The `scripts/runner/execute_pipeline.py` orchestrator automatically:
 ### 1. **Maintainability**
 
 - Single source of truth for business logic
-- Changes to algorithms only happen in `@src/`
+- Changes to algorithms happen in `src/`, not in entry-point scripts
 - Scripts automatically use updated functionality
 
 ### 2. **Testability**
@@ -211,12 +220,11 @@ test_results = parse_pytest_output(stdout, stderr, exit_code)
 ### ✅ **Correct: Project Script Using projects/{name}/src/**
 
 ```python
-# projects/{name}/scripts/optimization_analysis.py - Project orchestrator (code exemplar)
-from projects.template_code_project.src.example import add_numbers, calculate_average  # From projects/{name}/src/
+# projects/templates/template_code_project/scripts/optimization_analysis.py
+from src.analysis.workflow import main
 
-# Use projects/{name}/src/ methods for computation
-result = add_numbers(5, 3)
-avg = calculate_average([1, 2, 3, 4, 5])
+if __name__ == "__main__":
+    main()
 ```
 
 ### ❌ **Incorrect: Implementing Business Logic in Root Scripts**

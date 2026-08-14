@@ -19,7 +19,8 @@ The generic project template implements a **unified test-driven development para
 
 - **Source code** implements mathematical functionality
 - **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
-- **Scripts** are **thin orchestrators** that import and use `projects/{name}/src/` methods
+- **Scripts** are **thin orchestrators** that import and use
+  `projects/<qualified-name>/src/` methods
 - **`scripts/runner/execute_pipeline.py`** orchestrates the declarative DAG pipeline
 
 ## Workflow Diagram
@@ -27,10 +28,10 @@ The generic project template implements a **unified test-driven development para
 ```mermaid
 graph TB
     subgraph DEV["Development Components"]
-        SRC["Source Code<br/>projects/{name}/src/"]
-        TESTS["Tests<br/>projects/{name}/tests/"]
-        SCRIPTS["Scripts<br/>projects/{name}/scripts/"]
-        MANUSCRIPT["Manuscript<br/>projects/{name}/manuscript/"]
+        SRC["Source Code<br/>projects/&lt;qualified-name&gt;/src/"]
+        TESTS["Tests<br/>projects/&lt;qualified-name&gt;/tests/"]
+        SCRIPTS["Scripts<br/>projects/&lt;qualified-name&gt;/scripts/"]
+        MANUSCRIPT["Manuscript<br/>projects/&lt;qualified-name&gt;/manuscript/"]
     end
 
     subgraph VALGEN["Validation and generation"]
@@ -77,28 +78,39 @@ graph TB
 
 The `scripts/runner/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes the pipeline stages sequentially, ensuring coherence between all components:
 
-### 1. Code Validation Phase
+### 1. Test phase
 
-- **Runs all generation scripts** - This validates that `projects/{name}/src/` code works correctly
-- **Scripts import from project src/** - Ensures no code duplication and validates imports
-- **Generates figures and data** - Creates outputs that markdown will reference
+- **Runs infrastructure and project tests** before analysis
+- **Enforces the configured coverage gates** for the selected surfaces
+- **Validates real project behavior** without replacing scientific dependencies
 
-### 2. Markdown Validation Phase
+### 2. Analysis and source hydration
+
+- **Discovers project analysis scripts** and runs them as thin orchestrators
+- **Generates figures, data, registries, and manuscript variables** from tested
+  project code
+- **Hydrates the render tree** from `output/data/manuscript_variables.json`
+  unless hydration is explicitly skipped for a diagnostic render
+
+### 3. Manuscript validation and rendering
 
 - **Validates all image references** - Ensures figures referenced in markdown exist
 - **Checks internal links** - Validates equation labels and section anchors
 - **Validates equation formatting** - Ensures proper LaTeX equation environments
+- **Builds enabled formats** from the hydrated manuscript tree
 
-### 3. Documentation Generation Phase
+### 4. Project-defined documentation generation
 
-- **Auto-generates glossary** - Creates API table from current `src/` code
-- **Updates documentation** - Keeps code-doc sync automatically
+- A project may include a glossary or API-doc generator among its analysis
+  scripts. This is not a universal root-pipeline stage.
+- The glossary CLI can also be run manually with explicit source and target
+  paths; see the [modules guide](../modules/modules-guide.md#documentation-generation).
 
-### 4. Output Generation Phase
+### 5. Validation and copy-out
 
-- **Builds individual PDFs** - Creates per-section PDFs from validated markdown
-- **Builds combined PDF** - Creates unified document from all sections
-- **Exports LaTeX** - Provides LaTeX source for further processing
+- **Validates publication artifacts and provenance contracts**
+- **Copies final deliverables** from the project working output to
+  `output/<qualified-name>/`
 
 ## Test Suite and Code Connections
 
@@ -138,7 +150,9 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run pipeline** - Use `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only` to validate coherence
+5. **Run pipeline** - Use
+   `./run.sh pipeline --project templates/template_code_project --core-only`
+   for the public control-positive exemplar
 
 ## Step-by-Step Workflow
 
@@ -149,9 +163,9 @@ flowchart TD
 uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-report=term-missing
 
 # Check coverage (≥90% gate; live percentage per exemplar → docs/_generated/COUNTS.md)
-coverage report
+uv run coverage report
 
-# Make code changes in projects/{name}/src/
+# Make code changes in projects/<qualified-name>/src/
 # Update corresponding tests
 # Update documentation if needed
 ```
@@ -159,12 +173,14 @@ coverage report
 ### 2. Validation Phase
 
 ```bash
-# Run tests again to ensure changes work
-uv run pytest
+# Run the infrastructure and selected project suites separately. Separate
+# invocations avoid collisions between projects that each define tests/conftest.py.
+uv run pytest tests/infra_tests/
+uv run pytest projects/templates/template_code_project/tests/
 
 # Generate figures and data
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
-uv run python scripts/pipeline/stage_02_analysis.py --project template_code_project
+uv run python scripts/pipeline/stage_02_analysis.py --project templates/template_code_project
 
 # Validate markdown integrity
 uv run python -m infrastructure.validation.cli markdown projects/templates/template_code_project/manuscript/
@@ -174,15 +190,17 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 
 ```bash
 # Run the core pipeline (no LLM stages)
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+./run.sh pipeline --project templates/template_code_project --core-only
 
 # Or use unified interactive menu
 ./run.sh
 ```
 
-With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (unless disabled), environment setup, infrastructure tests (unless `--skip-infra`), project tests, analysis, PDF rendering, output validation, then copy outputs. That path is driven by scripts **`00`–`05`** (tests use **`01`**, which runs infrastructure + project suites).
-
-**Full** pipeline (for example `./run.sh --pipeline` without `--core-only`) adds LLM review and translations (`scripts/pipeline/stage_06_llm_review.py`) before copy. **`scripts/pipeline/stage_07_executive_report.py`** is for multi-project / executive reporting, not the default single-project stage list.
+With `--core-only`, `PipelineExecutor` selects the **core** path. The exact
+selection and order come from `pipeline.yaml`; use the generated table below
+rather than a copied count. A normal full run may also select configured LLM
+stages. `scripts/pipeline/stage_07_executive_report.py` is for multi-project /
+executive reporting, not the default single-project stage list.
 
 ### Canonical stage table (generated)
 
@@ -234,14 +252,17 @@ With `--core-only`, `PipelineExecutor` runs the **core** path: clean outputs (un
 - **Print output paths** to stdout for manifest collection
 - **Use headless plotting** (MPLBACKEND=Agg)
 
-### Documentation (`manuscript/`)
+### Documentation (`projects/<qualified-name>/manuscript/`)
 
 - **References source code** using inline code formatting
 - **Displays generated figures** from `output/figures/`
 - **Passes validation** for images, references, and equations
-- **Auto-updated glossary** from source API
+- **Optionally generated glossary/API material** when the project declares a
+  generator or the glossary CLI is run explicitly
 
-### Output Structure (`output/`)
+<a id="project-working-output"></a>
+
+### Project working output (`projects/<qualified-name>/output/`)
 
 ```mermaid
 flowchart LR
@@ -250,10 +271,17 @@ flowchart LR
     OUT --> DATA[data<br/>CSV · NPZ · manifests]
     OUT --> PDF[pdf<br/>Individual + combined PDFs]
     OUT --> TEX[tex<br/>Exported LaTeX files]
+    OUT --> WEB[web<br/>Combined + section HTML]
+    OUT --> REPORTS[reports and logs<br/>Validation evidence]
 
     classDef d fill:#0f172a,stroke:#0f172a,color:#fff
-    class OUT,FIG,DATA,PDF,TEX d
+    class OUT,FIG,DATA,PDF,TEX,WEB,REPORTS d
 ```
+
+After the copy stage, final deliverables appear under
+`output/<qualified-name>/`. The qualified name retains its lifecycle prefix;
+for example, the public exemplar copies to
+`output/templates/template_code_project/`.
 
 ## Validation Rules
 
@@ -291,27 +319,30 @@ Two commands specific to this section, not covered above:
 uv sync
 
 # Check coverage with per-line detail (vs. the summary `coverage report` shown earlier)
-coverage report -m
+uv run coverage report -m
 ```
 
-Cleaning outputs is automatic — the pipeline removes `output/` before regenerating it
-(see [Output Management](#output-management) below); there is no separate manual clean step.
+Cleaning is a declared pipeline stage. It removes regeneratable working
+artifacts according to the cleanup policy; there is no separate manual clean
+step for the normal build.
 
 ## Output Management
 
-The pipeline automatically manages outputs. All outputs are regenerated from markdown sources during the build process, ensuring consistency.
+The pipeline manages project working outputs and copied deliverables. Cleaning
+is policy-driven: it preserves configured checkpoint/evidence directories and
+some publication sidecars while removing other regeneratable artifacts. A
+canonical public exemplar can also track deterministic publication evidence.
 
-This script:
-
-- Removes `output/` directory (all disposable)
-- Preserves source code, tests, markdown, and scripts
-- Provides clear instructions for regeneration
-
-**Note**: All outputs are regeneratable from source, so cleaning is safe and often useful for troubleshooting or ensuring fresh builds.
+Do not treat every file named `output/` as disposable. Before manual deletion,
+inspect the project's cleanup policy, tracked files, and provenance/release
+contracts. Prefer a normal pipeline run to an ad hoc recursive delete.
 
 ### Output Directory Structure
 
-Same layout as the [Output Structure diagram above](#output-structure-output) (`figures/`, `data/`, `pdf/`, `tex/`). All directories under `output/` are disposable and can be safely cleaned.
+The common layout is shown in the
+[project working output diagram](#project-working-output).
+Enabled formats and project-specific evidence can add further directories; see
+[Output formats](../usage/output-formats.md).
 
 ## Benefits of This Paradigm
 
@@ -336,14 +367,10 @@ Same layout as the [Output Structure diagram above](#output-structure-output) (`
 
 **Symptom**: `ModuleNotFoundError: No module named 'project.src'`
 
-**Solution**: Ensure tests/conftest.py adds src/ to sys.path:
-```python
-import os, sys
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SRC = os.path.join(ROOT, "src")
-if SRC not in sys.path:
-    sys.path.insert(0, SRC)
-```
+**Solution**: run through the repository environment (`uv run`), verify the
+project's package/import configuration, and use the import convention already
+exercised by its tests. Avoid one-off `sys.path` mutations in documentation or
+production scripts.
 
 ### Coverage Below Threshold
 
@@ -370,26 +397,26 @@ uv run python -m infrastructure.validation.cli markdown projects/templates/templ
 uv run python projects/templates/template_code_project/scripts/optimization_analysis.py
 
 # Check test coverage gaps
-coverage report -m
+uv run coverage report -m
 ```
 
 ## Key Connections to Remember
 
-1. **`projects/{name}/src/` modules → `projects/{name}/tests/` validation → `projects/{name}/scripts/` generation → `projects/{name}/manuscript/` documentation**
+1. **`projects/<qualified-name>/src/` modules → per-project tests → analysis scripts → hydrated manuscript**
 2. **The pipeline orchestrator ensures all connections are valid before building outputs**
 3. **Changes in any component must be reflected in all connected components**
 4. **The test suite validates the entire pipeline, not just individual modules**
 5. **Documentation is validated against outputs to maintain coherence**
-6. **Scripts are THIN ORCHESTRATORS that import and use `projects/{name}/src/` methods**
-7. **Business logic lives ONLY in `projects/{name}/src/` - scripts handle orchestration and I/O**
+6. **Scripts are thin orchestrators that import and use project `src/` methods**
+7. **Business logic lives only in project `src/`; scripts handle orchestration and I/O**
 
 ## Thin Orchestrator Pattern
 
 The workflow enforces a **thin orchestrator pattern** where:
 
-- **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
-- **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
-- **`projects/{name}/tests/`** ensures coverage of all functionality
+- **`projects/<qualified-name>/src/`** contains all business logic, algorithms, and mathematical implementations
+- **`projects/<qualified-name>/scripts/`** contains lightweight wrappers that import and use project `src/` methods
+- **`projects/<qualified-name>/tests/`** validates project functionality
 - **`scripts/runner/execute_pipeline.py`** orchestrates the entire pipeline
 
 This ensures:

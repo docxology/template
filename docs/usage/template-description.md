@@ -27,7 +27,7 @@ This template provides a **foundation** for research projects with:
 - **Markdown-to-multiformat pipeline**: PDF + HTML + Slides ship by default; DOCX and EPUB are opt-in via [`render.formats`](output-formats.md) in `manuscript/config.yaml`. Pandoc + xelatex drive the pipeline; see [output-formats.md](output-formats.md) for the full matrix.
 - **Cross-referencing system** for complex documents
 - **Automated figure generation** from Python scripts
-- **Glossary generation** from source code
+- **Optional glossary generation** from a selected source tree
 
 ### 🏗️ **Architecture Benefits**
 
@@ -79,8 +79,8 @@ This template provides a **foundation** for research projects with:
 
 | Issue | Solution |
 |-------|----------|
-| Project not in menu | Create `manuscript/config.yaml` |
-| Test import errors | Ensure `tests/conftest.py` exists |
+| Project not in menu | Check the public/active discovery boundary, required project markers, and [`active_projects.md`](../_generated/active_projects.md); render `working/...` projects explicitly |
+| Test import errors | Run with `uv run` and verify the project's package/import configuration |
 | Stage 4 fails fast | Add project deps to root `pyproject.toml` |
 | Config warnings | Use `project_config:` prefix for custom keys |
 

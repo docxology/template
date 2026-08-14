@@ -82,7 +82,7 @@ EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
     ExemplarSnapshot("template_prose_project", "92.85 %"),
     ExemplarSnapshot("template_redacted_report", "94.81 %"),
     ExemplarSnapshot("template_registered_report", "94.13 %"),
-    ExemplarSnapshot("template_search_project", "96.71 %"),
+    ExemplarSnapshot("template_search_project", "96.47 %"),
     ExemplarSnapshot("template_sia", "94.80 %"),
     ExemplarSnapshot("template_storybook", "93.54 %"),
     ExemplarSnapshot("template_template", "97.66 %"),

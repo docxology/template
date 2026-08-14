@@ -6,8 +6,8 @@ description: |
   health check across projects, audit everything, or pre-merge sanity sweep for template
   exemplars — even without naming docs/prompts or a skill. Not for single failing stage only.
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-05-27"
+  version: "1.0.1"
+  last_updated: "2026-08-13"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -69,3 +69,10 @@ uv run python -m infrastructure.validation.cli prerender projects/<project>/manu
 - **Single failing stage** → [pipeline-debugging](../pipeline-debugging/SKILL.md)
 - **Claim-by-claim manuscript pass** → [manuscript-claim-verification](../manuscript-claim-verification/SKILL.md)
 - **Determinism only** → [reproducibility-audit](../reproducibility-audit/SKILL.md)
+
+## References
+
+For a copy-paste, long-horizon launch brief that expands this workflow across
+software, tests, variable injection, statistics, figures, accessibility,
+scholarship, provenance, rendering, and release boundaries, use the
+[comprehensive research-software and manuscript review prompt](references/comprehensive-research-software-manuscript-review-prompt.md).

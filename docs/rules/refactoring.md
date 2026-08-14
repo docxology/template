@@ -105,7 +105,9 @@ Update in this order:
 
 ### Testing During Refactoring
 
-1. **Before**: Ensure 100% test coverage of code being refactored
+1. **Before**: Capture current behavior with characterization, edge-case, and
+   negative-control tests; meet the applicable project/infrastructure coverage
+   gate without treating a percentage as proof of semantic completeness
 2. **During**: Update tests to import from new locations
 3. **After**: Run full test suite with coverage report
 4. **Verify**: No broken imports, all tests pass

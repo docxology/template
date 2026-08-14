@@ -2,9 +2,34 @@
 
 ## Overview
 
-This guide covers automatic image insertion, captioning, and cross-referencing in markdown files.
+This guide covers the current manuscript image contract and the legacy image
+insertion utilities.
 
-**Caveat:** `ImageManager`/`FigureManager`/`MarkdownIntegration` (below) generate
+## Current manuscript workflow
+
+Generate every scientific figure from tested project code, save it under the
+project's `output/figures/`, and publish a deterministic
+`figure_registry.json`. Each registry record binds a `fig:` label, filename,
+visible caption, generating function, and `metadata.alt_text` to the produced
+file. The registry writer fails closed when a declared file is missing.
+
+In manuscript source, use:
+
+```markdown
+![Visible caption whose changing statistics are injected from analysis output.](../output/figures/convergence.png){#fig:convergence width=80%}
+
+[@fig:convergence] summarizes the analysis.
+```
+
+The caption remains visible content. Concise alt text describes the image for
+nonvisual use; it is not a duplicate caption, and a complex figure also needs a
+nearby prose or appendix description. See
+[Manuscript Semantics](../guides/manuscript-semantics.md) and the
+[Visualization Guide](visualization-guide.md).
+
+## Legacy utilities
+
+`ImageManager`/`FigureManager`/`MarkdownIntegration` (below) generate
 raw LaTeX (`\ref{}`, `\begin{figure}`) and are not wired into the default
 render pipeline, which uses Pandoc image syntax (`![caption](path){#fig:name}`)
 and bracket-cite cross-references (`[@fig:name]`) exclusively — see
@@ -98,10 +123,10 @@ print(f"Total figures: {stats['total_figures']}")
 print(f"By section: {stats['figures_by_section']}")
 ```
 
-## Workflow
+## Legacy workflow
 
 1. **Generate figures** using visualization modules
-2. **Register figures** with FigureManager
+2. **Register figures** with `FigureManager`
 3. **Insert figures** into markdown using ImageManager
 4. **Update references** automatically
 5. **Validate** all figures and references

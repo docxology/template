@@ -587,17 +587,19 @@ def analyze_dataset(
     Results include summary statistics, visualizations, and insights.
 
     Args:
-        dataset: Dataset object to analyze. Must contain at least
-            one numeric column and 10+ rows for meaningful analysis.
+        dataset: Dataset object to analyze. Required schema, sample-size
+            assumptions, and admissible missingness are method-specific and
+            must be validated explicitly.
         method: Analysis method to use. Options:
-            - "auto": Automatically select best method
+            - "auto": Select the configured method by a documented rule
             - "statistical": Basic statistical analysis
             - "ml": Machine learning-based analysis
             - "deep": Deep statistical analysis
         parameters: Method-specific parameters. If None, uses defaults
             for the selected method.
-        validate_results: Whether to validate analysis results for
-            statistical significance and data quality.
+        validate_results: Whether to validate declared numerical, schema,
+            and method-specific assumptions. This does not by itself establish
+            statistical or scientific validity.
         progress_callback: Optional callback function called with
             progress percentage (0.0 to 1.0) during analysis.
 
@@ -605,8 +607,9 @@ def analyze_dataset(
         AnalysisResult containing:
         - summary_stats: Dict of statistical measures
         - visualizations: List of generated plot paths
-        - insights: List of key findings and recommendations
-        - quality_score: Float between 0-1 indicating result quality
+        - insights: Source-bound interpretations with evidence identifiers
+        - quality_score: Project-defined diagnostic with documented components;
+          not a generic measure of scientific quality
         - warnings: List of warnings about data or analysis
 
     Raises:
@@ -631,8 +634,9 @@ def analyze_dataset(
         ... )
 
     Note:
-        Large datasets (>10k rows) may take several minutes to analyze.
-        Consider using method="auto" for optimal performance.
+        Benchmark runtime on the declared data shape and environment. Do not
+        describe the automatically selected method as optimal without an
+        explicit objective and comparative evidence.
 
     See Also:
         validate_dataset: For dataset validation before analysis

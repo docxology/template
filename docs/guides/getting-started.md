@@ -306,15 +306,26 @@ Even though you're not generating figures yet, you can reference existing ones. 
 ```markdown
 ![Example visualization showing convergence behavior.](../output/figures/convergence_plot.png){#fig:example width=80%}
 
-[@fig:example] demonstrates the algorithm's performance.
+[@fig:example] shows the recorded convergence trajectory.
 ```
 
 **Figure Anatomy**:
 
-- `![caption](path)` - Pandoc image syntax; the caption appears below the figure in the PDF and as alt text in HTML/EPUB
+- `![caption](path)` - Pandoc image syntax; the bracketed text is the visible
+  caption. The current HTML postprocessor derives an `alt` attribute from its
+  first sentence, but the figure registry must also carry separately authored
+  `metadata.alt_text`; inspect the rendered HTML/EPUB/PDF rather than assuming
+  the caption is an adequate nonvisual description.
 - `width=80%` - 80% of text width
 - `{#fig:example}` - Unique label for cross-referencing
 - `[@fig:example]` - Cross-reference (parenthetical); use bare `@fig:example` for a narrative reference ("Figure 3 shows…")
+
+When a figure or caption reports a computed sample size, estimate, uncertainty,
+percentage, benchmark, or configuration, inject that text from the same typed
+analysis summary that produced the figure. Do not hand-copy result values into
+the manuscript. Include units, population/sample, exclusions, and the meaning
+of intervals or error bars; add a long description for a complex multi-panel
+figure.
 
 ### Example
 

@@ -33,6 +33,8 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 | `prompts/` | Agent workflow skills — hub [`prompts/SKILL.md`](prompts/SKILL.md); see [prompts/AGENTS.md](prompts/AGENTS.md) |
 | `security/` | Security documentation and policies |
 | `rules/` | Contributor norms — expanded standards; repo-root [`.cursorrules`](../.cursorrules) is the Cursor-facing summary |
+| `audit/` | Generated, point-in-time audit snapshots; never hand-edit producer output |
+| `images/` | Small public assets used by repository documentation, not manuscript figures |
 | `streams/` | Timestamped notes for livestreams and recorded talks |
 | `_generated/` | Machine-generated snippets; authoritative active `projects/` names in `active_projects.md` — link there instead of duplicating rosters in guides |
 
@@ -49,6 +51,51 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
   for their own scopes
 - Cross-references use relative paths with descriptive link text
 - Documentation is intended to be evergreen; when behaviour changes, we may include dated notes so it’s clear which guidance is newer.
+
+## Review and evidence contract
+
+Deep documentation review must follow the fact to its producer and verifier.
+Do not resolve a contradiction by changing prose to match an accidental runtime
+behavior when the code's docstring, public contract, and tests indicate the
+opposite intent; record the discrepancy and repair the owning source or narrow
+the claim.
+
+| Surface | Producer / authority | Required review |
+| --- | --- | --- |
+| Commands, flags, defaults, precedence | CLI parser, config schema, implementation, focused tests | Execute or probe the exact path, including conflicting inputs and failure cases. |
+| Generated repo facts | Producer named by [`_generated/AGENTS.md`](_generated/AGENTS.md) | Regenerate with the producer; never edit generated output directly. |
+| Manuscript variables and statistics | Project analysis code and source artifacts, serialized to `output/data/manuscript_variables.json` | Trace every variable to inputs, estimand, sample size, uncertainty, units, rounding, and freshness. Source manuscript prose uses `{{TOKEN}}`; hydrated output is generated. |
+| Figures and tables | Analysis code, figure/artifact registry, source data | Check data lineage, scales, labels, legends, uncertainty, palettes, resolution, panel ordering, and agreement among plot, caption, prose, and registry. |
+| Captions and alt text | Manuscript source plus the rendered artifact | A caption interprets the display and states statistical context; alt text conveys the visual structure without pretending the caption alone is accessible text. |
+| Scholarship and citations | Primary literature and bibliography records | Verify citation identity and support, qualify claim strength, disclose limitations and alternative explanations, and avoid citation laundering through secondary summaries. |
+| Gates and release claims | Gate implementation, negative controls, fresh receipts, hosted CI, remote SHA | Name the verifier and a known-wrong test/fixture when claiming enforcement. Report local validation, hosted CI, approval, merge, publication, and archival state separately. |
+
+When a value can change between runs, inject or generate it. When a statement is
+interpretive, cite evidence and state its boundary. When a check is advisory,
+do not describe it as a blocking gate.
+
+### Documentation validation sequence
+
+Run the smallest focused checks while editing, then the complete documentation
+surface before handoff:
+
+```bash
+uv run python scripts/audit/lint_docs.py --json --repo-root .
+uv run python scripts/audit/audit_documentation.py --format markdown
+uv run python scripts/audit/check_template_drift.py --strict
+uv run python scripts/docgen/counts.py --check
+uv run python scripts/docgen/exemplar_roster.py --check
+uv run python scripts/docgen/status_evidence.py --check
+uv run python scripts/docgen/api_reference.py --check
+uv run python -m infrastructure.skills check
+uv run python -m infrastructure.skills check-contracts
+```
+
+The RedTeam audit is intentionally broad and advisory; triage its findings
+rather than treating the number of heuristic matches as a quality score. The
+other commands above fail on concrete drift. Changes to generated sources,
+public behavior, or release contracts also require their focused tests and the
+repository's normal pre-commit/pre-push checks.
 
 ## Entry Points
 

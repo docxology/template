@@ -33,7 +33,12 @@ change.
 ```bash
 git clone https://github.com/YOUR_USERNAME/template.git
 cd template
+git remote add upstream https://github.com/docxology/template.git
 ```
+
+Before changing files, inspect `git status --short --branch`, the upstream
+relationship, and any nested checkout state. Do not reset, clean, or overwrite
+an existing dirty worktree to make setup easier.
 
 ### 2. **Install Dependencies**
 ```bash
@@ -42,24 +47,24 @@ uv sync
 
 ### 3. **Run Tests**
 ```bash
-# Recommended: match CI (see ../.github/README.md)
+# Focused local contracts; see ../../.github/AGENTS.md for exact hosted CI.
 uv sync
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-fail-under=60 -m "not requires_ollama"
-uv run pytest projects/templates/template_code_project/tests/ --cov=projects/templates/template_code_project/src --cov-fail-under=90 -m "not requires_ollama"
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
+uv run python scripts/pipeline/stage_01_test.py \
+  --project templates/template_code_project --project-only
 ```
 
-Legacy one-liners (without `uv`; not recommended):
-
-```bash
-python -m pytest
-python -m pytest --cov=src --cov-report=html
-```
+Run one project test directory per pytest process. Collecting multiple public
+projects in one process can collide on the shared `tests.conftest` package;
+use the stage runner's isolated all-public matrix when broad coverage is
+needed.
 
 ## 📋 **Contribution Guidelines**
 
 ### 🧪 **Testing Requirements**
 - **90% minimum coverage** for project code, **60% minimum** for infrastructure
-- **All tests must pass** before any changes are accepted
+- **All applicable gates must pass** before changes are accepted; report
+  `failed`, `blocked`, `not run`, and capability-driven skips explicitly
 - **Add tests** for new functionality
 - **Update tests** when fixing bugs
 
@@ -90,10 +95,13 @@ test: add coverage for new statistical functions
 
 ### 1. **Create a Branch**
 ```bash
-git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/issue-description
+git fetch upstream
+git switch -c feature/your-feature-name upstream/main
 ```
+
+If you already have local work, preserve it first and resolve overlap
+deliberately. Do not use a destructive reset or checkout to force the branch
+onto upstream state.
 
 ### 2. **Make Your Changes**
 - **Implement the feature/fix**
@@ -104,20 +112,37 @@ git checkout -b fix/issue-description
 ### 3. **Test Your Changes**
 ```bash
 # Run the full test suite
-uv run python scripts/pipeline/stage_01_test.py --project {name}
+uv run python scripts/pipeline/stage_01_test.py --project templates/{name}
 
-# Check coverage
-uv run pytest tests/infra_tests/ --cov=infrastructure --cov-report=html
+# Run the coverage-bearing infrastructure gate
+uv run python scripts/pipeline/stage_01_test.py --infra-only --infra-scope full
 
 # Test the build pipeline
-uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
+uv run python scripts/runner/execute_pipeline.py --project templates/{name} --core-only
+
+# Documentation, confidentiality, generated-artifact, and no-stand-in gates
+uv run python scripts/audit/lint_docs.py --quiet
+uv run python scripts/audit/check_tracked_all.py
+uv run python scripts/audit/check_tracked_generated_artifacts.py
+uv run python scripts/audit/verify_no_mocks.py
+uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-replacements 0
 ```
+
+The target project's own `AGENTS.md` may require additional analysis,
+rendering, provenance, scholarship, or publication-audit gates. A green core
+pipeline does not by itself establish scientific validity, semantic
+accessibility, release authority, or publication.
 
 ### 4. **Submit a Pull Request**
 - **Clear description** of what the PR accomplishes
 - **Reference any issues** being addressed
 - **Include screenshots** if UI changes
 - **Describe testing** performed
+- **Distinguish results** that passed from gates that were skipped, blocked,
+  unavailable, or not run
+- **Do not include generated/local evidence** merely to make the PR appear
+  current; regenerate only source-owned public artifacts permitted by the
+  repository's tracked-artifact policy
 
 ## 🎯 **What We're Looking For**
 
@@ -165,6 +190,7 @@ maintainer alignment first.
 ## 📚 **Resources**
 
 - **[`../../.github/README.md`](../../.github/README.md)** - GitHub Actions, branch protection, local CI mirror
+- **[`../../.github/AGENTS.md`](../../.github/AGENTS.md)** - exact CI jobs, matrices, and local parity commands
 - **[`contribution-map.md`](contribution-map.md)** - Overlap checks and practical contribution strategy
 - **[`../core/architecture.md`](../core/architecture.md)** - System design overview
 - **[`../core/workflow.md`](../core/workflow.md)** - Development workflow guide

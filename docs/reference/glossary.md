@@ -14,7 +14,10 @@
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: see `pyproject.toml` `[project].version` / the latest git tag for the current package version
 - **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`COUNTS.md`](../_generated/COUNTS.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
-- **Build Pipeline**: Orchestrated sequence from environment setup through copied deliverables. **Core** (`execute_pipeline.py --project {name} --core-only`): eight executor stages by default (clean, setup, infrastructure tests, project tests, analysis, PDF, validate, copy). **Full** adds optional LLM stages before copy. `./run.sh --pipeline` logs main steps as [1/9]–[9/9] with an initial clean line as [0/9]. Canonical stage entrypoints live under `scripts/pipeline/stage_NN_*.py`; project-specific scripts remain under each exemplar's `projects/<name>/scripts/` interface.
+- **Build Pipeline**: Orchestrated DAG from setup through copied deliverables.
+  Selection comes from tags and configuration in `pipeline.yaml`; the current
+  order and failure modes are in the
+  [generated stage table](../core/workflow.md#canonical-stage-table-generated).
 
 ---
 
@@ -44,9 +47,10 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 
 Automated sequence of operations orchestrated by `scripts/runner/execute_pipeline.py` using the declared DAG in `infrastructure/core/pipeline/pipeline.yaml`.
 
-**Core pipeline** (`--core-only`): Clean Output Directories → Environment Setup → Infrastructure Tests → Project Tests → Project Analysis → PDF Rendering → Output Validation → Copy Outputs (8 stages).
-**Full pipeline** (default): adds LLM Scientific Review and LLM Translations stages (10 total).
-**Opt-in stages**: Ebook Generation, Metadata Package, Executable Bundle, and Archival Publication are declared in the DAG for contracts and direct invocation, so `pipeline.yaml` contains 16 stages total.
+`--core-only` selects the core-tagged path. A normal full run can additionally
+select configured LLM stages, while other publication lanes remain opt-in. The
+declarative YAML and generated table are authoritative; avoid copying counts
+into long-lived prose.
 
 See [RUN_GUIDE.md](../RUN_GUIDE.md) for the complete stage reference.
 
@@ -64,7 +68,9 @@ Core algorithms, mathematical functions, and computational methods. Must reside 
 
 Single PDF document containing all manuscript sections in proper order. Generated from individual section PDFs by the build pipeline.
 
-**File**: `output/{name}/pdf/{name}_combined.pdf` (top-level deliverable after copy outputs)
+**File**: `output/<qualified-name>/pdf/<name>_combined.pdf` after the copy stage.
+For example:
+`output/templates/template_code_project/pdf/template_code_project_combined.pdf`.
 
 **See**: [PDF Generation](#pdf-generation)
 
@@ -72,19 +78,21 @@ Single PDF document containing all manuscript sections in proper order. Generate
 
 test coverage required: 90% minimum for project code, 60% minimum for infrastructure. Enforced by build pipeline before PDF generation.
 
-**Check**: `uv run pytest tests/ --cov=src --cov-report=term-missing`
+**Check**: run the infrastructure and selected project suites separately; see
+[RUN_GUIDE.md](../RUN_GUIDE.md) for the current commands.
 
 **See**: [Test Coverage](#test-coverage)
 
 ### Cross-Reference
 
-Internal link between document parts (sections, equations, figures, tables) using LaTeX `\ref{}` and `\eqref{}` commands.
+Internal link between document parts using Pandoc labels and bracket-cite
+references that work across enabled formats.
 
 **Examples**:
 
-- Section: `\ref{sec:methodology}`
-- Equation: `\eqref{eq:objective}`
-- Figure: `\ref{fig:plot}`
+- Section: `[@sec:methodology]`
+- Equation: `[@eq:objective]`
+- Figure: `[@fig:plot]`
 
 **See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
 
@@ -111,17 +119,17 @@ Persistent identifier for academic publications. Optional configuration for the 
 
 ### Equation Environment
 
-LaTeX structure for numbered mathematical equations with labels for cross-referencing.
+Labelled display-math structure for numbered equations and cross-references.
 
 **Syntax**:
 
-```latex
-\begin{equation}\label{eq:name}
+```markdown
+$$
 f(x) = x^2
-\end{equation}
+$$ {#eq:name}
 ```
 
-**Reference**: `\eqref{eq:name}`
+**Reference**: `[@eq:name]`
 
 **See**: [markdown-template-guide.md](../usage/markdown-template-guide.md)
 
@@ -129,7 +137,9 @@ f(x) = x^2
 
 ### Figure Generation
 
-Process of creating visual outputs from data using scripts that follow the thin orchestrator pattern. Figures saved to `output/figures/`.
+Process of creating visual outputs from data using thin analysis scripts.
+Figures and their registry are saved to
+`projects/<qualified-name>/output/figures/`.
 
 **Pattern**: Script imports from `src/` → Uses tested methods → Handles visualization → Saves output
 
@@ -139,7 +149,8 @@ Process of creating visual outputs from data using scripts that follow the thin 
 
 ### Glossary
 
-Auto-generated API reference from `src/` code. Updated automatically during build pipeline.
+Optional API glossary generated from a selected `src/` tree. It is not a
+universal root-pipeline stage unless the project includes that generator.
 
 **File**: `manuscript/98_symbols_glossary.md`
 
@@ -172,7 +183,9 @@ Running matplotlib without display server using `MPLBACKEND=Agg`. Required for C
 
 Single PDF file generated for each manuscript section. Allows focused review of specific sections.
 
-**Location**: `projects/{name}/output/pdf/*.pdf` while building; after copy, `output/{name}/pdf/*.pdf` (see [`docs/RUN_GUIDE.md`](../RUN_GUIDE.md))
+**Location**: `projects/<qualified-name>/output/pdf/*.pdf` while building;
+after copy, `output/<qualified-name>/pdf/*.pdf` (see
+[`RUN_GUIDE.md`](../RUN_GUIDE.md)).
 
 **See**: [PDF Generation](#pdf-generation)
 
@@ -244,9 +257,13 @@ Unique persistent identifier for researchers. Optional configuration for the tem
 
 ### Output Directory
 
-Location where all generated files are placed. **All files are disposable** and can be regenerated.
+Locations where analysis, rendering, validation, and publication artifacts are
+placed. Cleanup is policy-driven; tracked exemplar evidence, checkpoints, and
+release-bound sidecars are not generically disposable.
 
-**Location**: `output/`
+**Locations**: project working output under
+`projects/<qualified-name>/output/`, then selected copied deliverables under
+`output/<qualified-name>/`.
 
 **Subdirectories**: `pdf/`, `figures/`, `data/`, `tex/`
 
@@ -274,7 +291,9 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 Automated checking of generated PDFs for rendering issues, unresolved references, and structural problems.
 
-**Command**: `uv run python scripts/pipeline/stage_04_validate.py` or `uv run python -m infrastructure.validation.cli pdf <path>`
+**Command**:
+`uv run python scripts/pipeline/stage_04_validate.py --project <qualified-name>`
+or `uv run python -m infrastructure.validation.cli pdf <path>`
 
 **Checks**: Unresolved references (??), missing citations, warnings, errors
 
@@ -307,14 +326,15 @@ Configuration information (author, title, DOI, etc.) applied to generated docume
 
 ### Reference System
 
-LaTeX-based cross-referencing that automatically numbers and links sections, equations, figures, and tables.
+Pandoc/pandoc-crossref system that numbers and links sections, equations,
+figures, and tables across enabled formats.
 
 **Types**:
 
-- Sections: `\ref{sec:name}`
-- Equations: `\eqref{eq:name}`
-- Figures: `\ref{fig:name}`
-- Tables: `\ref{tab:name}`
+- Sections: `[@sec:name]`
+- Equations: `[@eq:name]`
+- Figures: `[@fig:name]`
+- Tables: `[@tbl:name]`
 
 **See**: [Cross-Reference](#cross-reference)
 
@@ -374,7 +394,8 @@ Core business logic residing in `src/` directory. Must have test coverage.
 
 Testing metric ensuring every line of code is executed during tests. Project `src/` gates require **≥90%** (see [`docs/_generated/COUNTS.md`](../_generated/COUNTS.md)).
 
-**Check**: Look for lines marked `>>>>>` in coverage report
+**Check**: inspect the terminal report's `Missing` line-number column or the
+HTML coverage report.
 
 **See**: [Test Coverage](#test-coverage)
 
@@ -411,7 +432,8 @@ Percentage of code executed during test runs. This template requires 90% minimum
 - Statement coverage (every line)
 - Branch coverage (every conditional)
 
-**Command**: `uv run pytest tests/ --cov=src --cov-report=term-missing`
+**Command**: run the selected project suite with its project `src/` as the
+coverage target; run infrastructure tests separately.
 
 **See**: [Testing](#testing)
 
@@ -419,7 +441,9 @@ Percentage of code executed during test runs. This template requires 90% minimum
 
 Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
 
-**Status**: Run `uv run pytest tests/infra_tests/ projects/<name>/tests/ --collect-only` to count tests on your checkout.
+**Status**: collect infrastructure and selected-project tests in separate
+pytest invocations; current measured counts live in
+[`COUNTS.md`](../_generated/COUNTS.md).
 
 **Run**: `uv run python scripts/pipeline/stage_01_test.py --project <name>` (or separate infra/project pytest invocations; see [RUN_GUIDE.md](../RUN_GUIDE.md))
 

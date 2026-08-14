@@ -49,12 +49,16 @@ python3 --version   # requires 3.10+  # noqa: docs-lint
 
 ## 2. uv Package Manager
 
-`uv` manages all Python environments. **The pipeline installs it automatically** when called with any
-non-interactive flag (e.g. `--pipeline`). To install manually:
+`uv` manages all Python environments. For pipeline-capable invocations,
+`run.sh` installs the pinned uv release only when it can download the installer
+with `curl` or `wget` and verify it with `shasum` or `sha256sum`. To install
+manually, follow the
+[checksum-verified installation instructions](operational/build/dependency-management.md#installing-uv),
+then run:
 
 ```bash
-Follow the [checksum-verified uv installation instructions](operational/build/dependency-management.md#installing-uv), then run `uv sync`.
 source "$HOME/.local/bin/env"   # add uv to PATH for this session
+uv sync
 ```
 
 For permanent PATH export, add to `~/.bashrc` or `~/.bash_profile`:
@@ -117,27 +121,37 @@ uv sync --group rendering --group monitoring
 
 ## 5. Project-Level Dependencies
 
-Some projects maintain their own virtual environment in `projects/{name}/.venv`. The pipeline handles
-this automatically via `scripts/pipeline/stage_00_setup.py`. To set one up manually:
+Projects with their own `pyproject.toml` can maintain a virtual environment in
+`projects/<scope>/<name>/.venv`. Project-test commands use `uv run --directory`
+and can create/sync that environment from the project lock. Stage 00 syncs the
+root workspace; it does not independently guarantee a project-local venv. To
+prepare one explicitly:
 
 ```bash
-cd projects/my_research
-uv venv
-uv pip install -r requirements.txt   # if present
+uv sync --directory projects/templates/template_code_project --all-extras
 ```
 
-Stage scripts resolve the test/analysis interpreter via
-`infrastructure.core.runtime._python_env.resolve_test_python()` (project `.venv`
-when present and valid, otherwise the workspace interpreter). Root entry points
-(`run.sh`, `secure_run.sh`) use `uv run python -m infrastructure.orchestration`.
-The `get_python_cmd()` helper in `scripts/shell/bash_utils.sh` is the supported path
-for operational shell scripts that source that file directly (backup/health tooling).
+Project tests run through the project-aware pytest command builder. Analysis
+scripts use the project environment when `.venv` exists; otherwise they use the
+workspace interpreter, so a venv-less project's analysis dependencies must also
+be available in the root workspace. Root entry points (`run.sh`,
+`secure_run.sh`) use `uv run python -m infrastructure.orchestration`. The
+`get_python_cmd()` helper in `scripts/shell/bash_utils.sh` is the supported path
+for operational shell scripts that source that file directly (backup/health
+tooling).
 
 ---
 
 ## 6. Running the Pipeline (Non-Interactive)
 
-### Full pipeline (default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **10** core+LLM stages; LLM stages may skip with exit code 2 if Ollama is unavailable; two bundle/archival stages are declared but opt-in)
+### Full pipeline
+
+The default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml)
+declares 16 stages. A normal full run selects 10 core+LLM stages; the two LLM
+stages may soft-skip when Ollama is unavailable. Science/provenance,
+ebook/metadata, and bundle/archival stages are declared but opt-in. Use the
+generated table in [`RUN_GUIDE.md`](RUN_GUIDE.md#core-pipeline-stages--executive-reporting)
+instead of inferring execution order from script-number prefixes.
 
 ```bash
 ./run.sh --pipeline
@@ -192,8 +206,10 @@ export LOG_LEVEL=1             # 0=debug, 1=info, 2=warning (default)
 # Default (unset) is the prefix-less console format described in
 # docs/operational/logging/output-design.md.
 
-# Render formats — opt in / out per format. Yaml config (manuscript/config.yaml
-# under `render.formats:`) takes precedence over env; env overrides defaults.
+# Render formats — opt in / out per format. The public precedence contract is
+# explicit ENABLE_* env > manuscript/config.yaml render.formats > defaults.
+# A known implementation discrepancy currently lets YAML win when both are
+# set; avoid specifying the same format in both places until that is repaired.
 # DOCX and EPUB require pandoc (already installed for HTML/PDF).
 export ENABLE_PDF=1            # default 1 — combined PDF
 export ENABLE_HTML=1           # default 1 — combined + per-section HTML
@@ -339,10 +355,11 @@ The root `.venv` is created by `uv sync`. If it's missing, run:
 uv sync
 ```
 
-Project-level venvs are set up by `scripts/pipeline/stage_00_setup.py`. Run stage 0 manually:
+Stage 00 syncs the root workspace. Prepare a project-local environment with the
+project's own metadata:
 
 ```bash
-uv run python scripts/pipeline/stage_00_setup.py
+uv sync --directory projects/templates/template_code_project --all-extras
 ```
 
 ---

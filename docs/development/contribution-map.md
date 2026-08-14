@@ -21,12 +21,18 @@ Run this minimum check before planning work:
 git status --short --branch
 git diff --name-only
 git ls-files --others --exclude-standard
-gh-axi pr list --limit 20
-gh-axi issue list --limit 30
+git fetch upstream  # if an upstream remote is configured
+gh pr list --repo docxology/template --limit 20
+gh issue list --repo docxology/template --limit 30
 uv run python -m infrastructure.project.public_scope source-paths
 uv run python -m infrastructure.skills operations-list-json
 uv run python -m infrastructure.skills list-json
 ```
+
+The `gh` commands require network access and authentication. If either is
+unavailable, record the overlap check as `unavailable`; do not infer that no PR
+or issue exists. `git fetch` updates remote-tracking refs only—it does not merge
+or overwrite a dirty worktree.
 
 Then inspect the relevant backlog and docs:
 
@@ -80,15 +86,14 @@ Work that needs maintainer alignment before coding:
 
 Areas to avoid unless explicitly assigned:
 
-- Active dirty lanes in `infrastructure/publishing/`,
-  `infrastructure/validation/output/`,
-  `projects/templates/template_gold_refinement/`, and
-  `projects/templates/template_literature_meta_analysis/`.
+- Any path currently modified by another contributor or agent. Re-run
+  `git status`, inspect live PRs, and coordinate ownership; a dated list of
+  "active dirty lanes" becomes false quickly.
 - Generated outputs under `output/templates/` or project-local `output/` unless
-  the matching source producer is being regenerated and verified.
-- Dependency-update overlap with open PR
-  [#32](https://github.com/docxology/template/pull/32), which currently tracks
-  the `actions/checkout` bump to `7.0.0`.
+  the matching source producer is being regenerated, the path is permitted by
+  the tracked-artifact policy, and the source-current candidate is verified.
+- Local-only lifecycle/resource paths under `projects/`, `fonds/`, `rules/`,
+  or `tools/`; only their declared public `templates/` surfaces may be tracked.
 
 ## Extension surface routing
 
@@ -112,20 +117,12 @@ When a future idea is reviewed, answer in this order:
 5. The smallest mergeable contribution shape.
 6. A focused implementation plan only after the overlap risk is checked.
 
-## Current live signals
+## Live signals: derive, do not copy
 
-Last refreshed: 2026-07-05.
-
-- GitHub issues: `0` open via `gh-axi issue list --limit 30`.
-- GitHub PRs: `1` open, Dependabot PR #32 for `actions/checkout` `7.0.0`.
-- Public source scope: `infrastructure` plus the current public exemplar `src`
-  trees via
-  `uv run python -m infrastructure.project.public_scope source-paths`.
-- Skills catalog: 57 entries via `uv run python -m infrastructure.skills list-json`.
-- Operations catalog: 31 entries via
-  `uv run python -m infrastructure.skills operations-list-json`.
-- Package/release boundary: the current root state is documented in
-  [`docs/maintenance/release-boundary.md`](../maintenance/release-boundary.md);
-  do not copy a version literal into this map.
-
-Refresh these before using them in a PR body or committing new roadmap text.
+Issue, PR, skill, operation, project, and release counts are volatile. Derive
+them with the commands above at the moment of review and cite the command,
+checkout revision, and retrieval status in a PR body. Public source scope comes
+from `infrastructure.project.public_scope`; the package/release boundary is
+documented in
+[`docs/maintenance/release-boundary.md`](../maintenance/release-boundary.md).
+An old count or an unsuccessful network query is not current evidence.
