@@ -4,6 +4,7 @@ This module provides functions for validating copied outputs and
 output directory structure.
 """
 
+from collections.abc import Collection
 from pathlib import Path
 from typing import Any, TypedDict
 
@@ -12,6 +13,7 @@ from infrastructure.core.logging.utils import get_logger, log_success
 
 from infrastructure.project.discovery import discover_projects
 from infrastructure.validation.output.layout import OPTIONAL_OUTPUT_SUBDIRS, OUTPUT_SUBDIR_NAMES
+from infrastructure.validation.output.render_formats import validate_enabled_render_outputs
 
 
 class _DirectoryDetail(TypedDict, total=False):
@@ -52,18 +54,31 @@ class ValidationResultDict(TypedDict):
 logger = get_logger(__name__)
 
 
-def validate_copied_outputs(output_dir: Path) -> bool:
+def validate_copied_outputs(
+    output_dir: Path,
+    *,
+    project_name: str | None = None,
+    enabled_formats: Collection[str] | None = None,
+    manuscript_dir: Path | None = None,
+) -> bool:
     """Validate all project outputs were copied successfully.
 
     Checks:
-    - Combined PDF exists at root (preferred) or in pdf/ directory (fallback)
-    - Also checks source directory if copy hasn't happened yet (Stage 6 validation)
+    - When ``enabled_formats`` is supplied, validates exactly those canonical
+      copied artifacts and rejects canonical artifacts for disabled formats.
+    - Otherwise preserves the legacy combined-PDF lookup contract.
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm, logs)
     - Each directory contains files
     - All files are readable
 
     Args:
-        output_dir: Path to top-level output directory
+        output_dir: Path to top-level output directory.
+        project_name: Qualified project name or basename. Defaults to the
+            copied output directory name.
+        enabled_formats: Effective render formats. ``None`` preserves the
+            legacy PDF-only behavior for callers that do not have config.
+        manuscript_dir: Current source manuscript, used to derive exact slide
+            deck names when slides are enabled.
 
     Returns:
         True if validation successful, False if critical files missing
@@ -72,29 +87,51 @@ def validate_copied_outputs(output_dir: Path) -> bool:
 
     validation_passed = True
 
-    # Check combined PDF using shared location logic
-    project_name = output_dir.name if "output" in output_dir.parts else None
-
-    combined_pdf_found = False
-    if project_name:
-        pdf_result = _find_combined_pdf(output_dir, project_name)
-        if pdf_result:
-            _pdf_path, size_mb = pdf_result
-            log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
-            combined_pdf_found = True
-
-    if not combined_pdf_found:
-        logger.error("Combined manuscript PDF missing or empty")
-        if project_name:
-            logger.error(f"  Expected: output/{project_name}/{project_name}_combined.pdf")
-            logger.error(f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf")
-            logger.error(f"  Or in source: projects/{project_name}/output/pdf/{project_name}_combined.pdf")
-            logger.error(f"  Or in WIP source: projects/working/{project_name}/output/pdf/{project_name}_combined.pdf")
+    inferred_project_name = project_name or (output_dir.name if "output" in output_dir.parts else None)
+    if enabled_formats is not None:
+        if inferred_project_name is None:
+            logger.error("Cannot validate configured render outputs without a project name")
+            validation_passed = False
         else:
-            logger.error("  Expected: output/{project_name}_combined.pdf")
-        logger.error("  → PDF rendering stage (Stage 5) may have failed")
-        logger.error("  → Check project output/ directory for the combined PDF")
-        validation_passed = False
+            validation_passed = validate_enabled_render_outputs(
+                output_dir,
+                inferred_project_name,
+                enabled_formats,
+                manuscript_dir=manuscript_dir,
+            )
+    else:
+        # Preserve the historical PDF contract for callers without an
+        # effective render configuration.
+        combined_pdf_found = False
+        if inferred_project_name:
+            pdf_result = _find_combined_pdf(output_dir, inferred_project_name)
+            if pdf_result:
+                _pdf_path, size_mb = pdf_result
+                log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
+                combined_pdf_found = True
+
+        if not combined_pdf_found:
+            logger.error("Combined manuscript PDF missing or empty")
+            if inferred_project_name:
+                logger.error(
+                    f"  Expected: output/{inferred_project_name}/{Path(inferred_project_name).name}_combined.pdf"
+                )
+                logger.error(
+                    f"  Or in: output/{inferred_project_name}/pdf/{Path(inferred_project_name).name}_combined.pdf"
+                )
+                logger.error(
+                    f"  Or in source: projects/{inferred_project_name}/output/pdf/"
+                    f"{Path(inferred_project_name).name}_combined.pdf"
+                )
+                logger.error(
+                    f"  Or in WIP source: projects/working/{inferred_project_name}/output/pdf/"
+                    f"{Path(inferred_project_name).name}_combined.pdf"
+                )
+            else:
+                logger.error("  Expected: output/{project_name}_combined.pdf")
+            logger.error("  → PDF rendering stage may have failed")
+            logger.error("  → Check project output/ directory for the combined PDF")
+            validation_passed = False
 
     # Check all expected subdirectories
     expected_dirs = {
@@ -236,7 +273,11 @@ def validate_root_output_structure(repo_root: Path) -> dict[str, Any]:
     return report
 
 
-def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDict:
+def collect_detailed_validation_results(
+    output_dir: Path,
+    *,
+    require_pdf: bool = True,
+) -> ValidationResultDict:
     """Collect detailed validation results for reporting.
 
     Provides comprehensive validation data including file counts, sizes,
@@ -244,6 +285,8 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
 
     Args:
         output_dir: Path to output directory
+        require_pdf: Whether the effective render configuration requires a PDF
+            deliverable.
 
     Returns:
         Dictionary with detailed validation results:
@@ -255,7 +298,7 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
         - recommendations: Actionable recommendations
     """
     validation_results: ValidationResultDict = {
-        "structure": validate_output_structure(output_dir),
+        "structure": validate_output_structure(output_dir, require_pdf=require_pdf),
         "directories": {},
         "file_counts": {},
         "total_size_mb": 0.0,
@@ -349,18 +392,19 @@ def collect_detailed_validation_results(output_dir: Path) -> ValidationResultDic
     return validation_results
 
 
-def validate_output_structure(output_dir: Path) -> OutputStructureResult:
+def validate_output_structure(output_dir: Path, *, require_pdf: bool = True) -> OutputStructureResult:
     """Validate complete output directory structure.
 
     Checks:
     - Output directory exists
-    - Combined PDF exists and is > 100KB (should be substantial)
+    - When ``require_pdf`` is true, a combined PDF exists and is > 100KB
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm, logs)
     - Each subdirectory contains files
     - All files are readable
 
     Args:
         output_dir: Path to top-level output directory
+        require_pdf: Whether the effective format configuration requires PDF.
 
     Returns:
         Dictionary with structure validation results
@@ -410,7 +454,7 @@ def validate_output_structure(output_dir: Path) -> OutputStructureResult:
     pdf_file = None
     pdf_size_mb = 0.0
 
-    if project_name:
+    if require_pdf and project_name:
         pdf_result = _find_combined_pdf(output_dir, project_name)
         if pdf_result:
             pdf_file, pdf_size_mb = pdf_result
@@ -420,7 +464,7 @@ def validate_output_structure(output_dir: Path) -> OutputStructureResult:
                 result["suspicious_sizes"].append(f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB")
         else:
             result["missing_files"].append(f"{project_name}_combined.pdf")
-    else:
+    elif require_pdf:
         logger.debug("No project name detected in directory structure, skipping specific PDF validation")
 
     # Populate directory structure metadata
@@ -432,12 +476,14 @@ def validate_output_structure(output_dir: Path) -> OutputStructureResult:
             "readable": pdf_file.is_file(),
         }
     else:
-        result["valid"] = False
         result["directory_structure"][pdf_key] = {
             "exists": False,
             "size_mb": 0.0,
             "readable": False,
+            "required": require_pdf,
         }
+        if require_pdf:
+            result["valid"] = False
 
     for subdir_name in OUTPUT_SUBDIR_NAMES:
         subdir = output_dir / subdir_name

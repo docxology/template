@@ -1106,7 +1106,7 @@ The discussion ontology binds `coverage_semantics` to the audit matrix in [@sec:
 
 <!-- sheaf-track:simulation -->
 
-Measured pymdp rollout (`state_inference`, config hash `81eb061f43b7bfd7`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
+Measured pymdp rollout (`state_inference`, config hash `133a13df72cfd8d8`): mean belief entropy 0.3251 nats over 2 steps; goal reached flag 1; action diversity 2.
 
 Analytical sweep residual RMSE 0 nats (max residual 0). Coverage audit: 95 present / 95 bound / 0 missing cells on the IMRAD matrix.
 
@@ -1514,7 +1514,7 @@ blocked-scope status, with all-attested flag `true`.
 
 Analytical oracles ([@sec:methods_analytical]), pymdp rollouts ([@sec:results_si_tmaze]), and sheaf composition ([@sec:methods_sheaf]) share one auditable manuscript contract: measured artifacts hydrate 12 composed sections, [@sec:sheaf_coverage] reports binding state, and strict compose validation blocks gray matrix cells before PDF rendering.
 
-The T-maze harness runs in `state_inference` mode with config hash `81eb061f43b7bfd7`; sweep RMSE 0 nats summarizes analytical-empirical agreement on the toy coupling grid. [@sec:results_invariants] merges analytical and simulation gates; [@sec:discussion_outlook] states scope and extensions. Scientific claims remain confined to declared models, not empirical statements about biological agents [@gershman2019fepbrain].
+The T-maze harness runs in `state_inference` mode with config hash `133a13df72cfd8d8`; sweep RMSE 0 nats summarizes analytical-empirical agreement on the toy coupling grid. [@sec:results_invariants] merges analytical and simulation gates; [@sec:discussion_outlook] states scope and extensions. Scientific claims remain confined to declared models, not empirical statements about biological agents [@gershman2019fepbrain].
 
 The exemplar therefore sits at a narrow intersection: finite discrete active inference on POMDP-like toy models [@dacosta2020discrete; @friston2021sophisticated; @dacosta2023reward], sheaf-style local-to-global checks for publication artifacts [@curry2014sheaves; @robinson2014topological], and GNN notation as an interop layer [@gnn2023].
 

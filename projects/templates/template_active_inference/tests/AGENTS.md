@@ -61,17 +61,26 @@ status table leak into later checks. Never `git commit -a` a degraded status
 table after a run.
 
 Run full verification from this project root:
-`uv run python scripts/run_full_verification.py`. It runs gate-heavy coverage in
+`uv run --extra dev python scripts/run_full_verification.py`. It runs gate-heavy coverage in
 separate pytest processes and appends coverage into one final 90% gate. Use
 focused `-q` commands only for package-local development loops. The legacy
 single-process coverage run is available as `--monolithic-coverage` for
 diagnostics only.
 
-The root project-test stage skips `long_running` tests by default, even when
-`--include-slow` is set, so template CI and local smoke loops do not rerun every
-deep negative-control regeneration. Use
-`uv run python scripts/pipeline/stage_01_test.py --project templates/template_active_inference --project-only --include-slow --include-long-running`
-for an intentional deep gate refresh.
+The project `pyproject.toml` explicitly assigns that command to the
+single-project template Stage-01 lane. The adapter does not infer it from the
+filename and does not lower the floor: it requires a fresh nonce-bound receipt,
+aggregates real JUnit outcomes from the final coverage groups once, and reads
+the resulting coverage database independently. The all-project union runner
+continues to use its isolated generic pytest policy; GitHub's per-project
+public matrix invokes this single-project contract.
+
+Generic Stage-01 profile flags do not silently rewrite a project's declared
+argv. For an intentional bounded direct loop use
+`uv run --extra dev python scripts/run_full_verification.py --profile quick`; use
+`--profile release` or `--profile exhaustive` explicitly when that selection is
+the intended evidence. The declared pipeline command omits `--profile` and
+therefore preserves this project's historical comprehensive selection.
 
 Standard pytest expects the committed gate-artifact snapshot under `output/` to
 be present and semantically current. It fails fast when the snapshot is stale

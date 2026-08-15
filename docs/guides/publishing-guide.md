@@ -200,6 +200,16 @@ tarball = prepare_arxiv_submission(output_dir, metadata)
 print(f"Submission package: {tarball}")
 ```
 
+Run this only after the final render. The packager prefers the persisted
+`output/pdf/_combined_manuscript.tex`, includes its stem-matched `.bbl`,
+rendered bibliography and figures, and fails rather than creating a
+references-only archive. Pin `SOURCE_DATE_EPOCH` for a byte-reproducible UTC
+date name and archive. A public tracked package changes the stable output tree,
+so refresh its artifact manifest and rerun Stage 4 afterward; Stage 4 refreshes
+both validation and rendered provenance. See
+[`infrastructure/publishing/arxiv/README.md`](../../infrastructure/publishing/arxiv/README.md)
+for the exact producer order and Active Inference example.
+
 ---
 
 ## GitHub Releases

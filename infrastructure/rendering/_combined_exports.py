@@ -16,7 +16,13 @@ from infrastructure.core.logging.diagnostic import DiagnosticReporter, Diagnosti
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering import RenderManager
+from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
+from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_markdown
+from infrastructure.rendering._pdf_combined_prevalidate import prevalidate_for_render
+from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
+from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
+from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 
 logger = get_logger(__name__)
 
@@ -79,12 +85,74 @@ def combined_source_files(md_files: list[Path]) -> list[Path]:
 html_combined_source_files = combined_source_files
 
 
+def _project_root_for_manuscript(manuscript_dir: Path) -> Path:
+    """Resolve the owning project root for source or injected manuscripts."""
+
+    if manuscript_dir.name == "manuscript" and manuscript_dir.parent.name == "output":
+        return manuscript_dir.parent.parent
+    if manuscript_dir.name == "manuscript" and manuscript_dir.parent.name == "docs":
+        return manuscript_dir.parent.parent
+    return manuscript_dir.parent
+
+
+def prepare_shared_combined_markdown(
+    manager: RenderManager,
+    md_files: list[Path],
+    manuscript_dir: Path,
+    project_name: str,
+) -> Path:
+    """Write a current combined source for exports and provenance.
+
+    DOCX and EPUB must not depend on a prior PDF run. The shared source is
+    rebuilt from the exact ordered manuscript inputs, receives the same generic
+    preprocessing as the combined PDF, and is bound to the composition receipt.
+    PDF-only and slides-only runs also use it because the HTML renderer is not
+    present to emit the cross-format composition evidence in those lanes.
+    """
+
+    source_files = combined_source_files(md_files)
+    if not source_files:
+        raise RenderingError("Cannot prepare combined manuscript without current Markdown inputs")
+    profile = manager.config.security()
+    for source_file in source_files:
+        profile.validate_source(source_file)
+    prevalidate_for_render(source_files, bib_file=None)
+
+    project_config, _ = _load_render_config(manuscript_dir)
+    combined_content = combine_manuscript_markdown_sections(
+        source_files,
+        section_breaks=_rendering_options(project_config)["section_breaks"],
+    )
+    combined_content = preprocess_combined_markdown(
+        combined_content,
+        manuscript_dir=manuscript_dir,
+    ).content
+
+    project_root = _project_root_for_manuscript(manuscript_dir)
+    combined_path = project_root / "output" / "web" / "_combined_manuscript.md"
+    profile.validate_output(combined_path)
+    combined_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = combined_path.with_suffix(combined_path.suffix + ".tmp")
+    try:
+        temporary.write_text(combined_content, encoding="utf-8")
+        temporary.replace(combined_path)
+    except OSError:
+        temporary.unlink(missing_ok=True)
+        raise
+    write_manuscript_composition(
+        project_root,
+        project_name,
+        source_files,
+        combined_path,
+        algorithm="shared-combined-markdown-v1",
+    )
+    logger.info("Prepared shared combined manuscript: %s", combined_path)
+    return combined_path
+
+
 def resolve_combined_markdown(manuscript_dir: Path) -> Path | None:
     """Find the combined-manuscript markdown produced by the combined-PDF pipeline."""
-    if manuscript_dir.name == "manuscript" and manuscript_dir.parent.name == "output":
-        project_root = manuscript_dir.parent.parent
-    else:
-        project_root = manuscript_dir.parent
+    project_root = _project_root_for_manuscript(manuscript_dir)
     candidates = [
         project_root / "output" / "pdf" / "_combined_manuscript.md",
         project_root / "output" / "tex" / "_combined_manuscript.md",
@@ -95,22 +163,18 @@ def resolve_combined_markdown(manuscript_dir: Path) -> Path | None:
     return None
 
 
-def resolve_bibliography(manuscript_dir: Path) -> Path | None:
-    """Return the first .bib in the manuscript dir, or None if not found."""
-    bibs = sorted(manuscript_dir.glob("*.bib"))
-    return bibs[0] if bibs else None
-
-
 def render_combined_docx(
     manager: RenderManager,
     manuscript_dir: Path,
     project_name: str,
     reporter: DiagnosticReporter,
+    *,
+    combined_md: Path | None = None,
 ) -> None:
     """Render the combined DOCX from the preprocessed combined markdown."""
     from infrastructure.rendering.docx_renderer import render_docx
 
-    combined_md = resolve_combined_markdown(manuscript_dir)
+    combined_md = combined_md or resolve_combined_markdown(manuscript_dir)
     if combined_md is None:
         logger.warning(
             "[skip] DOCX rendering: no combined markdown found (combined-PDF stage may have been skipped or failed)"
@@ -119,8 +183,8 @@ def render_combined_docx(
 
     docx_dir = Path(manager.config.docx_dir)
     docx_dir.mkdir(parents=True, exist_ok=True)
-    out_path = docx_dir / f"{project_name}_combined.docx"
-    bibliography = resolve_bibliography(manuscript_dir)
+    out_path = docx_dir / f"{Path(project_name).name}_combined.docx"
+    bibliographies = resolve_bibliography(manuscript_dir)
 
     # Image refs in the combined markdown are written as ``figures/<name>``, so
     # the resource path must be the *parent* of the figures dir (e.g. ``output/``),
@@ -140,8 +204,9 @@ def render_combined_docx(
         extra_args.extend(["--filter", crossref])
     else:
         logger.warning("pandoc-crossref not on PATH; DOCX @fig:/@sec:/@tbl:/@eq: will not resolve.")
-    if bibliography is not None:
-        extra_args.extend(["--citeproc", f"--bibliography={bibliography}"])
+    if bibliographies:
+        extra_args.append("--citeproc")
+        extra_args.extend(pandoc_bibliography_args(bibliographies))
 
     import yaml as _yaml
     from infrastructure.rendering._pdf_title_page import _load_render_config, build_pandoc_metadata
@@ -179,6 +244,7 @@ def render_combined_epub(
     project_name: str,
     reporter: DiagnosticReporter,
     *,
+    combined_md: Path | None = None,
     epub_renderer: Callable[..., Any] | None = None,
 ) -> None:
     """Render the combined EPUB from the preprocessed combined markdown."""
@@ -187,7 +253,7 @@ def render_combined_epub(
 
         epub_renderer = render_epub
 
-    combined_md = resolve_combined_markdown(manuscript_dir)
+    combined_md = combined_md or resolve_combined_markdown(manuscript_dir)
     if combined_md is None:
         logger.warning(
             "[skip] EPUB rendering: no combined markdown found (combined-PDF stage may have been skipped or failed)"
@@ -196,8 +262,8 @@ def render_combined_epub(
 
     epub_dir = Path(manager.config.epub_dir)
     epub_dir.mkdir(parents=True, exist_ok=True)
-    out_path = epub_dir / f"{project_name}_combined.epub"
-    bibliography = resolve_bibliography(manuscript_dir)
+    out_path = epub_dir / f"{Path(project_name).name}_combined.epub"
+    bibliographies = resolve_bibliography(manuscript_dir)
 
     # Same resolution contract as DOCX: image refs are ``figures/<name>``, so the
     # figures dir's parent must be on the resource path or pandoc silently drops them.
@@ -220,8 +286,9 @@ def render_combined_epub(
         extra_args.extend(["--filter", crossref])
     else:
         logger.warning("pandoc-crossref not on PATH; EPUB @fig:/@sec:/@tbl:/@eq: will not resolve.")
-    if bibliography is not None:
-        extra_args.extend(["--citeproc", f"--bibliography={bibliography}"])
+    if bibliographies:
+        extra_args.append("--citeproc")
+        extra_args.extend(pandoc_bibliography_args(bibliographies))
 
     from infrastructure.rendering._pdf_title_page import (
         _cover_image_path,
@@ -324,12 +391,38 @@ def render_combined_outputs(
     else:
         logger.info("[skip] HTML rendering disabled in config (render.formats.html=false)")
 
+    shared_combined_md: Path | None = None
+    needs_shared_evidence = (
+        config.enable_docx
+        or config.enable_epub
+        or (not config.enable_html and (config.enable_pdf or config.enable_slides))
+    )
+    if md_files and needs_shared_evidence:
+        shared_combined_md = prepare_shared_combined_markdown(
+            manager,
+            md_files,
+            manuscript_dir,
+            project_name,
+        )
+
     if config.enable_docx:
-        render_combined_docx(manager, manuscript_dir, project_name, reporter)
+        render_combined_docx(
+            manager,
+            manuscript_dir,
+            project_name,
+            reporter,
+            combined_md=shared_combined_md,
+        )
     else:
         logger.debug("[skip] DOCX rendering disabled in config (default; render.formats.docx=true to enable)")
 
     if config.enable_epub:
-        render_combined_epub(manager, manuscript_dir, project_name, reporter)
+        render_combined_epub(
+            manager,
+            manuscript_dir,
+            project_name,
+            reporter,
+            combined_md=shared_combined_md,
+        )
     else:
         logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")

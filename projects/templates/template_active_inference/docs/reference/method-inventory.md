@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 820
+Total documented definitions: 830
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -571,20 +571,24 @@ Total documented definitions: 820
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 19 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:19`. |
-| 34 | `function` | `_project_state_fingerprint` | docstring | Return a deterministic source/output fingerprint for refresh caching. |
-| 61 | `function` | `_generator_name` | docstring | Return the refreshable script name in a command, if any. |
-| 72 | `class` | `_RefreshCache` | docstring | In-run fixed-point cache for idempotent generator commands. |
-| 75 | `function` | `_RefreshCache.__init__` | docstring | Initialize an empty in-run refresh cache. |
-| 81 | `function` | `_RefreshCache.run` | docstring | Run a generator command, skipping it when the project state is unchanged. |
-| 125 | `function` | `_RefreshCache.receipt` | docstring | Return timing/cache evidence without making a performance claim. |
-| 150 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:150`. |
-| 154 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:154`. |
-| 192 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:192`. |
-| 199 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
-| 223 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:223`. |
-| 244 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:244`. |
-| 289 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
+| 34 | `function` | `_relative_test_path` | inventory fallback | Inventory fallback for function `_relative_test_path` defined at `src/orchestration/full_verification.py:34`. |
+| 49 | `function` | `_project_state_fingerprint` | docstring | Return a deterministic source/output fingerprint for refresh caching. |
+| 76 | `function` | `_generator_name` | docstring | Return the refreshable script name in a command, if any. |
+| 87 | `class` | `_RefreshCache` | docstring | In-run fixed-point cache for idempotent generator commands. |
+| 90 | `function` | `_RefreshCache.__init__` | docstring | Initialize an empty in-run refresh cache. |
+| 96 | `function` | `_RefreshCache.run` | docstring | Run a generator command, skipping it when the project state is unchanged. |
+| 140 | `function` | `_RefreshCache.receipt` | docstring | Return timing/cache evidence without making a performance claim. |
+| 165 | `function` | `_all_test_modules` | inventory fallback | Inventory fallback for function `_all_test_modules` defined at `src/orchestration/full_verification.py:165`. |
+| 169 | `function` | `_chunked_test_groups` | inventory fallback | Inventory fallback for function `_chunked_test_groups` defined at `src/orchestration/full_verification.py:169`. |
+| 207 | `function` | `_coverage_test_groups` | inventory fallback | Inventory fallback for function `_coverage_test_groups` defined at `src/orchestration/full_verification.py:207`. |
+| 214 | `function` | `_profile_marker_args` | docstring | Return additive pytest selection args for a named verification profile. |
+| 238 | `function` | `_coverage_command` | inventory fallback | Inventory fallback for function `_coverage_command` defined at `src/orchestration/full_verification.py:238`. |
+| 269 | `function` | `_project_test_receipt_context` | docstring | Return the Stage-01 receipt context, if the generic runner requested one. |
+| 285 | `function` | `_junit_outcomes` | docstring | Aggregate the final coverage groups' real JUnit outcomes once. |
+| 321 | `function` | `_pytest_evidence` | docstring | Return aggregate warning and discovery counts from pytest sidecars. |
+| 347 | `function` | `_write_project_test_receipt` | docstring | Write a nonce-bound receipt for the generic Stage-01 adapter. |
+| 385 | `function` | `_run` | inventory fallback | Inventory fallback for function `_run` defined at `src/orchestration/full_verification.py:385`. |
+| 441 | `function` | `run_verification` | docstring | Run verification, optionally applying a typed pytest profile. |
 
 ## `src/orchestration/pipeline_manifest.py`
 
@@ -597,9 +601,14 @@ Total documented definitions: 820
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 21 | `class` | `PortableSubprocessResult` | docstring | Result of one bounded standalone subprocess. |
-| 31 | `function` | `build_bounded_env` | docstring | Return an environment without credential-shaped variable names. |
-| 38 | `function` | `run_bounded_subprocess` | docstring | Run a command in a process group and kill descendants on timeout. |
+| 22 | `class` | `PortableSubprocessResult` | docstring | Result of one bounded standalone subprocess. |
+| 35 | `function` | `build_bounded_env` | docstring | Return an environment without credential-shaped variable names. |
+| 42 | `function` | `run_bounded_subprocess` | docstring | Run a command in a process group and kill descendants on timeout. |
+| 97 | `function` | `_timeout_output_text` | docstring | Normalize ``TimeoutExpired`` partial output across Python versions. |
+| 104 | `function` | `_terminate_process_tree` | docstring | Kill a standalone runner and descendants that created new sessions. |
+| 134 | `function` | `_posix_descendant_pids` | docstring | Return descendants of *root_pid* from one portable process-table scan. |
+| 170 | `function` | `_terminate_tagged_processes` | docstring | Kill surviving descendants by inherited bounded-run identity. |
+| 190 | `function` | `_tagged_process_pids` | docstring | Return same-user processes whose environment contains *run_token*. |
 
 ## `src/roadmap_tracks/figure_provenance.py`
 
@@ -937,31 +946,32 @@ Total documented definitions: 820
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 46 | `function` | `_word_count` | inventory fallback | Inventory fallback for function `_word_count` defined at `src/roadmap_tracks/visualization_audit.py:46`. |
-| 50 | `function` | `_image_metrics` | inventory fallback | Inventory fallback for function `_image_metrics` defined at `src/roadmap_tracks/visualization_audit.py:50`. |
-| 65 | `function` | `_statistical_sources` | inventory fallback | Inventory fallback for function `_statistical_sources` defined at `src/roadmap_tracks/visualization_audit.py:65`. |
-| 70 | `function` | `_all_sources_present` | inventory fallback | Inventory fallback for function `_all_sources_present` defined at `src/roadmap_tracks/visualization_audit.py:70`. |
-| 74 | `function` | `_figure_section_bindings` | inventory fallback | Inventory fallback for function `_figure_section_bindings` defined at `src/roadmap_tracks/visualization_audit.py:74`. |
-| 93 | `function` | `_section_id_from_path` | inventory fallback | Inventory fallback for function `_section_id_from_path` defined at `src/roadmap_tracks/visualization_audit.py:93`. |
-| 103 | `function` | `_imrad_section_files` | docstring | Read every IMRaD manuscript markdown file once: ``(section_id, text)`` pairs. |
-| 124 | `function` | `_figure_reference_sections` | inventory fallback | Inventory fallback for function `_figure_reference_sections` defined at `src/roadmap_tracks/visualization_audit.py:124`. |
-| 131 | `function` | `_manifest_section_tracks` | inventory fallback | Inventory fallback for function `_manifest_section_tracks` defined at `src/roadmap_tracks/visualization_audit.py:131`. |
-| 149 | `function` | `_reference_section_status` | inventory fallback | Inventory fallback for function `_reference_section_status` defined at `src/roadmap_tracks/visualization_audit.py:149`. |
-| 159 | `function` | `_figure_evidence_rows` | docstring | Derive live figure evidence rows from registry, source maps, hashes, and renders. |
-| 247 | `function` | `build_visualization_quality_audit` | docstring | Build figure accessibility, source, hash, and render-readiness rows. |
-| 293 | `function` | `write_visualization_quality_audit` | docstring | Write the deterministic visualization-quality audit report. |
-| 304 | `function` | `build_statistical_visualization_bridge` | docstring | Build the crosswalk from statistical figure rows to scholarship and sheaf bindings. |
-| 404 | `function` | `write_statistical_visualization_bridge` | docstring | Write the statistical-visualization scholarship/sheaf crosswalk. |
-| 415 | `function` | `validate_visualization_quality_audit` | docstring | Validate the saved visualization-quality audit against its row evidence. |
-| 588 | `function` | `validate_statistical_visualization_bridge` | docstring | Validate the saved statistical visualization crosswalk against row evidence. |
+| 50 | `function` | `_word_count` | inventory fallback | Inventory fallback for function `_word_count` defined at `src/roadmap_tracks/visualization_audit.py:50`. |
+| 54 | `function` | `_image_metrics` | inventory fallback | Inventory fallback for function `_image_metrics` defined at `src/roadmap_tracks/visualization_audit.py:54`. |
+| 69 | `function` | `_statistical_sources` | inventory fallback | Inventory fallback for function `_statistical_sources` defined at `src/roadmap_tracks/visualization_audit.py:69`. |
+| 74 | `function` | `_all_sources_present` | inventory fallback | Inventory fallback for function `_all_sources_present` defined at `src/roadmap_tracks/visualization_audit.py:74`. |
+| 78 | `function` | `_figure_section_bindings` | inventory fallback | Inventory fallback for function `_figure_section_bindings` defined at `src/roadmap_tracks/visualization_audit.py:78`. |
+| 97 | `function` | `_section_id_from_path` | inventory fallback | Inventory fallback for function `_section_id_from_path` defined at `src/roadmap_tracks/visualization_audit.py:97`. |
+| 107 | `function` | `_imrad_section_files` | docstring | Read every IMRaD manuscript markdown file once: ``(section_id, text)`` pairs. |
+| 128 | `function` | `_figure_reference_sections` | inventory fallback | Inventory fallback for function `_figure_reference_sections` defined at `src/roadmap_tracks/visualization_audit.py:128`. |
+| 135 | `function` | `_manifest_section_tracks` | inventory fallback | Inventory fallback for function `_manifest_section_tracks` defined at `src/roadmap_tracks/visualization_audit.py:135`. |
+| 153 | `function` | `_reference_section_status` | inventory fallback | Inventory fallback for function `_reference_section_status` defined at `src/roadmap_tracks/visualization_audit.py:153`. |
+| 163 | `function` | `_figure_evidence_rows` | docstring | Derive live figure evidence rows from registry, source maps, hashes, and renders. |
+| 251 | `function` | `build_visualization_quality_audit` | docstring | Build figure accessibility, source, hash, and render-readiness rows. |
+| 297 | `function` | `write_visualization_quality_audit` | docstring | Write the deterministic visualization-quality audit report. |
+| 308 | `function` | `build_statistical_visualization_bridge` | docstring | Build the crosswalk from statistical figure rows to scholarship and sheaf bindings. |
+| 408 | `function` | `write_statistical_visualization_bridge` | docstring | Write the statistical-visualization scholarship/sheaf crosswalk. |
+| 419 | `function` | `validate_visualization_quality_audit` | docstring | Validate the saved visualization-quality audit against its row evidence. |
+| 592 | `function` | `validate_statistical_visualization_bridge` | docstring | Validate the saved statistical visualization crosswalk against row evidence. |
 
 ## `src/roadmap_tracks/visualization_contract.py`
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 61 | `function` | `_visualization_source_files` | inventory fallback | Inventory fallback for function `_visualization_source_files` defined at `src/roadmap_tracks/visualization_contract.py:61`. |
-| 65 | `function` | `build_style_contract` | docstring | Build a live typography-token and source-literal contract. |
-| 110 | `function` | `build_auxiliary_visualization_inventory` | docstring | Inventory visual files intentionally outside the numbered figure registry. |
+| 65 | `function` | `_visualization_source_files` | inventory fallback | Inventory fallback for function `_visualization_source_files` defined at `src/roadmap_tracks/visualization_contract.py:65`. |
+| 69 | `function` | `build_style_contract` | docstring | Build a live typography-token and source-literal contract. |
+| 114 | `function` | `build_auxiliary_visualization_inventory` | docstring | Inventory visual files intentionally outside the numbered figure registry. |
+| 162 | `function` | `auxiliary_visualization_rows_match` | docstring | Compare auxiliary evidence without treating PNG compression size as content. |
 
 ## `src/simulation/cue_tmaze_model.py`
 

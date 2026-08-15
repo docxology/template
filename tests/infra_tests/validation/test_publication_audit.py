@@ -143,6 +143,38 @@ def test_publication_audit_flags_missing_project_skill(tmp_path: Path) -> None:
     assert "PUBLICATION.PROJECT_SKILL_MISSING" in codes
 
 
+def test_publication_audit_requires_alt_for_tagged_pdf_cover(tmp_path: Path) -> None:
+    project = make_project(tmp_path, "template_test", program="templates", with_manuscript=True)
+    config_path = project / "manuscript" / "config.yaml"
+    config_path.write_text(
+        "paper:\n  title: Tagged paper\n  cover:\n    image: cover.png\nmetadata:\n  tagged_pdf: true\n",
+        encoding="utf-8",
+    )
+
+    missing_alt = build_publication_audit(
+        tmp_path,
+        ["templates/template_test"],
+        rendered=False,
+        include_drift=False,
+    )
+
+    assert "PUBLICATION.COVER_ACCESSIBILITY" in {finding.diagnostic_code for finding in missing_alt.blocking_findings}
+
+    with_alt = config_path.read_text(encoding="utf-8").replace(
+        "    image: cover.png\n",
+        "    image: cover.png\n    alt: A source-bound cover.\n",
+    )
+    config_path.write_text(with_alt, encoding="utf-8")
+    complete = build_publication_audit(
+        tmp_path,
+        ["templates/template_test"],
+        rendered=False,
+        include_drift=False,
+    )
+
+    assert "PUBLICATION.COVER_ACCESSIBILITY" not in {finding.diagnostic_code for finding in complete.blocking_findings}
+
+
 def test_publication_audit_flags_missing_project(tmp_path: Path) -> None:
     (tmp_path / "projects").mkdir()
     report = build_publication_audit(

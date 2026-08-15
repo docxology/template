@@ -8,6 +8,7 @@ The reporting module provides reporting capabilities for pipeline execution, inc
 
 - Consolidated pipeline reports (JSON, HTML, Markdown)
 - Test results reporting
+- Fail-closed structured receipts for explicitly declared chunked project verifiers
 - Validation reports with actionable recommendations
 - Performance metrics and analysis
 - Error aggregation and categorization

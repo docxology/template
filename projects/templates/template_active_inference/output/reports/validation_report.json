@@ -1,6 +1,7 @@
 {
   "checks": {
     "Artifact manifest": true,
+    "Enabled render outputs": true,
     "Evidence registry": true,
     "Figure registry": true,
     "Markdown validation": true,
@@ -13,7 +14,7 @@
   "output_statistics": {
     "data": {
       "files": 48,
-      "size_mb": 2.7922468185424805
+      "size_mb": 2.792276382446289
     },
     "detailed_validation": {
       "directories": {
@@ -30,36 +31,39 @@
           "size_mb": "3.79"
         },
         "llm": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
+          "largest_file": null,
           "size_mb": "0.00"
         },
         "logs": {
           "exists": true,
-          "file_count": 1,
+          "file_count": 2,
           "largest_file": "pymdp_runs.jsonl",
           "size_mb": "0.00"
         },
         "pdf": {
           "exists": true,
-          "file_count": 1,
+          "file_count": 10,
           "largest_file": "template_active_inference_combined.pdf",
-          "size_mb": "4.03"
+          "size_mb": "4.45"
         },
         "reports": {
           "exists": true,
-          "file_count": 39,
+          "file_count": 56,
           "largest_file": "evidence_registry.json",
-          "size_mb": "0.53"
+          "size_mb": "0.70"
         },
         "simulations": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
+          "largest_file": null,
           "size_mb": "0.00"
         },
         "slides": {
-          "exists": false,
+          "exists": true,
           "file_count": 0,
+          "largest_file": null,
           "size_mb": "0.00"
         },
         "web": {
@@ -72,19 +76,20 @@
       "file_counts": {
         "data": 48,
         "figures": 27,
-        "logs": 1,
-        "pdf": 1,
-        "reports": 39,
+        "llm": 0,
+        "logs": 2,
+        "pdf": 10,
+        "reports": 56,
+        "simulations": 0,
+        "slides": 0,
         "web": 19
       },
       "issues_by_severity": {
         "critical": [],
-        "info": [],
-        "warning": [
-          "Directory 'slides/' missing or empty",
-          "Directory 'simulations/' missing or empty",
-          "Directory 'llm/' missing or empty"
-        ]
+        "info": [
+          "slides/ directory is empty"
+        ],
+        "warning": []
       },
       "recommendations": [],
       "structure": {
@@ -92,7 +97,7 @@
           "combined_pdf": {
             "exists": true,
             "readable": true,
-            "size_mb": 4.03
+            "size_mb": 3.91
           },
           "data": {
             "exists": true,
@@ -109,42 +114,45 @@
             "size_mb": 3.79
           },
           "llm": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "optional": true,
+            "readable": true,
             "size_mb": 0.0
           },
           "logs": {
             "exists": true,
-            "files": 1,
+            "files": 2,
             "optional": true,
             "readable": true,
             "size_mb": 0.0
           },
           "pdf": {
             "exists": true,
-            "files": 1,
+            "files": 10,
             "optional": false,
             "readable": true,
-            "size_mb": 4.03
+            "size_mb": 4.45
           },
           "reports": {
             "exists": true,
-            "files": 39,
+            "files": 56,
             "optional": false,
             "readable": true,
-            "size_mb": 0.53
+            "size_mb": 0.7
           },
           "simulations": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "optional": true,
+            "readable": true,
             "size_mb": 0.0
           },
           "slides": {
-            "exists": false,
+            "exists": true,
             "files": 0,
             "optional": false,
+            "readable": true,
             "size_mb": 0.0
           },
           "web": {
@@ -155,23 +163,23 @@
             "size_mb": 0.66
           }
         },
-        "issues": [
-          "Missing directory: slides/"
-        ],
+        "issues": [],
         "missing_files": [],
-        "suspicious_sizes": [],
+        "suspicious_sizes": [
+          "slides/ directory is empty"
+        ],
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 11.796080589294434
+      "total_size_mb": 12.37891960144043
     },
     "figures": {
       "files": 27,
-      "size_mb": 3.785637855529785
+      "size_mb": 3.785647392272949
     },
     "pdf": {
-      "files": 1,
-      "size_mb": 4.033787727355957
+      "files": 10,
+      "size_mb": 4.4469099044799805
     }
   },
   "recommendations": [],
@@ -179,24 +187,24 @@
     "all_passed": true,
     "failed": 0,
     "figure_issues_count": 0,
-    "passed": 8,
-    "total_checks": 8
+    "passed": 9,
+    "total_checks": 9
   },
-  "timestamp": "2026-08-09T07:25:09Z",
+  "timestamp": "2026-08-14T14:20:53Z",
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "878de845b3d59c0cd3b3bbfe400ca4c7a2742616a67fc81e6f96af5cf449e78d",
-      "size_bytes": 48971
+      "sha256": "03b6e08f71e583015babf3c574157d7264f291ffae3a669acd7e3d0ceabd9a8d",
+      "size_bytes": 53995
     },
     "combined_manuscript": {
       "path": "output/web/_combined_manuscript.md",
-      "sha256": "506ad197b21630fb7bcb10405b37d9385fdaf89aa9ee5e3b934f2ab2aba9a9f7",
+      "sha256": "795a0d266a306684337123d2f108ed60b7917e657b610c88567006014e647415",
       "size_bytes": 128994
     },
     "composition_manifest": {
       "path": "output/reports/manuscript_composition.json",
-      "sha256": "b9694a7d12fca6b3eb89e91b952be69ecd53dbd57696dd740b8305db2c8ff1de",
+      "sha256": "9a863eafb8c575ca67b3ce4f970d1e3af68b74e331fb48101b389536cfa0ac31",
       "size_bytes": 4180
     },
     "consumed_manuscript": [
@@ -280,7 +288,7 @@
       },
       {
         "rendered_path": "output/manuscript/15_discussion_outlook.md",
-        "rendered_sha256": "aca8942a4d63a2fc083aee86455d0e9e4383de06c1dea062d59bc93c02f9e5c6",
+        "rendered_sha256": "b0578090f76811fe3a5a9e74a62126f970829bd51d6e8d9598fdb96f0e3f1c20",
         "source_path": "manuscript/15_discussion_outlook.md",
         "source_sha256": "58f663a34bdfd735aea64ccc09465cfef4c64875f85c02fdbcb9a07e46ce112a"
       },
@@ -292,7 +300,7 @@
       },
       {
         "rendered_path": "output/manuscript/17_conclusion.md",
-        "rendered_sha256": "ec0e22d7161f3777f606e927758f67ddfa977ef2a9563410fa257d64b88b909f",
+        "rendered_sha256": "760866c4287535ebe57b096f11f911026955325c2ebcd7a87cbed037b93ef40f",
         "source_path": "manuscript/17_conclusion.md",
         "source_sha256": "caade70f47791968cd368cb5e897b33c1465b0334202572d08a3b041903deb4f"
       },
@@ -312,19 +320,19 @@
     "fingerprints": {
       "config": {
         "file_count": 26,
-        "sha256": "4e844477e227d090c4064c96a8202e7ec038ecbd4b4b28273107a2bdf6bc0d27"
+        "sha256": "73b8b715172738464e0f2b6507b5766b069ab247f5536aeb5c5214d70c95b417"
       },
       "output": {
-        "file_count": 150,
-        "sha256": "cac10c7cff649058080c9891f8edeed3795c25867a84b4eac5af5b02eda237fc"
+        "file_count": 177,
+        "sha256": "94751694210c6ca93856d283354d67c57b66cadd5f33feac9752629cbd6451c5"
       },
       "source": {
-        "file_count": 276,
-        "sha256": "57071a195c45ec0c2d52a5aa11bcaa278497e02a7b516c091f63a9719f90c5b5"
+        "file_count": 277,
+        "sha256": "93ca3f9007939cb92bb29d529c41523a2ea02e9d1f228b1d58fdaada506c9d35"
       },
       "stage": {
-        "file_count": 1084,
-        "sha256": "3b90fc47cecc7c4ceafc73f52a43793c06124132c3a16df3ec38901f6cfda76d"
+        "file_count": 1238,
+        "sha256": "5083008d9c20d5a40dda9c4b250e5cacf79f56ee3e15cd22d0f03e8327552d4b"
       }
     },
     "project": "templates/template_active_inference",

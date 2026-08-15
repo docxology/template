@@ -96,6 +96,9 @@ paper:
   title: "Your Research Title"
   subtitle: ""  # Optional
   version: "1.0"
+  cover:
+    image: "figures/cover.png"
+    alt: "Concise plain-text description of the meaningful cover artwork."
 
 authors:
   - name: "Dr. Jane Smith"
@@ -117,6 +120,7 @@ keywords:
 metadata:
   license: "Apache-2.0"
   language: "en"
+  tagged_pdf: false
 
 analysis:
   scripts:
@@ -207,6 +211,15 @@ See [LLM Configuration](../../../infrastructure/llm/AGENTS.md) for options.
 - `LLM_REVIEW_TIMEOUT` - Timeout per review in seconds (default: 300)
 
 ### Rendering
+
+`paper.cover.image` and `paper.cover.alt` configure paper title-page artwork;
+book projects use `book.cover.image` and `book.cover.alt`. Setting
+`metadata.tagged_pdf: true` opts the combined PDF into the compatible
+LuaLaTeX tagging path. If the selected paper or book cover declares an image,
+its `alt` must then be a non-empty YAML string: both the publication audit and
+renderer fail closed, and the renderer checks before replacing a previous PDF.
+This emits a cover `Figure` alternative and requests PDF/UA-2 metadata; it does
+not prove the complete tag tree, reading order, or PDF/UA conformance.
 
 | Variable | Default | Description |
 |----------|---------|-------------|

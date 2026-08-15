@@ -593,6 +593,19 @@ class TestValidateOutputStructure:
         assert len(result["missing_files"]) > 0
         assert "test_project_combined.pdf" in result["missing_files"][0]
 
+    def test_pdf_disabled_structure_does_not_require_pdf(self, tmp_path):
+        """Format-aware callers must not receive a synthetic PDF failure."""
+        project_output_dir = tmp_path / "output" / "test_project"
+        web_dir = project_output_dir / "web"
+        web_dir.mkdir(parents=True)
+        (web_dir / "index.html").write_text("<!doctype html><html></html>\n", encoding="utf-8")
+
+        result = validate_output_structure(project_output_dir, require_pdf=False)
+
+        assert result["valid"] is True
+        assert result["missing_files"] == []
+        assert result["directory_structure"]["combined_pdf"]["required"] is False
+
     def test_validate_small_pdf(self, tmp_path):
         """Test validation with suspiciously small PDF."""
         output_root = tmp_path / "output"

@@ -22,7 +22,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
   per-project `projects/<name>/output/logs/pipeline.log` so the parent
   never sees interleaved output.
 - `resume.py` - checkpoint resume helpers
-- `stages.py` - subprocess execution and public multi-project test helpers; stage definitions live only in `pipeline.yaml`
+- `stages.py` - subprocess execution and public multi-project test helpers; script stages use a 7,200-second descendant-tree-killing boundary, and stage definitions live only in `pipeline.yaml`
 - `stage_monitor.py` - stage resource monitoring
 - `_stage_tracker.py` - tracking internals
 - `_performance_monitor.py` - performance internals
@@ -30,7 +30,7 @@ The `infrastructure/core/pipeline/` package contains the executor, DAG, summary,
 - `post_run_reporting.py` - post-run JSON/HTML/Markdown report generation
 - `hitl_cli.py` - non-interactive HITL CLI (`PipelineArgs`, `handle_hitl_command`)
 - `stage_registry.py` - canonical stage-key → script map (`STAGE_DISPATCH`, `MENU_KEY_TO_STAGE`)
-- `single_stage.py` - subprocess single-stage runner; consumes `stage_registry.script_argv_for_stage()`
+- `single_stage.py` - subprocess single-stage runner; consumes `stage_registry.script_argv_for_stage()` and shares the full pipeline's 7,200-second descendant-tree-killing boundary
 - `stage_vocabulary.py` - canonical stage names/aliases from `pipeline.yaml` (shared with menu banners and eval grader)
 - `summary_formatters.py` - summary formatting
 - `summary_helpers.py` - summary helpers

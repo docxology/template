@@ -189,7 +189,7 @@ def load_project_config_yaml(manuscript_dir: Path) -> dict[str, Any] | None:
 
 
 def _clean_stale_web_artifacts(manager: RenderManager) -> None:
-    """Remove generated web artifacts before a fresh per-file HTML render.
+    """Remove generated web artifacts before deciding whether HTML will render.
 
     Only removes files this renderer itself produces (the combined
     ``index.html`` and per-section ``{parent}__{stem}.html`` pages, per
@@ -197,24 +197,97 @@ def _clean_stale_web_artifacts(manager: RenderManager) -> None:
     also delete unrelated hand-authored web artifacts (e.g. a project's own
     ``dashboard.html``) that happen to live in the same ``output/web/`` dir.
     """
-    if not getattr(manager.config, "enable_html", False):
-        return
     web_dir = Path(manager.config.web_dir)
     if not web_dir.exists():
         return
     stale_files = [path for path in sorted(web_dir.glob("*.html")) if path.name == "index.html" or "__" in path.stem]
-    combined_markdown = web_dir / "_combined_manuscript.md"
-    if combined_markdown.exists():
-        stale_files.append(combined_markdown)
+    for renderer_owned in (web_dir / "_combined_manuscript.md", web_dir / "favicon.ico"):
+        if renderer_owned.exists() or renderer_owned.is_symlink():
+            stale_files.append(renderer_owned)
     removed = 0
     for stale in stale_files:
         try:
             stale.unlink()
             removed += 1
         except OSError as exc:
-            logger.debug("Could not remove stale web artifact %s: %s", stale, exc)
+            logger.error("Could not remove stale web artifact %s: %s", stale, exc)
+            raise
     if removed:
         logger.info("Removed %d stale web artifact(s) from %s", removed, web_dir)
+
+
+def clean_stale_render_deliverables(
+    manager: RenderManager,
+    source_files: list[Path],
+    project_name: str,
+) -> None:
+    """Remove canonical deliverables that could be mistaken for this run.
+
+    Targets are limited to filenames owned by the renderers inside their
+    configured output directories. Reserved ``*_slides`` and ``*_combined``
+    names are cleared across prior source names so a renamed/deleted section
+    cannot survive. Unrelated project artifacts are preserved. A standalone
+    LaTeX PDF is treated as renderer-owned only when a compiler sidecar with
+    the same stem identifies it.
+    """
+
+    _clean_stale_web_artifacts(manager)
+    project_basename = Path(project_name).name
+    targets = {
+        Path(manager.config.pdf_dir) / f"{project_basename}_combined.pdf",
+        Path(manager.config.docx_dir) / f"{project_basename}_combined.docx",
+        Path(manager.config.epub_dir) / f"{project_basename}_combined.epub",
+        Path(manager.config.output_dir) / "tex" / "_combined_manuscript.md",
+        Path(manager.config.output_dir) / "reports" / "manuscript_composition.json",
+    }
+    pdf_dir = Path(manager.config.pdf_dir)
+    if pdf_dir.is_dir():
+        targets.update(pdf_dir.glob("_combined_manuscript.*"))
+        targets.update(pdf_dir.glob("*_combined.pdf"))
+        latex_sidecar_suffixes = {
+            ".aux",
+            ".bbl",
+            ".blg",
+            ".lof",
+            ".log",
+            ".lot",
+            ".nav",
+            ".out",
+            ".snm",
+            ".toc",
+            ".vrb",
+        }
+        for sidecar in pdf_dir.iterdir():
+            if sidecar.is_file() and sidecar.suffix in latex_sidecar_suffixes:
+                targets.add(sidecar)
+                targets.add(pdf_dir / f"{sidecar.stem}.pdf")
+
+    slides_dir = Path(manager.config.slides_dir)
+    if slides_dir.is_dir():
+        targets.update(slides_dir.glob("*_slides.*"))
+    docx_dir = Path(manager.config.docx_dir)
+    if docx_dir.is_dir():
+        targets.update(docx_dir.glob("*_combined.docx"))
+        targets.add(docx_dir / "_docx_metadata.yaml")
+    epub_dir = Path(manager.config.epub_dir)
+    if epub_dir.is_dir():
+        targets.update(epub_dir.glob("*_combined.epub"))
+    for source_file in source_files:
+        if source_file.suffix == ".tex":
+            targets.add(Path(manager.config.pdf_dir) / f"{source_file.stem}.pdf")
+        elif source_file.suffix == ".md":
+            slide_stem = f"{source_file.stem}_slides"
+            targets.add(Path(manager.config.slides_dir) / f"{slide_stem}.pdf")
+            targets.add(Path(manager.config.slides_dir) / f"{slide_stem}.html")
+
+    removed = 0
+    for target in sorted(targets):
+        if not target.exists() and not target.is_symlink():
+            continue
+        target.unlink()
+        removed += 1
+    if removed:
+        logger.info("Removed %d stale render deliverable(s) before the current run", removed)
 
 
 def render_individual_files(

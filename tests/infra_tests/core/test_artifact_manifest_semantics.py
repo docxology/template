@@ -221,6 +221,39 @@ def test_current_output_snapshot_omits_hidden_atomic_write_leftovers(tmp_path: P
     assert "output/figures/.trace.png" not in recorded
 
 
+def test_runtime_history_is_not_stable_but_regular_reports_are(tmp_path: Path) -> None:
+    """Telemetry history stays local without hiding genuine stable reports."""
+    project = tmp_path / "nogit"
+    reports = project / "output" / "reports"
+    history = reports / ".history"
+    history.mkdir(parents=True)
+    (history / "telemetry-123.json").write_text('{"runtime": true}\n', encoding="utf-8")
+    (reports / "quality_summary.json").write_text('{"all_passed": true}\n', encoding="utf-8")
+
+    manifest = snapshot_current_artifact_manifest(project / "output")
+
+    recorded = {entry.path for entry in manifest.entries}
+    assert "output/reports/.history/telemetry-123.json" not in recorded
+    assert "output/reports/quality_summary.json" in recorded
+
+
+def test_runtime_history_is_gitignored_after_public_template_negations() -> None:
+    """Post-negation rules must ignore project history and the generated mirror."""
+    repo_root = Path(__file__).resolve().parents[3]
+    candidates = (
+        "projects/templates/template_code_project/output/reports/.history/telemetry-123.json",
+        "output/templates/template_code_project/reports/.history/telemetry-123.json",
+    )
+
+    for candidate in candidates:
+        completed = subprocess.run(
+            ["git", "check-ignore", "--no-index", "--quiet", candidate],
+            cwd=repo_root,
+            check=False,
+        )
+        assert completed.returncode == 0, f"runtime history is not ignored: {candidate}"
+
+
 def test_every_public_exemplar_manifest_references_only_tracked_files() -> None:
     """Bind to the live tree — this is the assertion CI was failing on."""
     import json

@@ -1,8 +1,8 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "6f851d7fe99fb7f4f3a7172a1a81a785a1207c5a7e28fd40b41a1ddaf9efe1da",
+  "binding_sha256": "71f9343b020b8ddc961cca915d1f02a24b7fc529db363e5cc9ad49398bdacb61",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "506ad197b21630fb7bcb10405b37d9385fdaf89aa9ee5e3b934f2ab2aba9a9f7",
+  "combined_sha256": "795a0d266a306684337123d2f108ed60b7917e657b610c88567006014e647415",
   "combined_size_bytes": 128994,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
@@ -87,7 +87,7 @@
     {
       "ordinal": 14,
       "path": "output/manuscript/15_discussion_outlook.md",
-      "sha256": "aca8942a4d63a2fc083aee86455d0e9e4383de06c1dea062d59bc93c02f9e5c6",
+      "sha256": "b0578090f76811fe3a5a9e74a62126f970829bd51d6e8d9598fdb96f0e3f1c20",
       "size_bytes": 3747
     },
     {
@@ -99,7 +99,7 @@
     {
       "ordinal": 16,
       "path": "output/manuscript/17_conclusion.md",
-      "sha256": "ec0e22d7161f3777f606e927758f67ddfa977ef2a9563410fa257d64b88b909f",
+      "sha256": "760866c4287535ebe57b096f11f911026955325c2ebcd7a87cbed037b93ef40f",
       "size_bytes": 1143
     },
     {
@@ -115,7 +115,7 @@
       "size_bytes": 509
     }
   ],
-  "ordered_inputs_sha256": "41028f648904f50ad5867af3b4a46aae670cd5d784ced9fecd72d0ad6b989cc1",
+  "ordered_inputs_sha256": "bb6f5b3c45b93622de0e2ad4105eafc7f578f556fa48a771a7c32b65185105c6",
   "project": "templates/template_active_inference",
   "schema_version": "template-manuscript-composition-v1"
 }

@@ -22,6 +22,35 @@ _INLINE_CODE_PATTERN = re.compile(r"`[^`\n]*`")
 _SKIP_DOCS = frozenset(["AGENTS.md", "README.md"])
 
 
+def validate_configured_cover_accessibility(
+    config: dict[str, object] | None,
+    *,
+    required: bool,
+) -> list[str]:
+    """Return tagged-PDF accessibility issues for the rendered cover image.
+
+    Book metadata selects the book title-page path only when it declares a
+    title; otherwise the PDF renderer uses the paper path.  Validate the same
+    selected section so an unused secondary cover cannot satisfy (or block)
+    the actual rendered artifact.
+    """
+    if not required or not isinstance(config, dict):
+        return []
+
+    book = config.get("book")
+    section_name = "book" if isinstance(book, dict) and book.get("title") else "paper"
+    section = config.get(section_name)
+    if not isinstance(section, dict):
+        return []
+    cover = section.get("cover")
+    if not isinstance(cover, dict) or not cover.get("image"):
+        return []
+    alt = cover.get("alt")
+    if isinstance(alt, str) and alt.strip():
+        return []
+    return [f"Tagged PDF requires non-empty {section_name}.cover.alt when {section_name}.cover.image is configured"]
+
+
 def _scan_manuscript_references(manuscript_dir: Path) -> set[str]:
     """Return all figure labels and references found in manuscript files."""
     referenced: set[str] = set()

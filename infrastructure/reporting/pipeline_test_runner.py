@@ -10,7 +10,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 from infrastructure.core.config.queries import get_testing_config
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
@@ -32,6 +32,7 @@ from infrastructure.core.pytest_orchestration import (
     parse_test_discovery_timeout,
     prepend_uv_to_path,
     project_declared_coverage_floor,
+    project_declared_test_command,
     resolve_test_profile,
     resolve_project_cov_config,
     resolve_infrastructure_test_paths,
@@ -45,6 +46,7 @@ from infrastructure.reporting.pipeline_test_reporting import (
     report_infra_only_results,
     report_results,
 )
+from infrastructure.reporting.project_verifier import ProjectVerifierError, run_declared_project_verifier
 from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
 
 logger = get_logger(__name__)
@@ -240,6 +242,48 @@ def _run_project_tests_impl(
     logger.info("Test path: %s", project_root / "tests")
     logger.info("Coverage target: %s (%s%% minimum)", project_root / "src", project_threshold)
 
+    try:
+        declared_command = project_declared_test_command(project_root)
+    except ValueError as exc:
+        logger.error("Invalid declared project verifier for '%s': %s", project_name, exc)
+        return 1, cast(TestSuiteResults, {})
+    if declared_command is not None:
+        log_substep(
+            "Using the project's explicit structured Stage-01 verifier "
+            "(the generic pytest profile flags do not rewrite its declared argv).",
+            logger,
+        )
+        try:
+            exit_code, declared_results = run_declared_project_verifier(
+                repo_root,
+                project_root,
+                project_name,
+                declared_command,
+                coverage_floor=project_threshold,
+            )
+            exit_code, guarded_results = enforce_project_suite_guards(
+                exit_code,
+                cast(dict[str, Any], declared_results),
+                project_name=project_name,
+                project_root=project_root,
+                project_threshold=project_threshold,
+                strict=strict,
+            )
+            duration = time.time() - start_time
+            logger.info("Declared project verifier completed in %.1fs", duration)
+            if exit_code == 0:
+                log_success("Project verifier passed", logger)
+            return exit_code, cast(TestSuiteResults, guarded_results)
+        except (OSError, ProjectVerifierError, ValueError) as exc:
+            duration = time.time() - start_time
+            logger.error(
+                "Declared project verifier failed after %.1fs: %s",
+                duration,
+                exc,
+                exc_info=True,
+            )
+            return 1, cast(TestSuiteResults, {})
+
     cmd = build_project_pytest_command(
         project_root,
         [
@@ -261,12 +305,12 @@ def _run_project_tests_impl(
     )
     env.pop("COVERAGE_PROCESS_START", None)
 
-    apply_coverage_datafile(cmd, env, ".coverage.project")
+    apply_coverage_datafile(cmd, env, str(project_root / ".coverage.project"))
     cmd.extend(
         [
             "--cov-report=term-missing",
-            "--cov-report=html",
-            "--cov-report=json:coverage_project.json",
+            f"--cov-report=html:{project_root / 'htmlcov'}",
+            f"--cov-report=json:{project_root / 'coverage_project.json'}",
             f"--cov-fail-under={project_threshold}",
             "--tb=short",
         ]
@@ -311,9 +355,9 @@ def _run_project_tests_impl(
             env=env,
             repo_root=repo_root,
             coverage_json_paths=[
-                repo_root / "coverage_project.json",
-                repo_root / "coverage.json",
-                repo_root / "htmlcov" / "coverage.json",
+                project_root / "coverage_project.json",
+                project_root / "coverage.json",
+                project_root / "htmlcov" / "coverage.json",
             ],
             coverage_threshold=project_threshold,
             max_failures_env_var="MAX_PROJECT_TEST_FAILURES",
@@ -413,6 +457,7 @@ def execute_test_pipeline(
             repo_root,
             include_coverage_details=True,
             include_infrastructure_coverage=run_infra,
+            project_root=resolve_project_root(repo_root, project_name),
         )
         output_dir = resolve_project_root(repo_root, project_name) / "output" / "reports"
         save_test_report_to_files(report, output_dir)

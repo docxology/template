@@ -17,11 +17,14 @@ subprocesses.
 
 from __future__ import annotations
 
+import contextlib
 import os
 import platform
 import signal
 import stat
+import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -187,11 +190,15 @@ class TestRunBoundedSubprocess:
     def test_timeout_without_capture_still_kills_process_group(self, tmp_path: Path) -> None:
         """The analysis-script mode cannot leave descendants when output is uncaptured."""
         marker = tmp_path / "leaked.txt"
+        pid_file = tmp_path / "root.pid"
         child_body = f"import pathlib,time; time.sleep(2); pathlib.Path({str(marker)!r}).write_text('leaked')"
         script = tmp_path / "uncaptured_timeout.py"
         _write_executable(
             script,
-            f"import subprocess,sys,time\nsubprocess.Popen([sys.executable, '-c', {child_body!r}])\ntime.sleep(30)\n",
+            "import os,pathlib,subprocess,sys,time\n"
+            f"pathlib.Path({str(pid_file)!r}).write_text(str(os.getpid()), encoding='utf-8')\n"
+            f"subprocess.Popen([sys.executable, '-c', {child_body!r}])\n"
+            "time.sleep(30)\n",
         )
 
         result = run_bounded_subprocess(
@@ -208,6 +215,124 @@ class TestRunBoundedSubprocess:
 
         _time.sleep(2.2)
         assert not marker.exists()
+        root_pid = int(pid_file.read_text(encoding="utf-8"))
+        with pytest.raises(ChildProcessError):
+            os.waitpid(root_pid, os.WNOHANG)
+
+    @pytest.mark.skipif(not POSIX, reason="detached POSIX session regression")
+    @pytest.mark.parametrize("capture_output", [True, False])
+    def test_early_root_exit_cannot_leak_reparented_tagged_child(
+        self,
+        tmp_path: Path,
+        capture_output: bool,
+    ) -> None:
+        """Run identity cleanup covers the PPID/process-group blind spot."""
+        import time as _time
+
+        marker = tmp_path / "reparented-child-finished"
+        child_code = (
+            "import pathlib,time; "
+            "time.sleep(1.5); "
+            f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+        )
+        parent_code = (
+            "import subprocess,sys; subprocess.Popen([sys.executable, '-c', sys.argv[1]], start_new_session=True)"
+        )
+
+        started = _time.monotonic()
+        run_bounded_subprocess(
+            [sys.executable, "-c", parent_code, child_code],
+            cwd=tmp_path,
+            env=build_bounded_env(),
+            timeout=0.3,
+            capture_output=capture_output,
+        )
+        assert _time.monotonic() - started < 1.5
+        _time.sleep(1.6)
+        assert not marker.exists()
+
+    @pytest.mark.skipif(not POSIX, reason="SIGINT process cleanup is POSIX-only")
+    def test_keyboard_interrupt_kills_and_reaps_detached_process_tree(self, tmp_path: Path) -> None:
+        """An operator interrupt cannot orphan the bounded root or a detached writer."""
+        marker = tmp_path / "interrupt-leaked-child"
+        root_pid_path = tmp_path / "interrupt-root.pid"
+        child_pid_path = tmp_path / "interrupt-child.pid"
+        interrupted_path = tmp_path / "interrupt-observed"
+        child_code = (
+            "import pathlib,time; "
+            "time.sleep(2.0); "
+            f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+        )
+        root_code = (
+            "import os,pathlib,subprocess,sys,time; "
+            f"pathlib.Path({str(root_pid_path)!r}).write_text(str(os.getpid()), encoding='utf-8'); "
+            "child=subprocess.Popen([sys.executable, '-c', sys.argv[1]], "
+            "start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); "
+            f"pathlib.Path({str(child_pid_path)!r}).write_text(str(child.pid), encoding='utf-8'); "
+            "time.sleep(30)"
+        )
+        helper_code = (
+            "import pathlib,sys; "
+            "from infrastructure.core.execution_boundary import build_bounded_env,run_bounded_subprocess; "
+            "target_cwd=pathlib.Path(sys.argv[1]); "
+            "\ntry:\n"
+            " run_bounded_subprocess([sys.executable, '-c', sys.argv[2], sys.argv[3]], "
+            "cwd=target_cwd, env=build_bounded_env(), timeout=30, capture_output=False)\n"
+            "except KeyboardInterrupt:\n"
+            f" pathlib.Path({str(interrupted_path)!r}).write_text('yes', encoding='utf-8')\n"
+            " raise SystemExit(77)\n"
+            "raise SystemExit(78)\n"
+        )
+        repo_root = Path(__file__).resolve().parents[3]
+        helper = subprocess.Popen(
+            [sys.executable, "-c", helper_code, str(tmp_path), root_code, child_code],
+            cwd=repo_root,
+            env=os.environ.copy(),
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        root_pid: int | None = None
+        child_pid: int | None = None
+        cleanup_needed = True
+        try:
+            deadline = time.monotonic() + 10
+            while not (root_pid_path.is_file() and child_pid_path.is_file()):
+                if helper.poll() is not None:
+                    pytest.fail(f"interrupt helper exited before its process tree was ready: {helper.returncode}")
+                if time.monotonic() >= deadline:
+                    pytest.fail("interrupt helper did not publish child PIDs")
+                time.sleep(0.02)
+            root_pid = int(root_pid_path.read_text(encoding="utf-8"))
+            child_pid = int(child_pid_path.read_text(encoding="utf-8"))
+
+            os.kill(helper.pid, signal.SIGINT)
+            assert helper.wait(timeout=10) == 77
+            assert interrupted_path.read_text(encoding="utf-8") == "yes"
+
+            for pid in (root_pid, child_pid):
+                state = subprocess.run(
+                    ["ps", "-o", "stat=", "-p", str(pid)],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=5,
+                ).stdout.strip()
+                assert not state or state.startswith("Z"), f"PID {pid} survived interrupt cleanup in state {state}"
+            cleanup_needed = False
+            time.sleep(2.2)
+            assert not marker.exists()
+        finally:
+            if helper.poll() is None:
+                helper.kill()
+                helper.wait(timeout=5)
+            if cleanup_needed and root_pid is not None:
+                with contextlib.suppress(ProcessLookupError):
+                    os.kill(root_pid, signal.SIGKILL)
+            if cleanup_needed and child_pid is not None:
+                with contextlib.suppress(ProcessLookupError):
+                    os.kill(child_pid, signal.SIGKILL)
 
     def test_egress_check_can_refuse_launch(self, tmp_path: Path) -> None:
         def _refuse(argv, cwd, env):

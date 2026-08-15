@@ -20,6 +20,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "defusedxml>=0.7.1",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "pytest-timeout>=2.4.0",
@@ -48,5 +49,10 @@ omit = ["tests/*", "*/__init__.py"]
 fail_under = 90
 show_missing = true
 precision = 2
+
+[tool.template]
+# This stateful suite reaches its declared coverage floor through isolated
+# --cov-append chunks; the monolithic quick-profile lane is diagnostic only.
+project_test_command = ["uv", "run", "--extra", "dev", "python", "scripts/run_full_verification.py"]
 
 [tool.uv]

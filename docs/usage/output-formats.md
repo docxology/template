@@ -55,16 +55,14 @@ ENABLE_DOCX=1 ENABLE_EPUB=1 \
 | `ENABLE_DOCX` | same | `0` | Combined Microsoft Word document |
 | `ENABLE_EPUB` | same | `0` | Combined EPUB e-reader bundle |
 
-The intended and public precedence contract is an explicitly set
+The public precedence contract is an explicitly set
 `ENABLE_<FORMAT>` environment variable over `render.formats.<format>` in YAML,
 then the dataclass default. Direct users of the Python API may instead pass a
 fully constructed `RenderingConfig`.
 
-**Known implementation defect:** `RenderingConfig.from_project_config()`
-currently applies YAML after reading the environment, so YAML wins when both
-sources set the same format. Until that implementation and its mixed-source
-tests are corrected, set a given format in only one source. Environment-only
-and YAML-only configurations behave as documented.
+Precedence is resolved independently for each format, so mixed-source
+configuration is supported: an explicit false value remains an override rather
+than being treated as absent.
 
 ## What each format produces
 
@@ -89,6 +87,9 @@ and YAML-only configurations behave as documented.
 
 - One Beamer PDF per manuscript section (`<section>_slides.pdf`). Generated
   from the same source markdown via the `slides_renderer.py` module.
+- Beamer and Reveal.js decks resolve in-text citations against the shared
+  top-level bibliography union. They suppress a repeated bibliography block;
+  use the combined manuscript or dedicated references deck for the full list.
 - Use the `render:skip-beamer` HTML comment in a section to suppress its
   slide deck.
 
@@ -97,8 +98,8 @@ and YAML-only configurations behave as documented.
 - `<project>_combined.docx` — the full manuscript as a Microsoft Word
   document, suitable for journal submission, collaborative editing, or
   reviewer markup.
-- Citations are processed with Pandoc `--citeproc`, subject to the
-  multi-bibliography boundary below.
+- Citations are processed with Pandoc `--citeproc` using the shared
+  cross-format bibliography contract below.
 - An optional reference-doc template can be supplied to the renderer call —
   see `infrastructure/rendering/docx_renderer.py`.
 
@@ -108,33 +109,35 @@ and YAML-only configurations behave as documented.
   XHTML + manifest + optional cover image).
 - Use the `cover_image` kwarg on the renderer call to bundle a cover.
 
-### Multi-bibliography boundary
+### Cross-format bibliography contract
 
-Single-bibliography projects are unaffected. For a manuscript containing more
-than one top-level `.bib` file, the current combined PDF path unions all of
-them, combined HTML uses the conventional `references.bib`, and DOCX/EPUB use
-only the first filename in sorted order. A multi-bibliography exemplar such as
-`templates/template_search_project` can therefore have citation differences
-between editions. Keep one consolidated `references.bib` when DOCX/EPUB parity
-is required, and verify citations in every enabled format. Full parity should
-not be claimed until the renderers share one bibliography resolver and tests
-cover multiple `.bib` files.
+Single- and multi-bibliography projects use one resolver. Combined PDF and
+HTML, Beamer and Reveal.js slides, DOCX, EPUB, and the opt-in ebook stage
+discover every top-level `manuscript/*.bib` file, sort by filename, deduplicate
+repeated or symlinked paths, and pass the full set to their citation backend
+without rewriting manuscript sources. Duplicate citation keys, including
+case-only variants within one database or across databases, are an error:
+fail-closed handling prevents BibTeX and citeproc from silently selecting
+different definitions. The multi-bibliography
+`templates/template_search_project` exemplar exercises this contract.
+
+Per-section HTML previews remain intentionally separate: they render a single
+section and do not produce a combined bibliography. Slide decks resolve inline
+citations from the shared union but intentionally suppress the full references
+block in each section deck.
 
 ## Cross-format dependency
 
-DOCX and EPUB reuse the **preprocessed combined markdown** produced by the
-PDF rendering stage (`_combined_manuscript.md` under the project working
-`output/pdf/`).
-If you disable PDF via `render.formats.pdf: false`, the DOCX/EPUB stages
-log:
-
-```text
-[skip] DOCX rendering: no combined markdown found (combined-PDF stage may have been skipped or failed)
-```
-
-To produce DOCX or EPUB, currently leave `render.formats.pdf: true`. If a
-distribution must omit PDF, select the desired files during packaging rather
-than manually deleting evidence from the working output.
+DOCX and EPUB consume a fresh **shared preprocessed combined Markdown** built
+from the current ordered manuscript inputs. PDF-only and slides-only runs also
+emit this file when HTML is disabled so every normal render lane has current
+composition evidence. The composition is recorded in
+`output/reports/manuscript_composition.json`; it does not depend on a PDF
+artifact or a prior PDF run. PDF, DOCX, EPUB, and slides toggles can therefore
+be selected independently. The receipt-bound combined Markdown remains in the
+copied evidence tree even when HTML is disabled; renderer-owned HTML pages and
+the favicon do not. Disabled deliverables cannot satisfy current-run
+verification.
 
 ## Verifying outputs
 
@@ -155,7 +158,7 @@ unzip -l projects/templates/template_code_project/output/epub/*.epub | head -20
 ```yaml
 render:
   formats:
-    pdf: false   # skip combined PDF — DOCX/EPUB will cascade-skip
+    pdf: false   # skip PDF; other enabled formats remain independent
     html: true
     slides: false
     docx: false
@@ -169,6 +172,20 @@ Render formats: pdf=False html=True slides=False docx=False epub=False
 [skip] PDF rendering disabled in config (render.formats.pdf=false)
 [skip] Slides rendering disabled in config (render.formats.slides=false)
 ```
+
+Stages 3–5 use the same effective YAML-plus-environment configuration. Stage 3
+removes renderer-owned prior deliverables before producing the enabled formats;
+Stage 4 rejects a source output tree that still contains a canonical artifact
+for a disabled format; and Stage 5 defensively removes disabled-format artifacts
+from the freshly cleaned copied tree before validating each enabled deliverable.
+A prior PDF therefore cannot satisfy an HTML-only run or be republished by the
+copy stage.
+
+When `slides: true`, at least one current Markdown section must produce a deck;
+configuring every section with `<!-- render:skip-beamer -->` is a validation
+error rather than a successful zero-deliverable slides run. A project-local
+`scripts/_render_pdf_override.py` is the legacy exception to the ordinary
+format toggles: all three stages consistently treat that hook as PDF-only.
 
 ## See also
 

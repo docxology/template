@@ -105,19 +105,19 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 1. Lint & Type Check (`lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Tools:** `uv run ruff check`, `uv run ruff format --check`, `uv run mypy`, `uv run python -m infrastructure.skills check-all-exports`, `uv run python scripts/audit/check_template_drift.py --strict`
 - **Scope:** Ruff uses public lint paths from `infrastructure.project.public_scope lint-paths`; mypy uses its narrower `source-paths` output.
 
 #### 2. Static Health Report (`health`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Depends on:** `lint`
 - **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs.
 
 #### 3. Verify No Mocks Policy (`verify-no-mocks`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Script:** [`scripts/audit/verify_no_mocks.py`](../../scripts/audit/verify_no_mocks.py) (repository root)
 - **Enforced policy:** no configured prohibited mock-framework imports/calls
   (`MagicMock`, `mocker.patch`, `unittest.mock`, and related lexical forms) in
@@ -128,7 +128,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 3b. Setup hook — Windows smoke (`setup-hook-windows-smoke`)
 
-- **Runner:** `windows-latest` / Python 3.12
+- **Runner:** `windows-latest` / Python 3.14
 - **Depends on:** `verify-no-mocks`
 - **Conditional:** `if: needs.detect.outputs.setup_hook == 'true'` — no-op skip when no project ships [`infrastructure.project.setup_hook`](../../infrastructure/project/setup_hook.py). The `detect` job computes this because job-level `hashFiles()` is invalid in GitHub Actions.
 - **Step:** `uv run pytest tests/infra_tests/project/test_setup_hook.py` with `PYTHONUTF8=1`
@@ -139,7 +139,7 @@ behaviorally equivalent to the dedicated documentation job.
 - **Coverage threshold:** 60% (`--cov-fail-under=60`)
 - **Coverage file:** `.coverage.infra` (isolated from project coverage)
 - **Exclusions:** Tests marked `requires_ollama` are skipped (`-m "not requires_ollama"`)
-- **Codecov upload:** On Python 3.12 / ubuntu-latest only to avoid duplicate reports
+- **Codecov upload:** On Python 3.14 / `ubuntu-latest` only to avoid duplicate reports; upload failures do not fail CI
 
 #### 4b. Regression Tier — claim-binding pins (`test-regression`)
 
@@ -151,11 +151,11 @@ behaviorally equivalent to the dedicated documentation job.
 #### 5. Project Tests (`test-project`)
 
 - **Sync:** `uv sync --group public-exemplars` — the same deterministic dependency union as a fresh local `uv sync`, including the DisCoPy, monitoring, scientific, LLM-client, and PPTX groups used by the public roster. **Hypothesis** comes from the **dev** group (see root `pyproject.toml` `[dependency-groups]` and `default-groups`).
-- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.14 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 60`.
+- **Matrix:** **Per-project split** — the `detect-projects` job runs `scripts/gates/public_capabilities.py --ci-matrix-json`, which validates unique normalized package identities, full-minor Python compatibility, source/test syntax, format declarations, compiled/confined direct hydration, analysis declarations, reason-bearing skips, exact roster membership, and exact matrix parity before emitting the canonical `project × Python` include list. The current source of truth yields 24 exemplars × Python 3.10/3.14 = **48 matrix cells** on `ubuntu-latest`; no project or Python literal is duplicated in workflow YAML. Both matrix jobs set `UV_PYTHON` and assert the selected runtime minor so the repository `.python-version` cannot override a matrix cell. Job `timeout-minutes: 135`, leaving setup/upload margin around the 115-minute declared-verifier and 120-minute process-tree stage boundaries.
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
-- **Coverage file:** `.coverage.project` (isolated; removed at the start of each job before the run)
-- **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell), then `coverage xml -o coverage-project.xml`. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
-- **Codecov upload:** On Python 3.14 only
+- **Coverage files:** project-local `.coverage.project` for the generic pytest path or `.coverage` for a declared structured verifier; both are isolated, cleaned before the run, and independently produce the same project-local `coverage_project.json`.
+- **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell). The workflow uploads the resulting project-local JSON directly; it does not synthesize a separate XML report. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
+- **Codecov upload:** On Python 3.14 / `ubuntu-latest` only; upload failures do not fail CI
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)
 
@@ -171,7 +171,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 7. Validate Manuscripts (`validate`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Steps:**
   1. `infrastructure.validation.cli markdown projects/*/manuscript/` — validates all active project manuscripts
   2. `scripts/docgen/api_reference.py --check` — API reference drift gate
@@ -179,13 +179,13 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 8. Security Scan (`security`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **pip-audit:** blocking; audits the root all-groups/all-extras export and every canonical public-exemplar all-extras export, builds `--ignore-vuln` args from [`.github/pip-audit-ignore.txt`](../pip-audit-ignore.txt), and retries each export up to **3** times with backoff on failure (transient OSV/network issues)
 - **bandit:** `bandit -c bandit.yaml -r -ll`, covers `infrastructure/`, `scripts/`, `projects/`; path exclusions are in `bandit.yaml` (`exclude_dirs`, including archive/WIP roots and `.venv` / `site-packages` so local trees are not scanned)
 
 #### 9. Documentation Lint (`docs-lint`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12 / Node 20-compatible actions
+- **Runner:** `ubuntu-latest` / Python 3.14 / Node 20
 - **Depends on:** `lint`
 - **Timeout:** 15 minutes
 - **External tools (real, not mocked):**
@@ -202,7 +202,7 @@ behaviorally equivalent to the dedicated documentation job.
 
 #### 10. Performance Check (`performance`)
 
-- **Runner:** `ubuntu-latest` / Python 3.12
+- **Runner:** `ubuntu-latest` / Python 3.14
 - **Depends on:** `test-infra` + `test-project`
 - **Threshold:** each `infrastructure.core` or public project `src` cold import from `infrastructure.project.public_scope` must complete in ≤ 5 seconds
 - **Per-module timing** and the roster-dependent total are reported to stdout for trend analysis

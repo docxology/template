@@ -41,15 +41,15 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 | Stage | Script | Responsibility |
 | --- | --- | --- |
 | 00 | `pipeline/stage_00_setup.py` | Validate Python, dependencies, build tools, and directories |
-| 01 | `pipeline/stage_01_test.py` | Run infrastructure and project tests. Project pipelines use `--infra-scope pipeline-smoke` for a focused real infrastructure contract; explicit repo verification uses `--infra-scope full` for the coverage-bearing infrastructure suite. With `--project-only --all-projects`, delegates to `infrastructure.core.test_runner.run_per_project_pytest` (one pytest process per project, `--cov-append`, combined coverage gate for local all-project/release sweeps). |
+| 01 | `pipeline/stage_01_test.py` | Run infrastructure and project tests. Project pipelines use `--infra-scope pipeline-smoke` for a focused real infrastructure contract; explicit repo verification uses `--infra-scope full` for the coverage-bearing infrastructure suite. A single project may explicitly declare a structured `project_test_command` for a stateful/chunked verifier; the stage still requires project-local coverage, exact workspace runner versions, fresh real outcomes/warning/discovery counts, and independently checked coverage evidence. With `--project-only --all-projects`, delegates to `infrastructure.core.test_runner.run_per_project_pytest` (one pytest process per project, `--cov-append`, combined coverage gate for local all-project/release sweeps); that union path does not invoke custom verifiers. GitHub's isolated per-project matrix invokes the single-project lane and does honor them. |
 | 02 | `pipeline/stage_02_analysis.py` | Discover and run `projects/{name}/scripts/` |
-| 03 | `pipeline/stage_03_render.py` | Render manuscripts to PDF |
-| 04 | `pipeline/stage_04_validate.py` | Validate PDFs, markdown, and integrity reports |
-| 05 | `pipeline/stage_05_copy.py` | Copy final deliverables to `output/` |
+| 03 | `pipeline/stage_03_render.py` | Render every format enabled by the effective YAML/environment configuration |
+| 04 | `pipeline/stage_04_validate.py` | Validate enabled canonical formats plus markdown, artifact, provenance, and evidence checks |
+| 05 | `pipeline/stage_05_copy.py` | Copy to `output/`, filter disabled renderer-owned formats, and validate enabled deliverables |
 | 06 | `pipeline/stage_06_llm_review.py` | Generate LLM reviews or translations when Ollama is available |
 | 07 | `pipeline/stage_07_executive_report.py` | Build multi-project executive summaries and dashboards |
 
-`runner/execute_pipeline.py` also supports single-stage execution with keys such as `setup`, `infra_tests`, `project_tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`.
+`runner/execute_pipeline.py` also supports single-stage execution with keys such as `setup`, `infra_tests`, `project_tests`, `analysis`, `render_pdf`, `validate`, `copy`, `llm_reviews`, `llm_translations`, and `executive_report`. Script stages use the same 7,200-second, descendant-tree-killing boundary as the full pipeline, so a long declared verifier cannot be cut off by the former 30-minute wrapper or leave detached output writers behind.
 
 ## Key Files
 
@@ -72,8 +72,9 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 - Maintenance helpers now live under [`maintenance/`](maintenance/) - `manage_workspace.py`, `show_project_info.py`, `render_working_projects.py`, `rerender_working_pdfs.py`, `organize_executive_outputs.py`, `merge_test_supplements.py`, `batch_cogsec_improve.py`, `setup_pre_commit.py`, `codegraph_local.py`, `refresh_artifact_manifests.py` (see [`maintenance/README.md`](maintenance/README.md) and [`maintenance/AGENTS.md`](maintenance/AGENTS.md)). `show_project_info.py` is a standalone project metadata CLI; it is **not** invoked by `run.sh` (the menu's `i` key prints only the current project name).
 - `shell/bash_utils.sh` - shared shell helpers for backup/health scripts and integration tests (not sourced by `run.sh` / `secure_run.sh`)
 - `shell/shell_bootstrap.sh` - shared `uv` bootstrap and sandbox env vars sourced by `run.sh` and `secure_run.sh`
-- `shell/backup-daily.sh` / `shell/backup-weekly.sh` / `shell/backup-full.sh` - rsync backup tiers
-- `shell/restore-test.sh` - non-destructive backup-restore verification
+- `shell/backup-daily.sh` / `shell/backup-weekly.sh` - site-configured rsync backup tiers
+- `shell/backup-full.sh` - named, metadata-bearing `.hermes`/`.cache`/`output` snapshots
+- `shell/restore-test.sh` - private-scratch metadata and transfer-consistency verification
 - `shell/health-check.sh` - pre-flight system health check (Python, uv, disk, Docker, repo)
 
 ## Quality gates (thin orchestrator)

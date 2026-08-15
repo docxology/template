@@ -66,6 +66,10 @@ telemetry:
 | `reports/telemetry.txt` | Text | Human-readable summary table (current run) |
 | `reports/.history/telemetry-<unix_ts>.json` | JSON | Archived prior runs, oldest pruned beyond `TELEMETRY_KEEP` |
 
+The `.history/` archive is bounded local runtime state. Public exemplar ignore
+rules and the central stable-artifact classifier exclude it from committed
+artifact manifests and rendered publication provenance.
+
 ## Retention
 
 | Env var | Default | Behaviour |

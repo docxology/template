@@ -165,7 +165,8 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **project_pyproject.py**
 - Cached single-read accessors for a project `pyproject.toml`'s test/coverage settings
-- Public API: `load_project_pyproject`, `project_declared_coverage_floor`, `resolve_project_cov_config`, `project_declares_dev_extra`, dataclass `ProjectPyprojectConfig`
+- Public API: `load_project_pyproject`, `project_declared_coverage_floor`, `project_declared_test_command`, `resolve_project_cov_config`, `project_declares_dev_extra`, dataclass `ProjectPyprojectConfig`
+- `[tool.template].project_test_command` is an explicit, default-off argv contract for the single-project Stage-01 lane; malformed declarations fail closed. Stage 01 overlays the workspace's exact pytest/Coverage runner versions, requires project-local coverage evidence plus real warning/discovery/outcome counts, and gives the verifier a 6,900-second deadline inside the tree-killing 7,200-second stage boundary. The `--all-projects --public-projects` union runner remains on isolated generic pytest, while GitHub's per-project public matrix invokes the same single-project Stage-01 contract and therefore honors an explicit verifier.
 
 **sidecar_linking.py**
 - Generic sidecar lifecycle symlink sync for template checkouts: creates/updates/prunes managed symlinks under `projects/` from a resolved private root, honoring per-pool env/config overrides

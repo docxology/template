@@ -253,11 +253,18 @@ See [`troubleshooting/README.md`](troubleshooting/README.md) and
 ## Backup and restore status
 
 The daily/weekly shell helpers require an operator-configured SSH destination.
-The full-backup/restore pair is currently **unverified and unavailable as a
-recovery gate** because its remote path construction and restored directory
-layout are not mutually consistent. Do not rely on it until the implementation
-is repaired and a source-bound restore receipt exists. Details and safer
-verification guidance are in [`maintenance.md`](maintenance.md).
+The full-backup/restore pair now has a tested, versioned layout contract:
+`backup-full.sh --dry-run` previews without connecting, backup refuses to
+overwrite an existing snapshot, `restore-test.sh --list` reads without writing,
+and restore uses a private control directory followed by a current
+snapshot-to-copy consistency comparison and restricted receipt. It is available
+as an operator-configured file
+transfer helper, but it is not by itself a recovery gate: encryption,
+credentials, retention, remote-host authority, Git recovery, and a
+source-current pipeline remain external checks. Creation-time/at-rest integrity,
+source quiescence, hard links, ACLs, and xattrs are also outside the current
+contract. Details and commands are in
+[`maintenance.md`](maintenance.md).
 
 ## Escalation record
 

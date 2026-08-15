@@ -49,6 +49,12 @@ from infrastructure.validation.output.prose_quality import (
     prose_quality_enabled as _is_prose_quality_enabled,
     validate_prose_quality as _validate_prose_quality,
 )
+from infrastructure.validation.output.render_formats import (
+    enabled_render_formats,
+    load_effective_rendering_config,
+    render_config_manuscript_dir,
+    validate_enabled_render_outputs,
+)
 from infrastructure.validation.output.claim_verification import (
     claim_verification_enabled as _is_claim_verification_enabled,
     verify_project_claims as _verify_project_claims,
@@ -81,17 +87,42 @@ def _build_core_checks(
     repo_root: Path = _REPO_ROOT,
     prose_validator: Callable[[str], bool] | None = None,
 ) -> list[PipelineCheck]:
-    checks = [
-        PipelineCheck("PDF validation", lambda: validate_pdfs(project_name, repo_root=repo_root)),
-        PipelineCheck(
-            "Transmission bookends",
-            lambda: validate_transmission_bookends(project_name, repo_root=repo_root),
-        ),
+    project_root = _project_root(project_name, repo_root=repo_root)
+    try:
+        render_config = load_effective_rendering_config(project_root)
+    except (OSError, TypeError, ValueError) as exc:
+        logger.error("Could not determine enabled render formats: %s", exc)
+        checks = [PipelineCheck("Render configuration", lambda: False)]
+    else:
+        formats = enabled_render_formats(render_config)
+        checks = []
+        if render_config.enable_pdf:
+            checks.extend(
+                [
+                    PipelineCheck("PDF validation", lambda: validate_pdfs(project_name, repo_root=repo_root)),
+                    PipelineCheck(
+                        "Transmission bookends",
+                        lambda: validate_transmission_bookends(project_name, repo_root=repo_root),
+                    ),
+                ]
+            )
+        checks.append(
+            PipelineCheck(
+                "Enabled render outputs",
+                lambda: validate_enabled_render_outputs(
+                    project_root / "output",
+                    project_name,
+                    formats,
+                    manuscript_dir=render_config_manuscript_dir(project_root),
+                ),
+            )
+        )
+    checks.append(
         PipelineCheck(
             "Markdown validation",
             lambda: validate_manuscript_output_markdown(project_name, repo_root=repo_root),
-        ),
-    ]
+        )
+    )
     if _prose_quality_enabled(project_name, repo_root=repo_root):
         validate = prose_validator or (lambda name: validate_prose_quality(name, repo_root=repo_root))
         checks.append(PipelineCheck("Prose quality", lambda: validate(project_name)))
@@ -167,12 +198,18 @@ def validate_manuscript_output_markdown(project_name: str = "project", *, repo_r
 
 
 def verify_outputs_exist(
-    project_name: str = "project", *, repo_root: Path = _REPO_ROOT
+    project_name: str = "project",
+    *,
+    repo_root: Path = _REPO_ROOT,
+    require_pdf: bool = True,
 ) -> tuple[bool, ValidationResultDict]:
     """Verify all expected output files exist.
 
     Args:
         project_name: Name of project in projects/ directory (default: "project")
+        repo_root: Repository root containing the resolved project.
+        require_pdf: Whether detailed structure validation requires a combined
+            PDF for the effective render configuration.
 
     Returns:
         Tuple of (validation_passed, detailed_validation_results)
@@ -181,7 +218,7 @@ def verify_outputs_exist(
 
     output_dir = _project_output_dir(project_name, repo_root=repo_root)
 
-    detailed_validation = collect_detailed_validation_results(output_dir)
+    detailed_validation = collect_detailed_validation_results(output_dir, require_pdf=require_pdf)
     structure_valid = detailed_validation["structure"]["valid"]
 
     if structure_valid:
@@ -511,7 +548,12 @@ def execute_validation_pipeline(
             results.append(("Claim verification", False))
 
     try:
-        structure_result, detailed_validation = verify_outputs_exist(project_name, repo_root=repo_root)
+        render_config = load_effective_rendering_config(project_root)
+        structure_result, detailed_validation = verify_outputs_exist(
+            project_name,
+            repo_root=repo_root,
+            require_pdf=render_config.enable_pdf,
+        )
         results.append(("Output structure", structure_result))
     except Exception as e:
         logger.error(f"Error during output structure validation: {e}", exc_info=True)

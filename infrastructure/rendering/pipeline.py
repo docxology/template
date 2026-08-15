@@ -25,6 +25,7 @@ from infrastructure.rendering._combined_exports import (  # noqa: F401
     render_combined_outputs as _render_combined_outputs,
 )
 from infrastructure.rendering._manuscript_source import (  # noqa: F401
+    clean_stale_render_deliverables as _clean_stale_render_deliverables,
     has_generated_manuscript_ordering as _has_generated_manuscript_ordering,
     load_project_config_yaml as _load_project_config_yaml,
     log_manuscript_composition as _log_manuscript_composition,
@@ -38,6 +39,7 @@ from infrastructure.rendering._pipeline_summary import (
     generate_rendering_summary,
     log_rendering_summary,
     verify_pdf_outputs,
+    verify_render_outputs,
 )
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files, verify_figures_exist
@@ -70,7 +72,7 @@ class RenderPipelineDependencies:
     render_combined: Callable[..., None] = _render_combined_outputs
     generate_summary: Callable[..., dict[str, Any]] = generate_rendering_summary
     log_summary: Callable[[dict[str, Any]], None] = log_rendering_summary
-    verify_outputs: Callable[..., bool] = verify_pdf_outputs
+    verify_outputs: Callable[..., bool] = verify_render_outputs
 
 
 def _render_pipeline_impl(
@@ -109,6 +111,12 @@ def _render_pipeline_impl(
 
     override_script = project_root / "scripts" / "_render_pdf_override.py"
     if override_script.exists():
+        stale_override_pdf = project_root / "output" / "pdf" / f"{Path(project_name).name}_combined.pdf"
+        try:
+            stale_override_pdf.unlink(missing_ok=True)
+        except OSError as exc:
+            logger.error("Could not remove stale override PDF %s: %s", stale_override_pdf, exc)
+            return 1
         return deps.run_override(project_root, override_script)
 
     if deps.validate_latex() != 0:
@@ -125,8 +133,8 @@ def _render_pipeline_impl(
 
     source_files = deps.discover_manuscript(manuscript_dir)
     if not source_files:
-        logger.warning("No manuscript files found")
-        return 0
+        logger.error("No manuscript files found; refusing to validate prior render outputs")
+        return 1
 
     _log_manuscript_composition(source_files)
 
@@ -163,6 +171,11 @@ def _render_pipeline_impl(
         return 1
 
     md_files = [f for f in source_files if f.suffix == ".md"]
+    try:
+        _clean_stale_render_deliverables(manager, source_files, project_name)
+    except OSError as exc:
+        logger.error("Could not remove stale render deliverable: %s", exc)
+        return 1
     rendered_count, failed_files = deps.render_individual(manager, source_files, reporter)
 
     if md_files:
@@ -229,6 +242,7 @@ __all__ = [
     "generate_rendering_summary",
     "log_rendering_summary",
     "verify_pdf_outputs",
+    "verify_render_outputs",
     "RenderPipelineDependencies",
     "execute_render_pipeline",
 ]

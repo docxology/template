@@ -58,6 +58,21 @@ uv run pytest tests/infra_tests/validation/test_markdown_validator.py -v
 - Equation validation
 - Link verification
 
+### Render-format Contract Tests (`test_render_formats.py`)
+
+Stage 4 and Stage 5 publication-format validation:
+
+```bash
+uv run pytest tests/infra_tests/validation/test_render_formats.py -v
+```
+
+**Test Coverage:**
+- HTML-only validation with PDF disabled
+- Rejection of stale canonical disabled-format artifacts
+- Exact combined-PDF requirements when PDF is enabled
+- Environment-over-YAML format precedence
+- Copied-tree cleanup that preserves unrelated authored web pages
+
 ### Integrity Tests (`test_integrity.py`)
 
 File integrity and consistency:

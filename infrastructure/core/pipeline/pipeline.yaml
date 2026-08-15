@@ -72,11 +72,11 @@ stages:
     args: [--project-only, --verbose]
     depends_on: [Environment Setup]
     tags: [core, tests]
-    failure_mode: configurable tolerance
+    failure_mode: configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail
     contract:
       input_artifacts: ["projects/{project}/src/", "projects/{project}/tests/"]
       output_artifacts: ["projects/{project}/output/"]
-      definition_of_done: "Project tests pass against real project behavior and may refresh generated project artifacts exercised by the suite."
+      definition_of_done: "Generic project tests, or an explicitly declared structured single-project verifier, pass against real behavior with nonzero outcomes, real warning/discovery counts, project-local coverage at the unchanged declared floor, and one pinned runner stack; project fixtures/verifiers may refresh generated artifacts exercised by the suite."
       failure_code: "PROJECT_TESTS_FAILED"
       retry_policy: 0
       gate: "experiment_method_design"
@@ -142,7 +142,7 @@ stages:
     contract:
       input_artifacts: ["projects/{project}/manuscript/", "projects/{project}/output/data/"]
       output_artifacts: ["projects/{project}/output/"]
-      definition_of_done: "Manuscript renders to a structurally valid PDF artifact."
+      definition_of_done: "Every enabled canonical manuscript format is freshly rendered and verified from current inputs; renderer-owned canonical artifacts for disabled formats are absent."
       failure_code: "PDF_RENDERING_FAILED"
       retry_policy: 0
       gate: "render_validation"
@@ -153,11 +153,11 @@ stages:
     script: scripts/pipeline/stage_04_validate.py
     depends_on: [PDF Rendering]
     tags: [core]
-    failure_mode: PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report
+    failure_mode: enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory
     contract:
       input_artifacts: ["projects/{project}/output/", "projects/{project}/manuscript/"]
       output_artifacts: ["projects/{project}/output/reports/"]
-      definition_of_done: "Output, figure, markdown, and evidence checks produce a validation report."
+      definition_of_done: "Every enabled canonical render artifact and blocking release-evidence check passes; advisory checks are recorded in the validation report."
       failure_code: "OUTPUT_VALIDATION_FAILED"
       retry_policy: 0
       gate: "literature_source_quality"
@@ -204,7 +204,7 @@ stages:
     contract:
       input_artifacts: ["projects/{project}/output/"]
       output_artifacts: ["projects/{project}/output/reports/", "output/{project}/"]
-      definition_of_done: "Final deliverables are copied into the canonical top-level output tree."
+      definition_of_done: "A fresh canonical top-level output tree is copied, renderer-owned artifacts for disabled formats are filtered from that copy, and every enabled canonical deliverable validates."
       failure_code: "COPY_OUTPUTS_FAILED"
       retry_policy: 0
       gate: "publication_readiness"

@@ -17,11 +17,13 @@ and ``.log`` file on disk.
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
 
 import pytest
+from pypdf import PdfReader
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
@@ -39,6 +41,36 @@ def _require_beamer_toolchain() -> str:
         return "pdflatex"
     else:
         pytest.skip("No LaTeX compiler available")
+
+
+def _multi_bibliography_slide_fixture(tmp_path: Path) -> tuple[Path, Path]:
+    """Write one slide whose two citations live in separate bibliography files."""
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "references.bib").write_text(
+        "@article{alpha2020primary,\n"
+        "  author={Alpha, Ada},\n"
+        "  title={Primary Source},\n"
+        "  journal={Journal One},\n"
+        "  year={2020}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    (manuscript_dir / "z_supplemental.bib").write_text(
+        "@article{omega2021supplement,\n"
+        "  author={Omega, Orla},\n"
+        "  title={Supplemental Source},\n"
+        "  journal={Journal Two},\n"
+        "  year={2021}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "multi_bibliography.md"
+    source.write_text(
+        "# Evidence\n\nBoth sources matter [@alpha2020primary; @omega2021supplement].\n",
+        encoding="utf-8",
+    )
+    return source, manuscript_dir
 
 
 @pytest.mark.slow
@@ -78,6 +110,96 @@ def test_long_section_renders_via_allowframebreaks(test_config, tmp_path):
             "xelatex aborted with driver code 256 — overflowing frame not split."
         )
         assert "(job aborted, no legal \\end found)" not in log_text, "xelatex aborted before reaching \\end{document}."
+
+
+@pytest.mark.requires_latex
+def test_captioned_codelisting_renders_without_beamer_float_errors(test_config, tmp_path):
+    """A crossref-style captioned listing must be a numbered non-float block."""
+    _require_beamer_toolchain()
+    if not shutil.which("pandoc-crossref"):
+        pytest.skip("pandoc-crossref not installed")
+    source = tmp_path / "captioned_code.md"
+    source.write_text(
+        "# Captioned code\n\n"
+        "See [@lst:deterministic-example].\n\n"
+        '```{#lst:deterministic-example .python caption="Deterministic example"}\n'
+        "print(1)\n"
+        "```\n",
+        encoding="utf-8",
+    )
+
+    result = SlidesRenderer(test_config).render(source, output_format="beamer", manuscript_dir=tmp_path)
+
+    assert result.is_file()
+    assert result.stat().st_size > 5_000
+    extracted = "\n".join(page.extract_text() or "" for page in PdfReader(str(result)).pages)
+    assert "Listing 1: Deterministic example" in extracted
+    assert re.search(r"See\s+(?:lst\.|Listing)\s*1", extracted, flags=re.IGNORECASE)
+    assert "lst:deterministic-example" not in extracted
+    log_text = result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert "Not in outer par mode" not in log_text
+    assert "Undefined control sequence" not in log_text
+    assert "undefined references" not in log_text.lower()
+
+
+def test_slide_bibliography_args_use_sorted_union_and_suppress_references(tmp_path: Path):
+    """Both slide writers receive the same deterministic citation arguments."""
+    _source, manuscript_dir = _multi_bibliography_slide_fixture(tmp_path)
+
+    args = slides_renderer._slide_bibliography_args(manuscript_dir)
+
+    expected_bibliographies = [
+        f"--bibliography={manuscript_dir / 'references.bib'}",
+        f"--bibliography={manuscript_dir / 'z_supplemental.bib'}",
+    ]
+    assert args == [
+        "--citeproc",
+        *expected_bibliographies,
+        "--metadata",
+        "suppress-bibliography=true",
+    ]
+    assert slides_renderer._slide_bibliography_args(None) == []
+
+
+@pytest.mark.requires_latex
+def test_beamer_resolves_citations_from_every_top_level_bibliography(test_config, tmp_path):
+    """The real Beamer/Pandoc path resolves supplemental bibliography citations."""
+    _require_beamer_toolchain()
+    source, manuscript_dir = _multi_bibliography_slide_fixture(tmp_path)
+
+    result = SlidesRenderer(test_config).render(
+        source,
+        output_format="beamer",
+        manuscript_dir=manuscript_dir,
+    )
+
+    extracted = "\n".join(page.extract_text() or "" for page in PdfReader(str(result)).pages)
+    assert "Alpha" in extracted
+    assert "Omega" in extracted
+    assert "alpha2020primary?" not in extracted
+    assert "omega2021supplement?" not in extracted
+    assert "Primary Source" not in extracted
+    assert "Supplemental Source" not in extracted
+
+
+def test_revealjs_resolves_citations_from_every_top_level_bibliography(test_config, tmp_path):
+    """The real Reveal.js/Pandoc path resolves the same supplemental citations."""
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    source, manuscript_dir = _multi_bibliography_slide_fixture(tmp_path)
+
+    result = SlidesRenderer(test_config).render(
+        source,
+        output_format="revealjs",
+        manuscript_dir=manuscript_dir,
+    )
+
+    html = result.read_text(encoding="utf-8")
+    assert "Alpha" in html
+    assert "Omega" in html
+    assert "[@alpha2020primary" not in html
+    assert "@omega2021supplement]" not in html
+    assert 'id="refs"' not in html
 
 
 class TestSlidesRendererClass:
@@ -526,6 +648,30 @@ class TestSlidesMathHeaderInjection:
         assert "\\newtheorem{lemma}" not in content
         assert "\\newtheorem{corollary}" not in content
         assert "\\newtheorem{definition}" not in content
+
+    def test_postprocessor_overrides_generated_codelisting_float(self):
+        """The override lands after pandoc-crossref's preamble declaration."""
+        tex = r"""\documentclass{beamer}
+\newfloat{codelisting}{h}{lop}
+\begin{document}
+\begin{frame}
+\begin{codelisting}
+\caption[Short]{Long caption}
+code
+\end{codelisting}
+\end{frame}
+\end{document}
+"""
+
+        updated, changed = slides_renderer.make_codelisting_slide_safe(tex)
+
+        assert changed == 1
+        assert updated.index(r"\newfloat{codelisting}") < updated.index("Beamer-safe codelisting override")
+        assert updated.index("Beamer-safe codelisting override") < updated.index(r"\begin{document}")
+        assert r"\renewenvironment{codelisting}" in updated
+        assert r"\renewcommand{\caption}[2][]" in updated
+        assert r"\refstepcounter{codelisting}" in updated
+        assert slides_renderer.make_codelisting_slide_safe(updated) == (updated, 0)
 
     def test_beamer_renames_compiled_pdf_to_output_file(self, tmp_path):
         """When compile_latex writes {stem}_slides.pdf, normalize to output_file."""

@@ -150,6 +150,12 @@ class RenderManager:
                 else:
                     logger.info(f"Skipping HTML for {source_file.name} (render.formats.html=false)")
 
+            if not rendered_paths and not format_errors:
+                logger.info(
+                    "No per-file render formats enabled for %s; combined formats run separately", source_file.name
+                )
+                return []
+
             if not rendered_paths:
                 failed_formats = ", ".join(f"{fmt}: {err}" for fmt, err in format_errors)
                 raise TemplateError(

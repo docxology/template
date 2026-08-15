@@ -10,20 +10,21 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 from __future__ import annotations
 
 import os
-import subprocess  # nosec B404
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
+from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.errors import SCRIPT_EXECUTION_FAILED
 from infrastructure.core.files.cleanup import clean_output_directories
+from infrastructure.core.runtime.environment import get_python_command, get_subprocess_env
 
 if TYPE_CHECKING:
     from infrastructure.core.pipeline.config import PipelineConfig
 
 logger = get_logger(__name__)
+PIPELINE_STAGE_TIMEOUT_SECONDS = 7200.0
 
 
 def resolve_pipeline_script_path(repo_root: Path, script_name: str) -> Path:
@@ -146,21 +147,25 @@ class PipelineStageMixin(ABC):
 
         env = self._build_stage_env()
 
-        try:
-            # Stream subprocess output to console for long-running stages; still capture exit code.
-            result = subprocess.run(  # nosec B603
-                cmd, cwd=self.config.repo_root, env=env, check=False, timeout=7200
-            )
+        result = run_bounded_subprocess(
+            cmd,
+            cwd=self.config.repo_root,
+            env=env,
+            timeout=PIPELINE_STAGE_TIMEOUT_SECONDS,
+            capture_output=False,
+        )
 
-            if result.returncode == 0:
-                return True
+        if result.returncode == 0:
+            return True
 
-            # Exit code 2 = graceful skip (e.g., Ollama not available)
-            if allow_skip_code and result.returncode == 2:
-                logger.info(f"Stage skipped gracefully (exit code 2): {script_name}")
-                return True
+        # Exit code 2 = graceful skip (e.g., Ollama not available)
+        if allow_skip_code and result.returncode == 2:
+            logger.info(f"Stage skipped gracefully (exit code 2): {script_name}")
+            return True
 
-            return False
-        except (OSError, subprocess.SubprocessError, subprocess.TimeoutExpired) as e:
-            logger.error(SCRIPT_EXECUTION_FAILED.format(script_name=script_name, error=e))
-            return False
+        if result.timed_out:
+            error = f"timed out after {PIPELINE_STAGE_TIMEOUT_SECONDS:g}s"
+        else:
+            error = result.command_error or f"exit code {result.returncode}"
+        logger.error(SCRIPT_EXECUTION_FAILED.format(script_name=script_name, error=error))
+        return False

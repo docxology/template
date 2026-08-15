@@ -30,6 +30,7 @@ from infrastructure.core.pytest_orchestration import (
     parse_test_summary_count,
     parse_project_workers,
     project_declared_coverage_floor,
+    project_declared_test_command,
     project_has_test_files,
     resolve_coverage_file,
     resolve_test_profile,
@@ -61,6 +62,40 @@ def test_project_declared_coverage_floor_missing_file_returns_none(tmp_path: Pat
     project = tmp_path / "projects" / "demo"
     project.mkdir(parents=True)
     assert project_declared_coverage_floor(project) is None
+
+
+def test_project_declared_test_command_is_explicit_argv(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        dedent(
+            """
+            [tool.template]
+            project_test_command = ["uv", "run", "python", "scripts/verify.py", "--strict"]
+            """
+        ).lstrip(),
+        encoding="utf-8",
+    )
+
+    assert project_declared_test_command(project) == (
+        "uv",
+        "run",
+        "python",
+        "scripts/verify.py",
+        "--strict",
+    )
+
+
+def test_project_declared_test_command_rejects_malformed_value(tmp_path: Path) -> None:
+    project = tmp_path / "projects" / "demo"
+    project.mkdir(parents=True)
+    (project / "pyproject.toml").write_text(
+        "[tool.template]\nproject_test_command = []\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="non-empty TOML array"):
+        project_declared_test_command(project)
 
 
 def test_resolve_project_cov_config_reads_run_section(tmp_path: Path) -> None:

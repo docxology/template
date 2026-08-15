@@ -8,7 +8,9 @@ No mocking framework — real files, subprocesses, and RenderManager subclasses.
 from __future__ import annotations
 
 import os
-import sys
+import shutil
+import venv
+import zipfile
 from dataclasses import replace
 from pathlib import Path
 
@@ -17,6 +19,7 @@ import pytest
 from infrastructure.core.exceptions import RenderingError, TemplateError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.rendering import RenderManager
+from infrastructure.rendering._combined_exports import render_combined_outputs
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_validation import ValidationReport
 from infrastructure.rendering.pipeline import (
@@ -31,6 +34,7 @@ from infrastructure.rendering.pipeline import (
     _validate_latex_packages,
     execute_render_pipeline,
     RenderPipelineDependencies,
+    verify_render_outputs,
 )
 
 
@@ -296,8 +300,11 @@ def test_run_manuscript_variable_script_uses_project_venv_python(tmp_path: Path)
         encoding="utf-8",
     )
     venv_python = project / ".venv" / "bin" / "python"
-    venv_python.parent.mkdir(parents=True)
-    venv_python.symlink_to(sys.executable)
+    # Build a real virtual environment. A bare symlink to the host interpreter
+    # is not a virtual environment and, on Python 3.14, correctly reports the
+    # resolved host binary as ``sys.executable`` even when invoked via that
+    # symlink. The production contract is specifically the project venv.
+    venv.EnvBuilder(with_pip=False).create(project / ".venv")
     template_root = tmp_path / "template"
     template_root.mkdir()
 
@@ -684,17 +691,17 @@ def _make_project_with_manuscript(project_root: Path, *, n_md: int = 1, n_figure
         fig.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 64)
 
 
-def test_render_pipeline_impl_missing_manuscript_dir_returns_zero(
+def test_render_pipeline_impl_missing_manuscript_dir_returns_one(
     tmp_path: Path,
 ) -> None:
-    """When discover_manuscript_files returns empty the pipeline logs a warning and exits 0."""
+    """No current manuscript inputs must not validate stale prior outputs."""
     project = tmp_path / "empty_ms_proj"
     _make_project_with_manuscript(project, n_md=0)
 
     # manuscript dir exists but has no .md files
     rc = _render_pipeline_impl("empty_ms_proj", repo_root=tmp_path, dependencies=_dependencies_for(project))
 
-    assert rc == 0
+    assert rc == 1
 
 
 def test_render_pipeline_impl_skip_manuscript_hydration_branch(
@@ -838,7 +845,7 @@ def test_render_pipeline_impl_figure_truncation_log(
     project = tmp_path / "fig_truncate_proj"
     _make_project_with_manuscript(project, n_md=1, n_figures=5)
 
-    dependencies = _dependencies_for(project, discover_manuscript=lambda manuscript_dir: [])
+    dependencies = _dependencies_for(project)
 
     with caplog.at_level(logging.INFO, logger="infrastructure.rendering.pipeline"):
         rc = _render_pipeline_impl("fig_truncate_proj", repo_root=tmp_path, dependencies=dependencies)
@@ -887,7 +894,6 @@ def test_render_pipeline_impl_transmission_bookend_exception_logged(
     dependencies = _dependencies_for(
         project,
         write_bookends=_raise,
-        discover_manuscript=lambda manuscript_dir: [],
     )
 
     with caplog.at_level(logging.WARNING, logger="infrastructure.rendering.pipeline"):
@@ -914,6 +920,122 @@ def test_execute_render_pipeline_verify_pdf_false_returns_one(
     rc = execute_render_pipeline("verify_fail_proj", repo_root=tmp_path, dependencies=dependencies)
 
     assert rc == 1
+
+
+@pytest.mark.parametrize("with_stale_pdf", [False, True])
+def test_execute_render_pipeline_html_only_needs_no_pdf_and_removes_stale_pdf(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    with_stale_pdf: bool,
+) -> None:
+    """An HTML-only run verifies HTML and never accepts or retains an old PDF."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "html_only_proj"
+    _make_project_with_manuscript(project, n_md=1)
+    (project / "manuscript" / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: true\n    slides: false\n    docx: false\n    epub: false\n",
+        encoding="utf-8",
+    )
+    stale_pdf = project / "output" / "pdf" / "html_only_proj_combined.pdf"
+    if with_stale_pdf:
+        stale_pdf.parent.mkdir(parents=True)
+        stale_pdf.write_bytes(b"stale PDF from an earlier run")
+
+    def _write_current_html(manager, *_args, **_kwargs) -> None:
+        web_dir = Path(manager.config.web_dir)
+        web_dir.mkdir(parents=True, exist_ok=True)
+        (web_dir / "index.html").write_text(
+            "<!doctype html><html><body>current run</body></html>",
+            encoding="utf-8",
+        )
+
+    dependencies = _dependencies_for(
+        project,
+        render_combined=_write_current_html,
+        verify_outputs=verify_render_outputs,
+    )
+
+    rc = execute_render_pipeline("html_only_proj", repo_root=tmp_path, dependencies=dependencies)
+
+    assert rc == 0
+    assert not stale_pdf.exists()
+    assert (project / "output" / "web" / "index.html").is_file()
+
+
+def test_execute_render_pipeline_pdf_enabled_rejects_stale_prior_pdf(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Pre-run cleanup prevents an old combined PDF from satisfying strict verification."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "strict_pdf_proj"
+    _make_project_with_manuscript(project, n_md=1)
+    (project / "manuscript" / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n    docx: false\n    epub: false\n",
+        encoding="utf-8",
+    )
+    stale_pdf = project / "output" / "pdf" / "strict_pdf_proj_combined.pdf"
+    stale_pdf.parent.mkdir(parents=True)
+    stale_pdf.write_bytes(b"%PDF-1.7\n" + b"stale" * 4096 + b"\nstartxref\n0\n%%EOF\n")
+
+    dependencies = _dependencies_for(project, verify_outputs=verify_render_outputs)
+    rc = execute_render_pipeline("strict_pdf_proj", repo_root=tmp_path, dependencies=dependencies)
+
+    assert rc == 1
+    assert not stale_pdf.exists()
+
+
+@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc is required for combined package rendering")
+@pytest.mark.parametrize(("format_name", "extension"), [("docx", "docx"), ("epub", "epub")])
+def test_execute_render_pipeline_combined_packages_do_not_require_pdf(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    format_name: str,
+    extension: str,
+) -> None:
+    """DOCX-only and EPUB-only runs create and verify current real packages."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project_name = f"{format_name}_only_proj"
+    project = tmp_path / "projects" / "templates" / project_name
+    _make_project_with_manuscript(project, n_md=1)
+    (project / "manuscript" / "config.yaml").write_text(
+        "render:\n"
+        "  formats:\n"
+        "    pdf: false\n"
+        "    html: false\n"
+        "    slides: false\n"
+        f"    docx: {str(format_name == 'docx').lower()}\n"
+        f"    epub: {str(format_name == 'epub').lower()}\n",
+        encoding="utf-8",
+    )
+    stale_pdf = project / "output" / "pdf" / f"{project_name}_combined.pdf"
+    stale_combined = project / "output" / "pdf" / "_combined_manuscript.md"
+    stale_pdf.parent.mkdir(parents=True)
+    stale_pdf.write_bytes(b"stale PDF")
+    stale_combined.write_text("# stale combined source\n", encoding="utf-8")
+
+    dependencies = _dependencies_for(
+        project,
+        render_individual=_render_individual_files,
+        render_combined=render_combined_outputs,
+        verify_outputs=verify_render_outputs,
+    )
+    rc = execute_render_pipeline(project_name, repo_root=tmp_path, dependencies=dependencies)
+
+    output = project / "output" / format_name / f"{project_name}_combined.{extension}"
+    assert rc == 0
+    assert zipfile.is_zipfile(output)
+    assert not stale_pdf.exists()
+    assert not stale_combined.exists()
+    shared = project / "output" / "web" / "_combined_manuscript.md"
+    assert "Section 1" in shared.read_text(encoding="utf-8")
+    assert (project / "output" / "reports" / "manuscript_composition.json").is_file()
 
 
 def test_execute_render_pipeline_outer_exception_returns_one(

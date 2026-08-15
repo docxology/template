@@ -33,6 +33,7 @@ from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering._pdf_latex_helpers import (
     extract_math_font_preamble,
     extract_preamble,
@@ -42,6 +43,8 @@ from infrastructure.rendering._slides_crossref import (
     parse_aux_label_numbers,
     resolve_cross_deck_references,
 )
+from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
+from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering.latex_texttt import (
@@ -54,190 +57,25 @@ from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
 
-_FRAME_RE = re.compile(
-    r"(?P<open>\\begin\{frame\}(?:\[[^\]]*\])?(?:\{.*?\})?\n)"
-    r"(?P<body>.*?)"
-    r"(?P<close>\\end\{frame\})",
-    re.DOTALL,
-)
-_ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
-_ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
-_ISOLATE_SLIDE_ENVS = frozenset({"description", "enumerate", "figure", "itemize", "longtable", "table"})
-_FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
 
+def _slide_bibliography_args(manuscript_dir: Path | None) -> list[str]:
+    """Return the shared bibliography union for a section-level slide deck.
 
-def _append_framebreak(lines: list[str]) -> None:
-    """Append one frame break unless the generated TeX already has one."""
-    if lines and lines[-1].rstrip().endswith(r"\framebreak"):
-        return
-    lines.append(_FRAMEBREAK_MARKER)
-
-
-def _brace_delta(line: str) -> int:
-    """Return the unescaped TeX-brace balance contributed by one source line."""
-    delta = 0
-    escaped = False
-    for character in line:
-        if character == "{" and not escaped:
-            delta += 1
-        elif character == "}" and not escaped:
-            delta -= 1
-        if character == "\\" and not escaped:
-            escaped = True
-        else:
-            escaped = False
-    return delta
-
-
-def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
-    """Split safe top-level blocks inside one Beamer ``allowframebreaks`` frame.
-
-    Pandoc emits figures and longtables as unbreakable environments. A frame can
-    therefore overflow even when it has ``allowframebreaks``. This pass isolates
-    those environments and adds breaks only between top-level paragraphs once a
-    frame segment is dense enough; it never inserts a break inside a list,
-    theorem, equation, figure, or table environment.
+    Slide decks resolve in-text citations but deliberately suppress the repeated
+    reference list: the combined manuscript and the dedicated references deck
+    remain the reader-facing bibliography surfaces.
     """
-    source_lines = body.splitlines(keepends=True)
-    output: list[str] = []
-    environment_stack: list[str] = []
-    segment_length = 0
-    segment_has_content = False
-    isolate_ended = False
-    table_wrapper_open = False
-    brace_depth = 0
-
-    for index, line in enumerate(source_lines):
-        stripped = line.strip()
-        events = sorted(
-            [
-                *(("begin", match) for match in _ENV_BEGIN_RE.finditer(stripped)),
-                *(("end", match) for match in _ENV_END_RE.finditer(stripped)),
-            ],
-            key=lambda event: event[1].start(),
-        )
-
-        if not environment_stack and stripped.startswith(r"{\def\LTcaptype"):
-            if segment_has_content:
-                _append_framebreak(output)
-            output.append(line)
-            segment_length = 0
-            segment_has_content = False
-            table_wrapper_open = True
-            isolate_ended = False
-            continue
-
-        if events:
-            for kind, event in events:
-                if kind == "begin":
-                    name = event.group("name")
-                    if (
-                        not environment_stack
-                        and name in _ISOLATE_SLIDE_ENVS
-                        and segment_has_content
-                        and not table_wrapper_open
-                    ):
-                        _append_framebreak(output)
-                        segment_length = 0
-                        segment_has_content = False
-                    environment_stack.append(name)
-                    isolate_ended = False
-                    continue
-                if environment_stack and event.group("name") == environment_stack[-1]:
-                    ended = environment_stack.pop()
-                    if not environment_stack and ended in _ISOLATE_SLIDE_ENVS:
-                        isolate_ended = True
-                        segment_length = 0
-                        segment_has_content = False
-            output.append(line)
-            continue
-
-        if (
-            not environment_stack
-            and stripped
-            and isolate_ended
-            and not stripped.startswith(r"\end{frame}")
-            and not stripped.startswith("}")
-        ):
-            _append_framebreak(output)
-            segment_length = 0
-            segment_has_content = False
-            isolate_ended = False
-
-        output.append(line)
-        if environment_stack:
-            segment_length += len(line)
-            segment_has_content = True
-            continue
-
-        if stripped == r"\framebreak":
-            segment_length = 0
-            segment_has_content = False
-            isolate_ended = False
-            continue
-        if not environment_stack and table_wrapper_open and stripped == "}":
-            table_wrapper_open = False
-            isolate_ended = True
-            segment_length = 0
-            segment_has_content = False
-            continue
-        if stripped:
-            segment_length += len(line)
-            segment_has_content = True
-            brace_depth += _brace_delta(line)
-            next_nonempty = next(
-                (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
-                "",
-            )
-            safe_line_boundary = (
-                brace_depth == 0
-                and bool(next_nonempty)
-                and not stripped.endswith((r"\\", "&"))
-                and not stripped.startswith((r"\label", r"\caption"))
-                and not next_nonempty.startswith(("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ")", "]", ","))
-                and not next_nonempty.startswith((r"\end{frame}", "}"))
-            )
-            if segment_length >= paragraph_threshold and safe_line_boundary:
-                _append_framebreak(output)
-                segment_length = 0
-                segment_has_content = False
-                brace_depth = 0
-            continue
-
-        next_nonempty = next(
-            (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
-            "",
-        )
-        if (
-            segment_length >= (paragraph_threshold // 2)
-            and next_nonempty
-            and not next_nonempty.startswith(r"\end{frame}")
-        ):
-            _append_framebreak(output)
-            segment_length = 0
-            segment_has_content = False
-
-    return "".join(output)
-
-
-def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
-    """Split dense generated Beamer frames into independently sized frames."""
-    changed = 0
-
-    def replace_frame(match: re.Match[str]) -> str:
-        nonlocal changed
-        if "allowframebreaks" not in match.group("open"):
-            return match.group(0)
-        body = match.group("body")
-        updated = _split_frame_body(body)
-        if updated != body:
-            changed += 1
-        segments = updated.split(_FRAMEBREAK_MARKER)
-        if len(segments) == 1:
-            return f"{match.group('open')}{updated}{match.group('close')}"
-        return "\n\n".join(f"{match.group('open')}{segment}{match.group('close')}" for segment in segments)
-
-    return _FRAME_RE.sub(replace_frame, tex_content), changed
+    if manuscript_dir is None:
+        return []
+    bibliographies = resolve_bibliography(manuscript_dir)
+    if not bibliographies:
+        return []
+    return [
+        "--citeproc",
+        *pandoc_bibliography_args(bibliographies),
+        "--metadata",
+        "suppress-bibliography=true",
+    ]
 
 
 class SlidesRenderer:
@@ -290,9 +128,14 @@ class SlidesRenderer:
             return self._render_beamer_with_paths(source_file, output_file, manuscript_dir, figures_dir)
         else:
             # For reveal.js, use direct pandoc rendering
-            return self._render_revealjs(source_file, output_file)
+            return self._render_revealjs(source_file, output_file, manuscript_dir)
 
-    def _render_revealjs(self, source_file: Path, output_file: Path) -> Path:
+    def _render_revealjs(
+        self,
+        source_file: Path,
+        output_file: Path,
+        manuscript_dir: Path | None = None,
+    ) -> Path:
         """Render reveal.js slides."""
         cmd = [
             self.config.pandoc_path,
@@ -305,6 +148,9 @@ class SlidesRenderer:
             "-V",
             f"theme={self.config.slide_theme}",
         ]
+        cmd.extend(_slide_bibliography_args(manuscript_dir))
+        if manuscript_dir is not None:
+            cmd.extend(["--resource-path", str(manuscript_dir)])
 
         logger.info(f"Generating reveal.js slides from {source_file}")
 
@@ -377,27 +223,12 @@ class SlidesRenderer:
         else:
             logger.warning("pandoc-crossref not on PATH; Beamer formalism numbers may remain unresolved.")
 
-        # Beamer does not run citeproc implicitly. Without this pair, every
+        # Beamer does not run citeproc implicitly. Without these arguments, every
         # manuscript citation survives as literal ``[@key]`` text in the
-        # reviewer-facing PDF. Use the project bibliography when available;
-        # small renderer unit tests and standalone decks without one retain
-        # Pandoc's normal no-bibliography behavior.
-        bibliography = manuscript_dir / "references.bib" if manuscript_dir else None
-        if bibliography is not None and bibliography.exists():
-            # Process citations for readable in-text author/year labels, but
-            # suppress the bibliography block in each standalone section deck.
-            # The full reference list has its own 99_references deck and the
-            # combined PDF; embedding it in every deck creates one enormous,
-            # unbreakable final frame.
-            cmd.extend(
-                [
-                    "--citeproc",
-                    "--bibliography",
-                    str(bibliography),
-                    "--metadata",
-                    "suppress-bibliography=true",
-                ]
-            )
+        # reviewer-facing PDF. Use the shared project bibliography union when
+        # available; small renderer unit tests and standalone decks without one
+        # retain Pandoc's normal no-bibliography behavior.
+        cmd.extend(_slide_bibliography_args(manuscript_dir))
 
         # Inject the math-font subset of the manuscript preamble so
         # \mid, \ll, \gg etc. render cleanly in slide decks without
@@ -432,6 +263,10 @@ class SlidesRenderer:
                 tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
             tex_content = self._resolve_cross_deck_refs(tex_content)
+
+            tex_content, codelisting_replacements = make_codelisting_slide_safe(tex_content)
+            if codelisting_replacements:
+                logger.info("Replaced pandoc-crossref's listing float with a Beamer-safe block")
 
             # Latin Modern's text face does not provide a literal U+2265 glyph
             # in every size used by Beamer. Keep the semantic comparison while

@@ -128,6 +128,22 @@ def test_render_all_md_honors_disabled_html(tmp_path):
     assert results == [slides_file]
 
 
+def test_render_all_allows_combined_only_formats(tmp_path: Path) -> None:
+    """DOCX/EPUB/PDF-only configurations have no required per-section output."""
+
+    source = tmp_path / "section.md"
+    source.write_text("# Section\n", encoding="utf-8")
+    config = RenderingConfig(
+        enable_pdf=False,
+        enable_html=False,
+        enable_slides=False,
+        enable_docx=True,
+        enable_epub=False,
+    )
+
+    assert RenderManager(config).render_all(source) == []
+
+
 def test_render_all_missing_source_raises_template_error(tmp_path: Path) -> None:
     manager = RenderManager(RenderingConfig(web_dir=str(tmp_path), slides_dir=str(tmp_path / "slides")))
     missing = tmp_path / "missing.md"

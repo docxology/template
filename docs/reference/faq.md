@@ -53,10 +53,12 @@
 ### **Q: What if I don't need PDF generation?**
 
 **A:** Disable PDF with `render.formats.pdf: false` in the project's
-`manuscript/config.yaml`; do not delete shared rendering infrastructure. Note
-that combined DOCX/EPUB currently reuse the combined markdown created by the
-PDF stage and therefore cascade-skip when PDF is disabled. See
-[Output formats](../usage/output-formats.md).
+`manuscript/config.yaml`; do not delete shared rendering infrastructure. PDF,
+DOCX, and EPUB are independently selectable: when DOCX or EPUB is enabled,
+Stage 3 builds a fresh shared combined Markdown source from the current ordered
+manuscript inputs instead of depending on a PDF artifact. Stages 4 and 5 reject
+or filter stale renderer-owned outputs for disabled formats. See
+[Output formats](../usage/output-formats.md) for the complete contract.
 
 ## 🧪 **Testing & Development**
 

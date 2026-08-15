@@ -3,7 +3,7 @@
 Covers fixture-driven branches for:
 - combined_source_files: existing/missing path, transmission-bookend classification
 - resolve_combined_markdown: manuscript/output dir layout, pdf/tex candidates, empty/missing
-- resolve_bibliography: bib present vs absent
+- resolve_bibliography: deterministic union, path deduplication, and conflicts
 - render_combined_docx: no combined-md early return; bibliography/crossref/metadata paths
 - render_combined_epub: no combined-md early return; bibliography present vs absent
 - render_combined_outputs: enable_* toggles; RenderingError and OSError paths
@@ -11,14 +11,21 @@ Covers fixture-driven branches for:
 
 from __future__ import annotations
 
+import json
+import shutil
+import zipfile
 from pathlib import Path
 from types import SimpleNamespace
+
+import pytest
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.publishing.transmission_bookends import BEGIN_FILENAME, END_FILENAME
+from infrastructure.rendering._bibliography import BibliographyConflictError, pandoc_bibliography_args
 from infrastructure.rendering._combined_exports import (
     combined_source_files,
+    prepare_shared_combined_markdown,
     render_combined_docx,
     render_combined_epub,
     render_combined_outputs,
@@ -78,6 +85,58 @@ def test_combined_source_files_excludes_missing_bookend(tmp_path: Path) -> None:
     result = combined_source_files([missing_bookend])
 
     assert result == []
+
+
+def test_prepare_shared_combined_markdown_supports_docs_manuscript_root(tmp_path: Path) -> None:
+    """The shared producer writes to project output for docs/manuscript layouts."""
+
+    manuscript_dir = tmp_path / "docs" / "manuscript"
+    manuscript_dir.mkdir(parents=True)
+    source = manuscript_dir / "01_intro.md"
+    source.write_text("# Docs manuscript\n", encoding="utf-8")
+    manager = _make_manager(tmp_path)
+
+    result = prepare_shared_combined_markdown(
+        manager,
+        [source],
+        manuscript_dir,
+        "templates/docs_project",
+    )
+
+    assert result == tmp_path / "output" / "web" / "_combined_manuscript.md"
+    assert result.is_file()
+    assert (tmp_path / "output" / "reports" / "manuscript_composition.json").is_file()
+
+
+def test_slides_only_combined_stage_writes_current_composition_evidence(tmp_path: Path) -> None:
+    """Without HTML, a slides-only run still binds its current manuscript inputs."""
+
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source = manuscript_dir / "01_intro.md"
+    source.write_text("# Slides manuscript\n", encoding="utf-8")
+    manager = _make_manager(
+        tmp_path,
+        enable_pdf=False,
+        enable_html=False,
+        enable_slides=True,
+        enable_docx=False,
+        enable_epub=False,
+    )
+
+    render_combined_outputs(
+        manager,
+        [source],
+        manuscript_dir,
+        "templates/slides_project",
+        _make_reporter(tmp_path),
+        rendered_count=1,
+    )
+
+    combined = tmp_path / "output" / "web" / "_combined_manuscript.md"
+    receipt = json.loads((tmp_path / "output" / "reports" / "manuscript_composition.json").read_text())
+    assert combined.is_file()
+    assert receipt["algorithm"] == "shared-combined-markdown-v1"
 
 
 def test_combined_source_files_includes_missing_non_bookend(tmp_path: Path) -> None:
@@ -185,8 +244,8 @@ def test_resolve_combined_markdown_other_dir_layout(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_resolve_bibliography_returns_first_bib(tmp_path: Path) -> None:
-    """Returns the first (sorted) .bib file when one or more are present."""
+def test_resolve_bibliography_returns_sorted_union(tmp_path: Path) -> None:
+    """Every top-level bibliography is returned in deterministic filename order."""
     bib1 = tmp_path / "references.bib"
     bib2 = tmp_path / "zotero.bib"
     bib1.write_text("@article{a,title={A}}\n")
@@ -194,15 +253,96 @@ def test_resolve_bibliography_returns_first_bib(tmp_path: Path) -> None:
 
     result = resolve_bibliography(tmp_path)
 
-    # sorted order: references.bib < zotero.bib
-    assert result == bib1
+    assert result == (bib1, bib2)
 
 
-def test_resolve_bibliography_returns_none_when_no_bib(tmp_path: Path) -> None:
-    """Returns None when no .bib files are present in the manuscript dir."""
+def test_resolve_bibliography_returns_empty_union_when_no_bib(tmp_path: Path) -> None:
+    """Returns an empty union when no .bib files are present."""
     result = resolve_bibliography(tmp_path)
 
-    assert result is None
+    assert result == ()
+
+
+def test_pandoc_bibliography_args_deduplicate_repeated_paths(tmp_path: Path) -> None:
+    """The same repeated database path is passed to Pandoc only once."""
+    bibliography = tmp_path / "references.bib"
+    bibliography.write_text("@article{a,title={A}}\n", encoding="utf-8")
+
+    assert pandoc_bibliography_args([bibliography, bibliography]) == [f"--bibliography={bibliography}"]
+
+
+def test_resolve_bibliography_deduplicates_symlink_alias(tmp_path: Path) -> None:
+    """Two filenames for one physical database resolve to one union member."""
+    bibliography = tmp_path / "references.bib"
+    bibliography.write_text("@article{a,title={A}}\n", encoding="utf-8")
+    alias = tmp_path / "a_alias.bib"
+    try:
+        alias.symlink_to(bibliography.name)
+    except (NotImplementedError, OSError) as exc:
+        pytest.skip(f"symlink creation is unavailable: {exc}")
+
+    result = resolve_bibliography(tmp_path)
+
+    assert len(result) == 1
+    assert result[0].resolve() == bibliography.resolve()
+
+
+def test_pandoc_bibliography_args_reject_missing_input(tmp_path: Path) -> None:
+    """A vanished bibliography fails at the render boundary instead of being dropped."""
+    missing = tmp_path / "missing.bib"
+
+    with pytest.raises(FileNotFoundError, match="Bibliography not found"):
+        pandoc_bibliography_args([missing])
+
+
+def test_resolve_bibliography_rejects_duplicate_citation_keys(tmp_path: Path) -> None:
+    """Conflicting citeproc/BibTeX winner rules cannot silently diverge by format."""
+    first = tmp_path / "a.bib"
+    second = tmp_path / "b.bib"
+    first.write_text("@article{shared,title={First}}\n", encoding="utf-8")
+    second.write_text("@book{shared,title={Second}}\n", encoding="utf-8")
+
+    with pytest.raises(BibliographyConflictError) as exc_info:
+        resolve_bibliography(tmp_path)
+
+    message = str(exc_info.value)
+    assert message.count("'shared'") == 2
+    assert str(first) in message
+    assert str(second) in message
+
+
+def test_resolve_bibliography_rejects_cross_file_case_only_duplicate_keys(tmp_path: Path) -> None:
+    """Case-only variants in separate databases fail with both literal keys and paths."""
+    first = tmp_path / "a.bib"
+    second = tmp_path / "b.bib"
+    first.write_text("@article{SharedKey,title={First}}\n", encoding="utf-8")
+    second.write_text("@book{sharedkey,title={Second}}\n", encoding="utf-8")
+
+    with pytest.raises(BibliographyConflictError) as exc_info:
+        resolve_bibliography(tmp_path)
+
+    message = str(exc_info.value)
+    assert "'SharedKey'" in message
+    assert "'sharedkey'" in message
+    assert str(first) in message
+    assert str(second) in message
+
+
+def test_resolve_bibliography_rejects_same_file_case_only_duplicate_keys(tmp_path: Path) -> None:
+    """Case-only variants in one database fail while identifying both declarations."""
+    bibliography = tmp_path / "references.bib"
+    bibliography.write_text(
+        "@article{SharedKey,title={First}}\n@book{sharedkey,title={Second}}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(BibliographyConflictError) as exc_info:
+        resolve_bibliography(tmp_path)
+
+    message = str(exc_info.value)
+    assert "'SharedKey'" in message
+    assert "'sharedkey'" in message
+    assert message.count(str(bibliography)) == 2
 
 
 # ---------------------------------------------------------------------------
@@ -268,6 +408,8 @@ def test_render_combined_epub_with_bibliography(tmp_path: Path, monkeypatch) -> 
 
     bib = manuscript_dir / "references.bib"
     bib.write_text("@article{x, title={X}}\n")
+    supplemental_bib = manuscript_dir / "z_supplemental.bib"
+    supplemental_bib.write_text("@article{y, title={Y}}\n")
     (manuscript_dir / "config.yaml").write_text(
         "paper:\n  title: Test EPUB\nauthors:\n  - name: Ada Lovelace\nmetadata:\n  language: en-GB\n"
     )
@@ -296,6 +438,8 @@ def test_render_combined_epub_with_bibliography(tmp_path: Path, monkeypatch) -> 
     assert isinstance(extra_args, list)
     assert "--citeproc" in extra_args
     assert f"--bibliography={bib}" in extra_args
+    assert f"--bibliography={supplemental_bib}" in extra_args
+    assert extra_args.index(f"--bibliography={bib}") < extra_args.index(f"--bibliography={supplemental_bib}")
 
 
 def test_render_combined_epub_without_bibliography(tmp_path: Path) -> None:
@@ -463,8 +607,9 @@ def test_render_combined_outputs_html_rendering_error_recorded(tmp_path: Path) -
     assert len(reporter.events) >= 1
 
 
-def test_render_combined_outputs_docx_enabled_delegates(tmp_path: Path) -> None:
-    """When enable_docx=True, render_combined_outputs calls render_combined_docx (no error when no combined md)."""
+@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc is required for real DOCX rendering")
+def test_render_combined_outputs_docx_is_independent_of_pdf(tmp_path: Path) -> None:
+    """DOCX uses a fresh current combined source when PDF is disabled."""
     cfg = RenderingConfig(
         enable_pdf=False,
         enable_html=False,
@@ -477,14 +622,27 @@ def test_render_combined_outputs_docx_enabled_delegates(tmp_path: Path) -> None:
     manager = RenderManager(config=cfg)
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
+    source = manuscript_dir / "01_intro.md"
+    source.write_text("# Current DOCX source\n\nCurrent content.\n", encoding="utf-8")
+    stale_pdf_md = tmp_path / "output" / "pdf" / "_combined_manuscript.md"
+    stale_pdf_md.parent.mkdir(parents=True)
+    stale_pdf_md.write_text("# STALE PDF SOURCE\n", encoding="utf-8")
     reporter = _make_reporter(tmp_path)
 
-    # No combined markdown → render_combined_docx returns early; no exception
-    render_combined_outputs(manager, [], manuscript_dir, "proj", reporter, rendered_count=0)
+    render_combined_outputs(manager, [source], manuscript_dir, "templates/proj", reporter, rendered_count=0)
+
+    output = tmp_path / "output" / "docx" / "proj_combined.docx"
+    assert zipfile.is_zipfile(output)
+    shared = tmp_path / "output" / "web" / "_combined_manuscript.md"
+    assert "Current DOCX source" in shared.read_text(encoding="utf-8")
+    assert "STALE PDF SOURCE" not in shared.read_text(encoding="utf-8")
+    receipt = json.loads((tmp_path / "output" / "reports" / "manuscript_composition.json").read_text())
+    assert receipt["algorithm"] == "shared-combined-markdown-v1"
 
 
-def test_render_combined_outputs_epub_enabled_delegates(tmp_path: Path) -> None:
-    """When enable_epub=True, render_combined_outputs calls render_combined_epub (no error when no combined md)."""
+@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc is required for real EPUB rendering")
+def test_render_combined_outputs_epub_is_independent_of_pdf(tmp_path: Path) -> None:
+    """EPUB uses a fresh current combined source when PDF is disabled."""
     cfg = RenderingConfig(
         enable_pdf=False,
         enable_html=False,
@@ -497,9 +655,22 @@ def test_render_combined_outputs_epub_enabled_delegates(tmp_path: Path) -> None:
     manager = RenderManager(config=cfg)
     manuscript_dir = tmp_path / "manuscript"
     manuscript_dir.mkdir()
+    source = manuscript_dir / "01_intro.md"
+    source.write_text("# Current EPUB source\n\nCurrent content.\n", encoding="utf-8")
+    stale_pdf_md = tmp_path / "output" / "pdf" / "_combined_manuscript.md"
+    stale_pdf_md.parent.mkdir(parents=True)
+    stale_pdf_md.write_text("# STALE PDF SOURCE\n", encoding="utf-8")
     reporter = _make_reporter(tmp_path)
 
-    render_combined_outputs(manager, [], manuscript_dir, "proj", reporter, rendered_count=0)
+    render_combined_outputs(manager, [source], manuscript_dir, "templates/proj", reporter, rendered_count=0)
+
+    output = tmp_path / "output" / "epub" / "proj_combined.epub"
+    assert zipfile.is_zipfile(output)
+    shared = tmp_path / "output" / "web" / "_combined_manuscript.md"
+    assert "Current EPUB source" in shared.read_text(encoding="utf-8")
+    assert "STALE PDF SOURCE" not in shared.read_text(encoding="utf-8")
+    receipt = json.loads((tmp_path / "output" / "reports" / "manuscript_composition.json").read_text())
+    assert receipt["algorithm"] == "shared-combined-markdown-v1"
 
 
 # ---------------------------------------------------------------------------

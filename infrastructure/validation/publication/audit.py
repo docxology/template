@@ -8,13 +8,17 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+import yaml
 from markdown_it import MarkdownIt
 
 from infrastructure.core.pipeline.artifacts import validate_artifact_manifest
 from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 from infrastructure.project.drift import run_drift_checks
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
-from infrastructure.validation.content.figure_validator import validate_figure_registry
+from infrastructure.validation.content.figure_validator import (
+    validate_configured_cover_accessibility,
+    validate_figure_registry,
+)
 from infrastructure.validation.evidence_registry import (
     build_project_evidence_registry,
     missing_evidence_source_paths,
@@ -325,6 +329,34 @@ def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
         )
 
 
+def check_cover_accessibility(ctx: AuditContext) -> Iterable[PublicationFinding]:
+    """Require cover alt text when the project opts into tagged PDF output."""
+    config_path = ctx.project_root / "manuscript" / "config.yaml"
+    if not config_path.is_file():
+        return
+    try:
+        config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        return
+    if not isinstance(config, dict):
+        return
+    metadata = config.get("metadata")
+    tagged_pdf = bool(metadata.get("tagged_pdf", False)) if isinstance(metadata, dict) else False
+    for issue in validate_configured_cover_accessibility(config, required=tagged_pdf):
+        yield _finding(
+            ctx,
+            path=_relative(config_path, ctx.repo_root),
+            code="PUBLICATION.COVER_ACCESSIBILITY",
+            severity="error",
+            status="fail",
+            message=issue,
+            remediation=(
+                "Add concise plain-text alt metadata beside the selected "
+                "paper.cover.image or book.cover.image and rerender the tagged PDF."
+            ),
+        )
+
+
 _PLACEHOLDER_TOKEN_RE = re.compile(
     r"""
     (?:
@@ -493,6 +525,7 @@ SOURCE_CHECKERS: tuple[Checker, ...] = (
     check_no_mocks,
     check_methods,
     check_evidence,
+    check_cover_accessibility,
 )
 
 RENDERED_CHECKERS: tuple[Checker, ...] = (

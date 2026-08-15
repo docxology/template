@@ -117,18 +117,36 @@ restore.
 
 ## 7. Backup restore boundary
 
-The tracked full-backup and restore-test helpers are not currently accepted as
-a recovery gate: their remote-path construction and expected restored layout
-do not agree. Do not run them as proof of restorability until the scripts are
-repaired and validated with a disposable destination.
+The tracked full-backup and restore-test helpers now share the versioned layout
+`backups/full/<snapshot>/{.hermes,.cache,output}`. Remote shell checks use the
+filesystem path without an rsync `host:` prefix. Full backup refuses to replace
+an existing snapshot and serializes cooperating writers with an atomic lock.
+Restore validates `.template-full-backup`, creates a private control directory,
+compares the current snapshot with its restored copy, and writes a receipt
+without deleting any prior restore.
+
+```bash
+# Inspect without writing, then list without restoring
+bash scripts/shell/backup-full.sh --dry-run backup <snapshot>
+bash scripts/shell/restore-test.sh --list backup <snapshot>
+
+# Restore only into a generated scratch directory and verify it
+bash scripts/shell/restore-test.sh backup <snapshot>
+```
+
+A successful helper receipt validates current snapshot-to-restore transfer
+consistency. It is not evidence for creation-time or at-rest integrity, source
+quiescence, hard links/ACLs/xattrs, encryption, retention, remote-host authority,
+Git source recovery, or a source-current research pipeline. Those remain
+separate gates.
 
 For an operator-managed backup system:
 
 1. list the exact snapshot and destination without writing;
 2. restore into a newly created scratch directory, never over the checkout;
-3. compare file inventories and hashes;
+3. compare inventories, checksums, symlinks, permissions, and file timestamps;
 4. run `uv sync --frozen` and a focused pipeline in the scratch checkout;
-5. record missing files, permissions, symlinks, and secret-handling boundaries;
+5. review the generated receipt, missing labels, and secret-handling boundaries;
 6. promote restored data only after an owner reviews the comparison.
 
 ## 8. Safe diagnostic bundle

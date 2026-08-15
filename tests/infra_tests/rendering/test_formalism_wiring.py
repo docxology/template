@@ -95,6 +95,18 @@ def _assert_filter_ordering(argv: list[str], writer: str) -> None:
         assert index < position, f"{writer}: formalism filter must precede pandoc-crossref"
 
 
+def _assert_bibliography_union(argv: list[str], manuscript_dir: Path, writer: str) -> None:
+    """Assert citeproc receives every bibliography in deterministic order."""
+    expected = [
+        f"--bibliography={manuscript_dir / 'references.bib'}",
+        f"--bibliography={manuscript_dir / 'z_supplemental.bib'}",
+    ]
+    positions = [argv.index(argument) for argument in expected]
+    assert positions == sorted(positions), f"{writer}: bibliography order drifted: {argv}"
+    assert "--citeproc" in argv, f"{writer}: citeproc missing from pandoc command: {argv}"
+    assert argv.index("--citeproc") < positions[0]
+
+
 def _make_manager(tmp_path: Path) -> RenderManager:
     cfg = RenderingConfig(
         pdf_dir=str(tmp_path / "output/pdf"),
@@ -123,6 +135,8 @@ def _manuscript(tmp_path: Path) -> Path:
     combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
     combined.parent.mkdir(parents=True, exist_ok=True)
     combined.write_text(MANUSCRIPT_BODY, encoding="utf-8")
+    (manuscript_dir / "references.bib").write_text("@article{alpha,title={Alpha}}\n", encoding="utf-8")
+    (manuscript_dir / "z_supplemental.bib").write_text("@article{omega,title={Omega}}\n", encoding="utf-8")
     return manuscript_dir
 
 
@@ -162,7 +176,9 @@ def test_combined_docx_command_carries_the_filter(tmp_path: Path) -> None:
 
     render_combined_docx(manager, manuscript_dir, "proj", DiagnosticReporter("proj"))
 
-    _assert_filter_ordering(_recorded_argv(argv_log), "combined DOCX")
+    argv = _recorded_argv(argv_log)
+    _assert_filter_ordering(argv, "combined DOCX")
+    _assert_bibliography_union(argv, manuscript_dir, "combined DOCX")
 
 
 # ---------------------------------------------------------------------------
@@ -192,6 +208,7 @@ def test_combined_epub_command_carries_the_filter(tmp_path: Path) -> None:
     extra_args = captured["extra_args"]
     assert isinstance(extra_args, list)
     _assert_filter_ordering(extra_args, "combined EPUB")
+    _assert_bibliography_union(extra_args, manuscript_dir, "combined EPUB")
 
 
 # ---------------------------------------------------------------------------
@@ -218,7 +235,9 @@ def test_combined_html_command_carries_the_filter(tmp_path: Path) -> None:
 
     renderer.render_combined([section], manuscript_dir)
 
-    _assert_filter_ordering(_recorded_argv(argv_log), "combined HTML")
+    argv = _recorded_argv(argv_log)
+    _assert_filter_ordering(argv, "combined HTML")
+    _assert_bibliography_union(argv, manuscript_dir, "combined HTML")
 
 
 # ---------------------------------------------------------------------------
@@ -241,6 +260,8 @@ def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pyt
     repo_root = tmp_path / "repo"
     project_root = repo_root / "projects" / "working" / "proj"
     (project_root / "manuscript").mkdir(parents=True)
+    (project_root / "manuscript" / "references.bib").write_text("@article{alpha,title={Alpha}}\n", encoding="utf-8")
+    (project_root / "manuscript" / "z_supplemental.bib").write_text("@article{omega,title={Omega}}\n", encoding="utf-8")
     combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
     combined.parent.mkdir(parents=True, exist_ok=True)
     combined.write_text(MANUSCRIPT_BODY, encoding="utf-8")
@@ -248,7 +269,9 @@ def test_ebook_stage_command_carries_the_filter(tmp_path: Path, monkeypatch: pyt
     exit_code = ebook_stage.run_ebook_generation(repo_root, "proj", skip_formats_arg="mobi,docx")
     assert exit_code == 0
 
-    _assert_filter_ordering(_recorded_argv(argv_log), "ebook stage")
+    argv = _recorded_argv(argv_log)
+    _assert_filter_ordering(argv, "ebook stage")
+    _assert_bibliography_union(argv, project_root / "manuscript", "ebook stage")
 
 
 # ---------------------------------------------------------------------------

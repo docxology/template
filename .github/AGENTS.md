@@ -64,27 +64,28 @@ in a job `if:` and rejects the whole workflow at parse). 1 further job
 | # | Job id | Display name (representative) | Depends on | Python | Runner |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `detect` | Detect optional projects | — | — | ubuntu (always) |
-| 2 | `detect-projects` | Detect public capability matrix | — | manifest-owned 3.10 + 3.12 | ubuntu (always) |
+| 2 | `detect-projects` | Detect public capability matrix | — | manifest-owned 3.10 + 3.14 | ubuntu (always) |
 | 3 | `actionlint` | Actionlint | — | — | ubuntu (always) |
-| 4 | `lint` | Lint & Type Check | — | 3.12 | ubuntu |
-| 5 | `health` | Static Health Report | lint | 3.12 | ubuntu |
-| 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.12 | ubuntu |
-| 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.12 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
+| 4 | `lint` | Lint & Type Check | — | 3.14 | ubuntu |
+| 5 | `health` | Static Health Report | lint | 3.14 | ubuntu |
+| 6 | `verify-no-mocks` | Verify No Mocks Policy | — (parallel with `lint`) | 3.14 | ubuntu |
+| 7 | `setup-hook-windows-smoke` | Setup hook (Windows smoke) | verify-no-mocks, detect | 3.14 | windows · runs iff `needs.detect.outputs.setup_hook == 'true'` |
 | 8 | `test-infra` | Infra Tests (matrix) | verify-no-mocks | 3.10–3.14 | ubuntu (×3.10/3.11/3.12/3.13/3.14) + macOS (3.14 only) — 6 cells |
-| 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.12 | ubuntu |
+| 9 | `test-regression` | Regression Tier (claim-binding pins) | verify-no-mocks | 3.14 | ubuntu |
 | 10 | `test-project` | Project Tests (per-project matrix) | verify-no-mocks, detect-projects | capability-manifest versions | ubuntu only — exact project/Python include matrix from `public_capabilities.py` |
-| 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.12 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
-| 12 | `validate` | Validate Manuscripts | lint | 3.12 | ubuntu |
-| 13 | `security` | Security Scan | lint | 3.12 | ubuntu |
-| 14 | `docs-lint` | Documentation Lint | lint | 3.12 | ubuntu |
-| 15 | `performance` | Performance Check | test-infra + test-project | 3.12 | ubuntu |
-| 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.12 | ubuntu · schedule/manual only |
+| 11 | `fep-lean` | fep_lean (gauss + lake) | verify-no-mocks, detect | 3.14 | ubuntu · runs iff `needs.detect.outputs.fep_lean == 'true'` |
+| 12 | `validate` | Validate Manuscripts | lint | 3.14 | ubuntu |
+| 13 | `security` | Security Scan | lint | 3.14 | ubuntu |
+| 14 | `docs-lint` | Documentation Lint | lint | 3.14 | ubuntu |
+| 15 | `performance` | Performance Check | test-infra + test-project | 3.14 | ubuntu |
+| 16 | `public-matrix-receipt` | Public Matrix Receipt (receipt-bearing full matrix) | — | 3.14 | ubuntu · schedule/manual only |
 
 **Lint job** also runs `uv run python -m infrastructure.skills check-all-exports` (MED5 `__all__` gate), `scripts/audit/check_tracked_generated_artifacts.py` (rejects generated outputs and local `.codegraph/` indexes), **`scripts/audit/check_template_drift.py --strict`** (exemplar doc/script drift against Layer-1 contracts), and **`scripts/audit/check_tracked_all.py`** — the **confidentiality guard** that fails CI if any path outside the public allowlists for `projects/`, `fonds/`, `rules/`, or `tools/` is git-tracked (this is a public repo; confidential/rotating resources are local-only). **`validate`** runs manuscript markdown validation (one dir per invocation, looped over `projects/*/manuscript/`), `scripts/docgen/api_reference.py --check`, and imports each `projects.{name}.src`. **`security`** runs blocking **`pip-audit`** (IDs from [`.github/pip-audit-ignore.txt`](pip-audit-ignore.txt), up to 3 retries on failure) and **`bandit -c bandit.yaml -r -ll`** over `infrastructure/`, `scripts/`, and `projects/`. Path exclusions (the non-rendered subfolders `projects/working/`, `projects/published/`, `projects/archive/`, `projects/other/`, plus `.venv`, `site-packages`, `.lake`, and the rotating research projects under `projects/active/`) live in [`bandit.yaml`](../bandit.yaml) (`exclude_dirs`).
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
-Coverage is uploaded to **Codecov** after each test job (3.14/ubuntu-latest only).
+Infrastructure and project coverage are uploaded to **Codecov** only from their
+Python 3.14 / `ubuntu-latest` cells; upload failures do not fail CI.
 
 The `verify-no-mocks` job runs [`scripts/audit/verify_no_mocks.py`](../scripts/audit/verify_no_mocks.py) at the repository root (not under `.github/`).
 
@@ -196,7 +197,8 @@ required_status_checks:
     - "Infra Tests (ubuntu-latest, Python 3.11)"
     - "Infra Tests (ubuntu-latest, Python 3.12)"
     - "Infra Tests (ubuntu-latest, Python 3.13)"
-    - "Infra Tests (macos-latest, Python 3.12)"
+    - "Infra Tests (ubuntu-latest, Python 3.14)"
+    - "Infra Tests (macos-latest, Python 3.14)"
     # test-project expands dynamically: "Project Tests (<project>, py<ver>)"
     # for each live templates/template_* exemplar on py3.10 and py3.14. Examples:
     - "Project Tests (templates/template_active_inference, py3.14)"

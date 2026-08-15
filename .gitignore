@@ -262,6 +262,9 @@ projects/templates/*/output/reports/pipeline_report.md
 projects/templates/*/output/reports/render_summary.txt
 projects/templates/*/output/reports/telemetry.json
 projects/templates/*/output/reports/telemetry.txt
+# Archived telemetry is bounded local runtime history, not stable exemplar
+# evidence. This rule must follow the broad per-template negations above.
+projects/templates/*/output/reports/.history/**
 # PDF and slide source/intermediate files are reproducible build products.
 # Keep final PDF deliverables; source manuscripts and references remain in
 # manuscript/ and are the canonical authoring surface.

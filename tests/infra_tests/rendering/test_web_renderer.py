@@ -247,13 +247,25 @@ class TestCombinedHtmlRendering:
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
         md = manuscript_dir / "01_intro.md"
-        md.write_text("# Introduction\n\nPrior work matters [@jaynes2003probability].\n", encoding="utf-8")
+        md.write_text(
+            "# Introduction\n\nPrior work matters [@jaynes2003probability; @shannon1948theory].\n",
+            encoding="utf-8",
+        )
         (manuscript_dir / "references.bib").write_text(
             "@book{jaynes2003probability,\n"
             "  author = {Jaynes, Edwin T.},\n"
             "  title = {Probability Theory},\n"
             "  year = {2003},\n"
             "  publisher = {Cambridge University Press}\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        (manuscript_dir / "z_supplemental.bib").write_text(
+            "@article{shannon1948theory,\n"
+            "  author = {Shannon, Claude E.},\n"
+            "  title = {A Mathematical Theory of Communication},\n"
+            "  year = {1948},\n"
+            "  journal = {Bell System Technical Journal}\n"
             "}\n",
             encoding="utf-8",
         )
@@ -264,7 +276,9 @@ class TestCombinedHtmlRendering:
 
         content = result.read_text(encoding="utf-8")
         assert "Jaynes" in content
+        assert "Shannon" in content
         assert "#ref-jaynes2003probability" in content
+        assert "#ref-shannon1948theory" in content
         assert "[@jaynes2003probability]" not in content
         assert "[jaynes2003probability]" not in content
 

@@ -97,7 +97,7 @@ gitignored run directory. Before deleting caches, models, Docker data, or
 outputs, resolve exact targets and confirm they are not the only copy of
 unpublished evidence.
 
-## Backup helpers and current limitation
+## Backup helpers and acceptance boundary
 
 The shell helpers under `scripts/shell/` are site-specific examples. They
 assume an SSH-configured host named `backup`, transmit potentially sensitive
@@ -108,29 +108,83 @@ credential provisioning, or provider-independent verification.
 | --- | --- |
 | `backup-daily.sh` | Operator-configured rsync of `~/.hermes`; not a repository release gate. |
 | `backup-weekly.sh` | Operator-configured rsync of `.cache`; not a repository release gate. |
-| `backup-full.sh` | **Unavailable/unverified.** Remote path and saved directory layout do not match the restore helper's expectations. |
-| `restore-test.sh` | **Unavailable/unverified.** It checks a colon-qualified remote path through `ssh` and expects a layout the full backup does not reliably create. |
+| `backup-full.sh` | Available as an operator-configured helper. Creates a write-once-by-cooperating-helper snapshot with fixed `.hermes`, `.cache`, and `output` labels; `--dry-run` performs no network or filesystem writes. |
+| `restore-test.sh` | Available for non-destructive transfer verification. `--list` is read-only; restore uses a private control directory, validates snapshot metadata, compares the current snapshot with its restored copy, and emits a restricted receipt. |
 
-Do not schedule or rely on the full-backup/restore pair until those path
-contracts are repaired and a disposable end-to-end restore receipt passes.
-File existence or an rsync exit code alone does not establish restorability.
+The full pair now uses one layout contract:
+`backups/full/<snapshot>/{.hermes,.cache,output}` relative to the remote login
+directory, plus `.template-full-backup` metadata. `ssh` receives only that
+remote filesystem path; rsync alone receives `host:path`. Backup refuses to
+overwrite an existing snapshot, uses an atomic per-name directory lock across
+staging and finalization, retains explicitly named partial and lock paths on
+failure, and records every present or absent source label. Restore never removes
+a prior scratch tree, keeps its restored tree/diagnostics/receipt together under
+one mode-`0700` control directory, rejects a local scratch parent inside the
+backup namespace, and fails closed on undeclared layout or malformed metadata.
 
-### Requirements for a verified replacement
+```bash
+# Resolve and inspect mappings without connecting or writing
+bash scripts/shell/backup-full.sh --dry-run backup pre-upgrade-2026-08-14
 
-1. Explicit source and destination roots with no unresolved broad variable.
-2. Dry-run/list mode before writes and deletes.
-3. Encryption and access-control policy for secrets/private manuscripts.
-4. Versioned retention policy with recoverable deletion.
-5. Restore into a newly created scratch directory, never over the checkout.
-6. Inventory and hash comparison, including symlinks and permissions.
-7. `uv sync --frozen` plus a focused source-current pipeline from the restored
-   checkout.
-8. A redacted receipt binding source revision, snapshot identity, command,
-   exit status, missing paths, and limitations.
+# Create, list, then verify a write-once-by-helper remote snapshot
+bash scripts/shell/backup-full.sh backup pre-upgrade-2026-08-14
+bash scripts/shell/restore-test.sh --list backup pre-upgrade-2026-08-14
+bash scripts/shell/restore-test.sh backup pre-upgrade-2026-08-14
+```
 
-Until then, use an independently managed backup product or storage workflow
-whose restore procedure has already been tested for the operator's environment.
-That external system and its authority are outside this repository.
+For a disposable real-rsync round trip without SSH, pass the same absolute
+local root to both scripts:
+
+```bash
+BACKUP_SCRATCH_ROOT="$(mktemp -d)"
+bash scripts/shell/backup-full.sh \
+  --local-root "${BACKUP_SCRATCH_ROOT}/backups/full" local-contract-test
+bash scripts/shell/restore-test.sh \
+  --local-root "${BACKUP_SCRATCH_ROOT}/backups/full" \
+  --scratch-parent "${BACKUP_SCRATCH_ROOT}" local-contract-test
+```
+
+The local transport establishes the script and layout contract, not remote
+availability. Run the remote `--list` and restore against the operator's actual
+SSH host before treating a snapshot as recoverable there.
+
+### Implemented checks and remaining operator controls
+
+Implemented by the pair:
+
+1. Explicit repository/home sources and a validated destination/snapshot name.
+2. Non-writing `--dry-run` and read-only `--list` modes.
+3. A newly created scratch restore, never the checkout or a reused directory.
+4. Versioned layout metadata that records the repository revision when
+   available and classifies every expected source label as present or absent.
+5. A post-restore comparison of the current stored snapshot with its restored
+   copy using rsync checksums, symlinks, permissions, file timestamps,
+   additions, and deletions.
+6. A mode-`0600` receipt binding snapshot, recorded repository revision,
+   source, scratch target, command, exit status, file counts, missing labels,
+   verification result, and known limitations.
+
+Still owned by the operator or backup provider:
+
+1. encryption at rest/in transit beyond SSH and access-control policy for
+   Hermes secrets, private manuscripts, caches, and outputs;
+2. credential provisioning, host authenticity, storage quotas, monitoring,
+   and a versioned retention/deletion policy;
+3. a successful receipt from the actual remote host and independent review of
+   the restored files;
+4. Git/source recovery and `uv sync --frozen` plus a focused pipeline from a
+   restored checkout—the full helper preserves `.hermes`, repository `.cache`,
+   and `output`, not the Git working tree itself;
+5. creation-time content digests and at-rest tamper/corruption detection—the
+   current checksum pass cannot detect bad bytes already present when restore
+   begins;
+6. a quiesced point-in-time source view and filesystem metadata outside rsync
+   archive semantics: hard-link relationships, ACLs, extended attributes, and
+   macOS resource forks are not preserved or verified.
+
+File existence or one successful rsync exit code alone does not establish a
+complete disaster-recovery system. Use an independently managed product for
+controls the repository helper does not provide.
 
 ## Remote synchronization
 

@@ -8,10 +8,14 @@ No mocks used — all tests use real data, real subprocesses, and real function 
 
 from __future__ import annotations
 
+import contextlib
 import os
+import signal
 import sys
 import time
 from pathlib import Path
+
+import pytest
 
 from infrastructure.reporting.suite_runner import (
     _INTERNAL_STACK_PATTERNS,
@@ -159,6 +163,68 @@ class TestRunPytestStream:
         assert "timed out" in stderr
         assert elapsed < 2.0
         time.sleep(0.1)
+        assert not marker.exists()
+
+    @pytest.mark.skipif(os.name == "nt", reason="detached POSIX session regression")
+    def test_stream_timeout_kills_descendants_that_start_new_sessions(self, tmp_path):
+        """A nested bounded runner cannot outlive the outer output lock."""
+        marker = tmp_path / "detached-child-finished"
+        pid_file = tmp_path / "detached-child.pid"
+        child_code = (
+            "import pathlib,time; "
+            "time.sleep(3.0); "
+            f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+        )
+        parent_code = (
+            "import pathlib,subprocess,sys,time; "
+            "child=subprocess.Popen([sys.executable, '-c', sys.argv[1]], start_new_session=True); "
+            "pathlib.Path(sys.argv[2]).write_text(str(child.pid), encoding='utf-8'); "
+            "time.sleep(30)"
+        )
+        child_pid: int | None = None
+        try:
+            exit_code, _stdout, stderr = run_pytest_stream(
+                [sys.executable, "-c", parent_code, child_code, str(pid_file)],
+                tmp_path,
+                os.environ.copy(),
+                quiet=True,
+                timeout_seconds=1.5,
+            )
+            assert exit_code == 124
+            assert "timed out" in stderr
+            child_pid = int(pid_file.read_text(encoding="utf-8"))
+            time.sleep(1.8)
+            assert not marker.exists()
+        finally:
+            if child_pid is not None:
+                with contextlib.suppress(ProcessLookupError):
+                    os.kill(child_pid, signal.SIGKILL)
+
+    @pytest.mark.skipif(os.name == "nt", reason="detached POSIX session regression")
+    def test_stream_success_cleans_reparented_detached_child(self, tmp_path):
+        """An early successful root exit cannot release a live child writer."""
+        marker = tmp_path / "reparented-child-finished"
+        child_code = (
+            "import pathlib,time; "
+            "time.sleep(1.5); "
+            f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+        )
+        parent_code = (
+            "import subprocess,sys; "
+            "subprocess.Popen([sys.executable, '-c', sys.argv[1]], "
+            "start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)"
+        )
+
+        exit_code, _stdout, _stderr = run_pytest_stream(
+            [sys.executable, "-c", parent_code, child_code],
+            tmp_path,
+            os.environ.copy(),
+            quiet=True,
+            timeout_seconds=0.3,
+        )
+
+        assert exit_code == 0
+        time.sleep(1.6)
         assert not marker.exists()
 
 

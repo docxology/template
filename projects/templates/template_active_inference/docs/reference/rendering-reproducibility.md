@@ -91,7 +91,14 @@ typography-token contract from `figures.yaml`, rejects raw numeric font-size
 literals in the figure source modules, and inventories visual files that are
 intentionally outside the numbered registry. Auxiliary outputs such as the
 deterministic GIF must be classified and nonblank; unknown visual files fail the
-audit instead of silently sharing the output directory. The report marks figures
+audit instead of silently sharing the output directory. Auxiliary rows retain
+`size_bytes` for diagnostics, but freshness compares the decoded
+`content_sha256`, dimensions, mode, nonblank status, classification, and producer
+instead of the compression-dependent byte length. The two transmission images
+are attributed to their actual `infrastructure.publishing` generators. Thus an
+identical PNG re-encoded by another Pillow/zlib build passes, while changed
+pixels, missing or blank files, altered metadata, and unclassified files fail.
+The report marks figures
 backed by generated statistical data or report artifacts and fails when those
 bridge sources are missing. `output/data/statistical_visualization_bridge.json`
 expands those marked rows into a sheaf/scholarship crosswalk with manuscript

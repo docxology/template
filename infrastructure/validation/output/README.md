@@ -6,6 +6,7 @@ Pipeline output validation helpers.
 
 - `validator.py`
 - `pipeline.py`
+- `render_formats.py`
 - `pdf_checks.py`
 - `markdown_checks.py`
 - `design.py`
@@ -14,6 +15,12 @@ Pipeline output validation helpers.
 - `claim_verification.py`
 - `no_mock_enforcer.py`
 - `no_mock_audit.py`
+- `layout.py`
+
+`render_formats.py` is the shared Stage 4/5 contract for loading effective
+YAML-plus-environment format toggles, validating each enabled canonical
+deliverable, rejecting disabled-format leftovers, and filtering only
+renderer-owned artifacts from the freshly copied publication tree.
 
 ## See Also
 

@@ -1,0 +1,130 @@
+\begin{thebibliography}{16}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bosca and Ghrist(2026)]{bosca2026localglobal}
+Vicente Bosca and Robert Ghrist.
+\newblock Neural networks as local-to-global computations, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.14831}.
+
+\bibitem[Buckley et~al.(2017)Buckley, Kim, McGregor, and
+  Seth]{buckley2017mathreview}
+Christopher~L. Buckley, Chang~Sub Kim, Simon McGregor, and Anil~K. Seth.
+\newblock The free energy principle for action and perception: A mathematical
+  review.
+\newblock \emph{Journal of Mathematical Psychology}, 81:\penalty0 55--79, 2017.
+\newblock \doi{10.1016/j.jmp.2017.09.004}.
+\newblock URL \url{https://doi.org/10.1016/j.jmp.2017.09.004}.
+
+\bibitem[Champion et~al.(2021)Champion, Da~Costa, Bowman, and
+  Grze{\'s}]{champion2021branching}
+Th{\'e}ophile Champion, Lancelot Da~Costa, Howard Bowman, and Marek Grze{\'s}.
+\newblock Branching time active inference: The theory and its generality, 2021.
+\newblock URL \url{https://arxiv.org/abs/2111.11107}.
+
+\bibitem[Curry(2014)]{curry2014sheaves}
+Justin~Michael Curry.
+\newblock \emph{Sheaves, Cosheaves and Applications}.
+\newblock PhD thesis, University of Pennsylvania, 2014.
+\newblock URL
+  \url{https://repository.upenn.edu/entities/publication/c391a10c-f2e5-40be-bc3f-e6f73a43ddfb}.
+
+\bibitem[Da~Costa et~al.(2020)Da~Costa, Parr, Sajid, Veselic, Neacsu, and
+  Friston]{dacosta2020discrete}
+Lancelot Da~Costa, Thomas Parr, Noor Sajid, Sebastijan Veselic, Victorita
+  Neacsu, and Karl Friston.
+\newblock Active inference on discrete state-spaces: A synthesis.
+\newblock \emph{Journal of Mathematical Psychology}, 99:\penalty0 102447, 2020.
+\newblock \doi{10.1016/j.jmp.2020.102447}.
+\newblock URL \url{https://doi.org/10.1016/j.jmp.2020.102447}.
+
+\bibitem[Da~Costa et~al.(2023)Da~Costa, Sajid, Parr, Friston, and
+  Smith]{dacosta2023reward}
+Lancelot Da~Costa, Noor Sajid, Thomas Parr, Karl Friston, and Ryan Smith.
+\newblock Reward maximization through discrete active inference.
+\newblock \emph{Neural Computation}, 35\penalty0 (5):\penalty0 807--852, 2023.
+\newblock \doi{10.1162/neco_a_01574}.
+\newblock URL \url{https://doi.org/10.1162/neco_a_01574}.
+
+\bibitem[Friston(2010)]{friston2010fep}
+Karl Friston.
+\newblock The free-energy principle: A unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience}, 11\penalty0 (2):\penalty0
+  127--138, 2010.
+\newblock \doi{10.1038/nrn2787}.
+\newblock URL \url{https://www.nature.com/articles/nrn2787}.
+
+\bibitem[Friston et~al.(2021)Friston, Da~Costa, Hafner, Hesp, and
+  Parr]{friston2021sophisticated}
+Karl Friston, Lancelot Da~Costa, Danijar Hafner, Casper Hesp, and Thomas Parr.
+\newblock Sophisticated inference.
+\newblock \emph{Neural Computation}, 33\penalty0 (3):\penalty0 713--763, 2021.
+\newblock \doi{10.1162/neco_a_01351}.
+\newblock URL \url{https://doi.org/10.1162/neco_a_01351}.
+
+\bibitem[Gershman(2019)]{gershman2019fepbrain}
+Samuel~J. Gershman.
+\newblock What does the free energy principle tell us about the brain?
+\newblock \emph{Neurons, Behavior, Data Analysis, and Theory}, 2\penalty0
+  (3):\penalty0 1--10, 2019.
+\newblock \doi{10.51628/001c.10839}.
+\newblock URL \url{https://doi.org/10.51628/001c.10839}.
+
+\bibitem[Heins et~al.(2022)Heins, Millidge, Demekas, Klein, Friston, Couzin,
+  and Tschantz]{pymdp2024}
+Conor Heins, Beren Millidge, Daphne Demekas, Brennan Klein, Karl Friston,
+  Iain~D. Couzin, and Alexander Tschantz.
+\newblock pymdp: A python library for active inference in discrete state
+  spaces.
+\newblock \emph{Journal of Open Source Software}, 7\penalty0 (73):\penalty0
+  4098, 2022.
+\newblock \doi{10.21105/joss.04098}.
+\newblock URL \url{https://doi.org/10.21105/joss.04098}.
+
+\bibitem[Hodson et~al.(2023)Hodson, Bassett, van Hoof, Rosman, Solms, Shock,
+  and Smith]{hodson2023sophisticatedlearning}
+Rowan Hodson, Bruce Bassett, Charel van Hoof, Benjamin Rosman, Mark Solms,
+  Jonathan~P. Shock, and Ryan Smith.
+\newblock Sophisticated learning: A novel algorithm for active learning during
+  model-based planning, 2023.
+\newblock URL \url{https://arxiv.org/abs/2308.08029}.
+
+\bibitem[Nuijten et~al.(2026)Nuijten, van~de Laar, and
+  de~Vries]{nuijten2026efeplanning}
+Wouter W.~L. Nuijten, Thijs van~de Laar, and Bert de~Vries.
+\newblock Expected free energy-based planning as variational inference, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.20658}.
+
+\bibitem[Parr et~al.(2022)Parr, Pezzulo, and Friston]{parr2022active}
+Thomas Parr, Giovanni Pezzulo, and Karl~J. Friston.
+\newblock \emph{Active Inference: The Free Energy Principle in Mind, Brain, and
+  Behavior}.
+\newblock MIT Press, 2022.
+\newblock \doi{10.7551/mitpress/12441.001.0001}.
+\newblock URL \url{https://mitpress.mit.edu/9780262045353/active-inference/}.
+
+\bibitem[Robinson(2014)]{robinson2014topological}
+Michael Robinson.
+\newblock \emph{Topological Signal Processing}.
+\newblock Springer, 2014.
+\newblock \doi{10.1007/978-3-642-36104-3}.
+\newblock URL \url{https://link.springer.com/book/10.1007/978-3-642-36104-3}.
+
+\bibitem[Sm{\'e}kal and Friedman(2023)]{gnn2023}
+Jakub Sm{\'e}kal and Daniel~Ari Friedman.
+\newblock Generalized notation notation for active inference models, 2023.
+\newblock URL \url{https://zenodo.org/records/7803328}.
+
+\bibitem[Smith et~al.(2022)Smith, Friston, and Whyte]{smith2022tutorial}
+Ryan Smith, Karl~J. Friston, and Christopher~J. Whyte.
+\newblock A step-by-step tutorial on active inference and its application to
+  empirical data.
+\newblock \emph{Journal of Mathematical Psychology}, 107:\penalty0 102632,
+  2022.
+\newblock \doi{10.1016/j.jmp.2021.102632}.
+\newblock URL \url{https://doi.org/10.1016/j.jmp.2021.102632}.
+
+\end{thebibliography}

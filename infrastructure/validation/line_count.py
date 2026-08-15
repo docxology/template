@@ -42,10 +42,6 @@ DEFAULT_TEST_THRESHOLDS = LineCountThresholds(warn_at=800, fail_at=10_000)
 # grandfathered at their measured size. A ratchet can only move downward and
 # expires so the warning is not converted into a permanent allowance.
 SOURCE_LINE_COUNT_RATCHETS: Mapping[str, LineCountRatchet] = {
-    "infrastructure/rendering/slides_renderer.py": LineCountRatchet(
-        max_lines=877,
-        expires_on=date(2026, 12, 31),
-    ),
     "projects/templates/template_advanced_literature_review/src/multi_phase/search.py": LineCountRatchet(
         max_lines=826,
         expires_on=date(2026, 12, 31),

@@ -61,7 +61,12 @@ def _write_green_validation_report(root: Path, project: Path) -> dict[str, objec
     return payload
 
 
-def _green_project(root: Path, *, hydrated: bool = True) -> Path:
+def _green_project(
+    root: Path,
+    *,
+    hydrated: bool = True,
+    composition_algorithm: str = "web-renderer-combine-v1",
+) -> Path:
     project = make_project(
         root,
         "template_test",
@@ -111,7 +116,13 @@ def _green_project(root: Path, *, hydrated: bool = True) -> Path:
     combined = project / "output" / "web" / "_combined_manuscript.md"
     combined_text = "\n\n".join(path.read_text(encoding="utf-8").rstrip() for path in rendered_inputs) + "\n"
     write_doc(combined, combined_text)
-    write_manuscript_composition(project, PROJECT, rendered_inputs, combined)
+    write_manuscript_composition(
+        project,
+        PROJECT,
+        rendered_inputs,
+        combined,
+        algorithm=composition_algorithm,
+    )
     write_doc(project / "output" / "data" / "result.json", '{"count": 7}\n')
     snapshot_current_artifact_manifest(project / "output")
     _write_green_validation_report(root, project)
@@ -319,6 +330,23 @@ def test_extra_stable_output_is_rejected_until_manifest_attests_it(tmp_path: Pat
     assert receipt_path.read_bytes() == old_receipt
 
 
+def test_runtime_history_is_nonstable_but_unattested_report_still_fails(tmp_path: Path) -> None:
+    project = _green_project(tmp_path)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+
+    write_doc(
+        project / "output" / "reports" / ".history" / "telemetry-123.json",
+        '{"runtime": true}\n',
+    )
+    assert validate_rendered_provenance(tmp_path, PROJECT).valid
+
+    write_doc(project / "output" / "reports" / "unattested_quality_report.json", '{"quality": "green"}\n')
+    validation = validate_rendered_provenance(tmp_path, PROJECT)
+
+    assert [issue.code for issue in validation.issues] == ["ARTIFACT_MANIFEST_INCOMPLETE"]
+    assert "output/reports/unattested_quality_report.json" in validation.issues[0].message
+
+
 def test_manifest_and_validation_report_digests_are_bound_separately(tmp_path: Path) -> None:
     project = _green_project(tmp_path)
     write_rendered_provenance_receipt(tmp_path, PROJECT)
@@ -351,6 +379,24 @@ def test_nonhydrated_sources_are_bound_to_actual_combined_manuscript(tmp_path: P
     assert all(row.rendered_sha256 == receipt.combined_manuscript.sha256 for row in receipt.consumed_manuscript)
     composition = read_manuscript_composition(project / COMPOSITION_RELATIVE_PATH)
     assert composition.input_root_kind == "source"
+
+
+def test_shared_combined_algorithm_is_accepted_by_current_snapshot(tmp_path: Path) -> None:
+    """Strict provenance rebuilds a shared composition with its recorded algorithm."""
+
+    project = _green_project(
+        tmp_path,
+        hydrated=False,
+        composition_algorithm="shared-combined-markdown-v1",
+    )
+
+    snapshot = build_current_rendered_snapshot(tmp_path, PROJECT)
+    receipt = write_rendered_provenance_receipt(tmp_path, PROJECT)
+
+    assert snapshot.combined_manuscript.path == "output/web/_combined_manuscript.md"
+    assert receipt.combined_manuscript.sha256 == snapshot.combined_manuscript.sha256
+    composition = read_manuscript_composition(project / COMPOSITION_RELATIVE_PATH)
+    assert composition.algorithm == "shared-combined-markdown-v1"
 
 
 def test_composition_drift_blocks_refresh_and_preserves_receipt(tmp_path: Path) -> None:

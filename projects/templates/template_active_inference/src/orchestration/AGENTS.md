@@ -18,3 +18,14 @@ also keeping this full-verification path capable of regenerating it from a
 stale output tree. It also regenerates the source-derived method inventory
 before checking it, so adding a documented method cannot leave the verification
 lane permanently stale.
+
+The project explicitly declares this script as its single-project Stage-01
+verifier because the 90% branch-coverage contract is reached through isolated
+`--cov-append` groups, not the diagnostic monolithic quick lane. When the
+generic runner supplies `TEMPLATE_PROJECT_TEST_RECEIPT`, the verifier records
+JUnit outcomes only from the final coverage groups (never the duplicate
+pre-pass), parses them with `defusedxml`, combines pytest-produced warning and
+discovery sidecars, and writes the nonce-bound receipt after every postflight
+gate has passed. Coverage groups use the outer adapter's exact pinned
+interpreter rather than a nested `uv run` environment. Direct invocations
+without that environment remain unchanged.

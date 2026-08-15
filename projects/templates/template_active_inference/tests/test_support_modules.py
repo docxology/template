@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
+import contextlib
+import json
+import os
 import shutil
+import signal
+import sys
+import time
 from pathlib import Path
 
 import pytest
 
 from orchestration import full_verification
+from orchestration.portable_execution import build_bounded_env, run_bounded_subprocess
 from ontology.bindings import load_section_ontology, validate_gnn_ontology
 from simulation.logging_utils import RunLogger
 
@@ -59,8 +66,17 @@ def test_ontology_helpers() -> None:
     assert not validate_gnn_ontology(gnn)
 
 
-def test_full_verification_run_sets_defaults(tmp_path: Path, capsys) -> None:
+def test_full_verification_run_sets_defaults(tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[dict] = []
+
+    receipt_keys = (
+        "TEMPLATE_PROJECT_TEST_RECEIPT",
+        "TEMPLATE_PROJECT_TEST_RUN_ID",
+        "TEMPLATE_PROJECT_TEST_PROJECT",
+        "TEMPLATE_PROJECT_TEST_COMMAND_SHA256",
+    )
+    for key in receipt_keys:
+        monkeypatch.setenv(key, "outer-only")
 
     class Result:
         returncode = 0
@@ -85,6 +101,7 @@ def test_full_verification_run_sets_defaults(tmp_path: Path, capsys) -> None:
     assert calls[0]["env"]["PYTHONUNBUFFERED"] == "1"
     assert calls[0]["env"]["TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES"] == "2"
     assert calls[0]["env"]["EXTRA_FLAG"] == "1"
+    assert not any(key in calls[0]["env"] for key in receipt_keys)
     assert "Smoke" in capsys.readouterr().out
 
 
@@ -102,6 +119,62 @@ def test_full_verification_run_raises_on_failure(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.skipif(os.name == "nt", reason="detached POSIX session regression")
+def test_portable_timeout_kills_detached_descendant(tmp_path: Path) -> None:
+    marker = tmp_path / "detached-child-finished"
+    pid_file = tmp_path / "detached-child.pid"
+    child_code = (
+        f"import pathlib,time; time.sleep(3.0); pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+    )
+    parent_code = (
+        "import pathlib,subprocess,sys,time; "
+        "child=subprocess.Popen([sys.executable, '-c', sys.argv[1]], start_new_session=True); "
+        "pathlib.Path(sys.argv[2]).write_text(str(child.pid), encoding='utf-8'); "
+        "time.sleep(30)"
+    )
+    child_pid: int | None = None
+    try:
+        result = run_bounded_subprocess(
+            [sys.executable, "-c", parent_code, child_code, str(pid_file)],
+            cwd=tmp_path,
+            env=build_bounded_env(),
+            timeout=1.5,
+        )
+        assert result.timed_out
+        child_pid = int(pid_file.read_text(encoding="utf-8"))
+        time.sleep(1.8)
+        assert not marker.exists()
+    finally:
+        if child_pid is not None:
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(child_pid, signal.SIGKILL)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="detached POSIX session regression")
+@pytest.mark.parametrize("capture_output", [True, False])
+def test_portable_early_root_exit_cannot_leak_reparented_child(
+    tmp_path: Path,
+    capture_output: bool,
+) -> None:
+    marker = tmp_path / "reparented-child-finished"
+    child_code = (
+        f"import pathlib,time; time.sleep(1.5); pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+    )
+    parent_code = "import subprocess,sys; subprocess.Popen([sys.executable, '-c', sys.argv[1]], start_new_session=True)"
+
+    started = time.monotonic()
+    run_bounded_subprocess(
+        [sys.executable, "-c", parent_code, child_code],
+        cwd=tmp_path,
+        env=build_bounded_env(),
+        timeout=0.3,
+        capture_output=capture_output,
+    )
+    assert time.monotonic() - started < 1.5
+    time.sleep(1.6)
+    assert not marker.exists()
+
+
 def test_coverage_command_defers_threshold_until_final_chunk() -> None:
     partial = full_verification._coverage_command(["tests/test_one.py"], append=False, final=False)
     final = full_verification._coverage_command(["tests/test_two.py"], append=True, final=True)
@@ -109,6 +182,68 @@ def test_coverage_command_defers_threshold_until_final_chunk() -> None:
     assert "--cov-fail-under=0" in partial
     assert "--cov-fail-under=90" not in partial
     assert "--cov-fail-under=90" in final
+    assert partial[:3] == [sys.executable, "-m", "pytest"]
+
+
+def test_coverage_command_emits_machine_readable_junit_when_requested(tmp_path: Path) -> None:
+    junit = tmp_path / "coverage.xml"
+    evidence = tmp_path / "coverage-evidence.json"
+
+    command = full_verification._coverage_command(
+        ["tests/test_one.py"],
+        append=False,
+        final=True,
+        junit_path=junit,
+        evidence_path=evidence,
+    )
+
+    assert f"--junitxml={junit}" in command
+    assert f"--template-test-evidence={evidence}" in command
+
+
+def test_project_test_receipt_aggregates_final_coverage_groups_once(tmp_path: Path) -> None:
+    first = tmp_path / "first.xml"
+    second = tmp_path / "second.xml"
+    first.write_text(
+        '<testsuites><testsuite tests="3" failures="0" errors="0" skipped="1" time="0.1"/></testsuites>',
+        encoding="utf-8",
+    )
+    second.write_text(
+        '<testsuites><testsuite tests="2" failures="0" errors="0" skipped="0" time="0.1"/></testsuites>',
+        encoding="utf-8",
+    )
+
+    assert full_verification._junit_outcomes([first, second]) == {
+        "passed": 4,
+        "failed": 0,
+        "skipped": 1,
+        "total": 5,
+        "collection_errors": 0,
+    }
+
+    first_evidence = tmp_path / "first-evidence.json"
+    second_evidence = tmp_path / "second-evidence.json"
+    first_evidence.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-active-inference/pytest-evidence/1",
+                "warnings": 2,
+                "discovery_count": 4,
+            }
+        ),
+        encoding="utf-8",
+    )
+    second_evidence.write_text(
+        json.dumps(
+            {
+                "schema_version": "template-active-inference/pytest-evidence/1",
+                "warnings": 1,
+                "discovery_count": 2,
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert full_verification._pytest_evidence([first_evidence, second_evidence]) == (3, 6)
 
 
 def test_profile_args_are_additive_and_keep_live_services_opt_in() -> None:

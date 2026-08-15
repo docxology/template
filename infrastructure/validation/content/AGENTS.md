@@ -12,7 +12,9 @@ LaTeX/pandoc warnings.
 - `pdf_validator.py` - PDF text and structure validation
 - `markdown_validator.py` - markdown structure validation, including
   Pandoc-pitfall and citation-key checks
-- `figure_validator.py` - figure validation
+- `figure_validator.py` - figure-registry validation plus the selected
+  paper/book cover-alt contract used by tagged-PDF rendering and publication
+  audit
 - `ai_writing.py` - advisory AI-writing fingerprint detector (em-dash density, burstiness, stock phrases); **not** a hard pipeline gate
 - `diagnostic_codes.py` - stable, dotted IDs (`MarkdownCode`, `BibtexCode`)
   attached to every `DiagnosticEvent` emitted by `markdown_validator`

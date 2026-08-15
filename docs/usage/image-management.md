@@ -27,6 +27,26 @@ nearby prose or appendix description. See
 [Manuscript Semantics](../guides/manuscript-semantics.md) and the
 [Visualization Guide](visualization-guide.md).
 
+### Title-page covers
+
+Cover artwork is configured separately from the scientific figure registry:
+
+```yaml
+paper:  # use `book:` for a book cover
+  cover:
+    image: "figures/cover.png"
+    alt: "Concise description of the cover's meaningful visual content."
+metadata:
+  language: "en"
+  tagged_pdf: true
+```
+
+The `alt` value is plain text, not LaTeX. In tagged mode the combined-PDF
+renderer preserves TeX-reserved characters as literal PDF alternative text and
+fails before replacing an existing PDF when the selected configured cover has
+no valid alt string. Tagged metadata is only one PDF/UA prerequisite; inspect
+the complete structure tree and reading order before release.
+
 ## Legacy utilities
 
 `ImageManager`/`FigureManager`/`MarkdownIntegration` (below) generate

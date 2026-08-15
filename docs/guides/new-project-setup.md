@@ -167,6 +167,9 @@ paper:
   title: "Your Paper Title"
   version: "1.0"
   date: "2026-03-07"
+  cover:
+    image: "figures/cover.png"
+    alt: "Concise plain-text description of the cover artwork."
 
 authors:
   - name: "Author Name"
@@ -176,6 +179,10 @@ testing:
   max_test_failures: 0
   max_infra_test_failures: 3
   max_project_test_failures: 0
+
+metadata:
+  language: "en"
+  tagged_pdf: false  # true requires LuaLaTeX and nonblank cover alt metadata
 
 # Per-format render toggles. PDF/HTML/Slides default on; DOCX/EPUB default
 # off. See docs/usage/output-formats.md for the full reference.

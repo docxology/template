@@ -41,6 +41,10 @@ rendered formats.
 - Keep figure values, caption statistics, manuscript prose, and the figure
   registry bound to the same analysis output. Presence-only alt-text checks do
   not establish semantic adequacy.
+- Describe configured title-page artwork beside its source in
+  `paper.cover.alt` or `book.cover.alt`. If `metadata.tagged_pdf: true`, a
+  selected configured cover with missing, blank, or non-string alt text blocks
+  both the source publication audit and combined-PDF render.
 
 ## What the automated checks establish
 
@@ -49,7 +53,8 @@ rendered formats.
 | `validation.cli markdown --strict` | Referenced image files, citations, labels/references, math delimiters, and known Pandoc pitfalls pass the source validator | Alt-text quality, heading semantics, color contrast, reading order, or rendered usability |
 | `publication-audit --require-figure-accessibility` | Every referenced registered figure has a non-empty explicit `alt` or `metadata.alt_text` field, and registered generated files exist | Whether the text describes the figure well or whether unregistered decorative images are handled correctly |
 | HTML renderer tests | Language metadata, a main landmark and skip link, MathJax hardening, responsive figures, and basic alt/caption post-processing are emitted by covered code paths | Whole-document WCAG conformance or screen-reader usability |
-| PDF render/structural validation | The PDF was produced and passes the repository's structural checks; the LaTeX path requests tagged PDF/UA metadata when supported | A conforming tag tree, correct reading order, semantic tables/math, or PDF/UA certification |
+| Tagged cover validation | With `metadata.tagged_pdf: true`, the selected configured paper/book cover has explicit plain-text alt metadata, and the LuaLaTeX tagging path stores it on a `Figure` structure element | Semantic adequacy of the description or accessibility of the rest of the document |
+| PDF render/structural validation | The PDF was produced and passes the repository's structural checks; the opt-in LuaLaTeX path requests tagged PDF/UA-2 metadata | A conforming tag tree, correct reading order, semantic tables/math, or PDF/UA certification |
 
 Run the source and publication checks from the repository root, using a
 qualified project name:

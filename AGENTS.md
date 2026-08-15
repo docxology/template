@@ -644,11 +644,11 @@ steganography:
 2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract (may be skipped; full coverage gate is explicit)
 3. **Project Tests** - Run project test suite (90% coverage minimum)
 4. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
-5. **PDF Rendering** - Generate manuscript PDFs and figures
-6. **Output Validation** - Validate all generated outputs
+5. **PDF Rendering** - Historical stage label; render every enabled manuscript format from current inputs
+6. **Output Validation** - Validate every enabled canonical format and blocking release evidence
 7. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
-9. **Copy Outputs** - Copy final deliverables to root `output/` directory
+9. **Copy Outputs** - Copy, filter disabled renderer-owned formats, and validate final deliverables in root `output/`
 
 **Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — enable via `--tags ebook`, `--tags metadata`, `--tags bundle`, or `--tags archival`):
 
@@ -1546,12 +1546,12 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
 | **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |

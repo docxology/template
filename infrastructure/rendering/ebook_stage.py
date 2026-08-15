@@ -24,6 +24,11 @@ from pathlib import Path
 from infrastructure.core.config.loader import load_config
 from infrastructure.core.logging.utils import get_logger, log_header, log_success
 from infrastructure.project.discovery import resolve_project_root
+from infrastructure.rendering._bibliography import (
+    BibliographyConflictError,
+    pandoc_bibliography_args,
+    resolve_bibliography,
+)
 from infrastructure.rendering._combined_exports import (
     resolve_combined_markdown,
     rewrite_pdf_figure_refs_to_raster,
@@ -178,6 +183,15 @@ def run_ebook_generation(
         pandoc_extra_args_list.extend(["--filter", crossref])
     else:
         logger.warning("pandoc-crossref not on PATH; @fig:/@sec:/@tbl:/@eq: cross-references will not resolve.")
+
+    try:
+        bibliographies = resolve_bibliography(project_root / "manuscript")
+    except (BibliographyConflictError, OSError, UnicodeError) as exc:
+        logger.error("Bibliography resolution failed: %s", exc)
+        return 1
+    if bibliographies:
+        pandoc_extra_args_list.append("--citeproc")
+        pandoc_extra_args_list.extend(pandoc_bibliography_args(bibliographies))
 
     results: dict[str, tuple[bool, str]] = {}  # format → (success, message)
 

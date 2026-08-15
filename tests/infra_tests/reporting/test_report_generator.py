@@ -209,6 +209,25 @@ class TestGenerateTestReportFromReportGenerator:
         report = generate_test_report(infra, project, tmp_path, include_coverage_details=True)
         assert "coverage_details" in report
 
+    def test_project_identity_never_falls_back_to_stale_repo_coverage(self, tmp_path):
+        stale = tmp_path / "coverage_project.json"
+        stale.write_text(
+            json.dumps({"totals": {"percent_covered": 100.0}, "files": {"other.py": {"summary": {}}}}),
+            encoding="utf-8",
+        )
+        current_project = tmp_path / "projects" / "current"
+        current_project.mkdir(parents=True)
+
+        report = generate_test_report(
+            {},
+            {"passed": 0, "failed": 1, "total": 1, "exit_code": 1},
+            tmp_path,
+            include_coverage_details=True,
+            project_root=current_project,
+        )
+
+        assert "coverage_details" not in report
+
     def test_empty_results(self, tmp_path):
         report = generate_test_report({}, {}, tmp_path, include_coverage_details=False)
         assert report["summary"]["total_passed"] == 0

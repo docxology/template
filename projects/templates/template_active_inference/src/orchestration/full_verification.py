@@ -3,17 +3,32 @@
 from __future__ import annotations
 
 import hashlib
+import io
+import json
 import os
 import shlex
 import subprocess
+import sys
 import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Literal
 
+import defusedxml.ElementTree as ET
+from coverage import Coverage
+
 from .portable_execution import build_bounded_env, run_bounded_subprocess
 
 VerificationProfile = Literal["quick", "release", "exhaustive"]
+
+_PROJECT_TEST_RECEIPT_SCHEMA = "template/project-test-receipt/1"
+_PROJECT_TEST_RECEIPT_ENV = "TEMPLATE_PROJECT_TEST_RECEIPT"
+_PROJECT_TEST_RUN_ID_ENV = "TEMPLATE_PROJECT_TEST_RUN_ID"
+_PROJECT_TEST_PROJECT_ENV = "TEMPLATE_PROJECT_TEST_PROJECT"
+_PROJECT_TEST_COMMAND_SHA_ENV = "TEMPLATE_PROJECT_TEST_COMMAND_SHA256"
+_MAX_JUNIT_BYTES = 50_000_000
+_MAX_PYTEST_EVIDENCE_BYTES = 10_000
+_PYTEST_EVIDENCE_SCHEMA = "template-active-inference/pytest-evidence/1"
 
 
 def _relative_test_path(project_root: Path, path: Path) -> str:
@@ -226,8 +241,14 @@ def _coverage_command(
     append: bool,
     final: bool,
     profile: VerificationProfile | None = None,
+    junit_path: Path | None = None,
+    evidence_path: Path | None = None,
 ) -> list[str]:
-    cmd = ["uv", "run", "pytest", *modules, "--cov=src", "-q"]
+    # Use the verifier's current interpreter so Stage 01's exact, injected
+    # pytest/Coverage versions also produce the database and JUnit evidence.
+    # A nested ``uv run`` would ignore the outer overlay and silently fall
+    # back to the project's independently resolved environment.
+    cmd = [sys.executable, "-m", "pytest", *modules, "--cov=src", "-q"]
     cmd.extend(_profile_marker_args(profile))
     if append:
         cmd.append("--cov-append")
@@ -238,7 +259,127 @@ def _coverage_command(
         # partial chunk is intentionally below that threshold; enforce it only
         # on the final append pass.
         cmd.extend(["--cov-report=", "--cov-fail-under=0"])
+    if junit_path is not None:
+        cmd.append(f"--junitxml={junit_path}")
+    if evidence_path is not None:
+        cmd.append(f"--template-test-evidence={evidence_path}")
     return cmd
+
+
+def _project_test_receipt_context() -> tuple[Path, str, str, str] | None:
+    """Return the Stage-01 receipt context, if the generic runner requested one."""
+    raw_path = os.environ.get(_PROJECT_TEST_RECEIPT_ENV, "").strip()
+    if not raw_path:
+        return None
+    run_id = os.environ.get(_PROJECT_TEST_RUN_ID_ENV, "").strip()
+    project = os.environ.get(_PROJECT_TEST_PROJECT_ENV, "").strip()
+    command_sha = os.environ.get(_PROJECT_TEST_COMMAND_SHA_ENV, "").strip()
+    if not run_id or not project or not command_sha:
+        raise RuntimeError("Stage-01 receipt environment is incomplete")
+    receipt_path = Path(raw_path)
+    if not receipt_path.is_absolute():
+        raise RuntimeError("Stage-01 receipt path must be absolute")
+    return receipt_path, run_id, project, command_sha
+
+
+def _junit_outcomes(junit_paths: list[Path]) -> dict[str, int]:
+    """Aggregate the final coverage groups' real JUnit outcomes once."""
+    totals = {"passed": 0, "failed": 0, "skipped": 0, "total": 0, "collection_errors": 0}
+    if not junit_paths:
+        raise RuntimeError("Stage-01 receipt requested but no final coverage JUnit reports were declared")
+    for path in junit_paths:
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError(f"Stage-01 coverage group did not write JUnit evidence: {path}")
+        if path.stat().st_size > _MAX_JUNIT_BYTES:
+            raise RuntimeError(f"Stage-01 JUnit evidence exceeds {_MAX_JUNIT_BYTES} bytes: {path}")
+        try:
+            root = ET.parse(path).getroot()
+        except (OSError, ET.ParseError) as exc:
+            raise RuntimeError(f"cannot parse Stage-01 JUnit evidence {path}: {exc}") from exc
+        suites = [root] if root.tag.rsplit("}", 1)[-1] == "testsuite" else list(root.findall("./testsuite"))
+        if not suites:
+            raise RuntimeError(f"Stage-01 JUnit evidence has no testsuite counts: {path}")
+        for suite in suites:
+            try:
+                tests = int(suite.attrib.get("tests", "0"))
+                failures = int(suite.attrib.get("failures", "0"))
+                errors = int(suite.attrib.get("errors", "0"))
+                skipped = int(suite.attrib.get("skipped", "0"))
+            except ValueError as exc:
+                raise RuntimeError(f"invalid count in Stage-01 JUnit evidence {path}") from exc
+            passed = tests - failures - errors - skipped
+            if min(tests, failures, errors, skipped, passed) < 0:
+                raise RuntimeError(f"inconsistent count in Stage-01 JUnit evidence {path}")
+            totals["passed"] += passed
+            totals["failed"] += failures
+            totals["skipped"] += skipped
+            totals["total"] += tests
+            totals["collection_errors"] += errors
+    return totals
+
+
+def _pytest_evidence(evidence_paths: list[Path]) -> tuple[int, int]:
+    """Return aggregate warning and discovery counts from pytest sidecars."""
+    if not evidence_paths:
+        raise RuntimeError("Stage-01 receipt requested but no pytest evidence sidecars were declared")
+    warnings = 0
+    discovery_count = 0
+    for path in evidence_paths:
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError(f"Stage-01 coverage group did not write pytest evidence: {path}")
+        if path.stat().st_size > _MAX_PYTEST_EVIDENCE_BYTES:
+            raise RuntimeError(f"Stage-01 pytest evidence exceeds {_MAX_PYTEST_EVIDENCE_BYTES} bytes: {path}")
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"cannot parse Stage-01 pytest evidence {path}: {exc}") from exc
+        if not isinstance(payload, dict) or payload.get("schema_version") != _PYTEST_EVIDENCE_SCHEMA:
+            raise RuntimeError(f"Stage-01 pytest evidence has the wrong schema: {path}")
+        for key in ("warnings", "discovery_count"):
+            value = payload.get(key)
+            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                raise RuntimeError(f"Stage-01 pytest evidence field {key} is invalid: {path}")
+        warnings += payload["warnings"]
+        discovery_count += payload["discovery_count"]
+    return warnings, discovery_count
+
+
+def _write_project_test_receipt(
+    project_root: Path,
+    context: tuple[Path, str, str, str],
+    junit_paths: list[Path],
+    evidence_paths: list[Path],
+) -> None:
+    """Write a nonce-bound receipt for the generic Stage-01 adapter."""
+    receipt_path, run_id, project, command_sha = context
+    outcomes = _junit_outcomes(junit_paths)
+    warnings, discovery_count = _pytest_evidence(evidence_paths)
+    if outcomes["total"] <= 0:
+        raise RuntimeError("Stage-01 verifier refuses to receipt a zero-test run")
+    if discovery_count < outcomes["total"]:
+        raise RuntimeError("Stage-01 pytest discovery count is smaller than its JUnit outcome count")
+    coverage = Coverage(
+        data_file=str(project_root / ".coverage"),
+        config_file=str(project_root / "pyproject.toml"),
+    )
+    coverage.load()
+    coverage_percent = float(coverage.report(file=io.StringIO(), ignore_errors=False))
+    payload = {
+        "schema_version": _PROJECT_TEST_RECEIPT_SCHEMA,
+        "project": project,
+        "run_id": run_id,
+        "command_sha256": command_sha,
+        "coverage_percent": coverage_percent,
+        "results": {
+            **outcomes,
+            "discovery_count": discovery_count,
+            "warnings": warnings,
+        },
+    }
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = receipt_path.with_name(f".{receipt_path.name}.tmp")
+    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, receipt_path)
 
 
 def _run(
@@ -259,6 +400,17 @@ def _run(
     process_env.setdefault("TEMPLATE_ACTIVE_INFERENCE_FIXED_POINT_PASSES", "2")
     if env:
         process_env.update(env)
+    # Receipt authority belongs only to this top-level verifier process. If
+    # inherited by nested pytest, tests that exercise ``run_verification``
+    # would recursively enter receipt mode and demand JUnit sidecars from their
+    # in-memory command runners. Producers and tests need none of these values.
+    for receipt_key in (
+        _PROJECT_TEST_RECEIPT_ENV,
+        _PROJECT_TEST_RUN_ID_ENV,
+        _PROJECT_TEST_PROJECT_ENV,
+        _PROJECT_TEST_COMMAND_SHA_ENV,
+    ):
+        process_env.pop(receipt_key, None)
     if process_runner is not None:
         result = process_runner(
             cmd,
@@ -296,6 +448,9 @@ def run_verification(
 ) -> None:
     """Run verification, optionally applying a typed pytest profile."""
     refresh_cache = _RefreshCache()
+    receipt_context = _project_test_receipt_context()
+    junit_paths: list[Path] = []
+    evidence_paths: list[Path] = []
     profile_args = _profile_marker_args(profile)
     preflight = [
         ("Compose manuscript sections", ["uv", "run", "python", "scripts/compose_manuscript.py"]),
@@ -359,26 +514,45 @@ def run_verification(
         refresh_cache.run(project_root, cmd, label, command_runner)
 
     if monolithic_coverage:
+        junit_path = receipt_context[0].parent / "coverage-monolithic.xml" if receipt_context else None
+        evidence_path = receipt_context[0].parent / "coverage-monolithic-evidence.json" if receipt_context else None
+        if junit_path is not None:
+            junit_paths.append(junit_path)
+        if evidence_path is not None:
+            evidence_paths.append(evidence_path)
+        monolithic_command = [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/",
+            "--cov=src",
+            *profile_args,
+            "--cov-fail-under=90",
+            "--durations=20",
+            "-q",
+            "--maxfail=1",
+        ]
+        if junit_path is not None:
+            monolithic_command.append(f"--junitxml={junit_path}")
+        if evidence_path is not None:
+            monolithic_command.append(f"--template-test-evidence={evidence_path}")
         refresh_cache.run(
             project_root,
-            [
-                "uv",
-                "run",
-                "pytest",
-                "tests/",
-                "--cov=src",
-                *profile_args,
-                "--cov-fail-under=90",
-                "--durations=20",
-                "-q",
-                "--maxfail=1",
-            ],
+            monolithic_command,
             "Full suite coverage pass",
             command_runner,
         )
     else:
         coverage_groups = [(label, modules) for label, modules in _coverage_test_groups(project_root) if modules]
         for index, (label, modules) in enumerate(coverage_groups):
+            junit_path = receipt_context[0].parent / f"coverage-{index:02d}.xml" if receipt_context else None
+            evidence_path = (
+                receipt_context[0].parent / f"coverage-{index:02d}-evidence.json" if receipt_context else None
+            )
+            if junit_path is not None:
+                junit_paths.append(junit_path)
+            if evidence_path is not None:
+                evidence_paths.append(evidence_path)
             refresh_cache.run(
                 project_root,
                 _coverage_command(
@@ -386,6 +560,8 @@ def run_verification(
                     append=index > 0,
                     final=index == len(coverage_groups) - 1,
                     profile=profile,
+                    junit_path=junit_path,
+                    evidence_path=evidence_path,
                 ),
                 f"Coverage pass: {label}",
                 command_runner,
@@ -417,3 +593,5 @@ def run_verification(
     ]
     for label, cmd in final_refresh:
         refresh_cache.run(project_root, cmd, label, command_runner)
+    if receipt_context is not None:
+        _write_project_test_receipt(project_root, receipt_context, junit_paths, evidence_paths)

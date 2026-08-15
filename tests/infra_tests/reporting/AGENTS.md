@@ -13,7 +13,7 @@ flowchart TB
     T --> CORE[Report builders<br/>test_report_builder · test_report_generator ·<br/>test_summary_generator]
     T --> ERR[Errors<br/>test_error_aggregator]
     T --> HTML[HTML / Dashboards<br/>test_html_templates · test_dashboard_generator ·<br/>test_interactive_dashboard]
-    T --> PIPE[Pipeline<br/>test_pipeline_reporter · test_pipeline_io ·<br/>test_pipeline_markdown · test_pipeline_html]
+    T --> PIPE[Pipeline<br/>test_pipeline_reporter · test_pipeline_io ·<br/>test_pipeline_markdown · test_pipeline_html ·<br/>test_project_verifier]
     T --> CLI[Executive / Multi-project<br/>test_executive_reporter · test_multi_project_reporter ·<br/>test_output_reporter]
     T --> INTEG[Coverage / Parsers<br/>test_coverage_parser · test_coverage_analysis ·<br/>test_pytest_output_parser · test_result_loaders]
 
@@ -26,6 +26,11 @@ flowchart TB
 ```
 
 ## Test Categories
+
+`test_project_verifier.py` uses real subprocesses and coverage databases to
+pin the explicit Stage-01 verifier contract: confined argv, fresh nonce-bound
+receipt, non-vacuous outcome counts, canonical report adaptation, and an
+independently enforced project coverage floor.
 
 ### Core Reporting Tests
 

@@ -1,0 +1,193 @@
+"""Pure TeX transforms for splitting dense Beamer frames safely."""
+
+from __future__ import annotations
+
+import re
+
+_FRAME_RE = re.compile(
+    r"(?P<open>\\begin\{frame\}(?:\[[^\]]*\])?(?:\{.*?\})?\n)"
+    r"(?P<body>.*?)"
+    r"(?P<close>\\end\{frame\})",
+    re.DOTALL,
+)
+_ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
+_ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
+_ISOLATE_SLIDE_ENVS = frozenset({"codelisting", "description", "enumerate", "figure", "itemize", "longtable", "table"})
+_FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
+
+
+def _append_framebreak(lines: list[str]) -> None:
+    """Append one frame break unless the generated TeX already has one."""
+    if lines and lines[-1].rstrip().endswith(r"\framebreak"):
+        return
+    lines.append(_FRAMEBREAK_MARKER)
+
+
+def _brace_delta(line: str) -> int:
+    """Return the unescaped TeX-brace balance contributed by one source line."""
+    delta = 0
+    escaped = False
+    for character in line:
+        if character == "{" and not escaped:
+            delta += 1
+        elif character == "}" and not escaped:
+            delta -= 1
+        if character == "\\" and not escaped:
+            escaped = True
+        else:
+            escaped = False
+    return delta
+
+
+def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
+    """Split safe top-level blocks inside one Beamer ``allowframebreaks`` frame.
+
+    Pandoc emits figures and longtables as unbreakable environments. A frame can
+    therefore overflow even when it has ``allowframebreaks``. This pass isolates
+    those environments and adds breaks only between top-level paragraphs once a
+    frame segment is dense enough; it never inserts a break inside a list,
+    theorem, equation, figure, or table environment.
+    """
+    source_lines = body.splitlines(keepends=True)
+    output: list[str] = []
+    environment_stack: list[str] = []
+    segment_length = 0
+    segment_has_content = False
+    isolate_ended = False
+    table_wrapper_open = False
+    brace_depth = 0
+
+    for index, line in enumerate(source_lines):
+        stripped = line.strip()
+        events = sorted(
+            [
+                *(("begin", match) for match in _ENV_BEGIN_RE.finditer(stripped)),
+                *(("end", match) for match in _ENV_END_RE.finditer(stripped)),
+            ],
+            key=lambda event: event[1].start(),
+        )
+
+        if not environment_stack and stripped.startswith(r"{\def\LTcaptype"):
+            if segment_has_content:
+                _append_framebreak(output)
+            output.append(line)
+            segment_length = 0
+            segment_has_content = False
+            table_wrapper_open = True
+            isolate_ended = False
+            continue
+
+        if events:
+            for kind, event in events:
+                if kind == "begin":
+                    name = event.group("name")
+                    if (
+                        not environment_stack
+                        and name in _ISOLATE_SLIDE_ENVS
+                        and segment_has_content
+                        and not table_wrapper_open
+                    ):
+                        _append_framebreak(output)
+                        segment_length = 0
+                        segment_has_content = False
+                    environment_stack.append(name)
+                    isolate_ended = False
+                    continue
+                if environment_stack and event.group("name") == environment_stack[-1]:
+                    ended = environment_stack.pop()
+                    if not environment_stack and ended in _ISOLATE_SLIDE_ENVS:
+                        isolate_ended = True
+                        segment_length = 0
+                        segment_has_content = False
+            output.append(line)
+            continue
+
+        if (
+            not environment_stack
+            and stripped
+            and isolate_ended
+            and not stripped.startswith(r"\end{frame}")
+            and not stripped.startswith("}")
+        ):
+            _append_framebreak(output)
+            segment_length = 0
+            segment_has_content = False
+            isolate_ended = False
+
+        output.append(line)
+        if environment_stack:
+            segment_length += len(line)
+            segment_has_content = True
+            continue
+
+        if stripped == r"\framebreak":
+            segment_length = 0
+            segment_has_content = False
+            isolate_ended = False
+            continue
+        if not environment_stack and table_wrapper_open and stripped == "}":
+            table_wrapper_open = False
+            isolate_ended = True
+            segment_length = 0
+            segment_has_content = False
+            continue
+        if stripped:
+            segment_length += len(line)
+            segment_has_content = True
+            brace_depth += _brace_delta(line)
+            next_nonempty = next(
+                (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
+                "",
+            )
+            safe_line_boundary = (
+                brace_depth == 0
+                and bool(next_nonempty)
+                and not stripped.endswith((r"\\", "&"))
+                and not stripped.startswith((r"\label", r"\caption"))
+                and not next_nonempty.startswith(("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ")", "]", ","))
+                and not next_nonempty.startswith((r"\end{frame}", "}"))
+            )
+            if segment_length >= paragraph_threshold and safe_line_boundary:
+                _append_framebreak(output)
+                segment_length = 0
+                segment_has_content = False
+                brace_depth = 0
+            continue
+
+        next_nonempty = next(
+            (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
+            "",
+        )
+        if (
+            segment_length >= (paragraph_threshold // 2)
+            and next_nonempty
+            and not next_nonempty.startswith(r"\end{frame}")
+        ):
+            _append_framebreak(output)
+            segment_length = 0
+            segment_has_content = False
+
+    return "".join(output)
+
+
+def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
+    """Split dense generated Beamer frames into independently sized frames."""
+    changed = 0
+
+    def replace_frame(match: re.Match[str]) -> str:
+        nonlocal changed
+        if "allowframebreaks" not in match.group("open"):
+            return match.group(0)
+        body = match.group("body")
+        updated = _split_frame_body(body)
+        if updated != body:
+            changed += 1
+        segments = updated.split(_FRAMEBREAK_MARKER)
+        if len(segments) == 1:
+            return f"{match.group('open')}{updated}{match.group('close')}"
+        return "\n\n".join(f"{match.group('open')}{segment}{match.group('close')}" for segment in segments)
+
+    return _FRAME_RE.sub(replace_frame, tex_content), changed
+
+
+__all__ = ["split_long_slide_frames"]

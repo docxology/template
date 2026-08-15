@@ -1,6 +1,6 @@
 ---
 name: template-pipeline
-version: 1.0.0
+version: 1.1.0
 description: >
   Numbered pipeline stage orchestrators (stages 00–12) for the template
   research framework.  Each stage_NN_*.py is a thin orchestrator that wires
@@ -29,19 +29,19 @@ Load this skill when you need to:
 
 | Script | Infrastructure module |
 |--------|-----------------------|
-| `stage_00_setup.py` | `infrastructure.core.runtime.environment` |
-| `stage_01_test.py` | `infrastructure.core.testing` |
-| `stage_02_analysis.py` | `infrastructure.core.analysis` |
-| `stage_03_render.py` | `infrastructure.rendering` |
-| `stage_04_validate.py` | `infrastructure.validation` |
-| `stage_05_copy.py` | `infrastructure.core.files` |
-| `stage_06_llm_review.py` | `infrastructure.llm` |
-| `stage_07_executive_report.py` | `infrastructure.reporting` |
+| `stage_00_setup.py` | `infrastructure.core.runtime.setup_checks` |
+| `stage_01_test.py` | `infrastructure.core.pytest_orchestration`, `infrastructure.core.test_runner`, `infrastructure.reporting.pipeline_test_runner` |
+| `stage_02_analysis.py` | `infrastructure.core.analysis_pipeline`, `infrastructure.core.script_discovery` |
+| `stage_03_render.py` | `infrastructure.rendering.pipeline` (all enabled formats; historical YAML label `PDF Rendering`) |
+| `stage_04_validate.py` | `infrastructure.validation.output.pipeline`, `infrastructure.validation.publication.rendered_provenance` |
+| `stage_05_copy.py` | `infrastructure.core.files`, `infrastructure.validation.output.render_formats`, `infrastructure.validation.output.validator`, `infrastructure.reporting.output_statistics` |
+| `stage_06_llm_review.py` | `infrastructure.llm.review.pipeline_runner` |
+| `stage_07_executive_report.py` | `infrastructure.reporting.multi_project_reporter`, `infrastructure.reporting.output_organizer` |
 | `stage_08_connector_search.py` | `infrastructure.search.connectors` (opt-in) |
 | `stage_09_provenance_record.py` | `infrastructure.provenance` (opt-in) |
 | `stage_10_research_workflow.py` | `infrastructure.research.ResearchWorkflow` (opt-in) |
-| `stage_11_ebook.py` | `infrastructure.publishing.ebook` |
-| `stage_12_metadata.py` | `infrastructure.publishing.metadata` |
+| `stage_11_ebook.py` | `infrastructure.rendering.ebook_stage` |
+| `stage_12_metadata.py` | `infrastructure.publishing.metadata_stage` |
 
 ## Bootstrap pattern
 

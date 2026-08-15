@@ -8,6 +8,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 - `validator.py` - output structure validation (`validate_copied_outputs`, `validate_output_structure`, ...)
 - `pipeline.py` - Stage 4 orchestration facade (`validate_pdfs`, `validate_manuscript_output_markdown`, `execute_validation_pipeline`)
+- `render_formats.py` - shared Stage 4/5 effective-format loading, exact canonical deliverable validation, disabled-output rejection, and copied-tree filtering
 - `pdf_checks.py` - PDF structure and transmission bookend checks
 - `markdown_checks.py` - manuscript markdown wrapper and diagnostic report handling
 - `design.py` - domain profile, experiment plan, and AutoResearch overlay validation
@@ -26,6 +27,17 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 - `validate_pdfs(project_name)` — PDF validation for project output dir
 - `execute_validation_pipeline(project_name)` — runs PDF + markdown checks for Stage 4
 - `validate_claim_verification(project_root)` — optional report-only web claim verification over manuscript Markdown
+
+### `render_formats.py`
+
+- `load_effective_rendering_config(project_root)` — loads the same
+  environment-over-YAML format configuration used by rendering
+- `validate_enabled_render_outputs(...)` — validates every enabled canonical
+  PDF, HTML, slide, DOCX, or EPUB artifact and rejects renderer-owned artifacts
+  for disabled formats
+- `remove_disabled_render_outputs(...)` — removes disabled renderer-owned
+  artifacts only from Stage 5's freshly copied tree; it does not mutate project
+  source outputs or unrelated authored web pages
 
 ## See Also
 

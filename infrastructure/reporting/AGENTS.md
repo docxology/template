@@ -15,7 +15,7 @@ as verified success.
 | Multi-project summaries | `multi_project_reporter.py`, `multi_project_report.py` | Terminal and last-run multi-project summaries. |
 | Executive reports | `executive_reporter.py`, `_executive_*`, `_dashboard_*`, `_csv_*` | Dashboard, CSV, HTML, image, and markdown report generation. |
 | Evidence/release | `evidence_graph.py`, `release_readiness.py` | Local evidence graph and no-network release-readiness dashboard. `evidence_graph.py` graphs this repo's own `pipeline.yaml` stage DAG (producer/consumer/validator/artifact/claim) — a structurally-similar-but-different-domain analog to `projects/templates/template_literature_meta_analysis/src/reproducibility/`'s paper-content workflow graphs; cross-reference only, the two are not merged. |
-| Error/test helpers | `error_aggregator.py`, `suite_runner.py`, `pipeline_test_runner.py`, `pytest_output_parser.py` | Test orchestration and failure aggregation. |
+| Error/test helpers | `error_aggregator.py`, `suite_runner.py`, `pipeline_test_runner.py`, `project_verifier.py`, `pytest_output_parser.py` | Test orchestration and failure aggregation. `project_verifier.py` owns the nonce-bound receipt, confined argv, timeout, real-count, and independent coverage contract for explicitly declared single-project verifiers. |
 | Coverage parsing | `coverage_json_parser.py` | `parse_coverage_json` reads pytest-cov `coverage.json` into per-file and overall coverage stats. |
 | Coverage analysis | `coverage_analysis.py` | `format_coverage_status`, `analyze_coverage_gaps`, and `format_failure_suggestions` render coverage against thresholds and derive gap and failure hints. |
 | Coverage facade | `coverage_reporter.py` | Backwards-compatible re-export of `parse_coverage_json`, `parse_pytest_output`, `generate_test_report`, `save_test_report_to_files`, and the coverage-analysis helpers. |
@@ -82,6 +82,19 @@ uv run pytest tests/infra_tests/reporting -q
 For changes that touch project test execution, also run the relevant
 `scripts/pipeline/stage_01_test.py` mode because `pipeline_test_runner.py` controls the
 project output lock used by pipeline stages.
+
+The ordinary project path remains the generic pytest runner. A project may
+opt into a stateful/chunked command with
+`[tool.template].project_test_command`; the single-project lane accepts it only
+when `project_verifier.py` validates a fresh run-bound receipt and independently
+regenerates the project's CI-uploadable `coverage_project.json` from a new
+coverage database at or above the unchanged project floor. The verifier runs
+with the workspace's exact runner dependency versions, and the receipt carries
+real JUnit outcomes plus pytest-produced discovery and warning counts; absent
+project-local coverage never falls back to a repository-level file from another
+run. The all-project union runner deliberately does not use
+this hook; GitHub's isolated per-project matrix invokes the single-project lane
+and does.
 
 ## Change Checklist
 

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
 
 __all__ = [
     "_configured_image_path",
@@ -107,24 +108,29 @@ def _image_block(
     *,
     height: str,
     width: str = r"0.98\textwidth",
+    alt: str | None = None,
 ) -> str:
-    """Return a LaTeX includegraphics block for a configured image."""
+    """Return a LaTeX includegraphics block for a configured image.
+
+    ``alt`` is emitted as a LaTeX-tagging-compatible ``includegraphics`` option.
+    Keeping the option at the rendering boundary means config-driven title-page
+    artwork participates in the same tagged-PDF accessibility contract as
+    manuscript figures.
+    """
     if image_path is None:
         return ""
     if not image_path.is_file():
         logger.warning("Configured image does not exist: %s", image_path)
         return ""
     latex_image = _image_latex_path(image_path, config_file)
-    return (
-        r"\includegraphics[width="
-        + width
-        + r",height="
-        + height
-        + r",keepaspectratio]{"
-        + r"\detokenize{"
-        + latex_image
-        + r"}}"
-    )
+    options = [
+        "width=" + width,
+        "height=" + height,
+        "keepaspectratio",
+    ]
+    if alt and alt.strip():
+        options.append("alt={" + _latex_graphic_alt_text(alt) + "}")
+    return r"\includegraphics[" + ",".join(options) + "]{" + r"\detokenize{" + latex_image + r"}}"
 
 
 def _cover_image_block(
@@ -140,7 +146,10 @@ def _cover_image_block(
         if section_name is not None
         else _cover_image_path(config, config_file)
     )
-    return _image_block(image_path, config_file, height=height)
+    section = config.get(section_name or "paper", {}) or {}
+    cover = section.get("cover", {}) if isinstance(section, dict) else {}
+    alt = cover.get("alt") if isinstance(cover, dict) else None
+    return _image_block(image_path, config_file, height=height, alt=str(alt) if alt else None)
 
 
 def _has_available_paper_cover(config: dict[str, Any], config_file: Path | None) -> bool:

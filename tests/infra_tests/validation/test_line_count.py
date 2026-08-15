@@ -113,7 +113,6 @@ def test_gate_fails_on_syntax_invalid_counted_module(tmp_path: Path) -> None:
 def test_source_ratchets_cover_current_oversize_advisories() -> None:
     """Known source warnings are ratcheted rather than allowed to grow."""
     assert set(SOURCE_LINE_COUNT_RATCHETS) == {
-        "infrastructure/rendering/slides_renderer.py",
         "projects/templates/template_advanced_literature_review/src/multi_phase/search.py",
         "projects/templates/template_pools_rules_tools/src/figures.py",
     }

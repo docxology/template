@@ -40,7 +40,7 @@
    ```
    (For a fast inner loop instead: `uv run pytest tests/ -k "not gate and not
    figure" --no-cov`, or the combined verification wrapper
-   `uv run python scripts/run_full_verification.py`.)
+   `uv run --extra dev python scripts/run_full_verification.py`.)
 
 For the full pipeline (analytical/pymdp/figures/animation/method-inventory
 scripts in addition to the five roadmap-track generators above), see the

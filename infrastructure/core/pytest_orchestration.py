@@ -40,6 +40,7 @@ from infrastructure.core.pytest_profiles import (
 )
 from infrastructure.core.project_pyproject import (
     project_declared_coverage_floor,
+    project_declared_test_command,
     project_declares_dev_extra,
     resolve_project_cov_config,
 )
@@ -493,6 +494,7 @@ __all__ = [
     "parse_test_discovery_timeout",
     "prepend_uv_to_path",
     "project_declared_coverage_floor",
+    "project_declared_test_command",
     "project_has_test_files",
     "resolve_coverage_file",
     "resolve_test_profile",

@@ -471,8 +471,10 @@ jobs:
     # also removes the old code_project/fep_lean conftest plugin-name collision
     # (every project is already isolated in its own job). py3.10 (floor) + py3.14
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
-    # 60 min backstop — active_inference on py3.10 has exceeded 45 min on loaded runners.
-    timeout-minutes: 60
+    # 135 min backstop — declared project verifiers may use 115 minutes inside
+    # the shared 120-minute stage boundary; retain setup/upload margin so the
+    # hosted runner never bypasses receipt creation or descendant cleanup.
+    timeout-minutes: 135
     needs: [verify-no-mocks, detect-projects]
     permissions:
       contents: read
@@ -506,7 +508,8 @@ jobs:
 
       # scripts/pipeline/stage_01_test.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the
-      # project dir (projects/<name>/.coverage.project + coverage_project.json).
+      # project dir (generic pytest: .coverage.project; declared verifier:
+      # .coverage; both produce coverage_project.json).
       # The gate is therefore authoritative here; no repo-root coverage step.
       - name: Run project tests
         env:

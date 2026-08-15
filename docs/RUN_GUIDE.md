@@ -323,20 +323,24 @@ Executes project analysis scripts with progress tracking.
 
 #### Option 3: Render PDF
 
-Generates manuscript PDFs with progress tracking.
+Runs the historically named `PDF Rendering` stage with progress tracking. It
+renders every format enabled by the effective `render.formats` YAML plus
+`ENABLE_<FORMAT>` environment configuration.
 
 - Processes `projects/{name}/manuscript/` markdown files
-- Converts to LaTeX via pandoc
-- Compiles to PDF via xelatex
-- Also runs analysis scripts first (option 2)
+- Produces PDF/HTML/Beamer outputs by default and opt-in DOCX/EPUB outputs
+- Builds fresh combined sources from the current ordered manuscript inputs
+- Hydrates manuscript variables when the project provides the canonical producer;
+  run Stage 2 first whenever analysis-derived inputs need regeneration
 
-**Output**: `projects/{name}/output/pdf/`
+**Output**: format-specific directories under `projects/{name}/output/`; see
+[`usage/output-formats.md`](usage/output-formats.md).
 
 #### Option 4: Validate Output
 
 Validates build quality with reporting.
 
-- Checks generated PDFs for issues
+- Validates every enabled canonical render format (and PDF bookends when PDF is enabled)
 - Validates markdown references
 - Checks figure integrity
 - Generates validation reports (JSON, Markdown)
@@ -392,7 +396,7 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 ./run.sh --pipeline --resume # Resume from last checkpoint
 uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
 uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only
-uv run python scripts/pipeline/stage_03_render.py --project {name}      # Render PDF manuscript only
+uv run python scripts/pipeline/stage_03_render.py --project {name}      # Render configured manuscript formats
 
 # LLM Operations (requires Ollama)
 uv run python scripts/pipeline/stage_06_llm_review.py --reviews-only        # LLM manuscript review only (English)
@@ -413,7 +417,7 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 
 **Features**:
 
-- **Eight** DAG stages by default: clean → setup → infrastructure tests → project tests → analysis → PDF → validation → copy. Omit infrastructure tests with `--skip-infra` (**seven** stages).
+- **Eight** DAG stages by default: clean → setup → infrastructure tests → project tests → analysis → configured-format rendering (historical stage label: `PDF Rendering`) → validation → copy. Omit infrastructure tests with `--skip-infra` (**seven** stages).
 - No LLM-tagged stages (`scripts/pipeline/stage_06_llm_review.py` / `scripts/pipeline/stage_07_executive_report.py` are not part of `--core-only`; the executive stage is for multi-project reporting)
 - No LLM dependencies required for `--core-only`
 - Suitable for automated environments
@@ -431,12 +435,12 @@ The canonical pipeline-stage table (rendered from `pipeline.yaml`):
 | **0** Clean Output Directories | built-in `_run_clean_outputs` | `core`, `clean` | soft fail |
 | **1** Environment Setup | `scripts/pipeline/stage_00_setup.py` | `core` | hard fail |
 | **2** Infrastructure Tests | `scripts/pipeline/stage_01_test.py --infra-only --verbose --infra-scope pipeline-smoke` | `core`, `tests` | configurable tolerance |
-| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable tolerance |
+| **3** Project Tests | `scripts/pipeline/stage_01_test.py --project-only --verbose` | `core`, `tests` | configurable test-failure tolerance; zero-test, project-local coverage, verifier-receipt/evidence, and internal runner failures hard fail |
 | **4** Project Analysis | `scripts/pipeline/stage_02_analysis.py` | `core` | hard fail |
 | **5** Connector Search | `scripts/pipeline/stage_08_connector_search.py` | `science` | skipped if not configured |
 | **6** Provenance Record | `scripts/pipeline/stage_09_provenance_record.py --stage Connector Search` | `provenance` | skipped if not configured |
 | **7** PDF Rendering | `scripts/pipeline/stage_03_render.py` | `core` | hard fail |
-| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | PDF/bookends and artifact/provenance failures block; optional-format structure remains a warning + report |
+| **8** Output Validation | `scripts/pipeline/stage_04_validate.py` | `core` | enabled-format, enabled-PDF bookend, and artifact/provenance failures block; markdown, general output structure, and prose-quality checks remain advisory |
 | **9** LLM Scientific Review | `scripts/pipeline/stage_06_llm_review.py --reviews-only` | `llm` | skipped if Ollama absent |
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
@@ -537,7 +541,7 @@ uv run python scripts/pipeline/stage_00_setup.py            # Setup environment
 uv run python scripts/pipeline/stage_01_test.py --project {name}   # Run tests only
 uv run python scripts/pipeline/stage_01_test.py --project {name} --verbose  # Run tests with verbose output
 uv run python scripts/pipeline/stage_02_analysis.py --project {name}       # Run project scripts
-uv run python scripts/pipeline/stage_03_render.py --project {name}         # Render PDFs only
+uv run python scripts/pipeline/stage_03_render.py --project {name}         # Render configured formats
 uv run python scripts/pipeline/stage_04_validate.py --project {name}    # Validate outputs only
 uv run python scripts/pipeline/stage_05_copy.py --project {name}       # Copy final deliverables
 uv run python scripts/pipeline/stage_06_llm_review.py --project {name}         # LLM manuscript review

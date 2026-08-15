@@ -39,6 +39,7 @@ repos:
             projects/templates/.*\.svg|
             projects/templates/.*\.pdf|
             projects/templates/.*\.epub|
+            projects/templates/[^/]+/output/arxiv_submission_[0-9]{8}\.tar\.gz|
             output/templates/.*\.png|
             output/templates/.*\.svg|
             output/templates/.*\.pdf|

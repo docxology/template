@@ -179,7 +179,7 @@ uv run python scripts/generate_integration_audit.py
 uv run python scripts/generate_sheaf_tracks.py
 uv run python scripts/z_generate_manuscript_variables.py
 uv run python scripts/generate_method_inventory.py
-uv run python scripts/run_full_verification.py
+uv run --extra dev python scripts/run_full_verification.py
 ```
 
 > Runtime: the gate-heavy suite is slow because real pandoc/xelatex rendering
@@ -302,7 +302,7 @@ Run the documentation and artifact contract checks from this project root:
 
 ```bash
 uv run python scripts/check_documentation_contract.py --check
-uv run python scripts/run_full_verification.py
+uv run --extra dev python scripts/run_full_verification.py
 ```
 
 `run_full_verification.py` runs:
@@ -317,6 +317,13 @@ uv run python scripts/run_full_verification.py
 
 Use `--monolithic-coverage` only when diagnosing behavior that specifically
 requires the legacy single pytest coverage process.
+
+The same command is explicitly declared in `pyproject.toml` for the template's
+single-project Stage-01 lane. That adapter accepts success only with a fresh
+run-bound receipt containing real final-group outcomes and coverage that the
+template independently rereads at the unchanged 90% floor. The all-project
+union runner retains its generic isolated pytest policy; GitHub's per-project
+public matrix invokes this single-project contract.
 
 The inventory distinguishes inline docstrings from inventory fallbacks, so missing
 docstrings remain visible without bloating internal helper code.

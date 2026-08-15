@@ -10,6 +10,7 @@ import yaml
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.rendering._pandoc_filters import formalism_filter_args
 from infrastructure.rendering.config import RenderingConfig
@@ -291,9 +292,11 @@ class WebRenderer:
                 "Install: https://github.com/lierdakil/pandoc-crossref (e.g. brew install pandoc-crossref)"
             )
 
-        bibliography = manuscript_dir / "references.bib"
-        if bibliography.exists():
-            cmd.extend(["--citeproc", "--bibliography", str(bibliography), "--metadata=link-citations:true"])
+        bibliographies = resolve_bibliography(manuscript_dir)
+        if bibliographies:
+            cmd.append("--citeproc")
+            cmd.extend(pandoc_bibliography_args(bibliographies))
+            cmd.append("--metadata=link-citations:true")
 
         logger.info("Converting combined markdown to HTML...")
         logger.debug(f"Combined markdown file: {combined_md}")

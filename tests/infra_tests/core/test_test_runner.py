@@ -12,6 +12,8 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
 from textwrap import dedent
 
@@ -664,11 +666,11 @@ def test_output_digest_ignores_ignored_runtime_files_but_tracks_visible_files(tm
     assert _output_tree_digest(project_root) != before
 
 
-def test_receipt_rejects_output_drift_after_project_process_exits(
+def test_detached_project_writer_is_killed_before_receipt_finalization(
     synthetic_repo: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A detached test writer cannot mutate output after an early comparison."""
+    """A successful project lane cannot leave a detached output writer alive."""
     monkeypatch.delenv("COVERAGE_FILE", raising=False)
     _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
     project_root = synthetic_repo / "projects" / "alpha"
@@ -719,6 +721,59 @@ def test_receipt_rejects_output_drift_after_project_process_exits(
         receipt_path=receipt_path,
     )
 
+    from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
+
+    receipt = PublicMatrixReceipt.read(receipt_path)
+    assert output_file.read_text(encoding="utf-8") == "baseline\n"
+    assert rc == 0
+    assert receipt.overall_exit == 0
+    assert receipt.lanes[0].output_isolation_ok is True
+    assert receipt.validate(["alpha"]) == []
+
+
+def test_receipt_rejects_parent_output_drift_after_project_process_exits(
+    synthetic_repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A parent-owned mutation after the project matrix still fails closed."""
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    _write_project(synthetic_repo, "alpha", fail=False, extra_module="mod_alpha")
+    project_root = synthetic_repo / "projects" / "alpha"
+    output_file = project_root / "output" / "result.txt"
+    output_file.parent.mkdir()
+    output_file.write_text("baseline\n", encoding="utf-8")
+    combined_coverage_file = synthetic_repo / DEFAULT_COVERAGE_FILE
+    mutation_errors: list[BaseException] = []
+
+    def mutate_after_project_matrix() -> None:
+        try:
+            # The combined file is created only after the bounded project matrix
+            # returns, leaving the coverage gate before receipt finalization.
+            deadline = time.monotonic() + 10
+            while not combined_coverage_file.exists():
+                if time.monotonic() >= deadline:
+                    raise TimeoutError("combined coverage file was not created")
+                time.sleep(0.005)
+            output_file.write_text("late drift\n", encoding="utf-8")
+        except BaseException as exc:  # noqa: BLE001 - propagate thread failure in the test process
+            mutation_errors.append(exc)
+
+    writer = threading.Thread(target=mutate_after_project_matrix, daemon=True)
+    writer.start()
+    receipt_path = synthetic_repo / "public-matrix-receipt.json"
+    try:
+        rc = run_per_project_pytest(
+            synthetic_repo,
+            projects=["alpha"],
+            fail_under=1,
+            timeout=60,
+            receipt_path=receipt_path,
+        )
+    finally:
+        writer.join(timeout=15)
+
+    assert not writer.is_alive()
+    assert mutation_errors == []
     from infrastructure.core.public_matrix_receipt import PublicMatrixReceipt
 
     receipt = PublicMatrixReceipt.read(receipt_path)

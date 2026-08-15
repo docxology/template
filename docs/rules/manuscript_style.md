@@ -579,16 +579,20 @@ The method works well.[@author2023]  # ❌ After punctuation
 
 ### Citation Keys
 
-Citation keys are case-sensitive and must match entries in `references.bib`.
+Use one canonical spelling for every citation key in manuscript source and
+bibliography records. Citation backends do not agree safely on case-only
+distinctions, so keys such as `Smith2024` and `smith2024` conflict.
 
 **Requirements:**
 
 - Prefer keys in one canonical
-  `projects/{name}/manuscript/references.bib`. The combined PDF unions top-level
-  `.bib` files, but HTML, DOCX, and EPUB currently select narrower bibliography
-  inputs; consolidate supplemental files or verify every enabled format (see
-  [`../usage/output-formats.md`](../usage/output-formats.md#multi-bibliography-boundary)).
-- Use exact key spelling (case-sensitive)
+  `projects/{name}/manuscript/references.bib`. Supplemental top-level `.bib`
+  files are allowed: combined PDF, HTML, DOCX, EPUB, and ebook-stage exports
+  consume the same filename-sorted union. Keep citation keys unique
+  case-insensitively within and across the files; duplicate and case-only
+  variant keys fail closed (see the
+  [cross-format bibliography contract](../usage/output-formats.md#cross-format-bibliography-contract)).
+- Use the exact canonical spelling everywhere; do not create case-only variants
 - Keys typically follow the auto-generator convention `<surname><year><titleword>` — e.g. `boyd2004convex`, `kingma2014adam`
 
 **Example:**
@@ -972,7 +976,7 @@ Pandoc places figures and tables at their position in the source flow (float beh
 
 - Add all citations to `references.bib` first
 - Use consistent key naming (`authorYYYY` or `authorYYYYkeyword`)
-- Verify keys match exactly (case-sensitive)
+- Verify every citation uses the canonical key spelling and no case-only variants exist
 - Validate syntax and metadata, then run live reference-existence verification
 - Read the cited source and confirm it supports the adjacent claim
 - Keep bibliography file organized and record any curatorial corrections in

@@ -168,7 +168,23 @@ committed. The generated-artifact guard treats `.codegraph/*` as an offender.
 ```toml
 [tool.template]
 skip_combined_pytest = true  # omit from combined multi-project pytest union
+# Optional single-project Stage-01 verifier. The generic runner requires a
+# fresh structured receipt and independently rechecks the declared coverage floor.
+project_test_command = ["uv", "run", "--extra", "dev", "python", "scripts/run_full_verification.py"]
 ```
+
+`project_test_command` is not filename auto-discovery and is not used by the
+`--all-projects --public-projects` union runner. GitHub's per-project public
+matrix does use the single-project Stage-01 lane and therefore honors the
+declaration. Its Python entry point must resolve within the project's `scripts/`
+tree; shell strings, traversal, symlink escape, missing or stale receipts,
+zero-test receipts, and missing/below-floor coverage all fail.
+The adapter overlays the workspace's pinned pytest/Coverage stack, writes and
+reads only the selected project's `coverage_project.json`, and requires real
+JUnit outcomes plus pytest-produced warning and discovery counts. Its
+6,900-second verifier deadline remains below the shared 7,200-second stage
+deadline; both boundaries terminate descendants even when nested commands
+create new sessions.
 
 **Internal helpers (not exported from `infrastructure.project`)**:
 

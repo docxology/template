@@ -136,6 +136,9 @@ Edit `projects/{project_name}/manuscript/config.yaml`:
 paper:
   title: "Your Research Title"
   subtitle: "Optional Subtitle"
+  cover:
+    image: "figures/cover.png"
+    alt: "Concise description of the cover's meaningful visual content."
 
 authors:
   - name: "Dr. Your Name"
@@ -149,8 +152,21 @@ publication:
   journal: "Zenodo Preprints"
   year: "2026"
 
+metadata:
+  language: "en"
+  tagged_pdf: false  # opt in only with a compatible LuaLaTeX tagging stack
+
 # CAUTION: If you create a 'projects/{project_name}/manuscript/preamble.md' with \date{}, \title{}, or \author{} commands,
 # they will OVERRIDE these configuration values in the final PDF.
+```
+
+`paper.cover.alt` describes a paper cover; book projects use the parallel
+`book.cover.alt` field. When `metadata.tagged_pdf: true`, the combined-PDF
+renderer selects LuaLaTeX, writes that text into the cover image's PDF
+structure element, and fails before replacing an existing PDF if the selected
+configured cover has missing, blank, or non-string alt text. The option
+requests tagged PDF/UA-2 metadata; it does not certify PDF/UA conformance.
+
 ### DOI and ORCID status
 
 Publication identifiers are rendered from configuration rather than embedded
@@ -200,13 +216,19 @@ Place bibliography in `projects/{project_name}/manuscript/references.bib`:
 }
 ```
 
-Cite in markdown using LaTeX syntax:
+Cite in Markdown using portable Pandoc syntax:
 
-```latex
-According to recent work \cite{author2024}, we demonstrate...
+```markdown
+According to recent work [@author2024], we demonstrate...
 ```
 
-**Note**: Bibliography is automatically processed during PDF rendering. The system runs `bibtex` after LaTeX generation to resolve all citations.
+**Note**: Bibliographies are processed automatically. A project may split
+sources across multiple top-level `manuscript/*.bib` files; combined PDF,
+HTML, Beamer and Reveal.js slides, DOCX, EPUB, and ebook-stage exports all
+consume the same filename-sorted union. Section-level slide decks resolve
+inline citations but suppress a repeated full references block. Citation keys
+must be unique case-insensitively within and across those files. Rendering
+leaves the source bibliographies unchanged.
 
 ### Add Figures
 
@@ -336,6 +358,8 @@ graph TD
 | **core.py** | Main rendering orchestration | `RenderManager` - Unified API for all formats | All other modules |
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
+| **_slides_codelisting.py** | Captioned slide listings | Replaces pandoc-crossref's generated listing float after Pandoc preamble assembly so numbered code captions compile inside Beamer frames | slides_renderer |
+| **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely | slides_renderer |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration | pandoc |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
 | **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |

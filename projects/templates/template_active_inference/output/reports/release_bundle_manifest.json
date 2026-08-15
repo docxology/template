@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 38,
-  "bundle_hash": "2df56c5edb957ea62573438607da5960ffaa5275f9ccbea798c51ca14e14612e",
+  "bundle_hash": "7dc2ddde70ce53e7999a2fdec2c12f1c9b98d23a504267473426db24371bd4bd",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -17,7 +17,7 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/sheaf_gluing_certificate.json",
-        "copied_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+        "copied_sha256": "32b0fe5babdf08da39dd0451140d9529a6013fb96125cc983f9b43cfb0ce3139",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
@@ -41,11 +41,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/artifact_provenance.json",
-        "copied_sha256": "715c6a36b60b287b8f817432cb462653b03e124833a715c968930f72d851ddc0",
+        "copied_sha256": "c44cc85be8d48bffe510154a59bffdd7c659e69859edf667c2aadf4de60fbce7",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "41bec9a74d1c395de8d66aabf4fbf7f871079b917d8e3a4e5578531ab7778656",
+        "source_sha256": "b8e836806f646a87bf89a3faa17779b9dd354f4de78ad1cba322e3e6c1b1d5e2",
         "status": "deferred"
       },
       {
@@ -53,11 +53,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/replay_matrix.json",
-        "copied_sha256": "0db2e228b9347da71beb02c64b2a1299fb2b16d7ae1beb180ecd0a5b7663b9ec",
+        "copied_sha256": "cc723e892fb5cfee644fad86954dd2e3e79d67346153d98487e1adfb1c1a9c72",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "737d8a992c024f879b61cbd9e69b2cf098c4d91b49b721157a574e8b2184a735",
+        "source_sha256": "3d30a54bd6d8b864264c328205a013c1474dfcbd6c689c237719bab859a05124",
         "status": "deferred"
       },
       {
@@ -185,11 +185,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/security_posture_audit.json",
-        "copied_sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
+        "copied_sha256": "34116322e716dcb8e446ba1220e98405f27d38ed79ddc1d36abe49dac7ba7ac0",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "34116322e716dcb8e446ba1220e98405f27d38ed79ddc1d36abe49dac7ba7ac0",
+        "source_sha256": "997a4db62c5c99d22d108a5726c97d50e52cef474a4ca173b09139c077261e91",
         "status": "deferred"
       },
       {
@@ -209,11 +209,11 @@
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "data/artifact_contract_index.json",
-        "copied_sha256": "7c345962b590e1898061a0075126afe669bfa2de93610e2880b51bda4561f7b8",
+        "copied_sha256": "e13e659db495e9a6364f59b19d9141cbd26dab8de4ff73fd6ad3ddc27a564303",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "5a5cca37df8b3879adc233cf6f61ea4039d8b0d6402ed86079f0bf62ca7f74c8",
+        "source_sha256": "483130c8d85e24ed7610291270e6e85d136dc69b28cfbfba495d6fbce0415ec0",
         "status": "deferred"
       },
       {
@@ -302,15 +302,15 @@
       },
       {
         "artifact": "output/reports/visualization_quality_audit.json",
-        "comparison_deferred_until_copy": false,
+        "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/visualization_quality_audit.json",
         "copied_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
-        "hash_matches": true,
+        "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
-        "status": "matched"
+        "source_sha256": "9e61caeb72a230ec840b710d8eedcaee2f78588352282fe73d429dba7c1ed7b9",
+        "status": "deferred"
       },
       {
         "artifact": "output/data/statistical_visualization_bridge.json",
@@ -326,15 +326,15 @@
       },
       {
         "artifact": "output/pdf/template_active_inference_combined.pdf",
-        "comparison_deferred_until_copy": false,
-        "copied_exists": true,
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
         "copied_path": "pdf/template_active_inference_combined.pdf",
-        "copied_sha256": "c788f07c4aea4d9eb6128222204119cc486d254a4958e729fe4d62c852a554ed",
-        "hash_matches": true,
+        "copied_sha256": "",
+        "hash_matches": false,
         "matches_when_copied": true,
-        "source_exists": true,
-        "source_sha256": "c788f07c4aea4d9eb6128222204119cc486d254a4958e729fe4d62c852a554ed",
-        "status": "matched"
+        "source_exists": false,
+        "source_sha256": "",
+        "status": "deferred"
       },
       {
         "artifact": "output/web/template_active_inference.html",
@@ -350,15 +350,15 @@
       },
       {
         "artifact": "output/reports/artifact_diffoscope.json",
-        "comparison_deferred_until_copy": true,
+        "comparison_deferred_until_copy": false,
         "copied_exists": true,
         "copied_path": "reports/artifact_diffoscope.json",
-        "copied_sha256": "1db2b23dee2b8cbf49bb1c56cf10d638d4172637287e5210e2b10615c369759d",
-        "hash_matches": false,
+        "copied_sha256": "dbc1989287c75dd84ff1a6f321da269be43b0e0f528ebf2629e3312447111177",
+        "hash_matches": true,
         "matches_when_copied": true,
         "source_exists": true,
         "source_sha256": "dbc1989287c75dd84ff1a6f321da269be43b0e0f528ebf2629e3312447111177",
-        "status": "deferred"
+        "status": "matched"
       },
       {
         "artifact": "output/data/proof_extraction_index.json",
@@ -446,26 +446,26 @@
       },
       {
         "artifact": "output/reports/ablation_sensitivity_report.json",
-        "comparison_deferred_until_copy": true,
+        "comparison_deferred_until_copy": false,
         "copied_exists": true,
         "copied_path": "reports/ablation_sensitivity_report.json",
-        "copied_sha256": "3d075037bef51a4a660db40b82cd275a2b5135efdc3346dfde2a89ad4c5d35af",
-        "hash_matches": false,
+        "copied_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+        "hash_matches": true,
         "matches_when_copied": true,
         "source_exists": true,
         "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
-        "status": "deferred"
+        "status": "matched"
       },
       {
         "artifact": "output/reports/release_attestation.json",
         "comparison_deferred_until_copy": true,
         "copied_exists": true,
         "copied_path": "reports/release_attestation.json",
-        "copied_sha256": "d235efe16070cd07a3623f89f0b884eb424cdeac48f1104d7b6c93b795d75be7",
+        "copied_sha256": "cd4749822c34a4d2ff9832a10e768d399611c5be4c0d55a1abb354620624b1bb",
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
-        "source_sha256": "be088c2af05af127b2fc49dc2db71982968b8c5c1f692f9fa5b186c0e557ce1e",
+        "source_sha256": "fbb050e3e578e23f0e07e358fe086d44a4586178ccad3918f94824de0acfa3bf",
         "status": "deferred"
       }
     ]
@@ -490,14 +490,14 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "41bec9a74d1c395de8d66aabf4fbf7f871079b917d8e3a4e5578531ab7778656"
+      "source_sha256": "b8e836806f646a87bf89a3faa17779b9dd354f4de78ad1cba322e3e6c1b1d5e2"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "737d8a992c024f879b61cbd9e69b2cf098c4d91b49b721157a574e8b2184a735"
+      "source_sha256": "3d30a54bd6d8b864264c328205a013c1474dfcbd6c689c237719bab859a05124"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -574,7 +574,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "34116322e716dcb8e446ba1220e98405f27d38ed79ddc1d36abe49dac7ba7ac0"
+      "source_sha256": "997a4db62c5c99d22d108a5726c97d50e52cef474a4ca173b09139c077261e91"
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -588,7 +588,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "5a5cca37df8b3879adc233cf6f61ea4039d8b0d6402ed86079f0bf62ca7f74c8"
+      "source_sha256": "483130c8d85e24ed7610291270e6e85d136dc69b28cfbfba495d6fbce0415ec0"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -644,7 +644,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c"
+      "source_sha256": "9e61caeb72a230ec840b710d8eedcaee2f78588352282fe73d429dba7c1ed7b9"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -655,10 +655,10 @@
     },
     {
       "artifact": "output/pdf/template_active_inference_combined.pdf",
-      "deferred_until_render": false,
+      "deferred_until_render": true,
       "required_deliverable": true,
-      "source_exists": true,
-      "source_sha256": "c788f07c4aea4d9eb6128222204119cc486d254a4958e729fe4d62c852a554ed"
+      "source_exists": false,
+      "source_sha256": ""
     },
     {
       "artifact": "output/web/template_active_inference.html",
@@ -735,7 +735,7 @@
       "deferred_until_render": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "be088c2af05af127b2fc49dc2db71982968b8c5c1f692f9fa5b186c0e557ce1e"
+      "source_sha256": "fbb050e3e578e23f0e07e358fe086d44a4586178ccad3918f94824de0acfa3bf"
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",

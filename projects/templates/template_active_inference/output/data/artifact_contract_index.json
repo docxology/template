@@ -246,7 +246,7 @@
       "copied_parity_ok": true,
       "copied_path": "data/artifact_contract_index.json",
       "copied_required": true,
-      "copied_sha256": "7c345962b590e1898061a0075126afe669bfa2de93610e2880b51bda4561f7b8",
+      "copied_sha256": "e13e659db495e9a6364f59b19d9141cbd26dab8de4ff73fd6ad3ddc27a564303",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -263,7 +263,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "44faa12dd44f065b8f10e06a7b16c1874c794c5dae36b958829ba0a71b350e7d",
+      "source_sha256": "08a13117fabce0bbbd55d1d661fc4c65bfb627a28901285ea2e3cba47896beb2",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -281,7 +281,7 @@
       "copied_parity_ok": true,
       "copied_path": "data/artifact_provenance.json",
       "copied_required": true,
-      "copied_sha256": "715c6a36b60b287b8f817432cb462653b03e124833a715c968930f72d851ddc0",
+      "copied_sha256": "c44cc85be8d48bffe510154a59bffdd7c659e69859edf667c2aadf4de60fbce7",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -302,7 +302,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "e4f3e5b5d935e6208ff310d3cf3eea80732a121886e11ba77e4979139c0c1389",
+      "source_sha256": "6d31410f13522e324c612a05284dd2d71646b5ba09354ac528adb3d842329608",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -997,7 +997,7 @@
       "copied_parity_ok": true,
       "copied_path": "data/sheaf_gluing_certificate.json",
       "copied_required": true,
-      "copied_sha256": "26b60381230995915da1a59e59968cbab98dbbf39474bf37927d13eba714a439",
+      "copied_sha256": "32b0fe5babdf08da39dd0451140d9529a6013fb96125cc983f9b43cfb0ce3139",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -2058,8 +2058,8 @@
       "copied_parity_ok": true,
       "copied_path": "reports/ablation_sensitivity_report.json",
       "copied_required": true,
-      "copied_sha256": "3d075037bef51a4a660db40b82cd275a2b5135efdc3346dfde2a89ad4c5d35af",
-      "copied_status": "deferred",
+      "copied_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+      "copied_status": "matched",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/ablation_sensitivity_report.json"
@@ -2132,8 +2132,8 @@
       "copied_parity_ok": true,
       "copied_path": "reports/artifact_diffoscope.json",
       "copied_required": true,
-      "copied_sha256": "1db2b23dee2b8cbf49bb1c56cf10d638d4172637287e5210e2b10615c369759d",
-      "copied_status": "deferred",
+      "copied_sha256": "dbc1989287c75dd84ff1a6f321da269be43b0e0f528ebf2629e3312447111177",
+      "copied_status": "matched",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
         "output/reports/artifact_diffoscope.json",
@@ -2335,7 +2335,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "0d5e1af481c88313292c5325ffec2f37731be2bb8a7d219795ab69ac1d2bb82e",
+      "source_sha256": "b871c0792536381af7690bd702a27ec0f3e32b8efb7ed124cc781516f0d34628",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2669,7 +2669,7 @@
       "copied_parity_ok": true,
       "copied_path": "reports/release_attestation.json",
       "copied_required": true,
-      "copied_sha256": "d235efe16070cd07a3623f89f0b884eb424cdeac48f1104d7b6c93b795d75be7",
+      "copied_sha256": "cd4749822c34a4d2ff9832a10e768d399611c5be4c0d55a1abb354620624b1bb",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -2686,7 +2686,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "457e2a3b302b0b87b9c7647bd5307de436f276fea994ba9eafb9abae2e4d203a",
+      "source_sha256": "2210df90216e142059e56c0d691be8377fb43e2c662166225fa65fc9371f9cec",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2725,7 +2725,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "abe0f2ac99c231b7a30779cc188b98aff26c66fd52b75a22a013008f6eb088ed",
+      "source_sha256": "a2dffc9ae7f87b2437dad8054af1a032d4b430579d532579320f99a704da04a3",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2781,7 +2781,7 @@
       "copied_parity_ok": true,
       "copied_path": "reports/replay_matrix.json",
       "copied_required": true,
-      "copied_sha256": "0db2e228b9347da71beb02c64b2a1299fb2b16d7ae1beb180ecd0a5b7663b9ec",
+      "copied_sha256": "cc723e892fb5cfee644fad86954dd2e3e79d67346153d98487e1adfb1c1a9c72",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -2803,7 +2803,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "61af408ba16a959f7d7caaeab3837299e1a30d65798c746d3dfebfeab25c954c",
+      "source_sha256": "5f59c62183ba6d4403aef630307ad429f754a479d9de910976d3d49a30cf098a",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2886,7 +2886,7 @@
       "copied_parity_ok": true,
       "copied_path": "reports/security_posture_audit.json",
       "copied_required": true,
-      "copied_sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
+      "copied_sha256": "34116322e716dcb8e446ba1220e98405f27d38ed79ddc1d36abe49dac7ba7ac0",
       "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
@@ -2908,7 +2908,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "34116322e716dcb8e446ba1220e98405f27d38ed79ddc1d36abe49dac7ba7ac0",
+      "source_sha256": "997a4db62c5c99d22d108a5726c97d50e52cef474a4ca173b09139c077261e91",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3055,7 +3055,7 @@
       "copied_path": "reports/visualization_quality_audit.json",
       "copied_required": true,
       "copied_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
-      "copied_status": "matched",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/visualization_quality_audit.json",
@@ -3077,7 +3077,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "a2a838d803a1d6a6bf4f3cf12b155eab80730ea0a3ea6371168f128d5a71210c",
+      "source_sha256": "9e61caeb72a230ec840b710d8eedcaee2f78588352282fe73d429dba7c1ed7b9",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"

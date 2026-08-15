@@ -6,7 +6,7 @@ Markdown, PDF, and figure validation helpers.
 
 - `pdf_validator.py`
 - `markdown_validator.py`
-- `figure_validator.py`
+- `figure_validator.py` — registry checks and tagged-PDF cover-alt validation
 - `diagnostic_codes.py`
 
 ## See Also

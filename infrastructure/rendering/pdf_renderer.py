@@ -35,6 +35,9 @@ from infrastructure.rendering._pdf_title_page_config import _load_render_config,
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
 from infrastructure.rendering.security import subprocess_options
+from infrastructure.validation.content.figure_validator import (
+    validate_configured_cover_accessibility,
+)
 
 logger = get_logger(__name__)
 
@@ -227,6 +230,21 @@ class PDFRenderer:
             profile.validate_source(source_file)
         profile.validate_output(output_file)
 
+        project_config, project_config_file = _load_render_config(manuscript_dir)
+        tagged_pdf, language = _pdf_tagging_options(manuscript_dir)
+        cover_accessibility_issues = validate_configured_cover_accessibility(
+            project_config,
+            required=tagged_pdf,
+        )
+        if cover_accessibility_issues:
+            raise RenderingError(
+                "; ".join(cover_accessibility_issues),
+                context={
+                    "config": str(project_config_file or manuscript_dir / "config.yaml"),
+                    "tagged_pdf": tagged_pdf,
+                },
+            )
+
         # Remove existing output file to ensure fresh compilation
         if output_file.exists():
             output_file.unlink()
@@ -240,7 +258,6 @@ class PDFRenderer:
 
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
-        project_config, _ = _load_render_config(manuscript_dir)
         rendering_options = _rendering_options(project_config)
         combined_content = combine_manuscript_markdown_sections(
             source_files,
@@ -283,7 +300,6 @@ class PDFRenderer:
 
         # Step 4: Post-process LaTeX (lmodern, hidelinks, math delimiters)
         tex_content = combined_tex.read_text(encoding="utf-8")
-        tagged_pdf, language = _pdf_tagging_options(manuscript_dir)
         latex_compiler = _combined_latex_compiler(
             self.config.latex_compiler,
             tagged_pdf=tagged_pdf,

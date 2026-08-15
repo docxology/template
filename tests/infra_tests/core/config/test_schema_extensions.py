@@ -227,3 +227,34 @@ def test_generate_manuscript_config_schema_includes_registered_extension() -> No
     assert "analysis" in schema["properties"]
     assert "scripts" in schema["properties"]["analysis"]["properties"]
     assert "alpha_block" in schema["properties"]
+
+
+def test_generated_schema_describes_tagged_cover_accessibility_fields() -> None:
+    """Editor schema accepts boolean tagging plus paper/book cover alt strings."""
+    from jsonschema import Draft202012Validator
+    from jsonschema.exceptions import ValidationError
+
+    schema = generate_manuscript_config_schema()
+    validator = Draft202012Validator(schema)
+    config = {
+        "paper": {
+            "title": "Tagged paper",
+            "cover": {"image": "cover.png", "alt": "A source-bound cover."},
+        },
+        "book": {
+            "title": "Tagged book",
+            "cover": {"image": "book.png", "alt": "Nested modules."},
+        },
+        "metadata": {"language": "en", "tagged_pdf": True},
+    }
+
+    validator.validate(config)
+
+    with pytest.raises(ValidationError):
+        validator.validate({"metadata": {"tagged_pdf": "true"}})
+    with pytest.raises(ValidationError):
+        validator.validate({"paper": {"cover": {"image": "cover.png", "alt": ["not", "text"]}}})
+
+    assert schema["properties"]["paper"]["properties"]["cover"]["properties"]["alt"]["type"] == "string"
+    assert schema["properties"]["book"]["properties"]["cover"]["properties"]["alt"]["type"] == "string"
+    assert schema["properties"]["metadata"]["properties"]["tagged_pdf"]["type"] == "boolean"

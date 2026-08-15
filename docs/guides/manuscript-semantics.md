@@ -8,9 +8,9 @@ The PDF rendering pipeline uses **three cooperating tools**:
 |------|------|--------------|
 | `formalism.lua` filter | Numbers Definition/Proposition/Theorem blocks and resolves `@def:`, `@prop:`, `@thm:` references | [`infrastructure/rendering/_pandoc_filters.py`](../../infrastructure/rendering/_pandoc_filters.py) — ships with the repo, applied **first** |
 | `pandoc-crossref` filter | Resolves `@fig:`, `@tbl:`, `@eq:`, `@sec:` cross-references | [`infrastructure/rendering/_pdf_combined_pandoc.py`](../../infrastructure/rendering/_pdf_combined_pandoc.py) (`build_pandoc_tex_command`) — auto-detected on `PATH` |
-| Pandoc citation backend | Resolves the remaining `[@key]`; the PDF path uses `--natbib`, while HTML/DOCX/EPUB use `--citeproc` | Format-specific renderer |
+| Pandoc citation backend | Resolves the remaining `[@key]`; the PDF path uses `--natbib`, while HTML/DOCX/EPUB/Beamer/Reveal.js use `--citeproc` | Format-specific renderer |
 
-Order matters. `[@def:x]` and `[@knuth1997]` are both Pandoc *citations*; the formalism filter runs first so it can claim the formalism labels before the citation machinery would emit them as undefined citations. The renderers request the same formalism/cross-reference filter order, but citation backends and bibliography selection differ by format. `pandoc-crossref` is also an optional external executable. Verify numbering and citations in every enabled edition rather than inferring parity from one render.
+Order matters. `[@def:x]` and `[@knuth1997]` are both Pandoc *citations*; the formalism filter runs first so it can claim the formalism labels before the citation machinery would emit them as undefined citations. The renderers request the same formalism/cross-reference filter order and the same deterministic bibliography union; citation backends still differ (`natbib` for PDF, citeproc for HTML/DOCX/EPUB/slides). `pandoc-crossref` is also an optional external executable. Verify numbering and citations in every enabled edition rather than inferring parity from one render.
 
 Because these tools cooperate, **all citations must use Pandoc bracket-cite syntax** and **all cross-references must use Pandoc-crossref syntax**. Raw `\cite{}` and `\ref{}` work in PDF but break HTML / EPUB rendering and clutter the source.
 
@@ -42,12 +42,14 @@ Because these tools cooperate, **all citations must use Pandoc bracket-cite synt
    each enabled format. Undefined keys surface as `[?]` or renderer warnings;
    inspect every edition.
 3. Citation keys are lowercase alphanumeric with optional underscores. The convention used by the auto-generators is `<surname><year><titleword>` — e.g. `boyd2004convex`, `nocedal2006numerical`, `peng2011reproducible`.
-4. Use one canonical `references.bib` when cross-format parity matters. The
-   combined PDF currently unions every top-level `manuscript/*.bib`; combined
-   HTML reads `references.bib`; DOCX/EPUB read only the first `.bib` in sorted
-   filename order. Supplemental files such as `references_deep.bib` therefore
-   require consolidation or explicit per-format verification. See
-   [`../usage/output-formats.md`](../usage/output-formats.md#multi-bibliography-boundary).
+4. Prefer one curated `references.bib`, but supplemental top-level `.bib`
+   databases are supported. Combined PDF, HTML, DOCX, EPUB, and the opt-in
+   ebook stage all consume the same filename-sorted `manuscript/*.bib` union.
+   Repeated or symlinked paths are included once, and duplicate citation keys,
+   including case-only variants within or across databases, fail before
+   rendering because BibTeX and citeproc otherwise have different winner
+   rules. See the
+   [cross-format bibliography contract](../usage/output-formats.md#cross-format-bibliography-contract).
 5. Syntax and metadata validation do not establish that a source supports the
    adjacent claim. Before submission, validate the BibTeX, resolve identifiers
    against scholarly indexes, and inspect the primary source for claim support:

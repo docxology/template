@@ -133,7 +133,7 @@ class TestArxivApi:
             abstract="Abstract",
             keywords=["test"],
         )
-        (pdf_dir / "Test_Paper.bbl").write_text("\\begin{thebibliography}{1}", encoding="utf-8")
+        (manuscript_dir / "main.bbl").write_text("\\begin{thebibliography}{1}", encoding="utf-8")
 
         result = publishing.prepare_arxiv_submission(output_dir, metadata)
         assert result.exists()
@@ -142,7 +142,7 @@ class TestArxivApi:
             names = archive.getnames()
         assert "main.tex" in names
         assert "references.bib" in names
-        assert "Test_Paper.bbl" in names
+        assert "main.bbl" in names
 
     def test_api_module_keeps_zenodo_client_boundary(self):
         """api.py remains the Zenodo client module; platform helpers live in package exports."""

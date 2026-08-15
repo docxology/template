@@ -1,10 +1,10 @@
 ---
 name: template-shell
-version: 1.0.0
+version: 1.1.0
 description: >
   Shell helper scripts for the template research framework.
   Covers system health checks, local CI reproduction, uv bootstrap,
-  and rsync backup tiers.  Scripts live at scripts/ root level.
+  and rsync backup/restore contracts under scripts/shell/.
 tags:
   - shell
   - bash
@@ -34,9 +34,19 @@ Load this skill when you need to:
 | `scripts/shell/ci_local.sh` | Local CI reproduction |
 | `scripts/shell/shell_bootstrap.sh` | uv bootstrap + sandbox env vars |
 | `scripts/shell/bash_utils.sh` | Shared helpers (do not source directly in pipeline) |
+| `scripts/shell/backup-daily.sh` | Site-configured daily `.hermes` rsync tier |
+| `scripts/shell/backup-weekly.sh` | Site-configured weekly repository-cache rsync tier |
+| `scripts/shell/backup-full.sh` | Named, metadata-bearing `.hermes`/`.cache`/`output` snapshot |
+| `scripts/shell/restore-test.sh` | Private-scratch metadata and transfer-consistency verification |
 
 ## Pitfalls
 
 - `shell_bootstrap.sh` is sourced by `run.sh` — do not alter its `export` names.
 - `bash_utils.sh` is for backup/health scripts and integration tests only.
-- Backup scripts assume rsync is available and the `BACKUP_DEST` env var is set.
+- Remote backup helpers require `rsync`, `ssh`, and an SSH alias or
+  `user@hostname` positional argument (default: `backup`); they do not use a
+  `BACKUP_DEST` environment variable.
+- Use matching `--local-root <absolute-dir>` arguments for a disposable local
+  full-backup/restore round trip. Local success does not prove off-site
+  availability, creation-time integrity, encryption, retention, or source
+  quiescence.

@@ -4,7 +4,7 @@ tests for pipeline reporting and error aggregation.
 
 ## Overview
 
-Tests for reporting module including pipeline report generation, error aggregation, performance metrics, and report formatting.
+Tests for reporting module including pipeline report generation, error aggregation, performance metrics, report formatting, and the real-process structured project-verifier receipt/coverage boundary.
 
 ## Quick Start
 
@@ -14,6 +14,9 @@ uv run pytest tests/infra_tests/reporting/ -v
 
 # Run specific test module
 uv run pytest tests/infra_tests/reporting/test_error_aggregator.py -v
+
+# Run the explicit single-project verifier contract
+uv run pytest tests/infra_tests/reporting/test_project_verifier.py -q
 ```
 
 ## Test Modules

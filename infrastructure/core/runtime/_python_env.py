@@ -15,7 +15,8 @@ from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
 
-_ANALYSIS_SECRET_OPT_IN = "ANALYSIS_ALLOW_SECRETS"
+# Public environment-variable name, never a credential value.
+_ANALYSIS_SECRET_OPT_IN = "ANALYSIS_ALLOW_SECRETS"  # nosec B105
 
 
 def validate_analysis_script_path(script_path: Path, project_root: Path) -> Path:

@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._bibliography import resolve_bibliography
 from infrastructure.rendering._pdf_combined_transmission import (
     _END_TRANSMISSION_SECTION,
     _END_TRANSMISSION_SECTION_NUMBERED,
@@ -47,7 +48,7 @@ def _bibliography_insertion(replacement: str, *, inline: bool) -> str:
 
 def discover_manuscript_bib_paths(manuscript_dir: Path) -> list[Path]:
     """Return sorted ``*.bib`` paths beside the manuscript (multi-database projects)."""
-    return sorted(manuscript_dir.glob("*.bib"))
+    return list(resolve_bibliography(manuscript_dir))
 
 
 def inject_bibliography(

@@ -504,6 +504,7 @@ class TestProseQualityGate:
         if enabled is not None:
             (ms_dir / "config.yaml").write_text(
                 "paper:\n  title: Test\n"
+                "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n"
                 "validation:\n  prose_quality:\n    enabled: " + ("true" if enabled else "false") + "\n",
                 encoding="utf-8",
             )
@@ -593,7 +594,7 @@ class TestProseQualityGate:
         project_dir = self._scaffold(tmp_path, enabled=True, prose=ai_prose)
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True, exist_ok=True)
-        (pdf_dir / "p.pdf").write_bytes(_minimal_structural_pdf())
+        (pdf_dir / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
 
         rc, results = self._run_capturing_check_results(tmp_path)
         assert rc == 0
@@ -606,7 +607,7 @@ class TestProseQualityGate:
         (project_dir / "manuscript" / "bad.md").write_bytes(b"\xff\xfe not utf-8 \x80\x81")
         pdf_dir = project_dir / "output" / "pdf"
         pdf_dir.mkdir(parents=True, exist_ok=True)
-        (pdf_dir / "p.pdf").write_bytes(_minimal_structural_pdf())
+        (pdf_dir / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
 
         assert mod.validate_prose_quality("test", repo_root=tmp_path) is True
         rc, _ = self._run_capturing_check_results(tmp_path)
@@ -637,12 +638,14 @@ class TestClaimVerificationGate:
     def _scaffold(self, tmp_path):
         project_dir = tmp_path / "projects" / "active" / "test"
         (project_dir / "output" / "pdf").mkdir(parents=True)
-        (project_dir / "output" / "pdf" / "test.pdf").write_bytes(_minimal_structural_pdf())
+        (project_dir / "output" / "pdf" / "test_combined.pdf").write_bytes(_minimal_structural_pdf())
         ms_dir = project_dir / "manuscript"
         ms_dir.mkdir(parents=True)
         (ms_dir / "01_intro.md").write_text("We observed 12 participants in the cohort.", encoding="utf-8")
         (ms_dir / "config.yaml").write_text(
-            "paper:\n  title: Test\nvalidation:\n  claim_verification:\n    enabled: true\n",
+            "paper:\n  title: Test\n"
+            "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n"
+            "validation:\n  claim_verification:\n    enabled: true\n",
             encoding="utf-8",
         )
         return project_dir

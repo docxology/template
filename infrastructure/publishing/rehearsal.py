@@ -13,7 +13,8 @@ from typing import Sequence
 from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_policy
 from infrastructure.publishing.release_receipts import CleanCheckoutReceipt, CommandReceipt, ReceiptStatus
 
-REHEARSAL_RECEIPT_TOKEN = "__REHEARSAL_RECEIPT__"
+# Non-secret marker replaced with a receipt path before command execution.
+REHEARSAL_RECEIPT_TOKEN = "__REHEARSAL_RECEIPT__"  # nosec B105
 _REPRESENTATIVE_OUTPUT_PREFIX = "projects/templates/template_code_project/output/"
 
 DEFAULT_REHEARSAL_COMMANDS: tuple[tuple[str, ...], ...] = (

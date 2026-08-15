@@ -8,6 +8,12 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.pipeline.single_stage import execute_single_stage
+from infrastructure.core.pipeline.stages import PIPELINE_STAGE_TIMEOUT_SECONDS
+from infrastructure.reporting.project_verifier import DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS
+
+
+def test_single_stage_deadline_exceeds_declared_verifier_deadline() -> None:
+    assert PIPELINE_STAGE_TIMEOUT_SECONDS > DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS
 
 
 def test_unknown_stage_exits_with_message() -> None:

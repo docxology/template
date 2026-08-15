@@ -13,8 +13,9 @@ renderers without owning validation policy or project analysis.
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `web_renderer.py`, `_web_postprocess.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `mermaid_figure.py` | Slides, HTML orchestration and deterministic HTML post-processing, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Format renderers | `slides_renderer.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_postprocess.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `mermaid_figure.py` | Slides, Beamer-safe captioned listings and frame splitting, HTML orchestration and deterministic HTML post-processing, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Pandoc filters | `_pandoc_filters.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. |
+| Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py` | Section ordering, substitutions, resolved manuscript trees, and render-boundary composition evidence (`manuscript_composition.py` writes the ordered-input/combined-output digest receipt at `output/reports/manuscript_composition.json`, derived from the exact ordered inputs each combined writer just consumed). |
 | LaTeX support | `latex_utils.py`, `latex_package_validator.py`, `preflight.py` | Compilation and package checks. |
 | LaTeX checks | `latex_discovery.py`, `latex_validation.py`, `latex_log_quality.py`, `latex_texttt.py` | `kpsewhich`/per-package discovery, required/optional package `ValidationReport`, render-log findings for overfull/underfull boxes and undefined references, and rewriting long `\texttt{}` spans into a breakable monospace macro. |
@@ -34,6 +35,19 @@ renderers without owning validation policy or project analysis.
   belong before `\begin{figure}`.
 - PDF metadata and publishing information come from
   `projects/{name}/manuscript/config.yaml`.
+- Configured title-page artwork uses `paper.cover.image`/`paper.cover.alt` or
+  the parallel `book.cover.*` fields. With `metadata.tagged_pdf: true`, the
+  selected cover's `alt` must be a non-empty string; validation fails before a
+  prior combined PDF is replaced. The renderer requests tagged PDF/UA-2 output
+  through LuaLaTeX, but a successful render is not PDF/UA certification.
+- Combined PDF and HTML, Beamer and Reveal.js slides, DOCX, EPUB, and the opt-in
+  ebook stage consume the same filename-sorted union of top-level
+  `manuscript/*.bib` files. Repeated or symlinked paths are passed once;
+  duplicate and case-only variant citation keys within or across databases
+  raise before BibTeX and citeproc can choose different definitions. Do not
+  concatenate or rewrite manuscript bibliography sources during rendering.
+  Section-level slide decks resolve
+  inline citations but suppress repeated reference lists.
 - `pptx_deck.render_pptx()` normalizes OOXML ZIP-member timestamps after
   `python-pptx` saves the package. Do not remove that pass: identical decks
   must remain byte-identical, not merely content-equivalent.

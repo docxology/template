@@ -7,7 +7,6 @@ loop used by both infrastructure and project test suites.
 import collections
 import os
 import select
-import signal
 import subprocess
 import sys
 from contextlib import nullcontext
@@ -16,7 +15,12 @@ from pathlib import Path
 from time import monotonic
 from typing import Any
 
-from infrastructure.core.execution_boundary import build_bounded_env
+from infrastructure.core.execution_boundary import (
+    build_bounded_env,
+    build_bounded_run_env,
+    terminate_bounded_run_processes,
+    terminate_process_tree,
+)
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.logging.progress import log_with_spinner
@@ -92,16 +96,16 @@ def _passes_quiet_filter(char: str, line: str, quiet: bool) -> bool:
 
 
 def _terminate_stream_process(process: subprocess.Popen[bytes]) -> None:
-    """Terminate a streaming subprocess and all descendants in its session."""
-    if process.poll() is not None:
-        return
-    if os.name == "nt":  # pragma: no cover - the public runner is Unix-first
-        process.kill()
-        return
-    try:
-        os.killpg(process.pid, signal.SIGKILL)
-    except ProcessLookupError:
-        pass
+    """Terminate a streaming subprocess and descendants across sessions.
+
+    A nested project runner may deliberately start its own sessions for
+    per-command timeouts. Killing only the outer process group would then leave
+    those detached descendants alive after the project output lock is released.
+    On POSIX, freeze the root, discover descendants from the process table until
+    stable, then kill every PID as well as the original group. Windows uses
+    ``taskkill /T`` for the equivalent tree operation.
+    """
+    terminate_process_tree(process.pid, group_id=process.pid)
 
 
 def run_pytest_stream(
@@ -118,10 +122,11 @@ def run_pytest_stream(
     stdout_buf: list[str] = []
     recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
+    process_env, run_token = build_bounded_run_env(build_bounded_env(env))
     process = subprocess.Popen(
         cmd,
         cwd=str(repo_root),
-        env=build_bounded_env(env),
+        env=process_env,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=False,  # Use binary mode for non-blocking IO
@@ -183,9 +188,10 @@ def run_pytest_stream(
     finally:
         if timed_out:
             _terminate_stream_process(process)
-            process.wait()
         elif process.poll() is None:
             _terminate_stream_process(process)
+        terminate_bounded_run_processes(run_token)
+        if process.poll() is None:
             process.wait()
         if timed_out:
             stderr_text = f"streaming subprocess timed out after {timeout_seconds:g}s"

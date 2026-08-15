@@ -36,10 +36,33 @@ class AuthorConfig(TypedDict, total=False):
     email: str
 
 
+class _CoverConfig(TypedDict, total=False):
+    """Configured title-page artwork and its plain-text alternative."""
+
+    image: str
+    alt: str
+
+
 class PaperConfig(TypedDict, total=False):
     """Configuration for a paper's base metadata."""
 
     title: str
+    cover: _CoverConfig
+
+
+class _BookConfig(TypedDict, total=False):
+    """Configuration for book-specific title-page metadata."""
+
+    title: str
+    cover: _CoverConfig
+
+
+class _MetadataConfig(TypedDict, total=False):
+    """Cross-format manuscript metadata and PDF accessibility opt-ins."""
+
+    language: str
+    license: str
+    tagged_pdf: bool
 
 
 class PublicationConfig(TypedDict, total=False):
@@ -158,7 +181,7 @@ class ManuscriptConfig(TypedDict, total=False):
     prose: dict[str, Any]
     bibliography: dict[str, Any]
     report: dict[str, Any]
-    book: dict[str, Any]
+    book: _BookConfig
     layout: dict[str, Any]
     typography: dict[str, Any]
     front_matter: dict[str, Any]
@@ -170,7 +193,7 @@ class ManuscriptConfig(TypedDict, total=False):
     chapter_metadata: dict[str, Any]
     export: dict[str, Any]
     keywords: list[str]
-    metadata: dict[str, str]
+    metadata: _MetadataConfig
     project_config: dict[str, Any]  # passthrough for project-specific config sections
     experiment: dict[str, Any]  # passthrough for project experimental parameters
     sheaf: dict[str, Any]  # manifest-indexed manuscript composition configuration
@@ -192,6 +215,17 @@ def generate_manuscript_config_schema(
             "type": "object",
             "properties": {
                 "title": {"type": "string"},
+                "cover": {
+                    "type": "object",
+                    "properties": {
+                        "image": {"type": "string"},
+                        "alt": {
+                            "type": "string",
+                            "description": "Plain-text alternative for meaningful title-page artwork",
+                        },
+                    },
+                    "additionalProperties": True,
+                },
             },
             "additionalProperties": True,
         },
@@ -247,7 +281,24 @@ def generate_manuscript_config_schema(
         "prose": {"type": "object", "additionalProperties": True},
         "bibliography": {"type": "object", "additionalProperties": True},
         "report": {"type": "object", "additionalProperties": True},
-        "book": {"type": "object", "additionalProperties": True},
+        "book": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+                "cover": {
+                    "type": "object",
+                    "properties": {
+                        "image": {"type": "string"},
+                        "alt": {
+                            "type": "string",
+                            "description": "Plain-text alternative for meaningful title-page artwork",
+                        },
+                    },
+                    "additionalProperties": True,
+                },
+            },
+            "additionalProperties": True,
+        },
         "layout": {"type": "object", "additionalProperties": True},
         "typography": {"type": "object", "additionalProperties": True},
         "front_matter": {"type": "object", "additionalProperties": True},
@@ -259,7 +310,19 @@ def generate_manuscript_config_schema(
         "chapter_metadata": {"type": "object", "additionalProperties": True},
         "export": {"type": "object", "additionalProperties": True},
         "keywords": {"type": "array", "items": {"type": "string"}},
-        "metadata": {"type": "object", "additionalProperties": {"type": "string"}},
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "language": {"type": "string"},
+                "license": {"type": "string"},
+                "tagged_pdf": {
+                    "type": "boolean",
+                    "default": False,
+                    "description": "Opt into the compatible LuaLaTeX tagged-PDF path",
+                },
+            },
+            "additionalProperties": {"type": "string"},
+        },
         "project_config": {"type": "object", "additionalProperties": True},
         "experiment": {"type": "object", "additionalProperties": True},
         "sheaf": {"type": "object", "additionalProperties": True},

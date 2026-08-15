@@ -1945,7 +1945,7 @@ Metadata about a publishing platform adapter.
 prepare_arxiv_submission(output_dir: Path, metadata: PublicationMetadata) -> Path
 ```
 
-Assemble a LaTeX-source submission package and tar it for manual arXiv upload.
+Build a deterministic, non-partial LaTeX-source package for manual upload.
 
 ### `PublicationMetadata`
 
@@ -3604,7 +3604,7 @@ Verify every ``[@key]`` citation resolves in the project's BibTeX file(s).
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_copied_outputs(output_dir: Path) -> bool
+validate_copied_outputs(output_dir: Path, *, project_name: str | None=None, enabled_formats: Collection[str] | None=None, manuscript_dir: Path | None=None) -> bool
 ```
 
 Validate all project outputs were copied successfully.
@@ -3654,7 +3654,7 @@ Validate mathematical equation formatting and labeling.
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_output_structure(output_dir: Path) -> OutputStructureResult
+validate_output_structure(output_dir: Path, *, require_pdf: bool=True) -> OutputStructureResult
 ```
 
 Validate complete output directory structure.

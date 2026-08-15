@@ -12,6 +12,15 @@ from infrastructure.rendering.security import RenderSecurityProfile
 logger = get_logger(__name__)
 
 
+_FORMAT_TOGGLES = {
+    "pdf": ("enable_pdf", "ENABLE_PDF"),
+    "html": ("enable_html", "ENABLE_HTML"),
+    "slides": ("enable_slides", "ENABLE_SLIDES"),
+    "docx": ("enable_docx", "ENABLE_DOCX"),
+    "epub": ("enable_epub", "ENABLE_EPUB"),
+}
+
+
 def _strict_yaml_bool(value: Any, key: str) -> bool:
     """Return a YAML boolean, rejecting string truthiness traps."""
     if not isinstance(value, bool):
@@ -112,14 +121,7 @@ class RenderingConfig:
             if value is not None:
                 config_kwargs[config_key] = value
 
-        bool_mappings = {
-            "ENABLE_PDF": "enable_pdf",
-            "ENABLE_HTML": "enable_html",
-            "ENABLE_SLIDES": "enable_slides",
-            "ENABLE_DOCX": "enable_docx",
-            "ENABLE_EPUB": "enable_epub",
-        }
-        for env_var, config_key in bool_mappings.items():
+        for config_key, env_var in _FORMAT_TOGGLES.values():
             value = env_vars.get(env_var)
             if value is not None:
                 config_kwargs[config_key] = value.strip().lower() in ("1", "true", "yes", "on")
@@ -150,6 +152,9 @@ class RenderingConfig:
         Env vars still override (call site: ``ENABLE_<FORMAT>=0/1``). Missing
         keys fall back to the dataclass default for that field.
         """
+        import os
+
+        env_vars = env if env is not None else os.environ
         base = cls.from_env(env=env)
         if not project_config:
             return base
@@ -160,16 +165,11 @@ class RenderingConfig:
         if not isinstance(formats, dict):
             return base
         overrides: dict[str, Any] = {}
-        format_keys = {
-            "pdf": "enable_pdf",
-            "html": "enable_html",
-            "slides": "enable_slides",
-            "docx": "enable_docx",
-            "epub": "enable_epub",
-        }
-        for yaml_key, attr in format_keys.items():
+        for yaml_key, (attr, env_var) in _FORMAT_TOGGLES.items():
             if yaml_key in formats:
-                overrides[attr] = _strict_yaml_bool(formats[yaml_key], yaml_key)
+                yaml_value = _strict_yaml_bool(formats[yaml_key], yaml_key)
+                if env_vars.get(env_var) is None:
+                    overrides[attr] = yaml_value
         if not overrides:
             return base
         from dataclasses import replace

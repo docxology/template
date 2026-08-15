@@ -17,6 +17,7 @@ from infrastructure.core.pipeline.types import StageContract
 _IGNORED_OUTPUT_PARTS = frozenset(
     {
         ".checkpoints",
+        ".history",
         ".pipeline",
         "logs",
         "hitl",

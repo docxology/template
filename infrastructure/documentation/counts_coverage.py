@@ -24,7 +24,7 @@ from infrastructure.core.subprocess_policy import SubprocessPolicy, run_with_pol
 COVERAGE_PROVENANCE_RELATIVE_PATH = Path("docs/_generated/coverage_snapshot.json")
 COVERAGE_PROVENANCE_SCHEMA_VERSION = 3
 COVERAGE_SOURCE_INVENTORY_MODE = "tracked-and-nonignored-working-tree"
-EXEMPLAR_SNAPSHOT_DATE = "2026-08-11"
+EXEMPLAR_SNAPSHOT_DATE = "2026-08-15"
 COVERAGE_MEASUREMENT_TIMEOUT_SECONDS = 1800
 
 
@@ -63,7 +63,7 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "92.85 %"),
+    ExemplarSnapshot("template_active_inference", "92.22 %"),
     ExemplarSnapshot("template_advanced_literature_review", "92.14 %"),
     ExemplarSnapshot("template_autopoiesis", "97.20 %"),
     ExemplarSnapshot("template_autoresearch_project", "96.33 %"),

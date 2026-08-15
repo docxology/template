@@ -410,7 +410,13 @@ def _validate_composition(
         raise RenderedSnapshotError("COMPOSITION_INVALID", f"composition project must be {project}")
     combined_path = project_root / stored.combined_path
     try:
-        current = build_manuscript_composition(project_root, project, rendered_inputs, combined_path)
+        current = build_manuscript_composition(
+            project_root,
+            project,
+            rendered_inputs,
+            combined_path,
+            algorithm=stored.algorithm,
+        )
     except (OSError, ValueError) as exc:
         raise RenderedSnapshotError("COMPOSITION_INVALID", str(exc)) from exc
     if stored != current:

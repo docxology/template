@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
+from infrastructure.core.execution_boundary import run_bounded_subprocess
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.dag import PipelineDAG
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
 from infrastructure.core.pipeline.executor import PipelineExecutor
-from infrastructure.core.pipeline.stages import build_stage_subprocess_env, resolve_pipeline_script_path
+from infrastructure.core.pipeline.stages import (
+    PIPELINE_STAGE_TIMEOUT_SECONDS,
+    build_stage_subprocess_env,
+    resolve_pipeline_script_path,
+)
 from infrastructure.core.pipeline.stage_registry import (
     normalize_stage_key,
     resolve_stage_definition,
@@ -57,15 +61,24 @@ def execute_single_stage(
         script = definition.script.replace("{project}", project_name)
         script_path = resolve_pipeline_script_path(repo_root, script)
         cmd = get_python_command() + [str(script_path), *definition.args, "--project", project_name]
-        result = subprocess.run(
+        result = run_bounded_subprocess(
             cmd,
-            cwd=str(repo_root),
+            cwd=repo_root,
             env=build_stage_subprocess_env(repo_root, config.project_dir),
-            check=False,
-            timeout=1800,
+            timeout=PIPELINE_STAGE_TIMEOUT_SECONDS,
+            capture_output=False,
         )
         if result.returncode == 2 and definition.allow_skip:
             return 0
+        if result.timed_out:
+            logger.error(
+                "Stage '%s' timed out after %gs; its complete process tree was terminated",
+                definition.name,
+                PIPELINE_STAGE_TIMEOUT_SECONDS,
+            )
+            return 124
+        if result.command_error:
+            logger.error("Stage '%s' could not launch: %s", definition.name, result.command_error)
         return result.returncode
     if definition.method:
         executor = PipelineExecutor(config)
@@ -85,4 +98,21 @@ def _execute_legacy_aggregate(stage: str, project_name: str, repo_root: Path) ->
         project_name,
     ]
     logger.info("Executing compatibility stage '%s' for project '%s'", stage, project_name)
-    return subprocess.run(command, cwd=str(repo_root), check=False, timeout=1800).returncode
+    config = PipelineConfig(project_name=project_name, repo_root=repo_root)
+    result = run_bounded_subprocess(
+        command,
+        cwd=repo_root,
+        env=build_stage_subprocess_env(repo_root, config.project_dir),
+        timeout=PIPELINE_STAGE_TIMEOUT_SECONDS,
+        capture_output=False,
+    )
+    if result.timed_out:
+        logger.error(
+            "Compatibility stage '%s' timed out after %gs; its complete process tree was terminated",
+            stage,
+            PIPELINE_STAGE_TIMEOUT_SECONDS,
+        )
+        return 124
+    if result.command_error:
+        logger.error("Compatibility stage '%s' could not launch: %s", stage, result.command_error)
+    return result.returncode

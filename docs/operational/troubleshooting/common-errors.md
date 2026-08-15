@@ -105,10 +105,14 @@ by checking `projects/<name>/manuscript/config.yaml` `render.formats` block.
 
 **Symptom:** `[skip] DOCX rendering: no combined markdown found`.
 
-The DOCX/EPUB renderers reuse the preprocessed `_combined_manuscript.md`
-produced by the PDF stage. If PDF rendering is disabled, DOCX/EPUB
-cascade-skip. To produce DOCX/EPUB without PDF, set
-`render.formats.pdf: true` even if you don't need the PDF artifact.
+The default Stage 3 path now builds a fresh shared
+`output/web/_combined_manuscript.md` from the current ordered manuscript inputs
+whenever DOCX or EPUB is enabled; it does not require PDF. This skip message
+therefore indicates a direct or legacy renderer call that did not supply a
+current combined source, or a failed combined-source preparation step. Run the
+normal Stage 3 command, confirm current manuscript files were discovered, and
+inspect `output/reports/manuscript_composition.json`. Do not enable PDF merely
+to work around this message.
 
 **Symptom:** `pandoc DOCX render failed (exit 1)`.
 

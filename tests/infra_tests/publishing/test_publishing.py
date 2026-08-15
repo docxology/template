@@ -733,17 +733,13 @@ class TestDissemination:
         # Mock manuscript directory
         manuscript_dir = tmp_path / "manuscript"
         manuscript_dir.mkdir()
-        (manuscript_dir / "main.tex").touch()
+        (manuscript_dir / "main.tex").write_text(r"\documentclass{article}")
         (manuscript_dir / "ref.bib").touch()
         (manuscript_dir / "ignored.txt").touch()
 
-        # Mock bbl file
+        # A title-derived BBL is deliberately ignored; only a BBL matching the
+        # selected TeX root is valid for arXiv processing.
         (pdf_dir / "Test_Paper.bbl").touch()
-
-        # Hack to handle parent directory resolution in test
-        # The function uses output_dir.parent / "manuscript"
-        # In this test, output_dir is tmp_path/output, so parent is tmp_path.
-        # manuscript_dir is tmp_path/manuscript. So it works.
 
         metadata = publishing.PublicationMetadata(
             title="Test Paper",

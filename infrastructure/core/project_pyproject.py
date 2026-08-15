@@ -19,6 +19,8 @@ class ProjectPyprojectConfig:
     coverage_fail_under: int | None
     has_coverage_run: bool
     declares_dev_extra: bool
+    project_test_command: tuple[str, ...] | None
+    project_test_command_error: str | None
 
 
 @lru_cache(maxsize=128)
@@ -38,12 +40,29 @@ def load_project_pyproject(project_root: Path) -> ProjectPyprojectConfig | None:
     has_run = coverage.get("run") is not None
     optional = data.get("project", {}).get("optional-dependencies", {})
     dev_extra = isinstance(optional, dict) and "dev" in optional
+    template = data.get("tool", {}).get("template", {})
+    raw_test_command = template.get("project_test_command") if isinstance(template, dict) else None
+    test_command: tuple[str, ...] | None = None
+    test_command_error: str | None = None
+    if raw_test_command is not None:
+        if (
+            not isinstance(raw_test_command, list)
+            or not raw_test_command
+            or any(not isinstance(part, str) or not part.strip() for part in raw_test_command)
+        ):
+            test_command_error = (
+                "[tool.template].project_test_command must be a non-empty TOML array of non-empty strings"
+            )
+        else:
+            test_command = tuple(raw_test_command)
 
     return ProjectPyprojectConfig(
         path=pyproject,
         coverage_fail_under=fail_under,
         has_coverage_run=has_run,
         declares_dev_extra=dev_extra,
+        project_test_command=test_command,
+        project_test_command_error=test_command_error,
     )
 
 
@@ -67,10 +86,25 @@ def project_declares_dev_extra(project_root: Path) -> bool:
     return bool(cfg and cfg.declares_dev_extra)
 
 
+def project_declared_test_command(project_root: Path) -> tuple[str, ...] | None:
+    """Return an explicit single-project Stage-01 verifier command.
+
+    The declaration is deliberately opt-in. A malformed declaration fails
+    closed instead of silently falling back to the generic pytest lane.
+    """
+    cfg = load_project_pyproject(project_root)
+    if cfg is None:
+        return None
+    if cfg.project_test_command_error:
+        raise ValueError(cfg.project_test_command_error)
+    return cfg.project_test_command
+
+
 __all__ = [
     "ProjectPyprojectConfig",
     "load_project_pyproject",
     "project_declared_coverage_floor",
+    "project_declared_test_command",
     "project_declares_dev_extra",
     "resolve_project_cov_config",
 ]

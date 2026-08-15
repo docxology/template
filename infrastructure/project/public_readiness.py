@@ -51,7 +51,7 @@ class PublicReadinessReport:
     @property
     def counts(self) -> dict[str, int]:
         """Return stable status counts."""
-        counts = {"pass": 0, "fail": 0, "skip": 0}
+        counts = {status: 0 for status in PUBLIC_READINESS_STATUSES}
         for result in self.results:
             counts[result.status] = counts.get(result.status, 0) + 1
         return dict(sorted(counts.items()))

@@ -10,7 +10,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `multi_project.py`
 - `multi_project_parallel.py`
 - `resume.py`
-- `stages.py` — subprocess execution; it does not duplicate the YAML stage plan
+- `stages.py` — subprocess execution through the 7,200-second descendant-tree-killing boundary; it does not duplicate the YAML stage plan
 - `stage_monitor.py`
 - `_stage_tracker.py`
 - `_performance_monitor.py`
@@ -21,7 +21,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `summary_models.py`
 - `types.py`
 - `stage_registry.py` — `STAGE_DISPATCH`, `MENU_KEY_TO_STAGE` (single source for `--stage` and menu keys)
-- `single_stage.py` — `execute_single_stage()` subprocess runner
+- `single_stage.py` — `execute_single_stage()` subprocess runner using the same bounded deadline as the full pipeline
 - `stage_vocabulary.py` — stage names from `pipeline.yaml`
 - `pipeline.yaml` — default declared DAG definition consumed by the executor
 - `artifacts.py` — stage-provenance manifests plus an explicit, deterministic

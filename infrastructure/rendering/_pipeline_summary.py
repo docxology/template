@@ -8,6 +8,7 @@ This module provides:
 """
 
 import re
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -16,10 +17,14 @@ import yaml
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
+from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import (
     collect_latex_log_findings,
     format_latex_findings,
 )
+from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 from infrastructure.project.discovery import resolve_project_root
 
 logger = get_logger(__name__)
@@ -230,6 +235,145 @@ def _check_citations_used(manuscript_dir: Path) -> bool:
     return False
 
 
+def _rendering_config_for_verify(project_root: Path) -> RenderingConfig:
+    """Load the same effective format toggles used by the render orchestrator."""
+
+    manuscript_dir = _manuscript_dir_for_verify(project_root)
+    config_path = manuscript_dir / "config.yaml"
+    project_config: dict[str, Any] | None = None
+    if config_path.is_file():
+        try:
+            loaded = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError) as exc:
+            raise ValueError(f"Could not read rendering configuration {config_path}: {exc}") from exc
+        if loaded is not None and not isinstance(loaded, dict):
+            raise ValueError(f"Rendering configuration must be a mapping: {config_path}")
+        project_config = loaded
+    return RenderingConfig.from_project_config(project_config)
+
+
+def _verify_combined_html(project_root: Path) -> bool:
+    """Require a non-empty standalone combined HTML document."""
+
+    output_path = project_root / "output" / "web" / "index.html"
+    try:
+        if not output_path.is_file() or output_path.stat().st_size == 0:
+            logger.error("Combined HTML output missing or empty: %s", output_path)
+            return False
+        prefix = output_path.read_text(encoding="utf-8")[:8192].lower()
+    except (OSError, UnicodeDecodeError) as exc:
+        logger.error("Could not validate combined HTML output %s: %s", output_path, exc)
+        return False
+    if not re.search(r"(?:<!doctype\s+html\b|<html(?:\s|>))", prefix):
+        logger.error("Combined HTML output is not a standalone HTML document: %s", output_path)
+        return False
+    log_success(f"Combined HTML valid: {output_path.name}", logger)
+    return True
+
+
+def _expected_slide_outputs(project_root: Path) -> list[Path]:
+    """Return Beamer deliverables expected from the discovered Markdown inputs."""
+
+    manuscript_dir = _manuscript_dir_for_verify(project_root)
+    slides_dir = project_root / "output" / "slides"
+    expected: list[Path] = []
+    for source_file in discover_manuscript_files(manuscript_dir):
+        if source_file.suffix != ".md" or is_transmission_bookend(source_file):
+            continue
+        try:
+            source_text = source_file.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            logger.error("Could not inspect slide source %s: %s", source_file, exc)
+            return [slides_dir / "__unverifiable_slide_source__.pdf"]
+        if "<!-- render:skip-beamer -->" in source_text:
+            continue
+        expected.append(slides_dir / f"{source_file.stem}_slides.pdf")
+    return expected
+
+
+def _verify_slide_outputs(project_root: Path) -> bool:
+    """Validate every Beamer PDF expected from the current manuscript inputs."""
+
+    expected = _expected_slide_outputs(project_root)
+    if not expected:
+        logger.error("Slides are enabled, but no current manuscript source produces a slide deck")
+        return False
+    slides_dir = project_root / "output" / "slides"
+    expected_reserved = {
+        *(path for path in expected),
+        *(path.with_suffix(".html") for path in expected),
+    }
+    actual_reserved = {
+        *slides_dir.glob("*_slides.pdf"),
+        *slides_dir.glob("*_slides.html"),
+    }
+    unexpected = sorted(actual_reserved - expected_reserved)
+    if unexpected:
+        for path in unexpected:
+            logger.error("Unexpected slide output has no current manuscript source: %s", path)
+        return False
+    invalid = [path for path in expected if not path.is_file() or not validate_pdf_structure(path)]
+    if invalid:
+        for path in invalid:
+            logger.error("Slide output missing or structurally invalid: %s", path)
+        return False
+    logger.info("✅ Slide outputs valid: %d expected deck(s)", len(expected))
+    return True
+
+
+def _verify_docx_output(project_root: Path, project_basename: str) -> bool:
+    """Validate the minimum Open Packaging Convention contract for DOCX."""
+
+    output_path = project_root / "output" / "docx" / f"{project_basename}_combined.docx"
+    unexpected = sorted(set(output_path.parent.glob("*_combined.docx")) - {output_path})
+    if unexpected:
+        for path in unexpected:
+            logger.error("Unexpected combined DOCX has no current project identity: %s", path)
+        return False
+    required_members = {"[Content_Types].xml", "word/document.xml"}
+    try:
+        with zipfile.ZipFile(output_path) as archive:
+            names = set(archive.namelist())
+            valid = required_members <= names and archive.testzip() is None
+    except (OSError, zipfile.BadZipFile) as exc:
+        logger.error("Combined DOCX output missing or invalid (%s): %s", output_path, exc)
+        return False
+    if not valid:
+        logger.error("Combined DOCX output has an invalid package structure: %s", output_path)
+        return False
+    log_success(f"Combined DOCX valid: {output_path.name}", logger)
+    return True
+
+
+def _verify_epub_output(project_root: Path, project_basename: str) -> bool:
+    """Validate the required EPUB mimetype and container package members."""
+
+    output_path = project_root / "output" / "epub" / f"{project_basename}_combined.epub"
+    unexpected = sorted(set(output_path.parent.glob("*_combined.epub")) - {output_path})
+    if unexpected:
+        for path in unexpected:
+            logger.error("Unexpected combined EPUB has no current project identity: %s", path)
+        return False
+    try:
+        with zipfile.ZipFile(output_path) as archive:
+            mimetype_info = archive.getinfo("mimetype")
+            mimetype = archive.read("mimetype")
+            valid = (
+                mimetype == b"application/epub+zip"
+                and mimetype_info.compress_type == zipfile.ZIP_STORED
+                and "META-INF/container.xml" in archive.namelist()
+                and archive.testzip() is None
+            )
+    except (KeyError, OSError, zipfile.BadZipFile) as exc:
+        logger.error("Combined EPUB output missing or invalid (%s): %s", output_path, exc)
+        return False
+    if not valid:
+        logger.error("Combined EPUB output has an invalid package structure: %s", output_path)
+        return False
+    log_success(f"Combined EPUB valid: {output_path.name}", logger)
+    return True
+
+
 def verify_pdf_outputs(project_name: str = "project", *, repo_root: Path | None = None) -> bool:
     """Verify that PDFs were generated with quality checks."""
     logger.info("Verifying PDF outputs...")
@@ -246,6 +390,11 @@ def verify_pdf_outputs(project_name: str = "project", *, repo_root: Path | None 
     pdf_files = list(pdf_dir.glob("*.pdf"))
     project_basename = Path(project_name).name
     combined_pdf = pdf_dir / f"{project_basename}_combined.pdf"
+    unexpected_combined = sorted(set(pdf_dir.glob("*_combined.pdf")) - {combined_pdf})
+    if unexpected_combined:
+        for path in unexpected_combined:
+            logger.error("Unexpected combined PDF has no current project identity: %s", path)
+        return False
 
     if pdf_files:
         log_success(f"Generated {len(pdf_files)} PDF file(s)", logger)
@@ -322,3 +471,53 @@ def verify_pdf_outputs(project_name: str = "project", *, repo_root: Path | None 
     else:
         logger.error("No PDF files found in output directory")
         return False
+
+
+def verify_render_outputs(project_name: str = "project", *, repo_root: Path | None = None) -> bool:
+    """Verify exactly the publication formats enabled for the current run.
+
+    The legacy PDF override remains a PDF-only contract. Normal render runs use
+    the effective YAML/environment toggles and require a current, valid
+    deliverable for every enabled format.
+    """
+
+    root = repo_root or Path(__file__).parent.parent.parent
+    project_root = resolve_project_root(root, project_name)
+    if (project_root / "scripts" / "_render_pdf_override.py").is_file():
+        return verify_pdf_outputs(project_name, repo_root=root)
+
+    try:
+        config = _rendering_config_for_verify(project_root)
+    except (OSError, TypeError, ValueError) as exc:
+        logger.error("Could not determine enabled render formats: %s", exc)
+        return False
+
+    project_basename = Path(project_name).name
+    checks: list[tuple[str, bool]] = []
+    if config.enable_pdf:
+        checks.append(("PDF", verify_pdf_outputs(project_name, repo_root=root)))
+    if config.enable_html:
+        checks.append(("HTML", _verify_combined_html(project_root)))
+    if config.enable_slides:
+        slides_valid = _verify_slide_outputs(project_root)
+        if not config.enable_pdf:
+            slides_valid = slides_valid and _verify_latex_warning_policy(
+                project_root,
+                _manuscript_dir_for_verify(project_root),
+            )
+        checks.append(("slides", slides_valid))
+    if config.enable_docx:
+        checks.append(("DOCX", _verify_docx_output(project_root, project_basename)))
+    if config.enable_epub:
+        checks.append(("EPUB", _verify_epub_output(project_root, project_basename)))
+
+    if not checks:
+        logger.error("No render formats are enabled; there is no deliverable to verify")
+        return False
+
+    failed = [name for name, valid in checks if not valid]
+    if failed:
+        logger.error("Enabled render output verification failed: %s", ", ".join(failed))
+        return False
+    logger.info("✅ Enabled render outputs verified: %s", ", ".join(name for name, _ in checks))
+    return True

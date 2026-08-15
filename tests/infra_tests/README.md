@@ -60,7 +60,15 @@ per-marker behaviour live in the
 | `validation/` | `infrastructure/validation/` — docs scanning, links, repo scanning, integrity |
 | `validation/docs/` | Documentation linter regressions: Mermaid, links, consistency, doc pairs |
 
-Top-level files outside subfolders include `test_docs_discovery_consistency.py`, `test_documentation_index_invariants.py` (documentation invariants), `test_cogant_coverage_table_check.py` (parses the COGANT staging `check_coverage_table.py` helper for manuscript Table 9 vs `coverage report`), and `test_cogant_manuscript_crossrefs_audit.py` (loads `audit_manuscript_crossrefs.py` against the staging manuscript tree).
+Top-level files outside subfolders include `test_docs_discovery_consistency.py`,
+`test_documentation_index_invariants.py` (documentation invariants),
+`test_backup_restore_contract.py` (real disposable rsync round trips for the
+full-backup/restore shell pair), `test_stage_05_copy_formats.py` (real
+filesystem Stage 5 HTML-only copy behavior with clean and stale-PDF source
+trees), `test_cogant_coverage_table_check.py` (parses
+the COGANT staging `check_coverage_table.py` helper for manuscript Table 9 vs
+`coverage report`), and `test_cogant_manuscript_crossrefs_audit.py` (loads
+`audit_manuscript_crossrefs.py` against the staging manuscript tree).
 
 ## File Naming Convention
 

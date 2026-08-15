@@ -1,13 +1,17 @@
 """Tests for infrastructure/rendering/_pdf_title_page.py.
 
-No mocks: writes a real ``config.yaml`` under a temporary manuscript directory
-and asserts on the generated LaTeX strings (no LaTeX compilation needed).
+No mocks: writes real configuration/image inputs and, when LuaLaTeX supports
+the repository's tagged-PDF mode, inspects the emitted PDF structure tree.
 """
 
 from __future__ import annotations
 
 import logging
+import shutil
+import subprocess
 from pathlib import Path
+
+import pytest
 
 PAPER_CONFIG = """paper:
   title: "Deterministic Exemplar"
@@ -29,6 +33,9 @@ from infrastructure.rendering._pdf_title_page import (  # noqa: E402
     generate_title_page_preamble,
 )
 from infrastructure.rendering._pdf_title_page_config import _rendering_options
+from infrastructure.rendering._pdf_title_page_images import _image_block
+from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
+from infrastructure.rendering._pdf_combined_latex import postprocess_latex
 
 
 def _manuscript(tmp_path: Path, config_text: str) -> Path:
@@ -36,6 +43,49 @@ def _manuscript(tmp_path: Path, config_text: str) -> Path:
     d.mkdir()
     (d / "config.yaml").write_text(config_text, encoding="utf-8")
     return d
+
+
+def _run_lualatex(workdir: Path, jobname: str, tex: str) -> subprocess.CompletedProcess[str]:
+    """Compile a LaTeX document from a disposable source file."""
+    source = workdir / f"{jobname}.tex"
+    source.write_text(tex, encoding="utf-8")
+    return subprocess.run(
+        ["lualatex", "-interaction=nonstopmode", "-halt-on-error", f"-jobname={jobname}", source.name],
+        cwd=workdir,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=60,
+    )
+
+
+def _pdf_structure_alt_texts(pdf_path: Path) -> list[str]:
+    """Return every ``/Alt`` value reachable through the PDF structure tree."""
+    from pypdf import PdfReader
+
+    reader = PdfReader(pdf_path)
+    structure_root = reader.trailer["/Root"].get("/StructTreeRoot")
+    alt_texts: list[str] = []
+
+    def visit(node: object) -> None:
+        get_object = getattr(node, "get_object", None)
+        if callable(get_object):
+            node = get_object()
+        if isinstance(node, dict):
+            alt = node.get("/Alt")
+            if alt is not None:
+                alt_texts.append(str(alt))
+            kids = node.get("/K")
+            if kids is not None:
+                visit(kids)
+        elif isinstance(node, list):
+            for item in node:
+                visit(item)
+
+    if structure_root is not None:
+        visit(structure_root)
+    return alt_texts
 
 
 class TestPreamble:
@@ -100,6 +150,88 @@ class TestBody:
         body = generate_title_page_body(d)
 
         assert r"height=0.76\textheight" in body
+
+    def test_body_emits_configured_cover_alt_text(self, tmp_path: Path) -> None:
+        config = PAPER_CONFIG.replace(
+            "authors:",
+            "  cover:\n"
+            '    image: "cover.png"\n'
+            '    alt: "Assembly code and probabilistic state trajectories."\n'
+            "authors:",
+        )
+        d = _manuscript(tmp_path, config)
+        (d / "cover.png").write_bytes(b"png")
+
+        body = generate_title_page_body(d)
+
+        assert r"alt={Assembly code and probabilistic state trajectories.}" in body
+
+    def test_book_body_emits_its_own_configured_cover_alt_text(self, tmp_path: Path) -> None:
+        config = (
+            PAPER_CONFIG
+            + 'book:\n  title: "A Complete Book"\n'
+            + '  cover:\n    image: "cover.png"\n'
+            + '    alt: "Nested modules in a book-length scaffold."\n'
+        )
+        d = _manuscript(tmp_path, config)
+        (d / "cover.png").write_bytes(b"png")
+
+        body = generate_title_page_body(d)
+
+        assert r"alt={Nested modules in a book-length scaffold.}" in body
+
+    def test_graphic_alt_serializer_emits_literal_pdf_characters(self) -> None:
+        raw = r"100% & evidence #1; x_y, {sets}, $cost, A~B, x^2, path \ root."
+
+        serialized = _latex_graphic_alt_text(raw)
+
+        for char in r"\&%$#_{}~^":
+            assert rf"{{{ord(char)}}}{{12}}" in serialized
+        assert r"\textasciitilde" not in serialized
+        assert r"\textasciicircum" not in serialized
+        assert r"\textbackslash" not in serialized
+
+    @pytest.mark.requires_latex
+    @pytest.mark.timeout(60)
+    def test_tagged_lualatex_pdf_preserves_exact_cover_alt_text(self, tmp_path: Path) -> None:
+        if shutil.which("lualatex") is None:
+            pytest.skip("lualatex is not installed")
+
+        output_dir = tmp_path / "output" / "pdf"
+        output_dir.mkdir(parents=True)
+        probe_tex = postprocess_latex(
+            r"\documentclass{article}\begin{document}probe\end{document}",
+            tagged_pdf=True,
+            language="en",
+        )
+        probe = _run_lualatex(output_dir, "tagged-probe", probe_tex)
+        if probe.returncode != 0:
+            pytest.skip("installed LuaLaTeX does not support the repository's tagged-PDF metadata mode")
+
+        from PIL import Image
+
+        manuscript_dir = tmp_path / "manuscript"
+        manuscript_dir.mkdir()
+        config_file = manuscript_dir / "config.yaml"
+        image_path = manuscript_dir / "cover.png"
+        Image.new("RGB", (8, 8), color=(30, 60, 90)).save(image_path)
+        raw_alt = r"100% & evidence #1; x_y, {sets}, $cost, A~B, x^2, path \ root."
+        image_block = _image_block(
+            image_path,
+            config_file,
+            height=r"0.4\textheight",
+            alt=raw_alt,
+        )
+        tex = postprocess_latex(
+            r"\documentclass{article}\usepackage{graphicx}\begin{document}" + image_block + r"\end{document}",
+            tagged_pdf=True,
+            language="en",
+        )
+
+        compiled = _run_lualatex(output_dir, "tagged-cover-alt", tex)
+
+        assert compiled.returncode == 0, compiled.stdout
+        assert _pdf_structure_alt_texts(output_dir / "tagged-cover-alt.pdf") == [raw_alt]
 
     def test_missing_config_returns_empty(self, tmp_path: Path) -> None:
         (tmp_path / "manuscript").mkdir()

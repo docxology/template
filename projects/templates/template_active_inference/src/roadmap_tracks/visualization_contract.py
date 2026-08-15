@@ -10,6 +10,8 @@ from visualizations.figure_io import image_render_metrics
 from visualizations.figure_registry import load_figure_registry
 from visualizations.figure_style import load_figure_style
 
+from .image_content_hash import image_content_sha256
+
 MIN_TYPOGRAPHY_POINTS: dict[str, float] = {
     "title": 12.0,
     "subtitle": 10.5,
@@ -42,15 +44,17 @@ KNOWN_AUXILIARY_VISUALIZATIONS: dict[str, dict[str, str]] = {
     },
     "transmission_integrity_strip.png": {
         "classification": "auxiliary_transmission_check",
-        "producer": "manual_or_external_publication_export",
-        "reason": "release/transmission inspection strip kept outside numbered manuscript figures",
+        "producer": "infrastructure.publishing.transmission_barcode_strip.write_transmission_barcode_strip",
+        "reason": "infrastructure-generated integrity strip for transmission bookends",
     },
     "transmission_pairing.png": {
         "classification": "auxiliary_transmission_check",
-        "producer": "manual_or_external_publication_export",
-        "reason": "release/transmission pairing image kept outside numbered manuscript figures",
+        "producer": "infrastructure.publishing.transmission_figure.write_transmission_diagram",
+        "reason": "infrastructure-generated release-pairing diagram for transmission bookends",
     },
 }
+
+_COMPRESSION_DEPENDENT_AUXILIARY_FIELDS = frozenset({"size_bytes"})
 
 STYLE_LITERAL_RE = re.compile(
     r"(?P<name>fontsize|title_size|label_fontsize)\s*=\s*(?P<value>[0-9]+(?:\.[0-9]+)?)"
@@ -123,12 +127,14 @@ def build_auxiliary_visualization_inventory(project_root: Path) -> dict[str, Any
         rel = f"output/figures/{path.name}"
         classification = KNOWN_AUXILIARY_VISUALIZATIONS.get(path.name, {})
         metrics = image_render_metrics(path)
+        content_sha256 = image_content_sha256(path)
         rendered = (
             metrics["exists"]
             and int(metrics["width_px"]) > 0
             and int(metrics["height_px"]) > 0
             and int(metrics["size_bytes"]) > 0
             and metrics["nonblank"]
+            and bool(content_sha256)
         )
         rows.append(
             {
@@ -139,6 +145,7 @@ def build_auxiliary_visualization_inventory(project_root: Path) -> dict[str, Any
                 "producer": classification.get("producer", ""),
                 "reason": classification.get("reason", ""),
                 "rendered": rendered,
+                "content_sha256": content_sha256,
                 **metrics,
             }
         )
@@ -152,9 +159,34 @@ def build_auxiliary_visualization_inventory(project_root: Path) -> dict[str, Any
     }
 
 
+def auxiliary_visualization_rows_match(saved_rows: object, live_rows: object) -> bool:
+    """Compare auxiliary evidence without treating PNG compression size as content.
+
+    ``size_bytes`` remains useful diagnostic evidence in the saved report, but
+    Pillow and zlib versions can encode identical decoded pixels to different
+    byte lengths. Every other field remains fail-closed, including the decoded
+    content hash, dimensions, mode, nonblank status, classification, and
+    producer attribution.
+    """
+    if not isinstance(saved_rows, list) or not isinstance(live_rows, list):
+        return False
+    if not all(isinstance(row, dict) for row in [*saved_rows, *live_rows]):
+        return False
+    saved_evidence = [
+        {key: value for key, value in row.items() if key not in _COMPRESSION_DEPENDENT_AUXILIARY_FIELDS}
+        for row in saved_rows
+    ]
+    live_evidence = [
+        {key: value for key, value in row.items() if key not in _COMPRESSION_DEPENDENT_AUXILIARY_FIELDS}
+        for row in live_rows
+    ]
+    return saved_evidence == live_evidence
+
+
 __all__ = [
     "KNOWN_AUXILIARY_VISUALIZATIONS",
     "MIN_TYPOGRAPHY_POINTS",
+    "auxiliary_visualization_rows_match",
     "build_auxiliary_visualization_inventory",
     "build_style_contract",
 ]
