@@ -70,6 +70,14 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
     # the double-path bug: output/manuscript/../output/figures = output/output/figures.
     # output_dir is the pdf/ directory; figures/ is its sibling in output/.
     figures_dir = output_dir.parent / "figures"
+    audit_figures_dir = output_dir.parent / "audit_figures"
+    audit_prefixes = (
+        "../../output/audit_figures/",
+        "../output/audit_figures/",
+        "output/audit_figures/",
+        "../audit_figures/",
+        "audit_figures/",
+    )
     fixed_count = 0
     paths_fixed: list[str] = []
 
@@ -97,6 +105,32 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
 
         old_path = match.group(1)
         original_path = old_path
+
+        # Audit-only figures intentionally live outside the public
+        # ``output/figures`` registry. Preserve that boundary while still
+        # making the path relative to the PDF compilation directory.
+        normalized_old_path = _normalize_path(old_path)
+        audit_prefix = next(
+            (prefix for prefix in audit_prefixes if normalized_old_path.startswith(prefix)),
+            None,
+        )
+        if audit_prefix is not None:
+            audit_filename = normalized_old_path[len(audit_prefix) :]
+            new_path = f"../audit_figures/{audit_filename}"
+            audit_full_path = audit_figures_dir / audit_filename
+            if not audit_full_path.exists():
+                logger.warning(f"Audit figure file not found: {audit_full_path}")
+            if old_path == new_path:
+                return match.group(0)
+            fixed_count += 1
+            paths_fixed.append(f"{original_path} -> {new_path}")
+            full_match = match.group(0)
+            if "[" in full_match:
+                options_start = full_match.find("[")
+                options_end = full_match.find("]")
+                options = full_match[options_start : options_end + 1]
+                return f"\\includegraphics{options}{{{new_path}}}"
+            return f"\\includegraphics{{{new_path}}}"
 
         # Check if already in correct format
         if old_path.startswith("../figures/"):
@@ -139,8 +173,11 @@ def fix_figure_paths(tex_content: str, manuscript_dir: Path, output_dir: Path) -
     # Each pass targets a distinct prefix pattern that Pandoc/LaTeX can produce.
     _fallbacks: list[tuple[str, str, str]] = [
         ("../output/figures/", "../figures/", "fallback 1 (../output/figures/)"),
-        ("]{figures/", "]{../figures/", "fallback 2 (bare figures/)"),
-        ("]{output/figures/", "]{../figures/", "fallback 3 (output/figures/)"),
+        ("../output/audit_figures/", "../audit_figures/", "fallback 2 (../output/audit_figures/)"),
+        ("]{figures/", "]{../figures/", "fallback 3 (bare figures/)"),
+        ("]{audit_figures/", "]{../audit_figures/", "fallback 3 (bare audit_figures/)"),
+        ("]{output/figures/", "]{../figures/", "fallback 4 (output/figures/)"),
+        ("]{output/audit_figures/", "]{../audit_figures/", "fallback 5 (output/audit_figures/)"),
     ]
     for old, new, label in _fallbacks:
         count = tex_content.count(old)

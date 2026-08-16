@@ -48,6 +48,29 @@ class TestFixFigurePaths:
         result = fix_figure_paths(tex, tmp_path / "manuscript", tmp_path / "pdf")
         assert "../figures/plot.png" in result
 
+    def test_preserves_existing_audit_figure_path(self, tmp_path):
+        tex = r"\includegraphics{../audit_figures/trace_atlas.png}"
+        audit_figures_dir = tmp_path / "audit_figures"
+        audit_figures_dir.mkdir()
+        (audit_figures_dir / "trace_atlas.png").write_bytes(b"PNG")
+
+        result = fix_figure_paths(tex, tmp_path / "manuscript", tmp_path / "pdf")
+
+        assert result == tex
+        assert "../figures/trace_atlas.png" not in result
+
+    def test_normalizes_output_audit_figure_path(self, tmp_path):
+        tex = r"\includegraphics[width=\textwidth]{../output/audit_figures/trace_atlas.png}"
+        audit_figures_dir = tmp_path / "output" / "audit_figures"
+        audit_figures_dir.mkdir(parents=True)
+        (audit_figures_dir / "trace_atlas.png").write_bytes(b"PNG")
+
+        result = fix_figure_paths(tex, tmp_path / "manuscript", tmp_path / "output" / "pdf")
+
+        assert r"[width=\textwidth]" in result
+        assert "../audit_figures/trace_atlas.png" in result
+        assert "../figures/trace_atlas.png" not in result
+
     def test_fix_output_figures_path(self, tmp_path):
         tex = r"\includegraphics{../output/figures/plot.png}"
         figures_dir = tmp_path / "figures"

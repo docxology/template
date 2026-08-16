@@ -56,6 +56,13 @@ renderers without owning validation policy or project analysis.
   options only on the opt-in `metadata.tagged_pdf: true` LuaLaTeX path.
   Untagged PDFs are unchanged, and neither tagged rendering nor metadata
   injection is a claim of PDF/UA certification.
+- Local-audit-only figures may be authored under the sibling
+  `output/audit_figures/` directory and referenced as `../audit_figures/...`
+  from the hydrated manuscript. PDF path normalization preserves that
+  directory instead of silently mapping the asset into public
+  `output/figures/`; authored alternatives remain required for unregistered
+  non-decorative audit figures. Audit assets are not added to the public
+  figure registry or release bundle merely because they render successfully.
 - Combined PDF and HTML, Beamer and Reveal.js slides, DOCX, EPUB, and the opt-in
   ebook stage consume the same filename-sorted union of top-level
   `manuscript/*.bib` files. Repeated or symlinked paths are passed once;
