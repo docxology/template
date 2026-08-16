@@ -640,3 +640,54 @@ def test_directory_symlink_fingerprint_is_checkout_root_independent(tmp_path: Pa
         snapshots.append(build_current_rendered_snapshot(root, PROJECT))
 
     assert snapshots[0].source == snapshots[1].source
+
+
+def test_symlinked_project_tree_is_walkable_and_escapes_are_still_refused(tmp_path: Path) -> None:
+    """A project symlinked into the repository is in scope; anything else is not.
+
+    Projects are not always stored inside the repository. A private sidecar
+    checkout is linked in at ``projects/working/<name>``, so the project root
+    resolves outside ``repo_root``; the containment guard refused the very first
+    directory and made the whole tree unreadable, even though that tree is
+    exactly what the snapshot was asked to describe.
+
+    ``extra_root`` admits the project being walked and nothing else. The three
+    cases below are the ones that matter: the declared project is walkable, a
+    symlink leaving both the repository and the project is still refused, and a
+    caller that declares no extra root keeps the original behavior.
+    """
+    from infrastructure.validation.rendered_snapshot import (
+        RenderedSnapshotError,
+        _iter_tree_files,
+    )
+
+    repository = tmp_path / "repo"
+    (repository / "projects" / "working").mkdir(parents=True)
+    outside = tmp_path / "sidecar" / "my_project"
+    (outside / "src").mkdir(parents=True)
+    (outside / "src" / "module.py").write_text("x = 1\n", encoding="utf-8")
+
+    linked = repository / "projects" / "working" / "my_project"
+    linked.symlink_to(outside, target_is_directory=True)
+
+    # POSITIVE: declaring the project root makes its tree walkable.
+    records = list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    assert [record.path.name for record in records] == ["module.py"]
+
+    # NEGATIVE CONTROL: without the declaration the boundary is unchanged, so
+    # the same walk is still refused. Without this the parameter could be
+    # widening the guard for everyone.
+    with pytest.raises(RenderedSnapshotError) as unguarded:
+        list(_iter_tree_files(linked, repo_root=repository))
+    assert unguarded.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+    # NEGATIVE CONTROL: a symlink escaping BOTH the repository and the declared
+    # project is still refused, which is the case the guard exists for.
+    elsewhere = tmp_path / "unrelated"
+    elsewhere.mkdir()
+    (elsewhere / "secret.py").write_text("y = 2\n", encoding="utf-8")
+    (outside / "src" / "escape").symlink_to(elsewhere, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as escaped:
+        list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    assert escaped.value.code == "SOURCE_SYMLINK_ESCAPE"
