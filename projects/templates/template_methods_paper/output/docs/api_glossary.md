@@ -12,6 +12,7 @@
 | `methods_dsl.examples_methods` | `all_example_methods` | function | Every example method, in the fixed order the script and manuscript report them. |
 | `methods_dsl.examples_methods` | `pbs_preparation_method` | function | A phosphate-buffered-saline preparation protocol (manual bench work). |
 | `methods_dsl.examples_methods` | `sensor_calibration_method` | function | An instrument-calibration controlled procedure (mixed automated + human steps). |
+| `methods_dsl.export` | `export_receipt` | function | Return a typed, deterministic receipt for the available export forms. |
 | `methods_dsl.export` | `to_csv_rows` | function | Return *plan* as CSV lines (header first), ready to join with ``\n``. |
 | `methods_dsl.export` | `to_json` | function | Return the canonical JSON encoding :data:`Plan.plan_hash` was computed over. |
 | `methods_dsl.export` | `to_mermaid` | function | Render *plan* as a Mermaid ``flowchart TD`` showing scheduled order. |

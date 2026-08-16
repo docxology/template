@@ -54,10 +54,10 @@ DOI $>$ arXiv ID $>$ Semantic Scholar ID $>$ OpenAlex ID $>$ a stable digest of 
 normalized title. When two records share a canonical identifier they are merged, keeping
 the version with the most complete metadata (a count of non-None optional fields). The
 DOI is normalized: case-folded, resolver-prefix stripped, so the same paper returned by
-two engines under case/format-variant DOIs merges. For this run, 46 records
-carry DOIs, 5 carry OpenAlex IDs, and 0 carry arXiv
+two engines under case/format-variant DOIs merges. For this run, 80 records
+carry DOIs, 12 carry OpenAlex IDs, and 0 carry arXiv
 IDs. The de-duplicated corpus for this run holds $N = 46$ records published
-across 2010--2023.
+across 2000--2023.
 
 ## Relevance Filtering
 
@@ -65,4 +65,4 @@ After de-duplication, a relevance filter drops papers whose title and abstract c
 none of the configured relevance keywords (exoplanet, atmosphere, transit spectroscopy, JWST, molecular detection, atmospheric composition). Keywords are matched
 case-insensitively; an empty keyword list is treated as no filter to avoid silently
 wiping the corpus. A year filter then excludes papers published before the configured
-start year (2010).
+start year (2000).

@@ -2,6 +2,8 @@
 
 _Topic:_ **reproducible research optimization** · _results:_ 6 · _max-results:_ 100
 
+> **Fixture scope:** This report was generated from a bundled deterministic offline fixture. Its contents are workflow test data, not empirical literature findings.
+
 ## Summary by Source
 
 | Source | Papers |

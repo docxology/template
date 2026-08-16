@@ -309,7 +309,7 @@ def test_pandoc_metadata_args_enable_linked_references(tmp_path: Path) -> None:
     assert "--metadata=description:Accessible summary" in args
 
 
-def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: Path) -> None:
+def test_accessibility_postprocess_adds_landmarks_without_synthesizing_alt(tmp_path: Path) -> None:
     html_file = tmp_path / "index.html"
     html_file.write_text(
         '<html><head></head><body><figure><img src="plot.png" '
@@ -327,7 +327,8 @@ def test_accessibility_postprocess_adds_language_main_and_concise_alt(tmp_path: 
     assert '<a class="skip-link" href="#main-content">Skip to main content</a>' in content
     assert '<main id="main-content" tabindex="-1">' in content
     assert "aria-hidden" not in content
-    assert 'alt="Figure 1: Paired effect delta and likelihood A_k across seeds."' in content
+    assert 'alt="very long raw \\delta caption"' in content
+    assert 'alt="Figure 1: Paired effect delta and likelihood A_k across seeds."' not in content
 
     WebRenderer._enhance_accessibility(html_file, language="en-GB")
     content = html_file.read_text(encoding="utf-8")

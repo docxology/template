@@ -50,7 +50,7 @@
     },
     {
       "id": "artifact_diffoscope",
-      "row_count": 41,
+      "row_count": 40,
       "source": "output/reports/artifact_diffoscope.json"
     },
     {

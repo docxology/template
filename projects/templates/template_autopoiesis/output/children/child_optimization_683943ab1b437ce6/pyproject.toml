@@ -1,0 +1,12 @@
+[project]
+name = "child_optimization"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy", "matplotlib", "pyyaml"]
+# spec_hash: 683943ab1b437ce6  grammar_hash: 484f85e003a8825a
+# seed: 42  track: analytical  section_set: standard
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

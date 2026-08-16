@@ -1,29 +1,167 @@
 {
-  "timestamp": "2026-08-09T05:06:13.237704",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 192,
+    "passed": 233,
     "failed": 0,
     "skipped": 0,
-    "total": 192,
+    "total": 233,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 192,
+    "discovery_count": 233,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 13.19,
-      "execution": 13.19
+      "setup": 14.44,
+      "collection": 14.44,
+      "execution": 14.44
     },
     "test_categories": {},
-    "coverage_percent": 96.61,
+    "coverage_percent": 95.69015725101922,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 192,
+    "total_passed": 233,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 192,
+    "total_tests": 233,
     "all_passed": true,
-    "project_coverage": 96.61
+    "project_coverage": 95.69015725101922
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 95.69015725101922,
+      "total_executed": 1280,
+      "total_missing": 43,
+      "total_excluded": 19,
+      "total_lines": 1323,
+      "file_coverage": {
+        "src/mermaid/diagrams.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 122,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 122
+        },
+        "src/mermaid/renderer.py": {
+          "coverage_percent": 68.05555555555556,
+          "executed_lines": 46,
+          "missing_lines": 16,
+          "excluded_lines": 9,
+          "total_lines": 62
+        },
+        "src/textbook/analysis.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "src/textbook/audit.py": {
+          "coverage_percent": 96.47887323943662,
+          "executed_lines": 97,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 100
+        },
+        "src/textbook/config.py": {
+          "coverage_percent": 91.30434782608695,
+          "executed_lines": 173,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 184
+        },
+        "src/textbook/constants.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 7,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 7
+        },
+        "src/textbook/content.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 66,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 66
+        },
+        "src/textbook/contracts.py": {
+          "coverage_percent": 91.56118143459915,
+          "executed_lines": 143,
+          "missing_lines": 12,
+          "excluded_lines": 0,
+          "total_lines": 155
+        },
+        "src/textbook/models.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 74,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 74
+        },
+        "src/textbook/toc.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 35,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 35
+        },
+        "src/textbook_io.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 18,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 18
+        },
+        "src/textbook_logging.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 14,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 14
+        },
+        "src/textbook_paths.py": {
+          "coverage_percent": 98.36065573770492,
+          "executed_lines": 41,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 41
+        },
+        "src/textbook_visuals.py": {
+          "coverage_percent": 92.3076923076923,
+          "executed_lines": 12,
+          "missing_lines": 1,
+          "excluded_lines": 10,
+          "total_lines": 13
+        },
+        "src/visualization/_scaffold.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 35,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 35
+        },
+        "src/visualization/gallery.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 225,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 225
+        },
+        "src/visualization/plots.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 102,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 102
+        },
+        "src/visualization/registry.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 42,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 42
+        }
+      }
+    }
   }
 }

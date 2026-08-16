@@ -750,7 +750,7 @@
       ],
       "exists": true,
       "produced_by_configured_analysis": true,
-      "producer": "generate_figures.py",
+      "producer": "z_generate_manuscript_variables.py",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4975,7 +4975,7 @@
     "artifact_contract_copied_parity_complete": true,
     "artifact_contract_row_count": 85,
     "artifact_diffoscope_all_equal": true,
-    "artifact_diffoscope_row_count": 41,
+    "artifact_diffoscope_row_count": 40,
     "artifact_license_all_safe": true,
     "artifact_license_row_count": 85,
     "benchmark_all_models_complete": true,
@@ -5143,7 +5143,7 @@
     "si_trace_finite": true,
     "si_trace_steps_match": true,
     "stale_artifact_all_fresh": true,
-    "stale_artifact_fresh_count": 43,
+    "stale_artifact_fresh_count": 42,
     "state_space_catalog_all_finite": true,
     "state_space_catalog_row_count": 6,
     "state_transition_all_covered": true,

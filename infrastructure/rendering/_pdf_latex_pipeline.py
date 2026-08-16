@@ -35,6 +35,7 @@ STALE_AUX_EXTENSIONS = [".aux", ".bbl", ".blg", ".toc", ".out", ".lof", ".lot"]
 SIGPIPE_EXITS = frozenset({-13, 141})
 MAX_LATEX_PASSES = 4
 MAX_CONSECUTIVE_FAILURES = 2
+_LUAMML_MATHML_CACHE_NAME = "_combined_manuscript-luamml-mathml.html"
 
 
 def _normalize_latex_log(path: Path) -> None:
@@ -64,6 +65,23 @@ def _clean_stale_aux_files(output_dir: Path, tex_stem: str) -> None:
         if stale_file.exists():
             stale_file.unlink()
             logger.debug(f"  Cleaned stale auxiliary file: {stale_file.name}")
+
+
+def _remove_luamml_mathml_cache(output_dir: Path) -> None:
+    """Remove LuaLaTeX's tagged-math cache after the PDF is complete.
+
+    ``luamml`` writes an HTML/MathML cache beside the combined PDF while
+    compiling tagged mathematics.  It is useful during compilation but is
+    neither a reader-facing HTML surface nor a stable project snapshot
+    artifact.  Remove it only after all LaTeX passes and PDF canonicalization
+    have succeeded so a failed build cannot hide its diagnostic state.
+    """
+    cache = output_dir / _LUAMML_MATHML_CACHE_NAME
+    try:
+        cache.unlink(missing_ok=True)
+    except OSError as exc:
+        raise RenderingError(f"could not remove transient LuaLaTeX cache: {cache}") from exc
+    logger.debug("  Removed transient LuaLaTeX cache: %s", cache.name)
 
 
 def _run_latex_pass(
@@ -306,10 +324,12 @@ def compile_latex_manuscript(
             if output_file.exists():
                 canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)
                 log_pdf_success(output_file, source_files, start_time)
+                _remove_luamml_mathml_cache(output_dir)
             return output_file
         elif output_file.exists():
             canonicalize_pdf_for_determinism(output_file, repo_root=output_dir)
             log_pdf_success(output_file, source_files, start_time)
+            _remove_luamml_mathml_cache(output_dir)
             return output_file
         else:
             raise RenderingError(

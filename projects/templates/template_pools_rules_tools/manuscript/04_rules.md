@@ -68,9 +68,9 @@ This rule set governs research manuscripts. Its strong rules comprise:
 | `strong/reference-schema.yaml` | Required BibTeX fields and cite-key format constraints |
 | `strong/section-schema.yaml` | Required manuscript sections, ordering, and minimum word counts |
 
-In the current pipeline run, **{{RULES_SETS_OK}} of 2 rule sets** validated successfully (@fig:counts).
+In the current pipeline run, **{{RULES_SETS_OK}} of {{RULES_SETS_TOTAL}} rule sets** validated successfully (@fig:counts).
 
-## The `rules_applier` Module
+## Rule Application Module
 
 The `src/rules_applier.py` module exposes three functions:
 
@@ -93,7 +93,7 @@ result = validate_against_rules("template_project_rules")
 
 Strong rule validation counts are injected into the manuscript through the token system. The token `{{RULES_SETS_OK}}` expands to the count of rule sets that returned `status="ok"` during the integration run. This creates a verifiable link between the pipeline's actual behaviour and the manuscript's claims — the manuscript cannot assert successful validation without the pipeline having actually succeeded.
 
-## Beyond Structural Validation: The `strong_rule_evaluator` Module
+## Beyond Structural Validation: Semantic Rule Evaluation
 
 `validate_against_rules()` (described above) performs *structural* validation only: it confirms that `rules.yaml` and every file in `soft/`/`strong/` parse as YAML. It does not check whether the constraints those strong-rule files declare are actually satisfied by the current project. That semantic layer lives in a separate module, `src/strong_rule_evaluator.py`, exposed via `scripts/04_validate_strong_rules.py`:
 

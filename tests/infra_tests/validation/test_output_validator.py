@@ -4,6 +4,10 @@ Comprehensive tests for output validation functionality including
 copied outputs validation and output structure validation.
 """
 
+import subprocess
+
+import pytest
+
 from infrastructure.validation.output.validator import (
     validate_copied_outputs,
     validate_output_structure,
@@ -518,6 +522,141 @@ class TestCollectDetailedValidationResults:
         # Suspicious size should be in warnings
         assert len(result["issues_by_severity"]["warning"]) > 0
 
+    def test_detailed_statistics_ignore_runtime_state_and_empty_directories(self, tmp_path):
+        """Ignored residue must not perturb provenance-bound structure data."""
+        from infrastructure.validation.output.validator import collect_detailed_validation_results
+
+        project_dir = tmp_path / "project"
+        output_dir = project_dir / "output"
+        stable_files = {
+            "pdf/project_combined.pdf": b"P" * 120_000,
+            "web/index.html": b"<html></html>\n",
+            "figures/nested/trace.png": b"pixels",
+            "data/result.json": b"{}\n",
+            "reports/quality.json": b"{}\n",
+        }
+        for relative, payload in stable_files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+
+        subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True)
+        (tmp_path / ".gitignore").write_text(
+            "project/output/pdf/*.bbl\nproject/output/data/*.scratch\n",
+            encoding="utf-8",
+        )
+        baseline = collect_detailed_validation_results(output_dir)
+
+        ignored_files = {
+            "pdf/project_combined.aux": b"aux",
+            "pdf/project_combined.bbl": b"bibliography",
+            "data/cache.scratch": b"cache",
+            "reports/.history/telemetry.json": b"{}\n",
+            "reports/snapshots/stage.json": b"{}\n",
+            "logs/pipeline.log": b"log\n",
+            "figures/.trace.png": b"partial",
+        }
+        for relative, payload in ignored_files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        for relative in ("slides", "simulations", "llm"):
+            (output_dir / relative).mkdir(parents=True, exist_ok=True)
+
+        rerun = collect_detailed_validation_results(output_dir)
+
+        assert rerun == baseline
+        assert rerun["inventory_mode"] == "stable-shippable-output-v1"
+        assert rerun["directories"]["pdf"]["file_count"] == 1
+        assert rerun["directories"]["figures"]["file_count"] == 1
+        assert rerun["directories"]["logs"]["exists"] is False
+
+        (output_dir / "data" / "new-public-result.json").write_text("{}\n", encoding="utf-8")
+        changed = collect_detailed_validation_results(output_dir)
+        assert changed != baseline
+        assert changed["directories"]["data"]["file_count"] == 2
+
+    def test_detailed_statistics_fail_closed_on_output_symlinks(self, tmp_path):
+        """Statistics must never follow a link outside the publication tree."""
+        from infrastructure.validation.output.validator import collect_detailed_validation_results
+
+        output_dir = tmp_path / "project" / "output"
+        data_dir = output_dir / "data"
+        data_dir.mkdir(parents=True)
+        outside = tmp_path / "private-result.json"
+        outside.write_text('{"private": true}\n', encoding="utf-8")
+        (data_dir / "linked-result.json").symlink_to(outside)
+
+        with pytest.raises(ValueError, match="symlink artifact forbidden"):
+            collect_detailed_validation_results(output_dir, require_pdf=False)
+
+    def test_supplied_copy_inventory_cannot_use_source_pdf_fallback(self, tmp_path):
+        """Stage 5 structure evidence must describe the copied tree alone."""
+        from infrastructure.core.pipeline.artifacts import StableOutputInventory
+
+        copied = tmp_path / "output" / "demo"
+        copied.mkdir(parents=True)
+        source_pdf = tmp_path / "projects" / "demo" / "output" / "pdf" / "demo_combined.pdf"
+        source_pdf.parent.mkdir(parents=True)
+        source_pdf.write_bytes(b"P" * 120_000)
+
+        result = validate_output_structure(
+            copied,
+            require_pdf=True,
+            inventory=StableOutputInventory(files=()),
+            enabled_formats={"pdf"},
+        )
+
+        assert result["valid"] is False
+        assert result["directory_structure"]["combined_pdf"]["exists"] is False
+        assert result["directory_structure"]["pdf"]["exists"] is False
+
+    def test_implicit_inventory_rejects_git_ignored_combined_pdf(self, tmp_path):
+        """Direct structure validation cannot bless a non-shippable PDF."""
+        output_dir = tmp_path / "projects" / "demo" / "output"
+        pdf = output_dir / "pdf" / "demo_combined.pdf"
+        pdf.parent.mkdir(parents=True)
+        pdf.write_bytes(b"P" * 120_000)
+        subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True)
+        (tmp_path / ".gitignore").write_text(
+            "projects/demo/output/pdf/*.pdf\n",
+            encoding="utf-8",
+        )
+
+        result = validate_output_structure(output_dir, require_pdf=True)
+
+        assert result["valid"] is False
+        assert result["directory_structure"]["combined_pdf"]["exists"] is False
+        assert result["directory_structure"]["pdf"]["exists"] is False
+
+    def test_detailed_statistics_account_for_dynamic_publication_categories(self, tmp_path):
+        """DOCX, EPUB, manuscript, package, and root files remain visible."""
+        from infrastructure.validation.output.validator import collect_detailed_validation_results
+
+        output_dir = tmp_path / "project" / "output"
+        files = {
+            "docx/project_combined.docx": b"docx",
+            "epub/project_combined.epub": b"epub",
+            "manuscript/chapter.md": b"# Chapter\n",
+            "release/package.json": b"{}\n",
+            "submission.tar.gz": b"archive",
+        }
+        for relative, payload in files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+
+        result = collect_detailed_validation_results(output_dir, require_pdf=False)
+
+        assert sum(result["file_counts"].values()) == len(files)
+        assert result["file_counts"]["docx"] == 1
+        assert result["file_counts"]["epub"] == 1
+        assert result["file_counts"]["manuscript"] == 1
+        assert result["file_counts"]["release"] == 1
+        assert result["file_counts"]["root"] == 1
+        assert result["directories"]["root"]["largest_file"] == "submission.tar.gz"
+        assert result["directories"]["root"]["largest_file_path"] == "submission.tar.gz"
+
     def test_empty_data_dir_is_info_not_warning(self, tmp_path):
         """Empty ``data/`` (no producers) → ``info``, not ``warning``.
 
@@ -725,6 +864,44 @@ class TestValidateOutputStructure:
 
         assert result["valid"] is True
         assert len(result["missing_files"]) == 0
+
+    def test_validate_before_copy_stage_rejects_ignored_source_pdf(self, tmp_path):
+        """A non-shippable source PDF cannot satisfy pre-copy validation."""
+        copied = tmp_path / "output" / "test_project"
+        copied.mkdir(parents=True)
+        source_pdf = tmp_path / "projects" / "test_project" / "output" / "pdf" / "test_project_combined.pdf"
+        source_pdf.parent.mkdir(parents=True)
+        source_pdf.write_bytes(b"P" * 120_000)
+        subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True)
+        (tmp_path / ".gitignore").write_text(
+            "projects/test_project/output/pdf/*.pdf\n",
+            encoding="utf-8",
+        )
+
+        result = validate_output_structure(copied)
+
+        assert result["valid"] is False
+        assert result["directory_structure"]["combined_pdf"]["exists"] is False
+
+    def test_validate_before_copy_stage_rejects_source_inventory_symlink(self, tmp_path):
+        """Any unsafe source-inventory member blocks the PDF fallback."""
+        copied = tmp_path / "output" / "test_project"
+        copied.mkdir(parents=True)
+        source_output = tmp_path / "projects" / "test_project" / "output"
+        source_pdf = source_output / "pdf" / "test_project_combined.pdf"
+        source_pdf.parent.mkdir(parents=True)
+        source_pdf.write_bytes(b"P" * 120_000)
+        outside = tmp_path / "private.json"
+        outside.write_text("{}\n", encoding="utf-8")
+        linked = source_output / "data" / "linked.json"
+        linked.parent.mkdir(parents=True)
+        linked.symlink_to(outside)
+
+        result = validate_output_structure(copied)
+
+        assert result["valid"] is False
+        assert result["directory_structure"]["combined_pdf"]["exists"] is False
+        assert any("symlink artifact forbidden" in issue for issue in result["issues"])
 
     def test_validate_nested_source_output_structure(self, tmp_path):
         """Source output validation detects qualified project names."""

@@ -5,8 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project
 from infrastructure.core.pipeline.types import PipelineStageResult
 from infrastructure.core.pipeline.summary import generate_pipeline_summary
+from infrastructure.core.project_paths import resolve_project_root
 
 logger = get_logger(__name__)
 
@@ -19,7 +21,8 @@ def write_pipeline_post_run_reports(
     skip_infra: bool,
 ) -> None:
     """Generate text summary, JSON/HTML reports, and verify pipeline log."""
-    output_dir = repo_root / "projects" / project_name / "output"
+    project_dir = resolve_project_root(repo_root, project_name)
+    output_dir = project_dir / "output"
     reports_dir = output_dir / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
 
@@ -41,7 +44,13 @@ def write_pipeline_post_run_reports(
         )
         from infrastructure.reporting.log_analysis import generate_log_summary
 
-        output_stats = collect_output_statistics(repo_root, project_name)
+        output_stats = collect_output_statistics(
+            repo_root,
+            project_name,
+            project_dir=project_dir,
+            output_dir=output_dir,
+            inventory_mode=output_inventory_mode_for_project(repo_root, project_dir),
+        )
         log_file = output_dir / "logs" / "pipeline.log"
         if log_file.exists():
             try:

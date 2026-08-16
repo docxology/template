@@ -4,8 +4,8 @@ manuscript/preamble.md — LaTeX preamble for the Pools, Rules, and Tools manusc
 `infrastructure/rendering/_pdf_latex_helpers.py::extract_preamble` only
 recovers content between a closed ```latex ... ``` fence. An unfenced file
 falls back to a conservative single-line whitelist that silently drops any
-multi-line directive (geometry blocks, hypersetup, tcolorbox definitions,
-etc.) — keep this fence intact.
+multi-line directive (for example, geometry or hypersetup blocks) — keep this
+fence intact.
 
 Page margins are sourced from `manuscript/config.yaml`'s
 `metadata.geometry` key (single source of truth) — do not add a
@@ -30,10 +30,7 @@ Page margins are sourced from `manuscript/config.yaml`'s
 \usepackage{subcaption}
 \usepackage{setspace}
 \usepackage{fancyhdr}
-\usepackage{titlesec}
 \usepackage{enumitem}
-\usepackage{tcolorbox}
-\usepackage{mdframed}
 \usepackage{fontsize}
 
 % ============================================================
@@ -93,25 +90,6 @@ Page margins are sourced from `manuscript/config.yaml`'s
 \newcommand{\token}[1]{\texttt{\{\{#1\}\}}}
 \newcommand{\jsonkey}[1]{\texttt{"#1"}}
 \newcommand{\exitcode}[1]{\texttt{#1}}
-
-% ============================================================
-% Coloured note boxes
-% ============================================================
-\tcbuselibrary{skins}
-\newtcolorbox{noteBox}[1][]{
-  colback=blue!5!white,
-  colframe=blue!60!black,
-  fonttitle=\bfseries,
-  title=Note,
-  #1
-}
-\newtcolorbox{warningBox}[1][]{
-  colback=orange!10!white,
-  colframe=orange!80!black,
-  fonttitle=\bfseries,
-  title=Warning,
-  #1
-}
 
 % ============================================================
 % Cross-reference setup

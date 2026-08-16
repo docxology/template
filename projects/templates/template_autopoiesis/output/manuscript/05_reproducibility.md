@@ -2,8 +2,8 @@
 
 Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
-Determinism heading — f84a8f9dbcb18e37, 42, 493,
-96.28 — is a token substituted at render time by
+Determinism heading — a1f3e428cf1fb3e3, 42, 528,
+95.33 — is a token substituted at render time by
 `src/manuscript_variables.py::generate_variables()` from a live grammar load
 and a live pytest run (`src/manuscript_variables.py::measure_test_summary()`).
 Neither function accepts a hardcoded literal as a fallback: if the subprocess
@@ -19,7 +19,7 @@ this manuscript is permitted to assert.
 ### Determinism guarantee
 
 Given the same `manuscript/config.yaml` grammar definition (grammar hash
-`f84a8f9dbcb18e37`), the same seed (`42`), and the same
+`a1f3e428cf1fb3e3`), the same seed (`42`), and the same
 `template_autopoiesis` source tree, `scripts/autopoiesis.py expand` produces
 byte-identical selections on every invocation, and `materialize` produces a
 byte-identical child project tree. The determinism chain has three concrete
@@ -111,8 +111,8 @@ hashes into one summary digest, and the project does not conflate them:
   itself carries no positional structure.
 - **`merkle_root()`** builds a binary Merkle tree
   [@merkle_tree_provenance] over an *ordered* list of hex digests: each level
-  pairwise-concatenates adjacent nodes and hashes the concatenation, promoting
-  an unpaired trailing node unchanged to the next level, until one root
+  pairwise-concatenates adjacent nodes and hashes the concatenation, duplicating
+  an unpaired trailing node before hashing it with itself, until one root
   remains (the empty list is defined as the SHA-256 of the empty string,
   not a magic sentinel). Because the tree is addressable node-by-node, a
   Merkle profile supports proving that one specific file's hash is part of the
@@ -203,8 +203,8 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
 This is the same command family `measure_test_summary()` runs internally
 (with `--cov-branch` added explicitly, matching the repo-root
 `pyproject.toml`'s `branch = true` setting rather than this project's own,
-so the reported 96.28 agrees with the authoritative CI gate
+so the reported 95.33 agrees with the authoritative CI gate
 methodology rather than silently using a different one) to produce the
-493 and 96.28 tokens substituted above — the same
+528 and 95.33 tokens substituted above — the same
 build, not a paraphrase of it, is the source of both this document's prose
 and its own regeneration.

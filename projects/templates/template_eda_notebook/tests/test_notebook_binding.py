@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -19,6 +21,24 @@ PROJECT = Path(__file__).resolve().parents[1]
 def test_checked_in_notebook_binding_receipt_is_current():
     receipt = json.loads((PROJECT / "data" / "notebook_binding.json").read_text(encoding="utf-8"))
     assert validate_binding(receipt, PROJECT) == ()
+
+
+def test_refresh_notebook_binding_script_runs_from_project_root():
+    receipt_path = PROJECT / "data" / "notebook_binding.json"
+    before = receipt_path.read_bytes()
+
+    result = subprocess.run(
+        [sys.executable, "scripts/refresh_notebook_binding.py"],
+        cwd=PROJECT,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert str(receipt_path) in result.stdout
+    assert receipt_path.read_bytes() == before
 
 
 def test_notebook_binding_rejects_changed_cell(tmp_path):

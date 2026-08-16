@@ -312,6 +312,12 @@ The project-level next-work roadmap lives in [`TODO.md`](TODO.md).
 - `output/reports/evidence_registry.json`
 - `output/reports/artifact_manifest.json`
 
+The shared AutoResearch report writer keeps validation path identity portable:
+`repo_root` is serialized as `.`, while `project_root`, configuration
+`source_path`, and issue source paths are repository-relative POSIX paths.
+Resolved absolute paths remain available to the in-memory validator but are
+never written into the release-facing receipt.
+
 `output/reports/evidence_registry.json` is intentionally a compact summary, not
 the full validation registry. Full fact serialization is opt-in with
 `TEMPLATE_EVIDENCE_REGISTRY_FULL=1` and is not a required artifact.

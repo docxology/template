@@ -11,7 +11,7 @@ Numbered pipeline stage orchestrators (stages 00–12).
 | 02 | `stage_02_analysis.py` | Project analysis |
 | 03 | `stage_03_render.py` | Render every enabled manuscript format |
 | 04 | `stage_04_validate.py` | Validate enabled formats and release evidence |
-| 05 | `stage_05_copy.py` | Copy, filter, and validate publication outputs |
+| 05 | `stage_05_copy.py` | Create a complete local mirror, filter disabled formats, and validate/byte-match its stable publication inventory/statistics |
 | 06 | `stage_06_llm_review.py` | LLM review |
 | 07 | `stage_07_executive_report.py` | Executive report |
 | 08 | `stage_08_connector_search.py` | Connector search (opt-in) |

@@ -500,6 +500,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -896,8 +937,8 @@ baseline over the shared <span
 class="math inline">\(60\)</span>-experiment budget. The two curves
 track each other and converge to the same value.</p>
 <figure id="fig:comparison">
-<img src="../figures/search_comparison.png"
-alt="Figure 1: Champion metric (higher is better) versus experiment index for coordinated teams (solid) and the single-thread baseline (dashed) under a matched experiment budget." />
+<a class="figure-full-size-link" href="../figures/search_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/search_comparison.png"
+alt="Champion-metric trajectories under a matched sequential experiment budget. The solid coordinated-teams line contains 36 points, starting at -8.6627 and ending at 0.0012; The dashed single-thread baseline line contains 60 points, starting at -8.6627 and ending at 0.0012. Values are reported noisy champion metrics; line length can reflect early stopping and does not encode wall-clock speed." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Champion metric (higher is
 better) versus experiment index for coordinated teams (solid) and the
 single-thread baseline (dashed) under a matched experiment budget.
@@ -976,8 +1017,8 @@ and fig. <a href="#fig:ablation_efficiency">3</a>, drawn from
 <code>output/data/ablation.json</code>, switch off one mechanism at a
 time starting from the full coordinated configuration.</p>
 <figure id="fig:ablation">
-<img src="../figures/ablation.png"
-alt="Figure 2: Reported versus clean (ground-truth) champion metric for the full configuration and each single-mechanism ablation." />
+<a class="figure-full-size-link" href="../figures/ablation.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/ablation.png"
+alt="Paired horizontal bars compare final reported and clean metrics for 5 configurations: full coordination: reported 0.0012, clean 0.0000; no confirmation: reported 0.0156, clean 0.0000; no dead-end registry: reported 0.0012, clean 0.0000; no effect-size ranking: reported 0.0012, clean 0.0000; no reorganization: reported 0.0012, clean 0.0000. The largest absolute reported-minus-clean gap is 0.0156 for no confirmation. These are outcomes on this synthetic objective, not evidence of general agent performance." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Reported versus clean
 (ground-truth) champion metric for the full configuration and each
 single-mechanism ablation. A reported-greater-than-clean gap is accepted
@@ -1073,8 +1114,8 @@ clean metric <strong>unchanged</strong> at <span
 class="math inline">\(0.0000\)</span> — the registry buys a leaner
 search, not a better answer.</p>
 <figure id="fig:ablation_efficiency">
-<img src="../figures/ablation_efficiency.png"
-alt="Figure 3: Experiments used and redundant re-probes of retired directions per configuration." />
+<a class="figure-full-size-link" href="../figures/ablation_efficiency.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/ablation_efficiency.png"
+alt="Paired horizontal bars compare sequential experiment use and redundant re-probes for 5 configurations: full coordination: 36 used, 0 redundant; no confirmation: 36 used, 0 redundant; no dead-end registry: 60 used, 36 redundant; no effect-size ranking: 36 used, 0 redundant; no reorganization: 36 used, 0 redundant. The largest redundant count is 36 for no dead-end registry. Counts do not encode parallel throughput or wall-clock timing." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Experiments used and redundant
 re-probes of retired directions per configuration. Only the
 dead-end-registry ablation changes the profile: without the registry the

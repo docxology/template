@@ -10,7 +10,7 @@ backend on import so the module is safe to call from tests and pipelines.
 from __future__ import annotations
 
 import textwrap
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
 
 from registered_report.demo_study import (  # noqa: E402
+    PermutationResult,
     analysis_plan_stages,
     deviation_timeline,
     generate_demo_dataset,
@@ -34,6 +35,7 @@ __all__ = [
     "FIGURE_REGISTRY_SCHEMA",
     "REGISTERED_REPORT_FIGURE_SPECS",
     "RegisteredReportFigureSpec",
+    "build_accessible_figure_specs",
     "plot_analysis_dag",
     "plot_deviation_timeline",
     "plot_hypothesis_map",
@@ -49,6 +51,7 @@ class RegisteredReportFigureSpec:
     label: str
     filename: str
     caption: str
+    alt_text: str
     generated_by: str
 
 
@@ -58,24 +61,40 @@ REGISTERED_REPORT_FIGURE_SPECS: tuple[RegisteredReportFigureSpec, ...] = (
         label="fig:hypothesis_map",
         filename="hypothesis_map.png",
         caption="Registered hypothesis-to-outcome-to-analysis mapping.",
+        alt_text=(
+            "A four-column flow row links registered hypothesis H1 to the primary-score "
+            "outcome, mean-score-difference measure, and two-sided permutation analysis."
+        ),
         generated_by="registered_report.figures.plot_hypothesis_map",
     ),
     RegisteredReportFigureSpec(
         label="fig:analysis_dag",
         filename="analysis_dag.png",
         caption="Registered analysis workflow and pre-results lock boundary.",
+        alt_text=(
+            "Six ordered workflow boxes run from registration freeze through interpretation; "
+            "a dashed results-revealed boundary separates four locked blue stages from two purple post-results stages."
+        ),
         generated_by="registered_report.figures.plot_analysis_dag",
     ),
     RegisteredReportFigureSpec(
         label="fig:deviation_timeline",
         filename="deviation_timeline.png",
         caption="Timeline of registered decisions and documented deviations.",
+        alt_text=(
+            "A horizontal timeline marks the registered primary outcome in green and two "
+            "documented exploratory or model deviations in amber, with no undocumented red event."
+        ),
         generated_by="registered_report.figures.plot_deviation_timeline",
     ),
     RegisteredReportFigureSpec(
         label="fig:permutation_result",
         filename="permutation_result.png",
         caption="Seeded permutation null distribution and observed registered statistic.",
+        alt_text=(
+            "A histogram shows the seeded permutation null distribution, with vertical lines marking "
+            "the observed treatment-control difference and its negative counterpart."
+        ),
         generated_by="registered_report.figures.plot_permutation_result",
     ),
 )
@@ -99,6 +118,76 @@ _DEVIATIONS = [
     {"kind": "outcome", "target": "secondary_score", "rationale": "exploratory robustness endpoint"},
     {"kind": "model", "target": "linear_model", "rationale": "robustness sensitivity"},
 ]
+
+
+def build_accessible_figure_specs(
+    registration: dict[str, Any],
+    summary: dict[str, Any],
+) -> tuple[RegisteredReportFigureSpec, ...]:
+    """Bind figure descriptions to the exact registration and analysis result."""
+    edges = hypothesis_outcome_map(registration)
+    stages = analysis_plan_stages()
+    events = deviation_timeline(build_deviation_ledger(registration, _EXECUTED_WITH_DEVIATIONS, _DEVIATIONS))
+    hypothesis_ids = ", ".join(edge.hypothesis_id for edge in edges) or "no registered hypotheses"
+    documented = sum(not event.registered and event.documented for event in events)
+    undocumented = sum(not event.registered and not event.documented for event in events)
+    permutation_result = _validated_permutation_result(summary)
+    significance = "crosses" if permutation_result.p_value < float(summary["alpha"]) else "does not cross"
+    alt_by_label = {
+        "fig:hypothesis_map": (
+            f"A four-column mapping contains {len(edges)} registered hypothesis row(s) ({hypothesis_ids}), "
+            "linking each claim to its outcome, measure, and planned analysis."
+        ),
+        "fig:analysis_dag": (
+            f"{len(stages)} ordered workflow boxes run from registration freeze through interpretation; "
+            f"a dashed results-revealed boundary separates {sum(stage.locks_before_results for stage in stages)} "
+            "locked stages from the post-results stages."
+        ),
+        "fig:deviation_timeline": (
+            f"A horizontal timeline contains {len(events)} decision events: "
+            f"{sum(event.registered for event in events)} registered, {documented} documented deviation(s), "
+            f"and {undocumented} undocumented deviation(s)."
+        ),
+        "fig:permutation_result": (
+            f"A histogram shows {permutation_result.n_permutations:,} seeded permutation differences; "
+            f"the observed treatment-control difference is {permutation_result.observed_difference:.3f}, "
+            f"with two-sided p={permutation_result.p_value:.4f}, which {significance} the registered "
+            f"alpha={float(summary['alpha']):.3f} threshold."
+        ),
+    }
+    return tuple(replace(spec, alt_text=alt_by_label[spec.label]) for spec in REGISTERED_REPORT_FIGURE_SPECS)
+
+
+def _validated_permutation_result(summary: dict[str, Any]) -> PermutationResult:
+    """Recompute and validate the exact result used by the permutation plot."""
+    seed = int(summary["seed"])
+    dataset = generate_demo_dataset(
+        seed=seed,
+        n_per_group=int(summary["n_control"]),
+        effect=float(summary["effect"]),
+    )
+    result = run_permutation_test(
+        dataset,
+        seed=seed,
+        n_permutations=int(summary["n_permutations"]),
+    )
+    expected: dict[str, object] = {
+        "n_control": dataset.n_control,
+        "n_treatment": dataset.n_treatment,
+        "observed_difference": result.observed_difference,
+        "control_mean": result.control_mean,
+        "treatment_mean": result.treatment_mean,
+        "p_value": result.p_value,
+        "n_permutations": result.n_permutations,
+        "n_at_least_as_extreme": result.n_at_least_as_extreme,
+        "significant": result.p_value < float(summary["alpha"]),
+    }
+    mismatches = [field for field, value in expected.items() if summary.get(field) != value]
+    if mismatches:
+        raise ValueError(
+            "registered analysis summary disagrees with the seeded permutation replay: " + ", ".join(mismatches)
+        )
+    return result
 
 
 def _box(ax: Any, x: float, y: float, w: float, h: float, text: str, color: str, fontsize: float = 8.5) -> None:
@@ -232,7 +321,7 @@ def plot_permutation_result(summary: dict[str, Any], path: Path) -> Path:
     """Render the seeded permutation null distribution and observed difference."""
     seed = int(summary["seed"])
     dataset = generate_demo_dataset(seed=seed, n_per_group=int(summary["n_control"]), effect=float(summary["effect"]))
-    result = run_permutation_test(dataset, seed=seed, n_permutations=int(summary["n_permutations"]))
+    result = _validated_permutation_result(summary)
     null = permutation_null_distribution(dataset, seed=seed, n_permutations=int(summary["n_permutations"]))
     fig, ax = plt.subplots(figsize=(8.2, 4.4))
     ax.hist(null, bins=40, color=_LOCKED + "55", edgecolor=_LOCKED, linewidth=0.6, label="permutation null")

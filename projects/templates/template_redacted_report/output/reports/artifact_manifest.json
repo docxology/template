@@ -5,622 +5,623 @@
       "path": "output/data/release_ledger.json",
       "sha256": "17f4f303e2ccb68d6eb84ff9612f37ce3c686c3c953b85c1f8ef4f5c349797ef",
       "size_bytes": 10932,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black.hashes.json",
       "sha256": "1e21aa7cfaa3a0d3b36f632fe43f89a89b407ae8af46ccb085cad6aa64368e13",
       "size_bytes": 544,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black.pdf",
       "sha256": "3128a32c830aeb2121f5767674788d0c62b3f0d750fb5e7680b4cc27aa3ecfd7",
       "size_bytes": 21504,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_black_steganography.pdf",
       "sha256": "8d0bf9aef1dcda6bb82d8bf45390b3ce4fe8dce256600955bf63d9cd65bdd975",
       "size_bytes": 145846,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_blur.hashes.json",
       "sha256": "972a9383964cd649ede9ceb3d36001e0c861162e561e4cf7e7173b25e12237ba",
       "size_bytes": 543,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_blur.pdf",
       "sha256": "457db039378bbff5c4aa8f0451ed622dc4fa700aa8f5a83347a1ab0778f4dc45",
       "size_bytes": 36502,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_blur_steganography.pdf",
       "sha256": "2779a7a8da8728f7108501dcd61ca0cca99144ff65ed545a1ca0f0cd528ef3aa",
       "size_bytes": 253233,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_gray.hashes.json",
       "sha256": "ced460d766debeaf3457d20d7b0719949af2ba35622eee2f5dce085844845340",
       "size_bytes": 543,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_gray.pdf",
       "sha256": "19ee19dd5ec44ebbe79513ae4e3583c3d035bd2b80a95cd471f0ec1259acde4b",
       "size_bytes": 21592,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_gray_steganography.pdf",
       "sha256": "829993a9065834b69592c976017fd5fbb6229bc61d7d37d7453cccd840282e02",
       "size_bytes": 146064,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_white.hashes.json",
       "sha256": "2782c427177c96cfc8566c515261b38082473b51368fd2d10608b5e1407b62cc",
       "size_bytes": 544,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_white.pdf",
       "sha256": "2c7d3b8b8b54d475cf4213d284571b065461cec197e3f7b593867a629d5648dc",
       "size_bytes": 21530,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blackout_on_white_steganography.pdf",
       "sha256": "ea9b89e0cd2910b15b2ab78e69a9eb38ef2a984412e2ecc1bdbddadc03765317",
       "size_bytes": 146116,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_black.hashes.json",
       "sha256": "9da4f56efbaad0069ac6e33e3b485a370303138394ef930afbcea51def70c2ef",
       "size_bytes": 540,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_black.pdf",
       "sha256": "5a7465a51371ae670487079bb5b6d4705ab61fe10e2def4c107c19ea23f0a590",
       "size_bytes": 21930,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_black_steganography.pdf",
       "sha256": "a92d2ddcbb3b1693b5d61097c104f796cfce754364b82373025641c2b119eb8f",
       "size_bytes": 149460,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_blur.hashes.json",
       "sha256": "aedc2e4a059cd6d9c5139b3baeb5fc003d129b4ebaa9a30a1e72edbaa56c789d",
       "size_bytes": 539,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_blur.pdf",
       "sha256": "8b8a5d665d482f4dd98ed3c3742ab573d7b8441c3445b1cdd3b8201d25e19518",
       "size_bytes": 36807,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_blur_steganography.pdf",
       "sha256": "1a18a8c8040a38105723df14be01c0bde9d5f820699382dd455fde3654d0b6a2",
       "size_bytes": 255928,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_gray.hashes.json",
       "sha256": "7d94f8eeeb77ab058cda1564dec3c8c11c95a6c9a329a7c32a24ced974f969f2",
       "size_bytes": 539,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_gray.pdf",
       "sha256": "538c136f17c01eb2748b055d2214d44438b92385b398dce36fc21bf9aeb6e146",
       "size_bytes": 21965,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_gray_steganography.pdf",
       "sha256": "95da8f857462df3e2a2195e335c833c50e208a7ff614e4419ea49196ad02e348",
       "size_bytes": 148991,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_white.hashes.json",
       "sha256": "90597143a2b010ed8636bf199ef155a7a8149e8e5933e0532003056d6864d742",
       "size_bytes": 540,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_white.pdf",
       "sha256": "9dc2d3a5bde0946afbfd9a47473f1eaa8d4c12f7604224ce7076f2968908f23e",
       "size_bytes": 21923,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/blur_on_white_steganography.pdf",
       "sha256": "fc7bd3eeb1360e68ceceb558531c83320164e22d2a704e2ca0b4fe2a3239bf1f",
       "size_bytes": 148493,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_black.hashes.json",
       "sha256": "36a65b44201f95413e61fca725c80692bf668dbe341797cfb1cae9a26feb6346",
       "size_bytes": 543,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_black.pdf",
       "sha256": "e00ccf0e511eb00d0274684df6cc644eb2c72a99d0e53d65432e8dec51c63d37",
       "size_bytes": 21593,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_black_steganography.pdf",
       "sha256": "a58b512ad3eeb4f374a8a497d7f6cf131c4ecace0012e3d2f23c44b929e46061",
       "size_bytes": 146502,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_blur.hashes.json",
       "sha256": "5c377a99c0497b507d1e1df69f85ac6d97b314eb77be0e159d82a99775a7cd39",
       "size_bytes": 542,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_blur.pdf",
       "sha256": "9708a215da7e41f52cc953e4e26dec1783a4df751417463102e1593d20eeef43",
       "size_bytes": 36552,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_blur_steganography.pdf",
       "sha256": "4e327792a17eb157ff77fd774fb474a8f94c04f4ed7bddec4936534be819f73b",
       "size_bytes": 253806,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_gray.hashes.json",
       "sha256": "a6adeb12f41dfcdd9c1a9e17452550a1e7c03145e1288784b6e43ae43bf0284c",
       "size_bytes": 542,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_gray.pdf",
       "sha256": "e2c58e7761f8eb82e5968b244e5db2f5a604356f4500c91476546deb02464920",
       "size_bytes": 21610,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_gray_steganography.pdf",
       "sha256": "460a1815cf406aca1fbe4ce1d8766a842fb905515c13b35800d1134eb95a6dfd",
       "size_bytes": 146909,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_white.hashes.json",
       "sha256": "572d19ce406cee12a6726d88cd0add530cd1bb48cb17dbcc5c2281001dba214b",
       "size_bytes": 543,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_white.pdf",
       "sha256": "45f6d635d8ed7457e22f39f2309c38f93f81603cc4e05a3c6983bbb1c81a9f73",
       "size_bytes": 21574,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/grayout_on_white_steganography.pdf",
       "sha256": "4f4e683b96fd6be6496dd0a40dd4425a410f8afa144cba688c8da89ba11a518f",
       "size_bytes": 146587,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/variant_matrix.json",
       "sha256": "222ce47200591d578a37d6d7a1a8cc7dc4bb7334d695207186f9c02c2108c19f",
       "size_bytes": 30418,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_black.hashes.json",
       "sha256": "6e501b119ddbaac1c8368eb94a7b20c695024bcf63934608fc3b6c3ef8e58733",
       "size_bytes": 544,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_black.pdf",
       "sha256": "c7715c46ef8ff62cee9f9f98085cae04f68e6852a99169b80281d0013afa421e",
       "size_bytes": 21364,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_black_steganography.pdf",
       "sha256": "d0accb40b812b99dde39af703168d0d76a353e0a54c4694b2c9ac7390c45dc70",
       "size_bytes": 146013,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_blur.hashes.json",
       "sha256": "2aa7c5bc7921d9b4d6cb380f60051192fe83d78de8de411556e5c135ecd8c8c5",
       "size_bytes": 543,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_blur.pdf",
       "sha256": "8d50bb51bc5107a5e3592625943628ba465e3ef493d2dc52beed9f0b5b28375e",
       "size_bytes": 36315,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_blur_steganography.pdf",
       "sha256": "5ef2ecc30f0e3a00095d7bcafa4a81f8dc4120803cbdbf3fe685873b9501148a",
       "size_bytes": 253280,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_gray.hashes.json",
       "sha256": "ee728f676e54b3748731f54525e49f6ea15e38217f003f9bae164c66cced5b7e",
       "size_bytes": 543,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_gray.pdf",
       "sha256": "dd82cece00a4a4ef515f6bd45fe5099fb5b40bb31864ee005fdb58ad4ec970d0",
       "size_bytes": 21404,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_gray_steganography.pdf",
       "sha256": "33063543cea646b86b7397b038dec97976482208b7a54b894f6ef8d2eb0dd4ca",
       "size_bytes": 146082,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_white.hashes.json",
       "sha256": "5c0c94afe02e7879d018199fd09fb062cd5ed62aeec53fe9d50fe19749559f4c",
       "size_bytes": 544,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_white.pdf",
       "sha256": "6e8bdb1832ee3d514953269040dbac08547db340f35818c0d5f9541016b85d1a",
       "size_bytes": 21298,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/dev/redaction_variants/whiteout_on_white_steganography.pdf",
       "sha256": "1b32dd82d8a648b50a618b54f5807f1a72a32c64445b8fac477247453dc1bde9",
       "size_bytes": 145425,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/disclosure_control_matrix.png",
       "sha256": "329b8993f2f7b3eecfbc35af0d5b677191986fdae74c6a5078c698e22fb8d90c",
       "size_bytes": 74442,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/disclosure_control_matrix.svg",
       "sha256": "8f33d5c468b32eae0759f6d8b91c1c0870876729b0dd167995085e18c27e06f2",
       "size_bytes": 94783,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/figure_registry.json",
       "sha256": "7c2ce415acc36ff53363a75ece92b35475cab93262176aef86d78a07cfcf757b",
       "size_bytes": 2025,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/redaction_flow.png",
       "sha256": "e603e2898eb04719ccef9077c2bc988dcd04d838c9182f76f4adf988c73adeca",
       "size_bytes": 78001,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/figures/redaction_flow.svg",
       "sha256": "5e68075a1aada4184ef8bffaf641f4a791741c1a373ba888a40fc82841dc8a29",
       "size_bytes": 71756,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/pdf/template_redacted_report_combined.pdf",
-      "sha256": "724876476660a2db105a6deedb0a5ee9c4ea02a6d722ea4355a128e49441f80c",
-      "size_bytes": 221858,
-      "stage_name": "standalone-output-scan",
+      "sha256": "9066a29d1806135a506af41574b17957f8899aaf3a73d7c2b426643eab1dc7f0",
+      "size_bytes": 245257,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/manuscript_composition.json",
       "sha256": "e16a7162f386f1634508ab30ebfa4ca242cf9bfe36751c2380c1c5bab918c56e",
       "size_bytes": 1125,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/redaction_audit.json",
       "sha256": "f71e36616eccfcb6eb70f51956777a14c985fce14b3537419f7a75f2513fc766",
       "size_bytes": 4806,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/test_results.json",
-      "sha256": "43c22a7f4b07126197e52967855b91757012f9c104917020f5a09ae6babc99aa",
-      "size_bytes": 613,
-      "stage_name": "standalone-output-scan",
+      "sha256": "07dafdb67b7677f33f6893e6aba6648decdb68307d3e31001ec82e50e7798b47",
+      "size_bytes": 2669,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/reports/test_results.md",
-      "sha256": "06baa867afd78d930c9a26bd58779f4fe39f8ce268f822463f1876cc2e72221f",
-      "size_bytes": 293,
-      "stage_name": "standalone-output-scan",
+      "sha256": "3f867ab423f9797ae63867a0902a949fde430ddd9d95f7db73dba533843ba3b7",
+      "size_bytes": 292,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/00_abstract_slides.pdf",
-      "sha256": "4d590f0a4977ea12ea2b8dd4f395a41d3a536caedee7f4db8e78c1d14cb09a7c",
-      "size_bytes": 11848,
-      "stage_name": "standalone-output-scan",
+      "sha256": "a888bb24c402b196dfaa5502d196c69471acd1689d7f6bdcafb64826cda74b70",
+      "size_bytes": 16256,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/01_methods_slides.pdf",
-      "sha256": "180130f1e8ba79e82f49c868b48cbabab944197577ec74fe31891bef0e60b138",
-      "size_bytes": 116483,
-      "stage_name": "standalone-output-scan",
+      "sha256": "a4bfed5e9fcf1cde307131f0f927b8930542ff64dea5838dd0e802c535131452",
+      "size_bytes": 140959,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/slides/02_results_slides.pdf",
-      "sha256": "d88a324936c10d16a0bcb807ece32eaa6dc39fcc010aa085b2ee7f89f6418fcb",
-      "size_bytes": 126298,
-      "stage_name": "standalone-output-scan",
+      "sha256": "74952f68befba329add12ed4f8e3397a940abe03a2f57f7f52f5a1609a6e4647",
+      "size_bytes": 163659,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/_combined_manuscript.md",
       "sha256": "3227afb3a21fcc8659007b177d611369047d86b118d9c681659142de4c7e3d6e",
       "size_bytes": 15952,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/favicon.ico",
       "sha256": "6ca6e9ffbb22550f6d94bf216e743cc7469a7fc50d8dcf0737b11bf800de7dad",
       "size_bytes": 121,
-      "stage_name": "standalone-output-scan",
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/index.html",
-      "sha256": "278e12e18b6e125481acb03b40f3eb7e93afd96b1825f4776c9ccbad8fa1d7f8",
-      "size_bytes": 32160,
-      "stage_name": "standalone-output-scan",
+      "sha256": "da10bc222dd7399017ab66e24696248672af6fbbf7b829a505f658a40bc4ddd5",
+      "size_bytes": 33657,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__00_abstract.html",
-      "sha256": "ad8c68f146d3664935504550495b41bda4056b50cb9730d30c4f2d9c9253af5e",
-      "size_bytes": 5640,
-      "stage_name": "standalone-output-scan",
+      "sha256": "bddc63e1844ba53e882bbefad8abc13f56ef877a782deda10c0c86fca64cf84a",
+      "size_bytes": 10089,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__01_methods.html",
-      "sha256": "4c0c6eb237b6301da4ec4f9ea29a04a295707eae965260bd874e90a5c99a9a05",
-      "size_bytes": 11968,
-      "stage_name": "standalone-output-scan",
+      "sha256": "a2a481dc98fd05c11696aaaaeb20cd0ac7af4185d086d0a3094a8e07ba2fe886",
+      "size_bytes": 16755,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     },
     {
       "contract_match": true,
       "path": "output/web/manuscript__02_results.html",
-      "sha256": "52d1404e12edad7128a228a5cdb3458f9da1a963ad5472e76ba1d0cbe65dd8fe",
-      "size_bytes": 13800,
-      "stage_name": "standalone-output-scan",
+      "sha256": "162e2efed250da2ef4b905d35df29ca02668474fe9c1cbec356e2d41a9643706",
+      "size_bytes": 18467,
+      "stage_name": "current-output-snapshot",
       "stage_num": 0,
-      "timestamp": ""
+      "timestamp": "2026-08-14T14:20:53+00:00"
     }
   ],
+  "inventory_mode": "stable-shippable-output-v1",
   "issues": []
 }

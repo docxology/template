@@ -16,8 +16,10 @@ from paths import locate_repo_root, project_root
 from render_orchestration import (
     DeckAuditFailure,
     DiligenceAuditFailure,
+    _configured_formats,
     load_deck_config,
     _preflight_all_lengths,
+    _select_pptx_renderer,
     _subject_content_prefix,
     render_all_decks,
     render_one_length,
@@ -34,6 +36,22 @@ def test_load_deck_config_reads_real_config():
     assert config["pitch_subject"] == "template_template"
     assert "theme" in config
     assert config["subjects"]["template_methods_paper"]["content_prefix"] == "deck_content_methods"
+    assert _configured_formats(config) == ("pdf", "pptx")
+
+
+def test_declared_pptx_format_fails_closed_without_renderer():
+    from infrastructure.core.exceptions import RenderingError
+
+    with pytest.raises(RenderingError, match="declares pptx"):
+        _select_pptx_renderer(("pdf", "pptx"), None)
+
+
+@pytest.mark.parametrize("formats", ([], ["pdf", 7], ["pdf", "keynote"], ["pptx"]))
+def test_configured_formats_reject_invalid_or_incomplete_contract(formats):
+    from infrastructure.core.exceptions import RenderingError
+
+    with pytest.raises(RenderingError):
+        _configured_formats({"formats": formats})
 
 
 def test_load_deck_config_prefers_nested_schema_and_supports_legacy(tmp_path: Path):
@@ -240,23 +258,18 @@ def test_preflight_rejects_later_length_before_any_render(tmp_path: Path, repo_r
 
 @pytest.mark.slow
 def test_render_all_decks_writes_real_artifacts(repo_root):
-    """Six artifacts (PDF+PPTX) when python-pptx is installed, three (PDF-only)
-    when it isn't — PPTX is an opt-in dependency (`uv sync --group rendering-pptx`),
-    not a hard requirement, so this project's own isolated venv (as used by
-    `execute_pipeline.py --core-only`) legitimately may not have it."""
-    try:
-        import pptx  # noqa: F401
-
-        pptx_available = True
-    except ImportError:
-        pptx_available = False
+    """The isolated project runtime must produce all declared PDF+PPTX decks."""
+    from pptx import Presentation
 
     logger = logging.getLogger("test")
     written = render_all_decks(project_root(), repo_root, logger)
-    assert len(written) == (6 if pptx_available else 3)
+    assert len(written) == 6
+    assert {path.suffix for path in written} == {".pdf", ".pptx"}
     for path in written:
         assert path.is_file()
         assert path.stat().st_size > 1000
+        if path.suffix == ".pptx":
+            assert len(Presentation(path).slides) > 0
 
 
 def test_rendered_output_actually_reflects_token_value_not_a_cached_default(tmp_path: Path, repo_root):

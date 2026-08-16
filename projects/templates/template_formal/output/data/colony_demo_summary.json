@@ -1,8 +1,8 @@
 {
   "agent_db_paths": [
-    "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_0.sqlite3",
-    "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_1.sqlite3",
-    "<repo-root>/.claude/worktrees/nifty-feistel-305852/projects/templates/template_formal/output/data/agent_2.sqlite3"
+    "<home>/Documents/GitHub/template/projects/templates/template_formal/output/data/agent_0.sqlite3",
+    "<home>/Documents/GitHub/template/projects/templates/template_formal/output/data/agent_1.sqlite3",
+    "<home>/Documents/GitHub/template/projects/templates/template_formal/output/data/agent_2.sqlite3"
   ],
   "choice_history": [
     [
@@ -56,8 +56,8 @@
   "num_agents": 3,
   "num_ticks": 5,
   "observation_counts": {
-    "110ba805-0d00-4b53-90b6-9155fe4f1923": 5,
-    "1c9d12c1-dcd0-490e-b489-f187694d513f": 5,
-    "91e1a7ee-2dbf-48ad-8719-48d000843912": 5
+    "5c3f6c92-b47f-4024-ac7e-a2c672c36586": 5,
+    "ac7ab45c-1ddf-4b91-9f5e-05dac46d0b30": 5,
+    "e81f2286-716e-400f-97c7-561151eb368e": 5
   }
 }

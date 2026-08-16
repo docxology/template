@@ -20,6 +20,7 @@ from typing import Final
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.chrome import resolve_chrome_executable as _resolve_chrome_executable
+from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_text
 from infrastructure.rendering.security import run_isolated_subprocess
 
 logger = get_logger(__name__)
@@ -72,12 +73,14 @@ def replace_inline_mermaid(
     output_dir = _inline_mermaid_dir(Path(manuscript_dir))
     output_dir.mkdir(parents=True, exist_ok=True)
     puppeteer_config = _find_puppeteer_config(Path(manuscript_dir))
+    runtime_chrome_executable: Path | None = None
     if puppeteer_config is None:
         chrome_executable = _resolve_chrome_executable(home=home)
         if chrome_executable is None:
             render_disabled_reason = "no Chrome resolved"
         else:
             render_disabled_reason = None
+            runtime_chrome_executable = chrome_executable
             puppeteer_config = _write_puppeteer_runtime_config(output_dir, chrome_executable)
     else:
         render_disabled_reason = None
@@ -93,8 +96,9 @@ def replace_inline_mermaid(
         block_index += 1
         raw_source = match.group("source").strip()
         source = _normalise_mermaid_source(raw_source) if raw_source else ""
-        alt = _first_alt(match.group("alts")) or "Mermaid diagram"
-        caption = _caption_for_markdown(_caption_text(match) or alt)
+        caption_text = _caption_text(match)
+        alt = _first_alt(match.group("alts")) or caption_text or "Mermaid diagram"
+        caption = _caption_for_markdown(caption_text or alt)
         fallback_source = source or raw_source
         stem = f"inline_mermaid_{block_index:04d}_{_source_hash(source)}"
         if not source:
@@ -122,15 +126,30 @@ def replace_inline_mermaid(
         diagrams_rendered += 1
         rel_path = f"../figures/mermaid_inline/{png_path.name}"
         escaped_caption = _latex_caption(caption)
+        escaped_alt = _latex_graphic_alt_text(alt)
         return (
             "\n\\begin{figure}[htbp]\n"
             "\\centering\n"
-            f"\\includegraphics[width=0.82\\linewidth,height=4.2in,keepaspectratio]{{{rel_path}}}\n"
+            "\\includegraphics[width=0.82\\linewidth,height=4.2in,keepaspectratio,"
+            f"alt={{{escaped_alt}}}]{{{rel_path}}}\n"
             f"\\caption{{{escaped_caption}}}\n"
             "\\end{figure}\n"
         )
 
-    rewritten = _MERMAID_BLOCK_RE.sub(_replace, content)
+    try:
+        rewritten = _MERMAID_BLOCK_RE.sub(_replace, content)
+    finally:
+        if puppeteer_config is not None and runtime_chrome_executable is not None:
+            # mmdc must read the real executable path during its synchronous
+            # subprocess.  Once that subprocess has finished (successfully or
+            # otherwise), the tracked sidecar is publication evidence rather
+            # than an executable runtime config and must not retain a local
+            # home-directory prefix.
+            _persist_portable_puppeteer_runtime_config(
+                puppeteer_config,
+                runtime_chrome_executable,
+                home=home,
+            )
     logger.info("Rendered %d inline Mermaid diagram(s) for PDF output", diagrams_rendered)
     return MermaidReplacementResult(rewritten, diagrams_rendered)
 
@@ -185,6 +204,33 @@ def _write_puppeteer_runtime_config(output_dir: Path, chrome_executable: Path) -
         encoding="utf-8",
     )
     return runtime_config
+
+
+def _persist_portable_puppeteer_runtime_config(
+    runtime_config: Path,
+    chrome_executable: Path,
+    *,
+    home: Path | None,
+) -> None:
+    """Replace the runtime Chrome path with a clone-independent placeholder."""
+    resolved_chrome = chrome_executable.expanduser().resolve()
+    resolved_home = (home or Path.home()).expanduser().resolve()
+    try:
+        relative_chrome = resolved_chrome.relative_to(resolved_home)
+    except ValueError:
+        portable_chrome = f"<system>/{resolved_chrome.as_posix().lstrip('/')}"
+    else:
+        portable_chrome = f"<home>/{relative_chrome.as_posix()}"
+    runtime_config.write_text(
+        json.dumps(
+            {
+                "executablePath": portable_chrome,
+                "args": ["--no-sandbox"],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
 
 def _source_hash(source: str) -> str:

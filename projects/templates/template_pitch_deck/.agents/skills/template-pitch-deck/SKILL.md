@@ -23,6 +23,7 @@ Project-scoped skill for the in-repo exemplar at
 
 ```bash
 # From the repository root
+export PATH="$PWD/node_modules/.bin:$PATH"
 uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py
 uv run python projects/templates/template_pitch_deck/scripts/15_generate_diagrams.py
 uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py
@@ -31,7 +32,9 @@ uv run pytest projects/templates/template_pitch_deck/tests --cov=projects/templa
 uv run pytest tests/infra_tests/rendering/test_slide_deck.py tests/infra_tests/rendering/test_pptx_deck.py tests/infra_tests/rendering/test_mermaid_figure.py
 ```
 
-PPTX rendering needs the opt-in group: `uv sync --group rendering-pptx`.
+PDF and PPTX are required project formats; the isolated project environment
+installs `python-pptx` from this exemplar's own `pyproject.toml`. Mermaid
+figures require the repository-pinned `node_modules/.bin/mmdc` on `PATH`.
 
 ## Pitfalls
 

@@ -39,6 +39,11 @@ from scripts import ensure_repo_root_on_path  # noqa: E402
 ensure_repo_root_on_path()
 
 from infrastructure.core.logging.utils import get_logger, log_success, log_header
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
+    collect_stable_output_inventory,
+    output_inventory_mode_for_project,
+)
 from infrastructure.core.files.cleanup import (
     clean_final_output_directory,
     clean_root_output_directory,
@@ -57,6 +62,7 @@ from infrastructure.validation.output.render_formats import (
     render_config_manuscript_dir,
 )
 from infrastructure.reporting.output_statistics import (
+    STAGE5_DELIVERY_INVENTORY_SCOPE,
     collect_output_statistics,
     generate_detailed_output_report,
     log_output_summary,
@@ -77,6 +83,7 @@ def execute_copy_stage(project_name: str, *, repo_root: Path) -> int:
 
     project_root = resolve_project_root(repo_root, project_name)
     output_dir = repo_root / "output" / project_name
+    inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
 
     try:
         render_config = load_effective_rendering_config(project_root)
@@ -112,8 +119,23 @@ def execute_copy_stage(project_name: str, *, repo_root: Path) -> int:
         stats["pdf_files"] = sum(1 for path in (output_dir / "pdf").rglob("*") if path.is_file())
         stats["web_files"] = sum(1 for path in (output_dir / "web").rglob("*") if path.is_file())
         stats["slides_files"] = sum(1 for path in (output_dir / "slides").rglob("*") if path.is_file())
+        stats["docx_files"] = sum(1 for path in (output_dir / "docx").rglob("*") if path.is_file())
+        stats["epub_files"] = sum(1 for path in (output_dir / "epub").rglob("*") if path.is_file())
         stats["combined_pdf"] = int((output_dir / f"{Path(project_name).name}_combined.pdf").is_file())
         stats["total_files"] = sum(1 for path in output_dir.rglob("*") if path.is_file())
+
+        # The root delivery mirror is intentionally Git-ignored. Evaluate its
+        # relative paths against the canonical project output tree so stable
+        # publication artifacts remain visible while source-scoped ignore rules
+        # still exclude runtime state and render intermediates.
+        copied_inventory = collect_stable_output_inventory(
+            output_dir,
+            git_ignore_output_dir=project_root / "output",
+            git_ignore_path_overrides={
+                Path(f"{Path(project_name).name}_combined.pdf"): Path("pdf") / f"{Path(project_name).name}_combined.pdf"
+            },
+            inventory_mode=inventory_mode,
+        )
 
         # Step 4: Validate copied files
         validation_passed = validate_copied_outputs(
@@ -121,27 +143,76 @@ def execute_copy_stage(project_name: str, *, repo_root: Path) -> int:
             project_name=project_name,
             enabled_formats=formats,
             manuscript_dir=manuscript_dir,
+            inventory=copied_inventory,
         )
 
         # Step 4b: Validate directory structure without inventing a PDF
         # requirement for configurations that explicitly disable it.
-        structure_validation = validate_output_structure(output_dir, require_pdf=render_config.enable_pdf)
+        structure_validation = validate_output_structure(
+            output_dir,
+            require_pdf=render_config.enable_pdf,
+            inventory=copied_inventory,
+            enabled_formats=formats,
+        )
 
         # Step 5: Collect comprehensive output statistics
-        output_stats = collect_output_statistics(repo_root, project_name, project_dir=project_root)
+        output_stats = collect_output_statistics(
+            repo_root,
+            project_name,
+            require_pdf=render_config.enable_pdf,
+            output_dir=output_dir,
+            inventory=copied_inventory,
+            enabled_formats=formats,
+            inventory_scope=STAGE5_DELIVERY_INVENTORY_SCOPE,
+        )
         detailed_report = generate_detailed_output_report(output_dir, output_stats)
 
         logger.info(detailed_report)
 
-        report_file, json_file = write_output_statistics_reports(project_root / "output", output_stats)
+        report_file, json_file = write_output_statistics_reports(
+            project_root / "output",
+            output_stats,
+            report_output_dir=output_dir,
+        )
+        copied_report_file, copied_json_file = write_output_statistics_reports(
+            output_dir,
+            output_stats,
+            report_output_dir=output_dir,
+        )
+        if report_file.read_bytes() != copied_report_file.read_bytes():
+            raise ValueError("source and copied output-statistics text reports differ")
+        if json_file.read_bytes() != copied_json_file.read_bytes():
+            raise ValueError("source and copied output-statistics JSON reports differ")
+        # The reports are part of the completed physical mirror but are
+        # deliberately excluded from the stable inventory to avoid recursive
+        # evidence. Recount only the physical total after both receipts exist
+        # so first-run and repeat-run summaries have identical semantics.
+        stats["total_files"] = sum(1 for path in output_dir.rglob("*") if path.is_file())
+        stats["reports_files"] = sum(1 for path in (output_dir / "reports").rglob("*") if path.is_file())
         logger.info(f"Detailed output statistics saved to: {report_file}")
         logger.info(f"Output statistics JSON saved to: {json_file}")
+        logger.info(
+            "Physical local mirror: %d files; %s inventory: %d files",
+            stats.get("total_files", 0),
+            "Git-shippable publication"
+            if copied_inventory.mode == STABLE_OUTPUT_INVENTORY_MODE
+            else "stable-local project-output",
+            output_stats["total_files"],
+        )
 
         # Step 6: Log copy summary for the pipeline console
         log_output_summary(output_dir, dict(stats), structure_validation)
 
         if stats.get("total_files", 0) > 0 and validation_passed:
-            log_success("\n✅ Output copying complete - all project outputs ready!", logger)
+            inventory_label = (
+                "Git-shippable publication inventory"
+                if copied_inventory.mode == STABLE_OUTPUT_INVENTORY_MODE
+                else "stable-local output inventory"
+            )
+            log_success(
+                f"\n✅ Output copying complete - local mirror ready and {inventory_label} validated!",
+                logger,
+            )
             return 0
         logger.error("\n❌ Output copying incomplete - check warnings above")
         return 1

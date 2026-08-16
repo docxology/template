@@ -1,29 +1,153 @@
 {
-  "timestamp": "2026-08-08T23:00:36.504296",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 313,
+    "passed": 319,
     "failed": 0,
     "skipped": 2,
-    "total": 315,
+    "total": 321,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 315,
+    "discovery_count": 321,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 10.46,
-      "execution": 10.46
+      "setup": 9.24,
+      "collection": 9.24,
+      "execution": 9.24
     },
     "test_categories": {},
-    "coverage_percent": 97.44,
+    "coverage_percent": 96.45021645021644,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 313,
+    "total_passed": 319,
     "total_failed": 0,
     "total_skipped": 2,
-    "total_tests": 315,
+    "total_tests": 321,
     "all_passed": true,
-    "project_coverage": 97.44
+    "project_coverage": 96.45021645021644
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 96.45021645021644,
+      "total_executed": 1736,
+      "total_missing": 34,
+      "total_excluded": 4,
+      "total_lines": 1770,
+      "file_coverage": {
+        "src/analysis.py": {
+          "coverage_percent": 99.1304347826087,
+          "executed_lines": 167,
+          "missing_lines": 1,
+          "excluded_lines": 2,
+          "total_lines": 168
+        },
+        "src/composition.py": {
+          "coverage_percent": 88.05309734513274,
+          "executed_lines": 152,
+          "missing_lines": 10,
+          "excluded_lines": 0,
+          "total_lines": 162
+        },
+        "src/config.py": {
+          "coverage_percent": 88.23529411764706,
+          "executed_lines": 112,
+          "missing_lines": 8,
+          "excluded_lines": 0,
+          "total_lines": 120
+        },
+        "src/dashboard.py": {
+          "coverage_percent": 96.07843137254902,
+          "executed_lines": 75,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 76
+        },
+        "src/deep_search.py": {
+          "coverage_percent": 99.08045977011494,
+          "executed_lines": 305,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 307
+        },
+        "src/deep_search_cli.py": {
+          "coverage_percent": 87.01298701298701,
+          "executed_lines": 50,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 53
+        },
+        "src/dotenv.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 38,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 38
+        },
+        "src/figures.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 95,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 95
+        },
+        "src/llm_runtime.py": {
+          "coverage_percent": 91.66666666666667,
+          "executed_lines": 22,
+          "missing_lines": 2,
+          "excluded_lines": 2,
+          "total_lines": 24
+        },
+        "src/manuscript_variables.py": {
+          "coverage_percent": 98.1651376146789,
+          "executed_lines": 88,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 89
+        },
+        "src/pipeline.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 114,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 114
+        },
+        "src/report.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 77,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 77
+        },
+        "src/review_report.py": {
+          "coverage_percent": 99.0228013029316,
+          "executed_lines": 245,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 247
+        },
+        "src/search_invariants.py": {
+          "coverage_percent": 96.3302752293578,
+          "executed_lines": 93,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 95
+        },
+        "src/search_pipeline_cli.py": {
+          "coverage_percent": 90.47619047619048,
+          "executed_lines": 64,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 66
+        },
+        "src/synthesis.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 39,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 39
+        }
+      }
+    }
   }
 }

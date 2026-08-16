@@ -11,10 +11,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from manuscript.hydrate import write_resolved_manuscript
-from manuscript.sheaf import compose_all_sections
+from manuscript.refresh import ManuscriptRefreshPhase, refresh_manuscript_pipeline
 from manuscript.variables import generate_variables
-from roadmap_tracks import run_semantic_fixed_point, write_manuscript_staleness_report
+from roadmap_tracks import run_semantic_fixed_point
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -38,14 +37,13 @@ def main(argv: list[str] | None = None) -> int:
         # Draft hydration should stay below the repo's per-test timeout and
         # tolerate missing analysis artifacts. The strict pipeline path below
         # still refreshes the full sheaf-track and semantic artifact surface.
-        compose_all_sections(PROJECT_ROOT)
-        variables = generate_variables(PROJECT_ROOT, require_analysis_outputs=False)
-        out.write_text(json.dumps(variables, indent=2), encoding="utf-8")
-        resolved_dir = write_resolved_manuscript(PROJECT_ROOT, variables)
-        staleness_path = write_manuscript_staleness_report(PROJECT_ROOT)
-        print(out)
-        print(resolved_dir)
-        print(staleness_path)
+        paths = refresh_manuscript_pipeline(
+            PROJECT_ROOT,
+            require_analysis_outputs=False,
+            phase=ManuscriptRefreshPhase.POST_COMPOSE,
+        )
+        for path in paths.values():
+            print(path)
         return 0
 
     semantic_paths = run_semantic_fixed_point(

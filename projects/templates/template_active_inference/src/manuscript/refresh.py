@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from pathlib import Path
 from typing import Any
-from json_io import write_json
+from json_io import load_json_strict, write_json
 
 
 class ManuscriptRefreshPhase(str, Enum):
@@ -31,10 +31,24 @@ def refresh_manuscript_pipeline(
     compose_all_sections(project_root)
     variables: dict[str, Any] = generate_variables(project_root, require_analysis_outputs=require_analysis_outputs)
     write_json(variables_path, variables)
+    resolved_manuscript = write_resolved_manuscript(project_root, variables)
+    staleness = write_manuscript_staleness_report(project_root)
+
+    # The staleness writer enriches and rewrites manuscript_variables.json, so
+    # bind the public figure registry only after reloading that final canonical
+    # snapshot. This makes hydration the sole final registry producer and
+    # prevents a pre-pass variables dict from leaking into publication HTML.
+    final_variables = load_json_strict(variables_path)
+    if not final_variables:
+        raise ValueError(f"canonical manuscript variables are missing or empty: {variables_path}")
+    from visualizations.figure_registry import write_figure_registry_json
+
+    figure_registry = write_figure_registry_json(project_root, final_variables)
     return {
         "variables": variables_path,
-        "resolved_manuscript": write_resolved_manuscript(project_root, variables),
-        "staleness": write_manuscript_staleness_report(project_root),
+        "resolved_manuscript": resolved_manuscript,
+        "figure_registry": figure_registry,
+        "staleness": staleness,
     }
 
 

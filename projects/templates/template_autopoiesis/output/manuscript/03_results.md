@@ -12,7 +12,7 @@
 | integrity_profile | 2 | sha256, merkle |
 
 
-![Options per grammar slot, stacked. Each band is one slot's contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below.](../output/figures/fig_stacked_product.png){#fig:stacked_product width=85% fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."}
+![Options per effective grammar slot, stacked. Each band is one of the three content-determining slots; reserved presentation and sealing slots are intentionally omitted from this figure.](../output/figures/fig_stacked_product.png){#fig:stacked_product width=85% fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."}
 
 - **Total product size**: 360 cells
 - **Effective product size** (reserved slots excluded): 45 cells
@@ -26,7 +26,7 @@ factor to `Grammar.product_size`, which is the raw cross-product of all option
 counts — not an estimate, but the literal `n *= len(s.options)` accumulation
 over every slot. The `Grammar.grammar_hash` property serialises the seed, every
 slot name, and every option list into a canonical JSON string (`canonical()`)
-and takes the first sixteen hex characters of its SHA-256 digest — `f84a8f9dbcb18e37`
+and takes the first sixteen hex characters of its SHA-256 digest — `a1f3e428cf1fb3e3`
 for the grammar as currently checked into this project. Any edit to a slot's
 option list, the addition or removal of a slot, or a change to the seed changes
 this hash deterministically; it is not a version string maintained by hand.
@@ -95,7 +95,8 @@ convex quadratic, its analytic minimiser is known in closed form — `x* = c`,
 computed independently by the sibling kernel `analytic_minimizer` — so the
 iterative and closed-form solutions can be cross-checked against each other
 rather than against a single hardcoded expectation. On the example input (a
-diagonal `A`, `c = (1, -1)`, 200 steps at learning rate 0.1) the two agree to
+diagonal `A`, `c = (1, -1)`, 200 steps at learning
+rate 0.1) the two agree to
 within `1e-4`. The domain's negative control, `_negative_control_wrong_sign`,
 is the same loop with the gradient step's sign flipped (`x = x + lr * grad`
 instead of `x = x - lr * grad`); this turns descent into ascent and diverges
@@ -201,9 +202,9 @@ Each child project:
 
 ### Test results
 
-- **Test count**: 493
-- **Coverage**: 96.28%
-- **Grammar hash**: `f84a8f9dbcb18e37`
+- **Test count**: 528
+- **Coverage**: 95.33%
+- **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
 `measure_test_summary()` (`src/manuscript_variables.py`), which shells out to
@@ -215,9 +216,9 @@ or its output fails to parse, both fields resolve to the string `"pending"`
 rather than a plausible-looking number — the same discipline that governs
 every other numeric token in this manuscript.
 
-![Real, per-module branch coverage from the same measurement run that produces 493/96.28 above — not an aggregate alone. Any module below the repository's 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."}
+![Real, per-module branch coverage from the same measurement run that produces 528/95.33 above — not an aggregate alone. Any module below the repository's 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.](../output/figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."}
 
-The aggregate 96.28% is a mean weighted by statement and branch
+The aggregate 95.33% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
 As of this measurement every module clears the configured 90% line. The exact
 module values are deliberately read from [@fig:coverage_by_module], rather

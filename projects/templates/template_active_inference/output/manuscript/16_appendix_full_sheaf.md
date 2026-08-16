@@ -94,7 +94,7 @@ incomplete in the track-improvement scope.
 ### Appendix track: artifact diffoscope
 
 `artifact_diffoscope` binds `output/reports/artifact_diffoscope.json` into the
-full sheaf appendix. Rows: 41. All equal:
+full sheaf appendix. Rows: 40. All equal:
 `true`.
 
 This diffoscope is deliberately narrow and reproducibility-facing. For each

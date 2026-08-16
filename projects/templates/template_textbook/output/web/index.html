@@ -498,6 +498,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -1584,8 +1625,8 @@ href="#sec:part_0_quantitative_foundations">6</a></li>
 <h1 data-number="4" id="sec:part_0_orientation"><span
 class="header-section-number">4</span> Orientation to the Field</h1>
 <figure id="fig:part_0_orientation">
-<img src="../figures/part_0_orientation.png" style="width:90.0%"
-alt="Figure 1: Overview schematic for “Orientation to the Field”." />
+<a class="figure-full-size-link" href="../figures/part_0_orientation.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_0_orientation.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Orientation to the Field, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Overview schematic for
 “Orientation to the Field”. Replace this generated placeholder with a
 real figure produced by
@@ -1735,8 +1776,8 @@ href="#sec:q_part_0_orientation">31</a></li>
 <h1 data-number="5" id="sec:part_0_core_methods"><span
 class="header-section-number">5</span> Core Methods and Tools</h1>
 <figure id="fig:part_0_core_methods">
-<img src="../figures/part_0_core_methods.png" style="width:90.0%"
-alt="Figure 2: Overview schematic for “Core Methods and Tools”." />
+<a class="figure-full-size-link" href="../figures/part_0_core_methods.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_0_core_methods.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Core Methods and Tools, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Overview schematic for “Core
 Methods and Tools”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -1885,9 +1926,9 @@ href="#sec:q_part_0_core_methods">32</a></li>
 <h1 data-number="6" id="sec:part_0_quantitative_foundations"><span
 class="header-section-number">6</span> Quantitative Foundations</h1>
 <figure id="fig:part_0_quantitative_foundations">
-<img src="../figures/part_0_quantitative_foundations.png"
+<a class="figure-full-size-link" href="../figures/part_0_quantitative_foundations.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_0_quantitative_foundations.png"
 style="width:90.0%"
-alt="Figure 3: Overview schematic for “Quantitative Foundations”." />
+alt="A bordered placeholder overview panel labeled Quantitative Foundations, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Overview schematic for
 “Quantitative Foundations”. Replace this generated placeholder with a
 real figure produced by
@@ -2057,8 +2098,8 @@ href="#sec:part_I_structure_and_form">10</a></li>
 <h1 data-number="8" id="sec:part_I_first_principles"><span
 class="header-section-number">8</span> First Principles</h1>
 <figure id="fig:part_I_first_principles">
-<img src="../figures/logistic_growth.png" style="width:85.0%"
-alt="Figure 4: A logistic growth curve for three growth rates, approaching the carrying capacity K = 100 ." />
+<a class="figure-full-size-link" href="../figures/logistic_growth.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/logistic_growth.png" style="width:85.0%"
+alt="Three S-shaped logistic-growth curves approach the horizontal carrying-capacity line at 100; higher growth rates rise sooner." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: A logistic growth curve for
 three growth rates, approaching the carrying capacity <span
 class="math inline">\(K = 100\)</span>. Produced deterministically by
@@ -2300,8 +2341,8 @@ synthesis.</li>
 <h1 data-number="9" id="sec:part_I_building_blocks"><span
 class="header-section-number">9</span> Building Blocks</h1>
 <figure id="fig:part_I_building_blocks">
-<img src="../figures/part_I_building_blocks.png" style="width:90.0%"
-alt="Figure 5: Overview schematic for “Building Blocks”." />
+<a class="figure-full-size-link" href="../figures/part_I_building_blocks.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_I_building_blocks.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Building Blocks, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Overview schematic for
 “Building Blocks”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -2451,8 +2492,8 @@ href="#sec:q_part_I_building_blocks">35</a></li>
 <h1 data-number="10" id="sec:part_I_structure_and_form"><span
 class="header-section-number">10</span> Structure and Form</h1>
 <figure id="fig:part_I_structure_and_form">
-<img src="../figures/part_I_structure_and_form.png" style="width:90.0%"
-alt="Figure 6: Overview schematic for “Structure and Form”." />
+<a class="figure-full-size-link" href="../figures/part_I_structure_and_form.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_I_structure_and_form.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Structure and Form, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Overview schematic for
 “Structure and Form”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -2621,8 +2662,8 @@ href="#sec:part_II_regulation_and_control">14</a></li>
 <h1 data-number="12" id="sec:part_II_systems_overview"><span
 class="header-section-number">12</span> Systems Overview</h1>
 <figure id="fig:part_II_systems_overview">
-<img src="../figures/part_II_systems_overview.png" style="width:90.0%"
-alt="Figure 7: Overview schematic for “Systems Overview”." />
+<a class="figure-full-size-link" href="../figures/part_II_systems_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_II_systems_overview.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Systems Overview, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Overview schematic for “Systems
 Overview”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -2773,9 +2814,9 @@ href="#sec:q_part_II_systems_overview">37</a></li>
 <h1 data-number="13" id="sec:part_II_dynamics_and_change"><span
 class="header-section-number">13</span> Dynamics and Change</h1>
 <figure id="fig:part_II_dynamics_and_change">
-<img src="../figures/part_II_dynamics_and_change.png"
+<a class="figure-full-size-link" href="../figures/part_II_dynamics_and_change.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_II_dynamics_and_change.png"
 style="width:90.0%"
-alt="Figure 8: Overview schematic for “Dynamics and Change”." />
+alt="A bordered placeholder overview panel labeled Dynamics and Change, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Overview schematic for
 “Dynamics and Change”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -2926,9 +2967,9 @@ href="#sec:q_part_II_dynamics_and_change">38</a></li>
 <h1 data-number="14" id="sec:part_II_regulation_and_control"><span
 class="header-section-number">14</span> Regulation and Control</h1>
 <figure id="fig:part_II_regulation_and_control">
-<img src="../figures/part_II_regulation_and_control.png"
+<a class="figure-full-size-link" href="../figures/part_II_regulation_and_control.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_II_regulation_and_control.png"
 style="width:90.0%"
-alt="Figure 9: Overview schematic for “Regulation and Control”." />
+alt="A bordered placeholder overview panel labeled Regulation and Control, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 9: Overview schematic for
 “Regulation and Control”. Replace this generated placeholder with a real
 figure produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -3098,8 +3139,8 @@ href="#sec:part_III_frontiers">18</a></li>
 <h1 data-number="16" id="sec:part_III_applied_models"><span
 class="header-section-number">16</span> Applied Models</h1>
 <figure id="fig:part_III_applied_models">
-<img src="../figures/part_III_applied_models.png" style="width:90.0%"
-alt="Figure 10: Overview schematic for “Applied Models”." />
+<a class="figure-full-size-link" href="../figures/part_III_applied_models.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_III_applied_models.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Applied Models, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 10: Overview schematic for
 “Applied Models”. Replace this generated placeholder with a real figure
 produced by <code>src/visualization/plots.py</code>.</figcaption>
@@ -3250,17 +3291,15 @@ href="#sec:q_part_III_applied_models">40</a></li>
 <h1 data-number="17" id="sec:part_III_case_studies"><span
 class="header-section-number">17</span> Case Studies</h1>
 <figure id="fig:part_III_case_studies">
-<img src="../figures/gallery/gallery_errorbar.png" style="width:75.0%"
-alt="Figure 11: Group means with standard-error bars across six synthetic conditions, generated by visualization.gallery.errorbar_plot ." />
-<figcaption>Figure 11: Group means with
-standard-error bars across six synthetic conditions, generated by
-<code>visualization.gallery.errorbar_plot</code>. In a real case study
-you would replace this gallery placeholder with your own measured group
-means.</figcaption>
+<a class="figure-full-size-link" href="../figures/part_III_case_studies.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_III_case_studies.png" style="width:75.0%"
+alt="Six pilot measurements increase across control, low-treatment, and high-treatment conditions; each point has a vertical standard-error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 11: Pilot measurements with
+standard-error bars across the control, low-treatment, and
+high-treatment conditions, generated directly from
+<code>manuscript/assets/data/sample_dataset.csv</code>.</figcaption>
 </figure>
-<!-- alt: A plot of six conditions on the x-axis against a measured response on
-the y-axis, each point carrying a vertical standard-error bar; the response rises
-monotonically across the six conditions. -->
+<!-- alt: Six pilot measurements increase across control, low-treatment, and
+high-treatment conditions; each point has a vertical standard-error interval. -->
 <!-- chapter-metadata-badge -->
 <blockquote>
 <p>Level 2/3 · 30 min read · 45 min lecture · Prerequisites: First
@@ -3487,8 +3526,8 @@ synthesis.</li>
 <h1 data-number="18" id="sec:part_III_frontiers"><span
 class="header-section-number">18</span> Frontiers and Open Problems</h1>
 <figure id="fig:part_III_frontiers">
-<img src="../figures/part_III_frontiers.png" style="width:90.0%"
-alt="Figure 12: Overview schematic for “Frontiers and Open Problems”." />
+<a class="figure-full-size-link" href="../figures/part_III_frontiers.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/part_III_frontiers.png" style="width:90.0%"
+alt="A bordered placeholder overview panel labeled Frontiers and Open Problems, awaiting a subject-specific illustration." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 12: Overview schematic for
 “Frontiers and Open Problems”. Replace this generated placeholder with a
 real figure produced by
@@ -5098,9 +5137,9 @@ italic</em></strong>, <code>inline code</code>,
 <del>strikethrough</del>, H<sub>2</sub>O with a subscript, E =
 mc<sup>2</sup> with a superscript, and a footnote.<a href="#fn1"
 class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>You can hard-break a line with an explicit <code>&lt;br&gt;</code>
-element,<br> or separate paragraphs with a blank line. Escape literal
-Markdown with a backslash: *not italic*.</p>
+<p>You can hard-break a line with a backslash at the line end.<br />
+The next line begins after that break; separate paragraphs with a blank
+line. Escape literal Markdown with a backslash: *not italic*.</p>
 <hr />
 <h2 data-number="47.2" id="lists"><span
 class="header-section-number">47.2</span> 2. Lists</h2>
@@ -5289,8 +5328,8 @@ class="header-section-number">47.6</span> 6. Figures</h2>
 <p>A single figure with caption, label, and alt text, cross-referenced
 as fig. <a href="#fig:gallery_line">13</a>:</p>
 <figure id="fig:gallery_line">
-<img src="../figures/gallery/gallery_line.png" style="width:80.0%"
-alt="Figure 13: A multi-series line plot of three sine waves, produced by visualization.gallery.line_plot ." />
+<a class="figure-full-size-link" href="../figures/gallery/gallery_line.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_line.png" style="width:80.0%"
+alt="Three sinusoidal curves share one time axis, with progressively higher oscillation frequency." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 13: A multi-series line plot of
 three sine waves, produced by
 <code>visualization.gallery.line_plot</code>.</figcaption>
@@ -5300,21 +5339,21 @@ three sine waves, produced by
 stacked):</p>
 <div data-layout-ncol="2">
 <figure id="fig:gallery_bar">
-<img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
-alt="Figure 14: Bar chart." />
+<a class="figure-full-size-link" href="../figures/gallery/gallery_bar.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_bar.png" style="width:48.0%"
+alt="A vertical bar chart compares several labeled categories, with bar height encoding each category&#x27;s value." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 14: Bar chart.</figcaption>
 </figure>
 <figure id="fig:gallery_pie">
-<img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
-alt="Figure 15: Pie chart." />
+<a class="figure-full-size-link" href="../figures/gallery/gallery_pie.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_pie.png" style="width:48.0%"
+alt="A circular chart is divided into labeled slices whose angles encode category proportions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 15: Pie chart.</figcaption>
 </figure>
 </div>
 <p>A multi-panel composite (fig. <a
 href="#fig:gallery_multipanel">16</a>):</p>
 <figure id="fig:gallery_multipanel">
-<img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
-alt="Figure 16: A 2×2 composite: line, scatter, bar, and histogram panels." />
+<a class="figure-full-size-link" href="../figures/gallery/gallery_multipanel.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_multipanel.png" style="width:85.0%"
+alt="A two-by-two composite contains a line chart, scatter plot, bar chart, and histogram." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 16: A 2×2 composite: line,
 scatter, bar, and histogram panels.</figcaption>
 </figure>
@@ -5413,8 +5452,8 @@ class="header-section-number">47.10</span> 10. Media and data</h2>
 <p>Embedded raster image (any PNG/JPG works the same way as a
 figure):</p>
 <figure id="fig:gallery_media">
-<img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
-alt="Figure 17: A generated heatmap embedded as a raster image." />
+<a class="figure-full-size-link" href="../figures/gallery/gallery_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_heatmap.png" style="width:60.0%"
+alt="A rectangular heatmap uses a light-to-dark color scale to encode values across rows and columns." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 17: A generated heatmap embedded
 as a raster image.</figcaption>
 </figure>
@@ -5467,8 +5506,8 @@ its contents as a table:</p>
 <p>The error-bar figure fig. <a href="#fig:gallery_errorbar">18</a>
 visualises this kind of data:</p>
 <figure id="fig:gallery_errorbar">
-<img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
-alt="Figure 18: Means with standard-error bars." />
+<a class="figure-full-size-link" href="../figures/gallery/gallery_errorbar.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/gallery/gallery_errorbar.png" style="width:70.0%"
+alt="Six condition means rise from left to right; every point has a vertical standard-error interval." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 18: Means with standard-error
 bars.</figcaption>
 </figure>

@@ -10,6 +10,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    snapshot_current_artifact_manifest,
+)
 from infrastructure.publishing.repro_bundle import (
     BUNDLE_MANIFEST_NAME,
     SCHEMA_VERSION,
@@ -41,17 +47,9 @@ def _scaffold_repro_project(root: Path, name: str) -> Path:
     write_doc(fig, "PNG-BYTES")
     report = project / "output" / "reports" / "summary.json"
     write_doc(report, '{"value": 1}\n')
-    artifact_manifest = project / "output" / "reports" / "artifact_manifest.json"
-    write_doc(
-        artifact_manifest,
-        json.dumps(
-            {
-                "entries": [
-                    {"path": "output/figures/result.png"},
-                    {"path": "output/reports/summary.json"},
-                ]
-            }
-        ),
+    snapshot_current_artifact_manifest(
+        project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
     )
     return project
 
@@ -90,7 +88,10 @@ def test_build_resolves_artifacts_from_real_manifest_writer(tmp_path: Path) -> N
         stage_name="analysis",
         contract=contract,
     )
-    aggregate_artifact_manifests(project / "output")
+    aggregate_artifact_manifests(
+        project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
     assert (project / "output" / "reports" / "artifact_manifest.json").is_file()
 
     out_dir = build_repro_bundle(tmp_path, name, generated_at="2026-06-06T00:00:00+00:00")
@@ -141,6 +142,107 @@ def test_build_is_byte_stable_across_runs(tmp_path: Path) -> None:
     second_bytes = (second / BUNDLE_MANIFEST_NAME).read_bytes()
 
     assert first_bytes == second_bytes
+
+
+@pytest.mark.parametrize(
+    "generated_at",
+    ("", "not-a-timestamp", "2026-06-06T00:00:00"),
+)
+def test_build_rejects_missing_malformed_or_naive_timestamp(tmp_path: Path, generated_at: str) -> None:
+    name = "repro_bad_timestamp"
+    _scaffold_repro_project(tmp_path, name)
+
+    with pytest.raises(ValueError, match="timezone-aware ISO-8601/RFC3339"):
+        build_repro_bundle(tmp_path, name, generated_at=generated_at)
+
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.parametrize(
+    "project_name",
+    (
+        "/absolute-project",
+        "../outside-project",
+        "templates/../../outside-project",
+        "bad\x00project",
+        "--all-public",
+        "templates/-flag-spoof",
+    ),
+)
+def test_build_rejects_unsafe_project_names_before_writing(tmp_path: Path, project_name: str) -> None:
+    with pytest.raises(ValueError, match="project name"):
+        build_repro_bundle(tmp_path, project_name, generated_at=_TS)
+
+    assert not (tmp_path / "output").exists()
+
+
+def test_build_rejects_external_lifecycle_project_before_writing(tmp_path: Path) -> None:
+    private_root = tmp_path.parent / f"{tmp_path.name}-private-sidecar"
+    private_project = make_project(
+        private_root,
+        "private_demo",
+        with_manuscript=True,
+        with_scripts=True,
+    )
+    write_doc(private_project / "output" / "data" / "result.json", '{"private": true}\n')
+    snapshot_current_artifact_manifest(
+        private_project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+    lifecycle_link = tmp_path / "projects" / "working" / "private_demo"
+    lifecycle_link.parent.mkdir(parents=True, exist_ok=True)
+    lifecycle_link.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="must resolve inside the repository"):
+        build_repro_bundle(tmp_path, "working/private_demo", generated_at=_TS)
+
+    assert not (tmp_path / "output").exists()
+
+
+def test_build_preserves_internal_lifecycle_local_inventory_mode(tmp_path: Path) -> None:
+    project = make_project(
+        tmp_path,
+        "internal_demo",
+        program="working",
+        with_manuscript=True,
+        with_scripts=True,
+    )
+    write_doc(project / "output" / "data" / "result.json", '{"local": true}\n')
+    snapshot_current_artifact_manifest(
+        project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    out_dir = build_repro_bundle(tmp_path, "working/internal_demo", generated_at=_TS)
+
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert payload["project"] == "working/internal_demo"
+    assert verify_repro_bundle(manifest_path, checkout_root=tmp_path).ok is True
+
+
+def test_explicit_external_output_directory_remains_supported(tmp_path: Path) -> None:
+    name = "repro_external_output"
+    _scaffold_repro_project(tmp_path, name)
+    external_out = tmp_path.parent / f"{tmp_path.name}-external-bundle"
+
+    result = build_repro_bundle(tmp_path, name, out_dir=external_out, generated_at=_TS)
+
+    assert result == external_out
+    assert (external_out / BUNDLE_MANIFEST_NAME).is_file()
+
+
+def test_default_output_directory_must_remain_inside_repository(tmp_path: Path) -> None:
+    name = "repro_output_link"
+    _scaffold_repro_project(tmp_path, name)
+    external_output = tmp_path.parent / f"{tmp_path.name}-external-output"
+    external_output.mkdir()
+    (tmp_path / "output").symlink_to(external_output, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="default output directory escapes the repository"):
+        build_repro_bundle(tmp_path, name, generated_at=_TS)
+
+    assert not (external_output / name).exists()
 
 
 def test_verify_passes_on_unchanged_checkout(tmp_path: Path) -> None:
@@ -239,6 +341,196 @@ def test_verify_rejects_unsafe_duplicate_and_symlink_entries(tmp_path: Path) -> 
         assert any(row["reason"] == expected_reason for row in report.mismatches)
 
 
+@pytest.mark.parametrize(
+    "alias",
+    (
+        "./uv.lock",
+        "uv.lock/",
+        "dir//uv.lock",
+        "dir/./uv.lock",
+        "dir/../uv.lock",
+        "bad\x00path",
+        "dir\\uv.lock",
+        "/uv.lock",
+        "C:/uv.lock",
+    ),
+)
+def test_verify_rejects_noncanonical_posix_path_aliases(tmp_path: Path, alias: str) -> None:
+    name = "repro_aliases"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    lock_entry = next(entry for entry in payload["entries"] if entry["kind"] == "lockfile")
+    payload["entries"].append({**lock_entry, "path": alias})
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    assert {row["reason"] for row in report.mismatches} >= {"unsafe-or-duplicate-path"}
+
+
+def test_verify_requires_present_artifact_manifest_and_output_artifact(tmp_path: Path) -> None:
+    name = "repro_required_entries"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    no_manifest = {
+        **payload,
+        "entries": [entry for entry in payload["entries"] if entry["kind"] != "artifact-manifest"],
+    }
+    manifest_path.write_text(json.dumps(no_manifest), encoding="utf-8")
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+    assert report.ok is False
+    assert any(row["reason"] == "missing-artifact-manifest" for row in report.mismatches)
+
+    no_outputs = {
+        **payload,
+        "entries": [entry for entry in payload["entries"] if entry["kind"] != "output-artifact"],
+    }
+    manifest_path.write_text(json.dumps(no_outputs), encoding="utf-8")
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+    assert report.ok is False
+    assert any(row["reason"] == "missing-output-artifacts" for row in report.mismatches)
+
+    absent_manifest = json.loads(json.dumps(payload))
+    manifest_entry = next(entry for entry in absent_manifest["entries"] if entry["kind"] == "artifact-manifest")
+    manifest_entry.update({"present": False, "sha256": None, "size_bytes": 0})
+    manifest_path.write_text(json.dumps(absent_manifest), encoding="utf-8")
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+    assert report.ok is False
+    assert any(row["reason"] == "missing-artifact-manifest" for row in report.mismatches)
+
+
+@pytest.mark.parametrize(
+    "project_name",
+    ("../escape", "templates\\template_code_project", "--all-public", "templates/-spoof"),
+)
+def test_verify_rejects_noncanonical_or_unsafe_project_field(tmp_path: Path, project_name: str) -> None:
+    name = "repro_project_field"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["project"] = project_name
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    assert any(row["reason"] == "invalid-project" for row in report.mismatches)
+
+
+def test_verify_rejects_fabricated_project_command_and_kind_swaps(tmp_path: Path) -> None:
+    name = "repro_semantic_binding"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    artifact_entry = next(entry for entry in payload["entries"] if entry["kind"] == "artifact-manifest")
+    lock_entry = next(entry for entry in payload["entries"] if entry["kind"] == "lockfile")
+    artifact_entry["kind"] = "lockfile"
+    lock_entry["kind"] = "artifact-manifest"
+    payload["project"] = "totally_different_project"
+    payload["reproduce"] = ["echo fabricated"]
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    reasons = {row["reason"] for row in report.mismatches}
+    assert {"project-resolution-failed", "reproduce-command-mismatch"} <= reasons
+
+
+@pytest.mark.parametrize(
+    ("generated_at", "expected_reason"),
+    (
+        (None, "missing-generated-at"),
+        ("not-a-timestamp", "invalid-generated-at"),
+        ("2026-06-06T00:00:00", "invalid-generated-at"),
+    ),
+)
+def test_verify_requires_timezone_aware_generated_at(
+    tmp_path: Path,
+    generated_at: str | None,
+    expected_reason: str,
+) -> None:
+    name = "repro_timestamp_schema"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if generated_at is None:
+        payload.pop("generated_at")
+    else:
+        payload["generated_at"] = generated_at
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    assert any(row["reason"] == expected_reason for row in report.mismatches)
+
+
+def test_verify_requires_explicit_present_field(tmp_path: Path) -> None:
+    name = "repro_present_schema"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload.pop("generated_at")
+    for entry in payload["entries"]:
+        entry.pop("present")
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    reasons = {row["reason"] for row in report.mismatches}
+    assert {"missing-generated-at", "missing-entry-fields", "invalid-present-flag"} <= reasons
+
+
+def test_verify_binds_entry_kinds_to_canonical_paths(tmp_path: Path) -> None:
+    name = "repro_kind_binding"
+    _scaffold_repro_project(tmp_path, name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    artifact_entry = next(entry for entry in payload["entries"] if entry["kind"] == "artifact-manifest")
+    lock_entry = next(entry for entry in payload["entries"] if entry["kind"] == "lockfile")
+    artifact_entry["kind"] = "lockfile"
+    lock_entry["kind"] = "artifact-manifest"
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    kind_mismatches = [row for row in report.mismatches if row["reason"] == "kind-path-mismatch"]
+    assert {row["path"] for row in kind_mismatches} == {artifact_entry["path"], lock_entry["path"]}
+
+
+def test_verify_binds_safe_project_name_to_its_own_artifact_set(tmp_path: Path) -> None:
+    name = "repro_project_binding"
+    other_name = "repro_other_project"
+    _scaffold_repro_project(tmp_path, name)
+    _scaffold_repro_project(tmp_path, other_name)
+    out_dir = build_repro_bundle(tmp_path, name, generated_at=_TS)
+    manifest_path = out_dir / BUNDLE_MANIFEST_NAME
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["project"] = other_name
+    payload["reproduce"] = [f"uv run python scripts/runner/execute_pipeline.py --project {other_name} --core-only"]
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = verify_repro_bundle(manifest_path, checkout_root=tmp_path)
+
+    assert report.ok is False
+    reasons = {row["reason"] for row in report.mismatches}
+    assert {"unexpected-entry-path", "missing-required-entries", "output-artifact-set-mismatch"} <= reasons
+
+
 def test_cli_build_then_verify(tmp_path: Path) -> None:
     name = "repro_cli"
     _scaffold_repro_project(tmp_path, name)
@@ -283,12 +575,45 @@ def _scaffold_public_exemplar(root: Path, name: str) -> Path:
     # (matches the real artifacts writer; the bundle rebases onto repo root).
     fig = project / "output" / "figures" / "result.png"
     write_doc(fig, f"PNG-{name}")
-    artifact_manifest = project / "output" / "reports" / "artifact_manifest.json"
-    write_doc(
-        artifact_manifest,
-        json.dumps({"entries": [{"path": "output/figures/result.png"}]}),
-    )
+    snapshot_current_artifact_manifest(project / "output")
     return project
+
+
+def test_public_repro_bundle_rejects_explicit_local_inventory_manifest(tmp_path: Path) -> None:
+    project = _scaffold_public_exemplar(tmp_path, "template_sia")
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["inventory_mode"] = STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="artifact inventory mode mismatch"):
+        build_repro_bundle(tmp_path, "templates/template_sia", generated_at=_TS)
+
+
+def test_repro_bundle_rejects_manifest_omitting_current_stable_output(tmp_path: Path) -> None:
+    name = "repro_omission"
+    project = _scaffold_repro_project(tmp_path, name)
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["entries"] = [entry for entry in payload["entries"] if entry["path"] != "output/reports/summary.json"]
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unattested stable artifact: output/reports/summary.json"):
+        build_repro_bundle(tmp_path, name, generated_at=_TS)
+
+
+def test_repro_bundle_never_skips_escaping_manifest_output(tmp_path: Path) -> None:
+    name = "repro_escape"
+    project = _scaffold_repro_project(tmp_path, name)
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["entries"][0]["path"] = "../../private-result.json"
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="invalid artifact manifest"):
+        build_repro_bundle(tmp_path, name, generated_at=_TS)
+
+    assert not (tmp_path / "output").exists()
 
 
 def _scaffold_two_public_exemplars(root: Path) -> tuple[str, str]:

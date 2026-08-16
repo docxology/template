@@ -10,8 +10,11 @@ for directory-specific rules.
 
 ## Purpose
 
-Ground truth for integration counts lives in `output/data/manuscript_variables.json`;
-configuration is owned by `manuscript/config.yaml`.
+Ground truth for integration and figure counts lives in
+`output/data/manuscript_variables.json`; configuration is owned by
+`manuscript/config.yaml`. Content-figure counts derive from
+`src/figure_support.py::INTEGRATION_FIGURE_SPECS`, while the separately declared
+`COVER_FIGURE_FILENAMES` contract covers layout-only cover art.
 
 This exemplar shows how a project reads from the three top-level resource
 directories:

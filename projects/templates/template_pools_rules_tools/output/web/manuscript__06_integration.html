@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>06_integration.md.web</title>
   <style>
@@ -41,7 +41,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -175,6 +174,270 @@
   </style>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: min(100%, 800px);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #1f6f8b;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: #8f1d1d;
+}
+
+a:hover {
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #4b5563;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -215,8 +478,8 @@ integration run. Tokens are resolved by
 <code>output/data/manuscript_variables.json</code> and substitutes each
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
-<img src="figures/resource_counts.png" style="width:75.0%"
-alt="Runtime integration counts from manuscript_variables.json." />
+<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resource_counts.png" style="width:75.0%"
+alt="Bar chart comparing the runtime counts discovered for fonds, rules, and tools." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
 and tools discovered during a single pipeline run.</figcaption>
@@ -260,7 +523,7 @@ central to reproducibility: the manuscript’s quantitative claims are
 always consistent with the code that generated them
 [Stodden2016enhancing].</p>
 <h2 id="methods-the-script-pipeline">Methods: The Script Pipeline</h2>
-<p>Six thin orchestration scripts govern the integration workflow (<span
+<p>6 thin orchestration scripts govern the integration workflow (<span
 class="citation" data-cites="fig:pipeline">@fig:pipeline</span>, <span
 class="citation"
 data-cites="fig:pipelineflow">@fig:pipelineflow</span>):</p>
@@ -302,7 +565,7 @@ project’s own tree</td>
 </tr>
 <tr>
 <td><code>scripts/05_generate_figures.py</code></td>
-<td>Render all 8 content figures plus the cover illustration</td>
+<td>Render all 8 content figures plus 1 cover illustration</td>
 <td>9 PNG files under <code>manuscript/figures/</code></td>
 </tr>
 <tr>
@@ -314,15 +577,15 @@ into <code>output/manuscript/</code> immediately before rendering</td>
 </tbody>
 </table>
 <figure id="fig:pipelineflow">
-<img src="figures/pipeline_flow.png" style="width:95.0%"
-alt="The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step." />
-<figcaption>The six-script pipeline from source
+<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pipeline_flow.png" style="width:95.0%"
+alt="Left-to-right pipeline from source validation through integration, figure generation, variable hydration, and publication rendering." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>The 6-script pipeline from source
 validation through token hydration, ending at the combined-PDF render
 step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
-<img src="figures/status_dashboard.png" style="width:85.0%"
-alt="Integration status dashboard showing per-resource validation results." />
+<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/status_dashboard.png" style="width:85.0%"
+alt="Status dashboard showing pass, partial, or missing state for each resource category." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integration status dashboard showing
 per-resource validation results. Green indicates ok, amber indicates
 partial, red indicates missing.</figcaption>
@@ -373,8 +636,8 @@ script paths, so the pipeline can report the defect without attempting
 to invoke a non-existent script.</p></li>
 </ol>
 <figure id="fig:resilience">
-<img src="figures/resilience_layers.png" style="width:85.0%"
-alt="The integration layer’s three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response." />
+<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resilience_layers.png" style="width:85.0%"
+alt="Layered flow showing resource absence, malformed data, and missing scripts with bounded fallback responses." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>The integration layer’s three-level
 resilience design: resource absence, schema malformation, and script
 absence, each with its own graceful-degradation response.</figcaption>
@@ -407,34 +670,28 @@ not attempt to optimise for repositories with thousands of fonds, since
 the target use case is a curated, human-reviewed set of shared resources
 rather than a large-scale data catalogue.</p>
 <h2 id="test-coverage">Test Coverage</h2>
-<p>The eight <code>src/</code> modules — <code>fonds_reader</code>,
-<code>rules_applier</code>, <code>tools_invoker</code>,
-<code>integration</code>, <code>figures</code>,
-<code>strong_rule_evaluator</code>, <code>manuscript_variables</code>,
-and <code>type_defs</code> — are covered by tests across nine test files
-in <code>tests/</code>, including property-based tests
-(<code>test_property_based.py</code>) and coverage-extras tests
+<p>The 12 <code>src/</code> modules — including the readers,
+orchestrator, evaluator, figure modules, token generator,
+resource-schema validator, and type definitions — are covered by tests
+across 11 test files in <code>tests/</code>, including property-based
+tests (<code>test_property_based.py</code>) and coverage-extras tests
 targeting previously-uncovered branches
 (<code>test_coverage_extras.py</code>). Tests use real file paths, real
 YAML files, and real BibTeX content rather than mocks, ensuring that
 coverage numbers reflect genuine code paths through the
 resource-discovery logic. The current coverage report shows combined
-line coverage comfortably above the project’s 90% floor;
-<code>strong_rule_evaluator.py</code>, the newest and most branch-heavy
-module, has the most room for additional edge-case tests, while the
-remaining seven modules are at or near 100%. These exact test/coverage
-counts drift as the suite grows — treat the figures above as a snapshot,
-not a frozen claim, and re-run
-<code>uv run pytest … --cov-report=term</code> for the current numbers.
-The <code>tests/test_integration.py</code> suite includes an end-to-end
-test that calls <code>run_integration_demo()</code> and asserts that the
-<code>summary</code> dict contains the expected keys with non-negative
-integer values — a contract test that verifies the token injection
-pipeline’s data source. <code>tests/test_manuscript_variables.py</code>
-adds a negative control: it monkeypatches
-<code>run_integration_demo()</code>’s return value and asserts the
-derived tokens actually change, proving the token-generation function is
-live-wired to its source rather than emitting a hard-coded constant.</p>
+line coverage comfortably above the project’s 90% floor; exact test and
+coverage totals drift as the suite grows, so re-run
+<code>uv run pytest … --cov-report=term</code> for the current
+measurements. The <code>tests/test_integration.py</code> suite includes
+an end-to-end test that calls <code>run_integration_demo()</code> and
+asserts that the <code>summary</code> dict contains the expected keys
+with non-negative integer values — a contract test that verifies the
+token injection pipeline’s data source.
+<code>tests/test_manuscript_variables.py</code> adds negative controls
+that change both integration results and a real temporary project tree,
+proving the token generator tracks runtime and filesystem sources rather
+than emitting fixed constants.</p>
 </main>
 </body>
 </html>

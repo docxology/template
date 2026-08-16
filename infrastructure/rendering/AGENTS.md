@@ -40,6 +40,22 @@ renderers without owning validation policy or project analysis.
   selected cover's `alt` must be a non-empty string; validation fails before a
   prior combined PDF is replaced. The renderer requests tagged PDF/UA-2 output
   through LuaLaTeX, but a successful render is not PDF/UA certification.
+- Combined EPUB uses the same selected cover/alt pair and rejects a cover with
+  missing or blank alt text before Pandoc runs. After Pandoc emits its SVG
+  cover, `_epub_cover_accessibility.py` names the SVG graphic from the source
+  alt, hides the nested bitmap from duplicate announcement, and the bounded
+  package validator verifies XHTML/SVG image references and accessible names
+  before the renderer retains the EPUB.
+- Body-figure alternatives come from `output/figures/figure_registry.json`,
+  using either top-level `alt` or `metadata.alt_text`. Combined and per-section
+  HTML replace Pandoc's caption-derived image alternative only when the
+  rendered label and figure path exactly match the registry; blank metadata or
+  a present label/path disagreement fails the render. Non-empty authored alt
+  remains valid for unregistered figures and is never overwritten from the
+  visible caption. The same exact registry text replaces body-image `alt`
+  options only on the opt-in `metadata.tagged_pdf: true` LuaLaTeX path.
+  Untagged PDFs are unchanged, and neither tagged rendering nor metadata
+  injection is a claim of PDF/UA certification.
 - Combined PDF and HTML, Beamer and Reveal.js slides, DOCX, EPUB, and the opt-in
   ebook stage consume the same filename-sorted union of top-level
   `manuscript/*.bib` files. Repeated or symlinked paths are passed once;

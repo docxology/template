@@ -56,8 +56,8 @@ $$
 
 where $N_{\text{start}}$ and $N_{\text{end}}$ are the publication counts in the first and
 last years of the corpus, respectively. The doubling time is
-$t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 12.27\%, doubling time
-= 1.4 years.
+$t_d = \ln(2) / \ln(1 + \text{CAGR})$. For this run: CAGR = 6.76\%, doubling time
+= 2.1 years.
 
 ## Configuration Surface
 

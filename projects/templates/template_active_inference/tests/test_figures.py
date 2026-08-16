@@ -95,14 +95,15 @@ def test_generate_all_figures_complete(project_root: Path) -> None:
     written_names = {path.name for path in paths if path.suffix == ".png"}
     assert expected_names.issubset(written_names)
     assert any(p.name == "sheaf_coverage_matrix.json" for p in paths)
-    assert any(p.name == "figure_registry.json" for p in paths)
+    assert all(p.name != "figure_registry.json" for p in paths)
 
 
 def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
     from visualizations.figure_registry import write_figure_registry_json
 
     registry = load_figure_registry(project_root)
-    path = write_figure_registry_json(project_root)
+    variables = json.loads((project_root / "output" / "data" / "manuscript_variables.json").read_text(encoding="utf-8"))
+    path = write_figure_registry_json(project_root, variables)
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert set(payload) == {f"fig:{figure_id}" for figure_id in registry}
     for figure_id, spec in registry.items():
@@ -112,6 +113,114 @@ def test_figure_registry_json_matches_yaml(project_root: Path) -> None:
         assert record["visual_role"] == spec.visual_role
         assert record["evidence_role"] == spec.evidence_role
         assert record["paper_claim"] == spec.paper_claim
+        assert "{{" not in record["alt"]
+        assert "{{" not in record["caption"]
+    architecture = payload["fig:multi_track_architecture"]
+    assert architecture["alt"] == (
+        "Process diagram linking three scientific tracks to 31 pipeline gates "
+        "and 34 sheaf fragment types across 17 manifest rows."
+    )
+    assert architecture["caption"] == (
+        "Multi-track architecture: analytical, pymdp, and sheaf composition lanes mapped to "
+        "31 pipeline gates and 34 composable fragment types."
+    )
+
+
+def test_figure_registry_writer_requires_canonical_variables(tmp_path: Path) -> None:
+    from visualizations.figure_registry import write_figure_registry_json
+
+    tmp_path.joinpath("figures.yaml").write_text(
+        "figures:\n  example:\n    filename: example.png\n    alt: Accessible example.\n    caption: Example.\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="canonical manuscript variables"):
+        write_figure_registry_json(tmp_path, {})
+    assert not (tmp_path / "output" / "figures" / "figure_registry.json").exists()
+
+
+def test_figure_registry_writer_binds_exact_supplied_values(tmp_path: Path) -> None:
+    from visualizations.figure_registry import write_figure_registry_json
+
+    tmp_path.joinpath("figures.yaml").write_text(
+        "figures:\n"
+        "  example:\n"
+        "    filename: example.png\n"
+        "    alt: Count {{count_value}}; ready {{ready_value}}.\n"
+        "    caption: Score {{score_value:.2f}}.\n",
+        encoding="utf-8",
+    )
+    path = write_figure_registry_json(
+        tmp_path,
+        {"count_value": 7, "ready_value": True, "score_value": 1.234},
+    )
+    first = json.loads(path.read_text(encoding="utf-8"))["fig:example"]
+    assert first["alt"] == "Count 7; ready true."
+    assert first["caption"] == "Score 1.23."
+
+    path = write_figure_registry_json(
+        tmp_path,
+        {"count_value": 9, "ready_value": False, "score_value": 2.5},
+    )
+    second = json.loads(path.read_text(encoding="utf-8"))["fig:example"]
+    assert second["alt"] == "Count 9; ready false."
+    assert second["caption"] == "Score 2.50."
+    assert second != first
+
+
+def test_figure_registry_writer_preserves_prior_bytes_on_unknown_token(tmp_path: Path) -> None:
+    from visualizations.figure_registry import write_figure_registry_json
+
+    tmp_path.joinpath("figures.yaml").write_text(
+        "figures:\n"
+        "  example:\n"
+        "    filename: example.png\n"
+        "    alt: Value {{unknown_figure_value}}.\n"
+        "    caption: Example {{known_value}}.\n",
+        encoding="utf-8",
+    )
+    registry_path = tmp_path / "output" / "figures" / "figure_registry.json"
+    registry_path.parent.mkdir(parents=True)
+    prior = b'{"prior": true}\n'
+    registry_path.write_bytes(prior)
+
+    with pytest.raises(ValueError, match=r"example\.alt: unknown_figure_value"):
+        write_figure_registry_json(tmp_path, {"known_value": "resolved"})
+
+    assert registry_path.read_bytes() == prior
+    assert not list(registry_path.parent.glob(".figure_registry.json.*.tmp"))
+
+
+def test_figure_registry_writer_preserves_prior_bytes_on_malformed_double_token(tmp_path: Path) -> None:
+    from visualizations.figure_registry import write_figure_registry_json
+
+    tmp_path.joinpath("figures.yaml").write_text(
+        "figures:\n"
+        "  example:\n"
+        "    filename: example.png\n"
+        "    alt: Leaked {{BadToken}} and {{bad-token}}.\n"
+        "    caption: Example {{known_value}}.\n",
+        encoding="utf-8",
+    )
+    registry_path = tmp_path / "output" / "figures" / "figure_registry.json"
+    registry_path.parent.mkdir(parents=True)
+    prior = b'{"prior": true}\n'
+    registry_path.write_bytes(prior)
+
+    with pytest.raises(ValueError, match=r"malformed double-brace figure token for example\.alt"):
+        write_figure_registry_json(tmp_path, {"known_value": "resolved"})
+
+    assert registry_path.read_bytes() == prior
+    assert not list(registry_path.parent.glob(".figure_registry.json.*.tmp"))
+
+
+def test_figure_registry_has_one_declared_final_producer() -> None:
+    from manuscript.sheaf.semantic_maps import ARTIFACT_PRODUCERS
+    from validation_spine.artifacts import CORE_ARTIFACT_PRODUCERS
+
+    artifact = "output/figures/figure_registry.json"
+    expected = "z_generate_manuscript_variables.py"
+    assert ARTIFACT_PRODUCERS[artifact] == expected
+    assert CORE_ARTIFACT_PRODUCERS[artifact] == expected
 
 
 def test_layout_sensitive_figures_have_publication_dimensions(project_root: Path) -> None:

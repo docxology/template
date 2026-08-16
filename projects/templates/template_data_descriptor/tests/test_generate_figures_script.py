@@ -90,22 +90,35 @@ class TestGenerateFigures:
             "fig:quality_gate",
             "fig:checksum_verification",
         }
+        assert all(record["metadata"]["alt_text"].strip() for record in payload["figures"])
+        descriptor = json.loads((tmp_path / "data" / "example_descriptor.json").read_text(encoding="utf-8"))
+        checks = module.dd.verify_descriptor_files(descriptor, tmp_path / "data")
+        report = module.dd.build_descriptor_report(descriptor)
+        expected_alt = {
+            spec.label: spec.alt_text
+            for spec in module.dd.descriptor_figure_specs_for_data(
+                descriptor,
+                checks,
+                readiness_score=report.readiness_score,
+            )
+        }
+        assert {record["label"]: record["metadata"]["alt_text"] for record in payload["figures"]} == expected_alt
         ok, issues = _validate_registry(registry, tmp_path / "manuscript")
         assert ok, issues
 
     def test_incomplete_render_set_cannot_publish_registry(self, tmp_path: Path) -> None:
         shutil.copytree(PROJECT_ROOT / "data", tmp_path / "data")
         module = _load_script_module()
-        rendered = module.generate_figures(project_root=tmp_path)
+        run = module.dd.render_descriptor_figures(tmp_path)
+        incomplete = module.dd.DescriptorFigureRun(
+            inputs=run.inputs,
+            specs=run.specs,
+            rendered_paths=run.rendered_paths[:-1],
+        )
         output_figures = tmp_path / "output" / "figures"
 
         with pytest.raises(ValueError, match="missing generated figure file"):
-            module.publish_generated_figures(
-                output_figures,
-                module.dd.DESCRIPTOR_FIGURE_SPECS,
-                rendered[:-1],
-                schema_version=module.dd.FIGURE_REGISTRY_SCHEMA,
-            )
+            module.dd.publish_descriptor_figure_run(tmp_path, incomplete)
 
         assert not output_figures.exists()
 

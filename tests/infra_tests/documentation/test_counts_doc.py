@@ -8,8 +8,10 @@ run against the live repo tree; the renderer is exercised with a real
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
+import sys
 import venv
 from pathlib import Path
 
@@ -30,6 +32,10 @@ from infrastructure.documentation.counts_doc import (
     tracked_infra_python_count,
     validate_coverage_provenance,
     write_counts_doc,
+)
+from infrastructure.documentation.counts_coverage import (
+    ExemplarSnapshot,
+    _finalize_exemplar_coverage_result,
 )
 from infrastructure.project.public_scope import public_project_names
 
@@ -137,6 +143,8 @@ def test_coverage_measurement_data_file_is_absolute_for_relative_checkout() -> N
 
 def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:
     """Writing supplied facts exercises real I/O without 23 subprocesses."""
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
     facts = CountsFacts(
         public_projects=[s.name for s in EXEMPLAR_SNAPSHOT],
         packages=["core"],
@@ -146,8 +154,23 @@ def test_write_round_trips_supplied_facts(tmp_path: Path) -> None:
         exemplar_tests={s.name: 1 for s in EXEMPLAR_SNAPSHOT},
     )
     target = tmp_path / "COUNTS.md"
-    write_counts_doc(_repo_root(), out_path=target, facts=facts)
+    write_counts_doc(repo_root, out_path=target, facts=facts)
     assert target.read_text(encoding="utf-8") == render_counts_doc(facts)
+
+
+def test_write_canonical_counts_requires_coverage_provenance(tmp_path: Path) -> None:
+    """The canonical writer cannot bypass source-bound coverage provenance."""
+    facts = CountsFacts(
+        public_projects=[s.name for s in EXEMPLAR_SNAPSHOT],
+        packages=["core"],
+        infra_py_count=1,
+        project_tests=2,
+        publishing_tests=3,
+        exemplar_tests={s.name: 1 for s in EXEMPLAR_SNAPSHOT},
+    )
+
+    with pytest.raises(RuntimeError, match="missing coverage provenance"):
+        write_counts_doc(tmp_path, facts=facts)
 
 
 def test_doc_relative_path_points_at_counts_md() -> None:
@@ -329,3 +352,91 @@ def test_exemplar_snapshot_rewrite_is_a_noop_without_measurements(tmp_path: Path
     module_copy.write_text(original, encoding="utf-8")
     counts_doc._rewrite_exemplar_snapshot({}, module_copy)
     assert module_copy.read_text(encoding="utf-8") == original
+
+
+def test_coverage_refresh_does_not_publish_partial_measurements(tmp_path: Path) -> None:
+    """One failed exemplar leaves the complete recorded snapshot untouched."""
+    snapshot = (
+        ExemplarSnapshot("template_alpha", "10.00 %"),
+        ExemplarSnapshot("template_beta", "20.00 %"),
+    )
+    module_copy = tmp_path / "counts_coverage_copy.py"
+    original = 'ExemplarSnapshot("template_alpha", "10.00 %"),\nExemplarSnapshot("template_beta", "20.00 %"),\n'
+    module_copy.write_text(original, encoding="utf-8")
+
+    result = _finalize_exemplar_coverage_result(
+        {"template_alpha": "77.77 %"},
+        ["template_beta: coverage process failed"],
+        rewrite=True,
+        snapshot=snapshot,
+        source_path=module_copy,
+    )
+
+    assert not result.all_match
+    assert not result.measurement_complete
+    assert not result.snapshot_rewritten
+    assert result.failed_count == 1
+    assert result.measured_count == 1
+    assert "EXEMPLAR_SNAPSHOT not rewritten" in result.report
+    assert module_copy.read_text(encoding="utf-8") == original
+
+
+def test_coverage_refresh_publishes_complete_measurement_set(tmp_path: Path) -> None:
+    """A complete measurement may replace every drifted recorded value."""
+    snapshot = (
+        ExemplarSnapshot("template_alpha", "10.00 %"),
+        ExemplarSnapshot("template_beta", "20.00 %"),
+    )
+    module_copy = tmp_path / "counts_coverage_copy.py"
+    module_copy.write_text(
+        'ExemplarSnapshot("template_alpha", "10.00 %"),\nExemplarSnapshot("template_beta", "20.00 %"),\n',
+        encoding="utf-8",
+    )
+
+    result = _finalize_exemplar_coverage_result(
+        {"template_alpha": "77.77 %", "template_beta": "88.88 %"},
+        [],
+        rewrite=True,
+        snapshot=snapshot,
+        source_path=module_copy,
+    )
+
+    assert not result.all_match
+    assert result.measurement_complete
+    assert result.snapshot_rewritten
+    assert result.failed_count == 0
+    assert result.drifted_count == 2
+    rewritten = module_copy.read_text(encoding="utf-8")
+    assert 'ExemplarSnapshot("template_alpha", "77.77 %")' in rewritten
+    assert 'ExemplarSnapshot("template_beta", "88.88 %")' in rewritten
+
+
+def test_counts_cli_fails_when_coverage_measurements_are_missing(tmp_path: Path) -> None:
+    """The real CLI exits nonzero and writes nothing for an incomplete checkout."""
+    repo_root = _repo_root()
+    source_script = repo_root / "scripts" / "docgen" / "counts.py"
+    copied_script = tmp_path / "scripts" / "docgen" / "counts.py"
+    copied_script.parent.mkdir(parents=True)
+    copied_script.write_bytes(source_script.read_bytes())
+    before = copied_script.read_bytes()
+    environment = dict(os.environ)
+    existing_pythonpath = environment.get("PYTHONPATH")
+    environment["PYTHONPATH"] = (
+        f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
+    )
+
+    run = subprocess.run(
+        [sys.executable, str(copied_script), "--verify-coverage", "--write"],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert run.returncode == 1, run.stdout + run.stderr
+    assert f"{len(EXEMPLAR_SNAPSHOT)} failed, 0 measured" in run.stdout
+    assert "coverage snapshot not refreshed" in run.stdout
+    assert not (tmp_path / "docs").exists()
+    assert copied_script.read_bytes() == before

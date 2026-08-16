@@ -1,0 +1,12 @@
+[project]
+name = "child_dynamics"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy", "matplotlib", "pyyaml"]
+# spec_hash: 1693c227ea200969  grammar_hash: 16b9eb43de4d5e77
+# seed: 42  track: analytical  section_set: standard
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

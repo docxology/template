@@ -41,7 +41,8 @@ without autonomous research execution.
 - `parse_string_sequence(value, *, default)`
 - `build_autoresearch_plan(repo_root, project_name, projects_dir="projects")`
 - `validate_autoresearch_plan(plan, project_root, *, phase="all")`
-- `write_autoresearch_report(project_root, report)`
+- `write_autoresearch_report(project_root, report)` — serializes readiness paths
+  without machine-local checkout prefixes
 
 Implementation split: [`validation.py`](validation.py) orchestrates;
 [`validation_checks.py`](validation_checks.py) holds per-check validators.

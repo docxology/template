@@ -320,14 +320,12 @@ def run_figure(figure_id: str, project_root: Path) -> Path:
 
 
 def generate_all_figures(project_root: Path) -> list[Path]:
-    """Generate all figures."""
+    """Generate all image artifacts; manuscript hydration owns registry JSON."""
     from orchestration.coverage_pipeline import ensure_coverage_artifacts
-    from .figure_registry import write_figure_registry_json
 
     json_path, _, page_path = ensure_coverage_artifacts(project_root, write_page=True)
     paths: list[Path] = [json_path]
     paths.extend(run_figure(figure_id, project_root) for figure_id in FIGURE_GENERATORS)
-    paths.append(write_figure_registry_json(project_root))
     if page_path is not None:
         paths.append(page_path)
     return [path for path in paths if path is not None]

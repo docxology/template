@@ -33,6 +33,12 @@ dependencies = [
     # group provides it for free; this project's own isolated venv needs it
     # declared explicitly).
     "qrcode[pil]>=8.2",
+    # `manuscript/config.yaml` declares PPTX as a required deck format. Stage
+    # 02 runs in this project's isolated environment, so the renderer must be
+    # available here rather than only through the root optional dependency
+    # group; otherwise the canonical producer can silently leave tracked PPTX
+    # files stale while regenerating only the PDFs.
+    "python-pptx>=1.0.0",
 ]
 
 [project.optional-dependencies]

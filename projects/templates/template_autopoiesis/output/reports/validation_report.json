@@ -1,189 +1,373 @@
 {
-  "timestamp": "2026-07-12T02:08:51Z",
   "checks": {
-    "PDF validation": true,
-    "Transmission bookends": true,
+    "Artifact manifest": true,
+    "Enabled render outputs": true,
+    "Evidence registry": true,
+    "Figure registry": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": true,
-    "Evidence registry": true,
+    "PDF validation": true,
     "Project design overlays": true,
-    "Artifact manifest": true
+    "Transmission bookends": true
   },
   "figure_issues": [],
   "output_statistics": {
+    "data": {
+      "files": 3,
+      "size_mb": 0.0022029876708984375
+    },
     "detailed_validation": {
-      "structure": {
-        "valid": true,
-        "issues": [],
-        "missing_files": [],
-        "suspicious_sizes": [],
-        "warnings": [],
-        "directory_structure": {
-          "combined_pdf": {
-            "exists": true,
-            "size_mb": 0.52,
-            "readable": true
-          },
-          "pdf": {
-            "exists": true,
-            "files": 11,
-            "size_mb": 0.79,
-            "readable": true,
-            "optional": false
-          },
-          "web": {
-            "exists": true,
-            "files": 11,
-            "size_mb": 0.34,
-            "readable": true,
-            "optional": false
-          },
-          "slides": {
-            "exists": true,
-            "files": 1,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": false
-          },
-          "figures": {
-            "exists": true,
-            "files": 13,
-            "size_mb": 0.35,
-            "readable": true,
-            "optional": false
-          },
-          "data": {
-            "exists": true,
-            "files": 2,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": false
-          },
-          "reports": {
-            "exists": true,
-            "files": 28,
-            "size_mb": 0.26,
-            "readable": true,
-            "optional": false
-          },
-          "simulations": {
-            "exists": true,
-            "files": 0,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          },
-          "llm": {
-            "exists": true,
-            "files": 0,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          },
-          "logs": {
-            "exists": true,
-            "files": 1,
-            "size_mb": 0.0,
-            "readable": true,
-            "optional": true
-          }
-        }
-      },
       "directories": {
-        "pdf": {
+        "children": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "0.79",
-          "largest_file": "template_autopoiesis_combined.pdf"
+          "file_count": 79,
+          "largest_file": "graph.py",
+          "largest_file_path": "children/child_graph_ad8ab1d87fcea0c5/primitives/graph.py",
+          "size_mb": "0.05"
         },
-        "web": {
+        "data": {
           "exists": true,
-          "file_count": 11,
-          "size_mb": "0.34",
-          "largest_file": "index.html"
+          "file_count": 3,
+          "largest_file": "manuscript_variables.json",
+          "largest_file_path": "data/manuscript_variables.json",
+          "size_mb": "0.00"
         },
-        "slides": {
-          "exists": true,
-          "file_count": 1,
-          "size_mb": "0.00",
-          "largest_file": "_slides_math_header.tex"
+        "docx": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "epub": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
         },
         "figures": {
           "exists": true,
           "file_count": 13,
-          "size_mb": "0.35",
-          "largest_file": "cover_art.png"
+          "largest_file": "cover_art.png",
+          "largest_file_path": "figures/cover_art.png",
+          "size_mb": "0.35"
         },
-        "data": {
+        "llm": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "logs": {
+          "exists": false,
+          "file_count": 0,
+          "size_mb": "0.00"
+        },
+        "manuscript": {
           "exists": true,
-          "file_count": 2,
-          "size_mb": "0.00",
-          "largest_file": "manuscript_variables.json"
+          "file_count": 11,
+          "largest_file": "02_methods.md",
+          "largest_file_path": "manuscript/02_methods.md",
+          "size_mb": "0.09"
+        },
+        "pdf": {
+          "exists": true,
+          "file_count": 1,
+          "largest_file": "template_autopoiesis_combined.pdf",
+          "largest_file_path": "pdf/template_autopoiesis_combined.pdf",
+          "size_mb": "0.58"
         },
         "reports": {
           "exists": true,
-          "file_count": 28,
-          "size_mb": "0.26",
-          "largest_file": "evidence_registry.json"
+          "file_count": 3,
+          "largest_file": "test_results.json",
+          "largest_file_path": "reports/test_results.json",
+          "size_mb": "0.01"
         },
         "simulations": {
-          "exists": true,
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
-        "llm": {
-          "exists": true,
+        "slides": {
+          "exists": false,
           "file_count": 0,
-          "size_mb": "0.00",
-          "largest_file": null
+          "size_mb": "0.00"
         },
-        "logs": {
+        "web": {
           "exists": true,
-          "file_count": 1,
-          "size_mb": "0.00",
-          "largest_file": "pipeline.log"
+          "file_count": 11,
+          "largest_file": "index.html",
+          "largest_file_path": "web/index.html",
+          "size_mb": "0.38"
         }
       },
       "file_counts": {
-        "pdf": 11,
-        "web": 11,
-        "slides": 1,
+        "children": 79,
+        "data": 3,
         "figures": 13,
-        "data": 2,
-        "reports": 28,
-        "simulations": 0,
-        "llm": 0,
-        "logs": 1
+        "manuscript": 11,
+        "pdf": 1,
+        "reports": 3,
+        "web": 11
       },
-      "total_size_mb": 1.7442436218261719,
+      "inventory_mode": "stable-shippable-output-v1",
       "issues_by_severity": {
         "critical": [],
-        "warning": [],
-        "info": []
+        "info": [],
+        "warning": []
       },
-      "recommendations": []
-    },
-    "pdf": {
-      "files": 11,
-      "size_mb": 0.791865348815918
+      "recommendations": [],
+      "structure": {
+        "directory_structure": {
+          "children": {
+            "exists": true,
+            "files": 79,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.05
+          },
+          "combined_pdf": {
+            "exists": true,
+            "readable": true,
+            "size_mb": 0.58
+          },
+          "data": {
+            "exists": true,
+            "files": 3,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.0
+          },
+          "docx": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "required": false,
+            "size_mb": 0.0
+          },
+          "epub": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "required": false,
+            "size_mb": 0.0
+          },
+          "figures": {
+            "exists": true,
+            "files": 13,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.35
+          },
+          "llm": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "required": false,
+            "size_mb": 0.0
+          },
+          "logs": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "required": false,
+            "size_mb": 0.0
+          },
+          "manuscript": {
+            "exists": true,
+            "files": 11,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.09
+          },
+          "pdf": {
+            "exists": true,
+            "files": 1,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.58
+          },
+          "reports": {
+            "exists": true,
+            "files": 3,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.01
+          },
+          "simulations": {
+            "exists": false,
+            "files": 0,
+            "optional": true,
+            "required": false,
+            "size_mb": 0.0
+          },
+          "slides": {
+            "exists": false,
+            "files": 0,
+            "optional": false,
+            "required": false,
+            "size_mb": 0.0
+          },
+          "web": {
+            "exists": true,
+            "files": 11,
+            "optional": false,
+            "readable": true,
+            "required": true,
+            "size_mb": 0.38
+          }
+        },
+        "inventory_mode": "stable-shippable-output-v1",
+        "issues": [],
+        "missing_files": [],
+        "suspicious_sizes": [],
+        "valid": true,
+        "warnings": []
+      },
+      "total_size_mb": 1.4614839553833008
     },
     "figures": {
-      "files": 6,
-      "size_mb": 0.30805397033691406
+      "files": 13,
+      "size_mb": 0.35442543029785156
     },
-    "data": {
-      "files": 2,
-      "size_mb": 0.0012798309326171875
+    "inventory_mode": "stable-shippable-output-v1",
+    "pdf": {
+      "files": 1,
+      "size_mb": 0.5832080841064453
+    },
+    "stable_inventory": {
+      "categories": {
+        "children": {
+          "files": 79,
+          "size_bytes": 50675
+        },
+        "data": {
+          "files": 3,
+          "size_bytes": 2310
+        },
+        "figures": {
+          "files": 13,
+          "size_bytes": 371642
+        },
+        "manuscript": {
+          "files": 11,
+          "size_bytes": 90673
+        },
+        "pdf": {
+          "files": 1,
+          "size_bytes": 611538
+        },
+        "reports": {
+          "files": 3,
+          "size_bytes": 8483
+        },
+        "web": {
+          "files": 11,
+          "size_bytes": 397156
+        }
+      },
+      "mode": "stable-shippable-output-v1",
+      "total_files": 121,
+      "total_size_bytes": 1532477
     }
   },
+  "recommendations": [],
   "summary": {
-    "total_checks": 8,
-    "passed": 8,
+    "all_passed": true,
     "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": true
+    "passed": 9,
+    "total_checks": 9
   },
-  "recommendations": []
+  "timestamp": "2026-08-14T14:20:53Z",
+  "validated_inputs": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "83bce2cedb2143465ebe86e8c8e4528ea56aef2bef6b6e11464c0ff6476b3cad",
+      "size_bytes": 41770
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "514e227b1ff49dfacce766c8859f01df0e53b6a4976b1f06312e8c5579edb681",
+      "size_bytes": 82640
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "93710c4ba0ee0d6fdfa3fcbfffdbca7c9b0b3b0364157316ae711718e6fd5fbe",
+      "size_bytes": 2124
+    },
+    "consumed_manuscript": [
+      {
+        "rendered_path": "output/manuscript/00_abstract.md",
+        "rendered_sha256": "3ca922b5b9f41febcafc7cb2167d129ae0abb361cfa7faba9efe8ade2e46ffe9",
+        "source_path": "manuscript/00_abstract.md",
+        "source_sha256": "57a292835ea54c8f9fcde66eb0cde459279685068a9d59e71ec8b487c42c182f"
+      },
+      {
+        "rendered_path": "output/manuscript/01_introduction.md",
+        "rendered_sha256": "5aeb94ac8658eb62ccc6112f0755c59ffc646b484c895bf3f88637749fdb4f2d",
+        "source_path": "manuscript/01_introduction.md",
+        "source_sha256": "66ee220a021fa52c91a985c569e580b828508e3df9bd09e99b89262da4cba5c6"
+      },
+      {
+        "rendered_path": "output/manuscript/02_methods.md",
+        "rendered_sha256": "10de4b0e54995e8e6a5fa122b2512e0e7b882ebd6c029a8e61b2c87f97390759",
+        "source_path": "manuscript/02_methods.md",
+        "source_sha256": "4ca984fe7257a4751d6c5c3729d429c97f0e1d2755d1be95c44fd47953c03988"
+      },
+      {
+        "rendered_path": "output/manuscript/03_results.md",
+        "rendered_sha256": "628fad3c58eb0fbd985f1b6031fe1e5f1738b941777e2bc1d530e30b104dff7c",
+        "source_path": "manuscript/03_results.md",
+        "source_sha256": "fedcb4706e18e99597c2280a0d0d7e46af4a4a33bc44c5256ea7dc5818886138"
+      },
+      {
+        "rendered_path": "output/manuscript/04_honesty.md",
+        "rendered_sha256": "4b4a3eadd1f096a6b6115b71068a6ffc1aacc4a23bdfa0c317bce296a0c94f55",
+        "source_path": "manuscript/04_honesty.md",
+        "source_sha256": "911809ba73ab190d446e442528e19c3edd9c340d0e15f4b6b437440aebb9428d"
+      },
+      {
+        "rendered_path": "output/manuscript/05_reproducibility.md",
+        "rendered_sha256": "a775581b8c8d91f11f20a8fbc65a6ed61650f45dfcf1986910d9bf5ad55b2a49",
+        "source_path": "manuscript/05_reproducibility.md",
+        "source_sha256": "41c4f94c6476af733d3080c5daee1187aac6c6b3ef8deb6c9bf765574ef2ad00"
+      },
+      {
+        "rendered_path": "output/manuscript/06_limitations.md",
+        "rendered_sha256": "2e09b8d6b7957bc86f3baad9015c0a61df426a96dbe3dec2d8a317b1970c70f0",
+        "source_path": "manuscript/06_limitations.md",
+        "source_sha256": "ace1b0ec910742f8452b35bca99e6a982fae196a114339444fed17babbdacc2c"
+      },
+      {
+        "rendered_path": "output/manuscript/99_references.md",
+        "rendered_sha256": "14664b2f576e4918aecc00d7cd508ff81121b4bc254fc7b09abb6708e98f3dc6",
+        "source_path": "manuscript/99_references.md",
+        "source_sha256": "14664b2f576e4918aecc00d7cd508ff81121b4bc254fc7b09abb6708e98f3dc6"
+      }
+    ],
+    "fingerprints": {
+      "config": {
+        "file_count": 14,
+        "sha256": "bb619635c5a6a14080acb8195b78ec428609cfc0ba24d8b93fb4b50e1779eb8c"
+      },
+      "output": {
+        "file_count": 121,
+        "sha256": "c041624e9a1c3b14ee320a7782cbc2829fb47f8a6eb4f69f1c3c290e9496f163"
+      },
+      "source": {
+        "file_count": 52,
+        "sha256": "210275820649effeb0c14dcb599250a8cdb9723430ec5ebd2d56fd1abd4cd28b"
+      },
+      "stage": {
+        "file_count": 1245,
+        "sha256": "d6cdf4694112520537a037f7a06749356e0d27e1d2a8bba2e464160c1b6f3dfc"
+      }
+    },
+    "project": "templates/template_autopoiesis",
+    "schema_version": "template-validated-rendered-inputs-v1"
+  }
 }

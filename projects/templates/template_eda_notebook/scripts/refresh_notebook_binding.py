@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
-from src.eda.notebook_binding import build_binding_receipt
-
-
 PROJECT = Path(__file__).resolve().parents[1]
+if str(PROJECT) not in sys.path:
+    sys.path.insert(0, str(PROJECT))
+
+from src.eda.notebook_binding import build_binding_receipt  # noqa: E402
+
+
 SOURCE_PATHS = [
     "src/eda/__init__.py",
     "src/eda/cleaning.py",

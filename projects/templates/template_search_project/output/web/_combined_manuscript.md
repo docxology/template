@@ -145,7 +145,7 @@ Citation keys appear in `[brackets]` so a downstream tool — for example a Pand
 
 # Results {#sec:results}
 
-**Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from arxiv, crossref, producing 300 unique paper(s) after cross-keyword deduplication.
+**Run snapshot.** With the bundled `manuscript/config.yaml` the most recent execution evaluated the query *"reproducible research optimization"* against local, returned 6 deduplicated paper(s) (4 carrying a DOI, 6 carrying an abstract); the per-source breakdown is local=6 and recorded backend errors are none. The deep-search workflow ([@sec:deep_search]) covered 3 keyword(s) — *convex optimization; stochastic gradient descent; reproducible research* — drawn from , producing 300 unique paper(s) after cross-keyword deduplication.
 
 When `sources: [local]` is used, this section reports fixture execution only. It must not be read as a claim about empirical literature coverage; a live-provider run requires source-level provenance and a separately reviewed claim boundary.
 
@@ -1003,7 +1003,7 @@ _Per-paper synthesis omitted — no LLM Contribution paragraphs are present in t
 
 ---
 
-_Composition summary: 3 keywords · 300 unique papers · 300 per-paper notes integrated · 300 BibTeX entries · 4 key(s) missing from bib._
+_Composition summary: 3 keywords · 300 unique papers · 300 per-paper notes integrated · 300 BibTeX entries · 0 key(s) missing from bib._
 
 
 

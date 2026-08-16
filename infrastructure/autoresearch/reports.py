@@ -3,21 +3,62 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from infrastructure.autoresearch.models import AutoResearchPlan, AutoResearchReport
 
 
 def write_autoresearch_report(project_root: Path, report: AutoResearchReport) -> tuple[Path, Path]:
-    """Write JSON and Markdown AutoResearch readiness reports."""
+    """Write portable JSON and Markdown AutoResearch readiness reports."""
     reports_dir = project_root / "output" / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
     json_path = reports_dir / "autoresearch_readiness.json"
     md_path = reports_dir / "autoresearch_readiness.md"
+    portable_report = _release_safe_report(report)
 
-    json_path.write_text(json.dumps(report.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    md_path.write_text(_to_markdown(report), encoding="utf-8")
+    json_path.write_text(json.dumps(portable_report.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    md_path.write_text(_to_markdown(portable_report), encoding="utf-8")
     return json_path, md_path
+
+
+def _release_safe_report(report: AutoResearchReport) -> AutoResearchReport:
+    """Replace validation-only absolute paths with stable public labels."""
+    plan = report.plan
+    repo_root = plan.repo_root if plan is not None else None
+    issues = tuple(
+        replace(issue, source_path=_release_safe_path(issue.source_path, repo_root)) for issue in report.issues
+    )
+    if plan is None:
+        return replace(report, issues=issues)
+
+    config = replace(
+        plan.config,
+        source_path=_release_safe_path(plan.config.source_path, plan.repo_root),
+    )
+    portable_plan = replace(
+        plan,
+        repo_root=Path("."),
+        project_root=Path(_release_safe_path(plan.project_root, plan.repo_root)),
+        config=config,
+    )
+    return replace(report, issues=issues, plan=portable_plan)
+
+
+def _release_safe_path(value: str | Path, repo_root: Path | None) -> str:
+    """Return a checkout-independent path without a machine-local prefix."""
+    text = str(value)
+    if not text:
+        return ""
+    path = Path(text)
+    if not path.is_absolute():
+        return path.as_posix()
+    if repo_root is not None:
+        try:
+            return path.resolve().relative_to(repo_root.resolve()).as_posix()
+        except ValueError:
+            pass
+    return path.name
 
 
 def write_autoresearch_plan(project_root: Path, plan: AutoResearchPlan) -> Path:

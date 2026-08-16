@@ -57,12 +57,12 @@
   ],
   "configured_field_counts": {
     "defaulted": 11,
-    "explicit": 125,
+    "explicit": 126,
     "lexicon_level": 10,
-    "schema_level": 18,
+    "schema_level": 19,
     "section_level": 33,
     "slot_level": 66,
-    "total": 136,
+    "total": 137,
     "visualization_level": 9,
     "visualized": 7
   },
@@ -250,6 +250,7 @@
     "madlib.narrative_moves.scope",
     "madlib.pipeline_phases",
     "madlib.quality_probes",
+    "madlib.schema_version",
     "madlib.section_conditions",
     "madlib.section_conditions.abstract",
     "madlib.section_conditions.authoring_contract",

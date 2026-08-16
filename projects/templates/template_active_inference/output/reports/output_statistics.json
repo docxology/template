@@ -2,36 +2,19 @@
   "directories": {
     "pdf": {
       "exists": true,
-      "file_count": 10,
-      "size_mb": "4.45",
-      "total_size_bytes": 4662923,
+      "file_count": 1,
+      "size_mb": "4.03",
+      "total_size_bytes": 4226446,
       "largest_files": [
         {
           "name": "template_active_inference_combined.pdf",
-          "size_mb": "3.91",
+          "size_mb": "4.03",
+          "size_bytes": 4226446,
           "path": "pdf/template_active_inference_combined.pdf"
-        },
-        {
-          "name": "_combined_manuscript.tex",
-          "size_mb": "0.16",
-          "path": "pdf/_combined_manuscript.tex"
-        },
-        {
-          "name": "_combined_manuscript.log",
-          "size_mb": "0.13",
-          "path": "pdf/_combined_manuscript.log"
         }
       ],
       "extensions": {
-        ".pdf": 1,
-        ".md": 1,
-        ".log": 2,
-        ".aux": 1,
-        ".blg": 1,
-        ".bib": 1,
-        ".tex": 1,
-        ".toc": 1,
-        ".bbl": 1
+        ".pdf": 1
       }
     },
     "web": {
@@ -43,32 +26,45 @@
         {
           "name": "index.html",
           "size_mb": "0.21",
+          "size_bytes": 224218,
           "path": "web/index.html"
         },
         {
           "name": "_combined_manuscript.md",
           "size_mb": "0.12",
+          "size_bytes": 128994,
           "path": "web/_combined_manuscript.md"
         },
         {
           "name": "manuscript__08_methods_sheaf.html",
           "size_mb": "0.11",
+          "size_bytes": 118721,
           "path": "web/manuscript__08_methods_sheaf.html"
         }
       ],
       "extensions": {
-        ".html": 17,
         ".md": 1,
-        ".ico": 1
+        ".ico": 1,
+        ".html": 17
       }
     },
     "slides": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
+    },
+    "docx": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
+    },
+    "epub": {
+      "exists": false,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0
     },
     "figures": {
       "exists": true,
@@ -79,44 +75,50 @@
         {
           "name": "sheaf_layers_overview.png",
           "size_mb": "0.54",
+          "size_bytes": 566982,
           "path": "figures/sheaf_layers_overview.png"
         },
         {
           "name": "scholarship_source_map.png",
           "size_mb": "0.45",
+          "size_bytes": 470707,
           "path": "figures/scholarship_source_map.png"
         },
         {
           "name": "artifact_contract_map.png",
           "size_mb": "0.44",
+          "size_bytes": 466540,
           "path": "figures/artifact_contract_map.png"
         }
       ],
       "extensions": {
         ".png": 25,
-        ".gif": 1,
-        ".json": 1
+        ".json": 1,
+        ".gif": 1
       }
     },
     "data": {
       "exists": true,
       "file_count": 48,
       "size_mb": "2.79",
-      "total_size_bytes": 2927914,
+      "total_size_bytes": 2927912,
       "largest_files": [
         {
           "name": "sheaf_section_status_matrix.json",
           "size_mb": "0.76",
+          "size_bytes": 801239,
           "path": "data/sheaf_section_status_matrix.json"
         },
         {
           "name": "validation_dependency_graph.json",
           "size_mb": "0.37",
+          "size_bytes": 386145,
           "path": "data/validation_dependency_graph.json"
         },
         {
           "name": "manuscript_token_provenance.json",
           "size_mb": "0.28",
+          "size_bytes": 290393,
           "path": "data/manuscript_token_provenance.json"
         }
       ],
@@ -127,165 +129,241 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 55,
-      "size_mb": "0.68",
-      "total_size_bytes": 715662,
+      "file_count": 32,
+      "size_mb": "0.41",
+      "total_size_bytes": 429061,
       "largest_files": [
-        {
-          "name": "evidence_registry.json",
-          "size_mb": "0.08",
-          "path": "reports/evidence_registry.json"
-        },
         {
           "name": "manuscript_staleness_report.json",
           "size_mb": "0.07",
+          "size_bytes": 72360,
           "path": "reports/manuscript_staleness_report.json"
         },
         {
           "name": "claim_evidence_audit.json",
           "size_mb": "0.05",
+          "size_bytes": 49252,
           "path": "reports/claim_evidence_audit.json"
+        },
+        {
+          "name": "visualization_quality_audit.json",
+          "size_mb": "0.04",
+          "size_bytes": 40026,
+          "path": "reports/visualization_quality_audit.json"
         }
       ],
       "extensions": {
-        ".json": 48,
-        ".jsonl": 1,
-        ".txt": 2,
-        ".md": 4
+        ".json": 31,
+        ".md": 1
       }
     },
     "simulations": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "llm": {
-      "exists": true,
+      "exists": false,
       "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 0,
-      "largest_files": [],
-      "extensions": {}
+      "total_size_bytes": 0
     },
     "logs": {
-      "exists": true,
-      "file_count": 2,
+      "exists": false,
+      "file_count": 0,
       "size_mb": "0.00",
-      "total_size_bytes": 704,
+      "total_size_bytes": 0
+    },
+    "arxiv_submission": {
+      "exists": true,
+      "file_count": 28,
+      "size_mb": "3.92",
+      "total_size_bytes": 4115533,
       "largest_files": [
         {
-          "name": "pymdp_runs.jsonl",
-          "size_mb": "0.00",
-          "path": "logs/pymdp_runs.jsonl"
+          "name": "sheaf_layers_overview.png",
+          "size_mb": "0.54",
+          "size_bytes": 566982,
+          "path": "arxiv_submission/figures/sheaf_layers_overview.png"
         },
         {
-          "name": "pipeline.log",
-          "size_mb": "0.00",
-          "path": "logs/pipeline.log"
+          "name": "scholarship_source_map.png",
+          "size_mb": "0.45",
+          "size_bytes": 470707,
+          "path": "arxiv_submission/figures/scholarship_source_map.png"
+        },
+        {
+          "name": "artifact_contract_map.png",
+          "size_mb": "0.44",
+          "size_bytes": 466540,
+          "path": "arxiv_submission/figures/artifact_contract_map.png"
         }
       ],
       "extensions": {
-        ".jsonl": 1,
-        ".log": 1
+        ".bbl": 1,
+        ".tex": 1,
+        ".png": 25,
+        ".bib": 1
+      }
+    },
+    "manuscript": {
+      "exists": true,
+      "file_count": 21,
+      "size_mb": "0.13",
+      "total_size_bytes": 138377,
+      "largest_files": [
+        {
+          "name": "08_methods_sheaf.md",
+          "size_mb": "0.06",
+          "size_bytes": 64024,
+          "path": "manuscript/08_methods_sheaf.md"
+        },
+        {
+          "name": "16_appendix_full_sheaf.md",
+          "size_mb": "0.02",
+          "size_bytes": 20202,
+          "path": "manuscript/16_appendix_full_sheaf.md"
+        },
+        {
+          "name": "12_results_si_tmaze.md",
+          "size_mb": "0.01",
+          "size_bytes": 11128,
+          "path": "manuscript/12_results_si_tmaze.md"
+        }
+      ],
+      "extensions": {
+        ".md": 19,
+        ".yaml": 1,
+        ".bib": 1
+      }
+    },
+    "root": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "7.47",
+      "total_size_bytes": 7832534,
+      "largest_files": [
+        {
+          "name": "template_active_inference_combined.pdf",
+          "size_mb": "4.03",
+          "size_bytes": 4226446,
+          "path": "template_active_inference_combined.pdf"
+        },
+        {
+          "name": "arxiv_submission_20260814.tar.gz",
+          "size_mb": "3.44",
+          "size_bytes": 3606088,
+          "path": "arxiv_submission_20260814.tar.gz"
+        }
+      ],
+      "extensions": {
+        ".gz": 1,
+        ".pdf": 1
       }
     }
   },
-  "total_files": 161,
-  "total_size_mb": 12.36536693572998,
+  "total_files": 178,
+  "total_size_mb": 23.20164394378662,
   "largest_files": [
     {
       "name": "template_active_inference_combined.pdf",
-      "size_mb": "3.91",
+      "size_mb": "4.03",
+      "size_bytes": 4226446,
       "category": "pdf",
       "path": "pdf/template_active_inference_combined.pdf"
     },
     {
+      "name": "template_active_inference_combined.pdf",
+      "size_mb": "4.03",
+      "size_bytes": 4226446,
+      "category": "root",
+      "path": "template_active_inference_combined.pdf"
+    },
+    {
+      "name": "arxiv_submission_20260814.tar.gz",
+      "size_mb": "3.44",
+      "size_bytes": 3606088,
+      "category": "root",
+      "path": "arxiv_submission_20260814.tar.gz"
+    },
+    {
       "name": "sheaf_section_status_matrix.json",
       "size_mb": "0.76",
+      "size_bytes": 801239,
       "category": "data",
       "path": "data/sheaf_section_status_matrix.json"
     },
     {
       "name": "sheaf_layers_overview.png",
       "size_mb": "0.54",
+      "size_bytes": 566982,
+      "category": "arxiv_submission",
+      "path": "arxiv_submission/figures/sheaf_layers_overview.png"
+    },
+    {
+      "name": "sheaf_layers_overview.png",
+      "size_mb": "0.54",
+      "size_bytes": 566982,
       "category": "figures",
       "path": "figures/sheaf_layers_overview.png"
     },
     {
       "name": "scholarship_source_map.png",
       "size_mb": "0.45",
+      "size_bytes": 470707,
+      "category": "arxiv_submission",
+      "path": "arxiv_submission/figures/scholarship_source_map.png"
+    },
+    {
+      "name": "scholarship_source_map.png",
+      "size_mb": "0.45",
+      "size_bytes": 470707,
       "category": "figures",
       "path": "figures/scholarship_source_map.png"
     },
     {
       "name": "artifact_contract_map.png",
       "size_mb": "0.44",
+      "size_bytes": 466540,
+      "category": "arxiv_submission",
+      "path": "arxiv_submission/figures/artifact_contract_map.png"
+    },
+    {
+      "name": "artifact_contract_map.png",
+      "size_mb": "0.44",
+      "size_bytes": 466540,
       "category": "figures",
       "path": "figures/artifact_contract_map.png"
-    },
-    {
-      "name": "validation_dependency_graph.json",
-      "size_mb": "0.37",
-      "category": "data",
-      "path": "data/validation_dependency_graph.json"
-    },
-    {
-      "name": "manuscript_token_provenance.json",
-      "size_mb": "0.28",
-      "category": "data",
-      "path": "data/manuscript_token_provenance.json"
-    },
-    {
-      "name": "index.html",
-      "size_mb": "0.21",
-      "category": "web",
-      "path": "web/index.html"
-    },
-    {
-      "name": "_combined_manuscript.tex",
-      "size_mb": "0.16",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.tex"
-    },
-    {
-      "name": "_combined_manuscript.log",
-      "size_mb": "0.13",
-      "category": "pdf",
-      "path": "pdf/_combined_manuscript.log"
     }
   ],
   "missing_expected_files": [],
   "sizes_by_category": {
-    "pdf": 4.4469099044799805,
+    "pdf": 4.03065299987793,
     "web": 0.657353401184082,
-    "slides": 0.0,
     "figures": 3.785647392272949,
-    "data": 2.792276382446289,
-    "reports": 0.6825084686279297,
-    "simulations": 0.0,
-    "llm": 0.0,
-    "logs": 0.00067138671875
+    "data": 2.7922744750976562,
+    "reports": 0.40918445587158203,
+    "arxiv_submission": 3.9248781204223633,
+    "manuscript": 0.13196659088134766,
+    "root": 7.469686508178711
   },
+  "inventory_mode": "stable-shippable-output-v1",
+  "inventory_scope": "stage5-delivery-mirror",
+  "inventory_root": "output/templates/template_active_inference",
   "file_counts_by_type": {
-    ".pdf": 1,
-    ".md": 6,
-    ".log": 3,
-    ".aux": 1,
-    ".blg": 1,
-    ".bib": 1,
-    ".tex": 1,
-    ".toc": 1,
-    ".bbl": 1,
-    ".html": 17,
+    ".pdf": 2,
+    ".md": 21,
     ".ico": 1,
-    ".png": 25,
+    ".html": 17,
+    ".png": 50,
+    ".json": 79,
     ".gif": 1,
-    ".json": 96,
     ".csv": 1,
-    ".jsonl": 2,
-    ".txt": 2
+    ".bbl": 1,
+    ".tex": 1,
+    ".bib": 2,
+    ".yaml": 1,
+    ".gz": 1
   }
 }

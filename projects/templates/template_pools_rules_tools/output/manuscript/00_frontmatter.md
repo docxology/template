@@ -11,7 +11,7 @@
 | **Correspondence** | daniel@activeinference.institute |
 | **ORCID** | [0000-0001-6232-9096](https://orcid.org/0000-0001-6232-9096) |
 | **Version** | 1.0.0 |
-| **Date** | 2026-07-05 |
+| **Date** | 2026-07-10 |
 | **License** | CC-BY-4.0 |
 | **Repository** | [Public template repository](https://github.com/docxology/template) |
 | **DOI** | 10.5281/zenodo.21298888 |
@@ -45,6 +45,6 @@ This exemplar targets full computational reproducibility for every quantitative 
 | Manuscript variable tokens | `scripts/03_generate_manuscript.py` | Rendered PDF contains no unresolved `{{...}}` tokens |
 | All 9 figures (8 content + 1 cover) | `scripts/05_generate_figures.py` | `tests/test_figures.py` (per-function file-existence checks) |
 | ≥90% `src/` line coverage | `uv run pytest … --cov-fail-under=90` | CI + local pre-push gate |
-| Combined PDF | full project pipeline, Stage 6 (4-pass xelatex + bibtex) | `pdftotext` scan for unresolved-reference markers and page-scale raster read |
+| Combined PDF | full project pipeline, PDF rendering stage (4-pass xelatex + bibtex) | `pdftotext` scan for unresolved-reference markers and page-scale raster read |
 
-A reader who clones the repository and runs the five commands above, in order, reproduces every number and image in this document without manual intervention. Every quantitative claim in this document — fond/rule/tool counts, test counts, coverage percentages, and both bar-chart figures (@fig:counts, @fig:pipeline) — is generated from the same `run_integration_demo()` call at render time. None of these numbers are hand-typed; a `test_reflects_changed_integration_result` negative control in `tests/test_manuscript_variables.py` proves the token-generation function actually tracks its source rather than emitting a fixed constant.
+A reader who clones the repository and runs the listed commands in order reproduces every number and image in this document without manual intervention. Quantitative claims in this document — fond/rule/tool counts, project inventory counts, and the runtime bar-chart figures (@fig:counts, @fig:pipeline) — are derived from the integration result, declared figure contracts, or the project filesystem at render time. None of these values are hand-typed; negative controls in `tests/test_manuscript_variables.py` change both integration inputs and a real temporary project tree to prove that token generation tracks its sources rather than emitting fixed constants.

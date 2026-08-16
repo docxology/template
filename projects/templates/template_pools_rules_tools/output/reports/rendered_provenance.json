@@ -1,0 +1,95 @@
+{
+  "consumed_manuscript": [
+    {
+      "rendered_path": "output/manuscript/00_frontmatter.md",
+      "rendered_sha256": "444d8d2cee716756bfa4e54583402a8541db7ed5bbcb6bc15b8d733109c8e282",
+      "source_path": "manuscript/00_frontmatter.md",
+      "source_sha256": "07e42522237a6eac6a78aabdb3fc72b0ea8111025a31988b433fb91281a42e13"
+    },
+    {
+      "rendered_path": "output/manuscript/01_abstract.md",
+      "rendered_sha256": "a4205fff4fc346514ca4a57bde5e7980b96d18671c5b32a9148e9a7e96faf03d",
+      "source_path": "manuscript/01_abstract.md",
+      "source_sha256": "a06665f42a694284567f6c633f51bba067c5c575ee291c9be357cc26d106e7a9"
+    },
+    {
+      "rendered_path": "output/manuscript/02_introduction.md",
+      "rendered_sha256": "097de66b7e12b2bcda9e2efb99cc677e07b7ce5ec66ca7452bafb477f91f95be",
+      "source_path": "manuscript/02_introduction.md",
+      "source_sha256": "097de66b7e12b2bcda9e2efb99cc677e07b7ce5ec66ca7452bafb477f91f95be"
+    },
+    {
+      "rendered_path": "output/manuscript/03_pools.md",
+      "rendered_sha256": "aba46b2a22f556c3e34daf91640908906a464de3b290a1170931fabd308e7e97",
+      "source_path": "manuscript/03_pools.md",
+      "source_sha256": "643338abc0d401d602b99cad7baa090580e39b6d6a8990aea39812b94ee4fc2b"
+    },
+    {
+      "rendered_path": "output/manuscript/04_rules.md",
+      "rendered_sha256": "b75cf429aa1c6e4a6bb44e204c44487ee16336934e9926995edc10544d6ff64c",
+      "source_path": "manuscript/04_rules.md",
+      "source_sha256": "baa1e3a270e1faf326d65080204816325d5609e88ee2f85beeb3bc6ad115b761"
+    },
+    {
+      "rendered_path": "output/manuscript/05_tools.md",
+      "rendered_sha256": "01c03822e514a88969c2c416b7376ac457d41b536bb2ba9234b683777f4b8cd5",
+      "source_path": "manuscript/05_tools.md",
+      "source_sha256": "b9c9eada7fb23c5eec5e87c6033355c1f33699d69e779c5a9718f3ea2411ca0f"
+    },
+    {
+      "rendered_path": "output/manuscript/06_integration.md",
+      "rendered_sha256": "4fb6650888026f57f71a993daedf9e43d0e3b5e6f74a3b9f37daeb2f6616ea32",
+      "source_path": "manuscript/06_integration.md",
+      "source_sha256": "ceed3454960e54a24733952e06bd6ff02e1e3e1dd67bf44a247314778deb53ab"
+    },
+    {
+      "rendered_path": "output/manuscript/07_conclusion.md",
+      "rendered_sha256": "17c4562a5da9c821120ec9bcc871709271c66826ae56f6748acd1ad94c772049",
+      "source_path": "manuscript/07_conclusion.md",
+      "source_sha256": "1e121a26cda091b21df231cc6b6726a088a88532affb5bd2017b410fcd9b70d8"
+    }
+  ],
+  "evidence_files": {
+    "artifact_manifest": {
+      "path": "output/reports/artifact_manifest.json",
+      "sha256": "08e70dda00fa596a88dd3f7005a18af8445dbf3aa0cb01fa1d07d7f03977df4b",
+      "size_bytes": 14604
+    },
+    "combined_manuscript": {
+      "path": "output/web/_combined_manuscript.md",
+      "sha256": "73373e6aaaf0fd5f8847cff73954133bf7025f2a4664dad8b15deb4bbf5f6cb5",
+      "size_bytes": 59465
+    },
+    "composition_manifest": {
+      "path": "output/reports/manuscript_composition.json",
+      "sha256": "22a2de9595241fd82deba32c86d583a02a0d3e818fd98abdf93a5166bee1463e",
+      "size_bytes": 2116
+    },
+    "validation_report": {
+      "path": "output/reports/validation_report.json",
+      "sha256": "d5ceca213cc6df7f5fac2773d4ff4c87b9415a38ed525d63b2b466e7da7f6d7e",
+      "size_bytes": 10837
+    }
+  },
+  "evidence_mode": "validated-co-snapshot-fingerprint-bridge",
+  "fingerprints": {
+    "config": {
+      "file_count": 15,
+      "sha256": "f4ba0cb091b94c34fb7607925bca1d1623c329b1949de9f5a8449f5b04fd207c"
+    },
+    "output": {
+      "file_count": 45,
+      "sha256": "9d71c34aff1a96509588219d00d81f1b3b912bcd9f8c0cdf2ede09549e4752bc"
+    },
+    "source": {
+      "file_count": 46,
+      "sha256": "027d7776ac5dbec7c40b29408e7de2120322b90d32ad156fb51736e418609818"
+    },
+    "stage": {
+      "file_count": 1245,
+      "sha256": "d6cdf4694112520537a037f7a06749356e0d27e1d2a8bba2e464160c1b6f3dfc"
+    }
+  },
+  "project": "templates/template_pools_rules_tools",
+  "schema_version": "template-rendered-provenance-v2"
+}

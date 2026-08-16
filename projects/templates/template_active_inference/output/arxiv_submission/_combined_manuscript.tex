@@ -165,6 +165,17 @@
   colorlinks=true,linkcolor=red,urlcolor=red,citecolor=red,anchorcolor=red,filecolor=red,
   pdfcreator={LaTeX via pandoc}}
 
+\ifXeTeX
+\special{pdf:trailerid [ <b5f38707f64d755f11373640badb3afb> <b5f38707f64d755f11373640badb3afb> ]}
+\fi
+\ifPDFTeX
+\pdftrailerid{}
+\pdftrailer{/ID [ <b5f38707f64d755f11373640badb3afb> <b5f38707f64d755f11373640badb3afb> ]}
+\fi
+\ifLuaTeX
+\pdfvariable trailerid {[ <b5f38707f64d755f11373640badb3afb> <b5f38707f64d755f11373640badb3afb> ]}
+\fi
+
 \title{Active Inference Multi-Track Exemplar}
 \author{Daniel Ari Friedman}
 \date{}

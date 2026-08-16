@@ -29,7 +29,7 @@ CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/si_graph_world_trace.json": "simulate_si_graph_world.py",
     "output/data/analysis_statistics.json": "compute_statistics.py",
     "output/data/sheaf_coverage_matrix.json": "generate_figures.py",
-    "output/figures/figure_registry.json": "generate_figures.py",
+    "output/figures/figure_registry.json": "z_generate_manuscript_variables.py",
     "output/figures/semantic_gluing_graph.png": "generate_figures.py",
     "output/figures/si_belief_trajectory.gif": "render_animation.py",
     "output/reports/invariants.json": "run_analytical_sweep.py",

@@ -7,7 +7,7 @@ obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
-numbers with `493` / `96.28` tokens filled in at render
+numbers with `528` / `95.33` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a
@@ -130,7 +130,7 @@ Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker — it
 will not catch a false quantitative claim phrased without one of those seven
 tokens (the stale test-count incident described above would not have tripped it;
-that failure mode is closed instead by the `493` token
+that failure mode is closed instead by the `528` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
 `HonestyManifest.all_passed` is a conjunction over `evidence`,

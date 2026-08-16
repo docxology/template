@@ -260,7 +260,7 @@ The evidence-tier ladder in [@fig:evidence_tier_ladder] summarizes the evidence 
 
 The ladder complements the risk matrix by counting source tiers rather than
 plotting risks. When the shared evidence registry is available, the manuscript
-can report 1113 source-tiered facts to the validation
+can report 956 source-tiered facts to the validation
 surface. When that registry is not available, the same figure falls back to the
 integrity model's configured tiers. Either way, the reader sees the evidentiary
 mix instead of receiving an undifferentiated assurance that evidence exists.
@@ -279,10 +279,10 @@ also which source tiers make their claims inspectable.
 
 | Source tier | Count | Role |
 |-------------|-------|------|
-| generated_metric | 881 | Numbers regenerated from project analysis |
-| artifact | 121 | Generated artifacts exposed to readers |
+| generated_metric | 721 | Numbers regenerated from project analysis |
+| artifact | 116 | Generated artifacts exposed to readers |
+| configuration | 55 | Evidence source tier |
 | bibliography | 47 | Reference records and citation metadata |
-| configuration | 47 | Evidence source tier |
 | claim_ledger | 17 | Source-owned claim and fact declarations |
 : Evidence tiers used by the integrity model and shared registry when available. {#tbl:evidence_tiers}
 
@@ -317,15 +317,15 @@ The project-local claim-support assay reports 9 supported claims out of 9 total 
 
 ## Shared evidence registry summary
 
-When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 1113.
+When the template evidence gate has run, the shared registry supplies source-tiered facts used by the evidence validator. Current fact count available to this variable pass: 956.
 
 | Fact kind | Count |
 |-----------|-------|
-| artifact | 77 |
+| artifact | 72 |
 | citation | 47 |
 | equation | 8 |
 | figure | 28 |
-| number | 936 |
+| number | 784 |
 | section | 10 |
 | table | 7 |
 : Shared evidence-registry fact kinds when available. {#tbl:shared_evidence_kinds}
@@ -337,7 +337,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
 | claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
-| evidence_tier_ladder | yes | yes | 3420x1447 | 0.110 | 0.04011442 | pass |
+| evidence_tier_ladder | yes | yes | 3420x1447 | 0.111 | 0.04019577 | pass |
 | formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
 | implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
 | integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |

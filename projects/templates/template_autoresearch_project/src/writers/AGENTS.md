@@ -9,6 +9,5 @@
 | `payloads.py` | `refresh_loop_payloads` (+ legacy aliases) |
 | `manifests.py` | Artifact manifest, schema manifest, phase ledger |
 | `benchmark.py`, `figure_dispatch.py` | Benchmark grading and figure batch dispatch |
-| `constants.py` | Manifest exclusion sets |
 
 Public API: `writers/__init__.py` (same symbols previously imported from monolithic `writers.py`).

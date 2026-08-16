@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import csv
+from dataclasses import dataclass
+from math import isfinite
 from pathlib import Path
 from typing import Any
 
@@ -15,19 +17,72 @@ DECAY_PARAMETERS = {"initial": 100.0, "rate": 0.5}
 LOGISTIC_SENSITIVITY_RATES = (0.4, 0.8, 1.2)
 
 
-def _build_case_study_summary(dataset_path: Path, *, source_label: str | None = None) -> dict[str, Any]:
+@dataclass(frozen=True)
+class CaseStudyObservation:
+    """One source-bound observation in the worked case-study dataset."""
+
+    condition: str
+    replicate: int
+    measurement: float
+    standard_error: float
+
+
+def load_case_study_observations(dataset_path: Path) -> tuple[CaseStudyObservation, ...]:
+    """Load and validate the observations shared by the analysis and figure."""
+    required_fields = {"condition", "replicate", "measurement", "standard_error"}
     with dataset_path.open(newline="", encoding="utf-8") as handle:
-        rows = list(csv.DictReader(handle))
+        reader = csv.DictReader(handle)
+        missing_fields = required_fields - set(reader.fieldnames or ())
+        if missing_fields:
+            missing = ", ".join(sorted(missing_fields))
+            raise ValueError(f"case-study dataset is missing required columns: {missing}")
+        rows = list(reader)
+
+    observations: list[CaseStudyObservation] = []
+    seen_keys: set[tuple[str, int]] = set()
+    for row_number, row in enumerate(rows, start=2):
+        condition = (row.get("condition") or "").strip()
+        try:
+            replicate = int(row["replicate"])
+            measurement = float(row["measurement"])
+            standard_error = float(row["standard_error"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"case-study dataset row {row_number} contains invalid numeric data") from exc
+        if not condition:
+            raise ValueError(f"case-study dataset row {row_number} has a blank condition")
+        if replicate < 1:
+            raise ValueError(f"case-study dataset row {row_number} has a non-positive replicate")
+        if not isfinite(measurement) or not isfinite(standard_error) or standard_error < 0:
+            raise ValueError(f"case-study dataset row {row_number} has an invalid measurement or standard error")
+        key = (condition, replicate)
+        if key in seen_keys:
+            raise ValueError(f"case-study dataset has duplicate condition/replicate row: {condition}/{replicate}")
+        seen_keys.add(key)
+        observations.append(
+            CaseStudyObservation(
+                condition=condition,
+                replicate=replicate,
+                measurement=measurement,
+                standard_error=standard_error,
+            )
+        )
+    if not observations:
+        raise ValueError("case-study dataset contains no observations")
+    return tuple(observations)
+
+
+def _build_case_study_summary(dataset_path: Path, *, source_label: str | None = None) -> dict[str, Any]:
+    observations = load_case_study_observations(dataset_path)
     groups: dict[str, list[float]] = {}
-    for row in rows:
-        groups.setdefault(row["condition"], []).append(float(row["measurement"]))
+    for observation in observations:
+        groups.setdefault(observation.condition, []).append(observation.measurement)
 
     condition_order = ("control", "treatment_low", "treatment_high")
     means = {condition: float(np.mean(groups[condition])) for condition in condition_order}
     response = np.array([means[condition] for condition in condition_order])
     dose = np.arange(len(condition_order), dtype=float)
     fit = models.linear_fit(dose, response)
-    all_measurements = np.array([float(row["measurement"]) for row in rows])
+    all_measurements = np.array([observation.measurement for observation in observations])
     extrapolation_dose = 3.0
     return {
         "source": source_label or dataset_path.as_posix(),

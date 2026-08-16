@@ -11,7 +11,8 @@ import yaml
 from infrastructure.autoresearch.models import AutoResearchIssue, AutoResearchPlan
 from infrastructure.core.pipeline.artifacts import (
     ArtifactManifest,
-    ArtifactManifestEntry,
+    artifact_manifest_from_payload,
+    output_inventory_mode_for_project,
     validate_artifact_manifest,
 )
 from infrastructure.project.domain_profile import load_domain_profile
@@ -101,7 +102,10 @@ def _validate_evidence_registry(
     plan: AutoResearchPlan,
     issues: list[AutoResearchIssue],
 ) -> None:
-    registry = build_project_evidence_registry(project_root)
+    registry = build_project_evidence_registry(
+        project_root,
+        output_inventory_mode=output_inventory_mode_for_project(plan.repo_root, project_root),
+    )
     if registry.facts():
         return
     issues.append(
@@ -146,7 +150,11 @@ def _validate_artifact_manifest(
                 )
             )
         else:
-            report = validate_artifact_manifest(manifest, project_dir=project_root)
+            report = validate_artifact_manifest(
+                manifest,
+                project_dir=project_root,
+                expected_inventory_mode=output_inventory_mode_for_project(plan.repo_root, project_root),
+            )
             for message in report.issues:
                 issues.append(
                     _issue(
@@ -622,23 +630,7 @@ def _read_json_mapping(
 
 def _read_artifact_manifest(path: Path) -> ArtifactManifest:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError("manifest root must be a mapping")
-    entries = tuple(_entry_from_payload(row) for row in payload.get("entries", []) if isinstance(row, dict))
-    issues = tuple(str(issue) for issue in payload.get("issues", []))
-    return ArtifactManifest(entries=entries, issues=issues)
-
-
-def _entry_from_payload(row: dict[str, Any]) -> ArtifactManifestEntry:
-    return ArtifactManifestEntry(
-        path=str(row.get("path", "")),
-        size_bytes=int(row.get("size_bytes", 0) or 0),
-        sha256=str(row.get("sha256", "")),
-        stage_num=int(row.get("stage_num", 0) or 0),
-        stage_name=str(row.get("stage_name", "")),
-        contract_match=bool(row.get("contract_match", False)),
-        timestamp=str(row.get("timestamp", "")),
-    )
+    return artifact_manifest_from_payload(payload)
 
 
 def _strict_severity(plan: AutoResearchPlan) -> str:

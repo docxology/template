@@ -198,6 +198,270 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: min(100%, 800px);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #1f6f8b;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: #8f1d1d;
+}
+
+a:hover {
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #4b5563;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -210,9 +474,10 @@ Linguistic Structure</h2>
 full text. A TF-IDF representation over a 137-feature vocabulary feeds
 non-negative matrix factorization, which extracts 5 latent topics
 cross-cutting the subfield taxonomy. The top vocabulary terms are:
-atmospheric, uncertainty, spectra, temperature, abundance, coverage,
-opacity, sources, analysis, assumptions, observed, retrievals, models,
-stellar, across, evaluated, retrieval, structure, composition, jwst.</p>
+atmospheric, uncertainty, spectra, temperature, abundance, analysis,
+assumptions, opacity, retrievals, sources, stellar, coverage, evaluated,
+observed, across, composition, models, provide, competing,
+retrieval.</p>
 <p><strong>Table 3. NMF topics extracted from the corpus.</strong></p>
 <table>
 <colgroup>
@@ -228,28 +493,28 @@ stellar, across, evaluated, retrieval, structure, composition, jwst.</p>
 <tbody>
 <tr>
 <td>0</td>
-<td>model, intervals, quantify, effect, noise, misspecification, record,
-data</td>
+<td>atmospheric, cloud, retrieved, species, changes, structure, models,
+explore</td>
 </tr>
 <tr>
 <td>1</td>
-<td>population, harmonized, studies, reporting, preprocessing, require,
-metallicity, variation</td>
+<td>prior, methane, depend, spectral, dioxide, simulated, carbon,
+constrained</td>
 </tr>
 <tr>
 <td>2</td>
-<td>atmospheric, abundance, opacity, changes, species, cloud, retrieved,
-assumptions</td>
+<td>contributions, separate, resolution, planetary, high, systematics,
+modelled, instrument</td>
 </tr>
 <tr>
 <td>3</td>
-<td>jwst, calibration, analyses, choices, reported, extend,
-characterization, wavelength</td>
+<td>population, reporting, studies, preprocessing, require, harmonized,
+separates, specific</td>
 </tr>
 <tr>
 <td>4</td>
-<td>signals, instrument, astrophysical, alongside, modelled,
-systematics, contributions, high</td>
+<td>model, intervals, misspecification, noise, quantify, effect, record,
+dependencies</td>
 </tr>
 </tbody>
 </table>
@@ -260,8 +525,8 @@ fixture-derived topics describe synthetic text patterns, not the
 scientific field.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
-<img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
-alt="Topic-term bar charts for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
+alt="Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up to ten leading terms on the vertical axis, and bar length represents that term&#x27;s weight in the topic." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Topic-term bar charts for Exoplanet
 Atmospheres. Each panel shows the top weighted terms for one of 5 NMF
 topics, with bar length proportional to the topic-term weight in the
@@ -275,8 +540,8 @@ matrix, nearest-neighbour lists, clusters, and two-dimensional
 projection are all reproducible.</p>
 <!-- FIGURE: pca_embeddings.png -->
 <figure id="fig:pca_embeddings">
-<img src="../figures/pca_embeddings.png" title="PCA Embeddings"
-alt="PCA projection of document embeddings for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/pca_embeddings.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
+alt="Scatter plot projecting document TF-IDF vectors onto the first two principal components. Points are coloured by configured subfield, axes state explained variance, and arrows label the strongest well-separated term loadings." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>PCA projection of document embeddings for
 Exoplanet Atmospheres. Each point represents one document projected onto
 the first two principal components of the TF-IDF/SVD embedding. Colours
@@ -285,8 +550,8 @@ to the keyword taxonomy.</figcaption>
 </figure>
 <!-- FIGURE: dendrogram.png -->
 <figure id="fig:dendrogram">
-<img src="../figures/dendrogram.png" title="Document Dendrogram"
-alt="Hierarchical clustering dendrogram of document embeddings." />
+<a class="figure-full-size-link" href="../figures/dendrogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/dendrogram.png" title="Document Dendrogram"
+alt="Ward-linkage dendrogram clustering configured subfields by their mean TF-IDF vectors. Leaves name subfields, branch height gives Ward distance, and an inset reports the cophenetic correlation of the hierarchy." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Hierarchical clustering dendrogram of
 document embeddings. The tree shows the similarity structure of the
 corpus: documents that join low in the tree are semantically similar,
@@ -299,8 +564,8 @@ subfields: terms with high between-subfield variance (rather than high
 global mean) are selected for display.</p>
 <!-- FIGURE: term_heatmap.png -->
 <figure id="fig:term_heatmap">
-<img src="../figures/term_heatmap.png" title="Term Heatmap"
-alt="Term heatmap for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/term_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/term_heatmap.png" title="Term Heatmap"
+alt="Heatmap with configured subfields as rows and the twenty terms with greatest between-subfield variance as columns. Cell colour from pale yellow to dark red encodes the subfield&#x27;s mean TF-IDF weight for each term." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Term heatmap for Exoplanet Atmospheres.
 Each cell shows the mean TF-IDF weight of a term within a subfield.
 Terms are selected by between-subfield variance to highlight
@@ -308,7 +573,7 @@ discriminative vocabulary rather than globally frequent
 terms.</figcaption>
 </figure>
 <h2 id="named-entity-analysis">Named Entity Analysis</h2>
-<p>Named entity extraction over the 46 abstracts identified 1 unique
+<p>Named entity extraction over the 80 abstracts identified 1 unique
 entities. The most frequent entities reflect the retained corpus and the
 configured extraction rules; source coverage and fixture status
 determine how they may be interpreted.</p>
@@ -323,14 +588,14 @@ determine how they may be interpreted.</p>
 <tbody>
 <tr>
 <td>JWST</td>
-<td>15</td>
+<td>17</td>
 </tr>
 </tbody>
 </table>
 <!-- FIGURE: entity_bar_chart.png -->
 <figure id="fig:entity_bar_chart">
-<img src="../figures/entity_bar_chart.png" title="Named Entities"
-alt="Top named entities for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/entity_bar_chart.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/entity_bar_chart.png" title="Named Entities"
+alt="Descending horizontal bars rank up to twenty named entities extracted from abstracts. Entity labels appear on the vertical axis and bar length represents the number of extracted occurrences in the current corpus." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Top named entities for Exoplanet
 Atmospheres. The horizontal bar chart shows the 20 most frequently
 extracted entities from abstracts, revealing recurring objects,
@@ -483,9 +748,9 @@ reveal the most closely related works in the corpus.</p>
 </table>
 <!-- FIGURE: similarity_heatmap.png -->
 <figure id="fig:similarity_heatmap">
-<img src="../figures/similarity_heatmap.png"
+<a class="figure-full-size-link" href="../figures/similarity_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/similarity_heatmap.png"
 title="Similar Document Pairs"
-alt="Document similarity for Exoplanet Atmospheres." />
+alt="Ranked horizontal bars, despite the legacy heatmap filename, compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Document similarity for Exoplanet
 Atmospheres. The horizontal bar chart shows the 15 most similar document
 pairs ranked by cosine similarity of their TF-IDF/SVD embeddings.
@@ -493,16 +758,16 @@ High-similarity pairs share topical and lexical content.</figcaption>
 </figure>
 <!-- FIGURE: word_cloud.png -->
 <figure id="fig:word_cloud">
-<img src="../figures/word_cloud.png" title="Term Cloud"
-alt="Term cloud for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/word_cloud.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/word_cloud.png" title="Term Cloud"
+alt="Term cloud derived from topic-term weights: more heavily weighted corpus terms appear in larger type, with a fixed layout seed and a cividis colour scale; word position and colour do not encode additional quantities." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Term cloud for Exoplanet Atmospheres.
 Term sizes are proportional to their TF-IDF weights across the corpus,
 providing a visual summary of the dominant vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">
-<img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
-alt="Term co-occurrence matrix for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+alt="Symmetric square matrix for the thirty most frequent document-level terms. Rows and columns list the same terms; increasingly dark blue cells indicate larger normalized within-document co-occurrence, with a zero diagonal." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Term co-occurrence matrix for Exoplanet
 Atmospheres. Each cell shows the normalized co-occurrence frequency of
 two terms within the same document, revealing which concepts tend to

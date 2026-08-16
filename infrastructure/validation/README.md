@@ -575,5 +575,10 @@ tail -f logs/validation_*.log
 ```
 
 Evidence-registry timestamps honor `SOURCE_DATE_EPOCH`, so deterministic
-validation runs do not introduce wall-clock drift. For detailed function
-signatures and API documentation, see [AGENTS.md](AGENTS.md).
+validation runs do not introduce wall-clock drift. Output-derived JSON, CSV,
+claim-ledger, and artifact facts are admitted only through the explicit stable
+inventory. Public exemplars remain Git-shippable; lifecycle-aware callers may
+authorize stable-local mode only for resolved non-template projects. Runtime,
+build, control, and hidden-path files cannot support manuscript claims or
+perturb a regenerated registry. For detailed function signatures and API
+documentation, see [AGENTS.md](AGENTS.md).

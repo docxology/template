@@ -22,6 +22,7 @@ class ManuscriptFigureSpec:
     filename: str
     caption: str
     generated_by: str
+    alt_text: str
 
 
 FIGURE_REGISTRY_SCHEMA = "template-autopoiesis-figure-registry-v1"
@@ -31,24 +32,40 @@ MANUSCRIPT_FIGURE_SPECS: tuple[ManuscriptFigureSpec, ...] = (
         filename="fig_stacked_product.png",
         caption="Option counts for the three effective grammar slots, shown as a stacked bar.",
         generated_by="src.manuscript_figures.fig_stacked_product",
+        alt_text=(
+            "One stacked bar partitions the effective grammar options into labeled primitive-domain, track, "
+            "and section-set segments; reserved presentation and sealing slots are omitted."
+        ),
     ),
     ManuscriptFigureSpec(
         label="fig:product_space",
         filename="fig_product_space.png",
         caption="Total, effective, and reserved-only grammar product sizes.",
         generated_by="src.manuscript_figures.fig_product_space_annotation",
+        alt_text=(
+            "Three annotated bars compare the full grammar product, the smaller content-effective product, "
+            "and the remaining combinations attributable to reserved presentation and sealing choices."
+        ),
     ),
     ManuscriptFigureSpec(
         label="fig:domain_coverage",
         filename="fig_domain_coverage.png",
         caption="The five primitive domains, shown with distinct type colors.",
         generated_by="src.manuscript_figures.fig_domain_coverage",
+        alt_text=(
+            "Five equal-height, differently colored bars are labeled optimization, dynamics, statistics, "
+            "signal, and graph, showing one implemented primitive family for every configured domain."
+        ),
     ),
     ManuscriptFigureSpec(
         label="fig:coverage_by_module",
         filename="fig_coverage_by_module.png",
         caption="Measured branch coverage by source module with the 90 percent floor marked.",
         generated_by="src.manuscript_figures.fig_coverage_by_module",
+        alt_text=(
+            "Horizontal bars rank source modules by measured branch coverage against a dashed 90 percent "
+            "floor; modules below the threshold, if any, are distinguished in red."
+        ),
     ),
 )
 _SPEC_BY_LABEL = {spec.label: spec for spec in MANUSCRIPT_FIGURE_SPECS}

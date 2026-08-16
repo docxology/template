@@ -28,6 +28,26 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
   current-output integrity snapshot for targeted renders. Snapshots exclude
   control reports, provider-controlled `output/fulltext/` caches, and transient
   TeX/log files; they attest stable derived outputs rather than local caches.
+  `collect_stable_output_inventory()` is the shared read-only source for these
+  manifests and provenance-bound output statistics. Public exemplars use
+  fail-closed Git-shippable filtering; explicitly resolved non-template
+  lifecycle projects may use stable-local mode without claiming Git
+  shippability. Manifests persist the selected mode, validators compare it with
+  the lifecycle-authorized mode, and legacy manifests without the field retain
+  the strict Git-shippable interpretation. Manifest readers share an exact schema
+  parser (canonical POSIX `output/...` paths, complete typed fields, lowercase
+  SHA-256 values), and validation rejects duplicates, omitted stable artifacts,
+  or entries outside the lifecycle-authorized inventory. Both modes exclude
+  every hidden path component and retain fail-closed symlink diagnostics. It
+  uses NUL-safe Git path
+  transport; unavailable, failed, or malformed Git-ignore evaluation blocks a
+  detected worktree, while genuine non-repository trees retain static fallback.
+  It can map an ignored root delivery mirror back to its canonical
+  project-output paths, preserving source-scoped ignore decisions without
+  erasing the copied publication tree. The supported lazy package API exports
+  `StableOutputInventory`, `OutputInventoryMode`, both mode constants, the
+  collector, and `output_inventory_mode_for_project`; shippable mode is always
+  the collector default.
 
 `pipeline.yaml` is the only full-pipeline stage plan. Temporary repositories
 and installed wheels resolve the packaged copy of that same file; there is no

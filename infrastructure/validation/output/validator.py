@@ -10,6 +10,12 @@ from typing import Any, TypedDict
 
 from infrastructure.core.files.pdf_locator import find_combined_pdf as _find_combined_pdf
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
+    OutputInventoryMode,
+    StableOutputInventory,
+    collect_stable_output_inventory,
+)
 
 from infrastructure.project.discovery import discover_projects
 from infrastructure.validation.output.layout import OPTIONAL_OUTPUT_SUBDIRS, OUTPUT_SUBDIR_NAMES
@@ -21,6 +27,7 @@ class _DirectoryDetail(TypedDict, total=False):
     file_count: int
     size_mb: str
     largest_file: str | None
+    largest_file_path: str | None
 
 
 class _IssuesBySeverity(TypedDict):
@@ -38,6 +45,7 @@ class OutputStructureResult(TypedDict):
     suspicious_sizes: list[str]
     warnings: list[str]
     directory_structure: dict[str, dict[str, Any]]
+    inventory_mode: str
 
 
 class ValidationResultDict(TypedDict):
@@ -49,9 +57,62 @@ class ValidationResultDict(TypedDict):
     total_size_mb: float
     issues_by_severity: _IssuesBySeverity
     recommendations: list[Any]
+    inventory_mode: str
 
 
 logger = get_logger(__name__)
+
+_RENDER_FORMAT_BY_SUBDIR = {
+    "pdf": "pdf",
+    "web": "html",
+    "slides": "slides",
+    "docx": "docx",
+    "epub": "epub",
+}
+
+
+def _stable_category_required(
+    category: str,
+    enabled_formats: Collection[str] | None,
+    *,
+    require_pdf: bool,
+) -> bool:
+    """Return whether an empty stable category is actionable for this run."""
+
+    if category == "pdf":
+        return require_pdf
+    format_name = _RENDER_FORMAT_BY_SUBDIR.get(category)
+    if format_name is not None and enabled_formats is not None:
+        return format_name in enabled_formats
+    return category not in OPTIONAL_OUTPUT_SUBDIRS
+
+
+def _stable_files_by_subdir(
+    output_dir: Path,
+    inventory: StableOutputInventory | None = None,
+    *,
+    inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> tuple[StableOutputInventory, dict[str, tuple[Path, ...]]]:
+    """Return one fail-closed stable inventory grouped by output category."""
+    output_dir = output_dir.absolute()
+    current = (
+        inventory
+        if inventory is not None
+        else collect_stable_output_inventory(output_dir, inventory_mode=inventory_mode)
+    )
+    if current.issues:
+        raise ValueError("unstable output inventory: " + "; ".join(current.issues))
+    grouped: dict[str, list[Path]] = {name: [] for name in OUTPUT_SUBDIR_NAMES}
+    for path in current.files:
+        try:
+            relative = path.relative_to(output_dir)
+        except ValueError as exc:
+            raise ValueError(f"stable output path escapes output directory: {path}") from exc
+        category = relative.parts[0] if len(relative.parts) > 1 else "root"
+        grouped.setdefault(category, []).append(path)
+    if sum(len(paths) for paths in grouped.values()) != len(current.files):
+        raise ValueError("stable output inventory grouping is incomplete")
+    return current, {name: tuple(paths) for name, paths in grouped.items()}
 
 
 def validate_copied_outputs(
@@ -60,6 +121,7 @@ def validate_copied_outputs(
     project_name: str | None = None,
     enabled_formats: Collection[str] | None = None,
     manuscript_dir: Path | None = None,
+    inventory: StableOutputInventory | None = None,
 ) -> bool:
     """Validate all project outputs were copied successfully.
 
@@ -79,6 +141,9 @@ def validate_copied_outputs(
             legacy PDF-only behavior for callers that do not have config.
         manuscript_dir: Current source manuscript, used to derive exact slide
             deck names when slides are enabled.
+        inventory: Optional canonical inventory for the copied tree. Stage 5
+            supplies one whose Git-ignore decisions are mapped to the source
+            project output rather than the intentionally ignored root mirror.
 
     Returns:
         True if validation successful, False if critical files missing
@@ -98,6 +163,7 @@ def validate_copied_outputs(
                 inferred_project_name,
                 enabled_formats,
                 manuscript_dir=manuscript_dir,
+                inventory=inventory,
             )
     else:
         # Preserve the historical PDF contract for callers without an
@@ -138,6 +204,8 @@ def validate_copied_outputs(
         "pdf": "PDF manuscripts and metadata",
         "web": "HTML web outputs",
         "slides": "Beamer slide presentations",
+        "docx": "Microsoft Word manuscript deliverables",
+        "epub": "EPUB manuscript deliverables",
         "figures": "Generated figures and images",
         "data": "Data files and datasets",
         "reports": "Analysis and simulation reports",
@@ -147,35 +215,33 @@ def validate_copied_outputs(
     }
 
     # Directories that are optional or populated later in the pipeline
-    optional_dirs = {
-        "llm",
-        "logs",
-    }  # LLM stage and logs may be generated during pipeline
+    optional_dirs = set(OPTIONAL_OUTPUT_SUBDIRS)
+
+    _inventory, files_by_subdir = _stable_files_by_subdir(output_dir, inventory)
 
     for dir_name, description in expected_dirs.items():
-        subdir = output_dir / dir_name
-        if subdir.exists():
-            files = list(subdir.glob("**/*"))
-            file_count = len([f for f in files if f.is_file()])
-            if file_count > 0:
-                total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
-                log_success(
-                    f"{dir_name}/ valid ({file_count} files, {total_size_mb:.2f} MB)",
-                    logger,
-                )
-            else:
-                # Only warn for required directories, debug for optional or potentially empty
-                if dir_name in optional_dirs:
-                    logger.debug(f"{dir_name}/ not yet populated (generated in later stage)")
-                else:
-                    logger.debug(
-                        f"{dir_name}/ directory exists but is empty (may be expected for this project type)"  # noqa: E501
-                    )
+        files = files_by_subdir[dir_name]
+        if files:
+            file_count = len(files)
+            total_size_mb = sum(f.stat().st_size for f in files) / (1024 * 1024)
+            log_success(
+                f"{dir_name}/ valid ({file_count} files, {total_size_mb:.2f} MB)",
+                logger,
+            )
         else:
-            if dir_name in optional_dirs:
-                logger.debug(f"{dir_name}/ not found (optional, generated in later stage)")
+            if enabled_formats is not None:
+                if _stable_category_required(
+                    dir_name,
+                    enabled_formats,
+                    require_pdf="pdf" in enabled_formats,
+                ):
+                    logger.warning(f"{dir_name}/ has no stable artifacts ({description})")
+                else:
+                    logger.debug(f"{dir_name}/ is not enabled and has no stable artifacts")
+            elif dir_name in optional_dirs:
+                logger.debug(f"{dir_name}/ has no stable artifacts (optional, generated in later stage)")
             else:
-                logger.warning(f"{dir_name}/ directory not found ({description})")
+                logger.warning(f"{dir_name}/ has no stable artifacts ({description})")
 
     return validation_passed
 
@@ -277,6 +343,9 @@ def collect_detailed_validation_results(
     output_dir: Path,
     *,
     require_pdf: bool = True,
+    inventory: StableOutputInventory | None = None,
+    enabled_formats: Collection[str] | None = None,
+    inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
 ) -> ValidationResultDict:
     """Collect detailed validation results for reporting.
 
@@ -287,6 +356,10 @@ def collect_detailed_validation_results(
         output_dir: Path to output directory
         require_pdf: Whether the effective render configuration requires a PDF
             deliverable.
+        inventory: Optional canonical inventory to reuse across one validation
+            run. When omitted it is collected from ``output_dir``.
+        enabled_formats: Effective publication formats for required-category
+            diagnostics. ``None`` preserves legacy structure semantics.
 
     Returns:
         Dictionary with detailed validation results:
@@ -297,37 +370,43 @@ def collect_detailed_validation_results(
         - issues_by_severity: Categorized issues
         - recommendations: Actionable recommendations
     """
+    output_dir = output_dir.absolute()
+    current, files_by_subdir = _stable_files_by_subdir(
+        output_dir,
+        inventory,
+        inventory_mode=inventory_mode,
+    )
     validation_results: ValidationResultDict = {
-        "structure": validate_output_structure(output_dir, require_pdf=require_pdf),
+        "structure": validate_output_structure(
+            output_dir,
+            require_pdf=require_pdf,
+            inventory=current,
+            enabled_formats=enabled_formats,
+        ),
         "directories": {},
         "file_counts": {},
         "total_size_mb": 0.0,
         "issues_by_severity": {"critical": [], "warning": [], "info": []},
         "recommendations": [],
+        "inventory_mode": current.mode,
     }
 
-    for subdir_name in [
-        "pdf",
-        "web",
-        "slides",
-        "figures",
-        "data",
-        "reports",
-        "simulations",
-        "llm",
-        "logs",
-    ]:
-        subdir = output_dir / subdir_name
-        if subdir.exists() and subdir.is_dir():
-            files = list(subdir.rglob("*"))
-            files = [f for f in files if f.is_file()]
+    category_names = (*OUTPUT_SUBDIR_NAMES, *sorted(set(files_by_subdir) - set(OUTPUT_SUBDIR_NAMES)))
+    for subdir_name in category_names:
+        files = files_by_subdir[subdir_name]
+        if files:
             size_mb = sum(f.stat().st_size for f in files) / (1024 * 1024)
+            largest = min(
+                files,
+                key=lambda path: (-path.stat().st_size, path.relative_to(output_dir).as_posix()),
+            )
 
             validation_results["directories"][subdir_name] = {
                 "exists": True,
                 "file_count": len(files),
                 "size_mb": f"{size_mb:.2f}",
-                "largest_file": (max((f.stat().st_size, f.name) for f in files)[1] if files else None),
+                "largest_file": largest.name,
+                "largest_file_path": largest.relative_to(output_dir).as_posix(),
             }
             validation_results["file_counts"][subdir_name] = len(files)
             validation_results["total_size_mb"] += size_mb
@@ -337,7 +416,14 @@ def collect_detailed_validation_results(
                 "file_count": 0,
                 "size_mb": "0.00",
             }
-            validation_results["issues_by_severity"]["warning"].append(f"Directory '{subdir_name}/' missing or empty")
+            if _stable_category_required(
+                subdir_name,
+                enabled_formats,
+                require_pdf=require_pdf,
+            ):
+                validation_results["issues_by_severity"]["warning"].append(
+                    f"{subdir_name}/ has no stable publication artifacts"
+                )
 
     if not validation_results["structure"]["valid"]:
         for issue in validation_results["structure"]["issues"]:
@@ -392,7 +478,14 @@ def collect_detailed_validation_results(
     return validation_results
 
 
-def validate_output_structure(output_dir: Path, *, require_pdf: bool = True) -> OutputStructureResult:
+def validate_output_structure(
+    output_dir: Path,
+    *,
+    require_pdf: bool = True,
+    inventory: StableOutputInventory | None = None,
+    enabled_formats: Collection[str] | None = None,
+    inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> OutputStructureResult:
     """Validate complete output directory structure.
 
     Checks:
@@ -405,10 +498,15 @@ def validate_output_structure(output_dir: Path, *, require_pdf: bool = True) -> 
     Args:
         output_dir: Path to top-level output directory
         require_pdf: Whether the effective format configuration requires PDF.
+        inventory: Optional canonical inventory to reuse across one validation
+            run. When omitted it is collected from ``output_dir``.
+        enabled_formats: Effective publication formats for required-category
+            diagnostics. ``None`` preserves legacy structure semantics.
 
     Returns:
         Dictionary with structure validation results
     """
+    output_dir = output_dir.absolute()
     result: OutputStructureResult = {
         "valid": True,
         "issues": [],
@@ -416,12 +514,20 @@ def validate_output_structure(output_dir: Path, *, require_pdf: bool = True) -> 
         "suspicious_sizes": [],
         "warnings": [],
         "directory_structure": {},
+        "inventory_mode": STABLE_OUTPUT_INVENTORY_MODE,
     }
 
     if not output_dir.exists():
         result["valid"] = False
         result["issues"].append("Output directory does not exist")
         return result
+
+    current, files_by_subdir = _stable_files_by_subdir(
+        output_dir,
+        inventory,
+        inventory_mode=inventory_mode,
+    )
+    result["inventory_mode"] = current.mode
 
     # Check combined PDF using shared location logic
     path_parts = output_dir.parts
@@ -456,7 +562,24 @@ def validate_output_structure(output_dir: Path, *, require_pdf: bool = True) -> 
 
     if require_pdf and project_name:
         pdf_result = _find_combined_pdf(output_dir, project_name)
-        if pdf_result:
+        pdf_is_stable = bool(pdf_result and pdf_result[0].absolute() in current.files)
+        if pdf_result and not pdf_is_stable and inventory is None:
+            candidate = pdf_result[0].absolute()
+            try:
+                candidate.relative_to(output_dir.absolute())
+            except ValueError:
+                # Legacy pre-copy validation may resolve the canonical PDF from
+                # ``projects/<qualified>/output/pdf``. Admit that fallback only
+                # when it belongs to its own stable inventory; a Git-ignored
+                # source PDF must not satisfy the copied-output contract.
+                source_output = candidate.parent.parent
+                source_inventory = collect_stable_output_inventory(
+                    source_output,
+                    inventory_mode=inventory_mode,
+                )
+                result["issues"].extend(source_inventory.issues)
+                pdf_is_stable = not source_inventory.issues and candidate in source_inventory.files
+        if pdf_result and pdf_is_stable:
             pdf_file, pdf_size_mb = pdf_result
             combined_pdf_found = True
             size_bytes = int(pdf_size_mb * 1024 * 1024)
@@ -484,35 +607,45 @@ def validate_output_structure(output_dir: Path, *, require_pdf: bool = True) -> 
         }
         if require_pdf:
             result["valid"] = False
+            result["issues"].append("Missing required combined PDF")
 
-    for subdir_name in OUTPUT_SUBDIR_NAMES:
-        subdir = output_dir / subdir_name
+    category_names = (*OUTPUT_SUBDIR_NAMES, *sorted(set(files_by_subdir) - set(OUTPUT_SUBDIR_NAMES)))
+    for subdir_name in category_names:
+        files = files_by_subdir[subdir_name]
 
-        if subdir.exists():
-            files = list(subdir.glob("**/*"))
-            file_count = len([f for f in files if f.is_file()])
-            total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
+        if files:
+            file_count = len(files)
+            total_size_mb = sum(f.stat().st_size for f in files) / (1024 * 1024)
 
             result["directory_structure"][subdir_name] = {
                 "exists": True,
                 "files": file_count,
                 "size_mb": round(total_size_mb, 2),
-                "readable": subdir.is_dir(),
+                "readable": all(f.is_file() for f in files),
                 "optional": subdir_name in OPTIONAL_OUTPUT_SUBDIRS,
+                "required": _stable_category_required(
+                    subdir_name,
+                    enabled_formats,
+                    require_pdf=require_pdf,
+                ),
             }
-
-            # Only flag empty directories as suspicious if not optional
-            if file_count == 0 and subdir_name not in OPTIONAL_OUTPUT_SUBDIRS:
-                result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty")
         else:
+            required = _stable_category_required(
+                subdir_name,
+                enabled_formats,
+                require_pdf=require_pdf,
+            )
             result["directory_structure"][subdir_name] = {
                 "exists": False,
                 "files": 0,
                 "size_mb": 0.0,
                 "optional": subdir_name in OPTIONAL_OUTPUT_SUBDIRS,
+                "required": required,
             }
-            # Only add issue for required directories
-            if subdir_name not in OPTIONAL_OUTPUT_SUBDIRS:
-                result["issues"].append(f"Missing directory: {subdir_name}/")
+            # Physical absence, an empty directory, and a directory containing
+            # only ignored runtime files are deliberately the same stable
+            # publication state.
+            if required:
+                result["suspicious_sizes"].append(f"{subdir_name}/ directory is empty of stable publication artifacts")
 
     return result

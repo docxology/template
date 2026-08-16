@@ -406,6 +406,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         try:
             from infrastructure.core.pipeline.artifacts import (
                 aggregate_artifact_manifests,
+                output_inventory_mode_for_project,
                 write_stage_artifact_manifest,
             )
 
@@ -416,7 +417,13 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
                 stage_name=stage_spec.name,
                 contract=stage_spec.contract,
             )
-            aggregate_artifact_manifests(self.config.project_dir / "output")
+            aggregate_artifact_manifests(
+                self.config.project_dir / "output",
+                inventory_mode=output_inventory_mode_for_project(
+                    self.config.repo_root,
+                    self.config.project_dir,
+                ),
+            )
         except (OSError, ValueError) as exc:
             logger.warning(f"Failed to write artifact manifest: {exc}")
 
@@ -452,9 +459,18 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
         # post-validation rewrite of an older manifest.
         self._artifact_manifest_sealed = True
         try:
-            from infrastructure.core.pipeline.artifacts import aggregate_artifact_manifests
+            from infrastructure.core.pipeline.artifacts import (
+                aggregate_artifact_manifests,
+                output_inventory_mode_for_project,
+            )
 
-            aggregate_artifact_manifests(self.config.project_dir / "output")
+            aggregate_artifact_manifests(
+                self.config.project_dir / "output",
+                inventory_mode=output_inventory_mode_for_project(
+                    self.config.repo_root,
+                    self.config.project_dir,
+                ),
+            )
         except (OSError, ValueError) as exc:
             logger.warning(f"Failed to finalize artifact manifest before validation: {exc}")
 

@@ -4,14 +4,21 @@ from __future__ import annotations
 
 import re
 
+# Pandoc frame titles can wrap across source lines and contain nested formatting
+# such as ``\texttt{...}`` or ``\texorpdfstring{...}{...}``. A lazy ``.*?``
+# stops at the first inner closing brace and turns the remainder of the title
+# into frame content when dense frames are split. Match the bounded nesting
+# Pandoc emits so every continuation frame receives the complete title.
+_FRAME_TITLE_RE = r"\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}"
 _FRAME_RE = re.compile(
-    r"(?P<open>\\begin\{frame\}(?:\[[^\]]*\])?(?:\{.*?\})?\n)"
+    rf"(?P<open>\\begin\{{frame\}}(?:\[[^\]]*\])?(?:{_FRAME_TITLE_RE})?\n)"
     r"(?P<body>.*?)"
     r"(?P<close>\\end\{frame\})",
     re.DOTALL,
 )
 _ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
 _ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
+_TEX_GROUP_RE = re.compile(r"\\(?P<kind>begin|end)group\b")
 _ISOLATE_SLIDE_ENVS = frozenset({"codelisting", "description", "enumerate", "figure", "itemize", "longtable", "table"})
 _FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
 
@@ -56,9 +63,11 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
     isolate_ended = False
     table_wrapper_open = False
     brace_depth = 0
+    tex_group_depth = 0
 
     for index, line in enumerate(source_lines):
         stripped = line.strip()
+        tex_group_delta = sum(1 if match.group("kind") == "begin" else -1 for match in _TEX_GROUP_RE.finditer(stripped))
         events = sorted(
             [
                 *(("begin", match) for match in _ENV_BEGIN_RE.finditer(stripped)),
@@ -86,6 +95,8 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
                         and name in _ISOLATE_SLIDE_ENVS
                         and segment_has_content
                         and not table_wrapper_open
+                        and tex_group_depth == 0
+                        and tex_group_delta <= 0
                     ):
                         _append_framebreak(output)
                         segment_length = 0
@@ -100,10 +111,12 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
                         segment_length = 0
                         segment_has_content = False
             output.append(line)
+            tex_group_depth = max(0, tex_group_depth + tex_group_delta)
             continue
 
         if (
             not environment_stack
+            and tex_group_depth == 0
             and stripped
             and isolate_ended
             and not stripped.startswith(r"\end{frame}")
@@ -135,12 +148,14 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
             segment_length += len(line)
             segment_has_content = True
             brace_depth += _brace_delta(line)
+            tex_group_depth = max(0, tex_group_depth + tex_group_delta)
             next_nonempty = next(
                 (candidate.strip() for candidate in source_lines[index + 1 :] if candidate.strip()),
                 "",
             )
             safe_line_boundary = (
                 brace_depth == 0
+                and tex_group_depth == 0
                 and bool(next_nonempty)
                 and not stripped.endswith((r"\\", "&"))
                 and not stripped.startswith((r"\label", r"\caption"))
@@ -160,6 +175,7 @@ def _split_frame_body(body: str, *, paragraph_threshold: int = 900) -> str:
         )
         if (
             segment_length >= (paragraph_threshold // 2)
+            and tex_group_depth == 0
             and next_nonempty
             and not next_nonempty.startswith(r"\end{frame}")
         ):

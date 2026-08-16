@@ -117,10 +117,9 @@ project_config:
     worked_chapter_read_minutes: 40
     default_lab_minutes: 60
     extended_case_study_lab_minutes: 75
-
-evidence:
-  numeric_fact_registry: data/numeric_facts.yaml
-  diagram_specs: src/mermaid/diagram_specs.yaml
+  evidence:
+    numeric_fact_registry: data/numeric_facts.yaml
+    diagram_specs: src/mermaid/diagram_specs.yaml
 
 # Four parts, three chapters each — the canonical shape. Rename ids, labels,
 # directories, and chapter files to your own; run scripts/scaffold_chapter.py

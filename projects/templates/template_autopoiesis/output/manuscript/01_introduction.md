@@ -185,7 +185,7 @@ domain-specific research claim is being made here. This template covers the
 - graph
 
 The grammar seed `42` is the single source of randomness for
-every selection made during expansion; the grammar hash `f84a8f9dbcb18e37`
+every selection made during expansion; the grammar hash `a1f3e428cf1fb3e3`
 is the fingerprint of the grammar itself. Two runs of this manuscript's
 pipeline that share both values are required, by construction, to select
 identically — a requirement enforced by the property tests, not merely

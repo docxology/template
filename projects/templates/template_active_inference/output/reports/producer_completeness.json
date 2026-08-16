@@ -293,7 +293,7 @@
       "artifact": "output/figures/figure_registry.json",
       "configured": true,
       "exists": true,
-      "producer": "generate_figures.py"
+      "producer": "z_generate_manuscript_variables.py"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",

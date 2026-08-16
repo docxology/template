@@ -84,6 +84,7 @@ def _fingerprint(root: Path) -> str:
         "output/reports/release_bundle_manifest.json",
         "output/data/sheaf_section_status_matrix.json",
         "output/reports/sheaf_render_log.json",
+        "output/figures/figure_registry.json",
         "output/figures/si_belief_trajectory.gif",
         "output/data/animation_frame_deltas.json",
         *CANONICAL_ARTIFACTS.values(),
@@ -109,6 +110,20 @@ def _validate_fixed_point(root: Path) -> list[str]:
     issues.extend(validate_integration_audit_artifacts(root))
     issues.extend(validate_semantic_gluing(root))
     issues.extend(validate_sheaf_track_artifacts(root))
+    variables_path = root / "output" / "data" / "manuscript_variables.json"
+    try:
+        from json_io import load_json_strict
+
+        variables = load_json_strict(variables_path)
+    except ValueError as exc:
+        issues.append(str(exc))
+    else:
+        if not variables:
+            issues.append("missing canonical manuscript variables for figure registry hydration")
+        else:
+            from visualizations.figure_registry import validate_figure_registry_json
+
+            issues.extend(validate_figure_registry_json(root, variables))
     return issues
 
 
@@ -136,6 +151,7 @@ def _existing_fixed_point_paths(root: Path) -> dict[str, Path]:
         "animation_deltas": "output/data/animation_frame_deltas.json",
         "variables": "output/data/manuscript_variables.json",
         "resolved_manuscript": "output/manuscript",
+        "figure_registry": "output/figures/figure_registry.json",
         "staleness": "output/reports/manuscript_staleness_report.json",
         "crosswalk": "output/data/sheaf_evidence_crosswalk.json",
         "certificate": "output/data/sheaf_gluing_certificate.json",

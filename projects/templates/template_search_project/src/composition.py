@@ -77,6 +77,48 @@ def _format_locator(paper: dict) -> str:
     return "—"
 
 
+def _reported_retrieval_sources(
+    deep_dir: Path,
+    keywords: list[str],
+    configured_sources: list[str],
+    unique_papers: list[dict],
+) -> list[str]:
+    """Return deterministic source labels from the evidence being composed.
+
+    A replay may be composed while live deep search is disabled and therefore
+    has no currently configured sources.  Prefer the per-keyword retrieval
+    counts in that replay, then fall back to configuration and per-paper
+    provenance.  Empty labels are never admitted.
+    """
+    observed: dict[str, str] = {}
+
+    def record(source: object) -> None:
+        if not isinstance(source, str) or not (label := source.strip()):
+            return
+        observed.setdefault(label.casefold(), label)
+
+    for keyword in keywords:
+        slug = re.sub(r"[^A-Za-z0-9]+", "_", keyword.strip().lower()).strip("_") or "keyword"
+        papers_path = deep_dir / slug / "papers.json"
+        if not papers_path.exists():
+            continue
+        keyword_payload = json.loads(papers_path.read_text(encoding="utf-8"))
+        per_source_counts = keyword_payload.get("per_source_counts") or {}
+        if isinstance(per_source_counts, dict):
+            for source, count in per_source_counts.items():
+                if count:
+                    record(source)
+
+    if not observed:
+        for source in configured_sources:
+            record(source)
+    if not observed:
+        for paper in unique_papers:
+            record(paper.get("source"))
+
+    return [observed[key] for key in sorted(observed)]
+
+
 def compose_literature_review(
     project_root: Path,
     config: ProjectConfig,
@@ -102,6 +144,17 @@ def compose_literature_review(
     keywords: list[str] = list(payload.get("keywords") or [])
     unique_papers: list[dict] = list(payload.get("unique_papers") or [])
     citation_keys: dict[str, str] = dict(payload.get("citation_keys") or {})
+    retrieval_sources = _reported_retrieval_sources(
+        deep_dir,
+        keywords,
+        config.deep_search.sources,
+        unique_papers,
+    )
+    retrieval_source_clause = (
+        f" from {', '.join(retrieval_sources)}"
+        if retrieval_sources
+        else "; sources were not declared in the replay artifacts"
+    )
 
     # Validate every cited key exists in the unified BibTeX file.
     bib_path = (project_root / config.deep_search.unified_bibtex_path).resolve()
@@ -150,7 +203,7 @@ def compose_literature_review(
         f"This review covers **{len(keywords)} keyword(s)**, "
         f"**{len(unique_papers)} unique paper(s)** "
         f"(retrieved at up to {config.deep_search.max_results_per_keyword} per "
-        f"keyword from {', '.join(config.deep_search.sources)}). All references "
+        f"keyword{retrieval_source_clause}). All references "
         f"are stored in `{config.deep_search.unified_bibtex_path}` and resolved "
         f"by the combined-PDF pipeline (Pandoc `--natbib` + BibTeX over "
         f"all `manuscript/*.bib` files)."
@@ -268,6 +321,7 @@ def compose_literature_review(
         "bibtex_path": str(bib_path).replace(str(project_root.resolve()), "<repo-root>"),
         "bibtex_keys": len(bib_keys),
         "missing_citation_keys": missing_keys,
+        "retrieval_sources": retrieval_sources,
     }
     summary_path = deep_dir / "composition_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")

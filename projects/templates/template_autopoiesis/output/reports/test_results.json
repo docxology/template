@@ -1,29 +1,216 @@
 {
-  "timestamp": "2026-08-09T05:05:36.730232",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 511,
+    "passed": 528,
     "failed": 0,
-    "skipped": 1,
-    "total": 512,
+    "skipped": 0,
+    "total": 528,
     "warnings": 2,
     "exit_code": 0,
-    "discovery_count": 512,
+    "discovery_count": 528,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 10.0,
-      "execution": 10.0
+      "setup": 9.63,
+      "collection": 9.63,
+      "execution": 9.63
     },
     "test_categories": {},
-    "coverage_percent": 97.84,
+    "coverage_percent": 97.03196347031964,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 511,
+    "total_passed": 528,
     "total_failed": 0,
-    "total_skipped": 1,
-    "total_tests": 512,
+    "total_skipped": 0,
+    "total_tests": 528,
     "all_passed": true,
-    "project_coverage": 97.84
+    "project_coverage": 97.03196347031964
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 97.03196347031964,
+      "total_executed": 1275,
+      "total_missing": 39,
+      "total_excluded": 2,
+      "total_lines": 1314,
+      "file_coverage": {
+        "src/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 0,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 0
+        },
+        "src/cli.py": {
+          "coverage_percent": 95.18072289156626,
+          "executed_lines": 79,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 83
+        },
+        "src/common.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 23,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 23
+        },
+        "src/cover_art.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 105,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 105
+        },
+        "src/emit_templates.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 29,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 29
+        },
+        "src/expand.py": {
+          "coverage_percent": 97.72727272727273,
+          "executed_lines": 86,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 88
+        },
+        "src/figures.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 47,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 47
+        },
+        "src/grammar.py": {
+          "coverage_percent": 94.96402877697842,
+          "executed_lines": 132,
+          "missing_lines": 7,
+          "excluded_lines": 0,
+          "total_lines": 139
+        },
+        "src/honesty.py": {
+          "coverage_percent": 94.64285714285714,
+          "executed_lines": 53,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 56
+        },
+        "src/integrity.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 24,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 24
+        },
+        "src/manuscript_contract.py": {
+          "coverage_percent": 83.78378378378379,
+          "executed_lines": 31,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 37
+        },
+        "src/manuscript_figures.py": {
+          "coverage_percent": 99.07407407407408,
+          "executed_lines": 107,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 108
+        },
+        "src/manuscript_variables.py": {
+          "coverage_percent": 93.90243902439025,
+          "executed_lines": 77,
+          "missing_lines": 5,
+          "excluded_lines": 0,
+          "total_lines": 82
+        },
+        "src/materialize.py": {
+          "coverage_percent": 97.3913043478261,
+          "executed_lines": 112,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 115
+        },
+        "src/primitives/__init__.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 6,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 6
+        },
+        "src/primitives/base.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 13,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 13
+        },
+        "src/primitives/dynamics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "src/primitives/graph.py": {
+          "coverage_percent": 97.95918367346938,
+          "executed_lines": 48,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 49
+        },
+        "src/primitives/optimization.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 34,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 34
+        },
+        "src/primitives/signal.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 27,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 27
+        },
+        "src/primitives/statistics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 27,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 27
+        },
+        "src/project_paths.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 8,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 8
+        },
+        "src/realize.py": {
+          "coverage_percent": 90.9090909090909,
+          "executed_lines": 50,
+          "missing_lines": 5,
+          "excluded_lines": 0,
+          "total_lines": 55
+        },
+        "src/sealing.py": {
+          "coverage_percent": 98.4375,
+          "executed_lines": 63,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 64
+        },
+        "src/verify.py": {
+          "coverage_percent": 98.50746268656717,
+          "executed_lines": 66,
+          "missing_lines": 1,
+          "excluded_lines": 2,
+          "total_lines": 67
+        }
+      }
+    }
   }
 }

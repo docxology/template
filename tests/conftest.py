@@ -2,6 +2,8 @@
 
 This file:
 - Forces headless matplotlib (MPLBACKEND=Agg)
+- Disables Git fsmonitor for child processes that create temporary repositories
+- Disables optional Git index writes for child processes that inspect repositories
 - Inserts repository roots (infrastructure/, project/src/) ahead of tests/ to avoid shadowing
 - Keeps imports consistent for both infrastructure and project test suites
 - Provides credential fixtures for external service testing
@@ -15,6 +17,24 @@ import pytest
 
 # Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
+
+# A user-level ``core.fsmonitor=true`` makes every temporary Git repository in
+# the infrastructure suite start a detached fsmonitor daemon. Those daemons can
+# outlive ``tmp_path`` cleanup and accumulate across xdist workers. Keep the
+# override process-local: Git child processes inherit it, while production and
+# the user's persistent Git configuration remain untouched. Command-scope
+# parameters take precedence over repository and global configuration.
+_GIT_FSMONITOR_PARAMETER = "'core.fsmonitor'='false'"
+_git_config_parameters = os.environ.get("GIT_CONFIG_PARAMETERS", "").strip()
+if not _git_config_parameters.endswith(_GIT_FSMONITOR_PARAMETER):
+    os.environ["GIT_CONFIG_PARAMETERS"] = " ".join(
+        parameter for parameter in (_git_config_parameters, _GIT_FSMONITOR_PARAMETER) if parameter
+    )
+
+# Read-only commands such as ``git status`` normally refresh cached index stat
+# data behind ``.git/index.lock``. Test workers only need the result, not that
+# optional cache write; mandatory operations such as add/commit remain enabled.
+os.environ["GIT_OPTIONAL_LOCKS"] = "0"
 
 # Add paths for imports
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

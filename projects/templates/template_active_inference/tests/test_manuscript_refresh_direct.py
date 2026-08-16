@@ -34,13 +34,17 @@ def copied_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
 @pytest.mark.slow
 @pytest.mark.timeout(600)
 def test_refresh_manuscript_pipeline_pre_compose_writes_all_artifacts(copied_root: Path) -> None:
+    registry_path = copied_root / "output" / "figures" / "figure_registry.json"
+    registry_path.unlink(missing_ok=True)
     paths = refresh_manuscript_pipeline(
         copied_root, require_analysis_outputs=False, phase=ManuscriptRefreshPhase.PRE_COMPOSE
     )
-    assert set(paths) == {"variables", "resolved_manuscript", "staleness"}
+    assert set(paths) == {"variables", "resolved_manuscript", "figure_registry", "staleness"}
     variables = json.loads(paths["variables"].read_text(encoding="utf-8"))
     assert variables, "hydrated manuscript variables must be non-empty"
     assert paths["resolved_manuscript"].exists()
+    registry_text = paths["figure_registry"].read_text(encoding="utf-8")
+    assert "{{" not in registry_text
     staleness = json.loads(paths["staleness"].read_text(encoding="utf-8"))
     assert staleness, "staleness report must be non-empty"
 
@@ -68,7 +72,7 @@ def test_refresh_manuscript_pipeline_post_compose_skips_pre_write(copied_root: P
 @pytest.mark.timeout(600)
 def test_settle_manuscript_artifacts_is_pre_compose(copied_root: Path) -> None:
     paths = settle_manuscript_artifacts(copied_root)
-    assert set(paths) == {"variables", "resolved_manuscript", "staleness"}
+    assert set(paths) == {"variables", "resolved_manuscript", "figure_registry", "staleness"}
     assert all(path.exists() for path in paths.values())
 
 

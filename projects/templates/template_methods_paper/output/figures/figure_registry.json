@@ -4,7 +4,10 @@
       "caption": "Step counts for each deterministically compiled example method.",
       "filename": "step_counts.png",
       "generated_by": "scripts.methods_analysis.run_methods_analysis",
-      "label": "fig:step_counts"
+      "label": "fig:step_counts",
+      "metadata": {
+        "alt_text": "Two vertical bars compare the compiled step counts for PBS preparation and sensor calibration; the sensor-calibration plan contains the taller bar."
+      }
     }
   ],
   "schema_version": "template-methods-paper-figure-registry-v1"

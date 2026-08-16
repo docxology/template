@@ -197,6 +197,18 @@ def test_manuscript_citations_resolve_to_bibliography() -> None:
     assert "friston2010free" not in bibliography_keys
 
 
+def test_committed_referenced_figures_have_explicit_alt_text() -> None:
+    from infrastructure.validation.content.figure_validator import validate_figure_registry
+
+    valid, issues = validate_figure_registry(
+        PROJECT_ROOT / "output" / "figures" / "figure_registry.json",
+        MANUSCRIPT_ROOT,
+        require_accessibility=True,
+    )
+
+    assert valid, "\n".join(issues)
+
+
 def test_fixture_honesty_detects_empirical_language(tmp_path: Path) -> None:
     from literature.fixture_honesty import (
         validate_fixture_honesty,

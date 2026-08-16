@@ -28,8 +28,8 @@ Across 5 heterogeneous primitive domains
 - dynamics
 - statistics
 - signal
-- graph), 493 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 96.28% branch
+- graph), 528 tests exercise both fixed ground-truth
+checks and Hypothesis-driven property invariants at 95.33% branch
 coverage, with an explicit negative control per domain distinguishing the
 real kernel from a deliberately-wrong one.
 
@@ -60,8 +60,8 @@ flowchart TB
 - **Effective product size**: 45
 - **Total product size**: 360
 - **Reserved slots**: 3 (`figure_profile, qr_profile, integrity_profile`)
-- **Grammar hash**: `f84a8f9dbcb18e37`
-- **Tests**: 493 · **Coverage**: 96.28%
+- **Grammar hash**: `a1f3e428cf1fb3e3`
+- **Tests**: 528 · **Coverage**: 95.33%
 
 
 
@@ -256,7 +256,7 @@ domain-specific research claim is being made here. This template covers the
 - graph
 
 The grammar seed `42` is the single source of randomness for
-every selection made during expansion; the grammar hash `f84a8f9dbcb18e37`
+every selection made during expansion; the grammar hash `a1f3e428cf1fb3e3`
 is the fingerprint of the grammar itself. Two runs of this manuscript's
 pipeline that share both values are required, by construction, to select
 identically — a requirement enforced by the property tests, not merely
@@ -582,7 +582,7 @@ honesty discipline the project asks of its own manuscript elsewhere.
 | integrity_profile | 2 | sha256, merkle |
 
 
-![Options per grammar slot, stacked. Each band is one slot's contribution to the total product size; three bands are reserved (presentational/sealing) and are excluded from the effective product space discussed below.](../figures/fig_stacked_product.png){#fig:stacked_product width=85% fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."}
+![Options per effective grammar slot, stacked. Each band is one of the three content-determining slots; reserved presentation and sealing slots are intentionally omitted from this figure.](../figures/fig_stacked_product.png){#fig:stacked_product width=85% fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."}
 
 - **Total product size**: 360 cells
 - **Effective product size** (reserved slots excluded): 45 cells
@@ -596,7 +596,7 @@ factor to `Grammar.product_size`, which is the raw cross-product of all option
 counts — not an estimate, but the literal `n *= len(s.options)` accumulation
 over every slot. The `Grammar.grammar_hash` property serialises the seed, every
 slot name, and every option list into a canonical JSON string (`canonical()`)
-and takes the first sixteen hex characters of its SHA-256 digest — `f84a8f9dbcb18e37`
+and takes the first sixteen hex characters of its SHA-256 digest — `a1f3e428cf1fb3e3`
 for the grammar as currently checked into this project. Any edit to a slot's
 option list, the addition or removal of a slot, or a change to the seed changes
 this hash deterministically; it is not a version string maintained by hand.
@@ -665,7 +665,8 @@ convex quadratic, its analytic minimiser is known in closed form — `x* = c`,
 computed independently by the sibling kernel `analytic_minimizer` — so the
 iterative and closed-form solutions can be cross-checked against each other
 rather than against a single hardcoded expectation. On the example input (a
-diagonal `A`, `c = (1, -1)`, 200 steps at learning rate 0.1) the two agree to
+diagonal `A`, `c = (1, -1)`, 200 steps at learning
+rate 0.1) the two agree to
 within `1e-4`. The domain's negative control, `_negative_control_wrong_sign`,
 is the same loop with the gradient step's sign flipped (`x = x + lr * grad`
 instead of `x = x - lr * grad`); this turns descent into ascent and diverges
@@ -771,9 +772,9 @@ Each child project:
 
 ### Test results
 
-- **Test count**: 493
-- **Coverage**: 96.28%
-- **Grammar hash**: `f84a8f9dbcb18e37`
+- **Test count**: 528
+- **Coverage**: 95.33%
+- **Grammar hash**: `a1f3e428cf1fb3e3`
 
 Both the test count and coverage percentage above are produced by
 `measure_test_summary()` (`src/manuscript_variables.py`), which shells out to
@@ -785,9 +786,9 @@ or its output fails to parse, both fields resolve to the string `"pending"`
 rather than a plausible-looking number — the same discipline that governs
 every other numeric token in this manuscript.
 
-![Real, per-module branch coverage from the same measurement run that produces 493/96.28 above — not an aggregate alone. Any module below the repository's 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."}
+![Real, per-module branch coverage from the same measurement run that produces 528/95.33 above — not an aggregate alone. Any module below the repository's 90% floor would be drawn in red rather than smoothed into the headline percentage; none is, in this measurement.](../figures/fig_coverage_by_module.png){#fig:coverage_by_module width=90% fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."}
 
-The aggregate 96.28% is a mean weighted by statement and branch
+The aggregate 95.33% is a mean weighted by statement and branch
 count, not a uniform floor — [@fig:coverage_by_module] shows the real spread.
 As of this measurement every module clears the configured 90% line. The exact
 module values are deliberately read from [@fig:coverage_by_module], rather
@@ -816,7 +817,7 @@ obvious temptation: assert a capability in prose without checking whether the
 capability exists.  The abstract of this manuscript survived exactly this
 failure once — a hand-written test-count and coverage line that no
 generator step had computed — and was corrected by replacing the literal
-numbers with `493` / `96.28` tokens filled in at render
+numbers with `528` / `95.33` tokens filled in at render
 time by `scripts/02_measure_test_coverage.py`.  `src/honesty.py` exists to
 make that class of failure structurally harder: every load-bearing claim in
 this manuscript must resolve to a named function in a named file, and a
@@ -939,7 +940,7 @@ Two honesty points about this scanner, stated plainly rather than left
 implicit. First, it is a fixed lexical denylist, not a semantic checker — it
 will not catch a false quantitative claim phrased without one of those seven
 tokens (the stale test-count incident described above would not have tripped it;
-that failure mode is closed instead by the `493` token
+that failure mode is closed instead by the `528` token
 substitution, a separate mechanism). Second, `unsupported_claims` *is*
 enforced, but only on one of the two paths through this module:
 `HonestyManifest.all_passed` is a conjunction over `evidence`,
@@ -1036,8 +1037,8 @@ silently diverging from the source code that is supposed to back them.
 
 Reproducibility is not a claim this manuscript makes about itself; it is a
 property the code enforces on every run. Every number that appears below the
-Determinism heading — f84a8f9dbcb18e37, 42, 493,
-96.28 — is a token substituted at render time by
+Determinism heading — a1f3e428cf1fb3e3, 42, 528,
+95.33 — is a token substituted at render time by
 `src/manuscript_variables.py::generate_variables()` from a live grammar load
 and a live pytest run (`src/manuscript_variables.py::measure_test_summary()`).
 Neither function accepts a hardcoded literal as a fallback: if the subprocess
@@ -1053,7 +1054,7 @@ this manuscript is permitted to assert.
 ### Determinism guarantee
 
 Given the same `manuscript/config.yaml` grammar definition (grammar hash
-`f84a8f9dbcb18e37`), the same seed (`42`), and the same
+`a1f3e428cf1fb3e3`), the same seed (`42`), and the same
 `template_autopoiesis` source tree, `scripts/autopoiesis.py expand` produces
 byte-identical selections on every invocation, and `materialize` produces a
 byte-identical child project tree. The determinism chain has three concrete
@@ -1145,8 +1146,8 @@ hashes into one summary digest, and the project does not conflate them:
   itself carries no positional structure.
 - **`merkle_root()`** builds a binary Merkle tree
   [@merkle_tree_provenance] over an *ordered* list of hex digests: each level
-  pairwise-concatenates adjacent nodes and hashes the concatenation, promoting
-  an unpaired trailing node unchanged to the next level, until one root
+  pairwise-concatenates adjacent nodes and hashes the concatenation, duplicating
+  an unpaired trailing node before hashing it with itself, until one root
   remains (the empty list is defined as the SHA-256 of the empty string,
   not a magic sentinel). Because the tree is addressable node-by-node, a
   Merkle profile supports proving that one specific file's hash is part of the
@@ -1237,9 +1238,9 @@ uv run pytest projects/templates/template_autopoiesis/tests/ \
 This is the same command family `measure_test_summary()` runs internally
 (with `--cov-branch` added explicitly, matching the repo-root
 `pyproject.toml`'s `branch = true` setting rather than this project's own,
-so the reported 96.28 agrees with the authoritative CI gate
+so the reported 95.33 agrees with the authoritative CI gate
 methodology rather than silently using a different one) to produce the
-493 and 96.28 tokens substituted above — the same
+528 and 95.33 tokens substituted above — the same
 build, not a paraphrase of it, is the source of both this document's prose
 and its own regeneration.
 
@@ -1253,7 +1254,7 @@ and its own regeneration.
 
 This section states what the exemplar does *not* do, alongside what it does.
 Coverage and test-count figures are not restated as literal numbers here —
-those live only in the `493` / `96.28` tokens, resolved
+those live only in the `528` / `95.33` tokens, resolved
 at render time from a live measurement
 (`src/manuscript_variables.py::measure_test_summary`), not hand-typed.
 
@@ -1359,7 +1360,7 @@ malformed-JSON `except` branches are not independently exercised; `cli.py`'s
 library functions they wrap are covered elsewhere in `test_materialize.py`
 and `test_integrity_and_verify.py`; `honesty.py` itself sits closest to the
 floor at just above 90%. None of these pull the aggregate below the 90%
-floor (`--cov-fail-under=90`), and the aggregate 96.28 alone would
+floor (`--cov-fail-under=90`), and the aggregate 95.33 alone would
 obscure exactly where the remaining, smaller gaps live — which is the reason
 this section, and [@fig:coverage_by_module], exist as a per-module view
 rather than trusting one headline number. Property-based tests
@@ -1388,7 +1389,7 @@ draws all three elements unconditionally except the QR seal, which is drawn
 whenever `grammar_hash` is not `None` — the shipped `paper.cover.image`
 (`../figures/cover_art.png`) is generated by exactly this call, so the
 rendered title page carries a real gradient glow, real seed-derived dot
-scatter, and a real QR-style pixel grid encoding `f84a8f9dbcb18e37` with the
+scatter, and a real QR-style pixel grid encoding `a1f3e428cf1fb3e3` with the
 hash printed as a text label beneath it. An earlier draft of this section
 also noted that no test called `render_cover` with an explicit
 `grammar_hash=`, leaving the QR-drawing branch (`src/cover_art.py`, the `if

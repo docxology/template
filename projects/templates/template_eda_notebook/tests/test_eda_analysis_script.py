@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -22,6 +23,15 @@ def _load_script_module():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _current_specs(module):
+    cleaned, _ = module.clean_dataset(module.load_dataset())
+    return module.eda_figure_specs_for_data(
+        module.histogram_data(cleaned, "height_cm", bins=10),
+        module.correlation_heatmap_data(cleaned),
+        module.group_count_data(cleaned),
+    )
 
 
 class TestEdaAnalysisScript:
@@ -69,6 +79,16 @@ class TestEdaAnalysisScript:
             "fig:height_histogram": "height_histogram.png",
         }
         assert all((registry.parent / record["filename"]).is_file() for record in payload["figures"])
+        records = {record["label"]: record for record in payload["figures"]}
+        references: set[str] = set()
+        for path in (_PROJECT_ROOT / "manuscript").glob("*.md"):
+            if path.name in {"AGENTS.md", "README.md"}:
+                continue
+            references.update(re.findall(r"\{#(fig:[A-Za-z0-9_:-]+)\}", path.read_text(encoding="utf-8")))
+        assert references == set(records)
+        assert all(records[label]["metadata"]["alt_text"].strip() for label in references)
+        expected_alt = {spec.label: spec.alt_text for spec in _current_specs(module)}
+        assert {label: records[label]["metadata"]["alt_text"] for label in references} == expected_alt
 
     def test_incomplete_figure_set_cannot_write_registry(self, tmp_path):
         module = _load_script_module()
@@ -79,7 +99,7 @@ class TestEdaAnalysisScript:
         with pytest.raises(ValueError, match="missing generated figure file"):
             module.write_generated_figure_registry(
                 bad_registry,
-                module.EDA_FIGURE_SPECS,
+                _current_specs(module),
                 [figures / "height_histogram.png", figures / "group_counts.png"],
                 schema_version=module.FIGURE_REGISTRY_SCHEMA,
             )
@@ -96,7 +116,7 @@ class TestEdaAnalysisScript:
         with pytest.raises(ValueError, match="generated figure path.*do not exist"):
             module.write_generated_figure_registry(
                 tmp_path / "negative" / "figure_registry.json",
-                module.EDA_FIGURE_SPECS,
+                _current_specs(module),
                 [
                     figures / "height_histogram.png",
                     figures / "group_counts.png",

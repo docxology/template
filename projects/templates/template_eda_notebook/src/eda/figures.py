@@ -8,7 +8,8 @@ contract and makes every preparer trivially testable without a display backend.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import math
+from dataclasses import dataclass, replace
 
 import numpy as np
 import pandas as pd
@@ -66,6 +67,7 @@ class EdaFigureSpec:
     filename: str
     caption: str
     generated_by: str
+    alt_text: str
 
 
 FIGURE_REGISTRY_SCHEMA = "template-eda-notebook-figure-registry-v1"
@@ -76,18 +78,30 @@ EDA_FIGURE_SPECS: tuple[EdaFigureSpec, ...] = (
         filename="height_histogram.png",
         caption="Height distribution computed from complete-case histogram bins.",
         generated_by="scripts.eda_analysis.run_eda",
+        alt_text=(
+            "Histogram whose bars encode complete-case counts by height bin; missing observations are excluded "
+            "and the display does not imply a fitted distribution."
+        ),
     ),
     EdaFigureSpec(
         label="fig:group_counts",
         filename="group_counts.png",
         caption="Complete-case row counts for each sorted study group.",
         generated_by="scripts.eda_analysis.run_eda",
+        alt_text=(
+            "Bar chart whose heights encode complete-case row counts for sorted study groups; counts describe "
+            "sample composition, not group effects."
+        ),
     ),
     EdaFigureSpec(
         label="fig:correlation_heatmap",
         filename="correlation_heatmap.png",
         caption="Pearson feature-correlation matrix rendered on a fixed minus-one-to-one scale.",
         generated_by="scripts.eda_analysis.run_eda",
+        alt_text=(
+            "Pearson feature-correlation matrix encoded on a fixed minus-one-to-one diverging color scale; "
+            "associations are descriptive and do not establish causation."
+        ),
     ),
 )
 _FIGURE_SPEC_BY_LABEL = {spec.label: spec for spec in EDA_FIGURE_SPECS}
@@ -99,6 +113,130 @@ def eda_figure_spec(label: str) -> EdaFigureSpec:
         return _FIGURE_SPEC_BY_LABEL[label]
     except KeyError as exc:
         raise KeyError(f"unknown EDA figure label: {label!r}") from exc
+
+
+def eda_figure_specs_for_data(
+    histogram: HistogramFigureData,
+    heatmap: CorrelationFigureData,
+    groups: GroupCountFigureData,
+) -> tuple[EdaFigureSpec, ...]:
+    """Bind figure alternate text to the plot-ready data rendered in one run.
+
+    The immutable specifications above carry only encoding and interpretation
+    boundaries. This builder injects run-specific values from the same three
+    objects the thin analysis script passes to matplotlib, preventing a copied
+    exemplar or changed input dataset from retaining stale fixture numbers.
+
+    Args:
+        histogram: Histogram bin edges and counts used for the height chart.
+        heatmap: Labels and Pearson values used for the correlation heatmap.
+        groups: Labels and counts used for the group-count chart.
+
+    Returns:
+        A complete specification tuple with data-derived alternate text.
+    """
+    alt_by_label = {
+        "fig:height_histogram": _histogram_alt_text(histogram),
+        "fig:correlation_heatmap": _correlation_alt_text(heatmap),
+        "fig:group_counts": _group_count_alt_text(groups),
+    }
+    return tuple(replace(spec, alt_text=alt_by_label[spec.label]) for spec in EDA_FIGURE_SPECS)
+
+
+def _histogram_alt_text(data: HistogramFigureData) -> str:
+    if len(data.edges) != len(data.counts) + 1:
+        raise ValueError(f"histogram edge/count mismatch: {len(data.edges)} edges for {len(data.counts)} counts")
+    if not data.counts:
+        return f"Empty histogram for {data.column}: no bins were supplied. No distribution can be described."
+
+    observations = sum(data.counts)
+    lower, upper = data.edges[0], data.edges[-1]
+    if observations == 0:
+        return (
+            f"{len(data.counts)}-bin histogram for {data.column} from {_format_number(lower)} to "
+            f"{_format_number(upper)} with every bar at zero because no non-missing observations were "
+            "available; no distribution can be inferred."
+        )
+
+    peak = max(data.counts)
+    peak_bins = [
+        f"{_format_number(data.edges[index])} to {_format_number(data.edges[index + 1])}"
+        for index, count in enumerate(data.counts)
+        if count == peak
+    ]
+    peak_description = ", ".join(peak_bins)
+    return (
+        f"{len(data.counts)}-bin histogram of {observations} non-missing {data.column} observations from "
+        f"{_format_number(lower)} to {_format_number(upper)}. The tallest bar count is {peak} in "
+        f"{peak_description}. Bars encode counts; missing values are excluded and no fitted distribution "
+        "is implied."
+    )
+
+
+def _correlation_alt_text(data: CorrelationFigureData) -> str:
+    size = len(data.labels)
+    if len(data.values) != size or any(len(row) != size for row in data.values):
+        shape = [len(row) for row in data.values]
+        raise ValueError(f"correlation matrix shape does not match {size} labels: row lengths {shape}")
+    if size == 0:
+        return (
+            "Empty Pearson correlation heatmap: no numeric features were available, so no associations "
+            "can be described."
+        )
+
+    pairs: list[str] = []
+    for row in range(size):
+        for column in range(row + 1, size):
+            value = data.values[row][column]
+            rendered = _format_number(value) if math.isfinite(value) else "undefined"
+            pairs.append(f"{data.labels[row]} with {data.labels[column]}: {rendered}")
+
+    diagonal = [data.values[index][index] for index in range(size)]
+    if all(math.isfinite(value) and math.isclose(value, 1.0, abs_tol=1e-12) for value in diagonal):
+        diagonal_description = "The diagonal is 1.00."
+    else:
+        values = [_format_number(value) if math.isfinite(value) else "undefined" for value in diagonal]
+        diagonal_description = f"Diagonal values are {', '.join(values)}."
+
+    if pairs:
+        pair_description = "Off-diagonal pairs are " + "; ".join(pairs) + "."
+    else:
+        pair_description = "There are no off-diagonal feature pairs."
+    return (
+        f"{size}-by-{size} Pearson correlation heatmap for {', '.join(data.labels)} on a fixed "
+        f"minus-one-to-one diverging scale. {diagonal_description} {pair_description} Correlations are "
+        "descriptive and do not establish causation."
+    )
+
+
+def _group_count_alt_text(data: GroupCountFigureData) -> str:
+    if len(data.labels) != len(data.counts):
+        raise ValueError(f"group label/count mismatch: {len(data.labels)} labels for {len(data.counts)} counts")
+    if not data.labels:
+        return (
+            "Empty group-count bar chart: no complete-case rows or group labels were available; no group "
+            "comparison can be made."
+        )
+
+    bars = "; ".join(f"{label}: {count}" for label, count in zip(data.labels, data.counts))
+    largest = max(data.counts)
+    smallest = min(data.counts)
+    largest_labels = [label for label, count in zip(data.labels, data.counts) if count == largest]
+    smallest_labels = [label for label, count in zip(data.labels, data.counts) if count == smallest]
+    return (
+        f"{len(data.labels)} bars encode complete-case row counts: {bars}. Largest count {largest} occurs "
+        f"for {', '.join(largest_labels)}; smallest count {smallest} occurs for {', '.join(smallest_labels)}. "
+        "These counts describe sample composition, not group effects."
+    )
+
+
+def _format_number(value: float) -> str:
+    """Format a plotted numeric value compactly without hiding non-finite data."""
+    if not math.isfinite(value):
+        return "undefined"
+    if math.isclose(value, 0.0, abs_tol=5e-13):
+        value = 0.0
+    return f"{value:.2f}"
 
 
 def histogram_data(frame: pd.DataFrame, column: str, bins: int = 10) -> HistogramFigureData:

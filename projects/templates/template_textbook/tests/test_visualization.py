@@ -9,7 +9,7 @@ from infrastructure.validation.content.figure_validator import validate_figure_r
 
 from textbook.config import iter_chapters, load_config
 from visualization import _scaffold, plots
-from visualization.registry import collect_figure_registry_entries, write_figure_registry
+from visualization.registry import FIGURE_ALT_TEXT, collect_figure_registry_entries, write_figure_registry
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -44,21 +44,45 @@ def test_placeholder_overview(tmp_path):
 def test_generate_chapter_placeholders_matches_config(tmp_path):
     config = load_config()
     paths = plots.generate_chapter_placeholders(tmp_path, config)
-    # One placeholder per enabled chapter — derive from config, not a literal.
+    # The legacy name retains one-file-per-chapter behavior while dispatching
+    # filled chapters to their bespoke renderers.
     assert len(paths) == len(iter_chapters(config))
+    assert "part_III_case_studies.png" in {path.name for path in paths}
     for path in paths:
         _png_is_nonempty(path)
+
+
+def test_generate_chapter_figures_uses_source_bound_case_study_plot(tmp_path):
+    paths = plots.generate_chapter_figures(tmp_path, load_config())
+
+    assert len(paths) == len(iter_chapters(load_config()))
+    case_study = next(path for path in paths if path.name == "part_III_case_studies.png")
+    _png_is_nonempty(case_study)
+    placeholder = plots.placeholder_overview("Case Studies", tmp_path / "control", "part_III_case_studies")
+    assert case_study.read_bytes() != placeholder.read_bytes()
+
+
+def test_case_study_figure_changes_when_source_measurement_changes(tmp_path):
+    source = PROJECT_ROOT / "manuscript" / "assets" / "data" / "sample_dataset.csv"
+    alternate = tmp_path / "alternate.csv"
+    alternate.write_text(source.read_text(encoding="utf-8").replace("5.10,0.30", "7.10,0.30"), encoding="utf-8")
+
+    canonical_plot = plots.plot_case_study_errorbars(tmp_path / "canonical", dataset_path=source)
+    alternate_plot = plots.plot_case_study_errorbars(tmp_path / "alternate", dataset_path=alternate)
+
+    assert canonical_plot.read_bytes() != alternate_plot.read_bytes()
 
 
 @pytest.mark.slow
 def test_generate_all_figures(tmp_path):
     worked = plots.generate_worked_figures(tmp_path)
     paths = plots.generate_all_figures(tmp_path)
-    # all figures = worked figures + one placeholder per enabled chapter.
+    # all figures = worked figures + one unique figure per enabled chapter.
     assert len(paths) == len(worked) + len(iter_chapters(load_config()))
     names = {p.name for p in paths}
     assert "logistic_growth.png" in names  # a worked figure
     assert "part_0_orientation.png" in names  # a chapter placeholder that is displayed
+    assert "part_III_case_studies.png" in names  # a bespoke, data-derived chapter figure
 
 
 def test_figure_registry_entries_match_manuscript_labels(tmp_path):
@@ -68,6 +92,22 @@ def test_figure_registry_entries_match_manuscript_labels(tmp_path):
     assert "fig:part_0_orientation" in labels
     assert "fig:gallery_line" in labels
     assert "fig:part_III_case_studies" in labels
+    assert labels <= set(FIGURE_ALT_TEXT)
+    assert all(entry.alt.strip() for entry in entries)
+
+
+def test_figure_registry_rejects_missing_explicit_alt_text(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "figures"
+    manuscript.mkdir()
+    figures.mkdir()
+    (manuscript / "chapter.md").write_text(
+        "![A caption is not an alt-text substitute.](../figures/unknown.png){#fig:unknown}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="Missing explicit alt-text specification.*fig:unknown"):
+        collect_figure_registry_entries(manuscript, figures)
 
 
 @pytest.mark.slow
@@ -78,11 +118,35 @@ def test_figure_registry_validates_manuscript_references(tmp_path):
     paths.extend(generate_gallery_figures(tmp_path / "gallery"))
     registry = write_figure_registry(PROJECT_ROOT / "manuscript", tmp_path)
 
-    ok, issues = validate_figure_registry(registry, PROJECT_ROOT / "manuscript")
+    ok, issues = validate_figure_registry(
+        registry,
+        PROJECT_ROOT / "manuscript",
+        require_accessibility=True,
+    )
 
     assert registry.exists()
     assert paths
     assert ok, issues
+
+
+def test_figure_registry_rejects_two_labels_claiming_one_filename(tmp_path):
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "figures"
+    manuscript.mkdir()
+    figures.mkdir()
+    (manuscript / "chapter.md").write_text(
+        "\n".join(
+            (
+                "![Bar.](../figures/shared.png){#fig:gallery_bar}",
+                "![Line.](../figures/shared.png){#fig:gallery_line}",
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="claimed by multiple labels"):
+        collect_figure_registry_entries(manuscript, figures)
 
 
 def test_scaffold_new_figure_and_save(tmp_path):

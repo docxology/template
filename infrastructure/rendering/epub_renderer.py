@@ -9,11 +9,14 @@ from __future__ import annotations
 import shutil
 import subprocess
 import time
+import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._epub_cover_accessibility import apply_epub_cover_accessibility
+from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._output_text import _process_output_text
 
 logger = get_logger(__name__)
@@ -45,6 +48,7 @@ def render_epub(
     *,
     bibliography: Path | None = None,
     cover_image: Path | None = None,
+    cover_alt: str | None = None,
     title: str | None = None,
     author: str | None = None,
     language: str = "en",
@@ -58,6 +62,9 @@ def render_epub(
         output_path: Target .epub path; parent created if missing.
         bibliography: Optional `.bib` file. When given, --citeproc is enabled.
         cover_image: Optional cover image path (passed via --epub-cover-image).
+        cover_alt: Source-owned alternative text for ``cover_image``. A cover
+            image is rejected when this is missing or blank because Pandoc's
+            generated SVG cover otherwise has no accessible name.
         title: Book title, passed via ``--metadata title=``. Without this
             (and without a ``title:`` YAML frontmatter field already in
             *combined_md*), pandoc emits an EPUB with no ``dc:title`` at
@@ -85,6 +92,9 @@ def render_epub(
         raise FileNotFoundError(f"Bibliography not found: {bibliography}")
     if cover_image is not None and not cover_image.is_file():
         raise FileNotFoundError(f"Cover image not found: {cover_image}")
+    normalized_cover_alt = " ".join((cover_alt or "").split())
+    if cover_image is not None and not normalized_cover_alt:
+        raise RenderingError("EPUB cover image requires non-empty cover_alt accessibility text")
     if shutil.which(pandoc_path) is None:
         raise RenderingError(f"pandoc binary not found: {pandoc_path}")
 
@@ -142,6 +152,17 @@ def render_epub(
     size = output_path.stat().st_size
     if size == 0:
         raise RenderingError(f"pandoc reported success but EPUB is empty: {output_path}")
+
+    try:
+        if cover_image is not None:
+            apply_epub_cover_accessibility(output_path, normalized_cover_alt)
+        with zipfile.ZipFile(output_path) as archive:
+            validate_epub_package(archive)
+    except (OSError, ValueError, zipfile.BadZipFile) as exc:
+        output_path.unlink(missing_ok=True)
+        raise RenderingError(f"pandoc EPUB package failed accessibility validation: {exc}") from exc
+
+    size = output_path.stat().st_size
 
     logger.info("  Generated EPUB: %s (%.1f KB, %.1fs)", output_path.name, size / 1024, duration)
     return EpubRenderResult(

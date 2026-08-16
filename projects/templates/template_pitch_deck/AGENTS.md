@@ -34,7 +34,7 @@ template_pitch_deck/
 │   └── paths.py                # repo-root discovery
 ├── scripts/
 │   ├── 10_audit_deck_content.py   # token + cliche audit (fails closed)
-│   ├── 15_generate_diagrams.py    # Mermaid → PNG ×3 (degrades gracefully without mmdc/Chrome)
+│   ├── 15_generate_diagrams.py    # Mermaid → PNG ×3 (required; fails closed without mmdc/Chrome)
 │   ├── 16_generate_charts.py      # matplotlib charts ×3 (bar/scatter/donut) — thin dispatcher over chart_rendering.py
 │   ├── 20_render_decks.py         # the six-artifact render (thin wrapper around render_orchestration.py)
 │   └── 30_audit_diligence.py      # citation-coverage audit (standalone; also runs inside render_orchestration.py itself)
@@ -115,6 +115,7 @@ not just the separate script.
 From the template repo root:
 
 ```bash
+export PATH="$PWD/node_modules/.bin:$PATH"
 uv run pytest projects/templates/template_pitch_deck/tests/ \
   --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90 -v
 uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py

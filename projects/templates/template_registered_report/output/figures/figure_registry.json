@@ -4,25 +4,37 @@
       "caption": "Registered analysis workflow and pre-results lock boundary.",
       "filename": "analysis_dag.png",
       "generated_by": "registered_report.figures.plot_analysis_dag",
-      "label": "fig:analysis_dag"
+      "label": "fig:analysis_dag",
+      "metadata": {
+        "alt_text": "6 ordered workflow boxes run from registration freeze through interpretation; a dashed results-revealed boundary separates 4 locked stages from the post-results stages."
+      }
     },
     {
       "caption": "Timeline of registered decisions and documented deviations.",
       "filename": "deviation_timeline.png",
       "generated_by": "registered_report.figures.plot_deviation_timeline",
-      "label": "fig:deviation_timeline"
+      "label": "fig:deviation_timeline",
+      "metadata": {
+        "alt_text": "A horizontal timeline contains 3 decision events: 1 registered, 2 documented deviation(s), and 0 undocumented deviation(s)."
+      }
     },
     {
       "caption": "Registered hypothesis-to-outcome-to-analysis mapping.",
       "filename": "hypothesis_map.png",
       "generated_by": "registered_report.figures.plot_hypothesis_map",
-      "label": "fig:hypothesis_map"
+      "label": "fig:hypothesis_map",
+      "metadata": {
+        "alt_text": "A four-column mapping contains 1 registered hypothesis row(s) (H1), linking each claim to its outcome, measure, and planned analysis."
+      }
     },
     {
       "caption": "Seeded permutation null distribution and observed registered statistic.",
       "filename": "permutation_result.png",
       "generated_by": "registered_report.figures.plot_permutation_result",
-      "label": "fig:permutation_result"
+      "label": "fig:permutation_result",
+      "metadata": {
+        "alt_text": "A histogram shows 2,000 seeded permutation differences; the observed treatment-control difference is 1.003, with two-sided p=0.0005, which crosses the registered alpha=0.050 threshold."
+      }
     }
   ],
   "schema_version": "template-registered-report-figure-registry-v1"

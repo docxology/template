@@ -26,13 +26,15 @@ from __future__ import annotations
 
 import logging
 import pathlib
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from .cover_figure import generate_cover_art
+from .cover_figure import generate_cover_art as generate_cover_art
 from .figure_support import (
     BG,
     BLUE,
     BLUE_LIGHT,
+    COVER_FIGURE_FILENAMES,
     GRID,
     NEUTRAL,
     NEUTRAL_LIGHT,
@@ -48,7 +50,7 @@ from .figure_support import (
 from .figure_support import (
     INTEGRATION_FIGURE_SPECS as _INTEGRATION_FIGURE_SPECS,
 )
-from .rule_hierarchy_figure import generate_rule_hierarchy
+from .rule_hierarchy_figure import generate_rule_hierarchy as generate_rule_hierarchy
 
 # Registry metadata is re-exported from this compatibility façade because the
 # figure publisher and downstream project scripts historically import the
@@ -98,7 +100,7 @@ def _resolve_output(
     output_dir: str | pathlib.Path | None,
     filename: str,
     *,
-    default_output_dir=_default_output_dir,
+    default_output_dir: Callable[[], pathlib.Path] = _default_output_dir,
 ) -> pathlib.Path:
     if output_dir is None:
         output_dir = default_output_dir()
@@ -123,7 +125,7 @@ def generate_architecture_overview(
     output_dir: str | pathlib.Path | None = None,
     filename: str = "architecture_overview.png",
     *,
-    default_output_dir=_default_output_dir,
+    default_output_dir: Callable[[], pathlib.Path] = _default_output_dir,
 ) -> pathlib.Path | None:
     """Generate a three-panel figure showing fonds → rules → tools architecture."""
     if not _MPL_AVAILABLE:
@@ -624,7 +626,14 @@ def generate_pipeline_flow(
         ("02_run_integration.py", "run_integration_demo() → JSON summary", TEAL),
         ("03_generate_manuscript.py", "Write manuscript_variables.json", BLUE),
         ("04_validate_strong_rules.py", "Semantic strong-rule evaluation", NEUTRAL_LIGHT),
-        ("05_generate_figures.py", "Render 8 figures + cover art", TEAL_LIGHT),
+        (
+            "05_generate_figures.py",
+            (
+                f"Render {len(INTEGRATION_FIGURE_SPECS)} content + "
+                f"{len(COVER_FIGURE_FILENAMES)} cover"
+            ),
+            TEAL_LIGHT,
+        ),
         ("z_generate_manuscript_...py", "Hydrate + inject {{TOKENS}}", BLUE_LIGHT),
         ("PDF render", "4-pass xelatex + bibtex", NEUTRAL),
     ]
@@ -663,7 +672,7 @@ def generate_pipeline_flow(
             )
 
     ax.set_title(
-        "Script Pipeline: Six Scripts, Each One Job, Ending in the Combined PDF",
+        "Script Pipeline: One Job per Stage, Ending in the Combined PDF",
         fontsize=12,
         fontweight="bold",
         color="#0f172a",
@@ -709,7 +718,10 @@ def all_figures(
     tool_contract = generate_tool_contract(output_dir=output_dir)
     resilience = generate_resilience_layers(output_dir=output_dir)
     pipeline = generate_pipeline_flow(output_dir=output_dir)
-    cover = generate_cover_art(output_dir=output_dir)
+    covers = {
+        pathlib.Path(filename).stem: generate_cover_art(output_dir=output_dir, filename=filename)
+        for filename in COVER_FIGURE_FILENAMES
+    }
 
     return {
         "architecture_overview": arch,
@@ -720,7 +732,7 @@ def all_figures(
         "tool_contract": tool_contract,
         "resilience_layers": resilience,
         "pipeline_flow": pipeline,
-        "cover_art": cover,
+        **covers,
     }
 
 

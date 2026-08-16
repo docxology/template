@@ -10,9 +10,10 @@ from pathlib import Path
 import networkx as nx
 import pytest
 
-from visualization.figure_runner import FIGURE_CAPTIONS, generate_all_figures
+from visualization.figure_runner import FIGURE_ALT_TEXT, FIGURE_CAPTIONS, generate_all_figures
 
 TEMPLATE_ROOT = Path(__file__).resolve().parents[4]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _ensure_template_on_path() -> bool:
@@ -378,8 +379,29 @@ def test_generate_all_figures_writes_figure_registry(tmp_path: Path) -> None:
     first_label = next(iter(registry.values()))["label"]
     assert first_label.startswith("fig:")
     assert first_label.replace("fig:", "") + ".png" in FIGURE_CAPTIONS
+    assert all(record["metadata"]["alt_text"].strip() for record in registry.values())
 
     # Second run should not duplicate registry entries
     generate_all_figures(args)
     registry_again = json.loads(registry_path.read_text(encoding="utf-8"))
-    assert len(registry_again) == len(registry)
+    assert registry_again == registry
+
+
+def test_figure_alt_text_specs_are_complete_specific_and_nonredundant() -> None:
+    assert set(FIGURE_ALT_TEXT) == set(FIGURE_CAPTIONS)
+    alt_texts = list(FIGURE_ALT_TEXT.values())
+    assert len(set(alt_texts)) == len(alt_texts)
+    assert all(len(alt_text.split()) >= 20 for alt_text in alt_texts)
+    assert all(FIGURE_ALT_TEXT[filename] != caption for filename, caption in FIGURE_CAPTIONS.items())
+
+
+def test_committed_referenced_figures_have_explicit_alt_text() -> None:
+    from infrastructure.validation.content.figure_validator import validate_figure_registry
+
+    valid, issues = validate_figure_registry(
+        PROJECT_ROOT / "output" / "figures" / "figure_registry.json",
+        PROJECT_ROOT / "manuscript",
+        require_accessibility=True,
+    )
+
+    assert valid, "\n".join(issues)

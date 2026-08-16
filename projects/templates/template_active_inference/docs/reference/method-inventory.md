@@ -2,7 +2,7 @@
 
 Generated documentation coverage for every Python `def` and `class` under `src/` and `scripts/`. Entries marked `inventory fallback` have no inline docstring yet, but remain documented here by path, line, kind, and qualified name.
 
-Total documented definitions: 830
+Total documented definitions: 832
 
 ## `src/analytical/bernoulli_toy.py`
 
@@ -275,7 +275,7 @@ Total documented definitions: 830
 | ---: | --- | --- | --- | --- |
 | 10 | `class` | `ManuscriptRefreshPhase` | docstring | Data container for ManuscriptRefreshPhase. |
 | 17 | `function` | `refresh_manuscript_pipeline` | docstring | Process refresh manuscript pipeline. |
-| 41 | `function` | `settle_manuscript_artifacts` | docstring | Process settle manuscript artifacts. |
+| 55 | `function` | `settle_manuscript_artifacts` | docstring | Process settle manuscript artifacts. |
 
 ## `src/manuscript/render_helpers.py`
 
@@ -630,12 +630,12 @@ Total documented definitions: 830
 | 48 | `function` | `_write_semantic_core` | inventory fallback | Inventory fallback for function `_write_semantic_core` defined at `src/roadmap_tracks/fixed_point.py:48`. |
 | 55 | `function` | `_write_contract_artifacts` | inventory fallback | Inventory fallback for function `_write_contract_artifacts` defined at `src/roadmap_tracks/fixed_point.py:55`. |
 | 72 | `function` | `_fingerprint` | inventory fallback | Inventory fallback for function `_fingerprint` defined at `src/roadmap_tracks/fixed_point.py:72`. |
-| 101 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:101`. |
-| 115 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
-| 130 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:130`. |
-| 146 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:146`. |
-| 166 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
-| 182 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
+| 102 | `function` | `_validate_fixed_point` | inventory fallback | Inventory fallback for function `_validate_fixed_point` defined at `src/roadmap_tracks/fixed_point.py:102`. |
+| 130 | `function` | `_source_contract_issues` | docstring | Return source defects that generated-artifact settlement cannot repair. |
+| 145 | `function` | `_existing_fixed_point_paths` | inventory fallback | Inventory fallback for function `_existing_fixed_point_paths` defined at `src/roadmap_tracks/fixed_point.py:145`. |
+| 162 | `function` | `_write_fixed_point_pass` | inventory fallback | Inventory fallback for function `_write_fixed_point_pass` defined at `src/roadmap_tracks/fixed_point.py:162`. |
+| 182 | `function` | `_write_final_validation_pass` | docstring | Refresh self-referential reports and write the certificate from the final live state. |
+| 198 | `function` | `run_semantic_fixed_point` | docstring | Settle manuscript, semantic, and contract artifacts to a validated fixed point. |
 
 ## `src/roadmap_tracks/formal_interop.py`
 
@@ -1234,17 +1234,19 @@ Total documented definitions: 830
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 19 | `class` | `FigureSpec` | docstring | Data container for FigureSpec. |
-| 33 | `class` | `SectionFigureRef` | docstring | Data container for SectionFigureRef. |
-| 42 | `function` | `_figures_yaml_path` | inventory fallback | Inventory fallback for function `_figures_yaml_path` defined at `src/visualizations/figure_registry.py:42`. |
-| 46 | `function` | `_load_figures_yaml` | inventory fallback | Inventory fallback for function `_load_figures_yaml` defined at `src/visualizations/figure_registry.py:46`. |
-| 53 | `function` | `load_figure_registry` | docstring | Load figure registry from a file. |
-| 78 | `function` | `load_section_figures` | docstring | Load section figures from a file. |
-| 103 | `function` | `figure_output_path` | docstring | Process figure output path. |
-| 109 | `function` | `render_figure_markdown` | docstring | Render figure markdown. |
-| 146 | `function` | `render_section_figures` | docstring | Render section figures. |
-| 170 | `function` | `build_figure_registry_payload` | docstring | Build validator-facing registry JSON keyed by ``fig:{id}`` labels. |
-| 191 | `function` | `write_figure_registry_json` | docstring | Write ``output/figures/figure_registry.json`` from ``figures.yaml``. |
+| 20 | `class` | `FigureSpec` | docstring | Data container for FigureSpec. |
+| 34 | `class` | `SectionFigureRef` | docstring | Data container for SectionFigureRef. |
+| 43 | `function` | `_figures_yaml_path` | inventory fallback | Inventory fallback for function `_figures_yaml_path` defined at `src/visualizations/figure_registry.py:43`. |
+| 47 | `function` | `_load_figures_yaml` | inventory fallback | Inventory fallback for function `_load_figures_yaml` defined at `src/visualizations/figure_registry.py:47`. |
+| 54 | `function` | `load_figure_registry` | docstring | Load figure registry from a file. |
+| 79 | `function` | `load_section_figures` | docstring | Load section figures from a file. |
+| 104 | `function` | `figure_output_path` | docstring | Process figure output path. |
+| 110 | `function` | `_resolve_figure_field` | docstring | Resolve one registry field, rejecting malformed or unknown tokens. |
+| 132 | `function` | `render_figure_markdown` | docstring | Render figure markdown. |
+| 167 | `function` | `render_section_figures` | docstring | Render section figures. |
+| 191 | `function` | `build_figure_registry_payload` | docstring | Build a fully hydrated registry keyed by ``fig:{id}`` labels. |
+| 223 | `function` | `write_figure_registry_json` | docstring | Atomically persist the hydrated registry from ``figures.yaml``. |
+| 260 | `function` | `validate_figure_registry_json` | docstring | Return drift issues for the persisted hydrated registry. |
 
 ## `src/visualizations/figure_style.py`
 
@@ -1275,7 +1277,7 @@ Total documented definitions: 830
 | 235 | `function` | `figure_si_summary` | docstring | Deprecated alias for ``figure_si_tmaze_actions``. |
 | 240 | `function` | `figure_free_energy_curve` | docstring | Process figure free energy curve. |
 | 309 | `function` | `run_figure` | docstring | Dispatch a registry figure id to its generator. |
-| 322 | `function` | `generate_all_figures` | docstring | Generate all figures. |
+| 322 | `function` | `generate_all_figures` | docstring | Generate all image artifacts; manuscript hydration owns registry JSON. |
 
 ## `src/visualizations/figures_diagrams.py`
 
@@ -1467,4 +1469,4 @@ Total documented definitions: 830
 
 | line | kind | name | documentation source | summary |
 | ---: | --- | --- | --- | --- |
-| 20 | `function` | `main` | docstring | CLI entry point. |
+| 19 | `function` | `main` | docstring | CLI entry point. |

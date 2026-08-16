@@ -12,12 +12,24 @@ from infrastructure.rendering._pdf_latex_pipeline import (
     LATEX_CMD_OPTIONS,
     _check_fatal_error,
     _normalize_latex_log,
+    _remove_luamml_mathml_cache,
 )
 
 
 def test_latex_command_disables_shell_escape() -> None:
     assert "-shell-escape" not in LATEX_CMD_OPTIONS
     assert "-no-shell-escape" in LATEX_CMD_OPTIONS
+
+
+def test_tagged_math_cache_is_removed_after_successful_pdf_render(tmp_path: Path) -> None:
+    """LuaLaTeX's MathML cache must not leak into the reviewer snapshot."""
+    cache = tmp_path / "_combined_manuscript-luamml-mathml.html"
+    cache.write_text("<math xmlns='http://www.w3.org/1998/Math/MathML' />\n", encoding="utf-8")
+
+    _remove_luamml_mathml_cache(tmp_path)
+
+    assert not cache.exists()
+    _remove_luamml_mathml_cache(tmp_path)
 
 
 def test_latex_log_normalization_preserves_diagnostics_without_trailing_space(tmp_path: Path) -> None:

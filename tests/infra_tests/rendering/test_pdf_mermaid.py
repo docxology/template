@@ -116,9 +116,21 @@ def test_resolve_chrome_uses_system_candidates_then_none(tmp_path: Path, monkeyp
     assert _resolve_chrome_executable(home=missing_home) is None
 
 
-def test_replace_inline_mermaid_preserves_repo_puppeteer_config(
+@pytest.mark.parametrize(
+    ("block", "expected_alt"),
+    [
+        (_sample_mermaid_block("graph TD\nA-->B"), "Sample Caption"),
+        (
+            "```mermaid\ngraph TD\nA-->B\n```\n<!-- alt: Explicit diagram description. -->\n*Sample Caption*\n",
+            "Explicit diagram description.",
+        ),
+    ],
+)
+def test_replace_inline_mermaid_preserves_repo_puppeteer_config_and_authored_alt(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    block: str,
+    expected_alt: str,
 ) -> None:
     manuscript_dir = _fake_manuscript_dir(tmp_path)
     repo_config = manuscript_dir.parent / ".puppeteer.json"
@@ -145,10 +157,11 @@ printf 'png' > "$output"
     monkeypatch.setenv("PATH", str(mmdc.parent))
     monkeypatch.setenv("EXPECT_CONFIG", str(repo_config))
 
-    result = replace_inline_mermaid(_sample_mermaid_block("graph TD\nA-->B"), manuscript_dir)
+    result = replace_inline_mermaid(block, manuscript_dir)
 
     assert result.diagrams_rendered == 1
     assert "\\includegraphics" in result.content
+    assert f"alt={{{expected_alt}}}" in result.content
     assert "Sample Caption" in result.content
     runtime_configs = list((manuscript_dir.parent / "output" / "figures" / "mermaid_inline").glob("*.puppeteer.json"))
     assert runtime_configs == []
@@ -232,7 +245,6 @@ exit 9
     monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
     monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
     monkeypatch.setenv("PATH", str(mmdc.parent))
-    _write_shell_executable(tmp_path / "google-chrome", "exit 0\n")
     caplog.set_level("WARNING")
 
     result = replace_inline_mermaid(_sample_mermaid_block("graph TD\nA-->B"), manuscript_dir, home=tmp_path)
@@ -243,4 +255,52 @@ exit 9
     runtime_config = config_snapshot.read_text(encoding="utf-8")
     assert str(chrome) in runtime_config
     assert "--no-sandbox" in runtime_config
+    persisted_config = (
+        manuscript_dir.parent / "output" / "figures" / "mermaid_inline" / "inline_mermaid.puppeteer.json"
+    ).read_text(encoding="utf-8")
+    assert '"executablePath": "<home>/bin/google-chrome"' in persisted_config
+    assert str(chrome) not in persisted_config
+    assert str(tmp_path) not in persisted_config
     assert any("mmdc failed" in record.message for record in caplog.records)
+
+
+def test_replace_inline_mermaid_runtime_config_is_real_then_portable_on_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manuscript_dir = _fake_manuscript_dir(tmp_path)
+    chrome = _write_shell_executable(tmp_path / "bin" / "google-chrome", "exit 0\n")
+    config_snapshot = tmp_path / "captured-success-config.json"
+    mmdc = _write_shell_executable(
+        tmp_path / "bin" / "mmdc",
+        f"""
+output=""
+config=""
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --output) output="$2"; shift 2 ;;
+    --puppeteerConfigFile) config="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+[ -n "$config" ] || {{ echo "missing config" >&2; exit 8; }}
+cp "$config" "{config_snapshot}"
+printf 'png' > "$output"
+""",
+    )
+    monkeypatch.delenv("PUPPETEER_EXECUTABLE_PATH", raising=False)
+    monkeypatch.delenv("CHROME_EXECUTABLE_PATH", raising=False)
+    monkeypatch.setenv("PUPPETEER_CACHE_DIR", str(tmp_path / "missing-cache"))
+    monkeypatch.setenv("PATH", str(mmdc.parent))
+
+    result = replace_inline_mermaid(_sample_mermaid_block("graph TD\nA-->B"), manuscript_dir, home=tmp_path)
+
+    assert result.diagrams_rendered == 1
+    runtime_config = config_snapshot.read_text(encoding="utf-8")
+    assert str(chrome) in runtime_config
+    persisted_config = (
+        manuscript_dir.parent / "output" / "figures" / "mermaid_inline" / "inline_mermaid.puppeteer.json"
+    ).read_text(encoding="utf-8")
+    assert '"executablePath": "<home>/bin/google-chrome"' in persisted_config
+    assert str(chrome) not in persisted_config
+    assert str(tmp_path) not in persisted_config

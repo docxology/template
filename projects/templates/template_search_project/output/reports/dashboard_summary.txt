@@ -3,11 +3,11 @@ Literature Search Coverage Dashboard
 6 papers · 6 years · 1 sources · every floor and filter is CLI-configurable.
 
 project:           template_search_project
-generated:         2026-08-03T00:32:43Z
-git rev:           80735407f
+generated:         2026-08-15T12:47:20Z
+git rev:           634333692
 panels:            5
 controls:          0
-invariants:        11
+invariants:        14
 
 hyperparameters
 ---------------

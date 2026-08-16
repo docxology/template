@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import pytest
 
+from infrastructure.core.config.loader import validate_config_keys as validate_shared_config_keys
 from textbook.config import (
     DEFAULT_MANUSCRIPT,
     ChapterRef,
@@ -108,6 +109,19 @@ def test_iter_chapters_respects_enabled_flag():
 
 def test_validate_real_config_is_clean():
     assert validate_config(load_config()) == []
+
+
+def test_real_config_uses_only_shared_top_level_schema_keys():
+    """Project-owned settings stay below the shared project_config namespace."""
+    config = load_config()
+    assert (
+        validate_shared_config_keys(
+            config,
+            DEFAULT_MANUSCRIPT / "config.yaml",
+            project_name="templates/template_textbook",
+        )
+        == []
+    )
 
 
 def test_validate_config_detects_problems():

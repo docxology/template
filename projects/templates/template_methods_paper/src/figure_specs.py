@@ -12,6 +12,7 @@ class MethodsFigureSpec:
     label: str
     filename: str
     caption: str
+    alt_text: str
     generated_by: str
 
 
@@ -21,6 +22,10 @@ METHODS_FIGURE_SPECS: tuple[MethodsFigureSpec, ...] = (
         label="fig:step_counts",
         filename="step_counts.png",
         caption="Step counts for each deterministically compiled example method.",
+        alt_text=(
+            "Two vertical bars compare the compiled step counts for PBS preparation "
+            "and sensor calibration; the sensor-calibration plan contains the taller bar."
+        ),
         generated_by="scripts.methods_analysis.run_methods_analysis",
     ),
 )

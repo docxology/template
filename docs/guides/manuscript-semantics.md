@@ -112,12 +112,14 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
    figure number in the label.
 3. Cross-reference with `[@fig:label]` for parenthetical ("see fig. 3") or `@fig:label` for narrative ("Figure 3 shows…").
 4. Captions must be self-contained, but a caption is not a substitute for all
-   accessibility text. The current HTML post-processor derives a concise image
-   `alt` value from the first caption sentence; the full caption remains
-   visible. Make that first sentence a useful identification of the visual,
-   then put interpretation, methods, denominators, and uncertainty in the
-   remaining caption. Inspect the rendered HTML rather than assuming the
-   conversion is semantically adequate.
+   accessibility text. The HTML renderer binds the separately authored
+   registry alternative to the exact rendered label and figure path; it fails
+   on a matching blank or mismatched record instead of synthesizing `alt` from
+   the caption. An unregistered figure retains its nonblank authored Markdown
+   alternative. The full caption remains visible, so put interpretation,
+   methods, denominators, and uncertainty there without duplicating it as the
+   alternative. Inspect the rendered HTML rather than assuming the conversion
+   is semantically adequate.
 5. Register every generated figure in
    `output/figures/figure_registry.json`, including a stable label, filename,
    generator, caption, and explicit `metadata.alt_text`. The accessibility
@@ -125,6 +127,12 @@ x_{k+1} = x_k - \alpha \nabla f(x_k)
    that it conveys the figure's purpose and does not merely repeat its title.
    Provide a nearby prose or appendix description when the relationships in a
    complex figure cannot be conveyed concisely.
+   Tagged-PDF mode binds the same registry text into the PDF structure tree;
+   ordinary untagged PDF output makes no PDF/UA or assistive-technology claim.
+   An intentionally repeated, unlabelled registry image authored as `![](...)`
+   remains decorative: the HTML renderer restores Pandoc's omitted `alt=""`
+   attribute instead of repeating the canonical labelled figure's long
+   description. An unregistered image with no authored alternative fails.
 6. Do not encode meaning by colour alone. Use a colour-accessible palette plus
    redundant shapes, line styles, direct labels, or patterns; check contrast,
    grayscale legibility, type size, clipping, and panel order in the final

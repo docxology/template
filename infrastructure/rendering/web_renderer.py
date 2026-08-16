@@ -150,7 +150,10 @@ class WebRenderer:
                 # figure-detail styling as the combined publication page.
                 self._embed_css(output_file)
                 self._normalize_figure_paths_in_file(output_file)
-                self._enhance_accessibility(output_file)
+                self._enhance_accessibility(
+                    output_file,
+                    registry_path=Path(self.config.figures_dir) / "figure_registry.json",
+                )
                 self._add_full_resolution_figure_links(output_file)
                 self._add_responsive_image_variants(output_file)
             return output_file
@@ -245,7 +248,7 @@ class WebRenderer:
         )
 
         # Build pandoc command for HTML conversion
-        figures_dir = manuscript_dir.parent / "output" / "figures"
+        figures_dir = Path(self.config.figures_dir)
         lua_filter = Path(__file__).parent / "convert_latex_images.lua"
 
         cmd = [
@@ -334,6 +337,7 @@ class WebRenderer:
             self._enhance_accessibility(
                 output_file,
                 language=self._manuscript_language(manuscript_dir),
+                registry_path=figures_dir / "figure_registry.json",
             )
             self._add_full_resolution_figure_links(output_file)
             self._add_responsive_image_variants(output_file)
@@ -657,12 +661,21 @@ class WebRenderer:
         web_postprocess.normalize_figure_paths_in_file(html_file)
 
     @staticmethod
-    def _enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
-        web_postprocess.enhance_accessibility(html_file, language=language)
+    def _enhance_accessibility(
+        html_file: Path,
+        *,
+        language: str = "en",
+        registry_path: Path | None = None,
+    ) -> None:
+        web_postprocess.enhance_accessibility(
+            html_file,
+            language=language,
+            registry_path=registry_path,
+        )
 
     @staticmethod
-    def _replace_figure_alts(content: str) -> str:
-        return web_postprocess.replace_figure_alts(content)
+    def _replace_figure_alts(content: str, *, registry_path: Path | None = None) -> str:
+        return web_postprocess.replace_figure_alts(content, registry_path=registry_path)
 
     @staticmethod
     def _add_responsive_image_variants(html_file: Path) -> None:

@@ -5,7 +5,7 @@ from pathlib import Path
 from .analysis_figures import _figure_registry_entry, write_cover_overview_figure, write_token_density_figure
 from .analysis_reports import _write_json
 from .artifact_writers import write_core_artifacts
-from .figure_specs import CONDITIONAL_FIGURE_SPECS, write_conditional_figures
+from .figure_specs import CONDITIONAL_FIGURE_SPECS, figure_alt_text, write_conditional_figures
 from .run import build_run
 
 
@@ -35,12 +35,14 @@ def generate_artifacts(project_root: Path | str) -> dict[str, Path]:
             "Configuration-to-manuscript audit overview for the Madlib exemplar",
             "fig:madlib-cover-overview",
             "Cover",
+            figure_alt_text("cover_overview", run),
         ),
         "fig:token-density": _figure_registry_entry(
             figure.name,
             "Token choices by lexicon category",
             "fig:token-density",
             "Results",
+            figure_alt_text("token_density", run),
         ),
     }
     conditional_registry = write_conditional_figures(

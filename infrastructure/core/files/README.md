@@ -4,7 +4,8 @@ File cleanup, inventory, and output-copying helpers for `infrastructure.core`.
 
 ## Files
 
-- `operations.py`
+- `operations.py` — symlink-confined recursive local-mirror copying with PDF,
+  HTML, slides, DOCX, EPUB, figure, data, report, simulation, LLM, and log counts
 - `serialization.py`
 - `secure_write.py`
 - `cleanup.py`

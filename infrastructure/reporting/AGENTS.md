@@ -27,7 +27,7 @@ as verified success.
 | Log summaries | `log_analysis.py` | `generate_log_summary` tallies log-level counts and error/warning samples into a human-readable log report. |
 | Run lessons | `run_lessons.py` | `collect_run_lessons` and `write_run_lessons` capture per-run pipeline lessons (`RunLesson`) to JSONL, Markdown, and next-run context files. |
 | Interactive dashboards | `interactive_dashboard.py`, `_interactive_models.py`, `_interactive_html.py` | `InteractiveDashboard` builder API, the `Panel`/`Control`/`Invariant` data types, and page assembly for self-contained Plotly dashboards. See [Interactive simulation dashboard](#interactive-simulation-dashboard-interactive_dashboardpy). |
-| Output organization | `output_organizer.py`, `output_statistics.py`, `page_grid.py`, `page_rendering.py` | Final report file layout and page grids. |
+| Output organization | `output_organizer.py`, `output_statistics.py`, `page_grid.py`, `page_rendering.py` | Final report file layout and page grids. `output_statistics.py` consumes the artifact layer's complete stable inventory rather than raw disk state. Public exemplars use `stable-shippable-output-v1`; explicitly resolved non-template projects may use `stable-local-output-v1`. Dynamic categories and root bundles are retained; Stage 5 declares `stage5-delivery-mirror` scope and writes byte-identical source/copy receipts. |
 
 ## Interactive simulation dashboard (`interactive_dashboard.py`)
 

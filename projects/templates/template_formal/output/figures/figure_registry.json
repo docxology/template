@@ -4,6 +4,9 @@
     "filename": "colony_convergence_tick_distribution.png",
     "generated_by": "template_formal.colony.visualization.write_convergence_tick_histogram",
     "label": "fig:convergence-tick-distribution",
+    "metadata": {
+      "alt_text": "Histogram and empirical CDF summarize 37 of 40 converged trials, ranging from tick 0 to tick 29; 28 reached consensus at tick zero and the mean convergence tick is 4.1."
+    },
     "section": "Colony convergence"
   },
   "fig:demo-convergence": {
@@ -11,6 +14,9 @@
     "filename": "colony_demo_convergence.png",
     "generated_by": "template_formal.colony.visualization.write_demo_convergence_figure",
     "label": "fig:demo-convergence",
+    "metadata": {
+      "alt_text": "Two-panel line chart across 5 ticks: north changes from 2.94 to 14.12, south changes from 0.00 to 0.00; north's share of total concentration changes from 1.00 to 1.00."
+    },
     "section": "Colony convergence"
   }
 }

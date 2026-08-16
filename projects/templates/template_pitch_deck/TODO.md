@@ -20,7 +20,9 @@ keeps a capability blocked rather than silently promoting it.
   digest equality in the deterministic artifact gate.
 - Keep all three lengths in the raster QA matrix and fail on clipping or overlap
   when the configured raster toolchain is available.
-- Mermaid rendering remains optional: `mmdc` plus Chrome/Chromium is bounded by the renderer policy, and an unavailable tool produces an explicit warning/fallback rather than a false embedded-diagram claim.
+- Keep Mermaid rendering fail-closed: the repository-pinned `mmdc` plus
+  Chrome/Chromium must regenerate every declared diagram, and an unavailable
+  tool must fail Stage 02 rather than leave tracked diagram bytes stale.
 - Keep publication DOI/repository metadata source-bound and distinguish an
   unavailable deposit from a real owner-authorized publication receipt.
 - Content-slide figures flow below their bullet body in both output formats, and `_preflight_all_lengths` audits every configured length before writing any artifact.

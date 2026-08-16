@@ -223,6 +223,7 @@ Ship a complete, self-contained, registered public template `template_formal` un
 - [x] ISC-120: `scripts/02_run_analysis.py` must be a genuinely thin entrypoint: sweep configuration, statistical aggregation, JSON serialization, required-figure checks, and figure-registry construction live in a tested `src/template_formal/colony/analysis.py` service. The script may resolve the project root, call that service once, and print returned artifact paths; the module-line gate must no longer warn on the script.
 - [x] ISC-121: Every runtime typing import must honor the project's declared Python 3.10 floor. Types introduced in newer standard-library `typing` releases, including `Self`, must come from a declared compatibility backport, and the Python 3.10 project matrix must collect and execute the real suite rather than failing during import.
 - [x] ISC-122: Performance-regression guards for the real colony experiments must measure process CPU time rather than scheduler-sensitive wall-clock time. They must retain a generous upper bound that catches order-of-magnitude computational regressions, while a loaded host or concurrent test process must not turn an otherwise deterministic experiment into a false failure. Human-readable output may report wall-clock context separately, but the acceptance predicate must be based on CPU time.
+- [x] ISC-123: Every manuscript-referenced colony figure must publish explicit accessibility text derived from the exact demo or sweep data used to render it. The registry must not freeze calibrated outcome literals in source: alternate summaries must produce correspondingly different descriptions, and an empty or non-converged result must be described honestly rather than inheriting the committed run's counts.
 
 ## Test Strategy
 
@@ -711,3 +712,7 @@ Coverage (round 18, cumulative): 121/121 ISC groups passed, 121/121 artifact-bac
 - Repository infrastructure gate after provenance refresh: **8,796 passed, 8 skipped**, **83.27%** coverage (60% required); the optional skips remain service/network exclusions.
 
 Coverage (round 19, cumulative): 122/122 ISC groups passed, 122/122 artifact-backed (0 `[DEFERRED-VERIFY]`).
+
+**Round 20 (data-bound figure accessibility, 2026-08-15):** ISC-123 added before implementation. The figure registry now derives its two descriptions from the same demo concentration history and sweep outcomes passed to the renderers. Real alternate-data controls prevent committed-run values such as `37/40`, tick counts, and concentration endpoints from surviving when inputs change; the public registry remains the source for rendered accessibility metadata.
+
+Coverage (round 20, cumulative): 123/123 ISC groups passed, 123/123 artifact-backed (0 `[DEFERRED-VERIFY]`).

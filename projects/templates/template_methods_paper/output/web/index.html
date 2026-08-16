@@ -499,6 +499,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -738,10 +779,10 @@ grammar — is sufficient to reproduce BPL’s core safety properties
 (dimensional safety, staged validation, deterministic compilation) at a
 scope appropriate for a template exemplar. On the architecture side, the
 DSL is exercised by a zero-mock test suite under the repository’s
-configured project coverage gate, generates 17 artifacts (1 figures, 7
-data files, 9 reports) per pipeline run, and injects reproducibility
+configured project coverage gate, generates 19 artifacts (1 figures, 7
+data files, 11 reports) per pipeline run, and injects reproducibility
 metadata (configuration hash <code>a0f000565bef6a79</code>, build
-timestamp <code>2026-08-02T23:24:06Z</code>) into sec. <a
+timestamp <code>2026-08-14T14:20:53Z</code>) into sec. <a
 href="#sec:reproducibility">7</a>.</p>
 <p><strong>Keywords:</strong> methods paper, domain-specific language,
 controlled methods, deterministic compilation, staged validation,
@@ -1099,8 +1140,8 @@ class="header-section-number">4.2</span> Step-count comparison</h2>
 <p>fig. <a href="#fig:step_counts">1</a> plots the step count for each
 compiled method.</p>
 <figure id="fig:step_counts">
-<img src="../figures/step_counts.png"
-alt="Figure 1: Steps per example method: a bar chart built from len(plan.steps) for each plan in output/data/compiled_plans.json , plotted by scripts/methods_analysis.py ." />
+<a class="figure-full-size-link" href="../figures/step_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/step_counts.png"
+alt="Two vertical bars compare the compiled step counts for PBS preparation and sensor calibration; the sensor-calibration plan contains the taller bar." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Steps per example method: a bar
 chart built from <code>len(plan.steps)</code> for each plan in
 <code>output/data/compiled_plans.json</code>, plotted by
@@ -1368,7 +1409,7 @@ evaluations a method’s steps satisfy.</p>
 <h2 data-number="6.4" id="computational-environment"><span
 class="header-section-number">6.4</span> Computational environment</h2>
 <ul>
-<li><strong>Language</strong>: Python 3.12.13 on Darwin arm64 (see root
+<li><strong>Language</strong>: Python 3.12.12 on Darwin arm64 (see root
 <code>pyproject.toml</code> for the supported version range).</li>
 <li><strong>Core dependencies</strong>: <code>pyyaml</code>,
 <code>matplotlib</code> (declared in
@@ -1555,7 +1596,7 @@ validation. The manuscript intentionally does not hand-transcribe
 volatile values, so prose and artifacts cannot disagree. Configuration
 provenance is itself injected: <code>a0f000565bef6a79</code> is the
 SHA-256 of <code>manuscript/config.yaml</code> at build time, and
-<code>2026-08-02T23:24:06Z</code> records when the variables were
+<code>2026-08-14T14:20:53Z</code> records when the variables were
 generated (honoring <code>SOURCE_DATE_EPOCH</code> for byte-reproducible
 builds).</p>
 <hr />

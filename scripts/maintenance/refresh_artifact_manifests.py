@@ -12,6 +12,7 @@ if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
 from infrastructure.core.pipeline.artifacts import (  # noqa: E402
+    output_inventory_mode_for_project,
     snapshot_current_artifact_manifest,
     validate_artifact_manifest,
 )
@@ -58,8 +59,16 @@ def main(argv: list[str] | None = None) -> int:
             failed = True
             continue
 
-        manifest = snapshot_current_artifact_manifest(output_dir)
-        validation = validate_artifact_manifest(manifest, project_dir=project_dir)
+        inventory_mode = output_inventory_mode_for_project(root, project_dir)
+        manifest = snapshot_current_artifact_manifest(
+            output_dir,
+            inventory_mode=inventory_mode,
+        )
+        validation = validate_artifact_manifest(
+            manifest,
+            project_dir=project_dir,
+            expected_inventory_mode=inventory_mode,
+        )
         if validation.valid:
             print(f"PASS {name}: {len(manifest.entries)} stable artifacts")
             continue

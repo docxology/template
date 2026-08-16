@@ -170,10 +170,16 @@ a project intentionally wants a nonzero recommendation to create a HITL pause.
 After each successful completed stage, the executor writes a local stage
 manifest under `projects/{project}/output/.pipeline/artifacts/` and refreshes
 `projects/{project}/output/reports/artifact_manifest.json`. Entries include
-path, size, SHA256, producing stage, contract match status, and timestamp.
+path, size, SHA256, producing stage, contract match status, and timestamp. The
+top-level `inventory_mode` records whether the manifest came from the
+fail-closed Git-shippable inventory or an explicitly authorized stable-local
+inventory. Legacy manifests that omit this field are read as Git-shippable;
+new manifests always persist it, and validation rejects a mode that does not
+match the resolved project lifecycle.
 
-Validation reports missing declared outputs, changed hashes, and undeclared
-artifacts. Logs, HITL state, caches, and `.pipeline` metadata are ignored. The
+Validation reports missing declared outputs, changed hashes, undeclared
+artifacts, duplicate or noncanonical paths, and stable artifacts omitted from
+the manifest. Logs, HITL state, caches, and `.pipeline` metadata are ignored. The
 stable `artifact_manifest.json` is the publication-facing integrity record;
 the local stage manifests and their timestamps are not public evidence.
 

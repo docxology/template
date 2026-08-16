@@ -500,6 +500,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -922,8 +963,8 @@ class="header-section-number">4.2</span> Distributions</h2>
 height across the complete-case dataset, binned by
 <code>histogram_data()</code> and plotted by the analysis script.</p>
 <figure id="fig:height_histogram">
-<img src="../figures/height_histogram.png"
-alt="Figure 1: Height distribution: bin counts produced by histogram_data(frame, &quot;height_cm&quot;, bins=10) in src/eda/figures.py and plotted as a bar chart by scripts/eda_analysis.py ." />
+<a class="figure-full-size-link" href="../figures/height_histogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/height_histogram.png"
+alt="10-bin histogram of 116 non-missing height_cm observations from 142.59 to 193.71. The tallest bar count is 33 in 168.15 to 173.26. Bars encode counts; missing values are excluded and no fitted distribution is implied." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Height distribution: bin counts
 produced by <code>histogram_data(frame, "height_cm", bins=10)</code> in
 <code>src/eda/figures.py</code> and plotted as a bar chart by
@@ -937,8 +978,8 @@ class="header-section-number">4.3</span> Group composition</h2>
 rows fall in each group, computed by <code>group_count_data()</code>
 (labels sorted for deterministic output).</p>
 <figure id="fig:group_counts">
-<img src="../figures/group_counts.png"
-alt="Figure 2: Rows per group: sorted category labels and aligned counts from group_count_data() ." />
+<a class="figure-full-size-link" href="../figures/group_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/group_counts.png"
+alt="3 bars encode complete-case row counts: alpha: 38; beta: 34; gamma: 44. Largest count 44 occurs for gamma; smallest count 34 occurs for beta. These counts describe sample composition, not group effects." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Rows per group: sorted category
 labels and aligned counts from <code>group_count_data()</code>. The
 three groups are of comparable, though not identical, size; the counts
@@ -952,8 +993,8 @@ correlation matrix of the three numeric features, computed by
 <code>correlation_heatmap_data()</code>. The diagonal is unity by
 construction and the matrix is symmetric.</p>
 <figure id="fig:correlation_heatmap">
-<img src="../figures/correlation_heatmap.png"
-alt="Figure 3: Feature correlation heatmap: values from correlation_heatmap_data() (which wraps correlation_matrix(method=&quot;pearson&quot;) ) rendered with a diverging colour map on the fixed range [-1, 1] ." />
+<a class="figure-full-size-link" href="../figures/correlation_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/correlation_heatmap.png"
+alt="3-by-3 Pearson correlation heatmap for height_cm, weight_kg, resting_hr_bpm on a fixed minus-one-to-one diverging scale. The diagonal is 1.00. Off-diagonal pairs are height_cm with weight_kg: 0.72; height_cm with resting_hr_bpm: -0.12; weight_kg with resting_hr_bpm: -0.08. Correlations are descriptive and do not establish causation." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Feature correlation heatmap:
 values from <code>correlation_heatmap_data()</code> (which wraps
 <code>correlation_matrix(method="pearson")</code>) rendered with a

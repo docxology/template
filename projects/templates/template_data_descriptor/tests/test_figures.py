@@ -8,17 +8,20 @@ from typing import Any, cast
 
 from data_descriptor import (
     FileInventoryRow,
+    FileVerification,
     ProvenanceStep,
     SchemaRow,
+    build_descriptor_report,
     demo_broken_descriptor,
+    descriptor_figure_specs_for_data,
     file_inventory_rows,
     provenance_steps,
     schema_table_rows,
     severity_counts,
     validate_descriptor,
+    verify_descriptor_files,
     verification_table_rows,
 )
-from data_descriptor.verification import FileVerification
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -134,3 +137,70 @@ class TestVerificationTableRows:
             ("a.csv", "2", "2", "match", "verified"),
             ("b.csv", "3", "—", "absent", "absent"),
         )
+
+
+class TestFigureAltText:
+    """Registry descriptions follow descriptor inputs and fail truthful on empties."""
+
+    @staticmethod
+    def _specs_for(
+        descriptor: dict[str, Any],
+        checks: tuple[FileVerification, ...],
+    ):
+        report = build_descriptor_report(descriptor)
+        return {
+            spec.label: spec
+            for spec in descriptor_figure_specs_for_data(
+                descriptor,
+                checks,
+                readiness_score=report.readiness_score,
+            )
+        }
+
+    def test_alternate_descriptor_changes_all_data_descriptions(self) -> None:
+        shipped = load_fixture()
+        shipped_specs = self._specs_for(
+            shipped,
+            verify_descriptor_files(shipped, PROJECT_ROOT / "data"),
+        )
+        alternate = json.loads(json.dumps(shipped))
+        alternate["fields"] = alternate["fields"][:2]
+        alternate["files"] = [
+            {
+                "path": "fixtures/alternate.csv",
+                "media_type": "text/csv",
+                "rows": 99,
+                "checksum": "sha256:alternate",
+            }
+        ]
+        alternate["provenance"] = [{"step": "inspect", "agent": "reviewer"}]
+        alternate.pop("license")
+        alternate_checks = (
+            FileVerification(
+                "fixtures/alternate.csv",
+                "row_mismatch",
+                "sha256:alternate",
+                "sha256:observed",
+                99,
+                98,
+                False,
+                False,
+            ),
+        )
+
+        alternate_specs = self._specs_for(alternate, alternate_checks)
+
+        assert all(alternate_specs[label].alt_text != shipped_specs[label].alt_text for label in alternate_specs)
+        assert "2-row data dictionary" in alternate_specs["fig:schema_overview"].alt_text
+        assert "fixtures/alternate.csv: 99" in alternate_specs["fig:file_inventory"].alt_text
+        assert "inspect (reviewer)" in alternate_specs["fig:provenance_flow"].alt_text
+        assert "status row_mismatch" in alternate_specs["fig:checksum_verification"].alt_text
+        assert "synthetic" in alternate_specs["fig:quality_gate"].alt_text
+
+    def test_empty_descriptor_reports_absence_instead_of_fixture_numbers(self) -> None:
+        specs = self._specs_for({}, ())
+
+        assert "Empty data-dictionary table" in specs["fig:schema_overview"].alt_text
+        assert "Empty file-inventory bar chart" in specs["fig:file_inventory"].alt_text
+        assert "Empty provenance-flow panel" in specs["fig:provenance_flow"].alt_text
+        assert "Empty descriptor-to-file verification table" in specs["fig:checksum_verification"].alt_text

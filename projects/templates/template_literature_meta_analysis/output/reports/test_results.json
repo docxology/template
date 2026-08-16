@@ -1,29 +1,607 @@
 {
-  "timestamp": "2026-08-09T05:05:15.197671",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 1162,
+    "passed": 1211,
     "failed": 0,
     "skipped": 0,
-    "total": 1162,
+    "total": 1211,
     "warnings": 2,
     "exit_code": 0,
-    "discovery_count": 1162,
+    "discovery_count": 1211,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 25.07,
-      "execution": 25.07
+      "setup": 22.96,
+      "execution": 22.96
     },
     "test_categories": {},
-    "coverage_percent": 94.05,
+    "coverage_percent": 95.9412780656304,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 1162,
+    "total_passed": 1211,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 1162,
+    "total_tests": 1211,
     "all_passed": true,
-    "project_coverage": 94.05
+    "project_coverage": 95.9412780656304
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 95.9412780656304,
+      "total_executed": 5982,
+      "total_missing": 156,
+      "total_excluded": 30,
+      "total_lines": 6138,
+      "file_coverage": {
+        "src/analysis/citation_network.py": {
+          "coverage_percent": 92.93478260869566,
+          "executed_lines": 125,
+          "missing_lines": 9,
+          "excluded_lines": 0,
+          "total_lines": 134
+        },
+        "src/analysis/descriptive_stats.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 97,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 97
+        },
+        "src/analysis/embeddings.py": {
+          "coverage_percent": 95.04132231404958,
+          "executed_lines": 85,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 89
+        },
+        "src/analysis/entities.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 94,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 94
+        },
+        "src/analysis/pipeline_runner.py": {
+          "coverage_percent": 94.83870967741936,
+          "executed_lines": 129,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 133
+        },
+        "src/analysis/subfield_classifier.py": {
+          "coverage_percent": 96.07843137254902,
+          "executed_lines": 38,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 39
+        },
+        "src/analysis/subfield_defaults.py": {
+          "coverage_percent": 63.63636363636363,
+          "executed_lines": 7,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 11
+        },
+        "src/analysis/subfield_registry.py": {
+          "coverage_percent": 95.3125,
+          "executed_lines": 49,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 52
+        },
+        "src/analysis/temporal_analysis.py": {
+          "coverage_percent": 96.26168224299066,
+          "executed_lines": 71,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 73
+        },
+        "src/analysis/text_processing.py": {
+          "coverage_percent": 95.45454545454545,
+          "executed_lines": 60,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 62
+        },
+        "src/analysis/topic_modeling.py": {
+          "coverage_percent": 94.8051948051948,
+          "executed_lines": 55,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 57
+        },
+        "src/config.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "src/config_loader.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 48,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 48
+        },
+        "src/config_validation.py": {
+          "coverage_percent": 99.45054945054945,
+          "executed_lines": 233,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 234
+        },
+        "src/deep_research/deep_research_adapter.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 41,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 41
+        },
+        "src/knowledge_graph/calibration.py": {
+          "coverage_percent": 82.0,
+          "executed_lines": 31,
+          "missing_lines": 5,
+          "excluded_lines": 0,
+          "total_lines": 36
+        },
+        "src/knowledge_graph/extraction.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 10,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 10
+        },
+        "src/knowledge_graph/graph_builder.py": {
+          "coverage_percent": 98.80952380952381,
+          "executed_lines": 120,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 120
+        },
+        "src/knowledge_graph/hypothesis.py": {
+          "coverage_percent": 97.76119402985074,
+          "executed_lines": 97,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 100
+        },
+        "src/knowledge_graph/kg_runner.py": {
+          "coverage_percent": 85.97560975609755,
+          "executed_lines": 109,
+          "missing_lines": 13,
+          "excluded_lines": 0,
+          "total_lines": 122
+        },
+        "src/knowledge_graph/llm_client.py": {
+          "coverage_percent": 93.54838709677419,
+          "executed_lines": 48,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 50
+        },
+        "src/knowledge_graph/llm_config.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 15,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 15
+        },
+        "src/knowledge_graph/llm_extraction.py": {
+          "coverage_percent": 93.37748344370861,
+          "executed_lines": 104,
+          "missing_lines": 7,
+          "excluded_lines": 0,
+          "total_lines": 111
+        },
+        "src/knowledge_graph/llm_prompts.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 9,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 9
+        },
+        "src/knowledge_graph/nanopublication.py": {
+          "coverage_percent": 95.40229885057471,
+          "executed_lines": 141,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 144
+        },
+        "src/knowledge_graph/query.py": {
+          "coverage_percent": 98.0,
+          "executed_lines": 32,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 32
+        },
+        "src/knowledge_graph/schema.py": {
+          "coverage_percent": 90.47619047619048,
+          "executed_lines": 16,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 17
+        },
+        "src/literature/arxiv_client.py": {
+          "coverage_percent": 96.64429530201342,
+          "executed_lines": 109,
+          "missing_lines": 2,
+          "excluded_lines": 1,
+          "total_lines": 111
+        },
+        "src/literature/bibliography.py": {
+          "coverage_percent": 87.57396449704142,
+          "executed_lines": 113,
+          "missing_lines": 10,
+          "excluded_lines": 0,
+          "total_lines": 123
+        },
+        "src/literature/biorxiv_client.py": {
+          "coverage_percent": 96.26168224299066,
+          "executed_lines": 79,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 81
+        },
+        "src/literature/corpus.py": {
+          "coverage_percent": 99.35483870967742,
+          "executed_lines": 111,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 111
+        },
+        "src/literature/crossref_client.py": {
+          "coverage_percent": 95.1086956521739,
+          "executed_lines": 130,
+          "missing_lines": 4,
+          "excluded_lines": 1,
+          "total_lines": 134
+        },
+        "src/literature/engine_dispatch.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 30,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 30
+        },
+        "src/literature/europepmc_client.py": {
+          "coverage_percent": 97.93103448275862,
+          "executed_lines": 104,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 105
+        },
+        "src/literature/evaluation.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 31,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 31
+        },
+        "src/literature/fixture_corpus.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 44,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 44
+        },
+        "src/literature/fixture_honesty.py": {
+          "coverage_percent": 77.77777777777777,
+          "executed_lines": 40,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 46
+        },
+        "src/literature/fulltext_assessment.py": {
+          "coverage_percent": 92.23300970873787,
+          "executed_lines": 68,
+          "missing_lines": 5,
+          "excluded_lines": 0,
+          "total_lines": 73
+        },
+        "src/literature/fulltext_download.py": {
+          "coverage_percent": 92.54385964912281,
+          "executed_lines": 156,
+          "missing_lines": 10,
+          "excluded_lines": 15,
+          "total_lines": 166
+        },
+        "src/literature/fulltext_download_cli.py": {
+          "coverage_percent": 96.3855421686747,
+          "executed_lines": 70,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 71
+        },
+        "src/literature/http.py": {
+          "coverage_percent": 86.20689655172414,
+          "executed_lines": 38,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 42
+        },
+        "src/literature/models.py": {
+          "coverage_percent": 97.42268041237114,
+          "executed_lines": 136,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 138
+        },
+        "src/literature/openalex_client.py": {
+          "coverage_percent": 95.91836734693878,
+          "executed_lines": 139,
+          "missing_lines": 3,
+          "excluded_lines": 1,
+          "total_lines": 142
+        },
+        "src/literature/pubmed_client.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 86,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 86
+        },
+        "src/literature/query_router.py": {
+          "coverage_percent": 93.93939393939394,
+          "executed_lines": 50,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 52
+        },
+        "src/literature/sampling.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "src/literature/search_engines.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 64,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 64
+        },
+        "src/literature/search_runner.py": {
+          "coverage_percent": 90.48913043478261,
+          "executed_lines": 253,
+          "missing_lines": 13,
+          "excluded_lines": 0,
+          "total_lines": 266
+        },
+        "src/literature/semantic_scholar.py": {
+          "coverage_percent": 95.39473684210526,
+          "executed_lines": 116,
+          "missing_lines": 2,
+          "excluded_lines": 1,
+          "total_lines": 118
+        },
+        "src/literature/sovietrxiv_client.py": {
+          "coverage_percent": 99.31972789115646,
+          "executed_lines": 113,
+          "missing_lines": 0,
+          "excluded_lines": 1,
+          "total_lines": 113
+        },
+        "src/manuscript/variables/_logging.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 3,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 3
+        },
+        "src/manuscript/variables/compute.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 14,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 14
+        },
+        "src/manuscript/variables/context.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 31,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 31
+        },
+        "src/manuscript/variables/extractors/analysis.py": {
+          "coverage_percent": 96.44970414201184,
+          "executed_lines": 119,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 119
+        },
+        "src/manuscript/variables/extractors/citation.py": {
+          "coverage_percent": 98.87640449438203,
+          "executed_lines": 67,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 67
+        },
+        "src/manuscript/variables/extractors/config.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 24,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 24
+        },
+        "src/manuscript/variables/extractors/hypotheses.py": {
+          "coverage_percent": 96.93877551020408,
+          "executed_lines": 68,
+          "missing_lines": 0,
+          "excluded_lines": 4,
+          "total_lines": 68
+        },
+        "src/manuscript/variables/extractors/reproducibility.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 29,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 29
+        },
+        "src/manuscript/variables/extractors/subfields.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 26,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 26
+        },
+        "src/manuscript/variables/extractors/temporal.py": {
+          "coverage_percent": 94.5945945945946,
+          "executed_lines": 30,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 31
+        },
+        "src/manuscript/variables/formatters.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 22,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 22
+        },
+        "src/manuscript/variables/inject.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 22,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 22
+        },
+        "src/manuscript/variables/io.py": {
+          "coverage_percent": 96.34146341463415,
+          "executed_lines": 57,
+          "missing_lines": 1,
+          "excluded_lines": 2,
+          "total_lines": 58
+        },
+        "src/manuscript/variables/registry.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 12,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 12
+        },
+        "src/reproducibility/extraction.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 100,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 100
+        },
+        "src/reproducibility/models.py": {
+          "coverage_percent": 98.9795918367347,
+          "executed_lines": 82,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 82
+        },
+        "src/reproducibility/prompts.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 4,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 4
+        },
+        "src/reproducibility/runner.py": {
+          "coverage_percent": 91.81818181818181,
+          "executed_lines": 150,
+          "missing_lines": 10,
+          "excluded_lines": 0,
+          "total_lines": 160
+        },
+        "src/reproducibility/scoring.py": {
+          "coverage_percent": 99.56140350877193,
+          "executed_lines": 166,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 166
+        },
+        "src/visualization/advanced/embeddings.py": {
+          "coverage_percent": 97.03703703703704,
+          "executed_lines": 112,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 113
+        },
+        "src/visualization/advanced/labels.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 3,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 3
+        },
+        "src/visualization/advanced/topics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 91,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 91
+        },
+        "src/visualization/advanced/word_cloud.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 28,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 28
+        },
+        "src/visualization/advanced_plots.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 5,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 5
+        },
+        "src/visualization/citation_plots.py": {
+          "coverage_percent": 98.96907216494846,
+          "executed_lines": 83,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 83
+        },
+        "src/visualization/descriptive_plots.py": {
+          "coverage_percent": 99.41176470588235,
+          "executed_lines": 156,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 156
+        },
+        "src/visualization/field_overview.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 67,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 67
+        },
+        "src/visualization/figure_runner.py": {
+          "coverage_percent": 95.95959595959596,
+          "executed_lines": 137,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 140
+        },
+        "src/visualization/hypothesis_charts.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 155,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 155
+        },
+        "src/visualization/style.py": {
+          "coverage_percent": 90.9090909090909,
+          "executed_lines": 24,
+          "missing_lines": 1,
+          "excluded_lines": 0,
+          "total_lines": 25
+        },
+        "src/visualization/temporal_plots.py": {
+          "coverage_percent": 91.869918699187,
+          "executed_lines": 95,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 101
+        }
+      }
+    }
   }
 }

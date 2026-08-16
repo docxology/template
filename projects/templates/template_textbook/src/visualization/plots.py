@@ -18,8 +18,10 @@ from typing import Any
 import numpy as np
 
 from textbook import models
+from textbook.analysis import load_case_study_observations
 from textbook.config import iter_chapters, load_config
 from textbook_logging import get_logger
+from textbook_paths import MANUSCRIPT
 
 from ._scaffold import BLUE, GRAY, GREEN, ORANGE, SERIES, new_figure, save_figure
 
@@ -86,6 +88,41 @@ def plot_linear_fit(output_dir: Path) -> Path:
     ax.set_title(f"Linear fit (R² = {fit.r_squared:.3f})")
     ax.legend()
     return save_figure(fig, output_dir, "linear_fit")
+
+
+def plot_case_study_errorbars(output_dir: Path, *, dataset_path: Path | None = None) -> Path:
+    """Plot the six source-bound pilot observations and their standard errors."""
+    source_path = dataset_path or MANUSCRIPT / "assets" / "data" / "sample_dataset.csv"
+    observations = load_case_study_observations(source_path)
+    condition_order = tuple(dict.fromkeys(observation.condition for observation in observations))
+    colors = {condition: SERIES[index % len(SERIES)] for index, condition in enumerate(condition_order)}
+
+    fig, ax = new_figure(width=7.2, height=4.4)
+    x_positions = np.arange(len(observations))
+    for condition in condition_order:
+        indices = [index for index, observation in enumerate(observations) if observation.condition == condition]
+        selected = [observations[index] for index in indices]
+        ax.errorbar(
+            indices,
+            [observation.measurement for observation in selected],
+            yerr=[observation.standard_error for observation in selected],
+            fmt="o",
+            color=colors[condition],
+            ecolor=colors[condition],
+            capsize=4,
+            label=condition.replace("_", " "),
+        )
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(
+        [f"{observation.condition.replace('_', ' ')}\nr{observation.replicate}" for observation in observations],
+        rotation=20,
+        ha="right",
+    )
+    ax.set_xlabel("condition and replicate")
+    ax.set_ylabel("measurement ± standard error")
+    ax.set_title("Pilot measurements with standard errors")
+    ax.legend(title="condition")
+    return save_figure(fig, output_dir, "part_III_case_studies")
 
 
 def placeholder_overview(title: str, output_dir: Path, filename: str) -> Path:
@@ -166,20 +203,28 @@ def generate_worked_figures(output_dir: Path) -> list[Path]:
     ]
 
 
-def generate_chapter_placeholders(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
-    """Generate one ``<part_id>_<stem>.png`` placeholder per chapter in config."""
+def generate_chapter_figures(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
+    """Generate one uniquely named bespoke figure or placeholder per chapter."""
     cfg = config if config is not None else load_config()
     paths: list[Path] = []
     for chapter in iter_chapters(cfg):
         filename = f"{chapter.part_id}_{chapter.stem}.png"
-        paths.append(placeholder_overview(chapter.title, output_dir, filename))
+        if (chapter.part_id, chapter.stem) == ("part_III", "case_studies"):
+            paths.append(plot_case_study_errorbars(output_dir))
+        else:
+            paths.append(placeholder_overview(chapter.title, output_dir, filename))
     return paths
+
+
+def generate_chapter_placeholders(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
+    """Backward-compatible alias for the chapter-figure generation contract."""
+    return generate_chapter_figures(output_dir, config)
 
 
 def generate_all_figures(output_dir: Path, config: dict[str, Any] | None = None) -> list[Path]:
     """Generate every figure the manuscript references."""
     paths = generate_worked_figures(output_dir)
-    paths.extend(generate_chapter_placeholders(output_dir, config))
+    paths.extend(generate_chapter_figures(output_dir, config))
     logger.info("generated %d figures in %s", len(paths), output_dir)
     return paths
 
@@ -187,9 +232,11 @@ def generate_all_figures(output_dir: Path, config: dict[str, Any] | None = None)
 __all__ = [
     "cover_art",
     "generate_all_figures",
+    "generate_chapter_figures",
     "generate_chapter_placeholders",
     "generate_worked_figures",
     "placeholder_overview",
+    "plot_case_study_errorbars",
     "plot_exponential_decay",
     "plot_linear_fit",
     "plot_logistic_growth",

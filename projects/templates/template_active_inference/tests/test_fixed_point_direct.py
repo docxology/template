@@ -67,6 +67,21 @@ def test_fast_path_returns_existing_paths_when_valid(copied_root: Path) -> None:
 
 @pytest.mark.slow
 @pytest.mark.timeout(600)
+def test_missing_figure_registry_triggers_full_settlement(copied_root: Path) -> None:
+    registry_path = copied_root / "output" / "figures" / "figure_registry.json"
+    registry_path.unlink()
+    assert "missing output/figures/figure_registry.json" in _validate_fixed_point(copied_root)
+
+    paths = run_semantic_fixed_point(copied_root, require_analysis_outputs=False)
+
+    assert paths["figure_registry"] == registry_path
+    assert registry_path.is_file()
+    assert "{{" not in registry_path.read_text(encoding="utf-8")
+    assert _validate_fixed_point(copied_root) == []
+
+
+@pytest.mark.slow
+@pytest.mark.timeout(600)
 def test_stale_artifact_triggers_full_settlement(copied_root: Path) -> None:
     target = copied_root / "output" / "data" / "interop_roundtrip_report.json"
     target.unlink()

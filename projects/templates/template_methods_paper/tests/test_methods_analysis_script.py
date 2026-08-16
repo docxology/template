@@ -66,6 +66,12 @@ def test_run_methods_analysis_registry_binds_real_figure(tmp_path):
             "filename": "step_counts.png",
             "generated_by": "scripts.methods_analysis.run_methods_analysis",
             "label": "fig:step_counts",
+            "metadata": {
+                "alt_text": (
+                    "Two vertical bars compare the compiled step counts for PBS preparation "
+                    "and sensor calibration; the sensor-calibration plan contains the taller bar."
+                )
+            },
         }
     ]
     assert (registry.parent / "step_counts.png").is_file()

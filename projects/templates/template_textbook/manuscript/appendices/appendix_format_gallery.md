@@ -22,8 +22,8 @@ subscript, E = mc^2^ with a superscript, and a footnote.[^demo]
 [^demo]: Footnotes collect at the end of the document (or page, in PDF). Use them
 for asides that would interrupt the sentence.
 
-You can hard-break a line with an explicit `<br>` element,<br>
-or separate paragraphs with a blank line. Escape
+You can hard-break a line with a backslash at the line end.\
+The next line begins after that break; separate paragraphs with a blank line. Escape
 literal Markdown with a backslash: \*not italic\*.
 
 ---

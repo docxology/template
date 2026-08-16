@@ -1,0 +1,12 @@
+[project]
+name = "child_signal"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy", "matplotlib", "pyyaml"]
+# spec_hash: 1f1f96d50b348214  grammar_hash: a1f3e428cf1fb3e3
+# seed: 42  track: analytical  section_set: standard
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

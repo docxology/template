@@ -30,15 +30,22 @@ from registered_report import freeze_registration, run_registered_analysis  # no
 from registered_report.figures import (  # noqa: E402
     FIGURE_REGISTRY_SCHEMA,
     REGISTERED_REPORT_FIGURE_SPECS,
+    RegisteredReportFigureSpec,
+    build_accessible_figure_specs,
     render_all_figures,
 )
 
 
-def publish_output_figures(figures: dict[str, Path], output_figures: Path) -> list[Path]:
+def publish_output_figures(
+    figures: dict[str, Path],
+    output_figures: Path,
+    *,
+    specs: tuple[RegisteredReportFigureSpec, ...] = REGISTERED_REPORT_FIGURE_SPECS,
+) -> list[Path]:
     """Mirror a complete real render and write its provenance registry."""
     return publish_generated_figures(
         output_figures,
-        REGISTERED_REPORT_FIGURE_SPECS,
+        specs,
         figures.values(),
         schema_version=FIGURE_REGISTRY_SCHEMA,
     )
@@ -58,7 +65,11 @@ def generate_assets(
     frozen = freeze_registration(registration)
     summary = run_registered_analysis(frozen)
     figures = render_all_figures(frozen, summary, figures_dir)
-    published = publish_output_figures(figures, output_figures_dir)
+    published = publish_output_figures(
+        figures,
+        output_figures_dir,
+        specs=build_accessible_figure_specs(frozen, summary),
+    )
 
     data_dir.mkdir(parents=True, exist_ok=True)
     analysis_path = data_dir / "demo_analysis.json"

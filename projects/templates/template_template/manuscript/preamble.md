@@ -1,4 +1,10 @@
 ```latex
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{listings}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
 \makeatletter
 \@ifpackageloaded{geometry}
   {\geometry{margin=1.0in}}

@@ -10,7 +10,10 @@ from pathlib import Path
 import pytest
 
 from infrastructure.core.files.secure_write import atomic_write_text_confined
-from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    snapshot_current_artifact_manifest,
+)
 from infrastructure.rendering.manuscript_composition import (
     COMPOSITION_RELATIVE_PATH,
     read_manuscript_composition,
@@ -28,22 +31,31 @@ from infrastructure.validation.publication.rendered_provenance import (
     write_rendered_provenance_receipt,
 )
 from infrastructure.validation.rendered_snapshot import (
+    RenderedSnapshotError,
+    _output_records,
     build_current_rendered_snapshot,
 )
+from infrastructure.validation.output.validator import collect_detailed_validation_results
+from infrastructure.validation.output.pipeline import execute_validation_pipeline
 from tests._support.projects import make_project, write_doc
 
 PROJECT = "templates/template_test"
+EXTERNAL_PROJECT = "working/demo"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def _write_green_validation_report(root: Path, project: Path) -> dict[str, object]:
     snapshot = build_current_rendered_snapshot(root, PROJECT)
     checks = {"Rendered structure": True, "Artifact manifest": True}
+    detailed_validation = collect_detailed_validation_results(project / "output", require_pdf=False)
     payload: dict[str, object] = {
         "timestamp": "2026-01-01T00:00:00Z",
         "checks": checks,
         "figure_issues": [],
-        "output_statistics": {},
+        "output_statistics": {
+            "inventory_mode": "stable-shippable-output-v1",
+            "detailed_validation": detailed_validation,
+        },
         "summary": {
             "total_checks": len(checks),
             "passed": len(checks),
@@ -129,6 +141,63 @@ def _green_project(
     return project
 
 
+def _external_stage4_project(tmp_path: Path) -> tuple[Path, Path]:
+    """Create tracked template/private worktrees joined by a managed lifecycle link."""
+
+    template_root = tmp_path / "template"
+    private_project = tmp_path / "private" / "demo"
+    make_project(
+        private_project.parent,
+        "demo",
+        repo_layout=False,
+        with_manuscript=True,
+        with_output=True,
+    )
+    write_doc(template_root / ".gitignore", "# synthetic template policy\n")
+    write_doc(template_root / "pyproject.toml", '[project]\nname = "synthetic-template"\n')
+    write_doc(
+        template_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml",
+        "stages:\n  - name: Render\n    script: scripts/pipeline/stage_03_render.py\n",
+    )
+    write_doc(template_root / "infrastructure" / "rendering" / "runtime.py", "ENABLED = True\n")
+    write_doc(template_root / "scripts" / "__init__.py", '"""Synthetic stage scripts."""\n')
+    write_doc(template_root / "scripts" / "pipeline" / "stage_03_render.py", 'print("render")\n')
+
+    write_doc(private_project / ".gitignore", "output/\n")
+    render_config = (
+        "render:\n  formats:\n    pdf: false\n    html: true\n    slides: false\n    docx: false\n    epub: false\n"
+    )
+    write_doc(private_project / "manuscript" / "config.yaml", render_config)
+    write_doc(private_project / "manuscript" / "01_intro.md", "# Intro\n\nCurrent prose.\n")
+    write_doc(private_project / "output" / "manuscript" / "config.yaml", render_config)
+    write_doc(private_project / "output" / "manuscript" / "01_intro.md", "# Intro\n\nCurrent prose.\n")
+    write_doc(
+        private_project / "output" / "web" / "index.html",
+        "<!doctype html><html><body>Current prose.</body></html>\n",
+    )
+    combined = private_project / "output" / "web" / "_combined_manuscript.md"
+    write_doc(combined, "# Intro\n\nCurrent prose.\n")
+    write_doc(private_project / "output" / "data" / "result.json", '{"status": "current"}\n')
+    write_manuscript_composition(
+        private_project,
+        EXTERNAL_PROJECT,
+        [private_project / "output" / "manuscript" / "01_intro.md"],
+        combined,
+    )
+
+    managed = template_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+    for repository in (template_root, private_project):
+        subprocess.run(["git", "init", "-q"], cwd=repository, check=True, capture_output=True)
+        subprocess.run(["git", "add", "."], cwd=repository, check=True, capture_output=True)
+    snapshot_current_artifact_manifest(
+        private_project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+    return template_root, private_project
+
+
 def test_receipt_is_deterministic_and_current_for_green_real_files(tmp_path: Path) -> None:
     project = _green_project(tmp_path)
 
@@ -144,6 +213,169 @@ def test_receipt_is_deterministic_and_current_for_green_real_files(tmp_path: Pat
     assert first.config.file_count >= 3
     assert first.output.file_count >= 4
     assert validate_rendered_provenance(tmp_path, PROJECT).valid
+
+
+def test_rendered_snapshot_accepts_explicit_stable_local_manifest(tmp_path: Path) -> None:
+    """A blanket-ignored lifecycle output compares within its authorized mode."""
+    project = tmp_path / "private" / "demo"
+    result = project / "output" / "data" / "result.json"
+    result.parent.mkdir(parents=True)
+    result.write_text('{"count": 7}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(project)], check=True)
+    (project / ".gitignore").write_text("output/\n", encoding="utf-8")
+    snapshot_current_artifact_manifest(
+        project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    records, manifest = _output_records(
+        project,
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    assert [record.key for record in records] == ["output/data/result.json"]
+    assert manifest.path == "output/reports/artifact_manifest.json"
+
+
+def test_external_working_project_stage4_and_receipt_bind_both_worktrees(tmp_path: Path) -> None:
+    """Stage 4 binds private source/output and shared template implementation."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+
+    assert execute_validation_pipeline(EXTERNAL_PROJECT, repo_root=template_root) == 0
+    snapshot = build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+    receipt = write_rendered_provenance_receipt(template_root, EXTERNAL_PROJECT)
+
+    assert (private_project / RECEIPT_RELATIVE_PATH).is_file()
+    assert snapshot.stage.file_count > 0
+    assert snapshot.source.file_count > 0
+    assert snapshot.config.file_count > 0
+    assert snapshot.output.file_count > 0
+    assert receipt.stage == snapshot.stage
+    assert receipt.source == snapshot.source
+    assert receipt.config == snapshot.config
+    assert receipt.output == snapshot.output
+
+
+def test_external_snapshot_bare_name_recovers_managed_working_leaf(tmp_path: Path) -> None:
+    """Bare selection retains the same managed lifecycle authority as qualified."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+    combined = private_project / "output" / "web" / "_combined_manuscript.md"
+    write_manuscript_composition(
+        private_project,
+        "demo",
+        [private_project / "output" / "manuscript" / "01_intro.md"],
+        combined,
+    )
+    snapshot_current_artifact_manifest(
+        private_project / "output",
+        inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    snapshot = build_current_rendered_snapshot(template_root, "demo")
+
+    assert snapshot.project == "demo"
+    assert snapshot.source.file_count > 0
+    assert snapshot.config.file_count > 0
+
+
+def test_external_snapshot_requires_real_private_git_boundary(tmp_path: Path) -> None:
+    """An arbitrary external directory cannot become source-bound evidence."""
+
+    template_root = tmp_path / "template"
+    private_project = tmp_path / "outside" / "demo"
+    write_doc(private_project / "src" / "analysis.py", "VALUE = 1\n")
+    write_doc(private_project / "manuscript" / "01_intro.md", "# Intro\n")
+    managed = template_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "PROJECT_REPOSITORY_MISSING"
+
+
+def test_external_snapshot_rejects_intermediate_lifecycle_symlink(tmp_path: Path) -> None:
+    """Only the selected project leaf may cross into the private sidecar."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+    leaf = template_root / "projects" / "working" / "demo"
+    leaf.unlink()
+    lifecycle = leaf.parent
+    lifecycle.rmdir()
+    lifecycle.symlink_to(private_project.parent, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_rejects_symlinked_projects_root(tmp_path: Path) -> None:
+    """A broad projects-directory redirect cannot authorize private source."""
+
+    template_root, _private_project = _external_stage4_project(tmp_path)
+    projects_root = template_root / "projects"
+    redirected = tmp_path / "redirected-projects"
+    projects_root.rename(redirected)
+    projects_root.symlink_to(redirected, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_rejects_public_template_leaf_symlink(tmp_path: Path) -> None:
+    """Tracked public-template identity cannot be delegated to an external leaf."""
+
+    template_root, private_project = _external_stage4_project(tmp_path)
+    public_link = template_root / "projects" / "templates" / "demo"
+    public_link.parent.mkdir(parents=True)
+    public_link.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, "templates/demo")
+
+    assert exc_info.value.code == "PROJECT_LINK_INVALID"
+
+
+def test_external_snapshot_rejects_source_symlink_outside_private_worktree(tmp_path: Path) -> None:
+    """A managed project link does not authorize nested source escapes."""
+
+    template_root = tmp_path / "template"
+    private_project = tmp_path / "private" / "demo"
+    outside = tmp_path / "outside"
+    write_doc(private_project / "src" / "analysis.py", "VALUE = 1\n")
+    write_doc(private_project / "manuscript" / "01_intro.md", "# Intro\n")
+    write_doc(outside / "secret.py", "SECRET = True\n")
+    (private_project / "src" / "escape").symlink_to(outside, target_is_directory=True)
+    subprocess.run(["git", "init", "-q"], cwd=private_project, check=True, capture_output=True)
+    subprocess.run(["git", "add", "."], cwd=private_project, check=True, capture_output=True)
+    managed = template_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(template_root, EXTERNAL_PROJECT)
+
+    assert exc_info.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+
+def test_rendered_snapshot_rejects_manifest_from_another_inventory_mode(tmp_path: Path) -> None:
+    project = _green_project(tmp_path)
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["inventory_mode"] = STABLE_LOCAL_OUTPUT_INVENTORY_MODE
+    manifest_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with pytest.raises(RenderedSnapshotError) as exc_info:
+        build_current_rendered_snapshot(tmp_path, PROJECT)
+
+    assert exc_info.value.code == "ARTIFACT_MANIFEST_INVALID"
+    assert "artifact inventory mode mismatch" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(
@@ -345,6 +577,37 @@ def test_runtime_history_is_nonstable_but_unattested_report_still_fails(tmp_path
 
     assert [issue.code for issue in validation.issues] == ["ARTIFACT_MANIFEST_INCOMPLETE"]
     assert "output/reports/unattested_quality_report.json" in validation.issues[0].message
+
+
+def test_report_and_receipt_are_fixed_points_over_ignored_runtime_state(tmp_path: Path) -> None:
+    """Regenerating validation evidence must ignore machine-local residue."""
+    project = _green_project(tmp_path)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+    report_path = project / "output" / "reports" / "validation_report.json"
+    receipt_path = project / RECEIPT_RELATIVE_PATH
+    baseline_report = report_path.read_bytes()
+    baseline_receipt = receipt_path.read_bytes()
+
+    ignored_files = {
+        "pdf/build.aux": b"latex auxiliary",
+        "reports/.history/telemetry-123.json": b"{}\n",
+        "reports/snapshots/stage.json": b"{}\n",
+        "logs/pipeline.log": b"runtime log\n",
+        "figures/.partial.png": b"atomic leftover",
+    }
+    for relative, payload in ignored_files.items():
+        path = project / "output" / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(payload)
+    for relative in ("slides", "simulations", "llm"):
+        (project / "output" / relative).mkdir(parents=True, exist_ok=True)
+
+    _write_green_validation_report(tmp_path, project)
+    write_rendered_provenance_receipt(tmp_path, PROJECT)
+
+    assert report_path.read_bytes() == baseline_report
+    assert receipt_path.read_bytes() == baseline_receipt
+    assert validate_rendered_provenance(tmp_path, PROJECT).valid
 
 
 def test_manifest_and_validation_report_digests_are_bound_separately(tmp_path: Path) -> None:

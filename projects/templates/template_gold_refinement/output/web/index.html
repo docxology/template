@@ -500,6 +500,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -520,226 +561,237 @@ Injection</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
+<li><a href="#transmission-begins" id="toc-transmission-begins"><span
+class="toc-section-number">1</span> Transmission begins</a></li>
 <li><a href="#sec:abstract" id="toc-sec:abstract"><span
-class="toc-section-number">1</span> Abstract</a></li>
+class="toc-section-number">2</span> Abstract</a></li>
 <li><a href="#sec:introduction" id="toc-sec:introduction"><span
-class="toc-section-number">2</span> Introduction: Ore to Nine-Nines</a>
+class="toc-section-number">3</span> Introduction: Ore to Nine-Nines</a>
 <ul>
 <li><a href="#the-problem" id="toc-the-problem"><span
-class="toc-section-number">2.1</span> The problem</a></li>
+class="toc-section-number">3.1</span> The problem</a></li>
 <li><a href="#the-analogy-as-pipeline"
 id="toc-the-analogy-as-pipeline"><span
-class="toc-section-number">2.2</span> The analogy as pipeline</a></li>
+class="toc-section-number">3.2</span> The analogy as pipeline</a></li>
 <li><a href="#mega-madlib-token-engine"
 id="toc-mega-madlib-token-engine"><span
-class="toc-section-number">2.3</span> Mega-madlib token engine</a></li>
+class="toc-section-number">3.3</span> Mega-madlib token engine</a></li>
 <li><a href="#implementation-circuit"
 id="toc-implementation-circuit"><span
-class="toc-section-number">2.4</span> Implementation circuit</a></li>
+class="toc-section-number">3.4</span> Implementation circuit</a></li>
 <li><a href="#open-question-pinned" id="toc-open-question-pinned"><span
-class="toc-section-number">2.5</span> Open question pinned</a></li>
+class="toc-section-number">3.5</span> Open question pinned</a></li>
 </ul></li>
 <li><a href="#sec:methodology" id="toc-sec:methodology"><span
-class="toc-section-number">3</span> Methodology: The Refinery
+class="toc-section-number">4</span> Methodology: The Refinery
 Pipeline</a>
 <ul>
 <li><a href="#research-design" id="toc-research-design"><span
-class="toc-section-number">3.1</span> Research design</a></li>
+class="toc-section-number">4.1</span> Research design</a></li>
 <li><a href="#source-domain-construction-and-analogy-boundary"
 id="toc-source-domain-construction-and-analogy-boundary"><span
-class="toc-section-number">3.2</span> Source-domain construction and
+class="toc-section-number">4.2</span> Source-domain construction and
 analogy boundary</a></li>
 <li><a href="#inputs-and-source-ownership"
 id="toc-inputs-and-source-ownership"><span
-class="toc-section-number">3.3</span> Inputs and source
+class="toc-section-number">4.3</span> Inputs and source
 ownership</a></li>
 <li><a href="#stage-definitions" id="toc-stage-definitions"><span
-class="toc-section-number">3.4</span> Stage definitions</a></li>
+class="toc-section-number">4.4</span> Stage definitions</a></li>
 <li><a href="#refinery-model-and-purity-measure"
 id="toc-refinery-model-and-purity-measure"><span
-class="toc-section-number">3.5</span> Refinery model and purity
+class="toc-section-number">4.5</span> Refinery model and purity
 measure</a></li>
 <li><a href="#formalism-registry" id="toc-formalism-registry"><span
-class="toc-section-number">3.6</span> Formalism registry</a></li>
+class="toc-section-number">4.6</span> Formalism registry</a></li>
 <li><a href="#deterministic-token-composition"
 id="toc-deterministic-token-composition"><span
-class="toc-section-number">3.7</span> Deterministic token
+class="toc-section-number">4.7</span> Deterministic token
 composition</a></li>
 <li><a href="#config-owned-lexicon" id="toc-config-owned-lexicon"><span
-class="toc-section-number">3.8</span> Config-owned lexicon</a></li>
+class="toc-section-number">4.8</span> Config-owned lexicon</a></li>
 <li><a href="#derived-grading-vocabulary"
 id="toc-derived-grading-vocabulary"><span
-class="toc-section-number">3.9</span> Derived grading
+class="toc-section-number">4.9</span> Derived grading
 vocabulary</a></li>
 <li><a href="#execution-procedure" id="toc-execution-procedure"><span
-class="toc-section-number">3.10</span> Execution procedure</a></li>
+class="toc-section-number">4.10</span> Execution procedure</a></li>
 <li><a href="#traceability-and-artifact-lineage"
 id="toc-traceability-and-artifact-lineage"><span
-class="toc-section-number">3.11</span> Traceability and artifact
+class="toc-section-number">4.11</span> Traceability and artifact
 lineage</a></li>
 <li><a href="#evaluation-and-acceptance-criteria"
 id="toc-evaluation-and-acceptance-criteria"><span
-class="toc-section-number">3.12</span> Evaluation and acceptance
+class="toc-section-number">4.12</span> Evaluation and acceptance
 criteria</a>
 <ul>
 <li><a href="#adversarial-assay" id="toc-adversarial-assay"><span
-class="toc-section-number">3.12.1</span> Adversarial assay</a></li>
+class="toc-section-number">4.12.1</span> Adversarial assay</a></li>
 <li><a href="#scientific-integrity-risk-model"
 id="toc-scientific-integrity-risk-model"><span
-class="toc-section-number">3.12.2</span> Scientific-integrity risk
+class="toc-section-number">4.12.2</span> Scientific-integrity risk
 model</a></li>
 <li><a href="#multi-objective-purity"
 id="toc-multi-objective-purity"><span
-class="toc-section-number">3.12.3</span> Multi-objective purity</a></li>
+class="toc-section-number">4.12.3</span> Multi-objective purity</a></li>
 </ul></li>
 <li><a href="#reproducibility-and-validity-safeguards"
 id="toc-reproducibility-and-validity-safeguards"><span
-class="toc-section-number">3.13</span> Reproducibility and validity
+class="toc-section-number">4.13</span> Reproducibility and validity
 safeguards</a></li>
 </ul></li>
 <li><a href="#sec:results" id="toc-sec:results"><span
-class="toc-section-number">4</span> Results: Purity Progression and
+class="toc-section-number">5</span> Results: Purity Progression and
 Karat Grading</a>
 <ul>
 <li><a href="#purity-progression" id="toc-purity-progression"><span
-class="toc-section-number">4.1</span> Purity progression</a></li>
+class="toc-section-number">5.1</span> Purity progression</a></li>
 <li><a href="#karat-grading-scale" id="toc-karat-grading-scale"><span
-class="toc-section-number">4.2</span> Karat grading scale</a></li>
+class="toc-section-number">5.2</span> Karat grading scale</a></li>
 <li><a href="#final-certification" id="toc-final-certification"><span
-class="toc-section-number">4.3</span> Final certification</a></li>
+class="toc-section-number">5.3</span> Final certification</a></li>
 <li><a href="#token-plan-summary" id="toc-token-plan-summary"><span
-class="toc-section-number">4.4</span> Token plan summary</a>
+class="toc-section-number">5.4</span> Token plan summary</a>
 <ul>
 <li><a href="#category-distribution"
 id="toc-category-distribution"><span
-class="toc-section-number">4.4.1</span> Category distribution</a></li>
+class="toc-section-number">5.4.1</span> Category distribution</a></li>
 <li><a href="#section-distribution" id="toc-section-distribution"><span
-class="toc-section-number">4.4.2</span> Section distribution</a></li>
+class="toc-section-number">5.4.2</span> Section distribution</a></li>
 <li><a href="#provenance-trace" id="toc-provenance-trace"><span
-class="toc-section-number">4.4.3</span> Provenance trace</a></li>
+class="toc-section-number">5.4.3</span> Provenance trace</a></li>
 </ul></li>
 <li><a href="#provenance-flow" id="toc-provenance-flow"><span
-class="toc-section-number">4.5</span> Provenance flow</a></li>
+class="toc-section-number">5.5</span> Provenance flow</a></li>
 <li><a href="#purity-vs-claim-support"
 id="toc-purity-vs-claim-support"><span
-class="toc-section-number">4.6</span> Purity vs claim support</a></li>
+class="toc-section-number">5.6</span> Purity vs claim support</a></li>
 <li><a href="#token-selection-sensitivity"
 id="toc-token-selection-sensitivity"><span
-class="toc-section-number">4.7</span> Token selection
+class="toc-section-number">5.7</span> Token selection
 sensitivity</a></li>
 <li><a href="#integrity-gate-matrix"
 id="toc-integrity-gate-matrix"><span
-class="toc-section-number">4.8</span> Integrity gate matrix</a></li>
+class="toc-section-number">5.8</span> Integrity gate matrix</a></li>
 <li><a href="#formalism-traceability"
 id="toc-formalism-traceability"><span
-class="toc-section-number">4.9</span> Formalism traceability</a></li>
+class="toc-section-number">5.9</span> Formalism traceability</a></li>
 <li><a href="#implementation-circuit-1"
 id="toc-implementation-circuit-1"><span
-class="toc-section-number">4.10</span> Implementation circuit</a></li>
+class="toc-section-number">5.10</span> Implementation circuit</a></li>
 <li><a href="#claim-evidence-assay" id="toc-claim-evidence-assay"><span
-class="toc-section-number">4.11</span> Claim-evidence assay</a></li>
+class="toc-section-number">5.11</span> Claim-evidence assay</a></li>
 <li><a href="#scientific-integrity-risk-matrix"
 id="toc-scientific-integrity-risk-matrix"><span
-class="toc-section-number">4.12</span> Scientific-integrity risk
+class="toc-section-number">5.12</span> Scientific-integrity risk
 matrix</a></li>
 <li><a href="#evidence-tier-ladder" id="toc-evidence-tier-ladder"><span
-class="toc-section-number">4.13</span> Evidence-tier ladder</a></li>
+class="toc-section-number">5.13</span> Evidence-tier ladder</a></li>
 <li><a href="#adversarial-security-assay"
 id="toc-adversarial-security-assay"><span
-class="toc-section-number">4.14</span> Adversarial security
+class="toc-section-number">5.14</span> Adversarial security
 assay</a></li>
 <li><a href="#contribution-claims" id="toc-contribution-claims"><span
-class="toc-section-number">4.15</span> Contribution claims</a></li>
+class="toc-section-number">5.15</span> Contribution claims</a></li>
 <li><a href="#shared-evidence-registry-summary"
 id="toc-shared-evidence-registry-summary"><span
-class="toc-section-number">4.16</span> Shared evidence registry
+class="toc-section-number">5.16</span> Shared evidence registry
 summary</a></li>
 <li><a href="#figure-quality-report"
 id="toc-figure-quality-report"><span
-class="toc-section-number">4.17</span> Figure quality report</a></li>
+class="toc-section-number">5.17</span> Figure quality report</a></li>
 </ul></li>
 <li><a href="#sec:discussion" id="toc-sec:discussion"><span
-class="toc-section-number">5</span> Discussion: Load-Bearing vs
+class="toc-section-number">6</span> Discussion: Load-Bearing vs
 Rhetorical Analogy</a>
 <ul>
 <li><a href="#load-bearing-vs-rhetorical"
 id="toc-load-bearing-vs-rhetorical"><span
-class="toc-section-number">5.1</span> Load-bearing vs
+class="toc-section-number">6.1</span> Load-bearing vs
 rhetorical</a></li>
 <li><a href="#useful-adaptation-cases"
 id="toc-useful-adaptation-cases"><span
-class="toc-section-number">5.2</span> Useful adaptation cases</a></li>
+class="toc-section-number">6.2</span> Useful adaptation cases</a></li>
 <li><a href="#misuse-modes" id="toc-misuse-modes"><span
-class="toc-section-number">5.3</span> Misuse modes</a></li>
+class="toc-section-number">6.3</span> Misuse modes</a></li>
 <li><a href="#design-principles" id="toc-design-principles"><span
-class="toc-section-number">5.4</span> Design principles</a></li>
+class="toc-section-number">6.4</span> Design principles</a></li>
 <li><a href="#analogy-break-boundary"
 id="toc-analogy-break-boundary"><span
-class="toc-section-number">5.5</span> Analogy-break boundary</a></li>
+class="toc-section-number">6.5</span> Analogy-break boundary</a></li>
 </ul></li>
 <li><a href="#sec:conclusion" id="toc-sec:conclusion"><span
-class="toc-section-number">6</span> Conclusion: Certification and
+class="toc-section-number">7</span> Conclusion: Certification and
 Forking</a>
 <ul>
 <li><a href="#summary" id="toc-summary"><span
-class="toc-section-number">6.1</span> Summary</a></li>
+class="toc-section-number">7.1</span> Summary</a></li>
 <li><a href="#forking-responsibilities"
 id="toc-forking-responsibilities"><span
-class="toc-section-number">6.2</span> Forking responsibilities</a></li>
+class="toc-section-number">7.2</span> Forking responsibilities</a></li>
 </ul></li>
 <li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
-class="toc-section-number">7</span> Reproducibility: Seeded
+class="toc-section-number">8</span> Reproducibility: Seeded
 Regeneration</a>
 <ul>
 <li><a href="#deterministic-regeneration"
 id="toc-deterministic-regeneration"><span
-class="toc-section-number">7.1</span> Deterministic
+class="toc-section-number">8.1</span> Deterministic
 regeneration</a></li>
 <li><a href="#artifact-inventory" id="toc-artifact-inventory"><span
-class="toc-section-number">7.2</span> Artifact inventory</a></li>
+class="toc-section-number">8.2</span> Artifact inventory</a></li>
 <li><a href="#regeneration-commands"
 id="toc-regeneration-commands"><span
-class="toc-section-number">7.3</span> Regeneration commands</a></li>
+class="toc-section-number">8.3</span> Regeneration commands</a></li>
 <li><a href="#config-ownership" id="toc-config-ownership"><span
-class="toc-section-number">7.4</span> Config ownership</a></li>
+class="toc-section-number">8.4</span> Config ownership</a></li>
 <li><a href="#evidence-registry-separation"
 id="toc-evidence-registry-separation"><span
-class="toc-section-number">7.5</span> Evidence-registry
+class="toc-section-number">8.5</span> Evidence-registry
 separation</a></li>
 </ul></li>
 <li><a href="#sec:scope" id="toc-sec:scope"><span
-class="toc-section-number">8</span> Scope: Related Work and
+class="toc-section-number">9</span> Scope: Related Work and
 Limitations</a>
 <ul>
 <li><a href="#scope-limitations" id="toc-scope-limitations"><span
-class="toc-section-number">8.1</span> Scope limitations</a></li>
+class="toc-section-number">9.1</span> Scope limitations</a></li>
 <li><a href="#related-work" id="toc-related-work"><span
-class="toc-section-number">8.2</span> Related work</a></li>
+class="toc-section-number">9.2</span> Related work</a></li>
 <li><a href="#responsible-forking" id="toc-responsible-forking"><span
-class="toc-section-number">8.3</span> Responsible forking</a></li>
+class="toc-section-number">9.3</span> Responsible forking</a></li>
 </ul></li>
 <li><a href="#sec:evaluation" id="toc-sec:evaluation"><span
-class="toc-section-number">9</span> Quality Probes</a>
+class="toc-section-number">10</span> Quality Probes</a>
 <ul>
 <li><a href="#qa-probes" id="toc-qa-probes"><span
-class="toc-section-number">9.1</span> QA probes</a></li>
+class="toc-section-number">10.1</span> QA probes</a></li>
 <li><a href="#audit-rules" id="toc-audit-rules"><span
-class="toc-section-number">9.2</span> Audit rules</a></li>
+class="toc-section-number">10.2</span> Audit rules</a></li>
 </ul></li>
 <li><a href="#sec:authoring_contract"
 id="toc-sec:authoring_contract"><span
-class="toc-section-number">10</span> Authoring Contract</a>
+class="toc-section-number">11</span> Authoring Contract</a>
 <ul>
 <li><a href="#obligations" id="toc-obligations"><span
-class="toc-section-number">10.1</span> Obligations</a></li>
+class="toc-section-number">11.1</span> Obligations</a></li>
 <li><a href="#fork-checklist" id="toc-fork-checklist"><span
-class="toc-section-number">10.2</span> Fork checklist</a></li>
+class="toc-section-number">11.2</span> Fork checklist</a></li>
 </ul></li>
+<li><a href="#transmission-ends" id="toc-transmission-ends"><span
+class="toc-section-number">12</span> Transmission ends</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
-<h1 data-number="1" id="sec:abstract"><span
-class="header-section-number">1</span> Abstract</h1>
+<!-- transmission:begin -->
+<h1 data-number="1" id="transmission-begins"><span
+class="header-section-number">1</span> Transmission begins</h1>
+<p>This source-owned bookend marks the beginning of the manuscript
+payload. It is part of the rendered object and carries no claim beyond
+ordering and payload completeness.</p>
+<hr />
+<h1 data-number="2" id="sec:abstract"><span
+class="header-section-number">2</span> Abstract</h1>
 <p>This paper presents a deterministic, artifact-based methods
 demonstration that maps gold-refining stages onto a reproducible
 manuscript pipeline. The executable refinery processes manuscript ore
@@ -780,7 +832,7 @@ href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al.
 2013</a>)</span>. The project-local claim assay reports 9/9 supported
 contribution claims (100.00%, passing), while the integrity model
 exposes 9 source-owned risk dimensions and the shared template evidence
-registry contributes 1113 source-tiered facts when the validation gate
+registry contributes 956 source-tiered facts when the validation gate
 has run.</p>
 <p><strong>Results:</strong> The canonical run reaches 99.9999999%
 (nine-nines) (24K (nine-nines certified)), with a designed total gain of
@@ -792,8 +844,8 @@ security compliance, or external validity.</p>
 mega-madlib, token injection, scientific purity, assaying, karat
 grading, security assay, supply-chain provenance</p>
 <hr />
-<h1 data-number="2" id="sec:introduction"><span
-class="header-section-number">2</span> Introduction: Ore to
+<h1 data-number="3" id="sec:introduction"><span
+class="header-section-number">3</span> Introduction: Ore to
 Nine-Nines</h1>
 <p>Gold refining is one of humanity’s oldest purification technologies.
 The pre-1800 record is not a single modern pipeline, but it gives the
@@ -835,8 +887,8 @@ clearly enough that local certification is not mistaken for domain
 truth, historical authority, or security compliance? The paper answers
 these questions by constructing and validating one exemplar; it does not
 compare writing interventions or estimate effects on readers.</p>
-<h2 data-number="2.1" id="the-problem"><span
-class="header-section-number">2.1</span> The problem</h2>
+<h2 data-number="3.1" id="the-problem"><span
+class="header-section-number">3.1</span> The problem</h2>
 <p>A scientific manuscript accumulates impurities through its drafting
 lifecycle: unsupported claims, unresolved references, redundant prose,
 and citation gaps. The template repository provides infrastructure to
@@ -864,8 +916,8 @@ data-cites="peng2011reproducible ioannidis2005false">(<a
 href="#ref-peng2011reproducible" role="doc-biblioref">Peng 2011</a>; <a
 href="#ref-ioannidis2005false" role="doc-biblioref">Ioannidis
 2005</a>)</span>.</p>
-<h2 data-number="2.2" id="the-analogy-as-pipeline"><span
-class="header-section-number">2.2</span> The analogy as pipeline</h2>
+<h2 data-number="3.2" id="the-analogy-as-pipeline"><span
+class="header-section-number">3.2</span> The analogy as pipeline</h2>
 <p>We map five gold-refining stages onto manuscript operations:</p>
 <ul>
 <li><ol type="1">
@@ -885,8 +937,8 @@ output. These invariants are enforced by
 positive and negative tests. <code>stages_to_target()</code> supplies
 the inverse query: given a target, return the shortest valid prefix
 rather than selecting later stages out of order.</p>
-<h2 data-number="2.3" id="mega-madlib-token-engine"><span
-class="header-section-number">2.3</span> Mega-madlib token engine</h2>
+<h2 data-number="3.3" id="mega-madlib-token-engine"><span
+class="header-section-number">3.3</span> Mega-madlib token engine</h2>
 <p>The manuscript’s domain vocabulary is not hand-authored prose but
 config-owned lexical data, selected deterministically by a seeded
 SHA-256 digest. The engine generates 24 tokens across 11 slots and 8
@@ -906,8 +958,8 @@ evidence validation, figure registry check, and citation validation to
 source-owned operations; results tokens surface artifact manifest,
 figure registry, and token provenance; discussion tokens mark the fork
 obligation and domain validator where the analogy must stop.</p>
-<h2 data-number="2.4" id="implementation-circuit"><span
-class="header-section-number">2.4</span> Implementation circuit</h2>
+<h2 data-number="3.4" id="implementation-circuit"><span
+class="header-section-number">3.4</span> Implementation circuit</h2>
 <p>The metaphor becomes operational only when every transformation has
 an implementation owner. In this exemplar, configuration creates the
 ore, <code>src/refinery.py</code> defines the purity stages,
@@ -918,8 +970,8 @@ visuals, and the template validators decide whether the hydrated
 manuscript can be treated as publication metal. The loop is deliberately
 closed: failures from the validators point back to source files, not to
 hand-polished output.</p>
-<h2 data-number="2.5" id="open-question-pinned"><span
-class="header-section-number">2.5</span> Open question pinned</h2>
+<h2 data-number="3.5" id="open-question-pinned"><span
+class="header-section-number">3.5</span> Open question pinned</h2>
 <p>Is the analogy load-bearing or rhetorical? We assert it is
 <strong>both</strong>: it frames the methods paper (rhetorical) and
 operationalizes each stage against real infrastructure (load-bearing).
@@ -934,11 +986,11 @@ Thagard 1995</a>)</span>. The open question is not whether to use the
 analogy, but where the mapping breaks - a question the discussion
 addresses.</p>
 <hr />
-<h1 data-number="3" id="sec:methodology"><span
-class="header-section-number">3</span> Methodology: The Refinery
+<h1 data-number="4" id="sec:methodology"><span
+class="header-section-number">4</span> Methodology: The Refinery
 Pipeline</h1>
-<h2 data-number="3.1" id="research-design"><span
-class="header-section-number">3.1</span> Research design</h2>
+<h2 data-number="4.1" id="research-design"><span
+class="header-section-number">4.1</span> Research design</h2>
 <p>We conducted a deterministic, artifact-based methods demonstration.
 The research object is one executable manuscript compendium comprising
 authored configuration and Markdown, project source code, generated data
@@ -972,9 +1024,9 @@ href="#ref-rule2019jupyter" role="doc-biblioref"><span
 class="nocase">Rule et al.</span> 2019</a>)</span>. The narrower
 contribution here is provenance at the token and claim levels; the
 workflow does not purport to validate scientific truth.</p>
-<h2 data-number="3.2"
+<h2 data-number="4.2"
 id="source-domain-construction-and-analogy-boundary"><span
-class="header-section-number">3.2</span> Source-domain construction and
+class="header-section-number">4.2</span> Source-domain construction and
 analogy boundary</h2>
 <p>Structured reporting guidelines provide the closest scholarly
 analogue for the gate layer, but they also set its limit. CONSORT,
@@ -1025,8 +1077,8 @@ class="citation" data-cites="gentner1983structure hesse1966models">(<a
 href="#ref-gentner1983structure" role="doc-biblioref">Gentner 1983</a>;
 <a href="#ref-hesse1966models" role="doc-biblioref">Hesse
 1966</a>)</span>.</p>
-<h2 data-number="3.3" id="inputs-and-source-ownership"><span
-class="header-section-number">3.3</span> Inputs and source
+<h2 data-number="4.3" id="inputs-and-source-ownership"><span
+class="header-section-number">4.3</span> Inputs and source
 ownership</h2>
 <p>The run begins from three authored inputs:
 <code>manuscript/config.yaml</code>, the Markdown section shells in
@@ -1044,8 +1096,8 @@ then resolves variables into disposable Markdown. This ownership rule
 prevents a reported number or selected phrase from being corrected only
 in the rendered paper while its computational source remains
 unchanged.</p>
-<h2 data-number="3.4" id="stage-definitions"><span
-class="header-section-number">3.4</span> Stage definitions</h2>
+<h2 data-number="4.4" id="stage-definitions"><span
+class="header-section-number">4.4</span> Stage definitions</h2>
 <table>
 <colgroup>
 <col style="width: 5%" />
@@ -1101,8 +1153,8 @@ class="header-section-number">3.4</span> Stage definitions</h2>
 </tr>
 </tbody>
 </table>
-<h2 data-number="3.5" id="refinery-model-and-purity-measure"><span
-class="header-section-number">3.5</span> Refinery model and purity
+<h2 data-number="4.5" id="refinery-model-and-purity-measure"><span
+class="header-section-number">4.5</span> Refinery model and purity
 measure</h2>
 <p>The purity sequence across all stages is: 0.100000, 0.375000,
 0.750000, 0.916700, 0.999000, 1.000000</p>
@@ -1130,11 +1182,11 @@ the shortest ordered prefix whose terminal output reaches a requested
 purity. Prefix restriction is essential: later stages depend on earlier
 states and cannot be selected as an unordered set. The full progression
 is reported in fig. <a href="#fig:purity_progression">1</a> (see sec. <a
-href="#sec:results">4</a>). Because the values are constructed, the
+href="#sec:results">5</a>). Because the values are constructed, the
 analysis is descriptive and deterministic; no uncertainty interval or
 significance test is appropriate.</p>
-<h2 data-number="3.6" id="formalism-registry"><span
-class="header-section-number">3.6</span> Formalism registry</h2>
+<h2 data-number="4.6" id="formalism-registry"><span
+class="header-section-number">4.6</span> Formalism registry</h2>
 <p>The formal layer is generated from <code>src/formalisms.py</code>,
 not hand-numbered prose. tbl. <a href="#tbl:formalism_registry">1</a>
 lists the source evidence for each equation, and the equation blocks
@@ -1263,8 +1315,8 @@ validator(a) \land boundary(a)
 <p>The adversarial assay defines scope and evidence requirements; it is
 not proof of compliance or live scan findings. Source:
 <code>src/security_assay.py::build_security_assay</code>.</p>
-<h2 data-number="3.7" id="deterministic-token-composition"><span
-class="header-section-number">3.7</span> Deterministic token
+<h2 data-number="4.7" id="deterministic-token-composition"><span
+class="header-section-number">4.7</span> Deterministic token
 composition</h2>
 <p>The mega-madlib engine selects tokens from config-owned lexicon
 categories using a deterministic digest:</p>
@@ -1290,8 +1342,8 @@ assaying, parting, and smelting; selected manuscript terms are evidence
 and evidence. eq. <a href="#eq:token_digest">3</a> formalizes the rule,
 while evidence validation, figure registry check, and citation
 validation name the corresponding validation surfaces.</p>
-<h2 data-number="3.8" id="config-owned-lexicon"><span
-class="header-section-number">3.8</span> Config-owned lexicon</h2>
+<h2 data-number="4.8" id="config-owned-lexicon"><span
+class="header-section-number">4.8</span> Config-owned lexicon</h2>
 <table>
 <colgroup>
 <col style="width: 40%" />
@@ -1348,8 +1400,8 @@ class="header-section-number">3.8</span> Config-owned lexicon</h2>
 </tr>
 </tbody>
 </table>
-<h2 data-number="3.9" id="derived-grading-vocabulary"><span
-class="header-section-number">3.9</span> Derived grading vocabulary</h2>
+<h2 data-number="4.9" id="derived-grading-vocabulary"><span
+class="header-section-number">4.9</span> Derived grading vocabulary</h2>
 <p>Karat grades map purity fractions to a gold-fineness vocabulary used
 here as an analogy surface. The pre-1800 evidence supports fineness as a
 regulated testing and marking problem, but not the modern nine-nines
@@ -1376,9 +1428,9 @@ nine-nines label is a deliberately stringent local predicate. It is
 neither a continuous measure of manuscript quality nor an assertion
 about a universal gold-market threshold. The grading chart appears in
 fig. <a href="#fig:karat_grading">2</a> (see sec. <a
-href="#sec:results">4</a>).</p>
-<h2 data-number="3.10" id="execution-procedure"><span
-class="header-section-number">3.10</span> Execution procedure</h2>
+href="#sec:results">5</a>).</p>
+<h2 data-number="4.10" id="execution-procedure"><span
+class="header-section-number">4.10</span> Execution procedure</h2>
 <table>
 <colgroup>
 <col style="width: 15%" />
@@ -1480,8 +1532,8 @@ predicates and gates pass.</li>
 guard for each step. A fork that modifies a stage or claim must update
 its source definition, generated variables, visualizations, and
 validators together.</p>
-<h2 data-number="3.11" id="traceability-and-artifact-lineage"><span
-class="header-section-number">3.11</span> Traceability and artifact
+<h2 data-number="4.11" id="traceability-and-artifact-lineage"><span
+class="header-section-number">4.11</span> Traceability and artifact
 lineage</h2>
 <p>The implementation circuit shown in fig. <a
 href="#fig:implementation_circuit">9</a> is the method’s wiring diagram.
@@ -1505,8 +1557,8 @@ class="nocase">Belhajjame et al.</span> 2015</a>)</span>.</p>
 change the ore, the furnace, or the assay, but it must do so in the
 source layer and then let the generated and validation layers expose the
 consequences.</p>
-<h2 data-number="3.12" id="evaluation-and-acceptance-criteria"><span
-class="header-section-number">3.12</span> Evaluation and acceptance
+<h2 data-number="4.12" id="evaluation-and-acceptance-criteria"><span
+class="header-section-number">4.12</span> Evaluation and acceptance
 criteria</h2>
 <p>Evaluation is criterion-based rather than comparative. The run is
 assessed against predeclared local invariants: complete token hydration,
@@ -1525,9 +1577,9 @@ purity threshold and successful required gates. Consequently,
 this project’s declared rules. It does not mean peer reviewed,
 externally replicated, historically authoritative, secure, or compliant
 with a reporting standard. Detailed probes and audit rules are reported
-in sec. <a href="#sec:evaluation">9</a>.</p>
-<h3 data-number="3.12.1" id="adversarial-assay"><span
-class="header-section-number">3.12.1</span> Adversarial assay</h3>
+in sec. <a href="#sec:evaluation">10</a>.</p>
+<h3 data-number="4.12.1" id="adversarial-assay"><span
+class="header-section-number">4.12.1</span> Adversarial assay</h3>
 <p>The implementation trace handles accidental drift: missing tokens,
 unsupported claims, malformed citations, stale figures, or broken
 renders. A security assay adds a different question: could the
@@ -1559,8 +1611,8 @@ href="#tbl:security_assay">5</a>. This study did not run Codex Security
 or Deep Security Scan and reports no vulnerability findings.
 Completeness of the assay schema therefore supports scope disclosure,
 not security compliance.</p>
-<h3 data-number="3.12.2" id="scientific-integrity-risk-model"><span
-class="header-section-number">3.12.2</span> Scientific-integrity risk
+<h3 data-number="4.12.2" id="scientific-integrity-risk-model"><span
+class="header-section-number">4.12.2</span> Scientific-integrity risk
 model</h3>
 <p>The integrity model converts manuscript risks into source-owned
 dimensions. It does not replace peer review or domain validation. It
@@ -1712,8 +1764,8 @@ support rates, and figure labels belong to regenerated reports and
 registries; the manuscript consumes them through variables. Authored
 prose may interpret those values, but it should not silently restate
 them as hand-maintained facts.</p>
-<h3 data-number="3.12.3" id="multi-objective-purity"><span
-class="header-section-number">3.12.3</span> Multi-objective purity</h3>
+<h3 data-number="4.12.3" id="multi-objective-purity"><span
+class="header-section-number">4.12.3</span> Multi-objective purity</h3>
 <p>Scalar stage purity is retained only as the state variable of the
 refinery analogy. <code>src/purity.py::PurityVector</code> separately
 records stage completion, claim support, token provenance, and figure
@@ -1724,9 +1776,9 @@ render or terminal stage value from numerically compensating for
 unsupported claims or missing provenance. Weighting these dimensions
 would require an external validation study and is outside the present
 design.</p>
-<h2 data-number="3.13"
+<h2 data-number="4.13"
 id="reproducibility-and-validity-safeguards"><span
-class="header-section-number">3.13</span> Reproducibility and validity
+class="header-section-number">4.13</span> Reproducibility and validity
 safeguards</h2>
 <p>Determinism is assessed by exact replay from the same ordered
 configuration and source revision. Provenance is assessed by the
@@ -1735,7 +1787,7 @@ figure to an owning source and generated record. Negative controls in
 the test suite exercise malformed configuration and invalid refinery
 states; figure checks assess file presence, registry parity, dimensions,
 nonblank content, and color variance. Environment and regeneration
-details are given in sec. <a href="#sec:reproducibility">7</a>.</p>
+details are given in sec. <a href="#sec:reproducibility">8</a>.</p>
 <p>Four validity limits govern interpretation. First, <strong>construct
 validity</strong> is limited because purity is a designed workflow
 state, not a validated measure of writing quality. Second,
@@ -1748,18 +1800,18 @@ gates demonstrates source ownership and internal consistency, not
 correctness of domain claims. These limits are part of the method’s
 acceptance rule, not qualifications added after results are known.</p>
 <hr />
-<h1 data-number="4" id="sec:results"><span
-class="header-section-number">4</span> Results: Purity Progression and
+<h1 data-number="5" id="sec:results"><span
+class="header-section-number">5</span> Results: Purity Progression and
 Karat Grading</h1>
 <p>The canonical run completed 5 ordered, continuous stages and reached
 the configured terminal state of 99.9999999% (nine-nines) (24K
 (nine-nines certified)). These values verify execution of the declared
 model; they are not empirical estimates of manuscript quality.</p>
-<h2 data-number="4.1" id="purity-progression"><span
-class="header-section-number">4.1</span> Purity progression</h2>
+<h2 data-number="5.1" id="purity-progression"><span
+class="header-section-number">5.1</span> Purity progression</h2>
 <figure id="fig:purity_progression">
-<img src="../figures/purity_progression.png"
-alt="Figure 1: Purity progression across the five refinery stages from ore (9K) to nine-nines certification." />
+<a class="figure-full-size-link" href="../figures/purity_progression.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/purity_progression.png"
+alt="Bars and a cumulative line rise monotonically across ore, smelting, assaying, cupellation, and certification, ending at nine-nines purity." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Purity progression across the
 five refinery stages from ore (9K) to nine-nines
 certification.</figcaption>
@@ -1819,16 +1871,16 @@ certification.</figcaption>
 </tr>
 </tbody>
 </table>
-<h2 data-number="4.2" id="karat-grading-scale"><span
-class="header-section-number">4.2</span> Karat grading scale</h2>
+<h2 data-number="5.2" id="karat-grading-scale"><span
+class="header-section-number">5.2</span> Karat grading scale</h2>
 <figure id="fig:karat_grading">
-<img src="../figures/karat_grading.png"
-alt="Figure 2: Gold karat grading scale (9K–24K + nine-nines) with refinery stage markers." />
+<a class="figure-full-size-link" href="../figures/karat_grading.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/karat_grading.png"
+alt="A horizontal purity scale spans 9K through 24K and 99.999 percent, with markers showing where each successive refinery stage lands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Gold karat grading scale
 (9K–24K + nine-nines) with refinery stage markers.</figcaption>
 </figure>
-<h2 data-number="4.3" id="final-certification"><span
-class="header-section-number">4.3</span> Final certification</h2>
+<h2 data-number="5.3" id="final-certification"><span
+class="header-section-number">5.3</span> Final certification</h2>
 <ul>
 <li><strong>Final purity:</strong> 99.9999999% (nine-nines)</li>
 <li><strong>Final karat:</strong> 24K (nine-nines certified)</li>
@@ -1836,18 +1888,18 @@ class="header-section-number">4.3</span> Final certification</h2>
 <li><strong>Nine-nines certified:</strong> Yes</li>
 <li><strong>Nines count:</strong> 9</li>
 </ul>
-<h2 data-number="4.4" id="token-plan-summary"><span
-class="header-section-number">4.4</span> Token plan summary</h2>
+<h2 data-number="5.4" id="token-plan-summary"><span
+class="header-section-number">5.4</span> Token plan summary</h2>
 <p>The mega-madlib engine generated 24 tokens from seed 431 across 8
 lexicon categories.</p>
 <figure id="fig:token_density">
-<img src="../figures/token_density.png"
-alt="Figure 3: Mega-madlib token distribution across manuscript sections and lexicon categories." />
+<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_density.png"
+alt="Ordered bars compare the number of injected manuscript tokens across sections and lexicon categories, exposing where the template concentrates configurable prose." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Mega-madlib token distribution
 across manuscript sections and lexicon categories.</figcaption>
 </figure>
-<h3 data-number="4.4.1" id="category-distribution"><span
-class="header-section-number">4.4.1</span> Category distribution</h3>
+<h3 data-number="5.4.1" id="category-distribution"><span
+class="header-section-number">5.4.1</span> Category distribution</h3>
 <table>
 <thead>
 <tr>
@@ -1890,8 +1942,8 @@ class="header-section-number">4.4.1</span> Category distribution</h3>
 </tr>
 </tbody>
 </table>
-<h3 data-number="4.4.2" id="section-distribution"><span
-class="header-section-number">4.4.2</span> Section distribution</h3>
+<h3 data-number="5.4.2" id="section-distribution"><span
+class="header-section-number">5.4.2</span> Section distribution</h3>
 <table>
 <thead>
 <tr>
@@ -1930,8 +1982,8 @@ class="header-section-number">4.4.2</span> Section distribution</h3>
 </tr>
 </tbody>
 </table>
-<h3 data-number="4.4.3" id="provenance-trace"><span
-class="header-section-number">4.4.3</span> Provenance trace</h3>
+<h3 data-number="5.4.3" id="provenance-trace"><span
+class="header-section-number">5.4.3</span> Provenance trace</h3>
 <table>
 <colgroup>
 <col style="width: 22%" />
@@ -2123,8 +2175,8 @@ class="header-section-number">4.4.3</span> Provenance trace</h3>
 <p>Selected purity adjectives for this section: unrefined, purified.
 Selected evidence terms: artifact manifest, figure registry, token
 provenance.</p>
-<h2 data-number="4.5" id="provenance-flow"><span
-class="header-section-number">4.5</span> Provenance flow</h2>
+<h2 data-number="5.5" id="provenance-flow"><span
+class="header-section-number">5.5</span> Provenance flow</h2>
 <p>The provenance flow in fig. <a href="#fig:provenance_sankey">4</a>
 makes the refinement analogy auditable as a directed source path rather
 than a decorative metaphor. The graph starts from the same stage
@@ -2142,13 +2194,13 @@ causal custody from raw material through assay and final certification,
 so a later change to the stage model must move through the same graph,
 table, and validation surfaces.</p>
 <figure id="fig:provenance_sankey">
-<img src="../figures/provenance_sankey.png"
-alt="Figure 4: Provenance trace: ore → stages → certification purity flow." />
+<a class="figure-full-size-link" href="../figures/provenance_sankey.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/provenance_sankey.png"
+alt="A directed left-to-right flow links ore through four refining stages to certification; edge widths increase with each stage&#x27;s purity gain." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Provenance trace: ore → stages
 → certification purity flow.</figcaption>
 </figure>
-<h2 data-number="4.6" id="purity-vs-claim-support"><span
-class="header-section-number">4.6</span> Purity vs claim support</h2>
+<h2 data-number="5.6" id="purity-vs-claim-support"><span
+class="header-section-number">5.6</span> Purity vs claim support</h2>
 <p>The purity-versus-claim-support view in fig. <a
 href="#fig:purity_claim_scatter">5</a> places two differently scoped
 measurements on explicit axes: stage output purity on the horizontal
@@ -2163,13 +2215,13 @@ independent observations suitable for association testing. Its purpose
 is to reveal disagreement between a late refinery state and weak overall
 claim support without combining the two into one score.</p>
 <figure id="fig:purity_claim_scatter">
-<img src="../figures/purity_claim_scatter.png"
-alt="Figure 5: Stage purity plotted against the single project-level claim-support assay." />
+<a class="figure-full-size-link" href="../figures/purity_claim_scatter.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/purity_claim_scatter.png"
+alt="Five stage points progress rightward with increasing purity while sharing one vertical claim-support value, separating stage refinement from the project-level evidence assay." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Stage purity plotted against
 the single project-level claim-support assay.</figcaption>
 </figure>
-<h2 data-number="4.7" id="token-selection-sensitivity"><span
-class="header-section-number">4.7</span> Token selection
+<h2 data-number="5.7" id="token-selection-sensitivity"><span
+class="header-section-number">5.7</span> Token selection
 sensitivity</h2>
 <p>The token selection heatmap in fig. <a
 href="#fig:token_heatmap">6</a> turns the mega-madlib engine into an
@@ -2193,13 +2245,13 @@ late-bound choices. The result is a sensitivity check on authoring
 machinery, not a claim that any particular synonym is scientifically
 superior.</p>
 <figure id="fig:token_heatmap">
-<img src="../figures/token_heatmap.png"
-alt="Figure 6: Token selection heatmap: seed × category → selected index." />
+<a class="figure-full-size-link" href="../figures/token_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_heatmap.png"
+alt="A heatmap crosses deterministic seeds with lexicon categories; each cell color and label identify the selected inventory index for that seed-category pair." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Token selection heatmap: seed ×
 category → selected index.</figcaption>
 </figure>
-<h2 data-number="4.8" id="integrity-gate-matrix"><span
-class="header-section-number">4.8</span> Integrity gate matrix</h2>
+<h2 data-number="5.8" id="integrity-gate-matrix"><span
+class="header-section-number">5.8</span> Integrity gate matrix</h2>
 <p>The integrity gate matrix in fig. <a
 href="#fig:integrity_gate_matrix">7</a> makes the validation story
 visible: audit rules are not prose promises unless they connect to
@@ -2224,14 +2276,14 @@ exemplar: coverage is measured against the specific audit rules
 configured here, not against a universal publication-readiness
 standard.</p>
 <figure id="fig:integrity_gate_matrix">
-<img src="../figures/integrity_gate_matrix.png"
-alt="Figure 7: Integrity-gate matrix linking audit rules to tests, manuscript surfaces, and generated artifacts." />
+<a class="figure-full-size-link" href="../figures/integrity_gate_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/integrity_gate_matrix.png"
+alt="Rows of integrity rules cross columns for tests, manuscript, and artifacts; categorical cells distinguish missing, partial, and complete gate coverage." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Integrity-gate matrix linking
 audit rules to tests, manuscript surfaces, and generated
 artifacts.</figcaption>
 </figure>
-<h2 data-number="4.9" id="formalism-traceability"><span
-class="header-section-number">4.9</span> Formalism traceability</h2>
+<h2 data-number="5.9" id="formalism-traceability"><span
+class="header-section-number">5.9</span> Formalism traceability</h2>
 <p>The formalism traceability view in fig. <a
 href="#fig:formalism_traceability">8</a> links each equation-backed
 formalism to the source surface that owns it. This is the visual
@@ -2255,13 +2307,13 @@ layer should change with it. That is the desired behavior: the formal
 layer is a generated contract, not hand-maintained mathematical
 ornamentation.</p>
 <figure id="fig:formalism_traceability">
-<img src="../figures/formalism_traceability.png"
-alt="Figure 8: Formalism traceability from source-owned equation identifiers to source evidence." />
+<a class="figure-full-size-link" href="../figures/formalism_traceability.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/formalism_traceability.png"
+alt="A bipartite network connects each named formalism to its equation label and then to the source module that owns the supporting definition." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Formalism traceability from
 source-owned equation identifiers to source evidence.</figcaption>
 </figure>
-<h2 data-number="4.10" id="implementation-circuit-1"><span
-class="header-section-number">4.10</span> Implementation circuit</h2>
+<h2 data-number="5.10" id="implementation-circuit-1"><span
+class="header-section-number">5.10</span> Implementation circuit</h2>
 <p>The implementation circuit in fig. <a
 href="#fig:implementation_circuit">9</a> shows how the concept is
 executed rather than merely described. Configuration feeds code; code
@@ -2289,14 +2341,14 @@ backward to the owning source surface rather than encouraging local
 patching of rendered Markdown. That direction of repair is central to
 the manuscript’s definition of refinement.</p>
 <figure id="fig:implementation_circuit">
-<img src="../figures/implementation_circuit.png"
-alt="Figure 9: Implementation circuit from config-owned ore through generated manuscript artifacts and validation feedback." />
+<a class="figure-full-size-link" href="../figures/implementation_circuit.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/implementation_circuit.png"
+alt="A layered directed graph routes configuration and source modules into generated data, figures, and manuscript artifacts, then through validation feedback to publication." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 9: Implementation circuit from
 config-owned ore through generated manuscript artifacts and validation
 feedback.</figcaption>
 </figure>
-<h2 data-number="4.11" id="claim-evidence-assay"><span
-class="header-section-number">4.11</span> Claim-evidence assay</h2>
+<h2 data-number="5.11" id="claim-evidence-assay"><span
+class="header-section-number">5.11</span> Claim-evidence assay</h2>
 <p>The claim-evidence assay in fig. <a
 href="#fig:claim_evidence_assay">10</a> turns the assaying stage into a
 reader-facing diagnostic. Each bar is a contribution claim from
@@ -2322,14 +2374,14 @@ extensions in this manuscript: a claim can be source-owned without
 becoming a compliance claim, and a generated assay can confirm local
 evidence without pretending to certify the wider supply chain.</p>
 <figure id="fig:claim_evidence_assay">
-<img src="../figures/claim_evidence_assay.png"
-alt="Figure 10: Claim-evidence assay showing supported contribution claims, evidence surfaces, and boundary classifications." />
+<a class="figure-full-size-link" href="../figures/claim_evidence_assay.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/claim_evidence_assay.png"
+alt="Support bars summarize each contribution claim while a companion topology links claims to concrete evidence surfaces and explicit boundary classifications." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 10: Claim-evidence assay showing
 supported contribution claims, evidence surfaces, and boundary
 classifications.</figcaption>
 </figure>
-<h2 data-number="4.12" id="scientific-integrity-risk-matrix"><span
-class="header-section-number">4.12</span> Scientific-integrity risk
+<h2 data-number="5.12" id="scientific-integrity-risk-matrix"><span
+class="header-section-number">5.12</span> Scientific-integrity risk
 matrix</h2>
 <p>The integrity risk matrix in fig. <a
 href="#fig:integrity_risk_matrix">11</a> plots severity against
@@ -2361,14 +2413,14 @@ issue has already been eliminated. It shows which risks this exemplar
 has made inspectable and where future work would need to add stronger
 measurement before using stronger language.</p>
 <figure id="fig:integrity_risk_matrix">
-<img src="../figures/integrity_risk_matrix.png"
-alt="Figure 11: Scientific-integrity risk matrix plotting severity, detectability, residual risk, and owning evidence surface." />
+<a class="figure-full-size-link" href="../figures/integrity_risk_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/integrity_risk_matrix.png"
+alt="A scatter matrix positions integrity risks by severity and detectability; marker size encodes residual risk and color identifies the evidence-source tier." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 11: Scientific-integrity risk
 matrix plotting severity, detectability, residual risk, and owning
 evidence surface.</figcaption>
 </figure>
-<h2 data-number="4.13" id="evidence-tier-ladder"><span
-class="header-section-number">4.13</span> Evidence-tier ladder</h2>
+<h2 data-number="5.13" id="evidence-tier-ladder"><span
+class="header-section-number">5.13</span> Evidence-tier ladder</h2>
 <p>The evidence-tier ladder in fig. <a
 href="#fig:evidence_tier_ladder">12</a> summarizes the evidence surfaces
 available to the shared template evidence registry or, before that gate
@@ -2378,7 +2430,7 @@ claim-ledger facts, bibliography records, source code, or disposable
 artifacts.</p>
 <p>The ladder complements the risk matrix by counting source tiers
 rather than plotting risks. When the shared evidence registry is
-available, the manuscript can report 1113 source-tiered facts to the
+available, the manuscript can report 956 source-tiered facts to the
 validation surface. When that registry is not available, the same figure
 falls back to the integrity model’s configured tiers. Either way, the
 reader sees the evidentiary mix instead of receiving an undifferentiated
@@ -2394,8 +2446,8 @@ counts visible in tabular form. Together they close the figure sequence
 by showing not only that the 12 public figures render, but also which
 source tiers make their claims inspectable.</p>
 <figure id="fig:evidence_tier_ladder">
-<img src="../figures/evidence_tier_ladder.png"
-alt="Figure 12: Evidence-tier ladder summarizing source tiers available to the shared template evidence registry." />
+<a class="figure-full-size-link" href="../figures/evidence_tier_ladder.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/evidence_tier_ladder.png"
+alt="Ordered horizontal bars form a ladder from weaker to stronger evidence-source tiers, with each bar annotated by its registry count and percentage." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 12: Evidence-tier ladder
 summarizing source tiers available to the shared template evidence
 registry.</figcaption>
@@ -2413,23 +2465,23 @@ registry when available.</caption>
 <tbody>
 <tr>
 <td>generated_metric</td>
-<td>881</td>
+<td>721</td>
 <td>Numbers regenerated from project analysis</td>
 </tr>
 <tr>
 <td>artifact</td>
-<td>121</td>
+<td>116</td>
 <td>Generated artifacts exposed to readers</td>
+</tr>
+<tr>
+<td>configuration</td>
+<td>55</td>
+<td>Evidence source tier</td>
 </tr>
 <tr>
 <td>bibliography</td>
 <td>47</td>
 <td>Reference records and citation metadata</td>
-</tr>
-<tr>
-<td>configuration</td>
-<td>47</td>
-<td>Evidence source tier</td>
 </tr>
 <tr>
 <td>claim_ledger</td>
@@ -2438,8 +2490,8 @@ registry when available.</caption>
 </tr>
 </tbody>
 </table>
-<h2 data-number="4.14" id="adversarial-security-assay"><span
-class="header-section-number">4.14</span> Adversarial security
+<h2 data-number="5.14" id="adversarial-security-assay"><span
+class="header-section-number">5.14</span> Adversarial security
 assay</h2>
 <p>The adversarial assay reports 5 adversarial assay rows, 5
 schema-complete, mapping threats and standards to local evidence
@@ -2518,8 +2570,8 @@ security</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="4.15" id="contribution-claims"><span
-class="header-section-number">4.15</span> Contribution claims</h2>
+<h2 data-number="5.15" id="contribution-claims"><span
+class="header-section-number">5.15</span> Contribution claims</h2>
 <table>
 <colgroup>
 <col style="width: 18%" />
@@ -2606,12 +2658,12 @@ generated project report path is
 <code>output/reports/claim_support_registry.json</code>; the shared
 template evidence report remains
 <code>output/reports/evidence_registry.json</code>.</p>
-<h2 data-number="4.16" id="shared-evidence-registry-summary"><span
-class="header-section-number">4.16</span> Shared evidence registry
+<h2 data-number="5.16" id="shared-evidence-registry-summary"><span
+class="header-section-number">5.16</span> Shared evidence registry
 summary</h2>
 <p>When the template evidence gate has run, the shared registry supplies
 source-tiered facts used by the evidence validator. Current fact count
-available to this variable pass: 1113.</p>
+available to this variable pass: 956.</p>
 <table id="tbl:shared_evidence_kinds">
 <caption>Table 6: Shared evidence-registry fact kinds when
 available.</caption>
@@ -2624,7 +2676,7 @@ available.</caption>
 <tbody>
 <tr>
 <td>artifact</td>
-<td>77</td>
+<td>72</td>
 </tr>
 <tr>
 <td>citation</td>
@@ -2640,7 +2692,7 @@ available.</caption>
 </tr>
 <tr>
 <td>number</td>
-<td>936</td>
+<td>784</td>
 </tr>
 <tr>
 <td>section</td>
@@ -2652,8 +2704,8 @@ available.</caption>
 </tr>
 </tbody>
 </table>
-<h2 data-number="4.17" id="figure-quality-report"><span
-class="header-section-number">4.17</span> Figure quality report</h2>
+<h2 data-number="5.17" id="figure-quality-report"><span
+class="header-section-number">5.17</span> Figure quality report</h2>
 <p>The visualization registry is paired with
 <code>output/reports/figure_quality_report.json</code>, a generated QA
 report that checks PNG and SVG existence, file dimensions, nonblank
@@ -2701,8 +2753,8 @@ figure specs.</caption>
 <td>yes</td>
 <td>yes</td>
 <td>3420x1447</td>
-<td>0.110</td>
-<td>0.04011442</td>
+<td>0.111</td>
+<td>0.04019577</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -2798,11 +2850,11 @@ figure specs.</caption>
 </tbody>
 </table>
 <hr />
-<h1 data-number="5" id="sec:discussion"><span
-class="header-section-number">5</span> Discussion: Load-Bearing vs
+<h1 data-number="6" id="sec:discussion"><span
+class="header-section-number">6</span> Discussion: Load-Bearing vs
 Rhetorical Analogy</h1>
-<h2 data-number="5.1" id="load-bearing-vs-rhetorical"><span
-class="header-section-number">5.1</span> Load-bearing vs rhetorical</h2>
+<h2 data-number="6.1" id="load-bearing-vs-rhetorical"><span
+class="header-section-number">6.1</span> Load-bearing vs rhetorical</h2>
 <p>The gold-refining analogy operates on two levels.
 <strong>Rhetorically</strong>, it provides a memorable framing for a
 methods paper: purity progression, karat grading, and certification are
@@ -2870,8 +2922,8 @@ href="#ref-schulz2010consort" role="doc-biblioref">Schulz et al.
 completeness and traceability checks. They can expose a missing
 citation, an unresolved token, or an unsupported local claim; they
 cannot convert weak domain evidence into strong domain evidence.</p>
-<h2 data-number="5.2" id="useful-adaptation-cases"><span
-class="header-section-number">5.2</span> Useful adaptation cases</h2>
+<h2 data-number="6.2" id="useful-adaptation-cases"><span
+class="header-section-number">6.2</span> Useful adaptation cases</h2>
 <ul>
 <li><strong>Domain-specific refinement pipelines</strong>: fork the
 exemplar and remap stages to domain operations (e.g., clinical evidence,
@@ -2893,8 +2945,8 @@ files <span class="citation" data-cites="marwick2018packaging">(<a
 href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
 2018</a>)</span>.</li>
 </ul>
-<h2 data-number="5.3" id="misuse-modes"><span
-class="header-section-number">5.3</span> Misuse modes</h2>
+<h2 data-number="6.3" id="misuse-modes"><span
+class="header-section-number">6.3</span> Misuse modes</h2>
 <table>
 <colgroup>
 <col style="width: 17%" />
@@ -2993,8 +3045,8 @@ alignment and explicit claim boundaries.</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="5.4" id="design-principles"><span
-class="header-section-number">5.4</span> Design principles</h2>
+<h2 data-number="6.4" id="design-principles"><span
+class="header-section-number">6.4</span> Design principles</h2>
 <table>
 <colgroup>
 <col style="width: 50%" />
@@ -3058,8 +3110,8 @@ source-owned artifacts.</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="5.5" id="analogy-break-boundary"><span
-class="header-section-number">5.5</span> Analogy-break boundary</h2>
+<h2 data-number="6.5" id="analogy-break-boundary"><span
+class="header-section-number">6.5</span> Analogy-break boundary</h2>
 <p>The analogy breaks when purity becomes a rhetorical grade detached
 from evidence. In this exemplar, eq. <a href="#eq:claim_support">4</a>
 and eq. <a href="#eq:integrity_vector">5</a> keep the grade tied to
@@ -3129,8 +3181,8 @@ make overclaiming harder: a security claim must point to tbl. <a
 href="#tbl:security_assay">5</a>, and a real scan claim must point to
 scan artifacts that this pass does not produce.</p>
 <hr />
-<h1 data-number="6" id="sec:conclusion"><span
-class="header-section-number">6</span> Conclusion: Certification and
+<h1 data-number="7" id="sec:conclusion"><span
+class="header-section-number">7</span> Conclusion: Certification and
 Forking</h1>
 <p>The gold-refinery pipeline demonstrates that a metallurgical analogy
 can be made operationally accountable: each stage maps to an executable
@@ -3139,14 +3191,14 @@ preserve provenance, and validators constrain the terminal claim. The
 canonical run reaches the local nine-nines state (99.9999999%
 (nine-nines)); this is a software predicate, not a universal
 certification of manuscript quality.</p>
-<h2 data-number="6.1" id="summary"><span
-class="header-section-number">6.1</span> Summary</h2>
+<h2 data-number="7.1" id="summary"><span
+class="header-section-number">7.1</span> Summary</h2>
 <ul>
 <li>5 refinery stages from ore (9K) to certification (nine-nines)</li>
 <li>Final purity: 99.9999999% (nine-nines) (24K (nine-nines
 certified))</li>
 <li>24 tokens generated deterministically from seed 431</li>
-<li>Config hash: 4cb6b4b7930a03c2</li>
+<li>Config hash: 497be5f411529ad8</li>
 <li>7 source-owned formalisms with equation labels:
 eq:purity_functional, eq:monotone_refinery, eq:token_digest,
 eq:claim_support, eq:integrity_vector, eq:certification_predicate,
@@ -3161,8 +3213,8 @@ risk-matrix, and evidence-tier surfaces.</li>
 declared target, and multi-objective purity preserves distinct quality
 dimensions without compensatory averaging.</li>
 </ul>
-<h2 data-number="6.2" id="forking-responsibilities"><span
-class="header-section-number">6.2</span> Forking responsibilities</h2>
+<h2 data-number="7.2" id="forking-responsibilities"><span
+class="header-section-number">7.2</span> Forking responsibilities</h2>
 <ol type="1">
 <li>Remap metallurgical stages to domain operations</li>
 <li>Update lexicon categories in
@@ -3192,8 +3244,8 @@ href="#ref-sandve2013ten" role="doc-biblioref">Sandve et al. 2013</a>;
 <a href="#ref-marwick2018packaging" role="doc-biblioref">Marwick et al.
 2018</a>)</span>.</p>
 <hr />
-<h1 data-number="7" id="sec:reproducibility"><span
-class="header-section-number">7</span> Reproducibility: Seeded
+<h1 data-number="8" id="sec:reproducibility"><span
+class="header-section-number">8</span> Reproducibility: Seeded
 Regeneration</h1>
 <p>Reproduction requires identity, execution, and verification—not
 merely access to a PDF. Identity fixes the source revision,
@@ -3201,8 +3253,8 @@ configuration hash, software release, and environment. Execution
 rebuilds analysis artifacts before manuscript hydration. Verification
 checks that registered claims, figures, references, and rendered formats
 agree with their source owners.</p>
-<h2 data-number="7.1" id="deterministic-regeneration"><span
-class="header-section-number">7.1</span> Deterministic regeneration</h2>
+<h2 data-number="8.1" id="deterministic-regeneration"><span
+class="header-section-number">8.1</span> Deterministic regeneration</h2>
 <p>The refinery pipeline is fully deterministic. Given the same
 <code>manuscript/config.yaml</code> and <code>src/</code> code, every
 run produces identical output. This is the local version of a
@@ -3226,12 +3278,12 @@ format, but it does make the manuscript variables, figures, reports, and
 rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
-<li><strong>Config hash:</strong> 4cb6b4b7930a03c2</li>
-<li><strong>Generation timestamp:</strong> 2026-08-03T00:26:48Z</li>
-<li><strong>Python version:</strong> 3.12.13</li>
+<li><strong>Config hash:</strong> 497be5f411529ad8</li>
+<li><strong>Generation timestamp:</strong> 2026-08-14T14:20:53Z</li>
+<li><strong>Python version:</strong> 3.12.12</li>
 </ul>
-<h2 data-number="7.2" id="artifact-inventory"><span
-class="header-section-number">7.2</span> Artifact inventory</h2>
+<h2 data-number="8.2" id="artifact-inventory"><span
+class="header-section-number">8.2</span> Artifact inventory</h2>
 <table>
 <thead>
 <tr>
@@ -3250,16 +3302,16 @@ class="header-section-number">7.2</span> Artifact inventory</h2>
 </tr>
 <tr>
 <td>Reports</td>
-<td>14</td>
+<td>17</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td>43</td>
+<td>46</td>
 </tr>
 </tbody>
 </table>
-<h2 data-number="7.3" id="regeneration-commands"><span
-class="header-section-number">7.3</span> Regeneration commands</h2>
+<h2 data-number="8.3" id="regeneration-commands"><span
+class="header-section-number">8.3</span> Regeneration commands</h2>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the refinery analysis</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_gold_refinement/scripts/refinement_analysis.py</span>
@@ -3270,13 +3322,13 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
 <p>A reproduction report should record command exit status, the source
-revision, <code>4cb6b4b7930a03c2</code>, Python 3.12.13, and whether the
+revision, <code>497be5f411529ad8</code>, Python 3.12.12, and whether the
 generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted
 separately from substantive differences in source-owned values.</p>
-<h2 data-number="7.4" id="config-ownership"><span
-class="header-section-number">7.4</span> Config ownership</h2>
+<h2 data-number="8.4" id="config-ownership"><span
+class="header-section-number">8.4</span> Config ownership</h2>
 <p>All vocabulary, slots, section conditions, steganography toggles, and
 optional LLM review gates are declared in
 <code>manuscript/config.yaml</code> under <code>gold_refinement:</code>,
@@ -3288,7 +3340,7 @@ visible before execution instead of burying it in shell glue or
 prose.</p>
 <p>The reproducibility spine uses fact registry and figure registry as
 generated artifacts rather than reader trust signals. Variable
-generation records <code>4cb6b4b7930a03c2</code>; analysis writes
+generation records <code>497be5f411529ad8</code>; analysis writes
 refinery, token, claim-support, dashboard, and figure artifacts;
 validation may add the shared evidence registry used by template
 scientific-integrity checks.</p>
@@ -3318,8 +3370,8 @@ href="#tbl:figure_quality">7</a> as the figure-layer analogue of the
 claim-support registry: it proves that the visuals are regenerated,
 present in both raster and vector forms, nonblank, and aligned with the
 registry before prose promotes them.</p>
-<h2 data-number="7.5" id="evidence-registry-separation"><span
-class="header-section-number">7.5</span> Evidence-registry
+<h2 data-number="8.5" id="evidence-registry-separation"><span
+class="header-section-number">8.5</span> Evidence-registry
 separation</h2>
 <p>This exemplar now separates two evidence surfaces.
 <code>output/reports/claim_support_registry.json</code> is the
@@ -3344,11 +3396,11 @@ facts, bibliography records, or rendered artifacts. That distinction
 matters because only some tiers can support domain truth; others support
 reproducibility, formatting, or local consistency.</p>
 <hr />
-<h1 data-number="8" id="sec:scope"><span
-class="header-section-number">8</span> Scope: Related Work and
+<h1 data-number="9" id="sec:scope"><span
+class="header-section-number">9</span> Scope: Related Work and
 Limitations</h1>
-<h2 data-number="8.1" id="scope-limitations"><span
-class="header-section-number">8.1</span> Scope limitations</h2>
+<h2 data-number="9.1" id="scope-limitations"><span
+class="header-section-number">9.1</span> Scope limitations</h2>
 <p>This exemplar demonstrates the gold-refining analogy as a
 <strong>methods paper</strong>. It does not claim:</p>
 <ul>
@@ -3361,8 +3413,8 @@ judgement</li>
 <li>That reverse assay optimizes cost or scientific value, or that
 multi-objective purity is a validated composite scale</li>
 </ul>
-<h2 data-number="8.2" id="related-work"><span
-class="header-section-number">8.2</span> Related work</h2>
+<h2 data-number="9.2" id="related-work"><span
+class="header-section-number">9.2</span> Related work</h2>
 <p>The mega-madlib token injection pattern follows
 <code>template_madlib</code>’s deterministic lexical composition
 approach <span class="citation" data-cites="template_madlib">(<a
@@ -3502,8 +3554,8 @@ role="doc-biblioref">Cybersecurity and Infrastructure Security Agency
 adversarial assay. It does not claim compliance with those standards, it
 does not claim a signed SBOM or provenance bundle, and it does not claim
 a Codex Security or Deep Security Scan has been run.</p>
-<h2 data-number="8.3" id="responsible-forking"><span
-class="header-section-number">8.3</span> Responsible forking</h2>
+<h2 data-number="9.3" id="responsible-forking"><span
+class="header-section-number">9.3</span> Responsible forking</h2>
 <p>A fork must:</p>
 <ol type="1">
 <li>Add domain-specific evidence before making domain claims</li>
@@ -3543,10 +3595,10 @@ numerical target; and <code>PurityVector</code> prevents accidental
 compensatory averaging. None establishes that the chosen targets,
 dimensions, or stage meanings are externally valid.</p>
 <hr />
-<h1 data-number="9" id="sec:evaluation"><span
-class="header-section-number">9</span> Quality Probes</h1>
-<h2 data-number="9.1" id="qa-probes"><span
-class="header-section-number">9.1</span> QA probes</h2>
+<h1 data-number="10" id="sec:evaluation"><span
+class="header-section-number">10</span> Quality Probes</h1>
+<h2 data-number="10.1" id="qa-probes"><span
+class="header-section-number">10.1</span> QA probes</h2>
 <table>
 <colgroup>
 <col style="width: 16%" />
@@ -3648,8 +3700,8 @@ establish presence, readability, provenance, and registry parity.
 more than those tests and artifacts support. Certification requires all
 applicable levels; a pass at one level cannot compensate for failure at
 another.</p>
-<h2 data-number="9.2" id="audit-rules"><span
-class="header-section-number">9.2</span> Audit rules</h2>
+<h2 data-number="10.2" id="audit-rules"><span
+class="header-section-number">10.2</span> Audit rules</h2>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 31%" />
@@ -3820,10 +3872,10 @@ stagewise trend from a project-level aggregate, which is why fig. <a
 href="#fig:purity_claim_scatter">5</a> repeats one observed
 claim-support rate rather than inventing cumulative values.</p>
 <hr />
-<h1 data-number="10" id="sec:authoring_contract"><span
-class="header-section-number">10</span> Authoring Contract</h1>
-<h2 data-number="10.1" id="obligations"><span
-class="header-section-number">10.1</span> Obligations</h2>
+<h1 data-number="11" id="sec:authoring_contract"><span
+class="header-section-number">11</span> Authoring Contract</h1>
+<h2 data-number="11.1" id="obligations"><span
+class="header-section-number">11.1</span> Obligations</h2>
 <table>
 <colgroup>
 <col style="width: 48%" />
@@ -3912,8 +3964,8 @@ manuscript is compliant or secure. Future Codex Security or Deep
 Security Scan reports should enter the manuscript only as generated
 artifacts with validator receipts, evidence-ledger alignment, and a
 clear boundary between findings, mitigations, and remaining scope.</p>
-<h2 data-number="10.2" id="fork-checklist"><span
-class="header-section-number">10.2</span> Fork checklist</h2>
+<h2 data-number="11.2" id="fork-checklist"><span
+class="header-section-number">11.2</span> Fork checklist</h2>
 <ol type="1">
 <li>Remap metallurgical stages to domain operations in
 <code>src/refinery.py</code></li>
@@ -3966,6 +4018,13 @@ image can still mislead through an unsupported axis, aggregation,
 annotation, or caption. Every figure change must therefore update its
 <code>FigureSpec</code>, source data declaration, tests, manuscript
 interpretation, and regenerated PNG/SVG pair as one reviewable unit.</p>
+<hr />
+<!-- transmission:end -->
+<h1 data-number="12" id="transmission-ends"><span
+class="header-section-number">12</span> Transmission ends</h1>
+<p>This source-owned bookend marks the end of the manuscript payload. A
+release must retain both bookends so a copied or truncated transmission
+cannot appear complete by filename alone.</p>
 <div id="refs" class="references csl-bib-body hanging-indent"
 role="list">
 <div id="ref-agricola_de_re_metallica_1556" class="csl-entry"

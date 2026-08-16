@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import subprocess
 import sys
 
 import pytest
@@ -9,10 +10,44 @@ import pytest
 from infrastructure.validation.cli import main as cli
 from infrastructure.validation.cli.main import (
     validate_markdown_command,
+    validate_evidence_command,
     validate_pdf_command,
     validate_prerender_command,
     verify_integrity_command,
 )
+
+
+def test_evidence_cli_uses_stable_local_inventory_for_managed_working_project(tmp_path) -> None:
+    """A blanket-ignored private output remains evidence through the real CLI handler."""
+
+    repo_root = tmp_path / "template"
+    (repo_root / "infrastructure").mkdir(parents=True)
+    private_project = tmp_path / "private" / "demo"
+    manuscript = private_project / "manuscript"
+    result = private_project / "output" / "data" / "result.json"
+    manuscript.mkdir(parents=True)
+    result.parent.mkdir(parents=True)
+    (manuscript / "01_results.md").write_text(
+        "# Results\n\nThe measured score was 246813579.\n",
+        encoding="utf-8",
+    )
+    result.write_text('{"score": 246813579}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=private_project, check=True, capture_output=True)
+    (private_project / ".gitignore").write_text("output/\n", encoding="utf-8")
+    managed = repo_root / "projects" / "working" / "demo"
+    managed.parent.mkdir(parents=True)
+    managed.symlink_to(private_project, target_is_directory=True)
+    args = argparse.Namespace(
+        project_root=str(managed),
+        manuscript_dir=None,
+        output_json=None,
+        fail_on_issues=True,
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        validate_evidence_command(args)
+
+    assert exc_info.value.code == 0
 
 
 class TestValidatePdfCommand:

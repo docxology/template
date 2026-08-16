@@ -53,7 +53,7 @@ Primary configuration lives in `manuscript/config.yaml`; forkable defaults live 
 
 ## Figures and manuscript
 
-The manuscript embeds five figures generated deterministically from the descriptor and fixture bytes by the thin script [`scripts/generate_figures.py`](scripts/generate_figures.py) (schema data dictionary, file inventory, provenance flow, quality gate, and descriptor↔file checksum verification). All computation lives in the tested `src/data_descriptor/` package (`descriptor.py`, `figures.py`, `verification.py`); the script only plots and prints paths. Figures are written to and embedded from [`manuscript/figures/`](manuscript/figures/README.md). Regenerate with:
+The manuscript embeds five figures generated deterministically from the descriptor and fixture bytes by the thin script [`scripts/generate_figures.py`](scripts/generate_figures.py) (schema data dictionary, file inventory, provenance flow, quality gate, and descriptor↔file checksum verification). All computation, rendering, and fail-closed registry publication lives in the tested `src/data_descriptor/` package (`descriptor.py`, `figures.py`, `figure_pipeline.py`, `registry.py`, `verification.py`); the script only selects the project root, delegates, and prints paths. Figures are written to and embedded from [`manuscript/figures/`](manuscript/figures/README.md). Regenerate with:
 
 ```bash
 uv run python projects/templates/template_data_descriptor/scripts/generate_figures.py

@@ -122,6 +122,7 @@ __all__ = [
     "correlation_heatmap_data",
     "group_count_data",
     "eda_figure_spec",
+    "eda_figure_specs_for_data",
 ]
 ```
 

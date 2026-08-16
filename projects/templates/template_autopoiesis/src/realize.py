@@ -7,10 +7,51 @@ gated behind availability checks.
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 from typing import Optional
+
+from .expand import expand
+from .grammar import load_grammar
+from .materialize import child_name
+
+
+def clear_generated_children(children_root: Path) -> tuple[Path, ...]:
+    """Remove prior generator-owned ``child_*`` trees from *children_root*.
+
+    The analysis stage is a deterministic snapshot producer. Retaining child
+    trees whose content-derived names came from an older source revision makes
+    manifests accumulate stale, mutually inconsistent exemplars. Only direct,
+    real directories with the reserved ``child_`` prefix are removed; symlinks
+    fail closed and unrelated files/directories are preserved.
+    """
+    children_root.mkdir(parents=True, exist_ok=True)
+    root = children_root.resolve()
+    removed: list[Path] = []
+    for candidate in sorted(children_root.iterdir(), key=lambda path: path.name):
+        if not candidate.name.startswith("child_"):
+            continue
+        if candidate.is_symlink():
+            raise ValueError(f"generated child path must not be a symlink: {candidate}")
+        if not candidate.is_dir() or candidate.resolve().parent != root:
+            raise ValueError(f"generated child path must be a direct directory: {candidate}")
+        shutil.rmtree(candidate)
+        removed.append(candidate)
+    return tuple(removed)
+
+
+def select_full_child(project_root: Path, children_root: Path) -> Path:
+    """Return the materialized child selected by the project's live grammar."""
+    expected_name = child_name(expand(load_grammar(project_root)))
+    candidate = children_root / expected_name
+    root = children_root.resolve()
+    if candidate.is_symlink():
+        raise ValueError(f"full child path must not be a symlink: {candidate}")
+    if not candidate.is_dir() or candidate.resolve().parent != root:
+        raise FileNotFoundError(f"expected full child is missing: {candidate}")
+    return candidate
 
 
 def _project_slug(child_root: Path) -> str:

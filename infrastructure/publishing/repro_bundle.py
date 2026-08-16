@@ -25,13 +25,17 @@ import json
 import re
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from pathlib import PurePosixPath
 from typing import Any
 
 from infrastructure.core.files.operations import calculate_file_hash
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project, validate_artifact_manifest
+from infrastructure.core.project_paths import resolve_project_root, validate_project_name
 from infrastructure.project.public_scope import public_project_names
+from infrastructure.validation.output.artifacts import read_artifact_manifest
 
 logger = get_logger(__name__)
 
@@ -45,6 +49,10 @@ _KIND_PYPROJECT = "pyproject"
 _KIND_ARTIFACT_MANIFEST = "artifact-manifest"
 _KIND_CANONICAL_FACTS = "canonical-facts"
 _KIND_OUTPUT_ARTIFACT = "output-artifact"
+
+_PROJECT_COMPONENT_RE = re.compile(r"[A-Za-z0-9_][A-Za-z0-9._-]*")
+_TIMESTAMP_RE = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})")
+_ENTRY_REQUIRED_FIELDS = frozenset({"kind", "path", "present", "sha256", "size_bytes"})
 
 
 @dataclass(frozen=True)
@@ -110,6 +118,47 @@ def _make_entry(checkout_root: Path, kind: str, relpath: str) -> BundleEntry:
     return BundleEntry(kind=kind, path=relpath, sha256=digest, size_bytes=size, present=present)
 
 
+def _validate_repro_project_name(project_name: str) -> str:
+    """Return a canonical command-safe project name or raise ``ValueError``."""
+    normalized = validate_project_name(project_name)
+    if any(_PROJECT_COMPONENT_RE.fullmatch(part) is None for part in normalized.split("/")):
+        raise ValueError(
+            "project name components must start with a letter, digit, or underscore "
+            "and contain only letters, digits, dots, underscores, or hyphens"
+        )
+    return normalized
+
+
+def _valid_generated_at(value: object) -> bool:
+    """Return whether *value* is a timezone-aware ISO-8601/RFC3339 timestamp."""
+    if not isinstance(value, str) or _TIMESTAMP_RE.fullmatch(value) is None:
+        return False
+    candidate = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        parsed = datetime.fromisoformat(candidate)
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+
+
+def _resolve_repro_project(repo_root: Path, project_name: str) -> tuple[str, Path]:
+    """Resolve a reproduction project and confine it to the public checkout."""
+    repo_root = repo_root.resolve()
+    normalized = _validate_repro_project_name(project_name)
+    candidate = resolve_project_root(repo_root, normalized)
+    try:
+        project_dir = candidate.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"reproduction project does not exist: {normalized!r}") from exc
+    if not project_dir.is_dir():
+        raise ValueError(f"reproduction project is not a directory: {normalized!r}")
+    try:
+        project_dir.relative_to(repo_root)
+    except ValueError as exc:
+        raise ValueError(f"reproduction project must resolve inside the repository: {normalized!r}") from exc
+    return normalized, project_dir
+
+
 def _declared_output_relpaths(repo_root: Path, project_dir: Path) -> list[str]:
     """Read declared output artifact paths from the project artifact manifest.
 
@@ -120,37 +169,32 @@ def _declared_output_relpaths(repo_root: Path, project_dir: Path) -> list[str]:
     against ``repo_root``, so these are rebased onto the repo root here
     (``projects/templates/<name>/output/data/result.json``); without the rebase
     the resolver looked for ``<repo_root>/output/data/...`` and reported every
-    artifact absent, so ``verify`` always failed. Missing/malformed manifests —
-    and any path that escapes the repo root — yield an empty/filtered list (the
-    lockfile and canonical-facts pointer still anchor the bundle).
+    artifact absent, so ``verify`` always failed. Malformed, stale, unsafe, or
+    non-shippable manifests fail closed: a public reproduction bundle cannot
+    silently omit outputs after consuming an invalid attestation.
     """
     manifest_path = project_dir / "output" / "reports" / "artifact_manifest.json"
     if not manifest_path.is_file():
         return []
     try:
-        raw: Any = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        logger.warning("Unreadable artifact manifest at %s — skipping output artifacts.", manifest_path)
-        return []
-    if not isinstance(raw, dict):
-        return []
-    entries = raw.get("entries")
-    if not isinstance(entries, list):
-        return []
+        manifest = read_artifact_manifest(manifest_path)
+    except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        raise ValueError(f"invalid artifact manifest at {manifest_path}: {exc}") from exc
+    validation = validate_artifact_manifest(
+        manifest,
+        project_dir=project_dir,
+        expected_inventory_mode=output_inventory_mode_for_project(repo_root, project_dir),
+    )
+    if validation.issues:
+        raise ValueError(f"invalid artifact manifest at {manifest_path}: " + "; ".join(validation.issues))
     repo_root = repo_root.resolve()
     paths: list[str] = []
-    for entry in entries:
-        if not isinstance(entry, dict):
-            continue
-        path = entry.get("path")
-        if not (isinstance(path, str) and path):
-            continue
+    for entry in manifest.entries:
+        path = entry.path
         try:
             repo_relative = (project_dir / path).resolve().relative_to(repo_root)
-        except ValueError:
-            # Path escapes the repo root (absolute or ``..`` traversal) — skip it.
-            logger.warning("Artifact manifest path %r escapes the repo root — skipping.", path)
-            continue
+        except (OSError, ValueError) as exc:
+            raise ValueError(f"artifact manifest path escapes the repository: {path!r}") from exc
         paths.append(repo_relative.as_posix())
     return sorted(set(paths))
 
@@ -170,19 +214,8 @@ def _reproduce_commands(project_name: str) -> list[str]:
     ]
 
 
-def collect_entries(repo_root: Path, project_name: str) -> list[BundleEntry]:
-    """Collect and hash all reproduction inputs for *project_name*.
-
-    Entries are returned sorted by ``path`` for deterministic manifests.
-    """
-    repo_root = repo_root.resolve()
-    project_dir = repo_root / "projects" / project_name
-    if not project_dir.is_dir():
-        # Public exemplars live under projects/templates/<name>.
-        nested = repo_root / "projects" / "templates" / project_name
-        if nested.is_dir():
-            project_dir = nested
-
+def _collect_entries_for_project(repo_root: Path, project_dir: Path) -> list[BundleEntry]:
+    """Collect entries for a validated, checkout-confined project directory."""
     entries: list[BundleEntry] = [
         _make_entry(repo_root, _KIND_LOCKFILE, "uv.lock"),
         _make_entry(repo_root, _KIND_PYPROJECT, "pyproject.toml"),
@@ -190,17 +223,60 @@ def collect_entries(repo_root: Path, project_name: str) -> list[BundleEntry]:
     ]
 
     artifact_manifest_rel = _artifact_manifest_relpath(repo_root, project_dir)
-    if artifact_manifest_rel is not None:
-        entries.append(_make_entry(repo_root, _KIND_ARTIFACT_MANIFEST, artifact_manifest_rel))
+    if artifact_manifest_rel is None:
+        raise ValueError(f"artifact manifest is required for a reproduction bundle: {project_dir}")
+    artifact_manifest_entry = _make_entry(repo_root, _KIND_ARTIFACT_MANIFEST, artifact_manifest_rel)
+    if not artifact_manifest_entry.present:
+        raise ValueError(f"artifact manifest must be a present regular file inside the repository: {project_dir}")
+    entries.append(artifact_manifest_entry)
 
-    for relpath in _declared_output_relpaths(repo_root, project_dir):
-        entries.append(_make_entry(repo_root, _KIND_OUTPUT_ARTIFACT, relpath))
+    declared_outputs = _declared_output_relpaths(repo_root, project_dir)
+    if not declared_outputs:
+        raise ValueError(f"artifact manifest must declare at least one output artifact: {project_dir}")
+    output_entries = [_make_entry(repo_root, _KIND_OUTPUT_ARTIFACT, relpath) for relpath in declared_outputs]
+    absent_outputs = [entry.path for entry in output_entries if not entry.present]
+    if absent_outputs:
+        raise ValueError(
+            "artifact manifest declares output artifacts that are not present regular files "
+            f"inside the repository: {', '.join(absent_outputs)}"
+        )
+    entries.extend(output_entries)
 
     # Deduplicate by path (stable) then sort for a deterministic manifest.
     seen: dict[str, BundleEntry] = {}
     for entry in entries:
         seen.setdefault(entry.path, entry)
     return sorted(seen.values(), key=lambda e: e.path)
+
+
+def collect_entries(repo_root: Path, project_name: str) -> list[BundleEntry]:
+    """Collect and hash all reproduction inputs for *project_name*.
+
+    Entries are returned sorted by ``path`` for deterministic manifests.
+    """
+    repo_root = repo_root.resolve()
+    _normalized, project_dir = _resolve_repro_project(repo_root, project_name)
+    return _collect_entries_for_project(repo_root, project_dir)
+
+
+def _build_manifest_for_project(
+    repo_root: Path,
+    project_name: str,
+    project_dir: Path,
+    *,
+    generated_at: str,
+) -> dict[str, Any]:
+    """Build a manifest after project validation and path confinement."""
+    if not _valid_generated_at(generated_at):
+        raise ValueError("generated_at must be a timezone-aware ISO-8601/RFC3339 timestamp")
+    entries = _collect_entries_for_project(repo_root, project_dir)
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "project": project_name,
+        "generated_at": generated_at,
+        "reproduce": _reproduce_commands(project_name),
+        "entries": [entry.to_dict() for entry in entries],
+    }
 
 
 def build_manifest_dict(
@@ -217,14 +293,14 @@ def build_manifest_dict(
         generated_at: Caller-supplied timestamp (never read from the clock, so
             the manifest stays byte-stable across runs).
     """
-    entries = collect_entries(repo_root, project_name)
-    return {
-        "schema_version": SCHEMA_VERSION,
-        "project": project_name,
-        "generated_at": generated_at,
-        "reproduce": _reproduce_commands(project_name),
-        "entries": [entry.to_dict() for entry in entries],
-    }
+    repo_root = repo_root.resolve()
+    normalized, project_dir = _resolve_repro_project(repo_root, project_name)
+    return _build_manifest_for_project(
+        repo_root,
+        normalized,
+        project_dir,
+        generated_at=generated_at,
+    )
 
 
 def _serialize(manifest: dict[str, Any]) -> str:
@@ -254,11 +330,21 @@ def build_repro_bundle(
         The output directory containing ``repro_manifest.json``.
     """
     repo_root = repo_root.resolve()
+    normalized, project_dir = _resolve_repro_project(repo_root, project_name)
+    manifest = _build_manifest_for_project(
+        repo_root,
+        normalized,
+        project_dir,
+        generated_at=generated_at,
+    )
     if out_dir is None:
-        out_dir = repo_root / "output" / project_name / "repro_bundle"
+        out_dir = repo_root / "output" / normalized / "repro_bundle"
+        try:
+            out_dir.resolve(strict=False).relative_to(repo_root)
+        except (OSError, ValueError) as exc:
+            raise ValueError(f"default output directory escapes the repository: {out_dir}") from exc
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    manifest = build_manifest_dict(repo_root, project_name, generated_at=generated_at)
     (out_dir / BUNDLE_MANIFEST_NAME).write_text(_serialize(manifest), encoding="utf-8")
     logger.info("Wrote %s with %d entries", BUNDLE_MANIFEST_NAME, len(manifest["entries"]))
     return out_dir
@@ -336,10 +422,73 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
         return VerifyReport(ok=False, checked=0, mismatches=[{"path": "<manifest>", "reason": "not-a-mapping"}])
     if raw.get("schema_version") != SCHEMA_VERSION:
         mismatches.append({"path": "<manifest>", "reason": "unsupported-schema"})
-    if not isinstance(raw.get("project"), str) or not raw["project"].strip():
+    if "generated_at" not in raw:
+        mismatches.append({"path": "<manifest>", "reason": "missing-generated-at"})
+    elif not _valid_generated_at(raw["generated_at"]):
+        mismatches.append({"path": "<manifest>", "reason": "invalid-generated-at"})
+
+    normalized_project: str | None = None
+    expected_kinds_by_path: dict[str, str] | None = None
+    expected_output_paths: set[str] = set()
+    expected_artifact_manifest_path: str | None = None
+    raw_project = raw.get("project")
+    if not isinstance(raw_project, str) or not raw_project.strip():
         mismatches.append({"path": "<manifest>", "reason": "missing-project"})
-    if not isinstance(raw.get("reproduce"), list) or not raw["reproduce"]:
+    else:
+        try:
+            candidate_project = _validate_repro_project_name(raw_project)
+        except ValueError:
+            mismatches.append({"path": "<manifest>", "reason": "invalid-project"})
+        else:
+            if candidate_project != raw_project:
+                mismatches.append({"path": "<manifest>", "reason": "invalid-project"})
+            else:
+                normalized_project = candidate_project
+
+    reproduce = raw.get("reproduce")
+    if not isinstance(reproduce, list) or not reproduce:
         mismatches.append({"path": "<manifest>", "reason": "missing-reproduce-command"})
+    elif normalized_project is not None and reproduce != _reproduce_commands(normalized_project):
+        mismatches.append({"path": "<manifest>", "reason": "reproduce-command-mismatch"})
+
+    if normalized_project is not None:
+        try:
+            _normalized, project_dir = _resolve_repro_project(checkout_root, normalized_project)
+        except ValueError as exc:
+            mismatches.append(
+                {
+                    "path": "<manifest>",
+                    "reason": "project-resolution-failed",
+                    "detail": str(exc),
+                }
+            )
+        else:
+            expected_artifact_manifest_path = _artifact_manifest_relpath(checkout_root, project_dir)
+            if expected_artifact_manifest_path is None:
+                mismatches.append({"path": "<manifest>", "reason": "missing-project-artifact-manifest"})
+            else:
+                try:
+                    expected_output_paths = set(_declared_output_relpaths(checkout_root, project_dir))
+                except ValueError as exc:
+                    mismatches.append(
+                        {
+                            "path": "<manifest>",
+                            "reason": "invalid-project-artifact-manifest",
+                            "detail": str(exc),
+                        }
+                    )
+                else:
+                    if not expected_output_paths:
+                        mismatches.append({"path": "<manifest>", "reason": "missing-project-output-artifacts"})
+                    else:
+                        expected_kinds_by_path = {
+                            "uv.lock": _KIND_LOCKFILE,
+                            "pyproject.toml": _KIND_PYPROJECT,
+                            COUNTS_RELPATH: _KIND_CANONICAL_FACTS,
+                            expected_artifact_manifest_path: _KIND_ARTIFACT_MANIFEST,
+                            **{path: _KIND_OUTPUT_ARTIFACT for path in expected_output_paths},
+                        }
+
     entries = raw.get("entries")
     if not isinstance(entries, list) or not entries:
         mismatches.append({"path": "<manifest>", "reason": "empty-or-missing-entries"})
@@ -347,22 +496,48 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
 
     checked = 0
     seen_paths: set[str] = set()
+    kind_counts: dict[str, int] = {}
+    observed_output_paths: set[str] = set()
+    artifact_manifest_present = False
+    output_artifact_present = False
     for entry in entries:
         if not isinstance(entry, dict):
             mismatches.append({"path": "<malformed>", "reason": "malformed-entry"})
             continue
+        missing_fields = sorted(_ENTRY_REQUIRED_FIELDS - set(entry))
+        if missing_fields:
+            mismatches.append(
+                {
+                    "path": str(entry.get("path", "<malformed>")),
+                    "reason": "missing-entry-fields",
+                    "missing": missing_fields,
+                }
+            )
         path_value = entry.get("path")
         path = path_value if isinstance(path_value, str) else ""
         kind = str(entry.get("kind", ""))
         expected = entry.get("sha256")
-        expected_present = entry.get("present", expected is not None)
+        expected_present = entry.get("present")
         checked += 1
 
         path_obj = PurePosixPath(path)
-        if not path or path_obj.is_absolute() or ".." in path_obj.parts or "\\" in path or path in seen_paths:
+        if (
+            not path
+            or path == "."
+            or "\x00" in path
+            or "\\" in path
+            or path_obj.is_absolute()
+            or (path_obj.parts and len(path_obj.parts[0]) == 2 and path_obj.parts[0][1] == ":")
+            or ".." in path_obj.parts
+            or path_obj.as_posix() != path
+            or path in seen_paths
+        ):
             mismatches.append({"path": path or "<empty>", "reason": "unsafe-or-duplicate-path"})
             continue
         seen_paths.add(path)
+        kind_counts[kind] = kind_counts.get(kind, 0) + 1
+        if kind == _KIND_OUTPUT_ARTIFACT:
+            observed_output_paths.add(path)
         if kind not in {
             _KIND_LOCKFILE,
             _KIND_PYPROJECT,
@@ -371,18 +546,46 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
             _KIND_OUTPUT_ARTIFACT,
         }:
             mismatches.append({"path": path, "reason": "unknown-kind"})
+        if expected_kinds_by_path is not None:
+            expected_kind = expected_kinds_by_path.get(path)
+            if expected_kind is None:
+                mismatches.append({"path": path, "reason": "unexpected-entry-path"})
+            elif kind != expected_kind:
+                mismatches.append(
+                    {
+                        "path": path,
+                        "reason": "kind-path-mismatch",
+                        "expected": expected_kind,
+                        "actual": kind,
+                    }
+                )
         if not isinstance(expected_present, bool):
             mismatches.append({"path": path, "reason": "invalid-present-flag"})
             continue
-        if expected_present and (not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected)):
-            mismatches.append({"path": path, "reason": "invalid-sha256"})
-            continue
+        metadata_valid = True
+        if expected_present:
+            if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
+                mismatches.append({"path": path, "reason": "invalid-sha256"})
+                metadata_valid = False
+        elif expected is not None:
+            mismatches.append({"path": path, "reason": "invalid-absent-sha256"})
+            metadata_valid = False
         size_value = entry.get("size_bytes")
         if isinstance(size_value, bool) or not isinstance(size_value, int) or size_value < 0:
             mismatches.append({"path": path, "reason": "invalid-size"})
             continue
+        if not expected_present and size_value != 0:
+            mismatches.append({"path": path, "reason": "invalid-absent-size"})
+            metadata_valid = False
+        if not metadata_valid:
+            continue
 
         actual, _size, present = _hash_relpath(checkout_root, path)
+
+        if kind == _KIND_ARTIFACT_MANIFEST and path == expected_artifact_manifest_path and expected_present and present:
+            artifact_manifest_present = True
+        if kind == _KIND_OUTPUT_ARTIFACT and path in expected_output_paths and expected_present and present:
+            output_artifact_present = True
 
         if kind == _KIND_OUTPUT_ARTIFACT and not present:
             # A declared output must be reproducible. Absent at build time AND
@@ -408,6 +611,49 @@ def verify_repro_bundle(manifest_path: Path, *, checkout_root: Path) -> VerifyRe
             )
         elif _size != size_value:
             mismatches.append({"path": path, "reason": "size-changed", "expected": size_value, "actual": _size})
+
+    if not artifact_manifest_present:
+        mismatches.append({"path": "<manifest>", "reason": "missing-artifact-manifest"})
+    if not output_artifact_present:
+        mismatches.append({"path": "<manifest>", "reason": "missing-output-artifacts"})
+    if expected_kinds_by_path is not None:
+        missing_paths = sorted(set(expected_kinds_by_path) - seen_paths)
+        if missing_paths:
+            mismatches.append(
+                {
+                    "path": "<manifest>",
+                    "reason": "missing-required-entries",
+                    "missing": missing_paths,
+                }
+            )
+        if observed_output_paths != expected_output_paths:
+            mismatches.append(
+                {
+                    "path": "<manifest>",
+                    "reason": "output-artifact-set-mismatch",
+                    "missing": sorted(expected_output_paths - observed_output_paths),
+                    "unexpected": sorted(observed_output_paths - expected_output_paths),
+                }
+            )
+        expected_kind_counts = {
+            _KIND_LOCKFILE: 1,
+            _KIND_PYPROJECT: 1,
+            _KIND_ARTIFACT_MANIFEST: 1,
+            _KIND_CANONICAL_FACTS: 1,
+            _KIND_OUTPUT_ARTIFACT: len(expected_output_paths),
+        }
+        for kind, expected_count in expected_kind_counts.items():
+            actual_count = kind_counts.get(kind, 0)
+            if actual_count != expected_count:
+                mismatches.append(
+                    {
+                        "path": "<manifest>",
+                        "reason": "kind-cardinality-mismatch",
+                        "kind": kind,
+                        "expected": expected_count,
+                        "actual": actual_count,
+                    }
+                )
 
     return VerifyReport(ok=not mismatches, checked=checked, mismatches=mismatches)
 

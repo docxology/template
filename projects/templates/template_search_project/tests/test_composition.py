@@ -100,6 +100,7 @@ def test_writes_section_with_all_keys(tmp_path: Path):
     assert "Why this matters paragraph" in text
     assert "Supplemental S1" in text
     assert "\\newpage" in text
+    assert "keyword from local)" in text
 
     summary_path = iso / "output" / "deep_search" / "composition_summary.json"
     assert summary_path.exists()
@@ -107,6 +108,7 @@ def test_writes_section_with_all_keys(tmp_path: Path):
     assert summary["unique_papers"] == 1
     assert summary["per_paper_notes_integrated"] == 1
     assert summary["missing_citation_keys"] == []
+    assert summary["retrieval_sources"] == ["local"]
 
 
 def test_flags_missing_keys(tmp_path: Path):
@@ -175,3 +177,5 @@ def test_no_per_paper_notes_adds_omission_note(tmp_path: Path):
     assert exit_code == 0
     text = (iso / "manuscript" / "S01_literature_review.md").read_text(encoding="utf-8")
     assert "Per-paper synthesis omitted" in text
+    assert "sources were not declared in the replay artifacts" in text
+    assert "from )" not in text

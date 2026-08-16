@@ -31,6 +31,7 @@ from infrastructure.rendering._pdf_latex_pipeline import (
     compile_latex_manuscript,
 )
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
+from infrastructure.rendering._pdf_figure_alts import apply_pdf_figure_alts
 from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
@@ -319,6 +320,11 @@ class PDFRenderer:
 
         # Step 5: Fix figure paths for LaTeX compilation
         tex_content = fix_figure_paths(tex_content, manuscript_dir, output_dir)
+        tex_content = apply_pdf_figure_alts(
+            tex_content,
+            Path(self.config.figures_dir) / "figure_registry.json",
+            tagged_pdf=tagged_pdf,
+        )
 
         # Step 6: Inject preamble and title page
         config_path = manuscript_dir / "config.yaml"

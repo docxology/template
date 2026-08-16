@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
+from statistics import fmean
 
-from template_formal.colony.demo import run_demo_colony, run_statistics_sweep
+from template_formal.colony.demo import LOCATIONS, DemoSummary, run_demo_colony, run_statistics_sweep
 from template_formal.colony.stats import convergence_rate, wilson_score_interval
 from template_formal.colony.visualization import (
     write_convergence_tick_histogram,
@@ -49,6 +51,49 @@ class AnalysisArtifacts:
             self.sweep_figure,
             self.figure_registry,
         )
+
+
+def describe_demo_figure(summary: DemoSummary) -> str:
+    """Describe exactly the concentration series rendered for the demo figure."""
+    history = summary["concentration_history"]
+    if not history:
+        return "An empty two-panel chart contains no concentration history, so no location trend can be inferred."
+
+    final_values = {location: float(history[-1].get(location, 0.0)) for location in LOCATIONS}
+    winner = max(final_values, key=lambda location: final_values[location])
+    totals = [sum(float(row.get(location, 0.0)) for location in LOCATIONS) for row in history]
+    winner_values = [float(row.get(winner, 0.0)) for row in history]
+    shares = [value / total if total > 0.0 else 0.0 for value, total in zip(winner_values, totals)]
+    series = ", ".join(
+        f"{location} changes from {float(history[0].get(location, 0.0)):.2f} to "
+        f"{float(history[-1].get(location, 0.0)):.2f}"
+        for location in LOCATIONS
+    )
+    return (
+        f"Two-panel line chart across {len(history)} ticks: {series}; "
+        f"{winner}'s share of total concentration changes from {shares[0]:.2f} to {shares[-1]:.2f}."
+    )
+
+
+def describe_sweep_figure(consensus_ticks: list[int | None]) -> str:
+    """Describe exactly the convergence distribution rendered for the sweep."""
+    total = len(consensus_ticks)
+    converged = [tick for tick in consensus_ticks if tick is not None]
+    if total == 0:
+        return "An empty histogram and empirical-CDF panel contain no trials, so no convergence distribution is shown."
+    if not converged:
+        return f"Histogram and empirical-CDF panels show that none of the {total} trials reached consensus."
+
+    counts = Counter(converged)
+    tick_range = (
+        f"all at tick {converged[0]}"
+        if min(converged) == max(converged)
+        else f"ranging from tick {min(converged)} to tick {max(converged)}"
+    )
+    return (
+        f"Histogram and empirical CDF summarize {len(converged)} of {total} converged trials, {tick_range}; "
+        f"{counts[0]} reached consensus at tick zero and the mean convergence tick is {fmean(converged):.1f}."
+    )
 
 
 def run_publication_analysis(project_root: Path) -> AnalysisArtifacts:
@@ -106,6 +151,7 @@ def run_publication_analysis(project_root: Path) -> AnalysisArtifacts:
             ),
             "section": "Colony convergence",
             "generated_by": "template_formal.colony.visualization.write_demo_convergence_figure",
+            "metadata": {"alt_text": describe_demo_figure(summary)},
         },
         "fig:convergence-tick-distribution": {
             "label": "fig:convergence-tick-distribution",
@@ -116,6 +162,7 @@ def run_publication_analysis(project_root: Path) -> AnalysisArtifacts:
             ),
             "section": "Colony convergence",
             "generated_by": "template_formal.colony.visualization.write_convergence_tick_histogram",
+            "metadata": {"alt_text": describe_sweep_figure([result.consensus_tick for result in sweep_results])},
         },
     }
     figures_dir.mkdir(parents=True, exist_ok=True)
@@ -137,5 +184,7 @@ __all__ = [
     "SWEEP_CONFIG_KWARGS",
     "SWEEP_NUM_TRIALS",
     "SWEEP_SEED_BASE",
+    "describe_demo_figure",
+    "describe_sweep_figure",
     "run_publication_analysis",
 ]

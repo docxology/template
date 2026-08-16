@@ -43,6 +43,29 @@ def _make_valid_combined_pdf(path: Path, text: str = "combined manuscript") -> N
     _make_pdf(path, pages=12, text=text)
 
 
+def _make_epub(path: Path, *, chapter: str | None = None) -> None:
+    """Write a minimal well-formed EPUB package."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    container = (
+        '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
+        '<rootfiles><rootfile full-path="EPUB/content.opf" '
+        'media-type="application/oebps-package+xml"/></rootfiles></container>'
+    )
+    package = (
+        '<package xmlns="http://www.idpf.org/2007/opf" version="3.0">'
+        '<manifest><item id="chapter" href="chapter.xhtml" '
+        'media-type="application/xhtml+xml"/></manifest>'
+        '<spine><itemref idref="chapter"/></spine></package>'
+    )
+    chapter = chapter or '<html xmlns="http://www.w3.org/1999/xhtml"><body><p>Current.</p></body></html>'
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+        archive.writestr("META-INF/container.xml", container)
+        archive.writestr("EPUB/content.opf", package)
+        archive.writestr("EPUB/chapter.xhtml", chapter)
+
+
 def test_verify_render_outputs_validates_enabled_docx_and_epub_packages(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -67,12 +90,35 @@ def test_verify_render_outputs_validates_enabled_docx_and_epub_packages(
         archive.writestr("word/document.xml", "<document/>")
 
     epub = project / "output" / "epub" / "test_proj_combined.epub"
-    epub.parent.mkdir(parents=True)
-    with zipfile.ZipFile(epub, "w") as archive:
-        archive.writestr("mimetype", "application/epub+zip")
-        archive.writestr("META-INF/container.xml", "<container/>")
+    _make_epub(epub)
 
     assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is True
+
+
+def test_verify_render_outputs_rejects_malformed_epub_xhtml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Stage 3 applies the same XML-safe EPUB policy as later gates."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: false\n    docx: false\n    epub: true\n",
+        encoding="utf-8",
+    )
+    _make_epub(
+        project / "output" / "epub" / "test_proj_combined.epub",
+        chapter=(
+            '<html xmlns="http://www.w3.org/1999/xhtml"><body><p>Line break<br>is malformed XHTML.</p></body></html>'
+        ),
+    )
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
 
 
 def test_verify_render_outputs_rejects_slides_enabled_with_zero_decks(

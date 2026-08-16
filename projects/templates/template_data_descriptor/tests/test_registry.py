@@ -37,6 +37,7 @@ class TestRegistryBuild:
             "fig:quality_gate",
             "fig:checksum_verification",
         }
+        assert all(record["metadata"]["alt_text"].strip() for record in payload["figures"])
 
     def test_missing_generated_file_raises(self, tmp_path: Path) -> None:
         with pytest.raises(FigureRegistryError, match="missing generated figure file"):
@@ -67,6 +68,7 @@ class TestRegistryBuild:
                 filename=spec_b.filename,
                 caption=spec_a.caption,
                 generated_by=spec_a.generated_by,
+                alt_text=spec_a.alt_text,
             ),
             spec_a,
         )
@@ -81,6 +83,7 @@ class TestRegistryBuild:
             filename=spec.filename,
             caption=spec.caption,
             generated_by=spec.generated_by,
+            alt_text=spec.alt_text,
         )
         with pytest.raises(FigureRegistryError, match="must start with 'fig:'"):
             build_generated_figure_registry((bad,), [], schema_version=FIGURE_REGISTRY_SCHEMA)
@@ -92,6 +95,7 @@ class TestRegistryBuild:
             filename="subdir/out.png",
             caption=spec.caption,
             generated_by=spec.generated_by,
+            alt_text=spec.alt_text,
         )
         with pytest.raises(FigureRegistryError, match="must be a basename"):
             build_generated_figure_registry((bad,), [], schema_version=FIGURE_REGISTRY_SCHEMA)
@@ -103,6 +107,7 @@ class TestRegistryBuild:
             filename=spec.filename,
             caption="   ",
             generated_by=spec.generated_by,
+            alt_text=spec.alt_text,
         )
         with pytest.raises(FigureRegistryError, match="caption must not be empty"):
             build_generated_figure_registry((bad,), [], schema_version=FIGURE_REGISTRY_SCHEMA)
@@ -114,8 +119,21 @@ class TestRegistryBuild:
             filename=spec.filename,
             caption=spec.caption,
             generated_by="",
+            alt_text=spec.alt_text,
         )
         with pytest.raises(FigureRegistryError, match="generated_by must not be empty"):
+            build_generated_figure_registry((bad,), [], schema_version=FIGURE_REGISTRY_SCHEMA)
+
+    def test_empty_alt_text_raises(self, tmp_path: Path) -> None:
+        spec = DESCRIPTOR_FIGURE_SPECS[0]
+        bad = type(spec)(
+            label=spec.label,
+            filename=spec.filename,
+            caption=spec.caption,
+            generated_by=spec.generated_by,
+            alt_text="   ",
+        )
+        with pytest.raises(FigureRegistryError, match="alt_text must not be empty"):
             build_generated_figure_registry((bad,), [], schema_version=FIGURE_REGISTRY_SCHEMA)
 
     def test_duplicate_generated_filename_raises(self, tmp_path: Path) -> None:

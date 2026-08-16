@@ -88,7 +88,11 @@ checked out.
 model shared by both renderers:
 
 - `Slide` — one slide's title, bullets, an optional speaker-notes string, an
-  optional local figure path, and a `kind` (`title`, `section`, or `content`).
+  optional local figure path, and a `kind` — one of six layout hints:
+  `title` (deck opener/closer), `section` (section-divider), `content`
+  (default: title + bullets), `stat` (one large highlighted number +
+  label), `quote` (a pull-quote + attribution), or `diagram` (title + a
+  large full-bleed figure, e.g. a rendered Mermaid diagram).
 - `DeckContent` — a deck title/subtitle plus an ordered tuple of `Slide`.
 - `SlideBudget` — the three published maximum lengths (`SHORT` ≤ 11 slides,
   `MEDIUM` ≤ 38, `LONG` ≤ 58) and `filter_deck_for_budget`, a pure function
@@ -132,9 +136,6 @@ together into the six published artifacts under
 
 # Content and Validation {#sec:validation}
 
-## Methods
-
-
 ## The flagship pitch
 
 The shipped content pitches [`template_template`](../../template_template/) — this
@@ -157,7 +158,7 @@ long adds a full governance/confidentiality walkthrough and an appendix.
 instead of `manuscript/*.md`. `resolve_tokens` raises if any token in the
 content has no matching key in the live token set from `src/deck_tokens.py` — mirroring
 `template_madlib`'s `test_all_manuscript_tokens_are_generated` pre-substitution
-coverage check, adapted to deck content. `scripts/audit_deck_content.py`
+coverage check, adapted to deck content. `scripts/10_audit_deck_content.py`
 runs this check plus the cliché lint in one pass and exits non-zero on either
 class of failure; both failure modes are proven to actually fire (a
 deliberately-broken fixture triggers each) before the real content is
@@ -190,14 +191,14 @@ only place a generation time is recorded is deck metadata, following the
 repository for reproducible builds.
 
 ```bash
-uv run python scripts/20_render_decks.py
+uv run python projects/templates/template_pitch_deck/scripts/20_render_decks.py
 # → output/pdf/template_template_pitch_{short,medium,long}.pdf
 # → output/pptx/template_template_pitch_{short,medium,long}.pptx
 
 uv run pytest projects/templates/template_pitch_deck/tests/ \
   --cov=projects/templates/template_pitch_deck/src --cov-fail-under=90
 
-uv run python scripts/audit/check_template_drift.py
+uv run python scripts/audit/check_template_drift.py --project templates/template_pitch_deck --strict
 ```
 
 This project participates in the standard multi-project pipeline like any
@@ -205,6 +206,41 @@ other public exemplar (`./run.sh --project templates/template_pitch_deck --pipel
 and requires no LLM/Ollama stage — deck content is authored and
 token-resolved, not generated at render time by a model call, which keeps
 the artifact deterministic and the core pipeline Ollama-optional.
+
+
+
+---
+
+
+
+# Methodology {#sec:methodology}
+
+The deck is generated deterministically from a structured content model rather
+than authored slide-by-slide.
+
+## Deck construction
+
+`manuscript/deck_content_{short,medium,long}.yaml` are the single source of
+truth for slide content across three lengths. `src/deck_tokens.py` resolves
+live repository facts (`{{TOKEN}}` placeholders) from `template_template`'s own
+`manuscript/config.yaml` and the public exemplar roster — never hand-typed
+literals. `src/render_orchestration.py` then renders the resolved model into
+PDF (via reportlab) and PPTX (via python-pptx) through `scripts/20_render_decks.py`,
+with both renderers consuming one shared content model.
+
+## Validation
+
+Three offline audits run as real gates before the deck ships:
+
+| Check | Tool | Failure mode |
+| --- | --- | --- |
+| Token resolution | `src/token_resolution.py` | any unresolved `{{TOKEN}}` fails the run |
+| Cliché lint | `src/cliche_lint.py` | any stock pitch phrase fails the run |
+| Diligence citations | `src/diligence_audit.py` | any fact-bearing slide lacking a source fails |
+
+`scripts/10_audit_deck_content.py` runs the token and cliché checks in one pass;
+`scripts/30_audit_diligence.py` enforces 100% fact-citation coverage across all
+three lengths. PowerPoint/PDF slide-count parity is verified for every render.
 
 
 

@@ -1,6 +1,7 @@
 {
   "title": "The Shape Between",
   "subtitle": "A geometric fable of belonging, bracing, and reciprocal form",
+  "trim_size": "portrait",
   "page_count": 14,
   "characters": [
     {
@@ -40,6 +41,10 @@
       "scene": "cosmic_yinyang",
       "overlay_box": false,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Shape Between' (cosmic_yinyang). Story text: A geometric fable of belonging, bracing, and reciprocal form\nDaniel Ari Friedman\nDOI 10.5281/zenodo.21176000\ntemplate_storybook\n"
     },
     {
@@ -49,6 +54,10 @@
       "scene": "publication_info",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'Publication Information' (publication_info). Story text: The Shape Between\nTemplate storybook exemplar, version 0.1.0\nGenerated in the public research-template repository.\nPrimary artifact: output/pdf/the-shape-between.pdf\nLicense: MIT for template code and project materials.\nAuthor: Daniel Ari Friedman.\nDOI: 10.5281/zenodo.21176000.\nStory and images: illustrative fiction.\n\nAcknowledgements\nFor children who notice they are shaped differently; for families that make room; and for R. Buckminster Fuller's Synergetics, where triangular structure reveals how a square room can become steady.\n"
     },
     {
@@ -58,6 +67,10 @@
       "scene": "cube_home",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Square House' (cube_home). Story text: Tessa had four bright triangular faces and lived in a family of cubes. They loved her angles, but the chairs, shelves, songs, and bedtime quilts all expected corners to arrive in fours."
     },
     {
@@ -67,6 +80,10 @@
       "scene": "tetra_home",
       "overlay_box": false,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Pointed House' (tetra_home). Story text: Across the valley, Ciro rolled his square shoulders through a family of tetrahedra. Their tents folded from triangles, their games climbed to peaks, and every story knew how to stand on three edges."
     },
     {
@@ -76,6 +93,10 @@
       "scene": "symbol_valley",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Valley That Turned' (symbol_valley). Story text: Between the two homes was a round valley split like day and night. Cubes slept in the pale half. Tetrahedra dreamed in the dark half. The border curved like a question neither family could answer alone."
     },
     {
@@ -85,6 +106,10 @@
       "scene": "meeting",
       "overlay_box": false,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The First Edge' (meeting). Story text: Tessa and Ciro met where the curve bent inward. She offered an edge. He offered a face. Neither gift fit perfectly, and that was exactly why they stayed to listen."
     },
     {
@@ -94,6 +119,10 @@
       "scene": "tetra_stability",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Tetrahedron Inside' (tetra_stability). Story text: Ciro showed Tessa the hollow room at the center of his cube. Its square walls could lean unless something braced them. Tessa touched four far corners. Lines of strength flashed between them: a tetrahedron inside the cube, small and stable, teaching the room how to stand."
     },
     {
@@ -103,6 +132,10 @@
       "scene": "mirror",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'Mirror Families' (mirror). Story text: Each child brought the other home. The cube family learned to set a triangular place at the table. The tetrahedral family learned that a square could hold a sky without losing its corners."
     },
     {
@@ -112,6 +145,10 @@
       "scene": "bridge",
       "overlay_box": false,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'Bridge of Edges' (bridge). Story text: They built a bridge from shared edges: cube to tetrahedron, tetrahedron to cube, step after step until the valley no longer divided the map."
     },
     {
@@ -121,6 +158,10 @@
       "scene": "shadow_school",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Shadow School' (shadow_school). Story text: At noon they visited the shadow school. Tessa turned and made triangles, kites, and arrows. Ciro turned and made squares, diamonds, and doors. The teacher smiled: every shape has more than one truth when light moves around it."
     },
     {
@@ -130,6 +171,10 @@
       "scene": "tensegrity_lantern",
       "overlay_box": false,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Tensegrity Lantern' (tensegrity_lantern). Story text: That night they built a lantern from struts that pushed and threads that pulled. Nothing touched the way the grown-ups expected, yet the little star held itself in balance and floated over the valley."
     },
     {
@@ -139,6 +184,10 @@
       "scene": "vector_garden",
       "overlay_box": true,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Vector Garden' (vector_garden). Story text: In the morning, seeds sprouted along invisible arrows. Some grew toward corners, some toward peaks, and some grew between. Tessa and Ciro learned that home was not a box or a point; it was a pattern of directions that could keep growing."
     },
     {
@@ -148,6 +197,10 @@
       "scene": "mega_symbol",
       "overlay_box": true,
       "caption_position": "top",
+      "caption_zone": {
+        "position": "top",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Mega-Symbol' (mega_symbol). Story text: When both families crossed, the valley rose into a mega-symbol: square inside triangle, triangle inside square, dark carrying light, light carrying dark."
     },
     {
@@ -157,6 +210,10 @@
       "scene": "shared_home",
       "overlay_box": false,
       "caption_position": "bottom",
+      "caption_zone": {
+        "position": "bottom",
+        "minimum_height": 120
+      },
       "alt_text": "Full-page illustrated scene 'The Shape Between' (shared_home). Story text: Tessa and Ciro did not become the same shape. They became a way through. Their homes kept their own geometry, and the space between them learned to glow."
     }
   ],

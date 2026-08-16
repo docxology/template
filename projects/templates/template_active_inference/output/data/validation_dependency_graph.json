@@ -765,7 +765,7 @@
       ],
       "exists": true,
       "produced_by_configured_analysis": true,
-      "producer": "generate_figures.py",
+      "producer": "z_generate_manuscript_variables.py",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -2886,7 +2886,7 @@
     },
     {
       "kind": "produces",
-      "source": "generate_figures.py",
+      "source": "z_generate_manuscript_variables.py",
       "target": "output/figures/figure_registry.json"
     },
     {

@@ -291,6 +291,22 @@ class TestSlidesRendererClass:
         assert updated.count(r"\begin{frame}") == 2
         assert r"\framebreak" not in updated
 
+    def test_split_long_slide_frames_preserves_nested_markup_in_wrapped_titles(self):
+        tex = (
+            r"\begin{frame}[fragile,allowframebreaks]{The \texttt{secure\_run.sh}" + "\n"
+            r"Orchestrator}" + "\n" + ("A long paragraph. " * 120) + "\n\n"
+            "A second paragraph.\n"
+            r"\end{frame}" + "\n"
+        )
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        complete_title = "{The " + r"\texttt{secure\_run.sh}" + "\nOrchestrator}"
+        assert changed == 1
+        assert updated.count(r"\begin{frame}") == 2
+        assert updated.count(complete_title) == 2
+        assert r"\framebreak" not in updated
+
     def test_split_long_slide_frames_never_breaks_longtable_alignment(self):
         tex = r"""\begin{frame}[allowframebreaks]{Table}
 Context before the table.
@@ -314,6 +330,35 @@ Context after the table.
         table_start = updated.index(r"\begin{longtable}")
         table_end = updated.index(r"\end{longtable}")
         assert r"\framebreak" not in updated[table_start:table_end]
+
+    def test_split_long_slide_frames_preserves_explicit_tex_group_around_table(self):
+        """A Pandoc table font group must remain inside one continuation frame."""
+        tex = r"""\begin{frame}[fragile,allowframebreaks]{Grouped table}
+\begingroup\footnotesize
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+A & B \\
+\midrule\noalign{}
+\endhead
+one & two \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\endgroup
+Content after the grouped table.
+\end{frame}
+"""
+
+        updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+        grouped = updated[updated.index(r"\begingroup") : updated.index(r"\endgroup")]
+        assert changed == 1
+        assert updated.count(r"\begin{frame}") == 2
+        assert r"\begin{longtable}" in grouped
+        assert r"\begin{frame}" not in grouped
+        assert r"\end{frame}" not in grouped
+        assert r"\framebreak" not in grouped
 
     def test_slide_level_follows_deepest_source_heading(self, tmp_path):
         shallow = tmp_path / "shallow.md"

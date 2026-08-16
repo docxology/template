@@ -65,6 +65,12 @@ uv run python -m infrastructure.publishing.archival_cli \
 
 Pipeline stage: `uv run python scripts/runner/archive_publication.py --project <name>` (expects the Stage 14 executable bundle).
 
+Archive a deliberately curated bundle, not the whole Stage 5 root mirror. The
+mirror is a complete local debugging copy and can contain Git-ignored logs,
+telemetry, and render intermediates alongside its validated stable/shippable
+inventory. The Stage 14 executable bundle and format-specific release packages
+are the intended archival inputs.
+
 ## Import path
 
 `from infrastructure.publishing.archival import ...` is the supported import path.

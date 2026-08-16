@@ -9,9 +9,12 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from zipfile import ZIP_STORED, ZipFile
 
+import defusedxml.ElementTree as ElementTree
 import pytest
 import yaml
+from infrastructure.rendering.epub_renderer import render_epub
 from infrastructure.validation.content import validate_images
 from infrastructure.validation.content.diagnostic_codes import MarkdownCode
 
@@ -162,6 +165,37 @@ def test_format_gallery_figure_refs_match_generator():
     assert referenced, "format gallery references no gallery figures"
     missing = referenced - producible
     assert missing == set(), f"format gallery references non-producible figures: {missing}"
+
+
+def test_format_gallery_renders_as_well_formed_epub_xhtml(tmp_path):
+    """The authored gallery must produce a structurally valid EPUB archive."""
+    gallery = MANUSCRIPT / "appendices" / "appendix_format_gallery.md"
+    epub = tmp_path / "format_gallery.epub"
+
+    render_epub(
+        gallery,
+        epub,
+        title="Format Gallery",
+        author="Template Textbook",
+        extra_args=[f"--resource-path={gallery.parent}"],
+    )
+
+    with ZipFile(epub) as archive:
+        members = archive.namelist()
+        assert members[0] == "mimetype"
+        assert archive.getinfo("mimetype").compress_type == ZIP_STORED
+        assert archive.read("mimetype") == b"application/epub+zip"
+        assert archive.testzip() is None
+
+        xhtml_members = sorted(name for name in members if name.endswith(".xhtml"))
+        assert xhtml_members, "rendered EPUB contains no XHTML documents"
+        malformed: list[str] = []
+        for member in xhtml_members:
+            try:
+                ElementTree.fromstring(archive.read(member))
+            except ElementTree.ParseError as exc:
+                malformed.append(f"{member}: {exc}")
+        assert malformed == [], "malformed EPUB XHTML: " + "; ".join(malformed)
 
 
 @pytest.mark.slow

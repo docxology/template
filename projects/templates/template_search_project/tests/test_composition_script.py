@@ -131,6 +131,7 @@ def test_composition_writes_section_with_all_keys(tmp_path: Path):
     # Pandoc supplemental marker so the section renders as an appendix.
     assert "Supplemental S1" in text
     assert "\\newpage" in text
+    assert "keyword from local)" in text
 
     summary_path = iso / "output" / "deep_search" / "composition_summary.json"
     assert summary_path.exists()
@@ -138,6 +139,7 @@ def test_composition_writes_section_with_all_keys(tmp_path: Path):
     assert summary["unique_papers"] == 1
     assert summary["per_paper_notes_integrated"] == 1
     assert summary["missing_citation_keys"] == []
+    assert summary["retrieval_sources"] == ["local"]
 
 
 def test_composition_flags_missing_keys(tmp_path: Path):

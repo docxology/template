@@ -85,6 +85,15 @@
       "effect": "read_only"
     },
     {
+      "module": "infrastructure.core._bounded_run_guardian",
+      "invocation": "python -m infrastructure.core._bounded_run_guardian",
+      "source_path": "infrastructure/core/_bounded_run_guardian.py",
+      "purpose": "Independent POSIX guardian for token-bound subprocess cleanup.",
+      "subcommands": [],
+      "exports": [],
+      "effect": "read_only"
+    },
+    {
       "module": "infrastructure.core.cli",
       "invocation": "python -m infrastructure.core.cli",
       "source_path": "infrastructure/core/cli.py",
@@ -171,6 +180,12 @@
         }
       ],
       "exports": [
+        "STABLE_LOCAL_OUTPUT_INVENTORY_MODE",
+        "STABLE_OUTPUT_INVENTORY_MODE",
+        "OutputInventoryMode",
+        "StableOutputInventory",
+        "collect_stable_output_inventory",
+        "output_inventory_mode_for_project",
         "PipelinePurpose",
         "PipelineSource",
         "PipelineSourceOrigin",

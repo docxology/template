@@ -581,7 +581,7 @@ run log: <code>output/logs/pymdp_runs.jsonl</code>.</p>
 <figure id="fig:cue_tmaze_advantage">
 <a class="figure-full-size-link" href="../figures/cue_tmaze_advantage.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/cue_tmaze_advantage.png" style="width:95.0%"
 data-fig-alt="Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the cue information gain I(context; observation) in nats and the expected reward log-preference for an epistemic agent that samples the cue versus a greedy agent that commits to an arm, demonstrating a positive behavioural advantage for cue-sampling. The right panel shows the flat Expected Free Energy of the cue-first and greedy policies, which are identical, illustrating that flat EFE propagation cannot reward cue-sampling and the sophisticated observation- conditioned evaluator is required."
-alt="Cue-then-reward T-maze where epistemic value is strictly necessary." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Two-panel bar chart for the cue-then-reward T-maze. The left panel shows the cue information gain I(context; observation) in nats and the expected reward log-preference for an epistemic agent that samples the cue versus a greedy agent that commits to an arm, demonstrating a positive behavioural advantage for cue-sampling. The right panel shows the flat Expected Free Energy of the cue-first and greedy policies, which are identical, illustrating that flat EFE propagation cannot reward cue-sampling and the sophisticated observation- conditioned evaluator is required." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Cue-then-reward T-maze where epistemic
 value is strictly necessary. Left: the cue carries 0.6931 nats of
 information and the cue-sampling agent reaches reward with a measured
@@ -593,7 +593,7 @@ information-seeking required. Closed form (no sampling).</figcaption>
 <figure id="fig:efe_decomposition">
 <a class="figure-full-size-link" href="../figures/efe_decomposition.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/efe_decomposition.png" style="width:95.0%"
 data-fig-alt="Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar&#39;s height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic)."
-alt="Closed-form Expected Free Energy decomposition over the finite T-maze policies." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Two-panel bar chart of the Expected Free Energy term decomposition across the four length-two T-maze policies (action sequences 00, 01, 10, 11). The left panel stacks risk (pragmatic deviation, the KL of policy-predicted outcomes from preferences) below ambiguity (epistemic, the expected likelihood entropy) so each bar&#x27;s height is the Expected Free Energy G(pi); the goal-seeking policy with minimum G is marked. The right panel shows the equal-and-opposite pragmatic value (expected log-preference) and epistemic value (state-outcome mutual information) per policy, with a zero reference line, illustrating the exact identity G(pi) = -(pragmatic + epistemic)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Closed-form Expected Free Energy
 decomposition over the finite T-maze policies. Left: <span
 class="math inline">\(G(\pi)\)</span> = risk + ambiguity (stacked), with
@@ -605,7 +605,7 @@ ambiguity + pragmatic + epistemic = 0 to machine precision.</figcaption>
 <figure id="fig:precision_sweep">
 <a class="figure-full-size-link" href="../figures/precision_sweep.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/precision_sweep.png" style="width:90.0%"
 data-fig-alt="Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G) sharpens as the precision gamma increases from 0 to 16. The left axis plots the Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and saturating at the ln(|optimal set|) floor (a dashed reference line) because two policies tie at the expected-free-energy minimum. The right axis plots the probability mass placed on the expected-free-energy optimal policy set, rising from 0.5 toward 1 and crossing the selection threshold; the precision at which it crosses is marked."
-alt="Precision sweep over the closed-form T-maze policy posterior q(pi)proptoexp(-gamma G) across 33 grid points up to gamma =16." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Dual-axis line plot of how the T-maze policy posterior q(pi) = softmax(-gamma G) sharpens as the precision gamma increases from 0 to 16. The left axis plots the Shannon entropy of the posterior in nats, decreasing from ln 4 at gamma=0 and saturating at the ln(|optimal set|) floor (a dashed reference line) because two policies tie at the expected-free-energy minimum. The right axis plots the probability mass placed on the expected-free-energy optimal policy set, rising from 0.5 toward 1 and crossing the selection threshold; the precision at which it crosses is marked." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Precision sweep over the closed-form
 T-maze policy posterior <span
 class="math inline">\(q(\pi)\propto\exp(-\gamma G)\)</span> across 33
@@ -621,7 +621,7 @@ closed form (no sampling).</figcaption>
 <figure id="fig:dirichlet_convergence">
 <a class="figure-full-size-link" href="../figures/dirichlet_convergence.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/dirichlet_convergence.png" style="width:85.0%"
 data-fig-alt="Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling)."
-alt="Dirichlet model learning: KL (A_texttrue \,\|\, A_textlearned) versus concentration-update step." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Single-panel semilog line chart of the Kullback-Leibler divergence from the true T-maze likelihood matrix A to the Dirichlet-learned expected likelihood, plotted against the update step. The divergence starts large at the uniform prior and falls monotonically toward zero as deterministic observation-state counts accumulate, crossing a dashed convergence-tolerance reference line; the first step below tolerance is marked. The curve is computed in closed form from a fixed expected-count stream (no sampling)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Dirichlet model learning: KL<span
 class="math inline">\((A_{\text{true}} \,\|\,
 A_{\text{learned}})\)</span> versus concentration-update step. The
@@ -634,21 +634,21 @@ byte-reproducible.</figcaption>
 <figure id="fig:si_belief_entropy_curve">
 <a class="figure-full-size-link" href="../figures/si_belief_entropy_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/si_belief_entropy_curve.png" style="width:90.0%"
 data-fig-alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode."
-alt="Belief entropy over time for the T-maze rollout (mean 0.3251 nats)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Line plot of belief entropy in nats versus timestep for the pymdp T-maze rollout. Entropy ranges from 0.3251 to 0.3251 nats across 2 steps in state_inference mode." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Belief entropy over time for the T-maze
 rollout (mean 0.3251 nats).</figcaption>
 </figure>
 <figure id="fig:si_obs_action_trace">
 <a class="figure-full-size-link" href="../figures/si_obs_action_trace.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/si_obs_action_trace.png" style="width:90.0%"
 data-fig-alt="Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1."
-alt="Observation and action traces for the T-maze rollout (action diversity 2)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Dual-panel plot of observation index and action index versus timestep for the pymdp T-maze rollout. The upper panel shows discrete observations; the lower panel shows actions. Goal reached flag is 1." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Observation and action traces for the
 T-maze rollout (action diversity 2).</figcaption>
 </figure>
 <figure id="fig:si_tmaze_actions">
 <a class="figure-full-size-link" href="../figures/si_tmaze_actions.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/si_tmaze_actions.png" style="width:90.0%"
 data-fig-alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps."
-alt="Discrete action index over time for the pymdp T-maze rollout (policy length 2)." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+alt="Step plot of discrete action index versus timestep for the pymdp T-maze rollout in state_inference mode. Actions change at each timestep with light fill under the step trace; policy depth is 2 steps." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Discrete action index over time for the
 pymdp T-maze rollout (policy length 2).</figcaption>
 </figure>

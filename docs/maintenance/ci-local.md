@@ -169,12 +169,18 @@ changes and then audit again:
 
 ```bash
 uv run python scripts/maintenance/refresh_artifact_manifests.py --all-public
+uv run python scripts/maintenance/refresh_rendered_provenance.py --all-public
 uv run python -m infrastructure.validation.cli publication-audit \
   --all-public --strict --rendered --format json
 ```
 
-The refresh records a `current-output-snapshot`; it does not fabricate
-stage-level provenance for the test subprocesses.
+The manifest refresh records a `current-output-snapshot`; it does not fabricate
+stage-level provenance for the test subprocesses. The rendered-provenance
+refresh then re-renders, snapshots, validates, and binds that exact integrity
+snapshot to the current stage implementation, source, configuration, outputs,
+and manuscript-consumption evidence. Stage or commit the complete refreshed
+evidence set before the strict audit, because receipt validation requires the
+release paths to match Git's cached index.
 
 ## Long-term portability
 

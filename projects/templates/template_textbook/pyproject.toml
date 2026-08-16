@@ -19,6 +19,7 @@ description = "Modular, fillable textbook scaffold: data-driven manuscript (part
 authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.10"
 dependencies = [
+    "defusedxml>=0.7.1",
     "pyyaml>=6.0",
     "matplotlib>=3.7",
     "numpy>=1.24",

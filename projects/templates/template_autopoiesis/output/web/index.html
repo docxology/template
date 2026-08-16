@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A Combinatoric Grammar for Deterministic Runnable Project Synthesis" />
   <title>Autopoietic Project Generation</title>
   <style>
     /* Default styles provided by pandoc.
@@ -42,7 +43,6 @@
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -264,6 +264,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -288,11 +302,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -423,7 +432,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -432,7 +443,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -442,8 +458,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -471,6 +497,47 @@ mjx-container[display="true"] {
   border: 2px solid #3498db;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
 }
 
 .figure-caption {
@@ -704,8 +771,8 @@ the real kernel. The same discipline governs this document itself —
 every number below is substituted at render time from a live measurement
 rather than hand-typed as a literal.</p>
 <p>Across 5 heterogeneous primitive domains (- optimization - dynamics -
-statistics - signal - graph), 493 tests exercise both fixed ground-truth
-checks and Hypothesis-driven property invariants at 96.28% branch
+statistics - signal - graph), 528 tests exercise both fixed ground-truth
+checks and Hypothesis-driven property invariants at 95.33% branch
 coverage, with an explicit negative control per domain distinguishing
 the real kernel from a deliberately-wrong one.</p>
 <h3 data-number="1.1" id="generation-pipeline"><span
@@ -731,8 +798,8 @@ flowchart TB
 <li><strong>Total product size</strong>: 360</li>
 <li><strong>Reserved slots</strong>: 3
 (<code>figure_profile, qr_profile, integrity_profile</code>)</li>
-<li><strong>Grammar hash</strong>: <code>f84a8f9dbcb18e37</code></li>
-<li><strong>Tests</strong>: 493 · <strong>Coverage</strong>: 96.28%</li>
+<li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
+<li><strong>Tests</strong>: 528 · <strong>Coverage</strong>: 95.33%</li>
 </ul>
 <hr />
 <h2 data-number="2" id="introduction"><span
@@ -955,7 +1022,7 @@ research claim is being made here. This template covers the 5 primitive
 domains: - optimization - dynamics - statistics - signal - graph</p>
 <p>The grammar seed <code>42</code> is the single source of randomness
 for every selection made during expansion; the grammar hash
-<code>f84a8f9dbcb18e37</code> is the fingerprint of the grammar itself.
+<code>a1f3e428cf1fb3e3</code> is the fingerprint of the grammar itself.
 Two runs of this manuscript’s pipeline that share both values are
 required, by construction, to select identically — a requirement
 enforced by the property tests, not merely claimed by this
@@ -1366,13 +1433,13 @@ class="header-section-number">4.1</span> Grammar product space</h3>
 </tbody>
 </table>
 <figure id="fig:stacked_product">
-<img src="../figures/fig_stacked_product.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/fig_stacked_product.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fig_stacked_product.png" style="width:85.0%"
 data-fig-alt="Stacked bar chart of option counts for each of the three effective (non-reserved) grammar slots."
-alt="Figure 1: Options per grammar slot, stacked." />
-<figcaption>Figure 1: Options per grammar slot,
-stacked. Each band is one slot’s contribution to the total product size;
-three bands are reserved (presentational/sealing) and are excluded from
-the effective product space discussed below.</figcaption>
+alt="One stacked bar partitions the effective grammar options into labeled primitive-domain, track, and section-set segments; reserved presentation and sealing slots are omitted." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 1: Options per effective grammar
+slot, stacked. Each band is one of the three content-determining slots;
+reserved presentation and sealing slots are intentionally omitted from
+this figure.</figcaption>
 </figure>
 <ul>
 <li><strong>Total product size</strong>: 360 cells</li>
@@ -1382,9 +1449,9 @@ the effective product space discussed below.</figcaption>
 <code>figure_profile, qr_profile, integrity_profile</code></li>
 </ul>
 <figure id="fig:product_space">
-<img src="../figures/fig_product_space.png" style="width:80.0%"
+<a class="figure-full-size-link" href="../figures/fig_product_space.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fig_product_space.png" style="width:80.0%"
 data-fig-alt="Bar chart comparing total, effective, and reserved-only grammar product space."
-alt="Figure 2: Total, effective, and reserved-only product size for the grammar at seed=42, generated by fig_product_space_annotation ( src/manuscript_figures.py ) directly from Grammar.product_size / Grammar.effective_product_size — not…" />
+alt="Three annotated bars compare the full grammar product, the smaller content-effective product, and the remaining combinations attributable to reserved presentation and sealing choices." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Total, effective, and
 reserved-only product size for the grammar at seed=42, generated by
 <code>fig_product_space_annotation</code>
@@ -1402,7 +1469,7 @@ cross-product of all option counts — not an estimate, but the literal
 <code>Grammar.grammar_hash</code> property serialises the seed, every
 slot name, and every option list into a canonical JSON string
 (<code>canonical()</code>) and takes the first sixteen hex characters of
-its SHA-256 digest — <code>f84a8f9dbcb18e37</code> for the grammar as
+its SHA-256 digest — <code>a1f3e428cf1fb3e3</code> for the grammar as
 currently checked into this project. Any edit to a slot’s option list,
 the addition or removal of a slot, or a change to the seed changes this
 hash deterministically; it is not a version string maintained by
@@ -1475,9 +1542,9 @@ distinguishable children this template can emit.</p>
 <h3 data-number="4.3" id="the-five-primitive-domains"><span
 class="header-section-number">4.3</span> The five primitive domains</h3>
 <figure id="fig:domain_coverage">
-<img src="../figures/fig_domain_coverage.png" style="width:85.0%"
+<a class="figure-full-size-link" href="../figures/fig_domain_coverage.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fig_domain_coverage.png" style="width:85.0%"
 data-fig-alt="Five colored bars, one per primitive domain."
-alt="Figure 3: The five primitive domains, type-colored: optimization , dynamics , statistics , signal , graph ." />
+alt="Five equal-height, differently colored bars are labeled optimization, dynamics, statistics, signal, and graph, showing one implemented primitive family for every configured domain." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: The five primitive domains,
 type-colored: <code>optimization</code>, <code>dynamics</code>,
 <code>statistics</code>, <code>signal</code>,
@@ -1643,9 +1710,9 @@ kernel.</li>
 <h3 data-number="4.5" id="test-results"><span
 class="header-section-number">4.5</span> Test results</h3>
 <ul>
-<li><strong>Test count</strong>: 493</li>
-<li><strong>Coverage</strong>: 96.28%</li>
-<li><strong>Grammar hash</strong>: <code>f84a8f9dbcb18e37</code></li>
+<li><strong>Test count</strong>: 528</li>
+<li><strong>Coverage</strong>: 95.33%</li>
+<li><strong>Grammar hash</strong>: <code>a1f3e428cf1fb3e3</code></li>
 </ul>
 <p>Both the test count and coverage percentage above are produced by
 <code>measure_test_summary()</code>
@@ -1660,16 +1727,16 @@ resolve to the string <code>"pending"</code> rather than a
 plausible-looking number — the same discipline that governs every other
 numeric token in this manuscript.</p>
 <figure id="fig:coverage_by_module">
-<img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
+<a class="figure-full-size-link" href="../figures/fig_coverage_by_module.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fig_coverage_by_module.png" style="width:90.0%"
 data-fig-alt="Horizontal bar chart of per-module test coverage percentages, all at or above 90%."
-alt="Figure 4: Real, per-module branch coverage from the same measurement run that produces 493/96.28 above — not an aggregate alone." />
+alt="Horizontal bars rank source modules by measured branch coverage against a dashed 90 percent floor; modules below the threshold, if any, are distinguished in red." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Real, per-module branch
-coverage from the same measurement run that produces 493/96.28 above —
+coverage from the same measurement run that produces 528/95.33 above —
 not an aggregate alone. Any module below the repository’s 90% floor
 would be drawn in red rather than smoothed into the headline percentage;
 none is, in this measurement.</figcaption>
 </figure>
-<p>The aggregate 96.28% is a mean weighted by statement and branch
+<p>The aggregate 95.33% is a mean weighted by statement and branch
 count, not a uniform floor — fig. <a
 href="#fig:coverage_by_module">4</a> shows the real spread. As of this
 measurement every module clears the configured 90% line. The exact
@@ -1696,7 +1763,7 @@ an obvious temptation: assert a capability in prose without checking
 whether the capability exists. The abstract of this manuscript survived
 exactly this failure once — a hand-written test-count and coverage line
 that no generator step had computed — and was corrected by replacing the
-literal numbers with <code>493</code> / <code>96.28</code> tokens filled
+literal numbers with <code>528</code> / <code>95.33</code> tokens filled
 in at render time by <code>scripts/02_measure_test_coverage.py</code>.
 <code>src/honesty.py</code> exists to make that class of failure
 structurally harder: every load-bearing claim in this manuscript must
@@ -1874,7 +1941,7 @@ left implicit. First, it is a fixed lexical denylist, not a semantic
 checker — it will not catch a false quantitative claim phrased without
 one of those seven tokens (the stale test-count incident described above
 would not have tripped it; that failure mode is closed instead by the
-<code>493</code> token substitution, a separate mechanism). Second,
+<code>528</code> token substitution, a separate mechanism). Second,
 <code>unsupported_claims</code> <em>is</em> enforced, but only on one of
 the two paths through this module:
 <code>HonestyManifest.all_passed</code> is a conjunction over
@@ -1980,7 +2047,7 @@ diverging from the source code that is supposed to back them.</p>
 class="header-section-number">6</span> Reproducibility</h2>
 <p>Reproducibility is not a claim this manuscript makes about itself; it
 is a property the code enforces on every run. Every number that appears
-below the Determinism heading — f84a8f9dbcb18e37, 42, 493, 96.28 — is a
+below the Determinism heading — a1f3e428cf1fb3e3, 42, 528, 95.33 — is a
 token substituted at render time by
 <code>src/manuscript_variables.py::generate_variables()</code> from a
 live grammar load and a live pytest run
@@ -2001,7 +2068,7 @@ assert.</p>
 <h3 data-number="6.1" id="determinism-guarantee"><span
 class="header-section-number">6.1</span> Determinism guarantee</h3>
 <p>Given the same <code>manuscript/config.yaml</code> grammar definition
-(grammar hash <code>f84a8f9dbcb18e37</code>), the same seed
+(grammar hash <code>a1f3e428cf1fb3e3</code>), the same seed
 (<code>42</code>), and the same <code>template_autopoiesis</code> source
 tree, <code>scripts/autopoiesis.py expand</code> produces byte-identical
 selections on every invocation, and <code>materialize</code> produces a
@@ -2114,9 +2181,9 @@ tree <span class="citation" data-cites="merkle_tree_provenance">(<a
 href="#ref-merkle_tree_provenance" role="doc-biblioref">Merkle
 1988</a>)</span> over an <em>ordered</em> list of hex digests: each
 level pairwise-concatenates adjacent nodes and hashes the concatenation,
-promoting an unpaired trailing node unchanged to the next level, until
-one root remains (the empty list is defined as the SHA-256 of the empty
-string, not a magic sentinel). Because the tree is addressable
+duplicating an unpaired trailing node before hashing it with itself,
+until one root remains (the empty list is defined as the SHA-256 of the
+empty string, not a magic sentinel). Because the tree is addressable
 node-by-node, a Merkle profile supports proving that one specific file’s
 hash is part of the committed set without re-hashing every other file —
 a property the flat tree-hash profile does not have.</li>
@@ -2216,8 +2283,8 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="
 runs internally (with <code>--cov-branch</code> added explicitly,
 matching the repo-root <code>pyproject.toml</code>’s
 <code>branch = true</code> setting rather than this project’s own, so
-the reported 96.28 agrees with the authoritative CI gate methodology
-rather than silently using a different one) to produce the 493 and 96.28
+the reported 95.33 agrees with the authoritative CI gate methodology
+rather than silently using a different one) to produce the 528 and 95.33
 tokens substituted above — the same build, not a paraphrase of it, is
 the source of both this document’s prose and its own regeneration.</p>
 <hr />
@@ -2225,8 +2292,8 @@ the source of both this document’s prose and its own regeneration.</p>
 class="header-section-number">7</span> Limitations</h2>
 <p>This section states what the exemplar does <em>not</em> do, alongside
 what it does. Coverage and test-count figures are not restated as
-literal numbers here — those live only in the <code>493</code> /
-<code>96.28</code> tokens, resolved at render time from a live
+literal numbers here — those live only in the <code>528</code> /
+<code>95.33</code> tokens, resolved at render time from a live
 measurement
 (<code>src/manuscript_variables.py::measure_test_summary</code>), not
 hand-typed.</p>
@@ -2362,7 +2429,7 @@ elsewhere in <code>test_materialize.py</code> and
 <code>test_integrity_and_verify.py</code>; <code>honesty.py</code>
 itself sits closest to the floor at just above 90%. None of these pull
 the aggregate below the 90% floor (<code>--cov-fail-under=90</code>),
-and the aggregate 96.28 alone would obscure exactly where the remaining,
+and the aggregate 95.33 alone would obscure exactly where the remaining,
 smaller gaps live — which is the reason this section, and fig. <a
 href="#fig:coverage_by_module">4</a>, exist as a per-module view rather
 than trusting one headline number. Property-based tests
@@ -2399,7 +2466,7 @@ not <code>None</code> — the shipped <code>paper.cover.image</code>
 (<code>../figures/cover_art.png</code>) is generated by exactly this
 call, so the rendered title page carries a real gradient glow, real
 seed-derived dot scatter, and a real QR-style pixel grid encoding
-<code>f84a8f9dbcb18e37</code> with the hash printed as a text label
+<code>a1f3e428cf1fb3e3</code> with the hash printed as a text label
 beneath it. An earlier draft of this section also noted that no test
 called <code>render_cover</code> with an explicit
 <code>grammar_hash=</code>, leaving the QR-drawing branch

@@ -16,6 +16,11 @@ except ModuleNotFoundError:  # pragma: no cover - exercised by the Python 3.10 C
     import tomli as tomllib  # type: ignore[no-redef]
 
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
+    OutputInventoryMode,
+    collect_stable_output_inventory,
+)
 from infrastructure.validation.evidence_registry import (
     EvidenceFact,
     VerifiedEvidenceRegistry,
@@ -51,16 +56,27 @@ _CONTROL_REPORT_NAMES = frozenset(
 _MAX_EVIDENCE_JSON_LIST_ITEMS = 256
 
 
-def register_all_project_facts(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
+def register_all_project_facts(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    *,
+    output_inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> None:
     """Register facts from all known project-local artifact surfaces."""
     project_root = project_root.resolve()
+    output_inventory = collect_stable_output_inventory(
+        project_root / "output",
+        inventory_mode=output_inventory_mode,
+    )
+    if output_inventory.issues:
+        raise ValueError("unstable evidence output inventory: " + "; ".join(output_inventory.issues))
     _register_config_numbers(project_root, registry)
-    _register_json_numbers(project_root, registry)
-    _register_tabular_numbers(project_root, registry)
-    _register_claim_ledgers(project_root, registry)
+    _register_json_numbers(project_root, registry, output_files=output_inventory.files)
+    _register_tabular_numbers(project_root, registry, output_files=output_inventory.files)
+    _register_claim_ledgers(project_root, registry, output_files=output_inventory.files)
     _register_bibtex_citations(project_root, registry)
     _register_markdown_labels(project_root, registry)
-    _register_output_artifacts(project_root, registry)
+    _register_output_artifacts(project_root, registry, output_files=output_inventory.files)
 
 
 def _register_config_numbers(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
@@ -145,13 +161,18 @@ def _register_numbers_from_toml(
             )
 
 
-def _register_json_numbers(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
+def _register_json_numbers(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    *,
+    output_files: Iterable[Path],
+) -> None:
     for json_path in _iter_existing(project_root / "data", "*.json"):
         if _is_claim_ledger_path(json_path):
             continue
         _register_numbers_from_json(json_path, project_root, registry)
     output_dir = project_root / "output"
-    for json_path in _iter_existing(output_dir, "*.json"):
+    for json_path in sorted(path for path in output_files if path.suffix == ".json"):
         if _is_claim_ledger_path(json_path) or not _is_output_evidence_json(json_path, output_dir):
             continue
         _register_numbers_from_json(json_path, project_root, registry)
@@ -166,14 +187,22 @@ def _is_output_evidence_json(path: Path, output_dir: Path) -> bool:
     return ".pipeline" not in relative.parts and path.name not in _CONTROL_REPORT_NAMES
 
 
-def _register_claim_ledgers(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
+def _register_claim_ledgers(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    *,
+    output_files: Iterable[Path],
+) -> None:
     manuscript_dir = resolve_source_manuscript_dir(project_root)
-    for root in (project_root / "data", project_root / "output" / "data", manuscript_dir):
+    for root in (project_root / "data", manuscript_dir):
         for ledger_path in _iter_existing(root, "*claim*ledger*.json"):
             _register_claim_ledger(ledger_path, project_root, registry)
         for ledger_path in _iter_existing(root, "*claim*ledger*.yaml"):
             _register_claim_ledger(ledger_path, project_root, registry)
         for ledger_path in _iter_existing(root, "*claim*ledger*.yml"):
+            _register_claim_ledger(ledger_path, project_root, registry)
+    for ledger_path in sorted(path for path in output_files if _is_claim_ledger_path(path)):
+        if ledger_path.suffix.lower() in {".json", ".yaml", ".yml"}:
             _register_claim_ledger(ledger_path, project_root, registry)
 
 
@@ -245,16 +274,21 @@ def _register_numbers_from_json(
             )
 
 
-def _register_tabular_numbers(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
+def _register_tabular_numbers(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    *,
+    output_files: Iterable[Path],
+) -> None:
     manuscript_dir = resolve_source_manuscript_dir(project_root)
     for root in (
         project_root / "data",
         manuscript_dir / "assets" / "data",
-        project_root / "output" / "data",
-        project_root / "output" / "reports",
     ):
         for csv_path in _iter_existing(root, "*.csv"):
             _register_numbers_from_csv(csv_path, project_root, registry)
+    for csv_path in sorted(path for path in output_files if path.suffix.lower() == ".csv"):
+        _register_numbers_from_csv(csv_path, project_root, registry)
 
 
 def _register_numbers_from_csv(csv_path: Path, project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
@@ -332,30 +366,29 @@ def _register_markdown_labels(project_root: Path, registry: VerifiedEvidenceRegi
             registry.add(EvidenceFact(kind="listing", value=label, source=str(relative), source_path=str(relative)))
 
 
-def _register_output_artifacts(project_root: Path, registry: VerifiedEvidenceRegistry) -> None:
-    output_dir = project_root / "output"
-    if not output_dir.exists():
-        return
-    for artifact in output_dir.rglob("*"):
-        if artifact.is_file():
-            if artifact.name in _CONTROL_REPORT_NAMES:
-                continue
-            relative = _relative_to_project(artifact, project_root)
+def _register_output_artifacts(
+    project_root: Path,
+    registry: VerifiedEvidenceRegistry,
+    *,
+    output_files: Iterable[Path],
+) -> None:
+    for artifact in output_files:
+        if artifact.name in _CONTROL_REPORT_NAMES:
+            continue
+        relative = _relative_to_project(artifact, project_root)
+        registry.add(EvidenceFact(kind="artifact", value=str(relative), source="filesystem", source_path=str(relative)))
+        if "figures" in relative.parts:
             registry.add(
-                EvidenceFact(kind="artifact", value=str(relative), source="filesystem", source_path=str(relative))
+                EvidenceFact(
+                    kind="figure", value=f"fig:{artifact.stem}", source=str(relative), source_path=str(relative)
+                )
             )
-            if "figures" in relative.parts:
-                registry.add(
-                    EvidenceFact(
-                        kind="figure", value=f"fig:{artifact.stem}", source=str(relative), source_path=str(relative)
-                    )
+        if "tables" in relative.parts:
+            registry.add(
+                EvidenceFact(
+                    kind="table", value=f"tbl:{artifact.stem}", source=str(relative), source_path=str(relative)
                 )
-            if "tables" in relative.parts:
-                registry.add(
-                    EvidenceFact(
-                        kind="table", value=f"tbl:{artifact.stem}", source=str(relative), source_path=str(relative)
-                    )
-                )
+            )
 
 
 def _iter_existing(root: Path, pattern: str) -> Iterable[Path]:

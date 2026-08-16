@@ -11,7 +11,7 @@ from pathlib import Path
 import yaml
 from markdown_it import MarkdownIt
 
-from infrastructure.core.pipeline.artifacts import validate_artifact_manifest
+from infrastructure.core.pipeline.artifacts import output_inventory_mode_for_project, validate_artifact_manifest
 from infrastructure.methods import build_methods_orchestration_plan, validate_methods_orchestration_plan
 from infrastructure.project.drift import run_drift_checks
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
@@ -204,7 +204,13 @@ def check_evidence(ctx: AuditContext) -> Iterable[PublicationFinding]:
     manuscript_dir = ctx.project_root / "manuscript"
     if not manuscript_dir.is_dir():
         return
-    registry = build_project_evidence_registry(ctx.project_root)
+    registry = build_project_evidence_registry(
+        ctx.project_root,
+        output_inventory_mode=output_inventory_mode_for_project(
+            ctx.repo_root,
+            ctx.project_root,
+        ),
+    )
     for source_path in missing_evidence_source_paths(ctx.project_root, registry, repo_root=ctx.repo_root):
         yield _finding(
             ctx,
@@ -274,7 +280,11 @@ def check_artifact_manifest(ctx: AuditContext) -> Iterable[PublicationFinding]:
         return
     try:
         manifest = read_artifact_manifest(manifest_path)
-        manifest_report = validate_artifact_manifest(manifest, project_dir=ctx.project_root)
+        manifest_report = validate_artifact_manifest(
+            manifest,
+            project_dir=ctx.project_root,
+            expected_inventory_mode=output_inventory_mode_for_project(ctx.repo_root, ctx.project_root),
+        )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         yield _finding(
             ctx,
@@ -306,6 +316,7 @@ def check_figure_registry(ctx: AuditContext) -> Iterable[PublicationFinding]:
         figure_path,
         manuscript_dir,
         require_accessibility=ctx.require_figure_accessibility,
+        additional_manuscript_dirs=(ctx.project_root / "output" / "manuscript",),
     )
     for figure_issue in figure_issues:
         yield _finding(

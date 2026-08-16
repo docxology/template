@@ -57,8 +57,9 @@ Structured manifest: `../data/transmission_manifest.json`
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Abstract {#sec:abstract}
@@ -75,8 +76,9 @@ Contributions are **methodological** and **architectural**. On the methods side,
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Introduction {#sec:introduction}
@@ -142,8 +144,9 @@ Restricting $f$ to a quadratic with known $(A,b)$ keeps the optimum, gradient, a
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Methodology {#sec:methodology}
@@ -237,8 +240,9 @@ The research template supports advanced LaTeX customization through the `preambl
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Results {#sec:results}
@@ -426,8 +430,9 @@ The experimental results validate the gradient descent implementation and confir
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Conclusion {#sec:conclusion}
@@ -490,8 +495,9 @@ The pipeline produced the figures referenced in [@sec:results], wrote `optimizat
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Experimental Setup {#sec:experimental_setup}
@@ -532,10 +538,10 @@ Performance benchmarking spans problem dimensions $d \in \{1, 2, 5, 10, 20, 50\}
 
 ## Computational Environment
 
-- **Python**: 3.12.13
+- **Python**: 3.12.12
 - **NumPy**: 2.4.2
 - **Platform**: Darwin arm64
-- **Generated**: 2026-08-03T00:12:48Z
+- **Generated**: 2026-08-14T14:20:53Z
 
 ## Pipeline ordering
 
@@ -562,8 +568,9 @@ This table is descriptive documentation only; it is not executed as code during 
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Reproducibility Certification {#sec:reproducibility}
@@ -589,8 +596,8 @@ The analysis pipeline produced the following artifacts, each validated by `infra
 | ---------------------------------- | ---------------------- |
 | Publication-quality figures        | 9   |
 | Structured data files (CSV/JSON)   | 5 |
-| Analysis reports                   | 25   |
-| **Total artifacts**                | **39** |
+| Analysis reports                   | 16   |
+| **Total artifacts**                | **30** |
 
 ## Numerical Validation Summary
 
@@ -627,8 +634,9 @@ To verify: modifying any value in `config.yaml` and re-running the pipeline will
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # Scope, Related Work, and Positioning {#sec:scope}
@@ -658,8 +666,9 @@ These limitations are intentional: they narrow the failure surface so that infra
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 # References {#sec:references}
@@ -675,8 +684,9 @@ uv run python -m infrastructure.reference.citation.cli validate \
 
 
 
----
-
+```{=latex}
+\newpage
+```
 
 
 ```{=latex}

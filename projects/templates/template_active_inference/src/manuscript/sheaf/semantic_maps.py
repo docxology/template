@@ -30,7 +30,7 @@ ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/animation_frame_deltas.json": "render_animation.py",
     "output/figures/sheaf_layers_overview.png": "generate_figures.py",
     "output/figures/sheaf_coverage_heatmap.png": "generate_figures.py",
-    "output/figures/figure_registry.json": "generate_figures.py",
+    "output/figures/figure_registry.json": "z_generate_manuscript_variables.py",
     "output/reports/invariants.json": "run_analytical_sweep.py",
     "output/reports/si_invariants.json": "simulate_si_tmaze.py",
     "output/reports/si_tmaze_run_report.json": "simulate_si_tmaze.py",

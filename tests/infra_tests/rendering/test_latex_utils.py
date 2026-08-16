@@ -2,7 +2,11 @@
 
 import inspect
 import io
+import os
 import stat
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 from PIL import Image
@@ -41,15 +45,174 @@ def test_canonicalize_pdf_adds_identifier_when_source_omits_one(tmp_path, monkey
     monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
     pdf = tmp_path / "without-id.pdf"
     writer = PdfWriter()
+    writer._header = b"%PDF-2.0"
     writer.add_blank_page(width=72, height=72)
     writer.write(pdf)
     assert b"/ID" not in pdf.read_bytes()
 
+    prior_recursion_limit = sys.getrecursionlimit()
     canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
 
     content = pdf.read_bytes()
     assert b"/ID [ <" in content
+    assert content.startswith(b"%PDF-2.0")
     assert validate_pdf_structure(pdf)
+    assert sys.getrecursionlimit() == prior_recursion_limit
+
+
+def test_canonicalize_pdf_worker_failure_preserves_original_and_removes_temp(tmp_path, monkeypatch):
+    """A failed isolated worker cannot replace the source or leak its temp."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    pdf = tmp_path / "failure.pdf"
+    pdf.write_bytes(b"%PDF-2.0\ninvalid object graph\n%%EOF\n")
+    original = pdf.read_bytes()
+    prior_recursion_limit = sys.getrecursionlimit()
+
+    with pytest.raises(CompilationError, match="worker failed"):
+        canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+
+    assert pdf.read_bytes() == original
+    assert sys.getrecursionlimit() == prior_recursion_limit
+    assert list(tmp_path.glob(".failure.pdf.*.deterministic")) == []
+
+
+def test_canonicalize_pdf_temp_creation_error_is_compilation_error(tmp_path, monkeypatch):
+    """Parent-side temporary-file failures remain typed and non-destructive."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    name_max = os.pathconf(tmp_path, "PC_NAME_MAX")
+    pdf = tmp_path / ("x" * (name_max - len(".pdf")) + ".pdf")
+    writer = PdfWriter()
+    writer.add_blank_page(width=72, height=72)
+    writer.write(pdf)
+    original = pdf.read_bytes()
+
+    with pytest.raises(CompilationError, match="could not replace"):
+        canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+
+    assert pdf.read_bytes() == original
+
+
+def test_canonicalize_pdf_preserves_pdf_2_header(tmp_path, monkeypatch):
+    """Canonicalization must not downgrade tagged PDF 2.0 output to PDF 1.3."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    pdf = tmp_path / "pdf-2.pdf"
+    writer = PdfWriter()
+    writer.pdf_header = "%PDF-2.0"
+    writer.add_blank_page(width=72, height=72)
+    writer.write(pdf)
+
+    canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+
+    assert pdf.read_bytes().startswith(b"%PDF-2.0\n")
+    assert PdfReader(str(pdf)).pdf_header == "%PDF-2.0"
+
+
+def test_canonicalize_pdf_preserves_source_file_mode(tmp_path, monkeypatch):
+    """Atomic replacement retains the compiled PDF's publication permissions."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    pdf = tmp_path / "mode.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=72, height=72)
+    writer.write(pdf)
+    pdf.chmod(0o644)
+
+    canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+
+    assert stat.S_IMODE(pdf.stat().st_mode) == 0o644
+
+
+def _write_deep_tagged_pdf(path) -> None:
+    """Create a real PDF 2.0 structure tree beyond the parent recursion limit."""
+    script = r"""
+import sys
+from pathlib import Path
+
+from pypdf import PdfWriter
+from pypdf.generic import BooleanObject, DictionaryObject, NameObject
+
+sys.setrecursionlimit(10_000)
+target = Path(sys.argv[1])
+writer = PdfWriter()
+writer.pdf_header = "%PDF-2.0"
+writer.add_blank_page(width=72, height=72)
+child = None
+for _ in range(500):
+    node = DictionaryObject({NameObject("/S"): NameObject("/P")})
+    if child is not None:
+        node[NameObject("/K")] = child
+    child = writer._add_object(node)
+structure_root = DictionaryObject(
+    {NameObject("/Type"): NameObject("/StructTreeRoot"), NameObject("/K"): child}
+)
+writer.root_object[NameObject("/StructTreeRoot")] = writer._add_object(structure_root)
+writer.root_object[NameObject("/MarkInfo")] = DictionaryObject(
+    {NameObject("/Marked"): BooleanObject(True)}
+)
+writer.write(target)
+"""
+    result = subprocess.run(  # noqa: S603 - fixed test fixture generator under the project interpreter
+        [sys.executable, "-c", script, str(path)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def _run_pdf_canonicalization_worker(source, destination) -> subprocess.CompletedProcess[str]:
+    repository_root = Path(__file__).resolve().parents[3]
+    return subprocess.run(  # noqa: S603 - fixed internal worker module under project interpreter
+        [
+            sys.executable,
+            "-m",
+            "infrastructure.rendering._pdf_canonicalization_worker",
+            str(source),
+            str(destination),
+            "1700000000",
+        ],
+        cwd=repository_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+
+def _run_default_policy_pypdf_clone(source) -> subprocess.CompletedProcess[str]:
+    script = "import sys; from pypdf import PdfWriter; PdfWriter(clone_from=sys.argv[1], keep_initial_header=True)"
+    return subprocess.run(  # noqa: S603 - fixed control using the project interpreter
+        [sys.executable, "-c", script, str(source)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+
+def test_canonicalize_deep_tagged_pdf_worker_isolated_and_idempotent(tmp_path, monkeypatch):
+    """Deep tagged trees canonicalize idempotently without changing parent policy."""
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    pdf = tmp_path / "deep-tagged.pdf"
+    second = tmp_path / "deep-tagged-second.pdf"
+    _write_deep_tagged_pdf(pdf)
+    prior_recursion_limit = sys.getrecursionlimit()
+    default_policy = _run_default_policy_pypdf_clone(pdf)
+
+    canonicalize_pdf_for_determinism(pdf, repo_root=tmp_path)
+    first_content = pdf.read_bytes()
+    worker = _run_pdf_canonicalization_worker(pdf, second)
+
+    assert default_policy.returncode != 0
+    assert "RecursionError" in default_policy.stderr
+    assert worker.returncode == 0, worker.stderr
+    assert second.read_bytes() == first_content
+    assert first_content.startswith(b"%PDF-2.0\n")
+    assert b"/StructTreeRoot" in first_content
+    assert b"/Marked true" in first_content
+    assert validate_pdf_structure(pdf)
+    assert sys.getrecursionlimit() == prior_recursion_limit
+    assert list(tmp_path.glob(".deep-tagged.pdf.*.deterministic")) == []
 
 
 def test_canonicalize_pdf_preserves_raster_image_streams(tmp_path, monkeypatch):

@@ -20,8 +20,15 @@ from typing import Any
 import yaml
 
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
+    OutputInventoryMode,
+    StableOutputInventory,
+    collect_stable_output_inventory,
+)
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
@@ -162,6 +169,7 @@ def remove_disabled_render_outputs(
     a non-removable stale artifact cannot be accepted as a current output.
     """
 
+    output_dir = output_dir.absolute()
     enabled = set(enabled_formats)
     unknown = enabled - RENDER_FORMATS
     if unknown:
@@ -334,7 +342,7 @@ def _validate_docx_output(output_dir: Path, project_basename: str) -> bool:
 
 
 def _validate_epub_output(output_dir: Path, project_basename: str) -> bool:
-    """Validate the required EPUB mimetype and container package members."""
+    """Validate EPUB container metadata, package manifest, and XHTML documents."""
 
     path = output_dir / "epub" / f"{project_basename}_combined.epub"
     unexpected = sorted(set((output_dir / "epub").glob("*_combined.epub")) - {path})
@@ -344,19 +352,9 @@ def _validate_epub_output(output_dir: Path, project_basename: str) -> bool:
         return False
     try:
         with zipfile.ZipFile(path) as archive:
-            mimetype_info = archive.getinfo("mimetype")
-            mimetype = archive.read("mimetype")
-            valid = (
-                mimetype == b"application/epub+zip"
-                and mimetype_info.compress_type == zipfile.ZIP_STORED
-                and "META-INF/container.xml" in archive.namelist()
-                and archive.testzip() is None
-            )
-    except (KeyError, OSError, zipfile.BadZipFile) as exc:
+            validate_epub_package(archive)
+    except (EOFError, KeyError, NotImplementedError, OSError, RuntimeError, ValueError, zipfile.BadZipFile) as exc:
         logger.error("Combined EPUB output missing or invalid (%s): %s", path, exc)
-        return False
-    if not valid:
-        logger.error("Combined EPUB output has an invalid package structure: %s", path)
         return False
     log_success(f"Combined EPUB valid: {path.name}", logger)
     return True
@@ -370,14 +368,21 @@ def validate_enabled_render_outputs(
     manuscript_dir: Path | None = None,
     pdf_validator: Callable[[], bool] | None = None,
     reject_disabled: bool = True,
+    inventory: StableOutputInventory | None = None,
+    inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
 ) -> bool:
     """Validate exactly the enabled canonical formats in one output tree.
 
     ``pdf_validator`` lets Stage 4 retain its established validation contract;
     Stage 5 omits it and validates the copied combined PDF directly.  Source
-    fallback lookup is intentionally never used here.
+    fallback lookup is intentionally never used here. Every enabled canonical
+    deliverable must also belong to the effective stable output inventory. For
+    public exemplars this is the Git-shippable set; private/local projects whose
+    canonical output tree is ignored use the explicitly labelled stable-local
+    set instead.
     """
 
+    output_dir = output_dir.absolute()
     enabled = set(enabled_formats)
     unknown = enabled - RENDER_FORMATS
     if unknown:
@@ -411,8 +416,63 @@ def validate_enabled_render_outputs(
     if failed:
         logger.error("Enabled render output validation failed: %s", ", ".join(failed))
         valid = False
+    current = (
+        inventory
+        if inventory is not None
+        else collect_stable_output_inventory(output_dir, inventory_mode=inventory_mode)
+    )
+    if current.issues:
+        logger.error("Unstable render-output inventory: %s", "; ".join(current.issues))
+        valid = False
+    elif not _enabled_outputs_are_stable(
+        output_dir,
+        project_basename,
+        enabled,
+        current,
+    ):
+        valid = False
     if valid:
         logger.info("Enabled render outputs valid: %s", ", ".join(name for name, _ in checks))
+    return valid
+
+
+def _enabled_outputs_are_stable(
+    output_dir: Path,
+    project_basename: str,
+    enabled_formats: set[str],
+    inventory: StableOutputInventory,
+) -> bool:
+    """Require each enabled canonical deliverable in the stable inventory."""
+
+    stable = set(inventory.files)
+    required: dict[str, tuple[Path, ...]] = {}
+    if "pdf" in enabled_formats:
+        pdf_candidates = (
+            output_dir / f"{project_basename}_combined.pdf",
+            output_dir / "pdf" / f"{project_basename}_combined.pdf",
+        )
+        if not any(path in stable for path in pdf_candidates):
+            logger.error("Enabled PDF is not a stable output artifact: %s", pdf_candidates[0])
+            return False
+    if "html" in enabled_formats:
+        required["HTML"] = (output_dir / "web" / "index.html",)
+    if "slides" in enabled_formats:
+        required["slides"] = tuple(sorted((output_dir / "slides").glob("*_slides.pdf")))
+    if "docx" in enabled_formats:
+        required["DOCX"] = (output_dir / "docx" / f"{project_basename}_combined.docx",)
+    if "epub" in enabled_formats:
+        required["EPUB"] = (output_dir / "epub" / f"{project_basename}_combined.epub",)
+
+    valid = True
+    for name, paths in required.items():
+        missing = [path for path in paths if path not in stable]
+        if not paths or missing:
+            logger.error(
+                "Enabled %s output is not a stable output artifact: %s",
+                name,
+                missing[0] if missing else output_dir,
+            )
+            valid = False
     return valid
 
 

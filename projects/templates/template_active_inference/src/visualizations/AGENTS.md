@@ -15,9 +15,13 @@ Use the headless Agg backend and pin `savefig` metadata so figures are byte-repr
 | [`lean_boundary.py`](lean_boundary.py) | Lean module scanner for boundary-status table |
 | [`figures_sheaf.py`](figures_sheaf.py) | Coverage heatmap + layers overview (`figures_sheaf_{payload,draw}.py`) |
 
-`generate_all_figures()` writes `output/figures/figure_registry.json` (keys
-`fig:{id}`) for output validation. Source metadata remains in root
-`figures.yaml`; verifier figures such as `track_lane_promotion_map`,
+`generate_all_figures()` writes the registered image artifacts. The sole final
+producer of `output/figures/figure_registry.json` (keys `fig:{id}`) is the
+hydration boundary in `z_generate_manuscript_variables.py`, via
+`manuscript.refresh.refresh_manuscript_pipeline()`. It reloads the final
+`output/data/manuscript_variables.json` snapshot after staleness settlement and
+atomically persists fully resolved alt/caption values. Source metadata remains
+in root `figures.yaml`; verifier figures such as `track_lane_promotion_map`,
 `artifact_contract_map`, and `security_posture_map` are regular registry rows
 with the same source-map, hash, and quality-audit requirements as statistical
 figures.

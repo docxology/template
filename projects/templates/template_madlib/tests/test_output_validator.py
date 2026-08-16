@@ -100,6 +100,7 @@ def _write_minimal_outputs(root: Path) -> None:
             "label": "fig:" + filename.removesuffix(".png").replace("_", "-"),
             "section": "Results",
             "generated_by": "tests",
+            "metadata": {"alt_text": f"Generated test figure for {filename}."},
         }
         for filename in DECLARED_FIGURE_FILES
         if filename != "figure_registry.json"
@@ -331,6 +332,22 @@ def test_registry_file_missing_reported(tmp_path: Path) -> None:
     codes = _codes(validate_generated_outputs(tmp_path))
     assert "registry-file-missing" in codes
     assert "figure-set-incomplete" in codes
+
+
+def test_registry_missing_or_blank_alt_text_reported(tmp_path: Path) -> None:
+    _write_minimal_outputs(tmp_path)
+    path = tmp_path / "output" / "figures" / "figure_registry.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    registry["fig:token-density"].pop("metadata")
+    registry["fig:quality-gate-matrix"]["metadata"]["alt_text"] = "   "
+    path.write_text(json.dumps(registry, indent=2), encoding="utf-8")
+
+    result = validate_generated_outputs(tmp_path)
+
+    assert "registry-alt-missing" in _codes(result)
+    issue = next(issue for issue in result.issues if issue.code == "registry-alt-missing")
+    assert "fig:token-density" in issue.message
+    assert "fig:quality-gate-matrix" in issue.message
 
 
 def test_figure_ref_unregistered_reported(tmp_path: Path) -> None:

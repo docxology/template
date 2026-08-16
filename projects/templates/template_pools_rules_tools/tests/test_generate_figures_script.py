@@ -17,7 +17,7 @@ from infrastructure.validation.content.figure_validator import (  # noqa: E402
     validate_figure_registry,
 )
 
-from src.figures import all_figures  # noqa: E402
+from src.figures import INTEGRATION_FIGURE_SPECS, all_figures  # noqa: E402
 
 SCRIPT = PROJECT_ROOT / "scripts" / "05_generate_figures.py"
 
@@ -45,14 +45,7 @@ def test_generate_assets_writes_registry_for_real_integration_figures(tmp_path: 
     payload = json.loads(registry.read_text(encoding="utf-8"))
     assert registry in written
     assert {record["label"] for record in payload["figures"]} == {
-        "fig:architecture",
-        "fig:counts",
-        "fig:pipeline",
-        "fig:taxonomy",
-        "fig:rulehier",
-        "fig:toolcontract",
-        "fig:resilience",
-        "fig:pipelineflow",
+        spec.label for spec in INTEGRATION_FIGURE_SPECS
     }
     assert all(record["metadata"]["alt_text"] for record in payload["figures"])
     ok, issues = validate_figure_registry(registry, manuscript)

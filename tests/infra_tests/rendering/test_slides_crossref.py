@@ -15,11 +15,18 @@ real aux-format lines (samples mirror an actual
 
 from __future__ import annotations
 
+import subprocess
+from pathlib import Path
+
+import pytest
+
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
 )
+from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 # Real hyperref five-group aux lines, including a caption field with heavy
@@ -156,6 +163,27 @@ class TestResolveCrossDeckReferences:
         assert replaced == 1
         assert unresolved == ["lem:not-in-aux"]
 
+    def test_strict_renderer_rejects_nonlocal_label_missing_from_current_aux(self, test_config):
+        renderer = SlidesRenderer(test_config)
+
+        with pytest.raises(RenderingError, match="cannot resolve post-Pandoc") as exc_info:
+            renderer._resolve_cross_deck_refs(
+                r"Equation \eqref{eq:foreign}.",
+                strict_cross_deck_refs=True,
+            )
+
+        assert exc_info.value.context["unresolved_labels"] == ["eq:foreign"]
+
+    def test_strict_renderer_keeps_section_visible_label_fallback(self, test_config):
+        renderer = SlidesRenderer(test_config)
+
+        updated = renderer._resolve_cross_deck_refs(
+            r"See \ref{sec:foreign_section}.",
+            strict_cross_deck_refs=True,
+        )
+
+        assert updated == r"See \texttt{sec:foreign\_section}."
+
     def test_other_ref_commands_untouched(self):
         tex = r"\pageref{sec:intro-visual-map} \autoref{sec:intro-visual-map} \cref{sec:intro-visual-map}"
 
@@ -194,3 +222,58 @@ class TestSlidesRendererHook:
         assert renderer._resolve_cross_deck_refs(tex) == (
             r"See \texttt{sec:experimental\_setup} for the run configuration."
         )
+
+    def test_strict_beamer_render_resolves_canonical_pandoc_crossref_after_conversion(self, tmp_path):
+        """The strict second pass evaluates generated TeX, not Markdown syntax."""
+        pdf_dir = tmp_path / "output" / "pdf"
+        slides_dir = tmp_path / "output" / "slides"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            "\\relax\n"
+            "\\newlabel{fig:foreign}{{2}{2}{Foreign figure}{figure.2}{}}\n"
+            "\\newlabel{eq:foreign}{{7}{3}{Foreign equation}{equation.7}{}}\n"
+            "\\newlabel{tbl:foreign}{{3}{4}{Foreign table}{table.3}{}}\n"
+            "\\newlabel{sec:foreign}{{4}{5}{Foreign section}{section.4}{}}\n",
+            encoding="utf-8",
+        )
+        source = tmp_path / "01_intro.md"
+        source.write_text(
+            "# Intro\n\nSee [@fig:foreign], [@eq:foreign], [@tbl:foreign], and [@sec:foreign].\n",
+            encoding="utf-8",
+        )
+
+        def post_pandoc_runner(command, *args, **kwargs):
+            tex_path = Path(command[command.index("-o") + 1])
+            tex_path.write_text(
+                r"\documentclass{beamer}\begin{document}"
+                r"Figure \ref{fig:foreign}, Equation \eqref{eq:foreign}, "
+                r"Table \ref{tbl:foreign}, Section \ref{sec:foreign}."
+                r"\end{document}",
+                encoding="utf-8",
+            )
+            return subprocess.CompletedProcess(args=command, returncode=0, stdout="", stderr="")
+
+        def inspect_then_compile(tex_path: Path, output_dir: Path, **kwargs) -> Path:
+            resolved_tex = tex_path.read_text(encoding="utf-8")
+            assert "Figure 2, Equation (7), Table 3, Section 4." in resolved_tex
+            assert "foreign}" not in resolved_tex
+            output = output_dir / f"{tex_path.stem}.pdf"
+            output.write_bytes(b"%PDF-1.7\n")
+            return output
+
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                pdf_dir=str(pdf_dir),
+                slides_dir=str(slides_dir),
+                output_dir=str(tmp_path / "output"),
+                pandoc_path="pandoc",
+                latex_compiler="xelatex",
+            ),
+            process_runner=post_pandoc_runner,
+            latex_compile=inspect_then_compile,
+        )
+
+        result = renderer.render(source, output_format="beamer", strict_cross_deck_refs=True)
+
+        assert result == slides_dir / "01_intro_slides.pdf"
+        assert result.is_file()

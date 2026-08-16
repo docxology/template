@@ -416,6 +416,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -727,7 +768,7 @@ These steps make the method auditable from three directions: tests
 inspect the Python behavior, generated artifacts expose the token plan,
 and manuscript validation confirms that no unresolved placeholder
 survives into rendered outputs.</p>
-<p>The config-origin inventory currently separates 125 explicit YAML
+<p>The config-origin inventory currently separates 126 explicit YAML
 path(s) from 11 loader-defaulted path(s). Treating origin as method
 evidence prevents a rendered field from looking equally authored when it
 was actually inherited from the loader. The same inventory drives
@@ -855,8 +896,8 @@ and documentation before replacing exemplar vocabulary with domain
 claims. Without that migration work, the fork has only changed words,
 not the evidential status of the generated manuscript.</p>
 <figure id="fig:token-injection-flow">
-<img src="../figures/token_injection_flow.png"
-alt="Figure 1: Deterministic token-injection flow" />
+<a class="figure-full-size-link" href="../figures/token_injection_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_injection_flow.png"
+alt="Five-stage left-to-right token-injection flow: schema parse; slot expansion (22 rules and 40 choices); section composition (11 enabled sections); artifact writing; and render gates. Guard labels name parser tests, seed-stability tests, placeholder scanning, figure registry, and evidence registry. The diagram describes the configured method and does not assert that a particular render passed those gates." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Deterministic token-injection
 flow</figcaption>
 </figure>
@@ -1515,20 +1556,20 @@ same explicit/default path inventory written to JSON; the pipeline,
 allocation, provenance, and gate figures are generated from the same
 token plan and QA schema.</p>
 <figure id="fig:token-density">
-<img src="../figures/token_density.png"
-alt="Figure 2: Token category density" />
+<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_density.png"
+alt="10 horizontal bars encode selected token choices by lexicon category: methods: 1; adjectives: 2; constraints: 3; failures: 3; qualities: 3; audiences: 4; nouns: 5; verbs: 5; measures: 6; artifacts: 8. Counts come from the seeded token plan; they are not vocabulary-size or prose-quality scores." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Token category
 density</figcaption>
 </figure>
 <figure id="fig:section-token-allocation">
-<img src="../figures/section_token_allocation.png"
-alt="Figure 3: Section token allocation" />
+<a class="figure-full-size-link" href="../figures/section_token_allocation.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/section_token_allocation.png"
+alt="11 horizontal bars encode selected token choices and section enablement: abstract: 3 (enabled); introduction: 8 (enabled); methods: 6 (enabled); results: 5 (enabled); discussion: 3 (enabled); configuration: 1 (enabled); evaluation: 5 (enabled); reproducibility: 2 (enabled); limitations: 3 (enabled); scope: 2 (enabled); authoring_contract: 2 (enabled). Muted rows are disabled; allocation counts do not measure prose quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Section token
 allocation</figcaption>
 </figure>
 <figure id="fig:provenance-trace-map">
-<img src="../figures/provenance_trace_map.png"
-alt="Figure 4: Provenance trace map" />
+<a class="figure-full-size-link" href="../figures/provenance_trace_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/provenance_trace_map.png"
+alt="Heatmap crossing 11 manuscript sections with 10 lexicon categories. 40 token choices occupy 22 nonzero cells; the largest cell count is 4 at introduction/nouns, introduction/verbs. Cell counts trace generated choices and do not validate the truth of substituted prose." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Provenance trace
 map</figcaption>
 </figure>
@@ -1972,26 +2013,26 @@ the composition.</p>
 rendering. They are useful during review because a title change, slot
 expansion, or disabled section appears as a small config diff and a
 regenerated artifact diff rather than as scattered prose edits.</p>
-<p>The configured-field inventory separates 125 explicit YAML path(s)
+<p>The configured-field inventory separates 126 explicit YAML path(s)
 from 11 loader-defaulted path(s). That distinction matters for forks: a
 field that appears in the rendered manuscript may be intentionally
 authored in <code>config.yaml</code>, or it may be a documented default
 inherited from the template.</p>
 <figure id="fig:configured-field-matrix">
-<img src="../figures/configured_field_matrix.png"
-alt="Figure 5: Configured field origin matrix" />
+<a class="figure-full-size-link" href="../figures/configured_field_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/configured_field_matrix.png"
+alt="Five-by-two heatmap of tracked config-field paths by scope and origin: schema: 19 explicit, 0 defaulted; section: 33 explicit, 0 defaulted; lexicon: 10 explicit, 0 defaulted; slot: 55 explicit, 11 defaulted; visualization: 9 explicit, 0 defaulted. Counts describe configuration provenance and do not establish schema completeness." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Configured field origin
 matrix</figcaption>
 </figure>
 <figure id="fig:section-configuration-heatmap">
-<img src="../figures/section_configuration_heatmap.png"
-alt="Figure 6: Section configuration heatmap" />
+<a class="figure-full-size-link" href="../figures/section_configuration_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/section_configuration_heatmap.png"
+alt="11-row heatmap with columns for section switch, title, narrative moves, and slot count: abstract: switch explicit, title explicit, moves explicit, 3 slots; introduction: switch explicit, title explicit, moves explicit, 8 slots; methods: switch explicit, title explicit, moves explicit, 6 slots; results: switch explicit, title explicit, moves explicit, 5 slots; discussion: switch explicit, title explicit, moves explicit, 3 slots; configuration: switch explicit, title explicit, moves explicit, 1 slots; evaluation: switch explicit, title explicit, moves explicit, 5 slots; reproducibility: switch explicit, title explicit, moves explicit, 2 slots; limitations: switch explicit, title explicit, moves explicit, 3 slots; scope: switch explicit, title explicit, moves explicit, 2 slots; authoring_contract: switch explicit, title explicit, moves explicit, 2 slots. The matrix records configuration coverage, not manuscript quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Section configuration
 heatmap</figcaption>
 </figure>
 <figure id="fig:field-origin-summary">
-<img src="../figures/field_origin_summary.png"
-alt="Figure 7: Field origin summary" />
+<a class="figure-full-size-link" href="../figures/field_origin_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_origin_summary.png"
+alt="Two horizontal bars summarize configured-field provenance: 126 explicit paths and 11 defaulted paths, out of 137 tracked paths. The counts identify origin and do not indicate validation status or research quality." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Field origin
 summary</figcaption>
 </figure>
@@ -2084,7 +2125,7 @@ class="header-section-number">6.2</span> Configuration Counts</h2>
 <li>Pipeline phases: <code>17</code></li>
 <li>Quality probes: <code>14</code></li>
 <li>Authoring obligations: <code>8</code></li>
-<li>Explicit configured paths: <code>125</code></li>
+<li>Explicit configured paths: <code>126</code></li>
 <li>Defaulted configured paths: <code>11</code></li>
 <li>Enabled visualization flags: <code>7</code></li>
 <li>Section-level configured paths: <code>33</code></li>
@@ -2106,11 +2147,11 @@ class="header-section-number">6.3</span> Configured Field Summary</h2>
 <tbody>
 <tr>
 <td>Total tracked field paths</td>
-<td style="text-align: right;">136</td>
+<td style="text-align: right;">137</td>
 </tr>
 <tr>
 <td>Explicit YAML paths</td>
-<td style="text-align: right;">125</td>
+<td style="text-align: right;">126</td>
 </tr>
 <tr>
 <td>Loader-defaulted paths</td>
@@ -2138,7 +2179,7 @@ class="header-section-number">6.3</span> Configured Field Summary</h2>
 </tr>
 <tr>
 <td>Top-level schema paths</td>
-<td style="text-align: right;">18</td>
+<td style="text-align: right;">19</td>
 </tr>
 </tbody>
 </table>
@@ -2371,6 +2412,12 @@ audit-ready method evidence.</td>
 <td>explicit</td>
 <td>schema</td>
 <td>14 entries</td>
+</tr>
+<tr>
+<td><code>madlib.schema_version</code></td>
+<td>explicit</td>
+<td>schema</td>
+<td>configured field</td>
 </tr>
 <tr>
 <td><code>madlib.section_conditions</code></td>
@@ -3015,8 +3062,8 @@ disappear, did the provenance survive, did the figure registry cover
 every reference, and did copied outputs preserve the same evidence
 surface that validation inspected?</p>
 <figure id="fig:quality-gate-matrix">
-<img src="../figures/quality_gate_matrix.png"
-alt="Figure 8: Quality gate matrix" />
+<a class="figure-full-size-link" href="../figures/quality_gate_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/quality_gate_matrix.png"
+alt="Three declaration panels list configured review surfaces. Evaluation criteria (7): Placeholder resolution, Token provenance coverage, Figure registry integrity, Evidence registry cleanliness, Copied-output readiness, Reviewer packet completeness, Method-invariant traceability. QA probes (14): Method row completeness, Field-origin visibility, Placeholder survival, Provenance completeness, Section-switch observability, Figure registry coverage, Method-figure alignment, Evidence cleanliness, Fork readiness, Copied-output parity, Digest invariant review, Claim-ledger alignment, Review packet completeness, Fork migration sufficiency. Failure modes (13): Unresolved placeholder, Overclaimed generated prose, Config-source drift, Figure provenance gap, Domain misuse, Method row drift, Field-origin opacity, Visual-method mismatch, Fork without validators, Digest invariant drift, Claim ledger omission, Review packet incompleteness, Fork migration ambiguity. These are configured gates and failure boundaries, not results showing that the gates passed." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Quality gate
 matrix</figcaption>
 </figure>
@@ -3249,12 +3296,11 @@ config. Generated files remain disposable; the durable contract is the
 ability to regenerate them from the tracked project tree and to observe
 the same validation gates passing.</p>
 <ul>
-<li>Config hash: <code>f40365faffaeb743</code></li>
-<li>Generated: <code>not-recorded (set SOURCE_DATE_EPOCH)</code>
-(derived from <code>SOURCE_DATE_EPOCH</code>; an explicit
-<code>not-recorded</code> marker is emitted when the reproducible
-timestamp is not supplied)</li>
-<li>Python: <code>3.12.13</code></li>
+<li>Config hash: <code>1af3356c12013333</code></li>
+<li>Generated: <code>2026-08-14T14:20:53Z</code> (derived from
+<code>SOURCE_DATE_EPOCH</code>; an explicit <code>not-recorded</code>
+marker is emitted when the reproducible timestamp is not supplied)</li>
+<li>Python: <code>3.12.12</code></li>
 <li>Platform: <code>Darwin arm64</code></li>
 </ul>
 <hr />

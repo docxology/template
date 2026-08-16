@@ -7,7 +7,7 @@ defining label. The combined manuscript PDF *does* resolve every label,
 and its retained ``.aux`` file (``output/pdf/_combined_manuscript.aux``)
 carries the ground-truth ``\\newlabel{label}{{number}{page}...}`` map.
 
-This module provides a fail-open pre-pass for
+This module provides the parsing and substitution pass used by
 :class:`infrastructure.rendering.slides_renderer.SlidesRenderer`:
 
 * :func:`parse_aux_label_numbers` parses the combined build's ``.aux``
@@ -19,14 +19,16 @@ This module provides a fail-open pre-pass for
   ``L`` that is **not** defined inside the deck's own ``.tex`` source.
   Within-deck references are left alone so Beamer numbers them natively;
   labels absent from the aux map are left untouched and reported back to
-  the caller for the render log. The slide build never fails because of
-  this pass.
+  the caller. Direct standalone renders remain fail-open, while the canonical
+  post-combined refresh rejects unresolved non-section labels in strict mode.
 
 The numbers substituted here match the combined PDF exactly because they
-come *from* the combined PDF's own auxiliary file. Note the aux is a
-retained artefact of the most recent combined build: on the very first
-render of a project (no aux yet) every cross-deck ref stays as "??"
-until the next render pass, consistent with fail-open behavior.
+come *from* the combined PDF's own auxiliary file. Direct standalone slide
+renders remain fail-open when no AUX is available. The canonical rendering
+pipeline instead clears any stale combined AUX before the combined build,
+validates the newly produced label map, and then refreshes each Beamer deck;
+it therefore does not require a second pipeline invocation to resolve
+cross-deck references.
 """
 
 from __future__ import annotations

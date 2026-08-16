@@ -42,6 +42,11 @@ class FigureSpecLike(Protocol):
         """Qualified source function or pipeline entry point."""
         ...
 
+    @property
+    def alt_text(self) -> str:
+        """Specific plain-text description of the visual result."""
+        ...
+
 
 class FigureRegistryError(ValueError):
     """Raised when generated figures cannot satisfy their registry contract."""
@@ -88,6 +93,8 @@ def build_generated_figure_registry(
             raise FigureRegistryError(f"figure caption must not be empty: {spec.label}")
         if not spec.generated_by.strip():
             raise FigureRegistryError(f"figure generated_by must not be empty: {spec.label}")
+        if not spec.alt_text.strip():
+            raise FigureRegistryError(f"figure alt_text must not be empty: {spec.label}")
 
     generated_by_name: dict[str, Path] = {}
     for raw_path in generated_paths:
@@ -111,9 +118,7 @@ def build_generated_figure_registry(
             "generated_by": spec.generated_by,
             "label": spec.label,
         }
-        alt_text = str(getattr(spec, "alt_text", "") or "").strip()
-        if alt_text:
-            record["metadata"] = {"alt_text": alt_text}
+        record["metadata"] = {"alt_text": spec.alt_text.strip()}
         return record
 
     return {

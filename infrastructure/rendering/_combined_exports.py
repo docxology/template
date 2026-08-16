@@ -10,7 +10,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import RenderingError, TemplateError
 from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter, DiagnosticSeverity
 from infrastructure.core.logging.utils import get_logger
@@ -22,6 +22,7 @@ from infrastructure.rendering._pdf_combined_markdown import preprocess_combined_
 from infrastructure.rendering._pdf_combined_prevalidate import prevalidate_for_render
 from infrastructure.rendering._pdf_markdown_combine import combine_manuscript_markdown_sections
 from infrastructure.rendering._pdf_title_page_config import _load_render_config, _rendering_options
+from infrastructure.rendering._slides_crossref import COMBINED_AUX_BASENAME
 from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 
 logger = get_logger(__name__)
@@ -291,6 +292,7 @@ def render_combined_epub(
         extra_args.extend(pandoc_bibliography_args(bibliographies))
 
     from infrastructure.rendering._pdf_title_page import (
+        _cover_image_alt,
         _cover_image_path,
         _load_render_config,
         build_pandoc_metadata,
@@ -298,6 +300,7 @@ def render_combined_epub(
 
     title: str | None = None
     author: str | None = None
+    cover_alt: str | None = None
     language = "en"
     config, config_file = _load_render_config(manuscript_dir)
     if isinstance(config, dict):
@@ -313,6 +316,7 @@ def render_combined_epub(
         if isinstance(raw_metadata, dict) and raw_metadata.get("language"):
             language = str(raw_metadata["language"])
         cover_image = _cover_image_path(config, config_file) if config_file is not None else None
+        cover_alt = _cover_image_alt(config)
     else:
         cover_image = None
 
@@ -326,6 +330,7 @@ def render_combined_epub(
             title=title,
             author=author,
             cover_image=cover_image,
+            cover_alt=cover_alt,
             language=language,
             pandoc_path=manager.config.pandoc_path,
             extra_args=extra_args,
@@ -348,13 +353,17 @@ def render_combined_outputs(
 ) -> None:
     """Generate the combined PDF / HTML / DOCX / EPUB manuscripts."""
     config = manager.config
+    combined_pdf_succeeded = False
 
     if config.enable_pdf:
+        if config.enable_slides and md_files:
+            _clear_stale_combined_aux(manager)
         logger.debug("\n" + "=" * BANNER_WIDTH)
         logger.info("Generating combined PDF manuscript...")
         try:
             combined_pdf = manager.render_combined_pdf(combined_source_files(md_files), manuscript_dir, project_name)
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
+            combined_pdf_succeeded = True
         except RenderingError as re:
             logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
             reporter.record(re.to_diagnostic_event(severity=DiagnosticSeverity.ERROR))
@@ -377,6 +386,17 @@ def render_combined_outputs(
             logger.warning("  This is an unexpected error - please report this issue")
     else:
         logger.info("[skip] PDF rendering disabled in config (render.formats.pdf=false)")
+
+    # Standalone Beamer decks are rendered before the combined manuscript so
+    # the ordinary per-file pass can proceed in one sweep. The combined PDF is
+    # the authoritative numbering surface, however, and only its retained AUX
+    # file contains labels defined in other sections. Refresh every enabled
+    # deck after that AUX exists so cross-section references cannot ship as
+    # LaTeX's unresolved ``??`` marker. This second pass is intentionally
+    # narrow: it reruns Beamer only, leaving the already-current HTML and
+    # combined PDF untouched.
+    if combined_pdf_succeeded and config.enable_slides and md_files:
+        _refresh_slides_against_combined_aux(manager, md_files)
 
     if config.enable_html:
         logger.debug("\n" + "=" * BANNER_WIDTH)
@@ -426,3 +446,166 @@ def render_combined_outputs(
         )
     else:
         logger.debug("[skip] EPUB rendering disabled in config (default; render.formats.epub=true to enable)")
+
+
+def _refresh_slides_against_combined_aux(
+    manager: RenderManager,
+    md_files: list[Path],
+) -> None:
+    """Re-render Beamer decks after the combined PDF writes its label map.
+
+    A section deck cannot resolve labels owned by another section on its first
+    standalone compile. ``SlidesRenderer`` resolves those labels from the
+    combined manuscript AUX file when it is available, so this refresh is the
+    producer-order bridge between the combined PDF and the slide surfaces.
+    Missing transmission bookends and explicitly skipped Beamer sources are
+    excluded exactly as they are in the ordinary per-file renderer.
+    """
+    refresh_sources: list[Path] = []
+    for source_file in combined_source_files(md_files):
+        if not source_file.is_file():
+            continue
+        try:
+            source_text = source_file.read_text(encoding="utf-8")
+        except OSError as exc:
+            raise RenderingError(
+                f"Could not inspect slide source before AUX refresh: {exc}",
+                context={"source": str(source_file)},
+            ) from exc
+        if not is_transmission_bookend(source_file) and "<!-- render:skip-beamer -->" not in source_text:
+            refresh_sources.append(source_file)
+
+    if not refresh_sources:
+        return
+
+    try:
+        _require_current_combined_aux(manager)
+    except RenderingError:
+        _remove_refresh_decks(manager, refresh_sources)
+        raise
+
+    logger.info(
+        "Refreshing %d Beamer deck(s) against the combined manuscript AUX label map",
+        len(refresh_sources),
+    )
+    failures: list[str] = []
+    for source_file in refresh_sources:
+        output_file = _slide_pdf_path(manager, source_file)
+        try:
+            output_file.unlink(missing_ok=True)
+            manager.render_slides(
+                source_file,
+                output_format="beamer",
+                strict_cross_deck_refs=True,
+            )
+        except (TemplateError, OSError, subprocess.SubprocessError, ValueError, TypeError) as exc:
+            try:
+                output_file.unlink(missing_ok=True)
+            except OSError as cleanup_exc:
+                failures.append(f"{source_file.name}: {exc}; cleanup failed: {cleanup_exc}")
+            else:
+                failures.append(f"{source_file.name}: {exc}")
+    if failures:
+        raise RenderingError(
+            "Combined-PDF AUX slide refresh failed; refusing to publish stale standalone decks: " + "; ".join(failures),
+            context={"failed_sources": failures},
+        )
+
+
+def _combined_aux_path(manager: RenderManager) -> Path:
+    """Return the retained combined-manuscript AUX path for *manager*."""
+    return Path(manager.config.pdf_dir) / COMBINED_AUX_BASENAME
+
+
+def _clear_stale_combined_aux(manager: RenderManager) -> None:
+    """Remove a prior combined AUX so a successful build must produce a current one."""
+    aux_path = _combined_aux_path(manager)
+    try:
+        aux_path.unlink(missing_ok=True)
+    except OSError as exc:
+        raise RenderingError(
+            "Could not clear the stale combined-manuscript AUX before rendering",
+            context={"aux_path": str(aux_path), "error": str(exc)},
+        ) from exc
+
+
+def _require_current_combined_aux(manager: RenderManager) -> None:
+    """Require a readable, structurally complete AUX from the current combined build."""
+    aux_path = _combined_aux_path(manager)
+    if not aux_path.is_file():
+        raise RenderingError(
+            "Combined PDF succeeded without producing the AUX required for Beamer refresh",
+            context={"aux_path": str(aux_path)},
+        )
+    try:
+        aux_text = aux_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        raise RenderingError(
+            "Combined-manuscript AUX is unreadable; Beamer refresh cannot be verified",
+            context={"aux_path": str(aux_path), "error": str(exc)},
+        ) from exc
+    if not aux_text.strip():
+        raise RenderingError(
+            "Combined-manuscript AUX is empty; Beamer refresh cannot be verified",
+            context={"aux_path": str(aux_path)},
+        )
+
+    if not _has_parseable_aux_structure(aux_text):
+        raise RenderingError(
+            "Combined-manuscript AUX has no parseable LaTeX structure",
+            context={"aux_path": str(aux_path)},
+        )
+
+
+def _has_parseable_aux_structure(aux_text: str) -> bool:
+    """Recognize a complete TeX command stream with balanced, unescaped braces."""
+    first_content = next(
+        (line.lstrip() for line in aux_text.splitlines() if line.strip() and not line.lstrip().startswith("%")),
+        "",
+    )
+    if not first_content.startswith("\\") or "\x00" in aux_text:
+        return False
+
+    brace_depth = 0
+    escaped = False
+    in_comment = False
+    for character in aux_text:
+        if in_comment:
+            if character == "\n":
+                in_comment = False
+            continue
+        if character == "%" and not escaped:
+            in_comment = True
+            continue
+        if character == "{" and not escaped:
+            brace_depth += 1
+        elif character == "}" and not escaped:
+            brace_depth -= 1
+            if brace_depth < 0:
+                return False
+        if character == "\\":
+            escaped = not escaped
+        else:
+            escaped = False
+    return brace_depth == 0
+
+
+def _slide_pdf_path(manager: RenderManager, source_file: Path) -> Path:
+    """Return the canonical standalone Beamer PDF path for *source_file*."""
+    return Path(manager.config.slides_dir) / f"{source_file.stem}_slides.pdf"
+
+
+def _remove_refresh_decks(manager: RenderManager, source_files: list[Path]) -> None:
+    """Remove first-pass decks when the current combined AUX cannot support refresh."""
+    cleanup_failures: list[str] = []
+    for source_file in source_files:
+        output_file = _slide_pdf_path(manager, source_file)
+        try:
+            output_file.unlink(missing_ok=True)
+        except OSError as exc:
+            cleanup_failures.append(f"{output_file}: {exc}")
+    if cleanup_failures:
+        raise RenderingError(
+            "Could not remove first-pass Beamer decks after AUX validation failed",
+            context={"cleanup_failures": cleanup_failures},
+        )

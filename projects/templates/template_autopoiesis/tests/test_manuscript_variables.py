@@ -76,12 +76,16 @@ def test_generate_variables_uses_supplied_real_numbers():
 def test_example_parameters_are_bound_to_executable_primitive_specs():
     from src.common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
     from src.primitives.graph import PAGERANK_ITERATIONS
-    from src.primitives.optimization import OPTIMIZATION_EXAMPLE_STEPS
+    from src.primitives.optimization import (
+        OPTIMIZATION_EXAMPLE_LEARNING_RATE,
+        OPTIMIZATION_EXAMPLE_STEPS,
+    )
     from src.primitives.signal import SIGNAL_SAMPLE_POINTS
 
     v = generate_variables(PROJECT_ROOT)
 
     assert v["OPTIMIZATION_EXAMPLE_STEPS"] == OPTIMIZATION_EXAMPLE_STEPS == 200
+    assert v["OPTIMIZATION_EXAMPLE_LEARNING_RATE"] == OPTIMIZATION_EXAMPLE_LEARNING_RATE == 0.1
     assert v["SIGNAL_SAMPLE_POINTS"] == SIGNAL_SAMPLE_POINTS == 64
     assert v["PAGERANK_ITERATIONS"] == PAGERANK_ITERATIONS == 50
     assert v["HASH_PREFIX_HEX_LENGTH"] == HASH_PREFIX_HEX_LENGTH == 16

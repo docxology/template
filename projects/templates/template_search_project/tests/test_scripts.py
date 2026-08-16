@@ -83,6 +83,7 @@ def test_generate_search_figures(tmp_path: Path):
     assert all(path.stat().st_size > 0 for path in expected)
     registry = json.loads((figures_dir / "figure_registry.json").read_text(encoding="utf-8"))
     assert len(registry["figures"]) == 3
+    assert all(str(row.get("metadata", {}).get("alt_text", "")).strip() for row in registry["figures"])
 
 
 def test_generate_search_figures_skips_without_input(tmp_path: Path):

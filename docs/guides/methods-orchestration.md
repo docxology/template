@@ -52,10 +52,14 @@ built-in executor method names, failure codes, artifact-path containment,
 verification-command script resolution, and current artifact-manifest hashes.
 Project-local stage commands receive explicit `--project` context. A rendered
 artifact manifest produced by `refresh_artifact_manifests.py` is an integrity
-snapshot, not stage provenance; the audit reports that distinction as a warning
-until per-stage manifests are produced by `PipelineExecutor`. Exit codes are
-`0` clean/warnings, `1` validation errors, and `2` invalid
-invocation/configuration.
+snapshot, not stage provenance. The standalone Methods audit reports that
+distinction as a warning until `PipelineExecutor` produces per-stage manifests.
+The strict rendered publication audit accepts a current, validated rendered
+co-snapshot receipt as alternative release evidence and suppresses only that
+warning; a missing or stale receipt retains the warning and also produces a
+deterministic rendered-provenance failure. Neither path relabels an integrity
+snapshot as stage lineage. Methods CLI exit codes are `0` clean/warnings, `1`
+validation errors, and `2` invalid invocation/configuration.
 
 Run the focused tests:
 
@@ -75,9 +79,12 @@ uv run python -m infrastructure.validation.cli publication-audit \
 This flag is intentionally opt-in while existing exemplars are migrated. The
 ordinary publication audit still blocks missing registries and unregistered
 references, and it never treats a missing optional figure registry as proof
-that no figures exist. The flag verifies non-empty accessibility metadata, not
-its descriptive quality; inspect the rendered HTML and PDF with human and
-assistive-technology review.
+that no figures exist. The rendered audit scans both authored manuscript source
+and the hydrated `output/manuscript/` tree, so producer-injected references
+cannot bypass the gate. The flag verifies non-empty accessibility metadata,
+not its descriptive quality; inspect the rendered HTML and any explicitly
+tagged PDF with human and assistive-technology review. An untagged PDF is not
+PDF/UA evidence.
 
 ## Authoring Rules
 

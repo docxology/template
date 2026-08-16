@@ -394,26 +394,34 @@ class TestValidateOutputStructure:
         assert len(result["missing_files"]) > 0
 
     def test_structure_empty_directories(self, tmp_path):
-        """Test structure validation with empty subdirectories."""
+        """Empty physical directories do not alter stable publication structure."""
         # Create proper output structure: output/template_code_project/
         output_base = tmp_path / "output"
         output_base.mkdir()
         output_dir = output_base / "template_code_project"
         output_dir.mkdir()
 
-        # Create PDF in pdf/ directory but leave slides/web empty
+        # Create PDF in pdf/ directory and capture the stable baseline before
+        # adding empty physical directories.
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir()
         (pdf_dir / "template_code_project_combined.pdf").write_text("x" * 1024 * 100)  # > 100KB
         # Also copy to root for validation
         (output_dir / "template_code_project_combined.pdf").write_text("x" * 1024 * 100)
+        baseline = validate_output_structure(output_dir)
+
         (output_dir / "slides").mkdir()
         (output_dir / "web").mkdir()
+        rerun = validate_output_structure(output_dir)
 
-        result = validate_output_structure(output_dir)
-
-        assert result["valid"] is True
-        assert len([s for s in result["suspicious_sizes"] if "empty" in s]) == 2
+        assert rerun == baseline
+        assert rerun["valid"] is True
+        empty_categories = {
+            message.split("/", 1)[0]
+            for message in rerun["suspicious_sizes"]
+            if "empty of stable publication artifacts" in message
+        }
+        assert empty_categories == {"web", "slides", "figures", "data", "reports"}
 
     def test_structure_small_pdf(self, tmp_path):
         """Test structure validation detects unusually small PDF."""

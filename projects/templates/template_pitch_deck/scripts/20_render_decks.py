@@ -3,9 +3,9 @@
 
 Thin wrapper around ``src/render_orchestration.py::render_all_decks`` — see
 that module's docstring for the audit → resolve → budget-filter → render
-pipeline it runs per deck length. PPTX rendering is skipped with a warning
-(not a failure) when ``python-pptx`` is not installed — install it with
-``uv sync --group rendering-pptx`` to get all six artifacts.
+pipeline it runs per deck length. Every format declared by
+``project_config.deck.formats`` is required: the producer fails rather than
+leaving a tracked PDF or PPTX artifact stale.
 """
 
 from __future__ import annotations

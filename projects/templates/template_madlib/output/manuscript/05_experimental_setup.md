@@ -6,7 +6,7 @@ Configuration owns more than vocabulary. It also owns section titles, narrative 
 
 The tables in this section expose the declared surface that controls rendering. They are useful during review because a title change, slot expansion, or disabled section appears as a small config diff and a regenerated artifact diff rather than as scattered prose edits.
 
-The configured-field inventory separates 125 explicit YAML path(s) from 11 loader-defaulted path(s). That distinction matters for forks: a field that appears in the rendered manuscript may be intentionally authored in `config.yaml`, or it may be a documented default inherited from the template.
+The configured-field inventory separates 126 explicit YAML path(s) from 11 loader-defaulted path(s). That distinction matters for forks: a field that appears in the rendered manuscript may be intentionally authored in `config.yaml`, or it may be a documented default inherited from the template.
 
 ![Configured field origin matrix](../output/figures/configured_field_matrix.png){#fig:configured-field-matrix}
 
@@ -43,7 +43,7 @@ The configured-field inventory separates 125 explicit YAML path(s) from 11 loade
 - Pipeline phases: `17`
 - Quality probes: `14`
 - Authoring obligations: `8`
-- Explicit configured paths: `125`
+- Explicit configured paths: `126`
 - Defaulted configured paths: `11`
 - Enabled visualization flags: `7`
 - Section-level configured paths: `33`
@@ -57,15 +57,15 @@ The configured-field inventory separates 125 explicit YAML path(s) from 11 loade
 
 | Measure | Count |
 | --- | ---: |
-| Total tracked field paths | 136 |
-| Explicit YAML paths | 125 |
+| Total tracked field paths | 137 |
+| Explicit YAML paths | 126 |
 | Loader-defaulted paths | 11 |
 | Enabled visualization flags | 7 |
 | Section-level paths | 33 |
 | Lexicon-level paths | 10 |
 | Slot-level paths | 66 |
 | Visualization-control paths | 9 |
-| Top-level schema paths | 18 |
+| Top-level schema paths | 19 |
 
 ## Configured Field Inventory
 
@@ -106,6 +106,7 @@ The configured-field inventory separates 125 explicit YAML path(s) from 11 loade
 | `madlib.narrative_moves.scope` | explicit | section | 4 moves |
 | `madlib.pipeline_phases` | explicit | schema | 17 entries |
 | `madlib.quality_probes` | explicit | schema | 14 entries |
+| `madlib.schema_version` | explicit | schema | configured field |
 | `madlib.section_conditions` | explicit | schema | configured field |
 | `madlib.section_conditions.abstract` | explicit | section | enabled |
 | `madlib.section_conditions.authoring_contract` | explicit | section | enabled |

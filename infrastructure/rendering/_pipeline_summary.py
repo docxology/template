@@ -18,6 +18,7 @@ from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
+from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_log_quality import (
@@ -346,7 +347,7 @@ def _verify_docx_output(project_root: Path, project_basename: str) -> bool:
 
 
 def _verify_epub_output(project_root: Path, project_basename: str) -> bool:
-    """Validate the required EPUB mimetype and container package members."""
+    """Validate the shared bounded EPUB package contract."""
 
     output_path = project_root / "output" / "epub" / f"{project_basename}_combined.epub"
     unexpected = sorted(set(output_path.parent.glob("*_combined.epub")) - {output_path})
@@ -356,19 +357,9 @@ def _verify_epub_output(project_root: Path, project_basename: str) -> bool:
         return False
     try:
         with zipfile.ZipFile(output_path) as archive:
-            mimetype_info = archive.getinfo("mimetype")
-            mimetype = archive.read("mimetype")
-            valid = (
-                mimetype == b"application/epub+zip"
-                and mimetype_info.compress_type == zipfile.ZIP_STORED
-                and "META-INF/container.xml" in archive.namelist()
-                and archive.testzip() is None
-            )
-    except (KeyError, OSError, zipfile.BadZipFile) as exc:
+            validate_epub_package(archive)
+    except (EOFError, KeyError, NotImplementedError, OSError, RuntimeError, ValueError, zipfile.BadZipFile) as exc:
         logger.error("Combined EPUB output missing or invalid (%s): %s", output_path, exc)
-        return False
-    if not valid:
-        logger.error("Combined EPUB output has an invalid package structure: %s", output_path)
         return False
     log_success(f"Combined EPUB valid: {output_path.name}", logger)
     return True

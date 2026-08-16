@@ -10,17 +10,53 @@ import shutil
 import pytest
 
 from infrastructure.autoresearch import BudgetPolicy, ReviewGate
+from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
+    artifact_manifest_from_payload,
+    collect_stable_output_inventory,
+    validate_artifact_manifest,
+)
 
 from src.config import AutoResearchLoopConfig, HumanReviewState
 from src.ml.task import run_bounded_ml_task
 from src.models import AutoResearchLoopResult, LoopStageResult
 from src.writers import (
+    write_artifact_manifest,
     write_loop_payloads,
     write_method_contract_artifacts,
     write_ml_task_artifacts,
     write_research_object_manifest,
     write_schema_manifest,
 )
+
+
+def test_artifact_manifest_uses_public_mode_and_exact_stable_set(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    project_root = repo_root / "projects" / "templates" / "demo"
+    stable = project_root / "output" / "data" / "stable.json"
+    ignored = project_root / "output" / "logs" / "runtime.log"
+    stable.parent.mkdir(parents=True)
+    ignored.parent.mkdir(parents=True)
+    stable.write_text('{"value": 1}\n', encoding="utf-8")
+    ignored.write_text("runtime-only\n", encoding="utf-8")
+
+    manifest_path = write_artifact_manifest(project_root, repo_root=repo_root)
+    manifest = artifact_manifest_from_payload(json.loads(manifest_path.read_text(encoding="utf-8")))
+    inventory = collect_stable_output_inventory(
+        project_root / "output",
+        inventory_mode=STABLE_OUTPUT_INVENTORY_MODE,
+    )
+
+    assert manifest.inventory_mode == STABLE_OUTPUT_INVENTORY_MODE
+    assert {entry.path for entry in manifest.entries} == {
+        path.relative_to(project_root).as_posix() for path in inventory.files
+    }
+    assert {entry.path for entry in manifest.entries} == {"output/data/stable.json"}
+    assert not validate_artifact_manifest(
+        manifest,
+        project_dir=project_root,
+        expected_inventory_mode=STABLE_OUTPUT_INVENTORY_MODE,
+    ).issues
 
 
 def test_write_loop_payloads_writes_core_and_finalize_artifacts(tmp_path: Path) -> None:

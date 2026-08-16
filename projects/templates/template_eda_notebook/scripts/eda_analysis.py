@@ -22,11 +22,11 @@ from infrastructure.documentation.generated_figure_registry import (  # noqa: E4
 )
 from src.eda import (  # noqa: E402
     CORRELATION_COLOR_LIMITS,
-    EDA_FIGURE_SPECS,
     FIGURE_REGISTRY_SCHEMA,
     clean_dataset,
     correlation_heatmap_data,
     eda_figure_spec,
+    eda_figure_specs_for_data,
     group_count_data,
     histogram_data,
     load_dataset,
@@ -94,7 +94,7 @@ def run_eda(project_root: Path | None = None) -> list[Path]:
 
     registry_path = write_generated_figure_registry(
         figures_dir / "figure_registry.json",
-        EDA_FIGURE_SPECS,
+        eda_figure_specs_for_data(hist, heat, groups),
         [hist_path, heat_path, group_path],
         schema_version=FIGURE_REGISTRY_SCHEMA,
     )

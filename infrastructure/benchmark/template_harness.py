@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from infrastructure.benchmark.rubrics import RubricSet
-from infrastructure.core.pipeline.artifacts import validate_artifact_manifest
+from infrastructure.core.pipeline.artifacts import STABLE_OUTPUT_INVENTORY_MODE, validate_artifact_manifest
 from infrastructure.project.domain_profile import load_domain_profile
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.evidence_registry import (
@@ -347,7 +347,11 @@ def _check_artifact_manifest(project_root: Path) -> list[str]:
         return ["invalid artifact manifest JSON: output/reports/artifact_manifest.json"]
     if not manifest.entries:
         return ["artifact manifest has no entries"]
-    report = validate_artifact_manifest(manifest, project_dir=project_root)
+    report = validate_artifact_manifest(
+        manifest,
+        project_dir=project_root,
+        expected_inventory_mode=STABLE_OUTPUT_INVENTORY_MODE,
+    )
     return _bounded_prefixed_issues("artifact manifest issue", report.issues)
 
 

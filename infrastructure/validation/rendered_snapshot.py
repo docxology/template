@@ -11,11 +11,18 @@ from pathlib import Path
 from typing import Any
 
 from infrastructure.core.pipeline.artifacts import (
+    OutputInventoryMode,
     collect_current_artifact_manifest,
     compute_sha256,
+    output_inventory_mode_for_project,
     validate_artifact_manifest,
 )
-from infrastructure.core.project_paths import resolve_project_root, resolve_source_manuscript_dir
+from infrastructure.core.project_paths import (
+    resolve_project_root,
+    resolve_source_manuscript_dir,
+    validate_project_name,
+)
+from infrastructure.project.linking import LIFECYCLE_SUBDIRS
 from infrastructure.rendering.manuscript_composition import (
     COMPOSITION_RELATIVE_PATH,
     ManuscriptComposition,
@@ -225,6 +232,119 @@ def _repository_root_for(path: Path, fallback: Path) -> Path:
     return fallback
 
 
+def _lexical_project_root_for_selection(
+    repo_root: Path,
+    project: str,
+    resolved_project_root: Path,
+) -> Path:
+    """Recover the selected lexical alias without resolving its leaf link."""
+    project = validate_project_name(project)
+    projects_root = (repo_root / "projects").absolute()
+    parts = project.split("/")
+    if parts[0] in {*LIFECYCLE_SUBDIRS, "templates"}:
+        return projects_root.joinpath(*parts)
+
+    resolved = resolved_project_root.resolve(strict=False)
+    candidates = (
+        projects_root / "active" / project,
+        projects_root / "working" / project,
+        projects_root / project,
+        projects_root / "templates" / project,
+    )
+    for candidate in candidates:
+        if (candidate.exists() or candidate.is_symlink()) and candidate.resolve(strict=False) == resolved:
+            return candidate
+    return candidates[0]
+
+
+def _source_repository_boundary(
+    repo_root: Path,
+    lexical_project_root: Path,
+    resolved_project_root: Path,
+) -> Path:
+    """Authorize project source through its real repository and lexical alias."""
+    repository = repo_root.resolve()
+    projects_root = (repository / "projects").absolute()
+    lexical = lexical_project_root.absolute()
+    try:
+        relative = lexical.relative_to(projects_root)
+    except ValueError as exc:
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            "project source is not represented below the template projects directory",
+        ) from exc
+
+    current = lexical.parent
+    while True:
+        if current.is_symlink():
+            raise RenderedSnapshotError(
+                "PROJECT_LINK_INVALID",
+                f"project source has an intermediate symlink: {current}",
+            )
+        if current == projects_root:
+            break
+        if current == current.parent:
+            raise RenderedSnapshotError(
+                "PROJECT_LINK_INVALID",
+                "project source alias does not have the expected projects-directory ancestry",
+            )
+        current = current.parent
+
+    parts = relative.parts
+    if parts and parts[0] == "templates" and lexical.is_symlink():
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            "public template projects cannot be represented by a symlink",
+        )
+
+    resolved_project = resolved_project_root.resolve()
+    if _is_relative_to(resolved_project, repository):
+        return repository
+
+    is_direct_leaf = len(parts) == 2
+    is_category_leaf = len(parts) == 3 and parts[1].startswith("_")
+    if (
+        not parts
+        or parts[0] not in LIFECYCLE_SUBDIRS
+        or not (is_direct_leaf or is_category_leaf)
+        or not lexical.is_symlink()
+    ):
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            "external project source requires a managed lifecycle leaf symlink",
+        )
+    try:
+        linked_target = lexical.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            f"external lifecycle project link is unreadable: {exc}",
+        ) from exc
+    if linked_target != resolved_project:
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            "external lifecycle project link does not match the selected project",
+        )
+
+    project_repository = _repository_root_for(resolved_project, repository).resolve()
+    if project_repository == repository or not (project_repository / ".git").exists():
+        raise RenderedSnapshotError(
+            "PROJECT_REPOSITORY_MISSING",
+            "external project requires a containing Git worktree boundary",
+        )
+    if not _is_relative_to(resolved_project, project_repository):
+        raise RenderedSnapshotError(
+            "PROJECT_REPOSITORY_INVALID",
+            "external project escapes its nearest Git worktree boundary",
+        )
+    if _cached_paths(project_repository) is None:
+        raise RenderedSnapshotError(
+            "PROJECT_REPOSITORY_INVALID",
+            "external project Git worktree is unavailable",
+        )
+    return project_repository
+
+
 def _cached_paths(repo_root: Path) -> set[Path] | None:
     """Return cached paths for one worktree, independent of global Git helpers."""
     try:
@@ -251,7 +371,12 @@ def _cached_paths(repo_root: Path) -> set[Path] | None:
     return {(repo_root / raw.decode("utf-8")).absolute() for raw in completed.stdout.split(b"\0") if raw}
 
 
-def _cached_records(records: Iterable[_FileRecord], repo_root: Path) -> list[_FileRecord]:
+def _cached_records(
+    records: Iterable[_FileRecord],
+    repo_root: Path,
+    *,
+    require_worktrees: bool = False,
+) -> list[_FileRecord]:
     """Keep files cached by their nearest Git worktree, including nested repos."""
     candidates = list(records)
     by_root: dict[Path, list[_FileRecord]] = {}
@@ -260,6 +385,12 @@ def _cached_records(records: Iterable[_FileRecord], repo_root: Path) -> list[_Fi
         by_root.setdefault(root, []).append(record)
     cached_by_root = {root: _cached_paths(root) for root in by_root}
     if any(paths is None for paths in cached_by_root.values()):
+        if require_worktrees:
+            unavailable = sorted(str(root) for root, paths in cached_by_root.items() if paths is None)
+            raise RenderedSnapshotError(
+                "PROJECT_REPOSITORY_INVALID",
+                "project source Git worktree is unavailable: " + ", ".join(unavailable),
+            )
         return candidates
     return [
         record
@@ -309,11 +440,18 @@ def _is_config_path(path: str) -> bool:
     )
 
 
-def _project_records(repo_root: Path, project_root: Path) -> tuple[list[_FileRecord], list[_FileRecord]]:
+def _project_records(
+    repo_root: Path,
+    project_root: Path,
+    *,
+    lexical_project_root: Path,
+) -> tuple[list[_FileRecord], list[_FileRecord]]:
     source: list[_FileRecord] = []
     config: list[_FileRecord] = []
+    project_repository = _source_repository_boundary(repo_root, lexical_project_root, project_root)
+    external_project = project_repository != repo_root.resolve()
     manuscript_root = resolve_source_manuscript_dir(project_root).absolute()
-    for raw_record in _iter_tree_files(project_root, repo_root=repo_root):
+    for raw_record in _iter_tree_files(project_root, repo_root=project_repository):
         record = _relative_record(raw_record, project_root)
         candidate = Path(record.key.split(" -> ", maxsplit=1)[0])
         if candidate.parts and candidate.parts[0] == "docs":
@@ -327,8 +465,8 @@ def _project_records(repo_root: Path, project_root: Path) -> tuple[list[_FileRec
         path = repo_root / relative
         if path.is_file():
             config.append(_FileRecord(f"@root/{relative}", path))
-    source = _cached_records(source, repo_root)
-    config = _cached_records(config, repo_root)
+    source = _cached_records(source, repo_root, require_worktrees=external_project)
+    config = _cached_records(config, repo_root, require_worktrees=external_project)
     if not source:
         raise RenderedSnapshotError("PROJECT_SOURCE_MISSING", "no cached project source files found")
     if not config:
@@ -344,7 +482,11 @@ def _evidence_file(project_root: Path, path: Path) -> EvidenceFile:
     return EvidenceFile(relative, path.stat().st_size, compute_sha256(path))
 
 
-def _output_records(project_root: Path) -> tuple[list[_FileRecord], EvidenceFile]:
+def _output_records(
+    project_root: Path,
+    *,
+    inventory_mode: OutputInventoryMode,
+) -> tuple[list[_FileRecord], EvidenceFile]:
     output_dir = project_root / "output"
     manifest_path = output_dir / "reports" / "artifact_manifest.json"
     try:
@@ -353,11 +495,19 @@ def _output_records(project_root: Path) -> tuple[list[_FileRecord], EvidenceFile
         raise RenderedSnapshotError("ARTIFACT_MANIFEST_MISSING", "artifact manifest is missing") from exc
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         raise RenderedSnapshotError("ARTIFACT_MANIFEST_INVALID", f"cannot read artifact manifest: {exc}") from exc
-    validation = validate_artifact_manifest(stored, project_dir=project_root)
-    if validation.issues:
-        raise RenderedSnapshotError("ARTIFACT_MANIFEST_INVALID", "; ".join(validation.issues))
+    validation = validate_artifact_manifest(
+        stored,
+        project_dir=project_root,
+        expected_inventory_mode=inventory_mode,
+    )
+    invalid_issues = tuple(issue for issue in validation.issues if not issue.startswith("unattested stable artifact: "))
+    if invalid_issues:
+        raise RenderedSnapshotError("ARTIFACT_MANIFEST_INVALID", "; ".join(invalid_issues))
     try:
-        current = collect_current_artifact_manifest(output_dir)
+        current = collect_current_artifact_manifest(
+            output_dir,
+            inventory_mode=inventory_mode,
+        )
     except (OSError, ValueError) as exc:
         raise RenderedSnapshotError("OUTPUT_TREE_INVALID", str(exc)) from exc
     if current.issues:
@@ -482,9 +632,24 @@ def _manuscript_consumption(
 def build_current_rendered_snapshot(repo_root: Path | str, project: str) -> CurrentRenderedSnapshot:
     """Build the current complete rendered snapshot without reading its validation report."""
     root = Path(repo_root).resolve()
-    project_root = resolve_project_root(root, project)
-    source_records, config_records = _project_records(root, project_root)
-    output_records, artifact_manifest = _output_records(project_root)
+    try:
+        project_root = resolve_project_root(root, project)
+    except ValueError as exc:
+        raise RenderedSnapshotError(
+            "PROJECT_LINK_INVALID",
+            f"cannot resolve project source alias: {exc}",
+        ) from exc
+    lexical_project_root = _lexical_project_root_for_selection(root, project, project_root)
+    inventory_mode = output_inventory_mode_for_project(root, project_root)
+    source_records, config_records = _project_records(
+        root,
+        project_root,
+        lexical_project_root=lexical_project_root,
+    )
+    output_records, artifact_manifest = _output_records(
+        project_root,
+        inventory_mode=inventory_mode,
+    )
     consumption, composition_manifest, combined_manuscript = _manuscript_consumption(project_root, project)
     return CurrentRenderedSnapshot(
         project=project,

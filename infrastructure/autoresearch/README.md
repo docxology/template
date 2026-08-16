@@ -157,3 +157,8 @@ Reports are written to:
 
 - `projects/{project}/output/reports/autoresearch_readiness.json`
 - `projects/{project}/output/reports/autoresearch_readiness.md`
+
+The report writer keeps resolved paths in memory for validation, but serializes
+release-facing paths portably: `repo_root` is `.`, repository-contained project,
+configuration, and issue paths are repository-relative POSIX paths, and an
+absolute path outside the repository is reduced to its basename.

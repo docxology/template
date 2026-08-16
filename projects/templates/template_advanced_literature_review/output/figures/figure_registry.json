@@ -8,18 +8,22 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Horizontal bars run from zero to each configured subfield's paper count; labels at the bar ends give both the count and its percentage of the current corpus, while the title reports the corpus total."
+    }
   },
   "fig:subfield_distribution": {
     "figure_id": "figure_001",
     "filename": "subfield_distribution.png",
-    "caption": "Distribution of distinct subfields identified in the literature.",
+    "caption": "Distribution of subfields, with categories below 2% grouped as 'Other'.",
     "label": "fig:subfield_distribution",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Donut chart partitions the current corpus by configured subfield. Each slice is labelled with its percentage, the centre reports total N, and subfields below two percent are pooled into an Other slice."
+    }
   },
   "fig:growth_curve": {
     "figure_id": "figure_002",
@@ -30,7 +34,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR."
+    }
   },
   "fig:subfield_timeline": {
     "figure_id": "figure_003",
@@ -41,18 +47,22 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands."
+    }
   },
   "fig:citation_network": {
     "figure_id": "figure_004",
     "filename": "citation_network.png",
-    "caption": "Citation network demonstrating connections between top papers.",
+    "caption": "Citation network of the corpus, displaying up to 100 highest in-degree nodes.",
     "label": "fig:citation_network",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Directed spring-layout citation graph in which arrows represent citation links, node area increases with in-degree, and node colour denotes detected community when available. The five highest-in-degree papers are labelled."
+    }
   },
   "fig:degree_distribution": {
     "figure_id": "figure_005",
@@ -63,7 +73,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Histogram of paper in-degree in the directed citation graph, with the horizontal axis giving citations received and the vertical axis giving the number of papers; logarithmic axes are used when the degree range is large."
+    }
   },
   "fig:hypothesis_dashboard": {
     "figure_id": "figure_006",
@@ -74,18 +86,22 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Horizontal evidence-score bars for the configured hypotheses on a scale from minus one to plus one. Orange bars extend left for contradictory evidence, green bars extend right for supportive evidence, and zero is marked."
+    }
   },
   "fig:word_cloud": {
     "figure_id": "figure_007",
     "filename": "word_cloud.png",
-    "caption": "Word cloud of salient terms appearing in abstract text.",
+    "caption": "Word cloud of top weighted terms from the discovered topics.",
     "label": "fig:word_cloud",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Term cloud derived from topic-term weights: more heavily weighted corpus terms appear in larger type, with a fixed layout seed and a cividis colour scale; word position and colour do not encode additional quantities."
+    }
   },
   "fig:topic_term_bars": {
     "figure_id": "figure_008",
@@ -96,7 +112,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up to ten leading terms on the vertical axis, and bar length represents that term's weight in the topic."
+    }
   },
   "fig:pca_embeddings": {
     "figure_id": "figure_009",
@@ -107,40 +125,48 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Scatter plot projecting document TF-IDF vectors onto the first two principal components. Points are coloured by configured subfield, axes state explained variance, and arrows label the strongest well-separated term loadings."
+    }
   },
   "fig:term_heatmap": {
     "figure_id": "figure_010",
     "filename": "term_heatmap.png",
-    "caption": "Heatmap of dominant TF-IDF terms across analyzed documents.",
+    "caption": "Heatmap of mean TF-IDF weights for terms selected by between-subfield variance.",
     "label": "fig:term_heatmap",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Heatmap with configured subfields as rows and the twenty terms with greatest between-subfield variance as columns. Cell colour from pale yellow to dark red encodes the subfield's mean TF-IDF weight for each term."
+    }
   },
   "fig:dendrogram": {
     "figure_id": "figure_011",
     "filename": "dendrogram.png",
-    "caption": "Hierarchical clustering dendrogram showing document similarity.",
+    "caption": "Hierarchical clustering dendrogram of subfield TF-IDF centroids.",
     "label": "fig:dendrogram",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Ward-linkage dendrogram clustering configured subfields by their mean TF-IDF vectors. Leaves name subfields, branch height gives Ward distance, and an inset reports the cophenetic correlation of the hierarchy."
+    }
   },
   "fig:cooccurrence_matrix": {
     "figure_id": "figure_012",
     "filename": "cooccurrence_matrix.png",
-    "caption": "Co-occurrence matrix for significant terms.",
+    "caption": "Normalized co-occurrence matrix for the most frequent terms.",
     "label": "fig:cooccurrence_matrix",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Symmetric square matrix for the thirty most frequent document-level terms. Rows and columns list the same terms; increasingly dark blue cells indicate larger normalized within-document co-occurrence, with a zero diagonal."
+    }
   },
   "fig:citation_distribution": {
     "figure_id": "figure_013",
@@ -151,7 +177,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Vertical bars show how many retained papers fall in each citation-count bucket; bar-top labels give bucket counts, and the title reports the corpus size, total citations, and Gini concentration coefficient."
+    }
   },
   "fig:top_venues": {
     "figure_id": "figure_014",
@@ -162,7 +190,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Descending horizontal bars rank up to fifteen publication venues by the number of retained corpus papers. Venue names appear on the vertical axis and bar length measures the paper count represented in the current evidence snapshot."
+    }
   },
   "fig:author_productivity": {
     "figure_id": "figure_015",
@@ -173,7 +203,9 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Descending horizontal bars rank up to twenty authors by their number of retained corpus publications. Author names appear on the vertical axis and bar length encodes publication count after the pipeline's record deduplication."
+    }
   },
   "fig:entity_bar_chart": {
     "figure_id": "figure_016",
@@ -184,17 +216,21 @@
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Descending horizontal bars rank up to twenty named entities extracted from abstracts. Entity labels appear on the vertical axis and bar length represents the number of extracted occurrences in the current corpus."
+    }
   },
   "fig:similarity_heatmap": {
     "figure_id": "figure_017",
     "filename": "similarity_heatmap.png",
-    "caption": "Top document pairs by cosine similarity of TF-IDF/SVD embeddings.",
+    "caption": "Top document pairs ranked by cosine similarity of TF-IDF/SVD embeddings.",
     "label": "fig:similarity_heatmap",
     "section": null,
     "width": "0.8\\textwidth",
     "placement": "h",
     "generated_by": "04_generate_figures.py",
-    "metadata": {}
+    "metadata": {
+      "alt_text": "Ranked horizontal bars, despite the legacy heatmap filename, compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis."
+    }
   }
 }

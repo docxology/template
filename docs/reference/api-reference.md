@@ -2244,7 +2244,7 @@ Render *combined_md* to a DOCX at *output_path*.
 *function — defined in `infrastructure.rendering.epub_renderer`*
 
 ```python
-render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, cover_image: Path | None=None, title: str | None=None, author: str | None=None, language: str='en', pandoc_path: str='pandoc', extra_args: list[str] | None=None) -> EpubRenderResult
+render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None=None, cover_image: Path | None=None, cover_alt: str | None=None, title: str | None=None, author: str | None=None, language: str='en', pandoc_path: str='pandoc', extra_args: list[str] | None=None) -> EpubRenderResult
 ```
 
 Render *combined_md* to an EPUB at *output_path*.
@@ -2306,7 +2306,7 @@ Write resolved copies of ``manuscript/*.md`` into ``output/manuscript/``.
 *function — defined in `infrastructure.reporting.output_statistics`*
 
 ```python
-collect_output_statistics(repo_root: Path, project_name: str='project', project_dir: Path | None=None) -> dict[str, Any]
+collect_output_statistics(repo_root: Path, project_name: str='project', project_dir: Path | None=None, *, require_pdf: bool=True, output_dir: Path | None=None, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str] | None=None, inventory_scope: str=PROJECT_OUTPUT_INVENTORY_SCOPE, inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> dict[str, Any]
 ```
 
 Collect comprehensive output file statistics.
@@ -2614,7 +2614,7 @@ Generate validation report as JSON and Markdown; returns paths by format key.
 *function — defined in `infrastructure.reporting.output_statistics`*
 
 ```python
-write_output_statistics_reports(project_output_dir: Path, stats: dict[str, Any]) -> tuple[Path, Path]
+write_output_statistics_reports(project_output_dir: Path, stats: dict[str, Any], *, report_output_dir: Path | None=None) -> tuple[Path, Path]
 ```
 
 Write text and JSON output statistics reports under ``output/reports``.
@@ -3604,7 +3604,7 @@ Verify every ``[@key]`` citation resolves in the project's BibTeX file(s).
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_copied_outputs(output_dir: Path, *, project_name: str | None=None, enabled_formats: Collection[str] | None=None, manuscript_dir: Path | None=None) -> bool
+validate_copied_outputs(output_dir: Path, *, project_name: str | None=None, enabled_formats: Collection[str] | None=None, manuscript_dir: Path | None=None, inventory: StableOutputInventory | None=None) -> bool
 ```
 
 Validate all project outputs were copied successfully.
@@ -3614,7 +3614,7 @@ Validate all project outputs were copied successfully.
 *function — defined in `infrastructure.validation.content.figure_validator`*
 
 ```python
-validate_figure_registry(registry_path: Path, manuscript_dir: Path, *, require_accessibility: bool=False) -> tuple[bool, list[str]]
+validate_figure_registry(registry_path: Path, manuscript_dir: Path, *, require_accessibility: bool=False, additional_manuscript_dirs: Iterable[Path]=()) -> tuple[bool, list[str]]
 ```
 
 Validate figure registry against manuscript references.
@@ -3654,7 +3654,7 @@ Validate mathematical equation formatting and labeling.
 *function — defined in `infrastructure.validation.output.validator`*
 
 ```python
-validate_output_structure(output_dir: Path, *, require_pdf: bool=True) -> OutputStructureResult
+validate_output_structure(output_dir: Path, *, require_pdf: bool=True, inventory: StableOutputInventory | None=None, enabled_formats: Collection[str] | None=None, inventory_mode: OutputInventoryMode=STABLE_OUTPUT_INVENTORY_MODE) -> OutputStructureResult
 ```
 
 Validate complete output directory structure.

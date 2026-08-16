@@ -1,6 +1,6 @@
 {
   "all_equal": true,
-  "row_count": 41,
+  "row_count": 40,
   "rows": [
     {
       "artifact": "output/data/analysis_statistics.json",
@@ -275,17 +275,6 @@
       "live_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
       "saved_content_sha256": "77eb6e6def936a27a5df4da764eb538fdfdfed8587291f64f8417dfd8cd2a95e",
       "saved_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
-      "source": "output/data/artifact_provenance.json"
-    },
-    {
-      "artifact": "output/figures/figure_registry.json",
-      "compared_field": "sha256",
-      "equal": true,
-      "jsonpath": "$",
-      "live_content_sha256": "",
-      "live_sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
-      "saved_content_sha256": "",
-      "saved_sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
       "source": "output/data/artifact_provenance.json"
     },
     {

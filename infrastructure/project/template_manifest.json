@@ -46,7 +46,7 @@
       "qualified_name": "templates/template_data_descriptor",
       "title": "template_data_descriptor",
       "use_when": "Use this template when the contribution is a **published dataset or data paper**: a schema contract, file inventory, data dictionary, provenance chain, license boundary, quality checks, and machine-readable descriptor must all stay consistent before publication.",
-      "test_file_count": 6,
+      "test_file_count": 7,
       "coverage_floor": 90
     },
     {
@@ -70,7 +70,7 @@
       "qualified_name": "templates/template_literature_meta_analysis",
       "title": "Literature Meta-Analysis Template",
       "use_when": "Use it whenever the research object is *a body of literature about a topic* and you want every reported number to trace to committed, regenerable artifacts.",
-      "test_file_count": 70,
+      "test_file_count": 71,
       "coverage_floor": 90
     },
     {
@@ -190,7 +190,7 @@
       "qualified_name": "templates/template_pitch_deck",
       "title": "Template: Pitch Deck",
       "use_when": "Use this template when you need a pitch, grant report, or recurring stakeholder update treated as a build artifact — bound to live repository facts, validated for unresolved tokens and pitch-deck cliché, and regenerable byte-for-byte from source rather than hand-maintained in a proprietary slide tool.",
-      "test_file_count": 12,
+      "test_file_count": 13,
       "coverage_floor": 90
     }
   ]

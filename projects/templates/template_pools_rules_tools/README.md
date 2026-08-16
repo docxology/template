@@ -8,7 +8,7 @@ Copy `manuscript/config.yaml.example` to `manuscript/config.yaml` for forkable
 configuration. Preserve template integrity when forking this exemplar into a
 standalone checkout.
 
-A meta-project exemplar demonstrating the integration of three top-level resource directories and four public tool exemplars:
+A meta-project exemplar demonstrating the integration of the top-level resource directories and public tool exemplars discovered at runtime:
 
 | Directory | Role |
 |---|---|
@@ -30,6 +30,12 @@ schema-versioned validation receipt. Invalid paths, duplicate identities, and
 missing required fields fail closed; local-only pool folders remain outside the
 public tracked exemplar until a fourth fond is deliberately authored.
 
+Quantitative manuscript claims are source-bound. Integration counts and the
+total/content/cover figure counts are generated into
+`output/data/manuscript_variables.json`; content figures derive from
+`INTEGRATION_FIGURE_SPECS`, and cover art is tracked by the separate
+`COVER_FIGURE_FILENAMES` layout contract.
+
 ## Structure
 
 ```
@@ -39,6 +45,7 @@ template_pools_rules_tools/
 │   ├── fonds_reader.py        # Read fonds from fonds/templates/
 │   ├── rules_applier.py       # Load and apply soft rules from rules/templates/
 │   ├── strong_rule_evaluator.py  # Evaluate strong (hard-constraint) rules
+│   ├── resource_schema.py     # Fail-closed shared-resource schema receipts
 │   ├── tools_invoker.py       # Discover tools from tools/templates/
 │   ├── integration.py         # Integration orchestrator; generate_figure_data()
 │   ├── figure_support.py     # Figure themes, status maps, and provenance specs
@@ -62,6 +69,7 @@ template_pools_rules_tools/
 │   ├── test_figures.py
 │   ├── test_property_based.py
 │   ├── test_manuscript_variables.py
+│   ├── test_resource_schema.py
 │   ├── test_coverage_extras.py
 │   └── test_generate_figures_script.py
 └── manuscript/

@@ -16,7 +16,7 @@ belongs here.
 | `stage_02_analysis.py` | 02 | Project-script discovery and execution | `core` |
 | `stage_03_render.py` | 03 | Current-input rendering of every enabled manuscript format | `core` |
 | `stage_04_validate.py` | 04 | Exact enabled-format and release-evidence validation | `core` |
-| `stage_05_copy.py` | 05 | Fresh copy, disabled-format filtering, and enabled-deliverable validation while preserving publication sidecars | `core` |
+| `stage_05_copy.py` | 05 | Fresh complete local mirror, disabled-format filtering, stable enabled-deliverable validation, and byte-identical source/copy statistics while preserving publication sidecars. The console distinguishes the physical mirror count from the stable/shippable inventory count. | `core` |
 | `stage_06_llm_review.py` | 06 | LLM review and translation | `llm` |
 | `stage_07_executive_report.py` | 07 | Multi-project executive reporting | `core` |
 | `stage_08_connector_search.py` | 08 | Connector-backed search (opt-in) | `connector_search` |

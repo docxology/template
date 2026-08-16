@@ -14,6 +14,14 @@ The reporting module provides reporting capabilities for pipeline execution, inc
 - Error aggregation and categorization
 - **Executive cross-project summaries and visual dashboards**
 - **Unified output organization system**
+- Stable output statistics shared with artifact manifests: public exemplars use
+  `stable-shippable-output-v1`, while explicitly resolved non-template projects
+  may use `stable-local-output-v1`. Build intermediates, logs,
+  telemetry/history, hidden paths, snapshots, and runtime-only directories are
+  excluded from deterministic reports. Counts cover every inventory category
+  and root bundle, use exact-byte ordering for largest files, and declare
+  `project-output` or Stage 5 `stage5-delivery-mirror` scope; source and copied
+  JSON/text reports are written byte-identically
 - **Interactive simulation dashboards** (`interactive_dashboard.py`) — project-agnostic builder for self-contained Plotly dashboards with multi-view linked panels, live controls, and plaintext invariants. See [`AGENTS.md`](AGENTS.md#interactive-simulation-dashboard-interactive_dashboardpy).
 
 ## Architecture

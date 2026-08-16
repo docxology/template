@@ -482,7 +482,7 @@ The `gate_ergonomics` fragment turns validation commands into evidence rows. `ou
 The `artifact_diffoscope` track compares saved provenance hashes against live
 artifact hashes at the artifact root JSONPath. Its proof artifact is
 `output/reports/artifact_diffoscope.json`: it currently records
-41 comparison rows, with equality status
+40 comparison rows, with equality status
 `true`.
 
 <!-- sheaf-track:artifact_license -->
@@ -1244,7 +1244,7 @@ incomplete in the track-improvement scope.
 ### Appendix track: artifact diffoscope
 
 `artifact_diffoscope` binds `output/reports/artifact_diffoscope.json` into the
-full sheaf appendix. Rows: 41. All equal:
+full sheaf appendix. Rows: 40. All equal:
 `true`.
 
 This diffoscope is deliberately narrow and reproducibility-facing. For each

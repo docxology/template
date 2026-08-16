@@ -52,6 +52,12 @@ from infrastructure.publishing.archival import (
 `dry_run=True` is the default at every layer — accidental imports cannot trigger
 real deposits.
 
+Callers must pass a deliberately curated bundle. Do not archive the complete
+Stage 5 root mirror: it intentionally retains local logs, telemetry, and render
+intermediates for debugging even though deterministic statistics exclude them
+from the stable/shippable inventory. Prefer the Stage 14 executable bundle or a
+format-specific release package.
+
 ## Entry points
 
 ```bash

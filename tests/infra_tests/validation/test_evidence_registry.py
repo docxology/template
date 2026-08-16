@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
 
+from infrastructure.core.pipeline.artifacts import STABLE_LOCAL_OUTPUT_INVENTORY_MODE
 from infrastructure.validation.evidence_registry import (
     EVIDENCE_REGISTRY_REPORT_SCHEMA,
     EvidenceFact,
@@ -331,6 +333,63 @@ def test_build_project_registry_collects_config_reports_and_nested_run_artifacts
     assert not registry.has("artifact", "output/reports/validation_report.md")
     assert {fact.source_tier for fact in registry.lookup("number", "0.85")} == {"generated_metric"}
     assert {fact.source_path for fact in registry.lookup("number", "3.10")} == {"pyproject.toml"}
+
+
+def test_project_registry_is_invariant_to_ignored_runtime_and_control_reports(tmp_path: Path, monkeypatch) -> None:
+    """Stage 4 evidence cannot depend on Stage 5/self-report or runtime residue."""
+    project = tmp_path / "project"
+    result = project / "output" / "data" / "result.json"
+    result.parent.mkdir(parents=True)
+    result.write_text('{"measured": 7}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(project)], check=True)  # noqa: S603, S607 - fixed test argv
+    (project / ".gitignore").write_text("output/data/runtime*\n", encoding="utf-8")
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+
+    baseline = build_project_evidence_registry(project).to_dict()
+
+    residue = {
+        "output/reports/output_statistics.json": '{"total_files": 999}\n',
+        "output/reports/.history/telemetry-1.json": '{"cpu": 42}\n',
+        "output/logs/pipeline.log": "runtime\n",
+        "output/pdf/paper.aux": "aux\n",
+        "output/data/runtime.csv": "metric\n987654321\n",
+        "output/data/runtime_claim_ledger.json": json.dumps({"claims": [{"claim_id": "runtime", "value": 987654321}]}),
+    }
+    for relative, content in residue.items():
+        path = project / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+
+    rerun = build_project_evidence_registry(project).to_dict()
+
+    assert rerun == baseline
+    assert not any(fact["source_path"].endswith("output_statistics.json") for fact in rerun["facts"])
+    assert not any(fact["source_path"].endswith("runtime.csv") for fact in rerun["facts"])
+    assert not any(fact["source_path"].endswith("runtime_claim_ledger.json") for fact in rerun["facts"])
+
+    new_evidence = project / "output" / "data" / "new_result.json"
+    new_evidence.write_text('{"measured": 8}\n', encoding="utf-8")
+    changed = build_project_evidence_registry(project).to_dict()
+    assert changed != baseline
+    assert any(fact["source_path"].endswith("new_result.json") for fact in changed["facts"])
+
+
+def test_private_blanket_ignored_output_still_supplies_stable_local_evidence(tmp_path: Path) -> None:
+    """A private sidecar may ignore output/ without erasing its local facts."""
+    project = tmp_path / "private-project"
+    result = project / "output" / "data" / "result.json"
+    result.parent.mkdir(parents=True)
+    result.write_text('{"score": 246813579}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(project)], check=True)  # noqa: S603, S607 - fixed test argv
+    (project / ".gitignore").write_text("output/\n", encoding="utf-8")
+
+    registry = build_project_evidence_registry(
+        project,
+        output_inventory_mode=STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+    )
+
+    assert registry.has("number", "246813579")
+    assert registry.has("artifact", "output/data/result.json")
 
 
 def test_build_project_registry_bounds_raw_json_arrays_but_keeps_scalar_summaries(tmp_path: Path) -> None:

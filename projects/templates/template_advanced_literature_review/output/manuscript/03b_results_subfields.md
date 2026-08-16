@@ -12,14 +12,14 @@ instrumentation, and theoretical modeling. A fork may add or rename buckets with
 changing the analysis code; the taxonomy, keyword lists, and phase relevance should be
 reviewed together.
 
-The largest bucket is **Observational Methods** at 50.0%. Table 2 and the
+The largest bucket is **Observational Methods** at 51.4%. Table 2 and the
 generated subfield artifacts provide the counts and annual breakdown. Where the fixture
 corpus is used, these values demonstrate classification behavior only and are marked
 synthetic in the evidence registry.
 
 | Subfield | Papers | Share |
 | --- | --- | --- |
-| Observational Methods | 23 | 50.0% |
-| Atmospheric Molecules | 7 | 15.2% |
-| Jwst Instruments | 9 | 19.6% |
-| Theoretical Modeling | 7 | 15.2% |
+| Observational Methods | 36 | 51.4% |
+| Atmospheric Molecules | 13 | 18.6% |
+| Jwst Instruments | 11 | 15.7% |
+| Theoretical Modeling | 10 | 14.3% |

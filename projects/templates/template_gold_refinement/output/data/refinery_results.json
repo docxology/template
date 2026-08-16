@@ -12,6 +12,7 @@
     0.999,
     0.999999999
   ],
+  "reverse_assay_target": 0.9167,
   "stages": [
     {
       "order": 1,

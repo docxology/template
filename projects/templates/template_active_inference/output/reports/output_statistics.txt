@@ -2,34 +2,39 @@
 OUTPUT STATISTICS REPORT
 ============================================================
 
-Output Directory: output
+Output Directory: output/templates/template_active_inference
+Inventory Mode: stable-shippable-output-v1
+Inventory Scope: stage5-delivery-mirror
+Inventory Root: output/templates/template_active_inference
 
-Total Files: 161
-Total Size: 12.37 MB
+Total Files: 178
+Total Size: 23.20 MB
 
 Files by Category:
-  • pdf: 10 files (4.45 MB)
+  • pdf: 1 files (4.03 MB)
   • web: 19 files (0.66 MB)
   • figures: 27 files (3.79 MB)
   • data: 48 files (2.79 MB)
-  • reports: 55 files (0.68 MB)
-  • logs: 2 files (0.00 MB)
+  • reports: 32 files (0.41 MB)
+  • arxiv_submission: 28 files (3.92 MB)
+  • manuscript: 21 files (0.13 MB)
+  • root: 2 files (7.47 MB)
 
 Largest Files:
-  • template_active_inference_combined.pdf: 3.91 MB (pdf)
+  • template_active_inference_combined.pdf: 4.03 MB (pdf)
+  • template_active_inference_combined.pdf: 4.03 MB (root)
+  • arxiv_submission_20260814.tar.gz: 3.44 MB (root)
   • sheaf_section_status_matrix.json: 0.76 MB (data)
-  • sheaf_layers_overview.png: 0.54 MB (figures)
-  • scholarship_source_map.png: 0.45 MB (figures)
-  • artifact_contract_map.png: 0.44 MB (figures)
+  • sheaf_layers_overview.png: 0.54 MB (arxiv_submission)
 
 File Types:
-  • .json: 96 file(s)
-  • .png: 25 file(s)
+  • .json: 79 file(s)
+  • .png: 50 file(s)
+  • .md: 21 file(s)
   • .html: 17 file(s)
-  • .md: 6 file(s)
-  • .log: 3 file(s)
-  • .jsonl: 2 file(s)
-  • .txt: 2 file(s)
-  • .pdf: 1 file(s)
-  • .aux: 1 file(s)
-  • .blg: 1 file(s)
+  • .pdf: 2 file(s)
+  • .bib: 2 file(s)
+  • .ico: 1 file(s)
+  • .gif: 1 file(s)
+  • .csv: 1 file(s)
+  • .bbl: 1 file(s)

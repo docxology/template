@@ -12,6 +12,14 @@ from importlib import import_module
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from infrastructure.core.pipeline.artifacts import (
+        STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
+        STABLE_OUTPUT_INVENTORY_MODE,
+        OutputInventoryMode,
+        StableOutputInventory,
+        collect_stable_output_inventory,
+        output_inventory_mode_for_project,
+    )
     from infrastructure.core.pipeline.definition import (
         PipelinePurpose,
         PipelineSource,
@@ -47,6 +55,24 @@ if TYPE_CHECKING:
     from infrastructure.reporting.multi_project_report import format_multi_project_detailed_report
 
 _EXPORTS: dict[str, tuple[str, str]] = {
+    "STABLE_LOCAL_OUTPUT_INVENTORY_MODE": (
+        "infrastructure.core.pipeline.artifacts",
+        "STABLE_LOCAL_OUTPUT_INVENTORY_MODE",
+    ),
+    "STABLE_OUTPUT_INVENTORY_MODE": (
+        "infrastructure.core.pipeline.artifacts",
+        "STABLE_OUTPUT_INVENTORY_MODE",
+    ),
+    "OutputInventoryMode": ("infrastructure.core.pipeline.artifacts", "OutputInventoryMode"),
+    "StableOutputInventory": ("infrastructure.core.pipeline.artifacts", "StableOutputInventory"),
+    "collect_stable_output_inventory": (
+        "infrastructure.core.pipeline.artifacts",
+        "collect_stable_output_inventory",
+    ),
+    "output_inventory_mode_for_project": (
+        "infrastructure.core.pipeline.artifacts",
+        "output_inventory_mode_for_project",
+    ),
     "PipelinePurpose": ("infrastructure.core.pipeline.definition", "PipelinePurpose"),
     "PipelineSource": ("infrastructure.core.pipeline.definition", "PipelineSource"),
     "PipelineSourceOrigin": ("infrastructure.core.pipeline.definition", "PipelineSourceOrigin"),
@@ -85,6 +111,12 @@ _EXPORTS: dict[str, tuple[str, str]] = {
 }
 
 __all__ = [
+    "STABLE_LOCAL_OUTPUT_INVENTORY_MODE",
+    "STABLE_OUTPUT_INVENTORY_MODE",
+    "OutputInventoryMode",
+    "StableOutputInventory",
+    "collect_stable_output_inventory",
+    "output_inventory_mode_for_project",
     "PipelinePurpose",
     "PipelineSource",
     "PipelineSourceOrigin",

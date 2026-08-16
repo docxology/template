@@ -48,6 +48,7 @@ from infrastructure.documentation.counts_coverage import (
     COVERAGE_PROVENANCE_RELATIVE_PATH,
     COVERAGE_PROVENANCE_SCHEMA_VERSION,
     COVERAGE_SOURCE_INVENTORY_MODE,
+    CoverageVerificationResult,
     EXEMPLAR_SNAPSHOT,
     EXEMPLAR_SNAPSHOT_DATE,
     ExemplarSnapshot,
@@ -59,6 +60,7 @@ from infrastructure.documentation.counts_coverage import (
     measure_exemplar_coverage,
     validate_coverage_provenance,
     verify_exemplar_coverage,
+    verify_exemplar_coverage_result,
     write_coverage_provenance,
 )
 from infrastructure.project.public_scope import public_project_names
@@ -71,6 +73,7 @@ __all__ = [
     "DOC_RELATIVE_PATH",
     "EXEMPLAR_SNAPSHOT",
     "EXEMPLAR_SNAPSHOT_DATE",
+    "CoverageVerificationResult",
     "ExemplarSnapshot",
     "CountsFacts",
     "_coverage_measurement_command",
@@ -88,6 +91,7 @@ __all__ = [
     "tracked_infra_python_count",
     "validate_coverage_provenance",
     "verify_exemplar_coverage",
+    "verify_exemplar_coverage_result",
     "write_counts_doc",
     "write_coverage_provenance",
 ]
@@ -465,9 +469,17 @@ def write_counts_doc(
     facts: CountsFacts | None = None,
     project_workers: str | int | None = None,
 ) -> Path:
-    """Render and write COUNTS.md; returns the written path."""
-    validate_coverage_provenance(repo_root)
+    """Render and write COUNTS.md; returns the written path.
+
+    The canonical generated document is always provenance-gated.  An explicit
+    alternate output path is a rendering API for caller-supplied facts (used by
+    real-I/O tests and previews), so it must not rescan every public exemplar or
+    imply that the alternate file is a certified repository snapshot.
+    """
     target = out_path if out_path is not None else repo_root / DOC_RELATIVE_PATH
+    canonical_target = repo_root / DOC_RELATIVE_PATH
+    if target.resolve() == canonical_target.resolve():
+        validate_coverage_provenance(repo_root)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         render_counts_doc(facts or collect_facts(repo_root, project_workers=project_workers)),

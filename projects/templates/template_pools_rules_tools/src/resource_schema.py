@@ -6,12 +6,11 @@ import hashlib
 import json
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
 
 REQUIRED_MANIFEST_KEYS = ("type", "description", "version", "license")
 
 
-def validate_resource_manifest(manifest: Any, resource_kind: str) -> tuple[str, ...]:
+def validate_resource_manifest(manifest: object, resource_kind: str) -> tuple[str, ...]:
     """Validate one manifest without importing or executing the resource."""
     if not isinstance(manifest, Mapping):
         return ("manifest must be a mapping",)
@@ -67,12 +66,17 @@ def validate_resource_directory(path: Path, resource_kind: str) -> tuple[str, ..
     try:
         import yaml
 
-        manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+        manifest: object = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
         return (f"cannot read {manifest_name}: {exc}",)
     issues = list(validate_resource_manifest(manifest, resource_kind))
     if resource_kind == "tools" and isinstance(manifest, Mapping):
-        for entrypoint in manifest.get("entrypoints", []):
+        entrypoints = manifest.get("entrypoints")
+        if not isinstance(entrypoints, list):
+            return tuple(issues)
+        for entrypoint in entrypoints:
+            if not isinstance(entrypoint, str):
+                continue
             candidate = root / entrypoint
             if candidate.is_symlink():
                 issues.append(f"symlinked tool entrypoint is not allowed: {entrypoint}")
@@ -88,9 +92,9 @@ def validate_resource_directory(path: Path, resource_kind: str) -> tuple[str, ..
     return tuple(issues)
 
 
-def build_resource_schema_receipt(resources: list[tuple[str, Path, str]]) -> dict[str, Any]:
+def build_resource_schema_receipt(resources: list[tuple[str, Path, str]]) -> dict[str, object]:
     """Return a deterministic receipt for a resource manifest inventory."""
-    rows = []
+    rows: list[dict[str, object]] = []
     for name, path, kind in sorted(resources, key=lambda row: row[0]):
         issues = validate_resource_directory(path, kind)
         rows.append(

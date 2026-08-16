@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "target_purity": 0.9167,
+  "stage_names": [
+    "ore",
+    "smelting",
+    "assaying"
+  ],
+  "terminal_purity": 0.9167,
+  "prefix_constrained": true
+}

@@ -106,6 +106,7 @@ def run_ebook_generation(
     *,
     skip_formats_arg: str = "",
     cover_image_arg: str | None = None,
+    cover_alt_arg: str | None = None,
 ) -> int:
     """Execute ebook generation orchestration."""
     log_header(f"STAGE 11: Ebook Generation (Project: {project})", logger)
@@ -209,6 +210,7 @@ def run_ebook_generation(
                         render_source,
                         epub_path,
                         cover_image=cover_image,
+                        cover_alt=cover_alt_arg,
                         title=title,
                         author=author,
                         language=language,

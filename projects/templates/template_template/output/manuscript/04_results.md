@@ -9,8 +9,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 | Project | Effective core stages¹ | Discovered tests | Declared project floor |
 |---------|-----------------------|-----------------:|-----------------------:|
 | `template_code_project` | 8 | 243 | 90% |
-| `template_prose_project` | 8 | 144 | 90% |
-| `template_autoresearch_project` | 8 | 303 | 90% |
+| `template_prose_project` | 8 | 151 | 90% |
+| `template_autoresearch_project` | 8 | 304 | 90% |
 
 ¹“Core-only” excludes LLM-tagged and other opt-in stages according to the YAML stage tags. A fresh run must be used to establish completion status or wall-clock performance for a particular machine and dependency set.
 
@@ -18,8 +18,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 571+ |
-| Total tests | ~9,631 |
+| Test files | 578+ |
+| Total tests | ~9,874 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -34,10 +34,10 @@ The introspection module (`template_template.introspection`) emits the authorita
 | `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 125 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 128 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 15 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 17 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `llm` | 55 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
 | `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |
@@ -48,8 +48,8 @@ The introspection module (`template_template.introspection`) emits the authorita
 | `provenance` | 7 | ✓ | ✓ | — |
 | `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 65 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
-| `reporting` | 57 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
+| `rendering` | 69 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `reporting` | 58 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
@@ -58,7 +58,7 @@ The introspection module (`template_template.introspection`) emits the authorita
 | `skills` | 8 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
-| `validation` | 81 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 82 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS.md` coverage wherever the Documentation Duality standard applies; subsets ship Tier‑3 `SKILL.md` descriptors for MCP routing (`infrastructure/skills` manifest generation).
 
@@ -71,7 +71,7 @@ All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`337+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`341+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 

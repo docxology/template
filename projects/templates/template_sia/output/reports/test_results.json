@@ -1,29 +1,145 @@
 {
-  "timestamp": "2026-08-09T05:06:08.461233",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 67,
+    "passed": 74,
     "failed": 0,
     "skipped": 0,
-    "total": 67,
+    "total": 74,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 68,
+    "discovery_count": 75,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 8.22,
-      "execution": 8.22
+      "setup": 18.66,
+      "execution": 18.66
     },
     "test_categories": {},
-    "coverage_percent": 99.69,
+    "coverage_percent": 94.8019801980198,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 67,
+    "total_passed": 74,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 67,
+    "total_tests": 74,
     "all_passed": true,
-    "project_coverage": 99.69
+    "project_coverage": 94.8019801980198
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 94.8019801980198,
+      "total_executed": 650,
+      "total_missing": 20,
+      "total_excluded": 2,
+      "total_lines": 670,
+      "file_coverage": {
+        "src/approval.py": {
+          "coverage_percent": 81.57894736842105,
+          "executed_lines": 45,
+          "missing_lines": 7,
+          "excluded_lines": 0,
+          "total_lines": 52
+        },
+        "src/artifact_manifest.py": {
+          "coverage_percent": 89.6,
+          "executed_lines": 87,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 93
+        },
+        "src/figures/figure_registry.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 21,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 21
+        },
+        "src/figures/sia_generation_heatmap.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 62,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 62
+        },
+        "src/figures/sia_improvement_delta.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 76,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 76
+        },
+        "src/figures/sia_loop_diagram.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 48,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 48
+        },
+        "src/figures/sia_metrics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 65,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 65
+        },
+        "src/generation_records.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 23,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 23
+        },
+        "src/loop.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 36,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 36
+        },
+        "src/loop_config.py": {
+          "coverage_percent": 82.14285714285714,
+          "executed_lines": 55,
+          "missing_lines": 7,
+          "excluded_lines": 0,
+          "total_lines": 62
+        },
+        "src/manuscript_tokens_core.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 19,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 19
+        },
+        "src/manuscript_tokens_metrics.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 34,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 34
+        },
+        "src/manuscript_variables.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 16,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 16
+        },
+        "src/reference_agent.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 41,
+          "missing_lines": 0,
+          "excluded_lines": 2,
+          "total_lines": 41
+        },
+        "src/reports.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 22,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 22
+        }
+      }
+    }
   }
 }

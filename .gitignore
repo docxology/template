@@ -262,6 +262,12 @@ projects/templates/*/output/reports/pipeline_report.md
 projects/templates/*/output/reports/render_summary.txt
 projects/templates/*/output/reports/telemetry.json
 projects/templates/*/output/reports/telemetry.txt
+# Structured diagnostics are local validator telemetry, not publication
+# evidence; canonical validation/evidence receipts carry the release result.
+projects/templates/*/output/reports/diagnostics.json
+# The opt-in full evidence dump is diagnostic and can be very large; the
+# bounded canonical evidence_registry.json remains the public receipt.
+projects/templates/*/output/reports/evidence_registry_full.json
 # Archived telemetry is bounded local runtime history, not stable exemplar
 # evidence. This rule must follow the broad per-template negations above.
 projects/templates/*/output/reports/.history/**

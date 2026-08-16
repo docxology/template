@@ -198,6 +198,270 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
   type="text/javascript" integrity="sha384-2BWc4dVaHADUocwKrUrK9u3iDwHxVMKXWEcoRmUkXYSFKhAsgVAYClu9ydNuo5Oz" crossorigin="anonymous"></script>
 
 <link data-template-favicon rel="icon" href="favicon.ico">
+
+<style>
+:root {
+  --brand-1: #5b6ee0;
+  --web-bg: #f8f8f8;
+  --web-surface: #ffffff;
+  --web-text: #2c3e50;
+  --web-border: #bdc3c7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand-1: #7e8ce8;
+    --web-bg: #0f1420;
+    --web-surface: #161c2b;
+    --web-text: #e6eaf2;
+    --web-border: #2a3447;
+  }
+}
+.theorem-box {
+  border-left: 4px solid var(--brand-1);
+  background: var(--web-surface);
+  padding: 0.6em 1em;
+  margin: 1.1em 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-box.definition { border-left-style: dashed; }
+.theorem-box > p:first-child { margin-top: 0; }
+.theorem-box > p:last-child { margin-bottom: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  max-width: 100%;
+}
+
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  width: min(100%, 800px);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  overflow-x: visible;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  body {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #1f6f8b;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #b91c1c;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+  overflow-wrap: anywhere;
+}
+
+a:visited {
+  color: #8f1d1d;
+}
+
+a:hover {
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a,
+#TOC a {
+  color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #4b5563;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -205,24 +469,24 @@ window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
 <h1 id="results-field-overview">Results: Field Overview</h1>
 <p>The de-duplicated corpus for <strong>Exoplanet Atmospheres</strong>
 contains <span class="math inline">\(N = 46\)</span> records spanning
-2010–2023 (13 years). Publication volume grows at a compound annual rate
-of 12.27% (mean year-over-year growth 63.3%, doubling time 1.4 years),
+2000–2023 (23 years). Publication volume grows at a compound annual rate
+of 6.76% (mean year-over-year growth 38.9%, doubling time 2.1 years),
 peaking in 2023 with 9 records that year. The growth curve is a
 first-order descriptive summary of the retained corpus; it is not a
 field-wide estimate of research activity.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
-<img src="../figures/growth_curve.png" title="Publication Growth Curve"
-alt="Publication growth curve for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/growth_curve.png" title="Publication Growth Curve"
+alt="Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication growth curve for Exoplanet
 Atmospheres. Annual publication counts (bars) and cumulative total
-(line) show sustained growth from 2010 through 2023, peaking in
+(line) show sustained growth from 2000 through 2023, peaking in
 2023.</figcaption>
 </figure>
 <h2 id="rq1-field-size-and-growth">RQ1: Field Size and Growth</h2>
 <p>The temporal analysis describes a retained literature slice spanning
-13 years. The compound annual growth rate of 12.27% implies a corpus
-doubling time of approximately 1.4 years under the configured retrieval
+23 years. The compound annual growth rate of 6.76% implies a corpus
+doubling time of approximately 2.1 years under the configured retrieval
 and indexing conditions. The peak year 2023 contains 9 retained records;
 that count may reflect both publication activity and delays or
 differences in source indexing, so it should not be interpreted as a
@@ -237,8 +501,20 @@ causal trend without a live coverage audit.</p>
 </thead>
 <tbody>
 <tr>
-<td>2010</td>
-<td>2</td>
+<td>2003</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2004</td>
+<td>4</td>
+</tr>
+<tr>
+<td>2006</td>
+<td>4</td>
+</tr>
+<tr>
+<td>2008</td>
+<td>4</td>
 </tr>
 <tr>
 <td>2011</td>
@@ -249,19 +525,7 @@ causal trend without a live coverage audit.</p>
 <td>3</td>
 </tr>
 <tr>
-<td>2013</td>
-<td>2</td>
-</tr>
-<tr>
 <td>2014</td>
-<td>3</td>
-</tr>
-<tr>
-<td>2016</td>
-<td>3</td>
-</tr>
-<tr>
-<td>2017</td>
 <td>3</td>
 </tr>
 <tr>
@@ -281,7 +545,7 @@ causal trend without a live coverage audit.</p>
 <h2 id="rq2-subfield-composition">RQ2: Subfield Composition</h2>
 <p>Records distribute across the 4 configured subfields as shown in
 Table 2, with <strong>Observational Methods</strong> the largest bucket
-at 50.0% of the classified corpus. The dominance of Observational
+at 51.4% of the classified corpus. The dominance of Observational
 Methods is a property of the configured taxonomy and retained corpus. It
 is not a domain prevalence estimate without a live, source-backed review
 and a documented coverage assessment.</p>
@@ -297,30 +561,30 @@ and a documented coverage assessment.</p>
 <tbody>
 <tr>
 <td>Observational Methods</td>
-<td>23</td>
-<td>50.0%</td>
+<td>36</td>
+<td>51.4%</td>
 </tr>
 <tr>
 <td>Atmospheric Molecules</td>
-<td>7</td>
-<td>15.2%</td>
+<td>13</td>
+<td>18.6%</td>
 </tr>
 <tr>
 <td>Jwst Instruments</td>
-<td>9</td>
-<td>19.6%</td>
+<td>11</td>
+<td>15.7%</td>
 </tr>
 <tr>
 <td>Theoretical Modeling</td>
-<td>7</td>
-<td>15.2%</td>
+<td>10</td>
+<td>14.3%</td>
 </tr>
 </tbody>
 </table>
 <!-- FIGURE: field_summary.png -->
 <figure id="fig:field_summary">
-<img src="../figures/field_summary.png" title="Field Summary"
-alt="Field summary dashboard for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/field_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_summary.png" title="Field Summary"
+alt="Horizontal bars run from zero to each configured subfield&#x27;s paper count; labels at the bar ends give both the count and its percentage of the current corpus, while the title reports the corpus total." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Field summary dashboard for Exoplanet
 Atmospheres. The dashboard combines corpus size, temporal range,
 subfield distribution, and key bibliometric indicators in a single
@@ -328,18 +592,18 @@ overview panel.</figcaption>
 </figure>
 <!-- FIGURE: subfield_distribution.png -->
 <figure id="fig:subfield_distribution">
-<img src="../figures/subfield_distribution.png"
+<a class="figure-full-size-link" href="../figures/subfield_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_distribution.png"
 title="Subfield Distribution"
-alt="Subfield distribution for Exoplanet Atmospheres." />
+alt="Donut chart partitions the current corpus by configured subfield. Each slice is labelled with its percentage, the centre reports total N, and subfields below two percent are pooled into an Other slice." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Subfield distribution for Exoplanet
 Atmospheres. The 4-bucket taxonomy shows the relative weight of each
 configured sub-area, with Observational Methods dominant at
-50.0%.</figcaption>
+51.4%.</figcaption>
 </figure>
 <!-- FIGURE: subfield_timeline.png -->
 <figure id="fig:subfield_timeline">
-<img src="../figures/subfield_timeline.png" title="Subfield Timeline"
-alt="Subfield timeline for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+alt="Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Subfield timeline for Exoplanet
 Atmospheres. Stacked annual publication counts by subfield show how each
 sub-area has evolved over time, revealing emerging and declining
@@ -347,17 +611,17 @@ research threads.</figcaption>
 </figure>
 <h2 id="identifier-and-full-text-coverage">Identifier and Full-Text
 Coverage</h2>
-<p>The corpus has measurable identifier coverage: 46 of 46 records
+<p>The corpus has measurable identifier coverage: 80 of 46 records
 (100.0%) carry DOIs, supporting cross-engine de-duplication. OpenAlex
-IDs are present for 5 records. Abstract coverage stands at 100.0% (46
+IDs are present for 12 records. Abstract coverage stands at 100.0% (80
 records), which limits the text analytics to that subset. Open-access
-status is confirmed for 43.5% of records, and 43.5% have a direct PDF
+status is confirmed for 42.5% of records, and 42.5% have a direct PDF
 link.</p>
 <h2 id="descriptive-bibliometrics">Descriptive Bibliometrics</h2>
-<p>The corpus spans 104 unique authors across 46 papers, yielding a mean
-of 1.30 papers per author. Citation counts range from zero to 110 (mean
-30.0, median 25.0), with a total of 1,381 citations across the corpus.
-The Gini coefficient of citation concentration is 0.474. This statistic
+<p>The corpus spans 144 unique authors across 46 papers, yielding a mean
+of 1.51 papers per author. Citation counts range from zero to 110 (mean
+37.0, median 31.0), with a total of 2,593 citations across the corpus.
+The Gini coefficient of citation concentration is 0.421. This statistic
 describes concentration within the retained corpus and should not be
 generalized to citation behavior in the field.</p>
 <p><strong>Table 3. Citation count distribution.</strong></p>
@@ -379,15 +643,15 @@ generalized to citation behavior in the field.</p>
 </tr>
 <tr>
 <td>10-49</td>
-<td>24</td>
+<td>39</td>
 </tr>
 <tr>
 <td>50-99</td>
-<td>9</td>
+<td>16</td>
 </tr>
 <tr>
 <td>100-499</td>
-<td>1</td>
+<td>3</td>
 </tr>
 <tr>
 <td>500+</td>
@@ -397,9 +661,9 @@ generalized to citation behavior in the field.</p>
 </table>
 <!-- FIGURE: citation_distribution.png -->
 <figure id="fig:citation_distribution">
-<img src="../figures/citation_distribution.png"
+<a class="figure-full-size-link" href="../figures/citation_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/citation_distribution.png"
 title="Citation Distribution"
-alt="Citation distribution for Exoplanet Atmospheres." />
+alt="Vertical bars show how many retained papers fall in each citation-count bucket; bar-top labels give bucket counts, and the title reports the corpus size, total citations, and Gini concentration coefficient." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Citation distribution for Exoplanet
 Atmospheres. The histogram shows the number of papers in each
 citation-count bucket, with the Gini coefficient annotated. The
@@ -417,42 +681,42 @@ corpus.</figcaption>
 <tbody>
 <tr>
 <td>Astronomy and Astrophysics</td>
-<td>8</td>
-</tr>
-<tr>
-<td>Monthly Notices of the Royal Astronomical Society</td>
-<td>7</td>
-</tr>
-<tr>
-<td>Nature Astronomy</td>
-<td>7</td>
+<td>11</td>
 </tr>
 <tr>
 <td>Publications of the Astronomical Society of the Pa</td>
-<td>7</td>
+<td>11</td>
 </tr>
 <tr>
 <td>The Astrophysical Journal</td>
-<td>5</td>
+<td>10</td>
 </tr>
 <tr>
-<td>Icarus</td>
-<td>4</td>
+<td>Monthly Notices of the Royal Astronomical Society</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Nature Astronomy</td>
+<td>9</td>
 </tr>
 <tr>
 <td>Research Notes of the AAS</td>
-<td>4</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Icarus</td>
+<td>6</td>
 </tr>
 <tr>
 <td>The Astronomical Journal</td>
-<td>4</td>
+<td>5</td>
 </tr>
 </tbody>
 </table>
 <!-- FIGURE: top_venues.png -->
 <figure id="fig:top_venues">
-<img src="../figures/top_venues.png" title="Top Venues"
-alt="Top publication venues for Exoplanet Atmospheres." />
+<a class="figure-full-size-link" href="../figures/top_venues.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/top_venues.png" title="Top Venues"
+alt="Descending horizontal bars rank up to fifteen publication venues by the number of retained corpus papers. Venue names appear on the vertical axis and bar length measures the paper count represented in the current evidence snapshot." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Top publication venues for Exoplanet
 Atmospheres. The horizontal bar chart shows the venues with the most
 retained records; it describes this corpus rather than the complete
@@ -470,61 +734,61 @@ field.</figcaption>
 <tbody>
 <tr>
 <td>1</td>
-<td>D. Ito</td>
-<td>3</td>
+<td>A. Fournier</td>
+<td>4</td>
 </tr>
 <tr>
 <td>2</td>
-<td>G. Petrov</td>
-<td>3</td>
+<td>B. Owens</td>
+<td>4</td>
 </tr>
 <tr>
 <td>3</td>
-<td>J. Ito</td>
-<td>3</td>
+<td>D. Ito</td>
+<td>4</td>
 </tr>
 <tr>
 <td>4</td>
-<td>L. Carter</td>
-<td>3</td>
+<td>D. Nakamura</td>
+<td>4</td>
 </tr>
 <tr>
 <td>5</td>
-<td>A. Fournier</td>
-<td>2</td>
+<td>G. Ito</td>
+<td>4</td>
 </tr>
 <tr>
 <td>6</td>
-<td>A. Jensen</td>
-<td>2</td>
+<td>K. Ito</td>
+<td>4</td>
 </tr>
 <tr>
 <td>7</td>
-<td>A. Singh</td>
-<td>2</td>
+<td>B. Kowalski</td>
+<td>3</td>
 </tr>
 <tr>
 <td>8</td>
-<td>B. Kowalski</td>
-<td>2</td>
+<td>C. Singh</td>
+<td>3</td>
 </tr>
 <tr>
 <td>9</td>
-<td>B. Owens</td>
-<td>2</td>
+<td>E. Tanaka</td>
+<td>3</td>
 </tr>
 <tr>
 <td>10</td>
-<td>C. Esposito</td>
-<td>2</td>
+<td>F. Lindgren</td>
+<td>3</td>
 </tr>
 </tbody>
 </table>
 <!-- FIGURE: author_productivity.png -->
 <figure id="fig:author_productivity">
-<img src="../figures/author_productivity.png"
+<a class="figure-full-size-link" href="../figures/author_productivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/author_productivity.png"
 title="Author Productivity"
-alt="Author productivity for Exoplanet Atmospheres." />
+alt="Descending horizontal bars rank up to twenty authors by their number of retained corpus publications. Author names appear on the vertical axis and bar length encodes publication count after the pipeline&#x27;s record deduplication." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Author productivity for Exoplanet
 Atmospheres. The horizontal bar chart shows authors with the most
 retained records; names and counts depend on source coverage and

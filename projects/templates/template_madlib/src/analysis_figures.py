@@ -378,13 +378,23 @@ def write_field_origin_summary(counts: dict[str, int], output_path: Path | str) 
     return _save_figure(fig, plt, output)
 
 
-def _figure_registry_entry(filename: str, caption: str, label: str, section: str) -> dict[str, str]:
+def _figure_registry_entry(
+    filename: str,
+    caption: str,
+    label: str,
+    section: str,
+    alt_text: str,
+) -> dict[str, Any]:
+    normalized_alt = alt_text.strip()
+    if not normalized_alt:
+        raise ValueError(f"figure alt text must not be empty: {label}")
     return {
         "filename": filename,
         "caption": caption,
         "label": label,
         "section": section,
         "generated_by": "scripts/01_generate_madlib_artifacts.py",
+        "metadata": {"alt_text": normalized_alt},
     }
 
 

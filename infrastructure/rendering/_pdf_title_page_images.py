@@ -11,6 +11,7 @@ from infrastructure.rendering._pdf_title_page_latex import _latex_graphic_alt_te
 
 __all__ = [
     "_configured_image_path",
+    "_cover_image_alt",
     "_cover_image_block",
     "_cover_image_path",
     "_has_available_paper_cover",
@@ -20,6 +21,23 @@ __all__ = [
 ]
 
 logger = get_logger(__name__)
+
+
+def _cover_image_alt(config: dict[str, Any]) -> str | None:
+    """Return the alt text paired with the selected book or paper cover."""
+
+    for section_name in ("book", "paper"):
+        section = config.get(section_name, {}) or {}
+        if not isinstance(section, dict):
+            continue
+        cover = section.get("cover", {}) or {}
+        if not isinstance(cover, dict) or not cover.get("image"):
+            continue
+        alt = cover.get("alt")
+        if isinstance(alt, str) and alt.strip():
+            return " ".join(alt.split())
+        return None
+    return None
 
 
 def _cover_image_path(config: dict[str, Any], config_file: Path) -> Path | None:

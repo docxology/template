@@ -416,6 +416,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -584,8 +625,8 @@ orphan decisions are flagged, and source-control coverage is enforced.
 Layer two applies visual redaction treatments, steganographic provenance
 overlays, and optional Kmyth TPM sidecar sealing.</p>
 <figure id="fig:redaction_flow">
-<img src="../figures/redaction_flow.png"
-alt="Figure 1: Release-review pipeline: the disclosure-control layer audits the invented fixture against the public ceiling and builds an in-memory sanitized packet, the evidence layer projects text-free audit and hashed-ledger JSON, and the…" />
+<a class="figure-full-size-link" href="../figures/redaction_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/redaction_flow.png"
+alt="Two-layer flow diagram. Layer one runs disclosure control: typed fixture load, classification ceiling and span validation, orphan and coverage checks, then an in-memory sanitized packet. Layer two projects a text-free audit and hashed release ledger, then renders the 4x4 visual proof matrix with steganography and optional Kmyth TPM sidecar sealing." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Release-review pipeline: the
 disclosure-control layer audits the invented fixture against the public
 ceiling and builds an in-memory sanitized packet, the evidence layer
@@ -853,8 +894,8 @@ records:</p>
 <li>Kmyth sidecar count and filenames (when Kmyth is available).</li>
 </ul>
 <figure id="fig:disclosure_control_matrix">
-<img src="../figures/disclosure_control_matrix.png"
-alt="Figure 2: Development proof matrix: four redaction styles (blackout, whiteout, grayout, blur) rendered across four PDF backgrounds (white, gray, black, blur); every one of the sixteen cells applies the identical source-safe redaction…" />
+<a class="figure-full-size-link" href="../figures/disclosure_control_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/disclosure_control_matrix.png"
+alt="A four-by-four grid of redaction style tokens (blackout, whiteout, grayout, blur) on PDF backgrounds (white, gray, black, blur), with the note that all sixteen variants apply identical source-safe redaction decisions." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Development proof matrix: four
 redaction styles (blackout, whiteout, grayout, blur) rendered across
 four PDF backgrounds (white, gray, black, blur); every one of the

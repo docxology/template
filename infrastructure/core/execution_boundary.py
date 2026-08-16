@@ -24,14 +24,22 @@ All functions are testable with real files/subprocesses (No-Mocks policy).
 from __future__ import annotations
 
 import contextlib
+import ctypes
 import os
 import signal
 import subprocess  # nosec B404
+import sys
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Sequence
 
+from infrastructure.core._bounded_run_guardian import (
+    BoundedRunGuardian as _BoundedRunGuardian,
+)
+from infrastructure.core._bounded_run_guardian import (
+    start_bounded_run_guardian as _start_bounded_run_guardian,
+)
 from infrastructure.core.secrets import strip_secret_env
 
 
@@ -235,7 +243,16 @@ def run_bounded_subprocess(
             timed_out=False,
             command_error=f"refused by egress policy: {exc}",
         )
-    with contextlib.suppress(OSError, ProcessLookupError):
+    try:
+        guardian = _start_bounded_run_guardian(env)
+    except (OSError, RuntimeError, TimeoutError) as exc:
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=1,
+            timed_out=False,
+            command_error=f"failed to start bounded-run guardian: {exc}",
+        )
+    try:
         proc = subprocess.Popen(
             cmd,
             cwd=str(workdir),
@@ -246,55 +263,82 @@ def run_bounded_subprocess(
             stderr=subprocess.PIPE if capture_output else None,
             text=True if capture_output else None,
         )
-        # Effective group id: the child got a fresh session (its pid == pgid).
-        effective_group = proc.pid if group_id is None else group_id
-        try:
-            stdout, stderr = proc.communicate(timeout=timeout)
-            terminate_bounded_run_processes(run_token)
+    except BaseException as exc:
+        if guardian is not None:
+            guardian.close()
+        if isinstance(exc, OSError):
             return BoundedSubprocessResult(
                 argv=tuple(cmd),
-                returncode=proc.returncode if proc.returncode is not None else 0,
+                returncode=1,
                 timed_out=False,
-                stdout=stdout or "",
-                stderr=stderr or "",
+                command_error="failed to launch",
             )
-        except subprocess.TimeoutExpired as exc:
+        raise
+
+    # Effective group id: the child got a fresh session (its pid == pgid).
+    effective_group = proc.pid if group_id is None else group_id
+    if guardian is not None:
+        try:
+            guardian.arm(root_pid=proc.pid, run_token=run_token)
+        except BaseException as exc:
             terminate_process_tree(proc.pid, group_id=effective_group)
             terminate_bounded_run_processes(run_token)
-            # Always reap the root process. With inherited stdout/stderr,
-            # skipping ``communicate``/``wait`` would leave a defunct child
-            # owned by a long-running pipeline orchestrator.
-            try:
-                timed_out_stdout, timed_out_stderr = proc.communicate(timeout=5)
-            except subprocess.TimeoutExpired:
-                if proc.stdout is not None:
-                    proc.stdout.close()
-                if proc.stderr is not None:
-                    proc.stderr.close()
-                with _suppress():
-                    proc.wait(timeout=5)
-                timed_out_stdout = _timeout_output_text(exc.stdout)
-                timed_out_stderr = _timeout_output_text(exc.stderr)
-            return BoundedSubprocessResult(
-                argv=tuple(cmd),
-                returncode=-signal.SIGKILL,
-                timed_out=True,
-                stdout=timed_out_stdout or "",
-                stderr=timed_out_stderr or "",
-            )
-        except BaseException:
-            _terminate_and_reap_interrupted_process(
-                proc,
-                group_id=effective_group,
-                run_token=run_token,
-            )
+            guardian.close()
+            with _suppress():
+                proc.wait(timeout=5)
+            if isinstance(exc, (OSError, RuntimeError)):
+                return BoundedSubprocessResult(
+                    argv=tuple(cmd),
+                    returncode=1,
+                    timed_out=False,
+                    command_error=f"failed to arm bounded-run guardian: {exc}",
+                )
             raise
-    return BoundedSubprocessResult(
-        argv=tuple(cmd),
-        returncode=1,
-        timed_out=False,
-        command_error="failed to launch",
-    )
+
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+        cleanup_error = _complete_bounded_run_cleanup(guardian, run_token)
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=1 if cleanup_error else (proc.returncode if proc.returncode is not None else 0),
+            timed_out=False,
+            stdout=stdout or "",
+            stderr=stderr or "",
+            command_error=cleanup_error,
+        )
+    except subprocess.TimeoutExpired as exc:
+        terminate_process_tree(proc.pid, group_id=effective_group)
+        cleanup_error = _complete_bounded_run_cleanup(guardian, run_token)
+        # Always reap the root process. With inherited stdout/stderr,
+        # skipping ``communicate``/``wait`` would leave a defunct child
+        # owned by a long-running pipeline orchestrator.
+        try:
+            timed_out_stdout, timed_out_stderr = proc.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            if proc.stdout is not None:
+                proc.stdout.close()
+            if proc.stderr is not None:
+                proc.stderr.close()
+            with _suppress():
+                proc.wait(timeout=5)
+            timed_out_stdout = _timeout_output_text(exc.stdout)
+            timed_out_stderr = _timeout_output_text(exc.stderr)
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=-signal.SIGKILL,
+            timed_out=True,
+            stdout=timed_out_stdout or "",
+            stderr=timed_out_stderr or "",
+            command_error=cleanup_error,
+        )
+    except BaseException:
+        _terminate_and_reap_interrupted_process(
+            proc,
+            group_id=effective_group,
+            run_token=run_token,
+            guardian=guardian,
+        )
+        raise
 
 
 def _terminate_process_group(group_id: int) -> None:
@@ -317,12 +361,13 @@ def _terminate_and_reap_interrupted_process(
     *,
     group_id: int,
     run_token: str,
+    guardian: _BoundedRunGuardian | None,
 ) -> None:
     """Best-effort complete cleanup while preserving the caller's exception."""
     with contextlib.suppress(Exception):
         terminate_process_tree(process.pid, group_id=group_id)
     with contextlib.suppress(Exception):
-        terminate_bounded_run_processes(run_token)
+        _complete_bounded_run_cleanup(guardian, run_token)
     for pipe in (process.stdout, process.stderr):
         if pipe is not None:
             with contextlib.suppress(Exception):
@@ -331,6 +376,23 @@ def _terminate_and_reap_interrupted_process(
         process.kill()
     with contextlib.suppress(Exception):
         process.wait(timeout=5)
+
+
+def _complete_bounded_run_cleanup(
+    guardian: _BoundedRunGuardian | None,
+    run_token: str,
+) -> str:
+    """Wait for independent cleanup, run a caller-side sweep, and report errors."""
+    cleanup_error = ""
+    if guardian is not None:
+        try:
+            guardian.wait_for_cleanup()
+        except (OSError, RuntimeError, TimeoutError, subprocess.SubprocessError) as exc:
+            cleanup_error = f"bounded-run guardian cleanup failed: {exc}"
+        finally:
+            guardian.close()
+    terminate_bounded_run_processes(run_token)
+    return cleanup_error
 
 
 def terminate_process_tree(root_pid: int, *, group_id: int | None = None) -> None:
@@ -418,7 +480,10 @@ def terminate_bounded_run_processes(run_token: str) -> set[int]:
     """
     if os.name == "nt":
         return set()
+    if sys.platform == "darwin":
+        return _terminate_darwin_bounded_run_processes(run_token)
     matched: set[int] = set()
+    empty_scans = 0
     for _ in range(4):
         current = _tagged_process_pids(run_token) - {os.getpid()}
         new_pids = current - matched
@@ -426,7 +491,8 @@ def terminate_bounded_run_processes(run_token: str) -> set[int]:
         for pid in new_pids:
             with _suppress():
                 os.kill(pid, signal.SIGSTOP)
-        if not new_pids:
+        empty_scans = 0 if new_pids else empty_scans + 1
+        if empty_scans >= 2:
             break
     for pid in sorted(matched, reverse=True):
         with _suppress():
@@ -434,8 +500,47 @@ def terminate_bounded_run_processes(run_token: str) -> set[int]:
     return matched
 
 
+def _terminate_darwin_bounded_run_processes(run_token: str) -> set[int]:
+    """Freeze and re-verify token-bound processes before killing them.
+
+    macOS does not provide ``pidfd`` handles. A second token check while each
+    candidate is stopped therefore closes the practical PID-reuse window: a
+    PID that disappeared or no longer carries the token is resumed rather
+    than killed.
+    """
+    stopped: set[int] = set()
+    empty_scans = 0
+    for _ in range(4):
+        current = _darwin_tagged_process_pids(run_token) - {os.getpid()}
+        stale = stopped - current
+        for pid in stale:
+            with _suppress():
+                os.kill(pid, signal.SIGCONT)
+        stopped.intersection_update(current)
+
+        new_pids = current - stopped
+        for pid in new_pids:
+            with _suppress():
+                os.kill(pid, signal.SIGSTOP)
+        stopped.update(new_pids)
+        empty_scans = 0 if new_pids else empty_scans + 1
+        if empty_scans >= 2:
+            break
+
+    verified = stopped & _darwin_tagged_process_pids(run_token)
+    for pid in stopped - verified:
+        with _suppress():
+            os.kill(pid, signal.SIGCONT)
+    for pid in sorted(verified, reverse=True):
+        with _suppress():
+            os.kill(pid, signal.SIGKILL)
+    return verified
+
+
 def _tagged_process_pids(run_token: str) -> set[int]:
     """Return same-user processes whose environment contains *run_token*."""
+    if sys.platform == "darwin":
+        return _darwin_tagged_process_pids(run_token)
     ps_command = "/bin/ps" if Path("/bin/ps").is_file() else "ps"
     try:
         completed = subprocess.run(  # nosec B603 - fixed process-table query
@@ -461,6 +566,96 @@ def _tagged_process_pids(run_token: str) -> set[int]:
         except ValueError:
             continue
     return matches
+
+
+def _darwin_tagged_process_pids(run_token: str) -> set[int]:
+    """Find live token holders without a whole-user ``ps eww`` expansion.
+
+    ``ps auxeww`` asks macOS to expand every process environment before the
+    caller can filter it. A single uninterruptible I/O process can make that
+    operation take longer than the bounded run itself. Instead, take a cheap
+    PID/state snapshot and query ``KERN_PROCARGS2`` directly for each live PID.
+    The kernel calls are fast for sleeping and uninterruptible processes and
+    only the exact bounded-run environment entry is retained.
+    """
+    ps_command = "/bin/ps" if Path("/bin/ps").is_file() else "ps"
+    try:
+        completed = subprocess.run(  # nosec B603 - fixed process-state query
+            [ps_command, "-x", "-o", "pid=,stat="],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=2,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return set()
+    if completed.returncode != 0:
+        return set()
+
+    libc = ctypes.CDLL(None, use_errno=True)
+    sysctl = libc.sysctl
+    matches: set[int] = set()
+    for line in completed.stdout.splitlines():
+        fields = line.split(None, 1)
+        if len(fields) != 2 or fields[1].startswith("Z"):
+            continue
+        try:
+            pid = int(fields[0])
+        except ValueError:
+            continue
+        raw_args = _darwin_process_args(sysctl, pid)
+        if raw_args is not None and _darwin_args_have_run_token(raw_args, run_token):
+            matches.add(pid)
+    return matches
+
+
+def _darwin_process_args(sysctl: object, pid: int) -> bytes | None:
+    """Return one process's ``KERN_PROCARGS2`` buffer, if still available."""
+    query = sysctl
+    if not callable(query):
+        return None
+    mib = (ctypes.c_int * 3)(1, 49, pid)  # CTL_KERN, KERN_PROCARGS2, pid
+    for _ in range(2):
+        size = ctypes.c_size_t(0)
+        if query(mib, 3, None, ctypes.byref(size), None, 0) != 0 or size.value == 0:
+            return None
+        buffer = ctypes.create_string_buffer(size.value)
+        if query(mib, 3, buffer, ctypes.byref(size), None, 0) == 0:
+            return bytes(buffer.raw[: size.value])
+        # An exec between the sizing and data calls can change the required
+        # buffer size. Retry once against the process's new argument image.
+    return None
+
+
+def _darwin_args_have_run_token(raw_args: bytes, run_token: str) -> bool:
+    """Return whether parsed ``KERN_PROCARGS2`` environment has *run_token*."""
+    int_size = ctypes.sizeof(ctypes.c_int)
+    if len(raw_args) < int_size:
+        return False
+    argc = int.from_bytes(raw_args[:int_size], byteorder=sys.byteorder, signed=True)
+    if argc < 0:
+        return False
+
+    cursor = raw_args.find(b"\0", int_size)
+    if cursor < 0:
+        return False
+    cursor += 1
+    while cursor < len(raw_args) and raw_args[cursor] == 0:
+        cursor += 1
+    for _ in range(argc):
+        cursor = raw_args.find(b"\0", cursor)
+        if cursor < 0:
+            return False
+        cursor += 1
+    while cursor < len(raw_args) and raw_args[cursor] == 0:
+        cursor += 1
+
+    prefix = f"{_RUN_IDS_ENV}=".encode("ascii")
+    token = run_token.encode("ascii")
+    for entry in raw_args[cursor:].split(b"\0"):
+        if entry.startswith(prefix) and token in entry[len(prefix) :].split(b":"):
+            return True
+    return False
 
 
 def _suppress() -> "contextlib.AbstractContextManager[None]":

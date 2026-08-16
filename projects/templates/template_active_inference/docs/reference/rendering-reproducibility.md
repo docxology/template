@@ -31,8 +31,11 @@ claim pass; regenerate the producer that owns the artifact.
   sheaf fragments by `scripts/compose_manuscript.py`.
 - `output/manuscript/*.md` is hydrated from composed manuscript sections plus
   `output/data/manuscript_variables.json`.
-- `output/figures/*` comes from `scripts/generate_figures.py` and
-  `scripts/render_animation.py`.
+- Registered image bytes under `output/figures/` come from
+  `scripts/generate_figures.py`; animation bytes come from
+  `scripts/render_animation.py`. The exception is
+  `output/figures/figure_registry.json`, whose sole final producer is the
+  hydration boundary in `scripts/z_generate_manuscript_variables.py`.
 - `output/pdf/*` and `output/web/*` are render outputs, not sources of truth.
 - Root-level `output/templates/template_active_inference/**` is copied from the
   project-local `output/**` by the root pipeline.
@@ -43,7 +46,10 @@ The single hydration boundary is `scripts/z_generate_manuscript_variables.py`.
 Composition may emit `{{token}}` placeholders, but only hydration substitutes
 them. Unknown placeholders and single-brace token typos fail closed. Volatile
 counts, run facts, semantic restrictions, and figure captions must enter through
-`output/data/manuscript_variables.json`, never hard-coded prose.
+`output/data/manuscript_variables.json`, never hard-coded prose. After the
+staleness pass rewrites that canonical variables snapshot, hydration reloads it
+and atomically writes the fully resolved figure alt/caption registry. Figure
+generation never persists a competing raw-token registry.
 
 ## Producer order
 

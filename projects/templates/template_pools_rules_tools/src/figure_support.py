@@ -39,6 +39,11 @@ class IntegrationFigureSpec:
 
 
 FIGURE_REGISTRY_SCHEMA = "template-pools-rules-tools-figure-registry-v1"
+# Cover art is a layout asset, not a manuscript-referenced content figure, so it
+# is intentionally excluded from ``INTEGRATION_FIGURE_SPECS`` and the generated
+# figure registry.  Keep its filename contract explicit here so generation,
+# manuscript variables, and tests all derive the cover count from one source.
+COVER_FIGURE_FILENAMES: tuple[str, ...] = ("cover_art.png",)
 INTEGRATION_FIGURE_SPECS: tuple[IntegrationFigureSpec, ...] = (
     IntegrationFigureSpec(
         label="fig:architecture",
@@ -117,6 +122,7 @@ __all__ = [
     "BG",
     "BLUE",
     "BLUE_LIGHT",
+    "COVER_FIGURE_FILENAMES",
     "FIGURE_REGISTRY_SCHEMA",
     "GRID",
     "INTEGRATION_FIGURE_SPECS",

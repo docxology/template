@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import stat
 import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -52,6 +53,28 @@ def _fake_pandoc(tmp_path: Path) -> tuple[Path, Path]:
     bin_dir = tmp_path / "fakebin"
     bin_dir.mkdir(parents=True, exist_ok=True)
     argv_log = tmp_path / "argv.log"
+    epub_writer = bin_dir / "write-valid-epub.py"
+    epub_writer.write_text(
+        """import sys
+import zipfile
+
+output = sys.argv[1]
+container = ('<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
+             '<rootfiles><rootfile full-path="EPUB/content.opf" '
+             'media-type="application/oebps-package+xml"/></rootfiles></container>')
+package = ('<package xmlns="http://www.idpf.org/2007/opf"><manifest>'
+           '<item id="chapter" href="text/chapter.xhtml" media-type="application/xhtml+xml"/>'
+           '</manifest><spine><itemref idref="chapter"/></spine></package>')
+chapter = ('<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Fixture</title></head>'
+           '<body><p>Fixture</p></body></html>')
+with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    archive.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+    archive.writestr("META-INF/container.xml", container)
+    archive.writestr("EPUB/content.opf", package)
+    archive.writestr("EPUB/text/chapter.xhtml", chapter)
+""",
+        encoding="utf-8",
+    )
     script = bin_dir / "pandoc"
     script.write_text(
         f"""#!/bin/sh
@@ -62,7 +85,13 @@ while [ $# -gt 0 ]; do
   if [ "$1" = "-o" ]; then out="$2"; fi
   shift
 done
-if [ -n "$out" ]; then mkdir -p "$(dirname "$out")"; printf 'stub' > "$out"; fi
+if [ -n "$out" ]; then
+  mkdir -p "$(dirname "$out")"
+  case "$out" in
+    *.epub) '{sys.executable}' '{epub_writer}' "$out" ;;
+    *) printf 'stub' > "$out" ;;
+  esac
+fi
 exit 0
 """,
         encoding="utf-8",

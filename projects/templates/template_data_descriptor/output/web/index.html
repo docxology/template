@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="A FAIR-style exemplar for dataset papers" />
   <title>Data Descriptor Template: Schema, Provenance, and Release
 Readiness</title>
   <style>
@@ -43,7 +44,6 @@ Readiness</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -265,6 +265,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -289,11 +303,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -324,11 +333,38 @@ body {
   overflow-x: visible;
 }
 
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 0.65rem 0.9rem;
+  transform: translateY(-120%);
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 @media (max-width: 600px) {
   body {
     width: 100%;
     max-width: 100%;
     padding: 16px;
+  }
+
+  figure img {
+    width: 100% !important;
   }
 }
 
@@ -368,6 +404,11 @@ table {
   margin: 20px 0;
 }
 
+figure {
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
 th, td {
   border: 1px solid #bdc3c7;
   padding: 8px;
@@ -375,7 +416,7 @@ th, td {
 }
 
 th {
-  background-color: #3498db;
+  background-color: #1f6f8b;
   color: white;
 }
 
@@ -392,7 +433,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -401,7 +444,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -411,8 +459,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -442,6 +500,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -452,7 +551,7 @@ mjx-container[display="true"] {
 </style>
 </head>
 <body>
-<main id="main-content">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header id="title-block-header">
 <h1 class="title">Data Descriptor Template: Schema, Provenance, and
 Release Readiness</h1>
@@ -538,6 +637,7 @@ class="toc-section-number">7.3</span> Boundaries and claims</a></li>
 class="toc-section-number">8</span> References</a></li>
 </ul>
 </nav>
+<main id="main-content" tabindex="-1">
 <h1 data-number="1" id="abstract"><span
 class="header-section-number">1</span> Abstract</h1>
 <p>This exemplar demonstrates a <strong>data descriptor</strong>
@@ -632,8 +732,8 @@ row counts, read directly from the descriptor by
 analysis script <a
 href="../scripts/generate_figures.py"><code>scripts/generate_figures.py</code></a>.</p>
 <figure id="fig:file_inventory">
-<img src="figures/file_inventory.png"
-alt="Figure 1: File inventory: declared row counts per file, from file_inventory_rows() ." />
+<a class="figure-full-size-link" href="../figures/file_inventory.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/file_inventory.png"
+alt="2 horizontal bars encode descriptor-declared row counts: fixtures/measurements.csv: 12; fixtures/subjects.csv: 6. Largest declared count 12 occurs for fixtures/measurements.csv. Declared counts alone do not verify file bytes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: File inventory: declared row
 counts per file, from <code>file_inventory_rows()</code>. The
 measurement table is the larger of the two files; the subject table is
@@ -667,8 +767,8 @@ this dictionary directly from the descriptor via
 <code>schema_table_rows()</code> in
 <code>src/data_descriptor/figures.py</code>.</p>
 <figure id="fig:schema_overview">
-<img src="figures/schema_overview.png"
-alt="Figure 2: Field schema / data dictionary: one row per declared field, with type, nullability, unit, and a compact constraint label, from schema_table_rows() ." />
+<a class="figure-full-size-link" href="../figures/schema_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/schema_overview.png"
+alt="6-row data dictionary: sample_id (string, nullable no, constraint pattern ^S[0-9]{3}$); subject_id (string, nullable no, constraint pattern ^P[0-9]{3}$); group (category, nullable no, constraint {control, treatment}); value (number, nullable no, unit normalized_score, constraint [0, 1]); collected_on (date, nullable no); instrument (category, nullable no, constraint {sensor_a, sensor_b}). The table describes declared metadata, not observed values." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Field schema / data dictionary:
 one row per declared field, with type, nullability, unit, and a compact
 constraint label, from <code>schema_table_rows()</code>. Identifier
@@ -729,8 +829,8 @@ href="#fig:provenance_flow">3</a> renders that chain via
 <code>provenance_steps()</code> in
 <code>src/data_descriptor/figures.py</code>.</p>
 <figure id="fig:provenance_flow">
-<img src="figures/provenance_flow.png"
-alt="Figure 3: Provenance chain: the ordered steps that produced the release, from provenance_steps() ." />
+<a class="figure-full-size-link" href="../figures/provenance_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/provenance_flow.png"
+alt="4 connected boxes run left to right: collect (synthetic fixture generator) to clean (template_data_descriptor) to validate (template_data_descriptor) to package (template_data_descriptor). This is the descriptor-declared chain and does not independently verify that the steps ran." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Provenance chain: the ordered
 steps that produced the release, from <code>provenance_steps()</code>.
 Each box is a declared step; the label beneath is the responsible agent.
@@ -788,8 +888,8 @@ corrupts a checksum, zeroes a row count, and removes a unit). The clean
 fixture produces zero findings; the perturbed demo produces several
 errors and warnings.</p>
 <figure id="fig:quality_gate">
-<img src="figures/quality_gate.png"
-alt="Figure 4: Quality gate: validation findings by severity for the clean fixture descriptor (left, zero findings) versus a deliberately-broken demonstration copy (right)." />
+<a class="figure-full-size-link" href="../figures/quality_gate.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/quality_gate.png"
+alt="Grouped bars compare validation findings. Supplied descriptor: 0 errors and 0 warnings. Deliberately perturbed control: 3 errors and 3 warnings. The control is synthetic and demonstrates gate sensitivity; it is not an empirical data-quality estimate." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Quality gate: validation
 findings by severity for the clean fixture descriptor (left, zero
 findings) versus a deliberately-broken demonstration copy (right). The
@@ -815,8 +915,8 @@ reconciliation for the shipped fixture: both files verify, declared and
 actual row counts agree, and each recomputed checksum matches its
 declaration, so the readiness score is unpenalised.</p>
 <figure id="fig:checksum_verification">
-<img src="figures/checksum_verification.png"
-alt="Figure 5: Descriptor↔︎file verification: declared versus recomputed row counts and checksum agreement per file, from verify_descriptor_files() ." />
+<a class="figure-full-size-link" href="../figures/checksum_verification.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/checksum_verification.png"
+alt="2-row descriptor-to-file verification table: fixtures/measurements.csv: declared rows 12, actual rows 12, checksum match, status verified; fixtures/subjects.csv: declared rows 6, actual rows 6, checksum match, status verified. Descriptor readiness is 1.000; this is release-readiness evidence, not a scientific quality score." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Descriptor↔︎file verification:
 declared versus recomputed row counts and checksum agreement per file,
 from <code>verify_descriptor_files()</code>. Both shipped fixture files

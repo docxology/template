@@ -7,7 +7,9 @@ from pathlib import Path
 
 import pytest
 
+from infrastructure.core.pipeline.artifacts import snapshot_current_artifact_manifest
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
+from infrastructure.rendering.manuscript_composition import write_manuscript_composition
 from infrastructure.validation.cli.main import build_parser, publication_audit_command
 from infrastructure.validation.publication import (
     PublicationAuditReport,
@@ -17,9 +19,81 @@ from infrastructure.validation.publication import (
     format_publication_audit_markdown,
     validate_publication_audit,
 )
+from infrastructure.validation.publication.rendered_provenance import write_rendered_provenance_receipt
+from infrastructure.validation.rendered_snapshot import build_current_rendered_snapshot
 from tests._support.projects import make_project, write_doc
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+SYNTHETIC_PROJECT = "templates/template_test"
+
+
+def _write_snapshot_audit_fixture(root: Path) -> Path:
+    """Write one real-file rendered project with a stage-zero integrity snapshot."""
+    project = make_project(
+        root,
+        "template_test",
+        program="templates",
+        with_manuscript=True,
+        with_scripts=True,
+        with_output=True,
+    )
+    write_doc(
+        project / ".agents" / "skills" / "template-test" / "SKILL.md",
+        "---\nname: template-test\ndescription: Synthetic publication fixture.\n---\n",
+    )
+    write_doc(
+        project / "methods_pipeline.yaml",
+        """\
+stages:
+  - name: Project Analysis
+    key: analysis
+    script: scripts/pipeline/stage_02_analysis.py
+    tags: [core]
+    contract:
+      input_artifacts: ["projects/{project}/src/"]
+      output_artifacts: ["projects/{project}/output/data/result.json"]
+      definition_of_done: "Analysis writes a source-bound result."
+      failure_code: "PROJECT_ANALYSIS_FAILED"
+      retry_policy: 0
+""",
+    )
+    write_doc(root / "scripts" / "pipeline" / "stage_02_analysis.py", 'print("analysis")\n')
+    write_doc(root / "scripts" / "runner" / "execute_pipeline.py", 'print("pipeline")\n')
+
+    source = project / "manuscript" / "01_methods.md"
+    hydrated = project / "output" / "manuscript" / source.name
+    manuscript = "# Methods\n\nA deterministic procedure produces a source-bound artifact.\n"
+    write_doc(source, manuscript)
+    write_doc(hydrated, manuscript)
+    combined = project / "output" / "web" / "_combined_manuscript.md"
+    write_doc(combined, manuscript)
+    write_manuscript_composition(project, SYNTHETIC_PROJECT, [hydrated], combined)
+    write_doc(project / "output" / "data" / "result.json", '{"status": "complete"}\n')
+    write_doc(project / "output" / "reports" / "evidence_registry.json", '{"claims": []}\n')
+    snapshot_current_artifact_manifest(project / "output")
+
+    snapshot = build_current_rendered_snapshot(root, SYNTHETIC_PROJECT)
+    checks = {"Artifact manifest": True, "Rendered structure": True}
+    validation_report = {
+        "timestamp": "2026-01-01T00:00:00Z",
+        "checks": checks,
+        "figure_issues": [],
+        "output_statistics": {"inventory_mode": "stable-shippable-output-v1"},
+        "summary": {
+            "total_checks": len(checks),
+            "passed": len(checks),
+            "failed": 0,
+            "figure_issues_count": 0,
+            "all_passed": True,
+        },
+        "recommendations": [],
+        "validated_inputs": snapshot.validated_inputs_dict(),
+    }
+    write_doc(
+        project / "output" / "reports" / "validation_report.json",
+        json.dumps(validation_report, indent=2, sort_keys=True) + "\n",
+    )
+    return project
 
 
 def test_advanced_literature_review_is_in_public_scope() -> None:
@@ -221,6 +295,56 @@ stages:
     assert "PUBLICATION.RENDER_REPORT_MISSING" in codes
 
 
+def test_strict_rendered_audit_accepts_stage_zero_snapshot_with_current_receipt(tmp_path: Path) -> None:
+    project = _write_snapshot_audit_fixture(tmp_path)
+    manifest_payload = json.loads(
+        (project / "output" / "reports" / "artifact_manifest.json").read_text(encoding="utf-8")
+    )
+    write_rendered_provenance_receipt(tmp_path, SYNTHETIC_PROJECT)
+
+    report = build_publication_audit(
+        tmp_path,
+        [SYNTHETIC_PROJECT],
+        rendered=True,
+        include_drift=False,
+    )
+
+    assert manifest_payload["entries"]
+    assert {entry["stage_num"] for entry in manifest_payload["entries"]} == {0}
+    assert {entry["stage_name"] for entry in manifest_payload["entries"]} == {"current-output-snapshot"}
+    assert report.findings == ()
+    assert validate_publication_audit(report, strict=True) == 0
+
+
+@pytest.mark.parametrize(
+    ("receipt_state", "expected_failure"),
+    [
+        ("missing", "PUBLICATION.RENDERED_PROVENANCE_MISSING"),
+        ("stale", "PUBLICATION.RENDERED_PROVENANCE_VALIDATION_INPUTS_DRIFT"),
+    ],
+)
+def test_strict_rendered_audit_rejects_stage_zero_snapshot_without_current_receipt(
+    tmp_path: Path,
+    receipt_state: str,
+    expected_failure: str,
+) -> None:
+    project = _write_snapshot_audit_fixture(tmp_path)
+    if receipt_state == "stale":
+        write_rendered_provenance_receipt(tmp_path, SYNTHETIC_PROJECT)
+        write_doc(project / "src" / "stub.py", '"""Source changed after validation."""\n')
+
+    report = build_publication_audit(
+        tmp_path,
+        [SYNTHETIC_PROJECT],
+        rendered=True,
+        include_drift=False,
+    )
+    codes = {finding.diagnostic_code for finding in report.findings}
+
+    assert codes == {"METHODS.STAGE_PROVENANCE_UNAVAILABLE", expected_failure}
+    assert validate_publication_audit(report, strict=True) == 1
+
+
 def test_publication_audit_flags_missing_figure_registry_for_referenced_figure(tmp_path: Path) -> None:
     project = make_project(
         tmp_path,
@@ -241,6 +365,53 @@ def test_publication_audit_flags_missing_figure_registry_for_referenced_figure(t
     )
     codes = {finding.diagnostic_code for finding in report.blocking_findings}
     assert "PUBLICATION.FIGURE_REGISTRY" in codes
+
+
+def test_publication_audit_checks_accessibility_for_hydrated_only_figure(tmp_path: Path) -> None:
+    project = make_project(
+        tmp_path,
+        "template_test",
+        program="templates",
+        with_manuscript=True,
+        with_output=True,
+    )
+    write_doc(project / "manuscript" / "00_abstract.md", "# Abstract\n\nNo source figure.\n")
+    write_doc(
+        project / "output" / "manuscript" / "03_results.md",
+        "# Results\n\n![Injected result](../figures/injected.png){#fig:injected}\n",
+    )
+    figures = project / "output" / "figures"
+    figures.mkdir(parents=True, exist_ok=True)
+    (figures / "injected.png").write_bytes(b"png")
+    (figures / "figure_registry.json").write_text(
+        json.dumps(
+            {
+                "figures": [
+                    {
+                        "label": "fig:injected",
+                        "filename": "injected.png",
+                        "generated_by": "tests.injected",
+                        "metadata": {"alt_text": ""},
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = build_publication_audit(
+        tmp_path,
+        ["templates/template_test"],
+        rendered=True,
+        include_drift=False,
+        require_figure_accessibility=True,
+    )
+
+    matching = [
+        finding for finding in report.blocking_findings if finding.diagnostic_code == "PUBLICATION.FIGURE_REGISTRY"
+    ]
+    assert len(matching) == 1
+    assert "fig:injected" in matching[0].message
 
 
 def test_publication_audit_flags_missing_evidence_source(tmp_path: Path) -> None:

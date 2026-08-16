@@ -1,6 +1,6 @@
 # Configured Field Summary
 
-- Explicit paths: `125`
+- Explicit paths: `126`
 - Defaulted paths: `11`
 - Enabled visualization flags: `7`
 - Visualization flags: `configured_field_matrix, section_configuration_heatmap, field_origin_summary, token_injection_flow, section_token_allocation, provenance_trace_map, quality_gate_matrix`

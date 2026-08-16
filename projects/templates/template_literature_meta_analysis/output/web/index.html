@@ -499,6 +499,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -1513,9 +1554,9 @@ relative to alternative wakefulness agents.</p></li>
 </ul>
 <!-- FIGURE: hypothesis_dashboard.png -->
 <figure id="fig:hypothesis_dashboard">
-<img src="../figures/hypothesis_dashboard.png"
+<a class="figure-full-size-link" href="../figures/hypothesis_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/hypothesis_dashboard.png"
 title="Hypothesis Dashboard"
-alt="Figure 1: Hypothesis dashboard for Modafinil." />
+alt="Horizontal evidence-score bars for the configured hypotheses on a scale from minus one to plus one. Orange bars extend left for contradictory evidence, green bars extend right for supportive evidence, and zero is marked." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Hypothesis dashboard for
 Modafinil. The dashboard summarizes the evidence scores across the 6
 configured hypotheses, showing the direction and magnitude of
@@ -1532,8 +1573,8 @@ class="header-section-number">10</span> Results: Field Overview</h1>
 signal that the literature is active rather than dormant.</p>
 <!-- FIGURE: growth_curve.png -->
 <figure id="fig:growth_curve">
-<img src="../figures/growth_curve.png" title="Publication Growth Curve"
-alt="Figure 2: Publication growth curve for Modafinil." />
+<a class="figure-full-size-link" href="../figures/growth_curve.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/growth_curve.png" title="Publication Growth Curve"
+alt="Dual-axis time series with annual publication counts as bars, a dashed moving-average line, and cumulative publications as a marked line. Annotations identify the peak year, median year, total N, span, and CAGR." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Publication growth curve for
 Modafinil. Annual publication counts (bars) and cumulative total (line)
 show sustained growth from 2000 through 2026, peaking in
@@ -1652,8 +1693,8 @@ disorder, and obstructive sleep apnea.</p>
 </table>
 <!-- FIGURE: field_summary.png -->
 <figure id="fig:field_summary">
-<img src="../figures/field_summary.png" title="Field Summary"
-alt="Figure 3: Field summary dashboard for Modafinil." />
+<a class="figure-full-size-link" href="../figures/field_summary.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/field_summary.png" title="Field Summary"
+alt="Horizontal bars run from zero to each configured subfield&#x27;s paper count; labels at the bar ends give both the count and its percentage of the current corpus, while the title reports the corpus total." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Field summary dashboard for
 Modafinil. The dashboard combines corpus size, temporal range, subfield
 distribution, and key bibliometric indicators in a single overview
@@ -1661,17 +1702,17 @@ panel.</figcaption>
 </figure>
 <!-- FIGURE: subfield_distribution.png -->
 <figure id="fig:subfield_distribution">
-<img src="../figures/subfield_distribution.png"
+<a class="figure-full-size-link" href="../figures/subfield_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_distribution.png"
 title="Subfield Distribution"
-alt="Figure 4: Subfield distribution for Modafinil." />
+alt="Donut chart partitions the current corpus by configured subfield. Each slice is labelled with its percentage, the centre reports total N, and subfields below two percent are pooled into an Other slice." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Subfield distribution for
 Modafinil. The 6-bucket taxonomy shows the relative weight of each
 configured sub-area, with Clinical Sleep dominant at 63.0%.</figcaption>
 </figure>
 <!-- FIGURE: subfield_timeline.png -->
 <figure id="fig:subfield_timeline">
-<img src="../figures/subfield_timeline.png" title="Subfield Timeline"
-alt="Figure 5: Subfield timeline for Modafinil." />
+<a class="figure-full-size-link" href="../figures/subfield_timeline.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/subfield_timeline.png" title="Subfield Timeline"
+alt="Stacked area chart of publication counts by year. Coloured bands identify configured subfields, and their combined height at each year gives the annual corpus total; an inset reports total N across all bands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Subfield timeline for
 Modafinil. Stacked annual publication counts by subfield show how each
 sub-area has evolved over time, revealing emerging and declining
@@ -1731,9 +1772,9 @@ literature.</p>
 </table>
 <!-- FIGURE: citation_distribution.png -->
 <figure id="fig:citation_distribution">
-<img src="../figures/citation_distribution.png"
+<a class="figure-full-size-link" href="../figures/citation_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/citation_distribution.png"
 title="Citation Distribution"
-alt="Figure 6: Citation distribution for Modafinil." />
+alt="Vertical bars show how many retained papers fall in each citation-count bucket; bar-top labels give bucket counts, and the title reports the corpus size, total citations, and Gini concentration coefficient." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Citation distribution for
 Modafinil. The histogram shows the number of papers in each
 citation-count bucket, with the Gini coefficient annotated. The
@@ -1793,8 +1834,8 @@ networks.</figcaption>
 </table>
 <!-- FIGURE: top_venues.png -->
 <figure id="fig:top_venues">
-<img src="../figures/top_venues.png" title="Top Venues"
-alt="Figure 7: Top publication venues for Modafinil." />
+<a class="figure-full-size-link" href="../figures/top_venues.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/top_venues.png" title="Top Venues"
+alt="Descending horizontal bars rank up to fifteen publication venues by the number of retained corpus papers. Venue names appear on the vertical axis and bar length measures the paper count represented in the current evidence snapshot." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Top publication venues for
 Modafinil. The horizontal bar chart shows the 15 venues with the most
 papers in the corpus, revealing where the modafinil literature is
@@ -1864,9 +1905,9 @@ published.</figcaption>
 </table>
 <!-- FIGURE: author_productivity.png -->
 <figure id="fig:author_productivity">
-<img src="../figures/author_productivity.png"
+<a class="figure-full-size-link" href="../figures/author_productivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/author_productivity.png"
 title="Author Productivity"
-alt="Figure 8: Author productivity for Modafinil." />
+alt="Descending horizontal bars rank up to twenty authors by their number of retained corpus publications. Author names appear on the vertical axis and bar length encodes publication count after the pipeline&#x27;s record deduplication." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Author productivity for
 Modafinil. The horizontal bar chart shows the 20 authors with the most
 papers in the corpus, revealing the most prolific contributors to the
@@ -1981,8 +2022,8 @@ taxonomy, revealing connections that the explicit classification does
 not capture.</p>
 <!-- FIGURE: topic_term_bars.png -->
 <figure id="fig:topic_term_bars">
-<img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
-alt="Figure 9: Topic-term bar charts for Modafinil." />
+<a class="figure-full-size-link" href="../figures/topic_term_bars.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/topic_term_bars.png" title="Topic-Term Weights"
+alt="Grid of horizontal bar charts, one panel per NMF topic. Each panel lists up to ten leading terms on the vertical axis, and bar length represents that term&#x27;s weight in the topic." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 9: Topic-term bar charts for
 Modafinil. Each panel shows the top weighted terms for one of 5 NMF
 topics, with bar length proportional to the topic-term weight in the
@@ -1997,8 +2038,8 @@ matrix, nearest-neighbour lists, clusters, and two-dimensional
 projection are all reproducible.</p>
 <!-- FIGURE: pca_embeddings.png -->
 <figure id="fig:pca_embeddings">
-<img src="../figures/pca_embeddings.png" title="PCA Embeddings"
-alt="Figure 10: PCA projection of document embeddings for Modafinil." />
+<a class="figure-full-size-link" href="../figures/pca_embeddings.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pca_embeddings.png" title="PCA Embeddings"
+alt="Scatter plot projecting document TF-IDF vectors onto the first two principal components. Points are coloured by configured subfield, axes state explained variance, and arrows label the strongest well-separated term loadings." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 10: PCA projection of document
 embeddings for Modafinil. Each point represents one document projected
 onto the first two principal components of the TF-IDF/SVD embedding.
@@ -2007,8 +2048,8 @@ relates to the keyword taxonomy.</figcaption>
 </figure>
 <!-- FIGURE: dendrogram.png -->
 <figure id="fig:dendrogram">
-<img src="../figures/dendrogram.png" title="Document Dendrogram"
-alt="Figure 11: Hierarchical clustering dendrogram of subfield TF-IDF centroids." />
+<a class="figure-full-size-link" href="../figures/dendrogram.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/dendrogram.png" title="Document Dendrogram"
+alt="Ward-linkage dendrogram clustering configured subfields by their mean TF-IDF vectors. Leaves name subfields, branch height gives Ward distance, and an inset reports the cophenetic correlation of the hierarchy." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 11: Hierarchical clustering
 dendrogram of subfield TF-IDF centroids. Leaves are the configured
 subfields; the tree shows the similarity structure between subfield
@@ -2021,8 +2062,8 @@ subfields: terms with high between-subfield variance (rather than high
 global mean) are selected for display.</p>
 <!-- FIGURE: term_heatmap.png -->
 <figure id="fig:term_heatmap">
-<img src="../figures/term_heatmap.png" title="Term Heatmap"
-alt="Figure 12: Term heatmap for Modafinil." />
+<a class="figure-full-size-link" href="../figures/term_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/term_heatmap.png" title="Term Heatmap"
+alt="Heatmap with configured subfields as rows and the twenty terms with greatest between-subfield variance as columns. Cell colour from pale yellow to dark red encodes the subfield&#x27;s mean TF-IDF weight for each term." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 12: Term heatmap for Modafinil.
 Each cell shows the mean TF-IDF weight of a term within a subfield.
 Terms are selected by between-subfield variance to highlight
@@ -2107,8 +2148,8 @@ pharmacological vocabulary of the modafinil literature.</p>
 </table>
 <!-- FIGURE: entity_bar_chart.png -->
 <figure id="fig:entity_bar_chart">
-<img src="../figures/entity_bar_chart.png" title="Named Entities"
-alt="Figure 13: Top named entities for Modafinil." />
+<a class="figure-full-size-link" href="../figures/entity_bar_chart.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/entity_bar_chart.png" title="Named Entities"
+alt="Descending horizontal bars rank up to twenty named entities extracted from abstracts. Entity labels appear on the vertical axis and bar length represents the number of extracted occurrences in the current corpus." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 13: Top named entities for
 Modafinil. The horizontal bar chart shows the 20 most frequently
 extracted named entities from abstracts, revealing the dominant drugs,
@@ -2262,9 +2303,9 @@ reveal the most closely related works in the corpus.</p>
 </table>
 <!-- FIGURE: similarity_heatmap.png -->
 <figure id="fig:similarity_heatmap">
-<img src="../figures/similarity_heatmap.png"
+<a class="figure-full-size-link" href="../figures/similarity_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/similarity_heatmap.png"
 title="Similar Document Pairs"
-alt="Figure 14: Document similarity for Modafinil." />
+alt="Ranked horizontal bars, despite the legacy heatmap filename, compare up to fifteen document pairs. Each label identifies a pair of paper IDs and bar length gives cosine similarity on a fixed zero-to-one axis." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 14: Document similarity for
 Modafinil. The horizontal bar chart shows the 15 most similar document
 pairs ranked by cosine similarity of their TF-IDF/SVD embeddings.
@@ -2272,8 +2313,8 @@ High-similarity pairs share topical and lexical content.</figcaption>
 </figure>
 <!-- FIGURE: word_cloud.png -->
 <figure id="fig:word_cloud">
-<img src="../figures/word_cloud.png" title="Term Cloud"
-alt="Figure 15: Term cloud for Modafinil." />
+<a class="figure-full-size-link" href="../figures/word_cloud.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/word_cloud.png" title="Term Cloud"
+alt="Term cloud derived from topic-term weights: more heavily weighted corpus terms appear in larger type, with a fixed layout seed and a cividis colour scale; word position and colour do not encode additional quantities." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 15: Term cloud for Modafinil. Term
 sizes are proportional to their topic-term weights from the discovered
 topics, providing a visual summary of the dominant
@@ -2281,8 +2322,8 @@ vocabulary.</figcaption>
 </figure>
 <!-- FIGURE: cooccurrence_matrix.png -->
 <figure id="fig:cooccurrence_matrix">
-<img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
-alt="Figure 16: Term co-occurrence matrix for Modafinil." />
+<a class="figure-full-size-link" href="../figures/cooccurrence_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/cooccurrence_matrix.png" title="Term Co-occurrence"
+alt="Symmetric square matrix for the thirty most frequent document-level terms. Rows and columns list the same terms; increasingly dark blue cells indicate larger normalized within-document co-occurrence, with a zero diagonal." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 16: Term co-occurrence matrix for
 Modafinil. Each cell shows the normalized co-occurrence frequency of two
 terms within the same document, revealing which concepts tend to appear
@@ -2439,8 +2480,8 @@ members, serve as integrative reviews or meta-analyses that connect
 disparate threads of the literature.</p>
 <!-- FIGURE: citation_network.png -->
 <figure id="fig:citation_network">
-<img src="../figures/citation_network.png" title="Citation Network"
-alt="Figure 17: Citation network for Modafinil." />
+<a class="figure-full-size-link" href="../figures/citation_network.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/citation_network.png" title="Citation Network"
+alt="Directed spring-layout citation graph in which arrows represent citation links, node area increases with in-degree, and node colour denotes detected community when available. The five highest-in-degree papers are labelled." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 17: Citation network for
 Modafinil. Nodes represent papers; directed edges represent citation
 links. Node colours indicate community membership (1416 communities
@@ -2449,9 +2490,9 @@ algorithm with a fixed seed for reproducibility.</figcaption>
 </figure>
 <!-- FIGURE: degree_distribution.png -->
 <figure id="fig:degree_distribution">
-<img src="../figures/degree_distribution.png"
+<a class="figure-full-size-link" href="../figures/degree_distribution.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/degree_distribution.png"
 title="Degree Distribution"
-alt="Figure 18: Degree distribution for the Modafinil citation network." />
+alt="Histogram of paper in-degree in the directed citation graph, with the horizontal axis giving citations received and the vertical axis giving the number of papers; logarithmic axes are used when the degree range is large." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 18: Degree distribution for the
 Modafinil citation network. The histogram shows the frequency of each
 in-degree value on a log-linear scale, revealing the heavy-tailed

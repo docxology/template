@@ -1,29 +1,82 @@
 {
-  "timestamp": "2026-08-09T05:06:13.375338",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 21,
+    "passed": 25,
     "failed": 0,
     "skipped": 0,
-    "total": 21,
+    "total": 25,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 21,
+    "discovery_count": 25,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 13.46,
-      "execution": 13.46
+      "setup": 13.38,
+      "execution": 13.38
     },
     "test_categories": {},
-    "coverage_percent": 94.4,
+    "coverage_percent": 93.90581717451524,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 21,
+    "total_passed": 25,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 21,
+    "total_tests": 25,
     "all_passed": true,
-    "project_coverage": 94.4
+    "project_coverage": 93.90581717451524
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 93.90581717451524,
+      "total_executed": 794,
+      "total_missing": 35,
+      "total_excluded": 0,
+      "total_lines": 829,
+      "file_coverage": {
+        "src/storybook/characters.py": {
+          "coverage_percent": 78.18181818181819,
+          "executed_lines": 33,
+          "missing_lines": 6,
+          "excluded_lines": 0,
+          "total_lines": 39
+        },
+        "src/storybook/illustration.py": {
+          "coverage_percent": 99.24385633270322,
+          "executed_lines": 397,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 399
+        },
+        "src/storybook/models.py": {
+          "coverage_percent": 92.40506329113924,
+          "executed_lines": 63,
+          "missing_lines": 4,
+          "excluded_lines": 0,
+          "total_lines": 67
+        },
+        "src/storybook/rendering.py": {
+          "coverage_percent": 95.57522123893806,
+          "executed_lines": 93,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 95
+        },
+        "src/storybook/story.py": {
+          "coverage_percent": 78.125,
+          "executed_lines": 76,
+          "missing_lines": 14,
+          "excluded_lines": 0,
+          "total_lines": 90
+        },
+        "src/storybook/text_layout.py": {
+          "coverage_percent": 93.85474860335195,
+          "executed_lines": 132,
+          "missing_lines": 7,
+          "excluded_lines": 0,
+          "total_lines": 139
+        }
+      }
+    }
   }
 }

@@ -10,6 +10,44 @@ from pathlib import Path
 from infrastructure.core.pipeline.artifacts import compute_sha256
 
 
+def test_autoresearch_manifest_reader_preserves_explicit_inventory_mode(tmp_path: Path) -> None:
+    from infrastructure.autoresearch.validation_checks import _read_artifact_manifest
+
+    manifest_path = tmp_path / "artifact_manifest.json"
+    manifest_path.write_text(
+        '{"entries": [], "issues": [], "inventory_mode": "stable-local-output-v1"}\n',
+        encoding="utf-8",
+    )
+
+    assert _read_artifact_manifest(manifest_path).inventory_mode == "stable-local-output-v1"
+
+
+def test_autoresearch_evidence_registry_uses_local_mode_for_blanket_ignored_sidecar(
+    tmp_path: Path,
+) -> None:
+    from infrastructure.autoresearch.models import AutoResearchConfig, AutoResearchPlan
+    from infrastructure.autoresearch.validation_checks import _validate_evidence_registry
+
+    repo_root = tmp_path / "template"
+    project = tmp_path / "private" / "demo"
+    variables = project / "output" / "data" / "manuscript_variables.json"
+    variables.parent.mkdir(parents=True)
+    variables.write_text('{"LOCAL_VALUE": 7}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=project, check=True, capture_output=True)
+    (project / ".gitignore").write_text("output/\n", encoding="utf-8")
+    plan = AutoResearchPlan(
+        repo_root=repo_root,
+        project_root=project,
+        project_name="demo",
+        config=AutoResearchConfig(strict=True),
+    )
+    issues = []
+
+    _validate_evidence_registry(project, plan, issues)
+
+    assert issues == []
+
+
 def _write_repo_scaffold(tmp_path: Path) -> Path:
     repo_root = tmp_path
     pipeline_dir = repo_root / "infrastructure" / "core" / "pipeline"
@@ -94,9 +132,11 @@ ablations: [ablation]
                 "stage_num": 2,
                 "stage_name": "Project Analysis",
                 "contract_match": True,
+                "timestamp": "",
             }
         ],
         "issues": [],
+        "inventory_mode": "stable-local-output-v1",
     }
     (project / "output" / "reports" / "artifact_manifest.json").write_text(
         json.dumps(manifest),
@@ -587,6 +627,51 @@ def test_write_report_outputs_json_and_markdown(tmp_path: Path) -> None:
     assert "AUTORESEARCH.TEST" in md_path.read_text(encoding="utf-8")
 
 
+def test_write_report_is_byte_stable_across_checkout_roots(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import (
+        AutoResearchConfig,
+        AutoResearchIssue,
+        AutoResearchPlan,
+        AutoResearchReport,
+        write_autoresearch_report,
+    )
+
+    def write_from_checkout(repo_root: Path) -> tuple[bytes, bytes]:
+        project = repo_root / "projects" / "templates" / "demo"
+        plan = AutoResearchPlan(
+            repo_root=repo_root,
+            project_root=project,
+            project_name="templates/demo",
+            config=AutoResearchConfig(source_path=str(project / "autoresearch.yaml")),
+        )
+        report = AutoResearchReport(
+            project_name="templates/demo",
+            valid=False,
+            issues=(
+                AutoResearchIssue(
+                    severity="warning",
+                    code="AUTORESEARCH.DEMO",
+                    message="Demonstrate portable issue paths.",
+                    source_path=str(project / "output" / "data" / "evidence.json"),
+                ),
+            ),
+            plan=plan,
+        )
+        json_path, markdown_path = write_autoresearch_report(project, report)
+        return json_path.read_bytes(), markdown_path.read_bytes()
+
+    first_json, first_markdown = write_from_checkout(tmp_path / "checkout-a")
+    second_json, second_markdown = write_from_checkout(tmp_path / "checkout-b")
+
+    assert first_json == second_json
+    assert first_markdown == second_markdown
+    payload = json.loads(first_json)
+    assert payload["plan"]["repo_root"] == "."
+    assert payload["plan"]["project_root"] == "projects/templates/demo"
+    assert payload["plan"]["config"]["source_path"] == "projects/templates/demo/autoresearch.yaml"
+    assert payload["issues"][0]["source_path"] == "projects/templates/demo/output/data/evidence.json"
+
+
 def test_review_packet_summary_and_benchmark_scores_write_branch_outputs(tmp_path: Path) -> None:
     from infrastructure.autoresearch import (
         AutoResearchConfig,
@@ -700,9 +785,11 @@ required_artifacts: [output/data/result.csv]
                 "stage_num": 2,
                 "stage_name": "Project Analysis",
                 "contract_match": True,
+                "timestamp": "",
             }
         ],
         "issues": [],
+        "inventory_mode": "stable-local-output-v1",
     }
     (project / "output" / "reports" / "artifact_manifest.json").write_text(
         json.dumps(manifest),
@@ -710,6 +797,37 @@ required_artifacts: [output/data/result.csv]
     )
     present = validate_autoresearch_plan(plan, project, phase="extrinsic")
     assert present.valid is True
+
+
+def test_autoresearch_rejects_mode_mismatch_and_git_ignored_manifest_entry(tmp_path: Path) -> None:
+    from infrastructure.autoresearch import build_autoresearch_plan, validate_autoresearch_plan
+
+    repo_root = _write_repo_scaffold(tmp_path)
+    project = repo_root / "projects" / "demo"
+    (project / "autoresearch.yaml").write_text(
+        "strict: true\nquality_checks: [artifact_manifest]\n",
+        encoding="utf-8",
+    )
+    subprocess.run(["git", "init", "-q"], cwd=repo_root, check=True, capture_output=True)
+    (repo_root / ".gitignore").write_text(
+        "projects/demo/output/data/result.csv\n",
+        encoding="utf-8",
+    )
+    manifest_path = project / "output" / "reports" / "artifact_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    payload["inventory_mode"] = "stable-shippable-output-v1"
+    manifest_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = validate_autoresearch_plan(
+        build_autoresearch_plan(repo_root, "demo"),
+        project,
+        phase="extrinsic",
+    )
+    messages = "\n".join(issue.message for issue in report.issues)
+
+    assert report.valid is False
+    assert "artifact inventory mode mismatch" in messages
+    assert "artifact outside stable-local-output-v1 inventory" in messages
 
 
 def test_validation_phase_all_matches_combined_checks(tmp_path: Path) -> None:

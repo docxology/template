@@ -189,13 +189,20 @@ class RenderManager:
         """Render a .tex or .md source file to PDF."""
         return self.pdf_renderer.render(source_file)
 
-    def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
+    def render_slides(
+        self,
+        source_file: Path,
+        output_format: str = "beamer",
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render slides with figure path resolution."""
         return self.slides_renderer.render(
             source_file,
             output_format=output_format,
             manuscript_dir=self.manuscript_dir,
             figures_dir=self.figures_dir,
+            strict_cross_deck_refs=strict_cross_deck_refs,
         )
 
     def render_web(self, source_file: Path) -> Path:

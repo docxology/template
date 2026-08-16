@@ -11,7 +11,7 @@ from typing import Any
 
 from infrastructure.validation.content.figure_validator import validate_figure_registry
 from src.figures import write_all_figures
-from src.figures.figure_registry import FIGURE_SPECS
+from src.figures.figure_registry import FIGURE_SPECS, write_figure_registry
 from src.figures.sia_generation_heatmap import write_sia_generation_heatmap
 from src.figures.sia_improvement_delta import write_sia_improvement_delta
 from src.figures.sia_metrics import _fmt, write_sia_metric_progression
@@ -89,7 +89,11 @@ def test_figure_registry_validates_manuscript_references(tmp_path: Path, copy_pr
     paths = write_all_figures(project)
     registry = project / "output" / "figures" / "figure_registry.json"
 
-    ok, issues = validate_figure_registry(registry, project / "manuscript")
+    ok, issues = validate_figure_registry(
+        registry,
+        project / "manuscript",
+        require_accessibility=True,
+    )
 
     assert registry in paths
     assert ok, issues
@@ -175,3 +179,35 @@ def test_write_sia_metric_progression_empty_metrics(tmp_path: Path, copy_project
     out = write_sia_metric_progression(project)
     assert out.is_file()
     assert out.stat().st_size > 0
+
+
+def test_registry_alt_text_follows_alternate_generation_metrics(tmp_path: Path, copy_project_sandbox: Copy):
+    project = _make_minimal_project(
+        tmp_path,
+        copy_project_sandbox,
+        generations=[
+            {"generation": 1, "evaluation": {"metric_name": "accuracy", "metric_value": 0.4, "n_samples": 3}},
+            {"generation": 2, "evaluation": {"metric_name": "accuracy", "metric_value": 0.7, "n_samples": 6}},
+            {"generation": 3, "evaluation": {"metric_name": "accuracy", "metric_value": 0.5, "n_samples": 9}},
+        ],
+    )
+
+    payload = json.loads(write_figure_registry(project).read_text(encoding="utf-8"))
+    alt = {record["label"]: record["metadata"]["alt_text"] for record in payload["figures"]}
+
+    assert "40.0% to 50.0%" in alt["fig:sia-metric-progression"]
+    assert "sample counts range from 3 to 9" in alt["fig:sia-generation-heatmap"]
+    assert "1 positive, 1 negative, and 0 unchanged" in alt["fig:sia-improvement-delta"]
+    assert "cumulative change is +10.0%" in alt["fig:sia-improvement-delta"]
+    assert "holds accuracy at 1.0" not in " ".join(alt.values())
+
+
+def test_registry_alt_text_handles_empty_generation_history(tmp_path: Path, copy_project_sandbox: Copy):
+    project = _make_minimal_project(tmp_path, copy_project_sandbox, generations=[])
+
+    payload = json.loads(write_figure_registry(project).read_text(encoding="utf-8"))
+    alt = {record["label"]: record["metadata"]["alt_text"] for record in payload["figures"]}
+
+    assert "no generation points" in alt["fig:sia-metric-progression"]
+    assert "no metric data" in alt["fig:sia-generation-heatmap"]
+    assert "at least two generations" in alt["fig:sia-improvement-delta"]

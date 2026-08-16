@@ -1,11 +1,10 @@
 """LaTeX compilation utilities."""
 
-import hashlib
-import re
+import stat
 import subprocess
+import sys
+import tempfile
 import time
-from collections.abc import Sequence
-from datetime import datetime, timezone
 from pathlib import Path
 
 from infrastructure.core.determinism import deterministic_subprocess_env, resolve_source_date_epoch
@@ -39,9 +38,8 @@ _SIGPIPE_RETURNCODES = {-13, 141}
 # when the produced PDF exists and passes structural validation. Any other
 # error signature, a missing PDF, or a structurally invalid PDF still fails.
 _BEAMER_RESERVED_A_SIGNATURE = r"Illegal parameter number in definition of \reserved@a"
-_PDF_ID_RE = re.compile(rb"/ID\s*\[\s*<([0-9A-Fa-f]{32})>\s*<([0-9A-Fa-f]{32})>\s*\]")
-_FONT_SUBSET_RE = re.compile(r"^/[A-Z]{6}\+(?P<font>.+)$")
-_FONT_SUBSET_BYTES_RE = re.compile(rb"[A-Z]{6}\+")
+_PDF_CANONICALIZATION_TIMEOUT_SECONDS = 300
+_PDF_CANONICALIZATION_WORKER = "infrastructure.rendering._pdf_canonicalization_worker"
 
 
 def _is_tolerable_beamer_reserved_a(
@@ -101,60 +99,6 @@ def normalize_latex_sidecars(output_dir: Path, tex_stem: str) -> None:
             logger.debug("LaTeX sidecar normalization skipped for %s: %s", sidecar, exc)
 
 
-def _canonicalize_pdf_objects(objects: Sequence[object]) -> None:
-    """Remove TeX's random six-letter font-subset prefixes in-place."""
-    try:
-        from pypdf.generic import ArrayObject, DictionaryObject, NameObject, StreamObject
-    except ImportError as exc:  # pragma: no cover - exercised in minimal installs
-        raise CompilationError(
-            "Deterministic PDF canonicalization requires the rendering extra (pypdf).",
-            context={"dependency": "pypdf"},
-        ) from exc
-
-    def visit(value: object) -> None:
-        if isinstance(value, StreamObject):
-            # Never decode/re-encode raster image streams during metadata
-            # canonicalization.  pypdf's get_data() path can rewrite
-            # XeTeX/dvipdfmx image filters and silently corrupt wide PNGs
-            # (including horizontal tiling and RGB channels) even though the
-            # source PDF is structurally valid.  Font subset prefixes live in
-            # font streams and content streams, not image payloads.
-            if str(value.get("/Subtype", "")) == "/Image":
-                return
-            stream_data = value.get_data()
-            canonical_data = _FONT_SUBSET_BYTES_RE.sub(b"AAAAAA+", stream_data)
-            if canonical_data != stream_data:
-                value.set_data(canonical_data)
-            return
-        if isinstance(value, DictionaryObject):
-            for key, child in list(value.items()):
-                if str(key) in {"/BaseFont", "/FontName"} and isinstance(child, NameObject):
-                    match = _FONT_SUBSET_RE.match(str(child))
-                    if match:
-                        value[key] = NameObject(f"/AAAAAA+{match.group('font')}")
-                else:
-                    visit(child)
-        elif isinstance(value, ArrayObject):
-            for child in value:
-                visit(child)
-
-    for obj in objects:
-        visit(obj)
-
-
-def _normalize_pdf_identifier(pdf_bytes: bytes) -> bytes:
-    """Replace a compiler-generated PDF ID with a content-derived stable ID."""
-    match = _PDF_ID_RE.search(pdf_bytes)
-    if match is None:
-        raise CompilationError("Deterministic PDF canonicalization found no PDF file identifier")
-
-    placeholder = b"/ID [ <" + (b"0" * 32) + b"> <" + (b"0" * 32) + b"> ]"
-    without_id = pdf_bytes[: match.start()] + placeholder + pdf_bytes[match.end() :]
-    stable_id = hashlib.sha256(without_id).hexdigest()[:32].encode("ascii")
-    replacement = b"/ID [ <" + stable_id + b"> <" + stable_id + b"> ]"
-    return pdf_bytes[: match.start()] + replacement + pdf_bytes[match.end() :]
-
-
 def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None = None) -> Path:
     """Canonicalize compiler-random PDF metadata when a build epoch is pinned.
 
@@ -168,49 +112,67 @@ def canonicalize_pdf_for_determinism(pdf_path: Path, *, repo_root: Path | None =
     if epoch is None:
         return pdf_path
 
+    temporary_path: Path | None = None
     try:
-        from pypdf import PdfReader, PdfWriter
-        from pypdf.generic import ArrayObject, ByteStringObject
-    except ImportError as exc:  # pragma: no cover - exercised in minimal installs
-        raise CompilationError(
-            "Deterministic PDF builds require the rendering extra (pypdf).",
-            context={"dependency": "pypdf", "pdf": str(pdf_path)},
-        ) from exc
+        source_mode = stat.S_IMODE(pdf_path.stat().st_mode)
+        with tempfile.NamedTemporaryFile(
+            prefix=f".{pdf_path.name}.",
+            suffix=".deterministic",
+            dir=pdf_path.parent,
+            delete=False,
+        ) as temporary:
+            temporary_path = Path(temporary.name)
 
-    reader = PdfReader(str(pdf_path))
-    writer = PdfWriter(clone_from=str(pdf_path))
-    # PDF identifiers are optional.  Some valid compiler outputs omit the
-    # trailer /ID, while others expose a non-hex or otherwise unmatchable ID
-    # through pypdf when cloning.  Replace either form with a deterministic
-    # placeholder so canonicalization can always derive and install a
-    # content-based identifier instead of rejecting a valid PDF.  pypdf has no
-    # public setter for trailer IDs.
-    placeholder = b"\x00" * 16
-    writer._ID = ArrayObject([ByteStringObject(placeholder), ByteStringObject(placeholder)])
-    _canonicalize_pdf_objects(writer._objects)  # pypdf has no public tree mutator
-
-    metadata = {
-        key: str(value)
-        for key, value in (reader.metadata or {}).items()
-        if key in {"/Producer", "/Keywords", "/Subject", "/Title"} and value is not None
-    }
-    metadata["/Creator"] = "XeTeX deterministic output"
-    metadata["/CreationDate"] = datetime.fromtimestamp(epoch, tz=timezone.utc).strftime("D:%Y%m%d%H%M%SZ")
-    writer.add_metadata(metadata)
-
-    temporary_path = pdf_path.with_name(f".{pdf_path.name}.deterministic")
-    try:
-        with temporary_path.open("wb") as handle:
-            writer.write(handle)
-        temporary_path.write_bytes(_normalize_pdf_identifier(temporary_path.read_bytes()))
+        source_root = Path(__file__).resolve().parents[2]
+        command = [
+            sys.executable,
+            "-m",
+            _PDF_CANONICALIZATION_WORKER,
+            str(pdf_path),
+            str(temporary_path),
+            str(epoch),
+        ]
+        result = subprocess.run(  # noqa: S603 - fixed internal worker module and argument vector
+            command,
+            cwd=source_root,
+            env=deterministic_subprocess_env(repo_root=repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_PDF_CANONICALIZATION_TIMEOUT_SECONDS,
+        )
+        if result.returncode != 0:
+            raise CompilationError(
+                "Deterministic PDF canonicalization worker failed",
+                context={
+                    "pdf": str(pdf_path),
+                    "returncode": result.returncode,
+                    "stderr": result.stderr[-2000:],
+                },
+            )
+        if not temporary_path.is_file() or not validate_pdf_structure(temporary_path):
+            raise CompilationError(
+                "Deterministic PDF canonicalization worker produced an invalid PDF",
+                context={"pdf": str(pdf_path), "temporary": str(temporary_path)},
+            )
+        temporary_path.chmod(source_mode)
         temporary_path.replace(pdf_path)
+    except subprocess.TimeoutExpired as exc:
+        raise CompilationError(
+            "Deterministic PDF canonicalization worker timed out",
+            context={"pdf": str(pdf_path), "timeout": _PDF_CANONICALIZATION_TIMEOUT_SECONDS},
+        ) from exc
     except OSError as exc:
+        context = {"pdf": str(pdf_path)}
+        if temporary_path is not None:
+            context["temporary"] = str(temporary_path)
         raise CompilationError(
             "Deterministic PDF canonicalization could not replace the compiled PDF",
-            context={"pdf": str(pdf_path), "temporary": str(temporary_path)},
+            context=context,
         ) from exc
     finally:
-        temporary_path.unlink(missing_ok=True)
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
     return pdf_path
 
 

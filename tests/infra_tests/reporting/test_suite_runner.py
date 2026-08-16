@@ -11,6 +11,7 @@ from __future__ import annotations
 import contextlib
 import os
 import signal
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -225,6 +226,75 @@ class TestRunPytestStream:
 
         assert exit_code == 0
         time.sleep(1.6)
+        assert not marker.exists()
+
+    @pytest.mark.skipif(os.name == "nt", reason="independent guardian is POSIX-only")
+    def test_stream_guardian_cleans_while_calling_process_is_stopped(self, tmp_path):
+        """Streaming cleanup proceeds while its orchestration process is stalled."""
+        marker = tmp_path / "stalled-stream-child-finished"
+        root_ready = tmp_path / "stream-root-ready"
+        child_code = (
+            "import pathlib,time; "
+            "time.sleep(1.0); "
+            f"pathlib.Path({str(marker)!r}).write_text('leaked', encoding='utf-8')"
+        )
+        root_code = (
+            "import pathlib,subprocess,sys,time; "
+            "subprocess.Popen([sys.executable, '-c', sys.argv[1]], "
+            "start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); "
+            "pathlib.Path(sys.argv[2]).write_text('ready', encoding='utf-8'); "
+            "time.sleep(0.25)"
+        )
+        helper_code = (
+            "import os,pathlib,sys; "
+            "from infrastructure.reporting.suite_runner import run_pytest_stream; "
+            "cwd=pathlib.Path(sys.argv[1]); "
+            "code,_,_=run_pytest_stream([sys.executable, '-c', sys.argv[2], sys.argv[3], sys.argv[4]], "
+            "cwd, os.environ.copy(), quiet=True, timeout_seconds=10); "
+            "raise SystemExit(0 if code == 0 else 71)"
+        )
+        repo_root = Path(__file__).resolve().parents[3]
+        helper = subprocess.Popen(
+            [
+                sys.executable,
+                "-c",
+                helper_code,
+                str(tmp_path),
+                root_code,
+                child_code,
+                str(root_ready),
+            ],
+            cwd=repo_root,
+            env=os.environ.copy(),
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        stopped = False
+        try:
+            deadline = time.monotonic() + 10
+            while not root_ready.is_file():
+                if helper.poll() is not None:
+                    pytest.fail(f"stream helper exited before its root was ready: {helper.returncode}")
+                if time.monotonic() >= deadline:
+                    pytest.fail("timed out waiting for streaming root readiness")
+                time.sleep(0.01)
+
+            os.kill(helper.pid, signal.SIGSTOP)
+            stopped = True
+            time.sleep(1.3)
+            assert not marker.exists()
+        finally:
+            if stopped:
+                with contextlib.suppress(ProcessLookupError):
+                    os.kill(helper.pid, signal.SIGCONT)
+            try:
+                helper.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                helper.kill()
+                helper.wait(timeout=5)
+        assert helper.returncode == 0
         assert not marker.exists()
 
 

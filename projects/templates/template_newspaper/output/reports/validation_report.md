@@ -1,11 +1,12 @@
 # Validation Report
 
-**Generated:** 2026-08-03T00:19:44Z
+**Generated:** 2026-08-14T14:20:53Z
 
 ## Validation Checks
 
 - ✅ PASS: PDF validation
 - ✅ PASS: Transmission bookends
+- ✅ PASS: Enabled render outputs
 - ✅ PASS: Markdown validation
 - ✅ PASS: Output structure
 - ✅ PASS: Figure registry

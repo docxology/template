@@ -1,29 +1,124 @@
 {
-  "timestamp": "2026-08-09T05:05:50.633029",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 125,
+    "passed": 142,
     "failed": 0,
     "skipped": 0,
-    "total": 125,
+    "total": 142,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 125,
+    "discovery_count": 142,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 23.9,
-      "execution": 23.9
+      "setup": 19.49,
+      "execution": 19.49
     },
     "test_categories": {},
-    "coverage_percent": 97.73,
+    "coverage_percent": 98.57142857142857,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 125,
+    "total_passed": 142,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 125,
+    "total_tests": 142,
     "all_passed": true,
-    "project_coverage": 97.73
+    "project_coverage": 98.57142857142857
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 98.57142857142857,
+      "total_executed": 503,
+      "total_missing": 3,
+      "total_excluded": 0,
+      "total_lines": 506,
+      "file_coverage": {
+        "src/chart_rendering.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 70,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 70
+        },
+        "src/cliche_lint.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 10,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 10
+        },
+        "src/content_loader.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 37,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 37
+        },
+        "src/coverage_chart_data.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 10,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 10
+        },
+        "src/deck_audit.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 23,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 23
+        },
+        "src/deck_tokens.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 65,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 65
+        },
+        "src/diligence_audit.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 32,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 32
+        },
+        "src/infra_facts.py": {
+          "coverage_percent": 96.55172413793103,
+          "executed_lines": 25,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 25
+        },
+        "src/paths.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 15,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 15
+        },
+        "src/render_orchestration.py": {
+          "coverage_percent": 96.0,
+          "executed_lines": 113,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 116
+        },
+        "src/standalone_slides.py": {
+          "coverage_percent": 98.07692307692308,
+          "executed_lines": 80,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 80
+        },
+        "src/token_resolution.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 23,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 23
+        }
+      }
+    }
   }
 }

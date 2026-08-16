@@ -5,6 +5,7 @@ loop used by both infrastructure and project test suites.
 """
 
 import collections
+import contextlib
 import os
 import select
 import subprocess
@@ -15,10 +16,13 @@ from pathlib import Path
 from time import monotonic
 from typing import Any
 
+from infrastructure.core._bounded_run_guardian import (
+    start_bounded_run_guardian as _start_bounded_run_guardian,
+)
 from infrastructure.core.execution_boundary import (
+    _complete_bounded_run_cleanup,
     build_bounded_env,
     build_bounded_run_env,
-    terminate_bounded_run_processes,
     terminate_process_tree,
 )
 from infrastructure.core.files.coverage_cleanup import clean_coverage_files
@@ -122,17 +126,35 @@ def run_pytest_stream(
     stdout_buf: list[str] = []
     recent_lines: collections.deque[str] = collections.deque(maxlen=10)
 
-    process_env, run_token = build_bounded_run_env(build_bounded_env(env))
-    process = subprocess.Popen(
-        cmd,
-        cwd=str(repo_root),
-        env=process_env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=False,  # Use binary mode for non-blocking IO
-        bufsize=0,
-        start_new_session=(os.name != "nt"),
-    )
+    base_env = build_bounded_env(env)
+    process_env, run_token = build_bounded_run_env(base_env)
+    guardian = _start_bounded_run_guardian(base_env)
+    try:
+        process = subprocess.Popen(
+            cmd,
+            cwd=str(repo_root),
+            env=process_env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=False,  # Use binary mode for non-blocking IO
+            bufsize=0,
+            start_new_session=(os.name != "nt"),
+        )
+    except BaseException:
+        if guardian is not None:
+            guardian.close()
+        raise
+    if guardian is not None:
+        try:
+            guardian.arm(root_pid=process.pid, run_token=run_token)
+        except BaseException as exc:
+            _terminate_stream_process(process)
+            guardian.close()
+            with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+                process.wait(timeout=5)
+            if isinstance(exc, (OSError, RuntimeError)):
+                raise RuntimeError(f"failed to arm bounded-run guardian: {exc}") from exc
+            raise
 
     assert process.stdout is not None
     fd = process.stdout.fileno()
@@ -140,6 +162,7 @@ def run_pytest_stream(
 
     timed_out = False
     deadline = monotonic() + timeout_seconds
+    cleanup_error = ""
     try:
         current_line = ""
         while True:
@@ -190,7 +213,7 @@ def run_pytest_stream(
             _terminate_stream_process(process)
         elif process.poll() is None:
             _terminate_stream_process(process)
-        terminate_bounded_run_processes(run_token)
+        cleanup_error = _complete_bounded_run_cleanup(guardian, run_token)
         if process.poll() is None:
             process.wait()
         if timed_out:
@@ -200,6 +223,8 @@ def run_pytest_stream(
         if process.stdout is not None:
             process.stdout.close()
 
+    if cleanup_error:
+        raise RuntimeError(cleanup_error)
     return (124 if timed_out else process.returncode), "".join(stdout_buf), stderr_text
 
 

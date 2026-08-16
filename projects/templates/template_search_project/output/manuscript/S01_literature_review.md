@@ -331,4 +331,4 @@ _Per-paper synthesis omitted — no LLM Contribution paragraphs are present in t
 
 ---
 
-_Composition summary: 3 keywords · 300 unique papers · 300 per-paper notes integrated · 300 BibTeX entries · 4 key(s) missing from bib._
+_Composition summary: 3 keywords · 300 unique papers · 300 per-paper notes integrated · 300 BibTeX entries · 0 key(s) missing from bib._

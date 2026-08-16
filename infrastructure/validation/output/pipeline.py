@@ -8,7 +8,7 @@ This module coordinates the validation stage by:
 """
 
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -19,8 +19,12 @@ from infrastructure.core.logging.constants import BANNER_WIDTH
 from infrastructure.core.logging.diagnostic import DiagnosticReporter
 from infrastructure.core.logging.utils import get_logger, log_success, log_substep
 from infrastructure.core.pipeline.artifacts import (
+    STABLE_OUTPUT_INVENTORY_MODE,
     ArtifactManifest,
+    OutputInventoryMode,
     aggregate_artifact_manifests,
+    collect_stable_output_inventory,
+    output_inventory_mode_for_project,
     validate_artifact_manifest,
 )
 from infrastructure.core.project_paths import resolve_source_manuscript_dir
@@ -88,6 +92,7 @@ def _build_core_checks(
     prose_validator: Callable[[str], bool] | None = None,
 ) -> list[PipelineCheck]:
     project_root = _project_root(project_name, repo_root=repo_root)
+    inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
     try:
         render_config = load_effective_rendering_config(project_root)
     except (OSError, TypeError, ValueError) as exc:
@@ -114,6 +119,7 @@ def _build_core_checks(
                     project_name,
                     formats,
                     manuscript_dir=render_config_manuscript_dir(project_root),
+                    inventory_mode=inventory_mode,
                 ),
             )
         )
@@ -202,6 +208,7 @@ def verify_outputs_exist(
     *,
     repo_root: Path = _REPO_ROOT,
     require_pdf: bool = True,
+    enabled_formats: Collection[str] | None = None,
 ) -> tuple[bool, ValidationResultDict]:
     """Verify all expected output files exist.
 
@@ -210,6 +217,8 @@ def verify_outputs_exist(
         repo_root: Repository root containing the resolved project.
         require_pdf: Whether detailed structure validation requires a combined
             PDF for the effective render configuration.
+        enabled_formats: Effective publication formats for required-category
+            diagnostics. ``None`` preserves legacy behavior.
 
     Returns:
         Tuple of (validation_passed, detailed_validation_results)
@@ -217,8 +226,17 @@ def verify_outputs_exist(
     log_substep("Verifying output structure...", logger)
 
     output_dir = _project_output_dir(project_name, repo_root=repo_root)
+    inventory_mode = output_inventory_mode_for_project(
+        repo_root,
+        _project_root(project_name, repo_root=repo_root),
+    )
 
-    detailed_validation = collect_detailed_validation_results(output_dir, require_pdf=require_pdf)
+    detailed_validation = collect_detailed_validation_results(
+        output_dir,
+        require_pdf=require_pdf,
+        enabled_formats=enabled_formats,
+        inventory_mode=inventory_mode,
+    )
     structure_valid = detailed_validation["structure"]["valid"]
 
     if structure_valid:
@@ -242,7 +260,12 @@ def verify_outputs_exist(
     return structure_valid, detailed_validation
 
 
-def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tuple[bool, list[str]]:
+def validate_evidence_registry(
+    project_root: Path,
+    manuscript_dir: Path,
+    *,
+    output_inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> tuple[bool, list[str]]:
     """Validate manuscript evidence tokens against project artifact provenance."""
     log_substep("Validating evidence registry...", logger)
 
@@ -255,7 +278,10 @@ def validate_evidence_registry(project_root: Path, manuscript_dir: Path) -> tupl
         logger.warning("No manuscript markdown files found for evidence registry validation")
         return True, []
 
-    registry = build_project_evidence_registry(project_root)
+    registry = build_project_evidence_registry(
+        project_root,
+        output_inventory_mode=output_inventory_mode,
+    )
     write_evidence_registry_report(project_root / "output", registry)
     error_issues: list[str] = []
     warning_issues: list[str] = []
@@ -296,9 +322,18 @@ def _read_artifact_manifest(path: Path) -> ArtifactManifest:
     return _read_manifest(path)
 
 
-def _current_project_manifest_if_valid(output_dir: Path, project_root: Path) -> ArtifactManifest | None:
+def _current_project_manifest_if_valid(
+    output_dir: Path,
+    project_root: Path,
+    *,
+    expected_inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+) -> ArtifactManifest | None:
     """Return the project-authored manifest when it is current."""
-    return _current_manifest_if_valid(output_dir, project_root)
+    return _current_manifest_if_valid(
+        output_dir,
+        project_root,
+        expected_inventory_mode=expected_inventory_mode,
+    )
 
 
 def generate_validation_report(
@@ -535,6 +570,7 @@ def execute_validation_pipeline(
     detailed_validation = None
 
     project_root = _project_root(project_name, repo_root=repo_root)
+    inventory_mode = output_inventory_mode_for_project(repo_root, project_root)
     manuscript_dir = resolve_source_manuscript_dir(project_root)
 
     claim_report = None
@@ -553,6 +589,7 @@ def execute_validation_pipeline(
             project_name,
             repo_root=repo_root,
             require_pdf=render_config.enable_pdf,
+            enabled_formats=enabled_render_formats(render_config),
         )
         results.append(("Output structure", structure_result))
     except Exception as e:
@@ -570,7 +607,11 @@ def execute_validation_pipeline(
 
     output_statistics: dict[str, Any]
     try:
-        evidence_result, evidence_issues = validate_evidence_registry(project_root, manuscript_dir)
+        evidence_result, evidence_issues = validate_evidence_registry(
+            project_root,
+            manuscript_dir,
+            output_inventory_mode=inventory_mode,
+        )
         results.append(("Evidence registry", evidence_result))
         if evidence_issues:
             output_statistics = {"evidence_issues": evidence_issues}
@@ -596,10 +637,21 @@ def execute_validation_pipeline(
         results.append(("Project design overlays", False))
 
     try:
-        artifact_manifest = _current_project_manifest_if_valid(output_dir, project_root)
+        artifact_manifest = _current_project_manifest_if_valid(
+            output_dir,
+            project_root,
+            expected_inventory_mode=inventory_mode,
+        )
         if artifact_manifest is None:
-            artifact_manifest = aggregate_artifact_manifests(output_dir)
-        artifact_report = validate_artifact_manifest(artifact_manifest, project_dir=project_root)
+            artifact_manifest = aggregate_artifact_manifests(
+                output_dir,
+                inventory_mode=inventory_mode,
+            )
+        artifact_report = validate_artifact_manifest(
+            artifact_manifest,
+            project_dir=project_root,
+            expected_inventory_mode=inventory_mode,
+        )
         results.append(("Artifact manifest", artifact_report.valid))
         if artifact_report.issues:
             output_statistics["artifact_manifest_issues"] = list(artifact_report.issues)
@@ -610,11 +662,35 @@ def execute_validation_pipeline(
     if detailed_validation:
         output_statistics["detailed_validation"] = detailed_validation
 
+    inventory = collect_stable_output_inventory(
+        output_dir,
+        inventory_mode=inventory_mode,
+    )
+    if inventory.issues:
+        raise ValueError("unstable output inventory: " + "; ".join(inventory.issues))
+    output_statistics["inventory_mode"] = inventory.mode
+    files_by_category: dict[str, list[Path]] = {}
+    for path in inventory.files:
+        relative = path.relative_to(output_dir)
+        category = relative.parts[0] if len(relative.parts) > 1 else "root"
+        files_by_category.setdefault(category, []).append(path)
+    if sum(len(paths) for paths in files_by_category.values()) != len(inventory.files):
+        raise ValueError("stable output inventory grouping is incomplete")
+    stable_categories: dict[str, dict[str, int]] = {}
+    for category, file_list in sorted(files_by_category.items()):
+        stable_categories[category] = {
+            "files": len(file_list),
+            "size_bytes": sum(path.stat().st_size for path in file_list),
+        }
+    output_statistics["stable_inventory"] = {
+        "mode": inventory.mode,
+        "total_files": len(inventory.files),
+        "total_size_bytes": sum(path.stat().st_size for path in inventory.files),
+        "categories": stable_categories,
+    }
     for subdir in ["pdf", "figures", "data"]:
-        subdir_path = output_dir / subdir
-        if subdir_path.exists():
-            files = list(subdir_path.glob("*"))
-            file_list = [f for f in files if f.is_file()]
+        file_list = files_by_category.get(subdir, [])
+        if file_list:
             total_size = sum(f.stat().st_size for f in file_list)
             size_mb = total_size / (1024 * 1024)
             output_statistics[subdir] = {

@@ -5,17 +5,17 @@
 Text analysis operates over titles, abstracts, and (when available) full text. A TF-IDF
 representation over a 137-feature vocabulary feeds non-negative matrix
 factorization, which extracts 5 latent topics cross-cutting the subfield
-taxonomy. The top vocabulary terms are: atmospheric, uncertainty, spectra, temperature, abundance, coverage, opacity, sources, analysis, assumptions, observed, retrievals, models, stellar, across, evaluated, retrieval, structure, composition, jwst.
+taxonomy. The top vocabulary terms are: atmospheric, uncertainty, spectra, temperature, abundance, analysis, assumptions, opacity, retrievals, sources, stellar, coverage, evaluated, observed, across, composition, models, provide, competing, retrieval.
 
 **Table 3. NMF topics extracted from the corpus.**
 
 | Topic | Top terms |
 | --- | --- |
-| 0 | model, intervals, quantify, effect, noise, misspecification, record, data |
-| 1 | population, harmonized, studies, reporting, preprocessing, require, metallicity, variation |
-| 2 | atmospheric, abundance, opacity, changes, species, cloud, retrieved, assumptions |
-| 3 | jwst, calibration, analyses, choices, reported, extend, characterization, wavelength |
-| 4 | signals, instrument, astrophysical, alongside, modelled, systematics, contributions, high |
+| 0 | atmospheric, cloud, retrieved, species, changes, structure, models, explore |
+| 1 | prior, methane, depend, spectral, dioxide, simulated, carbon, constrained |
+| 2 | contributions, separate, resolution, planetary, high, systematics, modelled, instrument |
+| 3 | population, reporting, studies, preprocessing, require, harmonized, separates, specific |
+| 4 | model, intervals, misspecification, noise, quantify, effect, record, dependencies |
 
 The topic labels are computed from the retained corpus and are not hand-assigned. Their
 interpretation should be checked against the generated topic-term weights and the
@@ -50,7 +50,7 @@ high between-subfield variance (rather than high global mean) are selected for d
 
 ## Named Entity Analysis
 
-Named entity extraction over the 46 abstracts identified 1
+Named entity extraction over the 80 abstracts identified 1
 unique entities. The most frequent entities reflect the retained corpus and the
 configured extraction rules; source coverage and fixture status determine how they may
 be interpreted.
@@ -59,7 +59,7 @@ be interpreted.
 
 | Entity | Frequency |
 | --- | --- |
-| JWST | 15 |
+| JWST | 17 |
 
 <!-- FIGURE: entity_bar_chart.png -->
 ![Top named entities for Exoplanet Atmospheres. The horizontal bar chart shows the 20 most frequently extracted entities from abstracts, revealing recurring objects, instruments, methods, and concepts in the retained corpus.](../output/figures/entity_bar_chart.png "Named Entities"){#fig:entity_bar_chart}

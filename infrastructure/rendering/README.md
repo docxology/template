@@ -166,6 +166,11 @@ renderer selects LuaLaTeX, writes that text into the cover image's PDF
 structure element, and fails before replacing an existing PDF if the selected
 configured cover has missing, blank, or non-string alt text. The option
 requests tagged PDF/UA-2 metadata; it does not certify PDF/UA conformance.
+Combined EPUB rendering consumes the same selected cover and alt pair. A cover
+with missing or blank alt fails before Pandoc runs; after rendering, the EPUB
+post-processor names Pandoc's SVG cover graphic from the configured alt, hides
+its nested bitmap from duplicate announcement, and validates every packaged
+XHTML/SVG image reference and accessibility name before retaining the output.
 
 ### DOI and ORCID status
 
@@ -246,6 +251,17 @@ Reference in text: Figure \ref{fig:your_figure}
 ```
 
 **Important**: The rendering system automatically ensures `\usepackage{graphicx}` is included in the LaTeX preamble. This package is required for `\includegraphics` commands. If not in your custom preamble (`projects/{project_name}/manuscript/preamble.md`), it will be added automatically during compilation.
+
+For accessible publication figures, generate
+`output/figures/figure_registry.json` with an exact `label`, `filename` (or
+`path`), and a non-empty top-level `alt` or `metadata.alt_text`. HTML uses that
+source-owned description only when the rendered label and path agree; it does
+not manufacture image alternatives from visible captions. A present registry
+record with blank alt text or a label/path mismatch blocks rendering. A
+non-empty authored Markdown alt remains valid for a genuinely unregistered
+figure. Tagged combined PDFs consume the same registry descriptions for body
+images only when `metadata.tagged_pdf: true`; ordinary untagged PDFs are
+unchanged, and successful tagged rendering is not PDF/UA certification.
 
 **Note**: Figure paths are automatically corrected during rendering. The system handles:
 
@@ -359,7 +375,7 @@ graph TD
 | **pdf_renderer.py** | PDF document generation | `PDFRenderer.render_combined_pdf()` - LaTeX compilation | latex_utils, manuscript_discovery |
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
 | **_slides_codelisting.py** | Captioned slide listings | Replaces pandoc-crossref's generated listing float after Pandoc preamble assembly so numbered code captions compile inside Beamer frames | slides_renderer |
-| **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely | slides_renderer |
+| **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely; explicit `\begingroup`/`\endgroup` regions remain in one continuation frame | slides_renderer |
 | **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration | pandoc |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
 | **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |

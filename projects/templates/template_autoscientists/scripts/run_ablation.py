@@ -22,7 +22,13 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
         sys.path.insert(0, text)
 
 from src.ablation import DEFAULT_BUDGET, build_ablation_payload, run_ablations  # noqa: E402
-from src.figures import write_ablation_figure, write_efficiency_figure, write_figure_registry  # noqa: E402
+from src.comparison import build_objective, run_comparison  # noqa: E402
+from src.figures import (  # noqa: E402
+    figure_specs_for_results,
+    write_ablation_figure,
+    write_efficiency_figure,
+    write_figure_registry,
+)
 
 
 def main() -> int:
@@ -39,7 +45,12 @@ def main() -> int:
     data_path = data_dir / "ablation.json"
     write_ablation_figure(rows, figure_path)
     write_efficiency_figure(rows, efficiency_path)
-    registry_path = write_figure_registry(figures_dir)
+    objective = build_objective()
+    coordinated, baseline = run_comparison(objective)
+    registry_path = write_figure_registry(
+        figures_dir,
+        figure_specs_for_results(coordinated, baseline, rows),
+    )
     data_path.write_text(
         json.dumps(build_ablation_payload(rows, budget=DEFAULT_BUDGET), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

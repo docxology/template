@@ -8,6 +8,7 @@ Follows No Mocks Policy — real files and monkeypatch for repo-root isolation o
 from __future__ import annotations
 
 import json
+import subprocess
 
 from infrastructure.core.pipeline.artifacts import ArtifactManifest, ArtifactManifestEntry, compute_sha256
 import infrastructure.validation.output.pipeline as mod
@@ -232,7 +233,13 @@ stages:
 
     assert result is False
     assert any("AUTORESEARCH.QUALITY_CHECK_UNKNOWN" in issue for issue in issues)
-    assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
+    readiness_path = project / "output" / "reports" / "autoresearch_readiness.json"
+    payload = json.loads(readiness_path.read_text(encoding="utf-8"))
+    plan = payload["plan"]
+    assert plan["repo_root"] == "."
+    assert plan["project_root"] == "projects/active/demo"
+    assert plan["config"]["source_path"] == "projects/active/demo/autoresearch.yaml"
+    assert payload["issues"][0]["source_path"] == "projects/active/demo/autoresearch.yaml"
 
 
 class TestGenerateValidationReport:
@@ -490,6 +497,88 @@ class TestExecuteValidationPipeline:
 
         assert selected is not None
         assert selected.entries[0].stage_name == "project contract"
+
+    def test_stage4_report_payload_is_invariant_to_ignored_runtime_state(self, tmp_path):
+        """Rerunning Stage 4 must not bind local build residue into evidence."""
+        project_dir = tmp_path / "projects" / "active" / "test"
+        output_dir = project_dir / "output"
+        stable_files = {
+            "pdf/test_combined.pdf": _minimal_structural_pdf() + b"x" * 120_000,
+            "web/index.html": b"<html></html>\n",
+            "figures/trace.png": b"pixels",
+            "data/result.json": b"{}\n",
+            "reports/quality.json": b"{}\n",
+            "manuscript/01_intro.md": b"# Injected intro\n",
+            "submission.tar.gz": b"archive",
+        }
+        for relative, payload in stable_files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        manuscript = project_dir / "manuscript"
+        manuscript.mkdir(parents=True)
+        (manuscript / "01_intro.md").write_text("# Intro\n\nContent.\n", encoding="utf-8")
+        (manuscript / "config.yaml").write_text(
+            "render:\n  formats:\n    pdf: true\n    html: false\n    slides: false\n",
+            encoding="utf-8",
+        )
+
+        subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True, capture_output=True)
+        (tmp_path / ".gitignore").write_text(
+            "projects/active/test/output/pdf/*.bbl\nprojects/active/test/output/data/*.scratch\n",
+            encoding="utf-8",
+        )
+        report_payloads: list[str] = []
+
+        def capture_report(results, figure_issues, output_statistics, project, *args, **kwargs):
+            report_payloads.append(
+                json.dumps(
+                    {
+                        "checks": results,
+                        "figure_issues": figure_issues,
+                        "output_statistics": output_statistics,
+                        "project": project,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return {"timestamp": "1970-01-01T00:00:00Z"}
+
+        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=capture_report)
+
+        ignored_files = {
+            "pdf/test_combined.aux": b"aux",
+            "pdf/test_combined.bbl": b"bibliography",
+            "data/cache.scratch": b"cache",
+            "reports/.history/telemetry.json": b"{}\n",
+            "reports/snapshots/stage.json": b"{}\n",
+            "logs/pipeline.log": b"log\n",
+            "figures/.trace.png": b"partial",
+        }
+        for relative, payload in ignored_files.items():
+            path = output_dir / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+        for relative in ("slides", "simulations", "llm"):
+            (output_dir / relative).mkdir(parents=True, exist_ok=True)
+
+        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=capture_report)
+
+        assert report_payloads[1] == report_payloads[0]
+        payload = json.loads(report_payloads[1])
+        statistics = payload["output_statistics"]
+        assert statistics["inventory_mode"] == "stable-local-output-v1"
+        assert statistics["pdf"]["files"] == 1
+        assert statistics["detailed_validation"]["directories"]["logs"]["exists"] is False
+        stable = statistics["stable_inventory"]
+        assert stable["total_files"] == len(stable_files)
+        assert sum(category["files"] for category in stable["categories"].values()) == len(stable_files)
+        assert stable["categories"]["manuscript"]["files"] == 1
+        assert stable["categories"]["root"]["files"] == 1
+
+        (output_dir / "data" / "new-public-result.json").write_text("{}\n", encoding="utf-8")
+        mod.execute_validation_pipeline("test", repo_root=tmp_path, report_writer=capture_report)
+        assert report_payloads[2] != report_payloads[1]
 
 
 class TestProseQualityGate:

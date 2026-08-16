@@ -1,29 +1,96 @@
 {
-  "timestamp": "2026-08-09T05:06:16.641748",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 143,
+    "passed": 154,
     "failed": 0,
     "skipped": 0,
-    "total": 143,
+    "total": 154,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 143,
+    "discovery_count": 154,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 16.68,
-      "execution": 16.68
+      "setup": 16.04,
+      "execution": 16.04
     },
     "test_categories": {},
-    "coverage_percent": 97.3,
+    "coverage_percent": 97.03196347031964,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 143,
+    "total_passed": 154,
     "total_failed": 0,
     "total_skipped": 0,
-    "total_tests": 143,
+    "total_tests": 154,
     "all_passed": true,
-    "project_coverage": 97.3
+    "project_coverage": 97.03196347031964
+  },
+  "coverage_details": {
+    "project": {
+      "overall_coverage": 97.03196347031964,
+      "total_executed": 1349,
+      "total_missing": 27,
+      "total_excluded": 67,
+      "total_lines": 1376,
+      "file_coverage": {
+        "src/redacted_report/_proof_renderer.py": {
+          "coverage_percent": 98.41584158415841,
+          "executed_lines": 406,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 409
+        },
+        "src/redacted_report/artifacts.py": {
+          "coverage_percent": 89.90825688073394,
+          "executed_lines": 149,
+          "missing_lines": 11,
+          "excluded_lines": 0,
+          "total_lines": 160
+        },
+        "src/redacted_report/figures.py": {
+          "coverage_percent": 94.90445859872611,
+          "executed_lines": 135,
+          "missing_lines": 4,
+          "excluded_lines": 2,
+          "total_lines": 139
+        },
+        "src/redacted_report/kmyth_support.py": {
+          "coverage_percent": 92.85714285714286,
+          "executed_lines": 49,
+          "missing_lines": 3,
+          "excluded_lines": 0,
+          "total_lines": 52
+        },
+        "src/redacted_report/profiles.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 38,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 38
+        },
+        "src/redacted_report/publication_meta.py": {
+          "coverage_percent": 84.61538461538461,
+          "executed_lines": 11,
+          "missing_lines": 2,
+          "excluded_lines": 0,
+          "total_lines": 13
+        },
+        "src/redacted_report/redaction.py": {
+          "coverage_percent": 100.0,
+          "executed_lines": 274,
+          "missing_lines": 0,
+          "excluded_lines": 0,
+          "total_lines": 274
+        },
+        "src/redacted_report/visuals.py": {
+          "coverage_percent": 98.26302729528535,
+          "executed_lines": 287,
+          "missing_lines": 4,
+          "excluded_lines": 65,
+          "total_lines": 291
+        }
+      }
+    }
   }
 }

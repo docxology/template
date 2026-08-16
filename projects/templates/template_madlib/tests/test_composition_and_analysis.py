@@ -179,6 +179,16 @@ def test_generate_artifacts_writes_data_reports_and_figure(tmp_path: Path) -> No
     assert registry["fig:configured-field-matrix"]["filename"] == "configured_field_matrix.png"
     assert registry["fig:section-configuration-heatmap"]["filename"] == "section_configuration_heatmap.png"
     assert registry["fig:field-origin-summary"]["filename"] == "field_origin_summary.png"
+    assert len(registry) == 9
+    assert all(
+        isinstance(record.get("metadata"), dict)
+        and isinstance(record["metadata"].get("alt_text"), str)
+        and record["metadata"]["alt_text"].strip()
+        for record in registry.values()
+    )
+    assert "does not imply external validation" in registry["fig:madlib-cover-overview"]["metadata"]["alt_text"]
+    assert "not vocabulary-size or prose-quality scores" in registry["fig:token-density"]["metadata"]["alt_text"]
+    assert "not results showing that the gates passed" in registry["fig:quality-gate-matrix"]["metadata"]["alt_text"]
     section_plan = json.loads(artifacts["section_plan"].read_text(encoding="utf-8"))
     assert "madlib.seed" in section_plan["explicit_paths"]
     assert "madlib.visualizations.enabled" in section_plan["defaulted_paths"]

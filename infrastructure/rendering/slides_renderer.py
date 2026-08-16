@@ -99,6 +99,8 @@ class SlidesRenderer:
         output_format: str = "beamer",
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
+        *,
+        strict_cross_deck_refs: bool = False,
     ) -> Path:
         """Render slides from markdown with figure path resolution.
 
@@ -107,6 +109,9 @@ class SlidesRenderer:
             output_format: Output format ("beamer" for PDF, "revealjs" for HTML)
             manuscript_dir: Directory containing manuscript (for resource paths)
             figures_dir: Directory containing figures (for resource paths)
+            strict_cross_deck_refs: Fail when post-Pandoc TeX contains a
+                non-section reference that is neither local nor present in the
+                current combined-manuscript AUX label map.
 
         Returns:
             Path to generated slides file
@@ -125,7 +130,13 @@ class SlidesRenderer:
 
         # For beamer, we need to handle figure paths specially
         if output_format == "beamer":
-            return self._render_beamer_with_paths(source_file, output_file, manuscript_dir, figures_dir)
+            return self._render_beamer_with_paths(
+                source_file,
+                output_file,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+            )
         else:
             # For reveal.js, use direct pandoc rendering
             return self._render_revealjs(source_file, output_file, manuscript_dir)
@@ -176,6 +187,8 @@ class SlidesRenderer:
         output_file: Path,
         manuscript_dir: Path | None,
         figures_dir: Path | None,
+        *,
+        strict_cross_deck_refs: bool = False,
     ) -> Path:
         """Render beamer slides with proper figure path handling.
 
@@ -262,7 +275,10 @@ class SlidesRenderer:
             if figures_dir:
                 tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
 
-            tex_content = self._resolve_cross_deck_refs(tex_content)
+            tex_content = self._resolve_cross_deck_refs(
+                tex_content,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+            )
 
             tex_content, codelisting_replacements = make_codelisting_slide_safe(tex_content)
             if codelisting_replacements:
@@ -384,7 +400,12 @@ class SlidesRenderer:
         levels = [len(match.group(1)) for match in re.finditer(r"^(#{1,6})[ \t]+", source, flags=re.MULTILINE)]
         return max(2, min(4, max(levels, default=2)))
 
-    def _resolve_cross_deck_refs(self, tex_content: str) -> str:
+    def _resolve_cross_deck_refs(
+        self,
+        tex_content: str,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> str:
         """Resolve cross-deck ``\\ref``/``\\eqref`` against the combined PDF's aux.
 
         Section decks are standalone Beamer builds, so a raw-LaTeX
@@ -399,26 +420,36 @@ class SlidesRenderer:
         and a missing aux (e.g. first-ever render, before any combined
         build) skips only the numeric lookup. Section references still become
         visible labels, so the first standalone render cannot ship ``??``.
-        Never fails the slide build.
+        The default standalone pass remains fail-open. The producer-ordered
+        refresh sets ``strict_cross_deck_refs`` and fails when any non-section
+        foreign reference remains unresolved in the post-Pandoc TeX.
         """
         aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
         label_numbers = parse_aux_label_numbers(aux_path)
-        if label_numbers:
-            tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
-            if replaced:
-                logger.info(
-                    "Resolved %d cross-deck reference(s) in slides from %s",
-                    replaced,
-                    aux_path.name,
-                )
-            if unresolved:
-                logger.warning(
-                    "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
-                    len(unresolved),
-                    aux_path.name,
-                    ", ".join(unresolved),
-                )
-        else:
+        tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
+        if replaced:
+            logger.info(
+                "Resolved %d cross-deck reference(s) in slides from %s",
+                replaced,
+                aux_path.name,
+            )
+        strict_unresolved = [label for label in unresolved if not label.startswith("sec:")]
+        if strict_cross_deck_refs and strict_unresolved:
+            raise RenderingError(
+                "Current combined-manuscript AUX cannot resolve post-Pandoc cross-deck slide references",
+                context={
+                    "aux_path": str(aux_path),
+                    "unresolved_labels": strict_unresolved,
+                },
+            )
+        if unresolved:
+            logger.warning(
+                "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
+                len(unresolved),
+                aux_path.name,
+                ", ".join(unresolved),
+            )
+        if not label_numbers:
             logger.debug("No combined-manuscript aux label map at %s; numeric refs left as-is", aux_path)
         # Pandoc-crossref emits ``\ref`` for section labels. Beamer does not
         # assign numbers to every subsection level used as a slide boundary,

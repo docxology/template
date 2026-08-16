@@ -23,8 +23,9 @@ for path in (PROJECT_ROOT, PROJECT_ROOT / "src", REPO_ROOT):
     if text not in sys.path:
         sys.path.insert(0, text)
 
+from src.ablation import run_ablations  # noqa: E402
 from src.comparison import build_comparison_payload, build_objective, run_comparison  # noqa: E402
-from src.figures import write_comparison_figure, write_figure_registry  # noqa: E402
+from src.figures import figure_specs_for_results, write_comparison_figure, write_figure_registry  # noqa: E402
 
 
 def main() -> int:
@@ -40,7 +41,10 @@ def main() -> int:
     figure_path = figures_dir / "search_comparison.png"
     data_path = data_dir / "search_comparison.json"
     write_comparison_figure(coordinated, baseline, figure_path)
-    registry_path = write_figure_registry(figures_dir)
+    registry_path = write_figure_registry(
+        figures_dir,
+        figure_specs_for_results(coordinated, baseline, run_ablations()),
+    )
     data_path.write_text(
         json.dumps(build_comparison_payload(objective, coordinated, baseline), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

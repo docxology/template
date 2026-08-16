@@ -12,6 +12,7 @@ from src.eda.figures import (
     GroupCountFigureData,
     HistogramFigureData,
     correlation_heatmap_data,
+    eda_figure_specs_for_data,
     group_count_data,
     histogram_data,
 )
@@ -87,3 +88,55 @@ class TestGroupCountData:
         frame = pd.DataFrame({"height_cm": [1.0, 2.0]})
         with pytest.raises(KeyError, match="group column"):
             group_count_data(frame)
+
+
+class TestFigureAltText:
+    """Registry descriptions follow the real plot-ready values, including empties."""
+
+    @staticmethod
+    def _specs_for(frame: pd.DataFrame):
+        return {
+            spec.label: spec
+            for spec in eda_figure_specs_for_data(
+                histogram_data(frame, "height_cm", bins=2),
+                correlation_heatmap_data(frame),
+                group_count_data(frame),
+            )
+        }
+
+    def test_alternate_frame_changes_every_data_description(self):
+        shipped, _ = clean_dataset(load_dataset())
+        alternate = pd.DataFrame(
+            {
+                "group": ["control", "control", "treated"],
+                "height_cm": [1.0, 2.0, 3.0],
+                "weight_kg": [3.0, 2.0, 1.0],
+                "resting_hr_bpm": [1.0, 2.0, 3.0],
+            }
+        )
+
+        shipped_specs = self._specs_for(shipped)
+        alternate_specs = self._specs_for(alternate)
+
+        assert all(alternate_specs[label].alt_text != shipped_specs[label].alt_text for label in alternate_specs)
+        assert "3 non-missing height_cm observations" in alternate_specs["fig:height_histogram"].alt_text
+        assert "control: 2; treated: 1" in alternate_specs["fig:group_counts"].alt_text
+        heatmap_alt = alternate_specs["fig:correlation_heatmap"].alt_text
+        assert "height_cm with weight_kg: -1.00" in heatmap_alt
+        assert "do not establish causation" in heatmap_alt
+
+    def test_empty_frame_is_reported_as_empty_not_as_fixture_values(self):
+        empty = pd.DataFrame(
+            {
+                "group": pd.Series(dtype="string"),
+                "height_cm": pd.Series(dtype="float64"),
+                "weight_kg": pd.Series(dtype="float64"),
+                "resting_hr_bpm": pd.Series(dtype="float64"),
+            }
+        )
+
+        specs = self._specs_for(empty)
+
+        assert "every bar at zero" in specs["fig:height_histogram"].alt_text
+        assert "undefined" in specs["fig:correlation_heatmap"].alt_text
+        assert "Empty group-count bar chart" in specs["fig:group_counts"].alt_text

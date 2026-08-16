@@ -79,6 +79,7 @@ _Status legend: ✅ published (durable identifier recorded in `config.yaml`) · 
 From the public template repo root:
 
 ```bash
+export PATH="$PWD/node_modules/.bin:$PATH"
 uv run python projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py
 uv run python projects/templates/template_pitch_deck/scripts/15_generate_diagrams.py
 uv run python projects/templates/template_pitch_deck/scripts/16_generate_charts.py
@@ -91,7 +92,11 @@ uv run pytest projects/templates/template_pitch_deck/tests/ \
 ./run.sh --project templates/template_pitch_deck --pipeline --core-only
 ```
 
-PPTX rendering requires the opt-in dependency group: `uv sync --group rendering-pptx`. Without it, the render script still produces the three PDFs and logs a warning instead of failing.
+The project's own runtime dependencies include `python-pptx` because
+`project_config.deck.formats` declares both PDF and PPTX. The canonical
+producer fails if a declared format is unavailable. Mermaid is likewise a
+required Stage-02 producer for this exemplar: run `npm ci` at the repository
+root and put the pinned `node_modules/.bin/mmdc` on `PATH` as shown above.
 
 ## Directory Structure
 

@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
+  <meta name="description" content="Short/Medium/Long PDF+PPTX decks from one token-resolved content source" />
   <title>template_pitch_deck: Reproducible, Validated Pitch-Deck
 Generation</title>
   <style>
@@ -43,7 +44,6 @@ Generation</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -265,6 +265,20 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
   fontURL: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/woff2",
   dynamicPrefix: "https://cdn.jsdelivr.net/npm/@mathjax/mathjax-newcm-font@4.0.0/chtml/dynamic"
 });
+window.normalizeTemplateMathJaxAria = function () {
+  document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {
+    var roleDescription = node.getAttribute("aria-roledescription") || "";
+    if (/[-]/.test(roleDescription)) {
+      node.setAttribute("aria-roledescription", "mathematical expression");
+    }
+  });
+};
+window.MathJax.startup = Object.assign({}, window.MathJax.startup, {
+  ready: function () {
+    window.MathJax.startup.defaultReady();
+    window.MathJax.startup.promise.then(window.normalizeTemplateMathJaxAria);
+  }
+});
 </script>
 <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"
@@ -289,11 +303,6 @@ window.MathJax.chtml = Object.assign({}, window.MathJax.chtml, {
     --web-border: #2a3447;
   }
 }
-/* Numbered theorem-like environments. Pandoc's HTML writer drops raw-LaTeX
-   \newtheorem blocks, so WebRenderer rewrites them (web-only) into
-   .theorem-box Divs; this styles them as boxed, numbered blocks that read like
-   the PDF's theorem environments. The PDF path is unchanged (it uses the LaTeX
-   preamble). */
 .theorem-box {
   border-left: 4px solid var(--brand-1);
   background: var(--web-surface);
@@ -424,7 +433,9 @@ img {
 
 a {
   color: #b91c1c;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
   overflow-wrap: anywhere;
 }
 
@@ -433,7 +444,12 @@ a:visited {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+a:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 3px;
 }
 
 .toc {
@@ -443,8 +459,18 @@ a:hover {
   margin-bottom: 30px;
 }
 
-.toc a {
+.toc a,
+#TOC a {
   color: #b91c1c;
+  display: inline-block;
+  min-height: 28px;
+  line-height: 1.5;
+  padding-block: 2px;
+}
+
+.toc li,
+#TOC li {
+  margin-block: 1px;
 }
 
 .math {
@@ -472,6 +498,47 @@ mjx-container[display="true"] {
   border: 2px solid #3498db;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
 }
 
 .figure-caption {
@@ -512,19 +579,25 @@ class="toc-section-number">3.3</span> Project-side content</a></li>
 <li><a href="#sec:validation" id="toc-sec:validation"><span
 class="toc-section-number">4</span> Content and Validation</a>
 <ul>
-<li><a href="#methods" id="toc-methods"><span
-class="toc-section-number">4.1</span> Methods</a></li>
 <li><a href="#the-flagship-pitch" id="toc-the-flagship-pitch"><span
-class="toc-section-number">4.2</span> The flagship pitch</a></li>
+class="toc-section-number">4.1</span> The flagship pitch</a></li>
 <li><a href="#token-resolution" id="toc-token-resolution"><span
-class="toc-section-number">4.3</span> Token resolution</a></li>
+class="toc-section-number">4.2</span> Token resolution</a></li>
 <li><a href="#cliché-lint" id="toc-cliché-lint"><span
-class="toc-section-number">4.4</span> Cliché lint</a></li>
+class="toc-section-number">4.3</span> Cliché lint</a></li>
 </ul></li>
 <li><a href="#sec:reproducibility" id="toc-sec:reproducibility"><span
 class="toc-section-number">5</span> Reproducibility</a></li>
+<li><a href="#sec:methodology" id="toc-sec:methodology"><span
+class="toc-section-number">6</span> Methodology</a>
+<ul>
+<li><a href="#deck-construction" id="toc-deck-construction"><span
+class="toc-section-number">6.1</span> Deck construction</a></li>
+<li><a href="#validation" id="toc-validation"><span
+class="toc-section-number">6.2</span> Validation</a></li>
+</ul></li>
 <li><a href="#sec:references" id="toc-sec:references"><span
-class="toc-section-number">6</span> References</a></li>
+class="toc-section-number">7</span> References</a></li>
 </ul>
 </nav>
 <main id="main-content" tabindex="-1">
@@ -614,8 +687,12 @@ format-agnostic content model shared by both renderers:</p>
 <ul>
 <li><code>Slide</code> — one slide’s title, bullets, an optional
 speaker-notes string, an optional local figure path, and a
-<code>kind</code> (<code>title</code>, <code>section</code>, or
-<code>content</code>).</li>
+<code>kind</code> — one of six layout hints: <code>title</code> (deck
+opener/closer), <code>section</code> (section-divider),
+<code>content</code> (default: title + bullets), <code>stat</code> (one
+large highlighted number + label), <code>quote</code> (a pull-quote +
+attribution), or <code>diagram</code> (title + a large full-bleed
+figure, e.g. a rendered Mermaid diagram).</li>
 <li><code>DeckContent</code> — a deck title/subtitle plus an ordered
 tuple of <code>Slide</code>.</li>
 <li><code>SlideBudget</code> — the three published maximum lengths
@@ -659,10 +736,8 @@ infra renderers together into the six published artifacts under
 <hr />
 <h1 data-number="4" id="sec:validation"><span
 class="header-section-number">4</span> Content and Validation</h1>
-<h2 data-number="4.1" id="methods"><span
-class="header-section-number">4.1</span> Methods</h2>
-<h2 data-number="4.2" id="the-flagship-pitch"><span
-class="header-section-number">4.2</span> The flagship pitch</h2>
+<h2 data-number="4.1" id="the-flagship-pitch"><span
+class="header-section-number">4.1</span> The flagship pitch</h2>
 <p>The shipped content pitches <a
 href="../../template_template/"><code>template_template</code></a> —
 this monorepo’s autopoietic meta-project, which introspects the
@@ -677,8 +752,8 @@ publishing surface <code>template_template</code> itself already
 reaches), and an ask. Medium and long variants add landscape,
 architecture, and roadmap detail; long adds a full
 governance/confidentiality walkthrough and an appendix.</p>
-<h2 data-number="4.3" id="token-resolution"><span
-class="header-section-number">4.3</span> Token resolution</h2>
+<h2 data-number="4.2" id="token-resolution"><span
+class="header-section-number">4.2</span> Token resolution</h2>
 <p><code>src/token_resolution.py</code> implements the same
 <code>{{TOKEN}}</code> convention used by
 <code>infrastructure/rendering/manuscript_injection.py</code>
@@ -690,12 +765,12 @@ token in the content has no matching key in the live token set from
 <code>template_madlib</code>’s
 <code>test_all_manuscript_tokens_are_generated</code> pre-substitution
 coverage check, adapted to deck content.
-<code>scripts/audit_deck_content.py</code> runs this check plus the
+<code>scripts/10_audit_deck_content.py</code> runs this check plus the
 cliché lint in one pass and exits non-zero on either class of failure;
 both failure modes are proven to actually fire (a deliberately-broken
 fixture triggers each) before the real content is checked clean.</p>
-<h2 data-number="4.4" id="cliché-lint"><span
-class="header-section-number">4.4</span> Cliché lint</h2>
+<h2 data-number="4.3" id="cliché-lint"><span
+class="header-section-number">4.3</span> Cliché lint</h2>
 <p><code>src/cliche_lint.py</code> maintains a word-boundary-safe
 denylist of pitch-deck stock phrases (“synergy,” “disrupt,” “10x,”
 “game-changing,” “rocket ship,” “paradigm shift,” and more). It is
@@ -717,14 +792,14 @@ a generation time is recorded is deck metadata, following the
 <code>STEGANOGRAPHY_DETERMINISTIC</code>-style convention already used
 elsewhere in this repository for reproducible builds.</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/20_render_decks.py</span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python projects/templates/template_pitch_deck/scripts/20_render_decks.py</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pdf/template_template_pitch_{short,medium,long}.pdf</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># → output/pptx/template_template_pitch_{short,medium,long}.pptx</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run pytest projects/templates/template_pitch_deck/tests/ <span class="dt">\</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cov</span><span class="op">=</span>projects/templates/template_pitch_deck/src <span class="at">--cov-fail-under</span><span class="op">=</span>90</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/audit/check_template_drift.py</span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run python scripts/audit/check_template_drift.py <span class="at">--project</span> templates/template_pitch_deck <span class="at">--strict</span></span></code></pre></div>
 <p>This project participates in the standard multi-project pipeline like
 any other public exemplar
 (<code>./run.sh --project templates/template_pitch_deck --pipeline --core-only</code>)
@@ -733,8 +808,63 @@ token-resolved, not generated at render time by a model call, which
 keeps the artifact deterministic and the core pipeline
 Ollama-optional.</p>
 <hr />
-<h1 data-number="6" id="sec:references"><span
-class="header-section-number">6</span> References</h1>
+<h1 data-number="6" id="sec:methodology"><span
+class="header-section-number">6</span> Methodology</h1>
+<p>The deck is generated deterministically from a structured content
+model rather than authored slide-by-slide.</p>
+<h2 data-number="6.1" id="deck-construction"><span
+class="header-section-number">6.1</span> Deck construction</h2>
+<p><code>manuscript/deck_content_{short,medium,long}.yaml</code> are the
+single source of truth for slide content across three lengths.
+<code>src/deck_tokens.py</code> resolves live repository facts
+(<code>{{TOKEN}}</code> placeholders) from
+<code>template_template</code>’s own <code>manuscript/config.yaml</code>
+and the public exemplar roster — never hand-typed literals.
+<code>src/render_orchestration.py</code> then renders the resolved model
+into PDF (via reportlab) and PPTX (via python-pptx) through
+<code>scripts/20_render_decks.py</code>, with both renderers consuming
+one shared content model.</p>
+<h2 data-number="6.2" id="validation"><span
+class="header-section-number">6.2</span> Validation</h2>
+<p>Three offline audits run as real gates before the deck ships:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Check</th>
+<th>Tool</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Token resolution</td>
+<td><code>src/token_resolution.py</code></td>
+<td>any unresolved <code>{{TOKEN}}</code> fails the run</td>
+</tr>
+<tr>
+<td>Cliché lint</td>
+<td><code>src/cliche_lint.py</code></td>
+<td>any stock pitch phrase fails the run</td>
+</tr>
+<tr>
+<td>Diligence citations</td>
+<td><code>src/diligence_audit.py</code></td>
+<td>any fact-bearing slide lacking a source fails</td>
+</tr>
+</tbody>
+</table>
+<p><code>scripts/10_audit_deck_content.py</code> runs the token and
+cliché checks in one pass; <code>scripts/30_audit_diligence.py</code>
+enforces 100% fact-citation coverage across all three lengths.
+PowerPoint/PDF slide-count parity is verified for every render.</p>
+<hr />
+<h1 data-number="7" id="sec:references"><span
+class="header-section-number">7</span> References</h1>
 <div id="refs" role="list">
 
 </div>

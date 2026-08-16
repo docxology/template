@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10" />
+  <meta name="generator" content="pandoc 3.10.1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A Meta-Project Demonstrating Fonds, Rules, and Tools Integration in Research Software" />
@@ -44,7 +44,6 @@ Architecture</title>
       body {
         background-color: transparent;
         color: black;
-        font-size: 12pt;
       }
       p, h2, h3 {
         orphans: 3;
@@ -501,6 +500,47 @@ mjx-container[display="true"] {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* A reading column keeps prose comfortable, but dense scientific figures need
+   a larger inspection surface.  The rendered image remains responsive and the
+   explicit link opens its source-resolution asset without changing the PDF. */
+.figure-full-size-link {
+  color: inherit;
+  display: block;
+  max-width: 100%;
+  text-align: center;
+}
+
+.figure-full-size-link img {
+  cursor: zoom-in;
+  margin-bottom: 0.45rem;
+}
+
+.figure-full-size-label {
+  color: #1f6f8b;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.figure-full-size-link:focus-visible {
+  outline: 3px solid #1f6f8b;
+  outline-offset: 4px;
+}
+
+@media (min-width: 1000px) {
+  .figure-full-size-link {
+    left: 50%;
+    max-width: none;
+    position: relative;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100vw - 3rem));
+  }
+}
+
 .figure-caption {
   font-style: italic;
   color: #4b5563;
@@ -576,14 +616,11 @@ class="toc-section-number">4.2.2</span>
 class="toc-section-number">4.2.3</span>
 <code>template_datasets</code></a></li>
 </ul></li>
-<li><a href="#the-fonds.yaml-manifest"
-id="toc-the-fonds.yaml-manifest"><span
-class="toc-section-number">4.3</span> The <code>fonds.yaml</code>
-Manifest</a></li>
-<li><a href="#the-fonds_reader-module"
-id="toc-the-fonds_reader-module"><span
-class="toc-section-number">4.4</span> The <code>fonds_reader</code>
-Module</a></li>
+<li><a href="#fond-manifest-contract"
+id="toc-fond-manifest-contract"><span
+class="toc-section-number">4.3</span> Fond Manifest Contract</a></li>
+<li><a href="#fond-reader-module" id="toc-fond-reader-module"><span
+class="toc-section-number">4.4</span> Fond Reader Module</a></li>
 <li><a href="#resilience-by-design" id="toc-resilience-by-design"><span
 class="toc-section-number">4.5</span> Resilience by Design</a></li>
 <li><a href="#worked-example-graceful-degradation-in-practice"
@@ -620,32 +657,29 @@ id="toc-template_manuscript_rules"><span
 class="toc-section-number">5.4.2</span>
 <code>template_manuscript_rules</code></a></li>
 </ul></li>
-<li><a href="#the-rules_applier-module"
-id="toc-the-rules_applier-module"><span
-class="toc-section-number">5.5</span> The <code>rules_applier</code>
-Module</a></li>
+<li><a href="#rule-application-module"
+id="toc-rule-application-module"><span
+class="toc-section-number">5.5</span> Rule Application Module</a></li>
 <li><a href="#rules-and-manuscript-variables"
 id="toc-rules-and-manuscript-variables"><span
 class="toc-section-number">5.6</span> Rules and Manuscript
 Variables</a></li>
-<li><a
-href="#beyond-structural-validation-the-strong_rule_evaluator-module"
-id="toc-beyond-structural-validation-the-strong_rule_evaluator-module"><span
-class="toc-section-number">5.7</span> Beyond Structural Validation: The
-<code>strong_rule_evaluator</code> Module</a></li>
+<li><a href="#beyond-structural-validation-semantic-rule-evaluation"
+id="toc-beyond-structural-validation-semantic-rule-evaluation"><span
+class="toc-section-number">5.7</span> Beyond Structural Validation:
+Semantic Rule Evaluation</a></li>
 </ul></li>
 <li><a href="#sec:tools" id="toc-sec:tools"><span
 class="toc-section-number">6</span> Tools: Executable Entry Points</a>
 <ul>
 <li><a href="#what-is-a-tool" id="toc-what-is-a-tool"><span
 class="toc-section-number">6.1</span> What Is a Tool?</a></li>
-<li><a href="#the-tools.yaml-manifest"
-id="toc-the-tools.yaml-manifest"><span
-class="toc-section-number">6.2</span> The <code>tools.yaml</code>
-Manifest</a></li>
-<li><a href="#the-three-template-tools"
-id="toc-the-three-template-tools"><span
-class="toc-section-number">6.3</span> The Three Template Tools</a>
+<li><a href="#tool-manifest-contract"
+id="toc-tool-manifest-contract"><span
+class="toc-section-number">6.2</span> Tool Manifest Contract</a></li>
+<li><a href="#discovered-template-tools"
+id="toc-discovered-template-tools"><span
+class="toc-section-number">6.3</span> Discovered Template Tools</a>
 <ul>
 <li><a href="#template_code_executor"
 id="toc-template_code_executor"><span
@@ -657,11 +691,13 @@ class="toc-section-number">6.3.2</span>
 <li><a href="#template_skill" id="toc-template_skill"><span
 class="toc-section-number">6.3.3</span>
 <code>template_skill</code></a></li>
+<li><a href="#template_model" id="toc-template_model"><span
+class="toc-section-number">6.3.4</span>
+<code>template_model</code></a></li>
 </ul></li>
-<li><a href="#the-tools_invoker-module"
-id="toc-the-tools_invoker-module"><span
-class="toc-section-number">6.4</span> The <code>tools_invoker</code>
-Module</a></li>
+<li><a href="#tool-discovery-module"
+id="toc-tool-discovery-module"><span
+class="toc-section-number">6.4</span> Tool Discovery Module</a></li>
 <li><a href="#tool-discovery-and-reproducibility"
 id="toc-tool-discovery-and-reproducibility"><span
 class="toc-section-number">6.5</span> Tool Discovery and
@@ -757,7 +793,7 @@ href="https://orcid.org/0000-0001-6232-9096">0000-0001-6232-9096</a></td>
 </tr>
 <tr>
 <td><strong>Date</strong></td>
-<td>2026-07-05</td>
+<td>2026-07-10</td>
 </tr>
 <tr>
 <td><strong>License</strong></td>
@@ -861,24 +897,24 @@ checks)</td>
 </tr>
 <tr>
 <td>Combined PDF</td>
-<td>full project pipeline, Stage 6 (4-pass xelatex + bibtex)</td>
+<td>full project pipeline, PDF rendering stage (4-pass xelatex +
+bibtex)</td>
 <td><code>pdftotext</code> scan for unresolved-reference markers and
 page-scale raster read</td>
 </tr>
 </tbody>
 </table>
-<p>A reader who clones the repository and runs the five commands above,
-in order, reproduces every number and image in this document without
-manual intervention. Every quantitative claim in this document —
-fond/rule/tool counts, test counts, coverage percentages, and both
-bar-chart figures (fig. <a href="#fig:counts">5</a>, fig. <a
-href="#fig:pipeline">7</a>) — is generated from the same
-<code>run_integration_demo()</code> call at render time. None of these
-numbers are hand-typed; a
-<code>test_reflects_changed_integration_result</code> negative control
-in <code>tests/test_manuscript_variables.py</code> proves the
-token-generation function actually tracks its source rather than
-emitting a fixed constant.</p>
+<p>A reader who clones the repository and runs the listed commands in
+order reproduces every number and image in this document without manual
+intervention. Quantitative claims in this document — fond/rule/tool
+counts, project inventory counts, and the runtime bar-chart figures
+(fig. <a href="#fig:counts">5</a>, fig. <a href="#fig:pipeline">7</a>) —
+are derived from the integration result, declared figure contracts, or
+the project filesystem at render time. None of these values are
+hand-typed; negative controls in
+<code>tests/test_manuscript_variables.py</code> change both integration
+inputs and a real temporary project tree to prove that token generation
+tracks its sources rather than emitting fixed constants.</p>
 <hr />
 <h1 data-number="2" id="abstract"><span
 class="header-section-number">2</span> Abstract</h1>
@@ -899,14 +935,11 @@ href="#ref-Wilson2014best" role="doc-biblioref">Wilson et al. 2014</a>;
 meta-project exemplar that demonstrates how a single project can
 programmatically discover, validate, and exercise all three resource
 categories with zero tight coupling to any specific resource instance.
-The exemplar comprises eight Python modules — three resource readers
-(<code>fonds_reader</code>, <code>rules_applier</code>,
-<code>tools_invoker</code>), an orchestrator (<code>integration</code>),
-a semantic rule evaluator (<code>strong_rule_evaluator</code>), a figure
-generator (<code>figures</code>), a manuscript-token generator
-(<code>manuscript_variables</code>), and shared type definitions
-(<code>type_defs</code>) — plus six thin orchestration scripts and a
-fully token-injected manuscript pipeline.</p>
+The exemplar comprises 12 Python modules, including resource readers, an
+integration orchestrator, semantic rule evaluation, figure generation,
+manuscript-token generation, resource-schema validation, and shared type
+definitions, plus 6 thin orchestration scripts and a fully
+token-injected manuscript pipeline.</p>
 <p>The architecture (fig. <a href="#fig:architecture">1</a>) separates
 <em>resource ownership</em> from <em>resource consumption</em>.
 Resources live in top-level <code>fonds/</code>, <code>rules/</code>,
@@ -918,7 +951,7 @@ graceful fallbacks: they return <code>None</code> or empty collections
 when a resource is absent, log a warning via the standard library
 <code>logging</code> module, and allow the integration pipeline to
 continue. This revision extends the original three-figure presentation
-to eight content figures plus a cover illustration — a fond taxonomy
+to 8 content figures plus 1 cover illustration — a fond taxonomy
 (fig. <a href="#fig:taxonomy">2</a>), a rule hierarchy (fig. <a
 href="#fig:rulehier">3</a>), a tool invocation contract (fig. <a
 href="#fig:toolcontract">4</a>), a three-level resilience diagram
@@ -928,13 +961,11 @@ claim in the prose has a corresponding visual.</p>
 <p>In a representative pipeline run, the integration demo loaded 3
 fonds, validated 2 rule sets, discovered 4 tools, and processed 8
 bibliography entries — all reported as structured JSON that populates
-manuscript variable tokens at render time. Tests covering the eight
-<code>src/</code> modules (across nine test files) achieve well above
-the required ≥90% combined line coverage and use real file paths rather
-than mocks, ensuring that reported counts are genuine — run
-<code>uv run pytest … --cov-report=term</code> for the current test
-count and coverage percentage rather than trusting a number printed
-here.</p>
+manuscript variable tokens at render time. Tests covering the 12
+<code>src/</code> modules across 11 test files achieve above the
+required ≥90% combined line coverage and use real file paths rather than
+mocks; rerun the project pytest command for current measured
+coverage.</p>
 <p>The <code>template_pools_rules_tools</code> exemplar provides a
 reference implementation that any project in the template repository can
 consult when designing its own resource-consumption layer.</p>
@@ -1026,8 +1057,8 @@ module:</p>
 </tbody>
 </table>
 <figure id="fig:architecture">
-<img src="figures/architecture_overview.png" style="width:90.0%"
-alt="Figure 1: Three-layer resource architecture of template_pools_rules_tools." />
+<a class="figure-full-size-link" href="../figures/architecture_overview.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/architecture_overview.png" style="width:90.0%"
+alt="Diagram showing fonds, rules, and tools feeding a shared integration layer." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Three-layer resource
 architecture of template_pools_rules_tools. Fonds (left) provide
 read-only data pools; Rules (centre) provide governance constraints;
@@ -1142,8 +1173,8 @@ differ by category — a consequence of each category’s data having a
 naturally different canonical representation (BibTeX for citations, YAML
 for structured contact records, YAML for dataset metadata).</p>
 <figure id="fig:taxonomy">
-<img src="figures/fond_taxonomy.png" style="width:85.0%"
-alt="Figure 2: Schema taxonomy comparison across the three fond types." />
+<a class="figure-full-size-link" href="../figures/fond_taxonomy.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/fond_taxonomy.png" style="width:85.0%"
+alt="Taxonomy diagram comparing shared manifest fields and category-specific schemas for three fond types." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Schema taxonomy comparison
 across the three fond types. Each fond declares a manifest and a
 <code>type</code> field; source-of-truth format, secondary mirror, and
@@ -1213,9 +1244,8 @@ role="doc-biblioref">LeCun et al. 1998</a>)</span>) and large-scale
 corpora used in language-model research <span class="citation"
 data-cites="Brown2020gpt3">(<a href="#ref-Brown2020gpt3"
 role="doc-biblioref">Brown et al. 2020</a>)</span>.</p>
-<h2 data-number="4.3" id="the-fonds.yaml-manifest"><span
-class="header-section-number">4.3</span> The <code>fonds.yaml</code>
-Manifest</h2>
+<h2 data-number="4.3" id="fond-manifest-contract"><span
+class="header-section-number">4.3</span> Fond Manifest Contract</h2>
 <p>Every fond root must contain a <code>fonds.yaml</code> manifest with
 at minimum three fields:</p>
 <div class="sourceCode" id="cb1"><pre
@@ -1228,9 +1258,8 @@ appropriate and what schema the <code>data/</code> directory is expected
 to follow. The <code>version</code> field is incremented whenever the
 schema changes, enabling consumers to detect and handle schema drift
 without silent failures.</p>
-<h2 data-number="4.4" id="the-fonds_reader-module"><span
-class="header-section-number">4.4</span> The <code>fonds_reader</code>
-Module</h2>
+<h2 data-number="4.4" id="fond-reader-module"><span
+class="header-section-number">4.4</span> Fond Reader Module</h2>
 <p>The <code>src/fonds_reader.py</code> module provides three reader
 functions — one per fond type — plus a convenience aggregator:</p>
 <div class="sourceCode" id="cb2"><pre
@@ -1386,8 +1415,8 @@ rather than a style preference: coverage below the source-declared
 threshold means tests are missing; a manuscript section without an
 abstract means the document is incomplete.</p>
 <figure id="fig:rulehier">
-<img src="figures/rule_hierarchy.png" style="width:85.0%"
-alt="Figure 3: Rule hierarchy: the two template rule sets, each split into a machine-enforceable strong/ branch and a guidance-only soft/ branch." />
+<a class="figure-full-size-link" href="../figures/rule_hierarchy.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/rule_hierarchy.png" style="width:85.0%"
+alt="Hierarchy diagram separating guidance-oriented soft rules from machine-enforced strong rules." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Rule hierarchy: the two
 template rule sets, each split into a machine-enforceable
 <code>strong/</code> branch and a guidance-only <code>soft/</code>
@@ -1455,9 +1484,8 @@ comprise:</p>
 </table>
 <p>In the current pipeline run, <strong>2 of 2 rule sets</strong>
 validated successfully (fig. <a href="#fig:counts">5</a>).</p>
-<h2 data-number="5.5" id="the-rules_applier-module"><span
-class="header-section-number">5.5</span> The <code>rules_applier</code>
-Module</h2>
+<h2 data-number="5.5" id="rule-application-module"><span
+class="header-section-number">5.5</span> Rule Application Module</h2>
 <p>The <code>src/rules_applier.py</code> module exposes three
 functions:</p>
 <div class="sourceCode" id="cb5"><pre
@@ -1492,9 +1520,9 @@ actual behaviour and the manuscript’s claims — the manuscript cannot
 assert successful validation without the pipeline having actually
 succeeded.</p>
 <h2 data-number="5.7"
-id="beyond-structural-validation-the-strong_rule_evaluator-module"><span
+id="beyond-structural-validation-semantic-rule-evaluation"><span
 class="header-section-number">5.7</span> Beyond Structural Validation:
-The <code>strong_rule_evaluator</code> Module</h2>
+Semantic Rule Evaluation</h2>
 <p><code>validate_against_rules()</code> (described above) performs
 <em>structural</em> validation only: it confirms that
 <code>rules.yaml</code> and every file in
@@ -1604,9 +1632,8 @@ needing to understand the tool’s implementation details — a textbook
 application of the Facade pattern <span class="citation"
 data-cites="Gamma1994design">(<a href="#ref-Gamma1994design"
 role="doc-biblioref">Gamma et al. 1994</a>)</span>.</p>
-<h2 data-number="6.2" id="the-tools.yaml-manifest"><span
-class="header-section-number">6.2</span> The <code>tools.yaml</code>
-Manifest</h2>
+<h2 data-number="6.2" id="tool-manifest-contract"><span
+class="header-section-number">6.2</span> Tool Manifest Contract</h2>
 <p>Every tool root must contain a <code>tools.yaml</code> manifest with
 the following fields:</p>
 <div class="sourceCode" id="cb7"><pre
@@ -1621,24 +1648,24 @@ class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> scripts/validate.sh</span></span></code></pre></div>
 <p>The <code>type</code> field determines the invocation contract the
 consumer should expect. The <code>entrypoints</code> list names the
-scripts that must exist on disk; the <code>tools_invoker</code> module
+files that must exist on disk; the <code>tools_invoker</code> module
 validates their presence at discovery time rather than at invocation
 time, making failures visible early in the pipeline rather than at
 runtime. fig. <a href="#fig:toolcontract">4</a> visualises the
-stdin/stdout/exit-code contract for all three template tools side by
-side; note that the <em>shape</em> of stdin and stdout differs per tool
-while the <em>presence</em> of a well-defined contract does not — this
-is what makes <code>tools_invoker</code> able to discover and validate
-any tool generically without knowing its payload schema.</p>
+stdin/stdout/exit-code contract for all 4 discovered template tools side
+by side. Note that the <em>shape</em> of stdin and stdout differs per
+tool while the <em>presence</em> of a well-defined contract does not —
+this is what makes <code>tools_invoker</code> able to discover and
+validate any tool generically without knowing its payload schema.</p>
 <figure id="fig:toolcontract">
-<img src="figures/tool_contract.png" style="width:90.0%"
-alt="Figure 4: Invocation contract for the three template tools: stdin payload, tool behaviour, and stdout/exit-code shape." />
-<figcaption>Figure 4: Invocation contract for the
-three template tools: stdin payload, tool behaviour, and
+<a class="figure-full-size-link" href="../figures/tool_contract.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/tool_contract.png" style="width:90.0%"
+alt="Contract diagram comparing tool inputs, behavior, outputs, and exit codes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 4: Invocation contract for the 4
+discovered template tools: stdin payload, tool behaviour, and
 stdout/exit-code shape.</figcaption>
 </figure>
-<h2 data-number="6.3" id="the-three-template-tools"><span
-class="header-section-number">6.3</span> The Three Template Tools</h2>
+<h2 data-number="6.3" id="discovered-template-tools"><span
+class="header-section-number">6.3</span> Discovered Template Tools</h2>
 <h3 data-number="6.3.1" id="template_code_executor"><span
 class="header-section-number">6.3.1</span>
 <code>template_code_executor</code></h3>
@@ -1685,9 +1712,9 @@ class="header-section-number">6.3.2</span>
 schema from disk and reports validation results in human-readable form.
 The entrypoint <code>scripts/validate.sh</code> exits 0 when the
 document is valid and non-zero with a detailed error message otherwise.
-The validator tool is used in the project pipeline to validate
-<code>manuscript_variables.json</code> against its expected schema
-before manuscript rendering.</p>
+its <code>scripts/schema.json</code> requires <code>name</code> and
+<code>version</code>, and the test suite exercises both valid and
+invalid payloads with real subprocesses.</p>
 <h3 data-number="6.3.3" id="template_skill"><span
 class="header-section-number">6.3.3</span>
 <code>template_skill</code></h3>
@@ -1704,13 +1731,20 @@ project’s tests or pipeline, by design. Offline reproducibility is a
 stated requirement of this exemplar (see the front-matter
 Reproducibility Checklist), and no CI job in this repository injects
 <code>OPENAI_API_KEY</code> into this project’s test run.
-<code>template_code_executor</code> and <code>template_validator</code>,
-by contrast, are fully local and deterministic — see the Execution-Proof
-Testing subsection below for how this project actually exercises
-them.</p>
-<h2 data-number="6.4" id="the-tools_invoker-module"><span
-class="header-section-number">6.4</span> The <code>tools_invoker</code>
-Module</h2>
+<code>template_code_executor</code>, <code>template_validator</code>,
+and <code>template_model</code> are fully local and deterministic.</p>
+<h3 data-number="6.3.4" id="template_model"><span
+class="header-section-number">6.3.4</span>
+<code>template_model</code></h3>
+<p>A pre-trained linear-regression model exemplar. It predicts a numeric
+target from <code>hours_studied</code> using fixed coefficients in
+<code>model_weights.json</code>; <code>scripts/predict.sh</code> reads
+<code>{"hours_studied": number}</code> and returns a JSON prediction.
+The manifest declares the weights file as an entrypoint, so the same
+discovery and existence-validation contract covers both executable
+scripts and model data.</p>
+<h2 data-number="6.4" id="tool-discovery-module"><span
+class="header-section-number">6.4</span> Tool Discovery Module</h2>
 <p>The <code>src/tools_invoker.py</code> module provides three public
 functions:</p>
 <div class="sourceCode" id="cb8"><pre
@@ -1886,8 +1920,8 @@ integration run. Tokens are resolved by
 <code>output/data/manuscript_variables.json</code> and substitutes each
 token before the manuscript is passed to the rendering engine.</p>
 <figure id="fig:counts">
-<img src="figures/resource_counts.png" style="width:75.0%"
-alt="Figure 5: Runtime integration counts from manuscript_variables.json." />
+<a class="figure-full-size-link" href="../figures/resource_counts.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resource_counts.png" style="width:75.0%"
+alt="Bar chart comparing the runtime counts discovered for fonds, rules, and tools." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Runtime integration counts from
 manuscript_variables.json. Bars show fonds loaded, rule sets validated,
 and tools discovered during a single pipeline run.</figcaption>
@@ -1934,9 +1968,8 @@ href="#ref-Stodden2016enhancing" role="doc-biblioref">Stodden et al.
 <h2 data-number="7.3" id="methods-the-script-pipeline"><span
 class="header-section-number">7.3</span> Methods: The Script
 Pipeline</h2>
-<p>Six thin orchestration scripts govern the integration workflow
-(fig. <a href="#fig:pipeline">7</a>, fig. <a
-href="#fig:pipelineflow">6</a>):</p>
+<p>6 thin orchestration scripts govern the integration workflow (fig. <a
+href="#fig:pipeline">7</a>, fig. <a href="#fig:pipelineflow">6</a>):</p>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -1974,7 +2007,7 @@ href="#sec:rules">5</a>) against this project’s own tree</td>
 </tr>
 <tr>
 <td><code>scripts/05_generate_figures.py</code></td>
-<td>Render all 8 content figures plus the cover illustration</td>
+<td>Render all 8 content figures plus 1 cover illustration</td>
 <td>9 PNG files under <code>manuscript/figures/</code></td>
 </tr>
 <tr>
@@ -1986,15 +2019,15 @@ into <code>output/manuscript/</code> immediately before rendering</td>
 </tbody>
 </table>
 <figure id="fig:pipelineflow">
-<img src="figures/pipeline_flow.png" style="width:95.0%"
-alt="Figure 6: The six-script pipeline from source validation through token hydration, ending at the combined-PDF render step." />
-<figcaption>Figure 6: The six-script pipeline from
+<a class="figure-full-size-link" href="../figures/pipeline_flow.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/pipeline_flow.png" style="width:95.0%"
+alt="Left-to-right pipeline from source validation through integration, figure generation, variable hydration, and publication rendering." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
+<figcaption>Figure 6: The 6-script pipeline from
 source validation through token hydration, ending at the combined-PDF
 render step.</figcaption>
 </figure>
 <figure id="fig:pipeline">
-<img src="figures/status_dashboard.png" style="width:85.0%"
-alt="Figure 7: Integration status dashboard showing per-resource validation results." />
+<a class="figure-full-size-link" href="../figures/status_dashboard.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/status_dashboard.png" style="width:85.0%"
+alt="Status dashboard showing pass, partial, or missing state for each resource category." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Integration status dashboard
 showing per-resource validation results. Green indicates ok, amber
 indicates partial, red indicates missing.</figcaption>
@@ -2046,8 +2079,8 @@ script paths, so the pipeline can report the defect without attempting
 to invoke a non-existent script.</p></li>
 </ol>
 <figure id="fig:resilience">
-<img src="figures/resilience_layers.png" style="width:85.0%"
-alt="Figure 8: The integration layer’s three-level resilience design: resource absence, schema malformation, and script absence, each with its own graceful-degradation response." />
+<a class="figure-full-size-link" href="../figures/resilience_layers.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/resilience_layers.png" style="width:85.0%"
+alt="Layered flow showing resource absence, malformed data, and missing scripts with bounded fallback responses." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: The integration layer’s
 three-level resilience design: resource absence, schema malformation,
 and script absence, each with its own graceful-degradation
@@ -2083,34 +2116,28 @@ of fonds, since the target use case is a curated, human-reviewed set of
 shared resources rather than a large-scale data catalogue.</p>
 <h2 data-number="7.6" id="test-coverage"><span
 class="header-section-number">7.6</span> Test Coverage</h2>
-<p>The eight <code>src/</code> modules — <code>fonds_reader</code>,
-<code>rules_applier</code>, <code>tools_invoker</code>,
-<code>integration</code>, <code>figures</code>,
-<code>strong_rule_evaluator</code>, <code>manuscript_variables</code>,
-and <code>type_defs</code> — are covered by tests across nine test files
-in <code>tests/</code>, including property-based tests
-(<code>test_property_based.py</code>) and coverage-extras tests
+<p>The 12 <code>src/</code> modules — including the readers,
+orchestrator, evaluator, figure modules, token generator,
+resource-schema validator, and type definitions — are covered by tests
+across 11 test files in <code>tests/</code>, including property-based
+tests (<code>test_property_based.py</code>) and coverage-extras tests
 targeting previously-uncovered branches
 (<code>test_coverage_extras.py</code>). Tests use real file paths, real
 YAML files, and real BibTeX content rather than mocks, ensuring that
 coverage numbers reflect genuine code paths through the
 resource-discovery logic. The current coverage report shows combined
-line coverage comfortably above the project’s 90% floor;
-<code>strong_rule_evaluator.py</code>, the newest and most branch-heavy
-module, has the most room for additional edge-case tests, while the
-remaining seven modules are at or near 100%. These exact test/coverage
-counts drift as the suite grows — treat the figures above as a snapshot,
-not a frozen claim, and re-run
-<code>uv run pytest … --cov-report=term</code> for the current numbers.
-The <code>tests/test_integration.py</code> suite includes an end-to-end
-test that calls <code>run_integration_demo()</code> and asserts that the
-<code>summary</code> dict contains the expected keys with non-negative
-integer values — a contract test that verifies the token injection
-pipeline’s data source. <code>tests/test_manuscript_variables.py</code>
-adds a negative control: it monkeypatches
-<code>run_integration_demo()</code>’s return value and asserts the
-derived tokens actually change, proving the token-generation function is
-live-wired to its source rather than emitting a hard-coded constant.</p>
+line coverage comfortably above the project’s 90% floor; exact test and
+coverage totals drift as the suite grows, so re-run
+<code>uv run pytest … --cov-report=term</code> for the current
+measurements. The <code>tests/test_integration.py</code> suite includes
+an end-to-end test that calls <code>run_integration_demo()</code> and
+asserts that the <code>summary</code> dict contains the expected keys
+with non-negative integer values — a contract test that verifies the
+token injection pipeline’s data source.
+<code>tests/test_manuscript_variables.py</code> adds negative controls
+that change both integration results and a real temporary project tree,
+proving the token generator tracks runtime and filesystem sources rather
+than emitting fixed constants.</p>
 <hr />
 <h1 data-number="8" id="sec:conclusion"><span
 class="header-section-number">8</span> Conclusion</h1>
@@ -2218,16 +2245,14 @@ automatically would need to promote the relevant guideline to a strong
 rule with a corresponding evaluator function.</li>
 <li><strong><code>strong_rule_evaluator.py</code> had the thinnest test
 coverage of any <code>src/</code> module, historically.</strong> As
-measured in an earlier coverage run this session, it required more
-negative-control tests (malformed rule files, real violations,
-type-mismatched context values) than the other seven modules,
-concentrated in its <code>section_schema</code>,
-<code>reference_schema</code>, and <code>module_structure</code>
-evaluators and its context loader. That gap has since been closed with
-real negative-control fixtures — run
+measured in an earlier coverage run, it required more negative-control
+tests (malformed rule files, real violations, type-mismatched context
+values) than the other source modules, concentrated in its
+<code>section_schema</code>, <code>reference_schema</code>, and
+<code>module_structure</code> evaluators and its context loader. That
+gap has since been closed with real negative-control fixtures — run
 <code>uv run pytest … --cov-report=term-missing</code> for the current
-per-module breakdown, since these numbers, like the ones above, drift as
-the suite grows.</li>
+per-module breakdown, since coverage changes as the suite grows.</li>
 </ul>
 <p><strong>The no-concurrency-handling limitation above is not merely
 theoretical</strong>: this exemplar is itself designed to be populated

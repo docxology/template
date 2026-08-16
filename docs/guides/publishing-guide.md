@@ -705,6 +705,11 @@ missing path and the stage gracefully skips.
 
 Add `--commit` to perform real deposits (requires credentials — see [`archival/README.md`](../../infrastructure/publishing/archival/README.md)).
 
+Use a curated executable or format-specific release bundle as `--bundle`; do
+not point the archival CLI at the complete Stage 5 root mirror. That mirror is
+a local debugging copy and may retain ignored logs, telemetry, or renderer
+intermediates beyond its separately validated stable/shippable inventory.
+
 ---
 
 ## Publish to all platforms

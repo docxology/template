@@ -815,7 +815,7 @@
       "token": "validation_gate_index_count"
     },
     {
-      "expected": "41",
+      "expected": "40",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -1746,7 +1746,7 @@
       "token": "track_lane_matrix_complete"
     },
     {
-      "expected": "41",
+      "expected": "40",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",

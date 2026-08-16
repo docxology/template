@@ -68,6 +68,7 @@ def test_generate_all_returns_stable_order(tmp_path: Path):
         "fig:score_distribution",
         "fig:year_histogram",
     ]
+    assert all(str(row.get("metadata", {}).get("alt_text", "")).strip() for row in registry["figures"])
 
 
 def test_load_search_result_round_trip(tmp_path: Path):

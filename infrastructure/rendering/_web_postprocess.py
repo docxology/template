@@ -7,7 +7,14 @@ import html
 import re
 from pathlib import Path
 
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.rendering._figure_alt_registry import (
+    FigureAltRecord,
+    FigureAltRegistry,
+    rendered_figure_filename,
+    require_record_alt,
+)
 
 logger = get_logger(__name__)
 
@@ -112,54 +119,182 @@ def normalize_figure_paths_in_file(html_file: Path) -> None:
     write_if_changed(html_file, normalize_figure_paths(content))
 
 
-def replace_figure_alts(content: str) -> str:
-    """Replace generated image alt text with a concise plain-text caption."""
+_FIGURE_RE = re.compile(
+    r"<figure\b(?P<attrs>[^>]*)>(?P<body>.*?)</figure>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+_IMAGE_RE = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
+
+
+def _html_attribute_assignment_pattern(name: str) -> re.Pattern[str]:
+    """Return an exact HTML attribute assignment pattern for ``name``.
+
+    HTML attributes in renderer output are separated by whitespace.  A regex
+    word boundary is insufficient here because ``-`` is not a word character,
+    so ``\balt`` also matches the suffix of ``data-fig-alt`` (and ``\bsrc``
+    matches ``data-src``).  Requiring the attribute to begin at the start of
+    the provided fragment or immediately after whitespace keeps lookup and
+    replacement on the real attribute.
+    """
+    return re.compile(
+        rf"(?<!\S){re.escape(name)}\s*=\s*(?:\"(?P<double>[^\"]*)\"|'(?P<single>[^']*)'|(?P<bare>[^\s>]+))",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+
+def _html_attribute(attributes: str, name: str) -> str | None:
+    match = _html_attribute_assignment_pattern(name).search(attributes)
+    if match is None:
+        return None
+    return html.unescape(match.group("double") or match.group("single") or match.group("bare") or "")
+
+
+def _has_html_attribute(attributes: str, name: str) -> bool:
+    return _html_attribute_assignment_pattern(name).search(attributes) is not None
+
+
+def _set_image_alt(image_tag: str, alt_text: str) -> str:
+    escaped = html.escape(alt_text, quote=True)
+    alt_pattern = _html_attribute_assignment_pattern("alt")
+    if alt_pattern.search(image_tag):
+        return alt_pattern.sub(f'alt="{escaped}"', image_tag, count=1)
+    insert_at = image_tag.rfind("/>")
+    if insert_at < 0:
+        insert_at = image_tag.rfind(">")
+    return image_tag[:insert_at].rstrip() + f' alt="{escaped}" ' + image_tag[insert_at:]
+
+
+def _set_image_source(image_tag: str, source: str) -> str:
+    escaped = html.escape(source, quote=True)
+    source_pattern = _html_attribute_assignment_pattern("src")
+    if not source_pattern.search(image_tag):
+        raise RenderingError("Rendered registry figure is missing an image source")
+    return source_pattern.sub(f'src="{escaped}"', image_tag, count=1)
+
+
+def _exact_render_record(
+    registry: FigureAltRegistry,
+    *,
+    label: str | None,
+    filename: str | None,
+) -> FigureAltRecord | None:
+    filename_records = registry.by_filename(filename)
+    if len(filename_records) > 1:
+        raise RenderingError(
+            f"Rendered figure path maps to multiple registry records: {filename}",
+            context={"registry": str(registry.path)},
+        )
+    if label is None:
+        if not filename_records:
+            return None
+        raise RenderingError(
+            f"Rendered figure label/path mismatch: unlabeled != {filename_records[0].label}",
+            context={"registry": str(registry.path), "rendered_filename": filename},
+        )
+    label_record = registry.by_label(label)
+    if label_record is not None:
+        if label_record.filename != filename:
+            raise RenderingError(
+                f"Rendered figure path does not match registry record for {label_record.label}",
+                context={
+                    "registry": str(registry.path),
+                    "registry_filename": label_record.filename,
+                    "rendered_filename": filename,
+                },
+            )
+        return label_record
+    if not filename_records:
+        return None
+    filename_record = filename_records[0]
+    if label != filename_record.label:
+        raise RenderingError(
+            f"Rendered figure label/path mismatch: {label} != {filename_record.label}",
+            context={"registry": str(registry.path), "rendered_filename": filename},
+        )
+    return filename_record
+
+
+def replace_figure_alts(content: str, *, registry_path: Path | None = None) -> str:
+    """Apply exact registry alt text without deriving alternatives from captions.
+
+    A registry record is consumed only when the rendered ``figure`` label and
+    image path agree with it. Present-but-blank registry alternatives and
+    label/path disagreements raise instead of silently retaining Pandoc's
+    caption-derived ``alt``. Unregistered figures retain a non-empty authored
+    alternative. A cross-reference-labelled figure with a blank alternative is
+    non-decorative by construction and therefore also fails closed.
+    """
+    registry = FigureAltRegistry.load_optional(registry_path or Path("__absent_figure_registry__.json"))
 
     def _figure(match: re.Match[str]) -> str:
-        block = match.group(0)
-        caption_match = re.search(
-            r"<figcaption\b[^>]*>(?P<caption>.*?)</figcaption>",
-            block,
-            flags=re.IGNORECASE | re.DOTALL,
+        figure_attrs = match.group("attrs")
+        body = match.group("body")
+        image_match = _IMAGE_RE.search(body)
+        if image_match is None:
+            return match.group(0)
+        image_tag = image_match.group(0)
+        label = _html_attribute(figure_attrs, "id")
+        source = _html_attribute(image_match.group("attrs"), "src")
+        filename = rendered_figure_filename(source) if source is not None else None
+        record = _exact_render_record(registry, label=label, filename=filename)
+        if record is not None:
+            alt_text = require_record_alt(record, rendered_target=str(registry.path))
+            updated_image = _set_image_alt(image_tag, alt_text)
+            if record.filename is None:  # Defensive: registry parsing requires this.
+                raise RenderingError(f"Figure registry record is missing a filename: {record.label}")
+            updated_image = _set_image_source(updated_image, f"../figures/{record.filename}")
+            updated_body = body[: image_match.start()] + updated_image + body[image_match.end() :]
+            return f"<figure{figure_attrs}>{updated_body}</figure>"
+
+        authored_alt = _html_attribute(image_match.group("attrs"), "alt")
+        if label is not None and label.startswith("fig:") and not (authored_alt and authored_alt.strip()):
+            raise RenderingError(
+                f"Rendered non-decorative figure has blank authored alt text: {label}",
+                context={"registry": str(registry.path), "rendered_filename": filename},
+            )
+        return match.group(0)
+
+    content = _FIGURE_RE.sub(_figure, content)
+
+    def _explicit_image_alt(match: re.Match[str]) -> str:
+        attributes = match.group("attrs")
+        if _has_html_attribute(attributes, "alt"):
+            return match.group(0)
+        source = _html_attribute(attributes, "src")
+        filename = rendered_figure_filename(source) if source is not None else None
+        records = registry.by_filename(filename)
+        if len(records) > 1:
+            raise RenderingError(
+                f"Unlabelled rendered image maps to multiple registry records: {filename}",
+                context={"registry": str(registry.path)},
+            )
+        if len(records) == 1 and records[0].filename is not None:
+            # Markdown ``![](...)`` is an explicitly decorative reuse. Pandoc
+            # omits the attribute entirely, so restore the authored empty-alt
+            # semantic without repeating the canonical labelled figure's long
+            # description to screen-reader users.
+            image_tag = _set_image_alt(match.group(0), "")
+            return _set_image_source(image_tag, f"../figures/{records[0].filename}")
+        raise RenderingError(
+            "Rendered image is missing authored alt text and has no exact registry record",
+            context={"registry": str(registry.path), "rendered_filename": filename},
         )
-        if caption_match is None:
-            return block
-        caption = re.sub(r"<[^>]+>", " ", caption_match.group("caption"))
-        caption = html.unescape(caption)
-        replacements = {
-            "delta": "delta",
-            "pi": "pi",
-            "sqrt": "square root",
-            "approx": "approximately",
-            "times": "times",
-        }
-        caption = re.sub(r"\\([A-Za-z]+)", lambda tex: replacements.get(tex.group(1), tex.group(1)), caption)
-        caption = re.sub(r"\\[()\[\]]", "", caption)
-        caption = re.sub(r"[${}]+", "", caption)
-        caption = re.sub(r"\s+", " ", caption).strip()
-        sentence = re.split(r"(?<=[.!?])\s+", caption, maxsplit=1)[0]
-        concise = sentence[:240].rstrip()
-        if len(sentence) > 240:
-            concise = concise.rsplit(" ", 1)[0] + "…"
-        escaped = html.escape(concise, quote=True)
-        return re.sub(
-            r"(<img\b[^>]*\balt=)(?:\"[^\"]*\"|'[^']*')",
-            rf'\1"{escaped}"',
-            block,
-            count=1,
-            flags=re.IGNORECASE | re.DOTALL,
-        )
 
-    return re.sub(r"<figure\b[^>]*>.*?</figure>", _figure, content, flags=re.IGNORECASE | re.DOTALL)
+    return _IMAGE_RE.sub(_explicit_image_alt, content)
 
 
-def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
+def enhance_accessibility(
+    html_file: Path,
+    *,
+    language: str = "en",
+    registry_path: Path | None = None,
+) -> None:
     """Apply accessibility enhancements to ``html_file`` in place.
 
     Sets the ``<html lang>`` attribute when missing, removes ``aria-hidden``
-    from ``<figcaption>`` elements, replaces figure alt text with concise
-    captions, wraps body content in a ``<main>`` landmark with a skip link,
-    and writes the result only if the content changed.
+    from ``<figcaption>`` elements, applies exact source-owned figure-registry
+    alt text where available, wraps body content in a ``<main>`` landmark with
+    a skip link, and writes the result only if the content changed.
     """
     content = html_file.read_text(encoding="utf-8")
     if not re.search(r"<html\b[^>]*\blang=", content, flags=re.IGNORECASE):
@@ -176,7 +311,7 @@ def enhance_accessibility(html_file: Path, *, language: str = "en") -> None:
         content,
         flags=re.IGNORECASE,
     )
-    content = replace_figure_alts(content)
+    content = replace_figure_alts(content, registry_path=registry_path)
     if not re.search(r"<main\b", content, flags=re.IGNORECASE):
         main_open = '<main id="main-content" tabindex="-1">'
         toc_pattern = r'(?P<toc><nav\b[^>]*\bid=["\']TOC["\'][^>]*>.*?</nav>)'
@@ -208,10 +343,10 @@ def add_responsive_image_variants(html_file: Path) -> None:
 
     def _image(match: re.Match[str]) -> str:
         tag = match.group(0)
-        src_match = re.search(r'\bsrc="([^"]+)"', tag, flags=re.IGNORECASE)
-        if src_match is None:
+        source = _html_attribute(tag, "src")
+        if source is None:
             return tag
-        source_path = Path(src_match.group(1))
+        source_path = Path(source)
         if source_path.stem.endswith("_mobile"):
             return tag
         mobile_source = str(source_path.with_name(source_path.stem + "_mobile" + source_path.suffix))
@@ -242,10 +377,6 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
         flags=re.IGNORECASE | re.DOTALL,
     )
     image_re = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
-    source_re = re.compile(
-        r"\bsrc\s*=\s*(?:\"(?P<double>[^\"]*)\"|'(?P<single>[^']*)')",
-        flags=re.IGNORECASE | re.DOTALL,
-    )
 
     def _figure(match: re.Match[str]) -> str:
         figure_body = match.group("body")
@@ -257,10 +388,7 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
             return match.group(0)
 
         def _image(image_match: re.Match[str]) -> str:
-            source_match = source_re.search(image_match.group("attrs"))
-            if source_match is None:
-                return image_match.group(0)
-            source = html.unescape(source_match.group("double") or source_match.group("single") or "")
+            source = _html_attribute(image_match.group("attrs"), "src")
             if not source:
                 return image_match.group(0)
             href = html.escape(source, quote=True)
@@ -283,13 +411,13 @@ def harden_mathjax_script(html_file: Path) -> None:
     content = html_file.read_text(encoding="utf-8")
     if MATHJAX_URL not in content:
         return
-    script_re = re.compile(r'(<script(?=[^>]*\bsrc="' + re.escape(MATHJAX_URL) + r'")[^>]*)></script>')
+    script_re = re.compile(r'(<script(?=[^>]*(?<!\S)src="' + re.escape(MATHJAX_URL) + r'")[^>]*)></script>')
 
     def _replace(match: re.Match[str]) -> str:
         tag = match.group(1)
-        if "integrity=" not in tag:
+        if not _has_html_attribute(tag, "integrity"):
             tag += f' integrity="{_MATHJAX_INTEGRITY}"'
-        if "crossorigin=" not in tag:
+        if not _has_html_attribute(tag, "crossorigin"):
             tag += ' crossorigin="anonymous"'
         script = f"{tag}></script>"
         return script if _MATHJAX_CONFIG_MARKER in content else f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"

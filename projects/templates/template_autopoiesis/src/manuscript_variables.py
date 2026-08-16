@@ -14,7 +14,10 @@ from typing import Any
 from .common import DERIVED_SEED_BITS, HASH_PREFIX_HEX_LENGTH
 from .grammar import load_grammar, KNOWN_DOMAINS, RESERVED_SLOTS
 from .primitives.graph import PAGERANK_ITERATIONS
-from .primitives.optimization import OPTIMIZATION_EXAMPLE_STEPS
+from .primitives.optimization import (
+    OPTIMIZATION_EXAMPLE_LEARNING_RATE,
+    OPTIMIZATION_EXAMPLE_STEPS,
+)
 from .primitives.signal import SIGNAL_SAMPLE_POINTS
 
 _PASSED_RE = re.compile(r"(\d+) passed")
@@ -164,6 +167,7 @@ def generate_variables(
     # Published example parameters come from the executable primitive specs,
     # not parallel literals in the manuscript.
     variables["OPTIMIZATION_EXAMPLE_STEPS"] = OPTIMIZATION_EXAMPLE_STEPS
+    variables["OPTIMIZATION_EXAMPLE_LEARNING_RATE"] = OPTIMIZATION_EXAMPLE_LEARNING_RATE
     variables["SIGNAL_SAMPLE_POINTS"] = SIGNAL_SAMPLE_POINTS
     variables["PAGERANK_ITERATIONS"] = PAGERANK_ITERATIONS
     variables["HASH_PREFIX_HEX_LENGTH"] = HASH_PREFIX_HEX_LENGTH

@@ -37,12 +37,20 @@ class RenderManager:
             Path to generated PDF
         """
 
-    def render_slides(self, source_file: Path, output_format: str = "beamer") -> Path:
+    def render_slides(
+        self,
+        source_file: Path,
+        output_format: str = "beamer",
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render presentation slides.
 
         Args:
             source_file: Path to source manuscript
             output_format: Slide format ("beamer" or "revealjs")
+            strict_cross_deck_refs: Require post-Pandoc foreign references to
+                resolve from the current combined-manuscript AUX map.
 
         Returns:
             Path to generated slides
@@ -278,19 +286,38 @@ class SlidesRenderer:
             config: Rendering configuration
         """
 
-    def render(self, source_path: Path, output_format: str = "beamer") -> Path:
+    def render(
+        self,
+        source_path: Path,
+        output_format: str = "beamer",
+        manuscript_dir: Optional[Path] = None,
+        figures_dir: Optional[Path] = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render manuscript to presentation slides.
 
         Args:
             source_path: Path to source manuscript
             output_format: Slide format ("beamer" or "revealjs")
+            manuscript_dir: Manuscript directory for resource paths
+            figures_dir: Figure directory for resource paths
+            strict_cross_deck_refs: Fail when post-Pandoc foreign references
+                cannot resolve from the current combined-manuscript AUX map
 
         Returns:
             Path to generated slides
         """
 
-    def _render_beamer_with_paths(self, source_file: Path, output_file: Path,
-                                   manuscript_dir: Optional[Path], figures_dir: Optional[Path]) -> Path:
+    def _render_beamer_with_paths(
+        self,
+        source_file: Path,
+        output_file: Path,
+        manuscript_dir: Optional[Path],
+        figures_dir: Optional[Path],
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> Path:
         """Render beamer slides with error reporting.
 
         error handling includes:
@@ -304,6 +331,8 @@ class SlidesRenderer:
             output_file: Desired PDF output path
             manuscript_dir: Manuscript directory for resource paths
             figures_dir: Figures directory for image paths
+            strict_cross_deck_refs: Require post-Pandoc foreign references to
+                resolve from the current combined-manuscript AUX map
 
         Returns:
             Path to generated PDF

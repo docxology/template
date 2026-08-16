@@ -5,17 +5,26 @@ from __future__ import annotations
 import json
 import re
 import shlex
-from pathlib import Path
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 
 from infrastructure.core.pipeline.artifacts import (
     ArtifactManifest,
-    ArtifactManifestEntry,
+    artifact_manifest_from_payload,
+    output_inventory_mode_for_project,
     validate_artifact_manifest,
 )
 from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
 from infrastructure.core.pipeline.definition import PipelinePurpose, resolve_pipeline_source
 from infrastructure.core.pipeline.executor import PipelineExecutor
+from infrastructure.core.project_paths import validate_project_name
+from infrastructure.methods._project_boundary import (
+    _ExternalBoundary,
+    _external_lifecycle_git_boundary,
+    _lexical_plan_path,
+    _lexical_project_root,
+    _path_is_authorized,
+    _portable_project_path,
+)
 from infrastructure.methods.models import (
     MethodStage,
     MethodsAuditReport,
@@ -53,8 +62,16 @@ def build_methods_orchestration_plan(
     commands into one object that can be rendered or checked.
     """
     root = Path(repo_root).resolve()
+    project_name = validate_project_name(project_name)
     project_root_abs = _resolve_project_root(root, project_name, projects_dir=projects_dir)
-    project_root = _relative_to(project_root_abs, root)
+    lexical_project_root = _lexical_project_root(
+        root,
+        project_name,
+        project_root_abs,
+        projects_dir=projects_dir,
+    )
+    _external_lifecycle_git_boundary(root, lexical_project_root, project_root_abs)
+    project_root = lexical_project_root.relative_to(root)
     if artifact_mode not in {"source", "rendered"}:
         raise ValueError(f"Unknown artifact mode: {artifact_mode}")
     pipeline_source_abs = resolve_pipeline_source(
@@ -69,7 +86,7 @@ def build_methods_orchestration_plan(
     # Compute the project key for ``{project}`` expansion: the path after
     # ``projects/`` so bare names like ``template_advanced_literature_review``
     # expand to ``templates/template_advanced_literature_review``.
-    project_key = _project_expansion_key(project_name, project_root_abs, root)
+    project_key = _project_expansion_key(project_name, lexical_project_root, root)
 
     stages = tuple(
         _build_stage(
@@ -82,15 +99,36 @@ def build_methods_orchestration_plan(
     )
     artifact_manifest = project_root / "output" / "reports" / "artifact_manifest.json"
     evidence_registry = project_root / "output" / "reports" / "evidence_registry.json"
-    figure_registry = _optional_surface_path(project_root, "output/figures/figure_registry.json")
-    claim_ledger = _optional_surface_path(project_root, "data/claim_ledger.yaml")
-    experiment_plan = _optional_surface_path(project_root, "experiment_plan.yaml")
+    figure_registry = _optional_surface_path(
+        project_root_abs,
+        "output/figures/figure_registry.json",
+        display_root=project_root,
+    )
+    claim_ledger = _optional_surface_path(
+        project_root_abs,
+        "data/claim_ledger.yaml",
+        display_root=project_root,
+    )
+    experiment_plan = _optional_surface_path(
+        project_root_abs,
+        "experiment_plan.yaml",
+        display_root=project_root,
+    )
 
     return MethodsOrchestrationPlan(
         project_name=project_name,
         project_root=project_root,
-        pipeline_source=_relative_to(pipeline_source_abs, root),
-        method_sections=_discover_method_sections(project_root_abs, root),
+        pipeline_source=_portable_project_path(
+            pipeline_source_abs,
+            repo_root=root,
+            project_root=project_root_abs,
+            project_display_root=project_root,
+        ),
+        method_sections=_discover_method_sections(
+            project_root_abs,
+            root,
+            project_display_root=project_root,
+        ),
         artifact_manifest=artifact_manifest,
         evidence_registry=evidence_registry,
         figure_registry=figure_registry,
@@ -120,8 +158,26 @@ def validate_methods_orchestration_plan(
     if require_generated_artifacts is None:
         require_generated_artifacts = plan.artifact_mode == "rendered"
     issues: list[MethodsIssue] = []
+    lexical_project_root = _lexical_plan_path(root, plan.project_root)
     project_root = _resolve_plan_path(root, plan.project_root)
     pipeline_source = _resolve_plan_path(root, plan.pipeline_source)
+    try:
+        external_boundary = _external_lifecycle_git_boundary(
+            root,
+            lexical_project_root,
+            project_root,
+        )
+    except ValueError as exc:
+        external_boundary = None
+        issues.append(
+            _issue(
+                "error",
+                "METHODS.PROJECT_ROOT_OUTSIDE_REPOSITORY",
+                str(exc),
+                plan.project_root.as_posix(),
+                "Use a managed lifecycle leaf symlink backed by a readable private Git worktree.",
+            )
+        )
     if not project_root.is_dir():
         issues.append(
             _issue(
@@ -211,7 +267,7 @@ def validate_methods_orchestration_plan(
         if stage.executor_method:
             _validate_executor_method(plan, stage, issues)
         if stage.script:
-            _validate_stage_script(root, plan, stage, issues)
+            _validate_stage_script(root, plan, stage, issues, external_boundary)
         if not stage.failure_code.strip():
             issues.append(
                 _issue(
@@ -242,8 +298,8 @@ def validate_methods_orchestration_plan(
                     "Declare output artifacts so methods claims can be traced.",
                 )
             )
-        _validate_artifact_paths(plan, stage, root, issues)
-        _validate_verification_commands(plan, stage, root, issues)
+        _validate_artifact_paths(plan, stage, root, issues, external_boundary)
+        _validate_verification_commands(plan, stage, root, issues, external_boundary)
     return tuple(issues)
 
 
@@ -388,12 +444,17 @@ def _validation_commands(project_name: str, project_root_key: str) -> tuple[str,
 
 def _resolve_project_root(root: Path, project_name: str, *, projects_dir: str) -> Path:
     candidate = root / projects_dir / project_name
-    if candidate.exists() or projects_dir != "projects":
+    if candidate.exists() or candidate.is_symlink() or projects_dir != "projects":
         return candidate.resolve()
     return resolve_project_root(root, project_name)
 
 
-def _discover_method_sections(project_root: Path, repo_root: Path) -> tuple[str, ...]:
+def _discover_method_sections(
+    project_root: Path,
+    repo_root: Path,
+    *,
+    project_display_root: Path | None = None,
+) -> tuple[str, ...]:
     manuscript_dir = project_root / "manuscript"
     if not manuscript_dir.is_dir():
         return ()
@@ -401,15 +462,29 @@ def _discover_method_sections(project_root: Path, repo_root: Path) -> tuple[str,
     for path in sorted(manuscript_dir.glob("*.md")):
         normalized = path.stem.lower().replace("-", "_")
         if any(token in normalized for token in _METHOD_SECTION_TOKENS):
-            sections.append(_relative_to(path, repo_root).as_posix())
+            sections.append(_display_project_child(path, project_root, repo_root, project_display_root).as_posix())
             continue
         try:
             body = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
         if _METHOD_HEADING_RE.search(body):
-            sections.append(_relative_to(path, repo_root).as_posix())
+            sections.append(_display_project_child(path, project_root, repo_root, project_display_root).as_posix())
     return tuple(sections)
+
+
+def _display_project_child(
+    path: Path,
+    project_root: Path,
+    repo_root: Path,
+    project_display_root: Path | None,
+) -> Path:
+    return _portable_project_path(
+        path,
+        repo_root=repo_root,
+        project_root=project_root,
+        project_display_root=project_display_root or project_root,
+    )
 
 
 def _expand_artifact(value: str, project_key: str) -> str:
@@ -434,7 +509,7 @@ def _project_expansion_key(
     # Try to use the canonical ``projects/`` prefix for standard layouts.
     if repo_root is not None:
         try:
-            rel = project_root.resolve().relative_to((repo_root / "projects").resolve())
+            rel = project_root.absolute().relative_to((repo_root / "projects").absolute())
             return rel.as_posix()
         except ValueError:
             pass
@@ -446,22 +521,22 @@ def _project_expansion_key(
     return project_root.as_posix()
 
 
-def _optional_surface_path(project_root: Path, relative_path: str) -> Path | None:
+def _optional_surface_path(
+    project_root: Path,
+    relative_path: str,
+    *,
+    display_root: Path | None = None,
+) -> Path | None:
     """Return a project-relative surface path only when its source exists."""
     path = project_root / relative_path
-    return path if path.is_file() else None
+    if not path.is_file():
+        return None
+    return (display_root / relative_path) if display_root is not None else path
 
 
 def _format_optional_path(path: Path | None) -> str:
     """Render an optional methods surface without inventing a file."""
     return path.as_posix() if path is not None else "not present"
-
-
-def _relative_to(path: Path, root: Path) -> Path:
-    try:
-        return path.resolve().relative_to(root)
-    except ValueError:
-        return path
 
 
 def _resolve_plan_path(root: Path, path: Path) -> Path:
@@ -475,6 +550,7 @@ def _validate_stage_script(
     plan: MethodsOrchestrationPlan,
     stage: MethodStage,
     issues: list[MethodsIssue],
+    external_boundary: _ExternalBoundary | None,
 ) -> None:
     """Validate a declared stage script and its repository containment."""
     script = Path(stage.script)
@@ -491,9 +567,7 @@ def _validate_stage_script(
         return
 
     resolved = (root / script).resolve(strict=False)
-    try:
-        resolved.relative_to(root)
-    except ValueError:
+    if not _path_is_authorized(root, script, external_boundary):
         issues.append(
             _issue(
                 "error",
@@ -539,6 +613,7 @@ def _validate_artifact_paths(
     stage: MethodStage,
     root: Path,
     issues: list[MethodsIssue],
+    external_boundary: _ExternalBoundary | None,
 ) -> None:
     """Reject unsafe artifact declarations before any filesystem probing."""
     for kind, paths in (("input", stage.input_artifacts), ("output", stage.output_artifacts)):
@@ -555,10 +630,7 @@ def _validate_artifact_paths(
                     )
                 )
                 continue
-            resolved = (root / Path(value)).resolve(strict=False)
-            try:
-                resolved.relative_to(root)
-            except ValueError:
+            if not _path_is_authorized(root, Path(value), external_boundary):
                 issues.append(
                     _issue(
                         "error",
@@ -575,6 +647,7 @@ def _validate_verification_commands(
     stage: MethodStage,
     root: Path,
     issues: list[MethodsIssue],
+    external_boundary: _ExternalBoundary | None,
 ) -> None:
     """Check generated commands for a resolvable Python script entrypoint."""
     for command in stage.verification_commands:
@@ -595,7 +668,12 @@ def _validate_verification_commands(
         if script_index is None:
             continue
         script_path = Path(argv[script_index])
-        if script_path.is_absolute() or not (root / script_path).is_file():
+        if (
+            script_path.is_absolute()
+            or ".." in script_path.parts
+            or not _path_is_authorized(root, script_path, external_boundary)
+            or not (root / script_path).is_file()
+        ):
             issues.append(
                 _issue(
                     "error",
@@ -702,7 +780,11 @@ def _validate_artifact_manifest(
             )
         )
         return
-    for manifest_issue in validate_artifact_manifest(manifest, project_dir=project_root).issues:
+    for manifest_issue in validate_artifact_manifest(
+        manifest,
+        project_dir=project_root,
+        expected_inventory_mode=output_inventory_mode_for_project(root, project_root),
+    ).issues:
         issues.append(
             _issue(
                 "error",
@@ -728,28 +810,7 @@ def _validate_artifact_manifest(
 
 def _artifact_manifest_from_payload(payload: object) -> ArtifactManifest:
     """Parse the shared artifact-manifest schema without accepting loose JSON."""
-    if not isinstance(payload, dict):
-        raise ValueError("artifact manifest must contain a mapping")
-    raw_entries = payload.get("entries")
-    raw_issues = payload.get("issues", [])
-    if not isinstance(raw_entries, list) or not isinstance(raw_issues, list):
-        raise ValueError("artifact manifest entries/issues must be lists")
-    entries: list[ArtifactManifestEntry] = []
-    for raw_entry in raw_entries:
-        if not isinstance(raw_entry, dict):
-            raise ValueError("artifact manifest entry must contain a mapping")
-        entries.append(
-            ArtifactManifestEntry(
-                path=str(raw_entry.get("path", "")),
-                size_bytes=int(raw_entry.get("size_bytes", 0) or 0),
-                sha256=str(raw_entry.get("sha256", "")),
-                stage_num=int(raw_entry.get("stage_num", 0) or 0),
-                stage_name=str(raw_entry.get("stage_name", "")),
-                contract_match=bool(raw_entry.get("contract_match", False)),
-                timestamp=str(raw_entry.get("timestamp", "")),
-            )
-        )
-    return ArtifactManifest(entries=tuple(entries), issues=tuple(str(issue) for issue in raw_issues))
+    return artifact_manifest_from_payload(payload)
 
 
 def _issue(severity: str, code: str, message: str, path: str, suggestion: str) -> MethodsIssue:

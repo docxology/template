@@ -63,30 +63,30 @@ class ExemplarSnapshot:
 
 
 EXEMPLAR_SNAPSHOT: tuple[ExemplarSnapshot, ...] = (
-    ExemplarSnapshot("template_active_inference", "92.22 %"),
-    ExemplarSnapshot("template_advanced_literature_review", "92.14 %"),
-    ExemplarSnapshot("template_autopoiesis", "97.20 %"),
-    ExemplarSnapshot("template_autoresearch_project", "96.33 %"),
-    ExemplarSnapshot("template_autoscientists", "97.56 %"),
+    ExemplarSnapshot("template_active_inference", "92.58 %"),
+    ExemplarSnapshot("template_advanced_literature_review", "91.96 %"),
+    ExemplarSnapshot("template_autopoiesis", "97.03 %"),
+    ExemplarSnapshot("template_autoresearch_project", "96.32 %"),
+    ExemplarSnapshot("template_autoscientists", "97.16 %"),
     ExemplarSnapshot("template_code_project", "95.84 %"),
-    ExemplarSnapshot("template_data_descriptor", "95.26 %"),
-    ExemplarSnapshot("template_eda_notebook", "92.21 %"),
-    ExemplarSnapshot("template_formal", "94.39 %"),
+    ExemplarSnapshot("template_data_descriptor", "96.13 %"),
+    ExemplarSnapshot("template_eda_notebook", "90.03 %"),
+    ExemplarSnapshot("template_formal", "94.50 %"),
     ExemplarSnapshot("template_gold_refinement", "92.19 %"),
-    ExemplarSnapshot("template_literature_meta_analysis", "93.97 %"),
-    ExemplarSnapshot("template_madlib", "98.79 %"),
+    ExemplarSnapshot("template_literature_meta_analysis", "95.92 %"),
+    ExemplarSnapshot("template_madlib", "99.11 %"),
     ExemplarSnapshot("template_methods_paper", "99.00 %"),
-    ExemplarSnapshot("template_newspaper", "99.13 %"),
-    ExemplarSnapshot("template_pitch_deck", "97.19 %"),
-    ExemplarSnapshot("template_pools_rules_tools", "93.67 %"),
-    ExemplarSnapshot("template_prose_project", "92.85 %"),
-    ExemplarSnapshot("template_redacted_report", "94.81 %"),
-    ExemplarSnapshot("template_registered_report", "94.13 %"),
-    ExemplarSnapshot("template_search_project", "96.47 %"),
-    ExemplarSnapshot("template_sia", "94.80 %"),
-    ExemplarSnapshot("template_storybook", "93.54 %"),
+    ExemplarSnapshot("template_newspaper", "99.25 %"),
+    ExemplarSnapshot("template_pitch_deck", "98.57 %"),
+    ExemplarSnapshot("template_pools_rules_tools", "94.72 %"),
+    ExemplarSnapshot("template_prose_project", "95.87 %"),
+    ExemplarSnapshot("template_redacted_report", "97.03 %"),
+    ExemplarSnapshot("template_registered_report", "94.35 %"),
+    ExemplarSnapshot("template_search_project", "96.45 %"),
+    ExemplarSnapshot("template_sia", "94.39 %"),
+    ExemplarSnapshot("template_storybook", "93.91 %"),
     ExemplarSnapshot("template_template", "97.66 %"),
-    ExemplarSnapshot("template_textbook", "93.35 %"),
+    ExemplarSnapshot("template_textbook", "96.25 %"),
 )
 
 
@@ -114,6 +114,19 @@ def _coverage_measurement_data_file(repo_root: Path, name: str) -> Path:
     """Return an absolute, project-local coverage data path."""
     project_dir = repo_root.resolve() / "projects" / "templates" / name
     return project_dir / f".coverage.measure_{name}"
+
+
+@dataclass(frozen=True)
+class CoverageVerificationResult:
+    """Structured outcome of one all-exemplar coverage verification."""
+
+    all_match: bool
+    measurement_complete: bool
+    snapshot_rewritten: bool
+    drifted_count: int
+    failed_count: int
+    measured_count: int
+    report: str
 
 
 def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
@@ -155,8 +168,12 @@ def measure_exemplar_coverage(repo_root: Path, name: str) -> str:
         data_file.unlink(missing_ok=True)
 
 
-def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
-    """Re-measure every exemplar's coverage and compare with its snapshot."""
+def verify_exemplar_coverage_result(
+    repo_root: Path,
+    *,
+    rewrite: bool = False,
+) -> CoverageVerificationResult:
+    """Re-measure every exemplar and return a fail-closed structured result."""
     measured: dict[str, str] = {}
     failures: list[str] = []
     for row in EXEMPLAR_SNAPSHOT:
@@ -165,9 +182,38 @@ def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple
         except RuntimeError as exc:
             failures.append(f"{row.name}: {exc}")
 
+    return _finalize_exemplar_coverage_result(
+        measured,
+        failures,
+        rewrite=rewrite,
+    )
+
+
+def _finalize_exemplar_coverage_result(
+    measured: dict[str, str],
+    failures: list[str],
+    *,
+    rewrite: bool,
+    snapshot: tuple[ExemplarSnapshot, ...] = EXEMPLAR_SNAPSHOT,
+    source_path: Path | None = None,
+) -> CoverageVerificationResult:
+    """Compare measurements and publish only a complete snapshot refresh."""
+    expected_names = {row.name for row in snapshot}
+    measured_names = set(measured)
+    effective_failures = list(failures)
+    if measured_names != expected_names and not effective_failures:
+        missing = sorted(expected_names - measured_names)
+        unexpected = sorted(measured_names - expected_names)
+        details: list[str] = []
+        if missing:
+            details.append(f"missing={','.join(missing)}")
+        if unexpected:
+            details.append(f"unexpected={','.join(unexpected)}")
+        effective_failures.append(f"coverage measurement roster incomplete ({'; '.join(details)})")
+
     lines = [f"{'exemplar':44} {'recorded':>10} {'measured':>10}  status"]
     mismatched: list[tuple[str, str, str]] = []
-    for row in EXEMPLAR_SNAPSHOT:
+    for row in snapshot:
         actual = measured.get(row.name)
         if actual is None:
             lines.append(f"{row.name:44} {row.coverage_pct:>10} {'-':>10}  NOT MEASURED")
@@ -177,13 +223,31 @@ def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple
             mismatched.append((row.name, row.coverage_pct, actual))
         lines.append(f"{row.name:44} {row.coverage_pct:>10} {actual:>10}  {'ok' if ok else 'DRIFTED'}")
 
-    if rewrite and measured:
-        _rewrite_exemplar_snapshot(measured)
+    measurement_complete = not effective_failures and measured_names == expected_names
+    snapshot_rewritten = rewrite and measurement_complete
+    if snapshot_rewritten:
+        _rewrite_exemplar_snapshot(measured, source_path)
         lines.append(f"\nrewrote EXEMPLAR_SNAPSHOT with {len(measured)} measured values")
-    for failure in failures:
+    elif rewrite and measured:
+        lines.append("\nEXEMPLAR_SNAPSHOT not rewritten because the measurement set was incomplete")
+    for failure in effective_failures:
         lines.append(f"MEASUREMENT FAILED — {failure}")
-    lines.append(f"\n{len(mismatched)} drifted, {len(failures)} failed, {len(measured)} measured")
-    return (not mismatched and not failures), "\n".join(lines)
+    lines.append(f"\n{len(mismatched)} drifted, {len(effective_failures)} failed, {len(measured)} measured")
+    return CoverageVerificationResult(
+        all_match=not mismatched and measurement_complete,
+        measurement_complete=measurement_complete,
+        snapshot_rewritten=snapshot_rewritten,
+        drifted_count=len(mismatched),
+        failed_count=len(effective_failures),
+        measured_count=len(measured),
+        report="\n".join(lines),
+    )
+
+
+def verify_exemplar_coverage(repo_root: Path, *, rewrite: bool = False) -> tuple[bool, str]:
+    """Re-measure coverage while preserving the historical tuple interface."""
+    result = verify_exemplar_coverage_result(repo_root, rewrite=rewrite)
+    return result.all_match, result.report
 
 
 def _rewrite_exemplar_snapshot(measured: dict[str, str], source_path: Path | None = None) -> None:
@@ -393,6 +457,7 @@ __all__ = [
     "COVERAGE_PROVENANCE_RELATIVE_PATH",
     "COVERAGE_PROVENANCE_SCHEMA_VERSION",
     "COVERAGE_SOURCE_INVENTORY_MODE",
+    "CoverageVerificationResult",
     "EXEMPLAR_SNAPSHOT",
     "EXEMPLAR_SNAPSHOT_DATE",
     "ExemplarSnapshot",
@@ -404,5 +469,6 @@ __all__ = [
     "measure_exemplar_coverage",
     "validate_coverage_provenance",
     "verify_exemplar_coverage",
+    "verify_exemplar_coverage_result",
     "write_coverage_provenance",
 ]
