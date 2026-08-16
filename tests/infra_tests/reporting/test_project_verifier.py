@@ -19,6 +19,14 @@ from infrastructure.core.pytest_profiles import test_runner_dependency_specs
 from infrastructure.reporting.pipeline_test_runner import execute_test_pipeline
 
 
+@pytest.fixture
+def unlocked_project_uv_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep the synthetic no-lock project isolated from repository frozen policy."""
+    # Canonical projects carry uv.lock and continue to honor UV_FROZEN. These
+    # disposable verifier projects intentionally exercise uv's clean bootstrap.
+    monkeypatch.delenv("UV_FROZEN", raising=False)
+
+
 def _write_verifier_project(repo_root: Path, *, write_receipt: bool = True) -> Path:
     project = repo_root / "projects" / "active" / "demo"
     for part in ("src", "tests", "scripts", "output"):
@@ -93,6 +101,7 @@ if WRITE_RECEIPT:
             assert "PYTEST_ADDOPTS" not in os.environ
             assert "PYTEST_PLUGINS" not in os.environ
             assert "PYTEST_DISABLE_PLUGIN_AUTOLOAD" not in os.environ
+            assert "UV_FROZEN" not in os.environ
             sys.path.insert(0, str(ROOT / "src"))
             coverage = Coverage(
                 data_file=str(ROOT / ".coverage"),
@@ -117,6 +126,7 @@ if WRITE_RECEIPT:
 
 
 @pytest.mark.timeout(180)
+@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_declared_verifier_requires_real_receipt_and_independent_coverage(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -143,6 +153,7 @@ def test_declared_verifier_requires_real_receipt_and_independent_coverage(
 
 
 @pytest.mark.timeout(180)
+@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_single_project_stage_dispatches_declared_verifier_and_writes_report(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path)
 
@@ -166,6 +177,7 @@ def test_single_project_stage_dispatches_declared_verifier_and_writes_report(tmp
 
 
 @pytest.mark.timeout(180)
+@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_declared_verifier_rejects_success_without_fresh_receipt(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path, write_receipt=False)
 
@@ -314,6 +326,7 @@ def test_receipt_rejects_failed_or_vacuous_outcomes(tmp_path: Path) -> None:
 
 
 @pytest.mark.timeout(180)
+@pytest.mark.usefixtures("unlocked_project_uv_environment")
 def test_declared_verifier_independently_rejects_coverage_below_floor(tmp_path: Path) -> None:
     project = _write_verifier_project(tmp_path)
 

@@ -169,7 +169,7 @@ def _wait_for_process_exit(pid: int, status_fd: int) -> None:
             os.close(pid_fd)
         return
 
-    if hasattr(select, "kqueue"):
+    if sys.platform == "darwin" and hasattr(select, "kqueue"):
         queue = select.kqueue()
         try:
             event = select.kevent(

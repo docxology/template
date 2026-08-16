@@ -506,6 +506,13 @@ jobs:
           uv run python -c \
             'import sys; expected=tuple(map(int, "${{ matrix.python-version }}".split("."))); assert sys.version_info[:2] == expected, (sys.version, expected)'
 
+      # Public exemplar suites may exercise real DOCX/EPUB render paths even
+      # though this job runs Stage 1 only. Keep the converter provisioned for
+      # every capability-manifest lane so those regressions never degrade into
+      # missing-tool failures or skips.
+      - name: Install pandoc
+        uses: pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e # v1.1.1
+
       # scripts/pipeline/stage_01_test.py --project runs pytest with cwd=<project> and enforces that
       # project's own --cov-fail-under=90 internally, writing coverage into the
       # project dir (generic pytest: .coverage.project; declared verifier:

@@ -102,7 +102,8 @@ def test_source_owned_registry_alt_reaches_real_combined_html(
 
     assert f'alt="{html.escape(rich_alt, quote=True)}"' in rendered
     assert 'src="../figures/dense.png"' in rendered
-    assert "<figcaption>Figure 1: Short visible caption</figcaption>" in re.sub(r"\s+", " ", rendered)
+    expected_caption = "Figure 1: Short visible caption" if shutil.which("pandoc-crossref") else "Short visible caption"
+    assert f"<figcaption>{expected_caption}</figcaption>" in re.sub(r"\s+", " ", rendered)
     assert 'alt="Short visible caption"' not in rendered
 
 

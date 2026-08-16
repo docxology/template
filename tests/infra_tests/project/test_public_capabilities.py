@@ -500,3 +500,17 @@ def test_ci_workflow_consumes_only_the_capability_matrix() -> None:
         sum(step.get("name") == "Verify selected Python minor" for step in workflow["jobs"]["test-project"]["steps"])
         == 1
     )
+
+
+def test_project_matrix_provisions_the_pinned_pandoc_toolchain() -> None:
+    repo = Path(__file__).resolve().parents[3]
+    workflow = yaml.safe_load((repo / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
+
+    project_step = next(
+        step for step in workflow["jobs"]["test-project"]["steps"] if step.get("name") == "Install pandoc"
+    )
+    infra_step = next(step for step in workflow["jobs"]["test-infra"]["steps"] if step.get("name") == "Install pandoc")
+
+    assert project_step == infra_step
+    assert project_step["uses"] == "pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e"
+    assert "if" not in project_step
