@@ -22,6 +22,8 @@ not to the contents of any specific workspace.
 - Output cleanup unlinks directory-symlink children instead of following them
   with `rmtree`.
 - Empty `pip-audit` stdout is recorded as a skip, not a clean zero-finding run.
+- Rendering web/CLI tests that swallowed every exception or only checked
+  `hasattr` now assert real HTML output and parser/main() outcomes.
 
 ### Documentation
 

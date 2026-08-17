@@ -39,47 +39,43 @@ class TestHtmlRendering:
     """Test HTML rendering functionality."""
 
     def test_render_html(self, tmp_path):
-        """Test rendering HTML."""
+        """WebRenderer.render writes HTML that contains the source heading."""
         md = tmp_path / "doc.md"
-        md.write_text("# Title\n\nContent")
+        md.write_text("# Title\n\nContent", encoding="utf-8")
+        renderer = _make_renderer(tmp_path)
+        result = renderer.render(md)
+        assert result.exists()
+        html = result.read_text(encoding="utf-8")
+        assert "Title" in html
+        assert "Content" in html
 
-        if hasattr(web_renderer, "render_html"):
-            try:
-                web_renderer.render_html(str(md))
-            except Exception:
-                pass
-
-    def test_render_html_with_template(self, tmp_path):
-        """Test rendering HTML with template."""
+    def test_render_html_uses_configured_web_dir(self, tmp_path):
+        """Output lands under the configured web_dir, not a hidden default."""
         md = tmp_path / "doc.md"
-        md.write_text("# Title")
-
-        if hasattr(web_renderer, "render_html"):
-            try:
-                web_renderer.render_html(str(md), template="default")
-            except Exception:
-                pass
+        md.write_text("# Title", encoding="utf-8")
+        renderer = _make_renderer(tmp_path)
+        result = renderer.render(md)
+        assert result.parent == Path(renderer.config.web_dir)
 
 
 class TestMathJaxIntegration:
     """Test MathJax integration."""
 
     def test_render_with_mathjax(self, tmp_path):
-        """Test rendering with MathJax."""
+        """Rendered math pages keep the equation and the pinned MathJax URL."""
         md = tmp_path / "math.md"
-        md.write_text("# Math\n\n$E = mc^2$")
-
-        if hasattr(web_renderer, "render_html"):
-            try:
-                web_renderer.render_html(str(md), mathjax=True)
-            except Exception:
-                pass
+        md.write_text("# Math\n\n$E = mc^2$", encoding="utf-8")
+        renderer = _make_renderer(tmp_path)
+        result = renderer.render(md)
+        html = result.read_text(encoding="utf-8")
+        assert "E = mc^2" in html or "E = mc" in html
+        assert _MATHJAX_URL in html
 
     def test_mathjax_config(self):
-        """Test MathJax configuration."""
-        if hasattr(web_renderer, "get_mathjax_config"):
-            config = web_renderer.get_mathjax_config()
-            assert config is not None
+        """Pinned MathJax constants stay non-empty and point at a https URL."""
+        assert _MATHJAX_URL.startswith("https://")
+        assert _MATHJAX_INTEGRITY.startswith("sha")
+        assert _MATHJAX_FONT_URL.startswith("https://")
 
     def test_harden_mathjax_script_adds_sri_to_pinned_url(self, tmp_path):
         html = tmp_path / "math.html"
@@ -104,48 +100,27 @@ class TestMathJaxIntegration:
 class TestCssIntegration:
     """Test CSS integration."""
 
-    def test_add_stylesheet(self, tmp_path):
-        """Test adding stylesheet."""
-        if hasattr(web_renderer, "add_stylesheet"):
-            html = "<html><head></head><body></body></html>"
-            result = web_renderer.add_stylesheet(html, "style.css")
-            assert result is not None
-
-    def test_inline_css(self, tmp_path):
-        """Test inlining CSS."""
-        css = tmp_path / "style.css"
-        css.write_text("body { color: black; }")
-
-        if hasattr(web_renderer, "inline_css"):
-            html = "<html><head></head><body></body></html>"
-            try:
-                web_renderer.inline_css(html, str(css))
-            except Exception:
-                pass
+    def test_rendered_html_includes_stylesheet_or_inline_style(self, tmp_path):
+        """Combined HTML is not a bare unstyled fragment."""
+        md = tmp_path / "doc.md"
+        md.write_text("# Title\n\nBody", encoding="utf-8")
+        renderer = _make_renderer(tmp_path)
+        html = renderer.render(md).read_text(encoding="utf-8")
+        assert "<style" in html.lower() or "stylesheet" in html.lower()
 
 
 class TestAssetHandling:
     """Test asset handling."""
 
-    def test_copy_assets(self, tmp_path):
-        """Test copying assets."""
-        src = tmp_path / "src"
-        src.mkdir()
-        (src / "image.png").write_bytes(b"\x89PNG")
-
-        if hasattr(web_renderer, "copy_assets"):
-            try:
-                web_renderer.copy_assets(str(src), str(tmp_path / "out"))
-            except Exception:
-                pass
-
-    def test_resolve_asset_paths(self, tmp_path):
-        """Test resolving asset paths."""
-        html = '<img src="image.png">'
-
-        if hasattr(web_renderer, "resolve_asset_paths"):
-            result = web_renderer.resolve_asset_paths(html, tmp_path)
-            assert result is not None
+    def test_render_preserves_local_image_reference(self, tmp_path):
+        """A markdown image remains addressable in the written HTML."""
+        md = tmp_path / "doc.md"
+        md.write_text("# Title\n\n![alt text](image.png)\n", encoding="utf-8")
+        (tmp_path / "image.png").write_bytes(b"\x89PNG")
+        renderer = _make_renderer(tmp_path)
+        html = renderer.render(md).read_text(encoding="utf-8")
+        assert "image.png" in html
+        assert "alt text" in html
 
 
 class TestWebRendererIntegration:
