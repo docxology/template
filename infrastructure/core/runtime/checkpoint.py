@@ -8,6 +8,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from dataclasses import asdict, dataclass, field
@@ -41,6 +42,7 @@ class PipelineCheckpoint:
     stage_results: list[StageResult]
     total_stages: int
     checkpoint_time: float
+    output_digest: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         """Convert checkpoint to dictionary for serialization."""
@@ -50,6 +52,7 @@ class PipelineCheckpoint:
             "stage_results": [asdict(sr) for sr in self.stage_results],
             "total_stages": self.total_stages,
             "checkpoint_time": self.checkpoint_time,
+            "output_digest": self.output_digest,
         }
 
     @classmethod
@@ -62,6 +65,7 @@ class PipelineCheckpoint:
             stage_results=stage_results,
             total_stages=data["total_stages"],
             checkpoint_time=data["checkpoint_time"],
+            output_digest=str(data.get("output_digest", "") or ""),
         )
 
 
@@ -126,6 +130,7 @@ class CheckpointManager:
             stage_results=stage_results,
             total_stages=total_stages,
             checkpoint_time=time.time(),
+            output_digest=self._output_tree_digest(),
         )
 
         try:
@@ -186,6 +191,30 @@ class CheckpointManager:
             logger.debug(f"checkpoint_exists check failed (treating as no checkpoint): {type(e).__name__}: {e}")
             return False
 
+    def _output_tree_digest(self) -> str:
+        """SHA-256 of the output tree excluding the checkpoint directory itself."""
+        output_root = self.checkpoint_dir.parent
+        if not output_root.is_dir():
+            return ""
+        digest = hashlib.sha256()
+        files: list[Path] = []
+        for path in output_root.rglob("*"):
+            if not path.is_file():
+                continue
+            try:
+                path.relative_to(self.checkpoint_dir)
+            except ValueError:
+                files.append(path)
+                continue
+            # File lives under .checkpoints — skip.
+        for path in sorted(files, key=lambda item: item.as_posix()):
+            rel = path.relative_to(output_root).as_posix()
+            digest.update(rel.encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\n")
+        return digest.hexdigest()
+
     def validate_checkpoint(self) -> tuple[bool, str | None]:
         """Validate checkpoint integrity and consistency.
 
@@ -237,6 +266,14 @@ class CheckpointManager:
                     return (
                         False,
                         f"Stage {i} ({result.name}) marked completed but has non-zero exit code",
+                    )
+
+            if checkpoint.last_stage_completed > 0 and checkpoint.output_digest:
+                current = self._output_tree_digest()
+                if current != checkpoint.output_digest:
+                    return (
+                        False,
+                        "Checkpoint output digest does not match the current output tree — refusing resume",
                     )
 
             return True, None

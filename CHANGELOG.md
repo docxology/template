@@ -22,6 +22,11 @@ not to the contents of any specific workspace.
 - Output cleanup unlinks directory-symlink children instead of following them
   with `rmtree`.
 - Empty `pip-audit` stdout is recorded as a skip, not a clean zero-finding run.
+- Incremental skip now requires the recorded output hash to still match; a
+  swapped artifact no longer skips the stage.
+- Resume checkpoints bind an output-tree digest so deleted or swapped files
+  invalidate the checkpoint.
+- Confidentiality `git` helpers now time out instead of hanging a gate.
 - Rendering web/CLI tests that swallowed every exception or only checked
   `hasattr` now assert real HTML output and parser/main() outcomes.
 

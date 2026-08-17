@@ -17,6 +17,7 @@ from infrastructure.core.pipeline.incremental import (
     load_hash_manifest,
     record_stage_hash,
     save_hash_manifest,
+    compute_stage_output_hash,
     should_skip_stage,
 )
 from infrastructure.core.pipeline.types import StageContract
@@ -201,8 +202,13 @@ class TestShouldSkipStage:
             contract=contract,
             upstream_output_hashes={},
         )
+        output_hash = compute_stage_output_hash(
+            repo_root=repo_root,
+            project_dir=project_dir,
+            contract=contract,
+        )
         manifest = HashManifest()
-        manifest.record("Stage A", input_hash=input_hash, output_hash="ignored")
+        manifest.record("Stage A", input_hash=input_hash, output_hash=output_hash)
 
         decision = should_skip_stage(
             config=IncrementalConfig(enabled=True),
@@ -350,3 +356,36 @@ class TestRecordStageHash:
         )
         up_hash_v2 = manifest.get("Upstream").output_hash
         assert up_hash_v1 != up_hash_v2
+
+    def test_mutated_output_forces_run_even_if_input_hash_matches(self, tmp_path: Path) -> None:
+        """Recorded output_hash is not cosmetic — a swapped artifact must re-run."""
+        repo_root, project_dir = _make_repo(tmp_path)
+        (project_dir / "manuscript").mkdir(exist_ok=True)
+        (project_dir / "manuscript" / "a.md").write_text("hello", encoding="utf-8")
+        (project_dir / "output" / "out.txt").write_text("result", encoding="utf-8")
+        contract = StageContract(input_artifacts=("manuscript/a.md",), output_artifacts=("output/out.txt",))
+        input_hash = compute_stage_input_hash(
+            repo_root=repo_root,
+            project_dir=project_dir,
+            stage_name="Stage A",
+            contract=contract,
+            upstream_output_hashes={},
+        )
+        output_hash = compute_stage_output_hash(
+            repo_root=repo_root,
+            project_dir=project_dir,
+            contract=contract,
+        )
+        manifest = HashManifest()
+        manifest.record("Stage A", input_hash=input_hash, output_hash=output_hash)
+        (project_dir / "output" / "out.txt").write_text("TAMPERED", encoding="utf-8")
+
+        decision = should_skip_stage(
+            config=IncrementalConfig(enabled=True),
+            manifest=manifest,
+            repo_root=repo_root,
+            project_dir=project_dir,
+            stage_name="Stage A",
+            contract=contract,
+        )
+        assert decision.skip is False
