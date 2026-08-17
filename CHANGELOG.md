@@ -27,6 +27,10 @@ not to the contents of any specific workspace.
 
 ### Documentation
 
+- Corrected living docs that still said four opt-in stages / a `--tags` flag,
+  treated `projects/active/` as non-rendered, or pinned local/CI Python at 3.12
+  or 3.10–3.13. The generator sentence in `counts_doc.py` now matches discovery:
+  `active/` is the hot-seat rendered set.
 - Added [`docs/maintenance/review-remediation-2026-08.md`](docs/maintenance/review-remediation-2026-08.md),
   a durable record of the 2026-08-12 parallel-agent comprehensive review and
   improvement (infrastructure/scripts/docs + all 24 exemplars, released in

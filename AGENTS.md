@@ -181,7 +181,7 @@ inspect the planned links, `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 `.private_projects_root` to override the sibling repo, and
 `TEMPLATE_SKIP_LINK_SYNC=1` to disable auto-sync for a command.
 
-**Note:** Exemplars such as `blake_bimetalism`, `traditional_newspaper`, `area_handbook`, `density_bioscales` may live under [`projects/archive/`](projects/archive/). In-progress trees live under [`projects/working/`](projects/working/) until retired or explicitly rendered. Active names are listed in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
+**Note:** Archived and in-progress trees live under the local-only `projects/archive/` and `projects/working/` mirrors. Rendered names are listed only in [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md).
 
 ## 📂 Project Organization: Rendered vs Non-Rendered Subfolders
 
@@ -196,7 +196,7 @@ Projects under `projects/templates/` (tracked exemplars) and `projects/active/` 
 
 ### Non-Rendered Projects (`working/`, `ongoing/`, `archive/`, optional legacy mirrors)
 
-Projects under `projects/working/`, `projects/ongoing/`, and `projects/archive/` are **preserved for explicit targeted work but not executed by default**. The optional legacy `projects/active/` mirror is treated the same way when present:
+Projects under `projects/working/`, `projects/ongoing/`, and `projects/archive/` are **preserved for explicit targeted work but not executed by default**:
 
 - **NOT discovered** by default infrastructure discovery functions
 - **NOT listed** in the normal `run.sh` menu
@@ -239,7 +239,7 @@ flowchart TB
     ROOT[template<br/>Generic template repository]
 
     ROOT --> INFRA[infrastructure<br/>Layer 1 · generic build · validation tools]
-    ROOT --> SCRIPTS[scripts<br/>Pipeline stage orchestrators 00–07]
+    ROOT --> SCRIPTS[scripts<br/>Pipeline stage orchestrators]
     ROOT --> TESTS[tests<br/>Infrastructure test suite]
     ROOT --> DOCS[docs<br/>Documentation hub · 300+ files]
     ROOT --> PROJECTS[projects<br/>Typed subfolders · templates+active rendered]
@@ -312,7 +312,7 @@ Each directory contains documentation for easy navigation:
 | [`projects/templates/template_template/`](projects/templates/template_template/) | [AGENTS.md](projects/templates/template_template/AGENTS.md) | [README.md](projects/templates/template_template/README.md) | Meta-template exemplar (canonical, always present) |
 | [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | [AGENTS.md](projects/templates/template_textbook/AGENTS.md) | [README.md](projects/templates/template_textbook/README.md) | Modular fillable-textbook scaffold exemplar (canonical, always present) |
 | [`projects/templates/template_search_project/`](projects/templates/template_search_project/) | [AGENTS.md](projects/templates/template_search_project/AGENTS.md) | [README.md](projects/templates/template_search_project/README.md) | Literature-search exemplar (canonical, always present) |
-| Rotating projects (e.g. `actinf_policy_entanglement_lean`, private symlinked workspaces) | see project tree when checked out under a typed subfolder | see project tree when checked out under a typed subfolder | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current rendered roster; ordinary sidecar work rotates between `projects/working/` and `projects/archive/` |
+| Rotating private workspaces | see project tree when checked out under a typed subfolder | see project tree when checked out under a typed subfolder | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current rendered roster; ordinary sidecar work rotates between `projects/working/` and `projects/archive/` |
 
 **In-progress projects** live under [`projects/working/`](projects/working/) and are not executed by default pipeline discovery. Render one explicitly with a qualified project name such as `working/<name>`, or deliberately restore it through optional sidecar `active/` only when it should enter default discovery. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects/working/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the rendered roster.
 
@@ -545,7 +545,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: default full pipeline — 10 core+LLM stages; pipeline.yaml declares four additional opt-in ebook/metadata/bundle/archival stages. --core-only drops LLM and opt-in stages and leaves 8.
+# Non-interactive: default full pipeline — 10 core+LLM stages; pipeline.yaml also declares six opt-in stages (ebook, metadata, bundle, archival, science, provenance). --core-only drops LLM and opt-in stages and leaves 8.
 ./run.sh --pipeline
 ```
 
@@ -650,7 +650,7 @@ steganography:
 8. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
 9. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
-**Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — enable via `--tags ebook`, `--tags metadata`, `--tags bundle`, or `--tags archival`):
+**Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — there is no `--tags` CLI flag; invoke the stage or runner script directly):
 
 12. **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
 13. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.

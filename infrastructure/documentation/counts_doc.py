@@ -312,7 +312,7 @@ Private lifecycle projects live outside this public repo in a separate external 
 
 **Ongoing projects** (`projects/ongoing/`, not discovered/rendered): local-only symlinks to the private repo's `ongoing/` projects — long-lived work with no publication target, roster omitted from public docs; render explicitly via the qualified name `ongoing/<name>`; list with `ls projects/ongoing/`.
 
-**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. The optional legacy `projects/active/` is a non-rendered lifecycle mirror.
+**Archived projects** (`projects/archive/`, preserved but not executed): local-only symlinks to the private repo's `archive/` projects (roster omitted from public docs) — list with `ls projects/archive/`. When present, `projects/active/` is the hot-seat rendered set (same default discovery as `templates/`).
 
 Regenerate [`active_projects.md`](active_projects.md) with:
 

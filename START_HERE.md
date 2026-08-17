@@ -45,7 +45,7 @@ uv --version   # should print 0.4.x or later
 package manager on Linux, or the pinned installer in the dependency-management
 guide.
 
-You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.12 via `.python-version`, and the supported range is 3.10–3.13 (`requires-python = ">=3.10"` in `pyproject.toml`, CI matrix 3.10/3.11/3.12/3.13).
+You do **not** need Python pre-installed. `uv sync` will download and pin the right Python version automatically — this repo pins 3.14 via `.python-version`, and the supported range is Python 3.10+ (`requires-python = ">=3.10"` in `pyproject.toml`; infrastructure CI is 3.10–3.14, public-project matrix is 3.10 and 3.14).
 
 ### Install `pandoc` (document converter — required)
 
