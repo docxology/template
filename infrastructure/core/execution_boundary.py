@@ -208,7 +208,6 @@ def run_bounded_subprocess(
     """
     cmd = list(argv)
     workdir = Path(cwd)
-    proc: subprocess.Popen[str] | None = None
     try:
         if egress_check is not None:
             egress_check(cmd, workdir, env)
@@ -219,7 +218,7 @@ def run_bounded_subprocess(
             timed_out=False,
             command_error=f"refused by egress policy: {exc}",
         )
-    with contextlib.suppress(OSError, ProcessLookupError):
+    try:
         proc = subprocess.Popen(
             cmd,
             cwd=str(workdir),
@@ -230,36 +229,67 @@ def run_bounded_subprocess(
             stderr=subprocess.PIPE if capture_output else None,
             text=True if capture_output else None,
         )
-        # Effective group id: the child got a fresh session (its pid == pgid).
-        effective_group = proc.pid if group_id is None else group_id
-        try:
-            stdout, stderr = proc.communicate(timeout=timeout)
-            return BoundedSubprocessResult(
-                argv=tuple(cmd),
-                returncode=proc.returncode if proc.returncode is not None else 0,
-                timed_out=False,
-                stdout=stdout or "",
-                stderr=stderr or "",
-            )
-        except subprocess.TimeoutExpired:
-            _terminate_process_group(effective_group)
-            timed_out_stdout: str | None = None
-            timed_out_stderr: str | None = None
-            if capture_output:
-                timed_out_stdout, timed_out_stderr = proc.communicate()
-            return BoundedSubprocessResult(
-                argv=tuple(cmd),
-                returncode=-signal.SIGKILL,
-                timed_out=True,
-                stdout=timed_out_stdout or "",
-                stderr=timed_out_stderr or "",
-            )
-    return BoundedSubprocessResult(
-        argv=tuple(cmd),
-        returncode=1,
-        timed_out=False,
-        command_error="failed to launch",
-    )
+    except OSError as exc:
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=1,
+            timed_out=False,
+            command_error=f"failed to launch: {exc}",
+        )
+    # Effective group id: the child got a fresh session (its pid == pgid).
+    effective_group = proc.pid if group_id is None else group_id
+    try:
+        stdout, stderr = proc.communicate(timeout=timeout)
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=proc.returncode if proc.returncode is not None else 0,
+            timed_out=False,
+            stdout=stdout or "",
+            stderr=stderr or "",
+        )
+    except subprocess.TimeoutExpired:
+        _terminate_process_group(effective_group)
+        timed_out_stdout, timed_out_stderr = _drain_after_terminate(proc, capture_output=capture_output)
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=-signal.SIGKILL,
+            timed_out=True,
+            stdout=timed_out_stdout or "",
+            stderr=timed_out_stderr or "",
+        )
+    except Exception as exc:  # noqa: BLE001 — any post-launch failure must still kill the group
+        _terminate_process_group(effective_group)
+        _drain_after_terminate(proc, capture_output=capture_output)
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=1,
+            timed_out=False,
+            command_error=f"bounded subprocess failed after launch: {exc}",
+        )
+
+
+def _drain_after_terminate(
+    proc: subprocess.Popen[str],
+    *,
+    capture_output: bool,
+) -> tuple[str | None, str | None]:
+    """Reap a terminated child without blocking forever if killpg was a no-op."""
+    if not capture_output:
+        with contextlib.suppress(subprocess.TimeoutExpired, OSError, ProcessLookupError):
+            proc.wait(timeout=5)
+        with contextlib.suppress(OSError, ProcessLookupError):
+            proc.kill()
+        return None, None
+    try:
+        return proc.communicate(timeout=5)
+    except subprocess.TimeoutExpired:
+        with contextlib.suppress(OSError, ProcessLookupError):
+            proc.kill()
+        with contextlib.suppress(subprocess.TimeoutExpired, OSError, ProcessLookupError):
+            return proc.communicate(timeout=1)
+        return None, None
+    except (OSError, ProcessLookupError):
+        return None, None
 
 
 def _terminate_process_group(group_id: int) -> None:

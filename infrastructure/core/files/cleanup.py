@@ -13,7 +13,11 @@ Sub-modules:
 from pathlib import Path
 
 from infrastructure.core.exceptions import FileOperationError
-from infrastructure.core.files.cleanup_helpers import archive_output_logs, clean_output_dir_contents
+from infrastructure.core.files.cleanup_helpers import (
+    archive_output_logs,
+    clean_output_dir_contents,
+    remove_output_entry,
+)
 from infrastructure.core.files.cleanup_root import clean_root_output_directory
 from infrastructure.core.logging.utils import get_logger, log_success
 from infrastructure.core.project_paths import validate_project_name
@@ -51,8 +55,6 @@ def clean_output_directory(output_dir: Path, *, preserve_names: frozenset[str] =
     Raises:
         FileOperationError: If the directory cannot be created or cleaned.
     """
-    import shutil
-
     logger.info("Cleaning output directory...")
     _reject_symlink_directory(output_dir)
 
@@ -71,12 +73,8 @@ def clean_output_directory(output_dir: Path, *, preserve_names: frozenset[str] =
             if item.name in preserve_names:
                 logger.debug(f"  Preserved entry: {item.name}")
                 continue
-            if item.is_dir():
-                shutil.rmtree(item)
-                logger.debug(f"  Removed directory: {item.name}")
-            else:
-                item.unlink()
-                logger.debug(f"  Removed file: {item.name}")
+            remove_output_entry(item)
+            logger.debug(f"  Removed entry: {item.name}")
 
         log_success("Output directory cleaned", logger)
     except OSError as e:

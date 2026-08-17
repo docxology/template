@@ -7,6 +7,7 @@ from pathlib import Path
 
 from infrastructure.validation.security_gate import (
     aggregate_security_findings,
+    parse_pip_audit_output,
     _pip_audit_vulnerabilities,
     run_security_scan,
     write_security_report,
@@ -126,3 +127,16 @@ def test_run_security_scan_skips_missing_tools_with_empty_path(tmp_path: Path, m
     assert {row["tool"] for row in report["failed_tools"]} == {"bandit", "pip_audit"}
     assert report["has_required_tool_failures"] is True
     assert (tmp_path / ".cache" / "template" / "security_report.json").exists()
+
+
+def test_empty_pip_audit_output_is_a_skip_not_zero_findings() -> None:
+    parsed = parse_pip_audit_output(stdout="", stderr="")
+    assert parsed["status"] == "skipped"
+    assert "no JSON" in parsed["reason"]
+    assert "findings" not in parsed
+
+
+def test_valid_pip_audit_json_is_not_skipped() -> None:
+    parsed = parse_pip_audit_output(stdout='{"dependencies": []}', stderr="")
+    assert parsed.get("status") != "skipped"
+    assert parsed["data"] == {"dependencies": []}

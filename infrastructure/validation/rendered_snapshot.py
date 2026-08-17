@@ -143,6 +143,16 @@ def _is_relative_to(path: Path, root: Path) -> bool:
     return True
 
 
+def _relative_to_permitted(path: Path, permitted: list[Path]) -> str | None:
+    """Return *path* relative to the first permitted root that contains it."""
+    for allowed in permitted:
+        try:
+            return path.relative_to(allowed).as_posix()
+        except ValueError:
+            continue
+    return None
+
+
 def _iter_tree_files(
     root: Path,
     *,
@@ -197,12 +207,12 @@ def _iter_tree_files(
             try:
                 if child.is_symlink():
                     target = child.resolve(strict=True)
-                    if not _is_relative_to(target, repository):
+                    target_key = _relative_to_permitted(target, permitted)
+                    if target_key is None:
                         raise RenderedSnapshotError(
                             "SOURCE_SYMLINK_ESCAPE",
                             f"source symlink escapes repository: {display}",
                         )
-                    target_key = target.relative_to(repository).as_posix()
                     if target.is_dir():
                         try:
                             display_key = display.absolute().relative_to(repo_root.absolute()).as_posix()
@@ -267,8 +277,9 @@ def _cached_paths(repo_root: Path) -> set[Path] | None:
             ],
             check=False,
             capture_output=True,
+            timeout=30,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if completed.returncode != 0:
         return None

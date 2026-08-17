@@ -6,9 +6,9 @@ that are not project-specific folders.
 Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 
-import shutil
 from pathlib import Path
 
+from infrastructure.core.files.cleanup_helpers import remove_output_entry
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -58,7 +58,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
 
                 if item_name in known_nested_leaf_names:
                     logger.debug(f"  Removing obsolete nested-project leaf directory: {item_name}")
-                    shutil.rmtree(item)
+                    remove_output_entry(item)
                     removed_items.append(item_name)
                     continue
 
@@ -90,7 +90,7 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
 
                 if item_name in root_level_dirs:
                     logger.debug(f"  Removing root-level directory: {item_name}")
-                    shutil.rmtree(item)
+                    remove_output_entry(item)
                     removed_items.append(item_name)
                 else:
                     # Unknown directory - keep it but log it

@@ -691,3 +691,12 @@ def test_symlinked_project_tree_is_walkable_and_escapes_are_still_refused(tmp_pa
     with pytest.raises(RenderedSnapshotError) as escaped:
         list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
     assert escaped.value.code == "SOURCE_SYMLINK_ESCAPE"
+
+    # Internal alias inside the declared project is in scope. The guard exists
+    # to stop escapes, not to refuse a sidecar project linking to itself.
+    (outside / "src" / "escape").unlink()
+    (outside / "src" / "alias.py").symlink_to(outside / "src" / "module.py")
+    aliased = list(_iter_tree_files(linked, repo_root=repository, extra_root=linked))
+    keys = {record.key for record in aliased}
+    assert any(record.path.name == "module.py" for record in aliased)
+    assert any("alias.py" in key for key in keys)

@@ -99,6 +99,18 @@ def _run_safety(repo_root: Path) -> dict[str, Any]:
     return {"findings": vulns, "summary": summary, "tool": "safety"}
 
 
+def parse_pip_audit_output(*, stdout: str, stderr: str) -> dict[str, Any]:
+    """Parse pip-audit JSON. Empty output is a skip, never a clean zero-vuln report."""
+    payload = stdout or stderr
+    if not payload.strip():
+        return {"status": "skipped", "reason": "pip-audit produced no JSON", "tool": "pip_audit"}
+    try:
+        data = json.loads(payload)
+    except json.JSONDecodeError:
+        return {"status": "skipped", "reason": "pip-audit output not valid JSON", "tool": "pip_audit"}
+    return {"data": data, "tool": "pip_audit"}
+
+
 def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
     probe = _run_security_command(
         repo_root,
@@ -125,14 +137,11 @@ def _run_pip_audit(repo_root: Path) -> dict[str, Any]:
     if result.timed_out:
         print("WARNING: pip-audit timed out")
         return {"status": "skipped", "reason": "pip-audit timed out", "tool": "pip_audit"}
-    try:
-        data = json.loads(result.stdout) if result.stdout else {}
-    except json.JSONDecodeError:
-        try:
-            data = json.loads(result.stderr) if result.stderr else {}
-        except json.JSONDecodeError:
-            print("WARNING: pip-audit output not valid JSON")
-            return {"status": "skipped", "reason": "pip-audit output not valid JSON", "tool": "pip_audit"}
+    parsed = parse_pip_audit_output(stdout=result.stdout or "", stderr=result.stderr or "")
+    if parsed.get("status") == "skipped":
+        print(f"WARNING: {parsed['reason']}")
+        return parsed
+    data = parsed["data"]
     vulns = _pip_audit_vulnerabilities(data)
     summary: dict[str, int] = {"total": len(vulns)}
     for severity in SEVERITY_LEVELS:
