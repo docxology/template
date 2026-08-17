@@ -119,6 +119,11 @@ class InfrastructureReport:
     total_python_files: int
     total_test_files: int
 
+    #: Tags that make a stage opt-in, read from the same pipeline.yaml the stages
+    #: come from. Previously restated here as a literal that mirrored a comment in
+    #: that file, which drifted the moment a new opt-in stage was declared.
+    opt_in_tags: frozenset[str] = frozenset()
+
     @property
     def pipeline_stages_declared(self) -> int:
         """Return the declared pipeline stages."""
@@ -133,13 +138,12 @@ class InfrastructureReport:
         # "Opt-in science/provenance stages (skipped in --core-only and default
         # runs)". All six tags are excluded from the default full-run count.
         """Return the default full pipeline stages."""
-        opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
-        return sum(1 for stage in self.pipeline_stages if opt_in_tags.isdisjoint(stage.tags))
+        return sum(1 for stage in self.pipeline_stages if self.opt_in_tags.isdisjoint(stage.tags))
 
     @property
     def pipeline_stages_core_only(self) -> int:
         """Return the core-only pipeline stages."""
-        opt_in_tags = {"bundle", "archival", "ebook", "metadata", "science", "provenance"}
+        opt_in_tags = self.opt_in_tags
         return sum(
             1
             for stage in self.pipeline_stages
@@ -373,6 +377,21 @@ def enumerate_numbered_scripts(scripts_dir: Path) -> list[PipelineStage]:
 count_pipeline_stages = enumerate_numbered_scripts
 
 
+def _load_opt_in_tags(repo_root: Path) -> frozenset[str]:
+    """Read the opt-in tag set declared in pipeline.yaml.
+
+    The DAG declares which tags make a stage opt-in; this exemplar must not restate
+    that set, and by the two-layer rule it cannot import the infrastructure copy
+    either. Reading the same YAML is the one option that keeps a single source.
+    """
+    yaml_path = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
+    try:
+        data = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        return frozenset()
+    return frozenset(data.get("opt_in_tags") or ())
+
+
 def load_pipeline_stages_from_yaml(repo_root: Path) -> list[PipelineStage]:
     """Load declared pipeline stages from ``infrastructure/core/pipeline/pipeline.yaml``."""
     yaml_path = repo_root / "infrastructure" / "core" / "pipeline" / "pipeline.yaml"
@@ -454,6 +473,7 @@ def build_infrastructure_report(repo_root: Path) -> InfrastructureReport:
         modules=modules,
         projects=projects,
         pipeline_stages=pipeline_stages,
+        opt_in_tags=_load_opt_in_tags(repo_root),
         numbered_scripts=numbered_scripts,
         total_python_files=total_py,
         total_test_files=total_tests,

@@ -12,10 +12,40 @@ from infrastructure.core.pipeline.cli import (
 )
 
 
+def _declared_stage_count() -> int:
+    """Stages declared in pipeline.yaml, read rather than remembered.
+
+    These assertions used to spell the number, and the count is in a test *name*.
+    Adding one opt-in stage broke five tests that were not testing stage counts at
+    all — they were testing tag filtering, JSON shape, and table rendering. A test
+    that hardcodes an incidental total fails for reasons unrelated to its subject.
+    """
+    import yaml
+
+    data = yaml.safe_load(DEFAULT_PIPELINE_YAML.read_text(encoding="utf-8")) or {}
+    stages = data.get("stages") or next(
+        (v for v in data.values() if isinstance(v, list) and v and isinstance(v[0], dict) and "key" in v[0]),
+        [],
+    )
+    return len(stages)
+
+
+def _llm_filtered_stage_count() -> int:
+    """Declared stages minus the LLM-tagged ones the filter under test removes."""
+    import yaml
+
+    data = yaml.safe_load(DEFAULT_PIPELINE_YAML.read_text(encoding="utf-8")) or {}
+    stages = data.get("stages") or next(
+        (v for v in data.values() if isinstance(v, list) and v and isinstance(v[0], dict) and "key" in v[0]),
+        [],
+    )
+    return sum(1 for s in stages if "llm" not in (s.get("tags") or []))
+
+
 class TestStageRows:
-    def test_default_pipeline_has_sixteen_declared_stages(self) -> None:
+    def test_default_pipeline_declares_every_stage_in_the_yaml(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML)
-        assert len(rows) == 16
+        assert len(rows) == _declared_stage_count()
         assert rows[0]["key"] == "clean"
         names = [r["name"] for r in rows]
         assert names[0] == "Clean Output Directories"
@@ -34,7 +64,7 @@ class TestStageRows:
 
     def test_explicit_tag_filter_excludes_llm(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML, exclude_tags={"llm"})
-        assert len(rows) == 14
+        assert len(rows) == _llm_filtered_stage_count()
         assert all("llm" not in r["tags"] for r in rows)
 
     def test_rows_expose_contract_fields(self) -> None:
@@ -68,20 +98,20 @@ class TestCli:
         assert rc == 0
         payload = json.loads(capsys.readouterr().out)  # must parse: no log pollution on stdout
         assert payload["version"] == 1
-        assert len(payload["stages"]) == 16
+        assert len(payload["stages"]) == _declared_stage_count()
 
     def test_list_stages_alias(self, capsys) -> None:
         rc = pipeline_cli_main(["list-stages", "--format", "json"])
         assert rc == 0
         payload = json.loads(capsys.readouterr().out)
-        assert len(payload["stages"]) == 16
+        assert len(payload["stages"]) == _declared_stage_count()
 
     def test_table_output(self, capsys) -> None:
         rc = pipeline_cli_main(["describe-pipeline", "--format", "table"])
         assert rc == 0
         out = capsys.readouterr().out
         assert "Clean Output Directories" in out
-        assert "16 stage(s)" in out
+        assert f"{_declared_stage_count()} stage(s)" in out
 
     def test_core_only_flag(self, capsys) -> None:
         rc = pipeline_cli_main(["describe-pipeline", "--format", "json", "--core-only"])

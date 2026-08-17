@@ -49,6 +49,25 @@ def _run_stdio_subprocess(messages: list[dict[str, Any]]) -> dict[Any, dict[str,
     return {line.get("id"): line for line in lines}
 
 
+def _declared_stage_count() -> int:
+    """Stages declared in pipeline.yaml, read rather than spelled.
+
+    These tests are about the MCP tool surface, not about how many stages exist.
+    Hardcoding the total made them fail when an unrelated opt-in stage was added,
+    which tells a maintainer nothing about MCP.
+    """
+    import yaml
+
+    from infrastructure.core.pipeline.cli import DEFAULT_PIPELINE_YAML
+
+    data = yaml.safe_load(DEFAULT_PIPELINE_YAML.read_text(encoding="utf-8")) or {}
+    stages = data.get("stages") or next(
+        (v for v in data.values() if isinstance(v, list) and v and isinstance(v[0], dict) and "key" in v[0]),
+        [],
+    )
+    return len(stages)
+
+
 class TestHandleRequest:
     def test_initialize(self) -> None:
         resp = handle_request({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
@@ -244,7 +263,7 @@ class TestInvokeCli:
         out = invoke_cli("infrastructure.core.pipeline", ["describe-pipeline", "--format", "json"])
         assert out["exit_code"] == 0
         payload = json.loads(out["stdout"])
-        assert len(payload["stages"]) == 16
+        assert len(payload["stages"]) == _declared_stage_count()
 
     def test_read_only_single_file_cli_is_reachable(self) -> None:
         # R7: a documented single-file CLI (read_only) runs via invoke_cli.
@@ -346,7 +365,7 @@ class TestServeLoop:
         assert by_id[1]["result"]["protocolVersion"] == PROTOCOL_VERSION
         assert "tools" in by_id[2]["result"]
         pipeline_payload = json.loads(by_id[3]["result"]["content"][0]["text"])
-        assert len(pipeline_payload["stages"]) == 16
+        assert len(pipeline_payload["stages"]) == _declared_stage_count()
 
     def test_real_subprocess_modern_stdio(self) -> None:
         by_id = _run_stdio_subprocess(

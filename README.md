@@ -454,6 +454,25 @@ narrative + benefits:
 - **Generic + reusable** — drop the same `infrastructure/` into any project that
   follows the layout ([`docs/usage/template-description.md`](docs/usage/template-description.md)).
 
+## 📦 Optional export: docxplus
+
+An opt-in stage exports a project as a conforming `.docx` (and `.docxplus`, the same
+bytes under a name that says so) which *also carries the project's own source tree*
+in a signed manifest. Word, LibreOffice, and Google Docs open it as an ordinary
+document; `docxplus` recovers the repository from inside it.
+
+```bash
+uv sync --extra docxplus
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/template_code_project
+```
+
+The container format is imported from upstream
+([docxology/docxplus](https://github.com/docxology/docxplus), pinned to a released
+tag) rather than vendored: this repository stays the rendering engine, and the
+specification stays the container project's business. The stage is excluded from
+default runs by its `docxplus` tag and skips cleanly when the extra is absent, so
+nobody who does not want it pays for it.
+
 ## 🔒 Security & Monitoring
 
 LLM input sanitization (`infrastructure.llm.core.sanitization`), security
