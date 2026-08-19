@@ -37,6 +37,7 @@ what the diffoscope gate compares. Neither replaces the other.
 from __future__ import annotations
 
 import hashlib
+from functools import lru_cache
 from pathlib import Path
 
 #: Suffixes routed through content hashing rather than byte hashing.
@@ -46,6 +47,33 @@ IMAGE_SUFFIXES: frozenset[str] = frozenset({".png", ".gif"})
 def is_image_artifact(relative_path: str) -> bool:
     """True when *relative_path* names a raster artifact this module can hash."""
     return Path(relative_path).suffix.lower() in IMAGE_SUFFIXES
+
+
+@lru_cache(maxsize=256)
+def _image_content_sha256_cached(resolved_path_str: str, _mtime_ns: int, _size: int) -> str:
+    path = Path(resolved_path_str)
+    if not path.is_file():
+        return ""
+    try:
+        from PIL import Image, ImageSequence
+    except ImportError:
+        return ""
+
+    digest = hashlib.sha256()
+    try:
+        with Image.open(path) as image:
+            digest.update(f"size:{image.size[0]}x{image.size[1]}".encode())
+            frames = 0
+            for frame in ImageSequence.Iterator(image):
+                digest.update(frame.convert("RGBA").tobytes())
+                frames += 1
+            digest.update(f"frames:{frames}".encode())
+            text_chunks = dict(getattr(image, "text", {}) or {})
+            for key in sorted(text_chunks):
+                digest.update(f"meta:{key}={text_chunks[key]}".encode())
+    except OSError:
+        return ""
+    return digest.hexdigest()
 
 
 def image_content_sha256(path: Path) -> str:
@@ -58,29 +86,10 @@ def image_content_sha256(path: Path) -> str:
     if not path.is_file():
         return ""
     try:
-        from PIL import Image, ImageSequence
-    except ImportError:  # pragma: no cover - Pillow ships with matplotlib here
+        stat = path.stat()
+        return _image_content_sha256_cached(str(path.resolve()), stat.st_mtime_ns, stat.st_size)
+    except (OSError, ValueError):
         return ""
-
-    digest = hashlib.sha256()
-    try:
-        with Image.open(path) as image:
-            # Normalise to RGBA so a palette change that preserves the visible
-            # image does not read as drift, while any visible change does.
-            digest.update(f"size:{image.size[0]}x{image.size[1]}".encode())
-            frames = 0
-            for frame in ImageSequence.Iterator(image):
-                digest.update(frame.convert("RGBA").tobytes())
-                frames += 1
-            digest.update(f"frames:{frames}".encode())
-            # Textual chunks travel with the file and are a tamper surface even
-            # though nothing here writes them today, so they are covered.
-            text_chunks = dict(getattr(image, "text", {}) or {})
-            for key in sorted(text_chunks):
-                digest.update(f"meta:{key}={text_chunks[key]}".encode())
-    except OSError:
-        return ""
-    return digest.hexdigest()
 
 
 __all__ = ["IMAGE_SUFFIXES", "image_content_sha256", "is_image_artifact"]

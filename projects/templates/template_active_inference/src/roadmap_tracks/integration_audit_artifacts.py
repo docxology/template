@@ -11,7 +11,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
+from yaml_io import load_yaml
+
 
 from .integration_audit_builders import (
     LATE_HYDRATION_PRODUCER,
@@ -171,7 +172,7 @@ def build_artifact_license_audit(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     provenance = _load_json(root / "output" / "data" / "artifact_provenance.json")
     project_license = "MIT"
-    config = yaml.safe_load((root / "manuscript" / "config.yaml").read_text(encoding="utf-8")) or {}
+    config = load_yaml(root / "manuscript" / "config.yaml")
     project_license = str((config.get("metadata") or {}).get("license") or project_license)
     rows = []
     for row in provenance.get("rows") or list((provenance.get("artifacts") or {}).values()):

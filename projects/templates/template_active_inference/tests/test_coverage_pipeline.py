@@ -22,7 +22,6 @@ _FIGURE_INPUT = _PROJECT_ROOT / "output" / "data" / "si_tmaze_trace.json"
     not _FIGURE_INPUT.is_file(),
     reason="figure-input analysis artifacts absent (Stage 4 analysis / pymdp not run)",
 )
-@pytest.mark.slow
 def test_compose_then_figures_does_not_reemit_fresh_json(project_root: Path) -> None:
     compose_all_sections(project_root)
     json_path = project_root / "output" / "data" / "sheaf_coverage_matrix.json"

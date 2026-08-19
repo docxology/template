@@ -15,7 +15,7 @@ from gates.validation import validate_outputs
 
 from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
-pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
 
 
 @pytest.fixture
@@ -127,7 +127,6 @@ SELF_REFERENTIAL_STABILITY_EXEMPT_OUTPUTS = {
 }
 
 
-@pytest.mark.slow
 def test_validate_outputs_after_analysis() -> None:
     root = Path(__file__).resolve().parents[2]
     from analysis import run_analysis
@@ -157,8 +156,6 @@ def test_validate_outputs_key_surface_is_stable(
     assert set(checks) == set(REQUIRED_OUTPUTS) | EXPECTED_DERIVED_OUTPUT_CHECK_KEYS
 
 
-@pytest.mark.long_running
-@pytest.mark.slow
 def test_validate_outputs_no_regression_on_stable_artifact_tree(prepared_output_gate_artifacts: Path) -> None:
     refresh_generated_gate_artifacts(prepared_output_gate_artifacts)
     first_checks = validate_outputs(prepared_output_gate_artifacts)
@@ -287,7 +284,6 @@ def test_validate_outputs_negative_missing_sweep(project_root: Path, tmp_path: P
             sweep.write_bytes(backup.read_bytes())
 
 
-@pytest.mark.slow
 def test_figures_nonblank_passes_on_real_tree(
     project_root: Path,
     prepared_output_gate_artifacts: Path,
@@ -347,7 +343,6 @@ def test_figures_nonblank_validates_small_fixtures(tmp_path: Path) -> None:
     )
 
 
-@pytest.mark.slow
 def test_reproducibility_replay_rebuild_passes_on_real_tree(
     project_root: Path,
     prepared_output_gate_artifacts: Path,

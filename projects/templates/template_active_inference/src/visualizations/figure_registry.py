@@ -8,8 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import yaml
-
+from yaml_io import load_yaml
 from manuscript.hydrate import substitute_snake_case_tokens
 
 logger = logging.getLogger(__name__)
@@ -47,7 +46,7 @@ def _load_figures_yaml(project_root: Path) -> dict[str, Any]:
     path = _figures_yaml_path(project_root)
     if not path.is_file():
         raise FileNotFoundError(f"missing figure registry: {path}")
-    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return dict(load_yaml(path))
 
 
 def load_figure_registry(project_root: Path) -> dict[str, FigureSpec]:
@@ -100,9 +99,9 @@ def load_section_figures(project_root: Path) -> dict[str, tuple[SectionFigureRef
     return mapping
 
 
-def figure_output_path(project_root: Path, figure_id: str) -> Path:
+def figure_output_path(project_root: Path, figure_id: str, *, registry: dict[str, FigureSpec] | None = None) -> Path:
     """Process figure output path."""
-    spec = load_figure_registry(project_root)[figure_id]
+    spec = (registry or load_figure_registry(project_root))[figure_id]
     return project_root.resolve() / "output" / "figures" / spec.filename
 
 

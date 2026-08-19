@@ -7,13 +7,14 @@ from pathlib import Path
 from typing import Any
 
 
+from yaml_io import load_yaml
+
+
 def _load_structured(path: Path) -> Any:
     if path.suffix in {".json", ".jsonl"}:
         return json.loads(path.read_text(encoding="utf-8"))
     if path.suffix in {".yaml", ".yml"}:
-        import yaml
-
-        return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        return load_yaml(path)
     return path.read_text(encoding="utf-8")
 
 
@@ -127,9 +128,7 @@ def claim_evidence_status_rows(
     path = ledger_path or root / "data" / "claim_ledger.yaml"
     if not path.exists():
         return []
-    import yaml
-
-    ledger = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    ledger = load_yaml(path)
     rows: list[dict[str, Any]] = []
     for claim in ledger.get("claims") or []:
         claim_id = str(claim.get("id") or "<unknown>")
@@ -235,9 +234,7 @@ def typed_claim_evidence_issues(
     path = ledger_path or root / "data" / "claim_ledger.yaml"
     if not path.exists():
         return [f"claim ledger missing: {path}"]
-    import yaml
-
-    ledger = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    ledger = load_yaml(path)
     issues: list[str] = []
     for claim in ledger.get("claims") or []:
         claim_id = str(claim.get("id") or "<unknown>")
@@ -290,8 +287,6 @@ def validate_claim_ledger(project_root: Path) -> bool:
     ledger_path = root / "data" / "claim_ledger.yaml"
     if not ledger_path.exists():
         return False
-    import yaml
-
     from manuscript.sheaf import (
         gray_cell_count_from_json,
         load_coverage_json,
@@ -300,7 +295,7 @@ def validate_claim_ledger(project_root: Path) -> bool:
         validate_coverage_json_data,
     )
 
-    ledger = yaml.safe_load(ledger_path.read_text(encoding="utf-8")) or {}
+    ledger = load_yaml(ledger_path)
     manifest_path = root / "manuscript" / "sheaf" / "manifest.yaml"
     manifest = load_manifest(manifest_path, project_root=root) if manifest_path.exists() else None
     registry = (
@@ -331,8 +326,6 @@ def verify_claim_bindings(project_root: Path) -> list[str]:
     """Semantic claim bindings -- tie manuscript values/adjectives to their oracles."""
     import json
 
-    import yaml as _yaml
-
     root = project_root.resolve()
     violations: list[str] = []
 
@@ -353,11 +346,7 @@ def verify_claim_bindings(project_root: Path) -> list[str]:
 
     cfg_path = root / "pymdp.yaml"
     if cfg_path.is_file() and summary_mode is not None:
-        try:
-            cfg = _yaml.safe_load(cfg_path.read_text(encoding="utf-8")) or {}
-        except (OSError, _yaml.YAMLError) as exc:
-            cfg = {}
-            violations.append(f"pymdp.yaml unreadable: {exc}")
+        cfg = load_yaml(cfg_path)
         cfg_mode = cfg.get("mode")
         if cfg_mode is None:
             violations.append("pymdp.yaml is missing the mandatory 'mode' key (mode-match bind disarmed)")

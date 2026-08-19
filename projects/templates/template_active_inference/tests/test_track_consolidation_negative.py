@@ -24,7 +24,7 @@ from track_consolidation_support import (
     _write,
 )
 
-pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 @pytest.mark.long_running
@@ -51,6 +51,7 @@ def test_sheaf_track_writer_looks_up_source_commit_once(
     assert calls == 1
 
 
+@pytest.mark.long_running
 def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
 
@@ -368,6 +369,7 @@ def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
             assert any(expected in issue for issue in validate_sheaf_track_artifacts(project_root)), artifact_key
 
 
+@pytest.mark.long_running
 def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> None:
     """Row-only forgeries (rows contradict a True stored aggregate) must be caught.
 
@@ -528,6 +530,7 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
         write_sheaf_track_artifacts(project_root)
 
 
+@pytest.mark.long_running
 def test_canonical_track_contract_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_sheaf_track_source_contract
 

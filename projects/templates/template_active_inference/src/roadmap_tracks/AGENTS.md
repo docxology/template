@@ -70,5 +70,5 @@ private data, or nondeterministic research behavior.
 Run focused project tests after touching this package:
 
 ```bash
-uv run pytest tests/test_track_consolidation.py tests/test_roadmap_promotion.py -q --no-cov
+uv run pytest tests/test_track_consolidation_surface.py tests/test_track_consolidation_negative.py tests/test_roadmap_promotion.py -q --no-cov
 ```

@@ -9,7 +9,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-import yaml
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
@@ -18,6 +17,7 @@ from gnn.parser import parse_gnn_file
 from manuscript.sheaf.counts import structural_counts
 from ontology.bindings import load_section_ontology
 from simulation.tmaze_model import TMazeSpec
+from yaml_io import load_yaml
 from .figure_helpers import (
     configure_axis,
     draw_arrow,
@@ -160,14 +160,14 @@ def figure_tmaze_schematic(project_root: Path) -> Path:
 
 def _load_pipeline_track_labels(project_root: Path) -> list[str]:
     path = project_root / "tracks.yaml"
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(path)
     tracks = raw.get("tracks") or []
     return [str(track.get("label") or track.get("id")) for track in tracks if track.get("required", True)]
 
 
 def _load_sheaf_track_labels(project_root: Path) -> list[str]:
     path = project_root / "manuscript" / "sheaf" / "tracks.yaml"
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(path)
     tracks = raw.get("tracks") or {}
     ordered = sorted(tracks.items(), key=lambda item: int((item[1] or {}).get("order", 0)))
     return [str((meta or {}).get("label") or track_id) for track_id, meta in ordered]

@@ -5,8 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import cast
 
-import yaml
-
+from yaml_io import load_yaml
 from .models import (
     DEFAULT_MANIFEST_REL,
     DEFAULT_REGISTRY_REL,
@@ -44,7 +43,7 @@ def load_manifest(
     else:
         root = manifest_path.parent
     registry = registry_path or (root / DEFAULT_REGISTRY_REL)
-    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(manifest_path)
     defaults_raw = raw.get("defaults") or {}
     manifest_defaults = SheafDefaults(
         missing_track=parse_missing(defaults_raw.get("missing_track"), MissingTrackPolicy.SKIP),

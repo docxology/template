@@ -192,21 +192,23 @@ class CheckpointManager:
             return False
 
     def _output_tree_digest(self) -> str:
-        """SHA-256 of the output tree excluding the checkpoint directory itself."""
+        """SHA-256 of the output tree excluding checkpoints, logs, and internal metadata."""
         output_root = self.checkpoint_dir.parent
         if not output_root.is_dir():
             return ""
         digest = hashlib.sha256()
         files: list[Path] = []
+        ignored_parts = {".checkpoints", ".pipeline", "logs", "__pycache__"}
         for path in output_root.rglob("*"):
             if not path.is_file():
                 continue
             try:
-                path.relative_to(self.checkpoint_dir)
+                rel_parts = set(path.relative_to(output_root).parts)
+                if rel_parts & ignored_parts:
+                    continue
             except ValueError:
-                files.append(path)
                 continue
-            # File lives under .checkpoints — skip.
+            files.append(path)
         for path in sorted(files, key=lambda item: item.as_posix()):
             rel = path.relative_to(output_root).as_posix()
             digest.update(rel.encode("utf-8"))

@@ -47,8 +47,6 @@ def test_refresh_animation_outputs_tolerates_missing_inputs(tmp_path: Path) -> N
     assert paths == {}
 
 
-@pytest.mark.slow
-@pytest.mark.timeout(600)
 def test_fast_path_returns_existing_paths_when_valid(copied_root: Path) -> None:
     # Settle once so the copy is at THIS platform's fixed point (the tracked
     # snapshot may read stale on other legs, e.g. py3.10 float drift). The
@@ -65,8 +63,6 @@ def test_fast_path_returns_existing_paths_when_valid(copied_root: Path) -> None:
     assert _fingerprint(copied_root) == fingerprint_before, "fast path must not rewrite artifacts"
 
 
-@pytest.mark.slow
-@pytest.mark.timeout(600)
 def test_stale_artifact_triggers_full_settlement(copied_root: Path) -> None:
     target = copied_root / "output" / "data" / "interop_roundtrip_report.json"
     target.unlink()
@@ -83,8 +79,6 @@ def test_stale_artifact_triggers_full_settlement(copied_root: Path) -> None:
     assert {key: path.resolve() for key, path in paths.items()} == expected
 
 
-@pytest.mark.slow
-@pytest.mark.timeout(600)
 def test_sheaf_track_writer_writes_canonical_artifacts(copied_root: Path) -> None:
     """The non-finalize multi-phase writer must emit canonical sheaf artifacts.
 
@@ -103,8 +97,6 @@ def test_sheaf_track_writer_writes_canonical_artifacts(copied_root: Path) -> Non
         assert paths[key].is_file(), f"{key} artifact must exist on disk"
 
 
-@pytest.mark.slow
-@pytest.mark.timeout(600)
 def test_semantic_core_writer_returns_certificate_paths(copied_root: Path) -> None:
     """``_write_semantic_core`` must return certificate/crosswalk paths.
 
@@ -120,7 +112,6 @@ def test_semantic_core_writer_returns_certificate_paths(copied_root: Path) -> No
     assert paths["crosswalk"].is_file()
 
 
-@pytest.mark.slow
 def test_sheaf_owned_writer_returns_coverage_matrix(copied_root: Path) -> None:
     """``_write_sheaf_owned_artifacts`` must return a dict keyed by path.
 
@@ -136,8 +127,6 @@ def test_sheaf_owned_writer_returns_coverage_matrix(copied_root: Path) -> None:
     assert paths["coverage_matrix"].is_file()
 
 
-@pytest.mark.slow
-@pytest.mark.timeout(600)
 def test_unfixable_source_defect_raises_instead_of_converging(
     copied_root: Path,
 ) -> None:

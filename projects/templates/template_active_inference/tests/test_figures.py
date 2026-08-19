@@ -20,7 +20,7 @@ from visualizations.figures_sheaf import coverage_heatmap_payload, figure_sheaf_
 # Figure generation exercises real matplotlib writers and the shared output tree.
 # Keep it in the release lane while allowing analytical and contract tests to
 # form the quick inner loop.
-pytestmark = pytest.mark.slow
+# Figures tests run fast (<30s total)
 
 
 def _assert_png(path: Path, *, min_width: int = 400, min_height: int = 200) -> None:

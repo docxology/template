@@ -63,7 +63,7 @@ def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
             "expected_failure": True,
             "observed": "expected_failure",
             "fixture_replay_status": "expected_failure_observed",
-            "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls",
+            "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls",
         }
         for row_id, track, gate in rows
     ]

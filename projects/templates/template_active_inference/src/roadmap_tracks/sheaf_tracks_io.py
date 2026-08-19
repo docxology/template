@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import copy
 import hashlib
 import subprocess
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 # Re-exported for the sheaf-track builder modules that import ``_load_json`` /
 # ``_write_json`` from this module; the canonical implementations live in
@@ -18,34 +15,12 @@ from json_io import load_json as _load_json
 from json_io import write_json as _write_json  # noqa: F401  (re-exported for sheaf_tracks_write)
 
 
-@lru_cache(maxsize=256)
-def _parse_yaml_cached(path_str: str, _mtime_ns: int, _size: int) -> dict[str, Any]:
-    """Parse a YAML file, memoized on (path, mtime, size).
-
-    The artifact builders read the same manifest/registry/config/ledger YAML files
-    dozens of times per ``write_sheaf_track_artifacts`` call; parsing dominates
-    (~579 parses / ~7.5s in a single call). The cache key includes mtime_ns AND size
-    so any rewrite (e.g. negative-control tests mutating then restoring these files)
-    invalidates the entry. Callers receive a deepcopy via ``_load_yaml`` so mutation
-    of the returned dict can never corrupt the cached object.
-    """
-    data = yaml.safe_load(Path(path_str).read_text(encoding="utf-8")) or {}
-    return data if isinstance(data, dict) else {}
-
-
-def _load_yaml(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    stat = path.stat()
-    loaded = copy.deepcopy(_parse_yaml_cached(str(path), stat.st_mtime_ns, stat.st_size))
-    if not isinstance(loaded, dict):
-        raise ValueError(f"expected YAML object in {path}")
-    return loaded
+from yaml_io import load_yaml as _load_yaml
 
 
 def _load_structured(path: Path) -> dict[str, Any]:
     if path.suffix.lower() in {".yaml", ".yml"}:
-        return _load_yaml(path)
+        return dict(_load_yaml(path))
     loaded = _load_json(path)
     if not isinstance(loaded, dict):
         raise ValueError(f"expected JSON object in {path}")

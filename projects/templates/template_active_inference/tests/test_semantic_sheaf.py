@@ -10,7 +10,7 @@ import pytest
 from gate_support import ensure_gate_artifacts, temporary_json_mutation, temporary_text_mutation
 
 
-pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts]
+pytestmark = [pytest.mark.requires_gate_artifacts]
 
 
 def test_semantic_certificate_covers_tracks_symbols_and_variables(project_root: Path) -> None:

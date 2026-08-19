@@ -9,7 +9,8 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Literal
 
-import yaml
+from yaml_io import load_yaml
+
 
 SimulationMode = Literal["state_inference", "policy_inference"]
 
@@ -190,7 +191,7 @@ def load_pymdp_config(
     path = config_path or pymdp_config_path(project_root)
     if not path.is_file():
         return default_pymdp_config()
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(path)
     return _parse_raw(raw)
 
 

@@ -7,19 +7,12 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-import yaml
 
 from manuscript.sheaf.coverage import load_sheaf_coverage_context
+from yaml_io import load_yaml as _load_yaml
 
 STATUS_MATRIX_SCHEMA = "template_active_inference.sheaf_section_status_matrix.v1"
 RENDER_LOG_SCHEMA = "template_active_inference.sheaf_render_log.v1"
-
-
-def _load_yaml(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    return data if isinstance(data, dict) else {}
 
 
 def _claim_indexes(root: Path) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[tuple[str, str], list[str]]]:
