@@ -205,6 +205,7 @@ class TestLoadPipelineStagesFromYaml:
         tags = {stage.name: stage.tags for stage in stages}
         assert "bundle" in tags["Executable Bundle"]
         assert "archival" in tags["Archival Publication"]
+        assert "docxplus" in tags["docxplus Export"]
 
     def test_all_script_paths_resolve_to_real_files(self):
         """Regression guard: every stage with a ``script:`` field in

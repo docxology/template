@@ -54,6 +54,7 @@ class TestStageRows:
         assert "Metadata Package" in names
         assert "Connector Search" in names
         assert "Provenance Record" in names
+        assert "docxplus Export" in names
 
     def test_rows_are_topologically_ordered(self) -> None:
         rows = stage_rows(DEFAULT_PIPELINE_YAML)

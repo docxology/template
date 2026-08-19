@@ -35,6 +35,8 @@ try:  # pragma: no cover - the installed branch is exercised by the opt-in job
 
     _DOCXPLUS_AVAILABLE = True
 except ImportError:  # pragma: no cover - exercised whenever the extra is absent
+    DocxPlusBuilder = None
+    write_document = None
     _DOCXPLUS_AVAILABLE = False
 
 #: Install line quoted verbatim in the skip message, so a reader never has to
@@ -114,7 +116,7 @@ def export_project(
     discoverable only by trying. Returns an :class:`ExportResult` describing what
     happened, including the reason when nothing did.
     """
-    if not _DOCXPLUS_AVAILABLE:
+    if not _DOCXPLUS_AVAILABLE or DocxPlusBuilder is None or write_document is None:
         reason = f"docxplus is not installed; install the optional extra with: {INSTALL_HINT}"
         logger.info("Skipping docxplus export — %s", reason)
         return ExportResult(available=False, skipped_reason=reason)

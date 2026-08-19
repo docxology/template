@@ -23,7 +23,7 @@ Define the pipeline as a **declarative DAG in YAML** (`pipeline.yaml`). Each sta
 
 This example records the core+LLM selection when the ADR was accepted; it is
 not the live stage inventory. The accepted decision is the YAML-owned DAG, not
-a fixed stage count. The current `pipeline.yaml` declares 16 stages, the normal
+a fixed stage count. The current `pipeline.yaml` declares 17 stages, the normal
 full selection runs 10, and `--core-only` runs eight. Use the generated table in
 [`docs/RUN_GUIDE.md`](../../RUN_GUIDE.md#core-pipeline-stages--executive-reporting)
 for current names, dependencies, tags, and failure modes.

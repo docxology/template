@@ -40,7 +40,7 @@
   },
   "pipeline_stages_declared": {
     "manuscript_section": "manuscript/00_abstract.md, 02_introduction.md, 03a_architecture.md, 03c_documentation.md, 07_security_provenance.md, manuscript/AGENTS.md / pipeline-stages token table",
-    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (16)",
+    "claim_text": "a YAML-declared pipeline (${pipeline_stages_declared} stages; default full ${pipeline_stages_default_full}) ... `${pipeline_stages_declared}` | YAML stage count (17)",
     "value": 17,
     "abs_tolerance": 0,
     "verifier_function": "template_template.introspection.build_infrastructure_report",

@@ -274,6 +274,8 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
   Steganography only  | ./secure_run.sh --steganography-only        (re-watermark, no re-render)
   Ebook formats       | uv run python scripts/pipeline/stage_11_ebook.py --project <name>
   Metadata package    | uv run python scripts/pipeline/stage_12_metadata.py --project <name>
+  docxplus export     | uv run python scripts/pipeline/stage_13_docxplus.py --project <name>
+  Research workflow   | uv run python scripts/pipeline/stage_10_research_workflow.py --project <name> --describe
   Executable bundle   | uv run python scripts/runner/bundle_executable.py --project <name>
   Archival deposit    | uv run python scripts/runner/archive_publication.py --project <name>  (dry-run by default)
   Full release        | uv run python scripts/publish/publish_project_release.py --project <name> --tag vX --repo owner/repo
@@ -285,7 +287,7 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
 After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
 
-Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 16 stages total: 8 core, 2 science/provenance, 2 optional LLM, 2 opt-in ebook/metadata, and 2 opt-in bundle/archival stages.
+Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 17 stages total: 8 core, 2 science/provenance, 2 optional LLM, 3 opt-in ebook/docxplus/metadata, and 2 opt-in bundle/archival stages.
 
 ### Manuscript Menu Options
 

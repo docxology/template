@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "92.85 %",
-      "source_hash": "46a8eeb833da534513416537725677745a82ce40bd2da5bf55d8714b669df71e"
+      "source_hash": "ccbb40ba8665ea73434eeb8de1963e4f64bf49d03b982167a97501c72473bfab"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "92.14 %",
@@ -91,7 +91,7 @@
     },
     "template_template": {
       "coverage_pct": "97.66 %",
-      "source_hash": "61acef4fbd5629cd59b147a58241a07c41d977137bfa7c21e2d52e29dafc476d"
+      "source_hash": "172795bcb92cf7d451f6abba8df1fd4282141f1c116929398c03a8594f8763f2"
     },
     "template_textbook": {
       "coverage_pct": "93.35 %",
@@ -99,13 +99,13 @@
     }
   },
   "schema_version": 3,
-  "source_commit": "3d51aeb90d991f85fb358266447f84598a137146",
+  "source_commit": "7d7de2787fd248c19b3df320ac7e51d058d95661",
   "source_inventory_mode": "tracked-and-nonignored-working-tree",
   "source_tree_identity": {
     "algorithm": "sha256",
     "inventory_mode": "tracked-and-nonignored-working-tree",
     "projects": {
-      "template_active_inference": "46a8eeb833da534513416537725677745a82ce40bd2da5bf55d8714b669df71e",
+      "template_active_inference": "ccbb40ba8665ea73434eeb8de1963e4f64bf49d03b982167a97501c72473bfab",
       "template_advanced_literature_review": "694238dd07af9172957e7a344fe943d30e99291c9ca6f7d55c8cf817cec5e063",
       "template_autopoiesis": "62200bdcf843d0b6da07fd0d0c8f2fd8f33c5e5f4d4638d9a1a8ae69c3057600",
       "template_autoresearch_project": "89ee7f822c10059eaf4e5cbdb6228daa3345e34872a19b0aa40dd040fb90a14f",
@@ -127,7 +127,7 @@
       "template_search_project": "406d5d05c10c6039a05ce949253b871893ede76693029a8a0244eee25bf0d063",
       "template_sia": "613edbab22acb85b2905c49dfa214059e09782aad02c201df60520301f3b7439",
       "template_storybook": "fedea35fa5508163d6213c549d91ab413949286c24bb39fdb9138a039b836bc3",
-      "template_template": "61acef4fbd5629cd59b147a58241a07c41d977137bfa7c21e2d52e29dafc476d",
+      "template_template": "172795bcb92cf7d451f6abba8df1fd4282141f1c116929398c03a8594f8763f2",
       "template_textbook": "50f104c77f3e25f7a1c95a8747a80fbd34810cb2c63acc50716b89152d7adfc2"
     }
   }

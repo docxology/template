@@ -14,4 +14,5 @@ import from here.
 - `gates/` — validation gates over generated outputs.
 - `visualizations/` — deterministic figure generation.
 - `roadmap_tracks/` — promoted toy sweep, formal interop, canonical sheaf-track, and integration-audit artifacts.
+- `json_io.py`, `yaml_io.py` — shared JSON and memoized YAML reading/writing helpers.
 - `analysis.py`, `invariants.py` — top-level analysis entry points and invariant checks.

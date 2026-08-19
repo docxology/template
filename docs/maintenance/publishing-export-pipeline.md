@@ -97,14 +97,16 @@ artifacts. Each stage writes to `projects/<name>/output/`:
 | PDF rendering (`stage_03_render.py`) | `output/pdf/` | `<name>_combined.pdf` |
 | EPUB/MOBI (`stage_11_ebook.py`, opt-in) | `output/ebook/` | `<name>.epub`, `<name>.mobi` |
 | Metadata package (`stage_12_metadata.py`, opt-in) | `output/metadata/` | `onix.xml`, `metadata.json`, `content.opf` |
+| docxplus export (`stage_13_docxplus.py`, opt-in) | `output/docxplus/` | `<name>.docx`, `<name>.docxplus` |
 
-EPUB and metadata are opt-in stages (tagged `ebook` and `metadata`
-respectively; both are filtered out of default pipeline runs — see
+EPUB, metadata, and docxplus are opt-in stages (tagged `ebook`, `metadata`, and `docxplus`
+respectively; all are filtered out of default pipeline runs — see
 `infrastructure/core/pipeline/pipeline.yaml`). Invoke them explicitly:
 
 ```bash
 uv run python scripts/pipeline/stage_11_ebook.py --project templates/<name>
 uv run python scripts/pipeline/stage_12_metadata.py --project templates/<name>
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/<name>
 ```
 
 (The executable bundle and archival publication — tagged `bundle` and
