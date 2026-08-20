@@ -9,8 +9,33 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Robustness
+
+- `uv sync` timeout no longer claims a successful workspace sync; it falls back
+  to the same installed-package check as other `uv` failures.
+- Bounded hook execution no longer swallows post-launch `OSError` without
+  killing the process group, and drain-after-timeout cannot hang forever.
+- Declared pipeline artifact paths reject `..` / absolute escapes instead of
+  hashing files outside the repository.
+- Rendered-source walks admit in-project sidecar symlinks while still refusing
+  dual-root escapes; `git ls-files` for that walk now has a timeout.
+- Output cleanup unlinks directory-symlink children instead of following them
+  with `rmtree`.
+- Empty `pip-audit` stdout is recorded as a skip, not a clean zero-finding run.
+- Incremental skip now requires the recorded output hash to still match; a
+  swapped artifact no longer skips the stage.
+- Resume checkpoints bind an output-tree digest so deleted or swapped files
+  invalidate the checkpoint.
+- Confidentiality `git` helpers now time out instead of hanging a gate.
+- Rendering web/CLI tests that swallowed every exception or only checked
+  `hasattr` now assert real HTML output and parser/main() outcomes.
+
 ### Documentation
 
+- Corrected living docs that still said four opt-in stages / a `--tags` flag,
+  treated `projects/active/` as non-rendered, or pinned local/CI Python at 3.12
+  or 3.10–3.13. The generator sentence in `counts_doc.py` now matches discovery:
+  `active/` is the hot-seat rendered set.
 - Added [`docs/maintenance/review-remediation-2026-08.md`](docs/maintenance/review-remediation-2026-08.md),
   a durable record of the 2026-08-12 parallel-agent comprehensive review and
   improvement (infrastructure/scripts/docs + all 24 exemplars, released in

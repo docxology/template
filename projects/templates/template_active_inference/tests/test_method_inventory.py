@@ -53,6 +53,7 @@ def test_docs_signpost_method_inventory(project_root: Path) -> None:
 
 
 def test_method_inventory_check_command(project_root: Path) -> None:
+    write_method_inventory(project_root)
     result = subprocess.run(
         [sys.executable, "scripts/generate_method_inventory.py", "--check"],
         cwd=project_root,

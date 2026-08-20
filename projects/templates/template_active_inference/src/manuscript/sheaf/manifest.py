@@ -5,8 +5,7 @@ from __future__ import annotations
 from pathlib import Path, PureWindowsPath
 from typing import cast
 
-import yaml
-
+from yaml_io import load_yaml
 from .models import (
     DEFAULT_MANIFEST_REL,
     DEFAULT_REGISTRY_REL,
@@ -106,7 +105,7 @@ def load_manifest(
         else DEFAULT_REGISTRY_REL
     )
     resolve_project_relative_path(root, registry, field="manifest registry_path")
-    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
+    raw = load_yaml(manifest_path)
     defaults_raw = raw.get("defaults") or {}
     manifest_defaults = SheafDefaults(
         missing_track=parse_missing(defaults_raw.get("missing_track"), MissingTrackPolicy.SKIP),

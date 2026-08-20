@@ -150,21 +150,55 @@ def _is_relative_to(path: Path, root: Path) -> bool:
     return True
 
 
+def _relative_to_permitted(path: Path, permitted: list[Path]) -> str | None:
+    """Return *path* relative to the first permitted root that contains it."""
+    for allowed in permitted:
+        try:
+            return path.relative_to(allowed).as_posix()
+        except ValueError:
+            continue
+    return None
+
+
 def _iter_tree_files(
     root: Path,
     *,
     repo_root: Path,
     excluded_parts: frozenset[str] = _PROJECT_EXCLUDED_PARTS,
+    extra_root: Path | None = None,
 ) -> Iterator[_FileRecord]:
-    """Walk files while following only repository-confined, acyclic symlinks."""
+    """Walk files while following only confined, acyclic symlinks.
+
+    Confinement means the repository, plus ``extra_root`` when one is given.
+
+    ``extra_root`` exists for projects that are symlinked into the repository
+    rather than stored inside it. A private sidecar checkout linked in at
+    ``projects/working/<name>`` resolves outside ``repo_root``, and refusing it
+    made the entire tree unreadable even though that tree is precisely what the
+    snapshot was asked to describe. Callers pass the project root they are
+    already walking, so the guard still rejects a symlink escaping BOTH the
+    repository and the declared project, which is the case it exists for.
+
+    The boundary is never widened by default: a caller that declares no extra
+    root gets the repository-only behavior unchanged.
+
+    Args:
+        root: Directory to walk.
+        repo_root: Repository the snapshot claims to describe.
+        excluded_parts: Path components to skip.
+        extra_root: An additional permitted containment root, or None.
+    """
     root = root.absolute()
     repository = repo_root.resolve()
+    permitted = [repository]
+    if extra_root is not None:
+        permitted.append(extra_root.resolve())
     if not root.exists():
         return
 
     def visit(display_dir: Path, actual_dir: Path, ancestors: frozenset[Path]) -> Iterator[_FileRecord]:
         resolved_dir = actual_dir.resolve(strict=True)
-        if not _is_relative_to(resolved_dir, repository):
+        if not any(_is_relative_to(resolved_dir, allowed) for allowed in permitted):
             raise RenderedSnapshotError("SOURCE_SYMLINK_ESCAPE", f"source directory escapes repository: {display_dir}")
         if resolved_dir in ancestors:
             raise RenderedSnapshotError("SOURCE_SYMLINK_CYCLE", f"source symlink cycle: {display_dir}")
@@ -180,12 +214,12 @@ def _iter_tree_files(
             try:
                 if child.is_symlink():
                     target = child.resolve(strict=True)
-                    if not _is_relative_to(target, repository):
+                    target_key = _relative_to_permitted(target, permitted)
+                    if target_key is None:
                         raise RenderedSnapshotError(
                             "SOURCE_SYMLINK_ESCAPE",
                             f"source symlink escapes repository: {display}",
                         )
-                    target_key = target.relative_to(repository).as_posix()
                     if target.is_dir():
                         try:
                             display_key = display.absolute().relative_to(repo_root.absolute()).as_posix()
@@ -363,8 +397,9 @@ def _cached_paths(repo_root: Path) -> set[Path] | None:
             ],
             check=False,
             capture_output=True,
+            timeout=30,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if completed.returncode != 0:
         return None
@@ -451,7 +486,15 @@ def _project_records(
     project_repository = _source_repository_boundary(repo_root, lexical_project_root, project_root)
     external_project = project_repository != repo_root.resolve()
     manuscript_root = resolve_source_manuscript_dir(project_root).absolute()
-    for raw_record in _iter_tree_files(project_root, repo_root=project_repository):
+    # The project tree is what this snapshot describes, so the project root is a
+    # permitted containment root even when the project is symlinked in from
+    # outside the repository. The stage-implementation walk keeps the
+    # repository-only boundary: stage code must live in the repository.
+    for raw_record in _iter_tree_files(
+        project_root,
+        repo_root=project_repository,
+        extra_root=project_root,
+    ):
         record = _relative_record(raw_record, project_root)
         candidate = Path(record.key.split(" -> ", maxsplit=1)[0])
         if candidate.parts and candidate.parts[0] == "docs":

@@ -10,6 +10,7 @@ import shlex
 import subprocess
 import sys
 import time
+import xml.etree.ElementTree as StdET
 from collections import Counter
 from collections.abc import Callable
 from pathlib import Path
@@ -655,6 +656,61 @@ def _run(
         raise RuntimeError(f"{label} failed with return code {returncode}{suffix}")
 
 
+def _is_empty_profile_selection_failure(exc: RuntimeError) -> bool:
+    """Return whether pytest selected no tests for a filtered coverage group.
+
+    A complete module partition can legitimately contain a group whose tests
+    are all outside a bounded profile (for example, a negative-control module
+    made entirely of ``long_running`` tests in the ``release`` profile).
+    Pytest reports that situation with exit code 5.  It is distinct from a
+    collection error or a failing test and should be recorded as an empty
+    profile slice rather than making the whole aggregate coverage run fail.
+    """
+    detail = str(exc)
+    return (
+        "failed with return code 5" in detail
+        and "collected " in detail
+        and "deselected" in detail
+        and "0 selected" in detail
+    )
+
+
+def _write_empty_coverage_evidence(
+    label: str,
+    *,
+    junit_path: Path | None,
+    evidence_path: Path | None,
+) -> None:
+    """Write valid zero-test sidecars for a profile-empty coverage group."""
+    if junit_path is not None:
+        junit_path.parent.mkdir(parents=True, exist_ok=True)
+        suite = StdET.Element(
+            "testsuite",
+            {
+                "name": label,
+                "tests": "0",
+                "failures": "0",
+                "errors": "0",
+                "skipped": "0",
+            },
+        )
+        StdET.ElementTree(suite).write(junit_path, encoding="utf-8", xml_declaration=True)
+    if evidence_path is not None:
+        evidence_path.parent.mkdir(parents=True, exist_ok=True)
+        evidence_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": _PYTEST_EVIDENCE_SCHEMA,
+                    "warnings": 0,
+                    "discovery_count": 0,
+                },
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+
 def _run_chunked_coverage(
     project_root: Path,
     coverage_groups: list[tuple[str, list[str]]],
@@ -673,18 +729,35 @@ def _run_chunked_coverage(
             junit_paths.append(junit_path)
         if evidence_path is not None:
             evidence_paths.append(evidence_path)
-        command_runner(
-            project_root,
-            _coverage_command(
-                selectors,
-                append=index > 0,
-                final=index == len(coverage_groups) - 1,
-                profile=profile,
+        try:
+            command_runner(
+                project_root,
+                _coverage_command(
+                    selectors,
+                    append=index > 0,
+                    final=index == len(coverage_groups) - 1,
+                    profile=profile,
+                    junit_path=junit_path,
+                    evidence_path=evidence_path,
+                ),
+                f"Coverage pass: {label}",
+            )
+        except RuntimeError as exc:
+            # A zero-test group is expected only for a bounded profile.  Do
+            # not hide failures from the historical full verifier, and do not
+            # let an empty final group suppress the aggregate coverage floor.
+            if (
+                profile not in {"quick", "release"}
+                or index == len(coverage_groups) - 1
+                or not _is_empty_profile_selection_failure(exc)
+            ):
+                raise
+            print(f"    skipped: {label} selected no tests for the {profile} profile")
+            _write_empty_coverage_evidence(
+                label,
                 junit_path=junit_path,
                 evidence_path=evidence_path,
-            ),
-            f"Coverage pass: {label}",
-        )
+            )
     return junit_paths, evidence_paths
 
 

@@ -456,3 +456,27 @@ class TestCheckpointManager:
             finally:
                 # Restore permissions
                 checkpoint_dir.chmod(0o755)
+
+
+def test_validate_checkpoint_rejects_swapped_outputs(tmp_path):
+    """A structurally valid checkpoint must not resume after output files change."""
+    from infrastructure.core.runtime.checkpoint import CheckpointManager, StageResult
+
+    output = tmp_path / "output"
+    output.mkdir()
+    (output / "result.txt").write_text("original", encoding="utf-8")
+    manager = CheckpointManager(checkpoint_dir=output / ".checkpoints")
+    assert manager.save_checkpoint(
+        pipeline_start_time=1.0,
+        last_stage_completed=1,
+        stage_results=[StageResult(name="Analysis", exit_code=0, duration=0.1, completed=True)],
+        total_stages=3,
+    )
+    ok, _err = manager.validate_checkpoint()
+    assert ok is True
+
+    (output / "result.txt").write_text("TAMPERED", encoding="utf-8")
+    ok, err = manager.validate_checkpoint()
+    assert ok is False
+    assert err is not None
+    assert "digest" in err.lower()

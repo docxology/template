@@ -147,7 +147,7 @@ tooling).
 ### Full pipeline
 
 The default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml)
-declares 16 stages. A normal full run selects 10 core+LLM stages; the two LLM
+declares 17 stages. A normal full run selects 10 core+LLM stages; the two LLM
 stages may soft-skip when Ollama is unavailable. Science/provenance,
 ebook/metadata, and bundle/archival stages are declared but opt-in. Use the
 generated table in [`RUN_GUIDE.md`](RUN_GUIDE.md#core-pipeline-stages--executive-reporting)

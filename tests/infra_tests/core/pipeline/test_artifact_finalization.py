@@ -131,7 +131,7 @@ def test_resume_after_validation_preserves_committed_aggregate(tmp_path: Path) -
     project, pipeline_path = _make_pipeline_repo(root)
     artifact = project / "output" / "data" / "result.txt"
     artifact.parent.mkdir(parents=True)
-    artifact.write_text("rendered\\n", encoding="utf-8")
+    artifact.write_text("rendered\n", encoding="utf-8")
     aggregate_artifact_manifests(project / "output")
     committed_digest = _manifest_digest(project)
     (root / "validation-manifest.sha256").write_text(committed_digest + "\n", encoding="utf-8")

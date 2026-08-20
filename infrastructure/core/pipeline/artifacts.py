@@ -678,14 +678,20 @@ def _declared_output_paths(repo_root: Path, project_dir: Path, contract: StageCo
     project_slug = _project_slug(repo_root, project_dir)
     for raw in contract.output_artifacts:
         rendered = raw.replace("{project}", project_slug).rstrip("/")
+        rendered_path = Path(rendered)
+        if rendered_path.is_absolute() or ".." in rendered_path.parts:
+            raise ValueError(f"declared artifact path escapes confinement: {raw}")
         if rendered.startswith("projects/"):
-            paths.append(repo_root / rendered)
+            candidate = repo_root / rendered
         elif rendered == f"output/{project_slug}" or rendered.startswith(f"output/{project_slug}/"):
-            paths.append(repo_root / rendered)
+            candidate = repo_root / rendered
         elif rendered.startswith("output/"):
-            paths.append(project_dir / rendered)
+            candidate = project_dir / rendered
         else:
-            paths.append(project_dir / rendered)
+            candidate = project_dir / rendered
+        if not _is_relative_to(candidate, repo_root) and not _is_relative_to(candidate, project_dir):
+            raise ValueError(f"declared artifact path escapes confinement: {raw}")
+        paths.append(candidate)
     return tuple(paths)
 
 

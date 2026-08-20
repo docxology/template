@@ -271,7 +271,7 @@ def run_bounded_subprocess(
                 argv=tuple(cmd),
                 returncode=1,
                 timed_out=False,
-                command_error="failed to launch",
+                command_error=f"failed to launch: {exc}",
             )
         raise
 
@@ -330,6 +330,19 @@ def run_bounded_subprocess(
             stdout=timed_out_stdout or "",
             stderr=timed_out_stderr or "",
             command_error=cleanup_error,
+        )
+    except Exception as exc:  # noqa: BLE001 - any post-launch failure must clean up the group
+        _terminate_and_reap_interrupted_process(
+            proc,
+            group_id=effective_group,
+            run_token=run_token,
+            guardian=guardian,
+        )
+        return BoundedSubprocessResult(
+            argv=tuple(cmd),
+            returncode=1,
+            timed_out=False,
+            command_error=f"bounded subprocess failed after launch: {exc}",
         )
     except BaseException:
         _terminate_and_reap_interrupted_process(

@@ -18,6 +18,7 @@ from typing import Any
 
 from json_io import load_json_strict as _load_json
 from roadmap_tracks.sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
+from yaml_io import load_yaml
 
 CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/parameter_sweep.csv": "run_analytical_sweep.py",
@@ -93,12 +94,8 @@ def _file_fingerprint(path: Path) -> tuple[bool, int, str]:
 
 
 def _configured_analysis_scripts(root: Path) -> list[str]:
-    import yaml
-
     path = root / "manuscript" / "config.yaml"
-    if not path.is_file():
-        return []
-    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    payload = load_yaml(path)
     return [str(script) for script in ((payload.get("analysis") or {}).get("scripts") or [])]
 
 
@@ -115,12 +112,8 @@ def _config_digest(root: Path) -> str:
 
 
 def _deterministic_seed(root: Path) -> int:
-    import yaml
-
     path = root / "pymdp.yaml"
-    if not path.is_file():
-        return 0
-    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    payload = load_yaml(path)
     seed = payload.get("random_seed", payload.get("seed", 0))
     return int(seed)
 

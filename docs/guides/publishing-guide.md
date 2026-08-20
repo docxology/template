@@ -657,6 +657,21 @@ uv run python -m infrastructure.publishing.transmission_page_check \
 ```
 
 
+## Optional Export: docxplus (opt-in stage 13)
+
+Export the project as a conforming `.docx` and `.docxplus` intelligent document that carries its own source tree in a signed, tamper-evident manifest ([`docxology/docxplus`](https://github.com/docxology/docxplus)):
+
+```bash
+# Install the optional extra
+uv sync --extra docxplus
+
+# Run stage 13 for a project
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/template_code_project
+```
+
+Outputs are written to `projects/{name}/output/docxplus/` (`{name}.docx`, `{name}.docxplus`, and `docxplus_export.json`).
+
+
 ## Executable bundle (opt-in stage)
 
 ```bash

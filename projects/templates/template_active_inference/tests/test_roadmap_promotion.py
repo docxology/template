@@ -25,7 +25,7 @@ from gate_support import (
 # module a wide per-test ceiling (a marker overrides the CLI --timeout value). 600s covers
 # the heaviest negative control on the slowest leg without masking a real hang. These are
 # release-lane artifact refreshes, not quick contract checks.
-pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(600)]
 
 
 def _load(path: Path) -> dict:
@@ -127,6 +127,7 @@ def test_promoted_roadmap_artifacts_are_written_and_valid(project_root: Path) ->
     refresh_gate_artifact_session_signature(project_root)
 
 
+@pytest.mark.long_running
 @pytest.mark.long_running
 def test_toy_sweep_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_toy_sweep_artifacts, write_toy_sweep_artifacts
@@ -233,6 +234,7 @@ def test_toy_sweep_uses_measured_policy_and_topology_trace_artifacts(project_roo
 
 
 @pytest.mark.long_running
+@pytest.mark.long_running
 def test_formal_interop_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import validate_formal_interop_artifacts, write_formal_interop_artifacts
 
@@ -309,6 +311,7 @@ def test_formal_interop_negative_controls(project_root: Path) -> None:
     refresh_output_gate_contracts(project_root)
 
 
+@pytest.mark.long_running
 def test_integration_audit_negative_controls(project_root: Path) -> None:
     from roadmap_tracks import (
         validate_integration_audit_artifacts,

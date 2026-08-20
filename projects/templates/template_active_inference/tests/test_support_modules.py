@@ -313,6 +313,43 @@ def test_profile_args_are_additive_and_keep_live_services_opt_in() -> None:
     assert all("not external_fixture" in expression[1] for expression in (quick, release, exhaustive))
 
 
+def test_chunked_coverage_records_empty_bounded_profile_slice(tmp_path: Path) -> None:
+    """A filtered all-long group is skipped without weakening later coverage."""
+    calls: list[str] = []
+    groups = [
+        ("ordinary checks", ["tests/test_ordinary.py"]),
+        ("all-long checks", ["tests/test_long_running.py"]),
+        ("final checks", ["tests/test_final.py"]),
+    ]
+
+    def command_runner(root: Path, command: list[str], label: str) -> None:
+        del root, command
+        calls.append(label)
+        if label == "Coverage pass: all-long checks":
+            raise RuntimeError(
+                "Coverage pass: all-long checks failed with return code 5:\n"
+                "collected 4 items / 4 deselected / 0 selected"
+            )
+
+    junit_paths, evidence_paths = full_verification._run_chunked_coverage(
+        tmp_path,
+        groups,
+        profile="release",
+        receipt_context=(tmp_path / "receipt.json", "run-id", "project", "command-sha"),
+        command_runner=command_runner,
+    )
+
+    assert calls == [f"Coverage pass: {label}" for label, _ in groups]
+    empty_junit = junit_paths[1]
+    assert 'name="all-long checks"' in empty_junit.read_text(encoding="utf-8")
+    assert 'tests="0"' in empty_junit.read_text(encoding="utf-8")
+    assert json.loads(evidence_paths[1].read_text(encoding="utf-8")) == {
+        "discovery_count": 0,
+        "schema_version": "template-active-inference/pytest-evidence/1",
+        "warnings": 0,
+    }
+
+
 def test_coverage_only_uses_complete_release_partition(tmp_path: Path) -> None:
     project_root = Path(__file__).resolve().parents[1]
     calls: list[tuple[str, list[str]]] = []

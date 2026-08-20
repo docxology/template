@@ -37,6 +37,12 @@ from infrastructure.core.pipeline.definition import (
     resolve_pipeline_source,
 )
 
+# Imported rather than restated. Two copies of "which tags are opt-in" drift the
+# moment a stage is added: `docxplus_export` was tagged opt-in in
+# stage_vocabulary and still counted toward the default full run here, because
+# this list had not heard about it.
+from infrastructure.core.pipeline.stage_vocabulary import _OPT_IN_TAGS
+
 logger = get_logger(__name__)
 
 
@@ -58,7 +64,7 @@ def _quiet_dag_logging() -> Iterator[None]:
 
 
 DEFAULT_PIPELINE_YAML = Path(__file__).resolve().parent / "pipeline.yaml"
-OPT_IN_STAGE_TAGS = frozenset({"ebook", "metadata", "bundle", "archival", "science", "provenance"})
+OPT_IN_STAGE_TAGS = _OPT_IN_TAGS
 CORE_ONLY_EXCLUDED_TAGS = frozenset({"llm", *OPT_IN_STAGE_TAGS})
 
 __all__ = [

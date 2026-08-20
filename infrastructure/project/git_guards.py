@@ -14,6 +14,8 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES
 from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES
 
+_GIT_TIMEOUT_SEC = 60
+
 # Derived from PUBLIC_PROJECT_NAMES — the single roster source of truth — so it
 # can never drift from the public exemplar roster. (Before 2026-06-10 this was a
 # hand-maintained literal.)
@@ -217,6 +219,7 @@ def _offending_tracked_paths(
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     offenders: list[str] = []
@@ -292,6 +295,7 @@ def tracked_generated_artifacts(
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     return sorted(
@@ -318,6 +322,7 @@ def public_template_output_budget_findings(
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
     total_bytes = 0
@@ -381,6 +386,7 @@ def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     local_paths: list[str] = []
@@ -415,6 +421,7 @@ def tracked_secret_findings(repo_root: Path) -> list[str]:
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     findings: list[str] = []
     for raw_path in proc.stdout.decode("utf-8").split("\0"):
@@ -468,12 +475,14 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     index_proc = subprocess.run(
         ["git", "ls-files", "--stage", "-z"],
         cwd=repo_root,
         check=True,
         capture_output=True,
+        timeout=_GIT_TIMEOUT_SEC,
     )
     index_entries: dict[bytes, list[tuple[bytes, bytes, bytes]]] = {}
     for row in index_proc.stdout.split(b"\0"):
@@ -505,6 +514,7 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
             cwd=repo_root,
             check=True,
             capture_output=True,
+            timeout=_GIT_TIMEOUT_SEC,
         )
         content = blob.stdout
         if b"\x00" in content[:4096]:

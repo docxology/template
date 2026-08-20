@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import pytest
 
 from analysis import run_analysis
 from visualizations.figures import generate_all_figures
@@ -14,7 +13,6 @@ def test_analytical_sweep_writes_csv(tmp_path: Path) -> None:
     assert paths["parameter_sweep"].exists()
 
 
-@pytest.mark.slow
 def test_figures_after_pipeline_artifacts() -> None:
     root = Path(__file__).resolve().parents[1]
     from manuscript.sheaf import compose_all_sections

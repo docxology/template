@@ -7,7 +7,20 @@ from pathlib import Path
 
 import yaml
 
-_OPT_IN_TAGS = frozenset({"ebook", "metadata", "bundle", "archival", "science", "provenance"})
+
+def _load_opt_in_tags() -> frozenset[str]:
+    """Read the opt-in tag set from pipeline.yaml, the single declaration of it."""
+    import yaml
+
+    path = Path(__file__).resolve().parent / "pipeline.yaml"
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):  # pragma: no cover - a broken DAG fails elsewhere
+        return frozenset()
+    return frozenset(data.get("opt_in_tags") or ())
+
+
+_OPT_IN_TAGS = _load_opt_in_tags()
 
 # Informal tokens → canonical stage name (from pipeline.yaml + single_stage.py keys).
 _STAGE_ALIAS_TO_CANONICAL: dict[str, str] = {

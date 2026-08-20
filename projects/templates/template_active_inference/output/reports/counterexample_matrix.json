@@ -38,7 +38,7 @@
       "observed": "expected_failure",
       "promoted_track": "provenance",
       "target_gate": "validate_manuscript.canonical_sheaf_tracks_bound",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -53,7 +53,7 @@
       "observed": "expected_failure",
       "promoted_track": "sensitivity",
       "target_gate": "validate_manuscript.canonical_sheaf_tracks_bound",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -68,7 +68,7 @@
       "observed": "expected_failure",
       "promoted_track": "evidence_fields",
       "target_gate": "validate_outputs.canonical_sheaf_track_schemas",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -83,7 +83,7 @@
       "observed": "expected_failure",
       "promoted_track": "semantic",
       "target_gate": "validate_manuscript.semantic_sheaf_gluing",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -98,7 +98,7 @@
       "observed": "expected_failure",
       "promoted_track": "dependency",
       "target_gate": "validate_outputs.validation_dependency_graph_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -113,7 +113,7 @@
       "observed": "expected_failure",
       "promoted_track": "release_bundle",
       "target_gate": "validate_outputs.release_bundle_manifest_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -128,7 +128,7 @@
       "observed": "expected_failure",
       "promoted_track": "replay_matrix",
       "target_gate": "validate_outputs.replay_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -143,7 +143,7 @@
       "observed": "expected_failure",
       "promoted_track": "sensitivity",
       "target_gate": "validate_outputs.sensitivity_sweep_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -158,7 +158,7 @@
       "observed": "expected_failure",
       "promoted_track": "uncertainty",
       "target_gate": "validate_outputs.uncertainty_summary_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -173,7 +173,7 @@
       "observed": "expected_failure",
       "promoted_track": "counterexample",
       "target_gate": "validate_outputs.counterexample_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -188,7 +188,7 @@
       "observed": "expected_failure",
       "promoted_track": "model_checking",
       "target_gate": "validate_outputs.model_checking_witnesses_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -203,7 +203,7 @@
       "observed": "expected_failure",
       "promoted_track": "interop",
       "target_gate": "validate_outputs.interop_roundtrip_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -218,7 +218,7 @@
       "observed": "expected_failure",
       "promoted_track": "adversarial_audit",
       "target_gate": "validate_outputs.adversarial_audit_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -233,7 +233,7 @@
       "observed": "expected_failure",
       "promoted_track": "theorem_traceability",
       "target_gate": "validate_outputs.theorem_traceability_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -248,7 +248,7 @@
       "observed": "expected_failure",
       "promoted_track": "gate_ergonomics",
       "target_gate": "validate_outputs.validation_gate_index_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -263,7 +263,7 @@
       "observed": "expected_failure",
       "promoted_track": "artifact_diffoscope",
       "target_gate": "validate_outputs.artifact_diffoscope_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -278,7 +278,7 @@
       "observed": "expected_failure",
       "promoted_track": "artifact_contract_index",
       "target_gate": "validate_outputs.artifact_contract_index_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -293,7 +293,7 @@
       "observed": "expected_failure",
       "promoted_track": "scholarship",
       "target_gate": "validate_outputs.scholarship_source_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -308,7 +308,7 @@
       "observed": "expected_failure",
       "promoted_track": "proof_extraction",
       "target_gate": "validate_outputs.proof_extraction_index_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -323,7 +323,7 @@
       "observed": "expected_failure",
       "promoted_track": "state_space_catalog",
       "target_gate": "validate_outputs.state_space_catalog_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -338,7 +338,7 @@
       "observed": "expected_failure",
       "promoted_track": "causal_ablation",
       "target_gate": "validate_outputs.causal_ablation_matrix_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -353,7 +353,7 @@
       "observed": "expected_failure",
       "promoted_track": "artifact_license",
       "target_gate": "validate_outputs.artifact_license_audit_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -368,7 +368,7 @@
       "observed": "expected_failure",
       "promoted_track": "release_notes",
       "target_gate": "validate_outputs.release_notes_evidence_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -383,7 +383,7 @@
       "observed": "expected_failure",
       "promoted_track": "empirical_adapter",
       "target_gate": "validate_manuscript.blocked_empirical_adapter",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     },
     {
       "expected_failure": true,
@@ -398,7 +398,7 @@
       "observed": "expected_failure",
       "promoted_track": "security_posture",
       "target_gate": "validate_outputs.security_posture_audit_schema",
-      "test": "tests/test_track_consolidation.py::test_canonical_sheaf_track_negative_controls"
+      "test": "tests/test_track_consolidation_negative.py::test_canonical_sheaf_negative_controls"
     }
   ],
   "schema": "template_active_inference.counterexample_matrix.v1",

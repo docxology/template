@@ -62,6 +62,11 @@ def test_single_stage_routes_match_pipeline_yaml() -> None:
         assert dispatch.args == tuple(stage.args)
 
 
+def test_docxplus_export_stage_dispatch_registered() -> None:
+    script, *_args = script_argv_for_stage("docxplus_export")
+    assert script.endswith("stage_13_docxplus.py")
+
+
 def test_stage_identity_resolves_keys_and_compatible_display_names() -> None:
     yaml_path = Path(__file__).resolve().parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
     dag = PipelineDAG.from_yaml(yaml_path)

@@ -166,7 +166,7 @@ Projects under `projects/templates/` (the tracked exemplars) and `projects/activ
 
 #### 📦 **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
 
-Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**. The optional legacy `projects/active/` mirror is treated the same way when present:
+Projects under `projects/working/` and `projects/archive/` are **preserved but not executed by default**:
 
 - **NOT discovered** by infrastructure discovery functions
 - **NOT listed** in `run.sh` menu

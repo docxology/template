@@ -304,7 +304,7 @@ or `uv run python -m infrastructure.validation.cli pdf <path>`
 Required system dependencies and software that must be installed before using the template.
 
 **System**: pandoc, texlive-xetex, fonts
-**Python**: uv or pip, Python 3.10+ (infrastructure CI matrix: 3.10–3.13)
+**Python**: uv or pip, Python 3.10+ (infrastructure CI matrix: 3.10–3.14; local default 3.14)
 
 **See**: [getting-started.md](../guides/getting-started.md) | [README.md](../README.md)
 

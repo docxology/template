@@ -127,7 +127,7 @@ override the private root with `TEMPLATE_PRIVATE_PROJECTS_ROOT` or
 
 #### ❌ **Non-Rendered Projects (`working/`, `archive/`, optional legacy mirrors)**
 
-Projects under `projects/working/` and `projects/archive/` are non-rendered by default; the optional legacy `projects/active/` is treated the same way when present:
+Projects under `projects/working/` and `projects/archive/` are non-rendered by default:
 
 - **NOT discovered** by default infrastructure discovery functions
 - **NOT listed** in the normal `run.sh` menu

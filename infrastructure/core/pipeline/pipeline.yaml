@@ -22,6 +22,14 @@
 #   hooks        — optional explicit argv hooks: pre_stage, post_stage, on_fail,
 #                  on_pause; default timeout is 30s and CI execution is opt-in
 
+# Tags that mark a stage opt-in: the executor filters these out of default and
+# --core-only runs. Declared here as data because three separate places were
+# each keeping their own copy of this set — the executor, the stage vocabulary,
+# and the self-contained template_template exemplar, which by the two-layer rule
+# cannot import from infrastructure/. Adding `docxplus` to two of them left the
+# third counting an opt-in stage toward the default run.
+opt_in_tags: [ebook, metadata, bundle, archival, science, provenance, docxplus]
+
 stages:
 
   - name: Clean Output Directories
@@ -235,6 +243,21 @@ stages:
       output_artifacts: ["projects/{project}/output/ebook/"]
       definition_of_done: "EPUB, MOBI, and DOCX ebook files are generated or the stage is gracefully skipped when the combined markdown is absent."
       failure_code: "EBOOK_GENERATION_FAILED"
+      retry_policy: 0
+      rollback_to: "PDF Rendering"
+
+  - name: docxplus Export
+    key: docxplus_export
+    script: scripts/pipeline/stage_13_docxplus.py
+    allow_skip: true
+    depends_on: [PDF Rendering]
+    tags: [core, docxplus]
+    failure_mode: soft fail
+    contract:
+      input_artifacts: ["projects/{project}/"]
+      output_artifacts: ["projects/{project}/output/docxplus/"]
+      definition_of_done: "A conforming .docx and .docxplus carrying the project source tree are written, or the stage is gracefully skipped when the optional docxplus extra is not installed."
+      failure_code: "DOCXPLUS_EXPORT_FAILED"
       retry_policy: 0
       rollback_to: "PDF Rendering"
 

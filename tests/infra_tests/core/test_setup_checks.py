@@ -109,15 +109,27 @@ class TestSyncWorkspaceDependencies:
         # Should be True (all default deps are installed) — deterministic in CI.
         assert result is True
 
-    def test_timeout_branch_returns_true(self, tmp_path: Path) -> None:
-        """TimeoutExpired during uv sync causes the function to return True."""
+    def test_timeout_falls_back_instead_of_claiming_success(self, tmp_path: Path) -> None:
+        """TimeoutExpired during uv sync must check packages, not log a false success."""
         import subprocess as sp
 
         def _raise_timeout(*args, **kwargs):
             raise sp.TimeoutExpired(cmd=["uv", "sync"], timeout=30)
 
-        result = sync_workspace_dependencies(tmp_path, process_runner=_raise_timeout)
-        assert result is True
+        def _missing() -> tuple[bool, list[str]]:
+            return False, ["definitely_not_installed_xyz"]
+
+        def _install_fails(packages: list[str]) -> bool:
+            assert packages == ["definitely_not_installed_xyz"]
+            return False
+
+        result = sync_workspace_dependencies(
+            tmp_path,
+            process_runner=_raise_timeout,
+            dependency_checker=_missing,
+            package_installer=_install_fails,
+        )
+        assert result is False
 
     def test_file_not_found_fallback(self, tmp_path: Path) -> None:
         """FileNotFoundError (uv not in PATH) triggers fallback to check_dependencies."""

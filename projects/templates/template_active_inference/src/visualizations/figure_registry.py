@@ -50,15 +50,10 @@ def _figures_yaml_path(project_root: Path) -> Path:
 
 @lru_cache(maxsize=64)
 def _parse_figures_yaml_cached(path_str: str, payload: bytes) -> dict[str, Any]:
-    """Parse exact registry bytes once per path/content pair.
-
-    Figure-path validation is a high-fan-out dependency-graph operation.  Keying
-    the cache on the payload itself avoids trusting mutable size/mtime metadata,
-    while the path component keeps otherwise identical project copies isolated.
-    Callers receive a deepcopy so they cannot mutate the cached parse tree.
-    """
+    """Parse exact registry bytes once per path/content pair."""
     del path_str
-    return yaml.safe_load(payload.decode("utf-8")) or {}
+    data = yaml.safe_load(payload.decode("utf-8")) or {}
+    return data if isinstance(data, dict) else {}
 
 
 def _load_figures_yaml(project_root: Path) -> dict[str, Any]:
@@ -67,7 +62,7 @@ def _load_figures_yaml(project_root: Path) -> dict[str, Any]:
         raise ValueError(f"figure registry must not be a symlink: {path}")
     if not path.is_file():
         raise FileNotFoundError(f"missing figure registry: {path}")
-    return copy.deepcopy(_parse_figures_yaml_cached(str(path), path.read_bytes()))
+    return copy.deepcopy(_parse_figures_yaml_cached(str(path.resolve()), path.read_bytes()))
 
 
 def _validate_figure_filename(figure_id: str, value: object) -> str:
@@ -157,9 +152,9 @@ def load_section_figures(project_root: Path) -> dict[str, tuple[SectionFigureRef
     return mapping
 
 
-def figure_output_path(project_root: Path, figure_id: str) -> Path:
+def figure_output_path(project_root: Path, figure_id: str, *, registry: dict[str, FigureSpec] | None = None) -> Path:
     """Process figure output path."""
-    spec = load_figure_registry(project_root)[figure_id]
+    spec = (registry or load_figure_registry(project_root))[figure_id]
     return _confined_figure_output_path(project_root, figure_id, spec.filename)
 
 

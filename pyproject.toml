@@ -74,6 +74,10 @@ rendering-pptx = ["python-pptx>=1.0.0"]
 dashboard = ["plotly>=5.0.0"]
 dotenv = ["python-dotenv>=1.2.2"]
 steganography = ["cryptography>=50.0.0", "qrcode[pil]>=8.2", "python-barcode>=0.15"]
+# Imported from upstream rather than vendored: the container format is the
+# docxplus project's to specify, and this repository stays the rendering engine.
+# Pinned to the released tag so an export is reproducible.
+docxplus = ["docxplus @ git+https://github.com/docxology/docxplus@v1.0.1"]
 monitoring = ["psutil>=5.9.0"]
 publishing = ["huggingface-hub>=0.35.0", "twine>=5.0.0"]
 deep-research = ["google-genai>=1.0", "openai>=1.60", "python-dotenv>=1.2.2"]
@@ -230,6 +234,13 @@ exclude = [
     "projects/*/*/output",
     "output"
 ]
+
+[tool.hatch.metadata]
+# The `docxplus` extra points at a git tag rather than PyPI, because docxplus is
+# published on GitHub and Zenodo and not (yet) on the index. Hatchling refuses a
+# PEP 508 direct reference by default — a sensible guard for anything destined for
+# PyPI, and one that has to be waived explicitly rather than worked around.
+allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["infrastructure"]

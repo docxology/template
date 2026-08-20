@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "92.51 %",
-      "source_hash": "a0c086fbcf50c2af39ff90e23ba3f8e537e9136ca1e99fa628223696e7b3b13f"
+      "source_hash": "44fcdd06e8c92fd95431eea221ec3497e0cee33a054087e4de85f2749c27317f"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -91,7 +91,7 @@
     },
     "template_template": {
       "coverage_pct": "97.66 %",
-      "source_hash": "430c7847ef91a2e846a6c8906acd1cc064348e04617e2ed0ccedd24d3c8d85be"
+      "source_hash": "4ba3da2baea436150302a66c65b74100cf6636ff56e6e4c4269bd70ac9f7ca25"
     },
     "template_textbook": {
       "coverage_pct": "95.92 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "e9fbdab5f51b515d8933780c90f9d4e2955face3",
+  "source_commit": "8a8b316e376b49e04b7b4ed629122d8ca1a74145",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,18 +107,18 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "bc22bf71abb0bc86f4d35124d638d47244957d77165aeb2ade8155209f7234e5",
+        "digest": "b3ab9b98429049d194c13778157b36d2fb687a51f7e214d84d812ddbcf308340",
         "entries": [
           {
             "identity": "sha256",
             "path": "AGENTS.md",
-            "sha256": "3a563a7acb7d9a4621736b8e7a773101a7c64441e793cfad3e8119455a5753e4",
+            "sha256": "f8b3a9d7c730212f7fd58c2d256ddd158a69989f867879e7c8b71d82444708b3",
             "type": "file"
           },
           {
             "identity": "sha256",
             "path": "projects/AGENTS.md",
-            "sha256": "d23de17c5089699563a3d04163bec70f9cabd21931ab0c3914b2fff9c8a0270a",
+            "sha256": "b54d2402e323fef464b7915769fef03b21ac9cf14ba60108e931094a5045d52f",
             "type": "file"
           },
           {
@@ -129,7 +129,7 @@
           {
             "identity": "sha256",
             "path": "docs/RUN_GUIDE.md",
-            "sha256": "1f85baa48f67fd2f02a942908fa61890a01d5cd19ef3876aa8c9a8092d77467b",
+            "sha256": "dff347096fa4fd88fb986317419c2c2652222a0956e33505ae02e8e3e0943e54",
             "type": "file"
           },
           {
@@ -141,7 +141,7 @@
           {
             "identity": "sha256",
             "path": "docs/guides/publishing-guide.md",
-            "sha256": "0d7bf4062ed6bee24e75e64460fad631c67091217463b6c9ed5c9a6725e69a52",
+            "sha256": "112261320030aa4fb7a7e8de7a3d115b1025647ce3d5d982cdbb9b86515419e8",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "a0c086fbcf50c2af39ff90e23ba3f8e537e9136ca1e99fa628223696e7b3b13f",
+      "template_active_inference": "44fcdd06e8c92fd95431eea221ec3497e0cee33a054087e4de85f2749c27317f",
       "template_advanced_literature_review": "b9ab9c88e333c4797eb23b848f99e75ccf56972a2363bfb35e7c54fa8166ede6",
       "template_autopoiesis": "d8e3b1f4a87fb01e2ee7cde7982412d012216ea1e7653a5f460c3fa310c58d06",
       "template_autoresearch_project": "2b61f17783dbb69596aa4cb2e080ceef0f25f7361e380cf123faa391327ad2e0",
@@ -206,7 +206,7 @@
       "template_search_project": "7a522f9bee5edd49371a6f8df9e1e238010e86c30156602eb39414055131c7a0",
       "template_sia": "9ed57881c3a3cc902b0320e8997c572efccb00da0667dd33d52c2b8dcc27a2f5",
       "template_storybook": "8fc4f9f79c8162cd11f22523089e1d51bbdf6e8c1427a06274968f364763c964",
-      "template_template": "430c7847ef91a2e846a6c8906acd1cc064348e04617e2ed0ccedd24d3c8d85be",
+      "template_template": "4ba3da2baea436150302a66c65b74100cf6636ff56e6e4c4269bd70ac9f7ca25",
       "template_textbook": "2d97c326fbafbbbc0d52ec8fe5b49b83137a9b22c87072670f3b52cdc0f412b1"
     }
   }

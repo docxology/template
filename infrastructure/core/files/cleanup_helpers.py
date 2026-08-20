@@ -16,6 +16,15 @@ from infrastructure.core.logging.utils import get_logger
 logger = get_logger(__name__)
 
 
+def remove_output_entry(item: Path) -> None:
+    """Remove one output child without following a directory symlink."""
+    if item.is_symlink() or item.is_file():
+        item.unlink(missing_ok=True)
+        return
+    if item.is_dir():
+        shutil.rmtree(item)
+
+
 def clean_dir_preserving(
     dir_path: Path,
     output_dir: Path,
@@ -117,7 +126,7 @@ def clean_output_dir_contents(
                 # Selectively clean: remove everything except preserved files
                 clean_dir_preserving(item, output_dir, preserved_relative_paths, logger)
             else:
-                shutil.rmtree(item)
+                remove_output_entry(item)
         else:
             # Root-level files: preserve if in the preserve set (incremental pipeline)
             if Path(item.name) in preserved_relative_paths:

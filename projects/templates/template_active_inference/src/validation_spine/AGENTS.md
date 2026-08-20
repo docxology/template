@@ -24,5 +24,5 @@ metadata, replay provenance, and release-facing provenance drift checks.
 ## Verification
 
 ```bash
-uv run pytest tests/test_validation_spine.py tests/test_track_consolidation.py -q --tb=short
+uv run pytest tests/test_validation_spine.py tests/test_track_consolidation_surface.py tests/test_track_consolidation_negative.py -q --tb=short
 ```

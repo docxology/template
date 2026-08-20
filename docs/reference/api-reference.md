@@ -2229,6 +2229,30 @@ Outcome of an EPUB render.
 EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({'AGENTS.md', 'README.md', 'SYNTAX.md'})
 ```
 
+### `export_project`
+
+*function — defined in `infrastructure.rendering.docxplus_export`*
+
+```python
+export_project(project_root: Path, output_dir: Path, *, project: str, title: str | None=None, author: str | None=None, signing_key_hex: str | None=None, password: str | None=None) -> ExportResult
+```
+
+Write ``<project>.docx`` and ``<project>.docxplus`` carrying ``project_root``.
+
+### `ExportResult`
+
+*class — defined in `infrastructure.rendering.docxplus_export`*
+
+```python
+class ExportResult
+```
+
+What the export produced, or why it produced nothing.
+
+### `is_docxplus_available`
+
+*symbol — defined in `infrastructure.rendering.docxplus_export`*
+
 ### `render_docx`
 
 *function — defined in `infrastructure.rendering.docx_renderer`*
@@ -2268,6 +2292,16 @@ class RenderManager(config: RenderingConfig | None=None, manuscript_dir: Path | 
 ```
 
 Orchestrates rendering of all output formats.
+
+### `run_docxplus_export`
+
+*function — defined in `infrastructure.rendering.docxplus_stage`*
+
+```python
+run_docxplus_export(repo_root: Path, project: str, *, signing_key_path: str | None=None, password: str | None=None) -> int
+```
+
+Execute the docxplus export for ``project``. Returns a process exit code.
 
 ### `substitute_manuscript_text`
 

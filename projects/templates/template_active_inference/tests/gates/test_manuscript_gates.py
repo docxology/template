@@ -10,7 +10,7 @@ from manuscript.sheaf import compose_all_sections
 from gates.validation import validate_manuscript
 from gate_support import ensure_gate_artifacts
 
-pytestmark = [pytest.mark.slow, pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
+pytestmark = [pytest.mark.requires_gate_artifacts, pytest.mark.timeout(300)]
 
 
 @pytest.fixture(scope="module")

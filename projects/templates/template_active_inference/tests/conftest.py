@@ -145,6 +145,7 @@ _MUTABLE_PROJECT_SOURCE_GLOBS = (
 )
 _MUTABLE_PROJECT_SOURCE_FILES = (
     "data/claim_ledger.yaml",
+    "docs/reference/method-inventory.md",
     "pymdp.yaml",
     "src/roadmap_tracks/__init__.py",
     "tracks.yaml",

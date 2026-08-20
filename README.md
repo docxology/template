@@ -454,6 +454,25 @@ narrative + benefits:
 - **Generic + reusable** — drop the same `infrastructure/` into any project that
   follows the layout ([`docs/usage/template-description.md`](docs/usage/template-description.md)).
 
+## 📦 Optional export: docxplus
+
+An opt-in stage exports a project as a conforming `.docx` (and `.docxplus`, the same
+bytes under a name that says so) which *also carries the project's own source tree*
+in a signed manifest. Word, LibreOffice, and Google Docs open it as an ordinary
+document; `docxplus` recovers the repository from inside it.
+
+```bash
+uv sync --extra docxplus
+uv run python scripts/pipeline/stage_13_docxplus.py --project templates/template_code_project
+```
+
+The container format is imported from upstream
+([docxology/docxplus](https://github.com/docxology/docxplus), pinned to a released
+tag) rather than vendored: this repository stays the rendering engine, and the
+specification stays the container project's business. The stage is excluded from
+default runs by its `docxplus` tag and skips cleanly when the extra is absent, so
+nobody who does not want it pays for it.
+
 ## 🔒 Security & Monitoring
 
 LLM input sanitization (`infrastructure.llm.core.sanitization`), security
@@ -467,8 +486,8 @@ headers. Full surface and worked usage examples:
 Prerequisites: `pandoc` and a TeX distribution (`texlive-xetex` on Debian/Ubuntu,
 MacTeX on macOS). Python deps install with `uv sync` (project interpreter is
 `.venv/bin/python`; the template targets Python 3.10+ (`requires-python` in
-[`pyproject.toml`](pyproject.toml)) and CI tests infrastructure on 3.10–3.13, with
-[`.python-version`](.python-version) pinning 3.12 as the local default). Add per-project deps with
+[`pyproject.toml`](pyproject.toml)) and CI tests infrastructure on 3.10–3.14, with
+[`.python-version`](.python-version) pinning 3.14 as the local default). Add per-project deps with
 `uv run python scripts/maintenance/manage_workspace.py add <package> --project <name>`. To
 generate a manuscript, follow the [Quickstart](#quickstart) at the top.
 
@@ -570,9 +589,10 @@ Two entry points — `./run.sh` (interactive or `--pipeline`) and
 | **10** LLM Translations | `scripts/pipeline/stage_06_llm_review.py --translations-only` | `llm` | skipped if Ollama absent |
 | **11** Copy Outputs | `scripts/pipeline/stage_05_copy.py` | `core` | soft fail |
 | **12** Ebook Generation | `scripts/pipeline/stage_11_ebook.py` | `core`, `ebook` | soft fail |
-| **13** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
-| **14** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
-| **15** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
+| **13** docxplus Export | `scripts/pipeline/stage_13_docxplus.py` | `core`, `docxplus` | soft fail |
+| **14** Metadata Package | `scripts/pipeline/stage_12_metadata.py` | `core`, `metadata` | soft fail |
+| **15** Executable Bundle | `scripts/runner/bundle_executable.py` | `bundle` | soft fail |
+| **16** Archival Publication | `scripts/runner/archive_publication.py` | `archival` | soft fail |
 <!-- END:STAGE_TABLE -->
 
 Full per-stage flowchart, failure/skip transitions, and the script-to-stage

@@ -96,7 +96,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
   `template_template` distribution-name exception, Python-series proof,
   fail-closed source/test parsing, direct hydration compile/main-guard smoke,
   and `@pytest.mark.skip` parsing.
-- `build_ci_matrix()` / `validate_ci_matrix()` own the Python 3.10/3.12 matrix
+- `build_ci_matrix()` / `validate_ci_matrix()` own the Python 3.10/3.14 matrix
   contract consumed by `.github/workflows/ci.yml`.
 - Thin gate: `uv run python scripts/gates/public_capabilities.py`; it is also
   part of the unified health registry. `--json` emits the full stable manifest;

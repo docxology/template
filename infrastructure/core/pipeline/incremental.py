@@ -291,8 +291,8 @@ def should_skip_stage(
 
     Returns ``SkipDecision(skip=False)`` immediately when the feature is
     disabled (the default), guaranteeing the legacy behavior. When enabled, the
-    stage is skippable only when the recorded input hash matches AND all
-    declared outputs are present.
+    stage is skippable only when the recorded input hash matches, all declared
+    outputs are present, AND the current output hash matches the recorded one.
     """
     if not config.enabled:
         return SkipDecision(skip=False)
@@ -315,6 +315,14 @@ def should_skip_stage(
         return SkipDecision(skip=False, input_hash=input_hash)
     if not declared_outputs_present(repo_root=repo_root, project_dir=project_dir, contract=contract):
         # Fail-safe: matching hash but a declared output is absent -> re-run.
+        return SkipDecision(skip=False, input_hash=input_hash)
+    current_output = compute_stage_output_hash(
+        repo_root=repo_root,
+        project_dir=project_dir,
+        contract=contract,
+    )
+    if record.output_hash != current_output:
+        # Recorded input matched but the declared outputs were rewritten or swapped.
         return SkipDecision(skip=False, input_hash=input_hash)
     return SkipDecision(skip=True, input_hash=input_hash)
 

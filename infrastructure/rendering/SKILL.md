@@ -163,6 +163,23 @@ fresh temporary Pandoc target prevents stale-output acceptance, and atomic ZIP
 normalization retains the required first/uncompressed `mimetype` member, order,
 compression, comments, and permissions while fixing member timestamps.
 
+## docxplus Export (`docxplus_export.py`, `docxplus_stage.py`)
+
+Optional export: produces a conforming `.docx` and `.docxplus` document carrying the project's source tree under a signed manifest. Requires the `docxplus` optional extra (`uv sync --extra docxplus`):
+
+```python
+from pathlib import Path
+from infrastructure.rendering import export_project, is_docxplus_available, run_docxplus_export
+
+# Programmatic project export
+if is_docxplus_available():
+    res = export_project(
+        Path("projects/templates/template_code_project"),
+        Path("projects/templates/template_code_project/output/docxplus"),
+        project="template_code_project",
+    )
+```
+
 ## Supporting Files
 
 - `convert_latex_images.lua` — Pandoc Lua filter for LaTeX image conversion
@@ -178,10 +195,14 @@ Only these are re-exported at package level:
 | `RenderingConfig` | Class |
 | `DocxRenderResult` | Class |
 | `EpubRenderResult` | Class |
+| `ExportResult` | Class |
 | `discover_manuscript_files` | Function |
+| `export_project` | Function |
+| `is_docxplus_available` | Function |
 | `verify_figures_exist` | Function |
 | `render_docx` | Function |
 | `render_epub` | Function |
+| `run_docxplus_export` | Function |
 | `substitute_manuscript_text` | Function |
 | `write_resolved_manuscript_tree` | Function |
 | `EXCLUDED_DOC_FILENAMES` | Constant |

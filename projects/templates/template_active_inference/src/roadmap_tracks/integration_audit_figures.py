@@ -84,7 +84,7 @@ def build_figure_source_map(project_root: Path) -> dict[str, Any]:
     }
     registry = load_figure_registry(root)
     for figure_id in sorted(registry):
-        image_path = figure_output_path(root, figure_id)
+        image_path = figure_output_path(root, figure_id, registry=registry)
         metrics = image_render_metrics(image_path)
         dimensions = {"width": int(metrics["width_px"]), "height": int(metrics["height_px"])}
         source_artifacts = sources.get(figure_id, [])

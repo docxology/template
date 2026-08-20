@@ -19,6 +19,7 @@ Numbered pipeline stage orchestrators (stages 00–12).
 | 10 | `stage_10_research_workflow.py` | Research workflow (opt-in) |
 | 11 | `stage_11_ebook.py` | Ebook generation (opt-in) |
 | 12 | `stage_12_metadata.py` | Metadata package (opt-in) |
+| 13 | `stage_13_docxplus.py` | docxplus export: a `.docx` carrying the project (opt-in) |
 
 ## Usage
 

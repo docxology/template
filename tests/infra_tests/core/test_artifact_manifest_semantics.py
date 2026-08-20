@@ -963,3 +963,32 @@ def test_every_public_exemplar_manifest_references_only_tracked_files() -> None:
                 offenders.append(f"{qualified}: {rel}")
     assert checked > 0, "no tracked exemplar manifests found — the scan set went empty"
     assert not offenders, offenders[:10]
+
+
+def test_declared_output_paths_reject_parent_traversal(tmp_path: Path) -> None:
+    """A projects/ prefix must not be enough to walk out of the repository."""
+    from infrastructure.core.pipeline.artifacts import _declared_output_paths
+
+    repo = tmp_path / "repo"
+    project = repo / "projects" / "p"
+    project.mkdir(parents=True)
+    victim = tmp_path / "victim.txt"
+    victim.write_text("SECRET_OUTSIDE\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="escapes confinement"):
+        _declared_output_paths(repo, project, StageContract(output_artifacts=("projects/../victim.txt",)))
+    assert victim.read_text(encoding="utf-8") == "SECRET_OUTSIDE\n"
+
+
+def test_declared_output_paths_keep_in_repo_outputs(tmp_path: Path) -> None:
+    from infrastructure.core.pipeline.artifacts import _declared_output_paths
+
+    repo = tmp_path / "repo"
+    project = repo / "projects" / "p"
+    project.mkdir(parents=True)
+    paths = _declared_output_paths(
+        repo,
+        project,
+        StageContract(output_artifacts=("projects/{project}/output/data/result.json",)),
+    )
+    assert paths == (repo / "projects" / "p" / "output" / "data" / "result.json",)

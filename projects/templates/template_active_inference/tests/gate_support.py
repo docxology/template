@@ -89,7 +89,7 @@ class GateArtifactRuntime:
     toy_sweep_writer: Callable[[Path], object] = write_toy_sweep_artifacts
     formal_interop_writer: Callable[[Path], object] = write_formal_interop_artifacts
     sheaf_writer: Callable[..., object] = write_sheaf_track_artifacts
-    figure_writer: Callable[[Path], object] = generate_all_figures
+    figure_writer: Callable[..., object] = generate_all_figures
     gif_writer: Callable[[Path], object] = write_belief_trajectory_gif
     animation_writer: Callable[[Path], object] = write_animation_frame_deltas
     integration_writer: Callable[[Path], object] = write_integration_audit_artifacts
@@ -264,7 +264,10 @@ def _settle_generated_contracts(
     semantic_max_passes = max(4, requested_passes * 4)
     for _ in range(max(1, requested_passes)):
         active.sheaf_writer(project_root, finalize=False)
-        active.figure_writer(project_root)
+        try:
+            active.figure_writer(project_root, force=False)
+        except TypeError:
+            active.figure_writer(project_root)
         active.gif_writer(project_root)
         active.animation_writer(project_root)
         run_semantic_fixed_point(
