@@ -10,7 +10,7 @@ The `tests/infra_tests/rendering/` directory contains tests for the multi-format
 flowchart TB
     T[tests/infra_tests/rendering/]
     T --> META[AGENTS.md · __init__.py · conftest.py]
-    T --> CORE[Core<br/>test_core · test_config · test_renderers]
+    T --> CORE[Core<br/>test_core · test_config · test_renderers ·<br/>test_render_cache]
     T --> PDF[PDF renderer<br/>test_pdf_renderer_additional / _combined ·<br/>_coverage / _fixes / _full]
     T --> SLIDES[Slides renderer<br/>test_slides_renderer_comprehensive ·<br/>_coverage]
     T --> WEB[Web renderer<br/>test_web_renderer]

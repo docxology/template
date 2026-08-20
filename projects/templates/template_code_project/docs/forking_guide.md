@@ -32,7 +32,7 @@ that **only** the public canonical exemplars listed in
 [`../../../docs/_generated/active_projects.md`](../../../../docs/_generated/active_projects.md)
 under `projects/` are ever git-tracked. Your fork (`projects/working/my_project/`)
 is local-only and won't be pushed to the public repo even if you `git
-add -f` it — `scripts/audit/check_tracked_projects.py` blocks the push in
+add -f` it — `scripts/audit/check_tracked_all.py` blocks the push in
 `pre-push-quick`. Read [`../../../../CLAUDE.md`](../../../../CLAUDE.md)
 "CONFIDENTIALITY INVARIANT" for the full fence.
 

@@ -354,47 +354,47 @@ print(f"Completeness gaps: {len(results.completeness_gaps)}")
 ### PDF Validation
 ```bash
 # Validate single PDF with verbose output
-uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
+uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Validate with custom word preview length
-uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --preview-words 300
+uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --preview-words 300
 
 # Validate PDF from different path
-uv run python -m infrastructure.validation.cli.main pdf /path/to/document.pdf
+uv run python -m infrastructure.validation.cli pdf /path/to/document.pdf
 ```
 
 ### Markdown Validation
 ```bash
 # Validate markdown in manuscript directory
-uv run python -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/
+uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Strict validation (fail on any issue)
-uv run python -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/ --strict
+uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/ --strict
 
 # Validate specific markdown file
-uv run python -m infrastructure.validation.cli.main markdown projects/{project_name}/manuscript/01_abstract.md
+uv run python -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/01_abstract.md
 ```
 
 ### Integrity Validation
 ```bash
 # Full integrity check of output directory
-uv run python -m infrastructure.validation.cli.main integrity output/
+uv run python -m infrastructure.validation.cli integrity output/
 
 # Check specific subdirectories
-uv run python -m infrastructure.validation.cli.main integrity output/{project_name}/pdf/
-uv run python -m infrastructure.validation.cli.main integrity output/data/
+uv run python -m infrastructure.validation.cli integrity output/{project_name}/pdf/
+uv run python -m infrastructure.validation.cli integrity output/data/
 
 # Verbose integrity output
-uv run python -m infrastructure.validation.cli.main integrity output/ --verbose
+uv run python -m infrastructure.validation.cli integrity output/ --verbose
 ```
 
 ### Link Validation
 ```bash
 # Validate all links in repository (defaults to current directory)
-uv run python -m infrastructure.validation.cli.main links
+uv run python -m infrastructure.validation.cli links
 
 # Validate links against a specific repository root
-uv run python -m infrastructure.validation.cli.main links --repo-root docs/
+uv run python -m infrastructure.validation.cli links --repo-root docs/
 ```
 
 ## Integration with Build Pipeline
@@ -568,7 +568,7 @@ uv run pytest tests/integration/test_validation_pipeline.py -v
 export LOG_LEVEL=0
 
 # Run validation with verbose output
-uv run python -m infrastructure.validation.cli.main pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
+uv run python -m infrastructure.validation.cli pdf output/{project_name}/pdf/{project_name}_combined.pdf --verbose
 
 # Check validation logs
 tail -f logs/validation_*.log

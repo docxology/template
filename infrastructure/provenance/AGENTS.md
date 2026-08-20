@@ -17,7 +17,8 @@ session provenance with full transitive lineage queries.
 | `models.py` | Typed dataclasses: `NodeKind`, `EdgeRelation`, `ArtifactNode`, `RunNode`, `SourceNode`, `ClaimNode`, `Edge` |
 | `store.py` | Content-addressed JSON store; `Provenance` namespace with `record`, `link`, `get`, `query`, `list`, `clear`, `path` |
 | `review.py` | Reviewer finding system; `Review` namespace with `record`, `findings_for_node` |
-| `cli.py` | CLI commands: `record`, `link`, `query`, `list`, `review` |
+| `validation.py` | DAG structural and topological validator (`ProvenanceValidationReport`, `validate_provenance_dag`) |
+| `cli.py` | CLI commands: `record-artifact`, `list`, `review`, `validate` |
 | `__main__.py` | `python -m infrastructure.provenance` entry point |
 
 ## Architecture
@@ -88,8 +89,10 @@ python -m infrastructure.provenance query <artifact_id>
 python -m infrastructure.provenance list
 
 # Record a reviewer finding
-python -m infrastructure.provenance review <target_id> "Table 3, row 2" \
-    "p-value mismatch" major "output/stats.json:42"
+python -m infrastructure.provenance review
+
+# Validate DAG structure and acyclicity
+python -m infrastructure.provenance validate --json
 ```
 
 ## Tests

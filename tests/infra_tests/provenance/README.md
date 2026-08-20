@@ -9,6 +9,10 @@ Review system, and CLI.
 |---|---|
 | `test_store.py` | `Provenance` store: record, link, get, query, list, clear, persistence, content addressing |
 | `test_review.py` | `Review` namespace: findings, deduplication, verdicts, severity, metadata |
+| `test_validation.py` | `validate_provenance_dag`: cycle detection, self-loops, and unlinked nodes |
+| `test_cli.py` | CLI subcommands: `record-artifact`, `list`, `review`, `validate` |
+| `test_config.py` | `ProvenanceConfig` and `load_provenance_config` |
+| `test_provenance_scripts.py` | Stage 09 provenance record script orchestrator |
 
 ## Run
 

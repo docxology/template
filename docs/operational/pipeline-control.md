@@ -208,7 +208,7 @@ labels, data JSON values, claim ledgers, and generated artifact paths. The
 validation CLI can flag unsupported manuscript numbers and citations:
 
 ```bash
-uv run python -m infrastructure.validation.cli.main evidence projects/templates/template_code_project --fail-on-issues
+uv run python -m infrastructure.validation.cli evidence projects/templates/template_code_project --fail-on-issues
 ```
 
 The output validation stage writes

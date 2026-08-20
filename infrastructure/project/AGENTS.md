@@ -147,7 +147,7 @@ Implements the private-projects sidecar symlink sync documented in root `CLAUDE.
 - `offending_tracked_projects(repo_root)` — non-exemplar paths tracked under `projects/`
 - `tracked_generated_artifacts(repo_root)` — committed files under disposable `output/` trees
 - `is_generated_artifact_path(path)` — path classifier for generated outputs
-- Used by `scripts/audit/check_tracked_projects.py` and `scripts/audit/check_tracked_generated_artifacts.py`
+- Used by `scripts/audit/check_tracked_all.py` and `scripts/audit/check_tracked_generated_artifacts.py`
 
 ### CodeGraph Local Integration (`codegraph.py`)
 
