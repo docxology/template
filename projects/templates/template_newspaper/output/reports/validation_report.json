@@ -278,7 +278,7 @@
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f24eed0cd06375bbf5013378ddddff096a192c3ca9d4742d0f1d57203d8ab29d",
+      "sha256": "174d06b7b7a054634c6fc6ffedfd3823738ee6556891e8b1ccf14448e5d85617",
       "size_bytes": 11998
     },
     "combined_manuscript": {
@@ -336,7 +336,7 @@
       },
       "output": {
         "file_count": 37,
-        "sha256": "62e05ff1162faab45df7db1ba8973c9c5cf6e0dc491d29a0128c251c84158f85"
+        "sha256": "1357bd92b4c816fa65edf08258f72a323945becc37351c8bcca74459c4ee77db"
       },
       "source": {
         "file_count": 28,
@@ -344,7 +344,7 @@
       },
       "stage": {
         "file_count": 1245,
-        "sha256": "c3987bc0c93e157f2c5817a6b01fd9b8edd8068e92a7f09fa25009a53522e90a"
+        "sha256": "995e28968b759eff7a40a013636e8ba22c114cb59c67b7b15c80e2799e9e1149"
       }
     },
     "project": "templates/template_newspaper",

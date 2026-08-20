@@ -104,6 +104,104 @@ def test_mutable_output_snapshot_includes_gate_contract_artifacts() -> None:
     assert "output/reports/artifact_diffoscope.json" in rels
 
 
+def _capture_tmp_mutable_state(project_conftest, root: Path):
+    patterns = ("output/data/**/*",)
+
+    def iter_current():
+        return project_conftest._iter_declared_mutable_files(root, patterns)
+
+    initial_paths, snapshots = project_conftest._capture_snapshots(iter_current())
+    return initial_paths, snapshots, iter_current
+
+
+def _restore_tmp_mutable_state(project_conftest, root: Path, state) -> None:
+    initial_paths, snapshots, iter_current = state
+    project_conftest._remove_new_regular_files(root, initial_paths, iter_current())
+    project_conftest._restore_snapshots(root, snapshots)
+
+
+def test_mutable_state_cleanup_removes_new_declared_regular_files(tmp_path: Path) -> None:
+    project_conftest = _load_tests_conftest()
+    mutable_dir = tmp_path / "output" / "data"
+    mutable_dir.mkdir(parents=True)
+    state = _capture_tmp_mutable_state(project_conftest, tmp_path)
+    added = mutable_dir / "nested" / "added.json"
+    added.parent.mkdir()
+    added.write_text('{"added": true}', encoding="utf-8")
+
+    _restore_tmp_mutable_state(project_conftest, tmp_path, state)
+
+    assert not added.exists()
+    assert added.parent.is_dir()
+
+
+def test_mutable_state_cleanup_restores_baseline_bytes(tmp_path: Path) -> None:
+    project_conftest = _load_tests_conftest()
+    baseline = tmp_path / "output" / "data" / "baseline.json"
+    baseline.parent.mkdir(parents=True)
+    original = b'{"baseline": "original"}\n'
+    baseline.write_bytes(original)
+    state = _capture_tmp_mutable_state(project_conftest, tmp_path)
+    baseline.write_bytes(b'{"baseline": "mutated"}\n')
+
+    _restore_tmp_mutable_state(project_conftest, tmp_path, state)
+
+    assert baseline.read_bytes() == original
+
+
+def test_mutable_state_cleanup_recreates_deleted_baseline_file(tmp_path: Path) -> None:
+    project_conftest = _load_tests_conftest()
+    baseline = tmp_path / "output" / "data" / "baseline.json"
+    baseline.parent.mkdir(parents=True)
+    original = b'{"baseline": "original"}\n'
+    baseline.write_bytes(original)
+    state = _capture_tmp_mutable_state(project_conftest, tmp_path)
+    baseline.unlink()
+
+    _restore_tmp_mutable_state(project_conftest, tmp_path, state)
+
+    assert baseline.read_bytes() == original
+
+
+def test_mutable_state_cleanup_preserves_files_outside_declared_surfaces(
+    tmp_path: Path,
+) -> None:
+    project_conftest = _load_tests_conftest()
+    (tmp_path / "output" / "data").mkdir(parents=True)
+    state = _capture_tmp_mutable_state(project_conftest, tmp_path)
+    outside = tmp_path / "output" / "web" / "outside.txt"
+    outside.parent.mkdir(parents=True)
+    outside.write_text("preserve me", encoding="utf-8")
+
+    _restore_tmp_mutable_state(project_conftest, tmp_path, state)
+
+    assert outside.read_text(encoding="utf-8") == "preserve me"
+
+
+def test_mutable_state_cleanup_does_not_follow_or_delete_symlinks_or_directories(
+    tmp_path: Path,
+) -> None:
+    project_conftest = _load_tests_conftest()
+    mutable_dir = tmp_path / "output" / "data"
+    mutable_dir.mkdir(parents=True)
+    state = _capture_tmp_mutable_state(project_conftest, tmp_path)
+    outside_target = tmp_path / "outside.txt"
+    outside_target.write_text("outside", encoding="utf-8")
+    link = mutable_dir / "linked.json"
+    retained_directory = mutable_dir / "retained-directory"
+    retained_directory.mkdir()
+    try:
+        link.symlink_to(outside_target)
+    except (NotImplementedError, OSError) as exc:
+        pytest.skip(f"symlink creation is unavailable: {exc}")
+
+    _restore_tmp_mutable_state(project_conftest, tmp_path, state)
+
+    assert link.is_symlink()
+    assert outside_target.read_text(encoding="utf-8") == "outside"
+    assert retained_directory.is_dir()
+
+
 def test_ensure_gate_artifacts_reuses_matching_session_signature(
     tmp_path: Path,
 ) -> None:

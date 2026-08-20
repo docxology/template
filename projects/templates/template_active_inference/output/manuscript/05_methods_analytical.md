@@ -52,6 +52,10 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 
 <!-- sheaf-track:ontology -->
 
+```{=latex}
+\begin{samepage}
+```
+
 ### Ontology bindings
 
 - `E1` → **Stream1HabitPrior**
@@ -62,3 +66,7 @@ Measured MI and sweep artifacts in [@sec:results_mi_sweep] ground the same symbo
 - `pi1` → **Stream1PolicyVector**
 - `pi2` → **Stream2PolicyVector**
 - `q_joint` → **EntangledJointPosterior**
+
+```{=latex}
+\end{samepage}
+```

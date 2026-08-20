@@ -5,7 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from manuscript.sheaf.coverage import build_coverage_matrix, emit_coverage_artifacts, validate_coverage_strict
-from manuscript.sheaf.manifest import load_manifest
+from manuscript.sheaf.manifest import (
+    load_manifest,
+    reject_symlink_components,
+    resolve_project_relative_path,
+    validate_relative_path,
+)
 from manuscript.sheaf.models import (
     DEFAULT_MANIFEST_REL,
     ComposeOptions,
@@ -35,19 +40,36 @@ def validate_manifest(
 ) -> list[ManifestIssue]:
     """Validate manifest."""
     root = project_root.resolve()
+    issues: list[ManifestIssue] = []
+    try:
+        registry_file = resolve_project_relative_path(
+            root,
+            manifest.registry_path,
+            field="manifest registry_path",
+        )
+    except ValueError as exc:
+        issues.append(ManifestIssue("error", "unsafe_registry_path", str(exc)))
+        registry_file = None
     reg = registry or (
-        load_track_registry(root / manifest.registry_path)
-        if (root / manifest.registry_path).exists()
+        load_track_registry(registry_file)
+        if registry_file is not None and registry_file.exists()
         else TrackRegistry(tracks={}, renderer_suffixes={})
     )
     specs = reg.tracks
-    issues: list[ManifestIssue] = []
     validate_renderer_specs(reg, issues)
     seen_ids: set[str] = set()
     for section in manifest.sections:
         if section.id in seen_ids:
             issues.append(ManifestIssue("error", "duplicate_section_id", f"Duplicate section id: {section.id}"))
         seen_ids.add(section.id)
+        try:
+            validate_relative_path(
+                section.output_name,
+                field=f"{section.id} output_name",
+                basename_only=True,
+            )
+        except ValueError as exc:
+            issues.append(ManifestIssue("error", "unsafe_output_name", str(exc)))
         for track_id, rel in section.tracks.items():
             if specs and track_id not in specs:
                 issues.append(
@@ -58,7 +80,15 @@ def validate_manifest(
                     )
                 )
             spec = specs.get(track_id)
-            path = root / rel
+            try:
+                path = resolve_project_relative_path(
+                    root,
+                    rel,
+                    field=f"{section.id}/{track_id} track path",
+                )
+            except ValueError as exc:
+                issues.append(ManifestIssue("error", "unsafe_track_path", str(exc)))
+                continue
             if path.exists() and spec and spec.renderer not in GENERATED_RENDERERS:
                 allowed = reg.renderer_suffixes.get(spec.renderer)
                 if allowed and path.suffix not in allowed:
@@ -88,7 +118,8 @@ def validate_manifest(
                         f"{section.id}: track_order lists `{track_id}` but tracks map has no binding",
                     )
                 )
-    if strict_coverage and reg.tracks:
+    unsafe_paths = any(issue.code.startswith("unsafe_") for issue in issues)
+    if strict_coverage and reg.tracks and not unsafe_paths:
         matrix = build_coverage_matrix(reg, manifest, root)
         issues.extend(validate_coverage_strict(matrix))
         issues.extend(sheaf_law_issues(manifest, reg))
@@ -140,7 +171,11 @@ def compose_section(
         rel = section.tracks.get(track_id)
         if not rel:
             continue
-        track_path = project_root / rel
+        track_path = resolve_project_relative_path(
+            project_root,
+            rel,
+            field=f"{section.id}/{track_id} track path",
+        )
         if track_id not in registry.tracks:
             raise KeyError(f"unknown sheaf track `{track_id}` in section `{section.id}`")
         spec = registry.tracks[track_id]
@@ -167,7 +202,12 @@ def compose_all_sections(
     root = project_root.resolve()
     manifest_file = manifest_path or (root / DEFAULT_MANIFEST_REL)
     manifest = load_manifest(manifest_file, project_root=root)
-    registry = load_track_registry(root / manifest.registry_path)
+    registry_path = resolve_project_relative_path(
+        root,
+        manifest.registry_path,
+        field="manifest registry_path",
+    )
+    registry = load_track_registry(registry_path)
     opts = options or ComposeOptions()
     issues: list[ManifestIssue] = []
     validation = validate_manifest(manifest, root, registry=registry, strict_coverage=opts.strict)
@@ -175,7 +215,12 @@ def compose_all_sections(
     if opts.strict and issues_have_errors(validation):
         messages = "; ".join(i.message for i in validation if i.level == "error")
         raise ValueError(f"Sheaf manifest validation failed: {messages}")
-    out_dir = manuscript_dir or (root / "manuscript")
+    out_dir = manuscript_dir or resolve_project_relative_path(
+        root,
+        "manuscript",
+        field="manuscript output directory",
+    )
+    reject_symlink_components(out_dir, field="manuscript output directory")
     out_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
     group_titles = _imrad_group_titles(manifest)
@@ -194,7 +239,12 @@ def compose_all_sections(
             prefix = _imrad_divider_markdown(group_title)
         content = prefix + compose_section(section, root, registry=registry, options=opts, issues=issues)
         prev_imrad = section.imrad
-        target = out_dir / section.output_name
+        target = resolve_project_relative_path(
+            out_dir,
+            section.output_name,
+            field=f"{section.id} output_name",
+            basename_only=True,
+        )
         # Keep generated Markdown compatible with repository-wide formatting
         # hooks.  Some final track bodies intentionally have inconsistent
         # trailing newlines; normalize the composed page boundary so

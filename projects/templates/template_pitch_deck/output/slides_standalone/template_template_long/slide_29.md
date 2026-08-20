@@ -1,10 +1,10 @@
-# Publishing surface
+# Public vs. private, by construction
 
-*Slide 29 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 29 of 57 — template_template pitch, long deck — kind: `content`*
 
-- A registry of 20 publishing platforms — Zenodo, arXiv, GitHub, PyPI, OSF, Software Heritage, Hugging Face, IPFS, and more — with per-platform automation where an API exists.
-- Platforms without a submission API (arXiv) are documented as a manual step, not silently skipped or falsely marked complete.
-- Every 'published' status in a project's README is compiled from that project's own config.yaml, not hand-written prose that can drift out of sync.
+- Only projects/templates/ is public and CI-gated; private working projects render locally through the same pipeline without ever being tracked.
+- A dedicated audit (scripts/audit/check_tracked_all.py) enforces this on every push, not only at release time.
+- The same separation pattern that lets a lab keep unpublished work private, while still exercising the identical tested pipeline, day to day.
 
 ---
 

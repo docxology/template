@@ -1,6 +1,6 @@
 # Visualization
 
-*Slide 13 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 13 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Four figures — architecture overview, pipeline stages, module inventory, comparative feature matrix — are generated from the same live data, not hand-drawn.
 - generate_architecture_viz.py orchestrates dedicated figure modules sharing one palette module, so the visual language stays consistent across all four.

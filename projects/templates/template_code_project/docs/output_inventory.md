@@ -19,22 +19,53 @@ Paths in the table are relative to `projects/templates/template_code_project/`.
 | `output/figures/algorithm_complexity.png` | O(·) complexity visual | `src/figures/scientific.py::generate_complexity_visualization()` | 4 — Run Analysis |
 | `output/figures/performance_benchmark.png` | Benchmark dimensions vs deterministic work proxy and iterations | `src/figures/scientific.py::generate_benchmark_visualization()` | 4 — Run Analysis |
 | `output/figures/stability_analysis.png` | Stability heat map | `src/figures/scientific.py::generate_stability_visualization()` | 4 — Run Analysis |
+| `output/figures/benchmark_timings.png` | Deterministic benchmark input size vs objective value | `scripts/04_benchmark_stage.py` via `src/benchmark_support.py` | 4 — Run Analysis |
 | `output/data/optimization_results.csv` | Per-step-size results table including vector solution and termination reason | `save_optimization_results()` in `src/analysis/` | 4 — Run Analysis |
-| `output/data/manuscript_variables.json` | `{TOKEN: value}` substitution map | `scripts/z_generate_manuscript_variables.py` (calls `src/manuscript_variables.py::generate_variables`) | 4 — Run Analysis (post-stage) |
+| `output/data/convergence_plot.json` | Source values for the convergence figure | `src/figures/convergence.py::generate_convergence_plot()` | 4 — Run Analysis |
+| `output/data/dashboard_payload.json` | Numerical payload for the interactive dashboard | `src/dashboard.py::build_dashboard_html()` | 4 — Run Analysis |
+| `output/data/manuscript_variables.json` | `{TOKEN: value}` substitution map (hydration-self output, not an `ARTIFACT_DATA_FILES` input) | `scripts/z_generate_manuscript_variables.py` (calls `src/manuscript_variables.py::generate_variables`) | 4 — Run Analysis (post-stage) |
 | `output/reports/stability_analysis.json` | Stability assessment numbers | `run_stability_analysis()` in `src/analysis/` | 4 — Run Analysis |
 | `output/reports/performance_benchmark.json` | Byte-stable benchmark inputs, objective outputs, checks, and timing policy | `run_performance_benchmarking()` in `src/analysis/` | 4 — Run Analysis |
+| `output/reports/benchmark_report.json` | Deterministic rubric results for the exemplar benchmark | `scripts/04_benchmark_stage.py` via `src/benchmark_support.py` | 4 — Run Analysis |
+| `output/reports/dashboard_invariants.txt` | Machine-readable dashboard invariant results | `src/dashboard.py::build_dashboard_html()` | 4 — Run Analysis |
+| `output/reports/dashboard_summary.txt` | Human-readable dashboard summary | `src/dashboard.py::build_dashboard_html()` | 4 — Run Analysis |
+| `output/reports/output_validation.json` | Integrity summary for analysis outputs | `save_validation_report()` in `src/analysis/` | 4 — Run Analysis |
 | `output/web/dashboard.html` | Plotly interactive dashboard | `build_dashboard.py` / `src/dashboard.py` | 4 — Run Analysis |
-| `output/reports/output_statistics.json` | Output stats inventory | `infrastructure.reporting.collect_output_statistics` | 4 — Run Analysis |
+| `output/reports/output_statistics.{json,txt}` | Post-run output stats inventory (not an `ARTIFACT_REPORTS` input) | `infrastructure.reporting.write_output_statistics_reports()` | 9 — Copy Files |
 | `output/reports/validation_report.json` | Pipeline validation summary | `infrastructure.validation.verify_output_integrity` | 6 — Validate Output |
 | `output/manuscript/*.md` | Token-substituted manuscript sections (renderer input) | `infrastructure.rendering.manuscript_injection.write_resolved_manuscript_tree` called from `scripts/z_generate_manuscript_variables.py` | 4 — Run Analysis (post-stage) |
 | `output/citations/*.{bib,apa,mla}` | Citation metadata in 3 formats | `generate_citations_from_metadata()` in `src/analysis/` | 4 — Run Analysis |
 | `output/pdf/template_code_project_combined.pdf` | Working combined publication PDF | `infrastructure/rendering/pdf_renderer.py` via `scripts/pipeline/stage_03_render.py` | 5 — Render PDF |
+| `output/data/transmission_manifest.json` | Transmission-bookend integrity fields (not an `ARTIFACT_DATA_FILES` input) | `infrastructure.publishing.transmission_barcode_strip` | 5 — Render PDF |
+| `output/figures/transmission_integrity_strip.png`, `output/figures/transmission_pairing.png` | Transmission-bookend integrity graphics (not `ARTIFACT_FIGURES` inputs) | `infrastructure.publishing.transmission_barcode_strip` | 5 — Render PDF |
 | `output/slides/<section>.pdf` | Per-section Beamer slides (no Mermaid → no Chrome required) | `infrastructure/rendering/pdf_renderer.py` | 5 — Render PDF |
 | `output/web/*.html` | HTML version of each section | `infrastructure/rendering` | 5 — Render PDF |
 | `output/pdf/_combined_manuscript.{tex,aux,log}` | LaTeX intermediates | `xelatex` via Pandoc | 5 — Render PDF |
 | `output/logs/*.log` | Per-stage pipeline logs | `scripts/runner/execute_pipeline.py` | every stage |
 
 The repo-level `output/templates/template_code_project/` (written by `scripts/pipeline/stage_05_copy.py` at stage 9) is the **public-facing deliverables tree** consumed by CI artifact upload and the multi-project executive report.
+
+## Manuscript Artifact-Count Contract
+
+The manuscript inventory counts exact, producer-owned Stage 02 outputs:
+
+| Token | Registered inputs |
+| --- | --- |
+| `{{ARTIFACT_FIGURES}}` | `algorithm_complexity.png`, `benchmark_timings.png`, `convergence_plot.png`, `convergence_rate_comparison.png`, `performance_benchmark.png`, `stability_analysis.png`, `step_size_sensitivity.png` |
+| `{{ARTIFACT_DATA_FILES}}` | `convergence_plot.json`, `dashboard_payload.json`, `optimization_results.csv` |
+| `{{ARTIFACT_REPORTS}}` | `benchmark_report.json`, `dashboard_invariants.txt`, `dashboard_summary.txt`, `output_validation.json`, `performance_benchmark.json`, `stability_analysis.json` |
+
+`{{ARTIFACT_TOTAL}}` is the sum of those three categories. The exact registries
+live in `src/manuscript_variables.py` as `_ANALYSIS_FIGURE_FILENAMES`,
+`_ANALYSIS_DATA_FILENAMES`, and `_ANALYSIS_REPORT_FILENAMES`.
+
+Hydration-self outputs and downstream render, test, validation, provenance,
+manifest, and copy-stage artifacts do not contribute. In particular,
+`manuscript_variables.json`, `transmission_manifest.json`, the two transmission
+PNGs, and terminal files under `output/reports/` may be absent on a cold first
+hydration. Including them would make a later render change the `ARTIFACT_*`
+variables despite unchanged analysis evidence. When adding a genuine Stage 02
+analysis artifact, update the relevant registry and this inventory deliberately.
 
 ## Adding a New Output File
 

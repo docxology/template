@@ -1,13 +1,12 @@
-# Coverage isn't a headline number
+# The integrity stack, gate by gate
 
-*Slide 24 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 24 of 38 — template_template pitch, medium deck — kind: `diagram`*
 
-- Every one of 24 public exemplars is measured independently, not summarized into one repo-wide percentage.
-- The chart on the next slide is generated from the same docs/_generated/COUNTS.md factsheet this deck's own 97.66% figure comes from — one source of truth, two presentations.
+*(no body content — section/title slide)*
 
 ---
 
-**Source:** [docs/_generated/COUNTS.md](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)
+**Source:** [projects/templates/template_pitch_deck/src/token_resolution.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/token_resolution.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_medium.pdf) · [PPTX](../../pptx/template_template_pitch_medium.pptx)
 **Deck content source:** [manuscript/deck_content_medium.yaml](../../../manuscript/deck_content_medium.yaml)

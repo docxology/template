@@ -5,7 +5,45 @@ from __future__ import annotations
 from pathlib import Path
 
 from manuscript.sheaf.coverage import load_sheaf_coverage_context
-from manuscript.sheaf.models import CoverageMatrix, SheafManifest, TrackRegistry, coverage_cell_symbol
+from manuscript.sheaf.models import CoverageMatrix, SheafManifest, TrackRegistry
+
+
+def _table_text(value: object) -> str:
+    """Return compact table-safe prose without introducing Markdown cells."""
+    text = "" if value is None else str(value)
+    return " ".join(text.replace("|", "∣").split()) or "—"
+
+
+def _humanize_identifier(value: object) -> str:
+    """Turn a machine identifier into short, breakable publication prose."""
+    text = _table_text(value)
+    if text == "—":
+        return text
+    return " ".join(text.replace("_", " ").replace("-", " ").replace(".", " ").split())
+
+
+def _humanized_list(values: object) -> str:
+    """Render a JSON string list as breakable prose while preserving order."""
+    if not isinstance(values, list):
+        return "—"
+    items = [_humanize_identifier(value) for value in values]
+    return ", ".join(item for item in items if item != "—") or "—"
+
+
+def _path_basename(value: object) -> str:
+    """Render a source or artifact pointer as a short, breakable basename."""
+    path = _table_text(value)
+    if path == "—":
+        return path
+    return " ".join(Path(path).name.replace("_", " ").split())
+
+
+def _path_basename_list(values: object) -> str:
+    """Render ordered source pointers without long unbreakable repository paths."""
+    if not isinstance(values, list):
+        return "—"
+    items = [_path_basename(value) for value in values]
+    return ", ".join(item for item in items if item != "—") or "—"
 
 
 def render_track_registry_table(registry: TrackRegistry) -> str:
@@ -37,27 +75,35 @@ def render_binding_matrix_table(
     *,
     project_root: Path | None = None,
 ) -> str:
-    """Render binding matrix table."""
-    header = "| Section | " + " | ".join(matrix.track_ids) + " |"
-    sep = "| --- | " + " | ".join("---" for _ in matrix.track_ids) + " |"
+    """Render a compact, publication-readable binding matrix summary.
+
+    The canonical cell-level matrix remains in the JSON/heatmap artifacts.  A
+    track omitted from both summary lists is absent (not bound) for that row.
+    """
     lines = [
         "<!-- sheaf-layers:binding-matrix -->",
         "## IMRAD binding matrix",
         "",
-        "Section rows versus fragment track columns. "
-        "**P** = present (bound and file exists); **—** = absent (not bound); **M** = missing (bound, file absent).",
+        "Compact section summary: **P** = present (bound and file exists); "
+        "**M** = missing (bound, file absent). Every track not listed for a row is absent (not bound).",
         "",
-        header,
-        sep,
+        "The complete cell-level matrix is stored in `output/data/sheaf_coverage_matrix.json` "
+        "and visualized in [@fig:sheaf_coverage_heatmap].",
+        "",
+        "| Section | Present tracks (P) | Missing tracks (M) |",
+        "| --- | --- | --- |",
     ]
     for row in matrix.sections:
-        indent = "  " * row.depth
-        title = f"{indent}{row.title}"
+        prefix = "↳ " * row.depth
+        title = f"{prefix}{row.title}"
         if row.kind == "group":
-            title = f"{title} (group)"
+            title = f"**{title} (group)**"
         cells_by_track = {cell.track_id: cell for cell in row.cells}
-        symbols = [coverage_cell_symbol(cells_by_track[tid].color) for tid in matrix.track_ids]
-        lines.append(f"| {title} | " + " | ".join(symbols) + " |")
+        present = [track_id for track_id in matrix.track_ids if cells_by_track[track_id].status == "present"]
+        missing = [track_id for track_id in matrix.track_ids if cells_by_track[track_id].status == "missing"]
+        present_text = ", ".join(f"`{track_id}`" for track_id in present) or "—"
+        missing_text = ", ".join(f"`{track_id}`" for track_id in missing) or "—"
+        lines.append(f"| {title} | {present_text} | {missing_text} |")
     lines.extend(
         [
             "",
@@ -172,54 +218,114 @@ def render_semantic_restrictions_table(project_root: Path) -> str:
 
 
 def render_track_improvement_scope_table(project_root: Path) -> str:
-    """Render track improvement scope table."""
+    """Render every improvement row as a compact publication summary."""
     import json
 
     path = project_root / "output" / "data" / "track_improvement_scope.json"
     payload = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    roadmap = payload.get("improvement_roadmap") or []
+    promotions = {
+        row.get("track_id"): row
+        for row in (payload.get("promotion_matrix") or [])
+        if isinstance(row, dict) and row.get("track_id")
+    }
     lines = [
         "<!-- sheaf-layers:track-improvement-scope -->",
         "## Track improvement scope",
         "",
-        "| Track | Status | Current proof | Next artifact | Gate | Negative control |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "Every roadmap row is shown below in canonical order. The source-owned full matrix in "
+        "output/data/track_improvement_scope.json remains the authority for exact priorities, scope text, "
+        "gate or predicate IDs, negative-control IDs, and promotion fields.",
+        "",
+        "| Track | Evidence progression | Status, gate, and negative control |",
+        "| --- | --- | --- |",
     ]
-    for row in (payload.get("improvement_roadmap") or [])[:12]:
+    for row in roadmap:
+        track_id = row.get("track_id")
+        promotion = promotions.get(track_id) or {}
+        producer = promotion.get("producer")
+        producer_text = f"Producer: {_path_basename(producer)}. " if producer else "Producer: none while blocked. "
+        current = row.get("current_proof")
+        next_artifact = row.get("next_proving_artifact")
+        if current == next_artifact:
+            evidence = f"{producer_text}Current and next evidence: {_path_basename(current)}."
+        else:
+            evidence = (
+                f"{producer_text}Current proof: {_path_basename(current)}. "
+                f"Next proving artifact: {_path_basename(next_artifact)}."
+            )
+        status = _humanize_identifier(row.get("status"))
+        priority = _humanize_identifier(row.get("priority"))
+        gate = _humanize_identifier(row.get("gate_or_predicate"))
+        control = _humanize_identifier(row.get("negative_control"))
+        scope = _table_text(row.get("scope_boundary"))
         lines.append(
-            "| "
-            f"`{row.get('track_id')}` | {row.get('status')} | `{row.get('current_proof')}` | "
-            f"`{row.get('next_proving_artifact')}` | `{row.get('gate_or_predicate')}` | "
-            f"{row.get('negative_control')} |"
+            f"| **{_humanize_identifier(track_id)}** | {evidence} | "
+            f"Status: {status}; priority: {priority}. Gate or predicate: {gate}. "
+            f"Negative control: {control}. Scope: {scope}. |"
         )
-    lines.extend(["", f"**Improvement rows:** {payload.get('improvement_row_count', 0)}.", ""])
+    live_count = sum(row.get("status") == "live" for row in roadmap)
+    optional_count = sum(row.get("status") == "optional" for row in roadmap)
+    blocked_count = sum(row.get("status") == "blocked" for row in roadmap)
+    lines.extend(
+        [
+            "",
+            f"**Improvement rows:** {payload.get('improvement_row_count', len(roadmap))} total; "
+            f"{live_count} live / {optional_count} optional / {blocked_count} blocked; every row shown.",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
 def render_track_lane_matrix_table(project_root: Path) -> str:
-    """Render track lane matrix table."""
+    """Render every pipeline lane as a compact publication summary."""
     import json
 
     path = project_root / "output" / "data" / "track_lane_matrix.json"
     payload = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    rows = payload.get("rows") or []
     lines = [
         "<!-- sheaf-layers:track-lane-matrix -->",
         "## Track-lane matrix",
         "",
-        "| Pipeline track | Sheaf fragments | Producer | Primary artifact | Claims | Semantic | Gates | Negative |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        "Every pipeline row is shown below in canonical order. The source-owned full matrix in "
+        "output/data/track_lane_matrix.json remains the authority for exact source paths, claim IDs, "
+        "semantic-restriction IDs, gate IDs, negative-control IDs, and promotion cells.",
+        "",
+        "| Pipeline track | Source, producer, and primary artifact | Coverage, gates, and negative control |",
+        "| --- | --- | --- |",
     ]
-    for row in payload.get("rows") or []:
-        sheaf_tracks = ", ".join(f"`{track}`" for track in row.get("sheaf_tracks") or [])
-        claims = ", ".join(f"`{claim}`" for claim in row.get("claim_ids") or [])
-        semantic = ", ".join(f"`{restriction}`" for restriction in row.get("semantic_restrictions") or [])
-        gates = ", ".join(f"`{gate}`" for gate in row.get("validation_gates") or [])
-        lines.append(
-            "| "
-            f"`{row.get('track_id')}` | {sheaf_tracks} | `{row.get('producer')}` | "
-            f"`{row.get('primary_artifact')}` | {claims} | {semantic} | {gates} | "
-            f"`{row.get('negative_control')}` |"
+    for row in rows:
+        source_state = "present" if row.get("source_paths_present") else "missing"
+        producer_state = "configured" if row.get("producer_configured") else "not configured"
+        artifact_state = "present" if row.get("primary_artifact_exists") else "missing"
+        route = (
+            f"Sources ({source_state}): {_path_basename_list(row.get('source_paths'))}. "
+            f"Producer ({producer_state}): {_path_basename(row.get('producer'))}. "
+            f"Primary artifact ({artifact_state}): {_path_basename(row.get('primary_artifact'))}."
         )
-    lines.extend(["", f"**Pipeline rows:** {payload.get('row_count', 0)}.", ""])
+        requirement = "required" if row.get("required") else "optional"
+        completeness = "matrix complete" if row.get("matrix_complete") else "matrix incomplete"
+        registration = "registered" if row.get("sheaf_tracks_registered") else "unregistered"
+        semantic_count = len(row.get("semantic_restrictions") or [])
+        lines.append(
+            f"| **{_humanize_identifier(row.get('track_id'))}** | {route} | "
+            f"Role: {_table_text(row.get('label'))}. {requirement.capitalize()}; {completeness}. "
+            f"Fragments ({registration}): {_humanized_list(row.get('sheaf_tracks'))}; "
+            f"{row.get('manuscript_consumer_count', 0)} manuscript consumers; "
+            f"{row.get('claim_id_count', 0)} claims; {semantic_count} semantic restrictions. "
+            f"Gates: {_humanized_list(row.get('validation_gates'))}. "
+            f"Negative control: {_humanize_identifier(row.get('negative_control'))}. |"
+        )
+    lines.extend(
+        [
+            "",
+            f"**Pipeline rows:** {payload.get('row_count', len(rows))} total; "
+            f"{payload.get('required_track_count', 0)} required; every row shown.",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 

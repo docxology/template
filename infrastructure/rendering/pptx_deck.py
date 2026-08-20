@@ -20,7 +20,6 @@ than a bare traceback.
 from __future__ import annotations
 
 import io
-import math
 import os
 from pathlib import Path
 import tempfile
@@ -31,28 +30,40 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering.slide_deck import (
     CONTENT_BODY_FONT_SIZE,
+    CONTENT_BODY_LINE_HEIGHT_PT,
     CONTENT_HEADER_FONT_SIZE,
     DEFAULT_THEME,
+    DIAGRAM_FIGURE_BOTTOM_PT,
     DIAGRAM_HEADER_FONT_SIZE,
     QUOTE_ATTRIBUTION_FONT_SIZE,
     QUOTE_FONT_SIZE,
     SECTION_FONT_SIZE,
+    SECTION_RULE_HEIGHT_PT,
+    SECTION_RULE_TOP_FROM_TOP_PT,
+    SECTION_TITLE_BOX_HEIGHT_PT,
+    SECTION_TITLE_BOX_TOP_PT,
     SOURCE_FOOTER_FONT_SIZE,
     STAT_LABEL_FONT_SIZE,
     STAT_TITLE_FONT_SIZE,
     STAT_VALUE_FONT_SIZE,
     SUBTITLE_FONT_SIZE,
     TITLE_FONT_SIZE,
+    ContentSlideLayout,
     DeckContent,
     DeckTheme,
     Slide,
+    SLIDE_TEXT_WIDTH_PT,
+    fit_helvetica_bold_single_line_font_size,
+    plan_diagram_figure_layout,
     source_url,
+    validate_deck_layout,
 )
 
 logger = get_logger(__name__)
 
 try:
     from pptx import Presentation
+    from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
     from pptx.util import Inches, Pt
 
     _PPTX_AVAILABLE = True
@@ -63,33 +74,7 @@ _MSO_SHAPE_RECTANGLE = 1
 _MSO_SHAPE_TYPE_PICTURE = 13
 _QR_SIZE_INCHES = 0.62
 
-#: Never auto-shrink a single-line title below this size — matches
-#: `slide_deck.py`'s `_MIN_SINGLE_LINE_FONT_SIZE` so PDF/PPTX stay in parity.
-_MIN_SINGLE_LINE_FONT_SIZE = 14
-#: Average glyph width for Helvetica-Bold, as a fraction of font size — a
-#: standard typographic approximation (python-pptx has no text-measurement
-#: API the way ReportLab's `stringWidth` does, so this is a heuristic, not an
-#: exact measurement).
-_AVG_BOLD_CHAR_WIDTH_FACTOR = 0.6
 _DETERMINISTIC_ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
-
-
-def _fit_single_line_font_size_pt(text: str, max_width_inches: float, start_size: int) -> int:
-    """Return the largest font size ≤ ``start_size`` at which ``text`` fits on one line.
-
-    Heuristic counterpart to `slide_deck._fit_single_line_font_size` — a
-    single-line title drawn into a fixed-height header shape (content/
-    diagram/section slides) was previously clipped at the slide edge with no
-    wrap and no shrink when long enough to overflow (red-team finding,
-    2026-07-09, confirmed in the PDF renderer; applied here too for PDF/PPTX
-    parity even though python-pptx's own wrap/overflow behavior for this case
-    wasn't independently confirmed broken).
-    """
-    max_width_pt = max_width_inches * 72
-    size = start_size
-    while size > _MIN_SINGLE_LINE_FONT_SIZE and len(text) * size * _AVG_BOLD_CHAR_WIDTH_FACTOR > max_width_pt:
-        size -= 1
-    return size
 
 
 def is_pptx_available() -> bool:
@@ -122,6 +107,7 @@ def render_pptx(
         )
     if not deck.slides:
         raise RenderingError("Cannot render a deck with zero slides", context={"deck_title": deck.title})
+    layouts = validate_deck_layout(deck)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -135,7 +121,7 @@ def render_pptx(
     if needs_title_slide:
         _add_title_slide(prs, blank_layout, deck.title, deck.subtitle, theme)
 
-    for slide in deck.slides:
+    for slide, content_layout in zip(deck.slides, layouts, strict=True):
         if slide.kind == "title":
             pptx_slide = _add_title_slide(prs, blank_layout, slide.title, deck.subtitle, theme, notes=slide.notes)
         elif slide.kind == "section":
@@ -147,7 +133,9 @@ def render_pptx(
         elif slide.kind == "diagram":
             pptx_slide = _add_diagram_slide(prs, blank_layout, slide, theme)
         else:
-            pptx_slide = _add_content_slide(prs, blank_layout, slide, theme)
+            if content_layout is None:  # pragma: no cover - guarded by validate_deck_layout
+                raise RenderingError("Missing content-slide layout", context={"slide_title": slide.title})
+            pptx_slide = _add_content_slide(prs, blank_layout, slide, theme, content_layout)
         _add_source_footer(prs, pptx_slide, slide, theme, source_base_url)
         _add_qr_code(prs, pptx_slide, slide)
 
@@ -282,26 +270,52 @@ def _add_section_slide(prs: Any, layout: Any, title: str, theme: DeckTheme, note
     _fill_background(slide, prs, theme.white)
 
     rule = slide.shapes.add_shape(
-        _MSO_SHAPE_RECTANGLE, Inches(0.55), Inches(2.75), prs.slide_width - Inches(1.1), Pt(3)
+        _MSO_SHAPE_RECTANGLE,
+        Inches(0.55),
+        Pt(SECTION_RULE_TOP_FROM_TOP_PT),
+        prs.slide_width - Inches(1.1),
+        Pt(SECTION_RULE_HEIGHT_PT),
     )
     rule.fill.solid()
     rule.fill.fore_color.rgb = _rgb(theme.highlight_1)
     rule.line.fill.background()
     rule.shadow.inherit = False
 
-    box = slide.shapes.add_textbox(Inches(0.55), Inches(2.3), prs.slide_width - Inches(1.1), Inches(1.0))
+    box = slide.shapes.add_textbox(
+        Inches(0.55),
+        Pt(SECTION_TITLE_BOX_TOP_PT),
+        prs.slide_width - Inches(1.1),
+        Pt(SECTION_TITLE_BOX_HEIGHT_PT),
+    )
     tf = box.text_frame
-    tf.word_wrap = True
+    tf.word_wrap = False
+    tf.auto_size = MSO_AUTO_SIZE.NONE
+    tf.vertical_anchor = MSO_ANCHOR.TOP
+    tf.margin_left = 0
+    tf.margin_right = 0
+    tf.margin_top = 0
+    tf.margin_bottom = 0
     run = _set_run_text(tf, title)
-    run.font.size = Pt(_fit_single_line_font_size_pt(title, 9.0, SECTION_FONT_SIZE))
+    title_font_size = fit_helvetica_bold_single_line_font_size(
+        title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=SECTION_FONT_SIZE
+    )
+    run.font.size = Pt(title_font_size)
+    run.font.name = "Helvetica"
     run.font.bold = True
     run.font.color.rgb = _rgb(theme.black)
+    tf.paragraphs[0].line_spacing = Pt(title_font_size)
 
     _set_notes(slide, notes)
     return slide
 
 
-def _add_content_slide(prs: Any, layout: Any, slide_content: Slide, theme: DeckTheme) -> Any:
+def _add_content_slide(
+    prs: Any,
+    layout: Any,
+    slide_content: Slide,
+    theme: DeckTheme,
+    content_layout: ContentSlideLayout,
+) -> Any:
     slide = prs.slides.add_slide(layout)
     _fill_background(slide, prs, theme.white)
 
@@ -311,43 +325,62 @@ def _add_content_slide(prs: Any, layout: Any, slide_content: Slide, theme: DeckT
     header.line.fill.background()
     header.shadow.inherit = False
     header_tf = header.text_frame
+    header_tf.word_wrap = False
+    header_tf.auto_size = MSO_AUTO_SIZE.NONE
     header_run = _set_run_text(header_tf, slide_content.title)
-    header_run.font.size = Pt(_fit_single_line_font_size_pt(slide_content.title, 8.9, CONTENT_HEADER_FONT_SIZE))
+    header_run.font.size = Pt(
+        fit_helvetica_bold_single_line_font_size(
+            slide_content.title,
+            max_width_pt=SLIDE_TEXT_WIDTH_PT,
+            start_size_pt=CONTENT_HEADER_FONT_SIZE,
+        )
+    )
+    header_run.font.name = "Helvetica"
     header_run.font.bold = True
     header_run.font.color.rgb = _rgb(theme.white)
     header_tf.margin_left = Inches(0.55)
+    header_tf.margin_right = Inches(0.55)
 
-    body_top = Inches(1.2)
-    # Reserve figure space based on the actual bullet text before creating the
-    # body box. The previous fixed y=3.1in placement could overlap a long
-    # bullet list even though both shapes were individually valid.
-    estimated_lines = sum(max(1, math.ceil((len(bullet) + 5) / 68)) for bullet in slide_content.bullets)
-    body_height = min(2.8, max(0.8, 0.35 + estimated_lines * 0.28))
-    figure_top = 1.2 + body_height + 0.18
-    figure_height = 5.625 - figure_top - 0.3
-    if slide_content.figure_path is not None and figure_height < 0.6:
-        raise RenderingError(
-            "Content slide figure has no non-overlapping space below its bullets",
-            context={"slide_title": slide_content.title},
-        )
-    body_box = slide.shapes.add_textbox(Inches(0.55), body_top, prs.slide_width - Inches(1.1), Inches(body_height))
+    body_top = Pt(content_layout.body_top_pt)
+    body_height = Pt(content_layout.body_height_pt)
+    if content_layout.figure_y_pt is not None and content_layout.figure_height_pt is not None:
+        figure_top = 5.625 - (content_layout.figure_y_pt + content_layout.figure_height_pt) / 72
+    body_box = slide.shapes.add_textbox(Inches(0.55), body_top, prs.slide_width - Inches(1.1), body_height)
     tf = body_box.text_frame
-    tf.word_wrap = True
-    for i, bullet in enumerate(slide_content.bullets):
+    tf.word_wrap = False
+    tf.auto_size = MSO_AUTO_SIZE.NONE
+    tf.vertical_anchor = MSO_ANCHOR.TOP
+    tf.margin_left = 0
+    tf.margin_right = 0
+    tf.margin_top = 0
+    tf.margin_bottom = 0
+    for i, (lines, baselines) in enumerate(
+        zip(content_layout.bullet_lines, content_layout.line_baselines_pt, strict=True)
+    ):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        p.text = f"•  {bullet}"
+        p.text = "\v".join(lines)
+        p.font.name = "Helvetica"
         p.font.size = Pt(CONTENT_BODY_FONT_SIZE)
         p.font.color.rgb = _rgb(theme.black)
-        p.space_after = Pt(10)
+        line_spacing = baselines[0] - baselines[1] if len(baselines) > 1 else CONTENT_BODY_LINE_HEIGHT_PT
+        p.line_spacing = Pt(line_spacing)
+        if i < len(content_layout.bullet_lines) - 1:
+            next_baselines = content_layout.line_baselines_pt[i + 1]
+            paragraph_gap = baselines[-1] - next_baselines[0] - line_spacing
+            p.space_after = Pt(paragraph_gap)
+        else:
+            p.space_after = Pt(0)
 
     if slide_content.figure_path is not None:
         if slide_content.figure_path.is_file():
+            if content_layout.figure_y_pt is None or content_layout.figure_height_pt is None:
+                raise RenderingError("Missing content-figure layout", context={"slide_title": slide_content.title})
             slide.shapes.add_picture(
                 str(slide_content.figure_path),
                 Inches(1.5),
                 Inches(figure_top),
                 width=prs.slide_width - Inches(3.0),
-                height=Inches(figure_height),
+                height=Pt(content_layout.figure_height_pt),
             )
         else:
             logger.warning(
@@ -432,20 +465,37 @@ def _add_diagram_slide(prs: Any, layout: Any, slide_content: Slide, theme: DeckT
     header.line.fill.background()
     header.shadow.inherit = False
     header_tf = header.text_frame
+    header_tf.word_wrap = False
+    header_tf.auto_size = MSO_AUTO_SIZE.NONE
     header_run = _set_run_text(header_tf, slide_content.title)
-    header_run.font.size = Pt(_fit_single_line_font_size_pt(slide_content.title, 8.9, DIAGRAM_HEADER_FONT_SIZE))
+    header_run.font.size = Pt(
+        fit_helvetica_bold_single_line_font_size(
+            slide_content.title,
+            max_width_pt=SLIDE_TEXT_WIDTH_PT,
+            start_size_pt=DIAGRAM_HEADER_FONT_SIZE,
+        )
+    )
+    header_run.font.name = "Helvetica"
     header_run.font.bold = True
     header_run.font.color.rgb = _rgb(theme.white)
     header_tf.margin_left = Inches(0.55)
+    header_tf.margin_right = Inches(0.55)
 
     if slide_content.figure_path is not None:
         if slide_content.figure_path.is_file():
-            slide.shapes.add_picture(
+            figure_layout = plan_diagram_figure_layout(slide_content.figure_path)
+            picture = slide.shapes.add_picture(
                 str(slide_content.figure_path),
-                Inches(1.0),
-                Inches(1.0),
-                width=prs.slide_width - Inches(2.0),
+                Pt(figure_layout.left_pt),
+                Pt(figure_layout.top_pt),
+                width=Pt(figure_layout.width_pt),
+                height=Pt(figure_layout.height_pt),
             )
+            if prs.slide_height - (picture.top + picture.height) < Pt(DIAGRAM_FIGURE_BOTTOM_PT):
+                raise RenderingError(
+                    "Diagram figure enters the protected footer/QR band",
+                    context={"slide_title": slide_content.title},
+                )
         else:
             logger.warning(
                 "Slide %r declares figure_path=%s but the file does not exist — "

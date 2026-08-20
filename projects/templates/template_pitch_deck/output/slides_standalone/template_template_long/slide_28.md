@@ -1,10 +1,8 @@
-# Public vs. private, by construction
+# Governance and confidentiality
 
-*Slide 28 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 28 of 57 — template_template pitch, long deck — kind: `section`*
 
-- Only projects/templates/ is public and CI-gated; private working projects render locally through the same pipeline without ever being tracked.
-- A dedicated audit (scripts/audit/check_tracked_all.py) enforces this on every push, not only at release time.
-- The same separation pattern that lets a lab keep unpublished work private, while still exercising the identical tested pipeline, day to day.
+*(no body content — section/title slide)*
 
 ---
 

@@ -42,6 +42,41 @@ except ImportError:  # standalone load (no package context) — mirror the sibli
 logger = get_logger(__name__)
 
 
+# Only producer-owned Stage 02 analysis artifacts belong in the manuscript's
+# inventory. Hydration-self outputs plus render, test, validation, provenance,
+# and copy-stage receipts are downstream consumers of the analysis; counting
+# them would make a later render change ARTIFACT_* without new research
+# evidence. Keep these registries aligned with docs/output_inventory.md.
+_ANALYSIS_FIGURE_FILENAMES: frozenset[str] = frozenset(
+    {
+        "algorithm_complexity.png",
+        "benchmark_timings.png",
+        "convergence_plot.png",
+        "convergence_rate_comparison.png",
+        "performance_benchmark.png",
+        "stability_analysis.png",
+        "step_size_sensitivity.png",
+    }
+)
+_ANALYSIS_DATA_FILENAMES: frozenset[str] = frozenset(
+    {
+        "convergence_plot.json",
+        "dashboard_payload.json",
+        "optimization_results.csv",
+    }
+)
+_ANALYSIS_REPORT_FILENAMES: frozenset[str] = frozenset(
+    {
+        "benchmark_report.json",
+        "dashboard_invariants.txt",
+        "dashboard_summary.txt",
+        "output_validation.json",
+        "performance_benchmark.json",
+        "stability_analysis.json",
+    }
+)
+
+
 def _build_timestamp() -> str:
     """Build timestamp, honoring ``SOURCE_DATE_EPOCH`` for reproducible builds.
 
@@ -99,18 +134,18 @@ def _compute_config_hash(project_root: Path) -> str:
 
 
 def _count_output_artifacts(project_root: Path) -> dict[str, int]:
-    """Count generated artifacts by category (publication-quality only)."""
-    _SUFFIXES: dict[str, set[str]] = {
-        "figures": {".png", ".pdf", ".svg", ".jpg", ".jpeg"},
-        "data": {".csv", ".npz", ".json", ".parquet"},
-        "reports": {".json", ".md", ".html", ".txt"},
+    """Count registered Stage 02 artifacts without downstream feedback."""
+    filenames_by_category: dict[str, frozenset[str]] = {
+        "figures": _ANALYSIS_FIGURE_FILENAMES,
+        "data": _ANALYSIS_DATA_FILENAMES,
+        "reports": _ANALYSIS_REPORT_FILENAMES,
     }
     counts: dict[str, int] = {}
     output_dir = project_root / "output"
-    for subdir, suffixes in _SUFFIXES.items():
+    for subdir, filenames in filenames_by_category.items():
         dir_path = output_dir / subdir
-        if dir_path.exists():
-            counts[subdir] = sum(1 for f in dir_path.iterdir() if f.is_file() and f.suffix.lower() in suffixes)
+        if dir_path.is_dir():
+            counts[subdir] = sum(1 for path in dir_path.iterdir() if path.is_file() and path.name in filenames)
         else:
             counts[subdir] = 0
     return counts

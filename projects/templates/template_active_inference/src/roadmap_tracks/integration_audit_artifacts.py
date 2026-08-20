@@ -199,7 +199,6 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
     root = project_root.resolve()
     release_bundle = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
     semantic = _load_json(root / "output" / "data" / "sheaf_gluing_certificate.json")
-    validation_path = root / "output" / "reports" / "validation_report.json"
     semantic_path = root / "output" / "data" / "sheaf_gluing_certificate.json"
     rows = [
         {
@@ -207,7 +206,10 @@ def build_release_notes_evidence(project_root: Path) -> dict[str, Any]:
             "source": "output/reports/validation_report.json",
             "claim": "The final saved validation report is a release source; this row is explicitly deferred until the validation stage writes it.",
             "passed": True,
-            "deferred_until_validation": not validation_path.exists(),
+            # Stage 4 is downstream of semantic settlement.  Its prior receipt
+            # must never change the pre-render release-note bytes.
+            "deferred_until_validation": True,
+            "authority": "stage_04_validate",
         },
         {
             "note_id": "release_bundle_sources_present",

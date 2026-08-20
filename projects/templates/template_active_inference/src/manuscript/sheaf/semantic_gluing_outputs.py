@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import Any, cast
 
+from json_io import json_payloads_equal
 from manuscript.sheaf.semantic_certificate import build_semantic_gluing_certificate
 from manuscript.sheaf.semantic_evidence import build_evidence_crosswalk, build_validation_dependency_graph
 from manuscript.sheaf.semantic_issues import semantic_gluing_issues
@@ -150,6 +151,11 @@ def validate_semantic_gluing(project_root: Path) -> list[str]:
     issues: list[str] = semantic_gluing_issues(root)
     issues.extend(saved_issues)
     live = build_semantic_gluing_certificate(root)
-    if _stable_certificate_fields(saved) != _stable_certificate_fields(live):
+    # The certificate is deliberately hash-cycle-excluded from the pre-render
+    # P/C/R/B records because it embeds their live release predicates.  Its
+    # standalone validator must therefore authenticate the complete serialized
+    # surface rather than a projection; Stage 4 can then bind these exact bytes
+    # in the terminal artifact manifest without blessing omitted-field forgery.
+    if not json_payloads_equal(saved, live):
         issues.append("saved sheaf_gluing_certificate.json is stale relative to live semantic fields")
     return issues

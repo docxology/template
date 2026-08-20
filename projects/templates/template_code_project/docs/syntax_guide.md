@@ -119,12 +119,10 @@ Illustrative subset of tokens defined in `src/manuscript_variables.py::generate_
 
 | Token | Description |
 |---|---|
-| `{{ARTIFACT_FIGURES}}` | Count of PNG files in `output/figures/` |
-| `{{ARTIFACT_DATA_FILES}}` | Count of CSV/JSON files in `output/data/` |
-| `{{ARTIFACT_REPORTS}}` | Count of report files in `output/reports/` |
-| `{{ARTIFACT_TOTAL}}` | Total artifact count (figures + data + reports) |
-| `{{ARTIFACT_REPORTS}}` | Count of report files in `output/reports/` |
-| `{{ARTIFACT_TOTAL}}` | Total artifact count (figures + data + reports) |
+| `{{ARTIFACT_FIGURES}}` | Count of registered Stage 02 analysis figures; downstream transmission graphics are excluded |
+| `{{ARTIFACT_DATA_FILES}}` | Count of registered Stage 02 analysis data files; hydration-self and transmission manifests are excluded |
+| `{{ARTIFACT_REPORTS}}` | Count of the registered producer-owned analysis reports; downstream render, validation, provenance, and copy-stage receipts are excluded |
+| `{{ARTIFACT_TOTAL}}` | Total artifact count (figures + data + registered analysis reports) |
 
 **System tokens**
 

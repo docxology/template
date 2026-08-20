@@ -1,10 +1,10 @@
-# How you would verify this deck's own claims
+# What reproducible means here
 
-*Slide 32 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 32 of 57 — template_template pitch, long deck — kind: `content`*
 
-- Clone the monorepo, run the same pipeline command shown in this project's README, and regenerate this exact deck.
-- Diff the regenerated PDF/PPTX against the committed output — a token-honesty test already does this as part of the project's own CI gate.
-- Nothing in this pitch requires trusting the presenter; it requires running the pipeline.
+- Fixed RNG seeds and MPLBACKEND=Agg for headless, deterministic figure generation.
+- Two consecutive pipeline runs against the same repository state produce byte-identical rendered output.
+- Coverage and test counts are read from a generated report (docs/_generated/COUNTS.md), never hardcoded into prose that could go stale.
 
 ---
 

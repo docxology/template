@@ -14,7 +14,7 @@ from roadmap_tracks.sheaf_tracks_builders_formal import (
 from roadmap_tracks.sheaf_tracks_builders_provenance import build_artifact_provenance
 from roadmap_tracks.sheaf_tracks_builders_release import build_evidence_field_index
 from roadmap_tracks.sheaf_tracks_context import _ProvenanceContext
-from roadmap_tracks.sheaf_tracks_helpers import _copied_parity
+from roadmap_tracks.sheaf_tracks_helpers import _deferred_copy_parity
 from roadmap_tracks.sheaf_tracks_io import (
     _analysis_scripts,
     _artifact_maps,
@@ -37,6 +37,7 @@ from roadmap_tracks.sheaf_tracks_registry import (
     REQUIRED_EDGE_TYPES,
     SHEAF_TRACK_PRODUCER,
     VERSIONED_TRACK_RE,
+    hash_cycle_excluded,
 )
 
 
@@ -173,22 +174,8 @@ def build_track_lane_matrix(project_root: Path) -> dict[str, Any]:
     }
 
 
-def _artifact_contract_cycle_excluded(rel: str) -> bool:
-    return rel in {
-        CANONICAL_ARTIFACTS["provenance"],
-        CANONICAL_ARTIFACTS["semantic"],
-        CANONICAL_ARTIFACTS["dependency"],
-        CANONICAL_ARTIFACTS["track_improvement_scope"],
-        CANONICAL_ARTIFACTS["replay_matrix"],
-        CANONICAL_ARTIFACTS["artifact_diffoscope"],
-        CANONICAL_ARTIFACTS["release_bundle"],
-        CANONICAL_ARTIFACTS["release_attestation"],
-        CANONICAL_ARTIFACTS["artifact_contract_index"],
-        "output/figures/si_belief_trajectory.gif",
-        "output/data/animation_frame_deltas.json",
-        "output/data/manuscript_variables.json",
-        "output/reports/manuscript_staleness_report.json",
-    }
+def _artifact_contract_cycle_excluded(rel: str, producer: str = "") -> bool:
+    return bool(hash_cycle_excluded(rel, producer))
 
 
 def _artifact_contract_track_maps(
@@ -233,8 +220,8 @@ def build_artifact_contract_index(project_root: Path) -> dict[str, Any]:
         pipeline_tracks = pipeline_by_artifact.get(rel, [])
         sheaf_tracks = sheaf_by_artifact.get(rel, [])
         claim_ids = sorted(claim_ids_by_path.get(rel, []))
-        source_sha = _sha256(path)
-        freshness_cycle_excluded = _artifact_contract_cycle_excluded(rel)
+        freshness_cycle_excluded = _artifact_contract_cycle_excluded(rel, producer)
+        source_sha = "" if freshness_cycle_excluded else _sha256(path)
         copied = copied_rows.get(rel) or {}
         copied_required = bool(copied)
         copied_status = str(copied.get("status") or "not_required")
@@ -283,7 +270,7 @@ def build_artifact_contract_index(project_root: Path) -> dict[str, Any]:
                 "copied_path": str(copied.get("copied_path") or rel.removeprefix("output/")),
                 "copied_status": copied_status,
                 "copied_exists": bool(copied.get("copied_exists", False)),
-                "copied_sha256": str(copied.get("copied_sha256") or ""),
+                "copied_sha256": "" if freshness_cycle_excluded else str(copied.get("copied_sha256") or ""),
                 "copied_parity_ok": copied_parity_ok,
                 "contract_complete": row_complete,
             }
@@ -487,7 +474,7 @@ def build_validation_dependency_graph(
         artifact = str(row.get("artifact") or "")
         edges.append({"source": citation, "target": method_role, "kind": "scholarship_to_method"})
         edges.append({"source": citation, "target": artifact, "kind": "scholarship_to_artifact"})
-    copied = _copied_parity(root, list(CANONICAL_ARTIFACTS.values()))
+    copied = _deferred_copy_parity(root, list(CANONICAL_ARTIFACTS.values()))
     for row in copied["rows"]:
         edges.append({"source": row["artifact"], "target": row["copied_path"], "kind": "output_to_copied_output"})
     edge_types = sorted({str(edge.get("kind")) for edge in edges if edge.get("kind")})

@@ -3,20 +3,224 @@
 from __future__ import annotations
 
 import hashlib
+import os
+import stat
+import tempfile
 from pathlib import Path
 
 
 FINGERPRINT_CACHE = "output/.fingerprint_cache.sha256"
+_FINGERPRINT_INPUT_DIRS = ("data", "gnn", "lean", "manuscript", "scripts", "src", "tests")
+_FINGERPRINT_INPUT_SUFFIXES = frozenset(
+    {".bib", ".csv", ".json", ".lean", ".md", ".py", ".sh", ".tex", ".toml", ".txt", ".yaml", ".yml"}
+)
+_FINGERPRINT_INPUT_NAMES = frozenset({"lean-toolchain"})
+_FINGERPRINT_IGNORED_NAMES = frozenset({"AGENTS.md", "README.md", "SKILL.md"})
+_FINGERPRINT_ROOT_INPUTS = frozenset(
+    {
+        "domain_profile.yaml",
+        "experiment_plan.yaml",
+        "figures.yaml",
+        "pymdp.yaml",
+        "pyproject.toml",
+        "tracks.yaml",
+        "uv.lock",
+    }
+)
+_DOWNSTREAM_STATE_ONLY_OUTPUTS = frozenset(
+    {"output/pdf/template_active_inference_combined.pdf", "output/web/index.html"}
+)
 
 
-def _write_fingerprint_cache(cache_path: Path, fingerprint: str) -> None:
-    """Write the fingerprint cache, creating parent dirs as needed."""
+def _fingerprint_cache_path(root: Path) -> Path:
+    """Return the confined cache path, rejecting symlinked path components."""
+    project_root = root.resolve()
+    cache_path = project_root / FINGERPRINT_CACHE
+    cursor = project_root
+    parts = Path(FINGERPRINT_CACHE).parts
+    for index, part in enumerate(parts):
+        cursor /= part
+        if cursor.is_symlink():
+            raise RuntimeError(f"semantic fixed-point cache path must not contain symlinks: {cursor}")
+        if index < len(parts) - 1 and cursor.exists() and not cursor.is_dir():
+            raise RuntimeError(f"semantic fixed-point cache parent is not a directory: {cursor}")
+    return cache_path
+
+
+def _write_fingerprint_cache(root: Path, fingerprint: str) -> None:
+    """Atomically write the confined cache without following a cache symlink."""
+    cache_path = _fingerprint_cache_path(root)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(fingerprint, encoding="utf-8")
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=cache_path.parent,
+            prefix=f".{cache_path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as stream:
+            temp_path = Path(stream.name)
+            stream.write(fingerprint)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temp_path.replace(cache_path)
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
 
 
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else ""
+def _normalized_rel(rel: str) -> Path:
+    relative = Path(rel)
+    if relative.is_absolute() or not relative.parts or any(part in {"", ".", ".."} for part in relative.parts):
+        raise RuntimeError(f"semantic fixed-point path must be a normalized project-relative path: {rel}")
+    return relative
+
+
+def _confined_path_state(
+    root: Path,
+    rel: str,
+    *,
+    allow_directory: bool = False,
+    content_sensitive: bool = True,
+) -> str:
+    """Return a race-checked state token without following any symlink."""
+    relative = _normalized_rel(rel)
+    cursor = root.resolve()
+    leaf_stat: os.stat_result | None = None
+    for index, part in enumerate(relative.parts):
+        cursor /= part
+        try:
+            current_stat = cursor.lstat()
+        except FileNotFoundError:
+            return "missing"
+        if stat.S_ISLNK(current_stat.st_mode):
+            raise RuntimeError(f"semantic fixed-point observed path must not contain symlinks: {cursor}")
+        if index < len(relative.parts) - 1:
+            if not stat.S_ISDIR(current_stat.st_mode):
+                raise RuntimeError(f"semantic fixed-point observed parent is not a directory: {cursor}")
+            continue
+        leaf_stat = current_stat
+
+    if leaf_stat is None:
+        raise RuntimeError(f"semantic fixed-point observed path has no leaf: {rel}")
+    if stat.S_ISDIR(leaf_stat.st_mode):
+        if allow_directory:
+            return "directory"
+        raise RuntimeError(f"semantic fixed-point observed file is a directory: {cursor}")
+    if not stat.S_ISREG(leaf_stat.st_mode):
+        raise RuntimeError(f"semantic fixed-point observed path is not a regular file: {cursor}")
+    if not content_sensitive:
+        return "file"
+
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(cursor, flags)
+    try:
+        opened_stat = os.fstat(descriptor)
+        if not stat.S_ISREG(opened_stat.st_mode) or (
+            opened_stat.st_dev,
+            opened_stat.st_ino,
+        ) != (leaf_stat.st_dev, leaf_stat.st_ino):
+            raise RuntimeError(f"semantic fixed-point observed file changed during read: {cursor}")
+        digest = hashlib.sha256()
+        while chunk := os.read(descriptor, 1024 * 1024):
+            digest.update(chunk)
+    finally:
+        os.close(descriptor)
+    return f"file:{digest.hexdigest()}"
+
+
+def _walk_generation_inputs(root: Path, dirname: str) -> set[str]:
+    """Walk one declared input tree without following directory symlinks."""
+    rels: set[str] = {dirname}
+    base = root / dirname
+    state = _confined_path_state(root, dirname, allow_directory=True)
+    if state == "missing":
+        return rels
+    if state != "directory":
+        raise RuntimeError(f"semantic fixed-point input root is not a directory: {base}")
+    pending = [base]
+    while pending:
+        directory = pending.pop()
+        with os.scandir(directory) as entries:
+            for entry in sorted(entries, key=lambda item: item.name):
+                path = Path(entry.path)
+                rel = path.relative_to(root).as_posix()
+                if entry.is_symlink():
+                    raise RuntimeError(f"semantic fixed-point input tree must not contain symlinks: {path}")
+                if entry.is_dir(follow_symlinks=False):
+                    rels.add(rel)
+                    pending.append(path)
+                elif entry.is_file(follow_symlinks=False):
+                    if entry.name in _FINGERPRINT_IGNORED_NAMES:
+                        continue
+                    if path.suffix.lower() in _FINGERPRINT_INPUT_SUFFIXES or entry.name in _FINGERPRINT_INPUT_NAMES:
+                        rels.add(rel)
+                else:
+                    raise RuntimeError(f"semantic fixed-point input tree contains a special file: {path}")
+    return rels
+
+
+def _generation_input_rels(root: Path) -> list[str]:
+    """Return deterministic source/config inputs that can change generated evidence."""
+    rels = set(_FINGERPRINT_ROOT_INPUTS)
+    for dirname in _FINGERPRINT_INPUT_DIRS:
+        rels.update(_walk_generation_inputs(root, dirname))
+    return sorted(rels)
+
+
+def _observed_output_rels(root: Path) -> list[str]:
+    """Derive the complete positive, negative, and hydrated output inventory from SSOTs."""
+    from contracts.artifact_contract import VARIABLE_ARTIFACTS
+    from gates.artifact_manifest import REQUIRED_OUTPUTS
+    from manuscript.sheaf.semantic_maps import ARTIFACT_PRODUCERS
+    from roadmap_tracks.sheaf_tracks_builders_formal import BLOCKED_SCOPE_SENTINELS
+    from roadmap_tracks.sheaf_tracks_builders_release import RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+    from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, LEGACY_ARTIFACTS
+
+    rels = set(REQUIRED_OUTPUTS)
+    rels.update(ARTIFACT_PRODUCERS)
+    rels.update(VARIABLE_ARTIFACTS.values())
+    rels.update(CANONICAL_ARTIFACTS.values())
+    rels.update(LEGACY_ARTIFACTS)
+    rels.update(BLOCKED_SCOPE_SENTINELS)
+    rels.update(RELEASE_BUNDLE_REQUIRED_ARTIFACTS)
+
+    manuscript_dir = root / "output" / "manuscript"
+    state = _confined_path_state(root, "output/manuscript", allow_directory=True)
+    if state == "directory":
+        with os.scandir(manuscript_dir) as entries:
+            for entry in entries:
+                path = Path(entry.path)
+                if entry.is_symlink():
+                    raise RuntimeError(f"hydrated manuscript must not contain symlinks: {path}")
+                if entry.is_dir(follow_symlinks=False):
+                    raise RuntimeError(f"hydrated manuscript contains an unexpected directory: {path}")
+                if not entry.is_file(follow_symlinks=False):
+                    raise RuntimeError(f"hydrated manuscript contains a special file: {path}")
+                if path.suffix.lower() in {".bib", ".md"} or path.name == "config.yaml":
+                    rels.add(path.relative_to(root).as_posix())
+    figures_dir = root / "output" / "figures"
+    figures_state = _confined_path_state(root, "output/figures", allow_directory=True)
+    if figures_state == "directory":
+        with os.scandir(figures_dir) as entries:
+            for entry in entries:
+                path = Path(entry.path)
+                if entry.is_symlink():
+                    raise RuntimeError(f"rendered figure inventory must not contain symlinks: {path}")
+                if entry.is_file(follow_symlinks=False) and path.suffix.lower() in {".gif", ".png"}:
+                    rels.add(path.relative_to(root).as_posix())
+    return sorted(rels)
+
+
+def _cached_fingerprint_matches(root: Path, current: str) -> bool:
+    """Return whether the disposable cache exactly binds the current state."""
+    cache_path = _fingerprint_cache_path(root)
+    try:
+        return cache_path.is_file() and cache_path.read_text(encoding="utf-8").strip() == current
+    except (OSError, UnicodeError):
+        return False
 
 
 def _refresh_animation_outputs(root: Path) -> dict[str, Path]:
@@ -70,32 +274,30 @@ def _write_contract_artifacts(root: Path) -> dict[str, Path]:
 
 
 def _fingerprint(root: Path) -> str:
-    from roadmap_tracks.sheaf_tracks import CANONICAL_ARTIFACTS
+    from roadmap_tracks.sheaf_tracks_io import _source_commit
 
-    rels = [
-        "output/data/manuscript_variables.json",
-        "output/reports/manuscript_staleness_report.json",
-        "output/data/sheaf_evidence_crosswalk.json",
-        "output/data/sheaf_gluing_certificate.json",
-        "output/data/validation_dependency_graph.json",
-        "output/data/interop_roundtrip_report.json",
-        "output/data/artifact_contract_index.json",
-        "output/reports/replay_matrix.json",
-        "output/reports/release_bundle_manifest.json",
-        "output/data/sheaf_section_status_matrix.json",
-        "output/reports/sheaf_render_log.json",
-        "output/figures/figure_registry.json",
-        "output/figures/si_belief_trajectory.gif",
-        "output/data/animation_frame_deltas.json",
-        *CANONICAL_ARTIFACTS.values(),
-    ]
-    hydrated = sorted(path.relative_to(root).as_posix() for path in (root / "output" / "manuscript").glob("*.md"))
     digest = hashlib.sha256()
-    for rel in sorted(set([*rels, *hydrated])):
+    for rel in _generation_input_rels(root):
+        state = _confined_path_state(root, rel, allow_directory=True)
+        digest.update(b"input\0")
         digest.update(rel.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(_sha256(root / rel).encode("ascii"))
+        digest.update(state.encode("ascii"))
         digest.update(b"\0")
+    for rel in _observed_output_rels(root):
+        state = _confined_path_state(
+            root,
+            rel,
+            content_sensitive=rel not in _DOWNSTREAM_STATE_ONLY_OUTPUTS,
+        )
+        digest.update(b"output\0")
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(state.encode("ascii"))
+        digest.update(b"\0")
+    digest.update(b"source-commit\0")
+    digest.update(_source_commit(root).encode("utf-8"))
+    digest.update(b"\0")
     return digest.hexdigest()
 
 
@@ -156,7 +358,12 @@ def _existing_fixed_point_paths(root: Path) -> dict[str, Path]:
         "crosswalk": "output/data/sheaf_evidence_crosswalk.json",
         "certificate": "output/data/sheaf_gluing_certificate.json",
     }
-    return {key: root / rel for key, rel in rels.items() if (root / rel).exists()}
+    paths: dict[str, Path] = {}
+    for key, rel in rels.items():
+        state = _confined_path_state(root, rel, allow_directory=rel == "output/manuscript")
+        if state != "missing":
+            paths[key] = root / rel
+    return paths
 
 
 def _write_fixed_point_pass(root: Path, *, require_analysis_outputs: bool) -> dict[str, Path]:
@@ -203,49 +410,37 @@ def run_semantic_fixed_point(
 ) -> dict[str, Path]:
     """Settle manuscript, semantic, and contract artifacts to a validated fixed point.
 
-    When the fingerprint cache matches the current artifact hashes, the expensive
-    multi-pass rebuild is skipped entirely — returning in < 0.1 s instead of 600+ s.
+    When the fingerprint cache exactly matches the current generation inputs and
+    artifact hashes, the expensive multi-pass rebuild is skipped entirely. The
+    disposable cache is never evidence authority: a missing or stale cache forces
+    regeneration instead of blessing outputs produced by unknown source bytes.
     """
+    if max_passes < 2:
+        raise ValueError("semantic fixed-point max_passes must be at least 2")
     root = project_root.resolve()
+    current = _fingerprint(root)
     source_issues = _source_contract_issues(root)
     if source_issues:
         joined = "; ".join(dict.fromkeys(source_issues))
         raise RuntimeError(f"semantic fixed point cannot repair source contract defects: {joined}")
 
-    # Fast path: if cached fingerprint matches, skip the expensive rebuild entirely.
-    cache_path = root / FINGERPRINT_CACHE
-    current = _fingerprint(root)
-    if cache_path.is_file():
-        cached = cache_path.read_text(encoding="utf-8").strip()
-        if cached == current:
-            return _existing_fixed_point_paths(root)
-        # Fingerprint changed — fall through to rebuild.
-
-    initial_issues = _validate_fixed_point(root)
-    if not initial_issues:
-        _write_fingerprint_cache(cache_path, current)
+    # A cache match is only a performance hint. Re-run the live validators so a
+    # forged/disposable cache file can never bless an invalid artifact set.
+    if _cached_fingerprint_matches(root, current) and not _validate_fixed_point(root):
         return _existing_fixed_point_paths(root)
 
     paths: dict[str, Path] = {}
-    from roadmap_tracks.formal_interop import write_formal_interop_artifacts
-
-    paths.update(write_formal_interop_artifacts(root, missing_only=True))
-    if paths:
-        final_issues = _validate_fixed_point(root)
-        if not final_issues:
-            _write_fingerprint_cache(cache_path, _fingerprint(root))
-            return _existing_fixed_point_paths(root)
-
-    previous = ""
+    previous: str | None = None
+    final_issues: list[str] = []
     for _ in range(max_passes):
         paths.update(_write_fixed_point_pass(root, require_analysis_outputs=require_analysis_outputs))
         paths.update(_write_final_validation_pass(root, require_analysis_outputs=require_analysis_outputs))
         current = _fingerprint(root)
         final_issues = _validate_fixed_point(root)
-        if not final_issues:
-            _write_fingerprint_cache(cache_path, current)
-            return paths
-        if current == previous:
+        if not final_issues and previous == current:
+            _write_fingerprint_cache(root, current)
+            return _existing_fixed_point_paths(root)
+        if final_issues and previous == current:
             break
         previous = current
     if final_issues:

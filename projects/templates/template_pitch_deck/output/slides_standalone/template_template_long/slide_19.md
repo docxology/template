@@ -1,6 +1,6 @@
 # Testing discipline
 
-*Slide 19 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 19 of 57 — template_template pitch, long deck — kind: `content`*
 
 - No mocks, anywhere: tests use real files, real YAML, real rendered output — never unittest.mock or MagicMock.
 - 90% coverage floor on every exemplar's own src/; 60% floor on shared infrastructure/.

@@ -111,13 +111,13 @@ class TestSheafTracksHelpersPortableRepoPath:
         result = _portable_repo_path(target, proj)
         assert result == "<repo-root>/projects/my_proj/src/mod.py"
 
-    def test_outside_repo_falls_back_to_absolute(self, tmp_path: Path) -> None:
+    def test_outside_repo_is_redacted(self, tmp_path: Path) -> None:
         isolated = tmp_path / "isolated"
         isolated.mkdir()
         target = isolated / "data.txt"
         target.touch()
         result = _portable_repo_path(target, isolated)
-        assert result == target.as_posix()
+        assert result == "<external-path>"
 
 
 # ---------------------------------------------------------------------------

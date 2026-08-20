@@ -171,6 +171,24 @@ with missing or blank alt fails before Pandoc runs; after rendering, the EPUB
 post-processor names Pandoc's SVG cover graphic from the configured alt, hides
 its nested bitmap from duplicate announcement, and validates every packaged
 XHTML/SVG image reference and accessibility name before retaining the output.
+Pandoc receives a stable placeholder instead of generating a random package
+UUID. After cover processing, the renderer derives a UUIDv5 from the canonical
+EPUB member names and uncompressed bytes, with only the OPF and NCX identifier
+values normalized back to that placeholder. The same finalized value is written
+to the OPF package identifier and NCX navigation UID. This effective-package
+binding includes actual output changes produced by bibliography data, body
+media, filters, Pandoc metadata, or tool-version behavior without having to
+interpret their command-line inputs. Identifier overrides are rejected.
+
+A valid caller `SOURCE_DATE_EPOCH` controls Pandoc's `dcterms:modified` value,
+which is package content and therefore participates in the UUID; absent or
+invalid values use the fixed ZIP-safe epoch `1980-01-01T00:00:00Z`. Ambient Git
+state and the wall clock are not consulted. ZIP order and metadata are excluded
+from identity, then an atomic final rewrite normalizes member timestamps while
+preserving order, compression, comments, permissions, and the required first,
+uncompressed `mimetype` member. Pandoc writes a fresh sibling temporary target
+with an authoritative final output option, so a zero-exit nonwriting process or
+caller output redirect cannot cause a stale destination to be accepted.
 
 ### DOI and ORCID status
 

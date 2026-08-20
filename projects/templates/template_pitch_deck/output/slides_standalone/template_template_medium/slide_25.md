@@ -1,8 +1,9 @@
-# Per-exemplar coverage, measured live
+# Coverage isn't a headline number
 
-*Slide 25 of 37 — template_template pitch, medium deck — kind: `diagram`*
+*Slide 25 of 38 — template_template pitch, medium deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- Every one of 24 public exemplars is measured independently, not summarized into one repo-wide percentage.
+- The chart on the next slide is generated from the same docs/_generated/COUNTS.md factsheet this deck's own 97.66% figure comes from — one source of truth, two presentations.
 
 ---
 

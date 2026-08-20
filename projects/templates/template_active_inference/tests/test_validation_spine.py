@@ -73,6 +73,8 @@ def test_validation_spine_artifacts_are_written(project_root: Path) -> None:
     assert "output/reports/pymdp_runtime_diagnostics.json" in provenance["artifacts"]
     assert "output/data/pymdp_policy_posterior_grid.json" in provenance["artifacts"]
     assert "output/data/si_graph_world_topology_traces.json" in provenance["artifacts"]
+    assert all(record["cycle_excluded"] is False for record in provenance["artifacts"].values())
+    assert all(record["sha256"] and record["size_bytes"] > 0 for record in provenance["artifacts"].values())
     semantic_artifacts = [
         rel for rel in provenance["artifacts"] if rel.startswith("output/data/") or rel.startswith("output/reports/")
     ]

@@ -338,6 +338,12 @@
       "producer": "generate_figures.py"
     },
     {
+      "artifact": "output/figures/track_lane_promotion_map.png",
+      "configured": true,
+      "exists": true,
+      "producer": "generate_figures.py"
+    },
+    {
       "artifact": "output/reports/ablation_sensitivity_report.json",
       "configured": true,
       "exists": true,

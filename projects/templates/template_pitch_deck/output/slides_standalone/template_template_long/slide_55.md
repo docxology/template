@@ -1,14 +1,13 @@
-# Citation and contact
+# Glossary
 
-*Slide 55 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 55 of 57 — template_template pitch, long deck — kind: `content`*
 
-- Concept DOI: 10.5281/zenodo.20419007.
-- Repository: docxology/template_template, licensed Apache-2.0.
-- This deck itself: projects/templates/template_pitch_deck in the same monorepo.
+- Autopoietic — a system that regenerates its own description from its own live state, rather than from a fixed snapshot.
+- Thin orchestrator — a script that coordinates infrastructure/ and src/ calls but contains no business logic itself.
+- Coverage floor — the minimum percentage of source lines a test suite must exercise before the pipeline is allowed to proceed.
+- No-mocks policy — a testing rule requiring real files, real data, and real computation instead of simulated objects.
 
 ---
-
-**Source:** [projects/templates/template_template/manuscript/config.yaml](https://github.com/docxology/template/blob/main/projects/templates/template_template/manuscript/config.yaml)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

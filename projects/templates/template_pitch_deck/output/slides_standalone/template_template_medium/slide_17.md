@@ -1,6 +1,6 @@
 # The pattern generalizes
 
-*Slide 17 of 37 — template_template pitch, medium deck — kind: `section`*
+*Slide 17 of 38 — template_template pitch, medium deck — kind: `section`*
 
 *(no body content — section/title slide)*
 

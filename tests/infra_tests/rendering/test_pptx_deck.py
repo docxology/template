@@ -9,15 +9,35 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pdfplumber
 import pytest
 
 pytest.importorskip("pptx", reason="python-pptx opt-in group not installed (uv sync --group rendering-pptx)")
 
 from pptx import Presentation  # noqa: E402
+from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE  # noqa: E402
 
 from infrastructure.core.exceptions import RenderingError  # noqa: E402
-from infrastructure.rendering.pptx_deck import _fit_single_line_font_size_pt, render_pptx  # noqa: E402
-from infrastructure.rendering.slide_deck import CONTENT_HEADER_FONT_SIZE, DeckContent, DeckTheme, Slide, render_pdf  # noqa: E402
+from infrastructure.rendering.pptx_deck import render_pptx  # noqa: E402
+from infrastructure.rendering.slide_deck import (  # noqa: E402
+    CONTENT_PROTECTED_FLOOR_PT,
+    DIAGRAM_FIGURE_BOTTOM_PT,
+    DIAGRAM_FIGURE_MAX_HEIGHT_PT,
+    DIAGRAM_FIGURE_MAX_WIDTH_PT,
+    DIAGRAM_FIGURE_TOP_FROM_TOP_PT,
+    PAGE_SIZE,
+    SECTION_RULE_HEIGHT_PT,
+    SECTION_RULE_TOP_FROM_TOP_PT,
+    SECTION_TITLE_RULE_GAP_PT,
+    DeckContent,
+    DeckTheme,
+    SLIDE_TEXT_WIDTH_PT,
+    Slide,
+    fit_helvetica_bold_single_line_font_size,
+    plan_content_slide_layout,
+    plan_diagram_figure_layout,
+    render_pdf,
+)
 
 
 def _make_deck(n_slides: int) -> DeckContent:
@@ -211,6 +231,114 @@ def test_render_pptx_diagram_slide_embeds_figure(tmp_path: Path):
     assert len(picture_shapes) == 1
 
 
+@pytest.mark.parametrize(
+    ("image_size", "bound_dimension"),
+    (((200, 1200), "height"), ((1200, 200), "width")),
+)
+def test_pdf_and_pptx_fit_diagram_to_same_protected_geometry(
+    tmp_path: Path,
+    image_size: tuple[int, int],
+    bound_dimension: str,
+):
+    """Portrait and landscape images must fit by their limiting dimension.
+
+    This is the real counterexample for the former PPTX width-only placement:
+    at eight inches wide a 1:6 image was more than forty inches tall.
+    """
+    from PIL import Image
+
+    figure_path = tmp_path / f"{bound_dimension}-bound-diagram.png"
+    Image.new("RGB", image_size, "white").save(figure_path)
+    slide = Slide(
+        title="Tall evidence",
+        kind="diagram",
+        figure_path=figure_path,
+        source="CLAUDE.md",
+        qr_url="https://github.com/org/repo/blob/main/slide.md",
+    )
+    deck = DeckContent(title="Deck", slides=(slide,))
+    expected = plan_diagram_figure_layout(figure_path)
+
+    pdf_path = render_pdf(
+        deck,
+        tmp_path / "tall-diagram.pdf",
+        source_base_url="https://github.com/org/repo/blob/main/",
+    )
+    pptx_path = render_pptx(
+        deck,
+        tmp_path / "tall-diagram.pptx",
+        source_base_url="https://github.com/org/repo/blob/main/",
+    )
+
+    with pdfplumber.open(pdf_path) as document:
+        diagram_page = document.pages[1]
+        pdf_figure = next(image for image in diagram_page.images if image["srcsize"] == image_size)
+        assert pdf_figure["x0"] == pytest.approx(expected.left_pt, abs=0.01)
+        assert pdf_figure["y0"] == pytest.approx(expected.bottom_pt, abs=0.01)
+        assert pdf_figure["width"] == pytest.approx(expected.width_pt, abs=0.01)
+        assert pdf_figure["height"] == pytest.approx(expected.height_pt, abs=0.01)
+        assert pdf_figure["top"] == pytest.approx(expected.top_pt, abs=0.01)
+
+    prs = Presentation(str(pptx_path))
+    diagram_slide = list(prs.slides)[1]
+    pictures = [shape for shape in diagram_slide.shapes if shape.shape_type == 13]
+    pptx_figure = max(pictures, key=lambda shape: shape.width * shape.height)
+    assert pptx_figure.left / 12_700 == pytest.approx(expected.left_pt, abs=0.01)
+    assert pptx_figure.top / 12_700 == pytest.approx(expected.top_pt, abs=0.01)
+    assert pptx_figure.width / 12_700 == pytest.approx(expected.width_pt, abs=0.01)
+    assert pptx_figure.height / 12_700 == pytest.approx(expected.height_pt, abs=0.01)
+    pptx_figure_bottom_clearance = prs.slide_height - (pptx_figure.top + pptx_figure.height)
+    assert pptx_figure_bottom_clearance >= DIAGRAM_FIGURE_BOTTOM_PT * 12_700 - 2
+    assert expected.top_pt >= DIAGRAM_FIGURE_TOP_FROM_TOP_PT
+    assert expected.width_pt <= DIAGRAM_FIGURE_MAX_WIDTH_PT
+    assert expected.height_pt <= DIAGRAM_FIGURE_MAX_HEIGHT_PT
+    assert expected.top_pt + expected.height_pt <= PAGE_SIZE[1] - DIAGRAM_FIGURE_BOTTOM_PT
+    assert expected.width_pt / expected.height_pt == pytest.approx(image_size[0] / image_size[1])
+    if bound_dimension == "height":
+        assert expected.height_pt == pytest.approx(DIAGRAM_FIGURE_MAX_HEIGHT_PT)
+    else:
+        assert expected.width_pt == pytest.approx(DIAGRAM_FIGURE_MAX_WIDTH_PT)
+
+
+def test_pdf_and_pptx_section_title_rule_geometry_does_not_intersect(tmp_path: Path):
+    title = "Scientific integrity, by construction"
+    deck = DeckContent(title="Deck", slides=(Slide(title=title, kind="section"),))
+    pdf_path = render_pdf(deck, tmp_path / "section.pdf")
+    pptx_path = render_pptx(deck, tmp_path / "section.pptx")
+
+    with pdfplumber.open(pdf_path) as document:
+        page = document.pages[1]
+        pdf_rule = next(
+            rect
+            for rect in page.rects
+            if rect["height"] == pytest.approx(SECTION_RULE_HEIGHT_PT) and rect["width"] == pytest.approx(640.8)
+        )
+        expected_title_words = title.split()
+        title_words = [word for word in page.extract_words() if word["text"] in expected_title_words]
+        assert pdf_rule["top"] == pytest.approx(SECTION_RULE_TOP_FROM_TOP_PT)
+        assert [word["text"] for word in title_words] == expected_title_words
+        assert max(word["bottom"] for word in title_words) < pdf_rule["top"]
+
+    prs = Presentation(str(pptx_path))
+    section_slide = list(prs.slides)[1]
+    title_frame, _run = _pptx_title_frame_and_run(section_slide, title)
+    title_box = title_frame._parent
+    rule = next(
+        shape for shape in section_slide.shapes if shape.height == pytest.approx(SECTION_RULE_HEIGHT_PT * 12_700, abs=1)
+    )
+    assert rule.top == pytest.approx(SECTION_RULE_TOP_FROM_TOP_PT * 12_700, abs=1)
+    assert title_box.top + title_box.height <= rule.top
+    assert rule.top - (title_box.top + title_box.height) == pytest.approx(
+        SECTION_TITLE_RULE_GAP_PT * 12_700,
+        abs=2,
+    )
+    assert title_frame.word_wrap is False
+    assert title_frame.auto_size == MSO_AUTO_SIZE.NONE
+    assert title_frame.vertical_anchor == MSO_ANCHOR.TOP
+    assert title_frame.margin_left == title_frame.margin_right == 0
+    assert title_frame.margin_top == title_frame.margin_bottom == 0
+
+
 def test_render_pptx_source_citation_becomes_clickable_link(tmp_path: Path):
     deck = DeckContent(title="Deck", slides=(Slide(title="Fact slide", bullets=("x",), source="CLAUDE.md"),))
     output = render_pptx(deck, tmp_path / "cited_deck.pptx", source_base_url="https://github.com/org/repo/blob/main/")
@@ -325,19 +453,131 @@ def test_render_pptx_qr_and_figure_coexist_as_two_pictures(tmp_path: Path):
     assert len(picture_shapes) == 2
 
 
-def test_fit_single_line_font_size_pt_keeps_start_size_for_short_title():
-    assert _fit_single_line_font_size_pt("Short", 8.9, CONTENT_HEADER_FONT_SIZE) == CONTENT_HEADER_FONT_SIZE
+def _pdf_text_font_sizes(page, target: str) -> list[float]:
+    sizes: list[float] = []
+
+    def visit(text, _cm, _tm, _font, font_size):
+        if text.strip() == target:
+            sizes.append(float(font_size))
+
+    page.extract_text(visitor_text=visit)
+    return sizes
 
 
-def test_fit_single_line_font_size_pt_shrinks_a_long_title_to_fit():
-    long_title = "Why this is a science-integrity problem, not just a tooling problem"
-    size = _fit_single_line_font_size_pt(long_title, 8.9, CONTENT_HEADER_FONT_SIZE)
-    assert size < CONTENT_HEADER_FONT_SIZE
+def _pptx_title_frame_and_run(slide, target: str):
+    for shape in slide.shapes:
+        if not shape.has_text_frame:
+            continue
+        for paragraph in shape.text_frame.paragraphs:
+            for run in paragraph.runs:
+                if run.text == target:
+                    return shape.text_frame, run
+    raise AssertionError(f"missing title run: {target}")
 
 
-def test_fit_single_line_font_size_pt_never_shrinks_below_the_floor():
-    absurdly_long = "A title so long it could never fit on one line no matter how small the font gets, by design"
-    assert _fit_single_line_font_size_pt(absurdly_long, 1.0, CONTENT_HEADER_FONT_SIZE) == 14
+def test_pdf_and_pptx_match_all_eight_regressed_title_sizes(tmp_path: Path):
+    from pypdf import PdfReader
+
+    cases = (
+        ("The full roster, not one cherry-picked example", "content", 24),
+        ("Scientific integrity, by construction", "section", 33),
+        ("What's actually inside infrastructure/", "section", 33),
+        ("Why this is a science-integrity problem, not just a tooling problem", "content", 20),
+        ("The full roster, not one cherry-picked example", "content", 24),
+        ("Scientific integrity, by construction", "section", 33),
+        ("What's actually inside infrastructure/", "section", 33),
+        ("Where this could go next for your organization", "content", 24),
+    )
+    deck = DeckContent(
+        title="Deck",
+        slides=tuple(Slide(title=title, kind=kind, bullets=("Short body.",)) for title, kind, _ in cases),
+    )
+    pdf = render_pdf(deck, tmp_path / "titles.pdf")
+    pptx = render_pptx(deck, tmp_path / "titles.pptx")
+    pdf_pages = PdfReader(str(pdf)).pages
+    pptx_slides = list(Presentation(str(pptx)).slides)
+
+    for index, (title, kind, expected_size) in enumerate(cases, start=1):
+        assert _pdf_text_font_sizes(pdf_pages[index], title) == [float(expected_size)]
+        pptx_frame, pptx_run = _pptx_title_frame_and_run(pptx_slides[index], title)
+        assert pptx_run.font.size.pt == expected_size
+        assert pptx_run.font.name == "Helvetica"
+        assert pptx_frame.word_wrap is False
+        assert pptx_frame.auto_size == MSO_AUTO_SIZE.NONE
+        if kind == "section":
+            assert pptx_frame.margin_left == 0
+            assert pptx_frame.margin_right == 0
+        else:
+            assert pptx_frame.margin_left == 502_920  # 0.55 inch
+            assert pptx_frame.margin_right == 502_920
+
+
+def test_pptx_section_title_uses_exact_shared_text_width_without_wrapping(tmp_path: Path):
+    title = "W" * 21
+    assert (
+        fit_helvetica_bold_single_line_font_size(
+            title,
+            max_width_pt=SLIDE_TEXT_WIDTH_PT,
+            start_size_pt=33,
+        )
+        == 32
+    )
+    deck = DeckContent(title="Deck", slides=(Slide(title=title, kind="section"),))
+    output = render_pptx(deck, tmp_path / "section-title-width.pptx")
+    slide = list(Presentation(str(output)).slides)[-1]
+    frame, run = _pptx_title_frame_and_run(slide, title)
+
+    assert run.font.size.pt == 32
+    assert frame.word_wrap is False
+    assert frame.auto_size == MSO_AUTO_SIZE.NONE
+    assert frame.margin_left == 0
+    assert frame.margin_right == 0
+    assert frame._parent.width == pytest.approx(SLIDE_TEXT_WIDTH_PT * 12_700, abs=1)
+
+
+def test_render_pptx_body_overflow_preserves_existing_target(tmp_path: Path):
+    output = tmp_path / "sentinel.pptx"
+    output.write_bytes(b"sentinel-body")
+    deck = DeckContent(title="Deck", slides=(Slide(title="Overflow", bullets=(("many words " * 200).strip(),)),))
+    with pytest.raises(RenderingError, match="protected footer/QR band"):
+        render_pptx(deck, output)
+    assert output.read_bytes() == b"sentinel-body"
+
+
+def test_render_pptx_title_overflow_preserves_existing_target(tmp_path: Path):
+    output = tmp_path / "sentinel.pptx"
+    output.write_bytes(b"sentinel-title")
+    deck = DeckContent(title="Deck", slides=(Slide(title="W" * 500, kind="diagram"),))
+    with pytest.raises(RenderingError, match="minimum font size"):
+        render_pptx(deck, output)
+    assert output.read_bytes() == b"sentinel-title"
+
+
+def test_pptx_body_consumes_shared_boundary_plan_above_protected_floor(tmp_path: Path):
+    planned_slide = Slide(
+        title="Planned body",
+        bullets=("word", ("word " * 141).strip()),
+    )
+    layout = plan_content_slide_layout(planned_slide)
+    assert sum(len(lines) for lines in layout.bullet_lines) == 12
+    assert layout.last_glyph_bottom_pt == pytest.approx(64.794)
+    deck = DeckContent(title="Deck", slides=(planned_slide,))
+    output = render_pptx(deck, tmp_path / "planned.pptx")
+    prs = Presentation(str(output))
+    slide = list(prs.slides)[-1]
+    body = next(shape for shape in slide.shapes if shape.has_text_frame and "word" in shape.text)
+    assert "\v" in body.text
+    assert body.text_frame.word_wrap is False
+    assert body.text_frame.auto_size == MSO_AUTO_SIZE.NONE
+    assert body.text_frame.vertical_anchor == MSO_ANCHOR.TOP
+    assert body.top == pytest.approx(layout.body_top_pt * 12_700, abs=1)
+    assert prs.slide_height - (body.top + body.height) >= CONTENT_PROTECTED_FLOOR_PT * 12700
+    assert prs.slide_height - (body.top + body.height) == pytest.approx(
+        layout.last_glyph_bottom_pt * 12_700,
+        abs=2,
+    )
+    assert body.text_frame.paragraphs[0].line_spacing.pt == pytest.approx(21.0)
+    assert body.text_frame.paragraphs[0].space_after.pt == pytest.approx(8.28)
 
 
 def test_render_pptx_content_slide_with_long_title_does_not_crash(tmp_path: Path):

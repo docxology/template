@@ -1,8 +1,10 @@
-# Reproducibility guarantees
+# Publishing surface
 
-*Slide 30 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 30 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- A registry of 20 publishing platforms — Zenodo, arXiv, GitHub, PyPI, OSF, Software Heritage, Hugging Face, IPFS, and more — with per-platform automation where an API exists.
+- Platforms without a submission API (arXiv) are documented as a manual step, not silently skipped or falsely marked complete.
+- Every 'published' status in a project's README is compiled from that project's own config.yaml, not hand-written prose that can drift out of sync.
 
 ---
 

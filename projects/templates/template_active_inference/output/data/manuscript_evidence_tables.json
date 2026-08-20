@@ -10,12 +10,12 @@
     },
     {
       "id": "artifact_producers",
-      "row_count": 85,
+      "row_count": 86,
       "source": "output/data/validation_dependency_graph.json"
     },
     {
       "id": "artifact_provenance",
-      "row_count": 85,
+      "row_count": 86,
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "id": "artifact_diffoscope",
-      "row_count": 40,
+      "row_count": 43,
       "source": "output/reports/artifact_diffoscope.json"
     },
     {
@@ -70,7 +70,7 @@
     },
     {
       "id": "artifact_license",
-      "row_count": 85,
+      "row_count": 86,
       "source": "output/reports/artifact_license_audit.json"
     },
     {
@@ -115,7 +115,7 @@
     },
     {
       "id": "release_attestation",
-      "row_count": 7,
+      "row_count": 8,
       "source": "output/reports/release_attestation.json"
     }
   ]

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import stat
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -216,6 +218,32 @@ def _clean_stale_web_artifacts(manager: RenderManager) -> None:
         logger.info("Removed %d stale web artifact(s) from %s", removed, web_dir)
 
 
+def _reject_unsafe_combined_output_root(format_dir: Path, output_dir: Path) -> None:
+    """Require a real format-root hierarchy beneath the configured output root."""
+
+    output_root = Path(os.path.abspath(output_dir))
+    format_root = Path(os.path.abspath(format_dir))
+    try:
+        relative_format = format_root.relative_to(output_root)
+    except ValueError as exc:
+        raise ValueError(
+            f"refusing stale combined-output cleanup outside configured output directory: {format_root}"
+        ) from exc
+
+    candidates = [output_root]
+    candidate = output_root
+    for part in relative_format.parts:
+        candidate /= part
+        candidates.append(candidate)
+    for path in candidates:
+        try:
+            mode = path.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"refusing stale combined-output cleanup through symlinked output hierarchy: {path}")
+
+
 def clean_stale_render_deliverables(
     manager: RenderManager,
     source_files: list[Path],
@@ -226,11 +254,20 @@ def clean_stale_render_deliverables(
     Targets are limited to filenames owned by the renderers inside their
     configured output directories. Reserved ``*_slides`` and ``*_combined``
     names are cleared across prior source names so a renamed/deleted section
-    cannot survive. Unrelated project artifacts are preserved. A standalone
-    LaTeX PDF is treated as renderer-owned only when a compiler sidecar with
-    the same stem identifies it.
+    cannot survive. Reserved combined DOCX and EPUB names are owned recursively
+    below their real format directories. Each format root must remain lexically
+    below the configured output root, and symlinks from that output root through
+    the format root are rejected before any cleanup. ``Path.rglob`` leaves
+    deeper symlinked directories untraversed. Unrelated project artifacts are
+    preserved. A standalone LaTeX PDF is treated as renderer-owned only when a
+    compiler sidecar with the same stem identifies it.
     """
 
+    output_dir = Path(manager.config.output_dir)
+    docx_dir = Path(manager.config.docx_dir)
+    epub_dir = Path(manager.config.epub_dir)
+    _reject_unsafe_combined_output_root(docx_dir, output_dir)
+    _reject_unsafe_combined_output_root(epub_dir, output_dir)
     _clean_stale_web_artifacts(manager)
     project_basename = Path(project_name).name
     targets = {
@@ -265,13 +302,11 @@ def clean_stale_render_deliverables(
     slides_dir = Path(manager.config.slides_dir)
     if slides_dir.is_dir():
         targets.update(slides_dir.glob("*_slides.*"))
-    docx_dir = Path(manager.config.docx_dir)
     if docx_dir.is_dir():
-        targets.update(docx_dir.glob("*_combined.docx"))
+        targets.update(docx_dir.rglob("*_combined.docx"))
         targets.add(docx_dir / "_docx_metadata.yaml")
-    epub_dir = Path(manager.config.epub_dir)
     if epub_dir.is_dir():
-        targets.update(epub_dir.glob("*_combined.epub"))
+        targets.update(epub_dir.rglob("*_combined.epub"))
     for source_file in source_files:
         if source_file.suffix == ".tex":
             targets.add(Path(manager.config.pdf_dir) / f"{source_file.stem}.pdf")

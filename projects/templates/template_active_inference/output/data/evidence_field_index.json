@@ -206,9 +206,10 @@
         "lean"
       ],
       "validator": "validate_outputs",
-      "validator_count": 1,
+      "validator_count": 2,
       "validators": [
-        "validate_outputs"
+        "validate_outputs",
+        "figure_registry"
       ]
     },
     {

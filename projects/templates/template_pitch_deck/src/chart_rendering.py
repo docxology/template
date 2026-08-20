@@ -20,6 +20,105 @@ from typing import Any
 
 from infrastructure.rendering.slide_deck import DeckTheme
 
+_MIN_DONUT_TEXT_CONTRAST = 4.5
+
+
+def _hex_rgb(hex_color: str) -> tuple[float, float, float]:
+    """Convert one ``#RRGGBB`` theme color to normalized sRGB channels."""
+    value = hex_color.removeprefix("#")
+    if len(value) != 6:
+        raise ValueError(f"Expected a #RRGGBB color, got {hex_color!r}")
+    try:
+        return (
+            int(value[0:2], 16) / 255.0,
+            int(value[2:4], 16) / 255.0,
+            int(value[4:6], 16) / 255.0,
+        )
+    except ValueError as exc:
+        raise ValueError(f"Expected a #RRGGBB color, got {hex_color!r}") from exc
+
+
+def _relative_luminance(rgb: tuple[float, float, float]) -> float:
+    """Return WCAG relative luminance for normalized sRGB channels."""
+
+    def linearize(channel: float) -> float:
+        return channel / 12.92 if channel <= 0.04045 else ((channel + 0.055) / 1.055) ** 2.4
+
+    red, green, blue = (linearize(channel) for channel in rgb)
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+
+
+def _contrast_ratio(foreground: tuple[float, float, float], background: tuple[float, float, float]) -> float:
+    """Return the WCAG contrast ratio between two opaque sRGB colors."""
+    foreground_luminance = _relative_luminance(foreground)
+    background_luminance = _relative_luminance(background)
+    lighter = max(foreground_luminance, background_luminance)
+    darker = min(foreground_luminance, background_luminance)
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def _composite_rgba_on_rgb(
+    foreground: tuple[float, float, float, float], background: tuple[float, float, float]
+) -> tuple[float, float, float]:
+    """Composite one translucent artist color over an opaque canvas color."""
+    red, green, blue, alpha = foreground
+    if not 0.0 <= alpha <= 1.0:
+        raise ValueError(f"RGBA alpha must be in [0, 1], got {alpha}")
+    return (
+        red * alpha + background[0] * (1.0 - alpha),
+        green * alpha + background[1] * (1.0 - alpha),
+        blue * alpha + background[2] * (1.0 - alpha),
+    )
+
+
+def _visible_artist_rgb(artist: Any, canvas_rgb: tuple[float, float, float]) -> tuple[float, float, float]:
+    """Return a patch artist's visible RGB after its alpha is composited."""
+    facecolor = tuple(float(channel) for channel in artist.get_facecolor())
+    if len(facecolor) != 4:
+        raise ValueError(f"Expected an RGBA artist facecolor, got {facecolor!r}")
+    rgba = (facecolor[0], facecolor[1], facecolor[2], facecolor[3])
+    return _composite_rgba_on_rgb(rgba, canvas_rgb)
+
+
+def _contrasting_text_color(
+    background_rgb: tuple[float, float, float],
+    *,
+    dark_color: str,
+    light_color: str,
+    minimum_ratio: float = _MIN_DONUT_TEXT_CONTRAST,
+) -> tuple[str, float]:
+    """Choose the more readable theme text color, failing below ``minimum_ratio``."""
+    candidates = (
+        (dark_color, _contrast_ratio(_hex_rgb(dark_color), background_rgb)),
+        (light_color, _contrast_ratio(_hex_rgb(light_color), background_rgb)),
+    )
+    color, ratio = max(candidates, key=lambda candidate: candidate[1])
+    if ratio < minimum_ratio:
+        raise ValueError(
+            "Donut percentage label has no theme text color meeting "
+            f"the {minimum_ratio:.1f}:1 contrast floor (best={ratio:.2f}:1)"
+        )
+    return color, ratio
+
+
+def _apply_donut_autotext_contrast(wedges: list[Any], autotexts: list[Any], theme: DeckTheme) -> tuple[float, ...]:
+    """Set each real pie autotext artist to black or white at >= 4.5:1."""
+    if len(wedges) != len(autotexts):
+        raise ValueError(f"Expected one percentage artist per donut wedge, got {len(wedges)} and {len(autotexts)}")
+
+    canvas_rgb = _hex_rgb(theme.white)
+    ratios: list[float] = []
+    for wedge, autotext in zip(wedges, autotexts, strict=True):
+        background_rgb = _visible_artist_rgb(wedge, canvas_rgb)
+        text_color, ratio = _contrasting_text_color(
+            background_rgb,
+            dark_color=theme.black,
+            light_color=theme.white,
+        )
+        autotext.set_color(text_color)
+        ratios.append(ratio)
+    return tuple(ratios)
+
 
 def render_coverage_bar_chart(plt: Any, theme: DeckTheme, rows: list[tuple[str, int, float]], output_path: Path) -> int:
     """Horizontal bar chart of per-exemplar coverage %. Returns the row count."""
@@ -124,8 +223,9 @@ def render_infra_subpackage_donut(plt: Any, theme: DeckTheme, rows: list[tuple[s
 
     fig, ax = plt.subplots(figsize=(8, 8))
     fig.patch.set_facecolor(theme.white)
+    ax.set_facecolor(theme.white)
 
-    wedges, _texts, _autotexts = ax.pie(
+    wedges, _texts, autotexts = ax.pie(
         values,
         labels=labels,
         autopct=lambda pct: f"{pct:.0f}%" if pct >= 4 else "",
@@ -137,6 +237,7 @@ def render_infra_subpackage_donut(plt: Any, theme: DeckTheme, rows: list[tuple[s
     )
     for wedge, alpha in zip(wedges, alphas, strict=False):
         wedge.set_alpha(alpha)
+    _apply_donut_autotext_contrast(wedges, autotexts, theme)
 
     total = sum(values)
     ax.set_title(

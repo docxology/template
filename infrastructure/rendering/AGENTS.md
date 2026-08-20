@@ -46,6 +46,19 @@ renderers without owning validation policy or project analysis.
   alt, hides the nested bitmap from duplicate announcement, and the bounded
   package validator verifies XHTML/SVG image references and accessible names
   before the renderer retains the EPUB.
+- EPUB package identity and container metadata are deterministic. The renderer
+  gives Pandoc a placeholder, validates archive bounds before payload reads,
+  then derives UUIDv5 from canonical member names and uncompressed bytes with
+  only the OPF/NCX identifier values normalized out. Bibliography, body-media,
+  filter, metadata, and tool changes therefore affect identity when they affect
+  the effective package; identifier overrides are rejected. OPF
+  `dc:identifier` and NCX `dtb:uid` agree. A valid caller
+  `SOURCE_DATE_EPOCH` controls `dcterms:modified` and therefore participates in
+  identity; absent or invalid values use `1980-01-01T00:00:00Z`. Ambient Git and
+  wall-clock state are not consulted. Pandoc writes a fresh temporary target,
+  and the final atomic ZIP rewrite preserves order, compression, comments,
+  permissions, and EPUB's first uncompressed `mimetype` member while
+  normalizing member timestamps.
 - Body-figure alternatives come from `output/figures/figure_registry.json`,
   using either top-level `alt` or `metadata.alt_text`. Combined and per-section
   HTML replace Pandoc's caption-derived image alternative only when the
@@ -74,6 +87,14 @@ renderers without owning validation policy or project analysis.
 - `pptx_deck.render_pptx()` normalizes OOXML ZIP-member timestamps after
   `python-pptx` saves the package. Do not remove that pass: identical decks
   must remain byte-identical, not merely content-equivalent.
+- Generic PDF/PPTX decks share the exact ReportLab Helvetica title metric and
+  one explicit content-line plan from `slide_deck.py`. Both renderers must
+  validate fitted titles, unbreakable words, and the protected footer/QR band
+  before creating or replacing a target; do not reintroduce format-local
+  character-count or text-box-height estimates. Diagram figures likewise use
+  one aspect-preserving fit inside the shared header/footer-safe content box;
+  section-divider title and rule bands must remain structurally disjoint in
+  both formats.
 - `formalism.lua` must be applied by **every** writer that applies
   `pandoc-crossref`, and always **before** it and before `--citeproc`: the
   combined PDF (`_pdf_combined_pandoc.py`), combined DOCX and EPUB

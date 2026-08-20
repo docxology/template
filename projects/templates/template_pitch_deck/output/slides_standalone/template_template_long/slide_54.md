@@ -1,11 +1,8 @@
-# Glossary
+# Appendix
 
-*Slide 54 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 54 of 57 — template_template pitch, long deck — kind: `section`*
 
-- Autopoietic — a system that regenerates its own description from its own live state, rather than from a fixed snapshot.
-- Thin orchestrator — a script that coordinates infrastructure/ and src/ calls but contains no business logic itself.
-- Coverage floor — the minimum percentage of source lines a test suite must exercise before the pipeline is allowed to proceed.
-- No-mocks policy — a testing rule requiring real files, real data, and real computation instead of simulated objects.
+*(no body content — section/title slide)*
 
 ---
 

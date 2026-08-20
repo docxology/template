@@ -1,10 +1,10 @@
-# The ask
+# What comes next for this exemplar
 
-*Slide 35 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 35 of 38 — template_template pitch, medium deck — kind: `content`*
 
-- Adopt this pattern for your own methods papers: bind every reported number to the code that produced it, not to a hand-typed table.
-- Pilot it on one existing manuscript in your group before committing to a full rewrite.
-- Happy to pair with your team through a first regeneration cycle and help define your own introspection surface, if useful — no prior engagements to point to yet, this pattern is newly forkable.
+- Extend token-sourced facts beyond one pitch subject to any exemplar in the roster, so a new deck for a different project needs only new content YAML, not new code.
+- Add a second validated pitch (a broader meta-science-group deck) reusing the same rendering and audit pipeline.
+- Track deck-generation coverage and drift in the same CI gates that already watch every other public exemplar.
 
 ---
 

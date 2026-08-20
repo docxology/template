@@ -366,6 +366,32 @@ def test_enabled_epub_parses_container_opf_and_every_xhtml_document(tmp_path) ->
     assert validate_enabled_render_outputs(output_dir, "demo", {"epub"}) is True
 
 
+def test_enabled_docx_rejects_nested_legacy_combined_package(tmp_path) -> None:
+    """Stage 4 rejects a recursively nested combined DOCX with stale identity."""
+
+    output_dir = tmp_path / "output"
+    for path in (
+        output_dir / "docx" / "demo_combined.docx",
+        output_dir / "docx" / "templates" / "old_project_combined.docx",
+    ):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(path, "w") as archive:
+            archive.writestr("[Content_Types].xml", "<Types/>")
+            archive.writestr("word/document.xml", "<document/>")
+
+    assert validate_enabled_render_outputs(output_dir, "demo", {"docx"}) is False
+
+
+def test_enabled_epub_rejects_nested_legacy_combined_package(tmp_path) -> None:
+    """Stage 4 rejects a recursively nested combined EPUB with stale identity."""
+
+    output_dir = tmp_path / "output"
+    _write_epub(output_dir / "epub" / "demo_combined.epub")
+    _write_epub(output_dir / "epub" / "templates" / "old_project_combined.epub")
+
+    assert validate_enabled_render_outputs(output_dir, "demo", {"epub"}) is False
+
+
 def test_enabled_epub_rejects_malformed_declared_xhtml(tmp_path) -> None:
     """ZIP integrity cannot green an XHTML document that is not XML."""
 

@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import logging
 from dataclasses import dataclass
-from pathlib import Path
+from functools import lru_cache
+from pathlib import Path, PureWindowsPath
 from tempfile import NamedTemporaryFile
 from typing import Any
 
@@ -14,6 +16,8 @@ import yaml
 from manuscript.hydrate import collect_malformed_token_names, format_variables, substitute_snake_case_tokens
 
 logger = logging.getLogger(__name__)
+
+ALLOWED_FIGURE_SUFFIXES = frozenset({".png"})
 
 
 @dataclass(frozen=True)
@@ -44,11 +48,61 @@ def _figures_yaml_path(project_root: Path) -> Path:
     return project_root.resolve() / "figures.yaml"
 
 
+@lru_cache(maxsize=64)
+def _parse_figures_yaml_cached(path_str: str, payload: bytes) -> dict[str, Any]:
+    """Parse exact registry bytes once per path/content pair.
+
+    Figure-path validation is a high-fan-out dependency-graph operation.  Keying
+    the cache on the payload itself avoids trusting mutable size/mtime metadata,
+    while the path component keeps otherwise identical project copies isolated.
+    Callers receive a deepcopy so they cannot mutate the cached parse tree.
+    """
+    del path_str
+    return yaml.safe_load(payload.decode("utf-8")) or {}
+
+
 def _load_figures_yaml(project_root: Path) -> dict[str, Any]:
     path = _figures_yaml_path(project_root)
+    if path.is_symlink():
+        raise ValueError(f"figure registry must not be a symlink: {path}")
     if not path.is_file():
         raise FileNotFoundError(f"missing figure registry: {path}")
-    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return copy.deepcopy(_parse_figures_yaml_cached(str(path), path.read_bytes()))
+
+
+def _validate_figure_filename(figure_id: str, value: object) -> str:
+    filename = str(value)
+    path = Path(filename)
+    windows_path = PureWindowsPath(filename)
+    if (
+        not filename
+        or path.is_absolute()
+        or windows_path.is_absolute()
+        or windows_path.drive
+        or len(path.parts) != 1
+        or path.name != filename
+        or "\\" in filename
+    ):
+        raise ValueError(f"figure {figure_id!r} filename must be a basename: {filename!r}")
+    if path.suffix.lower() not in ALLOWED_FIGURE_SUFFIXES:
+        allowed = ", ".join(sorted(ALLOWED_FIGURE_SUFFIXES))
+        raise ValueError(f"figure {figure_id!r} filename must use an allowed image suffix ({allowed}): {filename!r}")
+    return filename
+
+
+def _confined_figure_output_path(project_root: Path, figure_id: str, filename: str) -> Path:
+    root = project_root.resolve()
+    output_dir = root / "output"
+    figures_dir = output_dir / "figures"
+    target = figures_dir / filename
+    for candidate in (output_dir, figures_dir, target):
+        if candidate.is_symlink():
+            raise ValueError(f"figure {figure_id!r} output path must not contain symlinks: {candidate}")
+    resolved_dir = figures_dir.resolve(strict=False)
+    resolved_target = target.resolve(strict=False)
+    if resolved_target.parent != resolved_dir:
+        raise ValueError(f"figure {figure_id!r} output path escapes output/figures: {filename!r}")
+    return target
 
 
 def load_figure_registry(project_root: Path) -> dict[str, FigureSpec]:
@@ -61,9 +115,11 @@ def load_figure_registry(project_root: Path) -> dict[str, FigureSpec]:
             logger.warning("figures.yaml entry %s is not a mapping; skipped", figure_id)
             continue
         fid = str(figure_id)
+        filename = _validate_figure_filename(fid, entry.get("filename", f"{fid}.png"))
+        _confined_figure_output_path(project_root, fid, filename)
         registry[fid] = FigureSpec(
             figure_id=fid,
-            filename=str(entry.get("filename", f"{fid}.png")),
+            filename=filename,
             alt=str(entry.get("alt", fid)),
             caption=str(entry.get("caption", "")),
             width=float(entry.get("width", 0.9)),
@@ -104,7 +160,7 @@ def load_section_figures(project_root: Path) -> dict[str, tuple[SectionFigureRef
 def figure_output_path(project_root: Path, figure_id: str) -> Path:
     """Process figure output path."""
     spec = load_figure_registry(project_root)[figure_id]
-    return project_root.resolve() / "output" / "figures" / spec.filename
+    return _confined_figure_output_path(project_root, figure_id, spec.filename)
 
 
 def _resolve_figure_field(
@@ -145,6 +201,7 @@ def render_figure_markdown(
     """Render figure markdown."""
     del figure_number, caption_prefix
     spec = load_figure_registry(project_root)[figure_id]
+    _confined_figure_output_path(project_root, figure_id, spec.filename)
     rel = f"../output/figures/{spec.filename}"
     alt = spec.alt
     caption = spec.caption

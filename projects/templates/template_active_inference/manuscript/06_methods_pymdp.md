@@ -41,9 +41,17 @@ See `gnn/si_tmaze.gnn.md` for a GNN view of the T-maze hidden state, observation
 
 <!-- sheaf-track:ontology -->
 
+```{=latex}
+\begin{samepage}
+```
+
 ### Ontology bindings
 
 - `belief_entropy` → **BeliefEntropy**
 - `loc` → **HiddenState**
 - `obs` → **ObservationLikelihood**
 - `pi` → **PolicyPosterior**
+
+```{=latex}
+\end{samepage}
+```

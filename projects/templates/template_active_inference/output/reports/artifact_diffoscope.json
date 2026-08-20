@@ -1,6 +1,6 @@
 {
   "all_equal": true,
-  "row_count": 40,
+  "row_count": 43,
   "rows": [
     {
       "artifact": "output/data/analysis_statistics.json",
@@ -33,6 +33,17 @@
       "live_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "saved_content_sha256": "",
       "saved_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "compared_field": "sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "",
+      "live_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+      "saved_content_sha256": "",
+      "saved_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -260,10 +271,10 @@
       "compared_field": "content_sha256",
       "equal": true,
       "jsonpath": "$",
-      "live_content_sha256": "ea3ef41b188a666e04c85d8152b8e2ec54544f71bc8a8d0465169f156beb50b8",
-      "live_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
-      "saved_content_sha256": "ea3ef41b188a666e04c85d8152b8e2ec54544f71bc8a8d0465169f156beb50b8",
-      "saved_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "live_content_sha256": "1929464dea995442eecf64e962eaa25c605c7d74104e0aa95a0bb4f1db3ebe29",
+      "live_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
+      "saved_content_sha256": "1929464dea995442eecf64e962eaa25c605c7d74104e0aa95a0bb4f1db3ebe29",
+      "saved_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -333,6 +344,17 @@
       "source": "output/data/artifact_provenance.json"
     },
     {
+      "artifact": "output/figures/si_belief_trajectory.gif",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "d80e985892f37dd1ab5708bfb10d6721fbed055ba8f8bd48525d62a9c99b45e2",
+      "live_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "saved_content_sha256": "d80e985892f37dd1ab5708bfb10d6721fbed055ba8f8bd48525d62a9c99b45e2",
+      "saved_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
       "artifact": "output/figures/theorem_traceability_graph.png",
       "compared_field": "content_sha256",
       "equal": true,
@@ -341,6 +363,17 @@
       "live_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
       "saved_content_sha256": "6b17ddd58bb2b63ca991c151d6e28559e07aca31f2c56b2c723795e1a3b34494",
       "saved_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/track_lane_promotion_map.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",
+      "live_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
+      "saved_content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",
+      "saved_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
       "source": "output/data/artifact_provenance.json"
     },
     {

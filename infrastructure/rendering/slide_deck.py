@@ -47,6 +47,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape
 from reportlab.lib.units import inch
 from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfgen import canvas
 
 from infrastructure.core.exceptions import RenderingError
@@ -78,6 +79,41 @@ SOURCE_FOOTER_FONT_SIZE = 9
 
 #: Bottom-right QR code side length.
 QR_SIZE = 0.62 * inch
+
+# Shared PDF/PPTX title and content geometry.  Both renderers consume these
+# point-valued constants so they cannot silently diverge through format-local
+# width estimates or text-box heuristics.
+SLIDE_TEXT_WIDTH_PT = PAGE_SIZE[0] - 2 * MARGIN
+HELVETICA_FONT_NAME = "Helvetica"
+HELVETICA_BOLD_FONT_NAME = "Helvetica-Bold"
+MIN_SINGLE_LINE_FONT_SIZE_PT = 14
+CONTENT_BODY_LINE_HEIGHT_PT = 21.0
+CONTENT_BULLET_GAP_PT = 0.46 * inch * 0.25
+CONTENT_BODY_FIRST_BASELINE_PT = PAGE_SIZE[1] - 1.35 * inch
+CONTENT_PROTECTED_FLOOR_PT = 0.12 * inch + QR_SIZE + 0.15 * inch
+
+# Section-divider geometry is expressed once in points so the PPTX renderer
+# can place its title frame and rule in the same non-intersecting bands as the
+# ReportLab path.  The PPTX frame is deliberately bounded above the rule;
+# allowing the default one-inch text box to straddle the rule lets Office and
+# LibreOffice draw the rule through the title glyphs.
+SECTION_RULE_BOTTOM_PT = PAGE_SIZE[1] / 2 - 2
+SECTION_RULE_HEIGHT_PT = 3.0
+SECTION_RULE_TOP_FROM_TOP_PT = PAGE_SIZE[1] - SECTION_RULE_BOTTOM_PT - SECTION_RULE_HEIGHT_PT
+SECTION_TITLE_BASELINE_PT = PAGE_SIZE[1] / 2 + 0.25 * inch
+SECTION_TITLE_RULE_GAP_PT = 0.15 * inch
+SECTION_TITLE_BOX_HEIGHT_PT = SECTION_FONT_SIZE * 1.2
+SECTION_TITLE_BOX_TOP_PT = SECTION_RULE_TOP_FROM_TOP_PT - SECTION_TITLE_RULE_GAP_PT - SECTION_TITLE_BOX_HEIGHT_PT
+
+# Diagram figures occupy one shared, footer-safe content box.  The top starts
+# below the 0.75-inch header and its accent rule; the bottom is the same
+# protected floor used by body text, leaving the source footer and QR code
+# unobstructed.  Both PDF and PPTX fit the intrinsic image aspect ratio inside
+# this box rather than scaling by width alone.
+DIAGRAM_FIGURE_TOP_FROM_TOP_PT = 1.0 * inch
+DIAGRAM_FIGURE_BOTTOM_PT = CONTENT_PROTECTED_FLOOR_PT
+DIAGRAM_FIGURE_MAX_WIDTH_PT = SLIDE_TEXT_WIDTH_PT
+DIAGRAM_FIGURE_MAX_HEIGHT_PT = PAGE_SIZE[1] - DIAGRAM_FIGURE_TOP_FROM_TOP_PT - DIAGRAM_FIGURE_BOTTOM_PT
 
 
 @dataclass(frozen=True)
@@ -190,6 +226,41 @@ class DeckContent:
         return self.slides
 
 
+@dataclass(frozen=True)
+class ContentSlideLayout:
+    """Exact shared line plan for one content slide.
+
+    ``bullet_lines`` and ``line_baselines_pt`` are consumed directly by both
+    renderers.  The plan therefore owns wrapping and vertical-fit decisions;
+    PDF and PPTX are not allowed to independently estimate the same text.
+    """
+
+    bullet_lines: tuple[tuple[str, ...], ...]
+    line_baselines_pt: tuple[tuple[float, ...], ...]
+    line_widths_pt: tuple[tuple[float, ...], ...]
+    last_glyph_bottom_pt: float
+    body_top_pt: float
+    body_height_pt: float
+    figure_y_pt: float | None = None
+    figure_height_pt: float | None = None
+
+
+@dataclass(frozen=True)
+class DiagramFigureLayout:
+    """Aspect-preserving figure placement shared by PDF and PPTX.
+
+    ``bottom_pt`` uses ReportLab's bottom-origin coordinates; ``top_pt`` uses
+    PowerPoint's top-origin coordinates.  The remaining dimensions are common
+    to both formats.
+    """
+
+    left_pt: float
+    bottom_pt: float
+    top_pt: float
+    width_pt: float
+    height_pt: float
+
+
 class SlideBudget(Enum):
     """Maximum content-slide counts for the three published deck lengths.
 
@@ -269,9 +340,10 @@ def render_pdf(
     and diff" reproducibility checks (this project's own core claim) fail on
     metadata alone despite identical content.
     """
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     if not deck.slides:
         raise RenderingError("Cannot render a deck with zero slides", context={"deck_title": deck.title})
+    layouts = validate_deck_layout(deck)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     c = canvas.Canvas(str(output_path), pagesize=PAGE_SIZE, invariant=1)
     page_width, page_height = PAGE_SIZE
@@ -281,7 +353,7 @@ def render_pdf(
         _draw_title_page(c, page_width, page_height, deck.title, deck.subtitle, theme)
         c.showPage()
 
-    for slide in deck.slides:
+    for slide, content_layout in zip(deck.slides, layouts, strict=True):
         if slide.kind == "title":
             _draw_title_page(c, page_width, page_height, slide.title, deck.subtitle, theme)
         elif slide.kind == "section":
@@ -293,7 +365,9 @@ def render_pdf(
         elif slide.kind == "diagram":
             _draw_diagram_slide(c, page_width, page_height, slide, theme)
         else:
-            _draw_content_slide(c, page_width, page_height, slide, theme)
+            if content_layout is None:  # pragma: no cover - guarded by validate_deck_layout
+                raise RenderingError("Missing content-slide layout", context={"slide_title": slide.title})
+            _draw_content_slide(c, page_width, page_height, slide, theme, content_layout)
         _draw_source_footer(c, page_width, slide, theme, source_base_url)
         _draw_qr_code(c, page_width, slide)
         c.showPage()
@@ -374,14 +448,30 @@ def _draw_section_slide(c: canvas.Canvas, width: float, height: float, title: st
     c.setFillColor(theme.white_c)
     c.rect(0, 0, width, height, fill=1, stroke=0)
     c.setFillColor(theme.highlight_1_c)
-    c.rect(MARGIN, height / 2 - 2, width - 2 * MARGIN, 3, fill=1, stroke=0)
-    section_font_size = _fit_single_line_font_size(c, title, "Helvetica-Bold", width - 2 * MARGIN, SECTION_FONT_SIZE)
+    c.rect(
+        MARGIN,
+        SECTION_RULE_BOTTOM_PT,
+        width - 2 * MARGIN,
+        SECTION_RULE_HEIGHT_PT,
+        fill=1,
+        stroke=0,
+    )
+    section_font_size = fit_helvetica_bold_single_line_font_size(
+        title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=SECTION_FONT_SIZE
+    )
     c.setFont("Helvetica-Bold", section_font_size)
     c.setFillColor(theme.black_c)
-    c.drawString(MARGIN, height / 2 + 0.25 * inch, title)
+    c.drawString(MARGIN, SECTION_TITLE_BASELINE_PT, title)
 
 
-def _draw_content_slide(c: canvas.Canvas, width: float, height: float, slide: Slide, theme: DeckTheme) -> None:
+def _draw_content_slide(
+    c: canvas.Canvas,
+    width: float,
+    height: float,
+    slide: Slide,
+    theme: DeckTheme,
+    layout: ContentSlideLayout,
+) -> None:
     c.setFillColor(theme.white_c)
     c.rect(0, 0, width, height, fill=1, stroke=0)
 
@@ -389,8 +479,10 @@ def _draw_content_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
     c.setFillColor(theme.black_c)
     c.rect(0, height - 0.9 * inch, width, 0.9 * inch, fill=1, stroke=0)
     c.setFillColor(theme.white_c)
-    title_font_size = _fit_single_line_font_size(
-        c, slide.title, "Helvetica-Bold", width - 2 * MARGIN, CONTENT_HEADER_FONT_SIZE
+    title_font_size = fit_helvetica_bold_single_line_font_size(
+        slide.title,
+        max_width_pt=SLIDE_TEXT_WIDTH_PT,
+        start_size_pt=CONTENT_HEADER_FONT_SIZE,
     )
     c.setFont("Helvetica-Bold", title_font_size)
     c.drawString(MARGIN, height - 0.62 * inch, slide.title)
@@ -399,33 +491,18 @@ def _draw_content_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
 
     # Bullets
     c.setFont("Helvetica", CONTENT_BODY_FONT_SIZE)
-    cursor_y = height - 1.35 * inch
-    bullet_gap = 0.46 * inch
-    for bullet in slide.bullets:
-        cursor_y = _draw_wrapped(
-            c,
-            f"•  {bullet}",
-            MARGIN,
-            cursor_y,
-            width - 2 * MARGIN,
-            21,
-            theme.black_c,
-            "Helvetica",
-            font_size=CONTENT_BODY_FONT_SIZE,
-        )
-        cursor_y -= bullet_gap * 0.25
+    for lines, baselines in zip(layout.bullet_lines, layout.line_baselines_pt, strict=True):
+        for line, baseline in zip(lines, baselines, strict=True):
+            c.setFillColor(theme.black_c)
+            c.drawString(MARGIN, baseline, line)
 
     if slide.figure_path is not None:
         if slide.figure_path.is_file():
+            if layout.figure_y_pt is None or layout.figure_height_pt is None:
+                raise RenderingError("Missing content-figure layout", context={"slide_title": slide.title})
             fig_width = width - 2 * MARGIN
-            available_height = cursor_y - MARGIN - 0.15 * inch
-            if available_height < 0.6 * inch:
-                raise RenderingError(
-                    "Content slide figure has no non-overlapping space below its bullets",
-                    context={"slide_title": slide.title},
-                )
-            fig_height = min(1.9 * inch, available_height)
-            fig_y = MARGIN
+            fig_height = layout.figure_height_pt
+            fig_y = layout.figure_y_pt
             c.drawImage(
                 str(slide.figure_path),
                 MARGIN,
@@ -500,8 +577,10 @@ def _draw_diagram_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
     c.setFillColor(theme.black_c)
     c.rect(0, height - 0.75 * inch, width, 0.75 * inch, fill=1, stroke=0)
     c.setFillColor(theme.white_c)
-    diagram_title_font_size = _fit_single_line_font_size(
-        c, slide.title, "Helvetica-Bold", width - 2 * MARGIN, DIAGRAM_HEADER_FONT_SIZE
+    diagram_title_font_size = fit_helvetica_bold_single_line_font_size(
+        slide.title,
+        max_width_pt=SLIDE_TEXT_WIDTH_PT,
+        start_size_pt=DIAGRAM_HEADER_FONT_SIZE,
     )
     c.setFont("Helvetica-Bold", diagram_title_font_size)
     c.drawString(MARGIN, height - 0.51 * inch, slide.title)
@@ -510,16 +589,13 @@ def _draw_diagram_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
 
     if slide.figure_path is not None:
         if slide.figure_path.is_file():
-            fig_width = width - 2 * MARGIN
-            fig_height = height - 1.35 * inch
+            figure_layout = plan_diagram_figure_layout(slide.figure_path)
             c.drawImage(
                 str(slide.figure_path),
-                MARGIN,
-                0.5 * inch,
-                width=fig_width,
-                height=fig_height,
-                preserveAspectRatio=True,
-                anchor="c",
+                figure_layout.left_pt,
+                figure_layout.bottom_pt,
+                width=figure_layout.width_pt,
+                height=figure_layout.height_pt,
             )
         else:
             logger.warning(
@@ -530,30 +606,191 @@ def _draw_diagram_slide(c: canvas.Canvas, width: float, height: float, slide: Sl
             )
 
 
-#: Never auto-shrink a single-line title below this size — past this point
-#: legibility matters more than fitting on one line; a title this long
-#: should be shortened in content, not shrunk indefinitely.
-_MIN_SINGLE_LINE_FONT_SIZE = 14.0
+def plan_diagram_figure_layout(figure_path: Path) -> DiagramFigureLayout:
+    """Fit one real image inside the shared diagram content box.
 
-
-def _fit_single_line_font_size(
-    c: canvas.Canvas, text: str, font_name: str, max_width: float, start_size: float
-) -> float:
-    """Return the largest font size ≤ ``start_size`` at which ``text`` fits on one line.
-
-    Used for slide-kind title bands drawn as a single `drawString` call with
-    a fixed-height header band (content/diagram slides) — those bands aren't
-    tall enough to wrap to a second line, so a title long enough to overflow
-    the header width was previously clipped at the slide edge with no
-    ellipsis (red-team finding, 2026-07-09: a real title in this deck's own
-    content did exactly this). Shrinks in whole-point steps down to
-    `_MIN_SINGLE_LINE_FONT_SIZE`; below that, returns the minimum anyway
-    (rendering a still-long title is better than raising or truncating text).
+    The intrinsic pixel ratio is the sole sizing input.  No DPI metadata or
+    format-local width heuristic can therefore make the two renderers choose
+    different geometry.
     """
-    size = start_size
-    while size > _MIN_SINGLE_LINE_FONT_SIZE and c.stringWidth(text, font_name, size) > max_width:
-        size -= 1.0
-    return size
+    image_width, image_height = ImageReader(str(figure_path)).getSize()
+    if image_width <= 0 or image_height <= 0:
+        raise RenderingError(
+            "Diagram figure has invalid intrinsic dimensions",
+            context={
+                "figure_path": str(figure_path),
+                "image_width": image_width,
+                "image_height": image_height,
+            },
+        )
+
+    scale = min(
+        DIAGRAM_FIGURE_MAX_WIDTH_PT / image_width,
+        DIAGRAM_FIGURE_MAX_HEIGHT_PT / image_height,
+    )
+    fitted_width = image_width * scale
+    fitted_height = image_height * scale
+    left = MARGIN + (DIAGRAM_FIGURE_MAX_WIDTH_PT - fitted_width) / 2
+    bottom = DIAGRAM_FIGURE_BOTTOM_PT + (DIAGRAM_FIGURE_MAX_HEIGHT_PT - fitted_height) / 2
+    top = PAGE_SIZE[1] - bottom - fitted_height
+    return DiagramFigureLayout(
+        left_pt=left,
+        bottom_pt=bottom,
+        top_pt=top,
+        width_pt=fitted_width,
+        height_pt=fitted_height,
+    )
+
+
+def fit_helvetica_bold_single_line_font_size(
+    text: str,
+    *,
+    max_width_pt: float,
+    start_size_pt: int,
+    min_size_pt: int = MIN_SINGLE_LINE_FONT_SIZE_PT,
+) -> int:
+    """Return the largest whole-point Helvetica-Bold size that fits exactly.
+
+    This pure ReportLab-metric helper is the single title-sizing authority for
+    PDF and PPTX.  It raises at the legibility floor rather than knowingly
+    returning a size whose rendered title still overflows.
+    """
+    for size_pt in range(start_size_pt, min_size_pt - 1, -1):
+        if pdfmetrics.stringWidth(text, HELVETICA_BOLD_FONT_NAME, size_pt) <= max_width_pt:
+            return size_pt
+    measured_width = pdfmetrics.stringWidth(text, HELVETICA_BOLD_FONT_NAME, min_size_pt)
+    raise RenderingError(
+        "Single-line slide title does not fit at the minimum font size",
+        context={
+            "title": text,
+            "minimum_font_size_pt": min_size_pt,
+            "measured_width_pt": round(measured_width, 3),
+            "available_width_pt": round(max_width_pt, 3),
+        },
+    )
+
+
+def _wrap_content_lines(text: str, *, slide_title: str) -> tuple[str, ...]:
+    """Wrap one content bullet with exact Helvetica glyph measurements."""
+    words = text.split()
+    if not words:
+        return ()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        word_width = pdfmetrics.stringWidth(word, HELVETICA_FONT_NAME, CONTENT_BODY_FONT_SIZE)
+        if word_width > SLIDE_TEXT_WIDTH_PT:
+            raise RenderingError(
+                "Content slide contains an unbreakable word wider than the text area",
+                context={
+                    "slide_title": slide_title,
+                    "word": word,
+                    "measured_width_pt": round(word_width, 3),
+                    "available_width_pt": round(SLIDE_TEXT_WIDTH_PT, 3),
+                },
+            )
+        candidate = f"{current} {word}".strip()
+        if pdfmetrics.stringWidth(candidate, HELVETICA_FONT_NAME, CONTENT_BODY_FONT_SIZE) <= SLIDE_TEXT_WIDTH_PT:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return tuple(lines)
+
+
+def plan_content_slide_layout(slide: Slide) -> ContentSlideLayout:
+    """Build and validate the exact content-line plan shared by both formats."""
+    bullet_lines: list[tuple[str, ...]] = []
+    line_baselines: list[tuple[float, ...]] = []
+    line_widths: list[tuple[float, ...]] = []
+    cursor_y = CONTENT_BODY_FIRST_BASELINE_PT
+    for index, bullet in enumerate(slide.bullets):
+        lines = _wrap_content_lines(f"•  {bullet}", slide_title=slide.title)
+        baselines = tuple(cursor_y - line_index * CONTENT_BODY_LINE_HEIGHT_PT for line_index in range(len(lines)))
+        widths = tuple(pdfmetrics.stringWidth(line, HELVETICA_FONT_NAME, CONTENT_BODY_FONT_SIZE) for line in lines)
+        bullet_lines.append(lines)
+        line_baselines.append(baselines)
+        line_widths.append(widths)
+        if baselines:
+            cursor_y = baselines[-1] - CONTENT_BODY_LINE_HEIGHT_PT
+        if index < len(slide.bullets) - 1:
+            cursor_y -= CONTENT_BULLET_GAP_PT
+
+    ascent, descent = pdfmetrics.getAscentDescent(HELVETICA_FONT_NAME, CONTENT_BODY_FONT_SIZE)
+    all_baselines = tuple(value for group in line_baselines for value in group)
+    last_glyph_bottom = (all_baselines[-1] + descent) if all_baselines else CONTENT_BODY_FIRST_BASELINE_PT
+    if last_glyph_bottom < CONTENT_PROTECTED_FLOOR_PT:
+        raise RenderingError(
+            "Content slide text enters the protected footer/QR band",
+            context={
+                "slide_title": slide.title,
+                "bullet_count": len(slide.bullets),
+                "wrapped_line_count": len(all_baselines),
+                "last_glyph_bottom_pt": round(last_glyph_bottom, 3),
+                "protected_floor_pt": round(CONTENT_PROTECTED_FLOOR_PT, 3),
+                "overflow_pt": round(CONTENT_PROTECTED_FLOOR_PT - last_glyph_bottom, 3),
+            },
+        )
+
+    figure_y: float | None = None
+    figure_height: float | None = None
+    if slide.figure_path is not None:
+        figure_y = CONTENT_PROTECTED_FLOOR_PT
+        figure_top = last_glyph_bottom - 0.15 * inch
+        figure_height = min(1.9 * inch, figure_top - figure_y)
+        if figure_height < 0.6 * inch:
+            raise RenderingError(
+                "Content slide figure has no non-overlapping space below its bullets",
+                context={
+                    "slide_title": slide.title,
+                    "figure_height_pt": round(figure_height, 3),
+                    "minimum_figure_height_pt": round(0.6 * inch, 3),
+                },
+            )
+
+    body_top = PAGE_SIZE[1] - (CONTENT_BODY_FIRST_BASELINE_PT + ascent)
+    body_height = max(
+        CONTENT_BODY_LINE_HEIGHT_PT,
+        PAGE_SIZE[1] - last_glyph_bottom - body_top,
+    )
+    return ContentSlideLayout(
+        bullet_lines=tuple(bullet_lines),
+        line_baselines_pt=tuple(line_baselines),
+        line_widths_pt=tuple(line_widths),
+        last_glyph_bottom_pt=last_glyph_bottom,
+        body_top_pt=body_top,
+        body_height_pt=body_height,
+        figure_y_pt=figure_y,
+        figure_height_pt=figure_height,
+    )
+
+
+def validate_deck_layout(deck: DeckContent) -> tuple[ContentSlideLayout | None, ...]:
+    """Preflight every fitted title and content body before target mutation."""
+    layouts: list[ContentSlideLayout | None] = []
+    for slide in deck.slides:
+        if slide.kind == "section":
+            fit_helvetica_bold_single_line_font_size(
+                slide.title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=SECTION_FONT_SIZE
+            )
+            layouts.append(None)
+        elif slide.kind == "diagram":
+            fit_helvetica_bold_single_line_font_size(
+                slide.title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=DIAGRAM_HEADER_FONT_SIZE
+            )
+            if slide.figure_path is not None and slide.figure_path.is_file():
+                plan_diagram_figure_layout(slide.figure_path)
+            layouts.append(None)
+        elif slide.kind in {"title", "stat", "quote"}:
+            layouts.append(None)
+        else:
+            fit_helvetica_bold_single_line_font_size(
+                slide.title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=CONTENT_HEADER_FONT_SIZE
+            )
+            layouts.append(plan_content_slide_layout(slide))
+    return tuple(layouts)
 
 
 def _draw_wrapped(

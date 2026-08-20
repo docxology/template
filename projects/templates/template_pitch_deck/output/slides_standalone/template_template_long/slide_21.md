@@ -1,6 +1,6 @@
 # Measured, not asserted
 
-*Slide 21 of 56 — template_template pitch, long deck — kind: `stat`*
+*Slide 21 of 57 — template_template pitch, long deck — kind: `stat`*
 
 ## 147 tests
 

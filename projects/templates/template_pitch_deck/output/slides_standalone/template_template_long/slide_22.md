@@ -1,6 +1,6 @@
 # Already public
 
-*Slide 22 of 56 — template_template pitch, long deck — kind: `stat`*
+*Slide 22 of 57 — template_template pitch, long deck — kind: `stat`*
 
 ## 9 platforms
 

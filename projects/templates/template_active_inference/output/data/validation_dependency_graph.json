@@ -874,6 +874,22 @@
         "figure_registry"
       ]
     },
+    "output/figures/track_lane_promotion_map.png": {
+      "claim_ids": [
+        "track_lane_promotion_map_figure"
+      ],
+      "consumers": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
     "output/reports/ablation_sensitivity_report.json": {
       "claim_ids": [
         "ablation_sensitivity_source_backed"
@@ -3078,6 +3094,36 @@
       "kind": "validated_by",
       "source": "output/figures/theorem_traceability_graph.png",
       "target": "figure_registry"
+    },
+    {
+      "kind": "produces",
+      "source": "generate_figures.py",
+      "target": "output/figures/track_lane_promotion_map.png"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/figures/track_lane_promotion_map.png",
+      "target": "methods_sheaf"
+    },
+    {
+      "kind": "consumed_by",
+      "source": "output/figures/track_lane_promotion_map.png",
+      "target": "appendix_full_sheaf"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/track_lane_promotion_map.png",
+      "target": "validate_outputs"
+    },
+    {
+      "kind": "validated_by",
+      "source": "output/figures/track_lane_promotion_map.png",
+      "target": "figure_registry"
+    },
+    {
+      "kind": "artifact_to_claim",
+      "source": "output/figures/track_lane_promotion_map.png",
+      "target": "track_lane_promotion_map_figure"
     },
     {
       "kind": "producer_to_track",

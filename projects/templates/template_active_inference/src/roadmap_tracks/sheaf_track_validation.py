@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
+
+from json_io import json_payloads_equal
 
 from . import sheaf_tracks as _tracks
 from .row_aggregates import all_rows
 from .security import validate_security_posture_audit
+from .sheaf_tracks_builders_release import RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+from .sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
 from .supplemental import validate_supplemental_artifacts
 
 
@@ -95,9 +100,14 @@ def validate_sheaf_track_source_contract(project_root: Path) -> list[str]:
 
 def _validate_saved_semantic_certificate(root: Path, restrictions: dict[str, bool], issues: list[str]) -> None:
     semantic = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["semantic"])
+    from manuscript.sheaf.semantic_certificate import build_semantic_gluing_certificate
+
+    live_semantic = build_semantic_gluing_certificate(root)
     _append_schema_issue(issues, semantic, _tracks.SEMANTIC_SCHEMA, "sheaf_gluing_certificate.json schema mismatch")
     if semantic.get("ok") is not True:
         issues.append("sheaf_gluing_certificate.json is not ok")
+    if not json_payloads_equal(semantic, live_semantic):
+        issues.append("sheaf_gluing_certificate.json is stale relative to live semantic fields")
     proof_obligations_ok = all_rows(
         semantic,
         lambda row: bool(row.get("class")) and bool(row.get("restriction")) and row.get("ok") is True,
@@ -151,17 +161,75 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     )
     provenance_rows = provenance.get("rows") or []
     provenance_bundles = provenance.get("bundles") or []
+    live_provenance = _tracks.build_artifact_provenance(root)
+    live_provenance_rows = live_provenance.get("rows") or []
+    live_provenance_bundles = live_provenance.get("bundles") or []
+    provenance_matches_live = json_payloads_equal(provenance, live_provenance)
+    producers, _, _ = _tracks._artifact_maps()
+    # Saved artifacts are untrusted input. Require their complete row surface to
+    # match the canonical live builder before deriving a filesystem path, then use
+    # only the live row's path for defense-in-depth hash checks. This ordering
+    # prevents an absolute, traversal, or symlink path injected into the saved
+    # payload from turning validation into an out-of-tree read primitive.
+    provenance_partition_ok = provenance_matches_live and bool(provenance_rows)
+    if provenance_partition_ok:
+        for row, live_row in zip(provenance_rows, live_provenance_rows, strict=True):
+            rel = str(live_row.get("artifact") or "")
+            producer = str(live_row.get("producer") or "")
+            path = root / rel
+            expected_excluded = hash_cycle_excluded(rel, producer)
+            if row.get("cycle_excluded") is not expected_excluded or row.get("hash_checked") is expected_excluded:
+                provenance_partition_ok = False
+                break
+            if expected_excluded:
+                if (
+                    row.get("sha256")
+                    or row.get("content_sha256")
+                    or int(row.get("size_bytes", 0) or 0) != 0
+                    or row.get("hash_authority") != HASH_CYCLE_AUTHORITY
+                ):
+                    provenance_partition_ok = False
+                    break
+            elif row.get("sha256") != _tracks._sha256(path) or int(row.get("size_bytes", 0) or 0) != (
+                path.stat().st_size if path.is_file() else 0
+            ):
+                provenance_partition_ok = False
+                break
+    provenance_bundle_partition_ok = provenance_matches_live and bool(provenance_bundles)
+    if provenance_bundle_partition_ok:
+        for bundle, live_bundle in zip(provenance_bundles, live_provenance_bundles, strict=True):
+            digest_parts = []
+            bundle_rows = bundle.get("artifacts") or []
+            live_bundle_rows = live_bundle.get("artifacts") or []
+            for row, live_row in zip(bundle_rows, live_bundle_rows, strict=True):
+                rel = str(live_row.get("artifact") or "")
+                producer = str(live_row.get("producer") or producers.get(rel, ""))
+                expected_excluded = hash_cycle_excluded(rel, producer)
+                if row.get("hash_cycle_excluded") is not expected_excluded:
+                    provenance_bundle_partition_ok = False
+                    break
+                expected_hash = "" if expected_excluded else _tracks._sha256(root / rel)
+                if row.get("sha256") != expected_hash:
+                    provenance_bundle_partition_ok = False
+                    break
+                digest_parts.append(f"{rel}:{'hash-cycle-excluded' if expected_excluded else expected_hash}")
+            expected_bundle_hash = hashlib.sha256("\n".join(digest_parts).encode("utf-8")).hexdigest()
+            if bundle.get("bundle_hash") != expected_bundle_hash:
+                provenance_bundle_partition_ok = False
+            if not provenance_bundle_partition_ok:
+                break
     # Recompute the aggregates exactly as build_artifact_provenance derives them so a
     # row-only forgery (rows contradict a True stored flag) cannot pass. (PR#23)
-    provenance_records_complete = bool(provenance_rows) and all(
-        row.get("complete") or row.get("cycle_excluded") for row in provenance_rows
-    )
+    provenance_records_complete = bool(provenance_rows) and all(row.get("complete") for row in provenance_rows)
     provenance_bundles_complete = bool(provenance_bundles) and all(
         bundle.get("complete") for bundle in provenance_bundles
     )
     if (
         provenance.get("all_records_complete") is not True
         or provenance.get("all_records_complete") != provenance_records_complete
+        or not provenance_matches_live
+        or not provenance_partition_ok
+        or not provenance_bundle_partition_ok
         or provenance.get("all_bundles_complete") is not True
         or provenance.get("all_bundles_complete") != provenance_bundles_complete
     ):
@@ -185,6 +253,8 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("artifact_provenance.json has incomplete field-level provenance rows")
 
     replay = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["replay_matrix"])
+    live_replay = _tracks.build_replay_matrix(root)
+    replay_matches_live = json_payloads_equal(replay, live_replay)
     _append_schema_issue(
         issues, replay, "template_active_inference.replay_matrix.v1", "replay_matrix.json schema mismatch"
     )
@@ -196,6 +266,28 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         replay_rows_matched,
         "replay_matrix.json records a replay mismatch",
     )
+    replay_partition_ok = replay_matches_live
+    if replay_partition_ok:
+        replay_rows = replay.get("rows") or []
+        live_replay_rows = live_replay.get("rows") or []
+        for row, live_row in zip(replay_rows, live_replay_rows, strict=True):
+            artifacts = [str(rel) for rel in live_row.get("artifacts") or []]
+            expected_excluded_artifacts = sorted(
+                rel for rel in artifacts if hash_cycle_excluded(rel, producers.get(rel, ""))
+            )
+            expected_checked = sorted(set(artifacts) - set(expected_excluded_artifacts))
+            if (
+                row.get("cycle_excluded_artifacts") != expected_excluded_artifacts
+                or row.get("hash_checked_artifacts") != expected_checked
+            ):
+                replay_partition_ok = False
+                break
+            expected_hashes = {rel: _tracks._sha256(root / rel) for rel in expected_checked}
+            if row.get("output_hashes") != expected_hashes:
+                replay_partition_ok = False
+                break
+    if not replay_partition_ok:
+        issues.append("replay_matrix.json hash eligibility partition is stale or forged")
 
     sensitivity = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["sensitivity"])
     _append_schema_issue(
@@ -405,10 +497,10 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("track_lane_matrix.json has incomplete pipeline-to-sheaf rows")
 
     artifact_contract = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["artifact_contract_index"])
+    live_artifact_contract = _tracks.build_artifact_contract_index(root)
     if artifact_contract.get("schema") != "template_active_inference.artifact_contract_index.v1":
         issues.append("artifact_contract_index.json schema mismatch")
     artifact_rows = artifact_contract.get("rows") or []
-    producers, _, _ = _tracks._artifact_maps()
     expected_artifacts = sorted(producers)
     artifact_ids = sorted(str(row.get("artifact") or "") for row in artifact_rows)
     contract_rows_complete = bool(artifact_rows) and all(bool(row.get("contract_complete")) for row in artifact_rows)
@@ -429,11 +521,19 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         if row.get("producer") != expected_producer or row.get("source_exists") != path.is_file():
             freshness_current = False
             break
-        if not row.get("freshness_cycle_excluded") and row.get("source_sha256") != _tracks._sha256(path):
+        expected_excluded = hash_cycle_excluded(rel, expected_producer)
+        if row.get("freshness_cycle_excluded") is not expected_excluded:
+            freshness_current = False
+            break
+        if expected_excluded and (row.get("source_sha256") or row.get("copied_sha256")):
+            freshness_current = False
+            break
+        if not expected_excluded and row.get("source_sha256") != _tracks._sha256(path):
             freshness_current = False
             break
     if (
         artifact_ids != expected_artifacts
+        or not json_payloads_equal(artifact_contract, live_artifact_contract)
         or artifact_contract.get("artifact_ids") != expected_artifacts
         or artifact_contract.get("semantic_artifact_ids") != expected_artifacts
         or artifact_contract.get("all_artifact_rows_match_semantic_map") is not True
@@ -500,30 +600,74 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("evidence_field_index.json has unmapped evidence fields")
 
     release = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["release_bundle"])
+    live_release = _tracks.build_release_bundle_manifest(root)
+    release_matches_live = json_payloads_equal(release, live_release)
     if release.get("schema") != "template_active_inference.release_bundle_manifest.v1":
         issues.append("release_bundle_manifest.json schema mismatch")
     # Recompute exactly as build_release_bundle_manifest derives the flag (each row is
     # present iff source_exists OR deferred_until_render) so a row-only forgery cannot
     # pass a bare flag read.
     release_rows = release.get("rows") or []
+    release_artifacts = [str(row.get("artifact") or "") for row in release_rows]
+    release_partition_ok = release_matches_live and release_artifacts == list(RELEASE_BUNDLE_REQUIRED_ARTIFACTS)
+    release_digest_parts: list[str] = []
+    if release_partition_ok:
+        live_release_rows = live_release.get("rows") or []
+        for row, live_row in zip(release_rows, live_release_rows, strict=True):
+            rel = str(live_row.get("artifact") or "")
+            producer = producers.get(rel, "generate_figures.py" if rel.endswith(".png") else "")
+            expected_excluded = hash_cycle_excluded(rel, producer)
+            expected_hash = "" if expected_excluded else _tracks._sha256(root / rel)
+            if (
+                row.get("hash_cycle_excluded") is not expected_excluded
+                or row.get("source_sha256") != expected_hash
+                or row.get("hash_authority") != (HASH_CYCLE_AUTHORITY if expected_excluded else "this_record")
+            ):
+                release_partition_ok = False
+            release_digest_parts.append(f"{rel}:{'hash-cycle-excluded' if expected_excluded else expected_hash}")
+    expected_release_hash = hashlib.sha256("\n".join(release_digest_parts).encode("utf-8")).hexdigest()
     release_sources_present = bool(release_rows) and all(
         row.get("source_exists") or row.get("deferred_until_render") for row in release_rows
     )
     if (
-        release.get("all_required_sources_present") is not True
+        not release_partition_ok
+        or not release_matches_live
+        or release.get("bundle_hash") != expected_release_hash
+        or release.get("manifest_phase") != "pre-render-pre-copy"
+        or release.get("terminal_hash_authority") != HASH_CYCLE_AUTHORITY
+        or release.get("all_required_sources_present") is not True
         or release.get("all_required_sources_present") != release_sources_present
     ):
         issues.append("release_bundle_manifest.json is missing required deliverables")
     copied = release.get("copied_output_parity") or {}
-    copied_rows_ok = bool(copied.get("rows")) and all(
-        row.get("status") in {"matched", "deferred"} and row.get("matches_when_copied") is True
-        for row in copied.get("rows") or []
+    copied_rows = copied.get("rows") or []
+    copied_rows_ok = [str(row.get("artifact") or "") for row in copied_rows] == list(
+        RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+    ) and all(
+        row.get("status") == "deferred"
+        and row.get("matches_when_copied") is True
+        and row.get("comparison_deferred_until_copy") is True
+        and not row.get("source_sha256")
+        and not row.get("copied_sha256")
+        and row.get("hash_authority") == HASH_CYCLE_AUTHORITY
+        and row.get("hash_cycle_excluded")
+        is hash_cycle_excluded(
+            str(row.get("artifact") or ""),
+            producers.get(
+                str(row.get("artifact") or ""),
+                "generate_figures.py" if str(row.get("artifact") or "").endswith(".png") else "",
+            ),
+        )
+        for row in copied_rows
     )
     if (
         release.get("all_copied_outputs_match_or_deferred") is not True
         or copied.get("all_copied_outputs_match_or_deferred") is not True
         or release.get("all_copied_outputs_match_or_deferred") != copied_rows_ok
         or copied.get("all_copied_outputs_match_or_deferred") != copied_rows_ok
+        or copied.get("row_count") != len(RELEASE_BUNDLE_REQUIRED_ARTIFACTS)
+        or copied.get("pre_copy_stage") is not True
+        or copied.get("parity_authority") != "stage_05_copy"
     ):
         issues.append("release_bundle_manifest.json has copied output parity drift")
 
@@ -612,6 +756,9 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
         issues.append("artifact_license_audit.json records unsafe artifacts")
 
     release_notes = _tracks._load_json(root / _tracks.CANONICAL_ARTIFACTS["release_notes"])
+    from roadmap_tracks.integration_audit_artifacts import build_release_notes_evidence
+
+    live_release_notes = build_release_notes_evidence(root)
     if release_notes.get("schema") != "template_active_inference.release_notes_evidence.v1":
         issues.append("release_notes_evidence.json schema mismatch")
     notes_backed = bool(release_notes.get("rows")) and all(
@@ -620,6 +767,7 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     if (
         release_notes.get("all_notes_source_backed") is not True
         or release_notes.get("all_notes_source_backed") != notes_backed
+        or not json_payloads_equal(release_notes, live_release_notes)
     ):
         issues.append("release_notes_evidence.json has unsupported notes")
 

@@ -1,13 +1,14 @@
-# Coverage isn't a headline number
+# What happens when a gate fails
 
-*Slide 38 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 38 of 57 — template_template pitch, long deck — kind: `content`*
 
-- Every one of 24 public exemplars is measured independently, not summarized into one repo-wide percentage.
-- The chart on the next slide is generated from the same docs/_generated/COUNTS.md factsheet this deck's own 97.66% figure comes from — one source of truth, two presentations.
+- scripts/10_audit_deck_content.py exits non-zero on the first unresolved token or cliche hit — the render script never runs against unaudited content.
+- scripts/30_audit_diligence.py exits non-zero if any fact-bearing slide lacks a source citation — a deck can be complete and still fail to ship.
+- Fail-closed, not fail-open: an audit that cannot run is treated as a failure, never silently skipped and reported as a pass.
 
 ---
 
-**Source:** [docs/_generated/COUNTS.md](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)
+**Source:** [projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/scripts/10_audit_deck_content.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

@@ -43,6 +43,15 @@ def _make_valid_combined_pdf(path: Path, text: str = "combined manuscript") -> N
     _make_pdf(path, pages=12, text=text)
 
 
+def _make_docx(path: Path) -> None:
+    """Write a minimal well-formed DOCX package."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("[Content_Types].xml", "<Types/>")
+        archive.writestr("word/document.xml", "<document/>")
+
+
 def _make_epub(path: Path, *, chapter: str | None = None) -> None:
     """Write a minimal well-formed EPUB package."""
 
@@ -84,13 +93,42 @@ def test_verify_render_outputs_validates_enabled_docx_and_epub_packages(
     )
 
     docx = project / "output" / "docx" / "test_proj_combined.docx"
-    docx.parent.mkdir(parents=True)
-    with zipfile.ZipFile(docx, "w") as archive:
-        archive.writestr("[Content_Types].xml", "<Types/>")
-        archive.writestr("word/document.xml", "<document/>")
+    _make_docx(docx)
 
     epub = project / "output" / "epub" / "test_proj_combined.epub"
     _make_epub(epub)
+
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is True
+
+
+def test_verify_render_outputs_rejects_nested_legacy_docx_and_epub_packages(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Stage 3 rejects reserved combined packages anywhere below format roots."""
+
+    for env_name in ("ENABLE_PDF", "ENABLE_HTML", "ENABLE_SLIDES", "ENABLE_DOCX", "ENABLE_EPUB"):
+        monkeypatch.delenv(env_name, raising=False)
+    project = tmp_path / "projects" / "templates" / "test_proj"
+    manuscript = project / "manuscript"
+    manuscript.mkdir(parents=True)
+    (manuscript / "01_intro.md").write_text("# Intro\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n  formats:\n    pdf: false\n    html: false\n    slides: false\n    docx: true\n    epub: true\n",
+        encoding="utf-8",
+    )
+    _make_docx(project / "output" / "docx" / "test_proj_combined.docx")
+    _make_epub(project / "output" / "epub" / "test_proj_combined.epub")
+
+    legacy_docx = project / "output" / "docx" / "templates" / "old_project_combined.docx"
+    _make_docx(legacy_docx)
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
+    legacy_docx.unlink()
+
+    legacy_epub = project / "output" / "epub" / "templates" / "old_project_combined.epub"
+    _make_epub(legacy_epub)
+    assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is False
+    legacy_epub.unlink()
 
     assert verify_render_outputs("templates/test_proj", repo_root=tmp_path) is True
 

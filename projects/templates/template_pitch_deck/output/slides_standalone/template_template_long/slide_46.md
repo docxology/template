@@ -1,8 +1,11 @@
-# infrastructure/, by subpackage
+# Not a black box
 
-*Slide 46 of 56 — template_template pitch, long deck — kind: `diagram`*
+*Slide 46 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- 25 importable subpackages, 752 tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction.
+- The largest single subpackage, core, holds 129 files — still a minority of the whole, not a monolith wearing a modular label.
+- Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from.
+- The next chart narrows the total to importable subpackages, excluding 2 top-level file(s): infrastructure/__init__.py and mcp_server.py.
 
 ---
 

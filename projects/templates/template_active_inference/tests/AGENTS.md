@@ -42,6 +42,19 @@ and roughly double that with it — branch coverage instrumentation is the
 single largest cost, and `COVERAGE_CORE=sysmon` cannot remove it before
 Python 3.14 (sys.monitoring cannot measure branches earlier; coverage.py falls
 back with a `no-sysmon` warning). Do not trade `branch = true` away for speed.
+The fixed-point coverage singleton has a 2,400-second group ceiling aligned
+with its forced-settlement item. The twelve-group coverage plan gives canonical
+sheaf negative controls and consolidation surface checks separate 1,800-second
+groups, then divides the former 57-module remainder into explicit 29-module,
+seven-module manuscript/pipeline, seven-module rendering/semantic-validation,
+eight-node semantic certificate-integrity, and seven-node semantic
+dependency/evidence/manuscript cohorts plus a computed 13-module terminal
+cohort. The semantic cohorts are explicit pytest node IDs whose union and order
+must equal the AST-derived set of supported top-level nonparametrized tests;
+unsupported dynamic or class-based collection fails closed. Only the 13-module
+terminal cohort reports and enforces the aggregate coverage floor. Every group
+other than fixed-point remains at 1,800 seconds, and the fixed-point exception
+must not spread to unrelated coverage or producer commands.
 
 This suite is NOT xdist-safe: gate tests compose and validate the REAL project
 tree and the autouse conftest fixture restores tracked sources/outputs after
@@ -95,3 +108,8 @@ leave partially refreshed artifacts behind for the run that follows.
 Long in-process runs restore tracked `output/` snapshots after each test. Tests
 may exercise real writers against the project tree, but they must not leave
 canonical gate artifacts stale for later `ensure_gate_artifacts()` calls.
+
+Coverage-only documentation measurement is therefore run from a symlink-free
+disposable copy owned by the outer counts process. Per-test teardown is not a
+crash-safety boundary: collection prewarm occurs before the session output
+snapshot, and an outer timeout can kill pytest before fixture restoration.

@@ -17,6 +17,7 @@ import zipfile
 from pathlib import Path
 from types import SimpleNamespace
 
+import defusedxml.ElementTree as safe_et
 import pytest
 
 from infrastructure.core.exceptions import CompilationError, RenderingError, TemplateError
@@ -60,6 +61,25 @@ def _make_manager(tmp_path: Path, **overrides: object) -> RenderManager:
     for attr, val in overrides.items():
         setattr(cfg, attr, val)
     return RenderManager(config=cfg)
+
+
+def _epub_package_identifiers(path: Path) -> tuple[str, str]:
+    """Read the OPF and NCX identities from one real combined export."""
+
+    with zipfile.ZipFile(path) as archive:
+        opf_name = next(name for name in archive.namelist() if name.endswith(".opf"))
+        ncx_name = next(name for name in archive.namelist() if name.endswith(".ncx"))
+        opf = safe_et.fromstring(archive.read(opf_name))
+        ncx = safe_et.fromstring(archive.read(ncx_name))
+    package_identifier = opf.find(".//{http://purl.org/dc/elements/1.1/}identifier")
+    assert package_identifier is not None and package_identifier.text is not None
+    navigation_identifier = next(
+        node.get("content")
+        for node in ncx.findall(".//{http://www.daisy.org/z3986/2005/ncx/}meta")
+        if node.get("name") == "dtb:uid"
+    )
+    assert navigation_identifier is not None
+    return package_identifier.text, navigation_identifier
 
 
 # ---------------------------------------------------------------------------
@@ -469,6 +489,60 @@ def test_render_combined_epub_without_bibliography(tmp_path: Path) -> None:
     reporter = _make_reporter(tmp_path)
 
     render_combined_epub(manager, manuscript_dir, "myproject", reporter)
+
+
+@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc not installed")
+def test_render_combined_epub_identifier_tracks_effective_bibliography(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Production bibliography extras participate in effective-package identity."""
+
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    combined_md = tmp_path / "output" / "pdf" / "_combined_manuscript.md"
+    combined_md.parent.mkdir(parents=True)
+    combined_md.write_text("# Evidence\n\nThe result follows prior work [@binding2026].\n", encoding="utf-8")
+    bibliography = manuscript_dir / "references.bib"
+    bibliography.write_text(
+        "@article{binding2026,\n"
+        "  author={Binder, Ada},\n"
+        "  title={First Effective Bibliography Revision},\n"
+        "  journal={Determinism Quarterly},\n"
+        "  year={2026}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    manager = _make_manager(tmp_path)
+    reporter = _make_reporter(tmp_path)
+    output = tmp_path / "output" / "epub" / "myproject_combined.epub"
+
+    render_combined_epub(manager, manuscript_dir, "myproject", reporter)
+    first_package_id, first_navigation_id = _epub_package_identifiers(output)
+    with zipfile.ZipFile(output) as archive:
+        first_text = "\n".join(
+            archive.read(name).decode("utf-8", errors="ignore")
+            for name in archive.namelist()
+            if name.endswith((".xhtml", ".html"))
+        )
+    assert first_package_id == first_navigation_id
+    assert "First Effective Bibliography Revision" in first_text
+
+    bibliography.write_text(
+        "@article{binding2026,\n"
+        "  author={Binder, Ada},\n"
+        "  title={Second Effective Bibliography Revision},\n"
+        "  journal={Determinism Quarterly},\n"
+        "  year={2026}\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    render_combined_epub(manager, manuscript_dir, "myproject", reporter)
+    changed_package_id, changed_navigation_id = _epub_package_identifiers(output)
+
+    assert changed_package_id == changed_navigation_id
+    assert changed_package_id != first_package_id
 
 
 # ---------------------------------------------------------------------------

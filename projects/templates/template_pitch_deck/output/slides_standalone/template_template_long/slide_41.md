@@ -1,14 +1,12 @@
-# This deck audits itself
+# Test volume and coverage aren't a tradeoff
 
-*Slide 41 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 41 of 57 — template_template pitch, long deck — kind: `diagram`*
 
-- src/token_resolution.py fails the build on any unresolved double-curly-brace placeholder — the same discipline this slide's own template_template token was resolved by.
-- src/cliche_lint.py and src/diligence_audit.py both run inside render_orchestration.py itself, before that deck length's own PDF/PPTX is written — a slide referencing a live-sourced token with no citation blocks that length's render, it does not just fail a separate, skippable check.
-- None of these checks are generic infrastructure — they are this project's own src/, built specifically because a pitch deck is exactly the kind of document that tempts unverifiable claims.
+*(no body content — section/title slide)*
 
 ---
 
-**Source:** [projects/templates/template_pitch_deck/src/diligence_audit.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/diligence_audit.py)
+**Source:** [docs/_generated/COUNTS.md](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

@@ -52,10 +52,9 @@ def test_sheaf_track_writer_looks_up_source_commit_once(
 
 
 def test_canonical_sheaf_negative_controls(project_root: Path) -> None:
-    from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
+    from roadmap_tracks import validate_sheaf_track_artifacts
 
     ensure_gate_artifacts(project_root)
-    write_sheaf_track_artifacts(project_root)
     paths = {
         "replay": project_root / "output" / "reports" / "replay_matrix.json",
         "sensitivity": project_root / "output" / "data" / "sensitivity_sweep.json",
@@ -376,10 +375,9 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
     from the rows) passes every one of these; the hardened checks recompute the aggregate
     from its rows exactly as the generator derives it and require stored == recomputed.
     """
-    from roadmap_tracks import validate_sheaf_track_artifacts, write_sheaf_track_artifacts
+    from roadmap_tracks import validate_sheaf_track_artifacts
 
     ensure_gate_artifacts(project_root)
-    write_sheaf_track_artifacts(project_root)
     paths = {
         "provenance": project_root / "output" / "data" / "artifact_provenance.json",
         "dependency": project_root / "output" / "data" / "validation_dependency_graph.json",
@@ -525,7 +523,6 @@ def test_canonical_sheaf_row_only_forgeries_are_caught(project_root: Path) -> No
     finally:
         for path, text in originals.items():
             path.write_text(text, encoding="utf-8")
-        write_sheaf_track_artifacts(project_root)
 
 
 def test_canonical_track_contract_negative_controls(project_root: Path) -> None:

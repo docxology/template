@@ -1,15 +1,10 @@
-# Not a black box
+# What's actually inside infrastructure/
 
-*Slide 45 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 45 of 57 — template_template pitch, long deck — kind: `section`*
 
-- 25 importable subpackages, 744 tracked Python files total under infrastructure/ — a real inventory anyone can `git ls-files` themselves, not a claimed abstraction.
-- The largest single subpackage, core, holds 128 files — still a minority of the whole, not a monolith wearing a modular label.
-- Every number on this slide is computed live by src/infra_facts.py at render time, reusing the exact same counters docs/_generated/COUNTS.md is built from.
-- The chart on the next slide shows a slightly narrower total — it only counts files inside an importable subpackage, excluding 2 top-level file(s) (infrastructure/__init__.py, mcp_server.py) that do not belong to any subpackage.
+*(no body content — section/title slide)*
 
 ---
-
-**Source:** [projects/templates/template_pitch_deck/src/infra_facts.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/infra_facts.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

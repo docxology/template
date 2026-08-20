@@ -1,8 +1,10 @@
-# Governance and confidentiality
+# What makes an exemplar 'public'
 
-*Slide 27 of 56 — template_template pitch, long deck — kind: `section`*
+*Slide 27 of 57 — template_template pitch, long deck — kind: `content`*
 
-*(no body content — section/title slide)*
+- A single hand-edited registry (infrastructure/project/public_scope.py) lists every project name in public CI/documentation scope.
+- Everything else under projects/ (working, ongoing, archive folders) stays local-only by construction, never accidentally published.
+- An automated confidentiality audit fails CI if a private project path is ever tracked by mistake.
 
 ---
 

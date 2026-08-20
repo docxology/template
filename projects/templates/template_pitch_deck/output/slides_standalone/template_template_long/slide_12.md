@@ -1,6 +1,6 @@
 # Injection
 
-*Slide 12 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 12 of 57 — template_template pitch, long deck — kind: `content`*
 
 - inject_metrics.py substitutes ${variable} values into manuscript/*.md, writing the resolved text to output/manuscript/ for rendering.
 - Unresolved tokens are never silently dropped — a missing variable is a build failure, not a blank space in the PDF.

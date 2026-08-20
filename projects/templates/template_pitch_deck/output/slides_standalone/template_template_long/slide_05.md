@@ -1,6 +1,6 @@
 # Where meta-science tooling stands today
 
-*Slide 5 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 5 of 57 — template_template pitch, long deck — kind: `content`*
 
 - Electronic lab notebooks and preregistration platforms address the experiment layer, not the infrastructure-description layer.
 - Literate-programming tools (R Markdown, Jupyter, Quarto) bind prose to code within one document, but rarely to a whole repository's live state.

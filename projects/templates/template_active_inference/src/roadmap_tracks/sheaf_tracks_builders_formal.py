@@ -10,6 +10,15 @@ from roadmap_tracks.sheaf_tracks_io import _analysis_scripts, _load_json, _regis
 from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, CANONICAL_SCHEMA, CANONICAL_TRACKS
 
 
+BLOCKED_SCOPE_SENTINELS: tuple[str, ...] = (
+    "output/data/empirical_adapter_manifest.json",
+    "output/data/private_data_provenance_manifest.json",
+    "output/data/network_replay_manifest.json",
+    "output/data/llm_evidence_audit.json",
+    "output/data/non_toy_model_scope_manifest.json",
+)
+
+
 def build_counterexample_matrix(project_root: Path) -> dict[str, Any]:
     """Build counterexample matrix."""
     _ = project_root
@@ -221,10 +230,10 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
             "scope_category": "blocked_empirical",
             "status": "blocked",
             "reason": "future-only until public data provenance, licensing/privacy, and typed claim gates exist",
-            "required_unblock_artifact": "output/data/empirical_adapter_manifest.json",
+            "required_unblock_artifact": BLOCKED_SCOPE_SENTINELS[0],
             "no_live_registry_entry": "empirical_adapter" not in registry,
             "no_configured_producer": "generate_empirical_adapter.py" not in scripts,
-            "no_empirical_result_artifact": not (root / "output" / "data" / "empirical_adapter_manifest.json").exists(),
+            "no_empirical_result_artifact": not (root / BLOCKED_SCOPE_SENTINELS[0]).exists(),
             "failure_mode": "empirical claim appears without manifest",
         },
         {
@@ -232,12 +241,10 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
             "scope_category": "blocked_private",
             "status": "blocked",
             "reason": "blocked until licensing/privacy and public provenance gates exist",
-            "required_unblock_artifact": "output/data/private_data_provenance_manifest.json",
+            "required_unblock_artifact": BLOCKED_SCOPE_SENTINELS[1],
             "no_live_registry_entry": "private_data" not in registry,
             "no_configured_producer": "generate_private_data_adapter.py" not in scripts,
-            "no_empirical_result_artifact": not (
-                root / "output" / "data" / "private_data_provenance_manifest.json"
-            ).exists(),
+            "no_empirical_result_artifact": not (root / BLOCKED_SCOPE_SENTINELS[1]).exists(),
             "failure_mode": "private data artifact appears without provenance manifest",
         },
         {
@@ -245,10 +252,10 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
             "scope_category": "blocked_network",
             "status": "blocked",
             "reason": "blocked until offline cache and deterministic replay gates exist",
-            "required_unblock_artifact": "output/data/network_replay_manifest.json",
+            "required_unblock_artifact": BLOCKED_SCOPE_SENTINELS[2],
             "no_live_registry_entry": "network_research" not in registry,
             "no_configured_producer": "fetch_network_research.py" not in scripts,
-            "no_empirical_result_artifact": not (root / "output" / "data" / "network_replay_manifest.json").exists(),
+            "no_empirical_result_artifact": not (root / BLOCKED_SCOPE_SENTINELS[2]).exists(),
             "failure_mode": "network-derived claim appears without replay manifest",
         },
         {
@@ -256,10 +263,10 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
             "scope_category": "blocked_llm",
             "status": "blocked",
             "reason": "blocked because evidence must come from deterministic local artifacts",
-            "required_unblock_artifact": "output/data/llm_evidence_audit.json",
+            "required_unblock_artifact": BLOCKED_SCOPE_SENTINELS[3],
             "no_live_registry_entry": "llm_evidence" not in registry,
             "no_configured_producer": "generate_llm_evidence.py" not in scripts,
-            "no_empirical_result_artifact": not (root / "output" / "data" / "llm_evidence_audit.json").exists(),
+            "no_empirical_result_artifact": not (root / BLOCKED_SCOPE_SENTINELS[3]).exists(),
             "failure_mode": "LLM-generated evidence appears as a validation source",
         },
         {
@@ -267,12 +274,10 @@ def build_blocked_scope_manifest(project_root: Path) -> dict[str, Any]:
             "scope_category": "blocked_empirical",
             "status": "blocked",
             "reason": "blocked until non-toy model provenance and claim predicates exist",
-            "required_unblock_artifact": "output/data/non_toy_model_scope_manifest.json",
+            "required_unblock_artifact": BLOCKED_SCOPE_SENTINELS[4],
             "no_live_registry_entry": "non_toy_models" not in registry,
             "no_configured_producer": "generate_non_toy_models.py" not in scripts,
-            "no_empirical_result_artifact": not (
-                root / "output" / "data" / "non_toy_model_scope_manifest.json"
-            ).exists(),
+            "no_empirical_result_artifact": not (root / BLOCKED_SCOPE_SENTINELS[4]).exists(),
             "failure_mode": "non-toy result claim appears outside future-only scope",
         },
     ]

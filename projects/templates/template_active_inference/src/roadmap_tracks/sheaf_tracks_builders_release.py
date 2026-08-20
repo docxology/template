@@ -6,7 +6,7 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
-from roadmap_tracks.sheaf_tracks_helpers import _copied_parity
+from roadmap_tracks.sheaf_tracks_helpers import _deferred_copy_parity
 from roadmap_tracks.sheaf_tracks_io import (
     _artifact_maps,
     _claim_ids_by_path,
@@ -15,7 +15,52 @@ from roadmap_tracks.sheaf_tracks_io import (
     _load_structured,
     _sha256,
 )
-from roadmap_tracks.sheaf_tracks_registry import CANONICAL_ARTIFACTS, CANONICAL_SCHEMA
+from roadmap_tracks.sheaf_tracks_registry import (
+    CANONICAL_ARTIFACTS,
+    CANONICAL_SCHEMA,
+    HASH_CYCLE_AUTHORITY,
+    hash_cycle_excluded,
+)
+
+
+RELEASE_BUNDLE_REQUIRED_ARTIFACTS: tuple[str, ...] = (
+    CANONICAL_ARTIFACTS["semantic"],
+    CANONICAL_ARTIFACTS["dependency"],
+    CANONICAL_ARTIFACTS["provenance"],
+    CANONICAL_ARTIFACTS["replay_matrix"],
+    CANONICAL_ARTIFACTS["sensitivity"],
+    CANONICAL_ARTIFACTS["uncertainty"],
+    CANONICAL_ARTIFACTS["counterexample"],
+    CANONICAL_ARTIFACTS["model_checking"],
+    CANONICAL_ARTIFACTS["interop"],
+    CANONICAL_ARTIFACTS["adversarial_audit"],
+    CANONICAL_ARTIFACTS["evidence_fields"],
+    CANONICAL_ARTIFACTS["theorem_traceability"],
+    CANONICAL_ARTIFACTS["gate_ergonomics"],
+    CANONICAL_ARTIFACTS["scholarship"],
+    CANONICAL_ARTIFACTS["security_posture"],
+    CANONICAL_ARTIFACTS["track_lane_matrix"],
+    CANONICAL_ARTIFACTS["artifact_contract_index"],
+    "output/figures/si_belief_trajectory.gif",
+    "output/figures/semantic_gluing_graph.png",
+    "output/figures/track_lane_promotion_map.png",
+    "output/figures/artifact_contract_map.png",
+    "output/figures/theorem_traceability_graph.png",
+    "output/figures/causal_ablation_heatmap.png",
+    "output/figures/scholarship_source_map.png",
+    "output/reports/visualization_quality_audit.json",
+    CANONICAL_ARTIFACTS["statistical_visualization_bridge"],
+    "output/pdf/template_active_inference_combined.pdf",
+    "output/web/index.html",
+    CANONICAL_ARTIFACTS["artifact_diffoscope"],
+    CANONICAL_ARTIFACTS["proof_extraction"],
+    CANONICAL_ARTIFACTS["state_space_catalog"],
+    CANONICAL_ARTIFACTS["causal_ablation"],
+    CANONICAL_ARTIFACTS["artifact_license"],
+    CANONICAL_ARTIFACTS["proof_dependency_graph"],
+    CANONICAL_ARTIFACTS["state_transition_table"],
+    CANONICAL_ARTIFACTS["ablation_sensitivity_report"],
+)
 
 
 def _field_value(payload: dict[str, Any], field: str) -> Any:
@@ -82,63 +127,31 @@ def build_evidence_field_index(project_root: Path) -> dict[str, Any]:
 
 
 def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
-    """Build release bundle manifest."""
+    """Build the deterministic project-local pre-render release inventory."""
     root = project_root.resolve()
-    required = [
-        CANONICAL_ARTIFACTS["semantic"],
-        CANONICAL_ARTIFACTS["dependency"],
-        CANONICAL_ARTIFACTS["provenance"],
-        CANONICAL_ARTIFACTS["replay_matrix"],
-        CANONICAL_ARTIFACTS["sensitivity"],
-        CANONICAL_ARTIFACTS["uncertainty"],
-        CANONICAL_ARTIFACTS["counterexample"],
-        CANONICAL_ARTIFACTS["model_checking"],
-        CANONICAL_ARTIFACTS["interop"],
-        CANONICAL_ARTIFACTS["adversarial_audit"],
-        CANONICAL_ARTIFACTS["evidence_fields"],
-        CANONICAL_ARTIFACTS["theorem_traceability"],
-        CANONICAL_ARTIFACTS["gate_ergonomics"],
-        CANONICAL_ARTIFACTS["scholarship"],
-        CANONICAL_ARTIFACTS["security_posture"],
-        CANONICAL_ARTIFACTS["track_lane_matrix"],
-        CANONICAL_ARTIFACTS["artifact_contract_index"],
-        "output/figures/si_belief_trajectory.gif",
-        "output/figures/semantic_gluing_graph.png",
-        "output/figures/track_lane_promotion_map.png",
-        "output/figures/artifact_contract_map.png",
-        "output/figures/theorem_traceability_graph.png",
-        "output/figures/causal_ablation_heatmap.png",
-        "output/figures/scholarship_source_map.png",
-        "output/reports/visualization_quality_audit.json",
-        CANONICAL_ARTIFACTS["statistical_visualization_bridge"],
-        "output/pdf/template_active_inference_combined.pdf",
-        "output/web/template_active_inference.html",
-        CANONICAL_ARTIFACTS["artifact_diffoscope"],
-        CANONICAL_ARTIFACTS["proof_extraction"],
-        CANONICAL_ARTIFACTS["state_space_catalog"],
-        CANONICAL_ARTIFACTS["causal_ablation"],
-        CANONICAL_ARTIFACTS["artifact_license"],
-        CANONICAL_ARTIFACTS["release_notes"],
-        CANONICAL_ARTIFACTS["proof_dependency_graph"],
-        CANONICAL_ARTIFACTS["state_transition_table"],
-        CANONICAL_ARTIFACTS["ablation_sensitivity_report"],
-        CANONICAL_ARTIFACTS["release_attestation"],
-    ]
+    producers, _, _ = _artifact_maps()
     rows = []
-    for rel in required:
+    for rel in RELEASE_BUNDLE_REQUIRED_ARTIFACTS:
         deferred_until_render = rel.startswith("output/pdf/") or rel.startswith("output/web/")
+        producer = producers.get(rel, "generate_figures.py" if rel.endswith(".png") else "")
+        cycle_excluded = hash_cycle_excluded(rel, producer)
         rows.append(
             {
                 "artifact": rel,
                 "source_exists": (root / rel).is_file(),
-                "source_sha256": _sha256(root / rel),
+                "source_sha256": "" if cycle_excluded else _sha256(root / rel),
+                "hash_cycle_excluded": cycle_excluded,
+                "hash_authority": HASH_CYCLE_AUTHORITY if cycle_excluded else "this_record",
                 "required_deliverable": True,
                 "deferred_until_render": deferred_until_render and not (root / rel).is_file(),
             }
         )
-    parity = _copied_parity(root, required)
+    parity = _deferred_copy_parity(root, list(RELEASE_BUNDLE_REQUIRED_ARTIFACTS))
     digest = hashlib.sha256(
-        "\n".join(f"{row['artifact']}:{row['source_sha256']}" for row in rows).encode("utf-8")
+        "\n".join(
+            f"{row['artifact']}:{'hash-cycle-excluded' if row['hash_cycle_excluded'] else row['source_sha256']}"
+            for row in rows
+        ).encode("utf-8")
     ).hexdigest()
     return {
         "schema": "template_active_inference.release_bundle_manifest.v1",
@@ -146,6 +159,8 @@ def build_release_bundle_manifest(project_root: Path) -> dict[str, Any]:
         "rows": rows,
         "artifact_count": len(rows),
         "bundle_hash": digest,
+        "manifest_phase": "pre-render-pre-copy",
+        "terminal_hash_authority": HASH_CYCLE_AUTHORITY,
         "copied_output_parity": parity,
         "all_required_sources_present": all(row["source_exists"] or row["deferred_until_render"] for row in rows),
         "all_copied_outputs_match_or_deferred": parity["all_copied_outputs_match_or_deferred"],

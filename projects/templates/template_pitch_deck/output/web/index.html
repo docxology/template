@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="generator" content="pandoc 3.10.2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Short/Medium/Long PDF+PPTX decks from one token-resolved content source" />
@@ -716,12 +716,17 @@ a reusable output shape any future project can consume.</p>
 <p><code>infrastructure/rendering/pptx_deck.render_pptx</code> builds
 the identical slide sequence with <code>python-pptx</code> (an opt-in
 dependency: <code>uv sync --group rendering-pptx</code>), matching
-title/section/content slide handling 1:1 with the PDF path. Both
+title/section/content slide handling 1:1 with the PDF path. Both paths
+consume one exact Helvetica glyph-width fitter and one precomputed
+content-line layout from <code>slide_deck.py</code>; neither
+independently estimates title width or body wrapping. The shared
+preflight rejects an unfit title or content entering the protected
+QR/source-footer band before an existing artifact is replaced. Both
 renderers are exercised by
 <code>tests/infra_tests/rendering/test_slide_deck.py</code> and
 <code>test_pptx_deck.py</code>, including a direct parity test that
 renders the same <code>DeckContent</code> through both paths and asserts
-the PDF page count equals the PPTX slide count.</p>
+matching PDF/PPTX title sizes, body line breaks, and slide counts.</p>
 <h2 data-number="3.3" id="project-side-content"><span
 class="header-section-number">3.3</span> Project-side content</h2>
 <p><code>projects/templates/template_pitch_deck/src/</code> holds only
@@ -733,6 +738,12 @@ values, and linting for cliché — never layout/drawing code.
 ties content loading, token resolution, cliché linting, and the two
 infra renderers together into the six published artifacts under
 <code>output/{pdf,pptx}/</code>.</p>
+<p>Medium and long split the public roster into one source-cited
+names-only slide and one identically cited contract slide. The split
+preserves every live name and all three original claims without
+shrinking presentation body text; executable tests derive the exact
+roster dynamically and bind each authored deck to its declared
+budget.</p>
 <hr />
 <h1 data-number="4" id="sec:validation"><span
 class="header-section-number">4</span> Content and Validation</h1>
@@ -751,7 +762,19 @@ currently-measured facts: exemplar count, coverage floors, the
 publishing surface <code>template_template</code> itself already
 reaches), and an ask. Medium and long variants add landscape,
 architecture, and roadmap detail; long adds a full
-governance/confidentiality walkthrough and an appendix.</p>
+governance/confidentiality walkthrough and an appendix. In both
+variants, the complete live public roster occupies its own cited slide
+and the two original concrete-instance/uniform-contract claims occupy
+the next slide with the same citation. Executable tests derive the exact
+names from <code>PUBLIC_PROJECT_NAMES</code> and bind each authored deck
+to its declared budget.</p>
+<p>The infrastructure subpackage donut also treats percentage contrast
+as a validated content property. <code>src/chart_rendering.py</code>
+composites each real wedge artist over the white canvas, chooses
+theme-black or theme-white by WCAG relative luminance, compares the
+result with the executable method constant <code>4.5:1</code>, and fails
+closed below that threshold. Outside slice labels remain black on the
+white background.</p>
 <h2 data-number="4.2" id="token-resolution"><span
 class="header-section-number">4.2</span> Token resolution</h2>
 <p><code>src/token_resolution.py</code> implements the same

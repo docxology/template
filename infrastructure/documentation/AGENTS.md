@@ -26,6 +26,34 @@ tree instead of copying volatile literals into prose.
   generation must stay safe on incomplete optional dependencies.
 - Counts and rosters are source-owned by generators; do not hand-edit generated
   facts.
+- Coverage snapshot measurement keeps the shared `release` marker selection and
+  a 1,800-second default subprocess ceiling. Named public-exemplar exceptions
+  belong only in `counts_coverage.COVERAGE_MEASUREMENT_POLICY_OVERRIDES` and
+  require a distinct row in the subprocess-policy inventory; the Active
+  Inference release profile uses its project-owned, state-isolated coverage
+  groups under a 6,900-second aggregate ceiling aligned with the declared
+  single-project Stage-01 verifier and below the 7,200-second stage boundary.
+  The counts parent executes those groups in a symlink-free disposable project
+  copy while reusing the canonical project dependency environment; collection
+  prewarm and interrupted test cleanup must never write the canonical source or
+  output tree. The disposable tree preserves
+  the canonical `projects/templates/<name>` repository shape and copies an exact,
+  symlink-free allowlist of repository-level documentation targets needed by the
+  project contract. It gets private Git metadata and exact canonical `HEAD`; its
+  object lookup may read the canonical object store through Git's alternate-object
+  contract, while refs, index state, and new objects remain temporary. Both Active
+  `uv` commands carry explicit `--locked`; their isolated child environment removes
+  inherited Git routing variables plus `UV_FROZEN` and `UV_NO_SYNC` so ambient
+  process state cannot redirect Git writes or override the lock-validation contract.
+- Coverage provenance uses a versioned inventory of every tracked or
+  nonignored project input, including source, tests, scripts, configuration,
+  data, manuscripts, and dependency locks. Generated output plus runtime,
+  build, cache, and environment artifacts are excluded; changing the inventory
+  contract requires a schema/mode bump and canonical provenance refresh. Active's
+  repository-level support closure has its own recorded identity: contract-bearing
+  files are content-hashed, while generated `docs/_generated/COUNTS.md` and the
+  sibling-exemplar directory marker bind only path, type, and existence to avoid a
+  generated-counts self-cycle.
 - Publication records may refresh external state only when the command or user
   explicitly requests it. Ordinary generation still synchronizes the
   source-owned central tables and per-exemplar standalone identity blocks.

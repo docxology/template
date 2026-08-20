@@ -9,20 +9,21 @@ from pypdf import PdfReader
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.slide_deck import (
-    DEFAULT_THEME,
     CONTENT_HEADER_FONT_SIZE,
-    MARGIN,
-    PAGE_SIZE,
+    CONTENT_PROTECTED_FLOOR_PT,
+    DEFAULT_THEME,
+    MIN_SINGLE_LINE_FONT_SIZE_PT,
+    SLIDE_TEXT_WIDTH_PT,
     DeckContent,
     DeckTheme,
     Slide,
     SlideBudget,
-    _fit_single_line_font_size,
     filter_deck_for_budget,
+    fit_helvetica_bold_single_line_font_size,
+    plan_content_slide_layout,
     render_pdf,
     source_url,
 )
-from reportlab.pdfgen import canvas as rl_canvas
 
 
 def _make_deck(n_slides: int) -> DeckContent:
@@ -334,29 +335,69 @@ def test_render_pdf_qr_and_source_annotations_coexist(tmp_path: Path):
 
 
 def test_fit_single_line_font_size_keeps_start_size_for_short_title():
-    c = rl_canvas.Canvas("__unused__.pdf", pagesize=PAGE_SIZE)
-    size = _fit_single_line_font_size(c, "Short title", "Helvetica-Bold", 400, CONTENT_HEADER_FONT_SIZE)
+    size = fit_helvetica_bold_single_line_font_size(
+        "Short title", max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=CONTENT_HEADER_FONT_SIZE
+    )
     assert size == CONTENT_HEADER_FONT_SIZE
 
 
-def test_fit_single_line_font_size_shrinks_a_long_title_to_fit(tmp_path: Path):
+def test_fit_single_line_font_size_shrinks_a_long_title_to_fit():
     """Real reproduction of the red-team-flagged clipping bug: a genuinely
     long title (the exact one that clipped in this deck's own long-form
     content) must shrink below the requested size to fit the available
     width, never silently overflow it."""
-    c = rl_canvas.Canvas(str(tmp_path / "__unused__.pdf"), pagesize=PAGE_SIZE)
     long_title = "Why this is a science-integrity problem, not just a tooling problem"
-    max_width = PAGE_SIZE[0] - 2 * MARGIN
-    size = _fit_single_line_font_size(c, long_title, "Helvetica-Bold", max_width, CONTENT_HEADER_FONT_SIZE)
-    assert size < CONTENT_HEADER_FONT_SIZE
-    assert c.stringWidth(long_title, "Helvetica-Bold", size) <= max_width
+    size = fit_helvetica_bold_single_line_font_size(
+        long_title, max_width_pt=SLIDE_TEXT_WIDTH_PT, start_size_pt=CONTENT_HEADER_FONT_SIZE
+    )
+    assert size == 20
 
 
-def test_fit_single_line_font_size_never_shrinks_below_the_floor(tmp_path: Path):
-    c = rl_canvas.Canvas(str(tmp_path / "__unused__.pdf"), pagesize=PAGE_SIZE)
+def test_fit_single_line_font_size_rejects_overflow_at_the_floor():
     absurdly_long = "A title so long it could never fit on one line no matter how small the font gets, by design"
-    size = _fit_single_line_font_size(c, absurdly_long, "Helvetica-Bold", 100, CONTENT_HEADER_FONT_SIZE)
-    assert size == 14.0
+    with pytest.raises(RenderingError, match="minimum font size"):
+        fit_helvetica_bold_single_line_font_size(
+            absurdly_long,
+            max_width_pt=100,
+            start_size_pt=CONTENT_HEADER_FONT_SIZE,
+            min_size_pt=MIN_SINGLE_LINE_FONT_SIZE_PT,
+        )
+
+
+def test_fit_single_line_font_size_uses_real_glyph_widths():
+    wide = "MMMMMMMMMMMMMMMMMMMM"
+    narrow = "iiiiiiiiiiiiiiiiiiii"
+    assert len(wide) == len(narrow)
+    assert fit_helvetica_bold_single_line_font_size(wide, max_width_pt=300, start_size_pt=24) == 18
+    assert fit_helvetica_bold_single_line_font_size(narrow, max_width_pt=300, start_size_pt=24) == 24
+
+
+def test_content_layout_keeps_last_glyph_above_footer_qr_floor():
+    layout = plan_content_slide_layout(Slide(title="Fits", bullets=("A concise evidence-bearing point.",)))
+    assert layout.last_glyph_bottom_pt >= CONTENT_PROTECTED_FLOOR_PT
+
+
+def test_content_layout_rejects_unbreakable_overwide_word():
+    with pytest.raises(RenderingError, match="unbreakable word"):
+        plan_content_slide_layout(Slide(title="Bad word", bullets=("W" * 1000,)))
+
+
+def test_render_pdf_body_overflow_preserves_existing_target(tmp_path: Path):
+    output = tmp_path / "sentinel.pdf"
+    output.write_bytes(b"sentinel-body")
+    deck = DeckContent(title="Deck", slides=(Slide(title="Overflow", bullets=(("many words " * 200).strip(),)),))
+    with pytest.raises(RenderingError, match="protected footer/QR band"):
+        render_pdf(deck, output)
+    assert output.read_bytes() == b"sentinel-body"
+
+
+def test_render_pdf_title_overflow_preserves_existing_target(tmp_path: Path):
+    output = tmp_path / "sentinel.pdf"
+    output.write_bytes(b"sentinel-title")
+    deck = DeckContent(title="Deck", slides=(Slide(title="W" * 500, kind="section"),))
+    with pytest.raises(RenderingError, match="minimum font size"):
+        render_pdf(deck, output)
+    assert output.read_bytes() == b"sentinel-title"
 
 
 def test_render_pdf_content_slide_with_long_title_does_not_crash(tmp_path: Path):

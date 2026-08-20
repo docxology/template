@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+from io import BytesIO
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
@@ -9,7 +11,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 from PIL import Image
 
-_IMAGE_METRICS_CACHE: dict[tuple[Path, int, int], dict[str, object]] = {}
+_IMAGE_METRICS_CACHE: dict[tuple[Path, str], dict[str, object]] = {}
 
 
 def _normalize_rgb_extrema(raw: Any) -> tuple[tuple[int, int], ...]:
@@ -24,8 +26,8 @@ def _normalize_rgb_extrema(raw: Any) -> tuple[tuple[int, int], ...]:
 def image_render_metrics(path: Path) -> dict[str, object]:
     """Return deterministic live PNG metrics used by render validators."""
     try:
-        stat = path.stat()
-    except FileNotFoundError:
+        payload = path.read_bytes()
+    except (FileNotFoundError, IsADirectoryError):
         return {
             "exists": False,
             "width_px": 0,
@@ -35,13 +37,16 @@ def image_render_metrics(path: Path) -> dict[str, object]:
             "aspect_ratio": 0.0,
             "nonblank": False,
         }
-    key = (path.resolve(), int(stat.st_size), int(stat.st_mtime_ns))
+    key = (path.resolve(), hashlib.sha256(payload).hexdigest())
     cached = _IMAGE_METRICS_CACHE.get(key)
     if cached is not None:
         return dict(cached)
+    for stale_key in tuple(_IMAGE_METRICS_CACHE):
+        if stale_key[0] == key[0]:
+            del _IMAGE_METRICS_CACHE[stale_key]
     channels: tuple[tuple[int, int], ...] = ()
     try:
-        with Image.open(path) as image:
+        with Image.open(BytesIO(payload)) as image:
             width, height = image.size
             mode = image.mode
             channels = _normalize_rgb_extrema(image.convert("RGB").getextrema())
@@ -50,11 +55,11 @@ def image_render_metrics(path: Path) -> dict[str, object]:
     aspect_ratio = float(width / height) if height else 0.0
     nonblank = any(low != high for low, high in channels)
     metrics = {
-        "exists": path.is_file(),
+        "exists": True,
         "width_px": int(width),
         "height_px": int(height),
         "mode": mode,
-        "size_bytes": stat.st_size,
+        "size_bytes": len(payload),
         "aspect_ratio": aspect_ratio,
         "nonblank": nonblank,
     }

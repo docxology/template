@@ -1,14 +1,24 @@
+from io import BytesIO
+import os
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pytest
 from PIL import Image
 
 from visualizations.figure_io import image_render_metrics, save_figure_png
-from visualizations.figure_registry import load_figure_registry, render_figure_markdown
+from visualizations.figure_registry import (
+    _load_figures_yaml,
+    _parse_figures_yaml_cached,
+    figure_output_path,
+    load_figure_registry,
+    render_figure_markdown,
+)
 from visualizations.figure_style import apply_style, load_figure_style
 
 ALLOWED_VISUAL_ROLES = {"trend", "comparison", "trace", "matrix", "diagram", "table", "flow", "dashboard"}
 ALLOWED_EVIDENCE_ROLES = {"statistical", "source_mapped", "formal", "schematic", "scholarship", "sheaf"}
+_ABSOLUTE_ESCAPE_FIGURE = str(Path(Path.cwd().anchor) / "tmp" / "escape.png")
 
 
 def test_load_figure_style_defaults() -> None:
@@ -102,6 +112,120 @@ def test_image_render_metrics_detects_blank_and_nonblank_png(tmp_path: Path) -> 
     changed.putpixel((10, 10), (0, 0, 0))
     changed.save(blank)
     assert image_render_metrics(blank)["nonblank"] is True
+
+
+def test_image_render_metrics_cache_tracks_content_not_restored_metadata(tmp_path: Path) -> None:
+    path = tmp_path / "same-metadata.png"
+    blank = Image.new("RGB", (40, 20), "white")
+    nonblank = Image.new("RGB", (40, 20), "white")
+    nonblank.putpixel((10, 10), (0, 0, 0))
+
+    def png_bytes(image: Image.Image) -> bytes:
+        buffer = BytesIO()
+        image.save(buffer, format="PNG")
+        return buffer.getvalue()
+
+    blank_payload = png_bytes(blank)
+    nonblank_payload = png_bytes(nonblank)
+    size = max(len(blank_payload), len(nonblank_payload))
+    blank_payload = blank_payload.ljust(size, b"\0")
+    nonblank_payload = nonblank_payload.ljust(size, b"\0")
+    path.write_bytes(blank_payload)
+    before = path.stat()
+    assert image_render_metrics(path)["nonblank"] is False
+
+    path.write_bytes(nonblank_payload)
+    os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+    after = path.stat()
+    assert after.st_size == before.st_size
+    assert after.st_mtime_ns == before.st_mtime_ns
+    assert image_render_metrics(path)["nonblank"] is True
+
+
+def test_figure_yaml_cache_tracks_content_not_restored_metadata(tmp_path: Path) -> None:
+    path = tmp_path / "figures.yaml"
+    original = ("figures:\n  example:\n    filename: example.png\n    alt: One\n    caption: Cache control.\n").encode()
+    changed = original.replace(b"alt: One", b"alt: Two")
+    assert len(changed) == len(original)
+    path.write_bytes(original)
+    before = path.stat()
+    assert load_figure_registry(tmp_path)["example"].alt == "One"
+
+    path.write_bytes(changed)
+    os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+    after = path.stat()
+    assert after.st_size == before.st_size
+    assert after.st_mtime_ns == before.st_mtime_ns
+    assert load_figure_registry(tmp_path)["example"].alt == "Two"
+
+
+def test_figure_yaml_cache_reuses_exact_bytes_without_sharing_mutable_payload(tmp_path: Path) -> None:
+    path = tmp_path / "figures.yaml"
+    path.write_text(
+        "figures:\n  example:\n    filename: example.png\n    alt: Original\n    caption: Cache isolation.\n",
+        encoding="utf-8",
+    )
+    _parse_figures_yaml_cached.cache_clear()
+    first = _load_figures_yaml(tmp_path)
+    first_info = _parse_figures_yaml_cached.cache_info()
+    first["figures"]["example"]["alt"] = "Mutated"
+
+    second = _load_figures_yaml(tmp_path)
+    second_info = _parse_figures_yaml_cached.cache_info()
+
+    assert second["figures"]["example"]["alt"] == "Original"
+    assert second_info.misses == first_info.misses
+    assert second_info.hits == first_info.hits + 1
+
+
+def test_figure_yaml_cache_does_not_bypass_symlink_rejection(tmp_path: Path) -> None:
+    path = tmp_path / "figures.yaml"
+    payload = (
+        "figures:\n  example:\n    filename: example.png\n    alt: Example\n    caption: Symlink control.\n"
+    ).encode()
+    path.write_bytes(payload)
+    assert load_figure_registry(tmp_path)["example"].alt == "Example"
+    outside = tmp_path / "outside-figures.yaml"
+    outside.write_bytes(payload)
+    path.unlink()
+    path.symlink_to(outside)
+
+    with pytest.raises(ValueError, match="must not be a symlink"):
+        load_figure_registry(tmp_path)
+
+    assert outside.read_bytes() == payload
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ["../escape.png", "nested/escape.png", _ABSOLUTE_ESCAPE_FIGURE, "escape.txt", r"nested\\escape.png"],
+)
+def test_figure_registry_rejects_unconfined_or_non_image_filename(tmp_path: Path, filename: str) -> None:
+    if filename == _ABSOLUTE_ESCAPE_FIGURE:
+        assert Path(filename).is_absolute()
+    tmp_path.joinpath("figures.yaml").write_text(
+        f"figures:\n  unsafe:\n    filename: {filename!r}\n    alt: Unsafe figure.\n    caption: Unsafe figure.\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="filename"):
+        load_figure_registry(tmp_path)
+
+
+def test_figure_output_path_rejects_symlinked_output_component(tmp_path: Path) -> None:
+    tmp_path.joinpath("figures.yaml").write_text(
+        "figures:\n  example:\n    filename: example.png\n    alt: Example figure.\n    caption: Example figure.\n",
+        encoding="utf-8",
+    )
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (tmp_path / "output").mkdir()
+    (tmp_path / "output" / "figures").symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="must not contain symlinks"):
+        figure_output_path(tmp_path, "example")
+
+    assert not (outside / "example.png").exists()
 
 
 def test_figure_registry_and_markdown() -> None:

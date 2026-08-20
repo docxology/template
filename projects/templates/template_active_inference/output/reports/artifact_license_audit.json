@@ -1,6 +1,6 @@
 {
   "all_license_safe": true,
-  "row_count": 85,
+  "row_count": 86,
   "rows": [
     {
       "artifact": "output/data/analysis_statistics.json",
@@ -389,6 +389,13 @@
     },
     {
       "artifact": "output/figures/theorem_traceability_graph.png",
+      "license": "MIT",
+      "license_safe": true,
+      "producer": "generate_figures.py",
+      "source_kind": "generated_local"
+    },
+    {
+      "artifact": "output/figures/track_lane_promotion_map.png",
       "license": "MIT",
       "license_safe": true,
       "producer": "generate_figures.py",

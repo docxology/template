@@ -1,15 +1,15 @@
 {
   "claim_boundary": "Compact evidence summary for manuscript validation; full fact dumps are opt-in debug output.",
-  "fact_count": 375,
+  "fact_count": 377,
   "freshness_warnings": [],
   "kind_counts": {
-    "artifact": 136,
+    "artifact": 138,
     "citation": 4,
     "figure": 9,
     "number": 219,
     "section": 7
   },
-  "omitted_fact_count": 175,
+  "omitted_fact_count": 177,
   "sample_facts": [
     {
       "active": true,
@@ -849,7 +849,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "11616"
+      "value": "13011"
     },
     {
       "active": true,
@@ -861,7 +861,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "116.16"
+      "value": "130.11"
     },
     {
       "active": true,
@@ -1245,7 +1245,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "2504"
+      "value": "3181"
     },
     {
       "active": true,
@@ -1257,7 +1257,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "25.04"
+      "value": "31.81"
     },
     {
       "active": true,
@@ -1293,7 +1293,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "2104"
+      "value": "2822"
     },
     {
       "active": true,
@@ -1305,7 +1305,7 @@
       "source_tier": "generated_metric",
       "stale": false,
       "tolerance": 0.0,
-      "value": "21.04"
+      "value": "28.22"
     },
     {
       "active": true,
@@ -2414,7 +2414,7 @@
   ],
   "schema": "template-evidence-registry-report-v1",
   "source_tiers": {
-    "artifact": 152,
+    "artifact": 154,
     "bibliography": 4,
     "configuration": 20,
     "generated_metric": 183,

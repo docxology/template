@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import os
 import subprocess
 from functools import lru_cache
 from pathlib import Path
@@ -19,25 +20,25 @@ from json_io import write_json as _write_json  # noqa: F401  (re-exported for sh
 
 
 @lru_cache(maxsize=256)
-def _parse_yaml_cached(path_str: str, _mtime_ns: int, _size: int) -> dict[str, Any]:
-    """Parse a YAML file, memoized on (path, mtime, size).
+def _parse_yaml_cached(path_str: str, payload: bytes) -> dict[str, Any]:
+    """Parse exact YAML bytes, memoized on (path, content).
 
     The artifact builders read the same manifest/registry/config/ledger YAML files
     dozens of times per ``write_sheaf_track_artifacts`` call; parsing dominates
-    (~579 parses / ~7.5s in a single call). The cache key includes mtime_ns AND size
-    so any rewrite (e.g. negative-control tests mutating then restoring these files)
-    invalidates the entry. Callers receive a deepcopy via ``_load_yaml`` so mutation
-    of the returned dict can never corrupt the cached object.
+    (~579 parses / ~7.5s in a single call). Content bytes are part of the key so a
+    same-size rewrite with a restored mtime cannot reuse stale parsed data. Callers
+    receive a deepcopy via ``_load_yaml`` so mutation of the returned dict can never
+    corrupt the cached object.
     """
-    data = yaml.safe_load(Path(path_str).read_text(encoding="utf-8")) or {}
+    del path_str
+    data = yaml.safe_load(payload.decode("utf-8")) or {}
     return data if isinstance(data, dict) else {}
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:
     if not path.is_file():
         return {}
-    stat = path.stat()
-    loaded = copy.deepcopy(_parse_yaml_cached(str(path), stat.st_mtime_ns, stat.st_size))
+    loaded = copy.deepcopy(_parse_yaml_cached(str(path.resolve()), path.read_bytes()))
     if not isinstance(loaded, dict):
         raise ValueError(f"expected YAML object in {path}")
     return loaded
@@ -139,6 +140,16 @@ def _artifact_maps() -> tuple[dict[str, str], dict[str, tuple[str, ...]], dict[s
 
 
 def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
+    environment = os.environ.copy()
+    for variable in (
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_COMMON_DIR",
+        "GIT_DIR",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_WORK_TREE",
+    ):
+        environment.pop(variable, None)
     try:
         result = process_runner(
             ["git", "-C", str(root), "rev-parse", "HEAD"],
@@ -146,6 +157,7 @@ def _source_commit(root: Path, *, process_runner=subprocess.run) -> str:
             capture_output=True,
             text=True,
             timeout=5,
+            env=environment,
         )
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return "unknown"

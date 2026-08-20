@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pytest
 
-from json_io import load_json, load_json_strict, read_json, write_json
+from json_io import json_payloads_equal, load_json, load_json_strict, read_json, write_json
 from roadmap_tracks.row_aggregates import all_field_present, all_rows, rows
 
 
@@ -54,6 +54,14 @@ def test_load_json_strict_returns_object(tmp_path: Path) -> None:
     obj = tmp_path / "obj.json"
     obj.write_text('{"a": 1, "b": [2, 3]}', encoding="utf-8")
     assert load_json_strict(obj) == {"a": 1, "b": [2, 3]}
+
+
+def test_json_payloads_equal_is_json_type_strict() -> None:
+    assert json_payloads_equal({"a": [True, 1, 1.0]}, {"a": [True, 1, 1.0]})
+    assert json_payloads_equal({"b": 2, "a": 1}, {"a": 1, "b": 2})
+    assert not json_payloads_equal({"value": True}, {"value": 1})
+    assert not json_payloads_equal({"value": 1}, {"value": 1.0})
+    assert not json_payloads_equal({"value": float("nan")}, {"value": float("nan")})
 
 
 def test_load_json_swallows_malformed_where_strict_raises(tmp_path: Path) -> None:

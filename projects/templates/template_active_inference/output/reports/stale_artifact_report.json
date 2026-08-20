@@ -154,7 +154,7 @@
       "artifact": "output/figures/artifact_contract_map.png",
       "exists": true,
       "fresh": true,
-      "sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f"
+      "sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
@@ -203,6 +203,12 @@
       "exists": true,
       "fresh": true,
       "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604"
+    },
+    {
+      "artifact": "output/figures/track_lane_promotion_map.png",
+      "exists": true,
+      "fresh": true,
+      "sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd"
     },
     {
       "artifact": "output/reports/gnn_lint_report.json",

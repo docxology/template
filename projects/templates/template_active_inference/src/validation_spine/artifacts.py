@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from json_io import load_json_strict as _load_json
+from roadmap_tracks.sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
 
 CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
     "output/data/parameter_sweep.csv": "run_analytical_sweep.py",
@@ -149,12 +150,15 @@ def _artifact_record(
 ) -> dict[str, Any]:
     path = root / rel
     exists, size_bytes, sha256 = _file_fingerprint(path)
+    cycle_excluded = hash_cycle_excluded(rel, producer)
     return {
         "path": rel,
         "producer": producer,
         "exists": exists,
-        "size_bytes": size_bytes,
-        "sha256": sha256,
+        "size_bytes": 0 if cycle_excluded else size_bytes,
+        "sha256": "" if cycle_excluded else sha256,
+        "cycle_excluded": cycle_excluded,
+        "hash_authority": HASH_CYCLE_AUTHORITY if cycle_excluded else "this_record",
         "deterministic_seed": seed,
         "config_digest": config_digest,
         "config_inputs": list(CONFIG_INPUTS),
@@ -202,7 +206,9 @@ def build_artifact_provenance(
         "config_inputs": {rel: _config_record(root, rel) for rel in CONFIG_INPUTS},
         "artifacts": artifacts,
         "artifact_count": len(artifacts),
-        "all_hashed": all(record["exists"] and bool(record["sha256"]) for record in artifacts.values()),
+        "all_hashed": all(
+            record["exists"] and (bool(record["sha256"]) or record["cycle_excluded"]) for record in artifacts.values()
+        ),
         "all_seeded": all(isinstance(record.get("deterministic_seed"), int) for record in artifacts.values()),
         "all_config_digests": all(record.get("config_digest") == config_digest for record in artifacts.values()),
         "all_source_commits": all(bool(record.get("source_commit")) for record in artifacts.values()),
@@ -446,7 +452,8 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
     live_records = [r for r in (live.get("artifacts") or {}).values() if isinstance(r, dict)]
     saved_config_digest = live_records[0].get("config_digest") if live_records else None
     derived = {
-        "all_hashed": bool(saved_records) and all(r.get("exists") and bool(r.get("sha256")) for r in saved_records),
+        "all_hashed": bool(saved_records)
+        and all(r.get("exists") and (bool(r.get("sha256")) or r.get("cycle_excluded") is True) for r in saved_records),
         "all_seeded": bool(saved_records) and all(isinstance(r.get("deterministic_seed"), int) for r in saved_records),
         "all_config_digests": bool(saved_records)
         and all(r.get("config_digest") == saved_config_digest for r in saved_records),
@@ -460,9 +467,14 @@ def validate_artifact_provenance(project_root: Path) -> list[str]:
         if not isinstance(saved_record, dict):
             issues.append(f"{rel}: missing provenance record")
             continue
-        if saved_record.get("sha256") != live_record.get("sha256"):
+        expected_excluded = hash_cycle_excluded(rel, str(live_record.get("producer") or ""))
+        if saved_record.get("cycle_excluded") is not expected_excluded:
+            issues.append(f"{rel}: hash eligibility mismatch")
+        if expected_excluded and (saved_record.get("sha256") or int(saved_record.get("size_bytes", 0) or 0) != 0):
+            issues.append(f"{rel}: excluded provenance row carries a live digest")
+        if not expected_excluded and saved_record.get("sha256") != live_record.get("sha256"):
             issues.append(f"{rel}: hash mismatch")
-        if saved_record.get("size_bytes") != live_record.get("size_bytes"):
+        if not expected_excluded and saved_record.get("size_bytes") != live_record.get("size_bytes"):
             issues.append(f"{rel}: size mismatch")
         if saved_record.get("producer") != live_record.get("producer"):
             issues.append(f"{rel}: producer mismatch")

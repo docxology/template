@@ -1,35 +1,35 @@
 {
-  "timestamp": "1970-01-01T00:00:00+00:00 (SOURCE_DATE_EPOCH unset)",
+  "timestamp": "2026-08-14T14:20:53+00:00",
   "infrastructure": {},
   "project": {
-    "passed": 794,
+    "passed": 851,
     "failed": 0,
-    "skipped": 1,
-    "total": 795,
+    "skipped": 5,
+    "total": 856,
     "warnings": 0,
     "exit_code": 0,
-    "discovery_count": 795,
+    "discovery_count": 856,
     "collection_errors": 0,
     "execution_phases": {},
     "test_categories": {},
-    "coverage_percent": 92.69402809385545,
+    "coverage_percent": 92.59065811072975,
     "failed_tests": []
   },
   "summary": {
-    "total_passed": 794,
+    "total_passed": 851,
     "total_failed": 0,
-    "total_skipped": 1,
-    "total_tests": 795,
+    "total_skipped": 5,
+    "total_tests": 856,
     "all_passed": true,
-    "project_coverage": 92.69402809385545
+    "project_coverage": 92.59065811072975
   },
   "coverage_details": {
     "project": {
-      "overall_coverage": 92.69402809385545,
-      "total_executed": 9448,
-      "total_missing": 525,
+      "overall_coverage": 92.59065811072975,
+      "total_executed": 9880,
+      "total_missing": 562,
       "total_excluded": 11,
-      "total_lines": 9973,
+      "total_lines": 10442,
       "file_coverage": {
         "projects/templates/template_active_inference/src/analysis.py": {
           "coverage_percent": 100.0,
@@ -208,10 +208,10 @@
         },
         "projects/templates/template_active_inference/src/json_io.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 26,
+          "executed_lines": 33,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 26
+          "total_lines": 33
         },
         "projects/templates/template_active_inference/src/manuscript/hydrate.py": {
           "coverage_percent": 96.92307692307692,
@@ -228,11 +228,11 @@
           "total_lines": 36
         },
         "projects/templates/template_active_inference/src/manuscript/refresh.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 24,
-          "missing_lines": 0,
+          "coverage_percent": 94.28571428571429,
+          "executed_lines": 30,
+          "missing_lines": 1,
           "excluded_lines": 0,
-          "total_lines": 24
+          "total_lines": 31
         },
         "projects/templates/template_active_inference/src/manuscript/render_helpers.py": {
           "coverage_percent": 88.88888888888889,
@@ -249,11 +249,11 @@
           "total_lines": 66
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/compose.py": {
-          "coverage_percent": 95.54140127388536,
-          "executed_lines": 106,
-          "missing_lines": 3,
+          "coverage_percent": 94.21965317919076,
+          "executed_lines": 119,
+          "missing_lines": 6,
           "excluded_lines": 0,
-          "total_lines": 109
+          "total_lines": 125
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/counts.py": {
           "coverage_percent": 100.0,
@@ -278,17 +278,17 @@
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/layers_report.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 110,
+          "executed_lines": 111,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 110
+          "total_lines": 111
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/manifest.py": {
-          "coverage_percent": 94.23076923076923,
-          "executed_lines": 40,
-          "missing_lines": 2,
+          "coverage_percent": 93.33333333333333,
+          "executed_lines": 75,
+          "missing_lines": 4,
           "excluded_lines": 0,
-          "total_lines": 42
+          "total_lines": 79
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/models.py": {
           "coverage_percent": 100.0,
@@ -347,11 +347,11 @@
           "total_lines": 64
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/semantic_gluing_outputs.py": {
-          "coverage_percent": 99.17355371900827,
-          "executed_lines": 93,
+          "coverage_percent": 99.18032786885246,
+          "executed_lines": 94,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 93
+          "total_lines": 94
         },
         "projects/templates/template_active_inference/src/manuscript/sheaf/semantic_issues.py": {
           "coverage_percent": 84.87394957983193,
@@ -417,11 +417,11 @@
           "total_lines": 41
         },
         "projects/templates/template_active_inference/src/orchestration/full_verification.py": {
-          "coverage_percent": 78.06788511749347,
-          "executed_lines": 219,
-          "missing_lines": 54,
+          "coverage_percent": 80.0498753117207,
+          "executed_lines": 234,
+          "missing_lines": 51,
           "excluded_lines": 2,
-          "total_lines": 273
+          "total_lines": 285
         },
         "projects/templates/template_active_inference/src/orchestration/pipeline_manifest.py": {
           "coverage_percent": 100.0,
@@ -445,11 +445,11 @@
           "total_lines": 16
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/fixed_point.py": {
-          "coverage_percent": 90.44585987261146,
-          "executed_lines": 128,
-          "missing_lines": 7,
+          "coverage_percent": 90.35532994923858,
+          "executed_lines": 280,
+          "missing_lines": 18,
           "excluded_lines": 0,
-          "total_lines": 135
+          "total_lines": 298
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/formal_interop.py": {
           "coverage_percent": 98.75776397515529,
@@ -466,18 +466,18 @@
           "total_lines": 27
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/integration_audit.py": {
-          "coverage_percent": 92.090395480226,
-          "executed_lines": 120,
+          "coverage_percent": 92.13483146067416,
+          "executed_lines": 121,
           "missing_lines": 7,
           "excluded_lines": 0,
-          "total_lines": 127
+          "total_lines": 128
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/integration_audit_artifacts.py": {
-          "coverage_percent": 81.86274509803921,
-          "executed_lines": 138,
+          "coverage_percent": 81.77339901477832,
+          "executed_lines": 137,
           "missing_lines": 34,
           "excluded_lines": 0,
-          "total_lines": 172
+          "total_lines": 171
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/integration_audit_builders.py": {
           "coverage_percent": 94.75806451612904,
@@ -522,11 +522,11 @@
           "total_lines": 99
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_track_validation.py": {
-          "coverage_percent": 90.06479481641469,
-          "executed_lines": 284,
-          "missing_lines": 23,
+          "coverage_percent": 87.84893267651888,
+          "executed_lines": 364,
+          "missing_lines": 41,
           "excluded_lines": 0,
-          "total_lines": 307
+          "total_lines": 405
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks.py": {
           "coverage_percent": 100.0,
@@ -537,10 +537,10 @@
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_builders_formal.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 41,
+          "executed_lines": 42,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 41
+          "total_lines": 42
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_builders_graph.py": {
           "coverage_percent": 98.7603305785124,
@@ -551,17 +551,17 @@
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_builders_provenance.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 51,
+          "executed_lines": 57,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 51
+          "total_lines": 57
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_builders_release.py": {
-          "coverage_percent": 94.28571428571429,
-          "executed_lines": 54,
+          "coverage_percent": 94.52054794520548,
+          "executed_lines": 57,
           "missing_lines": 2,
           "excluded_lines": 0,
-          "total_lines": 56
+          "total_lines": 59
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_builders_toy.py": {
           "coverage_percent": 96.61016949152543,
@@ -578,25 +578,25 @@
           "total_lines": 14
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_helpers.py": {
-          "coverage_percent": 100.0,
-          "executed_lines": 60,
-          "missing_lines": 0,
+          "coverage_percent": 93.16239316239316,
+          "executed_lines": 85,
+          "missing_lines": 4,
           "excluded_lines": 0,
-          "total_lines": 60
+          "total_lines": 89
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_io.py": {
-          "coverage_percent": 97.14285714285714,
-          "executed_lines": 108,
+          "coverage_percent": 97.26027397260275,
+          "executed_lines": 112,
           "missing_lines": 2,
           "excluded_lines": 0,
-          "total_lines": 110
+          "total_lines": 114
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_registry.py": {
           "coverage_percent": 100.0,
-          "executed_lines": 13,
+          "executed_lines": 18,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 13
+          "total_lines": 18
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/sheaf_tracks_restrictions.py": {
           "coverage_percent": 100.0,
@@ -613,11 +613,11 @@
           "total_lines": 140
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/supplemental.py": {
-          "coverage_percent": 98.97435897435898,
-          "executed_lines": 151,
+          "coverage_percent": 99.47368421052632,
+          "executed_lines": 148,
           "missing_lines": 0,
           "excluded_lines": 0,
-          "total_lines": 151
+          "total_lines": 148
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/toy_sweep.py": {
           "coverage_percent": 93.00699300699301,
@@ -648,9 +648,9 @@
           "total_lines": 5
         },
         "projects/templates/template_active_inference/src/roadmap_tracks/visualization_audit.py": {
-          "coverage_percent": 86.77884615384616,
-          "executed_lines": 282,
-          "missing_lines": 30,
+          "coverage_percent": 88.70192307692308,
+          "executed_lines": 286,
+          "missing_lines": 26,
           "excluded_lines": 0,
           "total_lines": 312
         },
@@ -774,11 +774,11 @@
           "total_lines": 52
         },
         "projects/templates/template_active_inference/src/validation_spine/artifacts.py": {
-          "coverage_percent": 86.21700879765396,
-          "executed_lines": 216,
-          "missing_lines": 25,
+          "coverage_percent": 87.5,
+          "executed_lines": 225,
+          "missing_lines": 23,
           "excluded_lines": 0,
-          "total_lines": 241
+          "total_lines": 248
         },
         "projects/templates/template_active_inference/src/visualizations/animation.py": {
           "coverage_percent": 87.33333333333333,
@@ -795,18 +795,18 @@
           "total_lines": 71
         },
         "projects/templates/template_active_inference/src/visualizations/figure_io.py": {
-          "coverage_percent": 92.1875,
-          "executed_lines": 49,
+          "coverage_percent": 93.15068493150685,
+          "executed_lines": 54,
           "missing_lines": 3,
           "excluded_lines": 0,
-          "total_lines": 52
+          "total_lines": 57
         },
         "projects/templates/template_active_inference/src/visualizations/figure_registry.py": {
-          "coverage_percent": 93.7007874015748,
-          "executed_lines": 96,
-          "missing_lines": 3,
+          "coverage_percent": 91.92825112107623,
+          "executed_lines": 161,
+          "missing_lines": 10,
           "excluded_lines": 0,
-          "total_lines": 99
+          "total_lines": 171
         },
         "projects/templates/template_active_inference/src/visualizations/figure_style.py": {
           "coverage_percent": 92.3076923076923,
@@ -816,11 +816,11 @@
           "total_lines": 84
         },
         "projects/templates/template_active_inference/src/visualizations/figures.py": {
-          "coverage_percent": 95.83333333333333,
-          "executed_lines": 156,
+          "coverage_percent": 95.78313253012048,
+          "executed_lines": 154,
           "missing_lines": 4,
           "excluded_lines": 0,
-          "total_lines": 160
+          "total_lines": 158
         },
         "projects/templates/template_active_inference/src/visualizations/figures_diagrams.py": {
           "coverage_percent": 93.26599326599326,

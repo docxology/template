@@ -30,11 +30,16 @@ column geometry — is a reusable output shape any future project can consume.
 `infrastructure/rendering/pptx_deck.render_pptx` builds the identical slide
 sequence with `python-pptx` (an opt-in dependency:
 `uv sync --group rendering-pptx`), matching title/section/content slide
-handling 1:1 with the PDF path. Both renderers are exercised by
+handling 1:1 with the PDF path. Both paths consume one exact Helvetica
+glyph-width fitter and one precomputed content-line layout from
+`slide_deck.py`; neither independently estimates title width or body wrapping.
+The shared preflight rejects an unfit title or content entering the protected
+QR/source-footer band before an existing artifact is replaced. Both renderers
+are exercised by
 `tests/infra_tests/rendering/test_slide_deck.py` and
 `test_pptx_deck.py`, including a direct parity test that renders the same
-`DeckContent` through both paths and asserts the PDF page count equals the
-PPTX slide count.
+`DeckContent` through both paths and asserts matching PDF/PPTX title sizes,
+body line breaks, and slide counts.
 
 ## Project-side content
 
@@ -45,3 +50,9 @@ code. `scripts/20_render_decks.py` is the thin orchestrator that ties content
 loading, token resolution, cliché linting, and the two infra renderers
 together into the six published artifacts under
 `output/{pdf,pptx}/`.
+
+Medium and long split the public roster into one source-cited names-only slide
+and one identically cited contract slide. The split preserves every live name
+and all three original claims without shrinking presentation body text;
+executable tests derive the exact roster dynamically and bind each authored
+deck to its declared budget.

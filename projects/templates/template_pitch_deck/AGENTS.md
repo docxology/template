@@ -50,11 +50,21 @@ not in this project's `src/`. This is a deliberate departure from the
 bespoke ReportLab layout engines in project-local `src/`): a slide deck is a
 generic, reusable output shape — like DOCX or EPUB — not a domain-specific
 layout, so it belongs alongside `infrastructure/rendering/docx_renderer.py`
-and `epub_renderer.py`. Both renderers import the same font-size constants
-from `slide_deck.py` (not re-declared in `pptx_deck.py`), so PDF and PPTX
-stay in size parity, not just text/slide-count parity.
+and `epub_renderer.py`. Both renderers consume the same exact Helvetica
+glyph-width fitter and precomputed body-line layout from `slide_deck.py`, so
+PDF and PPTX stay in fitted-size and line-break parity, not just
+text/slide-count parity. The shared preflight fails before output replacement
+if a title cannot fit at the legibility floor or body text would enter the
+full-width protected band above the QR/source footer.
 The PPTX renderer also normalizes OOXML ZIP-member timestamps after save;
 two identical renders must have the same SHA-256 digest.
+
+Medium and long keep the public roster presentation-readable without
+weakening its evidence: one cited slide contains the exact live public roster,
+and the next carries the two original contract claims with the same citation.
+Executable content tests bind both authored decks to their declared budgets.
+The subpackage donut independently chooses black or white percentage text
+from each real wedge artist's alpha-composited color and fails below 4.5:1.
 
 ### Per-slide QR deep-links (`src/standalone_slides.py`)
 

@@ -4,11 +4,11 @@
   "figure_count": 26,
   "rows": [
     {
-      "content_sha256": "ea3ef41b188a666e04c85d8152b8e2ec54544f71bc8a8d0465169f156beb50b8",
+      "content_sha256": "1929464dea995442eecf64e962eaa25c605c7d74104e0aa95a0bb4f1db3ebe29",
       "fresh": true,
       "path": "output/figures/artifact_contract_map.png",
-      "sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
-      "size_bytes": 466540
+      "sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
+      "size_bytes": 472268
     },
     {
       "content_sha256": "77eb6e6def936a27a5df4da764eb538fdfdfed8587291f64f8417dfd8cd2a95e",

@@ -1,7 +1,7 @@
 {
   "fig:artifact_contract_map": {
     "alt": "Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status.",
-    "caption": "Artifact contract map: 85 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in `output/data/artifact_contract_index.json`.",
+    "caption": "Artifact contract map: 86 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in `output/data/artifact_contract_index.json`.",
     "evidence_role": "sheaf",
     "figure_id": "artifact_contract_map",
     "filename": "artifact_contract_map.png",

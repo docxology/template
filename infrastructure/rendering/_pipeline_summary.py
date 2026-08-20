@@ -323,10 +323,10 @@ def _verify_slide_outputs(project_root: Path) -> bool:
 
 
 def _verify_docx_output(project_root: Path, project_basename: str) -> bool:
-    """Validate the minimum Open Packaging Convention contract for DOCX."""
+    """Validate one exact DOCX identity across the recursive format tree."""
 
     output_path = project_root / "output" / "docx" / f"{project_basename}_combined.docx"
-    unexpected = sorted(set(output_path.parent.glob("*_combined.docx")) - {output_path})
+    unexpected = sorted(set(output_path.parent.rglob("*_combined.docx")) - {output_path})
     if unexpected:
         for path in unexpected:
             logger.error("Unexpected combined DOCX has no current project identity: %s", path)
@@ -347,10 +347,10 @@ def _verify_docx_output(project_root: Path, project_basename: str) -> bool:
 
 
 def _verify_epub_output(project_root: Path, project_basename: str) -> bool:
-    """Validate the shared bounded EPUB package contract."""
+    """Validate one exact EPUB identity across the recursive format tree."""
 
     output_path = project_root / "output" / "epub" / f"{project_basename}_combined.epub"
-    unexpected = sorted(set(output_path.parent.glob("*_combined.epub")) - {output_path})
+    unexpected = sorted(set(output_path.parent.rglob("*_combined.epub")) - {output_path})
     if unexpected:
         for path in unexpected:
             logger.error("Unexpected combined EPUB has no current project identity: %s", path)

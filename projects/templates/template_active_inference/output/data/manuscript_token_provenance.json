@@ -1078,7 +1078,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/08_methods_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -1234,7 +1234,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/08_methods_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -1258,7 +1258,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/08_methods_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -1366,7 +1366,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "38",
+      "expected_value": "36",
       "generated_output_path": "output/manuscript/08_methods_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -1402,7 +1402,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "40",
+      "expected_value": "43",
       "generated_output_path": "output/manuscript/08_methods_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -1426,7 +1426,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/08_methods_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2902,7 +2902,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "38",
+      "expected_value": "36",
       "generated_output_path": "output/manuscript/16_appendix_full_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2926,7 +2926,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/16_appendix_full_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -2998,7 +2998,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "40",
+      "expected_value": "43",
       "generated_output_path": "output/manuscript/16_appendix_full_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -3022,7 +3022,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/16_appendix_full_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -3802,7 +3802,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "7",
+      "expected_value": "8",
       "generated_output_path": "output/manuscript/16_appendix_full_sheaf.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -3934,7 +3934,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "40",
+      "expected_value": "43",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -3958,7 +3958,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -4438,7 +4438,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "38",
+      "expected_value": "36",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -4462,7 +4462,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -4522,7 +4522,7 @@
     },
     {
       "consumer_kind": "appendix_fragment",
-      "expected_value": "7",
+      "expected_value": "8",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -5734,7 +5734,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "40",
+      "expected_value": "43",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -5758,7 +5758,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -6226,7 +6226,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -6250,7 +6250,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -6286,7 +6286,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "38",
+      "expected_value": "36",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,
@@ -6310,7 +6310,7 @@
     },
     {
       "consumer_kind": "manuscript_section",
-      "expected_value": "85",
+      "expected_value": "86",
       "generated_output_path": "output/manuscript/00_00_sheaf_coverage.md",
       "hydrated_value_present": true,
       "mapped": true,

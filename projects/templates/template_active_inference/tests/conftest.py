@@ -13,6 +13,7 @@ explicitly marked as slow; it remains the lane to run before release.
 from __future__ import annotations
 
 import os
+import stat
 import sys
 from collections.abc import Callable, Iterator
 from pathlib import Path
@@ -118,11 +119,12 @@ def _prewarm_gate_artifacts(
         from gate_support import ensure_gate_artifacts
 
         iterator = _iter_mutable_project_sources if source_iterator is None else source_iterator
-        snapshots = {path: path.read_bytes() for path in iterator()}
+        initial_paths, snapshots = _capture_snapshots(iterator())
         try:
             ensure_gate_artifacts(PROJECT_ROOT)
         finally:
-            _restore_snapshots(snapshots)
+            _remove_new_regular_files(PROJECT_ROOT, initial_paths, iterator())
+            _restore_snapshots(PROJECT_ROOT, snapshots)
     except pytest.skip.Exception:
         pass
     except AssertionError as exc:
@@ -156,27 +158,80 @@ _MUTABLE_PROJECT_OUTPUT_GLOBS = (
 )
 
 
-def _iter_mutable_project_sources() -> Iterator[Path]:
+def _is_confined_regular_file(
+    root: Path,
+    path: Path,
+    *,
+    allow_missing_leaf: bool = False,
+) -> bool:
+    """Return whether *path* is a regular file below *root* without symlinks."""
+    lexical_root = root.absolute()
+    lexical_path = path.absolute()
+    try:
+        relative = lexical_path.relative_to(lexical_root)
+        root_metadata = lexical_root.lstat()
+    except (OSError, ValueError):
+        return False
+    if not relative.parts or stat.S_ISLNK(root_metadata.st_mode):
+        return False
+    if not stat.S_ISDIR(root_metadata.st_mode):
+        return False
+
+    current = lexical_root
+    final_index = len(relative.parts) - 1
+    for index, part in enumerate(relative.parts):
+        current /= part
+        try:
+            metadata = current.lstat()
+        except FileNotFoundError:
+            return allow_missing_leaf and index == final_index
+        except OSError:
+            return False
+        if stat.S_ISLNK(metadata.st_mode):
+            return False
+        if index < final_index and not stat.S_ISDIR(metadata.st_mode):
+            return False
+        if index == final_index and not stat.S_ISREG(metadata.st_mode):
+            return False
+    return True
+
+
+def _iter_declared_mutable_files(
+    root: Path,
+    patterns: tuple[str, ...],
+    explicit_files: tuple[str, ...] = (),
+) -> Iterator[Path]:
+    """Yield only bounded regular files selected by the declared surfaces."""
+    lexical_root = root.absolute()
     seen: set[Path] = set()
-    for pattern in _MUTABLE_PROJECT_SOURCE_GLOBS:
-        for path in sorted(PROJECT_ROOT.glob(pattern)):
-            if path.is_file() and path not in seen:
+    for pattern in patterns:
+        pattern_path = Path(pattern)
+        if pattern_path.is_absolute() or ".." in pattern_path.parts:
+            raise ValueError(f"mutable-file pattern escapes project root: {pattern}")
+        for path in sorted(lexical_root.glob(pattern)):
+            if _is_confined_regular_file(lexical_root, path) and path not in seen:
                 seen.add(path)
                 yield path
-    for rel in _MUTABLE_PROJECT_SOURCE_FILES:
-        path = PROJECT_ROOT / rel
-        if path.is_file() and path not in seen:
+    for rel in explicit_files:
+        rel_path = Path(rel)
+        if rel_path.is_absolute() or ".." in rel_path.parts:
+            raise ValueError(f"mutable-file path escapes project root: {rel}")
+        path = lexical_root / rel_path
+        if _is_confined_regular_file(lexical_root, path) and path not in seen:
             seen.add(path)
             yield path
 
 
+def _iter_mutable_project_sources() -> Iterator[Path]:
+    yield from _iter_declared_mutable_files(
+        PROJECT_ROOT,
+        _MUTABLE_PROJECT_SOURCE_GLOBS,
+        _MUTABLE_PROJECT_SOURCE_FILES,
+    )
+
+
 def _iter_mutable_project_outputs() -> Iterator[Path]:
-    seen: set[Path] = set()
-    for pattern in _MUTABLE_PROJECT_OUTPUT_GLOBS:
-        for path in sorted(PROJECT_ROOT.glob(pattern)):
-            if path.is_file() and path not in seen:
-                seen.add(path)
-                yield path
+    yield from _iter_declared_mutable_files(PROJECT_ROOT, _MUTABLE_PROJECT_OUTPUT_GLOBS)
 
 
 def _snapshot_paths(paths: Iterator[Path]) -> dict[Path, bytes]:
@@ -189,35 +244,67 @@ def _snapshot_paths(paths: Iterator[Path]) -> dict[Path, bytes]:
     return snapshots
 
 
-def _restore_snapshots(snapshots: dict[Path, bytes]) -> None:
+def _capture_snapshots(paths: Iterator[Path]) -> tuple[frozenset[Path], dict[Path, bytes]]:
+    """Record every initial path even when reading one file fails."""
+    initial_paths = frozenset(paths)
+    return initial_paths, _snapshot_paths(iter(sorted(initial_paths)))
+
+
+def _remove_new_regular_files(
+    root: Path,
+    initial_paths: frozenset[Path],
+    current_paths: Iterator[Path],
+) -> None:
+    """Remove newly created regular files, confined to the caller's declared scan."""
+    for path in sorted(set(current_paths) - initial_paths, reverse=True):
+        if not _is_confined_regular_file(root, path):
+            continue
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            continue
+
+
+def _restore_snapshots(root: Path, snapshots: dict[Path, bytes]) -> None:
     for path, original in snapshots.items():
+        if not _is_confined_regular_file(root, path, allow_missing_leaf=True):
+            continue
         try:
             if path.read_bytes() == original:
                 continue
         except OSError:
             pass
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(original)
+        try:
+            path.write_bytes(original)
+        except OSError:
+            continue
+
+
+_MutableFileSnapshot = tuple[frozenset[Path], dict[Path, bytes]]
 
 
 @pytest.fixture(scope="session")
-def _mutable_project_source_snapshots() -> dict[Path, bytes]:
-    return _snapshot_paths(_iter_mutable_project_sources())
+def _mutable_project_source_snapshots() -> _MutableFileSnapshot:
+    return _capture_snapshots(_iter_mutable_project_sources())
 
 
 @pytest.fixture(scope="session")
-def _mutable_project_output_snapshots() -> dict[Path, bytes]:
-    return _snapshot_paths(_iter_mutable_project_outputs())
+def _mutable_project_output_snapshots() -> _MutableFileSnapshot:
+    return _capture_snapshots(_iter_mutable_project_outputs())
 
 
 @pytest.fixture(autouse=True)
 def _restore_mutable_project_state(
-    _mutable_project_source_snapshots: dict[Path, bytes],
-    _mutable_project_output_snapshots: dict[Path, bytes],
+    _mutable_project_source_snapshots: _MutableFileSnapshot,
+    _mutable_project_output_snapshots: _MutableFileSnapshot,
 ) -> Iterator[None]:
     yield
-    _restore_snapshots(_mutable_project_source_snapshots)
-    _restore_snapshots(_mutable_project_output_snapshots)
+    source_paths, source_snapshots = _mutable_project_source_snapshots
+    output_paths, output_snapshots = _mutable_project_output_snapshots
+    _remove_new_regular_files(PROJECT_ROOT, source_paths, _iter_mutable_project_sources())
+    _remove_new_regular_files(PROJECT_ROOT, output_paths, _iter_mutable_project_outputs())
+    _restore_snapshots(PROJECT_ROOT, source_snapshots)
+    _restore_snapshots(PROJECT_ROOT, output_snapshots)
 
 
 @pytest.fixture

@@ -68,7 +68,9 @@ def test_html_only_copy_stage_succeeds_without_publishing_pdf(tmp_path, caplog, 
     assert execute_copy_stage("active/demo", repo_root=tmp_path) == 0
 
     copied = tmp_path / "output" / "active" / "demo"
-    assert (copied / "web" / "index.html").is_file()
+    copied_html = copied / "web" / "index.html"
+    assert copied_html.is_file()
+    assert copied_html.read_bytes() == (web_dir / "index.html").read_bytes()
     assert not (copied / "demo_combined.pdf").exists()
     assert not (copied / "pdf").exists()
     source_stats = project_root / "output" / "reports" / "output_statistics.json"
@@ -132,8 +134,11 @@ def test_legacy_pdf_override_copy_stage_uses_pdf_only_contract(tmp_path) -> None
     assert execute_copy_stage("active/demo", repo_root=tmp_path) == 0
 
     copied = tmp_path / "output" / "active" / "demo"
-    assert (copied / "demo_combined.pdf").is_file()
-    assert (copied / "pdf" / "demo_combined.pdf").is_file()
+    root_alias = copied / "demo_combined.pdf"
+    canonical_pdf = copied / "pdf" / "demo_combined.pdf"
+    assert root_alias.is_file()
+    assert canonical_pdf.is_file()
+    assert root_alias.read_bytes() == canonical_pdf.read_bytes()
     assert not (copied / "web" / "index.html").exists()
     assert not (copied / "slides").exists()
 

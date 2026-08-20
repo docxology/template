@@ -1,16 +1,25 @@
 """Comprehensive tests for src/image_manager.py to ensure 100% coverage."""
 
+import pytest
+
 from infrastructure.documentation.figure_manager import FigureManager
 from infrastructure.documentation.image_manager import ImageManager
+
+
+@pytest.fixture(autouse=True)
+def _isolate_default_figure_registry(tmp_path, monkeypatch):
+    """Keep default FigureManager state out of the repository output tree."""
+    monkeypatch.chdir(tmp_path)
 
 
 class TestImageManager:
     """Test ImageManager class."""
 
-    def test_initialization(self):
+    def test_initialization(self, tmp_path):
         """Test manager initialization."""
         manager = ImageManager()
         assert manager.figure_manager is not None
+        assert manager.figure_manager.registry_file.resolve() == tmp_path / "output/figures/figure_registry.json"
 
     def test_initialization_with_figure_manager(self):
         """Test initialization with provided figure manager."""

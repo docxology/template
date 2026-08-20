@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="generator" content="pandoc 3.10.2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="Sheaf-Composed Manuscript with pymdp Sophisticated Inference" />
@@ -1516,7 +1516,7 @@ promotion-rule obligations; right: sheaf fragment bindings.</figcaption>
 <a class="figure-full-size-link" href="../figures/artifact_contract_map.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/artifact_contract_map.png" style="width:98.0%"
 data-fig-alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status."
 alt="Matrix generated from artifact_contract_index.json. Rows are generated artifacts; columns show producer configured, source present, claim bound or exempt, validation gate, negative control, freshness hash, copied-output parity, and complete contract status." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
-<figcaption>Figure 10: Artifact contract map: 85
+<figcaption>Figure 10: Artifact contract map: 86
 generated artifact rows with complete contract status true and
 copied-output parity complete true. Cycle rows are explicit in
 <code>output/data/artifact_contract_index.json</code>.</figcaption>
@@ -1541,7 +1541,7 @@ high-risk gaps: 0.</figcaption>
 <p>The <code>provenance</code> fragment makes artifact lineage a live
 canonical sheaf track. The configured producer
 <code>generate_sheaf_tracks.py</code> writes
-<code>output/data/artifact_provenance.json</code>, which hashes 85
+<code>output/data/artifact_provenance.json</code>, which hashes 86
 required toy artifacts and records producer scripts, source commit,
 deterministic seed fields, config digests, and 5 artifact bundles.
 Publication claims that depend on generated files must be traceable to
@@ -1549,7 +1549,7 @@ this lineage table or to a narrower artifact-specific certificate.</p>
 <p>The provenance claim is intentionally limited: every listed artifact
 exists, has a SHA-256 digest or an explicit cycle exclusion, is produced
 by a configured analysis script, and carries seed/config provenance
-(<code>85</code> seeded rows; all seeded flag <code>true</code>;
+(<code>86</code> seeded rows; all seeded flag <code>true</code>;
 bundle-complete flag <code>true</code>). A changed file, missing
 producer, or stale saved digest is a validation failure, not a prose
 warning.</p>
@@ -1584,11 +1584,11 @@ field is present (<code>true</code>).</p>
 <p>The <code>release_bundle</code> fragment records whether the
 canonical deliverables exist before copying and whether copied root
 outputs match or are explicitly deferred until the copy stage.
-<code>output/reports/release_bundle_manifest.json</code> tracks 38
+<code>output/reports/release_bundle_manifest.json</code> tracks 36
 required deliverables with source-present flag <code>true</code>.</p>
 <p>The bundle contract is now indexed artifact-by-artifact rather than
 inferred from isolated reports.
-<code>output/data/artifact_contract_index.json</code> contains 85
+<code>output/data/artifact_contract_index.json</code> contains 86
 generated artifact rows; each row binds its producer, configured script,
 pipeline/sheaf lanes, manuscript consumers, claim predicates,
 validators, negative control, freshness status, and copied-output
@@ -1610,7 +1610,7 @@ track</h3>
 <p>The <code>artifact_diffoscope</code> track compares saved provenance
 hashes against live artifact hashes at the artifact root JSONPath. Its
 proof artifact is <code>output/reports/artifact_diffoscope.json</code>:
-it currently records 40 comparison rows, with equality status
+it currently records 43 comparison rows, with equality status
 <code>true</code>.</p>
 <!-- sheaf-track:artifact_license -->
 <h3 data-number="8.4.5" id="artifact-license-track"><span
@@ -1619,7 +1619,7 @@ class="header-section-number">8.4.5</span> Artifact license track</h3>
 project-source artifacts under the public project license boundary. Its
 audit artifact is
 <code>output/reports/artifact_license_audit.json</code>: it currently
-records 85 rows, with license-safe status <code>true</code>.</p>
+records 86 rows, with license-safe status <code>true</code>.</p>
 <!-- sheaf-track:scholarship -->
 <p>The <code>scholarship</code> fragment turns citations into an audited
 method surface rather than decorative bibliography.
@@ -2066,715 +2066,145 @@ evidence.</td>
 <!-- sheaf-layers:binding-matrix -->
 <h2 data-number="8.6" id="imrad-binding-matrix"><span
 class="header-section-number">8.6</span> IMRAD binding matrix</h2>
-<p>Section rows versus fragment track columns. <strong>P</strong> =
-present (bound and file exists); <strong>—</strong> = absent (not
-bound); <strong>M</strong> = missing (bound, file absent).</p>
+<p>Compact section summary: <strong>P</strong> = present (bound and file
+exists); <strong>M</strong> = missing (bound, file absent). Every track
+not listed for a row is absent (not bound).</p>
+<p>The complete cell-level matrix is stored in
+<code>output/data/sheaf_coverage_matrix.json</code> and visualized in
+fig. <a href="#fig:sheaf_coverage_heatmap">1</a>.</p>
 <table>
 <colgroup>
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
-<col style="width: 2%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
 </colgroup>
 <thead>
 <tr>
 <th>Section</th>
-<th>prose</th>
-<th>formalism</th>
-<th>simulation</th>
-<th>assumption_index</th>
-<th>layers</th>
-<th>pymdp</th>
-<th>interop</th>
-<th>provenance</th>
-<th>replay_matrix</th>
-<th>counterexample</th>
-<th>adversarial_audit</th>
-<th>evidence_fields</th>
-<th>release_bundle</th>
-<th>gate_ergonomics</th>
-<th>artifact_diffoscope</th>
-<th>artifact_license</th>
-<th>scholarship</th>
-<th>security_posture</th>
-<th>sensitivity</th>
-<th>uncertainty</th>
-<th>benchmark</th>
-<th>manuscript_staleness</th>
-<th>visualization</th>
-<th>lean</th>
-<th>model_checking</th>
-<th>theorem_traceability</th>
-<th>proof_extraction</th>
-<th>state_space_catalog</th>
-<th>causal_ablation</th>
-<th>gnn</th>
-<th>ontology</th>
-<th>animation</th>
-<th>animation_delta</th>
-<th>release_notes</th>
+<th>Present tracks (P)</th>
+<th>Missing tracks (M)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Introduction (group)</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td><strong>Introduction (group)</strong></td>
 <td>—</td>
 <td>—</td>
 </tr>
 <tr>
-<td>Motivation and scope</td>
-<td>P</td>
+<td>↳ Motivation and scope</td>
+<td><code>prose</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ Contributions</td>
+<td><code>prose</code>, <code>visualization</code>,
+<code>ontology</code></td>
 <td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+</tr>
+<tr>
+<td><strong>Methods (group)</strong></td>
 <td>—</td>
 <td>—</td>
 </tr>
 <tr>
-<td>Contributions</td>
-<td>P</td>
+<td>↳ Bernoulli–Ising analytical model</td>
+<td><code>prose</code>, <code>formalism</code>, <code>simulation</code>,
+<code>assumption_index</code>, <code>visualization</code>,
+<code>gnn</code>, <code>ontology</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ pymdp simulation harness</td>
+<td><code>prose</code>, <code>formalism</code>, <code>pymdp</code>,
+<code>interop</code>, <code>visualization</code>, <code>gnn</code>,
+<code>ontology</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ Lean formalization boundary</td>
+<td><code>prose</code>, <code>visualization</code>, <code>lean</code>,
+<code>model_checking</code>, <code>theorem_traceability</code>,
+<code>proof_extraction</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ Sheaf composition</td>
+<td><code>prose</code>, <code>formalism</code>, <code>layers</code>,
+<code>provenance</code>, <code>counterexample</code>,
+<code>adversarial_audit</code>, <code>evidence_fields</code>,
+<code>release_bundle</code>, <code>gate_ergonomics</code>,
+<code>artifact_diffoscope</code>, <code>artifact_license</code>,
+<code>scholarship</code>, <code>security_posture</code>,
+<code>manuscript_staleness</code>, <code>visualization</code></td>
 <td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
+</tr>
+<tr>
+<td><strong>Results (group)</strong></td>
 <td>—</td>
 <td>—</td>
 </tr>
 <tr>
-<td>Methods (group)</td>
+<td>↳ Mutual-information parameter sweep</td>
+<td><code>prose</code>, <code>formalism</code>, <code>simulation</code>,
+<code>visualization</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ Free-energy decomposition</td>
+<td><code>prose</code>, <code>visualization</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ T-maze active-inference rollout</td>
+<td><code>prose</code>, <code>pymdp</code>,
+<code>visualization</code></td>
 <td>—</td>
+</tr>
+<tr>
+<td>↳ Validation invariants</td>
+<td><code>prose</code>, <code>simulation</code>,
+<code>replay_matrix</code>, <code>sensitivity</code>,
+<code>uncertainty</code>, <code>benchmark</code>,
+<code>visualization</code>, <code>state_space_catalog</code>,
+<code>causal_ablation</code></td>
 <td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+</tr>
+<tr>
+<td><strong>Discussion (group)</strong></td>
 <td>—</td>
 <td>—</td>
 </tr>
 <tr>
-<td>Bernoulli–Ising analytical model</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
+<td>↳ Limitations and outlook</td>
+<td><code>prose</code>, <code>simulation</code>,
+<code>scholarship</code>, <code>ontology</code>,
+<code>release_notes</code></td>
 <td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
+</tr>
+<tr>
+<td><strong>Appendix (group)</strong></td>
 <td>—</td>
 <td>—</td>
 </tr>
 <tr>
-<td>pymdp simulation harness</td>
-<td>P</td>
-<td>P</td>
+<td>↳ Appendix: full track coverage</td>
+<td><code>prose</code>, <code>formalism</code>, <code>simulation</code>,
+<code>assumption_index</code>, <code>pymdp</code>, <code>interop</code>,
+<code>provenance</code>, <code>replay_matrix</code>,
+<code>counterexample</code>, <code>adversarial_audit</code>,
+<code>evidence_fields</code>, <code>release_bundle</code>,
+<code>gate_ergonomics</code>, <code>artifact_diffoscope</code>,
+<code>artifact_license</code>, <code>scholarship</code>,
+<code>security_posture</code>, <code>sensitivity</code>,
+<code>uncertainty</code>, <code>benchmark</code>,
+<code>manuscript_staleness</code>, <code>visualization</code>,
+<code>lean</code>, <code>model_checking</code>,
+<code>theorem_traceability</code>, <code>proof_extraction</code>,
+<code>state_space_catalog</code>, <code>causal_ablation</code>,
+<code>gnn</code>, <code>ontology</code>, <code>animation</code>,
+<code>animation_delta</code>, <code>release_notes</code></td>
 <td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Lean formalization boundary</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Sheaf composition</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Results (group)</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Mutual-information parameter sweep</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Free-energy decomposition</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>T-maze active-inference rollout</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Validation invariants</td>
-<td>P</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Discussion (group)</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Limitations and outlook</td>
-<td>P</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-<td>—</td>
-<td>—</td>
-<td>P</td>
-</tr>
-<tr>
-<td>Appendix (group)</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Appendix: full track coverage</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>—</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
-<td>P</td>
 </tr>
 </tbody>
 </table>
@@ -3326,7 +2756,7 @@ class="header-section-number">8.9</span> Render and logging summary</h2>
 <td><code>sheaf.semantic</code></td>
 <td><code>output/data/validation_dependency_graph.json</code></td>
 <td><code>ok</code></td>
-<td>85 artifact producer rows</td>
+<td>86 artifact producer rows</td>
 </tr>
 <tr>
 <td><code>validation_gates_indexed</code></td>
@@ -4010,660 +3440,707 @@ restrictions</h2>
 <!-- sheaf-layers:track-lane-matrix -->
 <h2 data-number="8.13" id="track-lane-matrix"><span
 class="header-section-number">8.13</span> Track-lane matrix</h2>
+<p>Every pipeline row is shown below in canonical order. The
+source-owned full matrix in output/data/track_lane_matrix.json remains
+the authority for exact source paths, claim IDs, semantic-restriction
+IDs, gate IDs, negative-control IDs, and promotion cells.</p>
 <table>
 <colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
 </colgroup>
 <thead>
 <tr>
 <th>Pipeline track</th>
-<th>Sheaf fragments</th>
-<th>Producer</th>
-<th>Primary artifact</th>
-<th>Claims</th>
-<th>Semantic</th>
-<th>Gates</th>
-<th>Negative</th>
+<th>Source, producer, and primary artifact</th>
+<th>Coverage, gates, and negative control</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>lean</code></td>
-<td><code>lean</code></td>
-<td><code>generate_formal_interop_tracks.py</code></td>
-<td><code>output/reports/lean_theorem_inventory.json</code></td>
-<td><code>lean_graph_world_policy_boundary</code>,
-<code>lean_graph_world_topologies_witnessed</code>,
-<code>lean_theorem_inventory_proved</code>,
-<code>model_checking_exhaustive</code>,
-<code>model_checking_witnesses_pass</code>,
-<code>proof_dependency_graph_resolved</code>,
-<code>proof_extraction_constructive</code>,
-<code>theorem_traceability_linked</code>,
-<code>track_lane_promotion_map_figure</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>build_lean</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>lean</strong></td>
+<td>Sources (present): TemplateActiveInference. Producer (configured):
+generate formal interop tracks.py. Primary artifact (present): lean
+theorem inventory.json.</td>
+<td>Role: Lean boundary fragment. Required; matrix complete. Fragments
+(registered): lean; 2 manuscript consumers; 9 claims; 2 semantic
+restrictions. Gates: build lean, validate outputs. Negative control:
+track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>analytical</code></td>
-<td><code>formalism</code>, <code>simulation</code>,
-<code>assumption_index</code></td>
-<td><code>run_analytical_sweep.py</code></td>
-<td><code>output/data/parameter_sweep.csv</code></td>
-<td><code>analytical_assumption_index</code>,
-<code>composed_methods_analytical</code>,
-<code>composed_results_mi</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>analytical</strong></td>
+<td>Sources (present): analytical. Producer (configured): run analytical
+sweep.py. Primary artifact (present): parameter sweep.csv.</td>
+<td>Role: Python analytical companion. Required; matrix complete.
+Fragments (registered): formalism, simulation, assumption index; 7
+manuscript consumers; 3 claims; 2 semantic restrictions. Gates: validate
+outputs. Negative control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>pymdp</code></td>
-<td><code>pymdp</code></td>
-<td><code>simulate_si_tmaze.py</code></td>
-<td><code>output/data/si_policy_comparison.json</code></td>
-<td><code>graph_world_invariants_pass</code>,
-<code>graph_world_topology_traces_consistent</code>,
-<code>pymdp_policy_posterior_grid_normalized</code>,
-<code>pymdp_runtime_diagnostics_ok</code>,
-<code>sheaf_gluing_certificate</code>,
-<code>si_belief_entropy_figure</code>,
-<code>si_efe_rows_explained</code>, <code>si_graph_world_summary</code>,
-<code>si_graph_world_trace</code>,
-<code>si_graph_world_trace_consistency</code>,
-<code>si_policy_comparison</code>,
-<code>si_policy_comparison_modes</code>,
-<code>si_policy_grid_complete</code>, <code>si_tmaze_summary</code>,
-<code>si_tmaze_trace</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>pymdp</strong></td>
+<td>Sources (present): simulation. Producer (configured): simulate si
+tmaze.py. Primary artifact (present): si policy comparison.json.</td>
+<td>Role: pymdp sophisticated-inference harness. Required; matrix
+complete. Fragments (registered): pymdp; 3 manuscript consumers; 15
+claims; 2 semantic restrictions. Gates: validate outputs. Negative
+control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>gnn</code></td>
-<td><code>gnn</code></td>
-<td><code>generate_formal_interop_tracks.py</code></td>
-<td><code>output/reports/gnn_lint_report.json</code></td>
-<td><code>cross_track_symbols_consistent</code>,
-<code>interop_lossless</code>, <code>interop_roundtrip_lossless</code>,
-<code>sheaf_gluing_certificate</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>gnn</strong></td>
+<td>Sources (present): gnn, gnn. Producer (configured): generate formal
+interop tracks.py. Primary artifact (present): gnn lint
+report.json.</td>
+<td>Role: Generalized Notation Notation. Required; matrix complete.
+Fragments (registered): gnn; 3 manuscript consumers; 4 claims; 2
+semantic restrictions. Gates: validate outputs. Negative control: track
+lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>ontology</code></td>
-<td><code>ontology</code></td>
-<td><code>generate_formal_interop_tracks.py</code></td>
-<td><code>output/data/ontology_profile_matrix.json</code></td>
-<td><code>composed_discussion</code>,
-<code>cross_track_symbols_consistent</code>,
-<code>interop_lossless</code>, <code>interop_roundtrip_lossless</code>,
-<code>sheaf_gluing_certificate</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>ontology</strong></td>
+<td>Sources (present): ontology. Producer (configured): generate formal
+interop tracks.py. Primary artifact (present): ontology profile
+matrix.json.</td>
+<td>Role: Active Inference Ontology concordance. Required; matrix
+complete. Fragments (registered): ontology; 5 manuscript consumers; 5
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>visualizations</code></td>
-<td><code>visualization</code></td>
-<td><code>generate_integration_audit.py</code></td>
-<td><code>output/reports/visualization_quality_audit.json</code></td>
-<td><code>visualization_quality_audit_complete</code>,
-<code>visualization_statistics_bridge_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>visualizations</strong></td>
+<td>Sources (present): visualizations. Producer (configured): generate
+integration audit.py. Primary artifact (present): visualization quality
+audit.json.</td>
+<td>Role: Figures and optional animation. Required; matrix complete.
+Fragments (registered): visualization; 10 manuscript consumers; 2
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>provenance</code></td>
-<td><code>provenance</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/data/artifact_provenance.json</code></td>
-<td><code>artifact_contract_index_complete</code>,
-<code>artifact_contract_map_figure</code>,
-<code>artifact_diffoscope_equal</code>,
-<code>artifact_license_safe</code>,
-<code>artifact_provenance_seed_config</code>,
-<code>artifact_provenance_spine</code>,
-<code>dependency_graph_edges</code>,
-<code>figure_hash_manifest_complete</code>,
-<code>figure_source_map_complete</code>,
-<code>producer_completeness</code>,
-<code>pymdp_runtime_diagnostics_ok</code>,
-<code>release_bundle_sources_present</code>,
-<code>stale_artifact_report_fresh</code>,
-<code>track_improvement_scope_complete</code>,
-<code>track_lane_matrix_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>missing_sheaf_track_producer</code></td>
+<td><strong>provenance</strong></td>
+<td>Sources (present): roadmap tracks, artifact provenance.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): artifact provenance.json.</td>
+<td>Role: Artifact provenance and bundle-lineage spine. Required; matrix
+complete. Fragments (registered): provenance; 2 manuscript consumers; 15
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: missing sheaf track producer.</td>
 </tr>
 <tr>
-<td><code>replay_matrix</code></td>
-<td><code>replay_matrix</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/reports/replay_matrix.json</code></td>
-<td><code>replay_matrix_all_replayed</code>,
-<code>replay_matrix_spine</code>,
-<code>stale_artifact_report_fresh</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>replay_mismatch</code></td>
+<td><strong>replay matrix</strong></td>
+<td>Sources (present): roadmap tracks, replay matrix.json. Producer
+(configured): generate sheaf tracks.py. Primary artifact (present):
+replay matrix.json.</td>
+<td>Role: Deterministic replay matrix. Required; matrix complete.
+Fragments (registered): replay matrix; 2 manuscript consumers; 3 claims;
+2 semantic restrictions. Gates: validate manuscript, validate outputs.
+Negative control: replay mismatch.</td>
 </tr>
 <tr>
-<td><code>counterexample</code></td>
-<td><code>counterexample</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/reports/counterexample_matrix.json</code></td>
-<td><code>counterexample_expected_failures</code>,
-<code>counterexample_matrix_spine</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>known_bad_counterexample_passed</code></td>
+<td><strong>counterexample</strong></td>
+<td>Sources (present): roadmap tracks, counterexample matrix.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): counterexample matrix.json.</td>
+<td>Role: Expected-failure counterexample matrix. Required; matrix
+complete. Fragments (registered): counterexample; 2 manuscript
+consumers; 2 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: known bad counterexample
+passed.</td>
 </tr>
 <tr>
-<td><code>sensitivity</code></td>
-<td><code>sensitivity</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/data/sensitivity_sweep.json</code></td>
-<td><code>ablation_sensitivity_source_backed</code>,
-<code>causal_ablation_complete</code>,
-<code>graph_world_invariants_pass</code>,
-<code>graph_world_topology_traces_consistent</code>,
-<code>lean_graph_world_topologies_witnessed</code>,
-<code>sensitivity_complete_grid</code>,
-<code>si_efe_rows_explained</code>,
-<code>si_policy_grid_complete</code>,
-<code>state_transition_table_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>missing_sensitivity_cell</code></td>
+<td><strong>sensitivity</strong></td>
+<td>Sources (present): roadmap tracks, sensitivity sweep.json. Producer
+(configured): generate sheaf tracks.py. Primary artifact (present):
+sensitivity sweep.json.</td>
+<td>Role: Deterministic toy sensitivity sweep. Required; matrix
+complete. Fragments (registered): sensitivity; 2 manuscript consumers; 9
+claims; 2 semantic restrictions. Gates: validate outputs. Negative
+control: missing sensitivity cell.</td>
 </tr>
 <tr>
-<td><code>assumption_index</code></td>
-<td><code>assumption_index</code></td>
-<td><code>generate_toy_sweep_tracks.py</code></td>
-<td><code>output/data/analytical_assumption_index.json</code></td>
-<td><code>analytical_assumption_index</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>assumption index</strong></td>
+<td>Sources (present): roadmap tracks, analytical assumption index.json.
+Producer (configured): generate toy sweep tracks.py. Primary artifact
+(present): analytical assumption index.json.</td>
+<td>Role: Analytical equation assumption index. Required; matrix
+complete. Fragments (registered): assumption index; 2 manuscript
+consumers; 1 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: track lane matrix row
+only forgery.</td>
 </tr>
 <tr>
-<td><code>uncertainty</code></td>
-<td><code>uncertainty</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/data/uncertainty_summary.json</code></td>
-<td><code>ablation_sensitivity_source_backed</code>,
-<code>pymdp_policy_posterior_grid_normalized</code>,
-<code>uncertainty_normalized</code>,
-<code>uncertainty_rows_normalized</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>unnormalized_uncertainty_row</code></td>
+<td><strong>uncertainty</strong></td>
+<td>Sources (present): roadmap tracks, uncertainty summary.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): uncertainty summary.json.</td>
+<td>Role: Posterior and policy uncertainty summaries. Required; matrix
+complete. Fragments (registered): uncertainty; 2 manuscript consumers; 4
+claims; 2 semantic restrictions. Gates: validate outputs. Negative
+control: unnormalized uncertainty row.</td>
 </tr>
 <tr>
-<td><code>benchmark</code></td>
-<td><code>benchmark</code></td>
-<td><code>generate_toy_sweep_tracks.py</code></td>
-<td><code>output/data/toy_benchmark_matrix.json</code></td>
-<td><code>benchmark_rows_complete</code>,
-<code>causal_ablation_complete</code>,
-<code>state_space_catalog_finite</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>benchmark</strong></td>
+<td>Sources (present): roadmap tracks, toy benchmark matrix.json.
+Producer (configured): generate toy sweep tracks.py. Primary artifact
+(present): toy benchmark matrix.json.</td>
+<td>Role: Compact deterministic toy benchmark matrix. Required; matrix
+complete. Fragments (registered): benchmark; 2 manuscript consumers; 3
+claims; 2 semantic restrictions. Gates: validate outputs. Negative
+control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>model_checking</code></td>
-<td><code>model_checking</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/reports/model_checking_witnesses.json</code></td>
-<td><code>lean_graph_world_topologies_witnessed</code>,
-<code>lean_theorem_inventory_proved</code>,
-<code>model_checking_exhaustive</code>,
-<code>model_checking_witnesses_pass</code>,
-<code>state_space_catalog_finite</code>,
-<code>state_transition_table_complete</code>,
-<code>theorem_traceability_linked</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>missed_model_checking_counterexample</code></td>
+<td><strong>model checking</strong></td>
+<td>Sources (present): roadmap tracks, model checking witnesses.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): model checking witnesses.json.</td>
+<td>Role: Finite-state model-checking witnesses. Required; matrix
+complete. Fragments (registered): model checking; 2 manuscript
+consumers; 7 claims; 2 semantic restrictions. Gates: validate outputs.
+Negative control: missed model checking counterexample.</td>
 </tr>
 <tr>
-<td><code>interop</code></td>
-<td><code>interop</code></td>
-<td><code>generate_formal_interop_tracks.py</code></td>
-<td><code>output/data/interop_roundtrip_report.json</code></td>
-<td><code>interop_lossless</code>,
-<code>interop_roundtrip_lossless</code>,
-<code>pymdp_policy_posterior_grid_normalized</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_outputs</code></td>
-<td><code>interop_shape_loss</code></td>
+<td><strong>interop</strong></td>
+<td>Sources (present): roadmap tracks, interop roundtrip report.json.
+Producer (configured): generate formal interop tracks.py. Primary
+artifact (present): interop roundtrip report.json.</td>
+<td>Role: GNN/ontology/JSON round-trip checks. Required; matrix
+complete. Fragments (registered): interop; 2 manuscript consumers; 3
+claims; 2 semantic restrictions. Gates: validate outputs. Negative
+control: interop shape loss.</td>
 </tr>
 <tr>
-<td><code>adversarial_audit</code></td>
-<td><code>adversarial_audit</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/reports/adversarial_audit.json</code></td>
-<td><code>adversarial_audit_expected_failures</code>,
-<code>adversarial_audit_known_bad_blocked</code>,
-<code>claim_evidence_audit_typed</code>,
-<code>counterexample_expected_failures</code>,
-<code>empirical_adapter_blocked</code>,
-<code>producer_completeness</code>,
-<code>pymdp_runtime_diagnostics_ok</code>,
-<code>scope_boundary_toy_only</code>,
-<code>semantic_gluing_ok</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>adversarial_known_bad_passes</code></td>
+<td><strong>adversarial audit</strong></td>
+<td>Sources (present): roadmap tracks, adversarial audit.json. Producer
+(configured): generate sheaf tracks.py. Primary artifact (present):
+adversarial audit.json.</td>
+<td>Role: Expected-failure adversarial audit matrix. Required; matrix
+complete. Fragments (registered): adversarial audit; 2 manuscript
+consumers; 9 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: adversarial known bad
+passes.</td>
 </tr>
 <tr>
-<td><code>evidence_fields</code></td>
-<td><code>evidence_fields</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/data/evidence_field_index.json</code></td>
-<td><code>evidence_fields_mapped</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>missing_typed_claim</code></td>
+<td><strong>evidence fields</strong></td>
+<td>Sources (present): roadmap tracks, evidence field index.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): evidence field index.json.</td>
+<td>Role: Artifact field to claim and token index. Required; matrix
+complete. Fragments (registered): evidence fields; 2 manuscript
+consumers; 1 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: missing typed
+claim.</td>
 </tr>
 <tr>
-<td><code>release_bundle</code></td>
-<td><code>release_bundle</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/reports/release_bundle_manifest.json</code></td>
-<td><code>artifact_contract_copied_parity_complete</code>,
-<code>artifact_contract_index_complete</code>,
-<code>artifact_contract_map_figure</code>,
-<code>artifact_diffoscope_equal</code>,
-<code>artifact_license_safe</code>,
-<code>release_attestation_complete</code>,
-<code>release_bundle_sources_present</code>,
-<code>release_notes_source_backed</code>,
-<code>security_posture_controls_ok</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>release_bundle_parity_failure</code></td>
+<td><strong>release bundle</strong></td>
+<td>Sources (present): roadmap tracks, release bundle manifest.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): release bundle manifest.json.</td>
+<td>Role: Release bundle parity manifest. Required; matrix complete.
+Fragments (registered): release bundle; 2 manuscript consumers; 9
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: release bundle parity failure.</td>
 </tr>
 <tr>
-<td><code>theorem_traceability</code></td>
-<td><code>theorem_traceability</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/data/theorem_traceability_matrix.json</code></td>
-<td><code>proof_dependency_graph_resolved</code>,
-<code>proof_extraction_constructive</code>,
-<code>theorem_traceability_linked</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>theorem_traceability_unlinked</code></td>
+<td><strong>theorem traceability</strong></td>
+<td>Sources (present): roadmap tracks, theorem traceability matrix.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): theorem traceability matrix.json.</td>
+<td>Role: Lean theorem and model-checking traceability matrix. Required;
+matrix complete. Fragments (registered): theorem traceability; 2
+manuscript consumers; 3 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: theorem traceability
+unlinked.</td>
 </tr>
 <tr>
-<td><code>gate_ergonomics</code></td>
-<td><code>gate_ergonomics</code></td>
-<td><code>generate_integration_audit.py</code></td>
-<td><code>output/data/validation_gate_index.json</code></td>
-<td><code>artifact_contract_index_complete</code>,
-<code>gate_ergonomics_indexed</code>,
-<code>release_attestation_complete</code>,
-<code>release_notes_source_backed</code>,
-<code>security_posture_controls_ok</code>,
-<code>sheaf_render_log_events_ok</code>,
-<code>track_lane_matrix_complete</code>,
-<code>validation_gate_index_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>gate_ergonomics_unindexed</code></td>
+<td><strong>gate ergonomics</strong></td>
+<td>Sources (present): roadmap tracks, validation gate index.json.
+Producer (configured): generate integration audit.py. Primary artifact
+(present): validation gate index.json.</td>
+<td>Role: Validation gate command/input/negative-control index.
+Required; matrix complete. Fragments (registered): gate ergonomics; 2
+manuscript consumers; 8 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: gate ergonomics
+unindexed.</td>
 </tr>
 <tr>
-<td><code>artifact_diffoscope</code></td>
-<td><code>artifact_diffoscope</code></td>
-<td><code>generate_integration_audit.py</code></td>
-<td><code>output/reports/artifact_diffoscope.json</code></td>
-<td><code>artifact_contract_copied_parity_complete</code>,
-<code>artifact_diffoscope_equal</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>artifact_diffoscope_missed_hash_drift</code></td>
+<td><strong>artifact diffoscope</strong></td>
+<td>Sources (present): roadmap tracks, artifact diffoscope.json.
+Producer (configured): generate integration audit.py. Primary artifact
+(present): artifact diffoscope.json.</td>
+<td>Role: Artifact hash and JSONPath diffoscope. Required; matrix
+complete. Fragments (registered): artifact diffoscope; 2 manuscript
+consumers; 2 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: artifact diffoscope
+missed hash drift.</td>
 </tr>
 <tr>
-<td><code>proof_extraction</code></td>
-<td><code>proof_extraction</code></td>
-<td><code>generate_formal_interop_tracks.py</code></td>
-<td><code>output/data/proof_extraction_index.json</code></td>
-<td><code>proof_dependency_graph_resolved</code>,
-<code>proof_extraction_constructive</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>proof_extraction_missing_statement</code></td>
+<td><strong>proof extraction</strong></td>
+<td>Sources (present): roadmap tracks, proof extraction index.json.
+Producer (configured): generate formal interop tracks.py. Primary
+artifact (present): proof extraction index.json.</td>
+<td>Role: Lean proof extraction evidence index. Required; matrix
+complete. Fragments (registered): proof extraction; 2 manuscript
+consumers; 2 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: proof extraction missing
+statement.</td>
 </tr>
 <tr>
-<td><code>state_space_catalog</code></td>
-<td><code>state_space_catalog</code></td>
-<td><code>generate_toy_sweep_tracks.py</code></td>
-<td><code>output/data/state_space_catalog.json</code></td>
-<td><code>state_space_catalog_finite</code>,
-<code>state_transition_table_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>state_space_catalog_missing_finite_space</code></td>
+<td><strong>state space catalog</strong></td>
+<td>Sources (present): roadmap tracks, state space catalog.json.
+Producer (configured): generate toy sweep tracks.py. Primary artifact
+(present): state space catalog.json.</td>
+<td>Role: Finite toy state-space catalog. Required; matrix complete.
+Fragments (registered): state space catalog; 2 manuscript consumers; 2
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: state space catalog missing finite
+space.</td>
 </tr>
 <tr>
-<td><code>causal_ablation</code></td>
-<td><code>causal_ablation</code></td>
-<td><code>generate_toy_sweep_tracks.py</code></td>
-<td><code>output/data/causal_ablation_matrix.json</code></td>
-<td><code>ablation_sensitivity_source_backed</code>,
-<code>causal_ablation_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>causal_ablation_missing_cell</code></td>
+<td><strong>causal ablation</strong></td>
+<td>Sources (present): roadmap tracks, causal ablation matrix.json.
+Producer (configured): generate toy sweep tracks.py. Primary artifact
+(present): causal ablation matrix.json.</td>
+<td>Role: Deterministic toy causal ablation matrix. Required; matrix
+complete. Fragments (registered): causal ablation; 2 manuscript
+consumers; 2 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: causal ablation missing
+cell.</td>
 </tr>
 <tr>
-<td><code>artifact_license</code></td>
-<td><code>artifact_license</code></td>
-<td><code>generate_integration_audit.py</code></td>
-<td><code>output/reports/artifact_license_audit.json</code></td>
-<td><code>artifact_license_safe</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>artifact_license_unsafe_artifact</code></td>
+<td><strong>artifact license</strong></td>
+<td>Sources (present): roadmap tracks, artifact license audit.json.
+Producer (configured): generate integration audit.py. Primary artifact
+(present): artifact license audit.json.</td>
+<td>Role: Generated artifact license audit. Required; matrix complete.
+Fragments (registered): artifact license; 2 manuscript consumers; 1
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: artifact license unsafe artifact.</td>
 </tr>
 <tr>
-<td><code>scholarship</code></td>
-<td><code>scholarship</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/data/scholarship_source_matrix.json</code></td>
-<td><code>scholarship_source_map_figure</code>,
-<code>scholarship_source_matrix_connected</code>,
-<code>statistical_visualization_crosswalk_complete</code>,
-<code>visualization_statistics_bridge_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>missing_scholarship_source_binding</code></td>
+<td><strong>scholarship</strong></td>
+<td>Sources (present): roadmap tracks, scholarship source matrix.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): scholarship source matrix.json.</td>
+<td>Role: Source-backed scholarship matrix. Required; matrix complete.
+Fragments (registered): scholarship; 3 manuscript consumers; 4 claims; 2
+semantic restrictions. Gates: validate manuscript, validate outputs.
+Negative control: missing scholarship source binding.</td>
 </tr>
 <tr>
-<td><code>security_posture</code></td>
-<td><code>security_posture</code></td>
-<td><code>generate_sheaf_tracks.py</code></td>
-<td><code>output/reports/security_posture_audit.json</code></td>
-<td><code>security_posture_controls_ok</code>,
-<code>security_posture_map_figure</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>security_posture_aggregate_forgery</code></td>
+<td><strong>security posture</strong></td>
+<td>Sources (present): roadmap tracks, security posture audit.json.
+Producer (configured): generate sheaf tracks.py. Primary artifact
+(present): security posture audit.json.</td>
+<td>Role: Local security posture and deferred production controls.
+Required; matrix complete. Fragments (registered): security posture; 2
+manuscript consumers; 2 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: security posture
+aggregate forgery.</td>
 </tr>
 <tr>
-<td><code>release_notes</code></td>
-<td><code>release_notes</code></td>
-<td><code>generate_integration_audit.py</code></td>
-<td><code>output/reports/release_notes_evidence.json</code></td>
-<td><code>release_attestation_complete</code>,
-<code>release_notes_source_backed</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>release_notes_claim_failed_gate_passed</code></td>
+<td><strong>release notes</strong></td>
+<td>Sources (present): roadmap tracks, release notes evidence.json.
+Producer (configured): generate integration audit.py. Primary artifact
+(present): release notes evidence.json.</td>
+<td>Role: Source-backed release notes evidence. Required; matrix
+complete. Fragments (registered): release notes; 2 manuscript consumers;
+2 claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: release notes claim failed gate passed.</td>
 </tr>
 <tr>
-<td><code>animation_delta</code></td>
-<td><code>animation_delta</code></td>
-<td><code>render_animation.py</code></td>
-<td><code>output/data/animation_frame_deltas.json</code></td>
-<td><code>animation_frame_deltas_nonzero</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>animation delta</strong></td>
+<td>Sources (present): visualizations, animation frame deltas.json.
+Producer (configured): render animation.py. Primary artifact (present):
+animation frame deltas.json.</td>
+<td>Role: Animation frame-delta manifest. Required; matrix complete.
+Fragments (registered): animation delta; 1 manuscript consumers; 1
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>manuscript_staleness</code></td>
-<td><code>manuscript_staleness</code></td>
-<td><code>z_generate_manuscript_variables.py</code></td>
-<td><code>output/reports/manuscript_staleness_report.json</code></td>
-<td><code>manuscript_staleness_fresh</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>manuscript staleness</strong></td>
+<td>Sources (present): roadmap tracks, manuscript staleness report.json.
+Producer (configured): z generate manuscript variables.py. Primary
+artifact (present): manuscript staleness report.json.</td>
+<td>Role: Hydrated manuscript staleness audit. Required; matrix
+complete. Fragments (registered): manuscript staleness; 2 manuscript
+consumers; 1 claims; 2 semantic restrictions. Gates: validate
+manuscript, validate outputs. Negative control: track lane matrix row
+only forgery.</td>
 </tr>
 <tr>
-<td><code>visualization</code></td>
-<td><code>visualization</code></td>
-<td><code>generate_integration_audit.py</code></td>
-<td><code>output/reports/visualization_quality_audit.json</code></td>
-<td><code>animation_frame_deltas_nonzero</code>,
-<code>artifact_contract_map_figure</code>,
-<code>figure_hash_manifest_complete</code>,
-<code>figure_source_map_complete</code>,
-<code>scholarship_source_map_figure</code>,
-<code>security_posture_map_figure</code>,
-<code>semantic_gluing_graph_figure</code>,
-<code>sheaf_coverage_config</code>, <code>sheaf_coverage_heatmap</code>,
-<code>sheaf_gluing_certificate</code>,
-<code>sheaf_layers_overview</code>,
-<code>si_belief_entropy_figure</code>,
-<code>si_belief_trajectory_gif</code>,
-<code>statistical_visualization_crosswalk_complete</code>,
-<code>track_lane_promotion_map_figure</code>,
-<code>visualization_quality_audit_complete</code>,
-<code>visualization_statistics_bridge_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code>, <code>validate_outputs</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>visualization</strong></td>
+<td>Sources (present): visualizations. Producer (configured): generate
+integration audit.py. Primary artifact (present): visualization quality
+audit.json.</td>
+<td>Role: Sheaf fragment alias for figures. Optional; matrix complete.
+Fragments (registered): visualization; 10 manuscript consumers; 17
+claims; 2 semantic restrictions. Gates: validate manuscript, validate
+outputs. Negative control: track lane matrix row only forgery.</td>
 </tr>
 <tr>
-<td><code>manuscript</code></td>
-<td><code>prose</code>, <code>formalism</code>, <code>layers</code></td>
-<td><code>compose_manuscript.py</code></td>
-<td><code>manuscript/sheaf/manifest.yaml</code></td>
-<td><code>adversarial_audit_expected_failures</code>,
-<code>analytical_assumption_index</code>,
-<code>artifact_provenance_seed_config</code>,
-<code>artifact_provenance_spine</code>,
-<code>benchmark_rows_complete</code>,
-<code>claim_evidence_audit_typed</code>,
-<code>composed_appendix_full_sheaf</code>,
-<code>composed_discussion</code>,
-<code>composed_intro_motivation</code>,
-<code>composed_methods_analytical</code>,
-<code>composed_methods_sheaf</code>, <code>composed_results_mi</code>,
-<code>counterexample_matrix_spine</code>, <code>coverage_no_gray</code>,
-<code>dependency_graph_edges</code>,
-<code>empirical_adapter_blocked</code>,
-<code>gate_ergonomics_indexed</code>,
-<code>lean_graph_world_policy_boundary</code>,
-<code>manuscript_evidence_tables_source_backed</code>,
-<code>manuscript_staleness_fresh</code>,
-<code>manuscript_token_provenance_mapped</code>,
-<code>replay_matrix_spine</code>,
-<code>scholarship_source_matrix_connected</code>,
-<code>scope_boundary_toy_only</code>,
-<code>semantic_gluing_graph_figure</code>,
-<code>semantic_gluing_ok</code>, <code>sensitivity_complete_grid</code>,
-<code>sheaf_coverage_config</code>, <code>sheaf_coverage_heatmap</code>,
-<code>sheaf_coverage_matrix</code>,
-<code>sheaf_evidence_crosswalk</code>,
-<code>sheaf_gluing_certificate</code>, <code>sheaf_manifest</code>,
-<code>sheaf_registry</code>, <code>sheaf_render_log_events_ok</code>,
-<code>sheaf_section_status_matrix_complete</code>,
-<code>si_graph_world_trace_consistency</code>,
-<code>track_improvement_scope_complete</code>,
-<code>track_lane_matrix_complete</code>,
-<code>track_lane_promotion_map_figure</code>,
-<code>uncertainty_rows_normalized</code>,
-<code>validation_dependency_graph</code>,
-<code>validation_gate_index_complete</code>,
-<code>visualization_quality_audit_complete</code></td>
-<td><code>track_lane_matrix_complete</code>,
-<code>track_lane_matrix_row_count</code></td>
-<td><code>validate_manuscript</code></td>
-<td><code>track_lane_matrix_row_only_forgery</code></td>
+<td><strong>manuscript</strong></td>
+<td>Sources (present): manuscript, sheaf, figures.yaml. Producer
+(configured): compose manuscript.py. Primary artifact (present):
+manifest.yaml.</td>
+<td>Role: Sheaf composer and registry. Required; matrix complete.
+Fragments (registered): prose, formalism, layers; 12 manuscript
+consumers; 44 claims; 2 semantic restrictions. Gates: validate
+manuscript. Negative control: track lane matrix row only forgery.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Pipeline rows:</strong> 32.</p>
+<p><strong>Pipeline rows:</strong> 32 total; 31 required; every row
+shown.</p>
 <!-- sheaf-layers:track-improvement-scope -->
 <h2 data-number="8.14" id="track-improvement-scope"><span
 class="header-section-number">8.14</span> Track improvement scope</h2>
-<table style="width:100%;">
+<p>Every roadmap row is shown below in canonical order. The source-owned
+full matrix in output/data/track_improvement_scope.json remains the
+authority for exact priorities, scope text, gate or predicate IDs,
+negative-control IDs, and promotion fields.</p>
+<table>
 <colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
 </colgroup>
 <thead>
 <tr>
 <th>Track</th>
-<th>Status</th>
-<th>Current proof</th>
-<th>Next artifact</th>
-<th>Gate</th>
-<th>Negative control</th>
+<th>Evidence progression</th>
+<th>Status, gate, and negative control</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>adversarial_audit</code></td>
-<td>live</td>
-<td><code>output/reports/adversarial_audit.json</code></td>
-<td><code>output/reports/adversarial_audit.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>adversarial_known_bad_passes</td>
+<td><strong>adversarial audit</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+adversarial audit.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: adversarial known bad passes.
+Scope: deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>animation</code></td>
-<td>optional</td>
-<td><code>../figures/si_belief_trajectory.gif</code></td>
-<td><code>../figures/si_belief_trajectory.gif</code></td>
-<td><code>validate_outputs</code></td>
-<td>missing_fragment_coverage</td>
+<td><strong>animation</strong></td>
+<td>Producer: render animation.py. Current and next evidence: si belief
+trajectory.gif.</td>
+<td>Status: optional; priority: medium. Gate or predicate: validate
+outputs. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>animation_delta</code></td>
-<td>live</td>
-<td><code>output/data/animation_frame_deltas.json</code></td>
-<td><code>output/data/animation_frame_deltas.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>missing_fragment_coverage</td>
+<td><strong>animation delta</strong></td>
+<td>Producer: render animation.py. Current and next evidence: animation
+frame deltas.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs,
+validate manuscript. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>artifact_diffoscope</code></td>
-<td>live</td>
-<td><code>output/reports/artifact_diffoscope.json</code></td>
-<td><code>output/reports/artifact_diffoscope.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>artifact_diffoscope_missed_hash_drift</td>
+<td><strong>artifact diffoscope</strong></td>
+<td>Producer: generate integration audit.py. Current and next evidence:
+artifact diffoscope.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: artifact diffoscope missed hash
+drift. Scope: deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>artifact_license</code></td>
-<td>live</td>
-<td><code>output/reports/artifact_license_audit.json</code></td>
-<td><code>output/reports/artifact_license_audit.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>artifact_license_unsafe_artifact</td>
+<td><strong>artifact license</strong></td>
+<td>Producer: generate integration audit.py. Current and next evidence:
+artifact license audit.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: artifact license unsafe artifact.
+Scope: deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>assumption_index</code></td>
-<td>live</td>
-<td><code>output/data/analytical_assumption_index.json</code></td>
-<td><code>output/data/analytical_assumption_index.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>missing_fragment_coverage</td>
+<td><strong>assumption index</strong></td>
+<td>Producer: generate toy sweep tracks.py. Current and next evidence:
+analytical assumption index.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs,
+validate manuscript. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>benchmark</code></td>
-<td>live</td>
-<td><code>output/data/toy_benchmark_matrix.json</code></td>
-<td><code>output/data/toy_benchmark_matrix.json</code></td>
-<td><code>validate_outputs</code></td>
-<td>missing_fragment_coverage</td>
+<td><strong>benchmark</strong></td>
+<td>Producer: generate toy sweep tracks.py. Current and next evidence:
+toy benchmark matrix.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs.
+Negative control: missing fragment coverage. Scope: deterministic
+toy-only.</td>
 </tr>
 <tr>
-<td><code>causal_ablation</code></td>
-<td>live</td>
-<td><code>output/data/causal_ablation_matrix.json</code></td>
-<td><code>output/data/causal_ablation_matrix.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>causal_ablation_missing_cell</td>
+<td><strong>causal ablation</strong></td>
+<td>Producer: generate toy sweep tracks.py. Current and next evidence:
+causal ablation matrix.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: causal ablation missing cell.
+Scope: deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>counterexample</code></td>
-<td>live</td>
-<td><code>output/reports/counterexample_matrix.json</code></td>
-<td><code>output/reports/counterexample_matrix.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>known_bad_counterexample_passed</td>
+<td><strong>counterexample</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+counterexample matrix.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: known bad counterexample passed.
+Scope: deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>evidence_fields</code></td>
-<td>live</td>
-<td><code>output/data/evidence_field_index.json</code></td>
-<td><code>output/data/evidence_field_index.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>missing_typed_claim</td>
+<td><strong>evidence fields</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+evidence field index.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: missing typed claim. Scope:
+deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>formalism</code></td>
-<td>live</td>
-<td><code>manuscript/sheaf/manifest.yaml</code></td>
-<td><code>manuscript/sheaf/manifest.yaml</code></td>
-<td><code>validate_manuscript</code></td>
-<td>missing_fragment_coverage</td>
+<td><strong>formalism</strong></td>
+<td>Producer: compose manuscript.py. Current and next evidence:
+manifest.yaml.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate
+manuscript. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
 </tr>
 <tr>
-<td><code>gate_ergonomics</code></td>
-<td>live</td>
-<td><code>output/data/validation_gate_index.json</code></td>
-<td><code>output/data/validation_gate_index.json</code></td>
-<td><code>validate_outputs, validate_manuscript</code></td>
-<td>gate_ergonomics_unindexed</td>
+<td><strong>gate ergonomics</strong></td>
+<td>Producer: generate integration audit.py. Current and next evidence:
+validation gate index.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: gate ergonomics unindexed. Scope:
+deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>gnn</strong></td>
+<td>Producer: generate formal interop tracks.py. Current and next
+evidence: gnn lint report.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs.
+Negative control: missing fragment coverage. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>interop</strong></td>
+<td>Producer: generate formal interop tracks.py. Current and next
+evidence: interop roundtrip report.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs.
+Negative control: interop shape loss. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>layers</strong></td>
+<td>Producer: generate figures.py. Current and next evidence: sheaf
+coverage matrix.json.</td>
+<td>Status: optional; priority: medium. Gate or predicate: validate
+outputs, validate manuscript. Negative control: missing fragment
+coverage. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>lean</strong></td>
+<td>Producer: generate formal interop tracks.py. Current and next
+evidence: lean theorem inventory.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs.
+Negative control: missing fragment coverage. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>manuscript staleness</strong></td>
+<td>Producer: z generate manuscript variables.py. Current and next
+evidence: manuscript staleness report.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs,
+validate manuscript. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>model checking</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence: model
+checking witnesses.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs.
+Negative control: missed model checking counterexample. Scope:
+deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>ontology</strong></td>
+<td>Producer: generate formal interop tracks.py. Current and next
+evidence: ontology profile matrix.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs.
+Negative control: missing fragment coverage. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>proof extraction</strong></td>
+<td>Producer: generate formal interop tracks.py. Current and next
+evidence: proof extraction index.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: proof extraction missing
+statement. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>prose</strong></td>
+<td>Producer: compose manuscript.py. Current and next evidence:
+manifest.yaml.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate
+manuscript. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>provenance</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+artifact provenance.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate
+manuscript, validate outputs. Negative control: missing sheaf track
+producer. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>pymdp</strong></td>
+<td>Producer: simulate si tmaze.py. Current and next evidence: si policy
+comparison.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs.
+Negative control: missing fragment coverage. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>release bundle</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+release bundle manifest.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: release bundle parity failure.
+Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>release notes</strong></td>
+<td>Producer: generate integration audit.py. Current and next evidence:
+release notes evidence.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: release notes claim failed gate
+passed. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>replay matrix</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+replay matrix.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: replay mismatch. Scope:
+deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>scholarship</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+scholarship source matrix.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: missing scholarship source
+binding. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>security posture</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+security posture audit.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: security posture aggregate
+forgery. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>sensitivity</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+sensitivity sweep.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs.
+Negative control: missing sensitivity cell. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>simulation</strong></td>
+<td>Producer: generate toy sweep tracks.py. Current and next evidence:
+analytical observable sweep.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs.
+Negative control: missing fragment coverage. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>state space catalog</strong></td>
+<td>Producer: generate toy sweep tracks.py. Current and next evidence:
+state space catalog.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: state space catalog missing
+finite space. Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>theorem traceability</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+theorem traceability matrix.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs,
+validate manuscript. Negative control: theorem traceability unlinked.
+Scope: deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>uncertainty</strong></td>
+<td>Producer: generate sheaf tracks.py. Current and next evidence:
+uncertainty summary.json.</td>
+<td>Status: live; priority: high. Gate or predicate: validate outputs.
+Negative control: unnormalized uncertainty row. Scope: deterministic
+toy-only.</td>
+</tr>
+<tr>
+<td><strong>visualization</strong></td>
+<td>Producer: generate integration audit.py. Current and next evidence:
+visualization quality audit.json.</td>
+<td>Status: live; priority: medium. Gate or predicate: validate outputs,
+validate manuscript. Negative control: missing fragment coverage. Scope:
+deterministic toy-only.</td>
+</tr>
+<tr>
+<td><strong>empirical adapter</strong></td>
+<td>Producer: none while blocked. Current proof: blocked scope
+manifest.json. Next proving artifact: empirical adapter
+manifest.json.</td>
+<td>Status: blocked; priority: blocked. Gate or predicate: blocked scope
+manifest all blocked. Negative control: empirical claim appears without
+manifest. Scope: blocked until provenance, licensing/privacy,
+deterministic replay, and typed claim gates exist.</td>
+</tr>
+<tr>
+<td><strong>private or restricted data</strong></td>
+<td>Producer: none while blocked. Current proof: blocked scope
+manifest.json. Next proving artifact: private data provenance
+manifest.json.</td>
+<td>Status: blocked; priority: blocked. Gate or predicate: blocked scope
+manifest all blocked. Negative control: private data artifact appears
+without provenance manifest. Scope: blocked until provenance,
+licensing/privacy, deterministic replay, and typed claim gates
+exist.</td>
+</tr>
+<tr>
+<td><strong>network dependent research</strong></td>
+<td>Producer: none while blocked. Current proof: blocked scope
+manifest.json. Next proving artifact: network replay manifest.json.</td>
+<td>Status: blocked; priority: blocked. Gate or predicate: blocked scope
+manifest all blocked. Negative control: network derived claim appears
+without replay manifest. Scope: blocked until provenance,
+licensing/privacy, deterministic replay, and typed claim gates
+exist.</td>
+</tr>
+<tr>
+<td><strong>llm generated evidence</strong></td>
+<td>Producer: none while blocked. Current proof: blocked scope
+manifest.json. Next proving artifact: llm evidence audit.json.</td>
+<td>Status: blocked; priority: blocked. Gate or predicate: blocked scope
+manifest all blocked. Negative control: LLM generated evidence appears
+as a validation source. Scope: blocked until provenance,
+licensing/privacy, deterministic replay, and typed claim gates
+exist.</td>
+</tr>
+<tr>
+<td><strong>non toy model claims</strong></td>
+<td>Producer: none while blocked. Current proof: blocked scope
+manifest.json. Next proving artifact: non toy model scope
+manifest.json.</td>
+<td>Status: blocked; priority: blocked. Gate or predicate: blocked scope
+manifest all blocked. Negative control: non toy result claim appears
+outside future only scope. Scope: blocked until provenance,
+licensing/privacy, deterministic replay, and typed claim gates
+exist.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Improvement rows:</strong> 39.</p>
+<p><strong>Improvement rows:</strong> 39 total; 32 live / 2 optional / 5
+blocked; every row shown.</p>
 <hr />
 <h1 data-number="9" id="sec:results_mi_sweep"><span
 class="header-section-number">9</span> Mutual-information parameter
@@ -5204,10 +4681,10 @@ for field-level claim evidence: 97 mapped fields with status
 <code>true</code>.</p>
 <!-- sheaf-track:release_bundle -->
 <p><code>release_bundle_manifest.json</code> provides the appendix proof
-for required deliverables: 38 artifacts with source-present status
+for required deliverables: 36 artifacts with source-present status
 <code>true</code>.</p>
 <p><code>artifact_contract_index.json</code> is the appendix-level
-cross-artifact concordance proof. It rederives 85 rows from the live
+cross-artifact concordance proof. It rederives 86 rows from the live
 semantic producer map and release-bundle parity rows, with row-complete
 flag <code>true</code> and copied-parity flag <code>true</code>.</p>
 <!-- sheaf-track:gate_ergonomics -->
@@ -5221,7 +4698,7 @@ class="header-section-number">14.0.1</span> Appendix track: artifact
 diffoscope</h3>
 <p><code>artifact_diffoscope</code> binds
 <code>output/reports/artifact_diffoscope.json</code> into the full sheaf
-appendix. Rows: 40. All equal: <code>true</code>.</p>
+appendix. Rows: 43. All equal: <code>true</code>.</p>
 <p>This diffoscope is deliberately narrow and reproducibility-facing.
 For each non-cyclic generated artifact, it compares the saved provenance
 digest to the live file digest at validation time. The validator
@@ -5239,7 +4716,7 @@ class="header-section-number">14.0.2</span> Appendix track: artifact
 license</h3>
 <p><code>artifact_license</code> binds
 <code>output/reports/artifact_license_audit.json</code> into the full
-sheaf appendix. Rows: 85. All safe: <code>true</code>.</p>
+sheaf appendix. Rows: 86. All safe: <code>true</code>.</p>
 <p>The license audit classifies each generated or source-backed artifact
 under the public exemplar’s configured license boundary. It is
 intentionally conservative: generated local outputs and project-owned
@@ -5365,7 +4842,7 @@ promotion-rule obligations; right: sheaf fragment bindings.</em></p>
 <p><img src="../figures/artifact_contract_map.png"
 style="width:98.0%" alt="" /></p>
 <p><em>Reproduced from fig. <a href="#fig:artifact_contract_map">10</a>.
-Artifact contract map: 85 generated artifact rows with complete contract
+Artifact contract map: 86 generated artifact rows with complete contract
 status true and copied-output parity complete true. Cycle rows are
 explicit in
 <code>output/data/artifact_contract_index.json</code>.</em></p>
@@ -5506,7 +4983,7 @@ release note can say only what validation, bundle, or semantic artifacts
 support. The validator re-derives support from rows; flipping the
 summary bit without fixing a failed row still fails.</p>
 <p><code>output/reports/release_attestation.json</code> is the compact
-final view over the same boundary. It records 7 attestation rows for
+final view over the same boundary. It records 8 attestation rows for
 validation, release bundle hash, license audit, semantic certificate,
 and blocked-scope status, with all-attested flag <code>true</code>.</p>
 <hr />

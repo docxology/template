@@ -145,9 +145,23 @@ render_docx(combined_md: Path, output_path: Path, *, bibliography: Path | None =
             reference_doc: Path | None = None, pandoc_path: str = "pandoc",
             extra_args: list[str] | None = None) -> DocxRenderResult
 render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None = None,
-            cover_image: Path | None = None, pandoc_path: str = "pandoc",
+            cover_image: Path | None = None, cover_alt: str | None = None,
+            title: str | None = None, author: str | None = None, language: str = "en",
+            pandoc_path: str = "pandoc",
             extra_args: list[str] | None = None) -> EpubRenderResult
 ```
+
+EPUB rendering supplies Pandoc with a stable placeholder, preflights archive
+bounds before payload reads, then derives UUIDv5 from canonical package member
+names and uncompressed bytes with the OPF/NCX identifier fields normalized out.
+Effective bibliography, body-media, filter, metadata, and tool changes are thus
+bound when they change package content; identifier overrides are rejected. A
+valid caller `SOURCE_DATE_EPOCH` controls packaged `dcterms:modified` and hence
+participates in identity. Missing or invalid values use the fixed ZIP-safe epoch
+`1980-01-01T00:00:00Z`; ambient Git and wall-clock state are not consulted. A
+fresh temporary Pandoc target prevents stale-output acceptance, and atomic ZIP
+normalization retains the required first/uncompressed `mimetype` member, order,
+compression, comments, and permissions while fixing member timestamps.
 
 ## Supporting Files
 

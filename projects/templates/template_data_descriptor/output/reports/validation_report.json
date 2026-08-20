@@ -70,7 +70,7 @@
           "file_count": 8,
           "largest_file": "05_quality_validation_slides.pdf",
           "largest_file_path": "slides/05_quality_validation_slides.pdf",
-          "size_mb": "0.37"
+          "size_mb": "0.36"
         },
         "web": {
           "exists": true,
@@ -177,7 +177,7 @@
             "optional": false,
             "readable": true,
             "required": true,
-            "size_mb": 0.37
+            "size_mb": 0.36
           },
           "web": {
             "exists": true,
@@ -197,7 +197,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.8567914962768555
+      "total_size_mb": 0.8528661727905273
     },
     "figures": {
       "files": 6,
@@ -224,7 +224,7 @@
         },
         "slides": {
           "files": 8,
-          "size_bytes": 386565
+          "size_bytes": 382449
         },
         "web": {
           "files": 11,
@@ -233,7 +233,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 898411
+      "total_size_bytes": 894295
     }
   },
   "recommendations": [],
@@ -248,7 +248,7 @@
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "68931fdc2e4bf31e44262b79f2493dd8f93bebc144a7364452f6d51db2dc3c59",
+      "sha256": "65af147bfc634aaf9caa79e63062fbac2609f4eea5dc0fea433134598c7f5b7c",
       "size_bytes": 10499
     },
     "combined_manuscript": {
@@ -318,7 +318,7 @@
       },
       "output": {
         "file_count": 32,
-        "sha256": "6cdd87d8c8535984083786896dfa347b4c70266e58dfeaf7e0cd4d9efec233ab"
+        "sha256": "f79606e717883d8b3d0cfa34488b205fa0f6bf1308c66541f8332a6b689ad944"
       },
       "source": {
         "file_count": 31,
@@ -326,7 +326,7 @@
       },
       "stage": {
         "file_count": 1245,
-        "sha256": "c3987bc0c93e157f2c5817a6b01fd9b8edd8068e92a7f09fa25009a53522e90a"
+        "sha256": "995e28968b759eff7a40a013636e8ba22c114cb59c67b7b15c80e2799e9e1149"
       }
     },
     "project": "templates/template_data_descriptor",

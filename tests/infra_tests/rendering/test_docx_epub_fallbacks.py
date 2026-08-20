@@ -20,6 +20,7 @@ import shutil
 from pathlib import Path
 from zipfile import ZipFile
 
+import defusedxml.ElementTree as safe_et
 import pytest
 
 from infrastructure.core.exceptions import RenderingError
@@ -65,6 +66,25 @@ def _ebook_archive_text(path: Path) -> str:
     with ZipFile(path) as archive:
         members = [name for name in archive.namelist() if name.endswith((".xml", ".xhtml", ".html", ".opf"))]
         return "\n".join(archive.read(name).decode("utf-8", errors="ignore") for name in members)
+
+
+def _epub_package_identifiers(path: Path) -> tuple[str, str]:
+    """Return the OPF and NCX identifiers from one real ebook-stage EPUB."""
+
+    with ZipFile(path) as archive:
+        opf_name = next(name for name in archive.namelist() if name.endswith(".opf"))
+        ncx_name = next(name for name in archive.namelist() if name.endswith(".ncx"))
+        opf = safe_et.fromstring(archive.read(opf_name))
+        ncx = safe_et.fromstring(archive.read(ncx_name))
+    package_identifier = opf.find(".//{http://purl.org/dc/elements/1.1/}identifier")
+    assert package_identifier is not None and package_identifier.text is not None
+    navigation_identifier = next(
+        node.get("content")
+        for node in ncx.findall(".//{http://www.daisy.org/z3986/2005/ncx/}meta")
+        if node.get("name") == "dtb:uid"
+    )
+    assert navigation_identifier is not None
+    return package_identifier.text, navigation_identifier
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -682,6 +702,53 @@ class TestEbookStageFallbacks:
             assert "Supplemental Source" in archive_text
             assert "[@alpha2020primary" not in archive_text
             assert "@omega2021supplement]" not in archive_text
+
+    @needs_pandoc
+    def test_epub_identifier_tracks_effective_body_media(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """The production ebook stage binds packaged media bytes into its UUID."""
+
+        monkeypatch.setenv("SOURCE_DATE_EPOCH", "1700000000")
+        repo_root = tmp_path / "repo"
+        project_root = repo_root / "projects" / "working" / "myproject"
+        (project_root / "src").mkdir(parents=True)
+        (project_root / "src" / "__init__.py").write_text("", encoding="utf-8")
+        figures_dir = project_root / "output" / "figures"
+        figures_dir.mkdir(parents=True)
+        figure = figures_dir / "identity.svg"
+        figure.write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">'
+            '<title>First media revision</title><rect width="10" height="10" fill="red"/></svg>\n',
+            encoding="utf-8",
+        )
+        combined = project_root / "output" / "pdf" / "_combined_manuscript.md"
+        combined.parent.mkdir(parents=True)
+        combined.write_text(
+            "# Media evidence\n\n![Accessible identity fixture](figures/identity.svg)\n",
+            encoding="utf-8",
+        )
+        output = project_root / "output" / "ebook" / "myproject.epub"
+
+        assert run_ebook_generation(repo_root, "working/myproject", skip_formats_arg="mobi,docx") == 0
+        first_package_id, first_navigation_id = _epub_package_identifiers(output)
+        assert first_package_id == first_navigation_id
+
+        figure.write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">'
+            '<title>Second media revision</title><rect width="10" height="10" fill="blue"/></svg>\n',
+            encoding="utf-8",
+        )
+        assert run_ebook_generation(repo_root, "working/myproject", skip_formats_arg="mobi,docx") == 0
+        changed_package_id, changed_navigation_id = _epub_package_identifiers(output)
+
+        assert changed_package_id == changed_navigation_id
+        assert changed_package_id != first_package_id
+        with ZipFile(output) as archive:
+            svg_payloads = [archive.read(name) for name in archive.namelist() if name.endswith(".svg")]
+        assert any(b"Second media revision" in payload for payload in svg_payloads)
 
     @needs_pandoc
     @pytest.mark.skipif(_CALIBRE is None, reason="calibre not installed")

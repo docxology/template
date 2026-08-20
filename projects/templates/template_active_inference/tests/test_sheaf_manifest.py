@@ -6,6 +6,8 @@ from gates.validation import validate_manuscript
 from manuscript.sheaf import (
     SheafManifest,
     SheafSection,
+    TrackRegistry,
+    TrackSpec,
     build_coverage_matrix,
     compose_all_sections,
     load_manifest,
@@ -17,6 +19,7 @@ from gate_support import ensure_gate_artifacts, refresh_generated_gate_artifacts
 
 
 pytestmark = [pytest.mark.timeout(300)]
+_ABSOLUTE_OUTSIDE_TRACK = str(Path(Path.cwd().anchor) / "tmp" / "outside.md")
 
 
 def test_manifest_loads_imrad_sections() -> None:
@@ -80,6 +83,56 @@ sections:
     assert any(i.code == "duplicate_section_id" for i in issues)
     assert any(i.code == "unknown_track" for i in issues)
     assert any(i.code == "track_order_unbound" for i in issues)
+
+
+def test_validate_manifest_rejects_unconfined_and_symlinked_paths(tmp_path: Path) -> None:
+    root = tmp_path / "project"
+    outside = tmp_path / "outside"
+    root.mkdir()
+    outside.mkdir()
+    outside_file = outside / "track.md"
+    outside_file.write_text("outside\n", encoding="utf-8")
+    (root / "linked").symlink_to(outside, target_is_directory=True)
+    registry = TrackRegistry(
+        tracks={"prose": TrackSpec("prose", 1, "markdown", "Prose")},
+        renderer_suffixes={"markdown": (".md",)},
+    )
+    manifest = SheafManifest(
+        defaults=load_manifest(Path(__file__).resolve().parents[1] / "manuscript" / "sheaf" / "manifest.yaml").defaults,
+        sections=(
+            SheafSection("absolute", "Absolute", "a", 1, {"prose": str(outside_file)}, "01_absolute.md"),
+            SheafSection("parent", "Parent", "p", 2, {"prose": "../outside/track.md"}, "02_parent.md"),
+            SheafSection("linked", "Linked", "l", 3, {"prose": "linked/track.md"}, "03_linked.md"),
+            SheafSection("output", "Output", "o", 4, {}, "../escaped.md"),
+        ),
+        registry_path=Path("manuscript/sheaf/tracks.yaml"),
+    )
+
+    issues = validate_manifest(manifest, root, registry=registry)
+
+    assert sum(issue.code == "unsafe_track_path" for issue in issues) == 3
+    assert any(issue.code == "unsafe_output_name" for issue in issues)
+    assert outside_file.read_text(encoding="utf-8") == "outside\n"
+
+
+@pytest.mark.parametrize("track_path", ["../outside.md", _ABSOLUTE_OUTSIDE_TRACK, "linked/outside.md"])
+def test_load_manifest_rejects_unsafe_track_paths(tmp_path: Path, track_path: str) -> None:
+    if track_path == _ABSOLUTE_OUTSIDE_TRACK:
+        assert Path(track_path).is_absolute()
+    root = tmp_path / "project"
+    outside = tmp_path / "outside"
+    sheaf = root / "manuscript" / "sheaf"
+    sheaf.mkdir(parents=True)
+    outside.mkdir()
+    (root / "linked").symlink_to(outside, target_is_directory=True)
+    manifest_path = sheaf / "manifest.yaml"
+    manifest_path.write_text(
+        f"sections:\n  - id: unsafe\n    order: 1\n    title: Unsafe\n    tracks:\n      prose: {track_path!r}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="project-relative path|symlink"):
+        load_manifest(manifest_path, project_root=root)
 
 
 def test_validate_manifest_unknown_renderer(tmp_path: Path) -> None:

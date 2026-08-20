@@ -1,9 +1,9 @@
 {
   "algorithm": "web-renderer-combine-v1",
-  "binding_sha256": "051f91f1e0d64ba803def3fe2260b553dc26f861b482e95a88b3fff8a79a90fb",
+  "binding_sha256": "c5f239bac4e3294be8a03c56a0563b97185c56f56bd97feca5f50d3a2adb4518",
   "combined_path": "output/web/_combined_manuscript.md",
-  "combined_sha256": "b08375a94939cd8c8036b8c1f90db00f6a2a094e3c4d042ff2150537697de0c3",
-  "combined_size_bytes": 128994,
+  "combined_sha256": "e70cacf47015fc303415ddd018df0d18b0a3a041705777e7eef4c6bbabe63615",
+  "combined_size_bytes": 137377,
   "input_root_kind": "hydrated",
   "ordered_inputs": [
     {
@@ -33,20 +33,20 @@
     {
       "ordinal": 5,
       "path": "output/manuscript/03_intro_contributions.md",
-      "sha256": "e0966cdde925ba9a9e4e136cb33d6eff637fecfe9815374726a0b5bf19c9bc0a",
-      "size_bytes": 2046
+      "sha256": "4ca4168deb3858c7f08ab759f4b59690b822f840e59cdf0b36a425632bdbac8c",
+      "size_bytes": 2112
     },
     {
       "ordinal": 6,
       "path": "output/manuscript/05_methods_analytical.md",
-      "sha256": "0ec70d1e93158bb29e466e94ec4cde62259d5314ef48d0dbd9d5602e27440046",
-      "size_bytes": 5116
+      "sha256": "a62c7c4856b5c454412080339c03f9d03b01fde7a4d378293cec73b5270b7cc1",
+      "size_bytes": 5182
     },
     {
       "ordinal": 7,
       "path": "output/manuscript/06_methods_pymdp.md",
-      "sha256": "5bec086a03a0190f489d8c8868169f8610fd3d454e3200b39f845e96fa87fc64",
-      "size_bytes": 4110
+      "sha256": "5e92ec4a15f6f02df4f813b4fea76c1ef683ae046769d59a36f04c61b09bf320",
+      "size_bytes": 4176
     },
     {
       "ordinal": 8,
@@ -57,8 +57,8 @@
     {
       "ordinal": 9,
       "path": "output/manuscript/08_methods_sheaf.md",
-      "sha256": "c1ef5b379753c64893fd84f01836bf7d5a7adb984546823ebe3609615e7a6681",
-      "size_bytes": 64024
+      "sha256": "cf7738527835c83ffc548d35d353beb646711f4f882514ffabf270f8294071c2",
+      "size_bytes": 72069
     },
     {
       "ordinal": 10,
@@ -87,14 +87,14 @@
     {
       "ordinal": 14,
       "path": "output/manuscript/15_discussion_outlook.md",
-      "sha256": "b0578090f76811fe3a5a9e74a62126f970829bd51d6e8d9598fdb96f0e3f1c20",
-      "size_bytes": 3747
+      "sha256": "9f980bc7df891c6e6247247b5c25dbcd48c01348190cee348b0869c66233f939",
+      "size_bytes": 3813
     },
     {
       "ordinal": 15,
       "path": "output/manuscript/16_appendix_full_sheaf.md",
-      "sha256": "801a2d7df2fb741899ba0b50dbb7f2227110f3662ccaa63e53a4c75881041783",
-      "size_bytes": 20202
+      "sha256": "82d5fc41224692f8d463c3162cfaa5f75afe735e54136972d8bb0d704e454de8",
+      "size_bytes": 20268
     },
     {
       "ordinal": 16,
@@ -115,7 +115,7 @@
       "size_bytes": 509
     }
   ],
-  "ordered_inputs_sha256": "bd2b268a7d1074dcb984edd3be07fdcf41c28771048cdb32c73615827a1342f7",
+  "ordered_inputs_sha256": "fe2bd78579714ed62ed771b157c58f8fa1ba7abc4345b0f64b7e8e16a4432eca",
   "project": "templates/template_active_inference",
   "schema_version": "template-manuscript-composition-v1"
 }

@@ -45,7 +45,7 @@ uv run python scripts/docgen/coverage_history.py --from-dir=./_artefacts --days=
 uv run python scripts/docgen/coverage_history.py --from-gh --days=30
 ```
 
-**Canonical factsheet** — regenerate with `uv run python scripts/docgen/counts.py --write`; never hand-edit [`COUNTS.md`](COUNTS.md) (CI and pre-commit run `counts.py --check`). After changing an exemplar `src/` or its tests, rerun that project's coverage gate and then `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails closed when source hashes no longer match.
+**Canonical factsheet** — regenerate with `uv run python scripts/docgen/counts.py --write`; never hand-edit [`COUNTS.md`](COUNTS.md) (CI and pre-commit run `counts.py --check`). After changing an inventoried project coverage input—including source, tests, scripts, configuration, data, manuscript content, or dependency locks—rerun that project's coverage gate and then `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write`; ordinary `--write` fails closed when coverage-input hashes no longer match. Generated output plus runtime, build, cache, and environment artifacts are excluded from the versioned inventory.
 
 **Status evidence** — after changing a row in [`../../STATUS.md`](../../STATUS.md), run `uv run python scripts/docgen/status_evidence.py --write`; CI/checks use `uv run python scripts/docgen/status_evidence.py --check` to reject stale receipts.
 

@@ -1,12 +1,12 @@
-# Why partition it this way
+# infrastructure/, by subpackage
 
-*Slide 47 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 47 of 57 — template_template pitch, long deck — kind: `diagram`*
 
-- Each subpackage boundary matches a real reuse boundary: rendering/, validation/, publishing/, provenance/ each solve one generic problem every exemplar needs, independent of any project's domain logic.
-- A change inside one subpackage cannot silently reach into another without an explicit import — the boundary is enforced by the drift check, not just convention.
-- This is the same two-layer split described earlier in this deck, now shown at the resolution of individual subpackages instead of the whole layer.
+*(no body content — section/title slide)*
 
 ---
+
+**Source:** [projects/templates/template_pitch_deck/src/infra_facts.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/infra_facts.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

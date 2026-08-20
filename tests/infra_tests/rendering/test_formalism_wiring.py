@@ -59,18 +59,28 @@ def _fake_pandoc(tmp_path: Path) -> tuple[Path, Path]:
 import zipfile
 
 output = sys.argv[1]
+identifier = "urn:uuid:00000000-0000-5000-8000-000000000000"
 container = ('<container xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
              '<rootfiles><rootfile full-path="EPUB/content.opf" '
              'media-type="application/oebps-package+xml"/></rootfiles></container>')
-package = ('<package xmlns="http://www.idpf.org/2007/opf"><manifest>'
+package = ('<package xmlns="http://www.idpf.org/2007/opf" version="3.0" '
+           'unique-identifier="book-id"><metadata '
+           'xmlns:dc="http://purl.org/dc/elements/1.1/">'
+           f'<dc:identifier id="book-id">{identifier}</dc:identifier>'
+           '<dc:title>Fixture</dc:title><dc:language>en</dc:language></metadata><manifest>'
            '<item id="chapter" href="text/chapter.xhtml" media-type="application/xhtml+xml"/>'
-           '</manifest><spine><itemref idref="chapter"/></spine></package>')
+           '<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>'
+           '</manifest><spine toc="ncx"><itemref idref="chapter"/></spine></package>')
 chapter = ('<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Fixture</title></head>'
            '<body><p>Fixture</p></body></html>')
+ncx = ('<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">'
+       f'<head><meta name="dtb:uid" content="{identifier}"/></head>'
+       '<docTitle><text>Fixture</text></docTitle><navMap/></ncx>')
 with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
     archive.writestr("mimetype", "application/epub+zip", compress_type=zipfile.ZIP_STORED)
     archive.writestr("META-INF/container.xml", container)
     archive.writestr("EPUB/content.opf", package)
+    archive.writestr("EPUB/toc.ncx", ncx)
     archive.writestr("EPUB/text/chapter.xhtml", chapter)
 """,
         encoding="utf-8",
@@ -81,14 +91,16 @@ with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
 for a in "$@"; do printf '%s\\n' "$a" >> '{argv_log}'; done
 printf '%s\\n' '--END--' >> '{argv_log}'
 out=""
+writer=""
 while [ $# -gt 0 ]; do
   if [ "$1" = "-o" ]; then out="$2"; fi
+  if [ "$1" = "-t" ]; then writer="$2"; fi
   shift
 done
 if [ -n "$out" ]; then
   mkdir -p "$(dirname "$out")"
-  case "$out" in
-    *.epub) '{sys.executable}' '{epub_writer}' "$out" ;;
+  case "$writer" in
+    epub) '{sys.executable}' '{epub_writer}' "$out" ;;
     *) printf 'stub' > "$out" ;;
   esac
 fi

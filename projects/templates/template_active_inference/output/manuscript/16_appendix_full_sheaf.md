@@ -81,9 +81,9 @@ incomplete in the track-improvement scope.
 
 <!-- sheaf-track:release_bundle -->
 
-`release_bundle_manifest.json` provides the appendix proof for required deliverables: 38 artifacts with source-present status `true`.
+`release_bundle_manifest.json` provides the appendix proof for required deliverables: 36 artifacts with source-present status `true`.
 
-`artifact_contract_index.json` is the appendix-level cross-artifact concordance proof. It rederives 85 rows from the live semantic producer map and release-bundle parity rows, with row-complete flag `true` and copied-parity flag `true`.
+`artifact_contract_index.json` is the appendix-level cross-artifact concordance proof. It rederives 86 rows from the live semantic producer map and release-bundle parity rows, with row-complete flag `true` and copied-parity flag `true`.
 
 <!-- sheaf-track:gate_ergonomics -->
 
@@ -94,7 +94,7 @@ incomplete in the track-improvement scope.
 ### Appendix track: artifact diffoscope
 
 `artifact_diffoscope` binds `output/reports/artifact_diffoscope.json` into the
-full sheaf appendix. Rows: 40. All equal:
+full sheaf appendix. Rows: 43. All equal:
 `true`.
 
 This diffoscope is deliberately narrow and reproducibility-facing. For each
@@ -113,7 +113,7 @@ provenance.
 ### Appendix track: artifact license
 
 `artifact_license` binds `output/reports/artifact_license_audit.json` into the
-full sheaf appendix. Rows: 85. All safe:
+full sheaf appendix. Rows: 86. All safe:
 `true`.
 
 The license audit classifies each generated or source-backed artifact under the
@@ -227,7 +227,7 @@ counts are caught after composition, not only during source-file linting.
 
 ![](../figures/artifact_contract_map.png){width=98%}
 
-*Reproduced from [@fig:artifact_contract_map]. Artifact contract map: 85 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in `output/data/artifact_contract_index.json`.*
+*Reproduced from [@fig:artifact_contract_map]. Artifact contract map: 86 generated artifact rows with complete contract status true and copied-output parity complete true. Cycle rows are explicit in `output/data/artifact_contract_index.json`.*
 
 ![](../figures/security_posture_map.png){width=96%}
 
@@ -317,6 +317,10 @@ GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [@gnn2023
 
 <!-- sheaf-track:ontology -->
 
+```{=latex}
+\begin{samepage}
+```
+
 ### Ontology bindings
 
 - `belief_entropy` → **BeliefEntropy**
@@ -325,6 +329,10 @@ GNN declarations: `gnn/bernoulli_toy.gnn.md` and `gnn/si_tmaze.gnn.md` [@gnn2023
 - `observation` → **ObservationLikelihood**
 - `policy` → **PolicyPosterior**
 - `sheaf_track` → **SheafFragment**
+
+```{=latex}
+\end{samepage}
+```
 
 
 <!-- sheaf-track:animation -->
@@ -350,6 +358,6 @@ re-derives support from rows; flipping the summary bit without fixing a failed
 row still fails.
 
 `output/reports/release_attestation.json` is the compact final view over the
-same boundary. It records 7 attestation rows for
+same boundary. It records 8 attestation rows for
 validation, release bundle hash, license audit, semantic certificate, and
 blocked-scope status, with all-attested flag `true`.

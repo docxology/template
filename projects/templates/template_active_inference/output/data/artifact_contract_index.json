@@ -63,6 +63,7 @@
     "output/figures/sheaf_layers_overview.png",
     "output/figures/si_belief_trajectory.gif",
     "output/figures/theorem_traceability_graph.png",
+    "output/figures/track_lane_promotion_map.png",
     "output/reports/ablation_sensitivity_report.json",
     "output/reports/adversarial_audit.json",
     "output/reports/artifact_diffoscope.json",
@@ -93,7 +94,7 @@
     "output/reports/stale_artifact_report.json",
     "output/reports/visualization_quality_audit.json"
   ],
-  "row_count": 85,
+  "row_count": 86,
   "rows": [
     {
       "artifact": "output/data/analysis_statistics.json",
@@ -209,7 +210,7 @@
       "copied_required": false,
       "copied_sha256": "",
       "copied_status": "not_required",
-      "freshness_cycle_excluded": true,
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/animation_frame_deltas.json",
         "src/visualizations"
@@ -242,11 +243,11 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/artifact_contract_index.json",
       "copied_required": true,
-      "copied_sha256": "2247bea65f92fd749fbd459f5bfb5e97a4cdc7e159e0709011d76470637d38a6",
+      "copied_sha256": "",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -263,7 +264,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "270399c5317bf85cac19c81176a6331fc7be7dc66960c5468ff1dd43065c7259",
+      "source_sha256": "",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -277,11 +278,11 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/artifact_provenance.json",
       "copied_required": true,
-      "copied_sha256": "7fffb755095afa94b524485756ec6cdf7a46cb151d742fc8e4975e31751ba9e8",
+      "copied_sha256": "",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -302,7 +303,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "b9fe178f0347ec4234d33c168294a4f80ba87f85153a89ad87f718e11c704ad0",
+      "source_sha256": "",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -315,12 +316,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/causal_ablation_matrix.json",
       "copied_required": true,
-      "copied_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/causal_ablation_matrix.json",
@@ -388,12 +389,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/evidence_field_index.json",
       "copied_required": true,
-      "copied_sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/evidence_field_index.json",
@@ -414,7 +415,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
+      "source_sha256": "b8df7ab4a6d6ae1178b0065eab167e7f66ad4d39d5dac02cb568d8d4da692382",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -448,7 +449,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "7973a24fe82ea022eb353a5b84f05628454022345020057a05609b893dabba76",
+      "source_sha256": "3b2adb5a99a8bdd11795feb8910c2fb53d9c5a73b2daccee422d6fb9746a755c",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -493,12 +494,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/interop_roundtrip_report.json",
       "copied_required": true,
-      "copied_sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/interop_roundtrip_report.json",
@@ -552,7 +553,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "7ffb607bce2707d11feaa37d321a7c6be7c6ef3a9c6be7105e7edc4e8c2f3254",
+      "source_sha256": "d375b3ed509999f4066fda36acde5c47d4213e711579464beeb47cb4fbfb3ea6",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -586,7 +587,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "d7a2249a58d3088ceda285846443bc89a1b25af8bba37a6f2708f220f843b24e",
+      "source_sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -620,7 +621,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "2225a5f0593d04e0a32df47fe2e91a07872219d3309346293b2eb1de0b2b8756",
+      "source_sha256": "",
       "validation_gates": [
         "validate_manuscript"
       ]
@@ -737,12 +738,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/proof_dependency_graph.json",
       "copied_required": true,
-      "copied_sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/proof_dependency_graph.json"
@@ -771,12 +772,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/proof_extraction_index.json",
       "copied_required": true,
-      "copied_sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/proof_extraction_index.json",
@@ -844,12 +845,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/scholarship_source_matrix.json",
       "copied_required": true,
-      "copied_sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/scholarship_source_matrix.json",
@@ -884,12 +885,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/sensitivity_sweep.json",
       "copied_required": true,
-      "copied_sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/sensitivity_sweep.json",
@@ -976,7 +977,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "79c38673a666594140175dcd5bffdce9e0d1da379d36931552aba56a6b043f65",
+      "source_sha256": "fb4a8dc5ad56239bf40d40c847471b941dfa610320a45d919de9b54b9d2a78c7",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -993,11 +994,11 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/sheaf_gluing_certificate.json",
       "copied_required": true,
-      "copied_sha256": "32b0fe5babdf08da39dd0451140d9529a6013fb96125cc983f9b43cfb0ce3139",
+      "copied_sha256": "",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -1014,7 +1015,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "e4f05033424f23fafcdfd98b1707c0047626e1e2912b0e9d84770840966f897b",
+      "source_sha256": "",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -1048,7 +1049,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "333867025a1762b84cc770de08190d1d4f7aeec4ede3a83d7013ea099d9923a9",
+      "source_sha256": "ef8e98052c3224ac9d842998477139e6c91c240daeba9c503fb5485dd7435c1b",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -1363,12 +1364,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/state_space_catalog.json",
       "copied_required": true,
-      "copied_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/state_space_catalog.json",
@@ -1402,12 +1403,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/state_transition_table.json",
       "copied_required": true,
-      "copied_sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/state_transition_table.json"
@@ -1436,12 +1437,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/statistical_visualization_bridge.json",
       "copied_required": true,
-      "copied_sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/statistical_visualization_bridge.json"
@@ -1470,12 +1471,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/theorem_traceability_matrix.json",
       "copied_required": true,
-      "copied_sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/theorem_traceability_matrix.json",
@@ -1553,7 +1554,7 @@
       "copied_required": false,
       "copied_sha256": "",
       "copied_status": "not_required",
-      "freshness_cycle_excluded": true,
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/track_improvement_scope.json"
       ],
@@ -1581,12 +1582,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/track_lane_matrix.json",
       "copied_required": true,
-      "copied_sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/track_lane_matrix.json"
@@ -1616,12 +1617,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/uncertainty_summary.json",
       "copied_required": true,
-      "copied_sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/uncertainty_summary.json",
@@ -1655,13 +1656,13 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/validation_dependency_graph.json",
       "copied_required": true,
-      "copied_sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
+      "copied_sha256": "",
       "copied_status": "deferred",
-      "freshness_cycle_excluded": true,
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/validation_dependency_graph.json"
       ],
@@ -1675,7 +1676,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "94892e333b3c1c6d3af99342c02da2b132f2a8f3f412a8528ce2cb82bde5bf1f",
+      "source_sha256": "678d5ae0afef97efff5c26aecb08f690b114cbe1883cfa90dd84768a067ffccc",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -1689,12 +1690,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "data/validation_gate_index.json",
       "copied_required": true,
-      "copied_sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/data/validation_gate_index.json",
@@ -1728,12 +1729,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "figures/artifact_contract_map.png",
       "copied_required": true,
-      "copied_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/artifact_contract_map.png"
@@ -1749,7 +1750,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "c6af476040278e4a589e0075f3ebdfc1e5f7994e7aa70bc3a6d013620656144f",
+      "source_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
       "validation_gates": [
         "figure_registry",
         "validate_outputs"
@@ -1760,12 +1761,12 @@
       "claim_ids": [],
       "claim_required": false,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "figures/causal_ablation_heatmap.png",
       "copied_required": true,
-      "copied_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/causal_ablation_heatmap.png"
@@ -1812,7 +1813,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "504daf40ff01bc7c9a0edfb8ad0e893edd255631eabfde9416535d81c30c4274",
+      "source_sha256": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -1824,12 +1825,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "figures/scholarship_source_map.png",
       "copied_required": true,
-      "copied_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/scholarship_source_map.png"
@@ -1892,12 +1893,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "figures/semantic_gluing_graph.png",
       "copied_required": true,
-      "copied_sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/semantic_gluing_graph.png"
@@ -1991,13 +1992,13 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "figures/si_belief_trajectory.gif",
       "copied_required": true,
-      "copied_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
-      "copied_status": "matched",
-      "freshness_cycle_excluded": true,
+      "copied_sha256": "",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/si_belief_trajectory.gif"
       ],
@@ -2021,12 +2022,12 @@
       "claim_ids": [],
       "claim_required": false,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "figures/theorem_traceability_graph.png",
       "copied_required": true,
-      "copied_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/figures/theorem_traceability_graph.png"
@@ -2048,18 +2049,52 @@
       ]
     },
     {
+      "artifact": "output/figures/track_lane_promotion_map.png",
+      "claim_ids": [
+        "track_lane_promotion_map_figure"
+      ],
+      "claim_required": true,
+      "contract_complete": true,
+      "copied_exists": false,
+      "copied_parity_ok": true,
+      "copied_path": "figures/track_lane_promotion_map.png",
+      "copied_required": true,
+      "copied_sha256": "",
+      "copied_status": "deferred",
+      "freshness_cycle_excluded": false,
+      "freshness_inputs": [
+        "output/figures/track_lane_promotion_map.png"
+      ],
+      "manuscript_consumers": [
+        "appendix_full_sheaf",
+        "methods_sheaf"
+      ],
+      "negative_control": "artifact_contract_index_row_only_forgery",
+      "pipeline_tracks": [],
+      "producer": "generate_figures.py",
+      "producer_configured": true,
+      "sheaf_tracks": [],
+      "source_exists": true,
+      "source_hash_fresh": true,
+      "source_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
+      "validation_gates": [
+        "figure_registry",
+        "validate_outputs"
+      ]
+    },
+    {
       "artifact": "output/reports/ablation_sensitivity_report.json",
       "claim_ids": [
         "ablation_sensitivity_source_backed"
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/ablation_sensitivity_report.json",
       "copied_required": true,
-      "copied_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/ablation_sensitivity_report.json"
@@ -2089,12 +2124,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/adversarial_audit.json",
       "copied_required": true,
-      "copied_sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/adversarial_audit.json",
@@ -2128,13 +2163,13 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/artifact_diffoscope.json",
       "copied_required": true,
-      "copied_sha256": "dbc1989287c75dd84ff1a6f321da269be43b0e0f528ebf2629e3312447111177",
+      "copied_sha256": "",
       "copied_status": "deferred",
-      "freshness_cycle_excluded": true,
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/artifact_diffoscope.json",
         "src/roadmap_tracks"
@@ -2154,7 +2189,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "1579d08107d55e666c1477316ab48318bf90c0d1f2939e0c586fdbdc76557462",
+      "source_sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2167,11 +2202,11 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/artifact_license_audit.json",
       "copied_required": true,
-      "copied_sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
+      "copied_sha256": "",
       "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
@@ -2193,7 +2228,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "8ed9cc1ab834029c5e57ccfb580f45f550845eda590d225032964c2443e68da9",
+      "source_sha256": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2276,12 +2311,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/counterexample_matrix.json",
       "copied_required": true,
-      "copied_sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/counterexample_matrix.json",
@@ -2335,7 +2370,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "b871c0792536381af7690bd702a27ec0f3e32b8efb7ed124cc781516f0d34628",
+      "source_sha256": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2525,7 +2560,7 @@
       "copied_required": false,
       "copied_sha256": "",
       "copied_status": "not_required",
-      "freshness_cycle_excluded": true,
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/manuscript_staleness_report.json",
         "src/roadmap_tracks"
@@ -2545,7 +2580,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "9356cec4d8bccb9c09f5619dfd44efeaa1d78917fb7560d9e9abd580a3e07ce1",
+      "source_sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2559,12 +2594,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/model_checking_witnesses.json",
       "copied_required": true,
-      "copied_sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/model_checking_witnesses.json",
@@ -2618,7 +2653,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "6e37db96d620ce6ed56523d24f091ec1bc84757d079ab36cd3279b3592c40e91",
+      "source_sha256": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2665,13 +2700,13 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/release_attestation.json",
-      "copied_required": true,
-      "copied_sha256": "e8eabc5528b14f2d31397009f8ecbcd2940164300ed5a6a40718ce3cc884310f",
-      "copied_status": "deferred",
-      "freshness_cycle_excluded": true,
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/release_attestation.json"
       ],
@@ -2686,7 +2721,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "95a9e99af498d5e5779411cb3ac79674029d7fffb06d574638e95e0ad550df4c",
+      "source_sha256": "4b08210beb22bce41c7522e98e38870d9468622da431ffdbf8086775d049bac9",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2705,7 +2740,7 @@
       "copied_required": false,
       "copied_sha256": "",
       "copied_status": "not_required",
-      "freshness_cycle_excluded": true,
+      "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/release_bundle_manifest.json",
         "src/roadmap_tracks"
@@ -2725,7 +2760,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "1694b1040ceb8f36ca3d5189e8a8012f39fed960b67dde64fba0440237763538",
+      "source_sha256": "cd9d472ac18fbf65e67ad436ea1c1f24f5ced422d9a1702e447c6562aedcadb8",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2738,12 +2773,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/release_notes_evidence.json",
-      "copied_required": true,
-      "copied_sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
-      "copied_status": "matched",
+      "copied_required": false,
+      "copied_sha256": "",
+      "copied_status": "not_required",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/release_notes_evidence.json",
@@ -2764,7 +2799,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
+      "source_sha256": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2777,11 +2812,11 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/replay_matrix.json",
       "copied_required": true,
-      "copied_sha256": "0e05ed237022af370ca162eb986ee58a7b07e5278666de20b9b39c31b8d0a646",
+      "copied_sha256": "",
       "copied_status": "deferred",
       "freshness_cycle_excluded": true,
       "freshness_inputs": [
@@ -2803,7 +2838,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "0c70d271f4809353119590bf407bf073125776e7b8e19f1194acce3058aea683",
+      "source_sha256": "",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2869,7 +2904,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
+      "source_sha256": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2882,12 +2917,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/security_posture_audit.json",
       "copied_required": true,
-      "copied_sha256": "997a4db62c5c99d22d108a5726c97d50e52cef474a4ca173b09139c077261e91",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/security_posture_audit.json",
@@ -2942,7 +2977,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0",
+      "source_sha256": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3036,7 +3071,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "1d100be6fa10d2c42da87465437832664130dd000b1d4baa8577b0aae2be27d2",
+      "source_sha256": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3050,12 +3085,12 @@
       ],
       "claim_required": true,
       "contract_complete": true,
-      "copied_exists": true,
+      "copied_exists": false,
       "copied_parity_ok": true,
       "copied_path": "reports/visualization_quality_audit.json",
       "copied_required": true,
-      "copied_sha256": "9e61caeb72a230ec840b710d8eedcaee2f78588352282fe73d429dba7c1ed7b9",
-      "copied_status": "matched",
+      "copied_sha256": "",
+      "copied_status": "deferred",
       "freshness_cycle_excluded": false,
       "freshness_inputs": [
         "output/reports/visualization_quality_audit.json",
@@ -3077,7 +3112,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "9e61caeb72a230ec840b710d8eedcaee2f78588352282fe73d429dba7c1ed7b9",
+      "source_sha256": "696528a937668d83e047b94d30bfb99c16d5f39e6e4689600924385f4eede109",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3143,6 +3178,7 @@
     "output/figures/sheaf_layers_overview.png",
     "output/figures/si_belief_trajectory.gif",
     "output/figures/theorem_traceability_graph.png",
+    "output/figures/track_lane_promotion_map.png",
     "output/reports/ablation_sensitivity_report.json",
     "output/reports/adversarial_audit.json",
     "output/reports/artifact_diffoscope.json",

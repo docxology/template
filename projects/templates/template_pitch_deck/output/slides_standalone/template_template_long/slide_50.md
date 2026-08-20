@@ -1,10 +1,10 @@
-# Where this could go next for your organization
+# What comes next for this exemplar
 
-*Slide 50 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 50 of 57 — template_template pitch, long deck — kind: `content`*
 
-- A grant-report deck generated the same way a manuscript is — bound to the same project data your team already tracks.
-- A recurring quarterly-update deck that regenerates instead of being rebuilt from scratch each cycle.
-- A shared content schema across your organization's decks, so a house style survives staff turnover.
+- Extend token-sourced facts beyond one pitch subject to any exemplar in the roster, so a new deck for a different project needs only new content YAML, not new code.
+- Add a second validated pitch (a broader meta-science-group deck) reusing the same rendering and audit pipeline.
+- Track deck-generation coverage and drift in the same CI gates that already watch every other public exemplar.
 
 ---
 

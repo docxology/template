@@ -14,6 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from json_io import json_payloads_equal
 from json_io import load_json as _load_json
 from json_io import write_json as _write_json
 
@@ -236,37 +237,32 @@ def build_ablation_sensitivity_report(project_root: Path) -> dict[str, Any]:
 
 
 def build_release_attestation(project_root: Path) -> dict[str, Any]:
-    """Attest release bundle, validation, license, and blocked-scope status."""
+    """Attest pre-render evidence while deferring the downstream Stage-4 receipt."""
     root = project_root.resolve()
-    validation_path = root / "output" / "reports" / "validation_report.json"
-    release_path = root / "output" / "reports" / "release_bundle_manifest.json"
     semantic_path = root / "output" / "data" / "sheaf_gluing_certificate.json"
-    validation = _load_json(validation_path)
     release = _load_json(root / "output" / "reports" / "release_bundle_manifest.json")
+    release_notes_path = root / "output" / "reports" / "release_notes_evidence.json"
+    release_notes = _load_json(release_notes_path)
     license_audit = _load_json(root / "output" / "reports" / "artifact_license_audit.json")
     blocked = _load_json(root / "output" / "reports" / "blocked_scope_manifest.json")
     visualization = _load_json(root / "output" / "reports" / "visualization_quality_audit.json")
     statistical_bridge = _load_json(root / "output" / "data" / "statistical_visualization_bridge.json")
     semantic = _load_json(semantic_path)
-    validation_deferred = not validation_path.is_file()
-    if validation_path.is_file() and release_path.is_file():
-        validation_deferred = validation_path.stat().st_mtime < release_path.stat().st_mtime
     semantic_false_restrictions = [key for key, value in (semantic.get("restrictions") or {}).items() if value is False]
     semantic_non_self_false = [
         restriction for restriction in semantic_false_restrictions if restriction != "release_attestation_complete"
     ]
     semantic_passed = semantic.get("ok") is True or (bool(semantic.get("restrictions")) and not semantic_non_self_false)
-    validation_passed = (
-        validation.get("all_passed") is True
-        or validation.get("ok") is True
-        or (validation.get("summary") or {}).get("all_passed") is True
-    )
     rows = [
         {
             "id": "validation_report",
             "source": "output/reports/validation_report.json",
-            "passed": validation_passed if not validation_deferred else False,
-            "deferred_until_validation": validation_deferred,
+            # Stage 4 fingerprints the final rendered outputs.  A pre-render
+            # writer cannot truthfully bless that downstream receipt without
+            # immediately making its output fingerprint stale again.
+            "passed": False,
+            "deferred_until_validation": True,
+            "authority": "stage_04_validate",
         },
         {
             "id": "release_bundle",
@@ -274,6 +270,13 @@ def build_release_attestation(project_root: Path) -> dict[str, Any]:
             "passed": release.get("all_required_sources_present") is True
             and release.get("all_copied_outputs_match_or_deferred") is True,
             "bundle_hash": release.get("bundle_hash", ""),
+            "deferred_until_validation": False,
+        },
+        {
+            "id": "release_notes",
+            "source": "output/reports/release_notes_evidence.json",
+            "passed": release_notes.get("all_notes_source_backed") is True,
+            "source_sha256": _sha256(release_notes_path),
             "deferred_until_validation": False,
         },
         {
@@ -418,9 +421,14 @@ def validate_supplemental_artifacts(project_root: Path) -> list[str]:
     if attestation.get("schema") != "template_active_inference.release_attestation.v1":
         issues.append("release_attestation.json schema mismatch")
     attestation_rows = attestation.get("rows") or []
+    live_attestation = build_release_attestation(root)
     attested = bool(attestation_rows) and all(
         row.get("passed") or row.get("deferred_until_validation") for row in attestation_rows
     )
-    if attestation.get("all_attested") is not True or attestation.get("all_attested") != attested:
+    if (
+        attestation.get("all_attested") is not True
+        or attestation.get("all_attested") != attested
+        or not json_payloads_equal(attestation, live_attestation)
+    ):
         issues.append("release_attestation.json claims a failed gate passed")
     return issues

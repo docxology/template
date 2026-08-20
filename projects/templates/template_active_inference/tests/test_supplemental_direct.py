@@ -7,6 +7,7 @@ never rewritten (see ``direct_recompute_support``).
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from roadmap_tracks.supplemental import (
     validate_supplemental_artifacts,
     write_supplemental_artifacts,
 )
+from roadmap_tracks.integration_audit_artifacts import build_release_notes_evidence
 
 from direct_recompute_support import copy_project_tree
 
@@ -85,10 +87,34 @@ def test_release_attestation_hash_is_deterministic(project_root: Path) -> None:
     first = build_release_attestation(project_root)
     second = build_release_attestation(project_root)
     assert first["attestation_hash"] == second["attestation_hash"]
-    assert first["row_count"] == 7
+    assert first["row_count"] == 8
     assert first["all_attested"] is True
+    rows = {row["id"]: row for row in first["rows"]}
+    assert rows["validation_report"]["authority"] == "stage_04_validate"
+    assert rows["validation_report"]["deferred_until_validation"] is True
+    assert rows["release_notes"]["source_sha256"]
     for row in first["rows"]:
         assert row["passed"] or row["deferred_until_validation"]
+
+
+def test_release_notes_ignore_prior_stage_four_receipt(copied_root: Path) -> None:
+    validation_path = copied_root / "output" / "reports" / "validation_report.json"
+    original = validation_path.read_bytes() if validation_path.is_file() else None
+    try:
+        validation_path.unlink(missing_ok=True)
+        without_receipt = build_release_notes_evidence(copied_root)
+        validation_path.write_text('{"all_passed": true}\n', encoding="utf-8")
+        with_receipt = build_release_notes_evidence(copied_root)
+    finally:
+        if original is None:
+            validation_path.unlink(missing_ok=True)
+        else:
+            validation_path.write_bytes(original)
+
+    assert with_receipt == without_receipt
+    validation_row = next(row for row in with_receipt["rows"] if row["note_id"] == "validation_report_all_passed")
+    assert validation_row["deferred_until_validation"] is True
+    assert validation_row["authority"] == "stage_04_validate"
 
 
 @pytest.mark.timeout(300)
@@ -166,6 +192,47 @@ def test_validate_supplemental_flags_forged_attestation(copied_root: Path) -> No
         # Keep the top-level claim True while every row fails: the validator must
         # catch the row/claim disagreement, not just trust the aggregate flag.
         payload["all_attested"] = True
+        attestation_path.write_text(json.dumps(payload), encoding="utf-8")
+        issues = validate_supplemental_artifacts(copied_root)
+        assert any("claims a failed gate passed" in issue for issue in issues)
+    finally:
+        attestation_path.write_text(original, encoding="utf-8")
+
+
+@pytest.mark.timeout(300)
+def test_validate_supplemental_rejects_json_type_forgery(copied_root: Path) -> None:
+    write_supplemental_artifacts(copied_root)
+    attestation_path = copied_root / SUPPLEMENTAL_ARTIFACTS["release_attestation"]
+    original = attestation_path.read_text(encoding="utf-8")
+    try:
+        payload = json.loads(original)
+        row = next(candidate for candidate in payload["rows"] if candidate["passed"] is True)
+        row["passed"] = 1
+        attestation_path.write_text(json.dumps(payload), encoding="utf-8")
+        issues = validate_supplemental_artifacts(copied_root)
+        assert any("claims a failed gate passed" in issue for issue in issues)
+    finally:
+        attestation_path.write_text(original, encoding="utf-8")
+
+
+@pytest.mark.parametrize("row_id,field", [("release_bundle", "bundle_hash"), ("release_notes", "source_sha256")])
+def test_validate_supplemental_rejects_rehashed_release_binding_forgery(
+    copied_root: Path,
+    row_id: str,
+    field: str,
+) -> None:
+    write_supplemental_artifacts(copied_root)
+    attestation_path = copied_root / SUPPLEMENTAL_ARTIFACTS["release_attestation"]
+    original = attestation_path.read_text(encoding="utf-8")
+    try:
+        payload = json.loads(original)
+        row = next(candidate for candidate in payload["rows"] if candidate["id"] == row_id)
+        row[field] = "0" * 64
+        if row_id == "release_bundle":
+            payload["bundle_hash"] = "0" * 64
+        payload["attestation_hash"] = hashlib.sha256(
+            json.dumps(payload["rows"], sort_keys=True).encode("utf-8")
+        ).hexdigest()
         attestation_path.write_text(json.dumps(payload), encoding="utf-8")
         issues = validate_supplemental_artifacts(copied_root)
         assert any("claims a failed gate passed" in issue for issue in issues)

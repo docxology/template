@@ -17,7 +17,13 @@ from diligence_audit import uncited_fact_slides
 from standalone_slides import attach_qr_urls, write_standalone_slides
 
 from infrastructure.core.exceptions import RenderingError
-from infrastructure.rendering.slide_deck import DeckTheme, SlideBudget, filter_deck_for_budget, render_pdf
+from infrastructure.rendering.slide_deck import (
+    DeckTheme,
+    SlideBudget,
+    filter_deck_for_budget,
+    render_pdf,
+    validate_deck_layout,
+)
 
 DECK_LENGTHS: tuple[str, ...] = ("short", "medium", "long")
 _BUDGETS = {"short": SlideBudget.SHORT, "medium": SlideBudget.MEDIUM, "long": SlideBudget.LONG}
@@ -136,6 +142,7 @@ def render_one_length(
 
     resolved_deck = build_deck_content(raw, tokens, figures_dir=figures_dir)
     budgeted_deck = filter_deck_for_budget(resolved_deck, _BUDGETS[length])
+    validate_deck_layout(budgeted_deck)
     pitch_subject = tokens["PITCH_SUBJECT_NAME"]
 
     standalone_paths = write_standalone_slides(
@@ -178,9 +185,14 @@ def _subject_content_prefix(deck_config: dict, pitch_subject: str) -> str:
 
 
 def _preflight_all_lengths(
-    *, manuscript_dir: Path, repo_root: Path, tokens: dict[str, str], content_prefix: str
+    *,
+    manuscript_dir: Path,
+    repo_root: Path,
+    tokens: dict[str, str],
+    content_prefix: str,
+    figures_dir: Path | None = None,
 ) -> None:
-    """Audit every configured length before any generated output is written."""
+    """Audit and layout-check every length before generated output is touched."""
     for length in DECK_LENGTHS:
         raw = load_deck_yaml(manuscript_dir / f"{content_prefix}_{length}.yaml")
         result = audit_deck(length, raw, tokens)
@@ -192,6 +204,8 @@ def _preflight_all_lengths(
             raise DiligenceAuditFailure(
                 f"[{length}] {len(uncited)} fact-bearing slide(s) with no source citation: {titles}"
             )
+        resolved_deck = build_deck_content(raw, tokens, figures_dir=figures_dir)
+        validate_deck_layout(filter_deck_for_budget(resolved_deck, _BUDGETS[length]))
 
 
 def render_all_decks(
@@ -205,9 +219,6 @@ def render_all_decks(
     figures_dir = project_root / "output" / "figures"
     pdf_dir = project_root / "output" / "pdf"
     pptx_dir = project_root / "output" / "pptx"
-    pdf_dir.mkdir(parents=True, exist_ok=True)
-    pptx_dir.mkdir(parents=True, exist_ok=True)
-
     deck_config = load_deck_config(project_root)
     theme = _resolve_theme(deck_config)
     source_base_url = deck_config.get("source_base_url", "")
@@ -219,10 +230,13 @@ def render_all_decks(
         repo_root=repo_root,
         tokens=tokens,
         content_prefix=content_prefix,
+        figures_dir=figures_dir,
     )
 
     formats = _configured_formats(deck_config)
     render_pptx_fn = _select_pptx_renderer(formats, _try_import_render_pptx())
+    pdf_dir.mkdir(parents=True, exist_ok=True)
+    pptx_dir.mkdir(parents=True, exist_ok=True)
 
     written: list[Path] = []
     for length in DECK_LENGTHS:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import cast
 
 import yaml
@@ -29,6 +29,63 @@ def parse_missing(value: str | None, fallback: MissingTrackPolicy) -> MissingTra
         return fallback
 
 
+def validate_relative_path(
+    value: str | Path,
+    *,
+    field: str,
+    basename_only: bool = False,
+) -> Path:
+    """Return a portable relative path or fail closed on ambiguous input."""
+    raw = str(value)
+    path = Path(raw)
+    windows_path = PureWindowsPath(raw)
+    if (
+        not raw
+        or raw in {".", ".."}
+        or path.is_absolute()
+        or windows_path.is_absolute()
+        or windows_path.drive
+        or "\\" in raw
+        or ".." in path.parts
+        or ".." in windows_path.parts
+    ):
+        raise ValueError(f"{field} must be a portable project-relative path: {raw!r}")
+    if basename_only and (len(path.parts) != 1 or path.name != raw):
+        raise ValueError(f"{field} must be a basename, not a path: {raw!r}")
+    return path
+
+
+def resolve_project_relative_path(
+    project_root: Path,
+    value: str | Path,
+    *,
+    field: str,
+    basename_only: bool = False,
+) -> Path:
+    """Resolve a declared path beneath ``project_root`` without following links."""
+    root = project_root.resolve()
+    rel = validate_relative_path(value, field=field, basename_only=basename_only)
+    candidate = root
+    for part in rel.parts:
+        candidate = candidate / part
+        if candidate.is_symlink():
+            raise ValueError(f"{field} must not contain symlink components: {value!s}")
+    resolved = candidate.resolve(strict=False)
+    if resolved != root and root not in resolved.parents:
+        raise ValueError(f"{field} escapes the project root: {value!s}")
+    return candidate
+
+
+def reject_symlink_components(path: Path, *, field: str) -> None:
+    """Reject any existing symlink component in an arbitrary output path."""
+    absolute = path.absolute()
+    candidate = Path(absolute.anchor)
+    for part in absolute.parts[1:]:
+        candidate = candidate / part
+        if candidate.is_symlink():
+            raise ValueError(f"{field} must not contain symlink components: {path}")
+
+
 def load_manifest(
     manifest_path: Path,
     *,
@@ -43,7 +100,12 @@ def load_manifest(
         root = manifest_path.parent.parent.parent
     else:
         root = manifest_path.parent
-    registry = registry_path or (root / DEFAULT_REGISTRY_REL)
+    registry = (
+        validate_relative_path(registry_path, field="manifest registry_path")
+        if registry_path is not None
+        else DEFAULT_REGISTRY_REL
+    )
+    resolve_project_relative_path(root, registry, field="manifest registry_path")
     raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
     defaults_raw = raw.get("defaults") or {}
     manifest_defaults = SheafDefaults(
@@ -51,7 +113,17 @@ def load_manifest(
     )
     sections: list[SheafSection] = []
     for entry in raw.get("sections") or []:
-        tracks = {str(k): str(v) for k, v in dict(entry.get("tracks") or {}).items()}
+        section_id = str(entry["id"])
+        tracks: dict[str, str] = {}
+        for key, value in dict(entry.get("tracks") or {}).items():
+            track_id = str(key)
+            rel = str(value)
+            resolve_project_relative_path(
+                root,
+                rel,
+                field=f"{section_id}/{track_id} track path",
+            )
+            tracks[track_id] = rel
         include = entry.get("include_tracks")
         exclude = entry.get("exclude_tracks")
         order_override = entry.get("track_order")
@@ -76,14 +148,20 @@ def load_manifest(
             compose = kind == "section"
         else:
             compose = bool(compose_raw)
+        output_name = str(entry.get("output_name", f"{entry['order']:02d}_{entry['id']}.md"))
+        validate_relative_path(
+            output_name,
+            field=f"{section_id} output_name",
+            basename_only=True,
+        )
         sections.append(
             SheafSection(
-                id=str(entry["id"]),
+                id=section_id,
                 title=str(entry["title"]),
                 short=str(entry.get("short", entry["id"])),
                 order=int(entry["order"]),
                 tracks=tracks,
-                output_name=str(entry.get("output_name", f"{entry['order']:02d}_{entry['id']}.md")),
+                output_name=output_name,
                 kind=kind,
                 imrad=imrad,
                 depth=depth,

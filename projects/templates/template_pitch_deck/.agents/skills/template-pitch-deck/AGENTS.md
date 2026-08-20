@@ -25,8 +25,10 @@ Agents that need to:
 | Unresolved `{{TOKEN}}` fails the build | `src/token_resolution.py::resolve_tokens` (raises `UnresolvedTokenError`) |
 | Cliché is a checked gate | `src/cliche_lint.py::lint_deck_texts` (word-boundary denylist) |
 | Fact-bearing slides must carry a `source` citation | `src/diligence_audit.py::uncited_fact_slides` + `DiligenceAuditFailure` in `render_one_length` |
-| PDF ↔ PPTX parity is load-bearing | shared font-size constants in `infrastructure/rendering/slide_deck.py`, imported by `pptx_deck.py` |
+| PDF ↔ PPTX parity is load-bearing | shared exact title fitter + content layout plan in `infrastructure/rendering/slide_deck.py`, consumed by `pptx_deck.py` |
 | Slide budgets 11/38/58 | `infrastructure/rendering/slide_deck.py::SlideBudget` |
+| Authored flagship decks stay within their budgets | source YAML + content-contract test; medium and long preserve the exact live cited roster split |
+| Donut percentage contrast ≥ 4.5:1 | alpha-composited real-artist selection in `src/chart_rendering.py` + no-mock artist tests |
 | No-mocks testing, 90% src coverage floor | `tests/` + `pyproject.toml` `[tool.coverage.report] fail_under = 90` |
 
 ## Cross-refs

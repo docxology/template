@@ -16,9 +16,11 @@ from manuscript.sheaf import (
     parse_missing,
 )
 from manuscript.sheaf.cli import build_parser, run_compose_cli
+from manuscript.sheaf.renderers import _render_ontology
 
 _parse_missing = parse_missing
 pytestmark = [pytest.mark.timeout(120)]
+_ABSOLUTE_OUTSIDE_TRACK = str(Path(Path.cwd().anchor) / "tmp" / "outside.md")
 
 
 def test_compose_writes_markdown_sections(tmp_path: Path) -> None:
@@ -40,6 +42,29 @@ def test_discussion_ontology_renders_labels_not_raw_yaml() -> None:
     text = compose_section(section, root, registry=registry)
     assert "**Pedagogical scope**" in text
     assert "label:" not in text
+
+
+def test_ontology_renderer_keeps_normal_markdown_inside_pdf_only_samepage() -> None:
+    root = Path(__file__).resolve().parents[1]
+    ontology = root / "manuscript" / "sections" / "imrad" / "methods_pymdp" / "ontology.yaml"
+    text = _render_ontology(ontology)
+    latex_begin = "```{=latex}\n\\begin{samepage}\n```"
+    latex_end = "```{=latex}\n\\end{samepage}\n```"
+
+    assert text.startswith(f"{latex_begin}\n\n### Ontology bindings\n\n")
+    assert text.rstrip().endswith(latex_end)
+    assert text.index(latex_begin) < text.index("### Ontology bindings") < text.index(latex_end)
+    assert "```{=html}" not in text
+
+    html_markdown = text.replace(latex_begin, "").replace(latex_end, "").strip()
+    assert html_markdown.splitlines() == [
+        "### Ontology bindings",
+        "",
+        "- `belief_entropy` → **BeliefEntropy**",
+        "- `loc` → **HiddenState**",
+        "- `obs` → **ObservationLikelihood**",
+        "- `pi` → **PolicyPosterior**",
+    ]
 
 
 def test_compose_filters_enabled_tracks() -> None:
@@ -130,6 +155,65 @@ def test_compose_warn_policy_records_issue() -> None:
     )
     assert text.startswith("# Warn {#sec:warn}")
     assert any(i.code == "missing_track_at_compose" for i in issues)
+
+
+@pytest.mark.parametrize("track_path", ["../outside.md", _ABSOLUTE_OUTSIDE_TRACK, "linked/outside.md"])
+def test_compose_section_rejects_unsafe_track_paths(tmp_path: Path, track_path: str) -> None:
+    if track_path == _ABSOLUTE_OUTSIDE_TRACK:
+        assert Path(track_path).is_absolute()
+    root = tmp_path / "project"
+    outside = tmp_path / "outside"
+    root.mkdir()
+    outside.mkdir()
+    (outside / "outside.md").write_text("outside\n", encoding="utf-8")
+    (root / "linked").symlink_to(outside, target_is_directory=True)
+    registry = load_track_registry(Path(__file__).resolve().parents[1] / "manuscript" / "sheaf" / "tracks.yaml")
+    section = SheafSection(
+        id="unsafe",
+        title="Unsafe",
+        short="u",
+        order=1,
+        tracks={"prose": track_path},
+        output_name="01_unsafe.md",
+    )
+
+    with pytest.raises(ValueError, match="project-relative path|symlink"):
+        compose_section(section, root, registry=registry)
+
+    assert (outside / "outside.md").read_text(encoding="utf-8") == "outside\n"
+
+
+def test_compose_rejects_output_name_escape_before_write(tmp_path: Path) -> None:
+    root = write_cli_fixture_project(tmp_path)
+    manifest = root / "manuscript" / "sheaf" / "manifest.yaml"
+    manifest.write_text(
+        "sections:\n"
+        "  - id: escape\n"
+        "    order: 1\n"
+        "    title: Escape\n"
+        "    output_name: ../escaped.md\n"
+        "    tracks:\n"
+        "      prose: manuscript/sections/demo/prose.md\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="output_name"):
+        compose_all_sections(root, manuscript_dir=tmp_path / "rendered", options=ComposeOptions(strict=True))
+
+    assert not (tmp_path / "escaped.md").exists()
+
+
+def test_compose_rejects_symlink_component_in_output_directory(tmp_path: Path) -> None:
+    root = write_cli_fixture_project(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    link = tmp_path / "linked-output"
+    link.symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symlink components"):
+        compose_all_sections(root, manuscript_dir=link / "nested")
+
+    assert not (outside / "nested").exists()
 
 
 def test_compose_single_section_filter(tmp_path: Path) -> None:

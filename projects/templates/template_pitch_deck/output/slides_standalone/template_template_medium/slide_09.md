@@ -1,6 +1,6 @@
 # Metrics and injection
 
-*Slide 9 of 37 — template_template pitch, medium deck — kind: `content`*
+*Slide 9 of 38 — template_template pitch, medium deck — kind: `content`*
 
 - metrics.py turns the introspection scan into a dictionary of ${variable} values — the same token convention used across every exemplar's manuscript.
 - inject_metrics.py substitutes those values into manuscript/*.md, writing the resolved text to output/manuscript/ for rendering.

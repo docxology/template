@@ -859,6 +859,22 @@
         "figure_registry"
       ]
     },
+    "output/figures/track_lane_promotion_map.png": {
+      "claim_ids": [
+        "track_lane_promotion_map_figure"
+      ],
+      "consumers": [
+        "methods_sheaf",
+        "appendix_full_sheaf"
+      ],
+      "exists": true,
+      "produced_by_configured_analysis": true,
+      "producer": "generate_figures.py",
+      "validation_gates": [
+        "validate_outputs",
+        "figure_registry"
+      ]
+    },
     "output/reports/ablation_sensitivity_report.json": {
       "claim_ids": [
         "ablation_sensitivity_source_backed"
@@ -2981,7 +2997,7 @@
         },
         "id": "track_lane_promotion_map_figure",
         "path": "output/figures/track_lane_promotion_map.png",
-        "producer": "manual",
+        "producer": "generate_figures.py",
         "section": "methods_sheaf",
         "statement": "Track-lane promotion map figure is generated from the canonical promotion matrix and Lean promotion-proof boundary.",
         "tracks": [
@@ -2991,7 +3007,8 @@
           "lean"
         ],
         "validation_gates": [
-          "validate_outputs"
+          "validate_outputs",
+          "figure_registry"
         ]
       },
       {
@@ -4973,11 +4990,11 @@
     "appendix_sheaf_track_count": 33,
     "artifact_contract_complete": true,
     "artifact_contract_copied_parity_complete": true,
-    "artifact_contract_row_count": 85,
+    "artifact_contract_row_count": 86,
     "artifact_diffoscope_all_equal": true,
-    "artifact_diffoscope_row_count": 40,
+    "artifact_diffoscope_row_count": 43,
     "artifact_license_all_safe": true,
-    "artifact_license_row_count": 85,
+    "artifact_license_row_count": 86,
     "benchmark_all_models_complete": true,
     "benchmark_model_count": 3,
     "bernoulli_ontology_term_count": 8,
@@ -5056,7 +5073,7 @@
     "provenance_all_source_commits": true,
     "provenance_bundle_complete": true,
     "provenance_bundle_count": 5,
-    "provenance_seeded_count": 85,
+    "provenance_seeded_count": 86,
     "pymdp_config_hash": "133a13df72cfd8d8",
     "pymdp_horizon": 2,
     "pymdp_mode": "state_inference",
@@ -5068,8 +5085,8 @@
     "pymdp_runtime_unexpected_warning_count": 0,
     "random_seed": 0,
     "release_attestation_all_attested": true,
-    "release_attestation_row_count": 7,
-    "release_bundle_artifact_count": 38,
+    "release_attestation_row_count": 8,
+    "release_bundle_artifact_count": 36,
     "release_bundle_sources_present": true,
     "release_notes_row_count": 3,
     "release_notes_source_backed": true,
@@ -5143,7 +5160,7 @@
     "si_trace_finite": true,
     "si_trace_steps_match": true,
     "stale_artifact_all_fresh": true,
-    "stale_artifact_fresh_count": 42,
+    "stale_artifact_fresh_count": 43,
     "state_space_catalog_all_finite": true,
     "state_space_catalog_row_count": 6,
     "state_transition_all_covered": true,
@@ -5167,7 +5184,7 @@
     "uncertainty_bin_count": 3,
     "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
-    "validation_spine_artifact_count": 85,
+    "validation_spine_artifact_count": 86,
     "visualization_figures_section_bound": true,
     "visualization_intent_metadata_complete": true,
     "visualization_paper_claims_complete": true,
@@ -5709,8 +5726,8 @@
     "pymdp_runtime_phase_rows_ok": true,
     "pymdp_runtime_unexpected_warning_count": 0,
     "release_attestation_complete": true,
-    "release_attestation_row_count": 7,
-    "release_bundle_artifact_count": 38,
+    "release_attestation_row_count": 8,
+    "release_bundle_artifact_count": 36,
     "release_bundle_parity_ok": true,
     "release_bundle_sources_present": true,
     "release_notes_source_backed": true,

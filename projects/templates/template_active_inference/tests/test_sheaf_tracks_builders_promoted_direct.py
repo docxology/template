@@ -12,10 +12,13 @@ from pathlib import Path
 import pytest
 
 from roadmap_tracks.sheaf_tracks_builders_release import (
+    RELEASE_BUNDLE_REQUIRED_ARTIFACTS,
     build_evidence_field_index,
     build_release_bundle_manifest,
     build_theorem_traceability_matrix,
 )
+from roadmap_tracks.sheaf_tracks_io import _artifact_maps, _sha256
+from roadmap_tracks.sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
 from roadmap_tracks.sheaf_tracks_builders_toy import (
     build_sensitivity_sweep,
     build_uncertainty_summary,
@@ -34,10 +37,45 @@ def test_release_bundle_manifest_has_schema_and_rows(project_root: Path) -> None
     """Exercise the release-bundle builder end-to-end against the snapshot."""
     payload = build_release_bundle_manifest(project_root)
     assert payload["schema"] == "template_active_inference.release_bundle_manifest.v1"
+    assert payload["manifest_phase"] == "pre-render-pre-copy"
+    assert payload["terminal_hash_authority"] == HASH_CYCLE_AUTHORITY
     assert payload["artifact_count"] == len(payload["rows"]) > 0
+    assert [row["artifact"] for row in payload["rows"]] == list(RELEASE_BUNDLE_REQUIRED_ARTIFACTS)
+    assert "output/web/index.html" in RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+    assert "output/web/template_active_inference.html" not in RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+    assert "output/reports/release_notes_evidence.json" not in RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+    assert "output/reports/release_attestation.json" not in RELEASE_BUNDLE_REQUIRED_ARTIFACTS
+    producers, _, _ = _artifact_maps()
     for row in payload["rows"]:
         assert "artifact" in row
         assert "source_exists" in row or "deferred_until_render" in row
+        rel = row["artifact"]
+        producer = producers.get(rel, "generate_figures.py" if rel.endswith(".png") else "")
+        excluded = hash_cycle_excluded(rel, producer)
+        assert row["hash_cycle_excluded"] is excluded
+        if excluded:
+            assert row["source_sha256"] == ""
+            assert row["hash_authority"] == HASH_CYCLE_AUTHORITY
+        else:
+            assert row["source_sha256"] == _sha256(project_root / rel)
+            assert row["hash_authority"] == "this_record"
+    semantic_row = next(
+        row for row in payload["rows"] if row["artifact"] == "output/data/sheaf_gluing_certificate.json"
+    )
+    assert semantic_row["source_exists"] is True
+    assert semantic_row["hash_cycle_excluded"] is True
+    assert semantic_row["source_sha256"] == ""
+    assert semantic_row["hash_authority"] == HASH_CYCLE_AUTHORITY
+    copied = payload["copied_output_parity"]
+    assert copied["parity_authority"] == "stage_05_copy"
+    assert copied["pre_copy_stage"] is True
+    assert all(row["status"] == "deferred" for row in copied["rows"])
+    assert all(not row["source_sha256"] and not row["copied_sha256"] for row in copied["rows"])
+    copied_by_artifact = {row["artifact"]: row for row in copied["rows"]}
+    for rel in RELEASE_BUNDLE_REQUIRED_ARTIFACTS:
+        producer = producers.get(rel, "generate_figures.py" if rel.endswith(".png") else "")
+        assert copied_by_artifact[rel]["hash_cycle_excluded"] is hash_cycle_excluded(rel, producer)
+        assert copied_by_artifact[rel]["hash_authority"] == HASH_CYCLE_AUTHORITY
 
 
 def test_release_bundle_required_sources_have_existence_state(project_root: Path) -> None:

@@ -294,7 +294,7 @@
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "f9d1e7e4f60cd0ec5c972cd83dddaeff614a012a74889199dcbac2fa14156df7",
+      "sha256": "6863b93fbc2675bfdd420a96b52ae9e04c15e6cd168eca1b2c14519fe4fe52d7",
       "size_bytes": 21900
     },
     "combined_manuscript": {
@@ -388,7 +388,7 @@
       },
       "output": {
         "file_count": 67,
-        "sha256": "b845b1664bc0fc9a3f49773574619671a82e2b7a196f6f5d731c049d62c06cd8"
+        "sha256": "c6c86ea896b6465def24551e06aaa13525a38f31d98598c0c6382f7b7a1cb550"
       },
       "source": {
         "file_count": 41,
@@ -396,7 +396,7 @@
       },
       "stage": {
         "file_count": 1245,
-        "sha256": "c3987bc0c93e157f2c5817a6b01fd9b8edd8068e92a7f09fa25009a53522e90a"
+        "sha256": "995e28968b759eff7a40a013636e8ba22c114cb59c67b7b15c80e2799e9e1149"
       }
     },
     "project": "templates/template_madlib",

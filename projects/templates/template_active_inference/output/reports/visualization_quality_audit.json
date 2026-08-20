@@ -87,7 +87,7 @@
     {
       "accessibility_text_ok": true,
       "alt_word_count": 33,
-      "aspect_ratio": 0.6226158038147139,
+      "aspect_ratio": 0.616235167206041,
       "aspect_ratio_ok": true,
       "caption_word_count": 37,
       "claim_lane_count": 2,
@@ -102,7 +102,7 @@
       "exists": true,
       "figure_id": "artifact_contract_map",
       "hash_present": true,
-      "height_px": 3670,
+      "height_px": 3708,
       "mode": "RGB",
       "nonblank": true,
       "paper_claim": "The artifact contract map makes producer, validator, claim, freshness, and copied-output parity obligations inspectable for every generated artifact in the semantic contract.",
@@ -117,7 +117,7 @@
         "methods_sheaf"
       ],
       "section_bound": true,
-      "size_bytes": 466540,
+      "size_bytes": 472268,
       "source_backed": true,
       "source_mapped": true,
       "sources": [

@@ -199,7 +199,7 @@
         "valid": true,
         "warnings": []
       },
-      "total_size_mb": 0.8397178649902344
+      "total_size_mb": 0.838932991027832
     },
     "figures": {
       "files": 4,
@@ -230,7 +230,7 @@
         },
         "slides": {
           "files": 9,
-          "size_bytes": 438757
+          "size_bytes": 437934
         },
         "web": {
           "files": 12,
@@ -239,7 +239,7 @@
       },
       "mode": "stable-shippable-output-v1",
       "total_files": 32,
-      "total_size_bytes": 880508
+      "total_size_bytes": 879685
     }
   },
   "recommendations": [],
@@ -254,7 +254,7 @@
   "validated_inputs": {
     "artifact_manifest": {
       "path": "output/reports/artifact_manifest.json",
-      "sha256": "e9fb5af1d4c06110765f597163d26d232c6a3e8426d651fbd81107cf132e7bb9",
+      "sha256": "752c1c2d534313236e89238fd1a93d8575fd1fa249dd720bdcf1a80a15dc73c2",
       "size_bytes": 10522
     },
     "combined_manuscript": {
@@ -330,7 +330,7 @@
       },
       "output": {
         "file_count": 32,
-        "sha256": "edb3ba99568ed75226a6bf619e7c0d4e4c112f388ad29813587aa4ff0f8d404e"
+        "sha256": "6c14ac84212d022a18dc16b27e3a13d23517cd18a0bbabc6e114a31a12817b5a"
       },
       "source": {
         "file_count": 34,
@@ -338,7 +338,7 @@
       },
       "stage": {
         "file_count": 1245,
-        "sha256": "c3987bc0c93e157f2c5817a6b01fd9b8edd8068e92a7f09fa25009a53522e90a"
+        "sha256": "995e28968b759eff7a40a013636e8ba22c114cb59c67b7b15c80e2799e9e1149"
       }
     },
     "project": "templates/template_eda_notebook",

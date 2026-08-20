@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="generator" content="pandoc 3.10.2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Daniel Ari Friedman" />
   <meta name="description" content="A public exemplar for autoresearch, metric loops, evidence ledgers, review gates, and template orchestration" />
@@ -3257,595 +3257,340 @@ the generation method, source artifact, and claim boundary for
 validation.</figcaption>
 </figure>
 <table id="tbl:autoresearch-loop">
-<caption>Table 22: Generated artifact manifest from
-<code>output/reports/artifact_manifest.json</code>.</caption>
+<caption>Table 22: Reviewed upstream analysis and evidence paths from
+<code>output/reports/artifact_manifest.json</code>; unreviewed paths are
+omitted, and that terminal manifest remains the complete byte
+authority.</caption>
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr>
 <th>Artifact</th>
 <th>Role</th>
-<th>Bytes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>output/data/autoresearch_claims.json</td>
 <td>Loop artifact</td>
-<td>1766</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_evidence_overview.json</td>
 <td>Evidence registry</td>
-<td>4436</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_integrity_attestation.json</td>
 <td>Security evidence</td>
-<td>22755</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_inventory_export.json</td>
 <td>Security evidence</td>
-<td>20197</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_loop.json</td>
 <td>Loop artifact</td>
-<td>16085</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_phase_ledger.json</td>
 <td>Run or candidate ledger</td>
-<td>3779</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_plan.json</td>
 <td>Loop artifact</td>
-<td>19818</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_review_packet.json</td>
 <td>Review packet</td>
-<td>16204</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_schema_manifest.json</td>
 <td>Loop artifact</td>
-<td>7226</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_security_profile.json</td>
 <td>Security evidence</td>
-<td>1537</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_stage_matrix.csv</td>
 <td>Loop artifact</td>
-<td>749</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_supply_chain_inventory.json</td>
 <td>Security evidence</td>
-<td>21453</td>
 </tr>
 <tr>
 <td>output/data/autoresearch_threat_model.json</td>
 <td>Security evidence</td>
-<td>6370</td>
 </tr>
 <tr>
 <td>output/data/benchmark_boundary.json</td>
 <td>Benchmark grading</td>
-<td>2363</td>
 </tr>
 <tr>
 <td>output/data/benchmark_scores.json</td>
 <td>Benchmark grading</td>
-<td>621</td>
 </tr>
 <tr>
 <td>output/data/figure_quality_report.json</td>
 <td>Loop artifact</td>
-<td>16041</td>
 </tr>
 <tr>
 <td>output/data/figure_style.json</td>
 <td>Loop artifact</td>
-<td>1117</td>
 </tr>
 <tr>
 <td>output/data/idea_ledger.json</td>
 <td>Run or candidate ledger</td>
-<td>5233</td>
-</tr>
-<tr>
-<td>output/data/manuscript_figure_blocks.json</td>
-<td>Manuscript hydration</td>
-<td>13062</td>
-</tr>
-<tr>
-<td>output/data/manuscript_variable_provenance.json</td>
-<td>Manuscript hydration</td>
-<td>30891</td>
-</tr>
-<tr>
-<td>output/data/manuscript_variables.json</td>
-<td>Manuscript hydration</td>
-<td>57706</td>
 </tr>
 <tr>
 <td>output/data/ml_bootstrap_intervals.json</td>
 <td>Loop artifact</td>
-<td>615</td>
 </tr>
 <tr>
 <td>output/data/ml_calibration_bin_intervals.json</td>
 <td>Loop artifact</td>
-<td>2879</td>
 </tr>
 <tr>
 <td>output/data/ml_calibration_report.json</td>
 <td>Loop artifact</td>
-<td>2201</td>
 </tr>
 <tr>
 <td>output/data/ml_candidate_intervals.json</td>
 <td>Loop artifact</td>
-<td>1577</td>
 </tr>
 <tr>
 <td>output/data/ml_candidate_ledger.json</td>
 <td>Run or candidate ledger</td>
-<td>570872</td>
 </tr>
 <tr>
 <td>output/data/ml_candidate_rank_stability.json</td>
 <td>Loop artifact</td>
-<td>3135</td>
 </tr>
 <tr>
 <td>output/data/ml_candidate_selection_audit.json</td>
 <td>Loop artifact</td>
-<td>2145</td>
 </tr>
 <tr>
 <td>output/data/ml_class_balance.json</td>
 <td>Loop artifact</td>
-<td>2393</td>
 </tr>
 <tr>
 <td>output/data/ml_classification_diagnostics.json</td>
 <td>Loop artifact</td>
-<td>4246</td>
 </tr>
 <tr>
 <td>output/data/ml_confusion_matrix.csv</td>
 <td>Loop artifact</td>
-<td>271</td>
 </tr>
 <tr>
 <td>output/data/ml_diagnostic_boundary.json</td>
 <td>Loop artifact</td>
-<td>2064</td>
 </tr>
 <tr>
 <td>output/data/ml_error_examples.json</td>
 <td>Loop artifact</td>
-<td>989</td>
 </tr>
 <tr>
 <td>output/data/ml_paired_comparison.json</td>
 <td>Loop artifact</td>
-<td>470</td>
 </tr>
 <tr>
 <td>output/data/ml_prediction_records.json</td>
 <td>Loop artifact</td>
-<td>989913</td>
 </tr>
 <tr>
 <td>output/data/ml_probability_diagnostics.json</td>
 <td>Loop artifact</td>
-<td>3045</td>
 </tr>
 <tr>
 <td>output/data/ml_robustness_report.json</td>
 <td>Loop artifact</td>
-<td>3758</td>
 </tr>
 <tr>
 <td>output/data/ml_statistical_summary.json</td>
 <td>Loop artifact</td>
-<td>3032</td>
 </tr>
 <tr>
 <td>output/data/ml_task_results.json</td>
 <td>Loop artifact</td>
-<td>703566</td>
 </tr>
 <tr>
 <td>output/data/ml_training_diagnostics.json</td>
 <td>Loop artifact</td>
-<td>2968</td>
 </tr>
 <tr>
 <td>output/data/ml_training_history.csv</td>
 <td>Loop artifact</td>
-<td>6775</td>
 </tr>
 <tr>
 <td>output/data/mnist_task_config.json</td>
 <td>Loop artifact</td>
-<td>3926</td>
-</tr>
-<tr>
-<td>output/data/publication_ledger.json</td>
-<td>Run or candidate ledger</td>
-<td>1005</td>
 </tr>
 <tr>
 <td>output/data/research_object_manifest.json</td>
 <td>Loop artifact</td>
-<td>20789</td>
 </tr>
 <tr>
 <td>output/data/research_program.json</td>
 <td>Loop artifact</td>
-<td>965</td>
 </tr>
 <tr>
 <td>output/data/review_decisions.json</td>
 <td>Review packet</td>
-<td>669</td>
 </tr>
 <tr>
 <td>output/data/run_ledger.json</td>
 <td>Run or candidate ledger</td>
-<td>328</td>
-</tr>
-<tr>
-<td>output/data/transmission_manifest.json</td>
-<td>Loop artifact</td>
-<td>503</td>
 </tr>
 <tr>
 <td>../figures/autoresearch_candidate_lifecycle.png</td>
 <td>Generated figure</td>
-<td>28056</td>
 </tr>
 <tr>
 <td>../figures/autoresearch_closure_flow.png</td>
 <td>Generated figure</td>
-<td>40873</td>
 </tr>
 <tr>
 <td>../figures/autoresearch_integrity_chain.png</td>
 <td>Generated figure</td>
-<td>48228</td>
 </tr>
 <tr>
 <td>../figures/autoresearch_security_control_matrix.png</td>
 <td>Generated figure</td>
-<td>86494</td>
 </tr>
 <tr>
 <td>../figures/autoresearch_stage_matrix.png</td>
 <td>Generated figure</td>
-<td>23486</td>
 </tr>
 <tr>
 <td>../figures/figure_registry.json</td>
 <td>Loop artifact</td>
-<td>30674</td>
 </tr>
 <tr>
 <td>../figures/ml_bootstrap_intervals.png</td>
 <td>Generated figure</td>
-<td>21830</td>
 </tr>
 <tr>
 <td>../figures/ml_calibration_reliability.png</td>
 <td>Generated figure</td>
-<td>73855</td>
 </tr>
 <tr>
 <td>../figures/ml_candidate_rank_stability.png</td>
 <td>Generated figure</td>
-<td>43670</td>
 </tr>
 <tr>
 <td>../figures/ml_candidate_scores.png</td>
 <td>Generated figure</td>
-<td>59947</td>
 </tr>
 <tr>
 <td>../figures/ml_classification_metrics_heatmap.png</td>
 <td>Generated figure</td>
-<td>55133</td>
 </tr>
 <tr>
 <td>../figures/ml_complexity_accuracy.png</td>
 <td>Generated figure</td>
-<td>35016</td>
 </tr>
 <tr>
 <td>../figures/ml_confusion_matrix.png</td>
 <td>Generated figure</td>
-<td>65918</td>
 </tr>
 <tr>
 <td>../figures/ml_confusion_pairs.png</td>
 <td>Generated figure</td>
-<td>33982</td>
 </tr>
 <tr>
 <td>../figures/ml_generalization_gap.png</td>
 <td>Generated figure</td>
-<td>48554</td>
 </tr>
 <tr>
 <td>../figures/ml_learning_curves.png</td>
 <td>Generated figure</td>
-<td>59360</td>
 </tr>
 <tr>
 <td>../figures/ml_paired_correctness.png</td>
 <td>Generated figure</td>
-<td>43306</td>
 </tr>
 <tr>
 <td>../figures/ml_per_class_accuracy.png</td>
 <td>Generated figure</td>
-<td>34938</td>
 </tr>
 <tr>
 <td>../figures/ml_probability_margin_distribution.png</td>
 <td>Generated figure</td>
-<td>41747</td>
 </tr>
 <tr>
 <td>../figures/ml_probability_quality.png</td>
 <td>Generated figure</td>
-<td>38072</td>
 </tr>
 <tr>
 <td>../figures/ml_robustness_matrix.png</td>
 <td>Generated figure</td>
-<td>51292</td>
 </tr>
 <tr>
 <td>../figures/ml_selective_accuracy.png</td>
 <td>Generated figure</td>
-<td>48332</td>
 </tr>
 <tr>
 <td>../figures/ml_training_dynamics.png</td>
 <td>Generated figure</td>
-<td>50908</td>
 </tr>
 <tr>
 <td>../figures/mnist_class_balance.png</td>
 <td>Generated figure</td>
-<td>27006</td>
 </tr>
 <tr>
 <td>../figures/mnist_error_examples.png</td>
 <td>Generated figure</td>
-<td>28446</td>
 </tr>
 <tr>
 <td>../figures/mnist_subset_contact_sheet.png</td>
 <td>Generated figure</td>
-<td>23682</td>
-</tr>
-<tr>
-<td>../figures/transmission_integrity_strip.png</td>
-<td>Generated figure</td>
-<td>18338</td>
-</tr>
-<tr>
-<td>../figures/transmission_pairing.png</td>
-<td>Generated figure</td>
-<td>11314</td>
-</tr>
-<tr>
-<td>output/manuscript/00_abstract.md</td>
-<td>Manuscript hydration</td>
-<td>1451</td>
-</tr>
-<tr>
-<td>output/manuscript/01_introduction.md</td>
-<td>Manuscript hydration</td>
-<td>14774</td>
-</tr>
-<tr>
-<td>output/manuscript/02_methodology.md</td>
-<td>Manuscript hydration</td>
-<td>21101</td>
-</tr>
-<tr>
-<td>output/manuscript/03_results.md</td>
-<td>Manuscript hydration</td>
-<td>42052</td>
-</tr>
-<tr>
-<td>output/manuscript/04_conclusion.md</td>
-<td>Manuscript hydration</td>
-<td>2642</td>
-</tr>
-<tr>
-<td>output/manuscript/99_references.md</td>
-<td>Manuscript hydration</td>
-<td>58</td>
-</tr>
-<tr>
-<td>output/manuscript/config.yaml</td>
-<td>Manuscript hydration</td>
-<td>3233</td>
-</tr>
-<tr>
-<td>output/manuscript/preamble.md</td>
-<td>Manuscript hydration</td>
-<td>137</td>
-</tr>
-<tr>
-<td>output/manuscript/references.bib</td>
-<td>Manuscript hydration</td>
-<td>23228</td>
-</tr>
-<tr>
-<td>output/pdf/template_autoresearch_project_combined.pdf</td>
-<td>Loop artifact</td>
-<td>1463957</td>
-</tr>
-<tr>
-<td>output/release/swh_repo_url.txt</td>
-<td>Loop artifact</td>
-<td>59</td>
-</tr>
-<tr>
-<td>output/release/upload_receipts.json</td>
-<td>Loop artifact</td>
-<td>2004</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_evidence_overview.md</td>
 <td>Evidence registry</td>
-<td>1136</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_loop.json</td>
 <td>Loop artifact</td>
-<td>16085</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_loop.md</td>
 <td>Loop artifact</td>
-<td>1982</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_review_packet.md</td>
 <td>Review packet</td>
-<td>912</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_security_review.md</td>
 <td>Review packet</td>
-<td>1104</td>
 </tr>
 <tr>
 <td>output/reports/autoresearch_summary.md</td>
 <td>Loop artifact</td>
-<td>255</td>
 </tr>
 <tr>
 <td>output/reports/benchmark_readiness_smoke.json</td>
 <td>Benchmark grading</td>
-<td>778</td>
-</tr>
-<tr>
-<td>output/reports/manuscript_composition.json</td>
-<td>Manuscript hydration</td>
-<td>2149</td>
 </tr>
 <tr>
 <td>output/reports/ml_benchmark_score.json</td>
 <td>Benchmark grading</td>
-<td>382</td>
 </tr>
 <tr>
 <td>output/reports/ml_experiment_report.md</td>
 <td>Loop artifact</td>
-<td>1687</td>
 </tr>
 <tr>
 <td>output/reports/test_results.json</td>
 <td>Loop artifact</td>
-<td>13815</td>
 </tr>
 <tr>
 <td>output/reports/test_results.md</td>
 <td>Loop artifact</td>
-<td>292</td>
-</tr>
-<tr>
-<td>output/slides/00_abstract_slides.pdf</td>
-<td>Loop artifact</td>
-<td>19958</td>
-</tr>
-<tr>
-<td>output/slides/01_introduction_slides.pdf</td>
-<td>Loop artifact</td>
-<td>64117</td>
-</tr>
-<tr>
-<td>output/slides/02_methodology_slides.pdf</td>
-<td>Loop artifact</td>
-<td>241270</td>
-</tr>
-<tr>
-<td>output/slides/03_results_slides.pdf</td>
-<td>Loop artifact</td>
-<td>1140252</td>
-</tr>
-<tr>
-<td>output/slides/04_conclusion_slides.pdf</td>
-<td>Loop artifact</td>
-<td>21552</td>
-</tr>
-<tr>
-<td>output/slides/99_references_slides.pdf</td>
-<td>Loop artifact</td>
-<td>11244</td>
-</tr>
-<tr>
-<td>output/web/_combined_manuscript.md</td>
-<td>Manuscript hydration</td>
-<td>83966</td>
-</tr>
-<tr>
-<td>output/web/favicon.ico</td>
-<td>Loop artifact</td>
-<td>121</td>
-</tr>
-<tr>
-<td>output/web/index.html</td>
-<td>Loop artifact</td>
-<td>164706</td>
-</tr>
-<tr>
-<td>output/web/manuscript__00_abstract.html</td>
-<td>Manuscript hydration</td>
-<td>10237</td>
-</tr>
-<tr>
-<td>output/web/manuscript__01_introduction.html</td>
-<td>Manuscript hydration</td>
-<td>23638</td>
-</tr>
-<tr>
-<td>output/web/manuscript__02_methodology.html</td>
-<td>Manuscript hydration</td>
-<td>37355</td>
-</tr>
-<tr>
-<td>output/web/manuscript__03_results.html</td>
-<td>Manuscript hydration</td>
-<td>78026</td>
-</tr>
-<tr>
-<td>output/web/manuscript__04_conclusion.html</td>
-<td>Manuscript hydration</td>
-<td>11184</td>
-</tr>
-<tr>
-<td>output/web/manuscript__99_references.html</td>
-<td>Manuscript hydration</td>
-<td>8552</td>
 </tr>
 </tbody>
 </table>

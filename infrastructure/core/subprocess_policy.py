@@ -225,6 +225,20 @@ INTENTIONAL_SUBPROCESS_POLICIES: tuple[SubprocessPolicy, ...] = (
         capture_output=True,
     ),
     SubprocessPolicy(
+        policy_id="coverage-measurement-active-inference",
+        source_path="infrastructure/documentation/counts_coverage.py",
+        timeout_seconds=6900,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
+        policy_id="coverage-copy-git-context",
+        source_path="infrastructure/documentation/counts_coverage.py",
+        timeout_seconds=30,
+        check=False,
+        capture_output=True,
+    ),
+    SubprocessPolicy(
         policy_id="coverage-report",
         source_path="infrastructure/documentation/counts_coverage.py",
         timeout_seconds=300,

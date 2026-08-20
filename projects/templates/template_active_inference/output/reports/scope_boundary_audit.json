@@ -119,16 +119,16 @@
       "section": "07_methods_lean.md"
     },
     {
-      "blocked_context": false,
+      "blocked_context": true,
       "blocked_language_ok": true,
       "classification": "current",
-      "context": "toy_result",
-      "current_result_toy_only": true,
+      "context": "blocked_language",
+      "current_result_toy_only": false,
       "future_only": false,
-      "matched_phrase": "",
-      "non_live_context": false,
+      "matched_phrase": "private data",
+      "non_live_context": true,
       "ok": true,
-      "scope_category": "current_toy",
+      "scope_category": "blocked_private",
       "section": "08_methods_sheaf.md"
     },
     {
@@ -320,8 +320,8 @@
     "blocked_empirical": 2,
     "blocked_llm": 1,
     "blocked_network": 2,
-    "blocked_private": 1,
-    "current_toy": 13,
+    "blocked_private": 2,
+    "current_toy": 12,
     "future_only": 2
   },
   "violations": []

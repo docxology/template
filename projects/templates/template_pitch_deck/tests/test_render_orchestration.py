@@ -10,6 +10,7 @@ import pytest
 import yaml
 from hypothesis import given, settings, strategies as st
 from pypdf import PdfReader
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.slide_deck import Slide
 
 from paths import locate_repo_root, project_root
@@ -254,6 +255,92 @@ def test_preflight_rejects_later_length_before_any_render(tmp_path: Path, repo_r
             content_prefix="deck_content",
         )
     assert not (tmp_path / "pdf").exists()
+
+
+def test_current_decks_pass_shared_layout_preflight(repo_root):
+    from deck_tokens import build_deck_tokens
+
+    _preflight_all_lengths(
+        manuscript_dir=project_root() / "manuscript",
+        repo_root=repo_root,
+        tokens=build_deck_tokens(repo_root),
+        content_prefix="deck_content",
+        figures_dir=project_root() / "output" / "figures",
+    )
+
+
+@pytest.mark.parametrize(
+    ("slide_payload", "error_match"),
+    (
+        (
+            {
+                "kind": "content",
+                "title": "Overflow",
+                "bullets": [("many words " * 200).strip()],
+            },
+            "protected footer/QR band",
+        ),
+        (
+            {
+                "kind": "diagram",
+                "title": "W" * 500,
+            },
+            "minimum font size",
+        ),
+    ),
+)
+def test_render_one_length_layout_failure_preserves_standalone_and_targets(
+    tmp_path: Path,
+    repo_root,
+    slide_payload: dict[str, object],
+    error_match: str,
+):
+    from infrastructure.rendering.pptx_deck import render_pptx
+    from infrastructure.rendering.slide_deck import DeckTheme
+
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "deck_content_short.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "title": "Deck",
+                "slides": [slide_payload],
+            }
+        ),
+        encoding="utf-8",
+    )
+    standalone = tmp_path / "output" / "slides_standalone" / "template_template_short"
+    standalone.mkdir(parents=True)
+    marker = standalone / "existing.md"
+    marker.write_bytes(b"standalone-sentinel")
+    pdf_dir = tmp_path / "pdf"
+    pptx_dir = tmp_path / "pptx"
+    pdf_dir.mkdir()
+    pptx_dir.mkdir()
+    pdf_target = pdf_dir / "template_template_pitch_short.pdf"
+    pptx_target = pptx_dir / "template_template_pitch_short.pptx"
+    pdf_target.write_bytes(b"pdf-sentinel")
+    pptx_target.write_bytes(b"pptx-sentinel")
+
+    with pytest.raises(RenderingError, match=error_match):
+        render_one_length(
+            "short",
+            project_root=tmp_path,
+            repo_root=repo_root,
+            manuscript_dir=manuscript_dir,
+            figures_dir=tmp_path / "figures",
+            pdf_dir=pdf_dir,
+            pptx_dir=pptx_dir,
+            tokens={"PITCH_SUBJECT_NAME": "template_template"},
+            theme=DeckTheme(),
+            source_base_url="",
+            render_pptx_fn=render_pptx,
+            logger=logging.getLogger("test"),
+        )
+
+    assert marker.read_bytes() == b"standalone-sentinel"
+    assert pdf_target.read_bytes() == b"pdf-sentinel"
+    assert pptx_target.read_bytes() == b"pptx-sentinel"
 
 
 @pytest.mark.slow

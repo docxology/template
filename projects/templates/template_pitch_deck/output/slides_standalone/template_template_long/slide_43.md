@@ -1,15 +1,14 @@
-# Cite this deck
+# The chain of custody: slide → QR → GitHub
 
-*Slide 43 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 43 of 57 — template_template pitch, long deck — kind: `content`*
 
-- This pitch deck is its own exemplar in the same monorepo — it has its own src/, tests, and citable identity, distinct from the DOI of template_template, the project it pitches.
-- This deck's own DOI: 10.5281/zenodo.21281509.
-- That status is read live from this project's own manuscript/config.yaml at render time — the moment a real Zenodo deposit is recorded there, this slide's own text updates on the next regeneration, the same way every other fact in this deck does.
-- This deck's DOI is deposited through the same infrastructure.publishing pipeline every other exemplar in this monorepo uses — nothing deck-specific to build, only a deposit to make.
+- Every slide in this deck carries its own QR code, linking to a standalone, real Markdown page for that exact slide under output/slides_standalone/.
+- Once this output/ directory is committed and pushed, a photo of a projected or printed slide can be traced back to its precise source page on GitHub — not just to the deck as a whole. Locally, the generated page already exists; the QR only resolves once it is actually published.
+- Mechanically, this is the same source-citation system with one more hop: a citation links out to evidence; the QR links to the slide's own generated page, which repeats that same citation.
 
 ---
 
-**Source:** [projects/templates/template_pitch_deck/manuscript/config.yaml](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/manuscript/config.yaml)
+**Source:** [projects/templates/template_pitch_deck/src/standalone_slides.py](https://github.com/docxology/template/blob/main/projects/templates/template_pitch_deck/src/standalone_slides.py)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

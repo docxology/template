@@ -1,12 +1,13 @@
-# What makes an exemplar 'public'
+# One contract across all public exemplars
 
-*Slide 26 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 26 of 57 — template_template pitch, long deck — kind: `content`*
 
-- A single hand-edited registry (infrastructure/project/public_scope.py) lists every project name in public CI/documentation scope.
-- Everything else under projects/ (working, ongoing, archive folders) stays local-only by construction, never accidentally published.
-- An automated confidentiality audit fails CI if a private project path is ever tracked by mistake.
+- template_active_inference is called out here only as one concrete instance to point to — every name in that list is an independently-built exemplar following the identical two-layer architecture, not a hand-picked best case.
+- Neither exemplar's coverage gate or drift check required any special-casing to add — the contract is uniform across all 24 projects, and the folder itself is the evidence, not a claim about it.
 
 ---
+
+**Source:** [docs/_generated/active_projects.md](https://github.com/docxology/template/blob/main/docs/_generated/active_projects.md)
 
 **Full deck:** [PDF](../../pdf/template_template_pitch_long.pdf) · [PPTX](../../pptx/template_template_pitch_long.pptx)
 **Deck content source:** [manuscript/deck_content_long.yaml](../../../manuscript/deck_content_long.yaml)

@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="generator" content="pandoc 3.10.2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>16_appendix_full_sheaf.md.web</title>
   <style>
@@ -580,10 +580,10 @@ for field-level claim evidence: 97 mapped fields with status
 <code>true</code>.</p>
 <!-- sheaf-track:release_bundle -->
 <p><code>release_bundle_manifest.json</code> provides the appendix proof
-for required deliverables: 38 artifacts with source-present status
+for required deliverables: 36 artifacts with source-present status
 <code>true</code>.</p>
 <p><code>artifact_contract_index.json</code> is the appendix-level
-cross-artifact concordance proof. It rederives 85 rows from the live
+cross-artifact concordance proof. It rederives 86 rows from the live
 semantic producer map and release-bundle parity rows, with row-complete
 flag <code>true</code> and copied-parity flag <code>true</code>.</p>
 <!-- sheaf-track:gate_ergonomics -->
@@ -596,7 +596,7 @@ completion flag <code>true</code>.</p>
 diffoscope</h3>
 <p><code>artifact_diffoscope</code> binds
 <code>output/reports/artifact_diffoscope.json</code> into the full sheaf
-appendix. Rows: 40. All equal: <code>true</code>.</p>
+appendix. Rows: 43. All equal: <code>true</code>.</p>
 <p>This diffoscope is deliberately narrow and reproducibility-facing.
 For each non-cyclic generated artifact, it compares the saved provenance
 digest to the live file digest at validation time. The validator
@@ -613,7 +613,7 @@ their own provenance.</p>
 license</h3>
 <p><code>artifact_license</code> binds
 <code>output/reports/artifact_license_audit.json</code> into the full
-sheaf appendix. Rows: 85. All safe: <code>true</code>.</p>
+sheaf appendix. Rows: 86. All safe: <code>true</code>.</p>
 <p>The license audit classifies each generated or source-backed artifact
 under the public exemplar’s configured license boundary. It is
 intentionally conservative: generated local outputs and project-owned
@@ -743,7 +743,7 @@ sheaf fragment bindings.</em></p>
 style="width:98.0%" alt="" /></p>
 <p><em>Reproduced from <span class="citation"
 data-cites="fig:artifact_contract_map">[@fig:artifact_contract_map]</span>.
-Artifact contract map: 85 generated artifact rows with complete contract
+Artifact contract map: 86 generated artifact rows with complete contract
 status true and copied-output parity complete true. Cycle rows are
 explicit in
 <code>output/data/artifact_contract_index.json</code>.</em></p>
@@ -883,7 +883,7 @@ release note can say only what validation, bundle, or semantic artifacts
 support. The validator re-derives support from rows; flipping the
 summary bit without fixing a failed row still fails.</p>
 <p><code>output/reports/release_attestation.json</code> is the compact
-final view over the same boundary. It records 7 attestation rows for
+final view over the same boundary. It records 8 attestation rows for
 validation, release bundle hash, license audit, semantic certificate,
 and blocked-scope status, with all-attested flag <code>true</code>.</p>
 </main>

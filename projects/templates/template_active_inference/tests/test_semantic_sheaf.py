@@ -215,10 +215,10 @@ def test_semantic_outputs_settle_contract_and_staleness_artifacts(project_root: 
     )
 
     def contract_projection(row: dict) -> dict:
-        projected = {key: row.get(key) for key in contract_keys}
         if row.get("freshness_cycle_excluded"):
-            projected["source_sha256"] = "<cycle-excluded>"
-        return projected
+            assert row.get("source_sha256") == ""
+            assert row.get("copied_sha256") == ""
+        return {key: row.get(key) for key in contract_keys}
 
     assert saved_contract["all_rows_complete"] is True
     assert [contract_projection(row) for row in saved_contract.get("rows", [])] == [
@@ -250,6 +250,25 @@ def test_semantic_gluing_rejects_stale_saved_certificate(project_root: Path) -> 
         issues = validate_semantic_gluing(project_root)
 
     assert any("stale" in issue or "producer" in issue for issue in issues)
+
+
+def test_semantic_validators_reject_forged_omitted_certificate_fields(project_root: Path) -> None:
+    from manuscript.sheaf.semantic import validate_semantic_gluing, write_semantic_gluing_outputs
+    from roadmap_tracks.sheaf_tracks import validate_sheaf_track_artifacts
+
+    ensure_gate_artifacts(project_root)
+    paths = write_semantic_gluing_outputs(project_root)
+
+    def forge_unprojected_fields(payload: dict) -> None:
+        payload["manuscript_variables"] = {"forged": True}
+        payload["claims"] = []
+
+    with temporary_json_mutation(paths["certificate"], forge_unprojected_fields):
+        semantic_issues = validate_semantic_gluing(project_root)
+        sheaf_issues = validate_sheaf_track_artifacts(project_root)
+
+    assert any("stale relative to live semantic fields" in issue for issue in semantic_issues)
+    assert any("stale relative to live semantic fields" in issue for issue in sheaf_issues)
 
 
 def test_semantic_gluing_rejects_missing_or_malformed_saved_certificate(project_root: Path) -> None:

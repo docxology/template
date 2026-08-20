@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+from infrastructure.rendering.manuscript_injection import substitute_manuscript_text
 from src.artifact_loader import LoopArtifacts
+from src.manuscript.manuscript_tables_builders import artifact_manifest_table
 from src.manuscript.manuscript_tables import build_table_specs, variable_provenance_table
 
 
@@ -301,3 +306,141 @@ def test_variable_provenance_table_counts_sources() -> None:
 
     assert "| output/data/a.json | 2 |" in table
     assert "| output/data/c.json | 1 |" in table
+
+
+def test_artifact_manifest_table_keeps_only_reviewed_upstream_paths() -> None:
+    unreviewed_paths = (
+        "output/data/manuscript_variables.json",
+        "output/data/publication_ledger.json",
+        "output/data/transmission_manifest.json",
+        "output/docx/manuscript.docx",
+        "output/ebook/manuscript.epub",
+        "output/epub/manuscript.epub",
+        "output/figures/transmission_integrity_strip.png",
+        "output/figures/transmission_pairing.png",
+        "output/manuscript/03_results.md",
+        "output/pdf/manuscript.pdf",
+        "output/release/upload_receipts.json",
+        "output/release_bundle/manifest.json",
+        "output/slides/03_results_slides.pdf",
+        "output/tex/manuscript.tex",
+        "output/web/index.html",
+        "output/reports/artifact_manifest.json",
+        "output/reports/manuscript_composition.json",
+        "output/reports/publication_audit.json",
+        "output/reports/receipt.json",
+        "output/reports/release_receipt.json",
+        "output/reports/rendered_provenance.json",
+        "output/reports/validation_report.json",
+        "output/unknown_future_format/manuscript.bin",
+    )
+    entries = [
+        {"path": "output/data/autoresearch_loop.json", "size_bytes": 123},
+        {"path": "output/reports/ml_experiment_report.md", "size_bytes": 456},
+        *({"path": path, "size_bytes": 9000 + index} for index, path in enumerate(unreviewed_paths)),
+    ]
+
+    table = artifact_manifest_table({"entries": entries})
+
+    assert table.startswith("| Artifact | Role |")
+    assert "Bytes" not in table
+    assert "| output/data/autoresearch_loop.json | Loop artifact |" in table
+    assert "| output/reports/ml_experiment_report.md | Loop artifact |" in table
+    for path in unreviewed_paths:
+        assert f"| {path} |" not in table
+    assert "unreviewed paths are omitted" in table
+    assert "terminal manifest remains the complete byte authority" in table
+
+
+def test_artifact_manifest_table_is_stable_across_render_and_binder_generations() -> None:
+    first_manifest = {
+        "entries": [
+            {"path": "output/data/autoresearch_loop.json", "size_bytes": 16085},
+            {
+                "path": "output/data/research_object_manifest.json",
+                "size_bytes": 20789,
+                "sha256": "a" * 64,
+            },
+            {"path": "output/data/manuscript_variables.json", "size_bytes": 57706},
+            {"path": "output/data/publication_ledger.json", "size_bytes": 1005},
+            {"path": "output/data/transmission_manifest.json", "size_bytes": 503},
+            {"path": "output/figures/transmission_integrity_strip.png", "size_bytes": 18338},
+            {"path": "output/figures/transmission_pairing.png", "size_bytes": 11314},
+            {"path": "output/manuscript/03_results.md", "size_bytes": 42052},
+            {"path": "output/pdf/template_autoresearch_project_combined.pdf", "size_bytes": 1463816},
+            {"path": "output/slides/03_results_slides.pdf", "size_bytes": 1140307},
+            {"path": "output/web/index.html", "size_bytes": 161941},
+        ]
+    }
+    second_manifest = {
+        "entries": [
+            {"path": "output/data/autoresearch_loop.json", "size_bytes": 16086},
+            {
+                # Prior PDF/web byte drift changes this transitive binder's bytes.
+                "path": "output/data/research_object_manifest.json",
+                "size_bytes": 20790,
+                "sha256": "b" * 64,
+            },
+            {"path": "output/data/manuscript_variables.json", "size_bytes": 57707},
+            {"path": "output/data/publication_ledger.json", "size_bytes": 1006},
+            {"path": "output/data/transmission_manifest.json", "size_bytes": 504},
+            {"path": "output/figures/transmission_integrity_strip.png", "size_bytes": 18339},
+            {"path": "output/figures/transmission_pairing.png", "size_bytes": 11315},
+            {"path": "output/manuscript/03_results.md", "size_bytes": 42053},
+            {"path": "output/pdf/template_autoresearch_project_combined.pdf", "size_bytes": 1463811},
+            {"path": "output/slides/03_results_slides.pdf", "size_bytes": 1140308},
+            {"path": "output/web/index.html", "size_bytes": 161942},
+        ]
+    }
+
+    first_table = artifact_manifest_table(first_manifest)
+    second_table = artifact_manifest_table(second_manifest)
+    first_hydrated, first_unresolved = substitute_manuscript_text(
+        "# Results\n\n{{AUTORESEARCH_ARTIFACT_TABLE}}\n",
+        {"AUTORESEARCH_ARTIFACT_TABLE": first_table},
+    )
+    second_hydrated, second_unresolved = substitute_manuscript_text(
+        "# Results\n\n{{AUTORESEARCH_ARTIFACT_TABLE}}\n",
+        {"AUTORESEARCH_ARTIFACT_TABLE": second_table},
+    )
+
+    assert first_unresolved == second_unresolved == []
+    assert first_table == second_table
+    assert first_hydrated == second_hydrated
+
+    cold_manifest = {"entries": second_manifest["entries"][:2]}
+    assert artifact_manifest_table(cold_manifest) == second_table
+
+    downstream_paths_added = {
+        "entries": [
+            *second_manifest["entries"],
+            {"path": "output/ebook/manuscript.epub", "size_bytes": 1},
+            {"path": "output/pdf/supplement.pdf", "size_bytes": 1},
+        ]
+    }
+    unknown_path_added = {
+        "entries": [
+            *second_manifest["entries"],
+            {"path": "output/reports/new_analysis_evidence.json", "size_bytes": 1},
+        ]
+    }
+    reviewed_path_added = {
+        "entries": [
+            *second_manifest["entries"],
+            {"path": "output/data/benchmark_scores.json", "size_bytes": 621},
+        ]
+    }
+    assert artifact_manifest_table(downstream_paths_added) == second_table
+    assert artifact_manifest_table(unknown_path_added) == second_table
+    assert artifact_manifest_table(reviewed_path_added) != second_table
+
+
+def test_current_artifact_manifest_has_exact_reviewed_upstream_rows(project_root: Path) -> None:
+    manifest = json.loads((project_root / "output/reports/artifact_manifest.json").read_text(encoding="utf-8"))
+
+    table = artifact_manifest_table(manifest)
+    rows = [line for line in table.splitlines() if line.startswith("| output/")]
+
+    assert len(rows) == 80
+    assert "| output/data/research_object_manifest.json | Loop artifact |" in rows
+    assert all(line.count("|") == 3 for line in rows)

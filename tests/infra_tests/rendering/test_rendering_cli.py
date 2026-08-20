@@ -156,10 +156,15 @@ class TestRenderSlidesCommand:
 class TestRenderWebCommand:
     """Test suite for render_web_command using real RenderManager."""
 
-    def test_render_web_basic(self, tmp_path, capsys):
+    def test_render_web_basic(self, tmp_path, capsys, monkeypatch):
         """Test basic web rendering with real RenderManager."""
         md_file = tmp_path / "document.md"
         md_file.write_text("# Document\n\nContent here.")
+        output_dir = tmp_path / "output"
+        web_dir = output_dir / "web"
+        monkeypatch.setenv("OUTPUT_DIR", str(output_dir))
+        monkeypatch.setenv("WEB_DIR", str(web_dir))
+        monkeypatch.setenv("FIGURES_DIR", str(output_dir / "figures"))
 
         args = argparse.Namespace(source=str(md_file))
 
@@ -168,6 +173,8 @@ class TestRenderWebCommand:
 
         captured = capsys.readouterr()
         assert "Rendering web output" in captured.out or "Generated" in captured.out
+        assert (web_dir / f"{tmp_path.name}__document.html").is_file()
+        assert (web_dir / "favicon.ico").is_file()
 
     def test_render_web_nonexistent_source(self, tmp_path, capsys):
         """Test web rendering with nonexistent source."""

@@ -1,10 +1,10 @@
-# The ask
+# Where this could go next for your organization
 
-*Slide 51 of 56 — template_template pitch, long deck — kind: `content`*
+*Slide 51 of 57 — template_template pitch, long deck — kind: `content`*
 
-- Adopt this pattern for your own methods papers: bind every reported number to the code that produced it, not to a hand-typed table.
-- Pilot it on one existing manuscript in your group before committing to a full rewrite.
-- Happy to pair with your team through a first regeneration cycle and help define your own introspection surface, if useful — no prior engagements to point to yet, this pattern is newly forkable.
+- A grant-report deck generated the same way a manuscript is — bound to the same project data your team already tracks.
+- A recurring quarterly-update deck that regenerates instead of being rebuilt from scratch each cycle.
+- A shared content schema across your organization's decks, so a house style survives staff turnover.
 
 ---
 

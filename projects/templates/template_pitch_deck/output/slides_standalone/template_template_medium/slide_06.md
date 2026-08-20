@@ -1,6 +1,6 @@
 # (quote slide)
 
-*Slide 6 of 37 — template_template pitch, medium deck — kind: `quote`*
+*Slide 6 of 38 — template_template pitch, medium deck — kind: `quote`*
 
 > Autopoietic: the paper regenerates itself from the code it describes.
 
