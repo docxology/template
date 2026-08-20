@@ -29,6 +29,10 @@ The per-package symbol listings below are generated between the
 
 *symbol — defined in `infrastructure.autoresearch`*
 
+### `AutoResearchOrchestrator`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
 ### `AutoResearchPlan`
 
 *symbol — defined in `infrastructure.autoresearch`*
@@ -78,6 +82,14 @@ The per-package symbol listings below are generated between the
 *symbol — defined in `infrastructure.autoresearch`*
 
 ### `metric_unit_from_name`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `OrchestrationEvent`
+
+*symbol — defined in `infrastructure.autoresearch`*
+
+### `OrchestrationResult`
 
 *symbol — defined in `infrastructure.autoresearch`*
 
@@ -1477,6 +1489,26 @@ Runtime configuration for the provenance DAG.
 ProvenanceNode = ArtifactNode | RunNode | SourceNode | ClaimNode
 ```
 
+### `ProvenanceValidationFinding`
+
+*class — defined in `infrastructure.provenance.validation`*
+
+```python
+class ProvenanceValidationFinding
+```
+
+A single issue discovered during provenance DAG validation.
+
+### `ProvenanceValidationReport`
+
+*class — defined in `infrastructure.provenance.validation`*
+
+```python
+class ProvenanceValidationReport
+```
+
+Report detailing DAG structural and content integrity.
+
 ### `Review`
 
 *class — defined in `infrastructure.provenance.review`*
@@ -1536,6 +1568,16 @@ class SourceNode(NodeBase)
 ```
 
 Provenance node for an external data source or reference.
+
+### `validate_provenance_dag`
+
+*function — defined in `infrastructure.provenance.validation`*
+
+```python
+validate_provenance_dag(store: Provenance) -> ProvenanceValidationReport
+```
+
+Validate graph structure, references, and acyclicity of a Provenance store.
 
 ## Package: `infrastructure.publishing`
 
@@ -2253,6 +2295,16 @@ What the export produced, or why it produced nothing.
 
 *symbol — defined in `infrastructure.rendering.docxplus_export`*
 
+### `ManuscriptRenderCache`
+
+*class — defined in `infrastructure.rendering.render_cache`*
+
+```python
+class ManuscriptRenderCache(cache_file: Path | str)
+```
+
+File-backed incremental rendering cache.
+
 ### `render_docx`
 
 *function — defined in `infrastructure.rendering.docx_renderer`*
@@ -2302,6 +2354,16 @@ run_docxplus_export(repo_root: Path, project: str, *, signing_key_path: str | No
 ```
 
 Execute the docxplus export for ``project``. Returns a process exit code.
+
+### `SectionCacheEntry`
+
+*class — defined in `infrastructure.rendering.render_cache`*
+
+```python
+class SectionCacheEntry
+```
+
+Cache record for a single rendered manuscript section.
 
 ### `substitute_manuscript_text`
 

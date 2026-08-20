@@ -7,6 +7,7 @@ from typing import Any
 __all__ = [
     "AutoResearchConfig",
     "AutoResearchIssue",
+    "AutoResearchOrchestrator",
     "AutoResearchPlan",
     "AutoResearchReport",
     "AutoResearchStage",
@@ -16,6 +17,8 @@ __all__ = [
     "EXTRINSIC_QUALITY_CHECKS",
     "ExperimentCandidate",
     "INTRINSIC_QUALITY_CHECKS",
+    "OrchestrationEvent",
+    "OrchestrationResult",
     "ResearchIdea",
     "ResearchProgram",
     "ReviewGate",
@@ -36,6 +39,7 @@ __all__ = [
 _EXPORTS = {
     "AutoResearchConfig": ("infrastructure.autoresearch.models", "AutoResearchConfig"),
     "AutoResearchIssue": ("infrastructure.autoresearch.models", "AutoResearchIssue"),
+    "AutoResearchOrchestrator": ("infrastructure.autoresearch.orchestrator", "AutoResearchOrchestrator"),
     "AutoResearchPlan": ("infrastructure.autoresearch.models", "AutoResearchPlan"),
     "AutoResearchReport": ("infrastructure.autoresearch.models", "AutoResearchReport"),
     "AutoResearchStage": ("infrastructure.autoresearch.models", "AutoResearchStage"),
@@ -43,6 +47,8 @@ _EXPORTS = {
     "BudgetPolicy": ("infrastructure.autoresearch.models", "BudgetPolicy"),
     "EvidenceLink": ("infrastructure.autoresearch.models", "EvidenceLink"),
     "ExperimentCandidate": ("infrastructure.autoresearch.models", "ExperimentCandidate"),
+    "OrchestrationEvent": ("infrastructure.autoresearch.orchestrator", "OrchestrationEvent"),
+    "OrchestrationResult": ("infrastructure.autoresearch.orchestrator", "OrchestrationResult"),
     "ResearchIdea": ("infrastructure.autoresearch.models", "ResearchIdea"),
     "ResearchProgram": ("infrastructure.autoresearch.models", "ResearchProgram"),
     "ReviewGate": ("infrastructure.autoresearch.models", "ReviewGate"),

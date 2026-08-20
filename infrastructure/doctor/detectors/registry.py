@@ -10,7 +10,11 @@ from infrastructure.doctor.detectors.hygiene import (
     detect_pycache_clutter,
     detect_stale_coverage_files,
 )
-from infrastructure.doctor.detectors.layout import detect_manuscript_config, detect_project_structure
+from infrastructure.doctor.detectors.layout import (
+    detect_manuscript_config,
+    detect_manuscript_preamble_and_bib,
+    detect_project_structure,
+)
 from infrastructure.doctor.detectors.state import (
     detect_codex_startup_config,
     detect_doctor_state_writable,
@@ -34,6 +38,7 @@ DETECTORS: tuple[DetectorFn, ...] = (
     detect_run_sh_executable,
     detect_project_structure,
     detect_manuscript_config,
+    detect_manuscript_preamble_and_bib,
     detect_pycache_clutter,
     detect_stale_coverage_files,
     detect_orphan_output_dirs,
@@ -53,6 +58,7 @@ __all__ = [
     "detect_run_sh_executable",
     "detect_project_structure",
     "detect_manuscript_config",
+    "detect_manuscript_preamble_and_bib",
     "detect_pycache_clutter",
     "detect_stale_coverage_files",
     "detect_orphan_output_dirs",

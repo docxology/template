@@ -42,6 +42,11 @@ from infrastructure.provenance.review import (
     review_provenance_store,
 )
 from infrastructure.provenance.store import Provenance
+from infrastructure.provenance.validation import (
+    ProvenanceValidationFinding,
+    ProvenanceValidationReport,
+    validate_provenance_dag,
+)
 
 __all__ = [
     # Models
@@ -65,4 +70,8 @@ __all__ = [
     # Config
     "ProvenanceConfig",
     "load_provenance_config",
+    # Validation
+    "ProvenanceValidationFinding",
+    "ProvenanceValidationReport",
+    "validate_provenance_dag",
 ]

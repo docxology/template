@@ -19,6 +19,7 @@ from infrastructure.provenance.models import (
 )
 from infrastructure.provenance.review import review_provenance_store
 from infrastructure.provenance.store import Provenance
+from infrastructure.provenance.validation import validate_provenance_dag
 
 
 def _get_store(args: argparse.Namespace) -> Provenance:
@@ -59,6 +60,22 @@ def _cmd_review(args: argparse.Namespace) -> int:
     return 0 if result.passed else 1
 
 
+def _cmd_validate(args: argparse.Namespace) -> int:
+    store = _get_store(args)
+    report = validate_provenance_dag(store)
+    if args.json:
+        print(json.dumps(report.to_dict(), indent=2))
+    else:
+        for f in report.findings:
+            print(f"  [{f.severity.upper()}] {f.code}: {f.message}")
+        status = "PASS" if report.is_valid else "FAIL"
+        print(
+            f"\nDAG Validation: {status} (Nodes: {report.total_nodes}, "
+            f"Edges: {report.total_edges}, Errors: {len(report.errors)}, Warnings: {len(report.warnings)})"
+        )
+    return 0 if report.is_valid else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build and return the argparse parser."""
     parser = argparse.ArgumentParser(
@@ -84,6 +101,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_review = sub.add_parser("review", help="Review provenance DAG for issues")
     p_review.add_argument("--json", action="store_true")
     p_review.set_defaults(func=_cmd_review)
+
+    # validate
+    p_val = sub.add_parser("validate", help="Validate provenance DAG structure and acyclicity")
+    p_val.add_argument("--json", action="store_true")
+    p_val.set_defaults(func=_cmd_validate)
 
     return parser
 

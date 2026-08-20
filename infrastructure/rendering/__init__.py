@@ -23,6 +23,7 @@ from .manuscript_injection import (
     substitute_manuscript_text,
     write_resolved_manuscript_tree,
 )
+from .render_cache import ManuscriptRenderCache, SectionCacheEntry
 
 
 __all__ = [
@@ -30,8 +31,10 @@ __all__ = [
     "EpubRenderResult",
     "EXCLUDED_DOC_FILENAMES",
     "ExportResult",
+    "ManuscriptRenderCache",
     "RenderManager",
     "RenderingConfig",
+    "SectionCacheEntry",
     "discover_manuscript_files",
     "export_project",
     "is_docxplus_available",

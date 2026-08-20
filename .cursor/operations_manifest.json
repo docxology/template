@@ -28,6 +28,10 @@
           "help": "Write benchmark task status from grading outputs"
         },
         {
+          "name": "orchestrate",
+          "help": "Run full multi-phase AutoResearch orchestration"
+        },
+        {
           "name": "schema",
           "help": "Print this CLI's parameter schema as JSON and exit"
         }
@@ -35,6 +39,7 @@
       "exports": [
         "AutoResearchConfig",
         "AutoResearchIssue",
+        "AutoResearchOrchestrator",
         "AutoResearchPlan",
         "AutoResearchReport",
         "AutoResearchStage",
@@ -44,6 +49,8 @@
         "EXTRINSIC_QUALITY_CHECKS",
         "ExperimentCandidate",
         "INTRINSIC_QUALITY_CHECKS",
+        "OrchestrationEvent",
+        "OrchestrationResult",
         "ResearchIdea",
         "ResearchProgram",
         "ReviewGate",
@@ -550,6 +557,10 @@
         {
           "name": "review",
           "help": "Review provenance DAG for issues"
+        },
+        {
+          "name": "validate",
+          "help": "Validate provenance DAG structure and acyclicity"
         }
       ],
       "exports": [
@@ -569,7 +580,10 @@
         "Severity",
         "review_provenance_store",
         "ProvenanceConfig",
-        "load_provenance_config"
+        "load_provenance_config",
+        "ProvenanceValidationFinding",
+        "ProvenanceValidationReport",
+        "validate_provenance_dag"
       ],
       "effect": "read_only"
     },
@@ -766,8 +780,10 @@
         "EpubRenderResult",
         "EXCLUDED_DOC_FILENAMES",
         "ExportResult",
+        "ManuscriptRenderCache",
         "RenderManager",
         "RenderingConfig",
+        "SectionCacheEntry",
         "discover_manuscript_files",
         "export_project",
         "is_docxplus_available",
