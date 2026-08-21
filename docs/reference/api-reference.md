@@ -1489,6 +1489,16 @@ Runtime configuration for the provenance DAG.
 ProvenanceNode = ArtifactNode | RunNode | SourceNode | ClaimNode
 ```
 
+### `ProvenanceStoreError`
+
+*class — defined in `infrastructure.provenance.store`*
+
+```python
+class ProvenanceStoreError(ValueError)
+```
+
+Raised when a provenance store is malformed or cannot be read.
+
 ### `ProvenanceValidationFinding`
 
 *class — defined in `infrastructure.provenance.validation`*
@@ -2324,6 +2334,16 @@ render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None=N
 ```
 
 Render *combined_md* to an EPUB at *output_path*.
+
+### `RenderCacheError`
+
+*class — defined in `infrastructure.rendering.render_cache`*
+
+```python
+class RenderCacheError(ValueError)
+```
+
+Raised when the persistent render cache cannot be trusted or saved.
 
 ### `RenderingConfig`
 

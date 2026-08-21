@@ -588,13 +588,14 @@ testing policy, evaluated actively by executing
 during the infrastructure build phase.</p>
 <ol type="1">
 <li><strong>Project tests</strong>: <a
-href="../tests/test_optimizer.py"><code>projects/templates/template_code_project/tests/test_optimizer.py</code></a>
-exercises <code>src/optimizer.py</code> (typical, edge, boundary, and
-pathological inputs including NaN/Inf and zero gradients) and, when
-infrastructure imports succeed, call into
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py">the
+project optimizer test suite</a> exercises <code>src/optimizer.py</code>
+(typical, edge, boundary, and pathological inputs including NaN/Inf and
+zero gradients) and, when infrastructure imports succeed, call into
 <code>optimization_analysis.py</code> helpers—without mocks. Suite size:
 <a
-href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md">the
+measured repository counts</a>.</li>
 <li><strong>Infrastructure validation</strong>: The repository-level
 <code>tests/infra_tests/</code> suite validates shared template modules
 (e.g. pipeline and discovery helpers) independently of this project’s

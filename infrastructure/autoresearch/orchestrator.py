@@ -2,7 +2,7 @@
 
 Provides structured execution across AutoResearch phases:
 1. Intrinsic phase validation (domain, plan, pipeline, scripts)
-2. Task iteration & experiment candidate tracking
+2. Candidate budget evaluation (readiness-only; no candidate execution)
 3. Extrinsic readiness verification (evidence, manifests, review gates, security)
 4. Structured ledger persistence and publication gate validation
 """
@@ -10,6 +10,7 @@ Provides structured execution across AutoResearch phases:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +43,8 @@ class OrchestrationResult:
     success: bool
     phase_reached: str
     candidates_processed: int
+    candidate_budget: int = 0
+    reports_written: bool = False
     events: list[OrchestrationEvent] = field(default_factory=list)
     report: AutoResearchReport | None = None
     plan: AutoResearchPlan | None = None
@@ -53,6 +56,8 @@ class OrchestrationResult:
             "success": self.success,
             "phase_reached": self.phase_reached,
             "candidates_processed": self.candidates_processed,
+            "candidate_budget": self.candidate_budget,
+            "reports_written": self.reports_written,
             "events_count": len(self.events),
             "events": [
                 {
@@ -60,6 +65,7 @@ class OrchestrationResult:
                     "action": e.action,
                     "status": e.status,
                     "message": e.message,
+                    "timestamp": e.timestamp,
                     "payload": e.payload,
                 }
                 for e in self.events
@@ -97,6 +103,7 @@ class AutoResearchOrchestrator:
                 action=action,
                 status=status,
                 message=message,
+                timestamp=datetime.now(timezone.utc).isoformat(),
                 payload=payload or {},
             )
         )
@@ -112,7 +119,6 @@ class AutoResearchOrchestrator:
         self.events.clear()
 
         # 1. Build Plan
-        self.log_event("planning", "build_plan", "ok", f"Building AutoResearch plan for {self.project_name}")
         try:
             plan = build_autoresearch_plan(self.repo_root, self.project_name, projects_dir=self.projects_dir)
             project_root = plan.project_root
@@ -125,17 +131,20 @@ class AutoResearchOrchestrator:
                 candidates_processed=0,
                 events=list(self.events),
             )
+        self.log_event("planning", "build_plan", "ok", f"Built AutoResearch plan for {self.project_name}")
 
         # 2. Phase: Intrinsic Validation
-        self.log_event("intrinsic", "validate_intrinsic", "ok", "Validating intrinsic phase contracts")
         intrinsic_report = validate_autoresearch_plan(plan, project_root, phase="intrinsic")
-        if not intrinsic_report.valid and fail_on_intrinsic:
+        if not intrinsic_report.valid:
             self.log_event(
                 "intrinsic",
                 "validate_intrinsic",
-                "error",
+                "error" if fail_on_intrinsic else "warn",
                 f"Intrinsic phase validation failed with {intrinsic_report.summary.get('errors', 0)} errors",
             )
+        else:
+            self.log_event("intrinsic", "validate_intrinsic", "ok", "Intrinsic phase contracts passed")
+        if not intrinsic_report.valid and fail_on_intrinsic:
             return OrchestrationResult(
                 project_name=self.project_name,
                 success=False,
@@ -154,45 +163,69 @@ class AutoResearchOrchestrator:
             "ok",
             (
                 f"Budget policy allows max {budget.max_iterations} iterations "
-                f"(wall-time cap: {budget.max_wall_clock_minutes}m)"
+                f"(wall-time cap: {budget.max_wall_clock_minutes}m); readiness mode executes no candidates"
             ),
+            payload={"candidate_budget": budget.max_iterations, "candidates_processed": 0},
         )
-        allowed_count = budget.max_iterations
+        candidate_budget = budget.max_iterations
 
         # 4. Phase: Extrinsic Validation
-        self.log_event("extrinsic", "validate_extrinsic", "ok", "Validating extrinsic phase contracts")
         full_report = validate_autoresearch_plan(plan, project_root, phase="all")
-        if not full_report.valid and fail_on_extrinsic:
+        if not full_report.valid:
             self.log_event(
                 "extrinsic",
                 "validate_extrinsic",
-                "error",
+                "error" if fail_on_extrinsic else "warn",
                 f"Extrinsic phase validation failed with {full_report.summary.get('errors', 0)} errors",
             )
+        else:
+            self.log_event("extrinsic", "validate_extrinsic", "ok", "Extrinsic phase contracts passed")
+        if not full_report.valid and fail_on_extrinsic:
             return OrchestrationResult(
                 project_name=self.project_name,
                 success=False,
                 phase_reached="extrinsic",
-                candidates_processed=allowed_count,
+                candidates_processed=0,
+                candidate_budget=candidate_budget,
                 events=list(self.events),
                 report=full_report,
                 plan=plan,
             )
 
         # 5. Write reports if requested
+        reports_written = False
         if write_reports:
             try:
                 write_autoresearch_report(project_root, full_report)
+                reports_written = True
                 self.log_event("finalization", "write_reports", "ok", "Wrote AutoResearch report artifacts")
-            except Exception as exc:
-                self.log_event("finalization", "write_reports", "warn", f"Could not write reports: {exc}")
+            except OSError as exc:
+                self.log_event("finalization", "write_reports", "error", f"Could not write reports: {exc}")
+                return OrchestrationResult(
+                    project_name=self.project_name,
+                    success=False,
+                    phase_reached="finalization",
+                    candidates_processed=0,
+                    candidate_budget=candidate_budget,
+                    reports_written=False,
+                    events=list(self.events),
+                    report=full_report,
+                    plan=plan,
+                )
 
-        self.log_event("completion", "execute_plan", "ok", "AutoResearch orchestration completed successfully")
+        self.log_event(
+            "completion",
+            "execute_plan",
+            "ok" if full_report.valid else "warn",
+            "AutoResearch readiness orchestration completed; no candidates were executed",
+        )
         return OrchestrationResult(
             project_name=self.project_name,
             success=full_report.valid,
             phase_reached="completed",
-            candidates_processed=allowed_count,
+            candidates_processed=0,
+            candidate_budget=candidate_budget,
+            reports_written=reports_written,
             events=list(self.events),
             report=full_report,
             plan=plan,

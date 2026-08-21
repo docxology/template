@@ -26,6 +26,10 @@ from infrastructure.provenance.models import (
 _DEFAULT_FILENAME = "dag.json"
 
 
+class ProvenanceStoreError(ValueError):
+    """Raised when a provenance store is malformed or cannot be read."""
+
+
 class Provenance:
     """Persistent provenance DAG store.
 
@@ -208,10 +212,64 @@ class Provenance:
         """Load state from the backing file."""
         try:
             payload = json.loads(self._path.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            return
-        self._nodes = {n["node_id"]: n for n in payload.get("nodes", []) if "node_id" in n}
-        self._edges = payload.get("edges", [])
+        except json.JSONDecodeError as exc:
+            raise ProvenanceStoreError(f"Invalid JSON in provenance store {self._path}: {exc.msg}") from exc
+        except OSError as exc:
+            raise ProvenanceStoreError(f"Could not read provenance store {self._path}: {exc}") from exc
+        if not isinstance(payload, dict):
+            raise ProvenanceStoreError(f"Provenance store root must be an object: {self._path}")
+
+        raw_nodes = payload.get("nodes")
+        raw_edges = payload.get("edges")
+        if not isinstance(raw_nodes, list) or not isinstance(raw_edges, list):
+            raise ProvenanceStoreError(f"Provenance store nodes and edges must be lists: {self._path}")
+
+        nodes: dict[str, dict[str, Any]] = {}
+        for index, raw_node in enumerate(raw_nodes):
+            if not isinstance(raw_node, dict):
+                raise ProvenanceStoreError(f"Provenance node {index} is not an object: {self._path}")
+            node_id = raw_node.get("node_id")
+            if not isinstance(node_id, str) or not node_id:
+                raise ProvenanceStoreError(f"Provenance node {index} has no valid node_id: {self._path}")
+            if not isinstance(raw_node.get("kind"), str):
+                raise ProvenanceStoreError(f"Provenance node {node_id} has no valid kind: {self._path}")
+            if not isinstance(raw_node.get("label"), str):
+                raise ProvenanceStoreError(f"Provenance node {node_id} has no valid label: {self._path}")
+            if not isinstance(raw_node.get("metadata", {}), dict):
+                raise ProvenanceStoreError(f"Provenance node {node_id} has invalid metadata: {self._path}")
+            if not isinstance(raw_node.get("created_at", ""), str):
+                raise ProvenanceStoreError(f"Provenance node {node_id} has invalid created_at: {self._path}")
+            try:
+                node_from_dict(raw_node)
+            except (TypeError, ValueError, KeyError, OverflowError) as exc:
+                raise ProvenanceStoreError(f"Invalid provenance node {node_id}: {exc}") from exc
+            if node_id in nodes:
+                raise ProvenanceStoreError(f"Duplicate provenance node {node_id}: {self._path}")
+            nodes[node_id] = raw_node
+
+        edges: list[dict[str, Any]] = []
+        for index, raw_edge in enumerate(raw_edges):
+            if not isinstance(raw_edge, dict):
+                raise ProvenanceStoreError(f"Provenance edge {index} is not an object: {self._path}")
+            from_id = raw_edge.get("from_id")
+            to_id = raw_edge.get("to_id")
+            relation = raw_edge.get("relation")
+            if not isinstance(from_id, str) or not from_id:
+                raise ProvenanceStoreError(f"Provenance edge {index} has no valid from_id: {self._path}")
+            if not isinstance(to_id, str) or not to_id:
+                raise ProvenanceStoreError(f"Provenance edge {index} has no valid to_id: {self._path}")
+            if not isinstance(relation, str):
+                raise ProvenanceStoreError(f"Provenance edge {index} has no valid relation: {self._path}")
+            try:
+                EdgeRelation(relation)
+            except ValueError as exc:
+                raise ProvenanceStoreError(f"Invalid provenance edge relation {relation!r}: {self._path}") from exc
+            if not isinstance(raw_edge.get("metadata", {}), dict):
+                raise ProvenanceStoreError(f"Provenance edge {index} has invalid metadata: {self._path}")
+            edges.append(raw_edge)
+
+        self._nodes = nodes
+        self._edges = edges
 
     def _save(self) -> None:
         """Atomically persist the current DAG to disk."""
@@ -241,4 +299,4 @@ class Provenance:
             raise
 
 
-__all__ = ["Provenance"]
+__all__ = ["Provenance", "ProvenanceStoreError"]
