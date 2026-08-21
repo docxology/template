@@ -3,8 +3,8 @@ name: provenance-dag
 description: >
   Content-addressed provenance DAG for research lineage tracking.
   Use for: recording which pipeline stage produced which artifact,
-  querying edges between recorded nodes, running a DAG-wide review pass.
-  CLI: python -m infrastructure.provenance {list,record-artifact,review}.
+  querying edges between recorded nodes, running a DAG-wide review and validation pass.
+  CLI: python -m infrastructure.provenance {list,record-artifact,review,validate}.
   Library: infrastructure.provenance.Provenance (record/link/get/list/query).
   Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME
 ---
@@ -43,11 +43,14 @@ uv run python -m infrastructure.provenance list --kind artifact
 
 # Run the DAG-wide review pass (missing hashes, missing exit codes, etc.)
 uv run python -m infrastructure.provenance review --json
+
+# Run the DAG graph structural and acyclicity validation
+uv run python -m infrastructure.provenance validate --json
 ```
 
 There is no `link` or `query` CLI subcommand — those are library-only
-(`Provenance.link()` / `Provenance.query()`); the CLI only exposes
-`list`, `record-artifact`, and `review`.
+(`Provenance.link()` / `Provenance.query()`); the CLI exposes
+`list`, `record-artifact`, `review`, and `validate`.
 
 ## Pipeline Orchestrator
 

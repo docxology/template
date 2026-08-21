@@ -34,12 +34,17 @@ from infrastructure.search.literature.models import Paper, SearchQuery
 __all__ = ["Resolution", "ReferenceResolver", "normalize_doi"]
 
 
-_DOI_PREFIX_RE = re.compile(r"^(https?://(dx\.)?doi\.org/|doi:)", re.IGNORECASE)
+_DOI_PREFIX_RE = re.compile(r"^(https?://(dx\.)?doi\.org/|doi:\s*)", re.IGNORECASE)
 
 
 def normalize_doi(doi: str) -> str:
-    """Lower-case and strip ``doi:`` / ``(http|https)://(dx.)?doi.org/`` prefixes."""
-    return _DOI_PREFIX_RE.sub("", doi.strip()).strip().lower()
+    """Lower-case, URL-decode if needed, and strip ``doi:`` / ``(http|https)://(dx.)?doi.org/`` prefixes."""
+    import urllib.parse
+
+    raw = doi.strip()
+    unquoted = urllib.parse.unquote(raw)
+    cleaned = _DOI_PREFIX_RE.sub("", unquoted).strip().lower()
+    return cleaned
 
 
 @dataclass

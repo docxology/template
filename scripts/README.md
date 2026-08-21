@@ -84,7 +84,7 @@ uv run python scripts/pipeline/stage_07_executive_report.py
 | Exemplar drift | `uv run python scripts/audit/check_template_drift.py --strict` |
 | Documentation RedTeam audit | `uv run python scripts/audit/audit_documentation.py --format markdown` |
 | Module line count | `uv run python scripts/gates/module_line_count_check.py` |
-| Tracked projects guard | `uv run python scripts/audit/check_tracked_projects.py` |
+| Tracked all resources guard | `uv run python scripts/audit/check_tracked_all.py` |
 | Tracked generated artifacts | `uv run python scripts/audit/check_tracked_generated_artifacts.py` |
 | CodeGraph local scope | `codegraph files "$(pwd)" --json \| uv run python scripts/maintenance/codegraph_local.py verify-scope` |
 | Unified health | `uv run python -m infrastructure.core.health` |

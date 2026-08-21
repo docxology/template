@@ -724,7 +724,7 @@
     },
     {
       "name": "provenance-dag",
-      "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, querying edges between recorded nodes, running a DAG-wide review pass. CLI: python -m infrastructure.provenance {list,record-artifact,review}. Library: infrastructure.provenance.Provenance (record/link/get/list/query). Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
+      "description": "Content-addressed provenance DAG for research lineage tracking. Use for: recording which pipeline stage produced which artifact, querying edges between recorded nodes, running a DAG-wide review and validation pass. CLI: python -m infrastructure.provenance {list,record-artifact,review,validate}. Library: infrastructure.provenance.Provenance (record/link/get/list/query). Orchestrator: scripts/pipeline/stage_09_provenance_record.py --project {name} --stage NAME",
       "path": "infrastructure/provenance/SKILL.md",
       "cursor_at": "infrastructure/provenance/SKILL.md"
     },
@@ -1042,7 +1042,7 @@
     },
     {
       "name": "template-docgen",
-      "description": "Derived documentation generators for the template research framework. Scripts that write to docs/_generated/ and update in-place doc blocks. Currently at scripts/ root; this directory is the planned migration target.\n",
+      "description": "Derived documentation generators for the template research framework. Scripts that write to docs/_generated/ and update in-place doc blocks.\n",
       "path": "scripts/docgen/SKILL.md",
       "cursor_at": "scripts/docgen/SKILL.md"
     },

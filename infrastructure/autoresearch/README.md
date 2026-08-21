@@ -25,6 +25,7 @@ The full exported surface is defined by `__all__` in
 from infrastructure.autoresearch import (
     AutoResearchConfig,
     AutoResearchIssue,
+    AutoResearchOrchestrator,
     AutoResearchPlan,
     AutoResearchReport,
     AutoResearchStage,
@@ -34,6 +35,8 @@ from infrastructure.autoresearch import (
     EvidenceLink,
     ExperimentCandidate,
     INTRINSIC_QUALITY_CHECKS,
+    OrchestrationEvent,
+    OrchestrationResult,
     ResearchIdea,
     ResearchProgram,
     ReviewGate,

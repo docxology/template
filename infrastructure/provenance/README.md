@@ -12,27 +12,31 @@ No extra dependencies — uses Python stdlib only (`hashlib`, `json`, `os`,
 ## Quick start
 
 ```python
+from pathlib import Path
 from infrastructure.provenance import (
-    Provenance, RunNode, ArtifactNode, Edge, EdgeRelation, NodeKind
+    ArtifactNode,
+    EdgeRelation,
+    NodeKind,
+    Provenance,
+    RunNode,
 )
+
+# Initialize store
+prov = Provenance.with_path(Path("output/provenance"))
 
 # Record a run
-run = Provenance.record(
-    RunNode(id="", kind=NodeKind.RUN, label="train model", tool="scripts/train.py")
-)
+run = RunNode.create("train model", command="python scripts/train.py")
+prov.record(run)
 
 # Record the artifact it produced
-artifact = Provenance.record(
-    ArtifactNode(id="", kind=NodeKind.ARTIFACT, label="model.pkl",
-                 path="output/model.pkl", artifact_type="model")
-)
+artifact = ArtifactNode.create("model.pkl", path="output/model.pkl")
+prov.record(artifact)
 
 # Link them
-Provenance.link(Edge(from_id=run.id, to_id=artifact.id,
-                     relation=EdgeRelation.PRODUCED))
+prov.link(run.node_id, artifact.node_id, EdgeRelation.produced_by)
 
-# Transitive lineage query
-nodes, edges = Provenance.query(artifact.id)
+# Query
+edges = prov.query(from_id=run.node_id)
 ```
 
 ## Store configuration
@@ -62,44 +66,35 @@ nodes, edges = Provenance.query(artifact.id)
 | `supports` | Evidence node → Claim it supports |
 | `refutes` | Reviewer finding → Claim it disputes |
 
-## Review system
+## Review and Validation system
 
 ```python
-from infrastructure.provenance import Review, Finding, Severity
+from infrastructure.provenance import review_provenance_store, validate_provenance_dag
 
-result = Review.record(
-    target=artifact.id,
-    finding=Finding(
-        claim="Table 3, row 2",
-        issue="p-value 0.048 does not match replication (0.061)",
-        severity=Severity.MAJOR,
-        evidence="output/replication/stats.json:42",
-    ),
-    reviewer="agent-qa",
-)
+# Review standard node attributes
+review_result = review_provenance_store(prov)
+print("Review passed:", review_result.passed)
 
-# Query all findings
-findings = Review.findings_for_node(artifact.id)
+# Validate graph structural integrity & acyclicity
+validation_report = validate_provenance_dag(prov)
+print("DAG is valid:", validation_report.is_valid)
 ```
 
 ## CLI
 
 ```bash
-# Record nodes
-python -m infrastructure.provenance record run "fit model" --tool train.py
-python -m infrastructure.provenance record artifact "model.pkl" --path output/model.pkl
+# Record artifact
+python -m infrastructure.provenance record-artifact "model.pkl" --path output/model.pkl
 
-# Link nodes
-python -m infrastructure.provenance link <from_id> <to_id> produced
+# List nodes
+python -m infrastructure.provenance list
+python -m infrastructure.provenance list --kind artifact --json
 
-# Query
-python -m infrastructure.provenance query              # full graph
-python -m infrastructure.provenance query <id>         # lineage of one node
-python -m infrastructure.provenance list               # all nodes
+# Review node quality
+python -m infrastructure.provenance review
 
-# Review
-python -m infrastructure.provenance review <target_id> "claim" "issue" major "evidence"
-python -m infrastructure.provenance review <target_id> "claim" "verified" info "evidence" --verdict supports
+# Validate DAG structure & acyclicity
+python -m infrastructure.provenance validate --json
 ```
 
 ## Design notes

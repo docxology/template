@@ -333,7 +333,7 @@ should produce or point at a Zenodo software version under that concept DOI.
    ```bash
    rg -n "version =|version:" pyproject.toml CITATION.cff
    uv run python scripts/docgen/counts.py --check
-   uv run python scripts/audit/check_tracked_projects.py
+   uv run python scripts/audit/check_tracked_all.py
    uv run python scripts/audit/check_tracked_generated_artifacts.py
    ```
 

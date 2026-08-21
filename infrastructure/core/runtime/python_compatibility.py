@@ -57,8 +57,26 @@ def scan_python_310_compatibility(
         except (OSError, UnicodeError) as exc:
             issues.append(PythonCompatibilityIssue(display, 0, "PY310.READ", str(exc)))
             continue
-        parents = _parent_map(tree)
-        issues.extend(_api_issues(tree, parents, display))
+
+        # Fast path: only build parent map and inspect AST nodes if the source
+        # contains potential post-3.10 identifiers or imports.
+        if any(
+            token in source
+            for token in (
+                "tomllib",
+                "TaskGroup",
+                "UTC",
+                "StrEnum",
+                "LiteralString",
+                "NotRequired",
+                "Required",
+                "Self",
+                "TypeVarTuple",
+                "Unpack",
+            )
+        ):
+            parents = _parent_map(tree)
+            issues.extend(_api_issues(tree, parents, display))
     return tuple(sorted(issues, key=lambda issue: (issue.path, issue.line, issue.rule)))
 
 

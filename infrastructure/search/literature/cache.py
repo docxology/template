@@ -28,8 +28,12 @@ SEARCH_CACHE_SCHEMA_VERSION = 1
 
 def query_identity(query: SearchQuery) -> dict[str, Any]:
     """Return the canonical, receipt-friendly identity of *query*."""
+    import re
+
+    # Normalize whitespace: collapse consecutive spaces, tabs, and newlines
+    normalized_text = re.sub(r"\s+", " ", query.text.strip().lower())
     return {
-        "text": query.text.strip().lower(),
+        "text": normalized_text,
         "max_results": query.max_results,
         "year_min": query.year_min,
         "year_max": query.year_max,
@@ -60,8 +64,11 @@ def validate_cache_payload(payload: Any, query: SearchQuery | None = None) -> li
     if not isinstance(stored_query, dict):
         errors.append("query must be a mapping")
     elif query is not None:
+        import re
+
+        stored_text = re.sub(r"\s+", " ", str(stored_query.get("text", "")).strip().lower())
         stored_identity = {
-            "text": str(stored_query.get("text", "")).strip().lower(),
+            "text": stored_text,
             "max_results": stored_query.get("max_results"),
             "year_min": stored_query.get("year_min"),
             "year_max": stored_query.get("year_max"),

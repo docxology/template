@@ -33,6 +33,9 @@ without autonomous research execution.
 - `AutoResearchPlan`
 - `AutoResearchIssue`
 - `AutoResearchReport`
+- `AutoResearchOrchestrator`
+- `OrchestrationEvent`
+- `OrchestrationResult`
 - `INTRINSIC_QUALITY_CHECKS` / `EXTRINSIC_QUALITY_CHECKS`
 - `load_autoresearch_config(project_root)`
 - `parse_metric_lines(output)`

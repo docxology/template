@@ -23,7 +23,9 @@ from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 Severity = Literal["error", "warning"]
 BacklogStatus = Literal["open", "partial", "blocked-external", "blocked-tool"]
 
-ALLOWED_BACKLOG_STATUSES: frozenset[str] = frozenset({"open", "partial", "blocked-external", "blocked-tool"})
+ALLOWED_BACKLOG_STATUSES: frozenset[str] = frozenset(
+    {"open", "partial", "completed", "blocked-external", "blocked-tool"}
+)
 # Active work is deliberately decomposed into reviewable Minor/Medium slices.
 # Repository-wide or release-level initiatives belong in the maintenance plan
 # and are represented here by their current bounded slice or an explicit
