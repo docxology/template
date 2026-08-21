@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "92.51 %",
-      "source_hash": "c0862c7572e401a6ca627b66bd1327e9d804475a2380cee82e550e7eb3590d52"
+      "source_hash": "9de7c4911d5cfb4627e1ff39460f2b1ebdca1243cd24637af2ee61dc0ff9af86"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -23,7 +23,7 @@
     },
     "template_code_project": {
       "coverage_pct": "95.85 %",
-      "source_hash": "d7cfa2f24361c897c18f7ace77525203f0e2aea15602ab0a84f1ec001b3e5078"
+      "source_hash": "39eb1209fda23aebae3cfc95932b2058a7e73ffadecf4a1903076da16ae328fe"
     },
     "template_data_descriptor": {
       "coverage_pct": "96.13 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "b5bf4db4e7e49b8bbbb9e845f9709f4d8b43cf8c",
+  "source_commit": "60fb9b98d1564e8c7e15a09b718bb353d5b8efef",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -184,12 +184,12 @@
       }
     },
     "projects": {
-      "template_active_inference": "c0862c7572e401a6ca627b66bd1327e9d804475a2380cee82e550e7eb3590d52",
+      "template_active_inference": "9de7c4911d5cfb4627e1ff39460f2b1ebdca1243cd24637af2ee61dc0ff9af86",
       "template_advanced_literature_review": "b9ab9c88e333c4797eb23b848f99e75ccf56972a2363bfb35e7c54fa8166ede6",
       "template_autopoiesis": "d8e3b1f4a87fb01e2ee7cde7982412d012216ea1e7653a5f460c3fa310c58d06",
       "template_autoresearch_project": "2b61f17783dbb69596aa4cb2e080ceef0f25f7361e380cf123faa391327ad2e0",
       "template_autoscientists": "5f8adb786d0544583b85dda29c4d8d99a33ba6f67762de250bab928f23d97866",
-      "template_code_project": "d7cfa2f24361c897c18f7ace77525203f0e2aea15602ab0a84f1ec001b3e5078",
+      "template_code_project": "39eb1209fda23aebae3cfc95932b2058a7e73ffadecf4a1903076da16ae328fe",
       "template_data_descriptor": "7030bfc33070f0f9d99d30375c17128aae10e8fd1438b897e67353bc58a9c5b9",
       "template_eda_notebook": "92c15ffcd23dc3e211e687c6aa6ec57f5b181f0cdc6512545ba173d4c311ddb4",
       "template_formal": "44e5f6dd7a77003394f62b481774cf042f1012e77091acec580a9915690e8d05",
