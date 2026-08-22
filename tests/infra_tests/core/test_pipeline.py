@@ -6,6 +6,8 @@ import json
 import tempfile
 from pathlib import Path
 
+import pytest
+
 
 from infrastructure.core.runtime.checkpoint import CheckpointManager
 from infrastructure.core.pipeline import PipelineConfig, PipelineExecutor, PipelineStageResult
@@ -166,6 +168,7 @@ sys.exit(0)
 
         assert executor.config == config
 
+    @pytest.mark.timeout(60)
     def test_run_script_success(self):
         """Test successful script execution."""
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -186,6 +189,7 @@ sys.exit(0)
 
             assert result is True
 
+    @pytest.mark.timeout(60)
     def test_run_script_failure(self):
         """Test failed script execution."""
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -261,6 +265,7 @@ sys.exit(1)
         assert result2.success is False
         assert "bad value" in result2.error_message
 
+    @pytest.mark.timeout(60)
     def test_execute_full_pipeline_success(self, tmp_path: Path):
         """Test successful full pipeline execution."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=True)
@@ -306,6 +311,7 @@ sys.exit(1)
         assert "--infra-scope" in infra_invocations[0]["args"]
         assert "pipeline-smoke" in infra_invocations[0]["args"]
 
+    @pytest.mark.timeout(60)
     def test_execute_core_pipeline_success(self, tmp_path: Path):
         """Test successful core pipeline execution."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -337,6 +343,7 @@ sys.exit(1)
         assert "LLM Scientific Review" not in stage_names
         assert "LLM Translations" not in stage_names
 
+    @pytest.mark.timeout(60)
     def test_skip_infra_execution(self, tmp_path: Path):
         """Test that infrastructure tests are skipped when configured."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -349,6 +356,7 @@ sys.exit(1)
         infra_calls = [i for i in invocations if i["script"] == "stage_01_test.py" and "--infra-only" in i["args"]]
         assert infra_calls == []
 
+    @pytest.mark.timeout(60)
     def test_skip_llm_execution(self, tmp_path: Path):
         """Test that LLM stages are skipped when configured."""
         repo_root = self._create_fake_repo(tmp_path / "repo", "test", include_llm=False)
@@ -377,6 +385,7 @@ sys.exit(1)
         assert len(results) > 0
         assert all(isinstance(r, PipelineStageResult) for r in results)
 
+    @pytest.mark.timeout(60)
     def test_execute_core_pipeline_aborts_on_first_failure(self, tmp_path: Path):
         """Pipeline stops after the first failing stage; subsequent scripts are never invoked."""
         repo_root = tmp_path / "repo"
@@ -425,6 +434,7 @@ sys.exit(0)
         assert "stage_01_test.py" not in invoked
         assert "stage_02_analysis.py" not in invoked
 
+    @pytest.mark.timeout(60)
     def test_llm_stage_exit_code_2_treated_as_success(self, tmp_path: Path):
         """LLM stages that exit with code 2 (Ollama unavailable) are treated as success."""
         repo_root = tmp_path / "repo"
@@ -453,6 +463,7 @@ sys.exit(0)
         # All stages should succeed: LLM stage exit-2 is treated as graceful skip
         assert all(r.success for r in results), [r for r in results if not r.success]
 
+    @pytest.mark.timeout(60)
     def test_resume_pipeline_valid_checkpoint_skips_completed_stages(self, tmp_path: Path):
         """Resume with a valid checkpoint skips completed stages and runs remaining ones."""
         from infrastructure.core.runtime.checkpoint import StageResult

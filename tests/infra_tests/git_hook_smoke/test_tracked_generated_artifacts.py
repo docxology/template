@@ -56,6 +56,7 @@ def test_public_output_guard_rejects_hidden_and_empty_payloads(tmp_path: Path) -
 
 
 @pytest.mark.timeout(240)  # repo-wide index scan measures ~40s here (measured 2026-08-21)
+@pytest.mark.timeout(150)
 def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     """Repository index must stay free of regeneratable output artifacts."""
     proc = subprocess.run(
