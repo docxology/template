@@ -110,6 +110,38 @@ class HealthReport:
 _OUTPUT_TAIL_BYTES = 4000
 _GATE_TIMEOUT_SECONDS = 300.0
 
+# Per-gate timeout overrides (seconds). Gates whose runtime legitimately
+# exceeds the default ceiling — because they re-derive measured facts from
+# every public exemplar via per-project pytest collection subprocesses — get
+# an explicit, documented budget instead of failing spuriously on slower or
+# loaded machines. Every value here must remain a hard ceiling: the gate is
+# still expected to finish, only with more headroom than the 300s default.
+_GATE_TIMEOUT_OVERRIDES: dict[str, float] = {
+    # ``counts.py --check`` collects each public exemplar serially in its own
+    # declared environment; observed wall time exceeds 20 minutes locally.
+    "counts": 1800.0,
+    # ``lint_docs.py`` renders every discovered Mermaid block (268+ as of
+    # 2026-08) through real headless-Chrome subprocesses; observed local wall
+    # time exceeds the 300s default on loaded machines.
+    "docs-lint": 900.0,
+}
+
+
+def _gate_timeout_seconds(name: str) -> float:
+    """Return the effective timeout for *name*, honouring the env override."""
+    override = os.environ.get("TEMPLATE_HEALTH_GATE_TIMEOUT")
+    if override:
+        try:
+            parsed = float(override)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid TEMPLATE_HEALTH_GATE_TIMEOUT value {override!r}: expected a number of seconds"
+            ) from exc
+        if parsed <= 0:
+            raise ValueError(f"TEMPLATE_HEALTH_GATE_TIMEOUT must be positive, got {parsed}")
+        return parsed
+    return _GATE_TIMEOUT_OVERRIDES.get(name, _GATE_TIMEOUT_SECONDS)
+
 
 def _public_source_targets(repo_root: Path) -> list[str]:
     """Return public CI source paths for type checks."""
@@ -508,7 +540,9 @@ def run_health_checks(
     commit_before, clean_before = _repository_state(repo_root)
     start = time.perf_counter()
     if selected_workers == 1 or len(specs) == 1:
-        results = [_run_single_gate(name, argv, repo_root) for name, argv in specs]
+        results = [
+            _run_single_gate(name, argv, repo_root, timeout_seconds=_gate_timeout_seconds(name)) for name, argv in specs
+        ]
     else:
         # Gates are subprocess boundaries and do not share mutable Python
         # state. A bounded thread pool overlaps their I/O while preserving
@@ -516,7 +550,9 @@ def run_health_checks(
         with ThreadPoolExecutor(max_workers=min(selected_workers, len(specs))) as executor:
             results = list(
                 executor.map(
-                    lambda spec: _run_single_gate(spec[0], spec[1], repo_root),
+                    lambda spec: _run_single_gate(
+                        spec[0], spec[1], repo_root, timeout_seconds=_gate_timeout_seconds(spec[0])
+                    ),
                     specs,
                 )
             )
