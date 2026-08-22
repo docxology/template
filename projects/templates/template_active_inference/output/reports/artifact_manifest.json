@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "be381219060ae6afff0d0b63403262309337ba42a4df86fe169c0963e85a7482",
+      "sha256": "1bdd79e807dbc36118a857a101789c8c1a4400395cbf7351318e063b6cd12730",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -390,8 +390,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "b27e5cb0da838d9fe82ffd9c64237a41d040bbd89d67a79dd043beecc8a7c0eb",
-      "size_bytes": 8634,
+      "sha256": "a1af1f71f2a868cc0d4acf185b54423e5b103eca3e17d4271eab5a1199686d9b",
+      "size_bytes": 8635,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -471,8 +471,8 @@
     {
       "contract_match": true,
       "path": "output/data/sensitivity_sweep.json",
-      "sha256": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499",
-      "size_bytes": 4986,
+      "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
+      "size_bytes": 44895,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -669,8 +669,8 @@
     {
       "contract_match": true,
       "path": "output/data/uncertainty_summary.json",
-      "sha256": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd",
-      "size_bytes": 581,
+      "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
+      "size_bytes": 6449,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1254,8 +1254,8 @@
     {
       "contract_match": true,
       "path": "output/reports/model_checking_witnesses.json",
-      "sha256": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d",
-      "size_bytes": 1710,
+      "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
+      "size_bytes": 4418,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
