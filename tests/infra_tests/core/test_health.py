@@ -179,6 +179,14 @@ class TestGateTimeoutResolution:
         override = _gate_timeout_seconds("counts")
         assert override > _GATE_TIMEOUT_SECONDS
 
+    def test_bandit_override_exceeds_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
+        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
+
+        # Measured bandit wall time on a loaded workstation exceeds 10 minutes.
+        assert _gate_timeout_seconds("bandit") >= 1200.0
+        assert _gate_timeout_seconds("bandit") > _GATE_TIMEOUT_SECONDS
+
     def test_env_override_applies_to_every_gate(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "42")
         from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
