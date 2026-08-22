@@ -51,7 +51,7 @@ pymdp harness summary: `output/data/si_tmaze_summary.json` (mean belief entropy,
 
 <!-- sheaf-track:provenance -->
 
-The appendix provenance fragment points to `output/data/artifact_provenance.json`, the canonical artifact that records required toy artifact hashes, producer scripts, source commit, deterministic seeds, config digests, and 5 bundle rows.
+The appendix provenance fragment points to `output/data/artifact_provenance.json`, the canonical artifact that records required toy artifact hashes, producer scripts, source commit, deterministic seeds, config digests, and 0 bundle rows.
 
 <!-- sheaf-track:replay_matrix -->
 
@@ -94,7 +94,7 @@ incomplete in the track-improvement scope.
 ### Appendix track: artifact diffoscope
 
 `artifact_diffoscope` binds `output/reports/artifact_diffoscope.json` into the
-full sheaf appendix. Rows: 43. All equal:
+full sheaf appendix. Rows: 30. All equal:
 `true`.
 
 This diffoscope is deliberately narrow and reproducibility-facing. For each
@@ -113,7 +113,7 @@ provenance.
 ### Appendix track: artifact license
 
 `artifact_license` binds `output/reports/artifact_license_audit.json` into the
-full sheaf appendix. Rows: 86. All safe:
+full sheaf appendix. Rows: 34. All safe:
 `true`.
 
 The license audit classifies each generated or source-backed artifact under the

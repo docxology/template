@@ -553,7 +553,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "d375b3ed509999f4066fda36acde5c47d4213e711579464beeb47cb4fbfb3ea6",
+      "source_sha256": "30541d449bea312a74db389fbf9f37243109ad90305d72e2de26f9c88bcc5cf7",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -587,7 +587,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
+      "source_sha256": "b6371187cfc5f586a6dbd01276d2a419a59053ded9178730c946e4a0e06c2190",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2189,7 +2189,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
+      "source_sha256": "c0b6c39558a0f0800ddca03f4c0da8a94a372961754327fe994b9cb6d2d9ba16",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2228,7 +2228,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
+      "source_sha256": "0864f3c6f562b53eb8afce8ac48d4b591b8f6874c2ee601fdf768ae2f31d0524",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2580,7 +2580,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
+      "source_sha256": "60d6c4f9595732422d20f9377cf15cc7d953608c8ca0e28f5e0d89b83b7cc5ac",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2760,7 +2760,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-      "source_sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
+      "source_sha256": "95cf97ab22cc6216cadfb8a710bce0142231b5792db4b2258168647803a90733",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"

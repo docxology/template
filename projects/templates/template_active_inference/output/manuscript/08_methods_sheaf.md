@@ -89,9 +89,9 @@ Semantic gluing then checks agreement of the glued content: coverage counts, man
 
 <!-- sheaf-track:provenance -->
 
-The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes 86 required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and 5 artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
+The `provenance` fragment makes artifact lineage a live canonical sheaf track. The configured producer `generate_sheaf_tracks.py` writes `output/data/artifact_provenance.json`, which hashes 34 required toy artifacts and records producer scripts, source commit, deterministic seed fields, config digests, and 0 artifact bundles. Publication claims that depend on generated files must be traceable to this lineage table or to a narrower artifact-specific certificate.
 
-The provenance claim is intentionally limited: every listed artifact exists, has a SHA-256 digest or an explicit cycle exclusion, is produced by a configured analysis script, and carries seed/config provenance (`86` seeded rows; all seeded flag `true`; bundle-complete flag `true`). A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
+The provenance claim is intentionally limited: every listed artifact exists, has a SHA-256 digest or an explicit cycle exclusion, is produced by a configured analysis script, and carries seed/config provenance (`34` seeded rows; all seeded flag `true`; bundle-complete flag `false`). A changed file, missing producer, or stale saved digest is a validation failure, not a prose warning.
 
 <!-- sheaf-track:counterexample -->
 
@@ -128,7 +128,7 @@ The `gate_ergonomics` fragment turns validation commands into evidence rows. `ou
 The `artifact_diffoscope` track compares saved provenance hashes against live
 artifact hashes at the artifact root JSONPath. Its proof artifact is
 `output/reports/artifact_diffoscope.json`: it currently records
-43 comparison rows, with equality status
+30 comparison rows, with equality status
 `true`.
 
 <!-- sheaf-track:artifact_license -->
@@ -138,7 +138,7 @@ artifact hashes at the artifact root JSONPath. Its proof artifact is
 The `artifact_license` track classifies generated and project-source artifacts
 under the public project license boundary. Its audit artifact is
 `output/reports/artifact_license_audit.json`: it currently records
-86 rows, with license-safe status
+34 rows, with license-safe status
 `true`.
 
 <!-- sheaf-track:scholarship -->
@@ -489,7 +489,7 @@ Generated status for the current manuscript sheaf, summarized per composable sec
 | Dependency edges ok | `True` |
 | Track scope complete | `True` |
 | Empirical adapter blocked | `True` |
-| Provenance bundles complete | `True` |
+| Provenance bundles complete | `False` |
 | Replay rows matched | `True` |
 | Sensitivity complete | `True` |
 | Uncertainty normalized | `True` |
