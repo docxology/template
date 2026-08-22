@@ -99,3 +99,24 @@ decompositions) remain accurate and are adopted by reference.
 - [x] Minor fixes implemented and verified by real runs
 - [x] Path-scoped local commits of my files only
 - [x] Summary printed to terminal
+
+
+## Addendum (21:06) — commit race on the fix files
+
+The first commit of this session's fix (`fcb7773e7`, 20:58:55) landed with the
+report but **without the two test-file edits**: between my edits and the
+path-scoped commit, concurrent deep-pass sessions were racing in this same
+checkout and the working-tree test files were overwritten (the `-S` hit for
+`@pytest.mark.timeout(60)` inside `fcb7773e7` was from this report's prose,
+not the code). The fix was re-applied and committed as `1b6074262`
+(path-scoped: only the two test files). Re-verification after re-commit:
+
+- `pytest tests/infra_tests/core/test_pipeline.py -q --timeout=90`:
+  **18 passed in 30.69s**
+- `pytest tests/infra_tests/git_hook_smoke/test_tracked_generated_artifacts.py
+  -q --timeout=200`: **9 passed**; ruff clean on both files
+- Full smoke lane: **209 passed, 1 deselected in 45.61s, exit 0**
+
+This is the same commit-race hazard prior sessions recorded (F5 in the
+fifth-session report); treat any single-session file write here as
+uncommitted-until-verified.
