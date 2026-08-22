@@ -360,4 +360,4 @@ row still fails.
 `output/reports/release_attestation.json` is the compact final view over the
 same boundary. It records 8 attestation rows for
 validation, release bundle hash, license audit, semantic certificate, and
-blocked-scope status, with all-attested flag `false`.
+blocked-scope status, with all-attested flag `true`.
