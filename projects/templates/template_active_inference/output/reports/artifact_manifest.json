@@ -290,15 +290,6 @@
     },
     {
       "contract_match": true,
-      "path": "output/data/animation_frame_deltas.json",
-      "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
-      "size_bytes": 2165,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
       "path": "output/data/artifact_contract_index.json",
       "sha256": "ad308ef7bbb37bf71d0fbb070c7aaf01e1e575b464987aab64e84cee3d88d3e8",
       "size_bytes": 104401,
@@ -309,7 +300,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "ef76d1ed2e1463f960941b2b26b9d86e87c88043fda1e20520c0bf027f75ff34",
+      "sha256": "b2f90d34342af1611fa62082feee4d4c63502d9bf3e04df7e22d8d94f7c15a24",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -491,15 +482,6 @@
       "path": "output/data/sheaf_evidence_crosswalk.json",
       "sha256": "fb4a8dc5ad56239bf40d40c847471b941dfa610320a45d919de9b54b9d2a78c7",
       "size_bytes": 57624,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/data/sheaf_gluing_certificate.json",
-      "sha256": "d79b78bf282fb127de2d574e2087267381be2151ad88c4b381c326964e8c73c5",
-      "size_bytes": 203385,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -860,15 +842,6 @@
       "path": "output/figures/si_belief_entropy_curve.png",
       "sha256": "39bcaf1764b47e519c27739dc3f5870e0d50e93112b4db3da5ecb30275828b6c",
       "size_bytes": 44361,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/figures/si_belief_trajectory.gif",
-      "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
-      "size_bytes": 7058,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1256,15 +1229,6 @@
       "path": "output/reports/model_checking_witnesses.json",
       "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
       "size_bytes": 4418,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/producer_completeness.json",
-      "sha256": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
-      "size_bytes": 14660,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
