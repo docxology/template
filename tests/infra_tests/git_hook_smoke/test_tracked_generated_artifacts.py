@@ -6,6 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 from infrastructure.project.git_guards import (
@@ -54,6 +55,7 @@ def test_public_output_guard_rejects_hidden_and_empty_payloads(tmp_path: Path) -
     )
 
 
+@pytest.mark.timeout(240)  # repo-wide index scan measures ~40s here (measured 2026-08-21)
 def test_current_repo_has_no_tracked_generated_artifacts() -> None:
     """Repository index must stay free of regeneratable output artifacts."""
     proc = subprocess.run(
@@ -67,12 +69,15 @@ def test_current_repo_has_no_tracked_generated_artifacts() -> None:
         capture_output=True,
         text=True,
         check=False,
-        timeout=30,
+        # The repo-wide index scan measures ~40s on this checkout (measured
+        # 2026-08-21); a 30s cap made this smoke test flaky under load.
+        timeout=120,
     )
 
     assert proc.returncode == 0, proc.stdout + proc.stderr
 
 
+@pytest.mark.timeout(120)  # full-tree tracked-blob scan measures ~23s here (measured 2026-08-21)
 def test_current_repo_has_no_high_confidence_tracked_secrets() -> None:
     """Credential examples remain fixture-safe and real tokens are rejected."""
     repo_root = _repo_root()
