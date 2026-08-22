@@ -4798,9 +4798,7 @@
     ],
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
-  "issues": [
-    "artifact_provenance.json has incomplete provenance rows or bundles"
-  ],
+  "issues": [],
   "lane_summaries": {
     "analytical": {
       "all_ok": true,
@@ -5198,7 +5196,7 @@
     "visualization_statistics_backed_count": 7,
     "visualization_statistics_bridge_ok": true
   },
-  "ok": false,
+  "ok": true,
   "proof_obligations": [
     {
       "class": "semantic_restriction",
