@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "bba39bf795782ba42ef4006e2a5a66f6738c5e7baf1316d962598a8270f31b3c",
+      "sha256": "5c2a22d6ac312e70ab2e8812800747e57ba7fad2c73a9e3e87cfa716f293f7d8",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -381,8 +381,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_token_provenance.json",
-      "sha256": "877bf92bd6fb816d5b862330b590d1815c5f6113dadf934a0e6581e0481b7432",
-      "size_bytes": 290395,
+      "sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
+      "size_bytes": 290393,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -390,8 +390,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "ef0a575f5f4e9ff4531abbb29384bc067d56f3196180996d3bcce701edf954fc",
-      "size_bytes": 8634,
+      "sha256": "a1af1f71f2a868cc0d4acf185b54423e5b103eca3e17d4271eab5a1199686d9b",
+      "size_bytes": 8635,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -471,8 +471,8 @@
     {
       "contract_match": true,
       "path": "output/data/sensitivity_sweep.json",
-      "sha256": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499",
-      "size_bytes": 4986,
+      "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
+      "size_bytes": 44895,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -498,8 +498,8 @@
     {
       "contract_match": true,
       "path": "output/data/sheaf_gluing_certificate.json",
-      "sha256": "667071f8bd87a22967a715ca2e948a68f3b161729082f1db600740ca0eefef27",
-      "size_bytes": 203463,
+      "sha256": "d79b78bf282fb127de2d574e2087267381be2151ad88c4b381c326964e8c73c5",
+      "size_bytes": 203385,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -669,8 +669,8 @@
     {
       "contract_match": true,
       "path": "output/data/uncertainty_summary.json",
-      "sha256": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd",
-      "size_bytes": 581,
+      "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
+      "size_bytes": 6449,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -993,8 +993,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/07_methods_lean.md",
-      "sha256": "10be56935a4e6e573f932ad61b8bda7859af179096d44de1ff2cf3e0b2db48b6",
-      "size_bytes": 3384,
+      "sha256": "8f2cf5d8c724dd8c0834f3df506b06f3b11ed1761223bd13ddf84abe1b9f4d73",
+      "size_bytes": 3385,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1038,8 +1038,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/13_results_invariants.md",
-      "sha256": "85ff29628c02789feda6e33a14cec81391d8bfd348b76662384dfcafff31d642",
-      "size_bytes": 3746,
+      "sha256": "b8f3b4d9af657f740977d5a015cce99c84014a9b69f2a825cdc4f17b56ef0305",
+      "size_bytes": 3747,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1056,8 +1056,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/16_appendix_full_sheaf.md",
-      "sha256": "ad738f5303d1af90e9742985cafa933770dbbecfc69e056dc8e565abad821fe3",
-      "size_bytes": 20266,
+      "sha256": "82d5fc41224692f8d463c3162cfaa5f75afe735e54136972d8bb0d704e454de8",
+      "size_bytes": 20268,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1245,8 +1245,8 @@
     {
       "contract_match": true,
       "path": "output/reports/manuscript_staleness_report.json",
-      "sha256": "785172c078155564dd328acade46c42f8c8fc03628752c7509ad641616d21432",
-      "size_bytes": 72356,
+      "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
+      "size_bytes": 72360,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1254,8 +1254,8 @@
     {
       "contract_match": true,
       "path": "output/reports/model_checking_witnesses.json",
-      "sha256": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d",
-      "size_bytes": 1710,
+      "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
+      "size_bytes": 4418,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
