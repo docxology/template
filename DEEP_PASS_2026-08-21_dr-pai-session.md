@@ -161,3 +161,52 @@ unavoidable skip for the local non-PyPI workspace package). Committed: `uv.lock`
   concurrent session's dirty tree, not committed HEAD; belongs to that feature's landing.
 - Mirror-shape violations (M1) and 10-commits-behind (M2): unchanged, still deferred.
 - Prior reports' findings independently confirmed where overlapping; no contradictions found.
+
+---
+
+# Addendum 2 — fourth-pass verification (same session, later)
+
+Re-verified after the concurrent session landed its fixes as commits
+(`e2a01aaad`…`d2ced8304`). All measurements below are live this pass.
+
+## New fix implemented and verified this pass
+
+**F3 — unified-health `docs-lint` gate times out at the shared 300s ceiling**
+Evidence: `uv run python -m infrastructure.core.health --workers 1` reported
+"docs-lint — gate timed out after 300s"; a direct `scripts/audit/lint_docs.py`
+run needed >336s (268 Mermaid blocks rendered through headless-Chrome
+subprocesses). `counts` already had an override (`1800s`); `docs-lint` did not.
+Fix: added `"docs-lint": 900.0` to `_GATE_TIMEOUT_OVERRIDES`
+(infrastructure/core/health.py:119) and wired per-gate resolution into both
+serial and pooled execution paths, plus a `TestGateTimeoutResolution` suite in
+tests/infra_tests/core/test_health.py. Verified: ruff check + format clean;
+mypy clean on health.py; focused pytest `TestGateTimeoutResolution` **5 passed**;
+full `test_health.py` module **26 passed** (137s).
+
+## Gates re-confirmed green this pass
+
+| Gate | Result |
+| --- | --- |
+| Ruff (public lint surface) | PASS |
+| Mypy (source-paths, 1559 files) | PASS |
+| Bandit | 0 issues |
+| verify_no_mocks lexical + inventory (0 dep replacements) | clear |
+| git_hook_smoke suite | **14 passed** (28.8s) after concurrent session's timeout budgets |
+| exemplar_roster / api_reference / skills check / check-all-exports / stage_table idempotence | all PASS |
+| Backlog contract | PASS (25 files, 22 stable IDs, 0 errors) |
+
+## Still open
+
+- STALE coverage provenance for `template_active_inference` (`counts --check`
+  exit 1): tracked output JSONs remain dirty from the concurrent rendering
+  feature; provenance refresh belongs to that work's landing, not this pass.
+- F2 (Mermaid render timeouts), M1 (mirror-shape violations),
+  M2 (branch behind origin/main), M3 (dependency drift): unchanged dispositions
+  above.
+- J1 full-infra-lane completion remains scoped, not run under contention.
+
+## Commit
+
+- `e03ddb9e7` deep-pass: raise docs-lint unified-health gate ceiling… (only
+  infrastructure/core/health.py + tests/infra_tests/core/test_health.py; verified via
+  `git show --stat HEAD`)
