@@ -84,3 +84,27 @@ was running; results taken during concurrent runs were discarded as invalid
 rather than reported. The animation fix was verified by direct execution of the
 writer + delta builder + PIL decode, not by the full gate suite (which cannot
 pass while other agents hold the tree).
+
+
+---
+
+## Unified-health follow-up (post-report)
+
+Re-ran `uv run python -m infrastructure.core.health --workers 1 --json`: 26
+gates, 3 failed. Disposition:
+
+1. ruff-format — two files from ANOTHER session's in-flight slides work
+   (slides_renderer.py, _slides_framebreaks.py) were unformatted. I ran
+   `ruff format` on them, verified ruff + mypy clean on both, ran the slides
+   test modules (51 passed, 12 deselected), and committed as a2a4de423 so the
+   tree's formatting gate is green again. Post-commit: ruff-format True
+   (2881 files formatted).
+2. docs-lint — mmdc/Chrome mermaid timeouts under load; known environment flake
+   (M2 in the main report), unchanged.
+3. counts — STALE coverage provenance for template_active_inference; requires
+   rerunning that exemplar's ~10-minute coverage gate then refreshing
+   provenance. Blocked this session by the same concurrent-agent churn on that
+   exemplar's tree documented above; owner action after the fleet settles.
+
+Remaining dirty files (exemplar outputs, docs/_generated) belong to other
+sessions per the hard rules; not committed by me.
