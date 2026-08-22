@@ -119,3 +119,28 @@ See `my_projects/foo/`.
 """,
     )
     assert check_no_ghost_projects(repo) == []
+
+
+def test_dated_root_report_is_outside_long_lived_scope(tmp_path: Path) -> None:
+    """Dated point-in-time reports at the repo root are audit artifacts, not docs.
+
+    A ``DEEP_PASS_YYYY-MM-DD*.md`` report may reference project layouts that were
+    true only at its writing time; the ghost-project linter must not scan it.
+    """
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "DEEP_PASS_2026-08-21_session.md",
+        "Historical note: `projects/ghost_project/` existed during the assessment.\n",
+    )
+    assert check_no_ghost_projects(repo) == []
+
+
+def test_undated_root_report_is_still_scanned(tmp_path: Path) -> None:
+    """Non-dated root Markdown remains inside the long-lived doc surface."""
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "NOTES.md",
+        "See `projects/ghost_project/manuscript/build.sh`.\n",
+    )
+    issues = check_no_ghost_projects(repo)
+    assert len(issues) == 1
