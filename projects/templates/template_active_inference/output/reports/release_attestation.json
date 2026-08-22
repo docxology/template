@@ -1,6 +1,6 @@
 {
   "all_attested": true,
-  "attestation_hash": "371f1386655c729f018111b04fabf2a1ddb2b6215dfa4bf52e066b8b973355cc",
+  "attestation_hash": "2946f7e5f13b32cdbba70f0d263d2d474780b0bc15a0765c016749ab68f299f7",
   "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
   "row_count": 8,
   "rows": [
@@ -53,7 +53,9 @@
     {
       "deferred_until_validation": false,
       "id": "semantic_certificate",
-      "ignored_self_restrictions": [],
+      "ignored_self_restrictions": [
+        "release_attestation_complete"
+      ],
       "passed": true,
       "source": "output/data/sheaf_gluing_certificate.json"
     }

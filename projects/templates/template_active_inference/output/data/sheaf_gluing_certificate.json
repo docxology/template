@@ -1,6 +1,6 @@
 {
-  "all_lane_summaries_ok": true,
-  "all_proof_obligations_ok": true,
+  "all_lane_summaries_ok": false,
+  "all_proof_obligations_ok": false,
   "artifact_graph": {
     "output/data/analysis_statistics.json": {
       "claim_ids": [],
@@ -4799,7 +4799,12 @@
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
   "issues": [
-    "artifact_provenance.json has incomplete provenance rows or bundles"
+    "manuscript_token_provenance.json has unmapped tokens",
+    "claim_evidence_audit.json has untyped claims",
+    "artifact_provenance.json has incomplete provenance rows or bundles",
+    "release_attestation.json claims a failed gate passed",
+    "canonical semantic restrictions failed: release_attestation_complete",
+    "typed claim evidence failed"
   ],
   "lane_summaries": {
     "analytical": {
@@ -4872,8 +4877,8 @@
       ]
     },
     "release": {
-      "all_ok": true,
-      "ok_count": 34,
+      "all_ok": false,
+      "ok_count": 33,
       "restriction_count": 34,
       "restrictions": [
         "all_canonical_artifacts_have_claims",
@@ -5005,8 +5010,8 @@
     "causal_ablation_complete_grid": true,
     "causal_ablation_row_count": 36,
     "claim_evidence_audit_all_artifacts_resolved": true,
-    "claim_evidence_audit_all_complete": true,
-    "claim_evidence_audit_all_predicates_hold": true,
+    "claim_evidence_audit_all_complete": false,
+    "claim_evidence_audit_all_predicates_hold": false,
     "claim_evidence_audit_count": 97,
     "composed_section_count": 12,
     "counterexample_all_known_bad_fail": 1,
@@ -5086,7 +5091,7 @@
     "pymdp_runtime_known_warning_count": 4,
     "pymdp_runtime_unexpected_warning_count": 0,
     "random_seed": 0,
-    "release_attestation_all_attested": true,
+    "release_attestation_all_attested": false,
     "release_attestation_row_count": 8,
     "release_bundle_artifact_count": 36,
     "release_bundle_sources_present": true,
@@ -5347,7 +5352,7 @@
     {
       "class": "artifact_contract",
       "obligation": "prove_release_attestation_complete",
-      "ok": true,
+      "ok": false,
       "restriction": "release_attestation_complete"
     },
     {
@@ -5727,7 +5732,7 @@
     "pymdp_runtime_ok": true,
     "pymdp_runtime_phase_rows_ok": true,
     "pymdp_runtime_unexpected_warning_count": 0,
-    "release_attestation_complete": true,
+    "release_attestation_complete": false,
     "release_attestation_row_count": 8,
     "release_bundle_artifact_count": 36,
     "release_bundle_parity_ok": true,
