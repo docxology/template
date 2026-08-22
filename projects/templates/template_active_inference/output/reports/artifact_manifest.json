@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "d7680293b5a7b37ae07b825ea2f998b7bf3b6bcae7c9c40e681db239e78d5853",
+      "sha256": "8cf8d88cddb3d6458bb807b9b44bc85c9203eee569a755e685aef933f8b8c097",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -380,9 +380,18 @@
     },
     {
       "contract_match": true,
+      "path": "output/data/manuscript_token_provenance.json",
+      "sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
+      "size_bytes": 290393,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "b34fa1fcc50ee424123d3a70b2215f61b21a84c8b725ec287b4886e94dc02f14",
-      "size_bytes": 8636,
+      "sha256": "a1af1f71f2a868cc0d4acf185b54423e5b103eca3e17d4271eab5a1199686d9b",
+      "size_bytes": 8635,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -489,8 +498,8 @@
     {
       "contract_match": true,
       "path": "output/data/sheaf_gluing_certificate.json",
-      "sha256": "32b8b3884eba9b7eb4f4b52ee965aca87dd90d2eaf5addeea04210208443521a",
-      "size_bytes": 203386,
+      "sha256": "d79b78bf282fb127de2d574e2087267381be2151ad88c4b381c326964e8c73c5",
+      "size_bytes": 203385,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
