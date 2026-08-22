@@ -215,7 +215,7 @@ counts are caught after composition, not only during source-file linting.
 
 ![Theorem traceability graph generated from 17 linked theorem rows and 207 proof-dependency edges.](../figures/theorem_traceability_graph.png){#fig:theorem_traceability_graph width=95% fig-alt="Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: true."}
 
-![Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: false.](../figures/causal_ablation_heatmap.png){#fig:causal_ablation_heatmap width=92% fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."}
+![Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true.](../figures/causal_ablation_heatmap.png){#fig:causal_ablation_heatmap width=92% fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."}
 
 ![](../figures/scholarship_source_map.png){width=95%}
 
@@ -308,7 +308,7 @@ fails before the manuscript can reuse the result.
 `output/reports/ablation_sensitivity_report.json` then joins those ablation
 effects to the sensitivity and uncertainty artifacts. The report contributes
 36 source-backed rows, with source-backed status
-`false`, so the appendix heatmap is a rendered
+`true`, so the appendix heatmap is a rendered
 view of validated JSON rather than a decorative restatement.
 
 <!-- sheaf-track:gnn -->
