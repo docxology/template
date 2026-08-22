@@ -208,11 +208,21 @@ def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
         if updated != body:
             changed += 1
         segments = updated.split(_FRAMEBREAK_MARKER)
+        # listings/verbatim need [fragile] frames: without it Beamer typesets
+        # the frame body inside macro definitions and any '#' (e.g. Python
+        # comments) is read as an illegal macro parameter character.
+        frame_open = match.group("open")
+        if has_verbatim and "fragile" not in frame_open:
+            frame_open = re.sub(
+                r"(\\begin\{frame\})\[allowframebreaks", r"\1[allowframebreaks,fragile", frame_open, count=1
+            )
         if len(segments) == 1:
-            if has_verbatim and "allowframebreaks" in match.group("open"):
-                stripped_open = match.group("open").replace("allowframebreaks", "").replace("[]", "", 1)
+            if has_verbatim and "allowframebreaks" in frame_open:
+                stripped_open = frame_open.replace("allowframebreaks,", "").replace("allowframebreaks", "")
+                if stripped_open.endswith("[]"):
+                    stripped_open = stripped_open[:-2]
                 return f"{stripped_open}{updated}{match.group('close')}"
-            return f"{match.group('open')}{updated}{match.group('close')}"
+            return f"{frame_open}{updated}{match.group('close')}"
         # A split frame's verbatim-bearing segment must not keep
         # allowframebreaks either: Beamer would re-typeset that segment and
         # the listings/verbatim scanner fails across the injected \par again.
@@ -220,12 +230,14 @@ def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
 
             def _strip_af(segment: str) -> str:
                 if re.search(r"\\begin\{(?:lstlisting|verbatim|lstinputlisting)\}", segment):
-                    stripped_open = match.group("open").replace("allowframebreaks", "").replace("[]", "", 1)
+                    stripped_open = frame_open.replace("allowframebreaks,", "").replace("allowframebreaks", "")
+                    if stripped_open.endswith("[]"):
+                        stripped_open = stripped_open[:-2]
                     return f"{stripped_open}{segment}{match.group('close')}"
                 return f"{match.group('open')}{segment}{match.group('close')}"
 
             return "\n\n".join(_strip_af(segment) for segment in segments)
-        return "\n\n".join(f"{match.group('open')}{segment}{match.group('close')}" for segment in segments)
+        return "\n\n".join(f"{frame_open}{segment}{match.group('close')}" for segment in segments)
 
     return _FRAME_RE.sub(replace_frame, tex_content), changed
 

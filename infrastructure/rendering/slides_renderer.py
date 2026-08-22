@@ -530,6 +530,11 @@ class SlidesRenderer:
                 "mathtools",
                 "booktabs",
                 "multirow",
+                "algorithm",
+                "algpseudocode",
+                "algorithmicx",
+                "stmaryrd",
+                "mathrsfs",
             }
             safe_lines = [
                 ln
@@ -599,8 +604,36 @@ class SlidesRenderer:
             "\\providecommand{\\citeauthor}[1]{#1}\n"
             "\\providecommand{\\citeyear}[1]{#1}\n"
             "\\providecommand{\\cref}[1]{\\texttt{\\detokenize{#1}}}\n"
-            "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
+            "\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
+            # Beamer lacks \paragraph (standard LaTeX sectioning); render it
+            # as a bold run-in heading so dense prose sections don't fail.
+            "\\providecommand{\\paragraph}[1]{\\textbf{#1}\\ }\n"
         )
+
+        # Manuscript preambles may declare additional theorem-like environments
+        # (warning, note, ...) chained onto theorem. Recover any
+        # \newtheorem declaration whose environment beamer does not already
+        # define; redeclare via \newtheorem is an error for built-ins, so
+        # guard each with \lv@ifundefinedstyle-style check via \@ifundefined
+        # on the environment's begin macro.
+        preamble_theorems = ""
+        if preamble_file.exists():
+            import re as _re
+
+            known = {"theorem", "lemma", "corollary", "definition", "example", "fact"}
+            for _m in _re.finditer(
+                r"\\newtheorem\{(\w+)\}(?:\[(\\w+)\])?(?:\[[^\]]+\])?\{([^}]+)\}",
+                extract_preamble(preamble_file),
+            ):
+                env, chained, title = _m.group(1), _m.group(2), _m.group(3)
+                if env in known | {"proposition", "hypothesis", "remark", "axiom", "property"}:
+                    continue  # already declared or declared below/above
+                counter = f"[{chained}]" if chained else ""
+                preamble_theorems += f"\\newtheorem{{{env}}}{counter}{{{title}}}\n"
+        if preamble_theorems:
+            snippet_parts.append(
+                "% Additional theorem-like environments from manuscript preamble.\n" + preamble_theorems
+            )
 
         # Auto-numbered formalism environments the manuscript body may use
         # (mirrors the \newtheorem declarations `preamble.md` defines for the
