@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "5c2a22d6ac312e70ab2e8812800747e57ba7fad2c73a9e3e87cfa716f293f7d8",
+      "sha256": "66ac86166ea2ca752cecead4647c991d7925d749279ea667727777ffa6df7b38",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -734,6 +734,15 @@
       "path": "output/figures/efe_decomposition.png",
       "sha256": "1059380851d052fcfeda0d196ed4b8c34608ed871372a5939a6929226fe65218",
       "size_bytes": 70138,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/figure_registry.json",
+      "sha256": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
+      "size_bytes": 22462,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1229,6 +1238,15 @@
       "path": "output/reports/manuscript_composition.json",
       "sha256": "b64f631c785ec9d866ffb937d6e2abf75ad0a6760ec79fd5715b1067d3a95958",
       "size_bytes": 4180,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/manuscript_staleness_report.json",
+      "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
+      "size_bytes": 72360,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
