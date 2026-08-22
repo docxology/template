@@ -300,7 +300,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_contract_index.json",
-      "sha256": "ad308ef7bbb37bf71d0fbb070c7aaf01e1e575b464987aab64e84cee3d88d3e8",
+      "sha256": "ce2d581d24b9fda7a4ff151b30bbe17e1ee252482715dfc4e96e6cdf35f81827",
       "size_bytes": 104401,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "66ac86166ea2ca752cecead4647c991d7925d749279ea667727777ffa6df7b38",
+      "sha256": "711c90dbb2a5f49d203bc48f6ea7018077d5469a7346ee7217cf84be1d204440",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -381,8 +381,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_token_provenance.json",
-      "sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
-      "size_bytes": 290393,
+      "sha256": "02598cb169aca93046aeb13c859125ab9c47a58a91b78d577929a0b37dc858bf",
+      "size_bytes": 290399,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -390,8 +390,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "b34fa1fcc50ee424123d3a70b2215f61b21a84c8b725ec287b4886e94dc02f14",
-      "size_bytes": 8636,
+      "sha256": "a7f2d4651db4273c8a89cb492534759e9cf479d405acd89ad7fc628b097659e2",
+      "size_bytes": 8639,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -498,8 +498,8 @@
     {
       "contract_match": true,
       "path": "output/data/sheaf_gluing_certificate.json",
-      "sha256": "667071f8bd87a22967a715ca2e948a68f3b161729082f1db600740ca0eefef27",
-      "size_bytes": 203463,
+      "sha256": "32713325501c79dc3a7975458f0b6c982891d4471c21d4cc35c2f74e404e8ab0",
+      "size_bytes": 203884,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1002,8 +1002,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/08_methods_sheaf.md",
-      "sha256": "cf7738527835c83ffc548d35d353beb646711f4f882514ffabf270f8294071c2",
-      "size_bytes": 72069,
+      "sha256": "b67ba2e517e8cca080c8ee01f50e4f62f8c9bf3dfc3e0b3618ec8a62097880cf",
+      "size_bytes": 72071,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1056,8 +1056,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/16_appendix_full_sheaf.md",
-      "sha256": "82d5fc41224692f8d463c3162cfaa5f75afe735e54136972d8bb0d704e454de8",
-      "size_bytes": 20268,
+      "sha256": "d3394dbcc16f3aaa2f8646c82a0668e8441d7dbdfb154ee5a7ceb157c8f05413",
+      "size_bytes": 20269,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1164,8 +1164,8 @@
     {
       "contract_match": true,
       "path": "output/reports/claim_evidence_audit.json",
-      "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
-      "size_bytes": 49252,
+      "sha256": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
+      "size_bytes": 49326,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1245,8 +1245,8 @@
     {
       "contract_match": true,
       "path": "output/reports/manuscript_staleness_report.json",
-      "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
-      "size_bytes": 72360,
+      "sha256": "cb57c328ef8367b9ea56a653cf4f80ef385019ee0ba027b47f33ac4b690e9b5b",
+      "size_bytes": 72363,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1281,8 +1281,8 @@
     {
       "contract_match": true,
       "path": "output/reports/release_attestation.json",
-      "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
-      "size_bytes": 1985,
+      "sha256": "a2f8e047cb61feb9c39a3aa48188945d23da899c31317ceeed818c4027176e93",
+      "size_bytes": 2033,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1308,7 +1308,7 @@
     {
       "contract_match": true,
       "path": "output/reports/replay_matrix.json",
-      "sha256": "90d2e50f010e99d7e1492bb73cc771afbd72474571c528628daad4b8e5980b5f",
+      "sha256": "6a40b69dde7a821a607ce811cdcc7fa00edde64a1f687b750df249c9d6d2c41f",
       "size_bytes": 27762,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
