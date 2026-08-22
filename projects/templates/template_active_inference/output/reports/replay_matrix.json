@@ -474,7 +474,7 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-        "output/reports/release_attestation.json": "44a9bd27c1a5bcf7c5e3d267e0e4914a3b14e0bd62f06f6b5b6b5df4e3eefade",
+        "output/reports/release_attestation.json": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
         "output/reports/release_bundle_manifest.json": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
         "output/reports/security_posture_audit.json": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
