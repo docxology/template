@@ -4799,7 +4799,6 @@
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
   "issues": [
-    "manuscript_token_provenance.json has unmapped tokens",
     "artifact_provenance.json has incomplete provenance rows or bundles"
   ],
   "lane_summaries": {
