@@ -210,3 +210,24 @@ full `test_health.py` module **26 passed** (137s).
 - `e03ddb9e7` deep-pass: raise docs-lint unified-health gate ceiling… (only
   infrastructure/core/health.py + tests/infra_tests/core/test_health.py; verified via
   `git show --stat HEAD`)
+
+---
+
+# Addendum 3 — end-to-end verification of the docs-lint ceiling fix
+
+Re-ran `uv run python -m infrastructure.core.health --gates=docs-lint --workers 1`
+after commit `e03ddb9e7`:
+
+- The gate now **completes** (304s elapsed, FAIL on content) instead of being
+  killed at the 300s shared ceiling ("gate timed out" is gone). The override
+  wiring works through the real entrypoint.
+- Remaining failures: 2 of 268 Mermaid blocks time out at the per-block mmdc
+  30s cap (`docs/architecture/discovery-export-synthesis.md:19`,
+  `docs/architecture/thin-orchestrator-summary.md:15`). Machine load was
+  179-230 during the run. Direct re-render of one failing block with the same
+  command succeeded in 29.7s (exit 0, valid SVG produced), confirming these
+  are load-latency flakes (F2 class), not syntax defects. Disposition for F2
+  stands: re-run `lint_docs.py --mermaid-only` on an idle machine before
+  touching any diagram.
+
+No code changes in this addendum; verification record only.
