@@ -4798,7 +4798,9 @@
     ],
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
-  "issues": [],
+  "issues": [
+    "artifact_provenance.json has incomplete provenance rows or bundles"
+  ],
   "lane_summaries": {
     "analytical": {
       "all_ok": true,
@@ -5115,7 +5117,7 @@
     "security_posture_enforced_count": 7,
     "security_posture_high_risk_gap_count": 0,
     "security_posture_secret_finding_count": 0,
-    "semantic_ok": true,
+    "semantic_ok": false,
     "semantic_restriction_count": 126,
     "sensitivity_cell_count": 96,
     "sensitivity_complete_grid": true,
@@ -5196,7 +5198,7 @@
     "visualization_statistics_backed_count": 7,
     "visualization_statistics_bridge_ok": true
   },
-  "ok": true,
+  "ok": false,
   "proof_obligations": [
     {
       "class": "semantic_restriction",
