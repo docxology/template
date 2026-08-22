@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from infrastructure.provenance.models import (
@@ -18,7 +19,7 @@ from infrastructure.provenance.models import (
     NodeKind,
 )
 from infrastructure.provenance.review import review_provenance_store
-from infrastructure.provenance.store import Provenance
+from infrastructure.provenance.store import Provenance, ProvenanceStoreError
 from infrastructure.provenance.validation import validate_provenance_dag
 
 
@@ -117,7 +118,11 @@ def main(argv: list[str] | None = None) -> int:
     if not hasattr(args, "func"):
         parser.print_help()
         return 0
-    result = args.func(args)
+    try:
+        result = args.func(args)
+    except ProvenanceStoreError as exc:
+        print(f"provenance store error: {exc}", file=sys.stderr)
+        return 2
     return result if isinstance(result, int) else 0
 
 

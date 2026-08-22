@@ -25,7 +25,7 @@ session provenance with full transitive lineage queries.
 
 ### Content addressing
 
-`content_id(payload)` = first 16 hex characters of SHA-256 of the JSON-
+`content_id(payload)` = first 32 hex characters of SHA-256 of the JSON-
 serialised payload with sorted keys. Two calls with semantically identical
 dicts always return the same id, enabling automatic deduplication.
 
@@ -35,12 +35,15 @@ The store is a single JSON file:
 
 ```json
 {
-  "nodes": { "<id>": { ... node dict ... } },
+  "nodes": [ { "node_id": "<id>", "kind": "...", "label": "..." } ],
   "edges": [ { "from_id": "...", "to_id": "...", "relation": "..." } ]
 }
 ```
 
 Writes are atomic (write-temp + `os.replace`).
+Existing stores are validated before use. Invalid JSON, malformed nodes or
+edges, and unknown enum values raise `ProvenanceStoreError`; the CLI reports
+that error and exits non-zero instead of treating the store as empty.
 
 ### Node kinds
 
@@ -53,15 +56,19 @@ Writes are atomic (write-temp + `os.replace`).
 
 ### Edge relations
 
-`produced`, `consumed`, `derived-from`, `supports`, `refutes`
+`derived_from`, `produced_by`, `cites`, `supports`, `contradicts`, `depends_on`,
+`versioned_from`
 
 ## Store path
 
-Resolution order:
+The core store has no implicit environment-variable resolution:
 
-1. `Provenance.with_path(p)` — per-call override (useful in tests).
-2. `TEMPLATE_PROVENANCE_PATH` environment variable.
-3. Default: `.provenance/graph.json` relative to cwd.
+1. `Provenance.with_path(p)` — explicit directory override (useful in tests).
+2. `Provenance(path)` — explicit backing-file path.
+3. The CLI defaults to `output/provenance/dag.json` relative to cwd.
+
+`ProvenanceConfig` can supply a project-specific output directory, but callers
+must resolve that configuration and pass the resulting path to the store.
 
 ## Boundaries
 
@@ -73,17 +80,8 @@ Resolution order:
 ## CLI
 
 ```bash
-# Record a run node
-python -m infrastructure.provenance record run "train model" --tool train.py
-
 # Record an artifact
-python -m infrastructure.provenance record artifact "model.pkl" --path output/model.pkl
-
-# Link them (produced edge)
-python -m infrastructure.provenance link <run_id> <artifact_id> produced
-
-# Query lineage
-python -m infrastructure.provenance query <artifact_id>
+python -m infrastructure.provenance record-artifact "model.pkl" --path output/model.pkl
 
 # List all nodes
 python -m infrastructure.provenance list

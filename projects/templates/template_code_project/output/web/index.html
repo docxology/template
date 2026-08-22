@@ -874,14 +874,14 @@ confirm they resolve to this release pairing.</li>
 <code>../data/transmission_manifest.json</code>.</li>
 </ul>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
 style="width:98.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>
 <p>Structured manifest:
 <code>../data/transmission_manifest.json</code></p>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_pairing.png" style="width:35.0%"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/transmission_pairing.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_pairing.png" style="width:35.0%"
 alt="Publication pairing flow" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Publication pairing flow</figcaption>
 </figure>
@@ -1219,13 +1219,14 @@ testing policy, evaluated actively by executing
 during the infrastructure build phase.</p>
 <ol type="1">
 <li><strong>Project tests</strong>: <a
-href="../tests/test_optimizer.py"><code>projects/templates/template_code_project/tests/test_optimizer.py</code></a>
-exercises <code>src/optimizer.py</code> (typical, edge, boundary, and
-pathological inputs including NaN/Inf and zero gradients) and, when
-infrastructure imports succeed, call into
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py">the
+project optimizer test suite</a> exercises <code>src/optimizer.py</code>
+(typical, edge, boundary, and pathological inputs including NaN/Inf and
+zero gradients) and, when infrastructure imports succeed, call into
 <code>optimization_analysis.py</code> helpers—without mocks. Suite size:
 <a
-href="../../../../docs/_generated/COUNTS.md"><code>docs/_generated/COUNTS.md</code></a>.</li>
+href="https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md">the
+measured repository counts</a>.</li>
 <li><strong>Infrastructure validation</strong>: The repository-level
 <code>tests/infra_tests/</code> suite validates shared template modules
 (e.g. pipeline and discovery helpers) independently of this project’s
@@ -1308,7 +1309,7 @@ initial point <span class="math inline">\(x_0 = 0\)</span>. The
 algorithm iteratively updates the solution using the rule <span
 class="math inline">\(x_{k+1} = x_k - \alpha \nabla f(x_k)\)</span>.</p>
 <figure id="fig:convergence">
-<a class="figure-full-size-link" href="../figures/convergence_plot.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_plot.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/convergence_plot.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_plot.png"
 alt="Objective value over iterations for each declared step size; lower curves indicate faster convergence." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Objective value <span
 class="math inline">\(f(x_k)=\tfrac{1}{2}x_k^2 - x_k\)</span> versus
@@ -1352,7 +1353,7 @@ step size affects the convergence path and solution quality. The
 analysis reveals the trade-off between convergence speed and numerical
 stability.</p>
 <figure id="fig:step_sensitivity">
-<a class="figure-full-size-link" href="../figures/step_size_sensitivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/step_size_sensitivity.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/step_size_sensitivity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/step_size_sensitivity.png"
 alt="Comparison of convergence iterations and final solution quality across the configured step-size grid." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Sensitivity sweep produced by
 <code>generate_step_size_sensitivity_plot()</code> over an independent
@@ -1476,7 +1477,7 @@ href="#ref-nesterov2013gradient" role="doc-biblioref">Nesterov
 analysis of convergence rates across different step sizes, validating
 theoretical predictions against empirical results.</p>
 <figure id="fig:convergence_rate">
-<a class="figure-full-size-link" href="../figures/convergence_rate_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_rate_comparison.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/convergence_rate_comparison.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/convergence_rate_comparison.png"
 alt="Log-scale comparison of convergence error across step sizes, showing the stable and aggressive regimes." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Absolute objective error <span
 class="math inline">\(|f(x_k)-f(x^\ast)|\)</span> versus iteration on a
@@ -1650,7 +1651,7 @@ Visualization</h3>
 algorithm’s computational characteristics, including time and space
 complexity analysis across different problem scales.</p>
 <figure id="fig:complexity">
-<a class="figure-full-size-link" href="../figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/algorithm_complexity.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/algorithm_complexity.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/algorithm_complexity.png"
 alt="Deterministic proxy for optimization work by problem dimension and recorded iteration count." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Six-panel diagnostic from
 <code>generate_complexity_visualization()</code> (3×2 grid). <strong>Top
@@ -1711,7 +1712,7 @@ work and convergence iterations for <code>gradient_descent()</code> on
 identity-Hessian quadratics of dimension <span class="math inline">\(d
 \in \{1, 2, 5, 10, 20, 50\}\)</span>.</p>
 <figure id="fig:benchmark">
-<a class="figure-full-size-link" href="../figures/performance_benchmark.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/performance_benchmark.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/performance_benchmark.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/performance_benchmark.png"
 alt="Deterministic objective-evaluation observations; host-dependent wall-clock timing is excluded from the claim." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Deterministic dimensional
 benchmark from <code>generate_benchmark_visualization()</code>.
@@ -1739,7 +1740,7 @@ across a grid of 8 starting points (<span class="math inline">\(x_0 \in
 <code>gradient_descent()</code>, <code>quadratic_function()</code>, and
 <code>compute_gradient()</code> across the parameter space.</p>
 <figure id="fig:stability">
-<a class="figure-full-size-link" href="../figures/stability_analysis.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/stability_analysis.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/stability_analysis.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/stability_analysis.png"
 alt="Numerical stability score and recommendations produced by the configured stability checks." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Numerical stability heatmap
 from <code>generate_stability_visualization()</code>. Each cell shows
@@ -2305,7 +2306,7 @@ complexity.</p>
 <h1 data-number="9" id="sec:references"><span
 class="header-section-number">9</span> References</h1>
 <p>Bibliography lives in <a
-href="references.bib"><code>manuscript/references.bib</code></a> and is
+href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/manuscript/references.bib"><code>manuscript/references.bib</code></a> and is
 read by Pandoc during PDF render. The build pipeline invokes Pandoc with
 <code>--natbib</code>, so every <code>[@key]</code> citation in the
 manuscript is rewritten to the appropriate
@@ -2321,7 +2322,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <code>10.5281/zenodo.20417136</code> · SHA-256 <code>pending…</code> ·
 pairing pending</p>
 <figure>
-<a class="figure-full-size-link" href="../figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_code_project/output/figures/transmission_integrity_strip.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/transmission_integrity_strip.png"
 style="width:88.0%" alt="Integrity QR strip" /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Integrity QR strip</figcaption>
 </figure>

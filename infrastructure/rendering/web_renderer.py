@@ -156,6 +156,7 @@ class WebRenderer:
                 )
                 self._add_full_resolution_figure_links(output_file)
                 self._add_responsive_image_variants(output_file)
+                self._rewrite_repository_links(output_file, {source_file: output_file.name})
             return output_file
 
         except subprocess.CalledProcessError as e:
@@ -341,6 +342,20 @@ class WebRenderer:
             )
             self._add_full_resolution_figure_links(output_file)
             self._add_responsive_image_variants(output_file)
+            rendered_sources = {
+                source_file: self._output_file_for_source(source_file).name for source_file in source_files
+            }
+            if self._rewrite_repository_links(output_file, rendered_sources):
+                for source_file in source_files:
+                    section_file = self._output_file_for_source(source_file)
+                    if section_file.is_file() and section_file != output_file:
+                        self._rewrite_repository_links(section_file, rendered_sources)
+                link_issues = web_postprocess.deployed_web_link_issues(output_dir)
+                if link_issues:
+                    raise RenderingError(
+                        "Combined web rendering produced invalid deployed links",
+                        context={"web_dir": str(output_dir), "issues": list(link_issues)},
+                    )
             logger.info(f"✓ Embedded CSS styling in {output_file.name}")
 
         logger.info(f"✅ Generated combined HTML: {output_file.name}")
@@ -684,6 +699,23 @@ class WebRenderer:
     @staticmethod
     def _add_full_resolution_figure_links(html_file: Path) -> None:
         web_postprocess.add_full_resolution_figure_links(html_file)
+
+    @staticmethod
+    def _rewrite_repository_links(html_file: Path, rendered_sources: dict[Path, str]) -> bool:
+        """Rewrite public-checkout links and skip private/isolated renders."""
+        try:
+            repository_root = web_postprocess.repository_root_for(html_file)
+            for source_file in rendered_sources:
+                source_file.resolve(strict=True).relative_to(repository_root)
+        except (OSError, RenderingError, ValueError) as exc:
+            logger.debug("Skipping public repository-link rewrite for %s: %s", html_file, exc)
+            return False
+        web_postprocess.rewrite_repository_links(
+            html_file,
+            repository_root=repository_root,
+            rendered_sources=rendered_sources,
+        )
+        return True
 
     @staticmethod
     def _write_if_changed(path: Path, content: str) -> None:

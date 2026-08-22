@@ -112,6 +112,11 @@ renderers without owning validation policy or project analysis.
   zero is the failure mode that policy exists to prevent. The error is
   deliberately a `RuntimeError` so the DOCX/EPUB warning handlers cannot
   swallow it.
+- `render_cache.py` is a local acceleration cache, never publication evidence.
+  Its entries use path-aware keys rather than basenames, require an exact list
+  of regular-file outputs, and reject malformed or unwritable cache state with
+  a `RenderCacheError`. Callers must regenerate a render when the cache is
+  missing or invalid.
 - The per-section HTML path (`WebRenderer.render`) intentionally gets neither
   filter: it pre-converts citations and renders sections standalone, where
   restarted numbering would be misleading.

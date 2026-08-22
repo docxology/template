@@ -33,6 +33,43 @@ def _append_summary_issue(issues: list[str], payload: dict, field: str, derived:
         issues.append(message)
 
 
+def _without_source_commit(record: object) -> object:
+    """Remove the producer snapshot from one provenance record for comparison."""
+    if not isinstance(record, dict):
+        return record
+    return {key: value for key, value in record.items() if key != "source_commit"}
+
+
+def _provenance_payload_for_comparison(payload: dict) -> dict:
+    """Normalize generated provenance before comparing it with a live build.
+
+    ``source_commit`` identifies the checkout that ran the producer. Canonical
+    output receipts are committed after that run, so a later validation
+    checkout can legitimately have a newer ``HEAD`` even when every generated
+    scientific byte and every other provenance field is unchanged. Keep that
+    producer snapshot in the saved artifact and validate that it is present;
+    omit only the expected snapshot drift from the live-payload equality check.
+    """
+    normalized = dict(payload)
+    for section in ("artifacts", "rows", "field_provenance_rows"):
+        records = normalized.get(section)
+        if isinstance(records, dict):
+            normalized[section] = {key: _without_source_commit(record) for key, record in records.items()}
+        elif isinstance(records, list):
+            normalized[section] = [_without_source_commit(record) for record in records]
+    return normalized
+
+
+def _provenance_payloads_equal(saved: dict, live: dict) -> bool:
+    """Compare provenance exactly, allowing only producer-commit drift."""
+    return bool(
+        json_payloads_equal(
+            _provenance_payload_for_comparison(saved),
+            _provenance_payload_for_comparison(live),
+        )
+    )
+
+
 def _coerce_int(value: object) -> int:
     if isinstance(value, bool):
         return int(value)
@@ -164,7 +201,7 @@ def validate_sheaf_track_artifacts(project_root: Path, *, validate_saved_certifi
     live_provenance = _tracks.build_artifact_provenance(root)
     live_provenance_rows = live_provenance.get("rows") or []
     live_provenance_bundles = live_provenance.get("bundles") or []
-    provenance_matches_live = json_payloads_equal(provenance, live_provenance)
+    provenance_matches_live = _provenance_payloads_equal(provenance, live_provenance)
     producers, _, _ = _tracks._artifact_maps()
     # Saved artifacts are untrusted input. Require their complete row surface to
     # match the canonical live builder before deriving a filesystem path, then use

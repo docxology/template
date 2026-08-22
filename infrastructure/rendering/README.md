@@ -226,6 +226,27 @@ emitting an unnumbered export. Beamer rendering includes the filter when it is
 available and retains a diagnostic warning when a caller intentionally uses a
 fallback environment.
 
+### Web link post-processing
+
+The HTML renderer performs a final, source-aware anchor pass after Pandoc and
+the accessibility/figure post-processors have run. Renderer-owned pages and
+fragments remain local to `output/web`; links from manuscript sections to
+another rendered section are mapped to that page when it is available. Other
+local links are resolved against the authored manuscript directory and, when
+they target public repository content, become canonical GitHub `main` links.
+This keeps deployed HTML from retaining checkout-relative links such as
+`../../../../docs/...` while preserving external `https:`, `mailto:`, and
+`tel:` links. Executable or malformed URI schemes, missing targets, path
+escapes, and links into private `projects/`, `fonds/`, `rules/`, or `tools/`
+trees fail closed. Combined public-checkout renders also scan renderer-owned
+pages for remaining local anchors that leave the deployed web directory.
+
+Renders from isolated or private paths skip the public-repository rewrite, so
+private source paths are never projected into the public repository URL. The
+source-aware behavior is covered by
+`tests/infra_tests/rendering/test_web_renderer.py` and exercised by the real
+Pandoc render path.
+
 ### Add Bibliography and Citations
 
 Place bibliography in `projects/{project_name}/manuscript/references.bib`:
