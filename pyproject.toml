@@ -174,7 +174,7 @@ dev = [
     "types-pyyaml>=6.0.12.20250915",
     "ruff>=0.15.21",
     # Code-health scanner (Python 3.11+ only; template still supports 3.10 for projects)
-    "desloppify @ git+https://github.com/peteromallet/desloppify.git; python_version >= '3.11'",
+    "desloppify @ git+https://github.com/peteromallet/desloppify.git@19b9ebebcf449dd7074f30a7bdfdcd327d53cff6; python_version >= '3.11'",
     "pytest-xdist>=3.5",
 ]
 deep-research = [
