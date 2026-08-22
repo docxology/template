@@ -121,3 +121,43 @@ focused pytest of the F1 module, `uv pip list --outdated`.
       concurrent session's verified edit; nothing else met the bar to change under contention)
 - [x] Path-scoped local commit of my own files only (this report); no push
 - [x] Final summary printed to terminal
+
+
+---
+
+# Addendum — third-pass independent verification (same day)
+
+A further dispatch re-verified the repo independently while both earlier reports' content
+was on disk. New work and confirmations below; all measurements live this session.
+
+## Fixed
+
+**F1(new) — Known pip vulnerability PYSEC-2026-3721** — `uv run pip-audit` flagged
+`pip 26.1.2` (fix >=26.2); `uv.lock` pinned exactly 26.1.2. Fix: `uv lock --upgrade-package pip`
+-> 26.2.1 + `uv sync`. Verified: `pip --version` reports 26.2.1 in the project venv; re-run of
+`uv run pip-audit` exits **0 with zero known vulnerabilities** (remaining row is only the
+unavoidable skip for the local non-PyPI workspace package). Committed: `uv.lock` only.
+
+## Gates re-verified this pass
+
+| Gate | Result |
+| --- | --- |
+| Ruff check (public lint surface) | PASS |
+| ruff format --check | clean except 2 files belonging to a foreign uncommitted feature (left untouched) |
+| Mypy (`source-paths`, 1559 files) | PASS |
+| verify_no_mocks lexical + `--inventory --max-dependency-replacements 0` | clear (0 replacements) |
+| LLM deterministic suite (`-m "not requires_ollama"`) | **1226 passed**, 51 deselected |
+| `template_code_project` suite | **246 passed** |
+| Bandit (`bandit.yaml -qr infrastructure scripts`) | 0 findings, exit 0 |
+| Tracked-secrets / confidentiality / generated-artifact guards | all clean |
+| Backlog contract / template drift / active_projects --check / api_reference --check | all PASS/up-to-date |
+| Docs lint cross-links/consistency/doc-pairs | 0 broken / 0 issues |
+| Mermaid renders | 7 blocks exit-124 timeout locally under load (matches F2 above); environment flake, CI lane provisions pinned mmdc+chrome |
+| Prerender validation (`template_code_project/manuscript`) | clean |
+
+## Dispositions
+
+- counts.py STALE coverage provenance for `template_active_inference`: consequence of the
+  concurrent session's dirty tree, not committed HEAD; belongs to that feature's landing.
+- Mirror-shape violations (M1) and 10-commits-behind (M2): unchanged, still deferred.
+- Prior reports' findings independently confirmed where overlapping; no contradictions found.
