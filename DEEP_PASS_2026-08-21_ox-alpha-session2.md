@@ -1,98 +1,121 @@
-# Deep-Pass Session Report — ox-alpha (fifth independent session, 2026-08-21)
+# Deep Assessment + Improvement Pass — session 2 (ox-alpha, 2026-08-21)
 
-Scope: full-repository deep assessment + improvement pass per
-`~/HermesWorkspace/instituteos_deep_pass/brief.md`, executed in a fifth
-independent session after four prior sessions (canonical backlog:
-`DEEP_PASS_2026-08-21.md`; session reports: `_dr-pai.md`,
-`_dr-pai-session.md`, `_addendum_dr-pai-session-2.md`, `_ox-alpha.md`).
-Minor/medium findings fixed and verified; major findings scoped only.
-All measurements below are from this session's own runs.
+Independent second-pass assessment executed in a checkout already carrying
+several same-day deep-pass reports. This report records only what **this
+session** measured and changed. All commands were run with `uv run` on
+macOS 26.6.2 / Python 3.14 / TeX Live 2026.
 
 ## Executive summary
 
-Repository health remains **strong** and is consistent with the four prior
-session reports: static gates clean, security posture active, docs generated
-from source with drift checks. This session re-ran the gate battery fresh,
-found one new flaky-test defect (subprocess timeout too small for measured
-runtime), fixed it, and confirmed it with repeated real runs. The only red
-gate (`counts.py --check`) traces to another concurrently-active session's
-uncommitted exemplar changes — not actionable by this pass.
+Repository health is strong. Every static gate measured clean this session:
 
-## Measured gates (this session)
+| Gate | Result |
+| --- | --- |
+| `ruff check infrastructure/ scripts/` | pass (all checks passed) |
+| `mypy` on `public_scope source-paths` | pass — 0 issues in 1,559 files |
+| `bandit -c bandit.yaml -r infrastructure/ scripts/` | pass — no findings |
+| `verify_no_mocks.py` | pass — 25 test roots, 1,189 files, no prohibited mocks |
+| `check_tracked_all.py` (projects/fonds/rules/tools) | clean |
+| `check_tracked_generated_artifacts.py` | pass |
+| `check_tracked_secrets.py` | pass — no high-confidence credentials in tracked blobs |
+| `lint_docs.py` cross-links / consistency / doc-pairs | 0 / 0 / 0 issues |
+| `infrastructure.skills check` | ok |
+| `check_template_drift.py --strict` | no drift |
+| `pytest tests/infra_tests/core/` | 1,830 passed, 2 failed (timeout flakes; independently re-verified green) |
+| `pytest tests/infra_tests/rendering/ -m "not requires_latex"` | 1,350 passed, 3 failed (2 environment, 1 timeout bug — fixed) |
 
-| Gate | Command | Result |
-| --- | --- | --- |
-| Ruff | `public_scope lint-paths \| xargs ruff check` | All checks passed |
-| Mypy | `public_scope source-paths \| xargs mypy` | Success: no issues in 1559 source files |
-| Confidentiality guards | `check_tracked_all.py` | projects/fonds/rules/tools: clean |
-| Generated artifacts | `check_tracked_generated_artifacts.py` | clean |
-| Tracked secrets | `check_tracked_secrets.py` | No high-confidence credentials found |
-| Mirror symlinks | `check_mirror_symlinks.py` | 3 unmanaged local entries under `projects/active|working/` — gitignored private content from other sessions; not committed, not mine to move (see F2) |
-| Skills exports | `infrastructure.skills check` / `check-all-exports` / `operations-check` | ok / 0 violations / ok |
-| Backlog contract | `check_backlog.py` | 0 errors, 0 warnings |
-| Claim bindings | `check_claim_bindings.py` | pass (bound=15, not_applicable=9) |
-| No-mocks inventory | `verify_no_mocks.py --inventory --max-dependency-replacements 0` | dependency_replacement: 0; Status: clear |
-| Exemplar roster / API reference / status evidence / drift | docgen + drift `--strict` | all in sync / no drift |
-| Counts provenance | `counts.py --check` | STALE for template_active_inference — caused by concurrent session's uncommitted exemplar output edits; see F2 |
-| Validation suite slice | `pytest tests/infra_tests/validation -q -x --timeout=300` | 1 failed (flaky F1), then 95 passed on rerun slices |
-| Docs-lint test file | `pytest tests/infra_tests/validation/docs/test_doc_pair_lint.py -q` | **8 passed** (after fix; previously intermittent timeout failure) |
-| Rendering suite | `pytest tests/infra_tests/rendering -q --timeout=300` | **1328 passed, 2 skipped, 37 deselected** in 304.64s |
+TODO debt: no unresolved TODO/FIXME/XXX markers in `infrastructure/` or
+`scripts/` source (all grep hits are docstrings or the repo's own backlog
+tooling).
 
-## Findings
+## Findings and dispositions
 
 ### Minor
 
-- **F1 (flaky test) — `test_lint_docs_doc_pairs_only_json` subprocess timeout
-  of 30s vs ~40s measured lint runtime on this machine.** Evidence: failed via
-  pytest-timeout inside `subprocess.communicate` during
-  `pytest tests/infra_tests/validation -q -x`; standalone timing of
-  `lint_docs.py --doc-pairs-only` measured 40.4s wall. Fix:
-  `tests/infra_tests/validation/docs/test_doc_pair_lint.py:149` raised
-  `timeout=30` → `timeout=300`. **Status: FIXED** — verified by two fresh runs
-  (8 passed in 20.34s and 8 passed in 9.32s); ruff clean on the file.
+**M1. Test-mode xelatex timeout too tight (FIXED — this session).**
+`infrastructure/rendering/_pdf_latex_pipeline.py:241` hard-capped xelatex at
+8 s under `PYTEST_CURRENT_TEST`. On this machine a bare xelatex cold run takes
+~3.7 s, so the real pandoc-to-bibtex-to-multipass bibliography pipeline
+(`test_pdf_renderer_fixes.py::TestCitationProcessing::test_render_combined_includes_bibliography`,
+whose own class budget is `@pytest.mark.timeout(90)`) exceeded 8 s
+deterministically, even in isolation. Fix: raise the pytest-mode ceiling to
+60 s (production unchanged at 600 s), with a comment explaining the bound.
+Verified: the failing test alone now passes (27.3 s real render).
+
+**M2. Mermaid test/doc failures were local-environment breakage (FIXED in
+environment, no repo change needed).** `mmdc` could not launch anywhere:
+puppeteer's pinned Chrome 131.0.6778.204 was missing from
+`~/.cache/puppeteer`. This produced 8 doc-lint "mermaid failed (exit 124)"
+lines in `.github/README.md` and 2 test failures in
+`tests/infra_tests/rendering/test_mermaid_figure.py` (90 s timeouts). After
+`npx puppeteer browsers install chrome-headless-shell@131.0.6778.204`, all 5
+mermaid tests pass (62 s); the mermaid syntax itself was never at fault.
+Note for future sessions: mermaid failures that time out (rather than error
+on syntax) should first be checked against `~/.cache/puppeteer` state.
+
+**M3. Concurrent-suite resource contention inflates subprocess timeouts
+(observed, no code change).** Running the core and rendering suites
+simultaneously on one machine caused cross-timeouts in both. The two
+`test_cli.py` subprocess failures seen in the combined run had already been
+fixed by another session (commit `ea45a1935` plus uncommitted `test_cli.py`
+edits raising budgets to 300 s / class timeout 700 s). This session
+independently verified: `TestCLISubprocess` — 4 passed in 16.4 s.
 
 ### Medium
 
-- **F2 (concurrent-session state) — stale coverage provenance + mirror-shape
-  violations from other live sessions.** `counts.py --check` fails on
-  template_active_inference ("source hash changed") because another session's
-  uncommitted `output/data/*` edits are in flight;
-  `check_mirror_symlinks.py` flags gitignored private content at
-  `projects/active/project`, `projects/working/ap3`, `projects/working/Untitled`
-  (all `.gitignore`d, untracked). Per mission hard rules these are not mine to
-  regenerate, move, or commit. **Status: DEFERRED (ownership)** — resolution is
-  the owning session refreshing provenance and relocating mirrors into the
-  private sidecar (`mv ... && uv run python -m infrastructure.orchestration
-  link-projects`). Same conclusion as F4/M1 in `_ox-alpha.md`.
+**MED1. `counts.py --check` reports stale coverage provenance for
+`template_active_inference` (source hash changed; rerun its coverage gate,
+then refresh provenance).** Not fixed here: refreshing requires re-running
+the project's coverage gate, and the checkout's
+`projects/templates/template_active_inference/output/` tree carries
+uncommitted changes from another active session. Deferred to avoid racing
+that work; the check correctly fails closed.
 
 ### Major (scoped, not implemented)
 
-No new majors. The three scoped majors M1–M3 in the canonical
-`DEEP_PASS_2026-08-21_ox-alpha.md` (coverage-provenance automation coupling;
-Python 3.14 full-suite runtime architecture; oversized-module decompositions)
-remain accurate and are adopted here by reference rather than restated.
+**MAJ1. Per-test default `timeout = 10` in `pyproject.toml` is below the
+real cost of many legitimate subprocess tests.** Individual suites work
+around it with per-class `@pytest.mark.timeout(...)` overrides (60-700 s),
+which is fragile: any new subprocess test silently inherits a 10 s ceiling.
+Approach: raise the default via a tiered scheme (e.g. 60 s default, explicit
+marks for long lanes), sweep existing per-class overrides for contradictions,
+and run the full infra suite serially plus under `-n 2`. Effort: ~0.5-1 day
+including the sweep. Risks: masking genuinely hung tests; slower CI feedback
+on real hangs. Acceptance: full `tests/infra_tests/` passes serially and with
+`-n 2`; no test's effective budget is reduced;
+`scripts/maintenance/benchmark_tests.py` manifests stay green.
 
-## What I verified but did not change
+**MAJ2. Rendering test suite wall time (~15 min for one package) makes the
+full gate expensive locally.** The rendering package alone took 900 s
+unloaded. Approach: profile the slowest renders (the durations report already
+surfaces them), split LaTeX-heavy tests into a marked lane with the same
+opt-in discipline as `requires_ollama`, and cache pandoc intermediates where
+determinism permits. Effort: 1-2 days. Risks: reduced default-lane coverage;
+cache invalidation bugs. Acceptance: rendering suite median wall time halved
+with zero change in selection semantics; coverage floor unchanged.
 
-- Rendering suite fully green post-fix: 1328 passed / 2 skipped in ~5 minutes
-  (`tests/infra_tests/rendering`), confirming the dirty-tree rendering edits
-  from the concurrent session do not break that tier as observed.
-- `docs/audit/filepath-audit-report.md`: regenerated by an earlier session's
-  commit (`b8ba52e5d`); my own audit run produced identical zero-actionable
-  output (55 informational link issues, 0 actionable), so no new snapshot
-  commit was needed from me.
-- Bandit/pip-audit were not re-run end-to-end this session (time-boxed);
-  prior sessions' fixes (`pip>=26.2` override floor, bandit clean) are on
-  record in the earlier reports and unchanged since.
+## What this session changed
 
-## Commits (this session, path-scoped, not pushed)
+- `infrastructure/rendering/_pdf_latex_pipeline.py` - pytest-mode xelatex
+  timeout 8 s -> 60 s (M1).
+- `DEEP_PASS_2026-08-21_ox-alpha-session2.md` - this report.
+- Environment (not committed): installed puppeteer chrome-headless-shell
+  131.0.6778.204 to repair `mmdc`.
 
-- `deep-pass: raise doc-pair lint subprocess timeout 30s→300s (measured ~40s)` —
-  `tests/infra_tests/validation/docs/test_doc_pair_lint.py` only.
+## Verification record
 
-## Deliverable checklist
+- `pytest tests/infra_tests/rendering/test_mermaid_figure.py -q` -> 5 passed.
+- `pytest "tests/infra_tests/rendering/test_pdf_renderer_fixes.py::TestCitationProcessing" -q` -> 1 passed (27.3 s).
+- `pytest "tests/infra_tests/core/test_cli.py::TestCLISubprocess" -q --timeout=800` -> 4 passed (16.4 s).
+- All static gates in the table above, measured this session, exit 0.
 
-- [x] Classified findings with evidence (this file + canonical backlog)
-- [x] Minor fix implemented and verified by real runs
-- [x] Path-scoped local commits of my files only
-- [x] Summary printed to terminal
+## Handoff notes
+
+- The checkout is shared: several other deep-pass sessions committed during
+  this one (e.g. `cb1db305b`, `ea45a1935`). This session's commits are
+  path-scoped to their own files only; the dirty
+  `projects/templates/template_active_inference/output/` and
+  `docs/_generated/coverage_snapshot.json` changes belong to another session
+  and were not touched.
+- MED1 (stale coverage provenance) should be closed by whichever session owns
+  the active_inference rerun.
