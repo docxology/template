@@ -399,4 +399,3 @@ The commit for `test_tracked_generated_artifacts.py` stages only this pass's
 hunks (import + two timeout markers) via `git apply --cached`; the concurrent
 session's `timeout=120` subprocess hunk remains uncommitted in the working
 tree for its owner.
-
