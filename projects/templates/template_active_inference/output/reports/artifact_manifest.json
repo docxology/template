@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "9f8cc08b35ce1d5ebe9de7a24efcdc7272eb2e60c8ec7aec04f14984a4af018b",
+      "sha256": "72287acf21f4dfdee2a7d720d70e933e43753d47dc561e6dc9eb818aaf1908da",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1238,6 +1238,15 @@
       "path": "output/reports/manuscript_composition.json",
       "sha256": "b64f631c785ec9d866ffb937d6e2abf75ad0a6760ec79fd5715b1067d3a95958",
       "size_bytes": 4180,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/manuscript_staleness_report.json",
+      "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
+      "size_bytes": 72360,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
