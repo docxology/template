@@ -137,7 +137,7 @@
   "security_posture_enforced_count": 7,
   "security_posture_high_risk_gap_count": 0,
   "security_posture_secret_finding_count": 0,
-  "semantic_ok": false,
+  "semantic_ok": true,
   "semantic_restriction_count": 126,
   "sensitivity_cell_count": 96,
   "sensitivity_complete_grid": true,
