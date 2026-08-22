@@ -113,7 +113,9 @@ the same host-specific pattern prior passes recorded under M2.
 ## Files changed by this pass
 
 - `docs/guides/extending-and-automation.md` — F1 fix.
-- `DEEP_PASS_2026-08-21_ox-alpha-session7.md` — this report.
+- `DEEP_PASS_2026-08-21_ox-alpha-session8.md` — this report (renamed after a
+  filename collision with a parallel session's session-7 report; that report is
+  restored verbatim at its original path).
 
 All other dirty files belong to concurrent sessions and are intentionally not
 committed. No push (per hard rules).
