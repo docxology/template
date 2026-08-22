@@ -1,4 +1,4 @@
-# Deep-Pass Session Report — ox-alpha (fifth independent session, 2026-08-21)
+# Deep-Pass Session Report — ox-alpha (session 6, 2026-08-21)
 
 Scope: full-repository deep assessment + improvement pass per
 `~/HermesWorkspace/instituteos_deep_pass/brief.md`, executed in a fifth
