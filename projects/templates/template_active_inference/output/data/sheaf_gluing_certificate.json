@@ -4798,7 +4798,11 @@
     ],
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
-  "issues": [],
+  "issues": [
+    "claim_evidence_audit.json has untyped claims",
+    "replay_matrix.json hash eligibility partition is stale or forged",
+    "typed claim evidence failed"
+  ],
   "lane_summaries": {
     "analytical": {
       "all_ok": true,
@@ -5003,8 +5007,8 @@
     "causal_ablation_complete_grid": true,
     "causal_ablation_row_count": 36,
     "claim_evidence_audit_all_artifacts_resolved": true,
-    "claim_evidence_audit_all_complete": true,
-    "claim_evidence_audit_all_predicates_hold": true,
+    "claim_evidence_audit_all_complete": false,
+    "claim_evidence_audit_all_predicates_hold": false,
     "claim_evidence_audit_count": 97,
     "composed_section_count": 12,
     "counterexample_all_known_bad_fail": 1,
@@ -5115,7 +5119,7 @@
     "security_posture_enforced_count": 7,
     "security_posture_high_risk_gap_count": 0,
     "security_posture_secret_finding_count": 0,
-    "semantic_ok": true,
+    "semantic_ok": false,
     "semantic_restriction_count": 126,
     "sensitivity_cell_count": 96,
     "sensitivity_complete_grid": true,
@@ -5196,7 +5200,7 @@
     "visualization_statistics_backed_count": 7,
     "visualization_statistics_bridge_ok": true
   },
-  "ok": true,
+  "ok": false,
   "proof_obligations": [
     {
       "class": "semantic_restriction",
