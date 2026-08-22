@@ -1,6 +1,6 @@
 {
-  "all_lane_summaries_ok": false,
-  "all_proof_obligations_ok": false,
+  "all_lane_summaries_ok": true,
+  "all_proof_obligations_ok": true,
   "artifact_graph": {
     "output/data/analysis_statistics.json": {
       "claim_ids": [],
@@ -4799,25 +4799,12 @@
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
   "issues": [
-    "output/data/sensitivity_sweep.json: hash mismatch",
-    "output/data/sensitivity_sweep.json: size mismatch",
-    "output/data/uncertainty_summary.json: hash mismatch",
-    "output/data/uncertainty_summary.json: size mismatch",
-    "output/reports/model_checking_witnesses.json: hash mismatch",
-    "output/reports/model_checking_witnesses.json: size mismatch",
-    "manuscript_staleness_report.json records stale manuscript tokens",
-    "artifact_provenance.json has incomplete provenance rows or bundles",
-    "replay_matrix.json hash eligibility partition is stale or forged",
-    "uncertainty_summary.json has invalid bins or unnormalized rows",
-    "artifact_contract_index.json has incomplete or stale artifact contract rows",
-    "release_bundle_manifest.json is missing required deliverables",
-    "canonical semantic restrictions failed: sensitivity_complete_grid, uncertainty_normalized",
-    "typed claim evidence failed"
+    "artifact_provenance.json has incomplete provenance rows or bundles"
   ],
   "lane_summaries": {
     "analytical": {
-      "all_ok": false,
-      "ok_count": 13,
+      "all_ok": true,
+      "ok_count": 15,
       "restriction_count": 15,
       "restrictions": [
         "ablation_sensitivity_row_count",
@@ -4937,8 +4924,8 @@
       ]
     },
     "semantic": {
-      "all_ok": false,
-      "ok_count": 28,
+      "all_ok": true,
+      "ok_count": 29,
       "restriction_count": 29,
       "restrictions": [
         "adversarial_expected_failures",
@@ -5018,8 +5005,8 @@
     "causal_ablation_complete_grid": true,
     "causal_ablation_row_count": 36,
     "claim_evidence_audit_all_artifacts_resolved": true,
-    "claim_evidence_audit_all_complete": false,
-    "claim_evidence_audit_all_predicates_hold": false,
+    "claim_evidence_audit_all_complete": true,
+    "claim_evidence_audit_all_predicates_hold": true,
     "claim_evidence_audit_count": 97,
     "composed_section_count": 12,
     "counterexample_all_known_bad_fail": 1,
@@ -5065,10 +5052,10 @@
     "lambda_max": 4.0,
     "lean_graph_world_all_topologies_witnessed": true,
     "lean_graph_world_topology_witness_count": 4,
-    "manuscript_staleness_all_fresh": false,
+    "manuscript_staleness_all_fresh": true,
     "manuscript_staleness_row_count": 322,
     "model_checking_all_passed": true,
-    "model_checking_witness_count": 7,
+    "model_checking_witness_count": 12,
     "param_sweep_grid_points": 21,
     "pipeline_track_count": 31,
     "precision_entropy_at_gamma_one_formatted": "1.1458",
@@ -5132,7 +5119,7 @@
     "security_posture_secret_finding_count": 0,
     "semantic_ok": false,
     "semantic_restriction_count": 126,
-    "sensitivity_cell_count": 24,
+    "sensitivity_cell_count": 96,
     "sensitivity_complete_grid": true,
     "sheaf_law_count": 6,
     "sheaf_laws_verified": 6,
@@ -5196,8 +5183,8 @@
     "track_lane_matrix_complete": true,
     "track_lane_matrix_row_count": 32,
     "uncertainty_all_normalized": true,
-    "uncertainty_bin_count": 0,
-    "uncertainty_row_count": 2,
+    "uncertainty_bin_count": 3,
+    "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
     "validation_spine_artifact_count": 86,
     "visualization_figures_section_bound": true,
@@ -5426,7 +5413,7 @@
     {
       "class": "semantic_restriction",
       "obligation": "prove_sensitivity_complete_grid",
-      "ok": false,
+      "ok": true,
       "restriction": "sensitivity_complete_grid"
     },
     {
@@ -5492,7 +5479,7 @@
     {
       "class": "semantic_restriction",
       "obligation": "prove_uncertainty_normalized",
-      "ok": false,
+      "ok": true,
       "restriction": "uncertainty_normalized"
     },
     {
@@ -5711,7 +5698,7 @@
     "manuscript_staleness_row_count": 322,
     "model_checking_all_passed": true,
     "model_checking_exhaustive": true,
-    "model_checking_witness_count": 7,
+    "model_checking_witness_count": 12,
     "no_versioned_live_tracks": true,
     "policy_comparison_complete_grid": true,
     "policy_comparison_efe_rows_explained": true,
@@ -5763,8 +5750,8 @@
     "security_posture_no_high_risk_gaps": true,
     "security_posture_secret_finding_count": 0,
     "security_posture_secret_patterns_absent": true,
-    "sensitivity_cell_count": 24,
-    "sensitivity_complete_grid": false,
+    "sensitivity_cell_count": 96,
+    "sensitivity_complete_grid": true,
     "sheaf_render_log_all_events_ok": true,
     "sheaf_render_log_event_count": 8,
     "stale_artifacts_all_fresh": true,
@@ -5785,10 +5772,10 @@
     "track_lane_matrix_row_count": 32,
     "track_scope_complete": true,
     "uncertainty_all_normalized": true,
-    "uncertainty_normalized": false,
-    "uncertainty_row_count": 2,
+    "uncertainty_normalized": true,
+    "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
-    "validation_spine_ok": false,
+    "validation_spine_ok": true,
     "visualization_figures_section_bound": true,
     "visualization_intent_metadata_complete": true,
     "visualization_paper_claims_complete": true,

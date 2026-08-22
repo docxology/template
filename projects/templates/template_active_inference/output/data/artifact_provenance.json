@@ -905,8 +905,8 @@
       "hash_authority": "this_record",
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
-      "size_bytes": 1985,
+      "sha256": "1004c7e73cf758ec9b24e1cdbbcb3af71877e351e5235d8e62a137653053ab0a",
+      "size_bytes": 2031,
       "source_commit": "de67ffa73687b7ba8ae138b124dc22c304e0c02d"
     },
     "output/reports/release_bundle_manifest.json": {
@@ -1187,10 +1187,10 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d"
+          "sha256": "1004c7e73cf758ec9b24e1cdbbcb3af71877e351e5235d8e62a137653053ab0a"
         }
       ],
-      "bundle_hash": "3e0c8e51285ce4a50d606834de68f8bb03ba415551dcc1583bcbf7a7284e131f",
+      "bundle_hash": "9c5ac189f43951021d291982b0e8c40c8dfd90ee1ee843d7e8df40894f844794",
       "bundle_id": "semantic_audit",
       "complete": true,
       "missing": []
@@ -2436,7 +2436,7 @@
     },
     {
       "artifact": "output/reports/release_attestation.json",
-      "artifact_hash": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
+      "artifact_hash": "1004c7e73cf758ec9b24e1cdbbcb3af71877e351e5235d8e62a137653053ab0a",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -4660,8 +4660,8 @@
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
-      "size_bytes": 1985,
+      "sha256": "1004c7e73cf758ec9b24e1cdbbcb3af71877e351e5235d8e62a137653053ab0a",
+      "size_bytes": 2031,
       "source_commit": "de67ffa73687b7ba8ae138b124dc22c304e0c02d",
       "validation_gates": [
         "validate_outputs",

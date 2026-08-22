@@ -181,11 +181,11 @@ response evidence.
 
 <!-- sheaf-track:sensitivity -->
 
-`sheaf-track:sensitivity` binds `output/data/sensitivity_sweep.json`, measured `output/data/si_policy_grid.json`, compatibility-named EFE values artifact `output/data/si_efe_terms.json`, `output/data/analytical_observable_sweep.json`, and graph-world topology artifacts including `output/data/si_graph_world_topology_traces.json`. The appendix claim is exactly 24 complete canonical grid cells.
+`sheaf-track:sensitivity` binds `output/data/sensitivity_sweep.json`, measured `output/data/si_policy_grid.json`, compatibility-named EFE values artifact `output/data/si_efe_terms.json`, `output/data/analytical_observable_sweep.json`, and graph-world topology artifacts including `output/data/si_graph_world_topology_traces.json`. The appendix claim is exactly 96 complete canonical grid cells.
 
 <!-- sheaf-track:uncertainty -->
 
-`sheaf-track:uncertainty` binds `output/data/uncertainty_summary.json`. The appendix claim is exactly 2 normalized rows across 0 entropy bins with status `true`.
+`sheaf-track:uncertainty` binds `output/data/uncertainty_summary.json`. The appendix claim is exactly 12 normalized rows across 3 entropy bins with status `true`.
 
 <!-- sheaf-track:benchmark -->
 
@@ -215,7 +215,7 @@ counts are caught after composition, not only during source-file linting.
 
 ![Theorem traceability graph generated from 17 linked theorem rows and 207 proof-dependency edges.](../figures/theorem_traceability_graph.png){#fig:theorem_traceability_graph width=95% fig-alt="Three-column graph generated from theorem traceability and proof dependency JSON. Each row links a Lean theorem to its proof-dependency edge count and finite model witness count; all theorem rows have resolved dependency edges: true."}
 
-![Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: false.](../figures/causal_ablation_heatmap.png){#fig:causal_ablation_heatmap width=92% fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."}
+![Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true.](../figures/causal_ablation_heatmap.png){#fig:causal_ablation_heatmap width=92% fig-alt="Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows."}
 
 ![](../figures/scholarship_source_map.png){width=95%}
 
@@ -243,7 +243,7 @@ Lean modules under `lean/TemplateActiveInference/` declare horizon and coupling 
 
 <!-- sheaf-track:model_checking -->
 
-`sheaf-track:model_checking` binds `output/reports/model_checking_witnesses.json` and the Lean theorem inventories. The appendix claim is exactly 7 finite exhaustive witnesses with pass status `true`; Lean graph-world topology coverage is 4 generated topology ids with all-witnessed flag `true`.
+`sheaf-track:model_checking` binds `output/reports/model_checking_witnesses.json` and the Lean theorem inventories. The appendix claim is exactly 12 finite exhaustive witnesses with pass status `true`; Lean graph-world topology coverage is 4 generated topology ids with all-witnessed flag `true`.
 
 <!-- sheaf-track:theorem_traceability -->
 
@@ -308,7 +308,7 @@ fails before the manuscript can reuse the result.
 `output/reports/ablation_sensitivity_report.json` then joins those ablation
 effects to the sensitivity and uncertainty artifacts. The report contributes
 36 source-backed rows, with source-backed status
-`false`, so the appendix heatmap is a rendered
+`true`, so the appendix heatmap is a rendered
 view of validated JSON rather than a decorative restatement.
 
 <!-- sheaf-track:gnn -->
@@ -360,4 +360,4 @@ row still fails.
 `output/reports/release_attestation.json` is the compact final view over the
 same boundary. It records 8 attestation rows for
 validation, release bundle hash, license audit, semantic certificate, and
-blocked-scope status, with all-attested flag `false`.
+blocked-scope status, with all-attested flag `true`.
