@@ -83,7 +83,10 @@ class TestCreateParser:
         assert args.categories is None
 
 
-@pytest.mark.timeout(60)
+# Full-DAG subprocess runs take minutes even with instant stub stages;
+# the default 60s class pytest-timeout fires before the inner subprocess
+# timeout can. See DEEP_PASS_2026-08-21_ox-alpha-session7.md.
+@pytest.mark.timeout(900)
 class TestCLISubprocess:
     """Test CLI through real subprocess execution."""
 
@@ -161,7 +164,7 @@ authors:
                 capture_output=True,
                 text=True,
                 env=env,
-                timeout=30,
+                timeout=300,
             )
 
             assert result.returncode == 0
@@ -245,7 +248,7 @@ authors:
                 capture_output=True,
                 text=True,
                 env=env,
-                timeout=30,
+                timeout=300,
             )
 
             assert result.returncode == 0
