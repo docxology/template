@@ -6,6 +6,7 @@ import hashlib
 from io import BytesIO
 import json
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import Any
 
 ANIMATION_DELTAS_SCHEMA = "template_active_inference.animation_frame_deltas.v1"
@@ -54,13 +55,29 @@ def write_belief_trajectory_gif(project_root: Path) -> Path:
         draw.text((112, 78), f"action: {action}", fill=(100, 116, 139, 255))
         draw.text((24, 142), f"belief entropy {entropy:.4f} nats", fill=(17, 24, 39, 255))
         frames.append(frame)
-    frames[0].save(
-        out,
-        save_all=True,
-        append_images=frames[1:],
-        duration=450,
-        loop=0,
-    )
+    # Atomic publish: PIL's save truncates the target before writing, so a
+    # concurrent validator reading the canonical path can observe a partial
+    # (undecodable) GIF mid-pass. Render to a sibling temporary file and rename,
+    # matching the atomic-write contract used by the figure registry.
+    with NamedTemporaryFile(
+        "wb",
+        dir=out.parent,
+        prefix=f".{out.stem}.",
+        suffix=".gif",
+        delete=False,
+    ) as handle:
+        temporary_path = Path(handle.name)
+    try:
+        frames[0].save(
+            temporary_path,
+            save_all=True,
+            append_images=frames[1:],
+            duration=450,
+            loop=0,
+        )
+        temporary_path.replace(out)
+    finally:
+        temporary_path.unlink(missing_ok=True)
     return out
 
 
