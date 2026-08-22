@@ -81,7 +81,8 @@ the per-project subprocess model above, not a single mega pytest command.
 
 **References:** [`infrastructure/core/test_runner.py`](../infrastructure/core/test_runner.py),
 [`tests/infra_tests/core/test_test_runner.py`](infra_tests/core/test_test_runner.py),
-[`TO-DO.md`](../TO-DO.md) (tracked conftest item).
+[`infrastructure/core/project_test_matrix.py`](../infrastructure/core/project_test_matrix.py)
+(bounded per-project subprocess matrix with duplicate-index rejection).
 
 ## See Also
 

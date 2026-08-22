@@ -102,6 +102,11 @@ def run_project_test_matrix(
         return ()
     if workers < 1:
         raise ValueError("project matrix workers must be positive")
+    seen_indices: set[int] = set()
+    for task in ordered_tasks:
+        if task.index in seen_indices:
+            raise ValueError(f"duplicate project matrix task index: {task.index}")
+        seen_indices.add(task.index)
     workers = clamp_worker_count(workers, len(ordered_tasks))
     if workers == 1:
         return tuple(_run_task(task) for task in ordered_tasks)
