@@ -542,14 +542,14 @@
       "token": "claim_evidence_audit_all_artifacts_resolved"
     },
     {
-      "expected": "false",
+      "expected": "true",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "claim_evidence_audit_all_predicates_hold"
     },
     {
-      "expected": "false",
+      "expected": "true",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",

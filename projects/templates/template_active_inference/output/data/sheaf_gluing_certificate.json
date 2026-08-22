@@ -4799,9 +4799,9 @@
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
   "issues": [
-    "claim_evidence_audit.json has untyped claims",
+    "artifact_provenance.json has incomplete provenance rows or bundles",
     "replay_matrix.json hash eligibility partition is stale or forged",
-    "typed claim evidence failed"
+    "artifact_contract_index.json has incomplete or stale artifact contract rows"
   ],
   "lane_summaries": {
     "analytical": {
@@ -5007,8 +5007,8 @@
     "causal_ablation_complete_grid": true,
     "causal_ablation_row_count": 36,
     "claim_evidence_audit_all_artifacts_resolved": true,
-    "claim_evidence_audit_all_complete": false,
-    "claim_evidence_audit_all_predicates_hold": false,
+    "claim_evidence_audit_all_complete": true,
+    "claim_evidence_audit_all_predicates_hold": true,
     "claim_evidence_audit_count": 97,
     "composed_section_count": 12,
     "counterexample_all_known_bad_fail": 1,
