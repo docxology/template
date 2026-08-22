@@ -62,6 +62,13 @@ uv run python scripts/runner/execute_pipeline.py --help
 uv run python -m infrastructure.core.health --help
 ```
 
+Unified health gate timeouts: each gate subprocess gets a 300-second ceiling by
+default, with per-gate overrides in `_GATE_TIMEOUT_OVERRIDES`
+(`infrastructure/core/health.py`) for gates that legitimately re-derive measured
+facts from every public exemplar (`counts` at 1800 s, `docs-lint` at 900 s). Set
+`TEMPLATE_HEALTH_GATE_TIMEOUT=<seconds>` to apply one explicit ceiling to every
+gate on a constrained machine.
+
 The standalone health script also runs `uv sync --quiet`, so it can update the
 local environment and may require dependency/network access:
 
