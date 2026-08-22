@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "7927cd6df9d0ae3b197b0686d2e8d743076f2378f78b0c610fc993f448524764",
+      "sha256": "9f229721771304711b14e5aeb90b1a7877e358f1aa4aa237d2b5e7d3f24aa2c8",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
