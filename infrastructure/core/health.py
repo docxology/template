@@ -124,6 +124,10 @@ _GATE_TIMEOUT_OVERRIDES: dict[str, float] = {
     # 2026-08) through real headless-Chrome subprocesses; observed local wall
     # time exceeds the 300s default on loaded machines.
     "docs-lint": 900.0,
+    # ``bandit`` scans every infrastructure/script/public-exemplar source
+    # file; observed local wall time on a loaded workstation exceeds 10
+    # minutes (12 min measured 2026-08-21).
+    "bandit": 1200.0,
 }
 
 
