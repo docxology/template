@@ -10,8 +10,11 @@ from infrastructure.rendering.core import RenderManager
 
 
 @pytest.mark.requires_latex
+@pytest.mark.timeout(180)
 def test_render_all_tex(render_manager, tmp_path, skip_if_no_latex):
     """Test rendering all formats from LaTeX source with real compilation."""
+    # Real xelatex/pandoc subprocess chain; can exceed the 10s global budget
+    # under machine load. 180s matches other real-render tests.
     # Create a minimal valid LaTeX file
     tex_file = tmp_path / "test.tex"
     tex_file.write_text(

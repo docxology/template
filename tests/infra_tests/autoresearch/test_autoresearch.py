@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from infrastructure.core.pipeline.artifacts import compute_sha256
 
 
@@ -883,7 +885,11 @@ quality_checks: [unknown_check]
     assert (project / "output" / "reports" / "autoresearch_readiness.json").exists()
 
 
+@pytest.mark.timeout(120)
 def test_cli_plan_review_summarize_and_benchmark_write_declared_artifacts(tmp_path: Path) -> None:
+    # Four real subprocess CLI invocations (plan/review-packet/summarize/benchmark);
+    # measured ~24s standalone, so the 10s global budget is not sufficient on a
+    # loaded machine. Explicit budget keeps the suite from cascade-aborting.
     repo_root = _write_repo_scaffold(tmp_path)
     project = repo_root / "projects" / "demo"
     (project / "autoresearch.yaml").write_text(
