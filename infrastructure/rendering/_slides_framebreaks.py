@@ -197,12 +197,34 @@ def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
         if "allowframebreaks" not in match.group("open"):
             return match.group(0)
         body = match.group("body")
+        # Beamer re-typesets allowframebreaks frames multiple times; the
+        # listings package's verbatim scanner cannot survive that (\par is
+        # injected between passes -> "Paragraph ended before \lst@next").
+        # Frames containing verbatim-like environments keep their content in
+        # one piece below; additionally strip allowframebreaks so Beamer does
+        # not re-typeset the frame.
+        has_verbatim = bool(re.search(r"\\begin\{(?:lstlisting|verbatim|lstinputlisting)\}", body))
         updated = _split_frame_body(body)
         if updated != body:
             changed += 1
         segments = updated.split(_FRAMEBREAK_MARKER)
         if len(segments) == 1:
+            if has_verbatim and "allowframebreaks" in match.group("open"):
+                stripped_open = match.group("open").replace("allowframebreaks", "").replace("[]", "", 1)
+                return f"{stripped_open}{updated}{match.group('close')}"
             return f"{match.group('open')}{updated}{match.group('close')}"
+        # A split frame's verbatim-bearing segment must not keep
+        # allowframebreaks either: Beamer would re-typeset that segment and
+        # the listings/verbatim scanner fails across the injected \par again.
+        if has_verbatim:
+
+            def _strip_af(segment: str) -> str:
+                if re.search(r"\\begin\{(?:lstlisting|verbatim|lstinputlisting)\}", segment):
+                    stripped_open = match.group("open").replace("allowframebreaks", "").replace("[]", "", 1)
+                    return f"{stripped_open}{segment}{match.group('close')}"
+                return f"{match.group('open')}{segment}{match.group('close')}"
+
+            return "\n\n".join(_strip_af(segment) for segment in segments)
         return "\n\n".join(f"{match.group('open')}{segment}{match.group('close')}" for segment in segments)
 
     return _FRAME_RE.sub(replace_frame, tex_content), changed
