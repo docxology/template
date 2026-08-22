@@ -1,5 +1,5 @@
 {
-  "all_hydrated_values_current": false,
+  "all_hydrated_values_current": true,
   "all_tokens_mapped": true,
   "consumer_kinds": [
     "appendix_fragment",
@@ -2280,7 +2280,7 @@
       "consumer_kind": "manuscript_section",
       "expected_value": "96",
       "generated_output_path": "output/manuscript/13_results_invariants.md",
-      "hydrated_value_present": false,
+      "hydrated_value_present": true,
       "mapped": true,
       "precision": null,
       "section": "manuscript/13_results_invariants.md",
