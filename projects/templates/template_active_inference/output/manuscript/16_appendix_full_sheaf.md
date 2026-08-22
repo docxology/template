@@ -181,11 +181,11 @@ response evidence.
 
 <!-- sheaf-track:sensitivity -->
 
-`sheaf-track:sensitivity` binds `output/data/sensitivity_sweep.json`, measured `output/data/si_policy_grid.json`, compatibility-named EFE values artifact `output/data/si_efe_terms.json`, `output/data/analytical_observable_sweep.json`, and graph-world topology artifacts including `output/data/si_graph_world_topology_traces.json`. The appendix claim is exactly 24 complete canonical grid cells.
+`sheaf-track:sensitivity` binds `output/data/sensitivity_sweep.json`, measured `output/data/si_policy_grid.json`, compatibility-named EFE values artifact `output/data/si_efe_terms.json`, `output/data/analytical_observable_sweep.json`, and graph-world topology artifacts including `output/data/si_graph_world_topology_traces.json`. The appendix claim is exactly 96 complete canonical grid cells.
 
 <!-- sheaf-track:uncertainty -->
 
-`sheaf-track:uncertainty` binds `output/data/uncertainty_summary.json`. The appendix claim is exactly 2 normalized rows across 0 entropy bins with status `true`.
+`sheaf-track:uncertainty` binds `output/data/uncertainty_summary.json`. The appendix claim is exactly 12 normalized rows across 3 entropy bins with status `true`.
 
 <!-- sheaf-track:benchmark -->
 
@@ -243,7 +243,7 @@ Lean modules under `lean/TemplateActiveInference/` declare horizon and coupling 
 
 <!-- sheaf-track:model_checking -->
 
-`sheaf-track:model_checking` binds `output/reports/model_checking_witnesses.json` and the Lean theorem inventories. The appendix claim is exactly 7 finite exhaustive witnesses with pass status `true`; Lean graph-world topology coverage is 4 generated topology ids with all-witnessed flag `true`.
+`sheaf-track:model_checking` binds `output/reports/model_checking_witnesses.json` and the Lean theorem inventories. The appendix claim is exactly 12 finite exhaustive witnesses with pass status `true`; Lean graph-world topology coverage is 4 generated topology ids with all-witnessed flag `true`.
 
 <!-- sheaf-track:theorem_traceability -->
 
