@@ -13,7 +13,7 @@
   },
   "fig:causal_ablation_heatmap": {
     "alt": "Heatmap generated from the causal ablation and sensitivity reports. Rows are toy graph topologies, columns are perturbation types, and each cell shows the maximum absolute deterministic effect sourced from generated JSON rows.",
-    "caption": "Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: true.",
+    "caption": "Causal-ablation heatmap: 36 source-backed rows joined to sensitivity and uncertainty artifacts; all effects source-backed: false.",
     "evidence_role": "statistical",
     "figure_id": "causal_ablation_heatmap",
     "filename": "causal_ablation_heatmap.png",

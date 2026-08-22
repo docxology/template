@@ -1,6 +1,6 @@
 {
-  "all_lane_summaries_ok": true,
-  "all_proof_obligations_ok": true,
+  "all_lane_summaries_ok": false,
+  "all_proof_obligations_ok": false,
   "artifact_graph": {
     "output/data/analysis_statistics.json": {
       "claim_ids": [],
@@ -4799,16 +4799,19 @@
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
   "issues": [
+    "output/figures/figure_registry.json: hash mismatch",
+    "output/figures/figure_registry.json: size mismatch",
     "claim_evidence_audit.json has untyped claims",
     "artifact_provenance.json has incomplete provenance rows or bundles",
-    "replay_matrix.json hash eligibility partition is stale or forged",
-    "artifact_contract_index.json has incomplete or stale artifact contract rows",
+    "ablation_sensitivity_report.json has unsupported ablation effects",
+    "release_attestation.json claims a failed gate passed",
+    "canonical semantic restrictions failed: ablation_sensitivity_source_backed",
     "typed claim evidence failed"
   ],
   "lane_summaries": {
     "analytical": {
-      "all_ok": true,
-      "ok_count": 15,
+      "all_ok": false,
+      "ok_count": 14,
       "restriction_count": 15,
       "restrictions": [
         "ablation_sensitivity_row_count",
@@ -4928,8 +4931,8 @@
       ]
     },
     "semantic": {
-      "all_ok": true,
-      "ok_count": 29,
+      "all_ok": false,
+      "ok_count": 28,
       "restriction_count": 29,
       "restrictions": [
         "adversarial_expected_failures",
@@ -4984,7 +4987,7 @@
   },
   "manuscript_variables": {
     "ablation_sensitivity_row_count": 36,
-    "ablation_sensitivity_source_backed": true,
+    "ablation_sensitivity_source_backed": false,
     "adversarial_audit_all_documented": true,
     "adversarial_audit_count": 25,
     "adversarial_known_bad_passed": 0,
@@ -5207,7 +5210,7 @@
     {
       "class": "semantic_restriction",
       "obligation": "prove_ablation_sensitivity_source_backed",
-      "ok": true,
+      "ok": false,
       "restriction": "ablation_sensitivity_source_backed"
     },
     {
@@ -5654,7 +5657,7 @@
   },
   "restrictions": {
     "ablation_sensitivity_row_count": 36,
-    "ablation_sensitivity_source_backed": true,
+    "ablation_sensitivity_source_backed": false,
     "adversarial_expected_failures": true,
     "adversarial_expected_failures_documented": true,
     "adversarial_known_bad_passed": 0,
@@ -5779,7 +5782,7 @@
     "uncertainty_normalized": true,
     "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
-    "validation_spine_ok": true,
+    "validation_spine_ok": false,
     "visualization_figures_section_bound": true,
     "visualization_intent_metadata_complete": true,
     "visualization_paper_claims_complete": true,
