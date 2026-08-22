@@ -80,6 +80,25 @@ as written in `DEEP_PASS_2026-08-21_dr-pai-session.md`.**
   false positives (classification levels, not credentials). No config change made — CI
   runs `-ll` (medium+), so they never block.
 
+## Addendum update: unified health completed on third attempt
+
+A background `uv run python -m infrastructure.core.health --json` run launched during
+this session completed after ~35 min (26 gates). Result: **23 PASS / 3 FAIL**, and all
+three failures are attributable to the concurrent session's uncommitted work or machine
+load — no defect in committed code:
+
+- `ruff-format` — would reformat `infrastructure/core/health.py` and
+  `tests/infra_tests/rendering/test_slides_renderer_core.py`; both are in the
+  concurrent session's **dirty (uncommitted)** set.
+- `docs-lint` — single mermaid timeout (`docs/architecture/two-layer-architecture.md:39`,
+  mmdc exit 124 under load); same environment-latency class as F2.
+- `counts` — STALE coverage provenance for `template_active_inference`; expected while
+  uncommitted source edits change the tree hash (see observation above).
+
+This partially closes J1: the unified-health lane is now measured end-to-end. Remaining
+for J1 closure: rerun on a quiet tree (expect ruff-format/docs-lint/counts to flip green)
+plus the full infra test lane and public project matrix.
+
 ## Deliverable checklist
 
 - [x] This addendum records classified finding statuses with evidence
