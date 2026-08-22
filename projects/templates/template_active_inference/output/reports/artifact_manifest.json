@@ -290,6 +290,15 @@
     },
     {
       "contract_match": true,
+      "path": "output/data/animation_frame_deltas.json",
+      "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+      "size_bytes": 2165,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
       "path": "output/data/artifact_contract_index.json",
       "sha256": "ad308ef7bbb37bf71d0fbb070c7aaf01e1e575b464987aab64e84cee3d88d3e8",
       "size_bytes": 104401,
@@ -300,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "03f4dfb04d1a8c585395f57e984cf533ed1d113bd5bf5117b4064a222c54f686",
+      "sha256": "020ac0c3a3ccfa98468d689516ba79ffef18de631bd9a090bf3bfcd23d6587ae",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -489,8 +498,8 @@
     {
       "contract_match": true,
       "path": "output/data/sheaf_gluing_certificate.json",
-      "sha256": "d79b78bf282fb127de2d574e2087267381be2151ad88c4b381c326964e8c73c5",
-      "size_bytes": 203385,
+      "sha256": "32b8b3884eba9b7eb4f4b52ee965aca87dd90d2eaf5addeea04210208443521a",
+      "size_bytes": 203386,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -851,6 +860,15 @@
       "path": "output/figures/si_belief_entropy_curve.png",
       "sha256": "39bcaf1764b47e519c27739dc3f5870e0d50e93112b4db3da5ecb30275828b6c",
       "size_bytes": 44361,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/si_belief_trajectory.gif",
+      "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "size_bytes": 7058,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
