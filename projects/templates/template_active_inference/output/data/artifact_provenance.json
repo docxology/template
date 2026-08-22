@@ -173,8 +173,8 @@
       "hash_authority": "this_record",
       "path": "output/data/manuscript_token_provenance.json",
       "producer": "generate_integration_audit.py",
-      "sha256": "02598cb169aca93046aeb13c859125ab9c47a58a91b78d577929a0b37dc858bf",
-      "size_bytes": 290399,
+      "sha256": "e9e89346899b1e852a40fdb3e5b6763a4a59520d10f43b09286a7965dc374a11",
+      "size_bytes": 290389,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/data/manuscript_variables.json": {
@@ -281,8 +281,8 @@
       "hash_authority": "this_record",
       "path": "output/data/sensitivity_sweep.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
-      "size_bytes": 44895,
+      "sha256": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499",
+      "size_bytes": 4986,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/data/sheaf_coverage_matrix.json": {
@@ -533,8 +533,8 @@
       "hash_authority": "this_record",
       "path": "output/data/uncertainty_summary.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
-      "size_bytes": 6449,
+      "sha256": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd",
+      "size_bytes": 581,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/data/validation_dependency_graph.json": {
@@ -761,8 +761,8 @@
       "hash_authority": "this_record",
       "path": "output/reports/claim_evidence_audit.json",
       "producer": "generate_integration_audit.py",
-      "sha256": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
-      "size_bytes": 49326,
+      "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
+      "size_bytes": 49252,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/reports/counterexample_matrix.json": {
@@ -857,8 +857,8 @@
       "hash_authority": "this_record",
       "path": "output/reports/manuscript_staleness_report.json",
       "producer": "z_generate_manuscript_variables.py",
-      "sha256": "cb57c328ef8367b9ea56a653cf4f80ef385019ee0ba027b47f33ac4b690e9b5b",
-      "size_bytes": 72363,
+      "sha256": "13330982628da98904f251d2ce8f2ea96a205912f6e995a0e35a52f1e02526af",
+      "size_bytes": 72358,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/reports/model_checking_witnesses.json": {
@@ -869,8 +869,8 @@
       "hash_authority": "this_record",
       "path": "output/reports/model_checking_witnesses.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-      "size_bytes": 4418,
+      "sha256": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d",
+      "size_bytes": 1710,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/reports/producer_completeness.json": {
@@ -905,8 +905,8 @@
       "hash_authority": "this_record",
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "a2f8e047cb61feb9c39a3aa48188945d23da899c31317ceeed818c4027176e93",
-      "size_bytes": 2033,
+      "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
+      "size_bytes": 1985,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
     "output/reports/release_bundle_manifest.json": {
@@ -917,7 +917,7 @@
       "hash_authority": "this_record",
       "path": "output/reports/release_bundle_manifest.json",
       "producer": "generate_sheaf_tracks.py",
-      "sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
+      "sha256": "e454e70eabf0bfca4200ffd0424c0016067ca12ad8661bea5ed395ec36386957",
       "size_bytes": 31383,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04"
     },
@@ -1138,7 +1138,7 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7"
+          "sha256": "e454e70eabf0bfca4200ffd0424c0016067ca12ad8661bea5ed395ec36386957"
         },
         {
           "artifact": "output/reports/artifact_diffoscope.json",
@@ -1187,10 +1187,10 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "a2f8e047cb61feb9c39a3aa48188945d23da899c31317ceeed818c4027176e93"
+          "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d"
         }
       ],
-      "bundle_hash": "9011fbb531b42f21a025f531eb6eec7e174021bbf95237205e6142a70d6530d5",
+      "bundle_hash": "21d40984d3c3dbad1bbe778c28a55459ed21a4858aeedb62c7b6d58296b998c6",
       "bundle_id": "semantic_audit",
       "complete": true,
       "missing": []
@@ -1203,7 +1203,7 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef"
+          "sha256": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d"
         },
         {
           "artifact": "output/data/interop_roundtrip_report.json",
@@ -1241,7 +1241,7 @@
           "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89"
         }
       ],
-      "bundle_hash": "df6f5dcb303dfb263ac17545cd3f6fa76a1562f46ee071d293f81aa1513cdf70",
+      "bundle_hash": "5e744049515ed344dc0de5d25840aa77ea4a2841a68e3e764fad7c6f078946b6",
       "bundle_id": "formal_interop",
       "complete": true,
       "missing": []
@@ -1282,17 +1282,17 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754"
+          "sha256": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499"
         },
         {
           "artifact": "output/data/uncertainty_summary.json",
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-          "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae"
+          "sha256": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd"
         }
       ],
-      "bundle_hash": "41e1d37f7571c264e3a474d0b083d60d435bfa401ae24196b19604fa7c2cf6f7",
+      "bundle_hash": "7f129b214dd6cc3454a4bc7af8aa2cc5678043a18516850942143d4a75796aae",
       "bundle_id": "finite_toy_scope",
       "complete": true,
       "missing": []
@@ -1590,7 +1590,7 @@
     },
     {
       "artifact": "output/data/manuscript_token_provenance.json",
-      "artifact_hash": "02598cb169aca93046aeb13c859125ab9c47a58a91b78d577929a0b37dc858bf",
+      "artifact_hash": "e9e89346899b1e852a40fdb3e5b6763a4a59520d10f43b09286a7965dc374a11",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -1716,7 +1716,7 @@
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
-      "artifact_hash": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
+      "artifact_hash": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2010,7 +2010,7 @@
     },
     {
       "artifact": "output/data/uncertainty_summary.json",
-      "artifact_hash": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
+      "artifact_hash": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2270,7 +2270,7 @@
     },
     {
       "artifact": "output/reports/claim_evidence_audit.json",
-      "artifact_hash": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
+      "artifact_hash": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2380,7 +2380,7 @@
     },
     {
       "artifact": "output/reports/manuscript_staleness_report.json",
-      "artifact_hash": "cb57c328ef8367b9ea56a653cf4f80ef385019ee0ba027b47f33ac4b690e9b5b",
+      "artifact_hash": "13330982628da98904f251d2ce8f2ea96a205912f6e995a0e35a52f1e02526af",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2394,7 +2394,7 @@
     },
     {
       "artifact": "output/reports/model_checking_witnesses.json",
-      "artifact_hash": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
+      "artifact_hash": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2436,7 +2436,7 @@
     },
     {
       "artifact": "output/reports/release_attestation.json",
-      "artifact_hash": "a2f8e047cb61feb9c39a3aa48188945d23da899c31317ceeed818c4027176e93",
+      "artifact_hash": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2450,7 +2450,7 @@
     },
     {
       "artifact": "output/reports/release_bundle_manifest.json",
-      "artifact_hash": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
+      "artifact_hash": "e454e70eabf0bfca4200ffd0424c0016067ca12ad8661bea5ed395ec36386957",
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2990,8 +2990,8 @@
       "path": "output/data/manuscript_token_provenance.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-      "sha256": "02598cb169aca93046aeb13c859125ab9c47a58a91b78d577929a0b37dc858bf",
-      "size_bytes": 290399,
+      "sha256": "e9e89346899b1e852a40fdb3e5b6763a4a59520d10f43b09286a7965dc374a11",
+      "size_bytes": 290389,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs",
@@ -3233,8 +3233,8 @@
       "path": "output/data/sensitivity_sweep.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
-      "size_bytes": 44895,
+      "sha256": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499",
+      "size_bytes": 4986,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs"
@@ -3814,8 +3814,8 @@
       "path": "output/data/uncertainty_summary.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
-      "size_bytes": 6449,
+      "sha256": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd",
+      "size_bytes": 581,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs"
@@ -4334,8 +4334,8 @@
       "path": "output/reports/claim_evidence_audit.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-      "sha256": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
-      "size_bytes": 49326,
+      "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
+      "size_bytes": 49252,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs",
@@ -4548,8 +4548,8 @@
       "path": "output/reports/manuscript_staleness_report.json",
       "producer": "z_generate_manuscript_variables.py",
       "producer_configured": true,
-      "sha256": "cb57c328ef8367b9ea56a653cf4f80ef385019ee0ba027b47f33ac4b690e9b5b",
-      "size_bytes": 72363,
+      "sha256": "13330982628da98904f251d2ce8f2ea96a205912f6e995a0e35a52f1e02526af",
+      "size_bytes": 72358,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs",
@@ -4577,8 +4577,8 @@
       "path": "output/reports/model_checking_witnesses.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-      "size_bytes": 4418,
+      "sha256": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d",
+      "size_bytes": 1710,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs"
@@ -4660,8 +4660,8 @@
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "a2f8e047cb61feb9c39a3aa48188945d23da899c31317ceeed818c4027176e93",
-      "size_bytes": 2033,
+      "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
+      "size_bytes": 1985,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
         "validate_outputs",
@@ -4688,7 +4688,7 @@
       "path": "output/reports/release_bundle_manifest.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-      "sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
+      "sha256": "e454e70eabf0bfca4200ffd0424c0016067ca12ad8661bea5ed395ec36386957",
       "size_bytes": 31383,
       "source_commit": "602fa0abde666bf98254a0fbfac655e1d26efe04",
       "validation_gates": [
