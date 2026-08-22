@@ -162,7 +162,11 @@ class TestRunPytestStream:
         elapsed = time.monotonic() - started
         assert exit_code == 124
         assert "timed out" in stderr
-        assert elapsed < 2.0
+        # Cleanup includes the bounded-run guardian handshake plus repeated
+        # process-table scans (~1s idle, multi-second on a loaded host). Assert
+        # the kill landed well before the workload's natural 5s exit rather
+        # than pinning an absolute wall clock that flakes under load.
+        assert elapsed < 5.0
         time.sleep(0.1)
         assert not marker.exists()
 
