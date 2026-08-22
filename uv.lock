@@ -767,7 +767,7 @@ wheels = [
 [[package]]
 name = "desloppify"
 version = "0.9.14"
-source = { git = "https://github.com/peteromallet/desloppify.git#19b9ebebcf449dd7074f30a7bdfdcd327d53cff6" }
+source = { git = "https://github.com/peteromallet/desloppify.git?rev=19b9ebebcf449dd7074f30a7bdfdcd327d53cff6#19b9ebebcf449dd7074f30a7bdfdcd327d53cff6" }
 
 [[package]]
 name = "discopy"
@@ -3987,7 +3987,7 @@ deep-research = [
 ]
 dev = [
     { name = "bandit", specifier = ">=1.7.0" },
-    { name = "desloppify", marker = "python_full_version >= '3.11'", git = "https://github.com/peteromallet/desloppify.git" },
+    { name = "desloppify", marker = "python_full_version >= '3.11'", git = "https://github.com/peteromallet/desloppify.git?rev=19b9ebebcf449dd7074f30a7bdfdcd327d53cff6" },
     { name = "hypothesis", specifier = ">=6.151.11" },
     { name = "iniconfig", specifier = ">=2.3.0" },
     { name = "mypy", specifier = ">=1.17.1" },
