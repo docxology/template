@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "fb82a45bb8587dbc0c7e34ba8edc0a5e1c0dba70bccbc9da96dae8a1b72831f3",
+      "sha256": "aa05ec6c08a6412eb680bd4e271f322c864ee816732511e7340d94e1929d25f7",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -353,24 +353,6 @@
     },
     {
       "contract_match": true,
-      "path": "output/data/gnn_roundtrip_report.json",
-      "sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
-      "size_bytes": 454,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/data/interop_roundtrip_report.json",
-      "sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
-      "size_bytes": 506,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
       "path": "output/data/manuscript_evidence_tables.json",
       "sha256": "d375b3ed509999f4066fda36acde5c47d4213e711579464beeb47cb4fbfb3ea6",
       "size_bytes": 3167,
@@ -398,24 +380,6 @@
     },
     {
       "contract_match": true,
-      "path": "output/data/ontology_alias_index.json",
-      "sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
-      "size_bytes": 3012,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/data/ontology_profile_matrix.json",
-      "sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d",
-      "size_bytes": 6685,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
       "path": "output/data/parameter_sweep.csv",
       "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
       "size_bytes": 1037,
@@ -428,15 +392,6 @@
       "path": "output/data/proof_dependency_graph.json",
       "sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
       "size_bytes": 34009,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/data/proof_extraction_index.json",
-      "sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
-      "size_bytes": 4187,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -471,8 +426,8 @@
     {
       "contract_match": true,
       "path": "output/data/sensitivity_sweep.json",
-      "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
-      "size_bytes": 44895,
+      "sha256": "e35f7eb5c626e374498154d3d4b1a3b4c2498e7e116f44c5fc982317e7c4b499",
+      "size_bytes": 4986,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -669,8 +624,8 @@
     {
       "contract_match": true,
       "path": "output/data/uncertainty_summary.json",
-      "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
-      "size_bytes": 6449,
+      "sha256": "595bf459e45b49650062bba2e9b20ad5f6bf1286e4dbfc78dd20c0fc91cfa8bd",
+      "size_bytes": 581,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1190,15 +1145,6 @@
     },
     {
       "contract_match": true,
-      "path": "output/reports/gnn_lint_report.json",
-      "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
-      "size_bytes": 6548,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
       "path": "output/reports/graph_world_invariants.json",
       "sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
       "size_bytes": 1370,
@@ -1211,24 +1157,6 @@
       "path": "output/reports/invariants.json",
       "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
       "size_bytes": 499,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/lean_graph_world_inventory.json",
-      "sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
-      "size_bytes": 1056,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/lean_theorem_inventory.json",
-      "sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
-      "size_bytes": 1914,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1254,17 +1182,8 @@
     {
       "contract_match": true,
       "path": "output/reports/model_checking_witnesses.json",
-      "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
-      "size_bytes": 4418,
-      "stage_name": "current-output-snapshot",
-      "stage_num": 0,
-      "timestamp": ""
-    },
-    {
-      "contract_match": true,
-      "path": "output/reports/producer_completeness.json",
-      "sha256": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
-      "size_bytes": 14660,
+      "sha256": "358d1e30b813468b366e6a100d9d756a947f099b540c7469ab066713a589f66d",
+      "size_bytes": 1710,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
