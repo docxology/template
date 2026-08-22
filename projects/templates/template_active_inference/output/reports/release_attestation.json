@@ -1,7 +1,7 @@
 {
-  "all_attested": false,
-  "attestation_hash": "54648134009ddb23a19511a64c88172c93a20f416d701799844d159d6a25d7f6",
-  "bundle_hash": "9f72a8e727ed05254b174f971b64b13d217b59c96ada4083e475ed057dd47d51",
+  "all_attested": true,
+  "attestation_hash": "371f1386655c729f018111b04fabf2a1ddb2b6215dfa4bf52e066b8b973355cc",
+  "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
   "row_count": 8,
   "rows": [
     {
@@ -12,7 +12,7 @@
       "source": "output/reports/validation_report.json"
     },
     {
-      "bundle_hash": "9f72a8e727ed05254b174f971b64b13d217b59c96ada4083e475ed057dd47d51",
+      "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
       "deferred_until_validation": false,
       "id": "release_bundle",
       "passed": true,
@@ -54,7 +54,7 @@
       "deferred_until_validation": false,
       "id": "semantic_certificate",
       "ignored_self_restrictions": [],
-      "passed": false,
+      "passed": true,
       "source": "output/data/sheaf_gluing_certificate.json"
     }
   ],

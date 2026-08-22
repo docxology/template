@@ -15,7 +15,7 @@
     },
     {
       "id": "artifact_provenance",
-      "row_count": 34,
+      "row_count": 86,
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "id": "artifact_diffoscope",
-      "row_count": 30,
+      "row_count": 43,
       "source": "output/reports/artifact_diffoscope.json"
     },
     {
@@ -70,7 +70,7 @@
     },
     {
       "id": "artifact_license",
-      "row_count": 34,
+      "row_count": 86,
       "source": "output/reports/artifact_license_audit.json"
     },
     {

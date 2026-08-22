@@ -2,7 +2,7 @@
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
   "artifact_count": 36,
-  "bundle_hash": "9f72a8e727ed05254b174f971b64b13d217b59c96ada4083e475ed057dd47d51",
+  "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
@@ -780,7 +780,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "c0b6c39558a0f0800ddca03f4c0da8a94a372961754327fe994b9cb6d2d9ba16"
+      "source_sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -816,7 +816,7 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
-      "source_sha256": "0864f3c6f562b53eb8afce8ac48d4b591b8f6874c2ee601fdf768ae2f31d0524"
+      "source_sha256": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d"
     },
     {
       "artifact": "output/data/proof_dependency_graph.json",

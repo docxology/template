@@ -1,6 +1,6 @@
 {
   "all_equal": true,
-  "row_count": 30,
+  "row_count": 43,
   "rows": [
     {
       "artifact": "output/data/analysis_statistics.json",
@@ -33,6 +33,28 @@
       "live_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "saved_content_sha256": "",
       "saved_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/animation_frame_deltas.json",
+      "compared_field": "sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "",
+      "live_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+      "saved_content_sha256": "",
+      "saved_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/causal_ablation_matrix.json",
+      "compared_field": "sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "",
+      "live_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
+      "saved_content_sha256": "",
+      "saved_sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -88,6 +110,17 @@
       "live_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
       "saved_content_sha256": "",
       "saved_sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/data/proof_extraction_index.json",
+      "compared_field": "sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "",
+      "live_sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
+      "saved_content_sha256": "",
+      "saved_sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -212,6 +245,17 @@
       "source": "output/data/artifact_provenance.json"
     },
     {
+      "artifact": "output/data/state_space_catalog.json",
+      "compared_field": "sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "",
+      "live_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
+      "saved_content_sha256": "",
+      "saved_sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
       "artifact": "output/data/toy_benchmark_matrix.json",
       "compared_field": "sha256",
       "equal": true,
@@ -220,6 +264,50 @@
       "live_sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
       "saved_content_sha256": "",
       "saved_sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/artifact_contract_map.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "1929464dea995442eecf64e962eaa25c605c7d74104e0aa95a0bb4f1db3ebe29",
+      "live_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
+      "saved_content_sha256": "1929464dea995442eecf64e962eaa25c605c7d74104e0aa95a0bb4f1db3ebe29",
+      "saved_sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/causal_ablation_heatmap.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "77eb6e6def936a27a5df4da764eb538fdfdfed8587291f64f8417dfd8cd2a95e",
+      "live_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "saved_content_sha256": "77eb6e6def936a27a5df4da764eb538fdfdfed8587291f64f8417dfd8cd2a95e",
+      "saved_sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/scholarship_source_map.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "70325f3a789581200ead8e3216bf1d137935b92f8b3a2549e2d1f2abe819cea0",
+      "live_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "saved_content_sha256": "70325f3a789581200ead8e3216bf1d137935b92f8b3a2549e2d1f2abe819cea0",
+      "saved_sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/security_posture_map.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "37913b901d18e4d68c7127aee914bea4924a7b130da0aa8980c138c5544cf7de",
+      "live_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
+      "saved_content_sha256": "37913b901d18e4d68c7127aee914bea4924a7b130da0aa8980c138c5544cf7de",
+      "saved_sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -234,6 +322,28 @@
       "source": "output/data/artifact_provenance.json"
     },
     {
+      "artifact": "output/figures/sheaf_coverage_heatmap.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "98e965bfbafc7d95ca2129b91ff483e6e8de29c845a789d2e0c6cab58fe565ce",
+      "live_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
+      "saved_content_sha256": "98e965bfbafc7d95ca2129b91ff483e6e8de29c845a789d2e0c6cab58fe565ce",
+      "saved_sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/sheaf_layers_overview.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "7c2d481cde8ce874a4cabd063b2e51218ae7acc6c6d0895839ad54dee3f4fc1c",
+      "live_sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
+      "saved_content_sha256": "7c2d481cde8ce874a4cabd063b2e51218ae7acc6c6d0895839ad54dee3f4fc1c",
+      "saved_sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
       "artifact": "output/figures/si_belief_trajectory.gif",
       "compared_field": "content_sha256",
       "equal": true,
@@ -242,6 +352,28 @@
       "live_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
       "saved_content_sha256": "d80e985892f37dd1ab5708bfb10d6721fbed055ba8f8bd48525d62a9c99b45e2",
       "saved_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/theorem_traceability_graph.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "6b17ddd58bb2b63ca991c151d6e28559e07aca31f2c56b2c723795e1a3b34494",
+      "live_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "saved_content_sha256": "6b17ddd58bb2b63ca991c151d6e28559e07aca31f2c56b2c723795e1a3b34494",
+      "saved_sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/figures/track_lane_promotion_map.png",
+      "compared_field": "content_sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",
+      "live_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
+      "saved_content_sha256": "6d4a96ac32d2a54aa04862bac42d636c5a8164c96e5680c5275c6a6251f46b48",
+      "saved_sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -308,6 +440,17 @@
       "live_sha256": "5bcd007ba20a0977c8db14d22e1403452b69d1dd6963278377b9ffe693f1669f",
       "saved_content_sha256": "",
       "saved_sha256": "5bcd007ba20a0977c8db14d22e1403452b69d1dd6963278377b9ffe693f1669f",
+      "source": "output/data/artifact_provenance.json"
+    },
+    {
+      "artifact": "output/reports/reproducibility_replay.json",
+      "compared_field": "sha256",
+      "equal": true,
+      "jsonpath": "$",
+      "live_content_sha256": "",
+      "live_sha256": "8775039aa7485cb28c2cef36b212acf879c10a7c2d65a77ce5795e652c50bc69",
+      "saved_content_sha256": "",
+      "saved_sha256": "8775039aa7485cb28c2cef36b212acf879c10a7c2d65a77ce5795e652c50bc69",
       "source": "output/data/artifact_provenance.json"
     },
     {
