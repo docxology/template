@@ -388,7 +388,7 @@
       "token": "theorem_traceability_linked"
     },
     {
-      "expected": "12",
+      "expected": "7",
       "fresh": true,
       "resolved_path": "output/manuscript/07_methods_lean.md",
       "section": "manuscript/07_methods_lean.md",
@@ -542,14 +542,14 @@
       "token": "claim_evidence_audit_all_artifacts_resolved"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
       "token": "claim_evidence_audit_all_predicates_hold"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/08_methods_sheaf.md",
       "section": "manuscript/08_methods_sheaf.md",
@@ -1326,7 +1326,7 @@
       "token": "replay_matrix_all_matched"
     },
     {
-      "expected": "96",
+      "expected": "24",
       "fresh": true,
       "resolved_path": "output/manuscript/13_results_invariants.md",
       "section": "manuscript/13_results_invariants.md",
@@ -1347,14 +1347,14 @@
       "token": "si_graph_world_topology_trace_count"
     },
     {
-      "expected": "12",
+      "expected": "2",
       "fresh": true,
       "resolved_path": "output/manuscript/13_results_invariants.md",
       "section": "manuscript/13_results_invariants.md",
       "token": "uncertainty_row_count"
     },
     {
-      "expected": "3",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/13_results_invariants.md",
       "section": "manuscript/13_results_invariants.md",
@@ -1893,21 +1893,21 @@
       "token": "visualization_figures_section_bound"
     },
     {
-      "expected": "96",
+      "expected": "24",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "sensitivity_cell_count"
     },
     {
-      "expected": "12",
+      "expected": "2",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
       "token": "uncertainty_row_count"
     },
     {
-      "expected": "3",
+      "expected": "0",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -2012,7 +2012,7 @@
       "token": "ablation_sensitivity_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -2096,7 +2096,7 @@
       "token": "coverage_missing"
     },
     {
-      "expected": "12",
+      "expected": "7",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
@@ -2222,7 +2222,7 @@
       "token": "release_attestation_row_count"
     },
     {
-      "expected": "true",
+      "expected": "false",
       "fresh": true,
       "resolved_path": "output/manuscript/16_appendix_full_sheaf.md",
       "section": "manuscript/16_appendix_full_sheaf.md",
