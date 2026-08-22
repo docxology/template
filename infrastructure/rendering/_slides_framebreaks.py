@@ -19,7 +19,9 @@ _FRAME_RE = re.compile(
 _ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
 _ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
 _TEX_GROUP_RE = re.compile(r"\\(?P<kind>begin|end)group\b")
-_ISOLATE_SLIDE_ENVS = frozenset({"codelisting", "description", "enumerate", "figure", "itemize", "longtable", "table"})
+_ISOLATE_SLIDE_ENVS = frozenset(
+    {"codelisting", "lstlisting", "verbatim", "description", "enumerate", "figure", "itemize", "longtable", "table"}
+)
 _FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
 
 

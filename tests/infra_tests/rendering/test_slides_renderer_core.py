@@ -227,6 +227,33 @@ class TestSlidesRendererClass:
         assert updated.index(r"\end{figure}") < updated.index(r"After the figure.")
         assert updated.index(r"After the figure.") < updated.rindex(r"\end{frame}")
 
+    def test_split_long_slide_frames_isolates_verbatim_and_lstlisting(self):
+        """verbatim/lstlisting bodies must never receive an internal framebreak."""
+        for env in ("verbatim", "lstlisting"):
+            tex = (
+                r"\begin{frame}[allowframebreaks]{Code}" + "\n"
+                "Intro text before the code block.\n\n"
+                r"\begin{" + env + "}" + "\n"
+                "x = 1\n"
+                "y = 2\n"
+                r"\end{" + env + "}" + "\n\n"
+                "Closing prose after the block.\n"
+                r"\end{frame}" + "\n"
+            )
+
+            updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+            assert changed == 1
+            # The environment is isolated into its own frame: no framebreak
+            # marker inside the body, and intro/env/closing each end up in
+            # distinct frames.
+            body_start = updated.index(r"\begin{" + env + "}")
+            body_end = updated.index(r"\end{" + env + "}")
+            assert r"\framebreak" not in updated[body_start:body_end]
+            intro_frame_end = updated.index(r"\end{frame}", updated.index("Intro text"))
+            assert body_start > intro_frame_end
+            assert updated.index("Closing prose") > body_end
+
     def test_split_long_slide_frames_breaks_top_level_paragraphs_only(self):
         tex = (
             r"\begin{frame}[allowframebreaks]{Dense}" + "\n" + ("A long top-level paragraph. " * 80) + "\n\n"
@@ -657,6 +684,27 @@ class TestSlidesMathHeaderInjection:
         assert "\\providecommand{\\Cref}" in content
         # No math snippet expected (no preamble).
         assert "unicode-math" not in content
+
+    def test_header_includes_manuscript_macros_with_unsafe_packages_filtered(self, tmp_path):
+        r"""Manuscript macros land in the slide header rewritten as
+        \providecommand; unsafe layout packages (geometry) are dropped while
+        Beamer-safe ones (amsmath) survive."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{geometry}\n\\usepackage{amsmath}\n\\newcommand{\\calD}{\\mathcal{D}}\n```\n",
+            encoding="utf-8",
+        )
+        renderer = self._make_renderer(tmp_path)
+        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
+        # Macro rewritten to providecommand and present.
+        assert "\\providecommand{\\calD}" in content
+        assert "\\newcommand{\\calD}" not in content
+        # Safe package kept, layout machinery dropped.
+        assert "\\usepackage{amsmath}" in content
+        assert "geometry" not in content
 
     def test_helper_returns_header_with_citation_fallbacks_when_no_unicode_math(self, tmp_path):
         """When ``preamble.md`` exists but doesn't load unicode-math,

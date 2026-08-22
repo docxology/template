@@ -9,6 +9,20 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Rendering
+
+- Slide decks now recover manuscript-declared macros (`\newcommand`,
+  `\renewcommand`, `\DeclareMathOperator`) from `preamble.md` into the
+  Beamer header, rewritten as `\providecommand` so a clash with a class
+  built-in degrades to a no-op; only Beamer-safe packages survive the
+  fallback filter (layout/graphics machinery such as `geometry` is dropped).
+- Fixed the fallback rewrite so `\newcommand`/`\renewcommand` are actually
+  rewritten (the previous pattern never matched); covered by new
+  `extract_command_fallbacks` and header-injection tests.
+- `verbatim`/`lstlisting` bodies are now isolated environments during
+  allowframebreaks frame splitting, so no `\framebreak` can land inside a
+  code block; covered by a new split test.
+
 ### Robustness
 
 - `uv sync` timeout no longer claims a successful workspace sync; it falls back

@@ -35,6 +35,7 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
 from infrastructure.rendering._pdf_latex_helpers import (
+    extract_command_fallbacks,
     extract_math_font_preamble,
     extract_preamble,
 )
@@ -514,6 +515,32 @@ class SlidesRenderer:
             math_snippet = extract_math_font_preamble(preamble)
             if math_snippet is not None:
                 snippet_parts.append(math_snippet)
+            # Manuscript-declared macros (\calD, \cogstate, ...) must resolve
+            # in slides too; rewrite newcommand -> providecommand so a clash
+            # with a Beamer built-in degrades to a no-op rather than an error.
+            macro_fallbacks = extract_command_fallbacks(preamble)
+            # Keep only packages that are safe inside Beamer; layout/graphics
+            # machinery (geometry, hyperref, ...) clashes with the class.
+            _SLIDE_SAFE_PACKAGES = {
+                "listings",
+                "fancyvrb",
+                "amsmath",
+                "amssymb",
+                "bm",
+                "mathtools",
+                "booktabs",
+                "multirow",
+            }
+            safe_lines = [
+                ln
+                for ln in macro_fallbacks.splitlines()
+                if not ln.strip().startswith("\\usepackage") or any(pkg in ln for pkg in _SLIDE_SAFE_PACKAGES)
+            ]
+            macro_fallbacks = "\n".join(safe_lines)
+            if macro_fallbacks:
+                snippet_parts.append(
+                    "% Manuscript macro/package fallbacks (newcommand -> providecommand).\n" + macro_fallbacks + "\n"
+                )
 
         # Natbib fallback definitions for slide rendering. \providecommand
         # is a no-op when natbib is loaded (real definition wins). The layout
@@ -589,7 +616,13 @@ class SlidesRenderer:
         # fallbacks above), so a proposition/hypothesis number that doesn't
         # exactly match the PDF's shared sequence is consistent with that
         # existing degraded-but-non-fatal slides behavior, not a regression.
-        snippet_parts.append("\\newtheorem{proposition}{Proposition}\n\\newtheorem{hypothesis}{Hypothesis}\n")
+        snippet_parts.append(
+            "\\newtheorem{proposition}{Proposition}\n"
+            "\\newtheorem{hypothesis}{Hypothesis}\n"
+            # Beamer provides theorem/lemma/corollary/definition but NOT
+            # remark; combined-PDF preambles chain remark onto theorem.
+            "\\newtheorem{remark}[theorem]{Remark}\n"
+        )
 
         # snippet_parts is never empty past this point (the natbib/cref
         # fallback and the formalism-environment declarations above are both
