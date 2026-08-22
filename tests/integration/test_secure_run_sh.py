@@ -32,7 +32,12 @@ def run_script(repo_root: Path) -> Path:
 
 def run_script_cmd(script_path: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
     cmd = ["bash", str(script_path), *args]
-    return subprocess.run(cmd, capture_output=True, text=True, env=os.environ.copy())
+    # Bounded wait: a cold environment triggers the uv auto-installer inside
+    # run.sh; without a timeout the test hangs until the pytest-level
+    # timeout fires with no subprocess teardown.
+    return subprocess.run(
+        cmd, capture_output=True, text=True, env=os.environ.copy(), timeout=300
+    )
 
 
 def test_secure_script_exists(secure_script: Path) -> None:
