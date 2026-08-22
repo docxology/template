@@ -1,5 +1,5 @@
 {
-  "all_effects_source_backed": false,
+  "all_effects_source_backed": true,
   "max_abs_effect": 0.25,
   "row_count": 36,
   "rows": [
@@ -10,11 +10,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -24,11 +24,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -38,11 +38,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -52,11 +52,11 @@
       "mean_sensitivity_mi": 0.11094407167172737,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -66,11 +66,11 @@
       "mean_sensitivity_mi": 0.11094407167172737,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -80,11 +80,11 @@
       "mean_sensitivity_mi": 0.11094407167172737,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -94,11 +94,11 @@
       "mean_sensitivity_mi": 0.32781332547273745,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -108,11 +108,11 @@
       "mean_sensitivity_mi": 0.32781332547273745,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -122,11 +122,11 @@
       "mean_sensitivity_mi": 0.32781332547273745,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "linear4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -136,11 +136,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -150,11 +150,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -164,11 +164,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -178,11 +178,11 @@
       "mean_sensitivity_mi": 0.11094407167172737,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -192,11 +192,11 @@
       "mean_sensitivity_mi": 0.11094407167172737,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -206,11 +206,11 @@
       "mean_sensitivity_mi": 0.11094407167172737,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -220,11 +220,11 @@
       "mean_sensitivity_mi": 0.32781332547273745,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -234,11 +234,11 @@
       "mean_sensitivity_mi": 0.32781332547273745,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -248,11 +248,11 @@
       "mean_sensitivity_mi": 0.32781332547273745,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 4,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
       "source_backed": true,
       "topology": "branch4",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -262,11 +262,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -276,11 +276,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -290,11 +290,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -304,11 +304,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -318,11 +318,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -332,11 +332,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -346,11 +346,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -360,11 +360,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -374,11 +374,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "loop5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -388,11 +388,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -402,11 +402,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -416,11 +416,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -430,11 +430,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -444,11 +444,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -458,11 +458,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -472,11 +472,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "preference_flattened",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -486,11 +486,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "likelihood_noise_low",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     },
     {
@@ -500,11 +500,11 @@
       "mean_sensitivity_mi": 0.0,
       "metric": "toy_goal_margin_delta",
       "perturbation": "remove_shortcut_edge",
-      "sensitivity_row_count": 0,
+      "sensitivity_row_count": 8,
       "sensitivity_source": "output/data/sensitivity_sweep.json",
-      "source_backed": false,
+      "source_backed": true,
       "topology": "diamond5",
-      "uncertainty_row_count": 2,
+      "uncertainty_row_count": 12,
       "uncertainty_source": "output/data/uncertainty_summary.json"
     }
   ],

@@ -4801,8 +4801,11 @@
   "issues": [
     "output/figures/figure_registry.json: hash mismatch",
     "output/figures/figure_registry.json: size mismatch",
+    "manuscript_token_provenance.json has unmapped tokens",
     "claim_evidence_audit.json has untyped claims",
     "artifact_provenance.json has incomplete provenance rows or bundles",
+    "replay_matrix.json hash eligibility partition is stale or forged",
+    "artifact_contract_index.json has incomplete or stale artifact contract rows",
     "ablation_sensitivity_report.json has unsupported ablation effects",
     "release_attestation.json claims a failed gate passed",
     "canonical semantic restrictions failed: ablation_sensitivity_source_backed",
