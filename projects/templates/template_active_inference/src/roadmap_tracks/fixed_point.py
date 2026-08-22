@@ -394,11 +394,24 @@ def _write_final_validation_pass(root: Path, *, require_analysis_outputs: bool) 
     paths.update(_write_sheaf_owned_artifacts(root))
     paths.update(_refresh_animation_outputs(root))
     paths.update(_refresh_hydrated_manuscript(root, require_analysis_outputs=require_analysis_outputs))
+    # Hydration rewrites figure_registry.json (and variables), so the canonical
+    # sheaf-track writers must run after them: they alone own artifact_provenance,
+    # replay_matrix, release_bundle, and contract-index records bound to those
+    # final bytes.
+    from roadmap_tracks.sheaf_tracks import write_sheaf_track_artifacts
+
+    paths.update(write_sheaf_track_artifacts(root, finalize=False))
     paths.update(_write_contract_artifacts(root))
     paths.update(_write_semantic_core(root))
     paths.update(write_supplemental_artifacts(root))
+    # Terminal order matters: the certificate embeds live release predicates and
+    # the provenance/contract artifacts hash the certificate bytes. Ending on a
+    # contract refresh (then one final certificate rewrite, which only changes
+    # hash-cycle-excluded surfaces) leaves every saved-vs-live comparison green
+    # instead of oscillating between passes.
     paths.update(_write_contract_artifacts(root))
     paths.update(_write_semantic_core(root))
+    paths.update(_write_contract_artifacts(root))
     return paths
 
 

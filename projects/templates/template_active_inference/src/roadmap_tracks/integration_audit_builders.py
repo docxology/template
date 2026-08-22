@@ -373,7 +373,13 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
                 }
             )
             continue
-        resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+        try:
+            resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+        except FileNotFoundError:
+            # Hydration phases legitimately unlink and rewrite these copies
+            # between the existence probe and the read; treat the transient
+            # window as "not yet hydrated" rather than crashing the audit.
+            resolved_text = ""
         seen: set[tuple[str, str | None]] = set()
         for match in TOKEN_MATCH_RE.finditer(source_text):
             token = match.group(1)
@@ -400,7 +406,13 @@ def build_manuscript_staleness_report(project_root: Path) -> dict[str, Any]:
         if row["token"] == "manuscript_staleness_row_count":
             row["expected"] = str(len(rows))
             resolved_path = root / str(row["resolved_path"])
-            resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+            try:
+                resolved_text = resolved_path.read_text(encoding="utf-8") if resolved_path.is_file() else ""
+            except FileNotFoundError:
+                # Hydration phases legitimately unlink and rewrite these copies
+                # between the existence probe and the read; treat the transient
+                # window as "not yet hydrated" rather than crashing the audit.
+                resolved_text = ""
             row["fresh"] = resolved_path.is_file() and row["expected"] in resolved_text
     return {
         "schema": "template_active_inference.manuscript_staleness_report.v1",
