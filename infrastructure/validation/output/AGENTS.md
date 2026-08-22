@@ -8,6 +8,7 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 
 - `validator.py` - output structure validation (`validate_copied_outputs`, `validate_output_structure`, ...); all provenance-bound counts, sizes, and largest-file fields derive from `collect_stable_output_inventory()`. Public exemplars declare `stable-shippable-output-v1`; explicitly resolved non-template projects may declare `stable-local-output-v1`. Both exclude runtime/build/control and hidden-path residue. Dynamic categories and root bundles are retained, and Stage 5 reuses an inventory mapped to the canonical source-output context rather than scanning the ignored mirror directly.
 - `pipeline.py` - Stage 4 orchestration facade (`validate_pdfs`, `validate_manuscript_output_markdown`, `execute_validation_pipeline`)
+- `report.py` - Validation-report construction, recommendations, and persistence (`generate_validation_report`; split from `pipeline.py`)
 - `render_formats.py` - shared Stage 4/5 effective-format loading, exact canonical deliverable validation, disabled-output rejection, and copied-tree filtering
 - `pdf_checks.py` - PDF structure and transmission bookend checks
 - `markdown_checks.py` - manuscript markdown wrapper and diagnostic report handling

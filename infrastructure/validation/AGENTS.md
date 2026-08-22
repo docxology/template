@@ -23,7 +23,7 @@ running project science or rendering stages itself.
 | Claim bindings | `claims.py` | Roster-level `bound` / `not_applicable` / `external_data` inventory, source-derived regression-pin validation, and versioned claim-binding receipts. |
 | Publication audit | `publication/` | Composes drift, methods, evidence, figure, artifact, rendered-output, and no-mock checks into a stable public-readiness report. |
 | XML parser policy | `xml_parser_policy.py` | `validate_xml_parser_policy`: AST import-level guard forbidding stdlib `xml.*` parsers and `lxml`, requiring `defusedxml` (DEP-DEFUSEDXML-1). |
-| Rendered snapshot | `rendered_snapshot.py` | Commits the current rendered-input and validation-report fingerprints used to detect output drift after a targeted render / validation run (the strict `check_rendered_provenance` snapshot surface). |
+| Rendered snapshot | `rendered_snapshot/` | Package (`__init__.py` public API + private `_scan.py`/`_records.py`). Commits the current rendered-input and validation-report fingerprints used to detect output drift after a targeted render / validation run (the strict `check_rendered_provenance` snapshot surface). |
 
 ## Boundaries
 
