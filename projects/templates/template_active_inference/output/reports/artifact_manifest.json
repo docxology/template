@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "5c2a22d6ac312e70ab2e8812800747e57ba7fad2c73a9e3e87cfa716f293f7d8",
+      "sha256": "4eeb5b1cd5012c3ef5fb5268d6dbe78b8ede14440dcc0166a8a0b2e3a8017620",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -390,8 +390,8 @@
     {
       "contract_match": true,
       "path": "output/data/manuscript_variables.json",
-      "sha256": "b34fa1fcc50ee424123d3a70b2215f61b21a84c8b725ec287b4886e94dc02f14",
-      "size_bytes": 8636,
+      "sha256": "a1af1f71f2a868cc0d4acf185b54423e5b103eca3e17d4271eab5a1199686d9b",
+      "size_bytes": 8635,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -498,8 +498,8 @@
     {
       "contract_match": true,
       "path": "output/data/sheaf_gluing_certificate.json",
-      "sha256": "667071f8bd87a22967a715ca2e948a68f3b161729082f1db600740ca0eefef27",
-      "size_bytes": 203463,
+      "sha256": "d79b78bf282fb127de2d574e2087267381be2151ad88c4b381c326964e8c73c5",
+      "size_bytes": 203385,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -734,6 +734,15 @@
       "path": "output/figures/efe_decomposition.png",
       "sha256": "1059380851d052fcfeda0d196ed4b8c34608ed871372a5939a6929226fe65218",
       "size_bytes": 70138,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/figures/figure_registry.json",
+      "sha256": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
+      "size_bytes": 22462,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1229,6 +1238,15 @@
       "path": "output/reports/manuscript_composition.json",
       "sha256": "b64f631c785ec9d866ffb937d6e2abf75ad0a6760ec79fd5715b1067d3a95958",
       "size_bytes": 4180,
+      "stage_name": "current-output-snapshot",
+      "stage_num": 0,
+      "timestamp": ""
+    },
+    {
+      "contract_match": true,
+      "path": "output/reports/manuscript_staleness_report.json",
+      "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
+      "size_bytes": 72360,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
