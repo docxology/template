@@ -221,7 +221,7 @@ default-groups = [
 # pip-api (via pip-audit) pins an older pip; keep the installer above its
 # published security floor as well as the runtime dependency set.
 override-dependencies = [
-    "pip>=26.1.2",
+    "pip>=26.2",
     "msgpack>=1.2.1",
 ]
 
