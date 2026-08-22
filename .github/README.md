@@ -362,7 +362,7 @@ graph TB
     subgraph Entry["🚀 Entry Points"]
         RUNSH[./run.sh<br/>Interactive menu<br/>Full pipeline control]
         RUNALL[uv run python scripts/runner/execute_pipeline.py --core-only<br/>Programmatic<br/>Core pipeline]
-        INDIVIDUAL[Individual Scripts<br/>scripts/00-07_*.py<br/>Stage-specific execution]
+        INDIVIDUAL[Individual Scripts<br/>scripts/pipeline/stage_*.py<br/>Stage-specific execution]
     end
 
     subgraph Orchestration["⚙️ Orchestration Layer"]
