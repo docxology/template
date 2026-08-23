@@ -604,7 +604,7 @@ class SlidesRenderer:
             "\\providecommand{\\citeauthor}[1]{#1}\n"
             "\\providecommand{\\citeyear}[1]{#1}\n"
             "\\providecommand{\\cref}[1]{\\texttt{\\detokenize{#1}}}\n"
-            "\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
+            "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
             # Beamer lacks \paragraph (standard LaTeX sectioning); render it
             # as a bold run-in heading so dense prose sections don't fail.
             "\\providecommand{\\paragraph}[1]{\\textbf{#1}\\ }\n"
