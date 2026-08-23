@@ -37,7 +37,9 @@ render:
 ```
 
 The block is validated by the project-config schema in
-`infrastructure/core/config/schema.py` — unknown keys under
+`infrastructure/core/config/schema.py` (negative control:
+`test_validate_config_keys_strict_raises_for_unknown_key` asserts an unknown key
+is rejected) — unknown keys under
 `render.formats` are rejected at validation time.
 
 ### Via environment variables

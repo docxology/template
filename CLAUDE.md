@@ -237,7 +237,9 @@ lifecycle folder — is LOCAL-ONLY and must
 never be committed.** This is enforced, not conventional:
 `scripts/audit/check_tracked_all.py` fails the CI `lint` job and the pre-push
 `pre-push-quick` hook on any non-template tracked project (a `git add -f`
-cannot slip past it).
+cannot slip past it). Negative control:
+`test_offending_tracked_projects_flags_non_exemplar` constructs a known-wrong
+tracked path and asserts the guard fails.
 
 **The same invariant covers three sibling top-level resource-pool directories:**
 `fonds/`, `rules/`, and `tools/` (each analogous to `projects/` — only their

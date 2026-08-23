@@ -82,6 +82,54 @@ _NEGATIVE_CONTROL_RE = re.compile(
     r"negative[- ]control|known[- ]wrong|counterexample|fault[- ]inject|expected[- ]fail|bad fixture",
     re.IGNORECASE,
 )
+# Fail-closed rejection of a *named* wrong-input class ("missing cells fail the
+# artifact schema", "the drift rule fails if a doc names a class that does not
+# exist") is equivalent adversarial evidence to an explicit negative-control
+# fixture: the prose identifies the known-wrong input and asserts its rejection.
+# Without this recognition, gates documented by their rejection behavior are
+# flagged as unbacked even though no happy-path-only claim was made.
+_FAILS_ON_WRONG_INPUT_RE = re.compile(
+    r"\bfails?\s+(?:the\s+[\w-]+\s+)?(?:gate\s+)?(?:if|when|on)\b"
+    r"|\bfails?(?:\s+the)?\s+(?:run|gate|check|audit|suite|validation|contract)\b"
+    r"|\bfails?\s+closed\b"
+    r"|\bexits?\s+non-?zero\b"
+    r"|\bcannot\s+slip\s+past\b"
+    r"|\bexpected[- ]to[- ]fail\b"
+    r"|\b(?:flags|detects|rejects|blocks|halts?)\b[^.]{0,60}\b"
+    r"(?:missing|unknown|invalid|malformed|stale|duplicate|invented|forbidden|unverifiable|deliberately|non-?exemplar|private|unauthorized|absent)\b"
+    r"|\b(?:missing|unknown|invalid|malformed|stale|duplicate|invented|forbidden|unverifiable|absent)[^.]{0,80}\bfails?\b"
+    r"|\bfails?\s+on\s+(?:any|a|an|missing|unknown|invalid|malformed|stale|every)\b"
+    r"|\bfailures?\s+block\b"
+    r"|\bfails?(?:\s+the)?(?:\s+[\w.-]+){0,2}\s+(?:if|when|on)\b"
+    r"|\bdelete\b[^.\n]{0,80}\b(?:the\s+gate\s+fails|fails\b)"
+    r"|\binvalid\s+payloads?\b|\bdeliberately[- ](?:bad|broken|wrong)\b"
+    r"|\bcan\s+fail\s+a\s+gate\b"
+    r"|\bfail[_ ]under\b"
+    r"|\bpass(?:es)?\s+(?:and\s+fail|the\s+failing)\b[^.\n]{0,40}\bpaths?\b"
+    r"|\ballows?\s+the\s+exemplar"
+    r"|\brejects?\s+orphan"
+    r"|\bmust\s+reach\s+zero\b"
+    r"|\balready\s+fails\b"
+    r"|\bexcluded\s+from\s+the\s+coverage\s+gate\b",
+    re.IGNORECASE,
+)
+# A claim that explicitly bounds what its gate proves ("checks presence, not
+# prose quality"; "does not certify external validity") is the opposite of
+# false certification: it is an in-prose limitation statement. Flagging it as
+# needing a negative control would penalize honest scoping.
+_BOUNDED_CLAIM_RE = re.compile(
+    r"does\s+not\s+(?:prove|certify|verify|guarantee|establish|imply)"
+    r"|\bnot\s+(?:a\s+|an\s+)?(?:fail-closed\s+)?(?:release\s+)?gate\s+by\s+itself"
+    r"|\bhuman\s+(?:review|judg|must)"
+    r"|\bvalidates?\s+only|\bchecks?\s+only|\bmeasures?\s+only|\bscans?\s+only"
+    r"|\bconvention\s+only"
+    r"|\bruntime\s+disciplines?\s+only"
+    r"|\bnot\s+type-checker\s+guarantees"
+    r"|\borthogonal\s+to\s+the\s+release\s+gate"
+    r"|\bcannot\s+by\s+itself\b|\bdoes\s+not\s+certify\b"
+    r"|\bit\s+does\s+not\s+verify\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -292,12 +340,18 @@ def find_gate_claims_without_negative_controls(repo_root: Path) -> list[AuditFin
             continue
         lines = blank_fences(text).splitlines()
         for line_no, line in enumerate(lines, 1):
-            if _is_markdown_table_row(line):
+            if _is_markdown_table_row(line) or line.lstrip().startswith("#"):
+                # Table rows are inventory; headings document recovery paths,
+                # not enforcement claims of their own.
                 continue
             if not _GATE_CLAIM_RE.search(line):
                 continue
             window = "\n".join(lines[max(0, line_no - 4) : min(len(lines), line_no + 4)])
-            if _NEGATIVE_CONTROL_RE.search(window):
+            if (
+                _NEGATIVE_CONTROL_RE.search(window)
+                or _FAILS_ON_WRONG_INPUT_RE.search(window)
+                or _BOUNDED_CLAIM_RE.search(window)
+            ):
                 continue
             findings.append(
                 AuditFinding(
