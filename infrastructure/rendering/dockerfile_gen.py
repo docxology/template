@@ -28,6 +28,14 @@ __all__ = [
 
 DEFAULT_BASE_IMAGE: Final[str] = "ubuntu:24.04"
 
+# The CPython minor version each supported base image ships natively in its
+# default apt repositories. Requesting any other version requires the
+# deadsnakes PPA (see ``build_dockerfile``).
+_BASE_IMAGE_NATIVE_PYTHON: Final[dict[str, str]] = {
+    "ubuntu:24.04": "3.12",
+    "ubuntu:22.04": "3.10",
+}
+
 # Pinned uv version for reproducible bundles. A concrete pin (not the floating
 # ``latest``) is what makes the default Stage-10 bundle reproducible: the same
 # project state always resolves the same uv toolchain. Bump deliberately when
@@ -89,6 +97,25 @@ def build_dockerfile(config: DockerfileConfig) -> str:
     latex_pkg_line = " \\\n    ".join(config.latex_packages)
     tlmgr_pkg_line = " ".join(config.tlmgr_packages)
 
+    # A non-native Python version cannot be installed from the base image's
+    # default apt repositories; bootstrap the deadsnakes PPA for it so the
+    # generated Dockerfile actually builds (a bare ``apt-get install
+    # python3.14`` exits 100 on ubuntu:24.04, which ships 3.12).
+    base_native_python = _BASE_IMAGE_NATIVE_PYTHON.get(config.base_image, "3.12")
+    needs_deadsnakes = py_version_tag != base_native_python
+    deadsnakes_lines = (
+        [
+            "",
+            "# Non-native Python version: bootstrap the deadsnakes PPA first.",
+            "RUN apt-get update \\",
+            "    && apt-get install -y --no-install-recommends software-properties-common gpg-agent \\",
+            "    && add-apt-repository -y ppa:deadsnakes/ppa \\",
+            "    && rm -rf /var/lib/apt/lists/*",
+        ]
+        if needs_deadsnakes
+        else []
+    )
+
     # Pin the uv installer URL and verify its digest when a concrete version is
     # requested; only the floating "latest" alias uses the unversioned install
     # endpoint. This keeps the default generated Dockerfile reproducible without
@@ -112,6 +139,7 @@ def build_dockerfile(config: DockerfileConfig) -> str:
         "# See docs/maintenance/stage-10-executable-bundle.md for rationale.",
         "",
         f"FROM {config.base_image}",
+        *deadsnakes_lines,
         "",
         "ENV DEBIAN_FRONTEND=noninteractive \\",
         "    PYTHONDONTWRITEBYTECODE=1 \\",

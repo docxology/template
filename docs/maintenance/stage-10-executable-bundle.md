@@ -140,7 +140,7 @@ Implemented pieces:
    writes a deterministic `bundle_receipt.json` payload manifest, and verifies
    every listed path and content hash before returning.
 2. `infrastructure/rendering/manifest.py` reads `tests/regression/pinned_values/<project>.json` when present and writes `manifest.json`.
-3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`.
+3. `infrastructure/rendering/dockerfile_gen.py` writes a Dockerfile and `docker-compose.yml`. The Dockerfile pins `ubuntu:24.04` and installs Python 3.12 (Noble's native version) by default; requesting any other Python tag makes the generator bootstrap the deadsnakes PPA first, since a bare `apt-get install python3.<newer>` fails on Noble's repositories (verified 2026-08-22: default 3.14 image build exited 100 with `Unable to locate package python3.14`).
 4. `pipeline.yaml` declares the `Executable Bundle` stage with tag `bundle`; default runs filter it out.
 5. `scripts/runner/archive_publication.py` and the `Archival Publication` stage provide the downstream opt-in archival path. The archival command remains dry-run by default and must receive the verified Stage 14 bundle.
 

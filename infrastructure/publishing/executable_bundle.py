@@ -122,7 +122,7 @@ def bundle_project(
     repo_root: Path,
     project_name: str,
     *,
-    python_version: str = "3.14",
+    python_version: str = "3.12",
 ) -> Path:
     """Build executable bundle under output/<project>/executable_bundle/."""
     repo_root = repo_root.resolve()
