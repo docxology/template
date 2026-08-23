@@ -25,14 +25,20 @@ class RenderResult:
 
 
 def _resolve_mmdc() -> str | None:
-    """Resolve ``mmdc`` from PATH or a repository-local Node install."""
-    candidate = shutil.which("mmdc")
-    if candidate:
-        return candidate
+    """Resolve ``mmdc`` from a repository-local Node install or PATH.
+
+    The repository-local install is preferred over whatever happens to be on
+    PATH so the canonical checkout renders deterministically against the
+    version pinned in the repo's own ``package.json`` (a global ``mmdc`` on
+    PATH would silently shadow it).
+    """
     for parent in Path(__file__).resolve().parents:
         local_candidate = parent / "node_modules" / ".bin" / "mmdc"
         if local_candidate.exists():
             return str(local_candidate)
+    candidate = shutil.which("mmdc")
+    if candidate:
+        return candidate
     return None
 
 

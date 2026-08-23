@@ -167,12 +167,12 @@ def test_mmdc_available_returns_bool():
 
 
 def test_mmdc_resolution_accepts_repository_local_install():
-    """The canonical checkout works without a caller-managed PATH export."""
+    """The repository-local install wins over any PATH-provided mmdc."""
     local_mmdc = Path(__file__).resolve().parents[4] / "node_modules" / ".bin" / "mmdc"
+    resolved = _resolve_mmdc()
+    assert resolved is not None, "expected an mmdc install (local node_modules or PATH)"
     if local_mmdc.exists():
-        assert _resolve_mmdc() == str(local_mmdc)
-    else:
-        assert _resolve_mmdc() is None or mmdc_available()
+        assert resolved == str(local_mmdc)
 
 
 def test_build_flowchart_defaults():
