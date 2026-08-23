@@ -29,3 +29,17 @@
 ## Phase 4 — Commit & push
 - Committed: TO-DO.md backlog row + this report (path-scoped).
 - Pushed main → origin/main (043187c7e). The push fast-forwarded origin from e0ffd1cd2; between session start and push, concurrent commits from another session (e0ffd1cd2, 47a917f38, 674aa0258) landed on main and were included. Verified e0ffd1cd2 is an ancestor of HEAD; no rebase needed (0 behind at push).
+
+
+## Follow-up pass (same day) — DOC-NEGCTRL-HARDEN-MED-1 execution
+
+Implemented the scoped backlog row in the same session:
+
+1. **Detector refinement** (`infrastructure/validation/docs/public_audit.py`): the advisory `gate-negative-control` detector only recognized a narrow keyword list. Added three justified equivalence recognizers, each with a comment stating its rationale: `_FAILS_ON_WRONG_INPUT_RE` (fail-closed rejection of a named wrong-input class), `_BOUNDED_CLAIM_RE` (explicit limitation statements — honest scoping, not false certification), and heading/table-row skips. Findings went 139 → 58 through these classes only; the remaining 58 are left flagged as genuinely advisory.
+2. **Hand-verified negative controls added to prose** where a real known-wrong test exists and was verified by reading the test file: root `AGENTS.md` (no-mocks gate + confidentiality guard), `CLAUDE.md`, `docs/rules/api_design.md` (`test_top_level_f401_without_all_is_violation`), `docs/usage/output-formats.md` (`test_validate_config_keys_strict_raises_for_unknown_key`), `docs/rules/code_style.md`.
+3. **New tests**: 4 focused tests for the new recognizer behavior in `tests/infra_tests/validation/docs/test_public_audit.py` (14 passed).
+4. **Incidental fix**: mid-pass, `counts.py --check` went stale because a concurrent session's commits changed exemplar sources under the pinned coverage-provenance commit. Regenerated `docs/_generated/coverage_snapshot.json` via `counts.py --refresh-coverage-provenance --write` (percentages unchanged; source hashes/commit updated to 6198b0529). Health returned FAIL before this fix and PASS after.
+
+Gates after changes: public_audit tests 14 passed · validation suite 1524 passed · ruff/mypy clean on changed files · docs linters 0 issues · drift strict clean · all-exports clean · module-line-count exit 0 · no-mocks inventory clear · backlog strict clean · counts --check OK · infrastructure.core.health Overall PASS (26 gates).
+
+Committed as 80042c3c1 and pushed to origin/main.
