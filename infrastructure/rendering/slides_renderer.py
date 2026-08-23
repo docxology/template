@@ -605,6 +605,11 @@ class SlidesRenderer:
             "\\providecommand{\\citeyear}[1]{#1}\n"
             "\\providecommand{\\cref}[1]{\\texttt{\\detokenize{#1}}}\n"
             "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
+            # cleveref's range forms take two arguments; without their own
+            # fallbacks the single-argument \\cref above does not cover them
+            # and beamer stops at "Undefined control sequence".
+            "\\providecommand{\\crefrange}[2]{\\texttt{\\detokenize{#1}}--\\texttt{\\detokenize{#2}}}\n"
+            "\\providecommand{\\Crefrange}[2]{\\texttt{\\detokenize{#1}}--\\texttt{\\detokenize{#2}}}\n"
             # Beamer lacks \paragraph (standard LaTeX sectioning); render it
             # as a bold run-in heading so dense prose sections don't fail.
             "\\providecommand{\\paragraph}[1]{\\textbf{#1}\\ }\n"
@@ -655,6 +660,14 @@ class SlidesRenderer:
             # Beamer provides theorem/lemma/corollary/definition but NOT
             # remark; combined-PDF preambles chain remark onto theorem.
             "\\newtheorem{remark}[theorem]{Remark}\n"
+            # axiom and property sit in the skip-set above, whose comment says
+            # "declared below/above" -- but they were declared in neither, so a
+            # manuscript using \\begin{property} or \\begin{axiom} had them
+            # dropped by the extractor and never redeclared here. Beamer then
+            # failed with "Environment property undefined" and the stage
+            # discarded the slide deck it had just written.
+            "\\newtheorem{axiom}{Axiom}\n"
+            "\\newtheorem{property}{Property}\n"
         )
 
         # snippet_parts is never empty past this point (the natbib/cref

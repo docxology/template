@@ -742,6 +742,55 @@ class TestSlidesMathHeaderInjection:
         assert "\\newtheorem{corollary}" not in content
         assert "\\newtheorem{definition}" not in content
 
+    def test_helper_declares_every_environment_the_extractor_skips(self, tmp_path):
+        """The skip-set and the unconditional block must agree.
+
+        ``_maybe_write_math_header`` drops a manuscript's ``\\newtheorem``
+        declarations for environments it believes are "already declared or
+        declared below/above". ``axiom`` and ``property`` sat in that set while
+        being declared in neither place, so a manuscript using
+        ``\\begin{property}`` had the declaration dropped on the way in and
+        never restored -- beamer then failed with "Environment property
+        undefined", and the render stage discarded the slide deck it had
+        already written. Six of Part 1's decks were lost this way.
+
+        This asserts the invariant rather than the two names: every environment
+        the extractor refuses to carry over must be one beamer ships natively
+        or one this header declares itself.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\newtheorem{property}{Property}[section]\n\\newtheorem{axiom}{Axiom}[section]\n```\n",
+            encoding="utf-8",
+        )
+        renderer = self._make_renderer(tmp_path)
+        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
+
+        beamer_native = {"theorem", "lemma", "corollary", "definition", "example", "fact"}
+        skipped = beamer_native | {"proposition", "hypothesis", "remark", "axiom", "property"}
+        undeclared = [env for env in sorted(skipped - beamer_native) if f"\\newtheorem{{{env}}}" not in content]
+        assert not undeclared, (
+            "the extractor skips these environments as already handled, but the "
+            f"header declares none of them: {undeclared}"
+        )
+
+    def test_helper_provides_cleveref_range_fallbacks(self, tmp_path):
+        """``\\cref``'s fallback takes one argument and cannot cover
+        ``\\crefrange``, which takes two. Without its own fallback beamer
+        stopped at "Undefined control sequence" and Part 1's formal-framework
+        deck failed to compile.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        renderer = self._make_renderer(tmp_path)
+        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        content = header.read_text(encoding="utf-8")
+        assert "\\providecommand{\\crefrange}[2]" in content
+        assert "\\providecommand{\\Crefrange}[2]" in content
+
     def test_postprocessor_overrides_generated_codelisting_float(self):
         """The override lands after pandoc-crossref's preamble declaration."""
         tex = r"""\documentclass{beamer}
