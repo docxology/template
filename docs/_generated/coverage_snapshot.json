@@ -2,7 +2,7 @@
   "measured_at": "2026-08-16",
   "projects": {
     "template_active_inference": {
-      "coverage_pct": "92.51 %",
+      "coverage_pct": "91.87 %",
       "source_hash": "0890a3c35a5d61e66c42fd376ac6ea093af3c1f01ddd5825a02dfa6ffb222d0f"
     },
     "template_advanced_literature_review": {
@@ -78,7 +78,7 @@
       "source_hash": "6151242147cb6f00aac0faaa1cc09784dd0d79a2d3f5dbfd18f81a1361a51918"
     },
     "template_search_project": {
-      "coverage_pct": "96.45 %",
+      "coverage_pct": "96.28 %",
       "source_hash": "7a522f9bee5edd49371a6f8df9e1e238010e86c30156602eb39414055131c7a0"
     },
     "template_sia": {
@@ -90,16 +90,16 @@
       "source_hash": "8fc4f9f79c8162cd11f22523089e1d51bbdf6e8c1427a06274968f364763c964"
     },
     "template_template": {
-      "coverage_pct": "97.66 %",
+      "coverage_pct": "97.67 %",
       "source_hash": "4ba3da2baea436150302a66c65b74100cf6636ff56e6e4c4269bd70ac9f7ca25"
     },
     "template_textbook": {
-      "coverage_pct": "95.92 %",
+      "coverage_pct": "96.08 %",
       "source_hash": "25a2888d6f7984db66877122e0fcb65fcd2843bca244f5425263afbcf5fab841"
     }
   },
   "schema_version": 5,
-  "source_commit": "6198b05291df69e3904ff6ca7903b6303afa945a",
+  "source_commit": "0c6be5d7fa5b5ed73ceb597623313542b1849916",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
