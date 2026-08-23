@@ -530,7 +530,9 @@ class SlidesRenderer:
                 "mathtools",
                 "booktabs",
                 "multirow",
-                "algorithm",
+                # "algorithm" is deliberately absent: it is safe to PARSE but not
+                # to load, because its float machinery has no beamer
+                # implementation. The non-floating stand-in below replaces it.
                 "algpseudocode",
                 "algorithmicx",
                 "stmaryrd",
@@ -639,6 +641,40 @@ class SlidesRenderer:
             snippet_parts.append(
                 "% Additional theorem-like environments from manuscript preamble.\n" + preamble_theorems
             )
+
+        # Content-providing packages the manuscript preamble loads. The header
+        # deliberately drops layout machinery (geometry, hyperref, titlepage)
+        # because beamer ships its own, but a package that DEFINES environments
+        # the body uses is a different case: without it beamer stops at
+        # "Environment algorithm undefined" and the stage discards the deck.
+        # Part 2 of the cognitive_integrity series found this with 14
+        # \begin{algorithm} blocks. Kept to an allowlist rather than passing
+        # everything through, since that is what the drop exists to prevent.
+        # `algorithm` itself is NOT safe: it defines the environment but its
+        # float machinery (\\@float@Hx, \\float@makebox) has no beamer
+        # implementation, so the deck dies on "Undefined control sequence"
+        # instead of "Environment undefined" -- one step further, still dead.
+        # algpseudocode brings the algorithmic body, and a non-floating
+        # `algorithm` wrapper is supplied below in its place.
+        _ENV_PACKAGES = ("algpseudocode", "algorithmicx")
+        if preamble_file.exists():
+            loaded = extract_preamble(preamble_file)
+            wanted = [name for name in _ENV_PACKAGES if f"\\usepackage{{{name}}}" in loaded]
+            if wanted:
+                snippet_parts.append(
+                    "% Environment-providing packages carried over from the manuscript.\n"
+                    + "".join(f"\\usepackage{{{name}}}\n" for name in wanted)
+                )
+            if "\\usepackage{algorithm}" in loaded:
+                # A plain rule-delimited block: same visual role on a slide,
+                # none of the float machinery beamer cannot run.
+                snippet_parts.append(
+                    "% Non-floating stand-in for the `algorithm` float.\n"
+                    "\\newenvironment{algorithm}[1][]{%\n"
+                    "  \\par\\medskip\\noindent\\rule{\\linewidth}{0.4pt}\\par\\nobreak\\small\n"
+                    "  \\renewcommand{\\caption}[1]{\\par\\noindent\\textbf{##1}\\par}}{%\n"
+                    "  \\par\\nobreak\\noindent\\rule{\\linewidth}{0.4pt}\\par\\medskip}\n"
+                )
 
         # Auto-numbered formalism environments the manuscript body may use
         # (mirrors the \newtheorem declarations `preamble.md` defines for the

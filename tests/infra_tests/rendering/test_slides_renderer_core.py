@@ -791,6 +791,32 @@ class TestSlidesMathHeaderInjection:
         assert "\\providecommand{\\crefrange}[2]" in content
         assert "\\providecommand{\\Crefrange}[2]" in content
 
+    def test_helper_supplies_a_non_floating_algorithm_environment(self, tmp_path):
+        """`algorithm` must be replaced, not carried over.
+
+        Loading it under beamer defines the environment but leaves its float
+        machinery (\\@float@Hx, \\float@makebox) undefined, so a deck using it
+        dies one step later than it would have without the package -- still
+        dead, and harder to diagnose. 14 \\begin{algorithm} blocks in one
+        manuscript cost a 51-page deck this way.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{algorithm}\n\\usepackage{algpseudocode}\n```\n",
+            encoding="utf-8",
+        )
+        renderer = self._make_renderer(tmp_path)
+        content = renderer._maybe_write_math_header(manuscript, tmp_path / "slides").read_text(encoding="utf-8")
+        assert "\\usepackage{algpseudocode}" in content
+        assert "\\usepackage{algorithm}" not in content, (
+            "the float package was carried over; it has no beamer implementation"
+        )
+        assert "\\newenvironment{algorithm}" in content
+        # \providecommand is a no-op for \caption -- the caption package has
+        # already defined it, and then refuses it outside a float.
+        assert "\\renewcommand{\\caption}" in content
+
     def test_postprocessor_overrides_generated_codelisting_float(self):
         """The override lands after pandoc-crossref's preamble declaration."""
         tex = r"""\documentclass{beamer}
