@@ -78,6 +78,8 @@ def scaled_total_timeout(block_count: int) -> float:
         max(_LEGACY_TOTAL_FLOOR_SECONDS, block_count * _SECS_PER_BLOCK),
     )
     return max(scaled, _MMDC_TOTAL_TIMEOUT_SECONDS)
+
+
 _MMDC_BATCH_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_TIMEOUT", "60"))
 _MMDC_BATCH_SIZE = max(1, int(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_SIZE", "10")))
 # Transient mmdc timeouts under machine load (cold Chrome starts, CPU
