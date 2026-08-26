@@ -9,6 +9,21 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Executable bundle (Stage 14)
+
+- Closed backlog row `EXECUTABLE-BUNDLE-MAJ-2` with the **self-contained
+  payload** contract: `bundle_project()` now vendors `infrastructure/` into
+  `source/infrastructure/` under the same symlink and cache-exclusion gates as
+  the project trees, refusing a missing or symlinked Layer-1 tree. The compose
+  `tests` service runs the project suite directly against the vendored payload,
+  `verify` proves collection cleanliness, and the full-pipeline services
+  (`reproduce`, `render`) fail closed with an explicit
+  `UNAVAILABLE-DEPENDENCY RECEIPT` (exit 3) instead of a bare
+  `ModuleNotFoundError: No module named 'infrastructure'` observed in an
+  offline container on 2026-08-22. Negative controls:
+  `test_bundle_refuses_missing_or_symlinked_infrastructure_tree` and
+  `test_compose_full_pipeline_services_fail_closed`.
+
 ### Documentation audit
 
 - Closed backlog row `DOC-NEGCTRL-HARDEN-MED-1`: every active gate/verifier
