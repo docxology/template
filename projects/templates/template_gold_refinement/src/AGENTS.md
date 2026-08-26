@@ -48,7 +48,7 @@ in `scripts/` (thin orchestrators).
 - Token selection is deterministic: same seed + lexicon = same plan
 - Every `{{TOKEN}}` in manuscript source must be produced by `generate_variables()`
 - Config owns all prose choices (lexicon, slots, narrative moves)
-- `manuscript/config.yaml` also owns the secure-pipeline `steganography` block and the optional `llm` review gate
+- `manuscript/config.yaml` also owns the secure-pipeline `steganography` block and the optional `llm` review gate (negative control: `tests/test_pipeline_policy.py` feeds an invalid boolean such as `steganography.enabled: definitely` and asserts a `ValueError`; the LLM-review gate stays closed when Ollama is unavailable or opt-in is missing)
 - `domain_profile.yaml` owns the stage-remap profile, benchmark rubric, and analogy-boundary notes
 - Figure labels, paths, captions, and visual encodings must come from
   `FIGURE_SPECS`; do not duplicate registry metadata in scripts or manuscript
