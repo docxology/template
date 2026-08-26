@@ -135,6 +135,21 @@ def test_dated_root_report_is_outside_long_lived_scope(tmp_path: Path) -> None:
     assert check_no_ghost_projects(repo) == []
 
 
+def test_project_state_report_is_outside_long_lived_scope(tmp_path: Path) -> None:
+    """``PROJECT_STATE_REPORT_YYYY-MM-DD*`` reports get the same dated exemption.
+
+    Maintenance-pass reports hard-code moment-in-time receipts (lifecycle
+    trees, guard names) that are true only at writing time; the linter must
+    not treat them as living docs.
+    """
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "PROJECT_STATE_REPORT_2026-08-26_sessionX.md",
+        "Historical receipt: `projects/fonds/tools/` was clean during the pass.\n",
+    )
+    assert check_no_ghost_projects(repo) == []
+
+
 def test_undated_root_report_is_still_scanned(tmp_path: Path) -> None:
     """Non-dated root Markdown remains inside the long-lived doc surface."""
     repo = scaffold_repo(tmp_path, n_packages=15)
