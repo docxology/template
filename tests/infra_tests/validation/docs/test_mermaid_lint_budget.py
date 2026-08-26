@@ -8,6 +8,9 @@ indicted specific diagrams ("total timeout ... before rendering
 contract that replaces the fixed guess.
 """
 
+import os
+from pathlib import Path
+
 import infrastructure.validation.docs.mermaid_lint as ml
 
 
@@ -52,58 +55,77 @@ def test_raised_env_floor_raises_the_computed_floor() -> None:
         ml._MMDC_TOTAL_TIMEOUT_SECONDS = saved
 
 
-def _fake_mmdc(tmp_path, name="fake_mmdc"):
-    fake = tmp_path / name
-    fake.write_text("#!/bin/sh\nexit 3\n", encoding="utf-8")
+def _install_stub_mmdc(root: Path, *, body: str = "#!/bin/sh\nexit 3\n") -> Path:
+    """Install a real executable mmdc stub at the repo-local discovery path."""
+    bin_dir = root / "node_modules" / ".bin"
+    bin_dir.mkdir(parents=True, exist_ok=True)
+    fake = bin_dir / "mmdc"
+    fake.write_text(body, encoding="utf-8")
     fake.chmod(0o755)
-    return str(fake)
+    return fake
 
 
-def test_validate_blocks_scales_default_budget_from_discovered_blocks(tmp_path, monkeypatch) -> None:
-    """The None default computes its budget from len(blocks)."""
+def test_validate_blocks_scales_default_budget_from_discovered_blocks(tmp_path) -> None:
+    """The None default computes its budget from len(blocks).
+
+    A real file-backed mmdc stub is installed at the repo-local discovery path
+    and the working directory switches to the temp tree, so validate_blocks
+    resolves and executes a real CLI with no module globals replaced. The stub
+    exits 3 immediately; every failure must carry that code — a pre-render
+    total-budget failure would surface as 124 with a "before rendering"
+    message instead.
+    """
     md = tmp_path / "p.md"
     md.write_text("```mermaid\nflowchart TB\n  A-->B\n```\n", encoding="utf-8")
     blocks = ml.find_mermaid_blocks([tmp_path])
     assert len(blocks) == 1
 
-    captured = {}
-    real_scaled = ml.scaled_total_timeout
+    _install_stub_mmdc(tmp_path)
+    original_chdir = os.getcwd()
+    os.chdir(tmp_path)
+    try:
+        failures = ml.validate_blocks(blocks, timeout_seconds=30)
+    finally:
+        os.chdir(original_chdir)
 
-    def spy(block_count: int) -> float:
-        captured["count"] = block_count
-        return real_scaled(block_count)
-
-    monkeypatch.setattr(ml, "scaled_total_timeout", spy)
-    monkeypatch.setattr(ml, "resolve_mmdc_executable", lambda *a, **k: _fake_mmdc(tmp_path))
-
-    failures = ml.validate_blocks(blocks, timeout_seconds=30)
-    # Budget computation saw the discovered workload.
-    assert captured["count"] == len(blocks)
-    # The failure (if any) comes from the fake mmdc exit code, never from a
-    # 124 "before rendering" indictment on a fresh run.
     for f in failures:
-        assert f.returncode != 124
+        assert f.returncode == 3
         assert "before rendering" not in f.stderr
 
 
-def test_explicit_caller_budget_bypasses_scaling(tmp_path, monkeypatch) -> None:
-    """An explicit total_timeout_seconds is honored verbatim."""
+def test_explicit_caller_budget_bypasses_scaling(tmp_path) -> None:
+    """An explicit total_timeout_seconds is honored verbatim.
 
-    def boom(block_count: int) -> float:  # known-wrong sentinel
-        raise AssertionError("scaling must not run when budget is explicit")
-
+    Known-wrong control: pass an explicit 2s budget with a sleeping mmdc. The
+    caller value must reach the batch loop unchanged — the failure is a
+    per-budget 124 ("batch timed out after 2") rather than any scaled budget
+    computed by validate_blocks itself.
+    """
     md = tmp_path / "q.md"
     md.write_text("```mermaid\nflowchart LR\n  X-->Y\n```\n", encoding="utf-8")
-    blocks = ml.find_mermaid_blocks([tmp_path])
-    monkeypatch.setattr(ml, "scaled_total_timeout", boom)
-    monkeypatch.setattr(
-        ml,
-        "resolve_mmdc_executable",
-        lambda *a, **k: _fake_mmdc(tmp_path, "fake_mmdc2"),
+    _install_stub_mmdc(
+        tmp_path,
+        body="#!/usr/bin/env python3\nimport time\ntime.sleep(30)\n",
     )
 
-    failures = ml.validate_blocks(blocks, timeout_seconds=5, total_timeout_seconds=60)
-    assert all(f.returncode == 3 for f in failures)
+    original_chdir = os.getcwd()
+    os.chdir(tmp_path)
+    try:
+        failures = ml.validate_blocks(
+            ml.find_mermaid_blocks([tmp_path]),
+            timeout_seconds=1,
+            total_timeout_seconds=2,
+            retries_on_timeout=0,
+        )
+    finally:
+        os.chdir(original_chdir)
+
+    assert len(failures) == 1
+    assert failures[0].returncode == 124
+    # Total budget (not per-render timeout) expired first: the failure is
+    # attributed to the block with a total-timeout message, proving the
+    # explicit 2s budget was used verbatim rather than any scaled default.
+    assert "total timeout after 2s before rendering" in failures[0].stderr
 
 
 def test_module_env_override_documented_in_docs_agents_table() -> None:
