@@ -30,6 +30,7 @@ keeps a capability blocked rather than silently promoting it.
 
 - Keep `manuscript/config.yaml.example` stricter than the bundled exemplar config so forks see realistic editorial defaults; preserve the existing shape and threshold regression tests when the contract changes.
 - Threshold-name or report-key migrations require the existing check-name and schema-shape assertions in `tests/test_pipeline.py` plus a scoped row when the public contract changes.
+Renaming a threshold without moving its assertion is the known-wrong migration path this contract forecloses.
 
 ## Documentation and signposting gaps
 

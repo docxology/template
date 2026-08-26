@@ -80,8 +80,13 @@ plan = compile_method(method)
 ```
 
 **Decision rule**: if a line of code in a script validates, schedules, or
+The decision rule guides placement but does not certify enforcement — misclassification is caught by review, not automatically.
 hashes a `Method` (not just exports/plots an already-compiled `Plan`), move
-it to `src/methods_dsl/` and write a test.
+it to `src/methods_dsl/` and write a test. Gate-level negative controls are
+established in `tests/test_validation.py` (e.g.
+`test_structural_gate_catches_unknown_dependency`,
+`test_semantic_gate_catches_unknown_unit`) — a new gate needs its own
+known-wrong fixture before landing.
 
 ---
 

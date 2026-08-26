@@ -60,6 +60,7 @@ This allows downstream verification that the public release matches the audited 
 ## Review Gate
 
 The release gate requires three reviewer roles: originator, classification reviewer, and release authority. Each reviewer provides a non-empty rationale. The fixture reviews all approve, yielding:
+The complementary input is also enforced: missing roles or empty rationales mean the release gate fails closed.
 
 - **Approved**: true.
 - **Approval count**: 3.

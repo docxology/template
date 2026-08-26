@@ -24,6 +24,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Configurable-surface gaps
 
 - Keep `manuscript/config.yaml.example` placeholder-safe while retaining every required schema block a fork needs.
+Forking with a stripped schema block is the known-wrong starting point the required-block rule exists to prevent.
 - Schema-level validation is required before any new optional madlib section or generated figure enters the public contract.
 
 ## Documentation and signposting gaps

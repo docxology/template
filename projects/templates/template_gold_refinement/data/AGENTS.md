@@ -12,3 +12,4 @@ Static data assets consumed by `src/integrity.py`.
 
 - Do not add computed or generated artefacts here; `data/` is source-only.
 - Claim keys must be stable across runs — ledger mutation breaks the integrity gate.
+Mutating a stable key is the deliberately-wrong input the integrity gate rejects out of hand; regenerate from source instead of editing.

@@ -66,6 +66,7 @@ should be able to open `src/pipeline/` and find the exact check being
 discussed within ten seconds.
 
 **Every diagram must be Mermaid.** No ASCII art (project-wide rule).
+ASCII-art diagrams are the counterexample class this project-wide rule bans outright.
 
 ## Reading Order
 

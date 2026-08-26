@@ -31,7 +31,8 @@ uv run python --version
 
 ## Run the Test Suite
 
-Validate the environment and confirm the project test suite passes with the ≥90% coverage gate:
+Validate the environment and confirm the project test suite passes with the ≥90% coverage gate (retrieval clients degrade to `skipped` without network/keys, and tests exercise the real degradation path via local HTTP servers — see `../tests/PATTERNS.md`):
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
 
 ```bash
 uv run pytest projects/templates/template_literature_meta_analysis/tests/ -v --tb=short

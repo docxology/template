@@ -152,6 +152,7 @@ bitten this stack; both are now guarded, but the rule stands:
 
 2. **The canonical gate is the direct command.** This is the authoritative
    per-project quality gate and what CI enforces project-by-project:
+Only this command enforces the threshold; anything looser is advisory, and falling short fails the run.
 
    ```bash
    uv run pytest projects/templates/template_prose_project/tests/ \

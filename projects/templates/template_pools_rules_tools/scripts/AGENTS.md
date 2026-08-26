@@ -2,6 +2,7 @@
 
 Thin orchestrators: validate sources, run integration, generate manuscript
 variables, validate strong-rule compliance, and generate figures. Business
+Non-compliant sources fail validation before any figures generate — orchestration stops instead of shipping contradictions.
 logic lives in `src/`.
 
 ## Files
