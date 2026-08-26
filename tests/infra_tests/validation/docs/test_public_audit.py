@@ -123,6 +123,47 @@ def test_gate_claim_audit_still_flags_unbacked_enforcement(tmp_path: Path) -> No
     assert [finding.category for finding in findings] == ["gate-negative-control"]
 
 
+def test_gate_claim_audit_accepts_index_gate_fails_language(tmp_path: Path) -> None:
+    """\u201cThe index gate fails when an equation lacks its evidence row\u201d names the rejection."""
+    _write(
+        tmp_path / "docs/proof.md",
+        (
+            "The manuscript claims each equation is validated by the index gate.\n"
+            "If a row loses its evidence artifact the index gate fails and the\n"
+            "equation cannot be presented as part of the validated surface.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_accepts_halts_and_reports_when_language(tmp_path: Path) -> None:
+    """A strong rule that halts and reports on violation is adversarial evidence."""
+    _write(
+        tmp_path / "docs/rules.md",
+        (
+            "The enforcement field means a pipeline must halt and report when this "
+            "rule is violated; missing test coverage therefore blocks the build.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_accepts_hyphenated_fail_closed_evidence(tmp_path: Path) -> None:
+    """A fail-closed rejection claim is adversarial evidence in both hyphenations."""
+    _write(
+        tmp_path / "docs/guide.md",
+        (
+            "The loader rejects malformed JSON.\n"
+            "This gate must fail-closed when the payload is unusable, and must "
+            "fail closed when the manifest is missing.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
 def test_gate_claim_audit_ignores_tables_and_historical_records(tmp_path: Path) -> None:
     _write(
         tmp_path / "docs/rules.md",

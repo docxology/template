@@ -91,7 +91,7 @@ _NEGATIVE_CONTROL_RE = re.compile(
 _FAILS_ON_WRONG_INPUT_RE = re.compile(
     r"\bfails?\s+(?:the\s+[\w-]+\s+)?(?:gate\s+)?(?:if|when|on)\b"
     r"|\bfails?(?:\s+the)?\s+(?:run|gate|check|audit|suite|validation|contract)\b"
-    r"|\bfails?\s+closed\b"
+    r"|\bfail(?:s|ed)?[-\s]closed\b"
     r"|\bexits?\s+non-?zero\b"
     r"|\bcannot\s+slip\s+past\b"
     r"|\bexpected[- ]to[- ]fail\b"
@@ -100,11 +100,13 @@ _FAILS_ON_WRONG_INPUT_RE = re.compile(
     r"|\b(?:missing|unknown|invalid|malformed|stale|duplicate|invented|forbidden|unverifiable|absent)[^.]{0,80}\bfails?\b"
     r"|\bfails?\s+on\s+(?:any|a|an|missing|unknown|invalid|malformed|stale|every)\b"
     r"|\bfailures?\s+block\b"
+    r"|\bgate\s+fails?\b"
+    r"|\bhalts?\s+(?:and\s+reports?)\s+when\b"
     r"|\bfails?(?:\s+the)?(?:\s+[\w.-]+){0,2}\s+(?:if|when|on)\b"
     r"|\bdelete\b[^.\n]{0,80}\b(?:the\s+gate\s+fails|fails\b)"
     r"|\binvalid\s+payloads?\b|\bdeliberately[- ](?:bad|broken|wrong)\b"
     r"|\bcan\s+fail\s+a\s+gate\b"
-    r"|\bfail[_ ]under\b"
+    r"|\bfail(?:[-_ ])?under\b"
     r"|\bpass(?:es)?\s+(?:and\s+fail|the\s+failing)\b[^.\n]{0,40}\bpaths?\b"
     r"|\ballows?\s+the\s+exemplar"
     r"|\brejects?\s+orphan"
@@ -182,10 +184,15 @@ class PublicDocumentationAudit:
 
 
 def _relative(path: Path, repo_root: Path) -> str:
-    try:
-        return path.relative_to(repo_root).as_posix()
-    except ValueError:
-        return path.as_posix()
+    # doc_roots() may yield absolute roots while callers pass a relative
+    # repo_root; classify against both forms so prefix-based exemptions
+    # (historical policy docs, generated trees) cannot silently miss.
+    for base in (repo_root, Path(repo_root).resolve()):
+        try:
+            return path.resolve().relative_to(base.resolve()).as_posix()
+        except ValueError:
+            continue
+    return path.as_posix()
 
 
 def _doc_role(path: Path, repo_root: Path) -> str:
