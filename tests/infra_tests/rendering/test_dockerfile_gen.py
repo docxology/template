@@ -154,9 +154,13 @@ def test_build_dockerfile_omits_deadsnakes_for_native_python() -> None:
     assert "deadsnakes" not in text
 
 
-def test_build_compose_yaml_verify_service_targets_regression_tests() -> None:
+def test_build_compose_yaml_verify_service_collects_payload_tests() -> None:
+    # EXECUTABLE-BUNDLE-MAJ-2: the payload is single-project and vendored, so
+    # `verify` proves collection cleanliness against source/ instead of running
+    # repo-root regression tests that no bundle carries.
     text = build_compose_yaml("templates/my_proj")
-    assert "tests/regression/projects/my_proj" in text
+    assert "cd /workspace/source" in text
+    assert "pytest --collect-only -q" in text
 
 
 def test_dockerfile_config_immutable() -> None:
