@@ -18,7 +18,9 @@ Infrastructure (PAI). It provides a reproducible, zero-mock, agent-friendly envi
 1. **Standardized Structure** — `infrastructure/` for generic tools, `projects/{name}/src/` for domain logic.
 2. **Thin Orchestration** — Scripts coordinate; all business logic lives in src/ modules.
 3. **Multi-Project Support** — Multiple independent research projects in a single repo.
-4. **Real-Behavior Testing** — The no-mocks verifier rejects prohibited mock frameworks; tests exercise real behavior and must not add semantic dependency-replacement debt.
+4. **Real-Behavior Testing** — The no-mocks verifier rejects prohibited mock frameworks (negative control: `test_no_mock_enforcer.py` feeds it a real `MagicMock` fixture); tests exercise real behavior and must not add semantic dependency-replacement debt. Negative control: `tests/infra_tests/validation/test_no_mock_enforcer.py::test_magic_mock_usage_flagged` feeds the verifier a file containing a real `MagicMock()` call and asserts it is flagged. (negative control: the enforcer test feeds it a fixture containing a real `MagicMock()` call and asserts it is flagged, so removing the check — not just following it — breaks CI)
+Growing dependency-replacement debt fails the audit, so silent stand-in seams cannot accumulate.
+The verifier's own negative control lives in `tests/infra_tests/validation/test_no_mock_enforcer.py`, which feeds a known-wrong fixture containing a real `MagicMock()` call and asserts it is flagged.
 5. **Agent-Friendly Documentation** — Each documented directory carries `README.md` and `AGENTS.md` where the tree policy requires it; PAI-oriented context lives in root-adjacent `PAI.md` files (e.g. this file, [`../infrastructure/PAI.md`](../infrastructure/PAI.md), [`../scripts/PAI.md`](../scripts/PAI.md), [`../tests/PAI.md`](../tests/PAI.md), [`../projects/PAI.md`](../projects/PAI.md)), not in every subdirectory.
 6. **Headless Cloud Deployment** — On supported POSIX hosts with network access, `curl` or `wget`, and a SHA-256 tool, `./run.sh --pipeline` can install the pinned, checksum-verified uv bootstrap before syncing the workspace.
 

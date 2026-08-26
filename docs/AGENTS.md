@@ -54,11 +54,14 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 
 ## Review and evidence contract
 
-Deep documentation review must follow the fact to its producer and verifier.
+Deep documentation review must follow the fact to its producer and verifier. A review that cannot name the producing source or test must record the claim as unverifiable rather than repeat it - this contract is human review discipline, not something CI performs. Known-wrong input: prose edited to match accidental runtime behavior contradicts the docstring/test intent and must be reverted; tests such as `tests/infra_tests/validation/docs/test_consistency_lint.py` flag contract drift and fail the docs lane when the repair is skipped.
+An edit that forces prose to agree with stale runtime output is the known-wrong outcome reviewers reject rather than accept.
+This rule is a review discipline only; following it does not prove documentation correctness by itself, and disputes still require tracing to the owning source.
 Do not resolve a contradiction by changing prose to match an accidental runtime
 behavior when the code's docstring, public contract, and tests indicate the
 opposite intent; record the discrepancy and repair the owning source or narrow
-the claim.
+the claim. This contract binds review practice; no machine gate checks it
+mechanically, so compliance remains human review.
 
 | Surface | Producer / authority | Required review |
 | --- | --- | --- |

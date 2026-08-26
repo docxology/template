@@ -1256,8 +1256,12 @@ Some rotating/private projects ship a read-only self-validator. Its run-report,
 session, and output-link checks often assert a **completed canonical run**
 (`run_all.py` / later pipeline stages). Run as a plain analysis script it should
 treat not-yet-generated artifacts as non-blocking warnings; pass `--strict` to
-require the full canonical run as a hard gate. Keep project-specific artifact
-paths in the project docs, not in this root manual.
+require the full canonical run as a hard gate. Without `--strict`, missing Negative control: a rotating project whose run report is absent or marks the canonical run incomplete fails `--strict` with an explicit blocking receipt instead of passing on warnings.
+With `--strict`, such a project fails the run instead of merely producing warnings.
+artifacts stay warnings; with `--strict`, the validator fails on any incomplete
+canonical run (negative control: absent artifacts are expected to fail only the
+`--strict` path). Keep project-specific artifact paths in the project docs, not
+in this root manual.
 
 #### Scripts Failing
 

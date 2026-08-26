@@ -40,7 +40,9 @@ flowchart LR
 
 ### Job Graph
 
-`health` depends on **`lint`** only and is blocking. `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**.
+`health` depends on **`lint`** only and is blocking. A broken health job therefore blocks merge on its own; deleting the `health` gate from the graph fails this workflow definition check rather than silently skipping static health. `validate`, `security`, and `docs-lint` depend on **`lint` only** (parallel with the `verify-no-mocks` subtree). `setup-hook-windows-smoke` depends on **`verify-no-mocks`** and **`detect`** and is **skipped** unless `needs.detect.outputs.setup_hook == 'true'`. `test-infra`, `test-regression`, `test-project`, and `fep-lean` depend on **`verify-no-mocks`**. Known-wrong condition: a red `lint` job must block every downstream job — a skip-with-success path that masks it is the defect this graph forbids. This graph is descriptive prose about [`ci.yml`](ci.yml); nothing here verifies that the documentation stays synchronized with the workflow file. Known-wrong input under this graph: a lint failure propagates downstream — every dependent job (`health`, `validate`, `security`, `docs-lint`) is skipped or fails, so a broken lint can never reach `test-infra` masked as green.
+This contract is documentation only — it does not certify that `ci.yml` matches it; drift checking and review are what catch divergence.
+No path lets a failed job merge silently: if `lint` fails, every dependent job never starts — a merged commit with red `lint` is treated as a known-wrong outcome for this graph.
 
 ```mermaid
 flowchart TB
@@ -113,7 +115,10 @@ behaviorally equivalent to the dedicated documentation job.
 
 - **Runner:** `ubuntu-latest` / Python 3.14
 - **Depends on:** `lint`
-- **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs.
+A red static gate turns this job red and blocks dependents; this page does not certify hosted-runner behavior beyond that.
+- **Purpose:** Runs `uv run python -m infrastructure.core.health --json --quiet` → `health-report.json`; every represented static gate blocks, while behavioral and platform matrices remain separate jobs; a gate exiting non-zero must turn the job red, and warnings alone never satisfy it. Negative control: when any represented static gate fails, `infrastructure.core.health` exits non-zero and blocks this job rather than reporting green alongside a failure.
+A negative control backs this contract: deliberately breaking any represented static check locally flips the aggregate health report away from healthy status, which blocks the job.
+  - **Negative control:** removing or weakening a represented static gate in `infrastructure/core/health.py` must make the `health` job fail on the next run — a green report with a missing gate is invalid.
 
 #### 3. Verify No Mocks Policy (`verify-no-mocks`)
 
@@ -196,9 +201,11 @@ behaviorally equivalent to the dedicated documentation job.
   1. **Mermaid** — every fenced \`\`\`mermaid block in `docs/`, `infrastructure/`, `.github/`, `scripts/`, and root `*.md` is rendered with the real `mmdc` binary. Failure exits non-zero.
   2. **Cross-links** — every relative Markdown link must resolve on disk; fenced and inline-code spans are skipped.
   3. **Consistency** — `N Python (sub)packages` claims must match the live count under `infrastructure/`; rotating project names (`fep_lean`, `cogant`, …) must be conditionally framed in long-lived docs.
+Skip lists narrow the scan — they do not certify the excluded trees; anything outside the skips still fails the lint job.
   4. **Doc pairs** — permanent-template content folders must carry paired `AGENTS.md` and `README.md`; generated/local paths and rotating projects are excluded.
-- **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line.
-- **Scope guarantees:** the linter skips generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects/archive/`, `projects/working/`, `htmlcov/`, and `node_modules/`.
+- **Escape hatch:** append `<!-- noqa: docs-lint -->` to a Markdown line to suppress consistency or broken-link warnings on that line. Negative control: adding a deliberately broken relative link to a tracked doc makes `uv run python scripts/audit/lint_docs.py` exit non-zero — the run fails when any unresolved cross-link is reported.
+This skip list bounds what the linter checks: it scans tracked documentation only, and checking skip rules does not prove correctness of excluded generated trees.
+- **Scope guarantees:** the linter scans only tracked Markdown outside generated/local paths such as `output/`, `.venv/`, `.claude/`, `projects/archive/`, `projects/working/`, `htmlcov/`, and `node_modules/`; inside those trees it enforces nothing. Known-wrong input: an unlisted build tree such as a fresh `dist/` holding broken links is NOT skipped by these guarantees — the exclusion list is closed, and excluding a new path requires an explicit entry in `infrastructure/validation/docs/scan_scope.py`.
 - **Module:** [`infrastructure/validation/docs/`](../../infrastructure/validation/docs/) — `mermaid_lint.py`, `cross_link_lint.py`, `consistency_lint.py`, `doc_pair_lint.py`.
 
 #### 10. Performance Check (`performance`)

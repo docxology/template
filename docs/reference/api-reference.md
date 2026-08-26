@@ -2837,7 +2837,8 @@ Information about a discovered rule.
 validate_rule_structure(rule_dir: Path) -> tuple[bool, str]
 ```
 
-Validate that a rule directory has the required structure.
+Validate that a rule directory has the required structure. A rule missing `rules.yaml`, or with neither soft/ nor strong/ present, fails validation: the function returns `(False, message)` instead of raising.
+Shape validation is structural only: a well-formed directory layout does not guarantee that the rule's manifest content is meaningful.
 
 ## Package: `infrastructure.scientific`
 

@@ -344,7 +344,9 @@ uv run python scripts/audit/verify_no_mocks.py --inventory --max-dependency-repl
 ### Coverage Requirements
 
 - **Infrastructure**: 60% minimum (measured baseline → [`docs/development/coverage-gaps.md`](docs/development/coverage-gaps.md))
-- **Projects (per-project standalone)**: 90% minimum. Exemplar measured coverage → [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md). Per-project gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90`.
+- **Projects (per-project standalone)**: 90% minimum. A project suite below its floor fails via `--cov-fail-under` (a zero-test collection fails the gate outright rather than reporting vacuous 100%). Exemplar measured coverage → [`docs/_generated/COUNTS.md`](docs/_generated/COUNTS.md). Per-project gate: `uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-fail-under=90` — pytest exits non-zero when measured coverage falls below the floor. Negative control: dropping a project below its floor (or running the suite with `--no-cov`) makes that exact command exit non-zero — a green suite alone never satisfies the gate.
+Coverage beneath the configured floor fails the gate, so thinning the suite cannot buy a green run.
+The floor is self-demonstrating: deleting tests until measured coverage drops below it makes pytest exit non-zero through `--cov-fail-under`, which is the gate's built-in negative control.
   - **Rotating-project exceptions**: a CI matrix job may pin a lower floor for a checked-out rotating project (e.g. an 89% gate for a Lean-toolchain project) when its Lean build + live external CLI + Ollama-gated paths carry CI-only surface below the 90% floor. The exception applies only while that project is checked out under `projects/`; raise back to 90% once that surface is covered.
 - **Combined-union public-project gate**: 75% (`scripts/pipeline/stage_01_test.py --project-only --all-projects --public-projects`; `DEFAULT_FAIL_UNDER` in `infrastructure/core/test_runner.py`). Deliberately lower than the per-project floor: per-project suites only cover their own `src/`, so the union denominator spans the public exemplar source set. Local `--all-projects` without `--public-projects` still runs every discovered project in the checkout and may include rotating private symlinks. Per-project floors are unchanged and remain authoritative.
 - **No mocks**: All tests use real numerical examples
@@ -592,7 +594,9 @@ uv run python scripts/pipeline/stage_03_render.py --project {name}
 
 ## Important Notes
 
-- Generated outputs are regeneratable and must never be hand-edited to pass a gate.
+A hand-edited output is the known-wrong case: regeneration overwrites the edit and the resulting diff exposes the tampering.
+- Generated outputs are regeneratable and must never be hand-edited to pass a gate; a stale hand-edit is expected to fail the `docs-contract-guard` (`docgen/* --check`) rather than pass. The generated-artifact guard rejects force-added generated paths, so a hand-edited artifact cannot slip past CI. (negative control: the generated-artifact guard deliberately force-adds `.codegraph/` content in `tests/infra_tests/project/` fixtures and asserts rejection, so weakening or deleting the guard is itself caught)
+This prohibition is enforced, not aspirational: regenerated-artifact guards reject tracked files claiming to be generated state, and their test fixtures feed deliberately regenerated artifacts to assert that rejection.
 - Canonical public exemplar outputs admitted by the repository allowlist are tracked publication evidence; local/private/fork outputs remain ignored.
 - Install **pre-commit** hooks after `uv sync` so Ruff, mypy, Bandit, and push-time checks run locally (see `.pre-commit-config.yaml`)
 - Always run tests before committing changes
