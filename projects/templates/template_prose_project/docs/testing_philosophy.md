@@ -151,7 +151,9 @@ bitten this stack; both are now guarded, but the rule stands:
    **N collected > 0 AND coverage ≥ 90%**, never exit code alone.
 
 2. **The canonical gate is the direct command.** This is the authoritative
-   per-project quality gate and what CI enforces project-by-project: the run
+   per-project quality gate and what CI enforces project-by-project. Passing
+   on exit code alone — with zero tests collected — is the classic known-wrong
+   outcome this section closes off: the run
    exits non-zero unless collected tests > 0 AND coverage meets the floor
    (`--cov-fail-under=90`). Only this command enforces the threshold;
    anything looser is advisory, and falling short fails the run. The

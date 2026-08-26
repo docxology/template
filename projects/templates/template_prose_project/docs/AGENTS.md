@@ -65,7 +65,9 @@ function names, not vague descriptions. A reader of `02_methodology.md`
 should be able to open `src/pipeline/` and find the exact check being
 discussed within ten seconds.
 
-**Every diagram must be Mermaid.** No ASCII art (project-wide rule).
+**Every diagram must be Mermaid.** No ASCII art (project-wide rule). This is
+a contributor convention upheld by human review; it is not an automated
+gate by itself.
 ASCII-art diagrams are the counterexample class this project-wide rule bans outright: any fenced block in `docs/` that is not ```mermaid``` is the known-wrong fixture for this rule.
 
 ## Reading Order
