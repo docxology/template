@@ -75,7 +75,7 @@
   "manuscript_staleness_all_fresh": true,
   "manuscript_staleness_row_count": 322,
   "model_checking_all_passed": true,
-  "model_checking_witness_count": 7,
+  "model_checking_witness_count": 12,
   "param_sweep_grid_points": 21,
   "pipeline_track_count": 31,
   "precision_entropy_at_gamma_one_formatted": "1.1458",

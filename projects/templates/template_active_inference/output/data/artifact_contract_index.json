@@ -264,11 +264,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "",
-=======
-      "source_sha256": "6eec3fd4ae7ed0cfce8ecaec815fa9d5d34e7e56d0188c44e329acd47bcf93bf",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -307,11 +303,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "",
-=======
-      "source_sha256": "e527b7d9f3756b2345c0c3c399f3237f57ca7f53401f6c84d6fd824c003dcde7",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -1023,11 +1015,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "",
-=======
-      "source_sha256": "5b0fb179b009103b361d84baeaa189ff56a097b4de8089666770cd2d70e1f68d",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2201,11 +2189,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
-=======
-      "source_sha256": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2386,11 +2370,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b",
-=======
-      "source_sha256": "b0eba7da1d61afd57112b077399fcda09aeaaaa306e09d178f926d25e804b679",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2741,11 +2721,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
-=======
-      "source_sha256": "ca59fa8fd9ff7a39d46a5ab63dddbd86cecb8d7c4ea6fed872ddbae6873816d3",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2784,11 +2760,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
-=======
-      "source_sha256": "fd0c925047c40d49c8b532a7849090303ab2c62cd6029d0b47c70399fdecc342",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2866,11 +2838,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "",
-=======
-      "source_sha256": "5067951ea6f0e55bfe3db0ef95c48375a1fd71feeab8b9d4ecdfd64faec97959",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -2975,11 +2943,7 @@
       ],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
-=======
-      "source_sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3107,11 +3071,7 @@
       "sheaf_tracks": [],
       "source_exists": true,
       "source_hash_fresh": true,
-<<<<<<< Updated upstream
       "source_sha256": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
-=======
-      "source_sha256": "97e24cc5885f4c95e50df9874d6892aaa2163624cddaee4e4799b02691a752b5",
->>>>>>> Stashed changes
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"

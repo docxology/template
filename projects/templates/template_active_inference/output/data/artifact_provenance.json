@@ -19,11 +19,7 @@
       "producer": "compute_statistics.py",
       "sha256": "f68a7a557cd11ce22318f40a2f57171c758368a58262712107bbb3ec6135244f",
       "size_bytes": 965,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/analytical_assumption_index.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -35,11 +31,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96",
       "size_bytes": 3655,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/analytical_observable_sweep.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -51,11 +43,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "size_bytes": 41997,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/animation_frame_deltas.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -67,11 +55,7 @@
       "producer": "render_animation.py",
       "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
       "size_bytes": 2165,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/artifact_contract_index.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -81,15 +65,9 @@
       "hash_authority": "output/reports/artifact_manifest.json",
       "path": "output/data/artifact_contract_index.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "7912f4b923bf70d52062c03866b879bcdfa7c24ae21689d3ad4898966fda3572",
-      "size_bytes": 103485,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/artifact_provenance.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -99,15 +77,9 @@
       "hash_authority": "output/reports/artifact_manifest.json",
       "path": "output/data/artifact_provenance.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "9db9953c4c1517691b9aa4681498a46f46a743bdbf975b14903c787558f30181",
-      "size_bytes": 174947,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/causal_ablation_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -119,11 +91,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
       "size_bytes": 9726,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/cross_track_symbol_table.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -135,11 +103,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
       "size_bytes": 198816,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/evidence_field_index.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -149,15 +113,9 @@
       "hash_authority": "this_record",
       "path": "output/data/evidence_field_index.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "b8df7ab4a6d6ae1178b0065eab167e7f66ad4d39d5dac02cb568d8d4da692382",
       "size_bytes": 78849,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
-      "size_bytes": 78822,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/figure_source_map.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -169,11 +127,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "3b2adb5a99a8bdd11795feb8910c2fb53d9c5a73b2daccee422d6fb9746a755c",
       "size_bytes": 43395,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/gnn_roundtrip_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -185,11 +139,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
       "size_bytes": 454,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/interop_roundtrip_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -201,11 +151,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
       "size_bytes": 506,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/manuscript_evidence_tables.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -217,11 +163,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "d375b3ed509999f4066fda36acde5c47d4213e711579464beeb47cb4fbfb3ea6",
       "size_bytes": 3167,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/manuscript_token_provenance.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -231,15 +173,9 @@
       "hash_authority": "this_record",
       "path": "output/data/manuscript_token_provenance.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
       "size_bytes": 290393,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "7a32e0241e62ad1a8f0908bfb250cadaf8a3f91452e90da2535b10ab2b392682",
-      "size_bytes": 290399,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/manuscript_variables.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -249,15 +185,9 @@
       "hash_authority": "output/reports/artifact_manifest.json",
       "path": "output/data/manuscript_variables.json",
       "producer": "z_generate_manuscript_variables.py",
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "dc1fe1c1741bb12fdc7613afc406d587a928cc59159f6442f4ff6a78d8f15b6e",
-      "size_bytes": 8639,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/ontology_alias_index.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -269,11 +199,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
       "size_bytes": 3012,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/ontology_profile_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -285,11 +211,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d",
       "size_bytes": 6685,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/parameter_sweep.csv": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -301,11 +223,7 @@
       "producer": "run_analytical_sweep.py",
       "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
       "size_bytes": 1037,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/proof_dependency_graph.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -317,11 +235,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
       "size_bytes": 34009,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/proof_extraction_index.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -333,11 +247,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
       "size_bytes": 4187,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/pymdp_policy_posterior_grid.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -349,11 +259,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "028d5c1f73348612a004e3256d4b00fefa3a04b1c453977b905523e49d9249c8",
       "size_bytes": 4518,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/scholarship_source_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -365,11 +271,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
       "size_bytes": 23354,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/sensitivity_sweep.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -381,11 +283,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
       "size_bytes": 44895,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/sheaf_coverage_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -397,11 +295,7 @@
       "producer": "generate_figures.py",
       "sha256": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230",
       "size_bytes": 103816,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/sheaf_evidence_crosswalk.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -411,15 +305,9 @@
       "hash_authority": "this_record",
       "path": "output/data/sheaf_evidence_crosswalk.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "fb4a8dc5ad56239bf40d40c847471b941dfa610320a45d919de9b54b9d2a78c7",
       "size_bytes": 57624,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "79c38673a666594140175dcd5bffdce9e0d1da379d36931552aba56a6b043f65",
-      "size_bytes": 57584,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/sheaf_gluing_certificate.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -429,15 +317,9 @@
       "hash_authority": "output/reports/artifact_manifest.json",
       "path": "output/data/sheaf_gluing_certificate.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "a50a9ef6c5a1cc4fda99025410e9e943bed4934a1e47a42681300c30aee5d2aa",
-      "size_bytes": 203846,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/sheaf_section_status_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -447,15 +329,9 @@
       "hash_authority": "this_record",
       "path": "output/data/sheaf_section_status_matrix.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "ef8e98052c3224ac9d842998477139e6c91c240daeba9c503fb5485dd7435c1b",
       "size_bytes": 804979,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "333867025a1762b84cc770de08190d1d4f7aeec4ede3a83d7013ea099d9923a9",
-      "size_bytes": 801239,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_efe_terms.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -467,11 +343,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "96f864f030a3e6ce95987296dced5887df3d3c347d911618a3c79a91ecd4e105",
       "size_bytes": 1115,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_graph_world_summary.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -483,11 +355,7 @@
       "producer": "simulate_si_graph_world.py",
       "sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
       "size_bytes": 268,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_graph_world_topology_sweep.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -499,11 +367,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
       "size_bytes": 842,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_graph_world_topology_traces.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -515,11 +379,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
       "size_bytes": 2646,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_graph_world_trace.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -531,11 +391,7 @@
       "producer": "simulate_si_graph_world.py",
       "sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
       "size_bytes": 639,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_policy_comparison.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -547,11 +403,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "616188c134ccbbad4affdffb091377ff2d4940e681183ff617f8324d806d1f21",
       "size_bytes": 8282,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_policy_grid.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -563,11 +415,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "077724d21ba8f862f2a714b5f35109459e8e5493126125a5c94bef628cffb24c",
       "size_bytes": 1370,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_tmaze_summary.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -577,15 +425,9 @@
       "hash_authority": "this_record",
       "path": "output/data/si_tmaze_summary.json",
       "producer": "simulate_si_tmaze.py",
-<<<<<<< Updated upstream
       "sha256": "d4f160f9f491d38816b7d242e712be215547106eae54d79e82414769990e092e",
       "size_bytes": 969,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
-      "size_bytes": 941,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/si_tmaze_trace.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -597,11 +439,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
       "size_bytes": 1295,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/state_space_catalog.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -613,11 +451,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
       "size_bytes": 1764,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/state_transition_table.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -629,11 +463,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
       "size_bytes": 6364,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/statistical_visualization_bridge.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -645,11 +475,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
       "size_bytes": 12558,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/theorem_traceability_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -661,11 +487,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
       "size_bytes": 122352,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/toy_benchmark_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -677,11 +499,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
       "size_bytes": 759,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/track_improvement_scope.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -693,11 +511,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "f74366a4e4b0a7fd3f615edc12256c7d876e93a43bc479acb3b6cf709ce2f4dc",
       "size_bytes": 52830,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/track_lane_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -709,11 +523,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
       "size_bytes": 57772,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/uncertainty_summary.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -725,11 +535,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
       "size_bytes": 6449,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/validation_dependency_graph.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -739,15 +545,9 @@
       "hash_authority": "this_record",
       "path": "output/data/validation_dependency_graph.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "678d5ae0afef97efff5c26aecb08f690b114cbe1883cfa90dd84768a067ffccc",
       "size_bytes": 387454,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
-      "size_bytes": 386145,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/data/validation_gate_index.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -759,11 +559,7 @@
       "producer": "generate_integration_audit.py",
       "sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
       "size_bytes": 11938,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/artifact_contract_map.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -773,15 +569,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/artifact_contract_map.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
       "size_bytes": 472268,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc",
-      "size_bytes": 471105,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/causal_ablation_heatmap.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -791,15 +581,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/causal_ablation_heatmap.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
       "size_bytes": 57015,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9",
-      "size_bytes": 58002,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/figure_registry.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -808,17 +592,10 @@
       "exists": true,
       "hash_authority": "this_record",
       "path": "output/figures/figure_registry.json",
-<<<<<<< Updated upstream
       "producer": "z_generate_manuscript_variables.py",
       "sha256": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
       "size_bytes": 22462,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "producer": "generate_figures.py",
-      "sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
-      "size_bytes": 24177,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/scholarship_source_map.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -828,15 +605,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/scholarship_source_map.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
       "size_bytes": 470707,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
-      "size_bytes": 478477,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/security_posture_map.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -846,15 +617,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/security_posture_map.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
       "size_bytes": 218708,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "11a0c7cb9ae2f909ec4119b1113e5a6cb235d6da0846c748596b2d8de24d306c",
-      "size_bytes": 221432,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/semantic_gluing_graph.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -864,15 +629,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/semantic_gluing_graph.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
       "size_bytes": 251230,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
-      "size_bytes": 254630,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/sheaf_coverage_heatmap.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -882,15 +641,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/sheaf_coverage_heatmap.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
       "size_bytes": 236608,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "3cd70393bf283c707f16d115b1c5d182ac80f95d2b1842a99ae27b46ff7f658e",
-      "size_bytes": 240903,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/sheaf_layers_overview.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -902,11 +655,7 @@
       "producer": "generate_figures.py",
       "sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
       "size_bytes": 566982,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/si_belief_trajectory.gif": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -918,11 +667,7 @@
       "producer": "render_animation.py",
       "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
       "size_bytes": 7058,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/theorem_traceability_graph.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -932,15 +677,9 @@
       "hash_authority": "this_record",
       "path": "output/figures/theorem_traceability_graph.png",
       "producer": "generate_figures.py",
-<<<<<<< Updated upstream
       "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
       "size_bytes": 122202,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
-      "size_bytes": 123852,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/figures/track_lane_promotion_map.png": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -952,7 +691,7 @@
       "producer": "generate_figures.py",
       "sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
       "size_bytes": 194060,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/ablation_sensitivity_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -964,11 +703,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
       "size_bytes": 18673,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/adversarial_audit.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -980,11 +715,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
       "size_bytes": 9400,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/artifact_diffoscope.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -994,15 +725,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/artifact_diffoscope.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
       "size_bytes": 20961,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b",
-      "size_bytes": 19775,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/artifact_license_audit.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1012,15 +737,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/artifact_license_audit.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
       "size_bytes": 18468,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
-      "size_bytes": 18243,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/blocked_scope_manifest.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1032,11 +751,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
       "size_bytes": 2953,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/claim_evidence_audit.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1046,15 +761,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/claim_evidence_audit.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
       "size_bytes": 49252,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
-      "size_bytes": 49326,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/counterexample_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1064,15 +773,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/counterexample_matrix.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
       "size_bytes": 16876,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
-      "size_bytes": 16801,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/figure_hash_manifest.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1082,15 +785,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/figure_hash_manifest.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b",
       "size_bytes": 7813,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "b0eba7da1d61afd57112b077399fcda09aeaaaa306e09d178f926d25e804b679",
-      "size_bytes": 7813,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/gnn_lint_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1102,11 +799,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
       "size_bytes": 6548,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/graph_world_invariants.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1118,11 +811,7 @@
       "producer": "generate_toy_sweep_tracks.py",
       "sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
       "size_bytes": 1370,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/invariants.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1134,11 +823,7 @@
       "producer": "run_analytical_sweep.py",
       "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
       "size_bytes": 499,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/lean_graph_world_inventory.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1150,11 +835,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
       "size_bytes": 1056,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/lean_theorem_inventory.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1166,11 +847,7 @@
       "producer": "generate_formal_interop_tracks.py",
       "sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
       "size_bytes": 1914,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/manuscript_staleness_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1180,15 +857,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/manuscript_staleness_report.json",
       "producer": "z_generate_manuscript_variables.py",
-<<<<<<< Updated upstream
       "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
       "size_bytes": 72360,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "055d2de9800c46f3eb0c3c5f5fecd53732e3b6b4dcb1bbeb5cce80ef3c4a03a9",
-      "size_bytes": 72363,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/model_checking_witnesses.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1200,11 +871,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
       "size_bytes": 4418,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/producer_completeness.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1214,15 +881,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/producer_completeness.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
       "size_bytes": 14660,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
-      "size_bytes": 14479,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/pymdp_runtime_diagnostics.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1232,15 +893,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/pymdp_runtime_diagnostics.json",
       "producer": "simulate_si_tmaze.py",
-<<<<<<< Updated upstream
       "sha256": "5bcd007ba20a0977c8db14d22e1403452b69d1dd6963278377b9ffe693f1669f",
       "size_bytes": 10783,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "04238557fa15b65fe42c07d24a5aed424911b064ad3811ddaae7a10deb0fdb10",
-      "size_bytes": 10523,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/release_attestation.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1250,15 +905,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
       "size_bytes": 1985,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "28b391177b3f60c7605b01ff6ee458f08d7ef3e68ebd72fcf1625e8ffa728a32",
-      "size_bytes": 1735,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/release_bundle_manifest.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1268,15 +917,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/release_bundle_manifest.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
       "size_bytes": 31383,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "fd0c925047c40d49c8b532a7849090303ab2c62cd6029d0b47c70399fdecc342",
-      "size_bytes": 28719,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/release_notes_evidence.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1286,15 +929,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/release_notes_evidence.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
       "size_bytes": 1090,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
-      "size_bytes": 1051,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/replay_matrix.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1304,15 +941,9 @@
       "hash_authority": "output/reports/artifact_manifest.json",
       "path": "output/reports/replay_matrix.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "99e5909cc31c0462c2356af986359c7f8a379eea70b119d5c99eb812d250e0a3",
-      "size_bytes": 27403,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/reproducibility_replay.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1324,11 +955,7 @@
       "producer": "generate_validation_spine.py",
       "sha256": "8775039aa7485cb28c2cef36b212acf879c10a7c2d65a77ce5795e652c50bc69",
       "size_bytes": 1604,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/scope_boundary_audit.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1338,15 +965,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/scope_boundary_audit.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
       "size_bytes": 9527,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
-      "size_bytes": 9506,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/security_posture_audit.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1356,15 +977,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/security_posture_audit.json",
       "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
       "sha256": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
       "size_bytes": 10504,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
-      "size_bytes": 10504,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/sheaf_render_log.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1376,11 +991,7 @@
       "producer": "generate_sheaf_tracks.py",
       "sha256": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6",
       "size_bytes": 2247,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/si_invariants.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1392,11 +1003,7 @@
       "producer": "simulate_si_tmaze.py",
       "sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
       "size_bytes": 271,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/si_tmaze_run_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1406,15 +1013,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/si_tmaze_run_report.json",
       "producer": "simulate_si_tmaze.py",
-<<<<<<< Updated upstream
       "sha256": "ed140aad44e9850357fd39419f7ac77c64e4f8cbb9117823ffe0142609b39683",
       "size_bytes": 890,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
-      "size_bytes": 862,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/stale_artifact_report.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1424,15 +1025,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/stale_artifact_report.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
       "size_bytes": 8846,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "97e24cc5885f4c95e50df9874d6892aaa2163624cddaee4e4799b02691a752b5",
-      "size_bytes": 8838,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     "output/reports/visualization_quality_audit.json": {
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
@@ -1442,15 +1037,9 @@
       "hash_authority": "this_record",
       "path": "output/reports/visualization_quality_audit.json",
       "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
       "sha256": "696528a937668d83e047b94d30bfb99c16d5f39e6e4689600924385f4eede109",
       "size_bytes": 40025,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "sha256": "36026ba1244fbeb7875586ca57739f09e47656204f16bc9438954edbee938f64",
-      "size_bytes": 39680,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     }
   },
   "bundle_count": 5,
@@ -1500,11 +1089,7 @@
           "exists": true,
           "hash_cycle_excluded": true,
           "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
           "sha256": ""
-=======
-          "sha256": "a50a9ef6c5a1cc4fda99025410e9e943bed4934a1e47a42681300c30aee5d2aa"
->>>>>>> Stashed changes
         },
         {
           "artifact": "output/data/validation_dependency_graph.json",
@@ -1553,22 +1138,14 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
           "sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7"
-=======
-          "sha256": "fd0c925047c40d49c8b532a7849090303ab2c62cd6029d0b47c70399fdecc342"
->>>>>>> Stashed changes
         },
         {
           "artifact": "output/reports/artifact_diffoscope.json",
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
           "sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7"
-=======
-          "sha256": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b"
->>>>>>> Stashed changes
         },
         {
           "artifact": "output/reports/artifact_license_audit.json",
@@ -1596,11 +1173,7 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
           "sha256": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249"
-=======
-          "sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4"
->>>>>>> Stashed changes
         },
         {
           "artifact": "output/data/proof_dependency_graph.json",
@@ -1614,17 +1187,10 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_sheaf_tracks.py",
-<<<<<<< Updated upstream
           "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d"
         }
       ],
       "bundle_hash": "3e0c8e51285ce4a50d606834de68f8bb03ba415551dcc1583bcbf7a7284e131f",
-=======
-          "sha256": "28b391177b3f60c7605b01ff6ee458f08d7ef3e68ebd72fcf1625e8ffa728a32"
-        }
-      ],
-      "bundle_hash": "482cd1ed5288a96fcbf09f88adc825e73acad37628089d535360b2b7c5e42083",
->>>>>>> Stashed changes
       "bundle_id": "semantic_audit",
       "complete": true,
       "missing": []
@@ -1809,17 +1375,10 @@
           "exists": true,
           "hash_cycle_excluded": false,
           "producer": "generate_integration_audit.py",
-<<<<<<< Updated upstream
           "sha256": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b"
         }
       ],
       "bundle_hash": "86d1258a4cf42daa8f3d72414558058b102ee0c26eebff248b32329bc1dff8d6",
-=======
-          "sha256": "b0eba7da1d61afd57112b077399fcda09aeaaaa306e09d178f926d25e804b679"
-        }
-      ],
-      "bundle_hash": "96f0018a7f35b8a0000779f8cf191f4341a38bf1be47cacf3319a2df37e6cefa",
->>>>>>> Stashed changes
       "bundle_id": "rendered_outputs",
       "complete": true,
       "missing": []
@@ -1861,11 +1420,7 @@
       "jsonpath": "$",
       "producer": "compute_statistics.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/analytical_assumption_index.json",
@@ -1879,11 +1434,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/analytical_observable_sweep.json",
@@ -1897,11 +1448,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/animation_frame_deltas.json",
@@ -1914,19 +1461,11 @@
       "jsonpath": "$",
       "producer": "render_animation.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/artifact_contract_index.json",
       "artifact_hash": "",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/data/artifact_contract_index.json",
-      "artifact_hash": "7912f4b923bf70d52062c03866b879bcdfa7c24ae21689d3ad4898966fda3572",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -1936,19 +1475,11 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/artifact_provenance.json",
       "artifact_hash": "",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/data/artifact_provenance.json",
-      "artifact_hash": "9db9953c4c1517691b9aa4681498a46f46a743bdbf975b14903c787558f30181",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -1957,11 +1488,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/causal_ablation_matrix.json",
@@ -1975,11 +1502,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/cross_track_symbol_table.json",
@@ -1993,11 +1516,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/evidence_field_index.json",
@@ -2011,11 +1530,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/figure_source_map.json",
@@ -2029,11 +1544,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/gnn_roundtrip_report.json",
@@ -2047,11 +1558,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/interop_roundtrip_report.json",
@@ -2065,11 +1572,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/manuscript_evidence_tables.json",
@@ -2083,19 +1586,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/manuscript_token_provenance.json",
       "artifact_hash": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/data/manuscript_token_provenance.json",
-      "artifact_hash": "7a32e0241e62ad1a8f0908bfb250cadaf8a3f91452e90da2535b10ab2b392682",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2105,19 +1600,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/manuscript_variables.json",
       "artifact_hash": "",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/data/manuscript_variables.json",
-      "artifact_hash": "dc1fe1c1741bb12fdc7613afc406d587a928cc59159f6442f4ff6a78d8f15b6e",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2127,11 +1614,7 @@
       "jsonpath": "$",
       "producer": "z_generate_manuscript_variables.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/ontology_alias_index.json",
@@ -2145,11 +1628,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/ontology_profile_matrix.json",
@@ -2163,11 +1642,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/parameter_sweep.csv",
@@ -2181,11 +1656,7 @@
       "jsonpath": "$",
       "producer": "run_analytical_sweep.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/proof_dependency_graph.json",
@@ -2199,11 +1670,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -2217,11 +1684,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/pymdp_policy_posterior_grid.json",
@@ -2235,11 +1698,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/scholarship_source_matrix.json",
@@ -2253,11 +1712,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -2271,11 +1726,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/sheaf_coverage_matrix.json",
@@ -2289,11 +1740,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/sheaf_evidence_crosswalk.json",
@@ -2306,19 +1753,11 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/sheaf_gluing_certificate.json",
       "artifact_hash": "",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/data/sheaf_gluing_certificate.json",
-      "artifact_hash": "a50a9ef6c5a1cc4fda99025410e9e943bed4934a1e47a42681300c30aee5d2aa",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -2328,11 +1767,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/sheaf_section_status_matrix.json",
@@ -2346,11 +1781,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_efe_terms.json",
@@ -2364,11 +1795,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_graph_world_summary.json",
@@ -2382,11 +1809,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_graph_world.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_graph_world_topology_sweep.json",
@@ -2400,11 +1823,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_graph_world_topology_traces.json",
@@ -2418,11 +1837,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_graph_world_trace.json",
@@ -2437,11 +1852,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_graph_world.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_policy_comparison.json",
@@ -2455,11 +1866,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_policy_grid.json",
@@ -2473,11 +1880,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_tmaze_summary.json",
@@ -2491,11 +1894,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/si_tmaze_trace.json",
@@ -2509,11 +1908,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/state_space_catalog.json",
@@ -2527,11 +1922,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/state_transition_table.json",
@@ -2545,11 +1936,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/statistical_visualization_bridge.json",
@@ -2563,11 +1950,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/theorem_traceability_matrix.json",
@@ -2581,11 +1964,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/toy_benchmark_matrix.json",
@@ -2599,11 +1978,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/track_improvement_scope.json",
@@ -2617,11 +1992,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -2635,11 +2006,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/uncertainty_summary.json",
@@ -2653,11 +2020,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/validation_dependency_graph.json",
@@ -2670,11 +2033,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/data/validation_gate_index.json",
@@ -2688,11 +2047,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/artifact_contract_map.png",
@@ -2706,11 +2061,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/causal_ablation_heatmap.png",
@@ -2723,309 +2074,13 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/figure_registry.json",
       "artifact_hash": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
       "complete": true,
-<<<<<<< Updated upstream
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
-=======
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/scholarship_source_map.png",
-      "artifact_hash": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/security_posture_map.png",
-      "artifact_hash": "11a0c7cb9ae2f909ec4119b1113e5a6cb235d6da0846c748596b2d8de24d306c",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/semantic_gluing_graph.png",
-      "artifact_hash": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/sheaf_coverage_heatmap.png",
-      "artifact_hash": "3cd70393bf283c707f16d115b1c5d182ac80f95d2b1842a99ae27b46ff7f658e",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/sheaf_layers_overview.png",
-      "artifact_hash": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/si_belief_trajectory.gif",
-      "artifact_hash": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "render_animation.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/figures/theorem_traceability_graph.png",
-      "artifact_hash": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_figures.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/ablation_sensitivity_report.json",
-      "artifact_hash": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "results_invariants",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_sheaf_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/adversarial_audit.json",
-      "artifact_hash": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_sheaf_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/artifact_diffoscope.json",
-      "artifact_hash": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_integration_audit.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/artifact_license_audit.json",
-      "artifact_hash": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_integration_audit.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/blocked_scope_manifest.json",
-      "artifact_hash": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "discussion_outlook",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_sheaf_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/claim_evidence_audit.json",
-      "artifact_hash": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_integration_audit.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/counterexample_matrix.json",
-      "artifact_hash": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_sheaf_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/figure_hash_manifest.json",
-      "artifact_hash": "b0eba7da1d61afd57112b077399fcda09aeaaaa306e09d178f926d25e804b679",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_sheaf",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_integration_audit.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/gnn_lint_report.json",
-      "artifact_hash": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_pymdp",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_formal_interop_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/graph_world_invariants.json",
-      "artifact_hash": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "results_invariants",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_toy_sweep_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/invariants.json",
-      "artifact_hash": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "results_invariants"
-      ],
-      "jsonpath": "$",
-      "producer": "run_analytical_sweep.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/lean_graph_world_inventory.json",
-      "artifact_hash": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_lean",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_formal_interop_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/lean_theorem_inventory.json",
-      "artifact_hash": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_lean",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_formal_interop_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/manuscript_staleness_report.json",
-      "artifact_hash": "055d2de9800c46f3eb0c3c5f5fecd53732e3b6b4dcb1bbeb5cce80ef3c4a03a9",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
->>>>>>> Stashed changes
       "input_artifact_lineage": [
         "methods_sheaf",
         "appendix_full_sheaf"
@@ -3033,35 +2088,13 @@
       "jsonpath": "$",
       "producer": "z_generate_manuscript_variables.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/scholarship_source_map.png",
       "artifact_hash": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
       "complete": true,
-<<<<<<< Updated upstream
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
-=======
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_lean",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_sheaf_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/producer_completeness.json",
-      "artifact_hash": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
->>>>>>> Stashed changes
       "input_artifact_lineage": [
         "methods_sheaf",
         "appendix_full_sheaf"
@@ -3069,49 +2102,13 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/security_posture_map.png",
       "artifact_hash": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
       "complete": true,
-<<<<<<< Updated upstream
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
-=======
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "methods_pymdp",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "simulate_si_tmaze.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/release_attestation.json",
-      "artifact_hash": "28b391177b3f60c7605b01ff6ee458f08d7ef3e68ebd72fcf1625e8ffa728a32",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
-      "input_artifact_lineage": [
-        "discussion_outlook",
-        "appendix_full_sheaf"
-      ],
-      "jsonpath": "$",
-      "producer": "generate_sheaf_tracks.py",
-      "seed": 0,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/release_bundle_manifest.json",
-      "artifact_hash": "fd0c925047c40d49c8b532a7849090303ab2c62cd6029d0b47c70399fdecc342",
-      "complete": true,
-      "config_digest": "32acf414cf21f84444086b99d3809bc8eb3c42bd6f66a9ae9ed83b7383b2504e",
->>>>>>> Stashed changes
       "input_artifact_lineage": [
         "methods_sheaf",
         "appendix_full_sheaf"
@@ -3119,11 +2116,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/semantic_gluing_graph.png",
@@ -3136,7 +2129,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/sheaf_coverage_heatmap.png",
@@ -3149,19 +2142,11 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/sheaf_layers_overview.png",
       "artifact_hash": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/replay_matrix.json",
-      "artifact_hash": "99e5909cc31c0462c2356af986359c7f8a379eea70b119d5c99eb812d250e0a3",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -3170,7 +2155,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -3183,7 +2168,7 @@
       "jsonpath": "$",
       "producer": "render_animation.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/theorem_traceability_graph.png",
@@ -3196,7 +2181,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/figures/track_lane_promotion_map.png",
@@ -3210,7 +2195,7 @@
       "jsonpath": "$",
       "producer": "generate_figures.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/ablation_sensitivity_report.json",
@@ -3224,8 +2209,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/adversarial_audit.json",
@@ -3239,7 +2223,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/artifact_diffoscope.json",
@@ -3253,7 +2237,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/artifact_license_audit.json",
@@ -3267,7 +2251,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/blocked_scope_manifest.json",
@@ -3282,7 +2266,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/claim_evidence_audit.json",
@@ -3296,7 +2280,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/counterexample_matrix.json",
@@ -3309,7 +2293,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/figure_hash_manifest.json",
@@ -3323,7 +2307,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/gnn_lint_report.json",
@@ -3337,7 +2321,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/graph_world_invariants.json",
@@ -3351,7 +2335,7 @@
       "jsonpath": "$",
       "producer": "generate_toy_sweep_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/invariants.json",
@@ -3364,7 +2348,7 @@
       "jsonpath": "$",
       "producer": "run_analytical_sweep.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/lean_graph_world_inventory.json",
@@ -3378,7 +2362,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/lean_theorem_inventory.json",
@@ -3392,7 +2376,7 @@
       "jsonpath": "$",
       "producer": "generate_formal_interop_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/manuscript_staleness_report.json",
@@ -3406,7 +2390,7 @@
       "jsonpath": "$",
       "producer": "z_generate_manuscript_variables.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/model_checking_witnesses.json",
@@ -3420,7 +2404,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/producer_completeness.json",
@@ -3434,7 +2418,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/pymdp_runtime_diagnostics.json",
@@ -3448,7 +2432,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/release_attestation.json",
@@ -3462,7 +2446,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/release_bundle_manifest.json",
@@ -3476,7 +2460,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/release_notes_evidence.json",
@@ -3490,7 +2474,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/replay_matrix.json",
@@ -3504,10 +2488,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/reproducibility_replay.json",
@@ -3520,11 +2501,7 @@
       "jsonpath": "$",
       "producer": "generate_validation_spine.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/scope_boundary_audit.json",
@@ -3538,19 +2515,11 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/security_posture_audit.json",
       "artifact_hash": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/security_posture_audit.json",
-      "artifact_hash": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -3560,11 +2529,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/sheaf_render_log.json",
@@ -3578,11 +2543,7 @@
       "jsonpath": "$",
       "producer": "generate_sheaf_tracks.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/si_invariants.json",
@@ -3595,11 +2556,7 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/si_tmaze_run_report.json",
@@ -3612,19 +2569,11 @@
       "jsonpath": "$",
       "producer": "simulate_si_tmaze.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/stale_artifact_report.json",
       "artifact_hash": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
-    },
-    {
-      "artifact": "output/reports/stale_artifact_report.json",
-      "artifact_hash": "97e24cc5885f4c95e50df9874d6892aaa2163624cddaee4e4799b02691a752b5",
->>>>>>> Stashed changes
       "complete": true,
       "config_digest": "959f6de11a95d8aff018b2c54796deafdd51639703f03ad2968379a1ce11685f",
       "input_artifact_lineage": [
@@ -3634,11 +2583,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     },
     {
       "artifact": "output/reports/visualization_quality_audit.json",
@@ -3652,11 +2597,7 @@
       "jsonpath": "$",
       "producer": "generate_integration_audit.py",
       "seed": 0,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f"
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f"
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632"
     }
   ],
   "producer_coverage": {
@@ -3694,11 +2635,7 @@
       "producer_configured": true,
       "sha256": "f68a7a557cd11ce22318f40a2f57171c758368a58262712107bbb3ec6135244f",
       "size_bytes": 965,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3725,11 +2662,7 @@
       "producer_configured": true,
       "sha256": "341a92f92293650afc1f34b77dc524a81173c5cb6b98a79d5a40fe040169ac96",
       "size_bytes": 3655,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3755,11 +2688,7 @@
       "producer_configured": true,
       "sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "size_bytes": 41997,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -3785,11 +2714,7 @@
       "producer_configured": true,
       "sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
       "size_bytes": 2165,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3816,15 +2741,9 @@
       "path": "output/data/artifact_contract_index.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "7912f4b923bf70d52062c03866b879bcdfa7c24ae21689d3ad4898966fda3572",
-      "size_bytes": 103485,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3850,15 +2769,9 @@
       "path": "output/data/artifact_provenance.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "9db9953c4c1517691b9aa4681498a46f46a743bdbf975b14903c787558f30181",
-      "size_bytes": 174947,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -3886,11 +2799,7 @@
       "producer_configured": true,
       "sha256": "cfb07ade21798190e5b42307ae9bab5dbee91b69687a625097a43375155065f0",
       "size_bytes": 9726,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3918,11 +2827,7 @@
       "producer_configured": true,
       "sha256": "41a58ba8e5482f222b316a7f563c7b7782548c874b057090a09d990699a0146d",
       "size_bytes": 198816,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3948,15 +2853,9 @@
       "path": "output/data/evidence_field_index.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "b8df7ab4a6d6ae1178b0065eab167e7f66ad4d39d5dac02cb568d8d4da692382",
       "size_bytes": 78849,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
-      "size_bytes": 78822,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -3984,11 +2883,7 @@
       "producer_configured": true,
       "sha256": "3b2adb5a99a8bdd11795feb8910c2fb53d9c5a73b2daccee422d6fb9746a755c",
       "size_bytes": 43395,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4014,11 +2909,7 @@
       "producer_configured": true,
       "sha256": "3b91cfa950d1dfc8442ea50510c895a1006770631235db92467c0fcd33cda209",
       "size_bytes": 454,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4046,11 +2937,7 @@
       "producer_configured": true,
       "sha256": "ceb3f2b3c34ebdd06e9deaf34da62f640b53e8476f7a2bc94780f228d41bd78d",
       "size_bytes": 506,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4077,11 +2964,7 @@
       "producer_configured": true,
       "sha256": "d375b3ed509999f4066fda36acde5c47d4213e711579464beeb47cb4fbfb3ea6",
       "size_bytes": 3167,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4107,15 +2990,9 @@
       "path": "output/data/manuscript_token_provenance.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "94d9428fb86f99011aa5aa6d790aef3387d6901721993424472ea5c29e6c79c4",
       "size_bytes": 290393,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "7a32e0241e62ad1a8f0908bfb250cadaf8a3f91452e90da2535b10ab2b392682",
-      "size_bytes": 290399,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4141,15 +3018,9 @@
       "path": "output/data/manuscript_variables.json",
       "producer": "z_generate_manuscript_variables.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "dc1fe1c1741bb12fdc7613afc406d587a928cc59159f6442f4ff6a78d8f15b6e",
-      "size_bytes": 8639,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript"
       ]
@@ -4174,11 +3045,7 @@
       "producer_configured": true,
       "sha256": "8c01513c5afa5f22b31cdf1e0976b5626c3b2a12e4dd4aaaf3f8442bdd736311",
       "size_bytes": 3012,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4203,11 +3070,7 @@
       "producer_configured": true,
       "sha256": "2fefa687a32bf615e165292dc7df8edcc6d712f6b22d268deb263eccefb1379d",
       "size_bytes": 6685,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4232,11 +3095,7 @@
       "producer_configured": true,
       "sha256": "c2c441f2911d5080705d9b36e1e16ce977cd185a12e765722807ae148e4713dc",
       "size_bytes": 1037,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4263,11 +3122,7 @@
       "producer_configured": true,
       "sha256": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
       "size_bytes": 34009,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4295,11 +3150,7 @@
       "producer_configured": true,
       "sha256": "726a8f8d9f2d9921602c3f1febb3241f5bc9bc4296b779649a953c08b2aef7e2",
       "size_bytes": 4187,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4327,11 +3178,7 @@
       "producer_configured": true,
       "sha256": "028d5c1f73348612a004e3256d4b00fefa3a04b1c453977b905523e49d9249c8",
       "size_bytes": 4518,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4359,11 +3206,7 @@
       "producer_configured": true,
       "sha256": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
       "size_bytes": 23354,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4392,11 +3235,7 @@
       "producer_configured": true,
       "sha256": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
       "size_bytes": 44895,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4423,11 +3262,7 @@
       "producer_configured": true,
       "sha256": "ca776e2bdcc3936ed3d07ebb11b7ffd68a2d5e92242ef880b936197cf83bc230",
       "size_bytes": 103816,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4452,15 +3287,9 @@
       "path": "output/data/sheaf_evidence_crosswalk.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "fb4a8dc5ad56239bf40d40c847471b941dfa610320a45d919de9b54b9d2a78c7",
       "size_bytes": 57624,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "79c38673a666594140175dcd5bffdce9e0d1da379d36931552aba56a6b043f65",
-      "size_bytes": 57584,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -4490,15 +3319,9 @@
       "path": "output/data/sheaf_gluing_certificate.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "a50a9ef6c5a1cc4fda99025410e9e943bed4934a1e47a42681300c30aee5d2aa",
-      "size_bytes": 203846,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -4524,15 +3347,9 @@
       "path": "output/data/sheaf_section_status_matrix.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "ef8e98052c3224ac9d842998477139e6c91c240daeba9c503fb5485dd7435c1b",
       "size_bytes": 804979,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "333867025a1762b84cc770de08190d1d4f7aeec4ede3a83d7013ea099d9923a9",
-      "size_bytes": 801239,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -4560,11 +3377,7 @@
       "producer_configured": true,
       "sha256": "96f864f030a3e6ce95987296dced5887df3d3c347d911618a3c79a91ecd4e105",
       "size_bytes": 1115,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4591,11 +3404,7 @@
       "producer_configured": true,
       "sha256": "2e3daee54c64502d565a36c864e6073ef07cfd955719c6813b2b1dba3ca37080",
       "size_bytes": 268,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4620,11 +3429,7 @@
       "producer_configured": true,
       "sha256": "f9610cc62493a5f02a4eaa8842188366d1cc2e5ed67e9e23a42c0b7e30c631fe",
       "size_bytes": 842,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4651,11 +3456,7 @@
       "producer_configured": true,
       "sha256": "00f086b46f8ddd55b5521978945e652d041f16c0bfd59331ced0b1caaa128bc5",
       "size_bytes": 2646,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4683,11 +3484,7 @@
       "producer_configured": true,
       "sha256": "e688e9b6fff27f0930920707bbbcea1157d540ac4539fe9c7552884f94d1d549",
       "size_bytes": 639,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4715,11 +3512,7 @@
       "producer_configured": true,
       "sha256": "616188c134ccbbad4affdffb091377ff2d4940e681183ff617f8324d806d1f21",
       "size_bytes": 8282,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4746,11 +3539,7 @@
       "producer_configured": true,
       "sha256": "077724d21ba8f862f2a714b5f35109459e8e5493126125a5c94bef628cffb24c",
       "size_bytes": 1370,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4775,15 +3564,9 @@
       "path": "output/data/si_tmaze_summary.json",
       "producer": "simulate_si_tmaze.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "d4f160f9f491d38816b7d242e712be215547106eae54d79e82414769990e092e",
       "size_bytes": 969,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "81b7c65d2cf64a79ea1e195af7bc514d643d3e66fcbcff2984cd60e63743c65e",
-      "size_bytes": 941,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4810,11 +3593,7 @@
       "producer_configured": true,
       "sha256": "962f2a01908e353298f20f714e87f71cb266bb3d9ac96fb6fdb0c8232648992e",
       "size_bytes": 1295,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -4841,11 +3620,7 @@
       "producer_configured": true,
       "sha256": "f1258622fa7ab00e78e92df0e01a99a2485439007ed070a8a5d6704f41ddec2f",
       "size_bytes": 1764,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4873,11 +3648,7 @@
       "producer_configured": true,
       "sha256": "eafac9ee2500fc4c6c365b5a84813872d9099c5be0e202c062eed5b63ac5a42f",
       "size_bytes": 6364,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4905,11 +3676,7 @@
       "producer_configured": true,
       "sha256": "921841d0f1ab5347256cb0864f5eea832cbb4d27dd0dc068f193bdf890d75d21",
       "size_bytes": 12558,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4937,11 +3704,7 @@
       "producer_configured": true,
       "sha256": "629fcb99fe2ba481ac9a019913b8a42f7d613335c6c605fb289742203dcb0130",
       "size_bytes": 122352,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -4969,11 +3732,7 @@
       "producer_configured": true,
       "sha256": "ed4e8a618b3d483e28d00ca37cca833d9db223d43032de1791bb0c0e89d6ab0f",
       "size_bytes": 759,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5000,11 +3759,7 @@
       "producer_configured": true,
       "sha256": "f74366a4e4b0a7fd3f615edc12256c7d876e93a43bc479acb3b6cf709ce2f4dc",
       "size_bytes": 52830,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5032,11 +3787,7 @@
       "producer_configured": true,
       "sha256": "841037bd7b1c357031b492e874191ab6b2677f488922d707d05e9fdd386c1904",
       "size_bytes": 57772,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5065,11 +3816,7 @@
       "producer_configured": true,
       "sha256": "1e4c54e3d682ac99c9d716f93647908eeaee58a717e6f6604bd1ec13d625dfae",
       "size_bytes": 6449,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5094,15 +3841,9 @@
       "path": "output/data/validation_dependency_graph.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "678d5ae0afef97efff5c26aecb08f690b114cbe1883cfa90dd84768a067ffccc",
       "size_bytes": 387454,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "0dbacf83556e0010876ed5895f258e4c866043cc98c9c76cf77cf436a489434c",
-      "size_bytes": 386145,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -5131,11 +3872,7 @@
       "producer_configured": true,
       "sha256": "7c15bed7b828318b3a6d40e6e184b35ec5cf422d730985d332371c69329a4325",
       "size_bytes": 11938,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5161,15 +3898,9 @@
       "path": "output/figures/artifact_contract_map.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "046a95389e857d347a97857d816b47543e90ef10ddd1a9bd600d5b5111fcfc98",
       "size_bytes": 472268,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "976b61f9c31c3d61b4f97b45f3d3029884e5c2f00c3e8804b2118b27ad3534bc",
-      "size_bytes": 471105,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5192,15 +3923,9 @@
       "path": "output/figures/causal_ablation_heatmap.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "a5663681bd02fb704a1155fd2f5abfc6c6f3862fa031d8c17936118808635740",
       "size_bytes": 57015,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "547aa38bc26977303ff19f319f9a0692566b8fbdc1f4e3886250bddec03c84d9",
-      "size_bytes": 58002,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5224,15 +3949,9 @@
       "path": "output/figures/figure_registry.json",
       "producer": "z_generate_manuscript_variables.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
       "size_bytes": 22462,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "ef2c0fe943c5fab8c02ae95896980207af7ecb58221e3582d6c970efef95f3b9",
-      "size_bytes": 24177,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5257,15 +3976,9 @@
       "path": "output/figures/scholarship_source_map.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "4489a53f0d597cbf57826e9be146740ea517188cd04dc66c78f88070b1c31175",
       "size_bytes": 470707,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "ea4f33d3328e6d1bb6c9ac1d1e064190a070b1044627d044abda0bc4ffecde05",
-      "size_bytes": 478477,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5291,15 +4004,9 @@
       "path": "output/figures/security_posture_map.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "63c84940dad22e83be825073cfd68ae24daaabda1a5637b3c7c60f2b0e039fa7",
       "size_bytes": 218708,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "11a0c7cb9ae2f909ec4119b1113e5a6cb235d6da0846c748596b2d8de24d306c",
-      "size_bytes": 221432,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5324,15 +4031,9 @@
       "path": "output/figures/semantic_gluing_graph.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "8c2fab11ffc2bcfd2a1de6e66a53d70775a2aed73adfac3d7dd24265d5c8dc14",
       "size_bytes": 251230,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "5735402b1ce0229c1aefc9ef257581f76a0cd022498e6033fb4778f4528766d7",
-      "size_bytes": 254630,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5357,15 +4058,9 @@
       "path": "output/figures/sheaf_coverage_heatmap.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "e67fb41083d1232dcb33c6541615ceee32d4a54fcc69a2cb1c7966ee9bed5d57",
       "size_bytes": 236608,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "3cd70393bf283c707f16d115b1c5d182ac80f95d2b1842a99ae27b46ff7f658e",
-      "size_bytes": 240903,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5392,11 +4087,7 @@
       "producer_configured": true,
       "sha256": "44a406e9113e8ccdf46fda1e8fa87c9c453db67b9af914e88368b996aa82ce31",
       "size_bytes": 566982,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5423,11 +4114,7 @@
       "producer_configured": true,
       "sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
       "size_bytes": 7058,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5449,10 +4136,9 @@
       "path": "output/figures/theorem_traceability_graph.png",
       "producer": "generate_figures.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "1f760767bbed036b778c11ed748b68620d4537edcb089df44545b9245975e604",
       "size_bytes": 122202,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5480,12 +4166,7 @@
       "producer_configured": true,
       "sha256": "caba1fad9edfd6c35a1e4762502b1aab19ad8191cd55347a95ffdf6f3a52effd",
       "size_bytes": 194060,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "b41d42d28b7c2185724c57e1076475a5fefe6b58188146ae7f8014460af22e3b",
-      "size_bytes": 123852,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "figure_registry"
@@ -5513,11 +4194,7 @@
       "producer_configured": true,
       "sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
       "size_bytes": 18673,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5546,11 +4223,7 @@
       "producer_configured": true,
       "sha256": "5eabc21a2e038130eea3dc7af0bea89bd9744a5a4c94d1773e00f1790b7f7708",
       "size_bytes": 9400,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5576,15 +4249,9 @@
       "path": "output/reports/artifact_diffoscope.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
       "size_bytes": 20961,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b",
-      "size_bytes": 19775,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5610,15 +4277,9 @@
       "path": "output/reports/artifact_license_audit.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
       "size_bytes": 18468,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "3db262f80c5f2da663bd1da41768c257ba1af97aeff68ee6b644ea757a52bda6",
-      "size_bytes": 18243,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5647,11 +4308,7 @@
       "producer_configured": true,
       "sha256": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
       "size_bytes": 2953,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5677,15 +4334,9 @@
       "path": "output/reports/claim_evidence_audit.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
       "size_bytes": 49252,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "05a15323fcb35a57122ba93a8a70adb967545ae7a165394719bb537473ee4a81",
-      "size_bytes": 49326,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5711,15 +4362,9 @@
       "path": "output/reports/counterexample_matrix.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
       "size_bytes": 16876,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "c4b545d9ce0389c302fcf10cf52b2880a917e442f836264447436c9fff0781d0",
-      "size_bytes": 16801,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5745,15 +4390,9 @@
       "path": "output/reports/figure_hash_manifest.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b",
       "size_bytes": 7813,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "b0eba7da1d61afd57112b077399fcda09aeaaaa306e09d178f926d25e804b679",
-      "size_bytes": 7813,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5779,11 +4418,7 @@
       "producer_configured": true,
       "sha256": "a29ce1922701512403c542664a92af5787df00b874fc85ec439837049815aa89",
       "size_bytes": 6548,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5810,11 +4445,7 @@
       "producer_configured": true,
       "sha256": "cbe1e59cab6da1e1de37c3448ddcb0326f90af09be52a9ea2801821b762b7de9",
       "size_bytes": 1370,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5838,11 +4469,7 @@
       "producer_configured": true,
       "sha256": "332c2bb13dc74de8d190a3f6a32590dadbf4289d1362c4a38639b1ec7f2c7975",
       "size_bytes": 499,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5869,11 +4496,7 @@
       "producer_configured": true,
       "sha256": "13bf2cf6c614f60f8e3ca9dc354d95bee67ea3dc353560d6f7b60cf039e3f0cb",
       "size_bytes": 1056,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5900,11 +4523,7 @@
       "producer_configured": true,
       "sha256": "58e56fb6cbce951384aa4c34a7485a71255660fe6f96f668d3e8fb6afe90450d",
       "size_bytes": 1914,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5929,15 +4548,9 @@
       "path": "output/reports/manuscript_staleness_report.json",
       "producer": "z_generate_manuscript_variables.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60",
       "size_bytes": 72360,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "055d2de9800c46f3eb0c3c5f5fecd53732e3b6b4dcb1bbeb5cce80ef3c4a03a9",
-      "size_bytes": 72363,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -5966,11 +4579,7 @@
       "producer_configured": true,
       "sha256": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
       "size_bytes": 4418,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -5995,15 +4604,9 @@
       "path": "output/reports/producer_completeness.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
       "size_bytes": 14660,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
-      "size_bytes": 14479,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6029,15 +4632,9 @@
       "path": "output/reports/pymdp_runtime_diagnostics.json",
       "producer": "simulate_si_tmaze.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "5bcd007ba20a0977c8db14d22e1403452b69d1dd6963278377b9ffe693f1669f",
       "size_bytes": 10783,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "04238557fa15b65fe42c07d24a5aed424911b064ad3811ddaae7a10deb0fdb10",
-      "size_bytes": 10523,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6063,15 +4660,9 @@
       "path": "output/reports/release_attestation.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
       "size_bytes": 1985,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "28b391177b3f60c7605b01ff6ee458f08d7ef3e68ebd72fcf1625e8ffa728a32",
-      "size_bytes": 1735,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6097,15 +4688,9 @@
       "path": "output/reports/release_bundle_manifest.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
       "size_bytes": 31383,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "fd0c925047c40d49c8b532a7849090303ab2c62cd6029d0b47c70399fdecc342",
-      "size_bytes": 28719,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6131,15 +4716,9 @@
       "path": "output/reports/release_notes_evidence.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
       "size_bytes": 1090,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
-      "size_bytes": 1051,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6165,15 +4744,9 @@
       "path": "output/reports/replay_matrix.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "",
       "size_bytes": 0,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "99e5909cc31c0462c2356af986359c7f8a379eea70b119d5c99eb812d250e0a3",
-      "size_bytes": 27403,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6200,11 +4773,7 @@
       "producer_configured": true,
       "sha256": "8775039aa7485cb28c2cef36b212acf879c10a7c2d65a77ce5795e652c50bc69",
       "size_bytes": 1604,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -6229,15 +4798,9 @@
       "path": "output/reports/scope_boundary_audit.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
       "size_bytes": 9527,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
-      "size_bytes": 9506,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6263,15 +4826,9 @@
       "path": "output/reports/security_posture_audit.json",
       "producer": "generate_sheaf_tracks.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
       "size_bytes": 10504,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
-      "size_bytes": 10504,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6299,11 +4856,7 @@
       "producer_configured": true,
       "sha256": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6",
       "size_bytes": 2247,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_manuscript",
         "validate_outputs"
@@ -6328,11 +4881,7 @@
       "producer_configured": true,
       "sha256": "e446420f2acdf84911ba5efe00360bc245a1d22eee1b499b157c10001de07e5c",
       "size_bytes": 271,
-<<<<<<< Updated upstream
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -6354,15 +4903,9 @@
       "path": "output/reports/si_tmaze_run_report.json",
       "producer": "simulate_si_tmaze.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "ed140aad44e9850357fd39419f7ac77c64e4f8cbb9117823ffe0142609b39683",
       "size_bytes": 890,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "fd834b08c1c0987ec5753ab96ec04fae817c44aeba7992888381ce654038f44f",
-      "size_bytes": 862,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs"
       ]
@@ -6387,15 +4930,9 @@
       "path": "output/reports/stale_artifact_report.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
       "size_bytes": 8846,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "97e24cc5885f4c95e50df9874d6892aaa2163624cddaee4e4799b02691a752b5",
-      "size_bytes": 8838,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"
@@ -6422,15 +4959,9 @@
       "path": "output/reports/visualization_quality_audit.json",
       "producer": "generate_integration_audit.py",
       "producer_configured": true,
-<<<<<<< Updated upstream
       "sha256": "696528a937668d83e047b94d30bfb99c16d5f39e6e4689600924385f4eede109",
       "size_bytes": 40025,
-      "source_commit": "5a265deb4dd453d6eeaf6c87d4024499c3ac6c7f",
-=======
-      "sha256": "36026ba1244fbeb7875586ca57739f09e47656204f16bc9438954edbee938f64",
-      "size_bytes": 39680,
-      "source_commit": "c87cd4c70fcae84503a5e5918bdab7b772c30c5f",
->>>>>>> Stashed changes
+      "source_commit": "65c03222d9c276874d5220457280d73b4f63c632",
       "validation_gates": [
         "validate_outputs",
         "validate_manuscript"

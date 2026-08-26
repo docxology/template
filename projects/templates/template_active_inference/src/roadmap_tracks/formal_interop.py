@@ -182,13 +182,7 @@ def build_model_checking_witnesses(project_root: Path) -> dict[str, Any]:
         "schema": "template_active_inference.model_checking_witnesses.v1",
         "rows": rows,
         "witness_count": len(rows),
-<<<<<<< Updated upstream
         "all_exhaustive": bool(rows) and all(row["exhaustive"] for row in rows),
-=======
-        "all_exhaustive": bool(rows) and all(
-            row["state_count"] > 0 and row["action_count"] >= 0 for row in rows
-        ),
->>>>>>> Stashed changes
         "all_passed": all(row["passed"] and not row["counterexamples"] for row in rows),
     }
 
