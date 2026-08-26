@@ -27,6 +27,7 @@ def _canonicalize_pdf_objects(objects: Sequence[object]) -> None:
     from pypdf.generic import ArrayObject, DictionaryObject, NameObject, StreamObject
 
     def visit(value: object) -> None:
+        """Recursively strip font-subset prefixes from one PDF object graph node."""
         if isinstance(value, StreamObject):
             # Never decode/re-encode raster image streams during metadata
             # canonicalization. pypdf's get_data() path can rewrite
