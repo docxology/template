@@ -7,7 +7,7 @@ image: template-bundle-vendored:2026-08-26 (id 58c35a2d1675), built from output/
 1.01s call     source/tests/test_analysis_coverage.py::TestMainErrors::test_main_reraises_file_not_found_error
 1.01s call     source/tests/test_analysis_coverage.py::TestMainErrors::test_main_reraises_import_error
 1.01s call     source/tests/test_analysis_coverage.py::TestMainErrors::test_main_reraises_template_error
-242 passed, 4 deselected, 17 warnings in 19.40s
+242 passed, 4 deselected, 17 warnings in 19.40s <!-- noqa: drift-counts --> (dated historical receipt; live counts: docs/_generated/COUNTS.md)
 PYTEST_EXIT=0
 RUN1_EXIT=0
 
