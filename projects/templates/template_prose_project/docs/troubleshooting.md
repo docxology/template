@@ -181,8 +181,9 @@ collects nothing. A green exit with **zero collected tests is not a pass.**
 resolve when pytest runs from the repo root. The canonical command and the
 runner both measure against the **repo-root** `pyproject.toml` coverage
 config — that is the number the 90% gate enforces (live % →
-Falling below it fails the gate outright; exceeding it passes.
 [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md)).
+Falling below it fails the gate outright; exceeding it passes (a run with
+zero collected tests is the known-wrong input this fails closed on).
 
 ## Where to look
 

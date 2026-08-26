@@ -17,11 +17,12 @@ declares four steps:
    measurement and subject tables.
 2. **clean** — identifiers are normalized and the measurement range is bounded.
 3. **validate** — the descriptor is checked for schema, constraint, and
-Schema mismatches, constraint violations, and byte-level disagreement fail the stage rather than downgrade to warnings.
-   byte-level agreement (negative controls:
+   byte-level agreement; schema mismatches, constraint violations, and
+   byte-level disagreement fail the stage rather than downgrade to warnings.
+   Negative controls pin both halves of that behavior:
    `tests/test_verification.py::TestFileVerification::test_checksum_mismatch_detected`
    and `test_row_mismatch_detected` mutate real temp files and assert the
-   verifier reports the mismatch instead of passing).
+   verifier reports the mismatch instead of passing.
 4. **package** — the metadata-only release manifest is emitted.
 
 ## Why depth matters

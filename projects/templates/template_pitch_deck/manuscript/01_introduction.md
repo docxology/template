@@ -11,11 +11,11 @@ makes a real pitch land badly with a sophisticated audience.
 
 `template_pitch_deck` treats a pitch deck the same way this repository treats
 a manuscript: as a build artifact with a single source of truth, a validation
-gate, and a reproducibility guarantee. Three properties make that possible.
-A deck missing required sections fails the gate before render ever starts.
-(The gates carry proof-of-detection tests — for example
+gate (unresolved tokens or clichéd phrasing fail the audit before any render,
+never warn), and a reproducibility guarantee. Three properties make that
+possible, and each gate carries proof-of-detection tests: for example,
 `tests/test_cliche_lint.py::test_lint_text_detects_known_cliche` fires the
-cliché gate on a deliberately generic phrase.)
+cliché gate on a deliberately generic phrase.
 
 **One content source, six artifacts.** `manuscript/deck_content_{short,medium,long}.yaml`
 define the slide-by-slide narrative at three lengths; the live token builder (`src/deck_tokens.py`)
@@ -33,7 +33,6 @@ source has no corresponding resolved value, and a rendered artifact's
 extracted text is checked to contain zero leftover `{{` literals.
 
 **Cliché is a lint, not a vibe.** `src/cliche_lint.py` runs a word-boundary
-This is an explanatory analogy — the coverage mechanism does not certify narrative quality; the analogy carries that weight, not the tooling.
 denylist of pitch-deck stock phrases over every resolved slide before
 render. A pitch that reads as generic — regardless of how factually accurate
 it is — fails the same way an uncovered line of code fails a coverage gate.
