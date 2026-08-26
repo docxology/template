@@ -49,7 +49,11 @@ tree instead of copying volatile literals into prose.
   nonignored project input, including source, tests, scripts, configuration,
   data, manuscripts, and dependency locks. Generated output plus runtime,
   build, cache, and environment artifacts are excluded; changing the inventory
-  contract requires a schema/mode bump and canonical provenance refresh. Active's
+  contract without a schema/mode bump fails closed with a `RuntimeError` during provenance recomputation and requires canonical provenance refresh; a
+A shape change shipped without the version bump is exactly the known-wrong inventory state this requirement exists to prevent.
+Identity receipt validation supplies the failure case: mutating inventory-bearing content without the schema/mode bump yields hashes that disagree with the canonical provenance and the refresh fails.
+  stale source-inventory mode fails closed with a `RuntimeError` during
+  provenance recomputation. Active's
   repository-level support closure has its own recorded identity: contract-bearing
   files are content-hashed, while generated `docs/_generated/COUNTS.md` and the
   sibling-exemplar directory marker bind only path, type, and existence to avoid a

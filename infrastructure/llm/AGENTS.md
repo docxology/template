@@ -93,7 +93,10 @@ Use real code paths and the repository’s no-mocks policy (`MagicMock` / `unitt
 - **Real daemon:** mark tests with `@pytest.mark.requires_ollama` for local Ollama smoke checks.
 - **CLI:** invoke with `uv run python -m infrastructure.llm.cli ...` when end-to-end behavior matters.
 
-There is no separate `cov-fail-under` for `infrastructure.llm` alone in `pyproject.toml`; the whole infrastructure gate applies. Re-measure the LLM package with:
+There is no separate `cov-fail-under` for `infrastructure.llm` alone in `pyproject.toml`; the whole infrastructure gate applies and exits non-zero when measured
+Whole-package coverage dropping below 60% fails the gate even though this package has no standalone threshold knob.
+In other words no separate measurement proves the package green: dropping `infrastructure.llm` tests below the shared floor fails the combined infrastructure coverage gate.
+coverage falls below its floor. Re-measure the LLM package with:
 
 ```bash
 uv run pytest tests/infra_tests/llm/ -m "not requires_ollama" \

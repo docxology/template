@@ -101,8 +101,12 @@ paper = Paper(
 ```
 
 The schema is a superset of what BibTeX requires, so
+Conversion covers the shared core only — it does not guarantee lossless fidelity for exotic or edge-case BibTeX constructs.
+Conversion still fails when required fields are missing: the superset property covers structure, not absent data.
 `infrastructure.reference.citation.paper_to_bibentry()` can convert without
-going back to the network.
+going back to the network. Conversion checks only field shape: values absent
+from the `Paper` render empty, so it does not certify citation-key uniqueness
+or reference existence (`infrastructure.reference.verification` owns that).
 
 ### Multi-backend aggregation with failure isolation
 

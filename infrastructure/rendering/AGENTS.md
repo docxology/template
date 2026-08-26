@@ -95,7 +95,11 @@ renderers without owning validation policy or project analysis.
   character-count or text-box-height estimates. Diagram figures likewise use
   one aspect-preserving fit inside the shared header/footer-safe content box;
   section-divider title and rule bands must remain structurally disjoint in
-  both formats.
+Bands that overlap produce invalid geometry and are detected during layout validation, which then fails.
+  both formats; rendering fails when title fit is missing or slide text enters
+  the protected footer band, raising `RenderingError` before any deck is
+  written. Overlapping divider bands are the known-wrong layout the slide
+  layout tests assert neither format can emit.
 - `formalism.lua` must be applied by **every** writer that applies
   `pandoc-crossref`, and always **before** it and before `--citeproc`: the
   combined PDF (`_pdf_combined_pandoc.py`), combined DOCX and EPUB
