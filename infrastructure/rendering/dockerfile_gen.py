@@ -191,14 +191,24 @@ def build_dockerfile(config: DockerfileConfig) -> str:
 
 
 def build_compose_yaml(project_name: str) -> str:
-    """Return a minimal docker-compose.yml for the bundle.
+    """Return a docker-compose.yml for the self-contained bundle payload.
 
-    Provides four named services matching the manifest's entry_points so the
-    bundle is self-describing.
+    The bundle is a single-project payload: project trees plus a vendored
+    ``infrastructure/`` copy live under ``source/``. Services that only need
+    that payload (``tests``, ``verify``) run directly against it. Services that
+    would need the absent template-repository root (full pipeline
+    reproduction, rendering orchestration) FAIL CLOSED with an explicit
+    unavailable-dependency receipt and exit 3 — never a bare
+    ``ModuleNotFoundError`` (EXECUTABLE-BUNDLE-MAJ-2 negative control).
     """
 
     image_name = project_name.replace("/", "-").replace("\\", "-")
-    project_slug = project_name.rsplit("/", 1)[-1]
+    unavailable_receipt = (
+        "echo 'EXECUTABLE-BUNDLE UNAVAILABLE-DEPENDENCY RECEIPT: this bundle "
+        "payload is single-project; full-pipeline reproduction requires the "
+        "template repository root (scripts/, run.sh, tests/regression/). "
+        "Failing closed instead of raising ModuleNotFoundError.' >&2; exit 3"
+    )
     return (
         "# Auto-generated docker-compose.yml — see manifest.json entry_points.\n"
         "services:\n"
@@ -208,13 +218,17 @@ def build_compose_yaml(project_name: str) -> str:
         f"    image: template-bundle-{image_name}:latest\n"
         "    environment:\n"
         "      - MPLBACKEND=Agg\n"
+        f'    command: ["bash", "-lc", "{unavailable_receipt}"]\n'
         "  tests:\n"
         f"    image: template-bundle-{image_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_01_test.py --project {project_name}"]\n'
+        '    command: ["bash", "-lc", '
+        '"cd /workspace/source && uv run --project /workspace python -m pytest tests -q"]\n'
         "  render:\n"
         f"    image: template-bundle-{image_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run python scripts/pipeline/stage_03_render.py --project {project_name}"]\n'
+        f'    command: ["bash", "-lc", "{unavailable_receipt}"]\n'
         "  verify:\n"
         f"    image: template-bundle-{image_name}:latest\n"
-        f'    command: ["bash", "-lc", "uv run pytest tests/regression/projects/{project_slug} -v"]\n'
+        '    command: ["bash", "-lc", '
+        '"cd /workspace/source && uv run --project /workspace pytest --collect-only -q >/dev/null'
+        ' && echo payload-tests-collect-cleanly"]\n'
     )

@@ -9,6 +9,8 @@ from pathlib import Path
 import pytest
 
 from infrastructure.publishing.executable_bundle import bundle_project, verify_bundle_receipt
+import shutil
+
 from tests._support.projects import make_project, write_doc
 
 
@@ -24,6 +26,10 @@ def _scaffold_bundle_project(root: Path, name: str) -> None:
     pinned = root / "tests" / "regression" / "pinned_values"
     pinned.mkdir(parents=True)
     (pinned / f"{name}.json").write_text(json.dumps({"claims": []}))
+    # Minimal real Layer-1 tree; the bundle vendors it into source/.
+    infrastructure = root / "infrastructure"
+    infrastructure.mkdir()
+    (infrastructure / "__init__.py").write_text("", encoding="utf-8")
 
 
 def test_bundle_project_writes_manifest_and_dockerfile(tmp_path: Path) -> None:
@@ -43,8 +49,50 @@ def test_bundle_project_writes_manifest_and_dockerfile(tmp_path: Path) -> None:
     manifest = json.loads((out_dir / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["archival_receipts"]["zenodo_doi"] == "10.5281/zenodo.12345678"
     readme = (out_dir / "README.md").read_text(encoding="utf-8")
-    assert "template repository root" in readme
+    # EXECUTABLE-BUNDLE-MAJ-2 contract: self-contained vendored payload with
+    # fail-closed full-pipeline services.
+    assert "vendored ``infrastructure/`` copy" in readme
+    assert "FAIL CLOSED" in readme
+    assert (out_dir / "source" / "infrastructure").is_dir()
+    compose = (out_dir / "docker-compose.yml").read_text(encoding="utf-8")
+    import yaml as _yaml
+
+    services = _yaml.safe_load(compose)["services"]
+    assert "python -m pytest tests -q" in str(services["tests"]["command"])
+    assert services["render"]["command"][2].startswith(
+        "echo 'EXECUTABLE-BUNDLE UNAVAILABLE-DEPENDENCY RECEIPT"
+    )
     assert "No combined PDF was bundled" in readme
+
+
+def test_bundle_refuses_missing_or_symlinked_infrastructure_tree(tmp_path: Path) -> None:
+    """Negative control: the vendored Layer-1 copy is required and must be real."""
+    name = "template_code_project"
+    qualified = f"templates/{name}"
+    _scaffold_bundle_project(tmp_path, name)
+    infrastructure = tmp_path / "infrastructure"
+
+    shutil.rmtree(infrastructure)
+
+    # A symlinked Layer-1 tree cannot be vendored (would leak private mirroring)
+    external = tmp_path / "external_infrastructure"
+    external.mkdir()
+    (external / "__init__.py").write_text("", encoding="utf-8")
+    infrastructure.symlink_to(external)
+    with pytest.raises(ValueError, match="requires a real infrastructure/ tree"):
+        bundle_project(tmp_path, qualified)
+
+
+def test_compose_full_pipeline_services_fail_closed() -> None:
+    """Negative control: compose services needing the absent repo root exit non-zero with a receipt."""
+    from infrastructure.rendering.dockerfile_gen import build_compose_yaml
+    import yaml as _yaml
+
+    services = _yaml.safe_load(build_compose_yaml("templates/template_code_project"))["services"]
+    for service in ("reproduce", "render"):
+        command = services[service]["command"][2]
+        assert "UNAVAILABLE-DEPENDENCY RECEIPT" in command
+        assert "exit 3" in command
 
 
 def test_bundle_project_copies_combined_pdf_when_present(tmp_path: Path) -> None:

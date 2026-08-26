@@ -30,6 +30,13 @@ _BUNDLE_EXCLUDED_DIRECTORY_NAMES = frozenset(
     {".git", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 )
 _BUNDLE_EXCLUDED_FILE_SUFFIXES = frozenset({".pyc", ".pyo"})
+# Payload trees copied from the project directory itself.
+_BUNDLE_PROJECT_SUBTREES = ("src", "scripts", "manuscript", "tests")
+# Layer-1 trees vendored from the template repository root so the bundle is
+# self-contained: project ``src`` modules legitimately import
+# ``infrastructure.*``, so an offline container without them dies at collection
+# with a bare ``ModuleNotFoundError`` (EXECUTABLE-BUNDLE-MAJ-2).
+_BUNDLE_REPO_VENDORED_SUBTREES = ("infrastructure",)
 
 
 def _resolve_combined_pdf(repo_root: Path, project_name: str, project_dir: Path) -> Path | None:
@@ -100,12 +107,18 @@ def _write_bundle_readme(output_dir: Path, project_name: str, *, pdf_copied: boo
     )
     reproduce_section = (
         "## Reproduce\n\n"
-        "The bundled Dockerfile copies project ``source/`` only. Full pipeline "
-        "reproduction still requires this template repository root "
-        "(``infrastructure/``, root ``scripts/``, and ``uv.lock``).\n\n"
+        "The payload is self-contained for its vendored scope: ``source/`` "
+        "carries the project (src/scripts/manuscript/tests) plus a vendored "
+        "``infrastructure/`` copy, so the compose ``tests`` and ``verify`` "
+        "services run directly against it offline:\n\n"
         "```\n"
-        "docker compose run reproduce\n"
-        "```\n"
+        "docker compose run tests\n"
+        "docker compose run verify\n"
+        "```\n\n"
+        "Full-pipeline services (``reproduce``, ``render``) intentionally FAIL "
+        "CLOSED with an unavailable-dependency receipt: they require the "
+        "template repository root itself (root ``scripts/``, ``run.sh``, "
+        "``tests/regression/``), which no single-project bundle carries.\n"
     )
     (output_dir / "README.md").write_text(
         f"# Executable Bundle — {project_name}\n\n"
@@ -183,7 +196,7 @@ def bundle_project(
     if source_dst.exists():
         shutil.rmtree(source_dst)
     source_dst.mkdir(parents=True, exist_ok=True)
-    for sub in ("src", "scripts", "manuscript", "tests"):
+    for sub in _BUNDLE_PROJECT_SUBTREES:
         sub_src = project_dir / sub
         if sub_src.exists():
             shutil.copytree(
@@ -192,6 +205,21 @@ def bundle_project(
                 dirs_exist_ok=True,
                 ignore=_bundle_copy_ignore,
             )
+
+    # Vendor Layer-1 (currently ``infrastructure/``) from the template root so
+    # the offline container can import everything the bundled code imports.
+    for vendored_tree in _BUNDLE_REPO_VENDORED_SUBTREES:
+        vendored_src = repo_root / vendored_tree
+        if vendored_src.is_symlink() or not vendored_src.is_dir():
+            raise ValueError(
+                f"executable bundle requires a real {vendored_tree}/ tree at the repo root: {vendored_src}"
+            )
+        shutil.copytree(
+            vendored_src,
+            source_dst / vendored_tree,
+            dirs_exist_ok=True,
+            ignore=_bundle_copy_ignore,
+        )
 
     pdf_dst = _copy_pdf_artifact(repo_root, project_name, project_dir, output_dir)
     _write_bundle_readme(output_dir, project_name, pdf_copied=pdf_dst is not None)
@@ -211,7 +239,7 @@ def _reject_symlinks(root: Path) -> None:
     if root.is_symlink():
         raise ValueError(f"executable bundle refuses symlinked project root: {root}")
     paths: list[Path] = []
-    for subdirectory in ("src", "scripts", "manuscript", "tests"):
+    for subdirectory in (*_BUNDLE_PROJECT_SUBTREES, *_BUNDLE_REPO_VENDORED_SUBTREES):
         candidate = root / subdirectory
         if candidate.exists():
             paths.extend(path for path in (candidate, *candidate.rglob("*")) if not _is_excluded_bundle_name(path.name))
