@@ -59,9 +59,7 @@ def test_bundle_project_writes_manifest_and_dockerfile(tmp_path: Path) -> None:
 
     services = _yaml.safe_load(compose)["services"]
     assert "python -m pytest tests -q" in str(services["tests"]["command"])
-    assert services["render"]["command"][2].startswith(
-        "echo 'EXECUTABLE-BUNDLE UNAVAILABLE-DEPENDENCY RECEIPT"
-    )
+    assert services["render"]["command"][2].startswith("echo 'EXECUTABLE-BUNDLE UNAVAILABLE-DEPENDENCY RECEIPT")
     assert "No combined PDF was bundled" in readme
 
 
