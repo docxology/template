@@ -53,3 +53,21 @@ tree (same failure mode session D documented); push completed with
 `main...origin/main` at 0 divergence. All closed-row work
 (DOC-NEGCTRL-HARDEN-MED-1 through part 4 + verification follow-ups;
 EXECUTABLE-BUNDLE-MAJ-2 fail-closed contract) is now public.
+
+## Session addendum (Dr. PAI fleet orchestrator session, 11:11–12:55 PDT)
+
+Lane: DOC-NEGCTRL-HARDEN-MED-1 triage via three parallel leaf agents + independent verification; EXECUTABLE-BUNDLE-MAJ-2 acceptance attempt.
+
+Verified by this session:
+- Pre-work baseline: check_backlog --strict green (0 errors), counts.py --check in sync, audit baseline captured (58 gate-negative-control grep hits).
+- Detector improvement committed and tested by this checkout's agents: hyphenated/inflected fail-closed recognition + _relative() path-resolution fix with positive/negative regression tests (commit 008b0f0d0).
+- Final doc state independently re-verified after all concurrent lanes settled: gate-negative-control findings = 0, symbol-documentation = 0 (audit_documentation.py); check_backlog --strict still green.
+- Stale compose regression test fixed (test_build_compose_yaml_verify_service_collects_payload_tests) after the vendored-payload bundle contract landed; rendering+publishing bundle suites pass (31 passed).
+- Commit 277f75f88: verify-service contract test rename for the self-contained bundle payload.
+
+Blocked, reported honestly:
+- Offline-container receipt rerun (`docker run --rm --network none ... pytest source/tests`) could not complete here: host disk filled during a redundant TeX-heavy image rebuild (texlive-fonts-extra ~629MB layer), crashed colima/containerd, and required cleanup + daemon restart. The first-generation image reproduced exactly the pre-fix failure mode (bare ModuleNotFoundError on infrastructure import inside --network none container, exit 2) — corroborating the backlog row's original finding; the post-fix vendored payload IS present in the regenerated bundle on disk (source/infrastructure/ verified). Image cleanup and daemon recovery done.
+
+Left untouched intentionally:
+- Exemplar output/ mutations and manuscript drift under projects/templates/* produced by other sessions' gate-test runs (not mine to commit or revert).
+- Sibling-lane report files PROJECT_STATE_REPORT_2026-08-26_session*.md (owners unknown, do not delete).
