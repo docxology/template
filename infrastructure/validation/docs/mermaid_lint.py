@@ -47,6 +47,37 @@ _MERMAID_FENCE = re.compile(
 _KIND_RE = re.compile(r"^\s*(?P<kind>[A-Za-z][A-Za-z0-9_-]*)")
 _MMDC_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TIMEOUT", "30"))
 _MMDC_TOTAL_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT", "300"))
+# Floor for the unscaled (legacy) total budget when scaling applies.
+_LEGACY_TOTAL_FLOOR_SECONDS = 300.0
+# Real renders average well under one second per diagram on idle hardware,
+# but loaded machines (parallel agent sessions, cold Chrome starts) routinely
+# triple that. A fixed wall-clock budget sized from a smaller doc tree turns
+# repo growth into false per-block failures ("total timeout ... before
+# rendering"), indicting diagrams that were never attempted. Scale the
+# default budget with the discovered block count instead.
+_SECS_PER_BLOCK = float(os.environ.get("TEMPLATE_MERMAID_LINT_SECONDS_PER_BLOCK", "2.0"))
+# Cap so a discovery bug counting non-block matches cannot produce an
+# unbounded lint run.
+_MAX_SCALED_BUDGET_SECONDS = 3600.0
+
+
+def scaled_total_timeout(block_count: int) -> float:
+    """Return the total lint budget for ``block_count`` blocks.
+
+    The budget scales linearly with the discovered block count, floored at
+    ``_MMDC_TOTAL_TIMEOUT_SECONDS`` (the value of
+    ``TEMPLATE_MERMAID_LINT_TOTAL_TIMEOUT``, which therefore still raises the
+    floor when raised) and floored at the legacy 300s fixed budget so small
+    trees behave exactly as before. Capped so a discovery bug counting
+    non-block matches cannot produce an unbounded run. Callers passing an
+    explicit ``total_timeout_seconds`` to :func:`validate_blocks` bypass this
+    computation entirely.
+    """
+    scaled = min(
+        _MAX_SCALED_BUDGET_SECONDS,
+        max(_LEGACY_TOTAL_FLOOR_SECONDS, block_count * _SECS_PER_BLOCK),
+    )
+    return max(scaled, _MMDC_TOTAL_TIMEOUT_SECONDS)
 _MMDC_BATCH_TIMEOUT_SECONDS = float(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_TIMEOUT", "60"))
 _MMDC_BATCH_SIZE = max(1, int(os.environ.get("TEMPLATE_MERMAID_LINT_BATCH_SIZE", "10")))
 # Transient mmdc timeouts under machine load (cold Chrome starts, CPU
@@ -384,7 +415,7 @@ def validate_blocks(
     mmdc_path: str | None = None,
     chrome_path: str | None = None,
     timeout_seconds: float = _MMDC_TIMEOUT_SECONDS,
-    total_timeout_seconds: float = _MMDC_TOTAL_TIMEOUT_SECONDS,
+    total_timeout_seconds: float | None = None,
     retries_on_timeout: int | None = None,
 ) -> list[ValidationFailure]:
     """Render each block with `mmdc` and return failures.
@@ -407,6 +438,10 @@ def validate_blocks(
             "binary is reachable via CHROME_EXECUTABLE_PATH or run "
             "`npx --no-install puppeteer browsers install chrome-headless-shell`."
         )
+    if total_timeout_seconds is None:
+        # Scale the default budget with the discovered workload (see
+        # ``scaled_total_timeout``); an explicit caller value is used verbatim.
+        total_timeout_seconds = scaled_total_timeout(len(blocks))
     chrome_resolved = _resolve_chrome(chrome_path)
     retries = _MMDC_RETRY_ON_TIMEOUT if retries_on_timeout is None else max(0, retries_on_timeout)
     failures: list[ValidationFailure] = []
@@ -593,5 +628,6 @@ __all__ = [
     "find_mermaid_blocks",
     "mmdc_available",
     "resolve_mmdc_executable",
+    "scaled_total_timeout",
     "validate_blocks",
 ]
