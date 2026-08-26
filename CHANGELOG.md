@@ -9,6 +9,19 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Documentation audit
+
+- Closed backlog row `DOC-NEGCTRL-HARDEN-MED-1`: every active gate/verifier
+  claim previously flagged by `scripts/audit/audit_documentation.py` as lacking
+  a nearby negative control now carries an explicit control sentence — either a
+  named known-wrong input that fails the check, a fail-closed rejection
+  statement, or an honest scoping limitation. The advisory
+  `gate-negative-control` finding count dropped from 58 to 0; the detector was
+  not relaxed for this (controls were added per owning surface, no bulk edits).
+  Supporting detector fix: `_FAILS_ON_WRONG_INPUT_RE` now recognizes hyphenated
+  and inflected `fail-closed` variants so truthful fail-closed claims stop
+  reading as unbacked (`test_gate_claim_audit_accepts_hyphenated_fail_closed_evidence`).
+
 ### Rendering
 
 - Slide decks now recover manuscript-declared macros (`\newcommand`,
