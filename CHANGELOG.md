@@ -23,6 +23,15 @@ not to the contents of any specific workspace.
   offline container on 2026-08-22. Negative controls:
   `test_bundle_refuses_missing_or_symlinked_infrastructure_tree` and
   `test_compose_full_pipeline_services_fail_closed`.
+- Closed backlog row `EXECUTABLE-BUNDLE-MAJ-1` with the full
+  **offline-container verification receipt**
+  ([`docs/maintenance/executable-bundle-offline-receipt-2026-08-26.md`](docs/maintenance/executable-bundle-offline-receipt-2026-08-26.md)):
+  image `template-bundle-vendored:2026-08-26` (id `58c35a2d1675`) built from the
+  regenerated bundle; with `--network none` the vendored payload runs its real
+  project suite (242 passed, pytest exit 0) and a full-pipeline compose service
+  fails closed with the explicit `UNAVAILABLE-DEPENDENCY RECEIPT` (exit 3), never
+  a bare `ModuleNotFoundError`. Environment note: the image build requires >= 4 GiB
+  VM memory on colima (2 GiB OOM-kills texlive unpacking, docker exit 137).
 
 ### Documentation audit
 
