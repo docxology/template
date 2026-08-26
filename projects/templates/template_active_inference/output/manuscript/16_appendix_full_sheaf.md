@@ -243,7 +243,7 @@ Lean modules under `lean/TemplateActiveInference/` declare horizon and coupling 
 
 <!-- sheaf-track:model_checking -->
 
-`sheaf-track:model_checking` binds `output/reports/model_checking_witnesses.json` and the Lean theorem inventories. The appendix claim is exactly 12 finite exhaustive witnesses with pass status `true`; Lean graph-world topology coverage is 4 generated topology ids with all-witnessed flag `true`.
+`sheaf-track:model_checking` binds `output/reports/model_checking_witnesses.json` and the Lean theorem inventories. The appendix claim is exactly 7 finite exhaustive witnesses with pass status `true`; Lean graph-world topology coverage is 4 generated topology ids with all-witnessed flag `true`.
 
 <!-- sheaf-track:theorem_traceability -->
 

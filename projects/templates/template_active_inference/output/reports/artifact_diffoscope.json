@@ -33,6 +33,7 @@
       "live_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
       "saved_content_sha256": "",
       "saved_sha256": "b40e3562a7e8a13c5b9c54f5f3d27d864549e5077f121b9041345f392747175a",
+<<<<<<< Updated upstream
       "source": "output/data/artifact_provenance.json"
     },
     {
@@ -44,6 +45,8 @@
       "live_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
       "saved_content_sha256": "",
       "saved_sha256": "8259ff1011b1a9512827bf6ae0a90c373b8bb8d222ab2c77d698feacdcca3c58",
+=======
+>>>>>>> Stashed changes
       "source": "output/data/artifact_provenance.json"
     },
     {

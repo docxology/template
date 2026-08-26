@@ -1,5 +1,5 @@
 {
-  "all_lane_summaries_ok": true,
+  "all_lane_summaries_ok": false,
   "all_proof_obligations_ok": true,
   "artifact_graph": {
     "output/data/analysis_statistics.json": {
@@ -4798,7 +4798,11 @@
     ],
     "schema": "template_active_inference.evidence_crosswalk.v1"
   },
-  "issues": [],
+  "issues": [
+    "output/reports/model_checking_witnesses.json: hash mismatch",
+    "output/reports/model_checking_witnesses.json: size mismatch",
+    "artifact_contract_index.json has incomplete or stale artifact contract rows"
+  ],
   "lane_summaries": {
     "analytical": {
       "all_ok": true,
@@ -4922,8 +4926,8 @@
       ]
     },
     "semantic": {
-      "all_ok": true,
-      "ok_count": 29,
+      "all_ok": false,
+      "ok_count": 28,
       "restriction_count": 29,
       "restrictions": [
         "adversarial_expected_failures",
@@ -5053,7 +5057,7 @@
     "manuscript_staleness_all_fresh": true,
     "manuscript_staleness_row_count": 322,
     "model_checking_all_passed": true,
-    "model_checking_witness_count": 12,
+    "model_checking_witness_count": 7,
     "param_sweep_grid_points": 21,
     "pipeline_track_count": 31,
     "precision_entropy_at_gamma_one_formatted": "1.1458",
@@ -5196,7 +5200,7 @@
     "visualization_statistics_backed_count": 7,
     "visualization_statistics_bridge_ok": true
   },
-  "ok": true,
+  "ok": false,
   "proof_obligations": [
     {
       "class": "semantic_restriction",
@@ -5696,7 +5700,7 @@
     "manuscript_staleness_row_count": 322,
     "model_checking_all_passed": true,
     "model_checking_exhaustive": true,
-    "model_checking_witness_count": 12,
+    "model_checking_witness_count": 7,
     "no_versioned_live_tracks": true,
     "policy_comparison_complete_grid": true,
     "policy_comparison_efe_rows_explained": true,
@@ -5773,7 +5777,7 @@
     "uncertainty_normalized": true,
     "uncertainty_row_count": 12,
     "validation_gate_index_count": 26,
-    "validation_spine_ok": true,
+    "validation_spine_ok": false,
     "visualization_figures_section_bound": true,
     "visualization_intent_metadata_complete": true,
     "visualization_paper_claims_complete": true,

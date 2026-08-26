@@ -386,12 +386,21 @@
         "output/reports/artifact_diffoscope.json": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7",
         "output/reports/artifact_license_audit.json": "e3bb1fa9bb7a21782048e79f414928873bad7750750d3001c24a6ce80b93769d",
         "output/reports/claim_evidence_audit.json": "84b5df7a8d29a4075dfbcfeb1c9ea4534f4729939fd1cde934f205108092ce95",
+<<<<<<< Updated upstream
         "output/reports/figure_hash_manifest.json": "8cfa2c9d69b1698c595125f901ed744dd63f6c1772114b2a283084b8b6faef4b",
         "output/reports/producer_completeness.json": "b599fad7d9b546d3f98a0d77f3efd2cc9c27d1d59ea3ba4338a41d329ad127b4",
         "output/reports/release_notes_evidence.json": "3b5af3ab9c0c215c392aa191a0b8aa9730ebac0bfde3845f68e61d0fa7d3491e",
         "output/reports/scope_boundary_audit.json": "178246924d4af6ddde249a4b7a9219e476008005e0ce0f3c3a4f032a91cdbf12",
         "output/reports/stale_artifact_report.json": "2c8941c5b9e036d421ec5ead14cbc22299e6937021389ccbff05bdde831d3358",
         "output/reports/visualization_quality_audit.json": "696528a937668d83e047b94d30bfb99c16d5f39e6e4689600924385f4eede109"
+=======
+        "output/reports/figure_hash_manifest.json": "b0eba7da1d61afd57112b077399fcda09aeaaaa306e09d178f926d25e804b679",
+        "output/reports/producer_completeness.json": "8d0aad956caf2c1944024a46a0a30524c885fbb37228ed27b77abd2f3abeaf17",
+        "output/reports/release_notes_evidence.json": "0b6af2fee35387d477450c5d590d84e6b744687fad62b5b61a2165fbf98c7414",
+        "output/reports/scope_boundary_audit.json": "e8c06e11b7b176df8d596460b9c3037cba43696f4e75bbd35694ae59f0602577",
+        "output/reports/stale_artifact_report.json": "97e24cc5885f4c95e50df9874d6892aaa2163624cddaee4e4799b02691a752b5",
+        "output/reports/visualization_quality_audit.json": "36026ba1244fbeb7875586ca57739f09e47656204f16bc9438954edbee938f64"
+>>>>>>> Stashed changes
       },
       "producer_script": "generate_integration_audit.py",
       "replay_method": "artifact_fingerprint"
@@ -457,7 +466,12 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
+<<<<<<< Updated upstream
         "output/data/evidence_field_index.json": "b8df7ab4a6d6ae1178b0065eab167e7f66ad4d39d5dac02cb568d8d4da692382",
+=======
+        "output/data/artifact_contract_index.json": "6eec3fd4ae7ed0cfce8ecaec815fa9d5d34e7e56d0188c44e329acd47bcf93bf",
+        "output/data/evidence_field_index.json": "aed73ec1746fe7cf39acdfb5a9c7edc19101bd1cd620f7d2a0529a8000dc4384",
+>>>>>>> Stashed changes
         "output/data/proof_dependency_graph.json": "e262d5028c80a4d3088773e47bc2789969f0a98d298f7f95ffc6986067f9746f",
         "output/data/scholarship_source_matrix.json": "f2ba02c11322cbf440383f90dc31fd64c3271afb3c6e9bdae401c8559eeb35e6",
         "output/data/sensitivity_sweep.json": "c73577bdd019e2163160fbb846466e6b468fff59392fb2e0249b1ed890091754",
@@ -474,10 +488,17 @@
         "output/reports/blocked_scope_manifest.json": "b1198f578ac61f5f75a1da8eae54fc22d6241ad10023c848b0b94ef11433d022",
         "output/reports/counterexample_matrix.json": "75f80abc1e2c8cb1053f637727b2fd3f161831b6f39e48bec76c399b2df7c3a2",
         "output/reports/model_checking_witnesses.json": "b46a37c57334270ce00fae37b89657b1f2a9bde11dadb5e06aa6a294bcc34eef",
+<<<<<<< Updated upstream
         "output/reports/release_attestation.json": "d15691cc9efdce7dc7e3559d8da366139adf9c1ff17f4edd939543478f6cb66d",
         "output/reports/release_bundle_manifest.json": "5253dc7b949f83100734dede83e41c2ada73b59765a281ec490fc4d00c68aec7",
         "output/reports/security_posture_audit.json": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249",
         "output/reports/sheaf_render_log.json": "32ba5733e8ea1f5100bf8d263c5695ed4382e16d93b855ba8fc3b8d4d3a846b6"
+=======
+        "output/reports/release_attestation.json": "ca59fa8fd9ff7a39d46a5ab63dddbd86cecb8d7c4ea6fed872ddbae6873816d3",
+        "output/reports/release_bundle_manifest.json": "fd0c925047c40d49c8b532a7849090303ab2c62cd6029d0b47c70399fdecc342",
+        "output/reports/security_posture_audit.json": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
+        "output/reports/sheaf_render_log.json": "747a62db51fe9bf6308afe199c4bf2a5adcb7ea9eb54386230a65d19374bebc0"
+>>>>>>> Stashed changes
       },
       "producer_script": "generate_sheaf_tracks.py",
       "replay_method": "artifact_fingerprint"
@@ -499,8 +520,13 @@
       "input_config_hash": "b54774cebfb76660995a5898369d64b4f06942a9669dd58911cbd00c69204a03",
       "matched": true,
       "output_hashes": {
+<<<<<<< Updated upstream
         "output/figures/figure_registry.json": "ea25261680ef2abcd46a98257a2124e8ca052ff956ff3a7e27c78a695be1c2b8",
         "output/reports/manuscript_staleness_report.json": "0818dc6b93a9dec670f5c0b222cf529fba3c6dedc3a7a89f0dbf0116f16fbb60"
+=======
+        "output/data/manuscript_variables.json": "1d1d57fe8ddca405e03b73499d9a6fec458c5c04e5c565a702b707edfd04fdb3",
+        "output/reports/manuscript_staleness_report.json": "d0efcf3605cd0d9ce50adad9751d103996b6b6300b9ca2dde92595c0c4ef0b3f"
+>>>>>>> Stashed changes
       },
       "producer_script": "z_generate_manuscript_variables.py",
       "replay_method": "artifact_fingerprint"

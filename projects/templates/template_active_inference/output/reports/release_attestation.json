@@ -1,8 +1,14 @@
 {
   "all_attested": true,
+<<<<<<< Updated upstream
   "attestation_hash": "371f1386655c729f018111b04fabf2a1ddb2b6215dfa4bf52e066b8b973355cc",
   "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
   "row_count": 8,
+=======
+  "attestation_hash": "a5022cf0346cf1c41af7af5d5905cb7dd67c0ea88f7f09f34b85a9f28e176f60",
+  "bundle_hash": "22d2d6fda2509614d132d2349ddf9f6f12f8194eb595bd3f84947946a5688255",
+  "row_count": 7,
+>>>>>>> Stashed changes
   "rows": [
     {
       "authority": "stage_04_validate",
@@ -12,7 +18,11 @@
       "source": "output/reports/validation_report.json"
     },
     {
+<<<<<<< Updated upstream
       "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
+=======
+      "bundle_hash": "22d2d6fda2509614d132d2349ddf9f6f12f8194eb595bd3f84947946a5688255",
+>>>>>>> Stashed changes
       "deferred_until_validation": false,
       "id": "release_bundle",
       "passed": true,

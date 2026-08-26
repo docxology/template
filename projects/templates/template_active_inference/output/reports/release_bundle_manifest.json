@@ -1,15 +1,26 @@
 {
   "all_copied_outputs_match_or_deferred": true,
   "all_required_sources_present": true,
+<<<<<<< Updated upstream
   "artifact_count": 36,
   "bundle_hash": "e225c29dcf5e77acb4ef2fd1ff82d9a931113b83e5a59bab892ef4817db66390",
+=======
+  "artifact_count": 38,
+  "bundle_hash": "22d2d6fda2509614d132d2349ddf9f6f12f8194eb595bd3f84947946a5688255",
+>>>>>>> Stashed changes
   "copied_output_parity": {
     "all_copied_outputs_match": false,
     "all_copied_outputs_match_or_deferred": true,
+<<<<<<< Updated upstream
     "all_required_sources_present": true,
     "copied_root": "output/templates/template_active_inference",
     "copied_root_exists": false,
     "parity_authority": "stage_05_copy",
+=======
+    "all_required_sources_present": false,
+    "copied_root": "<repo-root>/output/templates/template_active_inference",
+    "copied_root_exists": false,
+>>>>>>> Stashed changes
     "pre_copy_stage": true,
     "row_count": 36,
     "rows": [
@@ -24,7 +35,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "a50a9ef6c5a1cc4fda99025410e9e943bed4934a1e47a42681300c30aee5d2aa",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -52,7 +67,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "9db9953c4c1517691b9aa4681498a46f46a743bdbf975b14903c787558f30181",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -66,7 +85,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "99e5909cc31c0462c2356af986359c7f8a379eea70b119d5c99eb812d250e0a3",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -220,7 +243,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -248,7 +275,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "f9e163d20ae4d0f9a14fa702824ea576604350cc92a098aa90cbf510d623b4b6",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -262,7 +293,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "83ec0b08db4b50926c12fc25438c2bc72608bbbdd798c0679d74f63e7501f3c9",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -416,7 +451,11 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b",
+>>>>>>> Stashed changes
         "status": "deferred"
       },
       {
@@ -514,7 +553,23 @@
         "hash_matches": false,
         "matches_when_copied": true,
         "source_exists": true,
+<<<<<<< Updated upstream
         "source_sha256": "",
+=======
+        "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357",
+        "status": "deferred"
+      },
+      {
+        "artifact": "output/reports/release_attestation.json",
+        "comparison_deferred_until_copy": true,
+        "copied_exists": false,
+        "copied_path": "reports/release_attestation.json",
+        "copied_sha256": "",
+        "hash_matches": false,
+        "matches_when_copied": true,
+        "source_exists": true,
+        "source_sha256": "28b391177b3f60c7605b01ff6ee458f08d7ef3e68ebd72fcf1625e8ffa728a32",
+>>>>>>> Stashed changes
         "status": "deferred"
       }
     ]
@@ -528,7 +583,11 @@
       "hash_cycle_excluded": true,
       "required_deliverable": true,
       "source_exists": true,
+<<<<<<< Updated upstream
       "source_sha256": ""
+=======
+      "source_sha256": "a50a9ef6c5a1cc4fda99025410e9e943bed4934a1e47a42681300c30aee5d2aa"
+>>>>>>> Stashed changes
     },
     {
       "artifact": "output/data/validation_dependency_graph.json",
@@ -546,7 +605,11 @@
       "hash_cycle_excluded": true,
       "required_deliverable": true,
       "source_exists": true,
+<<<<<<< Updated upstream
       "source_sha256": ""
+=======
+      "source_sha256": "9db9953c4c1517691b9aa4681498a46f46a743bdbf975b14903c787558f30181"
+>>>>>>> Stashed changes
     },
     {
       "artifact": "output/reports/replay_matrix.json",
@@ -555,7 +618,11 @@
       "hash_cycle_excluded": true,
       "required_deliverable": true,
       "source_exists": true,
+<<<<<<< Updated upstream
       "source_sha256": ""
+=======
+      "source_sha256": "99e5909cc31c0462c2356af986359c7f8a379eea70b119d5c99eb812d250e0a3"
+>>>>>>> Stashed changes
     },
     {
       "artifact": "output/data/sensitivity_sweep.json",
@@ -654,7 +721,11 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
+<<<<<<< Updated upstream
       "source_sha256": "d5417528780326a1cae12728829ab25307429e88838f2c7b709f982dd708a249"
+=======
+      "source_sha256": "db289c50fe7443c550a4d249a22bd3ab126dea0dd3ee9c6d41f663d5dde5bae4"
+>>>>>>> Stashed changes
     },
     {
       "artifact": "output/data/track_lane_matrix.json",
@@ -672,7 +743,11 @@
       "hash_cycle_excluded": true,
       "required_deliverable": true,
       "source_exists": true,
+<<<<<<< Updated upstream
       "source_sha256": ""
+=======
+      "source_sha256": "f9e163d20ae4d0f9a14fa702824ea576604350cc92a098aa90cbf510d623b4b6"
+>>>>>>> Stashed changes
     },
     {
       "artifact": "output/figures/si_belief_trajectory.gif",
@@ -780,7 +855,11 @@
       "hash_cycle_excluded": false,
       "required_deliverable": true,
       "source_exists": true,
+<<<<<<< Updated upstream
       "source_sha256": "5952226fe7ac56a942f04b01166fbf73e5037f4112c5f50a6f66347db267b7d7"
+=======
+      "source_sha256": "e69283e847dc9f5b5a9b6864f5c3fcb05796febcf74c19bfac23c56158db664b"
+>>>>>>> Stashed changes
     },
     {
       "artifact": "output/data/proof_extraction_index.json",
@@ -844,6 +923,16 @@
       "required_deliverable": true,
       "source_exists": true,
       "source_sha256": "5f7eff87722a26b25e058ac352dab160b4b1513a9cab54e6276e0c88cd148357"
+<<<<<<< Updated upstream
+=======
+    },
+    {
+      "artifact": "output/reports/release_attestation.json",
+      "deferred_until_render": false,
+      "required_deliverable": true,
+      "source_exists": true,
+      "source_sha256": "28b391177b3f60c7605b01ff6ee458f08d7ef3e68ebd72fcf1625e8ffa728a32"
+>>>>>>> Stashed changes
     }
   ],
   "schema": "template_active_inference.release_bundle_manifest.v1",
