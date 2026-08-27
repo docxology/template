@@ -71,9 +71,7 @@ MD_GLOB = "*.md"
 #: not long-lived documentation: their project references describe checkout
 #: state at a moment in time, so consistency linters must not treat them as
 #: living docs. Mirrors the rationale for excluding ``docs/audit/``.
-DATED_REPORT_ROOT_MD = re.compile(
-    r"^(?:DEEP_PASS|PROJECT_STATE_REPORT)_\d{4}-\d{2}-\d{2}"
-)
+DATED_REPORT_ROOT_MD = re.compile(r"^(?:DEEP_PASS|PROJECT_STATE_REPORT)_\d{4}-\d{2}-\d{2}")
 
 FENCE_RE = re.compile(
     r"^[ \t]*(?P<fence>`{3,}|~{3,}).*?\n.*?\n[ \t]*(?P=fence)",

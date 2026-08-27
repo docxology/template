@@ -134,6 +134,29 @@ def test_registry_replacement_uses_exact_alt_and_src_attributes(tmp_path: Path) 
     assert 'alt="Short visible caption"' not in rendered
 
 
+def test_registry_replacement_preserves_latex_backslashes_in_alt(tmp_path: Path) -> None:
+    """Registry alt text with LaTeX backslashes must not break re.sub replacement."""
+    registry_path = tmp_path / "figure_registry.json"
+    rich_alt = r"Phase portrait with \Omega resistance and \delta perturbation."
+    registry_path.write_text(
+        json.dumps({"fig:dense": {"filename": "dense.png", "alt": rich_alt}}),
+        encoding="utf-8",
+    )
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="figures/dense.png" '
+        'alt="Short visible caption"><figcaption>Visible caption.</figcaption>'
+        "</figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+
+    rendered = html_file.read_text(encoding="utf-8")
+    assert f'alt="{html.escape(rich_alt, quote=True)}"' in rendered
+    assert 'alt="Short visible caption"' not in rendered
+
+
 def test_labelled_html_figure_rejects_duplicate_registry_filename_owners(tmp_path: Path) -> None:
     registry_path = tmp_path / "figure_registry.json"
     registry_path.write_text(

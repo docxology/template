@@ -434,27 +434,35 @@ def _has_html_attribute(attributes: str, name: str) -> bool:
     return _html_attribute_assignment_pattern(name).search(attributes) is not None
 
 
+def _replace_html_attribute(tag: str, name: str, value: str) -> str:
+    """Replace or insert an HTML attribute with a literal escaped value.
+
+    ``re.sub`` treats string replacements as backreference templates; LaTeX
+    fragments such as ``\\Omega`` in alt text raise ``re.error: bad escape``
+    unless the replacement is a callable.
+    """
+    escaped = html.escape(value, quote=True)
+    pattern = _html_attribute_assignment_pattern(name)
+
+    def literal(_match: re.Match[str]) -> str:
+        return f'{name}="{escaped}"'
+
+    if pattern.search(tag):
+        return pattern.sub(literal, tag, count=1)
+    if name == "alt":
+        insert_at = tag.rfind("/>")
+        if insert_at < 0:
+            insert_at = tag.rfind(">")
+        return tag[:insert_at].rstrip() + f' alt="{escaped}" ' + tag[insert_at:]
+    raise RenderingError(f"Rendered registry figure is missing an image {name}")
+
+
 def _set_image_alt(image_tag: str, alt_text: str) -> str:
-    escaped = html.escape(alt_text, quote=True)
-    alt_pattern = _html_attribute_assignment_pattern("alt")
-    # sub() treats the replacement as a template: backslashes in alt text
-    # (LaTeX math such as \Omega in figure captions) must be doubled or the
-    # template parser raises "bad escape". A lambda replacement is literal.
-    literal = lambda _m: f'alt="{escaped}"'  # noqa: E731
-    if alt_pattern.search(image_tag):
-        return alt_pattern.sub(literal, image_tag, count=1)
-    insert_at = image_tag.rfind("/>")
-    if insert_at < 0:
-        insert_at = image_tag.rfind(">")
-    return image_tag[:insert_at].rstrip() + f' alt="{escaped}" ' + image_tag[insert_at:]
+    return _replace_html_attribute(image_tag, "alt", alt_text)
 
 
 def _set_image_source(image_tag: str, source: str) -> str:
-    escaped = html.escape(source, quote=True)
-    source_pattern = _html_attribute_assignment_pattern("src")
-    if not source_pattern.search(image_tag):
-        raise RenderingError("Rendered registry figure is missing an image source")
-    return source_pattern.sub(f'src="{escaped}"', image_tag, count=1)
+    return _replace_html_attribute(image_tag, "src", source)
 
 
 def _exact_render_record(
