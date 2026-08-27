@@ -437,8 +437,12 @@ def _has_html_attribute(attributes: str, name: str) -> bool:
 def _set_image_alt(image_tag: str, alt_text: str) -> str:
     escaped = html.escape(alt_text, quote=True)
     alt_pattern = _html_attribute_assignment_pattern("alt")
+    # sub() treats the replacement as a template: backslashes in alt text
+    # (LaTeX math such as \Omega in figure captions) must be doubled or the
+    # template parser raises "bad escape". A lambda replacement is literal.
+    literal = lambda _m: f'alt="{escaped}"'  # noqa: E731
     if alt_pattern.search(image_tag):
-        return alt_pattern.sub(f'alt="{escaped}"', image_tag, count=1)
+        return alt_pattern.sub(literal, image_tag, count=1)
     insert_at = image_tag.rfind("/>")
     if insert_at < 0:
         insert_at = image_tag.rfind(">")
