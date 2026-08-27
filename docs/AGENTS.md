@@ -162,19 +162,20 @@ This ensures the pipeline remains reproducible and does not make expensive netwo
 
 ## Typed-Subfolder Project Lifecycle
 
-Project lifecycle state is expressed as **typed subfolders under `projects/`**. Public exemplars are always discovered/rendered; optional `active/` entries are discovered/rendered when present; simplified sidecar `working/` and `archive/` mirrors are non-rendered by default. Authoritative public roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
+Project lifecycle state is expressed as **typed subfolders under `projects/`**. Public exemplars are always discovered/rendered; optional `active/` entries are discovered/rendered when present; simplified sidecar `working/`, `ongoing/`, and `archive/` mirrors are non-rendered by default. Authoritative public roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
 
 | Subfolder | Purpose | Discovered + rendered? |
 | ---------- | ------- | ------------------------ |
 | `projects/templates/` | The git-tracked public exemplars (this repo) | ✅ Yes |
 | `projects/active/` | Optional hot-seat render set — symlinks to deliberately reintroduced private `active/` | ✅ Yes when present |
 | `projects/working/` | Simplified sidecar working set — symlinks, explicit targeted renders only | ❌ No |
+| `projects/ongoing/` | Long-lived private work with no publication target — symlinks, explicit renders only | ❌ No |
 | `projects/archive/` | Simplified sidecar archive — symlinks, historical/reference | ❌ No |
 
 **Movement rules:**
 
 - Only `projects/templates/*` and optional `projects/active/*` are discovered and rendered (qualified names `templates/<name>` and `active/<name>`).
-- Private lifecycle projects live in the sibling `docxology/projects` repo. Its default folders are `working/` and `archive/`, symlinked into matching typed subfolders on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). Render a working project explicitly with a lifecycle-qualified name such as `working/<name>`.
+- Private lifecycle projects live in the sibling `docxology/projects` repo. Its default folders are `working/` and `archive/`, with optional `ongoing/` for long-lived work without a publication target; each mirrors into matching typed subfolders on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). Render explicitly with a lifecycle-qualified name such as `working/<name>` or `ongoing/<name>`.
 - The git-tracked public exemplars under `projects/templates/` never move — they are owned by this repo. Every other path under `projects/` is local-only and never committed (enforced by `scripts/audit/check_tracked_all.py`).
 
 **Configuring the active directory (advanced):**

@@ -121,33 +121,16 @@ See `my_projects/foo/`.
     assert check_no_ghost_projects(repo) == []
 
 
-def test_dated_root_report_is_outside_long_lived_scope(tmp_path: Path) -> None:
-    """Dated point-in-time reports at the repo root are audit artifacts, not docs.
-
-    A ``DEEP_PASS_YYYY-MM-DD*.md`` report may reference project layouts that were
-    true only at its writing time; the ghost-project linter must not scan it.
-    """
-    repo = scaffold_repo(tmp_path, n_packages=15)
-    write_doc(
-        repo / "DEEP_PASS_2026-08-21_session.md",
-        "Historical note: `projects/ghost_project/` existed during the assessment.\n",
-    )
-    assert check_no_ghost_projects(repo) == []
-
-
-def test_project_state_report_is_outside_long_lived_scope(tmp_path: Path) -> None:
-    """``PROJECT_STATE_REPORT_YYYY-MM-DD*`` reports get the same dated exemption.
-
-    Maintenance-pass reports hard-code moment-in-time receipts (lifecycle
-    trees, guard names) that are true only at writing time; the linter must
-    not treat them as living docs.
-    """
+def test_dated_root_report_with_ghost_project_is_scanned(tmp_path: Path) -> None:
+    """Root dated reports are no longer exempt from ghost-project lint."""
     repo = scaffold_repo(tmp_path, n_packages=15)
     write_doc(
         repo / "PROJECT_STATE_REPORT_2026-08-26_sessionX.md",
-        "Historical receipt: `projects/fonds/tools/` was clean during the pass.\n",
+        "Receipt: `projects/ghost_project/` was referenced during the pass.\n",
     )
-    assert check_no_ghost_projects(repo) == []
+    issues = check_no_ghost_projects(repo)
+    assert len(issues) == 1
+    assert "ghost_project" in issues[0].detail
 
 
 def test_undated_root_report_is_still_scanned(tmp_path: Path) -> None:

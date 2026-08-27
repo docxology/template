@@ -43,9 +43,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
     "absent",
     "may rotate",
     "no longer",
-    "for example",
-    "e.g.",
-    "e.g ",
     "guard",
     "skipping",
     "skipped",
@@ -56,7 +53,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
     "when the working tree",
     "when this tree",
     "is present",
-    "when ",
     "only when",
     "only if",
     "conditional on",
@@ -65,13 +61,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
 )
 
 MD_GLOB = "*.md"
-
-#: Dated point-in-time assessment reports at the repo root (e.g.
-#: ``DEEP_PASS_2026-08-21_session.md``). They are historical audit artifacts,
-#: not long-lived documentation: their project references describe checkout
-#: state at a moment in time, so consistency linters must not treat them as
-#: living docs. Mirrors the rationale for excluding ``docs/audit/``.
-DATED_REPORT_ROOT_MD = re.compile(r"^(?:DEEP_PASS|PROJECT_STATE_REPORT)_\d{4}-\d{2}-\d{2}")
 
 FENCE_RE = re.compile(
     r"^[ \t]*(?P<fence>`{3,}|~{3,}).*?\n.*?\n[ \t]*(?P=fence)",
@@ -145,13 +134,7 @@ def iter_long_lived_docs(
         if candidate.is_dir():
             roots.append(candidate)
     if repo_root.is_dir():
-        for md in repo_root.glob(MD_GLOB):
-            # Dated point-in-time reports (DEEP_PASS_*,
-            # PROJECT_STATE_REPORT_*) are audit artifacts, not long-lived
-            # docs; skip them like docs/audit/.
-            if DATED_REPORT_ROOT_MD.match(md.name):
-                continue
-            roots.append(md)
+        roots.extend(repo_root.glob(MD_GLOB))
     if extra_roots:
         roots.extend(Path(p) for p in extra_roots)
 

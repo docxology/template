@@ -24,7 +24,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `single_stage.py` — `execute_single_stage()` subprocess runner using the same bounded deadline as the full pipeline
 - `stage_vocabulary.py` — stage names from `pipeline.yaml`
 - `pipeline.yaml` — default declared DAG definition consumed by the executor
-- `artifacts.py` — stage-provenance manifests plus an explicit, deterministic
+- `artifacts/` — stage-provenance manifests package ([`artifacts/AGENTS.md`](artifacts/AGENTS.md)); public import path unchanged (`infrastructure.core.pipeline.artifacts`). Snapshots exclude
   current-output integrity snapshot for targeted renders. Snapshots exclude
   control reports, provider-controlled `output/fulltext/` caches, and transient
   TeX/log files; they attest stable derived outputs rather than local caches.
