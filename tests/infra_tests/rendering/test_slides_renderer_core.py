@@ -28,6 +28,8 @@ from pypdf import PdfReader
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering._slides_math_header import write_slides_math_header
+from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 
@@ -555,7 +557,7 @@ class TestFigurePathFixing:
     def test_fix_figure_paths_basic(self, tmp_path):
         """Test basic figure path fixing."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = r"\includegraphics{../output/figures/test.png}"
         output_dir = tmp_path / "slides"
@@ -563,14 +565,14 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         assert "../figures/test.png" in fixed
 
     def test_fix_figure_paths_already_correct(self, tmp_path):
         """Test that already correct paths are unchanged."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = r"\includegraphics{../figures/test.png}"
         output_dir = tmp_path / "slides"
@@ -578,7 +580,7 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         # Should remain unchanged
         assert "../figures/test.png" in fixed
@@ -586,7 +588,7 @@ class TestFigurePathFixing:
     def test_fix_figure_paths_multiple(self, tmp_path):
         """Test fixing multiple figure paths."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = r"""
         \includegraphics{../output/figures/fig1.png}
@@ -598,7 +600,7 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         assert "../figures/fig1.png" in fixed
         assert "../figures/fig2.png" in fixed
@@ -607,7 +609,7 @@ class TestFigurePathFixing:
     def test_fix_figure_paths_handles_pandoc_alt_text_brackets(self, tmp_path):
         """Pandoc Beamer alt text can contain brackets that defeat regex parsing."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = (
             r"\pandocbounded{\includegraphics[keepaspectratio,"
@@ -619,7 +621,7 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         assert "{../figures/free_energy_curve.png}" in fixed
         assert "alt={Curve on {[}0, 6{]} with $I(q_\\lambda)$}" in fixed
@@ -657,9 +659,9 @@ class TestSlidesMathHeaderInjection:
             "```latex\n\\usepackage{unicode-math}\n```\n",
             encoding="utf-8",
         )
-        renderer = self._make_renderer(tmp_path)
+        self._make_renderer(tmp_path)
         output_dir = tmp_path / "slides"
-        header = renderer._maybe_write_math_header(manuscript, output_dir)
+        header = write_slides_math_header(manuscript, output_dir)
         assert header is not None
         assert header.name == "_slides_math_header.tex"
         content = header.read_text(encoding="utf-8")
@@ -673,8 +675,8 @@ class TestSlidesMathHeaderInjection:
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         assert header.name == "_slides_math_header.tex"
         content = header.read_text(encoding="utf-8")
@@ -695,8 +697,8 @@ class TestSlidesMathHeaderInjection:
             "```latex\n\\usepackage{geometry}\n\\usepackage{amsmath}\n\\newcommand{\\calD}{\\mathcal{D}}\n```\n",
             encoding="utf-8",
         )
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         content = header.read_text(encoding="utf-8")
         # Macro rewritten to providecommand and present.
@@ -713,8 +715,8 @@ class TestSlidesMathHeaderInjection:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "preamble.md").write_text("```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8")
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         content = header.read_text(encoding="utf-8")
         assert "\\providecommand{\\citep}" in content
@@ -731,8 +733,8 @@ class TestSlidesMathHeaderInjection:
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         content = header.read_text(encoding="utf-8")
         assert "\\newtheorem{proposition}{Proposition}" in content
@@ -745,7 +747,7 @@ class TestSlidesMathHeaderInjection:
     def test_helper_declares_every_environment_the_extractor_skips(self, tmp_path):
         """The skip-set and the unconditional block must agree.
 
-        ``_maybe_write_math_header`` drops a manuscript's ``\\newtheorem``
+        ``write_slides_math_header`` drops a manuscript's ``\\newtheorem``
         declarations for environments it believes are "already declared or
         declared below/above". ``axiom`` and ``property`` sat in that set while
         being declared in neither place, so a manuscript using
@@ -764,8 +766,8 @@ class TestSlidesMathHeaderInjection:
             "```latex\n\\newtheorem{property}{Property}[section]\n\\newtheorem{axiom}{Axiom}[section]\n```\n",
             encoding="utf-8",
         )
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         content = header.read_text(encoding="utf-8")
 
@@ -785,8 +787,8 @@ class TestSlidesMathHeaderInjection:
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         content = header.read_text(encoding="utf-8")
         assert "\\providecommand{\\crefrange}[2]" in content
         assert "\\providecommand{\\Crefrange}[2]" in content
@@ -806,8 +808,8 @@ class TestSlidesMathHeaderInjection:
             "```latex\n\\usepackage{algorithm}\n\\usepackage{algpseudocode}\n```\n",
             encoding="utf-8",
         )
-        renderer = self._make_renderer(tmp_path)
-        content = renderer._maybe_write_math_header(manuscript, tmp_path / "slides").read_text(encoding="utf-8")
+        self._make_renderer(tmp_path)
+        content = write_slides_math_header(manuscript, tmp_path / "slides").read_text(encoding="utf-8")
         assert "\\usepackage{algpseudocode}" in content
         assert "\\usepackage{algorithm}" not in content, (
             "the float package was carried over; it has no beamer implementation"
