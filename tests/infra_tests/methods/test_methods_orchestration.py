@@ -14,7 +14,7 @@ from tests._support.projects import make_project, write_doc
 
 
 def test_methods_manifest_parser_preserves_explicit_inventory_mode() -> None:
-    from infrastructure.methods.orchestration import _artifact_manifest_from_payload
+    from infrastructure.methods._plan_validation import _artifact_manifest_from_payload
 
     manifest = _artifact_manifest_from_payload(
         {
