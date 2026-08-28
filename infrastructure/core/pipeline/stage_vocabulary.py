@@ -10,14 +10,13 @@ import yaml
 
 def _load_opt_in_tags() -> frozenset[str]:
     """Read the opt-in tag set from pipeline.yaml, the single declaration of it."""
-    import yaml
+    from infrastructure.core.pipeline.dag import load_opt_in_tags
 
     path = Path(__file__).resolve().parent / "pipeline.yaml"
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        return load_opt_in_tags(path)
     except (OSError, yaml.YAMLError):  # pragma: no cover - a broken DAG fails elsewhere
         return frozenset()
-    return frozenset(data.get("opt_in_tags") or ())
 
 
 _OPT_IN_TAGS = _load_opt_in_tags()
@@ -70,9 +69,20 @@ def all_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
     return tuple(str(s["name"]) for s in _load_stage_entries(str(path)) if s.get("name"))
 
 
+def _opt_in_tags_for(yaml_path: Path) -> frozenset[str]:
+    """Return ``opt_in_tags`` from *yaml_path*, falling back to the default DAG."""
+    from infrastructure.core.pipeline.dag import load_opt_in_tags
+
+    try:
+        return load_opt_in_tags(yaml_path)
+    except (OSError, yaml.YAMLError):
+        return _OPT_IN_TAGS
+
+
 def core_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
-    """Default-run stages: excludes opt-in bundle/archival tagged stages."""
+    """Default-run stages: excludes opt-in tagged stages."""
     path = yaml_path or _default_pipeline_yaml()
+    opt_in = _opt_in_tags_for(path)
     names: list[str] = []
     for stage in _load_stage_entries(str(path)):
         name = stage.get("name")
@@ -80,10 +90,34 @@ def core_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
             continue
         raw_tags = stage.get("tags")
         tags = {str(tag) for tag in raw_tags} if isinstance(raw_tags, list) else set()
-        if tags & _OPT_IN_TAGS:
+        if tags & opt_in:
             continue
         names.append(str(name))
     return tuple(names)
+
+
+def core_only_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:
+    """``--core-only`` stages: excludes opt-in and ``llm``-tagged stages."""
+    path = yaml_path or _default_pipeline_yaml()
+    opt_in = _opt_in_tags_for(path)
+    names: list[str] = []
+    for stage in _load_stage_entries(str(path)):
+        name = stage.get("name")
+        if not name:
+            continue
+        raw_tags = stage.get("tags")
+        tags = {str(tag) for tag in raw_tags} if isinstance(raw_tags, list) else set()
+        if tags & opt_in or "llm" in tags:
+            continue
+        names.append(str(name))
+    return tuple(names)
+
+
+def default_run_stage_count(*, include_llm: bool, yaml_path: Path | None = None) -> int:
+    """Stage count for the default full run or ``--core-only``."""
+    if include_llm:
+        return len(core_stage_names(yaml_path=yaml_path))
+    return len(core_only_stage_names(yaml_path=yaml_path))
 
 
 def menu_stage_names(*, yaml_path: Path | None = None) -> tuple[str, ...]:

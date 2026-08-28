@@ -184,7 +184,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
             logger.debug("Using default pipeline: %s", resolved)
 
         dag = PipelineDAG.from_yaml(resolved)
-        exclude_tags: set[str] = {"ebook", "metadata", "bundle", "archival", "science", "provenance"}
+        exclude_tags = set(dag.opt_in_tags)
         if not include_llm or self.config.skip_llm:
             exclude_tags.add("llm")
         if skip_clean:
@@ -195,6 +195,7 @@ class PipelineExecutor(PipelineStageMixin, PipelineResumeMixin):
 
         self._merge_plugin_stages_into_dag(dag)
         specs = dag.to_stage_specs(self)
+        self.config.total_stages = len(specs)
         self._artifact_manifest_boundary_names = frozenset(spec.name for spec in specs if spec.key == "validate")
         return specs
 
