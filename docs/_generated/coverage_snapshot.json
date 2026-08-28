@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.87 %",
-      "source_hash": "bdbd8e6aa4f5da3a175ea8be220b1f899f076cd99b6f19a0179495851c2c8e59"
+      "source_hash": "7f8f267dde62a802e337281b362c73a806986e5992c4e82c69a4ad3da0b964e0"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "24b8c80f8c66c93a2343cadbb6cbbcfde27638a9",
+  "source_commit": "89776f49bc0fd30cb6c71d64db260ae50d852dda",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,12 +107,12 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "7bcf067ec7aa06d647ddb84b5d3012cb08d259546a0b2f5bf6b8ed0a984effa9",
+        "digest": "3b84694933638f424051b458bb5ca8041473814e347a57682d1c2294b68cf65c",
         "entries": [
           {
             "identity": "sha256",
             "path": "AGENTS.md",
-            "sha256": "1a1769d7cb087c3a9e0f3a40e647c7315d9290cc5e18977888ce11f1d016f575",
+            "sha256": "c747c2e415e09e6e8b45dd173fb659b149da683a9da50ab56e5f35a2193a02e1",
             "type": "file"
           },
           {
@@ -129,7 +129,7 @@
           {
             "identity": "sha256",
             "path": "docs/RUN_GUIDE.md",
-            "sha256": "dff347096fa4fd88fb986317419c2c2652222a0956e33505ae02e8e3e0943e54",
+            "sha256": "626061274c0e105d5eeaf55d9d380cde47e905f198c056d56d4132b582c24b72",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "bdbd8e6aa4f5da3a175ea8be220b1f899f076cd99b6f19a0179495851c2c8e59",
+      "template_active_inference": "7f8f267dde62a802e337281b362c73a806986e5992c4e82c69a4ad3da0b964e0",
       "template_advanced_literature_review": "b9ab9c88e333c4797eb23b848f99e75ccf56972a2363bfb35e7c54fa8166ede6",
       "template_autopoiesis": "d8e3b1f4a87fb01e2ee7cde7982412d012216ea1e7653a5f460c3fa310c58d06",
       "template_autoresearch_project": "0dc056217055e5c3e2ca2236a481ffb747ac8c9095dd91c459a276bf1ddc35af",
