@@ -166,13 +166,24 @@ def test_mmdc_available_returns_bool():
     assert isinstance(mmdc_available(), bool)
 
 
-def test_mmdc_resolution_accepts_repository_local_install():
-    """The repository-local install wins over any PATH-provided mmdc."""
-    local_mmdc = Path(__file__).resolve().parents[4] / "node_modules" / ".bin" / "mmdc"
+def test_mmdc_resolution_accepts_repository_local_install(tmp_path: Path):
+    """A walk-up local ``node_modules/.bin/mmdc`` wins over any PATH binary."""
+    start = tmp_path / "src" / "mermaid" / "renderer.py"
+    start.parent.mkdir(parents=True)
+    start.write_text("# resolution start\n", encoding="utf-8")
+    local_bin = tmp_path / "node_modules" / ".bin"
+    local_bin.mkdir(parents=True)
+    local_mmdc = local_bin / "mmdc"
+    local_mmdc.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    local_mmdc.chmod(0o755)
+    assert _resolve_mmdc(start) == str(local_mmdc)
+
+
+def test_mmdc_resolution_without_local_install_is_optional():
+    """Live checkout resolution may be missing; a present path must be a file."""
     resolved = _resolve_mmdc()
-    assert resolved is not None, "expected an mmdc install (local node_modules or PATH)"
-    if local_mmdc.exists():
-        assert resolved == str(local_mmdc)
+    if resolved is not None:
+        assert Path(resolved).is_file()
 
 
 def test_build_flowchart_defaults():
