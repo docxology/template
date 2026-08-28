@@ -98,7 +98,7 @@ Tracked Python modules (matches the drift gate):
 git ls-files infrastructure | grep -c '\.py$'
 ```
 
-(Last refreshed count: **776** on 2026-08-28 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
+(Last refreshed count: **776** on 2026-08-10 UTC — point-in-time; re-derive with the command above, the literal drifts as the tree changes.)
 
 See `infrastructure/AGENTS.md` for module-specific function signatures and entry points.
 
