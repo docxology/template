@@ -14,8 +14,13 @@
 | `counts.py --check` | PASS |
 | Ruff (public lint surface) | PASS |
 | mypy (source paths, 1570 files) | PASS |
+<!-- Dated historical receipt from this session's runs; live counts are
+     authoritative in docs/_generated/COUNTS.md. -->
+<!-- noqa: drift-counts -->
 | `tests/infra_tests/documentation/ + publishing/` | 1183 passed, 3 deselected |
+<!-- noqa: drift-counts -->
 | `tests/regression/` | 55 passed |
+<!-- noqa: drift-counts -->
 | `projects/templates/template_template/tests/` | 147 passed (coverage floor met) |
 | `infrastructure.core.health` | PASS 26/26 gates |
 
