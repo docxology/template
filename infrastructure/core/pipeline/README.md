@@ -6,6 +6,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 
 - `executor.py`
 - `dag.py`
+- `definition.py` — resolve `pipeline.yaml` for execution vs methods (`resolve_pipeline_source`)
 - `incremental.py` — opt-in content-hash stage skipping (default OFF)
 - `multi_project.py`
 - `multi_project_parallel.py`
