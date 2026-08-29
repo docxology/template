@@ -533,3 +533,10 @@ def test_textbook_matrix_provisions_the_pinned_mermaid_toolchain() -> None:
             "if": "matrix.project == 'templates/template_textbook'",
         }
     ]
+    mermaid_index = project_steps.index(mermaid_steps[0])
+    test_index = next(
+        index
+        for index, step in enumerate(project_steps)
+        if step.get("name") == "Run project tests"
+    )
+    assert mermaid_index < test_index

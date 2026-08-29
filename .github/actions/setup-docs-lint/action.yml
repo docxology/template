@@ -1,7 +1,7 @@
-name: Setup documentation lint environment
+name: Setup Mermaid documentation tooling
 description: >-
-  Provision Node, mermaid-cli, and chrome-headless-shell for every CI job that
-  executes the blocking documentation lint gate.
+  Provision Node, mermaid-cli, and chrome-headless-shell for CI jobs that
+  execute blocking documentation lint or real Mermaid renderer tests.
 
 runs:
   using: composite
