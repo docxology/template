@@ -10,7 +10,11 @@ from pathlib import Path
 
 import pytest
 
-from infrastructure.core.pipeline.dag import PipelineDAG, StageDefinition
+from infrastructure.core.pipeline.dag import (
+    PipelineDAG,
+    StageDefinition,
+    opt_in_tags_from_mapping,
+)
 
 
 class TestStageDefinition:
@@ -58,6 +62,7 @@ class TestPipelineDAGFromYAML:
         """Test loading a custom YAML."""
         yaml_file = tmp_path / "pipeline.yaml"
         yaml_file.write_text("""
+opt_in_tags: [experimental]
 stages:
   - name: A
     method: do_a
@@ -69,6 +74,17 @@ stages:
 """)
         dag = PipelineDAG.from_yaml(yaml_file)
         assert len(dag.stages) == 2
+        assert dag.opt_in_tags == frozenset({"experimental"})
+
+    def test_from_dict_reads_opt_in_tags(self):
+        dag = PipelineDAG.from_dict(
+            {
+                "opt_in_tags": ["ebook", "docxplus"],
+                "stages": [{"name": "A", "method": "do_a", "tags": ["core"]}],
+            }
+        )
+        assert dag.opt_in_tags == frozenset({"ebook", "docxplus"})
+        assert opt_in_tags_from_mapping({"opt_in_tags": ["ebook"]}) == frozenset({"ebook"})
 
     def test_invalid_yaml_raises(self, tmp_path):
         """Test that missing stages key raises ValueError."""

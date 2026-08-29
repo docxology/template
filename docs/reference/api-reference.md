@@ -882,7 +882,7 @@ Create the log directory and append a session-start banner.
 *function — defined in `infrastructure.orchestration.discovery`*
 
 ```python
-validate_project_slug(slug: str, repo_root: Path) -> str
+validate_project_slug(slug: str, repo_root: Path, *, projects: Sequence[ProjectInfo] | None=None) -> str
 ```
 
 Validate a user-supplied project slug against discovered projects.
@@ -2553,7 +2553,7 @@ Generate consolidated pipeline report from stage results and optional extras.
 generate_summary_report(repo_root: Path | None=None) -> dict[str, Any]
 ```
 
-Generate comprehensive test summary report.
+Generate the test summary report.
 
 ### `get_error_aggregator`
 

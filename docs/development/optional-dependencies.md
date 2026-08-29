@@ -98,4 +98,5 @@ python -c "import shutil; print('xelatex:', bool(shutil.which('xelatex'))); prin
 - [`../../tests/infra_tests/README.md`](../../tests/infra_tests/README.md) — infrastructure test overview
 - [`../../tests/infra_tests/llm/AGENTS.md`](../../tests/infra_tests/llm/AGENTS.md) — LLM test categories and the `requires_ollama` real-daemon layer
 - [`../../tests/infra_tests/rendering/AGENTS.md`](../../tests/infra_tests/rendering/AGENTS.md) — rendering tests and LaTeX/pandoc gating
-- [`coverage-gaps.md`](coverage-gaps.md) — live coverage aggregate
+- [`../_generated/COUNTS.md`](../_generated/COUNTS.md) — live coverage aggregate
+- [`coverage-gaps.md`](coverage-gaps.md) — historical module-gap notes, not live gates

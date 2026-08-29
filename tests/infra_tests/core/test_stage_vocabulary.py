@@ -11,6 +11,11 @@ def test_project_analysis_in_core_stages() -> None:
     assert "Project Analysis" in names
     assert "PDF Rendering" in names
     assert "Output Validation" in names
+    assert "docxplus Export" not in names
+    assert "docxplus Export" not in sv.core_only_stage_names()
+    assert "LLM Scientific Review" not in sv.core_only_stage_names()
+    assert sv.default_run_stage_count(include_llm=True) == len(names)
+    assert sv.default_run_stage_count(include_llm=False) == len(sv.core_only_stage_names())
 
 
 def test_menu_stage_names_match_menu_module() -> None:

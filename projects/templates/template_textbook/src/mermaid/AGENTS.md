@@ -2,7 +2,7 @@
 
 Deterministic Mermaid diagram generation.
 
-**Contents.** `diagram_specs.yaml` declares each diagram; `diagrams.py` builds specs; `renderer.py` renders to `output/figures/mermaid/` with a PNG/SVG fallback.
+**Contents.** `diagram_specs.yaml` declares each diagram; `diagrams.py` builds specs; `renderer.py` renders to `output/figures/mermaid/` with a PNG/SVG fallback. `_resolve_mmdc(start=None)` walks from `start` or this module for `node_modules/.bin/mmdc`, then PATH.
 
 **Contract.** Diagrams are generated to `output/figures/mermaid/` and tracked
 as public release artifacts when they stay below the size ceiling; reproduce

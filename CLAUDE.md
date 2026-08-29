@@ -79,11 +79,10 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./secure_run.sh --steganography-only --project {project_name}
 ./secure_run.sh --steganography-only
 
-# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares 16 total,
-# including six opt-in ebook/metadata/bundle/archival/science/provenance stages)
+# Full pipeline default path (core+LLM; see STAGE_SUMMARY at the end of this file)
 ./run.sh --pipeline
 
-# Core pipeline only (8 stages — LLM and opt-in stages excluded)
+# Core pipeline only (LLM and opt-in stages excluded)
 uv run python scripts/runner/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
@@ -607,6 +606,10 @@ This prohibition is enforced, not aspirational: regenerated-artifact guards reje
 - Pipeline can be resumed from checkpoints with `--resume`
 - Tests timeout after 10 seconds by default (configurable in pyproject.toml)
 
+
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->

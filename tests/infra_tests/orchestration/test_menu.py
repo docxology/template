@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from infrastructure.core.pipeline.stage_vocabulary import default_run_stage_count
 from infrastructure.orchestration.menu import (
     MENU_OPTIONS,
     STAGE_NAMES,
@@ -50,6 +51,15 @@ def test_stage_names_align_with_pipeline() -> None:
     assert len(STAGE_NAMES) == 9
     assert STAGE_NAMES[0] == "Environment Setup"
     assert STAGE_NAMES[-1] == "Copy Outputs"
+
+
+def test_pipeline_menu_counts_follow_yaml() -> None:
+    rendered = render_menu("x")
+    core_only = default_run_stage_count(include_llm=False)
+    default_full = default_run_stage_count(include_llm=True)
+    assert f"{core_only} stages" in rendered
+    assert f"{default_full} stages" in rendered
+    assert core_only != default_full
 
 
 def test_menu_keys_unique() -> None:

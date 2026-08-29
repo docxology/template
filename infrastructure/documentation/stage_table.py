@@ -9,10 +9,11 @@ YAML and injects it between
 ``<!-- BEGIN:STAGE_TABLE -->`` / ``<!-- END:STAGE_TABLE -->`` markers,
 reusing :func:`infrastructure.documentation.glossary_gen.inject_between_markers`.
 
-The two public entry points are:
+The public entry points are:
 
 * :func:`build_stage_table` — render a Markdown table from the YAML.
-* :func:`inject_stage_table` — replace the marked block in a Markdown file.
+* :func:`build_stage_summary` — one-line declared / default-full / core-only counts.
+* :func:`inject_stage_table` — replace a marked block in a Markdown file.
 
 The generator is **idempotent**: running it twice with no YAML change makes
 no diff. The "Stage" column reflects the 0-based position of each stage in
@@ -29,6 +30,12 @@ from pathlib import Path
 import yaml
 
 from infrastructure.core.logging.utils import get_logger
+from infrastructure.core.pipeline.dag import opt_in_tags_from_mapping
+from infrastructure.core.pipeline.stage_vocabulary import (
+    all_stage_names,
+    core_only_stage_names,
+    core_stage_names,
+)
 from infrastructure.documentation.glossary_gen import inject_between_markers
 
 logger = get_logger(__name__)
@@ -84,8 +91,11 @@ def refresh_stage_tables(
             raise FileNotFoundError(f"Markdown target not found: {target}")
         target_rel = target.relative_to(repo_root) if target.is_relative_to(repo_root) else target
         table = build_stage_table(source, target_rel_to_repo=target_rel, repo_root=repo_root)
+        summary = build_stage_summary(source, target_rel_to_repo=target_rel)
         if write:
-            changed_now = inject_stage_table(target, table)
+            changed_table = inject_stage_table(target, table)
+            changed_summary = inject_stage_table(target, summary, marker="STAGE_SUMMARY")
+            changed_now = changed_table or changed_summary
         else:
             current = target.read_text(encoding="utf-8")
             proposed = inject_between_markers(
@@ -93,6 +103,12 @@ def refresh_stage_tables(
                 "<!-- BEGIN:STAGE_TABLE -->",
                 "<!-- END:STAGE_TABLE -->",
                 table,
+            )
+            proposed = inject_between_markers(
+                proposed,
+                "<!-- BEGIN:STAGE_SUMMARY -->",
+                "<!-- END:STAGE_SUMMARY -->",
+                summary,
             )
             changed_now = proposed != current
         (changed if changed_now else unchanged).append(target)
@@ -114,6 +130,43 @@ def _stage_table_caption(yaml_link: str) -> str:
 # Default caption used when no relative path is supplied. Kept for backwards
 # compatibility with callers that pre-date the per-target relative resolver.
 _STAGE_TABLE_CAPTION = _stage_table_caption(f"../{_PIPELINE_YAML_REL}")
+
+
+def _yaml_href(target_rel_to_repo: Path | None) -> str:
+    """Relative Markdown href from a target file back to ``pipeline.yaml``."""
+    if target_rel_to_repo is None:
+        return f"../{_PIPELINE_YAML_REL}"
+    depth = len(Path(target_rel_to_repo).parts) - 1
+    prefix = "../" * depth if depth > 0 else ""
+    return f"{prefix}{_PIPELINE_YAML_REL}"
+
+
+def build_stage_summary(
+    yaml_path: Path,
+    *,
+    target_rel_to_repo: Path | None = None,
+) -> str:
+    """Render the one-line declared / default-full / core-only stage counts."""
+    if not yaml_path.exists():
+        raise FileNotFoundError(f"pipeline.yaml not found: {yaml_path}")
+    raw = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(raw, dict) or "stages" not in raw:
+        raise ValueError(f"pipeline.yaml must have a top-level 'stages' list: {yaml_path}")
+    declared = len(all_stage_names(yaml_path=yaml_path))
+    default_full = len(core_stage_names(yaml_path=yaml_path))
+    core_only = len(core_only_stage_names(yaml_path=yaml_path))
+    last_index = max(declared - 1, 0)
+    opt_in = ", ".join(f"`{tag}`" for tag in sorted(opt_in_tags_from_mapping(raw)))
+    opt_in_clause = ""
+    if opt_in:
+        opt_in_clause = f" Opt-in tags ({opt_in}) stay out of those default runs unless a stage is invoked directly."
+    href = _yaml_href(target_rel_to_repo)
+    return (
+        f"The default [`pipeline.yaml`]({href}) declares **{declared} named stages** "
+        f"(indices 0–{last_index}). Default full runs execute **{default_full}** "
+        f"core+LLM stages; `--core-only` executes **{core_only}**.{opt_in_clause} "
+        "YAML stage indices do not match `stage_NN_*.py` prefixes."
+    )
 
 
 def _default_failure_mode(tags: list[str]) -> str:
@@ -267,6 +320,7 @@ def inject_stage_table(
 __all__ = [
     "DEFAULT_STAGE_TABLE_TARGETS",
     "StageTableRefreshResult",
+    "build_stage_summary",
     "build_stage_table",
     "inject_stage_table",
     "refresh_stage_tables",

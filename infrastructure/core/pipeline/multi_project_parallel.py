@@ -225,7 +225,6 @@ def _run_single_project_worker(spec: _WorkerSpec) -> tuple[str, bool, str]:
                 skip_infra=True,  # Infra tests run once at the orchestrator level.
                 skip_llm=spec.skip_llm or spec.core_only,
                 resume=spec.resume,
-                total_stages=8 if (spec.core_only or spec.skip_llm) else 10,
             )
             executor = PipelineExecutor(config)
             method = executor.execute_core_pipeline if spec.core_only else executor.execute_full_pipeline

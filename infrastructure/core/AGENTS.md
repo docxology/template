@@ -75,8 +75,9 @@ The Core module provides fundamental foundation utilities used across the entire
 - Component status checking
 - Health status reporting
 
-**health.py**
+**health.py** / **health_gates.py**
 - Unified repository health check entry point (`uv run python -m infrastructure.core.health`)
+- `health_gates.build_gate_specs` owns the gate argv table; `health.py` re-exports it and runs the CLI
 - Aggregates every per-CLI quality gate (mypy, ruff, ruff-format, bandit, no-mocks, `__all__` audit, docs-lint, stage-table & api-reference idempotence, architecture-overview presence) into a single typed `HealthReport`
 - Subprocess-only orchestrator — exit code is the sole pass/fail signal; stdout/stderr captured for diagnostics only
 - `--json` for machine-readable output (consumed by CI artefact upload), `--gates=<names>` for subset runs, `--quiet`, `--repo-root`, `--no-color`, and bounded `--workers` concurrency (`1` keeps serial diagnostics)
@@ -128,7 +129,7 @@ The Core module provides fundamental foundation utilities used across the entire
 - Read-only changed-surface classifier. `scripts/audit/test_impact.py` unions staged, unstaged, deleted, and non-ignored untracked paths before `classify_changed_paths()` reports infrastructure, documentation, public-exemplar, and local-only impacts, recommends the smallest safe lanes, and explicitly prohibits nested outer-project parallelism with inner pytest-xdist.
 
 **public_matrix_receipt.py**
-- Deterministic public-matrix receipt for per-project release lanes: records one bounded public-matrix run (per-project coverage floors, pass/fail, duration, resource profile, collection count, cache identity, and explicit skip reason) into a versioned contract, and fails closed when the on-disk output tree would drift from the receipt after the run. Backs the `--receipt` public-matrix mode and the scheduled `public-matrix-receipt` CI job.
+- Deterministic public-matrix receipt for per-project release lanes: records one bounded public-matrix run (per-project coverage floors, pass/fail, duration, resource profile, collection count, cache identity, and explicit skip reason) into a versioned contract, and fails closed when the on-disk output tree would drift from the receipt after the run. `write_public_matrix_receipt` lives here and is called from `test_runner.py`. Backs the `--receipt` public-matrix mode and the scheduled `public-matrix-receipt` CI job.
 
 **analysis_pipeline.py**
 - Stage-02 analysis-script runner: executes the discovered scripts under the standard subprocess contract (project-preferred interpreter, per-script timeout, sub-stage progress with EMA-based ETA), keeping `scripts/pipeline/stage_02_analysis.py` a thin orchestrator. Direct script paths are confined to the resolved project `scripts/` tree, and credential-like environment variables are redacted by default; set `ANALYSIS_ALLOW_SECRETS=1` only for an explicitly reviewed live integration.
@@ -260,7 +261,7 @@ The Core module provides fundamental foundation utilities used across the entire
 
 **pipeline/pipeline.yaml**
 - Default declarative pipeline stage definitions
-- 14 declared pipeline stages (8 core + 2 LLM + 2 opt-in ebook/metadata + 2 opt-in bundle/archival); default full runs execute 10 core+LLM stages; `--core-only` runs 8
+- Declared / default-full / `--core-only` counts come from `pipeline.yaml` via `STAGE_SUMMARY` (see root `AGENTS.md`); `opt_in_tags` is the single exclude set for default and `--core-only` runs
 - Tag-based filtering for `--core-only` vs full pipeline
 - Stage metadata: name, script, description, dependencies, tags
 - Optional `telemetry:` configuration block

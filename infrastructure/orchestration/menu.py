@@ -13,7 +13,10 @@ Interactive prompts and the menu redraw loop live in
 
 from collections.abc import Iterable
 
-from infrastructure.core.pipeline.stage_vocabulary import menu_stage_names
+from infrastructure.core.pipeline.stage_vocabulary import (
+    default_run_stage_count,
+    menu_stage_names,
+)
 
 # Stage labels from ``infrastructure/core/pipeline/pipeline.yaml`` via stage_vocabulary.
 STAGE_NAMES: tuple[str, ...] = menu_stage_names()
@@ -37,8 +40,16 @@ MENU_OPTIONS: tuple[tuple[str, str, str], ...] = (
     ("5", "Copy Outputs", "stage_05_copy.py"),
     ("6", "LLM Review", "stage_06_llm_review.py reviews (Ollama)"),
     ("7", "LLM Translations", "stage_06_llm_review.py translations (Ollama)"),
-    ("8", "Core Pipeline", "current project · infra on · LLM off · 8 stages"),
-    ("9", "Full Pipeline", "current project · infra on · LLM on · 10 stages"),
+    (
+        "8",
+        "Core Pipeline",
+        f"current project · infra on · LLM off · {default_run_stage_count(include_llm=False)} stages",
+    ),
+    (
+        "9",
+        "Full Pipeline",
+        f"current project · infra on · LLM on · {default_run_stage_count(include_llm=True)} stages",
+    ),
     ("f", "Full Pipeline (fast)", "current project · skip infra · LLM on"),
     ("a", "All projects full", "all projects · infra on · LLM on · report"),
     ("b", "All projects full (fast)", "all projects · skip infra · LLM on · report"),

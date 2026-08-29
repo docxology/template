@@ -223,7 +223,7 @@ def test_with_fixture(temp_data_file):
 ## Coverage Requirements
 
 - **90% minimum** for projects/{name}/src/ (see [COUNTS.md](../../_generated/COUNTS.md) for current %)
-- **60% minimum** for infrastructure/ (see [coverage-gaps.md](../coverage-gaps.md) for current %)
+- **60% minimum** for infrastructure/ (see [COUNTS.md](../../_generated/COUNTS.md) for current %)
 - **Mock frameworks are prohibited** and the semantic dependency-replacement
   ceiling is zero. Real local HTTP servers, temporary files, subprocesses, and
   narrow environment isolation are valid when they preserve the behavior under

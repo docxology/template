@@ -30,7 +30,7 @@ flowchart LR
 
 1. **Generic First**: Reusable across all projects
 2. **Domain-Independent**: No research-specific assumptions
-3. **Well-Tested**: 60% minimum coverage with data (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+3. **Well-Tested**: 60% minimum coverage with data (current % — see [COUNTS.md](../_generated/COUNTS.md))
 4. **Well-Documented**: AGENTS.md and README.md
 5. **Type-Hinted**: All public APIs have type annotations
 
@@ -55,7 +55,7 @@ flowchart LR
 
 ### Coverage Requirements
 
-- **60% minimum coverage** required for infrastructure code (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **60% minimum coverage** required for infrastructure code (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **No mock methods** - test with data
 - **Integration tests** demonstrating workflows
 - **Edge cases** and error conditions tested
@@ -258,7 +258,7 @@ Infrastructure modules are integrated into the build pipeline through:
 
 **Pipeline Entry Points**: Two orchestrators available:
 
-- `./run.sh --pipeline`: 9 stages (shown as [1/9]..[9/9]) with an initial clean step shown as [0/9]; optional LLM stages are included when configured/enabled
+- `./run.sh --pipeline`: default full run (`STAGE_NAMES` numbered `[1/N]`–`[N/N]`, clean as `[0/N]`); optional LLM stages are included when configured/enabled
 - `uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`: core pipeline without LLM stages
 
 Update these scripts to discover and use new infrastructure modules as needed.
