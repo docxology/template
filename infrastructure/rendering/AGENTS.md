@@ -39,8 +39,9 @@ renderers without owning validation policy or project analysis.
 - Configured title-page artwork uses `paper.cover.image`/`paper.cover.alt` or
   the parallel `book.cover.*` fields. With `metadata.tagged_pdf: true`, the
   selected cover's `alt` must be a non-empty string; validation fails before a
-  prior combined PDF is replaced. The renderer requests tagged PDF/UA-2 output
-  through LuaLaTeX, but a successful render is not PDF/UA certification.
+  prior combined PDF is replaced. The renderer requests PDF 2.0 tagging and
+  catalog language through LuaLaTeX while deliberately omitting a PDF/UA
+  conformance identifier. Tagged structure is not PDF/UA certification.
 - Combined EPUB uses the same selected cover/alt pair and rejects a cover with
   missing or blank alt text before Pandoc runs. After Pandoc emits its SVG
   cover, `_epub_cover_accessibility.py` names the SVG graphic from the source

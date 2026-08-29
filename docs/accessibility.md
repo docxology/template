@@ -54,7 +54,7 @@ rendered formats.
 | `publication-audit --require-figure-accessibility` | Every referenced registered figure has a non-empty explicit `alt` or `metadata.alt_text` field, and registered generated files exist | Whether the text describes the figure well or whether unregistered decorative images are handled correctly |
 | HTML renderer tests | Language metadata, a main landmark and skip link, MathJax hardening, responsive figures, and basic alt/caption post-processing are emitted by covered code paths | Whole-document WCAG conformance or screen-reader usability |
 | Tagged cover validation | With `metadata.tagged_pdf: true`, the selected configured paper/book cover has explicit plain-text alt metadata, and the LuaLaTeX tagging path stores it on a `Figure` structure element | Semantic adequacy of the description or accessibility of the rest of the document |
-| PDF render/structural validation | The PDF was produced and passes the repository's structural checks; the opt-in LuaLaTeX path requests tagged PDF/UA-2 metadata | A conforming tag tree, correct reading order, semantic tables/math, or PDF/UA certification |
+| PDF render/structural validation | The PDF was produced and passes the repository's structural checks; the opt-in LuaLaTeX path requests PDF 2.0 tagging and catalog language without a PDF/UA conformance identifier | A conforming tag tree, correct reading order, semantic tables/math, or PDF/UA certification |
 
 Run the source and publication checks from the repository root, using a
 qualified project name:

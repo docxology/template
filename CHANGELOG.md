@@ -48,6 +48,9 @@ not to the contents of any specific workspace.
 
 ### Rendering
 
+- Tagged-PDF rendering retains PDF 2.0 tagging and catalog language while no
+  longer embedding a PDF/UA-2 conformance identifier. Tagged structure remains
+  bounded structural evidence, not PDF/UA certification.
 - Slide decks now recover manuscript-declared macros (`\newcommand`,
   `\renewcommand`, `\DeclareMathOperator`) from `preamble.md` into the
   Beamer header, rewritten as `\providecommand` so a clash with a class

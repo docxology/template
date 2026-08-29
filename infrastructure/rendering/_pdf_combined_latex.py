@@ -142,9 +142,7 @@ def postprocess_latex(
 ) -> str:
     """Apply lmodern disabling, hidelinks patching, and math delimiter fixes."""
     if tagged_pdf and "\\DocumentMetadata{" not in tex_content:
-        tex_content = (
-            "\\DocumentMetadata{pdfversion=2.0,lang=" + language + ",tagging=on,pdfstandard=ua-2}\n" + tex_content
-        )
+        tex_content = "\\DocumentMetadata{pdfversion=2.0,lang=" + language + ",tagging=on}\n" + tex_content
     # Fix lmodern conflict with xelatex
     if "\\usepackage{lmodern}" in tex_content:
         tex_content = tex_content.replace("\\usepackage{lmodern}", "% \\usepackage{lmodern}")
