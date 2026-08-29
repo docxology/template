@@ -160,7 +160,13 @@ A negative control backs this contract: deliberately breaking any represented st
 - **Coverage threshold:** Each job enforces **that project's own ≥ 90%** floor on its `src/` (per CLAUDE.md). There is **no longer** a combined-union run or `--cov-append` — every project is isolated in its own job, which also removes the old `code_project`/`fep_lean` conftest plugin-name collision.
 - **Coverage files:** project-local `.coverage.project` for the generic pytest path or `.coverage` for a declared structured verifier; both are isolated, cleaned before the run, and independently produce the same project-local `coverage_project.json`.
 - **Scope:** [`scripts/pipeline/stage_01_test.py`](../../scripts/pipeline/stage_01_test.py) `--project <name> --project-only --include-slow` (one invocation per matrix cell). The workflow uploads the resulting project-local JSON directly; it does not synthesize a separate XML report. Rotating local projects are not part of this public-repo gate; dedicated project jobs own their own toolchains.
-- **External render tool:** every lane provisions the same SHA-pinned Pandoc action as `test-infra`, because project suites may exercise real DOCX/EPUB rendering during Stage 1. A required converter is never handled by skipping or weakening those regression tests.
+- **External render tools:** every lane provisions the same SHA-pinned Pandoc
+  action as `test-infra`, because project suites may exercise real DOCX/EPUB
+  rendering during Stage 1. The two `template_textbook` cells additionally use
+  the shared `setup-docs-lint` action so their Mermaid renderer tests receive
+  the repository-pinned `mmdc` and Chrome boundary they require. A required
+  renderer or converter is never handled by skipping or weakening those
+  regression tests.
 - **Codecov upload:** On Python 3.14 / `ubuntu-latest` only; upload failures do not fail CI
 
 #### 6. fep_lean — real Open Gauss + Lake (`fep-lean`)

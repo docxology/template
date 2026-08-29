@@ -84,6 +84,12 @@ in a job `if:` and rejects the whole workflow at parse). 1 further job
 
 **Display name (branch protection):** the optional fep_lean job is reported as **`fep_lean (gauss + lake)`** (`ci.yml` `name:` on job id `fep-lean`). It runs only when the `detect` job sets `fep_lean == 'true'` (`if: needs.detect.outputs.fep_lean == 'true'`) — a job-level `hashFiles()` is **invalid** in a job `if:` and would reject the whole workflow at parse, which is why the `detect` job exists. When fep_lean lives under `projects/working/`, `detect` reports `false` and the job is skipped. Promote with `mv projects/working/fep_lean projects/active/fep_lean` to activate CI. **Branch protection must NOT mark the two conditional jobs (`fep-lean`, `setup-hook-windows-smoke`) as required** — they are skipped (not failed) when their project is absent, so requiring them would wedge every PR.
 
+The per-project matrix provisions Pandoc for every exemplar. Its two
+`templates/template_textbook` cells also invoke the shared documentation-tool
+setup so the textbook's real Mermaid resolver and renderer tests run against
+the repository-pinned `mmdc`/Chrome installation instead of depending on an
+undeclared hosted-runner tool.
+
 Infrastructure and project coverage are uploaded to **Codecov** only from their
 Python 3.14 / `ubuntu-latest` cells; upload failures do not fail CI.
 

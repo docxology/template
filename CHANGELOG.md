@@ -65,6 +65,9 @@ not to the contents of any specific workspace.
 
 ### Robustness
 
+- The public textbook matrix now provisions the repository-pinned Mermaid CLI
+  and Chrome boundary before its real renderer tests, closing the prior
+  undeclared-host-tool failure on Python 3.10 and 3.14.
 - `uv sync` timeout no longer claims a successful workspace sync; it falls back
   to the same installed-package check as other `uv` failures.
 - Bounded hook execution no longer swallows post-launch `OSError` without
