@@ -234,6 +234,6 @@ gaps, the Layer-1 Monid gateway (`infrastructure/search/monid/`) provides
 direct-provider USD/1k list prices via
 [`infrastructure/search/monid/PRICING.md`](../../../infrastructure/search/monid/PRICING.md);
 upstream skill:
-[`.agents/skills/monid/SKILL.md`](../../../.agents/skills/monid/SKILL.md).
+[`infrastructure/search/monid/SKILL.md`](../../../infrastructure/search/monid/SKILL.md).
 Requires `MONID_API_KEY` and spends prepaid balance — never wire into default
 CI or pipeline stages.

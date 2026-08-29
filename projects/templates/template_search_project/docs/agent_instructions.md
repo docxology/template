@@ -181,6 +181,6 @@ offline and cost-free. Precedence for live agents:
 
 Compare direct-provider list prices in
 [`infrastructure/search/monid/PRICING.md`](../../../../infrastructure/search/monid/PRICING.md).
-Skill routing: [`.agents/skills/monid/SKILL.md`](../../../../.agents/skills/monid/SKILL.md).
+Skill routing: [`infrastructure/search/monid/SKILL.md`](../../../../infrastructure/search/monid/SKILL.md).
 Do not add Monid to default CI or project scripts without an explicit opt-in
 budget gate.

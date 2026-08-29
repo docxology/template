@@ -48,7 +48,7 @@ Prefer the user's MCP connectors and direct API keys first. For uncovered web
 search endpoints, Monid (`infrastructure/search/monid/`) is infrastructure-only
 gap filler — see
 [`PRICING.md`](../../../../../infrastructure/search/monid/PRICING.md) and
-[`.agents/skills/monid/SKILL.md`](../../../../../.agents/skills/monid/SKILL.md).
+[`infrastructure/search/monid/SKILL.md`](../../../../../infrastructure/search/monid/SKILL.md).
 This exemplar's `src/` does not import Monid; keep the offline default intact.
 
 ## Cross-refs
