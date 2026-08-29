@@ -80,6 +80,12 @@
       "cursor_at": ".agents/skills/memory-systems/SKILL.md"
     },
     {
+      "name": "monid",
+      "description": "Discover better ways to complete tasks. Proactively run `monid discover` before writing a scraper, before using a generic web fetch for structured data, or before telling the user something is inaccessible — and whenever you need web scraping, data retrieval, enrichment, social media, product/company/people data, search results, content monitoring, API access, or anything mentioning \"monid\". Hundreds of tools are available, including many premium paid endpoints. Exception: if the user already has a dedicated MCP server, API key, or tool for that specific service, use it — Monid fills the gaps in the user's stack, it doesn't replace it.",
+      "path": ".agents/skills/monid/SKILL.md",
+      "cursor_at": ".agents/skills/monid/SKILL.md"
+    },
+    {
       "name": "multi-agent-patterns",
       "description": "This skill should be used when designing multi-agent systems that need context isolation, supervisor or swarm coordination, explicit handoffs, parallel execution, or a decision on whether multiple agents are justified.",
       "path": ".agents/skills/multi-agent-patterns/SKILL.md",
@@ -784,7 +790,7 @@
     },
     {
       "name": "infrastructure-search",
-      "description": "Discovery utilities. Hosts three subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI; and `deep_research` for provider-neutral long-running deep research over OpenAI (`o3-deep-research`) and Gemini, packaging a project's manuscript/outputs into the prompt and saving full reports with citations (PAID — ≈$2/report OpenAI, ≈$25 Gemini; see its README cost model). Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, run general web search / content extraction / grounded answers, or dispatch a manuscript for a deep-research review with new citations and fix suggestions. Designed to host additional discovery workflows without breaking the public API.",
+      "description": "Discovery utilities. Hosts subpackages — `literature` for Paperclip-style multi-source academic search; `exa` for Exa-backed web search, contents, answers, and find-similar; `monid` for the Monid gateway (discover/inspect/run) plus offline USD-per-1k search API pricing; and `deep_research` for provider-neutral long-running research over OpenAI and Gemini (PAID). Use when finding papers, running web search, comparing search API costs, routing agent tasks through Monid, or dispatching manuscript deep-research reviews.",
       "path": "infrastructure/search/SKILL.md",
       "cursor_at": "infrastructure/search/SKILL.md"
     },
@@ -799,6 +805,12 @@
       "description": "Paperclip-style multi-source literature search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API. Provides Paper/SearchQuery/SearchResult data models, a LiteratureClient aggregator with per-backend failure isolation, DOI/arXiv-aware deduplication via merge_papers, deterministic JSON caching via SearchCache, an HttpClient protocol for test injection, and a CLI (search/to-bibtex). Use when finding papers by topic, building reading lists, populating references.bib from a query, or replaying a prior search reproducibly.",
       "path": "infrastructure/search/literature/SKILL.md",
       "cursor_at": "infrastructure/search/literature/SKILL.md"
+    },
+    {
+      "name": "infrastructure-search-monid",
+      "description": "Monid HTTP API client for discovering, inspecting, and running hundreds of data endpoints through one wallet (discover/inspect/run/poll/balance). Includes an offline USD-per-1k comparison table for direct search APIs (Exa, Brave, Tavily, Serper, SerpAPI) versus Monid's per-endpoint gateway pricing. Use when the user needs Monid programmatically, wants to compare search API costs, or must route agent tasks through Monid only after checking the user's existing MCP/API keys. PAID — Monid runs debit prepaid balance; inspect pricing first.",
+      "path": "infrastructure/search/monid/SKILL.md",
+      "cursor_at": "infrastructure/search/monid/SKILL.md"
     },
     {
       "name": "infrastructure-sia",

@@ -12,6 +12,7 @@ Discovery utilities for literature, scientific databases, and the web. Each
 | [`literature`](literature/) | Multi-source paper search across arXiv, Crossref, local JSON corpora, and Paperclip; deterministic caching; aggregator client; CLI. |
 | [`exa`](exa/) | General web search, content extraction, and grounded answers via the [Exa API](https://exa.ai). One subpackage per endpoint: [`search`](exa/search/), [`contents`](exa/contents/), [`answer`](exa/answer/), [`find_similar`](exa/find_similar/). Pure-stdlib transport, no SDK, no import-time network. |
 | [`deep_research`](deep_research/) | Provider-neutral deep research orchestration over OpenAI and Gemini with lazy SDK adapters, provider selection, and normalized job/result models. |
+| [`monid`](monid/) | Monid gateway client (discover/inspect/run/balance) plus offline USD-per-1k search API pricing comparison. |
 
 ## Exa quick start
 
@@ -26,6 +27,21 @@ for r in client.search("Next.js route handler auth example", num_results=10).res
 See [`exa/README.md`](exa/README.md) for the full interface, structured-output,
 and CLI reference. Canonical API docs:
 <https://docs.exa.ai/reference/search-api-guide-for-coding-agents>.
+
+## Monid quick start
+
+```python
+from infrastructure.search.monid import MonidClient
+
+client = MonidClient.from_env()  # MONID_API_KEY
+for hit in client.discover("web search", limit=5).results:
+    print(hit.provider, hit.endpoint, hit.price)
+```
+
+See [`monid/README.md`](monid/README.md) and [`monid/PRICING.md`](monid/PRICING.md) for the API and
+USD-per-1k search pricing table (Exa, Brave, Tavily, Serper, SerpAPI vs Monid gateway).
+
+Agent skill: [`.agents/skills/monid/SKILL.md`](../../.agents/skills/monid/SKILL.md).
 
 ## Deep research quick start
 
