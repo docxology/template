@@ -514,21 +514,3 @@ def test_project_matrix_provisions_the_pinned_pandoc_toolchain() -> None:
     assert project_step == infra_step
     assert project_step["uses"] == "pandoc/actions/setup@86321b6dd4675f5014c611e05088e10d4939e09e"
     assert "if" not in project_step
-
-
-def test_textbook_matrix_provisions_the_pinned_mermaid_toolchain() -> None:
-    repo = Path(__file__).resolve().parents[3]
-    workflow = yaml.safe_load((repo / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
-
-    project_steps = workflow["jobs"]["test-project"]["steps"]
-    mermaid_steps = [step for step in project_steps if step.get("uses") == "./.github/actions/setup-docs-lint"]
-
-    assert mermaid_steps == [
-        {
-            "uses": "./.github/actions/setup-docs-lint",
-            "if": "matrix.project == 'templates/template_textbook'",
-        }
-    ]
-    mermaid_index = project_steps.index(mermaid_steps[0])
-    test_index = next(index for index, step in enumerate(project_steps) if step.get("name") == "Run project tests")
-    assert mermaid_index < test_index

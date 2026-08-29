@@ -13,7 +13,3 @@ Puppeteer `chrome-headless-shell`, then exports `CHROME_EXECUTABLE_PATH`.
 
 The action intentionally does not run Python setup, dependency sync, or the
 linter itself; callers retain those explicit job-level steps.
-
-The `template_textbook` project-test cells also call this action before Stage 1
-so their real Mermaid resolver and renderer tests do not depend on undeclared
-host tooling.

@@ -1,9 +1,8 @@
 # `setup-docs-lint` — technical reference
 
-This composite action provisions the shared external Mermaid-rendering tools.
-Both `Static Health Report` and `Documentation Lint` call it before running
-`scripts/audit/lint_docs.py`; the two `template_textbook` project-matrix cells
-call it before their real Mermaid resolver and renderer tests.
+This composite action provisions the external tools required by the blocking
+documentation linter. Both `Static Health Report` and `Documentation Lint`
+must call this action before running `scripts/audit/lint_docs.py`.
 
 ## Invariants
 
@@ -16,7 +15,7 @@ call it before their real Mermaid resolver and renderer tests.
 
 ## Verification
 
-- Run `actionlint` after editing this action or any caller.
-- The CI `Documentation Lint`, `Static Health Report`, and textbook project
-  jobs are the real behavioral controls because the hosted-runner cache and
-  `GITHUB_ENV` propagation are GitHub Actions behavior.
+- Run `actionlint` after editing this action or either caller.
+- The CI `Documentation Lint` and `Static Health Report` jobs are the real
+  behavioral controls because the hosted-runner cache and `GITHUB_ENV`
+  propagation are GitHub Actions behavior.
