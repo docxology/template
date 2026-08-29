@@ -41,7 +41,7 @@ for hit in client.discover("web search", limit=5).results:
 See [`monid/README.md`](monid/README.md) and [`monid/PRICING.md`](monid/PRICING.md) for the API and
 USD-per-1k search pricing table (Exa, Brave, Tavily, Serper, SerpAPI vs Monid gateway).
 
-Agent skill: [`.agents/skills/monid/SKILL.md`](../../.agents/skills/monid/SKILL.md).
+Agent skill: [`monid/SKILL.md`](monid/SKILL.md).
 
 ## Deep research quick start
 

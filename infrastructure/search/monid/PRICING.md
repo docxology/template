@@ -60,4 +60,4 @@ See [Monid pricing guide](https://monid.ai/docs/guide/pricing).
 | One wallet, many providers | Monid (inspect per endpoint) |
 
 Prefer the user's existing API key or MCP when they already have one; Monid
-spends prepaid balance and should fill gaps only (see `.agents/skills/monid/SKILL.md`).
+spends prepaid balance and should fill gaps only (see [`SKILL.md`](SKILL.md)).
