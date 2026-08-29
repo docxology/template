@@ -43,7 +43,7 @@ def test_missing_repository_yaml_uses_packaged_canonical_dag(tmp_path: Path) -> 
     assert resolved == Path(__file__).parents[4] / "infrastructure/core/pipeline/pipeline.yaml"
 
     expected = PipelineDAG.from_yaml(resolved)
-    expected.filter_tags(exclude={"llm", "ebook", "metadata", "bundle", "archival", "science", "provenance"})
+    expected.filter_tags(exclude=set(expected.opt_in_tags) | {"llm"})
     expected_names = [stage.name for stage in expected.sorted_stages()]
     actual_names = [stage.name for stage in executor._build_stage_list(include_llm=False, skip_clean=False)]
     assert actual_names == expected_names

@@ -19,7 +19,7 @@ as verified success.
 | Coverage parsing | `coverage_json_parser.py` | `parse_coverage_json` reads pytest-cov `coverage.json` into per-file and overall coverage stats. |
 | Coverage analysis | `coverage_analysis.py` | `format_coverage_status`, `analyze_coverage_gaps`, and `format_failure_suggestions` render coverage against thresholds and derive gap and failure hints. |
 | Coverage facade | `coverage_reporter.py` | Backwards-compatible re-export of `parse_coverage_json`, `parse_pytest_output`, `generate_test_report`, `save_test_report_to_files`, and the coverage-analysis helpers. |
-| Test summary builder | `report_builder.py` | `discover_active_projects` and `generate_summary_report` aggregate infrastructure and project suite results into one weighted summary structure. |
+| Test summary builder | `report_builder.py` | `discover_active_projects` returns `ProjectInfo.qualified_name` (so `templates/<name>` does not collide with a flat sibling) and `generate_summary_report` aggregates infrastructure and project suite results into one weighted summary structure. |
 | Test result loaders | `result_loaders.py` | `load_test_results` and `load_infrastructure_results` read runner JSON into the `InfraResults` shape. |
 | Stage 01 reporting | `pipeline_test_reporting.py` | `report_results` and `report_infra_only_results` log the Stage 01 test-execution summary in human-readable form. |
 | Executive output layout | `executive_outputs.py` | `organize_executive_summary` and `ExecutiveOutputOptions` sort `output/executive_summary` files by type via `OutputOrganizer`. |

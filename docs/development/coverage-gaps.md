@@ -1,8 +1,9 @@
 # Test Coverage Gap Analysis
 
 This document tracks infrastructure test coverage gaps by Layer-1 module. The
-global infrastructure gate remains 60%; the rows below are targets and notes,
-not new CI gates.
+global infrastructure gate remains 60%. **Module-% tables below are historical
+notes, not live gates.** Live measured coverage and exemplar floors belong in
+[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md).
 
 **Last verified:** 2026-08-09 (source-bound guidance; current measurements are
 read from the generated coverage receipts below rather than copied into this
@@ -145,13 +146,13 @@ deterministic local paths — no mocks introduced.
 | `core/runtime/setup_checks.py` | 46.67% | 85.71% | +15 | `tests/infra_tests/core/test_setup_checks.py` |
 | `project/working_render.py` | 46.67% | 90.33% | +25 | `tests/infra_tests/project/test_working_render.py` |
 
-Scripts audit (43/49 clean thin orchestrators): six violations identified — two embed
-non-trivial algorithms in scripts (`scripts/docgen/api_reference.py` package discovery,
-`scripts/pipeline/stage_06_llm_review.py` stage-label resolution); two inline data-shaping logic that belongs
-in infrastructure (`audit_filepaths.py` statistics formatting, `verify_no_mocks.py`
-scan-root resolution); one embeds a mini-test-runner loop duplicating infrastructure
-aggregation (`scripts/pipeline/stage_00_setup.py`); one hardcodes a canonical configuration list
-(`scripts/docgen/stage_table.py`). No hardcoded external URLs found.
+The six thin-orchestrator script violations recorded here have been moved into
+`infrastructure/` (package discovery, stage-label resolution, filepath
+statistics, no-mocks scan-root resolution, Stage-00 setup aggregation, and
+stage-table generation from `pipeline.yaml`). Scripts in those paths now
+coordinate I/O; the algorithms live in tested Layer-1 modules. Re-run
+`scripts/audit/check_template_drift.py` rather than treating this paragraph as
+a live violation list.
 
 Parity notes: `infrastructure/docker/` has partial coverage via
 `tests/infra_tests/rendering/test_dockerfile_gen.py` (no dedicated `tests/infra_tests/docker/`

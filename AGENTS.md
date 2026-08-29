@@ -286,33 +286,13 @@ Each directory contains documentation for easy navigation:
 
 ### Project-Specific (Customizable)
 
-| Directory | AGENTS.md | README.md | Purpose |
-| --------- | --------- | --------- | ------- |
-| [`projects/templates/template_code_project/`](projects/templates/template_code_project/) | [AGENTS.md](projects/templates/template_code_project/AGENTS.md) | [README.md](projects/templates/template_code_project/README.md) | Code-centric exemplar (canonical, always present) |
-| [`projects/templates/template_prose_project/`](projects/templates/template_prose_project/) | [AGENTS.md](projects/templates/template_prose_project/AGENTS.md) | [README.md](projects/templates/template_prose_project/README.md) | Prose-centric exemplar (canonical, always present) |
-| [`projects/templates/template_active_inference/`](projects/templates/template_active_inference/) | [AGENTS.md](projects/templates/template_active_inference/AGENTS.md) | [README.md](projects/templates/template_active_inference/README.md) | Active Inference multi-track exemplar (canonical, always present) |
-| [`projects/templates/template_advanced_literature_review/`](projects/templates/template_advanced_literature_review/) | [AGENTS.md](projects/templates/template_advanced_literature_review/AGENTS.md) | [README.md](projects/templates/template_advanced_literature_review/README.md) | Advanced multi-phase literature-review exemplar with phase provenance and offline replay (canonical, always present) |
-| [`projects/templates/template_autopoiesis/`](projects/templates/template_autopoiesis/) | [AGENTS.md](projects/templates/template_autopoiesis/AGENTS.md) | [README.md](projects/templates/template_autopoiesis/README.md) | Combinatoric-grammar project-generation exemplar (canonical, always present) |
-| [`projects/templates/template_autoresearch_project/`](projects/templates/template_autoresearch_project/) | [AGENTS.md](projects/templates/template_autoresearch_project/AGENTS.md) | [README.md](projects/templates/template_autoresearch_project/README.md) | AutoResearch exemplar (canonical, always present) |
-| [`projects/templates/template_autoscientists/`](projects/templates/template_autoscientists/) | [AGENTS.md](projects/templates/template_autoscientists/AGENTS.md) | [README.md](projects/templates/template_autoscientists/README.md) | AutoScientists coordination-mechanism testbed exemplar (canonical, always present) |
-| [`projects/templates/template_data_descriptor/`](projects/templates/template_data_descriptor/) | [AGENTS.md](projects/templates/template_data_descriptor/AGENTS.md) | [README.md](projects/templates/template_data_descriptor/README.md) | Dataset descriptor/data-paper exemplar with schema, provenance, and quality gates (canonical, always present) |
-| [`projects/templates/template_eda_notebook/`](projects/templates/template_eda_notebook/) | [AGENTS.md](projects/templates/template_eda_notebook/AGENTS.md) | [README.md](projects/templates/template_eda_notebook/README.md) | EDA notebook exemplar with notebook-to-src binding and deterministic analysis outputs (canonical, always present) |
-| [`projects/templates/template_formal/`](projects/templates/template_formal/) | [AGENTS.md](projects/templates/template_formal/AGENTS.md) | [README.md](projects/templates/template_formal/README.md) | Strongly typed multiagent colony exemplar with session-typed protocols and Lean/TLA+ formal side-specs (canonical, always present) |
-| [`projects/templates/template_gold_refinement/`](projects/templates/template_gold_refinement/) | [AGENTS.md](projects/templates/template_gold_refinement/AGENTS.md) | [README.md](projects/templates/template_gold_refinement/README.md) | Gold-refining metallurgical analogy for manuscript composition (ore → nine-nines, mega-madlib token injection) (canonical, always present) |
-| [`projects/templates/template_literature_meta_analysis/`](projects/templates/template_literature_meta_analysis/) | [AGENTS.md](projects/templates/template_literature_meta_analysis/AGENTS.md) | [README.md](projects/templates/template_literature_meta_analysis/README.md) | Literature meta-analysis exemplar — multi-engine retrieval, de-dup, full-text, embeddings, bibliometrics; default term `modafinil` (canonical, always present) |
-| [`projects/templates/template_madlib/`](projects/templates/template_madlib/) | [AGENTS.md](projects/templates/template_madlib/AGENTS.md) | [README.md](projects/templates/template_madlib/README.md) | Conditional token-injection manuscript exemplar with QA probes and authoring contract (canonical, always present) |
-| [`projects/templates/template_methods_paper/`](projects/templates/template_methods_paper/) | [AGENTS.md](projects/templates/template_methods_paper/AGENTS.md) | [README.md](projects/templates/template_methods_paper/README.md) | Methods-paper exemplar — controlled-method specification DSL, staged validation, deterministic compilation, informed by BPL (canonical, always present) |
-| [`projects/templates/template_newspaper/`](projects/templates/template_newspaper/) | [AGENTS.md](projects/templates/template_newspaper/AGENTS.md) | [README.md](projects/templates/template_newspaper/README.md) | Newspaper layout-engine exemplar (canonical, always present) |
-| [`projects/templates/template_pitch_deck/`](projects/templates/template_pitch_deck/) | [AGENTS.md](projects/templates/template_pitch_deck/AGENTS.md) | [README.md](projects/templates/template_pitch_deck/README.md) | Pitch deck / slide deck scaffold exemplar (canonical, always present) |
-| [`projects/templates/template_pools_rules_tools/`](projects/templates/template_pools_rules_tools/) | [AGENTS.md](projects/templates/template_pools_rules_tools/AGENTS.md) | [README.md](projects/templates/template_pools_rules_tools/README.md) | Fonds/rules/tools resource-pool integration exemplar (canonical, always present) |
-| [`projects/templates/template_redacted_report/`](projects/templates/template_redacted_report/) | [AGENTS.md](projects/templates/template_redacted_report/AGENTS.md) | [README.md](projects/templates/template_redacted_report/README.md) | Formal redaction and release-review exemplar with authority, ledger, and mosaic-risk gates (canonical, always present) |
-| [`projects/templates/template_registered_report/`](projects/templates/template_registered_report/) | [AGENTS.md](projects/templates/template_registered_report/AGENTS.md) | [README.md](projects/templates/template_registered_report/README.md) | Registered-report/preregistration exemplar with locked hypotheses, outcomes, analysis plan, and deviation ledger (canonical, always present) |
-| [`projects/templates/template_sia/`](projects/templates/template_sia/) | [AGENTS.md](projects/templates/template_sia/AGENTS.md) | [README.md](projects/templates/template_sia/README.md) | SIA harness exemplar (canonical, always present) |
-| [`projects/templates/template_storybook/`](projects/templates/template_storybook/) | [AGENTS.md](projects/templates/template_storybook/AGENTS.md) | [README.md](projects/templates/template_storybook/README.md) | Full-page illustrated storybook exemplar (canonical, always present) |
-| [`projects/templates/template_template/`](projects/templates/template_template/) | [AGENTS.md](projects/templates/template_template/AGENTS.md) | [README.md](projects/templates/template_template/README.md) | Meta-template exemplar (canonical, always present) |
-| [`projects/templates/template_textbook/`](projects/templates/template_textbook/) | [AGENTS.md](projects/templates/template_textbook/AGENTS.md) | [README.md](projects/templates/template_textbook/README.md) | Modular fillable-textbook scaffold exemplar (canonical, always present) |
-| [`projects/templates/template_search_project/`](projects/templates/template_search_project/) | [AGENTS.md](projects/templates/template_search_project/AGENTS.md) | [README.md](projects/templates/template_search_project/README.md) | Literature-search exemplar (canonical, always present) |
-| Rotating private workspaces | see project tree when checked out under a typed subfolder | see project tree when checked out under a typed subfolder | See [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for current rendered roster; ordinary sidecar work rotates between `projects/working/` and `projects/archive/` |
+Public tracked exemplars live under `projects/templates/`. The live roster,
+qualified names, and per-exemplar pointers are generated in
+[`docs/_generated/active_projects.md`](docs/_generated/active_projects.md)
+(`uv run python scripts/docgen/active_projects.py`). The control-positive
+walkthrough remains [`projects/templates/template_code_project/`](projects/templates/template_code_project/).
+Rotating private workspaces use typed lifecycle folders; see
+[`docs/maintenance/private-projects-repo.md`](docs/maintenance/private-projects-repo.md).
 
 **In-progress projects** live under [`projects/working/`](projects/working/) and are not executed by default pipeline discovery. Render one explicitly with a qualified project name such as `working/<name>`, or deliberately restore it through optional sidecar `active/` only when it should enter default discovery. The roster rotates every checkout, so it is deliberately **not** hard-coded here (cf. the rotation rule above — hard-coding rotating project paths is the recurring staleness defect this guidance prevents): run `ls projects/working/` for the live set, and see [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) for the rendered roster.
 
@@ -545,7 +525,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: default full pipeline — 10 core+LLM stages; pipeline.yaml also declares six opt-in stages (ebook, metadata, bundle, archival, science, provenance). --core-only drops LLM and opt-in stages and leaves 8.
+# Non-interactive: default full pipeline (core+LLM). Opt-in tags stay out unless invoked directly. --core-only drops LLM and opt-in stages. See STAGE_SUMMARY.
 ./run.sh --pipeline
 ```
 
@@ -633,11 +613,11 @@ steganography:
 - **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
 - **`./run.sh --secure-run`**: Forwards to the `secure` orchestration subcommand (same Python CLI as bare `./run.sh`; use when you want argv shaping from the main shell).
 - **`./secure_run.sh`**: Ensures steganography extras (`uv sync --group steganography`), then `python -m infrastructure.orchestration secure`. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
-- **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`**: Core DAG only — **8** stages in default [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) (LLM-tagged stages excluded); no LLM dependencies.
+- **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`**: Core DAG only — LLM-tagged and opt-in stages excluded (counts in the generated `STAGE_SUMMARY` below).
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** — the default `pipeline.yaml` declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `run.sh` displays that default path as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages.
+**Full Pipeline Stages** — counts come from the generated `STAGE_SUMMARY` at the end of this file. `run.sh` shows `[0/N]` for clean and `[1/N]`–`[N/N]` for the numbered default-run stages (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py)). `--core-only` drops LLM-tagged and opt-in stages.
 
 - **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
 1. **Environment Setup** - Verify system requirements and dependencies
@@ -652,10 +632,11 @@ steganography:
 
 **Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — there is no `--tags` CLI flag; invoke the stage or runner script directly):
 
-12. **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
-13. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
-14. **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project. Invoke the runner directly; it is not under `scripts/pipeline/`.
-15. **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to archival targets. Defaults to dry-run; pass `--commit` only with owner authorization. Invoke the runner directly; it is not under `scripts/pipeline/`.
+- **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
+- **docxplus Export** (`scripts/pipeline/stage_13_docxplus.py`, tag `docxplus`) — Generate the DOCX+ export. Soft-fail; invoke the stage script directly.
+- **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
+- **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project. Invoke the runner directly; it is not under `scripts/pipeline/`.
+- **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to archival targets. Defaults to dry-run; pass `--commit` only with owner authorization. Invoke the runner directly; it is not under `scripts/pipeline/`.
 
 **Infrastructure Tests Behavior:**
 
@@ -667,9 +648,7 @@ steganography:
 
 - **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards (generated after all projects, not as a numbered stage)
 
-**Stage numbering (canonical phrasing — keep in sync with CLAUDE.md and README.md):**
-
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**. YAML stages 5–13 use pipeline-stage scripts; YAML stage 14 (Executable Bundle) and YAML stage 15 (Archival Publication) use their opt-in runner entry points under `scripts/runner/`. YAML stage indices are distinct from script filename prefixes.
+**Stage numbering:** see the generated `STAGE_SUMMARY` and `STAGE_TABLE` at the end of this file. YAML stage indices are distinct from script filename prefixes. Executable Bundle and Archival Publication use opt-in runner entry points under `scripts/runner/`.
 
 ### Manual Execution Options
 
@@ -1541,6 +1520,10 @@ See [`docs/operational/config/checkpoint-resume.md`](docs/operational/config/che
 - ✅ manuscript reference validation (all citations, figures, equations, sections resolved)
 - ✅ HTTP testing with pytest-httpserver (no mocks for API calls)
 
+
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->

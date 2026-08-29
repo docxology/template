@@ -56,7 +56,26 @@ def _canonical_project_slug(slug: str, projects: Sequence[ProjectInfo]) -> str |
     return sorted(matches)[0]
 
 
-def validate_project_slug(slug: str, repo_root: Path) -> str:
+def _reject_unsafe_slug(slug: str) -> None:
+    """Raise ``ValueError`` when *slug* is empty or a path-safety reject."""
+    if not slug:
+        raise ValueError("project slug must be a non-empty string")
+    if "\x00" in slug:
+        raise ValueError("project slug must not contain NUL bytes")
+    if ".." in slug:
+        raise ValueError(f"project slug must not contain '..': {slug!r}")
+    if slug.startswith("/"):
+        raise ValueError(f"project slug must not start with '/': {slug!r}")
+    if slug.startswith("-"):
+        raise ValueError(f"project slug must not start with '-': {slug!r}")
+
+
+def validate_project_slug(
+    slug: str,
+    repo_root: Path,
+    *,
+    projects: Sequence[ProjectInfo] | None = None,
+) -> str:
     """Validate a user-supplied project slug against discovered projects.
 
     Rejects (in order):
@@ -73,19 +92,9 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
     Raises:
         ValueError: with a precise reason for the rejection.
     """
-    if not slug:
-        raise ValueError("project slug must be a non-empty string")
-    if "\x00" in slug:
-        raise ValueError("project slug must not contain NUL bytes")
-    if ".." in slug:
-        raise ValueError(f"project slug must not contain '..': {slug!r}")
-    if slug.startswith("/"):
-        raise ValueError(f"project slug must not start with '/': {slug!r}")
-    if slug.startswith("-"):
-        raise ValueError(f"project slug must not start with '-': {slug!r}")
-
-    projects = discover_projects(repo_root)
-    resolved = _canonical_project_slug(slug, projects)
+    _reject_unsafe_slug(slug)
+    discovered = list(projects) if projects is not None else discover_projects(repo_root)
+    resolved = _canonical_project_slug(slug, discovered)
     if resolved is None:
         normalized = slug.replace("\\", "/")
         head = normalized.split("/", 1)[0]
@@ -98,15 +107,16 @@ def validate_project_slug(slug: str, repo_root: Path) -> str:
             if has_markers:
                 return normalized
     if resolved is None:
-        available = sorted(p.qualified_name for p in projects)
+        available = sorted(p.qualified_name for p in discovered)
         raise ValueError(f"project {slug!r} not found. Available: {', '.join(available) or '(none)'}")
     return resolved
 
 
 def resolve_project_info(slug: str, repo_root: Path) -> ProjectInfo:
     """Resolve a validated rendered or qualified lifecycle project once."""
-    qualified_name = validate_project_slug(slug, repo_root)
-    for project in discover_projects(repo_root):
+    projects = discover_projects(repo_root)
+    qualified_name = validate_project_slug(slug, repo_root, projects=projects)
+    for project in projects:
         if project.qualified_name == qualified_name:
             return project
 

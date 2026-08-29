@@ -15,7 +15,7 @@ This document consolidates best practices from across all documentation, providi
 ```mermaid
 flowchart LR
     P[project/]
-    P --> SRC[src<br/>Business logic · comprehensively tested]
+    P --> SRC[src<br/>Business logic · tested]
     P --> T[tests<br/>Test suite · 90% project · 60% infra minimum]
     P --> SC[scripts<br/>Thin orchestrators]
     P --> M[manuscript<br/>Research sections]
@@ -90,7 +90,7 @@ from example import add_numbers, calculate_average
 **Maintain coverage:**
 
 - **Project code**: 90% minimum (current measured % — see [COUNTS.md](../_generated/COUNTS.md))
-- **Infrastructure**: 60% minimum (current measured % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **Infrastructure**: 60% minimum (current measured % — see [COUNTS.md](../_generated/COUNTS.md))
 - Test all critical code paths
 - Include edge cases
 - Test error handling

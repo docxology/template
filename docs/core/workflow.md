@@ -204,6 +204,10 @@ executive reporting, not the default single-project stage list.
 
 ### Canonical stage table (generated)
 
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
+
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->
 

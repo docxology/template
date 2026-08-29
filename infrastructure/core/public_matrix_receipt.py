@@ -34,7 +34,16 @@ import json
 import math
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Mapping, Sequence
+from typing import Any, Mapping, Sequence
+
+from infrastructure.core.logging.utils import get_logger, log_substep
+from infrastructure.core.project_pyproject import project_declared_coverage_floor
+from infrastructure.core.test_runner_cache import _cache_identity_inputs, _resolve_roster_revision
+from infrastructure.core.test_runner_outputs import output_tree_digest
+
+logger = get_logger(__name__)
+
+DEFAULT_SUBPROCESS_TIMEOUT_SECONDS = 1800
 
 
 @dataclass(frozen=True)
@@ -294,10 +303,141 @@ def build_public_matrix_cache_key(
     return hashlib.sha256(payload).hexdigest()
 
 
+def write_public_matrix_receipt(
+    repo_root: Path,
+    receipt_path: str | Path | None,
+    *,
+    specs: Sequence[Any],
+    results: Sequence[Any],
+    output_digests_before: dict[str, str],
+    profile: str,
+    marker_expr: str | None,
+    project_workers: str | int | None,
+    parallel: str | int | None,
+    combined_coverage_percent: float | None,
+    combined_floor: int,
+    overall_exit: int,
+    measure_coverage_percent: Any,
+    phase_durations: dict[str, float] | None = None,
+    skip_reasons: dict[str, str] | None = None,
+    subprocess_timeout_seconds: int = DEFAULT_SUBPROCESS_TIMEOUT_SECONDS,
+) -> int:
+    """Finalize output isolation and write a requested public-matrix receipt."""
+    if receipt_path is None:
+        return overall_exit
+
+    lane_context: list[tuple[Any, Any, float | None]] = []
+    for result in results:
+        spec = next(s for s in specs if s.index == result.index)
+        coverage_percent = measure_coverage_percent(result.coverage_file)
+        lane_context.append((result, spec, coverage_percent))
+
+    output_isolation: dict[int, bool] = {}
+    for spec in specs:
+        before = output_digests_before[spec.project_name]
+        output_isolation[spec.index] = before == output_tree_digest(spec.project_root)
+        if not output_isolation[spec.index]:
+            logger.error(
+                "Project '%s' changed its output/ tree during the public-matrix run",
+                spec.project_name,
+            )
+            overall_exit = 1
+
+    worker_info = determine_worker_info(project_workers, parallel)
+    roster_revision = _resolve_roster_revision(repo_root)
+    cache_inputs = _cache_identity_inputs(
+        repo_root,
+        profile=profile,
+        marker_expr=marker_expr,
+        worker_info=worker_info,
+        project_names=[spec.project_name for spec in specs] + list((skip_reasons or {}).keys()),
+    )
+    cache_key = build_public_matrix_cache_key(
+        roster_revision=roster_revision,
+        profile=profile,
+        marker_expression=marker_expr,
+        worker_info=worker_info,
+        project_names=[spec.project_name for spec in specs] + list((skip_reasons or {}).keys()),
+        source_tree_identity=cache_inputs["index_worktree"],
+        interpreter_identity=cache_inputs["interpreter"],
+        lockfile_identity=cache_inputs["lockfiles"],
+        tool_versions=dict(item.split("=", 1) for item in cache_inputs["tool_versions"].split(";") if "=" in item),
+    )
+    lanes = []
+    for result, spec, coverage_percent in lane_context:
+        lanes.append(
+            PublicMatrixLaneResult(
+                project_name=result.project_name,
+                declared_floor=project_declared_coverage_floor(spec.project_root),
+                exit_code=result.exit_code,
+                timed_out=result.timed_out,
+                coverage_percent=coverage_percent,
+                output_isolation_ok=output_isolation[spec.index],
+                duration_seconds=result.duration_seconds,
+                resource_profile=worker_info,
+                skip_reason="",
+                collection_count=result.collection_count,
+                cache_key=cache_key,
+                output_isolation_digest=output_tree_digest(spec.project_root),
+                resource_limits={
+                    "subprocess_timeout_seconds": subprocess_timeout_seconds,
+                    "outer_project_workers": str(project_workers or "serial"),
+                    "inner_xdist_workers": str(parallel or "serial"),
+                },
+            )
+        )
+    for project_name, reason in sorted((skip_reasons or {}).items()):
+        is_error = reason.startswith("error:")
+        if is_error:
+            overall_exit = overall_exit or 1
+        lanes.append(
+            PublicMatrixLaneResult(
+                project_name=project_name,
+                declared_floor=None,
+                exit_code=1 if is_error else 0,
+                timed_out=False,
+                coverage_percent=None,
+                output_isolation_ok=True,
+                duration_seconds=0.0,
+                resource_profile=worker_info,
+                skip_reason=reason,
+                cache_key=cache_key,
+                resource_limits={
+                    "subprocess_timeout_seconds": subprocess_timeout_seconds,
+                    "outer_project_workers": str(project_workers or "serial"),
+                    "inner_xdist_workers": str(parallel or "serial"),
+                },
+            )
+        )
+    receipt = build_public_matrix_receipt(
+        roster_revision=roster_revision,
+        profile=profile,
+        marker_expression=marker_expr,
+        worker_info=worker_info,
+        lanes=lanes,
+        combined_coverage_percent=combined_coverage_percent,
+        combined_floor=combined_floor,
+        overall_exit=overall_exit,
+        phase_durations=phase_durations,
+        collection_counts={
+            result.project_name: result.collection_count
+            for result, _, _ in lane_context
+            if result.collection_count is not None
+        },
+        skip_reasons=dict(skip_reasons or {}),
+        cache_key=cache_key,
+        cache_inputs=cache_inputs,
+    )
+    receipt.write(receipt_path)
+    log_substep(f"Public-matrix receipt written: {receipt_path}", logger)
+    return overall_exit
+
+
 __all__ = [
     "PublicMatrixLaneResult",
     "PublicMatrixReceipt",
     "build_public_matrix_receipt",
     "build_public_matrix_cache_key",
     "determine_worker_info",
+    "write_public_matrix_receipt",
 ]

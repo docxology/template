@@ -40,7 +40,7 @@ This directory contains development standards, coding guidelines, and best pract
 - Location: `infrastructure/` (root level)
 - Domain-independent tools
 - Reusable across projects
-- 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- 60% minimum test coverage required (current % — see [COUNTS.md](../_generated/COUNTS.md))
 
 **Layer 2: Project** (Specific, customizable)
 
@@ -181,7 +181,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 **Key Points**:
 
 - Generic and domain-independent only
-- 60% minimum test coverage required (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- 60% minimum test coverage required (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
@@ -243,7 +243,7 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ### Coverage Requirements
 
-- **Infrastructure**: 60% minimum (current % — see [coverage-gaps.md](../development/coverage-gaps.md))
+- **Infrastructure**: 60% minimum (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Project code**: 90% minimum (current % — see [COUNTS.md](../_generated/COUNTS.md))
 - **Integration tests**: All critical workflows covered
 

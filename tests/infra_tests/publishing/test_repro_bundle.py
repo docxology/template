@@ -16,6 +16,7 @@ from infrastructure.core.pipeline.artifacts import (
     STABLE_LOCAL_OUTPUT_INVENTORY_MODE,
     snapshot_current_artifact_manifest,
 )
+from infrastructure.publishing._repro_bundle_verify import collect_schema_findings
 from infrastructure.publishing.repro_bundle import (
     BUNDLE_MANIFEST_NAME,
     SCHEMA_VERSION,
@@ -685,3 +686,17 @@ def test_build_rejects_project_and_all_public_together(tmp_path: Path) -> None:
     with pytest.raises(SystemExit) as exc:
         main(["build", "template_sia", "--all-public", "--repo-root", str(tmp_path), "--out", str(tmp_path / "o")])
     assert exc.value.code == 2
+
+
+def test_collect_schema_findings_rejects_unsupported_schema() -> None:
+    findings, project = collect_schema_findings(
+        {
+            "schema_version": "0.0",
+            "generated_at": "2026-01-01T00:00:00Z",
+            "project": "templates/demo",
+            "reproduce": ["not-the-command"],
+        }
+    )
+    reasons = {item["reason"] for item in findings}
+    assert "unsupported-schema" in reasons
+    assert project == "templates/demo"
