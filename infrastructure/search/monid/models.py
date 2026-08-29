@@ -48,15 +48,24 @@ class EndpointPrice:
             notes=notes,
         )
 
-    def estimated_per_call_usd(self) -> float | None:
-        """Return a flat per-call estimate when pricing is ``PER_CALL``."""
-        if self.type != "PER_CALL" or self.amount is None or self.amount.value is None:
-            return None
-        return self.amount.value
+    def estimated_per_call_usd(self, *, result_count: int = 1) -> float | None:
+        """Return a per-execution estimate for ``PER_CALL`` or ``PER_RESULT`` pricing."""
+        if result_count < 0:
+            raise ValueError("result_count must be non-negative")
+        if self.type == "PER_CALL":
+            if self.amount is None or self.amount.value is None:
+                return None
+            return self.amount.value
+        if self.type == "PER_RESULT":
+            if self.amount is None or self.amount.value is None:
+                return None
+            base = self.flat_fee.value if self.flat_fee is not None and self.flat_fee.value is not None else 0.0
+            return base + self.amount.value * result_count
+        return None
 
-    def estimated_per_1k_calls_usd(self) -> float | None:
+    def estimated_per_1k_calls_usd(self, *, result_count: int = 1) -> float | None:
         """Convert a per-call estimate to USD per 1,000 calls."""
-        per_call = self.estimated_per_call_usd()
+        per_call = self.estimated_per_call_usd(result_count=result_count)
         if per_call is None:
             return None
         return per_call * 1000.0

@@ -13,7 +13,13 @@ from infrastructure.search.monid.models import (
     RunRecord,
     WalletBalance,
 )
-from infrastructure.search.monid.pricing import SEARCH_API_PRICES, SearchApiPrice, format_pricing_table, sorted_by_cost
+from infrastructure.search.monid.pricing import (
+    LAST_REVIEWED,
+    SEARCH_API_PRICES,
+    SearchApiPrice,
+    format_pricing_table,
+    sorted_by_cost,
+)
 
 __all__ = [
     "API_KEY_ENV",
@@ -29,6 +35,7 @@ __all__ = [
     "MonidHttpClient",
     "MonidResponse",
     "RunRecord",
+    "LAST_REVIEWED",
     "SEARCH_API_PRICES",
     "SearchApiPrice",
     "UrllibMonidHttpClient",

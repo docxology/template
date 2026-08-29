@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
+from pathlib import Path
 
 import pytest
 from pytest_httpserver import HTTPServer
 
 from infrastructure.search.monid import (
+    LAST_REVIEWED,
     MonidClient,
     MonidConfig,
     MonidError,
@@ -15,6 +18,7 @@ from infrastructure.search.monid import (
     sorted_by_cost,
 )
 from infrastructure.search.monid.cli import build_parser, main, run
+from infrastructure.search.monid.models import EndpointPrice, Money
 
 
 def _client(httpserver: HTTPServer, **config_kwargs: object) -> MonidClient:
@@ -151,12 +155,24 @@ def test_run_async_polls_until_completed(httpserver: HTTPServer) -> None:
 
 
 def test_balance(httpserver: HTTPServer) -> None:
-    httpserver.expect_request("/v1/wallet/balance", method="GET").respond_with_json(
-        {"balance": {"value": 2.85, "currency": "USD"}}
-    )
+    captured: dict = {}
+
+    def handler(request):  # type: ignore[no-untyped-def]
+        captured["method"] = request.method
+        captured["body"] = request.get_data()
+        from werkzeug.wrappers import Response
+
+        return Response(
+            json.dumps({"balance": {"value": 2.85, "currency": "USD"}}),
+            content_type="application/json",
+        )
+
+    httpserver.expect_request("/v1/wallet/balance", method="GET").respond_with_handler(handler)
     bal = _client(httpserver).balance()
     assert bal.value == pytest.approx(2.85)
     assert bal.currency == "USD"
+    assert captured["method"] == "GET"
+    assert captured["body"] == b""
 
 
 def test_from_env_requires_key(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -195,3 +211,58 @@ def test_run_cli_invalid_json(monkeypatch: pytest.MonkeyPatch) -> None:
     args = parser.parse_args(["run", "p", "/e", "--input", "{bad"])
     with pytest.raises(MonidError, match="invalid --input JSON"):
         run(args)
+
+
+def test_endpoint_price_per_result_with_flat_fee() -> None:
+    price = EndpointPrice(
+        type="PER_RESULT",
+        amount=Money(value=0.001),
+        flat_fee=Money(value=0.002),
+    )
+    assert price.estimated_per_call_usd(result_count=10) == pytest.approx(0.012)
+    assert price.estimated_per_1k_calls_usd(result_count=1) == pytest.approx(3.0)
+
+
+def test_endpoint_price_per_result_rejects_negative_count() -> None:
+    price = EndpointPrice(type="PER_RESULT", amount=Money(value=0.001))
+    with pytest.raises(ValueError, match="non-negative"):
+        price.estimated_per_call_usd(result_count=-1)
+
+
+def test_search_api_prices_have_current_review_date() -> None:
+    repo_root = Path(__file__).resolve().parents[3]
+    pricing_md = (repo_root / "infrastructure/search/monid/PRICING.md").read_text(encoding="utf-8")
+    assert f"**Last reviewed:** {LAST_REVIEWED}" in pricing_md
+
+
+def test_hub_docs_do_not_hardcode_search_api_prices() -> None:
+    """USD/1k list prices belong in pricing.py and PRICING.md only."""
+    repo_root = Path(__file__).resolve().parents[3]
+    forbidden = ("$7.00/1k", "$0.30/1k", "Serper **$0.30")
+    hubs = (
+        "README.md",
+        "AGENTS.md",
+        "infrastructure/search/SKILL.md",
+        "infrastructure/search/README.md",
+    )
+    offenders: list[str] = []
+    for relative in hubs:
+        path = repo_root / relative
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for phrase in forbidden:
+            if phrase in text:
+                offenders.append(f"{relative}: {phrase}")
+    assert not offenders, "hardcoded search API prices in hub docs:\n" + "\n".join(offenders)
+
+
+@pytest.mark.network
+def test_live_discover_includes_price_when_key_present() -> None:
+    if not os.environ.get("MONID_API_KEY", "").strip():
+        pytest.skip("MONID_API_KEY not set")
+    resp = MonidClient.from_env().discover("web search", limit=3)
+    assert resp.count >= 0
+    if resp.results:
+        assert resp.results[0].price is not None
+        assert resp.results[0].price.type

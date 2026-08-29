@@ -13,6 +13,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+#: ISO date when vendor list prices were last verified (keep in sync with PRICING.md).
+LAST_REVIEWED = "2026-08-28"
+
 
 @dataclass(frozen=True)
 class SearchApiPrice:
@@ -124,4 +127,4 @@ def format_pricing_table() -> str:
     return "\n".join(lines)
 
 
-__all__ = ["SEARCH_API_PRICES", "SearchApiPrice", "format_pricing_table", "sorted_by_cost"]
+__all__ = ["LAST_REVIEWED", "SEARCH_API_PRICES", "SearchApiPrice", "format_pricing_table", "sorted_by_cost"]

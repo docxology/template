@@ -156,10 +156,10 @@ for hit in client.discover("web search", limit=5).results:
 print(format_pricing_table())  # offline USD/1k for Exa, Brave, Tavily, Serper, …
 ```
 
-Direct search API list prices (2026-08-28): Serper **$0.30–$1.00/1k**, Brave
-**$5/1k**, Exa search **$7/1k**, Tavily **$8/1k**, SerpAPI **$10/1k**. Monid
-gateway pricing is per-endpoint — always `inspect` before `run`. Full table:
-[`monid/PRICING.md`](monid/PRICING.md).
+Direct search API list prices are maintained in
+[`monid/PRICING.md`](monid/PRICING.md) (review date in
+[`pricing.py`](monid/pricing.py)). Monid gateway pricing is per-endpoint —
+always `inspect` before `run`.
 
 ## `deep_research` — Manuscript-scale research reports (PAID)
 
