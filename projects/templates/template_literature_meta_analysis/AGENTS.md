@@ -56,6 +56,16 @@ uv run python projects/templates/template_literature_meta_analysis/scripts/05_in
 
 Stage 01 (`01_literature_search.py`) is the live/network retrieval path. Use it only when intentionally refreshing the corpus from engines configured in `manuscript/config.yaml`. It writes both the merged corpus and a deterministic `output/data/retrieval_report.json`; a legacy resume without that report is labelled explicitly and never assigned reconstructed engine counts.
 
+## Optional gap-filler search (Monid)
+
+Prefer configured MCP connectors and direct retrieval API keys before Monid.
+The shared Monid gateway (`infrastructure/search/monid/`) covers web-search
+and data-endpoint gaps with wallet pricing — compare providers via
+[`infrastructure/search/monid/PRICING.md`](../../../infrastructure/search/monid/PRICING.md).
+This exemplar does not import Monid from `src/`; opt-in live use only with
+`MONID_API_KEY`. Manuscript-scale synthesis remains on the offline
+`deep_research` replay path (`scripts/08_deep_research_dispatch.py`).
+
 ## Verification Commands
 
 ```bash

@@ -42,6 +42,15 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_sea
 - **Run from the repo root.** Commands assume the template monorepo root
   as working directory unless the child `AGENTS.md` states otherwise.
 
+## Optional gap-filler search (Monid)
+
+Prefer the user's MCP connectors and direct API keys first. For uncovered web
+search endpoints, Monid (`infrastructure/search/monid/`) is infrastructure-only
+gap filler — see
+[`PRICING.md`](../../../../../infrastructure/search/monid/PRICING.md) and
+[`.agents/skills/monid/SKILL.md`](../../../../../.agents/skills/monid/SKILL.md).
+This exemplar's `src/` does not import Monid; keep the offline default intact.
+
 ## Cross-refs
 
 - Project contract: [`AGENTS.md`](../../../AGENTS.md)

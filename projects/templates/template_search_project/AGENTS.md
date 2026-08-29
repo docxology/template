@@ -223,3 +223,17 @@ work — noted for future reference only.
 * [`docs/modules/literature-search-and-references.md`](../../../docs/modules/literature-search-and-references.md) — module overview.
 * [`docs/guides/literature-workflow-guide.md`](../../../docs/guides/literature-workflow-guide.md) — narrative tutorial.
 * [`infrastructure/search/AGENTS.md`](../../../infrastructure/search/AGENTS.md) and [`infrastructure/reference/AGENTS.md`](../../../infrastructure/reference/AGENTS.md) — infrastructure guides.
+
+## Optional gap-filler search (Monid)
+
+This exemplar stays **offline-by-default** and does not import Monid from
+`src/`. When an agent or operator already has MCP connectors or direct API
+keys configured, use those first. For uncovered web-search or data-endpoint
+gaps, the Layer-1 Monid gateway (`infrastructure/search/monid/`) provides
+`discover` / `inspect` / `run` with per-endpoint wallet pricing. Compare
+direct-provider USD/1k list prices via
+[`infrastructure/search/monid/PRICING.md`](../../../infrastructure/search/monid/PRICING.md);
+upstream skill:
+[`.agents/skills/monid/SKILL.md`](../../../.agents/skills/monid/SKILL.md).
+Requires `MONID_API_KEY` and spends prepaid balance — never wire into default
+CI or pipeline stages.

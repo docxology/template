@@ -169,3 +169,18 @@ cd projects/templates/template_search_project && uv run python scripts/review --
 ```
 
 Checks 2 and 3 must produce the "Clean" message. Check 4 must list the nine review stages without raising.
+
+## Optional gap-filler search (Monid)
+
+This exemplar does **not** call Monid from `src/` — the default pipeline remains
+offline and cost-free. Precedence for live agents:
+
+1. User-configured MCP connectors and direct API keys (Paperclip, Exa, etc.).
+2. Monid (`infrastructure/search/monid/`) only for gaps — `discover` → `inspect`
+   → `run` with wallet pricing; requires `MONID_API_KEY`.
+
+Compare direct-provider list prices in
+[`infrastructure/search/monid/PRICING.md`](../../../../infrastructure/search/monid/PRICING.md).
+Skill routing: [`.agents/skills/monid/SKILL.md`](../../../../.agents/skills/monid/SKILL.md).
+Do not add Monid to default CI or project scripts without an explicit opt-in
+budget gate.
