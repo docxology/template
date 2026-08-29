@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from pathlib import PurePosixPath
@@ -18,6 +19,7 @@ class FigureAltRecord:
     label: str
     filename: str | None
     alt_text: str | None
+    long_description: str | None = None
 
 
 @dataclass(frozen=True)
@@ -221,10 +223,23 @@ def _parse_record(
             f"Figure registry has conflicting alternative text fields for {label}",
             context={"registry": str(registry_path)},
         )
+    top_long_description = _normalized_long_description(record.get("long_description"))
+    metadata_long_description = (
+        _normalized_long_description(metadata.get("long_description")) if isinstance(metadata, dict) else None
+    )
+    declared_long_descriptions = [
+        value for value in (top_long_description, metadata_long_description) if value is not None
+    ]
+    if len(set(declared_long_descriptions)) > 1:
+        raise RenderingError(
+            f"Figure registry has conflicting long-description fields for {label}",
+            context={"registry": str(registry_path)},
+        )
     return FigureAltRecord(
         label=label,
         filename=filename,
         alt_text=top_alt or renderer_alt or metadata_alt,
+        long_description=top_long_description or metadata_long_description,
     )
 
 
@@ -232,3 +247,12 @@ def _normalized_alt(value: object) -> str | None:
     if not isinstance(value, str) or not value.strip():
         return None
     return " ".join(value.split())
+
+
+def _normalized_long_description(value: object) -> str | None:
+    """Normalize prose paragraphs while retaining meaningful boundaries."""
+
+    if not isinstance(value, str) or not value.strip():
+        return None
+    paragraphs = [" ".join(paragraph.split()) for paragraph in re.split(r"\n\s*\n", value.strip())]
+    return "\n\n".join(paragraph for paragraph in paragraphs if paragraph)

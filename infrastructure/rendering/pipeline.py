@@ -150,6 +150,15 @@ def _render_pipeline_impl(
             slides_dir=str(project_root / "output" / "slides"),
             docx_dir=str(project_root / "output" / "docx"),
             epub_dir=str(project_root / "output" / "epub"),
+            slide_theme=env_config.slide_theme,
+            slides_profile=env_config.slides_profile,
+            slides_max_prose_words=env_config.slides_max_prose_words,
+            slides_max_table_rows=env_config.slides_max_table_rows,
+            slides_min_figure_area_percent=env_config.slides_min_figure_area_percent,
+            slides_title_font_pt=env_config.slides_title_font_pt,
+            slides_body_font_pt=env_config.slides_body_font_pt,
+            slides_figure_label_font_pt=env_config.slides_figure_label_font_pt,
+            slides_reader_href=env_config.slides_reader_href,
             enable_pdf=env_config.enable_pdf,
             enable_html=env_config.enable_html,
             enable_slides=env_config.enable_slides,
@@ -164,7 +173,8 @@ def _render_pipeline_impl(
         log_success("Initialized RenderManager from infrastructure.rendering", logger)
         logger.info(
             f"Render formats: pdf={config.enable_pdf} html={config.enable_html} "
-            f"slides={config.enable_slides} docx={config.enable_docx} epub={config.enable_epub}"
+            f"slides={config.enable_slides} docx={config.enable_docx} epub={config.enable_epub}; "
+            f"slides_profile={config.slides_profile}"
         )
     except (OSError, ValueError, TypeError) as e:
         logger.error(f"Failed to initialize RenderManager: {e}")

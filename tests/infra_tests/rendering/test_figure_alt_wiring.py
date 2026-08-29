@@ -134,6 +134,69 @@ def test_registry_replacement_uses_exact_alt_and_src_attributes(tmp_path: Path) 
     assert 'alt="Short visible caption"' not in rendered
 
 
+def test_registry_long_description_is_associated_escaped_and_idempotent(tmp_path: Path) -> None:
+    registry_path = tmp_path / "figure_registry.json"
+    registry_path.write_text(
+        json.dumps(
+            {
+                "fig:dense": {
+                    "filename": "dense.png",
+                    "alt": "A square-marked trajectory rises above a dotted reference.",
+                    "long_description": (
+                        "Panel A reads from left to right & distinguishes square and circle markers.\n\n"
+                        "The bounded fixture does not establish <universal> performance."
+                    ),
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
+        'alt="Visible caption"><figcaption>Visible caption.</figcaption></figure></body></html>',
+        encoding="utf-8",
+    )
+
+    WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+    WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+
+    rendered = html_file.read_text(encoding="utf-8")
+    assert rendered.count('class="figure-long-description"') == 1
+    assert 'id="fig-dense-long-description"' in rendered
+    assert 'aria-details="fig-dense-long-description"' in rendered
+    assert "aria-describedby" not in rendered
+    assert "left to right &amp; distinguishes" in rendered
+    assert "&lt;universal&gt; performance" in rendered
+    assert rendered.count("<p>") == 2
+
+
+def test_registry_rejects_conflicting_long_description_fields(tmp_path: Path) -> None:
+    registry_path = tmp_path / "figure_registry.json"
+    registry_path.write_text(
+        json.dumps(
+            {
+                "fig:dense": {
+                    "filename": "dense.png",
+                    "alt": "A meaningful concise alternative.",
+                    "long_description": "Top-level reading order.",
+                    "metadata": {"long_description": "Different nested reading order."},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
+        'alt="Visible caption"><figcaption>Visible caption.</figcaption></figure></body></html>',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RenderingError, match="conflicting long-description fields"):
+        WebRenderer._enhance_accessibility(html_file, registry_path=registry_path)
+
+
 def test_registry_replacement_preserves_latex_backslashes_in_alt(tmp_path: Path) -> None:
     """Registry alt text with LaTeX backslashes must not break re.sub replacement."""
     registry_path = tmp_path / "figure_registry.json"

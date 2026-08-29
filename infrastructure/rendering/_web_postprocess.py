@@ -19,6 +19,7 @@ from infrastructure.rendering._figure_alt_registry import (
     rendered_figure_filename,
     require_record_alt,
 )
+from infrastructure.rendering._web_figure_details import apply_figure_long_description
 
 logger = get_logger(__name__)
 
@@ -87,7 +88,15 @@ SHARED_DESIGN_TOKENS_CSS = """:root {
 }
 .theorem-box.definition { border-left-style: dashed; }
 .theorem-box > p:first-child { margin-top: 0; }
-.theorem-box > p:last-child { margin-bottom: 0; }"""
+.theorem-box > p:last-child { margin-bottom: 0; }
+.figure-long-description {
+  border: 1px solid var(--web-border);
+  border-radius: 4px;
+  margin-block: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+.figure-long-description > summary { cursor: pointer; font-weight: 700; }
+.figure-long-description > p { max-width: 80ch; }"""
 
 _ANCHOR_HREF_RE = re.compile(
     r"(?P<prefix><a\b[^>]*?(?<!\S)href\s*=\s*)(?P<quote>[\"'])(?P<href>.*?)(?P=quote)",
@@ -536,7 +545,10 @@ def replace_figure_alts(content: str, *, registry_path: Path | None = None) -> s
             if record.filename is None:  # Defensive: registry parsing requires this.
                 raise RenderingError(f"Figure registry record is missing a filename: {record.label}")
             updated_image = _set_image_source(updated_image, f"../figures/{record.filename}")
+            updated_image, disclosure = apply_figure_long_description(updated_image, record)
             updated_body = body[: image_match.start()] + updated_image + body[image_match.end() :]
+            if disclosure and "figure-long-description" not in updated_body:
+                updated_body += disclosure
             return f"<figure{figure_attrs}>{updated_body}</figure>"
 
         authored_alt = _html_attribute(image_match.group("attrs"), "alt")
@@ -671,6 +683,20 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
     )
     image_re = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
 
+    def _link_name(figure_body: str, image_attributes: str) -> str:
+        caption_match = re.search(
+            r"<figcaption\b[^>]*>(?P<caption>.*?)</figcaption>",
+            figure_body,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        caption = html.unescape(re.sub(r"<[^>]+>", " ", caption_match.group("caption"))) if caption_match else ""
+        accessible_context = " ".join(caption.split()) or (_html_attribute(image_attributes, "alt") or "").strip()
+        if not accessible_context:
+            return "Open full-size figure"
+        if len(accessible_context) > 140:
+            accessible_context = accessible_context[:137].rstrip() + "…"
+        return f"Open full-size figure: {accessible_context}"
+
     def _figure(match: re.Match[str]) -> str:
         figure_body = match.group("body")
         if "figure-full-size-link" in figure_body:
@@ -685,10 +711,12 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
             if not source:
                 return image_match.group(0)
             href = html.escape(source, quote=True)
+            link_name = _link_name(figure_body, image_match.group("attrs"))
+            escaped_link_name = html.escape(link_name, quote=True)
             return (
                 '<a class="figure-full-size-link" '
                 f'href="{href}" target="_blank" rel="noopener" '
-                'aria-label="Open full-size figure">'
+                f'aria-label="{escaped_link_name}">'
                 f"{image_match.group(0)}"
                 '<span class="figure-full-size-label" aria-hidden="true">'
                 "Open full-size figure</span></a>"

@@ -24,9 +24,11 @@ single section in isolation and have a different acceptable-citation
 set than the full manuscript.
 """
 
+import json
 import re
 import shutil
 import subprocess
+import tempfile
 from collections.abc import Callable
 from pathlib import Path
 
@@ -39,8 +41,13 @@ from infrastructure.rendering._slides_crossref import (
     resolve_cross_deck_references,
 )
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
+from infrastructure.rendering._slides_accessibility import (
+    enhance_accessible_reveal,
+    load_and_compose_pandoc_json,
+)
 from infrastructure.rendering._slides_framebreaks import split_long_slide_frames
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.latex_log_quality import parse_latex_log_findings
 from infrastructure.rendering.latex_utils import compile_latex, ensure_pdf_at
 from infrastructure.rendering.latex_texttt import (
     constrain_includegraphics_textheight,
@@ -53,6 +60,32 @@ from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
 from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
+
+
+def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
+    """Discard a Beamer derivative whose fixed accessible layout overflowed."""
+
+    findings = parse_latex_log_findings(
+        log_file,
+        blocked_layout_kinds={r"Overfull \hbox", r"Overfull \vbox"},
+    )
+    if not findings:
+        return
+    compiled_pdf.unlink(missing_ok=True)
+    examples = [f"{finding.kind} at line {finding.line_number}: {finding.message}" for finding in findings[:5]]
+    raise RenderingError(
+        "[slides.density.beamer-overflow] Accessible Beamer content exceeds its fixed frame geometry",
+        context={
+            "diagnostic_code": "slides.density.beamer-overflow",
+            "log_file": str(log_file),
+            "finding_count": len(findings),
+            "examples": examples,
+        },
+        suggestions=[
+            "Split the source at a semantic block boundary or shorten the projected excerpt.",
+            "Keep complete prose, captions, and tables in the linked canonical HTML manuscript.",
+        ],
+    )
 
 
 def _slide_bibliography_args(manuscript_dir: Path | None) -> list[str]:
@@ -125,24 +158,118 @@ class SlidesRenderer:
         profile.validate_output(output_file)
         profile.validate_source(source_file)
 
-        # For beamer, we need to handle figure paths specially
-        if output_format == "beamer":
-            return self._render_beamer_with_paths(
-                source_file,
-                output_file,
-                manuscript_dir,
-                figures_dir,
-                strict_cross_deck_refs=strict_cross_deck_refs,
+        if output_format not in {"beamer", "revealjs"}:
+            raise RenderingError(
+                f"Unsupported slide output format: {output_format}",
+                context={"source": str(source_file), "format": output_format},
             )
-        else:
-            # For reveal.js, use direct pandoc rendering
-            return self._render_revealjs(source_file, output_file, manuscript_dir)
+
+        render_source = source_file
+        temporary_sources: tuple[Path, ...] = ()
+        if self.config.slides_profile == "accessible":
+            # A failed strict composition must not leave a prior derivative
+            # that can be mistaken for the current source.
+            output_file.unlink(missing_ok=True)
+            render_source, temporary_sources = self._prepare_accessible_source(source_file, output_dir)
+
+        try:
+            # For beamer, we need to handle figure paths specially.
+            if output_format == "beamer":
+                return self._render_beamer_with_paths(
+                    render_source,
+                    output_file,
+                    manuscript_dir,
+                    figures_dir,
+                    strict_cross_deck_refs=strict_cross_deck_refs,
+                )
+            # For reveal.js, use direct pandoc rendering.
+            return self._render_revealjs(render_source, output_file, manuscript_dir, figures_dir)
+        finally:
+            for temporary in temporary_sources:
+                temporary.unlink(missing_ok=True)
+
+    def _prepare_accessible_source(self, source_file: Path, output_dir: Path) -> tuple[Path, tuple[Path, ...]]:
+        """Compose Markdown into one bounded semantic Pandoc JSON document."""
+
+        profile = self.config.security()
+        raw_handle = tempfile.NamedTemporaryFile(
+            prefix=f".{source_file.stem}-",
+            suffix=".pandoc.json",
+            dir=output_dir,
+            delete=False,
+        )
+        raw_json = Path(raw_handle.name)
+        raw_handle.close()
+        composed_json = raw_json.with_suffix(".accessible.json")
+        profile.validate_output(raw_json)
+        profile.validate_output(composed_json)
+        cmd = [
+            self.config.pandoc_path,
+            str(source_file),
+            "-t",
+            "json",
+            "-o",
+            str(raw_json),
+        ]
+        try:
+            self._process_runner(
+                cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+                **subprocess_options(profile, 600),
+            )
+            composition = load_and_compose_pandoc_json(
+                raw_json,
+                policy=self.config.accessible_slide_policy(),
+                source=str(source_file),
+            )
+            temporary = composed_json.with_suffix(composed_json.suffix + ".tmp")
+            try:
+                temporary.write_text(
+                    json.dumps(
+                        composition.document,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                temporary.replace(composed_json)
+            except OSError:
+                temporary.unlink(missing_ok=True)
+                raise
+            logger.info(
+                "Accessible slide composition: %d frames (%d section dividers, %d figure frames, %d table excerpts)",
+                composition.frame_count,
+                composition.section_divider_count,
+                composition.figure_frame_count,
+                composition.excerpted_table_count,
+            )
+            return composed_json, (raw_json, composed_json)
+        except subprocess.CalledProcessError as exc:
+            raw_json.unlink(missing_ok=True)
+            composed_json.unlink(missing_ok=True)
+            raise RenderingError(
+                f"Failed to parse accessible slide source: {exc.stderr}",
+                context={
+                    "source": str(source_file),
+                    "format": "pandoc-json",
+                    "diagnostic_code": "slides.parse.pandoc-json",
+                },
+            ) from exc
+        except Exception:
+            raw_json.unlink(missing_ok=True)
+            composed_json.unlink(missing_ok=True)
+            raise
 
     def _render_revealjs(
         self,
         source_file: Path,
         output_file: Path,
         manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
     ) -> Path:
         """Render reveal.js slides."""
         cmd = [
@@ -156,9 +283,13 @@ class SlidesRenderer:
             "-V",
             f"theme={self.config.slide_theme}",
         ]
+        if self.config.slides_profile == "accessible":
+            cmd.extend(["-f", "json", "--slide-level=2"])
         cmd.extend(_slide_bibliography_args(manuscript_dir))
         if manuscript_dir is not None:
             cmd.extend(["--resource-path", str(manuscript_dir)])
+        if figures_dir is not None:
+            cmd.extend(["--resource-path", str(figures_dir)])
 
         logger.info(f"Generating reveal.js slides from {source_file}")
 
@@ -170,9 +301,21 @@ class SlidesRenderer:
                 text=True,
                 **subprocess_options(self.config.security(), 600),
             )
+            if self.config.slides_profile == "accessible":
+                try:
+                    enhance_accessible_reveal(
+                        output_file,
+                        policy=self.config.accessible_slide_policy(),
+                        registry_path=(figures_dir / "figure_registry.json") if figures_dir is not None else None,
+                    )
+                except (OSError, RenderingError):
+                    output_file.unlink(missing_ok=True)
+                    raise
             return output_file
 
         except subprocess.CalledProcessError as e:
+            if self.config.slides_profile == "accessible":
+                output_file.unlink(missing_ok=True)
             raise RenderingError(
                 f"Failed to render slides: {e.stderr}",
                 context={"source": str(source_file), "format": "revealjs"},
@@ -197,7 +340,11 @@ class SlidesRenderer:
         output_dir = output_file.parent
 
         # Create temporary LaTeX file
-        temp_tex = output_dir / f"{source_file.stem}_slides.tex"
+        # Derive intermediates from the stable public output name. Accessible
+        # mode consumes a randomized, short-lived JSON source; deriving from
+        # that temporary filename would leak nondeterministic build products
+        # into ``output/slides``.
+        temp_tex = output_file.with_suffix(".tex")
 
         # Build pandoc command to convert markdown to LaTeX. A fixed slide
         # level is not safe for manuscript sections: when a source contains
@@ -206,7 +353,7 @@ class SlidesRenderer:
         # present heading (capped at h4) so the source's semantic breaks
         # become frames; the Lua filter below then lets each frame split when
         # its body is still too long.
-        slide_level = self._slide_level_for_source(source_file)
+        slide_level = 2 if self.config.slides_profile == "accessible" else self._slide_level_for_source(source_file)
         cmd = [
             self.config.pandoc_path,
             str(source_file),
@@ -217,12 +364,14 @@ class SlidesRenderer:
             "--standalone",
             f"--slide-level={slide_level}",
         ]
+        if self.config.slides_profile == "accessible":
+            cmd.extend(["-f", "json"])
 
         # Apply the allowframebreaks Lua filter so that long sections
         # without h2 sub-headings still split across slides instead of
         # triggering xelatex driver code 256 on overfull vboxes.
         allowframebreaks_filter = Path(__file__).with_name("_beamer_allowframebreaks.lua")
-        if allowframebreaks_filter.exists():
+        if self.config.slides_profile == "archive" and allowframebreaks_filter.exists():
             cmd.extend(["--lua-filter", str(allowframebreaks_filter)])
 
         # Keep formalism/equation labels source-owned and automatically
@@ -243,7 +392,13 @@ class SlidesRenderer:
         # Inject the math-font subset of the manuscript preamble so
         # \mid, \ll, \gg etc. render cleanly in slide decks without
         # pulling in the full combined-PDF preamble.
-        math_header = write_slides_math_header(manuscript_dir, output_dir)
+        math_header = write_slides_math_header(
+            manuscript_dir,
+            output_dir,
+            accessible_policy=(
+                self.config.accessible_slide_policy() if self.config.slides_profile == "accessible" else None
+            ),
+        )
         if math_header is not None:
             cmd.extend(["-H", str(math_header)])
 
@@ -304,16 +459,25 @@ class SlidesRenderer:
             # A long scientific caption is part of an unbreakable figure
             # environment. Keep the image legible but leave vertical room for
             # its accessibility/source caption on the same frame.
-            tex_content, graphics_replacements = constrain_includegraphics_textheight(tex_content, "0.40")
+            figure_fraction = (
+                f"{self.config.slides_min_figure_area_percent / 100:.2f}"
+                if self.config.slides_profile == "accessible"
+                else "0.40"
+            )
+            tex_content, graphics_replacements = constrain_includegraphics_textheight(
+                tex_content,
+                figure_fraction,
+            )
             if graphics_replacements:
                 logger.info("Constrained %d slide figure height bound(s)", graphics_replacements)
 
-            tex_content, framebreak_replacements = split_long_slide_frames(tex_content)
-            if framebreak_replacements:
-                logger.info(
-                    "Inserted safe frame breaks in %d dense slide frame(s)",
-                    framebreak_replacements,
-                )
+            if self.config.slides_profile == "archive":
+                tex_content, framebreak_replacements = split_long_slide_frames(tex_content)
+                if framebreak_replacements:
+                    logger.info(
+                        "Inserted safe frame breaks in %d dense slide frame(s)",
+                        framebreak_replacements,
+                    )
 
             # Write fixed LaTeX back
             _tmp = temp_tex.with_suffix(temp_tex.suffix + ".tmp")
@@ -326,6 +490,8 @@ class SlidesRenderer:
 
             # Compile LaTeX to PDF (written as {temp_tex.stem}.pdf, e.g. slides_slides.pdf)
             compiled_pdf = self._latex_compile(temp_tex, output_dir, compiler=self.config.latex_compiler, timeout=900)
+            if self.config.slides_profile == "accessible":
+                _reject_accessible_beamer_overflow(temp_tex.with_suffix(".log"), compiled_pdf)
             ensure_pdf_at(compiled_pdf, output_file)
 
             if output_file.exists():

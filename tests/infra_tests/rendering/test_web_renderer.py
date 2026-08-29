@@ -369,7 +369,7 @@ def test_figure_images_link_to_full_resolution_assets_idempotently(tmp_path: Pat
     assert 'href="../figures/dense.png"' in content
     assert 'target="_blank"' in content
     assert 'rel="noopener"' in content
-    assert 'aria-label="Open full-size figure"' in content
+    assert 'aria-label="Open full-size figure: Dense figure."' in content
     assert 'class="figure-full-size-label"' in content
 
 

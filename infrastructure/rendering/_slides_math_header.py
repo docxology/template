@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._pdf_latex_helpers import (
@@ -13,8 +14,32 @@ from infrastructure.rendering._pdf_latex_helpers import (
 
 logger = get_logger(__name__)
 
+if TYPE_CHECKING:
+    from infrastructure.rendering._slides_accessibility import AccessibleSlidePolicy
 
-def write_slides_math_header(manuscript_dir: Path | None, output_dir: Path) -> Path | None:
+
+def _latex_href(value: str) -> str:
+    r"""Escape a validated reader href for one Beamer ``\href`` argument."""
+
+    escaped = value
+    for source, target in (
+        ("%", r"\%"),
+        ("#", r"\#"),
+        ("_", r"\_"),
+        ("&", r"\&"),
+        ("{", r"\{"),
+        ("}", r"\}"),
+    ):
+        escaped = escaped.replace(source, target)
+    return escaped
+
+
+def write_slides_math_header(
+    manuscript_dir: Path | None,
+    output_dir: Path,
+    *,
+    accessible_policy: AccessibleSlidePolicy | None = None,
+) -> Path | None:
     """Write a Pandoc ``-H`` header file for Unicode math + citation
     fallbacks, if needed.
 
@@ -150,6 +175,47 @@ def write_slides_math_header(manuscript_dir: Path | None, output_dir: Path) -> P
         # as a bold run-in heading so dense prose sections don't fail.
         "\\providecommand{\\paragraph}[1]{\\textbf{#1}\\ }\n"
     )
+
+    if accessible_policy is not None:
+        # These declarations intentionally follow the archive defaults above:
+        # Beamer applies the later font selection, so the accessible profile
+        # cannot silently inherit the tiny table/equation/caption fallbacks
+        # used by dense archival derivatives.
+        accessible_title_pt = accessible_policy.title_font_pt
+        body = accessible_policy.body_font_pt
+        label = accessible_policy.figure_label_font_pt
+        title_leading = accessible_title_pt + 4
+        body_leading = body + 4
+        label_leading = label + 3
+        reader_href = _latex_href(accessible_policy.reader_href)
+        snippet_parts.append(
+            "% Opt-in accessible presentation profile.\n"
+            f"\\setbeamerfont{{normal text}}{{size*={{{body}pt}}{{{body_leading}pt}}}}\n"
+            f"\\setbeamerfont{{frametitle}}{{size*={{{accessible_title_pt}pt}}{{{title_leading}pt}}}}\n"
+            f"\\setbeamerfont{{section title}}{{size*={{{accessible_title_pt}pt}}{{{title_leading}pt}}}}\n"
+            f"\\setbeamerfont{{subsection title}}{{size*={{{accessible_title_pt}pt}}{{{title_leading}pt}}}}\n"
+            f"\\setbeamerfont{{caption}}{{size*={{{label}pt}}{{{label_leading}pt}}}}\n"
+            f"\\setbeamerfont{{caption name}}{{size*={{{label}pt}}{{{label_leading}pt}}}}\n"
+            f"\\AtBeginEnvironment{{longtable}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{tabular}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{equation}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{equation*}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{align}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{align*}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{itemize}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{enumerate}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            f"\\AtBeginEnvironment{{description}}{{\\fontsize{{{body}pt}}{{{body_leading}pt}}\\selectfont}}\n"
+            "\\AtBeginDocument{\\usebeamerfont{normal text}}\n"
+            "\\setbeamertemplate{footline}{%\n"
+            "  \\leavevmode\\hbox{%\n"
+            "    \\begin{beamercolorbox}[wd=\\paperwidth,ht=2.6ex,dp=1.1ex,center]{author in head/foot}%\n"
+            f"      \\fontsize{{{label}pt}}{{{label_leading}pt}}\\selectfont "
+            f"Untagged PDF derivative \\textbar\\ "
+            f"\\href{{{reader_href}}}{{HTML reader}}%\n"
+            "    \\end{beamercolorbox}%\n"
+            "  }%\n"
+            "}\n"
+        )
 
     # Manuscript preambles may declare additional theorem-like environments
     # (warning, note, ...) chained onto theorem. Recover any
