@@ -1,43 +1,43 @@
 # Infrastructure Module Reference
 
-This section inventories every Layer‑1 subdirectory returned by `28` `discover_infrastructure_modules(repo_root)`. File totals use `729` Python sources across infra + `9,874` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
+This section inventories every Layer‑1 subdirectory returned by `28` `discover_infrastructure_modules(repo_root)`. File totals use `769` Python sources across infra + `10,163` infra tests guarding them. Documentation Duality = paired `README.md` + `AGENTS.md`; optional `SKILL.md` manifests feed `python -m infrastructure.skills`.
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
-| `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
+| `autoresearch` | 11 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 128 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 133 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 17 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `llm` | 55 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
 | `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |
-| `methods` | 5 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
+| `methods` | 8 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 12 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
 | `project` | 42 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
-| `provenance` | 7 | ✓ | ✓ | — |
-| `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `provenance` | 8 | ✓ | ✓ | — |
+| `publishing` | 84 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 69 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `rendering` | 81 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 58 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
-| `search` | 62 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
+| `search` | 71 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
 | `sia` | 10 | ✓ | ✓ | Self-Improving-AI loop: task validation, harness, metric capture |
 | `skills` | 8 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
-| `validation` | 82 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 84 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 ## Alphabetical summaries
 
 Below, `${module_*_python_file_count}` placeholders expand per subdirectory at render-time.
 
-### `infrastructure.autoresearch` (10 files)
+### `infrastructure.autoresearch` (11 files)
 
 Readiness planner, validation CLI, and report models for AutoResearch-style project promotion (`infrastructure/autoresearch/`).
 
@@ -49,7 +49,7 @@ Template harness scoring and comparative gate helpers exercised in CI smoke path
 
 Repository-wide YAML templates and secure manifests (`.env.template`, hardened defaults referenced by Docker + CLI). `config/` carries no `__init__.py`, so it is a configuration subdirectory rather than an importable package.
 
-### `infrastructure.core` (128 files)
+### `infrastructure.core` (133 files)
 
 Checkpointing, logging, pipeline YAML parsing, telemetry bridges, filesystem helpers, hardened exceptions. Everything else imports logging + error taxonomy from here first.
 
@@ -61,7 +61,7 @@ Checkout diagnose/fix/undo repairs for broken local workspace states.
 
 Pinned images / compose scaffolding for reproducible CI + remote builds.
 
-### `infrastructure.documentation` (17 files)
+### `infrastructure.documentation` (23 files)
 
 Figure registries plus glossary tooling feeding manuscript automation.
 
@@ -73,7 +73,7 @@ Resource pool management for curated fonds (tracked reference datasets, bibliogr
 
 Ollama integrations, sanitization adapters, templated reviewer flows. **Literature ingestion now lives primarily in `search/literature` + citation helpers in `reference/`.**
 
-### `infrastructure.methods` (5 files)
+### `infrastructure.methods` (8 files)
 
 Deterministic methods-orchestration contracts (`MethodStage`, `MethodsOrchestrationPlan`, `MethodsIssue`): builds and validates an ordered methods plan for a research project so the manuscript's "Methods" track stays bound to executable stages.
 
@@ -89,11 +89,11 @@ Canonical discovery (`discover_projects`) enforcing `src/` + `tests/`, slug vali
 
 Readability metrics + Markdown tooling for prose-centric manuscripts / CI gates.
 
-### `infrastructure.provenance` (7 files)
+### `infrastructure.provenance` (8 files)
 
 Content-addressed provenance DAG. Records artifact lineage (which run produced which file, from which inputs) as a verifiable graph of artifact/run/source/claim nodes connected by produced/consumed/derived-from/supports/refutes edges. Includes a structured Review system with severity (blocking/major/minor/info) and verdict (refutes/supports). Features a CLI and pipeline integration hooks for automatic lineage recording after every stage.
 
-### `infrastructure.publishing` (83 files)
+### `infrastructure.publishing` (84 files)
 
 Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
@@ -101,7 +101,7 @@ Metadata models, APA/BibTeX/MLA formatters, optional Zenodo clients.
 
 Citation/BibTeX parsing + conversion utilities leveraged by manuscripts and retrieval scripts.
 
-### `infrastructure.rendering` (69 files)
+### `infrastructure.rendering` (81 files)
 
 Pandoc shim, Unicode/XeLaTeX postprocessors, combined PDF/HTML/slide exporters.
 
@@ -121,9 +121,9 @@ Governance rules layer for validating project lifecycle transitions, sidecar syn
 
 Stability probing, benchmarking hooks—consumed heavily by optimization exemplars (`template_code_project` scripts).
 
-### `infrastructure.search` (62 files)
+### `infrastructure.search` (71 files)
 
-Two-tier search architecture: the `literature/` client stack (client.py, backends, caches) powers literature search with arXiv, Crossref, local, and Paperclip backends. `connectors/` exposes the built-in scientific database adapters through a uniform `ConnectorRegistry`; OpenAlex, UniProt, PDB, Semantic Scholar, European PMC, bioRxiv, and other registered adapters share list/search CLI commands with HTTP timeout, retry, and TTL caching. The live registry, not this prose, is authoritative for connector count.
+Two-tier search architecture: the `literature/` client stack (client.py, backends, caches) powers literature search with arXiv, Crossref, local, and Paperclip backends. `connectors/` exposes the built-in scientific database adapters through a uniform `ConnectorRegistry`; OpenAlex, UniProt, PDB, Semantic Scholar, European PMC, bioRxiv, and other registered adapters share list/search CLI commands with HTTP timeout, retry, and TTL caching. `monid/` provides an opt-in paid gateway (`discover` / `inspect` / `run`) with offline USD/1k pricing reference in `monid/PRICING.md`. `deep_research/` dispatches long-horizon provider-neutral manuscript research (PAID, opt-in). The live registry, not this prose, is authoritative for connector count.
 
 ### `infrastructure.sia` (10 files)
 
@@ -141,7 +141,7 @@ Watermark overlays, hashing companions triggered by secure pipeline path.
 
 Invocable tool definitions registered by resource-pool governance; tools mirror `projects/templates/` with git-tracked `templates/*` exemplars.
 
-### `infrastructure.validation` (82 files)
+### `infrastructure.validation` (84 files)
 
 Markdown + PDF + integrity CLIs underpinning Stage 04 diagnostics.
 
