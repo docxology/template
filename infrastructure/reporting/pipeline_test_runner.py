@@ -47,9 +47,81 @@ from infrastructure.reporting.pipeline_test_reporting import (
     report_results,
 )
 from infrastructure.reporting.project_verifier import ProjectVerifierError, run_declared_project_verifier
-from infrastructure.reporting.suite_runner import TestSuiteConfig, run_test_suite
+from infrastructure.reporting.suite_runner import (
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+    TestSuiteConfig,
+    run_test_suite,
+)
 
 logger = get_logger(__name__)
+
+
+def _build_infrastructure_suite_config(
+    *,
+    cmd: list[str],
+    env: dict[str, str],
+    repo_root: Path,
+    coverage_json_paths: list[Path],
+    coverage_threshold: float,
+    quiet: bool,
+    scope: InfrastructureTestScope,
+) -> TestSuiteConfig:
+    """Build the infrastructure Stage-01 execution contract."""
+    return TestSuiteConfig(
+        label="Infrastructure",
+        cmd=cmd,
+        env=env,
+        repo_root=repo_root,
+        coverage_json_paths=coverage_json_paths,
+        coverage_threshold=coverage_threshold,
+        max_failures_env_var="MAX_INFRA_TEST_FAILURES",
+        max_failures_config_key="max_infra_test_failures",
+        quiet=quiet,
+        spinner_label=f"Running infrastructure tests ({scope})",
+        streaming_subprocess=True,
+        coverage_cleanup_scope_dir=None,
+        coverage_cleanup_recursive=False,
+    )
+
+
+def _build_generic_project_suite_config(
+    *,
+    project_name: str,
+    project_root: Path,
+    repo_root: Path,
+    cmd: list[str],
+    env: dict[str, str],
+    coverage_threshold: float,
+    quiet: bool,
+) -> TestSuiteConfig:
+    """Build the generic single-project Stage-01 execution contract.
+
+    Generic pytest and an explicitly declared project verifier share the same
+    single-project timeout capacity.  The larger budget only prevents the
+    runner from terminating an otherwise valid long suite prematurely; it is
+    not evidence that the suite completed or passed.
+    """
+    return TestSuiteConfig(
+        label="Project",
+        cmd=cmd,
+        env=env,
+        repo_root=repo_root,
+        coverage_json_paths=[
+            project_root / "coverage_project.json",
+            project_root / "coverage.json",
+            project_root / "htmlcov" / "coverage.json",
+        ],
+        coverage_threshold=coverage_threshold,
+        max_failures_env_var="MAX_PROJECT_TEST_FAILURES",
+        max_failures_config_key="max_project_test_failures",
+        quiet=quiet,
+        spinner_label=f"Running project tests for '{project_name}'",
+        streaming_subprocess=True,
+        timeout_seconds=DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+        total_timeout_seconds=DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+        coverage_cleanup_scope_dir=project_root,
+        coverage_cleanup_recursive=True,
+    )
 
 
 def run_infrastructure_tests(
@@ -152,18 +224,14 @@ def run_infrastructure_tests(
         )
 
     try:
-        config = TestSuiteConfig(
-            label="Infrastructure",
+        config = _build_infrastructure_suite_config(
             cmd=cmd,
             env=env,
             repo_root=repo_root,
             coverage_json_paths=coverage_json_paths,
             coverage_threshold=infra_threshold,
-            max_failures_env_var="MAX_INFRA_TEST_FAILURES",
-            max_failures_config_key="max_infra_test_failures",
             quiet=quiet,
-            spinner_label=f"Running infrastructure tests ({scope})",
-            streaming_subprocess=True,
+            scope=scope,
         )
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:
@@ -349,22 +417,14 @@ def _run_project_tests_impl(
         )
 
     try:
-        config = TestSuiteConfig(
-            label="Project",
+        config = _build_generic_project_suite_config(
+            project_name=project_name,
+            project_root=project_root,
+            repo_root=repo_root,
             cmd=cmd,
             env=env,
-            repo_root=repo_root,
-            coverage_json_paths=[
-                project_root / "coverage_project.json",
-                project_root / "coverage.json",
-                project_root / "htmlcov" / "coverage.json",
-            ],
             coverage_threshold=project_threshold,
-            max_failures_env_var="MAX_PROJECT_TEST_FAILURES",
-            max_failures_config_key="max_project_test_failures",
             quiet=quiet,
-            spinner_label=f"Running project tests for '{project_name}'",
-            streaming_subprocess=True,
         )
         exit_code, test_results = run_test_suite(config)
         if strict and test_results.get("failed", 0) > 0:

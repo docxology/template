@@ -21,9 +21,12 @@ import pytest
 from infrastructure.reporting.suite_runner import (
     _INTERNAL_STACK_PATTERNS,
     _SUMMARY_KEYWORDS,
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+    DEFAULT_TEST_SUITE_TIMEOUT_SECONDS,
     TestSuiteConfig as SuiteConfig,
     _is_internal_stack_line,
     _passes_quiet_filter,
+    _remaining_attempt_timeout_seconds,
     run_pytest_stream,
     run_test_suite,
 )
@@ -320,6 +323,24 @@ class TestSuiteConfigModel:
         assert config.label == "infra"
         assert config.coverage_threshold == 60.0
         assert config.quiet is True
+        assert config.timeout_seconds == DEFAULT_TEST_SUITE_TIMEOUT_SECONDS == 1800.0
+        assert config.total_timeout_seconds is None
+        assert config.coverage_cleanup_scope_dir is None
+        assert config.coverage_cleanup_recursive is True
+
+    def test_rejects_nonpositive_opt_in_total_timeout(self, tmp_path):
+        with pytest.raises(ValueError, match="total_timeout_seconds must be positive"):
+            SuiteConfig(
+                label="Project",
+                cmd=["pytest"],
+                env={},
+                repo_root=tmp_path,
+                coverage_json_paths=[],
+                coverage_threshold=90.0,
+                max_failures_env_var="MAX",
+                max_failures_config_key="max",
+                total_timeout_seconds=0.0,
+            )
 
     def test_default_spinner_label(self):
         config = SuiteConfig(
@@ -432,6 +453,13 @@ class TestRunTestSuite:
         exit_code, results = run_test_suite(config)
         assert isinstance(results, dict)
 
+    def test_nonpositive_per_attempt_timeout_keeps_fail_fast_semantics(self, tmp_path):
+        """The opt-in total budget does not reinterpret an invalid attempt budget."""
+        config = self._make_config(tmp_path)
+        config.timeout_seconds = 0.0
+        with pytest.raises(ValueError, match="timeout_seconds must be positive"):
+            run_test_suite(config)
+
     def test_run_suite_results_have_failed_tests(self, tmp_path):
         """Test that results include failed_tests key."""
         config = self._make_config(tmp_path)
@@ -443,6 +471,129 @@ class TestRunTestSuite:
         config = self._make_config(tmp_path, cmd=["echo", "All good"])
         exit_code, results = run_test_suite(config)
         assert isinstance(results, dict)
+
+    def _run_real_coverage_conflict_retry(self, tmp_path, config):
+        attempts_path = tmp_path / "cleanup-attempts.txt"
+        retry_probe = tmp_path / "cleanup_retry_probe.py"
+        retry_probe.write_text(
+            "import pathlib\n"
+            f"attempts = pathlib.Path({str(attempts_path)!r})\n"
+            "count = int(attempts.read_text(encoding='utf-8')) + 1 if attempts.exists() else 1\n"
+            "attempts.write_text(str(count), encoding='utf-8')\n"
+            "if count == 1:\n"
+            "    print('coverage.exceptions.DataError: retry required', flush=True)\n"
+            "    raise SystemExit(1)\n"
+            "print('1 passed in 0.01s', flush=True)\n",
+            encoding="utf-8",
+        )
+        config.cmd = [sys.executable, str(retry_probe)]
+
+        exit_code, results = run_test_suite(config)
+
+        assert attempts_path.read_text(encoding="utf-8") == "2"
+        assert exit_code == results["exit_code"] == 0
+
+    def test_project_scoped_retry_cleanup_preserves_sibling_coverage(self, tmp_path):
+        """A real generic-project retry removes only the selected project's data."""
+        selected_root = tmp_path / "projects" / "selected"
+        sibling_root = tmp_path / "projects" / "sibling"
+        selected_root.mkdir(parents=True)
+        sibling_root.mkdir(parents=True)
+        selected_coverage = selected_root / ".coverage.project"
+        sibling_coverage = sibling_root / ".coverage.project"
+        selected_coverage.write_text("selected", encoding="utf-8")
+        sibling_coverage.write_text("sibling", encoding="utf-8")
+        config = self._make_config(tmp_path)
+        config.coverage_cleanup_scope_dir = selected_root
+        config.coverage_cleanup_recursive = True
+
+        self._run_real_coverage_conflict_retry(tmp_path, config)
+
+        assert not selected_coverage.exists()
+        assert sibling_coverage.read_text(encoding="utf-8") == "sibling"
+
+    def test_nonrecursive_retry_cleanup_preserves_nested_project_coverage(self, tmp_path):
+        """A real infrastructure retry removes root data but not project data."""
+        project_root = tmp_path / "projects" / "selected"
+        project_root.mkdir(parents=True)
+        infrastructure_coverage = tmp_path / ".coverage.infra"
+        project_coverage = project_root / ".coverage.project"
+        infrastructure_coverage.write_text("infrastructure", encoding="utf-8")
+        project_coverage.write_text("project", encoding="utf-8")
+        config = self._make_config(tmp_path)
+        config.coverage_cleanup_scope_dir = None
+        config.coverage_cleanup_recursive = False
+
+        self._run_real_coverage_conflict_retry(tmp_path, config)
+
+        assert not infrastructure_coverage.exists()
+        assert project_coverage.read_text(encoding="utf-8") == "project"
+
+    def test_attempt_budget_is_bounded_by_remaining_total(self):
+        """The source-owned deadline calculation preserves and bounds both modes."""
+        assert _remaining_attempt_timeout_seconds(12.0, None, now_seconds=100.0) == 12.0
+        assert _remaining_attempt_timeout_seconds(12.0, 110.0, now_seconds=103.5) == 6.5
+        assert _remaining_attempt_timeout_seconds(12.0, 110.0, now_seconds=110.0) == 0.0
+        assert _remaining_attempt_timeout_seconds(12.0, 110.0, now_seconds=111.0) == 0.0
+
+    @pytest.mark.timeout(20)
+    def test_total_budget_bounds_coverage_retry_and_cleans_descendant(self, tmp_path):
+        """A real retry receives only remaining time and kills its detached child."""
+        attempts_path = tmp_path / "attempts.txt"
+        second_started_path = tmp_path / "second-started.txt"
+        descendant_marker_path = tmp_path / "descendant-finished.txt"
+        descendant = tmp_path / "descendant.py"
+        descendant.write_text(
+            "import pathlib, sys, time\n"
+            "time.sleep(4.0)\n"
+            "pathlib.Path(sys.argv[1]).write_text('survived', encoding='utf-8')\n",
+            encoding="utf-8",
+        )
+        retry_probe = tmp_path / "retry_probe.py"
+        retry_probe.write_text(
+            "import pathlib, subprocess, sys, time\n"
+            f"attempts = pathlib.Path({str(attempts_path)!r})\n"
+            "count = int(attempts.read_text(encoding='utf-8')) + 1 if attempts.exists() else 1\n"
+            "attempts.write_text(str(count), encoding='utf-8')\n"
+            "if count == 1:\n"
+            "    time.sleep(1.0)\n"
+            "    print('coverage.exceptions.DataError: retry required', flush=True)\n"
+            "    raise SystemExit(1)\n"
+            f"pathlib.Path({str(second_started_path)!r}).write_text('started', encoding='utf-8')\n"
+            f"subprocess.Popen([sys.executable, {str(descendant)!r}, {str(descendant_marker_path)!r}], "
+            "start_new_session=True)\n"
+            "time.sleep(10.0)\n"
+            "print('1 passed in 10.0s', flush=True)\n",
+            encoding="utf-8",
+        )
+        config = SuiteConfig(
+            label="Project",
+            cmd=[sys.executable, str(retry_probe)],
+            env=os.environ.copy(),
+            repo_root=tmp_path,
+            coverage_json_paths=[],
+            coverage_threshold=0.0,
+            max_failures_env_var="MAX_PROJECT_TEST_FAILURES",
+            max_failures_config_key="max_project_test_failures",
+            quiet=True,
+            streaming_subprocess=True,
+            timeout_seconds=10.0,
+            total_timeout_seconds=4.0,
+        )
+
+        started_at = time.monotonic()
+        exit_code, results = run_test_suite(config)
+        elapsed = time.monotonic() - started_at
+        time.sleep(1.5)
+
+        assert attempts_path.read_text(encoding="utf-8") == "2"
+        assert second_started_path.is_file()
+        assert not descendant_marker_path.exists()
+        assert exit_code == results["exit_code"] == 124
+        assert elapsed < 8.0
+        assert config.total_timeout_seconds == 4.0
+        assert config.timeout_seconds == 10.0
+        assert DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS == 6900.0
 
     def test_coverage_floor_failure_is_not_green_washed(self, tmp_path):
         """Regression: a non-zero exit with ZERO test failures (the signature of a
