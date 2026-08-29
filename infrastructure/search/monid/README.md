@@ -35,7 +35,8 @@ Tavily, Serper, SerpAPI, and how Monid gateway pricing differs.
 
 ## Docs
 
-- Upstream skill: [`.agents/skills/monid/SKILL.md`](../../../.agents/skills/monid/SKILL.md)
+- Repository skill: [`SKILL.md`](SKILL.md)
+- Upstream CLI skill source: https://monid.ai/SKILL.md
 - API reference: https://monid.ai/docs/api/overview.md
 - [`AGENTS.md`](AGENTS.md) — module contract
-- [`SKILL.md`](SKILL.md) — agent-oriented API
+- [`SKILL.md`](SKILL.md) — agent-oriented API and source-boundary guidance
