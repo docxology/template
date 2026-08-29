@@ -45,6 +45,16 @@ def _write_epub(path: Path) -> None:
         archive.writestr("EPUB/chapter.xhtml", chapter)
 
 
+def _write_accessible_reveal(path: Path) -> None:
+    path.write_text(
+        "<!doctype html><html><head><style data-template-accessible-slides></style></head>"
+        '<body><nav aria-label="Presentation companion"></nav>'
+        '<div aria-label="Presentation slides"><section aria-roledescription="slide">'
+        "<h2>Current</h2></section></div><script>keyboard: true</script></body></html>",
+        encoding="utf-8",
+    )
+
+
 @pytest.mark.parametrize("with_stale_pdf", [False, True])
 def test_html_only_copy_stage_succeeds_without_publishing_pdf(tmp_path, caplog, with_stale_pdf: bool) -> None:
     project_root = tmp_path / "projects" / "active" / "demo"
@@ -141,6 +151,34 @@ def test_legacy_pdf_override_copy_stage_uses_pdf_only_contract(tmp_path) -> None
     assert root_alias.read_bytes() == canonical_pdf.read_bytes()
     assert not (copied / "web" / "index.html").exists()
     assert not (copied / "slides").exists()
+
+
+@pytest.mark.parametrize(("with_reveal", "expected_status"), [(False, 1), (True, 0)])
+def test_accessible_slide_copy_requires_exact_pair(tmp_path: Path, with_reveal: bool, expected_status: int) -> None:
+    project_root = tmp_path / "projects" / "active" / "demo"
+    (project_root / "src").mkdir(parents=True)
+    (project_root / "tests").mkdir()
+    manuscript = project_root / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "01_intro.md").write_text("# Intro\n\nCurrent evidence.\n", encoding="utf-8")
+    (manuscript / "config.yaml").write_text(
+        "render:\n"
+        "  formats:\n"
+        "    pdf: false\n"
+        "    html: false\n"
+        "    slides: true\n"
+        "    docx: false\n"
+        "    epub: false\n"
+        "  slides:\n"
+        "    profile: accessible\n",
+        encoding="utf-8",
+    )
+    slides = project_root / "output" / "slides"
+    _write_pdf(slides / "01_intro_slides.pdf")
+    if with_reveal:
+        _write_accessible_reveal(slides / "01_intro_slides.html")
+
+    assert execute_copy_stage("active/demo", repo_root=tmp_path) == expected_status
 
 
 def test_copy_stage_maps_ignored_delivery_tree_to_source_inventory(tmp_path, caplog) -> None:
