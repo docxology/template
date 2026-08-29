@@ -5,8 +5,10 @@ description: Monid HTTP API client for discovering, inspecting, and running hund
 
 # Monid Submodule
 
-Python wrapper for https://monid.ai/docs/api/overview.md. For the upstream CLI
-workflow and agent rules, load [`.agents/skills/monid/SKILL.md`](../../../.agents/skills/monid/SKILL.md).
+Python wrapper for https://monid.ai/docs/api/overview.md. This file is the
+repository's canonical Monid skill. Consult https://monid.ai/SKILL.md when the
+upstream CLI workflow itself must be refreshed; do not mix that separate source
+into the context-engineering vendor tree under `.agents/skills/`.
 
 ## Discover → inspect → run
 

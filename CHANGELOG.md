@@ -62,6 +62,13 @@ not to the contents of any specific workspace.
 
 ### Robustness
 
+- Restored the single-source Agent Skills vendor boundary: the separately
+  sourced Monid CLI skill is no longer folded into the pinned Context
+  Engineering tree, the repository-owned Monid module skill remains
+  discoverable, and a negative control rejects any future unlocked skill
+  directory.
+- Completed the package-local Monid module map so the public-module
+  documentation gate covers `models.py` alongside the other six modules.
 - `uv sync` timeout no longer claims a successful workspace sync; it falls back
   to the same installed-package check as other `uv` failures.
 - Bounded hook execution no longer swallows post-launch `OSError` without

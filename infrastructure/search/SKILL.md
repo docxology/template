@@ -142,8 +142,10 @@ uv run python -m infrastructure.search.exa find-similar "https://example.com/pos
 ## `monid` — Gateway to hundreds of data endpoints (PAID)
 
 Monid routes agent tasks to third-party endpoints through one wallet. Python
-client: `MonidClient`; upstream CLI skill:
-[`.agents/skills/monid/SKILL.md`](../../.agents/skills/monid/SKILL.md).
+client: `MonidClient`; repository workflow:
+[`monid/SKILL.md`](monid/SKILL.md). The separate upstream Monid skill is not
+placed under `.agents/skills/`, whose complete tree is pinned to the declared
+context-engineering source.
 
 ```python
 from infrastructure.search.monid import MonidClient, format_pricing_table

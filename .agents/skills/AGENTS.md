@@ -12,6 +12,8 @@ pinned by [`../context-engineering.lock.json`](../context-engineering.lock.json)
   them; several accept caller-controlled paths or demonstrate credentialed
   shell commands.
 - Preserve relative paths when updating a skill.
+- Do not place a skill from another upstream in this tree or absorb it by
+  changing only the recorded counts/digest; that would misstate provenance.
 - Refresh through the audited installer at a pinned commit, reapply and record
   local overlays, then update both upstream and vendored hashes.
 - Run the upstream validators plus this repository's skill, runtime-sync, MCP,

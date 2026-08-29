@@ -10,6 +10,9 @@ Claude Code, and Hermes runtimes.
 - [`context-engineering.lock.json`](context-engineering.lock.json) pins the
   upstream repository, revision, plugin version, inventory counts, and exact
   content digest.
+- Every immediate skill directory under [`skills/`](skills/) belongs to that
+  one pinned source. A skill from another upstream stays with its owning
+  infrastructure package unless a reviewed multi-source lock schema is added.
 - Upstream skill directories retain their relative references and scripts.
   Scripts are illustrative and must not be auto-executed.
 - Runtime-specific policy belongs in an explicit overlay recorded by the lock,

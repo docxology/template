@@ -81,7 +81,7 @@ See [`exa/README.md`](exa/README.md), [`exa/AGENTS.md`](exa/AGENTS.md), and
 | `cli.py` | `discover` / `inspect` / `run` / `get-run` / `balance` / `pricing-table`. |
 
 See [`monid/README.md`](monid/README.md), [`monid/AGENTS.md`](monid/AGENTS.md),
-[`monid/PRICING.md`](monid/PRICING.md), and [`.agents/skills/monid/SKILL.md`](../../.agents/skills/monid/SKILL.md).
+[`monid/PRICING.md`](monid/PRICING.md), and [`monid/SKILL.md`](monid/SKILL.md).
 
 ### `deep_research/` — Provider-neutral long-running research orchestration
 

@@ -13,6 +13,16 @@ Monid HTTP API client. Unified gateway to hundreds of data endpoints; sibling to
 
 ## Public API
 
+| File | Role |
+| --- | --- |
+| `config.py` | Environment-backed host, credential, and polling configuration. |
+| `errors.py` | Typed `MonidError` failures. |
+| `http.py` | Standard-library HTTP transport protocol and implementation. |
+| `models.py` | Typed discover, inspect, run, balance, and pricing records. |
+| `client.py` | Discover, inspect, run, poll, and balance facade. |
+| `pricing.py` | Offline direct-provider price table and formatting helpers. |
+| `cli.py` | Real `discover`, `inspect`, `run`, `get-run`, `balance`, and `pricing-table` commands. |
+
 | Symbol | Role |
 | --- | --- |
 | `MonidConfig` / `MonidClient` | Config + facade |
@@ -31,8 +41,9 @@ https://monid.ai/docs/llms.txt — fetch API pages when behaviour drifts.
 
 ## Agent skill
 
-Repository skill: [`.agents/skills/monid/SKILL.md`](../../../.agents/skills/monid/SKILL.md)
-(upstream CLI workflow). Module skill: [`SKILL.md`](SKILL.md).
+Repository workflow: [`SKILL.md`](SKILL.md). The upstream Monid documentation
+remains linked from that skill, but its separate skill body is not mixed into
+the single-source context-engineering vendor tree under `.agents/skills/`.
 
 ## Tests
 
