@@ -218,8 +218,9 @@ book projects use `book.cover.image` and `book.cover.alt`. Setting
 LuaLaTeX tagging path. If the selected paper or book cover declares an image,
 its `alt` must then be a non-empty YAML string: both the publication audit and
 renderer fail closed, and the renderer checks before replacing a previous PDF.
-This emits a cover `Figure` alternative and requests PDF/UA-2 metadata; it does
-not prove the complete tag tree, reading order, or PDF/UA conformance.
+This emits a cover `Figure` alternative and requests PDF 2.0 tagging and catalog
+language without a PDF/UA conformance identifier. It does not prove the complete
+tag tree, reading order, or PDF/UA conformance.
 
 | Variable | Default | Description |
 |----------|---------|-------------|

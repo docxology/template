@@ -165,7 +165,8 @@ metadata:
 renderer selects LuaLaTeX, writes that text into the cover image's PDF
 structure element, and fails before replacing an existing PDF if the selected
 configured cover has missing, blank, or non-string alt text. The option
-requests tagged PDF/UA-2 metadata; it does not certify PDF/UA conformance.
+requests PDF 2.0 tagging and catalog language without emitting a PDF/UA
+conformance identifier. Tagged structure does not certify PDF/UA conformance.
 Combined EPUB rendering consumes the same selected cover and alt pair. A cover
 with missing or blank alt fails before Pandoc runs; after rendering, the EPUB
 post-processor names Pandoc's SVG cover graphic from the configured alt, hides

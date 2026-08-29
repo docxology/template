@@ -88,6 +88,16 @@ def _pdf_structure_alt_texts(pdf_path: Path) -> list[str]:
     return alt_texts
 
 
+def _pdf_root_and_xmp(pdf_path: Path) -> tuple[dict[str, object], bytes]:
+    """Return the real PDF catalog and XMP metadata stream."""
+    from pypdf import PdfReader
+
+    root = PdfReader(pdf_path).trailer["/Root"].get_object()
+    metadata = root.get("/Metadata")
+    assert metadata is not None
+    return root, metadata.get_object().get_data()
+
+
 class TestPreamble:
     def test_missing_config_returns_empty(self, tmp_path: Path) -> None:
         (tmp_path / "manuscript").mkdir()
@@ -190,6 +200,37 @@ class TestBody:
         assert r"\textasciitilde" not in serialized
         assert r"\textasciicircum" not in serialized
         assert r"\textbackslash" not in serialized
+
+    @pytest.mark.requires_latex
+    @pytest.mark.timeout(60)
+    def test_tagged_lualatex_pdf_keeps_structure_and_language_without_pdfua_identifier(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        if shutil.which("lualatex") is None:
+            pytest.skip("lualatex is not installed")
+
+        output_dir = tmp_path / "output" / "pdf"
+        output_dir.mkdir(parents=True)
+        tex = postprocess_latex(
+            r"\documentclass{article}\begin{document}Tagged paragraph.\end{document}",
+            tagged_pdf=True,
+            language="en-US",
+        )
+
+        compiled = _run_lualatex(output_dir, "tagged-metadata-boundary", tex)
+
+        assert compiled.returncode == 0, compiled.stdout
+        root, xmp = _pdf_root_and_xmp(output_dir / "tagged-metadata-boundary.pdf")
+        assert str(root.get("/Lang")) == "en-US"
+        structure_root = root.get("/StructTreeRoot")
+        assert structure_root is not None
+        assert structure_root.get_object().get("/K") is not None
+        mark_info = root.get("/MarkInfo")
+        assert mark_info is not None
+        assert bool(mark_info.get_object().get("/Marked"))
+        assert b"pdfuaid:part" not in xmp
+        assert b"pdfuaid:rev" not in xmp
 
     @pytest.mark.requires_latex
     @pytest.mark.timeout(60)
