@@ -45,6 +45,29 @@ config = RenderingConfig()
 # Configure PDF, HTML, slides options
 ```
 
+For projection-scale slides, explicitly select the accessible profile. The
+archive profile remains the default for backwards compatibility:
+
+```python
+config = RenderingConfig(
+    slides_profile="accessible",
+    slides_max_prose_words=80,
+    slides_max_table_rows=8,
+    slides_min_figure_area_percent=70,
+    slides_title_font_pt=28,
+    slides_body_font_pt=20,
+    slides_figure_label_font_pt=16,
+    slides_reader_href="../web/index.html",
+)
+```
+
+Accessible mode splits only at Pandoc semantic block boundaries, isolates
+figures/tables/equations/code/evidence, and fails with a coded `slides.*`
+diagnostic when an indivisible block cannot fit. Treat Reveal.js and the linked
+manuscript HTML as the accessibility-enhanced reader surfaces. Beamer output is
+an untagged presentation derivative; successful rendering is not a WCAG or
+PDF/UA conformance verdict.
+
 ## Manuscript Discovery
 
 ```python

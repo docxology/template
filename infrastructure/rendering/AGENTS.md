@@ -13,7 +13,7 @@ renderers without owning validation policy or project analysis.
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, Beamer math-header and figure-path helpers, Beamer-safe captioned listings and frame splitting, HTML orchestration, web-only markdown preprocess (citations/theorems), deterministic HTML post-processing, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Format renderers | `slides_renderer.py`, `_slides_accessibility.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `_web_figure_details.py`, `pandoc_renderers.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, opt-in semantic accessible-slide composition, Beamer math-header and figure-path helpers, Beamer-safe captioned listings and archive frame splitting, HTML orchestration, web-only markdown preprocess (citations/theorems), deterministic HTML post-processing and structured figure-detail association, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Pandoc filters | `_pandoc_filters.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. |
 | Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py`, `render_cache.py` | Section ordering, substitutions, resolved manuscript trees, render-boundary composition evidence (`manuscript_composition.py`), and modular section caching (`render_cache.py`). |
@@ -86,6 +86,18 @@ renderers without owning validation policy or project analysis.
   concatenate or rewrite manuscript bibliography sources during rendering.
   Section-level slide decks resolve
   inline citations but suppress repeated reference lists.
+- `render.slides.profile: accessible` is opt-in; `archive` remains the default
+  and retains the historical renderer. Accessible mode composes both Reveal.js
+  and Beamer from one Pandoc JSON AST, splits only between semantic blocks,
+  bounds prose at 80 words and displayed tables at eight body rows, allocates
+  at least 70% of a figure-led frame to the figure, and enforces native
+  title/body/figure-label floors of 28/20/16 points. A source block that cannot
+  satisfy those bounds fails with a stable `slides.*` diagnostic instead of
+  shrinking or character-count splitting. Reveal.js is the keyboard-operable,
+  long-description-bearing presentation reader; dense captions and complete
+  tables link to the canonical manuscript HTML. Beamer remains an explicitly
+  labelled untagged presentation derivative. Neither a successful render nor
+  these design constraints establish WCAG or PDF/UA conformance.
 - `pptx_deck.render_pptx()` normalizes OOXML ZIP-member timestamps after
   `python-pptx` saves the package. Do not remove that pass: identical decks
   must remain byte-identical, not merely content-equivalent.
@@ -150,6 +162,7 @@ uv run python -m infrastructure.rendering.cli web manuscript.md
 
 ```bash
 uv run pytest tests/infra_tests/rendering -q
+uv run pytest tests/infra_tests/rendering/test_slides_accessibility.py -q -m slow
 uv run pytest projects/templates/template_textbook/tests/test_mermaid.py -q
 ```
 
