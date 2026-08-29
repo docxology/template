@@ -63,6 +63,16 @@ flowchart TB
 | Docs lint | mermaid + cross-links + consistency + doc-pair coverage clean |
 | Import time | ≤ 5 s total |
 
+Each `test-project` cell has a 135-minute hosted-job backstop. Within that job,
+the directly invoked Stage-01 application gives generic pytest one total
+6,900-second subprocess-wait and retry-admission deadline, or gives an
+explicitly declared verifier one 6,900-second attempt. Post-timeout process-tree
+cleanup may complete outside that inner boundary. The hosted command does not
+pass through the full pipeline's separate 7,200-second stage wrapper; the
+remaining 1,200 seconds are setup, descendant-cleanup, and upload margin. These
+ceilings are capacity controls, not evidence that tests passed, coverage met
+its floor, or a structured verifier receipt was produced.
+
 ### Local CI Simulation
 
 ```bash

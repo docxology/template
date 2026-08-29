@@ -9,6 +9,10 @@ The reporting module provides reporting capabilities for pipeline execution, inc
 - Consolidated pipeline reports (JSON, HTML, Markdown)
 - Test results reporting
 - Fail-closed structured receipts for explicitly declared chunked project verifiers
+- A shared 6,900-second single-project budget: one attempt for an explicitly
+  declared verifier, or one total application-owned subprocess-wait and
+  retry-admission deadline across generic pytest's coverage-conflict attempts;
+  the suite-runner default remains 1,800 seconds per attempt for other callers
 - Validation reports with actionable recommendations
 - Performance metrics and analysis
 - Error aggregation and categorization
@@ -138,6 +142,36 @@ uv run python scripts/maintenance/organize_executive_outputs.py
 ```
 
 ## Quick Start
+
+### Project-test execution boundary
+
+`scripts/pipeline/stage_01_test.py --project <qualified-name> --project-only`
+gives the selected project's generic pytest suite the same 6,900-second
+execution capacity as an explicitly declared structured verifier. For generic
+pytest, one monotonic deadline bounds subprocess waiting and admission of the
+optional coverage-conflict retry; every subprocess receives the smaller of the
+per-attempt allowance and the time still remaining. Coverage cleanup before a
+retry reduces that remaining allowance. Process-tree cleanup after a subprocess
+reaches its wait deadline may finish outside the inner 6,900-second boundary and
+remains subject to the applicable outer backstop. A declared verifier has one
+6,900-second attempt.
+
+Hosted CI invokes Stage-01 directly, so the 6,900-second inner wait/admission
+boundary sits inside the job's 8,100-second backstop and leaves
+cleanup/setup/upload margin. When the full pipeline invokes Stage-01, its
+separate 7,200-second process-tree boundary also applies. This is timeout
+capacity only: a process that receives the larger budget has not thereby
+completed, passed tests, met coverage, or produced a valid verifier receipt.
+
+Coverage-conflict retries follow an explicit cleanup policy. Generic
+single-project pytest recursively cleans only the selected project root;
+infrastructure pytest cleans only root-level coverage files without descending
+into project trees. Callers that do not select a policy retain the historical
+recursive checkout-root default.
+
+Infrastructure timeout defaults, callers that do not opt into a total deadline,
+and the all-project union/matrix outer boundaries retain their existing
+contracts.
 
 ### Generate Pipeline Report
 

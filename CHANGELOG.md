@@ -62,6 +62,21 @@ not to the contents of any specific workspace.
 
 ### Robustness
 
+- Generic single-project Stage-01 pytest now uses the same 6,900-second
+  capacity as the declared structured-verifier path, instead of inheriting
+  `TestSuiteConfig`'s unrelated 1,800-second per-attempt default. Generic pytest
+  owns one monotonic subprocess-wait and retry-admission deadline across its
+  initial attempt and optional coverage-conflict retry; cleanup before retry
+  reduces the remaining allowance, while post-timeout process cleanup may
+  finish under the applicable outer backstop. Generic retry cleanup is now
+  confined recursively to the selected project, while infrastructure retry
+  cleanup remains nonrecursive at the checkout root so neither path deletes a
+  sibling project's live coverage. The declared verifier retains one
+  6,900-second attempt. Hosted CI invokes Stage-01 directly inside its unchanged
+  8,100-second job backstop, while a full-pipeline invocation also has its
+  separate 7,200-second process-tree boundary. Infrastructure timeout defaults
+  and all-project outer boundaries remain unchanged. This is timeout capacity
+  only, not a speedup or evidence of a passing test/coverage run.
 - Restored the single-source Agent Skills vendor boundary: the separately
   sourced Monid CLI skill is no longer folded into the pinned Context
   Engineering tree, the repository-owned Monid module skill remains

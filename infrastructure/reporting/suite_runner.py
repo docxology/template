@@ -37,6 +37,9 @@ from infrastructure.reporting.coverage_reporter import parse_pytest_output
 
 logger = get_logger(__name__)
 
+DEFAULT_TEST_SUITE_TIMEOUT_SECONDS = 1800.0
+DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS = 6900.0
+
 # Stack-trace patterns from pytest internals / urllib3 that clutter output
 _INTERNAL_STACK_PATTERNS = [
     "super().serve_forever",
@@ -118,7 +121,7 @@ def run_pytest_stream(
     env: dict[str, str],
     quiet: bool,
     *,
-    timeout_seconds: float = 1800,
+    timeout_seconds: float = DEFAULT_TEST_SUITE_TIMEOUT_SECONDS,
 ) -> tuple[int, str, str]:
     """Run pytest with streaming output, a real deadline, and group cleanup."""
     if timeout_seconds <= 0:
@@ -243,15 +246,30 @@ class TestSuiteConfig:
     quiet: bool = True
     spinner_label: str = ""
     streaming_subprocess: bool = False
-    timeout_seconds: float = 1800.0
-    """If True, the wrapped operation streams its stdout to the same TTY (e.g.,
-    pytest -v). In that case skip the spinner — its \r animation interleaves
-    with the streamed lines and produces visible garble. Default False preserves
-    spinner behavior for non-streaming operations (Ollama model load, etc.)."""
+    timeout_seconds: float = DEFAULT_TEST_SUITE_TIMEOUT_SECONDS
+    total_timeout_seconds: float | None = None
+    coverage_cleanup_scope_dir: Path | None = None
+    coverage_cleanup_recursive: bool = True
 
     def __post_init__(self) -> None:
+        """Populate display defaults and validate opt-in total capacity."""
         if not self.spinner_label:
             self.spinner_label = f"Running {self.label.lower()} tests"
+        if self.total_timeout_seconds is not None and self.total_timeout_seconds <= 0:
+            raise ValueError("total_timeout_seconds must be positive when provided")
+
+
+def _remaining_attempt_timeout_seconds(
+    per_attempt_timeout_seconds: float,
+    total_deadline_seconds: float | None,
+    *,
+    now_seconds: float | None = None,
+) -> float:
+    """Return the next subprocess budget under an optional absolute deadline."""
+    if total_deadline_seconds is None:
+        return per_attempt_timeout_seconds
+    current_time = monotonic() if now_seconds is None else now_seconds
+    return max(0.0, min(per_attempt_timeout_seconds, total_deadline_seconds - current_time))
 
 
 def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
@@ -269,13 +287,32 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
     Returns:
         Tuple of (exit_code, test_results_dict).
     """
+    if config.timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive")
+
     max_retries = 1
     retry_count = 0
+    total_deadline_seconds = (
+        monotonic() + config.total_timeout_seconds if config.total_timeout_seconds is not None else None
+    )
 
     exit_code = 1
     stdout_text = ""
     stderr_text = ""
     while retry_count <= max_retries:
+        attempt_timeout_seconds = _remaining_attempt_timeout_seconds(
+            config.timeout_seconds,
+            total_deadline_seconds,
+        )
+        if attempt_timeout_seconds <= 0:
+            exit_code = 124
+            total_timeout_message = (
+                f"{config.label.lower()} test suite exhausted its "
+                f"{config.total_timeout_seconds:g}s total timeout before retry attempt {retry_count + 1}"
+            )
+            stderr_text = f"{stderr_text}\n{total_timeout_message}" if stderr_text else total_timeout_message
+            logger.error(total_timeout_message)
+            break
         try:
             spinner_ctx = (
                 nullcontext() if config.streaming_subprocess else log_with_spinner(config.spinner_label, logger)
@@ -286,7 +323,7 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
                     config.repo_root,
                     config.env,
                     config.quiet,
-                    timeout_seconds=config.timeout_seconds,
+                    timeout_seconds=attempt_timeout_seconds,
                 )
 
             combined_output = stdout_text + "\n" + stderr_text
@@ -304,7 +341,11 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
                         retry_count,
                         max_retries,
                     )
-                    clean_coverage_files(config.repo_root)
+                    clean_coverage_files(
+                        config.repo_root,
+                        scope_dir=config.coverage_cleanup_scope_dir,
+                        recursive=config.coverage_cleanup_recursive,
+                    )
                     continue
                 else:
                     logger.error(
@@ -324,7 +365,11 @@ def run_test_suite(config: "TestSuiteConfig") -> tuple[int, dict[str, Any]]:
                         retry_count,
                         max_retries,
                     )
-                    clean_coverage_files(config.repo_root)
+                    clean_coverage_files(
+                        config.repo_root,
+                        scope_dir=config.coverage_cleanup_scope_dir,
+                        recursive=config.coverage_cleanup_recursive,
+                    )
                     continue
                 else:
                     logger.error(
