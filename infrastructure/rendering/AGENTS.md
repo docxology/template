@@ -98,6 +98,13 @@ renderers without owning validation policy or project analysis.
   tables link to the canonical manuscript HTML. Beamer remains an explicitly
   labelled untagged presentation derivative. Neither a successful render nor
   these design constraints establish WCAG or PDF/UA conformance.
+- Canonical Stage 03 rendering emits one exact `*_slides.pdf` and
+  `*_slides.html` pair per eligible source only in `accessible` mode. The pair
+  is transactional: both derivatives consume the same composed AST, and a
+  failure in either renderer removes both public outputs. `archive` mode keeps
+  its historical Beamer-required, Reveal-optional behavior. Stage 03, Stage 04,
+  and Stage 05 validation must carry the effective profile and enforce that
+  distinction.
 - `pptx_deck.render_pptx()` normalizes OOXML ZIP-member timestamps after
   `python-pptx` saves the package. Do not remove that pass: identical decks
   must remain byte-identical, not merely content-equivalent.

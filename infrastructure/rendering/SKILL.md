@@ -30,7 +30,7 @@ renderer = RenderManager(
 renderer.render_pdf(source_file)
 renderer.render_web(source_file)        # standalone HTML
 renderer.render_slides(source_file)     # beamer (PDF) by default
-renderer.render_all(source_file)        # md → slides + web; tex → PDF
+renderer.render_all(source_file)        # archive md → Beamer + web; tex → PDF
 
 # Render combined manuscript from multiple ordered source files
 renderer.render_combined_pdf(source_files, manuscript_dir, project_name="my_project")
@@ -67,6 +67,12 @@ diagnostic when an indivisible block cannot fit. Treat Reveal.js and the linked
 manuscript HTML as the accessibility-enhanced reader surfaces. Beamer output is
 an untagged presentation derivative; successful rendering is not a WCAG or
 PDF/UA conformance verdict.
+
+With `slides_profile="accessible"`, the canonical `render_all()` path emits a
+transactional Beamer/Reveal pair for each eligible Markdown source. Both files
+consume one composed Pandoc AST; any pair-member failure removes both outputs.
+Use `render_accessible_slide_pair()` for the same explicit programmatic
+contract. Archive mode keeps the historical Beamer-required behavior.
 
 ## Manuscript Discovery
 

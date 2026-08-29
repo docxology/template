@@ -14,7 +14,7 @@ belongs here.
 | `stage_00_setup.py` | 00 | Environment setup (Python, deps, dirs) | `core` |
 | `stage_01_test.py` | 01 | Infrastructure + project test orchestration | `core`, `tests` |
 | `stage_02_analysis.py` | 02 | Project-script discovery and execution | `core` |
-| `stage_03_render.py` | 03 | Current-input rendering of every enabled manuscript format | `core` |
+| `stage_03_render.py` | 03 | Current-input rendering of every enabled manuscript format; accessible slides are emitted as exact Beamer/Reveal pairs, while archive mode retains Beamer-only requirements | `core` |
 | `stage_04_validate.py` | 04 | Exact enabled-format and release-evidence validation | `core` |
 | `stage_05_copy.py` | 05 | Fresh complete local mirror, disabled-format filtering, stable enabled-deliverable validation, and byte-identical source/copy statistics while preserving publication sidecars. The console distinguishes the physical mirror count from the stable/shippable inventory count. | `core` |
 | `stage_06_llm_review.py` | 06 | LLM review and translation | `llm` |

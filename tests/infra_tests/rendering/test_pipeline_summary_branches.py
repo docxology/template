@@ -38,6 +38,16 @@ def _make_pdf(path: Path, pages: int = 1) -> None:
     pdf.save()
 
 
+def _make_accessible_reveal(path: Path) -> None:
+    path.write_text(
+        "<!doctype html><html><head><style data-template-accessible-slides></style></head>"
+        '<body><nav aria-label="Presentation companion"></nav>'
+        '<div aria-label="Presentation slides"><section aria-roledescription="slide">'
+        "<h2>Current</h2></section></div><script>keyboard: true</script></body></html>",
+        encoding="utf-8",
+    )
+
+
 def _scaffold_project(tmp_path: Path) -> Path:
     project = tmp_path / "projects" / "templates" / "test_proj"
     manuscript = project / "manuscript"
@@ -152,6 +162,26 @@ class TestVerifySlideOutputs:
         deck.parent.mkdir(parents=True)
         deck.write_bytes(b"%PDF-1.4\n%%EOF\n")
         assert _verify_slide_outputs(project) is False
+
+    def test_archive_profile_preserves_pdf_only_contract(self, tmp_path: Path) -> None:
+        project = _scaffold_project(tmp_path)
+        _make_pdf(project / "output" / "slides" / "01_intro_slides.pdf")
+
+        assert _verify_slide_outputs(project, slides_profile="archive") is True
+
+    def test_accessible_profile_requires_matching_reveal_output(self, tmp_path: Path) -> None:
+        project = _scaffold_project(tmp_path)
+        _make_pdf(project / "output" / "slides" / "01_intro_slides.pdf")
+
+        assert _verify_slide_outputs(project, slides_profile="accessible") is False
+
+    def test_accessible_profile_accepts_exact_valid_pair(self, tmp_path: Path) -> None:
+        project = _scaffold_project(tmp_path)
+        slides = project / "output" / "slides"
+        _make_pdf(slides / "01_intro_slides.pdf")
+        _make_accessible_reveal(slides / "01_intro_slides.html")
+
+        assert _verify_slide_outputs(project, slides_profile="accessible") is True
 
 
 class TestPackageVerification:

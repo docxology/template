@@ -37,6 +37,13 @@ _SLIDE_OPEN_RE = re.compile(
     flags=re.IGNORECASE | re.DOTALL,
 )
 _TAG_RE = re.compile(r"<[^>]+>")
+_STANDALONE_HTML_RE = re.compile(r"(?:<!doctype\s+html\b|<html(?:\s|>))", flags=re.IGNORECASE)
+_ACCESSIBLE_REVEAL_MARKERS = (
+    "data-template-accessible-slides",
+    'aria-label="Presentation companion"',
+    'aria-label="Presentation slides"',
+    'aria-roledescription="slide"',
+)
 
 
 @dataclass(frozen=True)
@@ -674,9 +681,31 @@ def enhance_accessible_reveal(
     write_if_changed(html_file, content)
 
 
+def accessible_reveal_output_issues(html_file: Path) -> tuple[str, ...]:
+    """Return structural issues for one accessibility-enhanced Reveal deck."""
+
+    try:
+        if not html_file.is_file() or html_file.stat().st_size == 0:
+            return ("file is missing or empty",)
+        content = html_file.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        return (f"file is not readable UTF-8: {exc}",)
+
+    issues: list[str] = []
+    if _STANDALONE_HTML_RE.search(content) is None:
+        issues.append("document is not standalone HTML")
+    issues.extend(
+        f"missing accessible Reveal marker: {marker}" for marker in _ACCESSIBLE_REVEAL_MARKERS if marker not in content
+    )
+    if re.search(r"\bkeyboard\s*:\s*true\b", content) is None:
+        issues.append("Reveal keyboard navigation is not enabled")
+    return tuple(issues)
+
+
 __all__ = [
     "AccessibleSlideComposition",
     "AccessibleSlidePolicy",
+    "accessible_reveal_output_issues",
     "compose_accessible_pandoc_document",
     "enhance_accessible_reveal",
     "load_and_compose_pandoc_json",

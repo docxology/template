@@ -131,6 +131,40 @@ def test_render_all_md_honors_disabled_html(tmp_path):
     assert results == [slides_file]
 
 
+def test_render_all_accessible_profile_uses_one_canonical_slide_pair(tmp_path: Path) -> None:
+    """Accessible mode routes one source through the paired renderer surface."""
+
+    source = tmp_path / "section.md"
+    source.write_text("# Section\n\n## Result\n\nBounded evidence.\n", encoding="utf-8")
+    slides_dir = tmp_path / "slides"
+    pdf = slides_dir / "section_slides.pdf"
+    html = slides_dir / "section_slides.html"
+
+    class RecordingSlidesRenderer:
+        def __init__(self) -> None:
+            self.pair_calls: list[Path] = []
+
+        def render(self, *_args, **_kwargs):
+            raise AssertionError("accessible render_all must not invoke the single-format renderer")
+
+        def render_accessible_pair(self, source_file, **_kwargs):
+            self.pair_calls.append(source_file)
+            return pdf, html
+
+    renderer = RecordingSlidesRenderer()
+    config = RenderingConfig(
+        enable_html=False,
+        output_dir=str(tmp_path),
+        slides_dir=str(slides_dir),
+        slides_profile="accessible",
+    )
+
+    results = RenderManager(config, slides_renderer=renderer).render_all(source)
+
+    assert results == [pdf, html]
+    assert renderer.pair_calls == [source]
+
+
 def test_render_all_allows_combined_only_formats(tmp_path: Path) -> None:
     """DOCX/EPUB/PDF-only configurations have no required per-section output."""
 

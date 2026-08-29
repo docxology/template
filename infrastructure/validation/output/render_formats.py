@@ -30,6 +30,7 @@ from infrastructure.core.project_paths import resolve_source_manuscript_dir
 from infrastructure.publishing.transmission_bookends import is_transmission_bookend
 from infrastructure.rendering._epub_package_validation import validate_epub_package
 from infrastructure.rendering._pdf_latex_validation import validate_pdf_structure
+from infrastructure.rendering._slides_accessibility import accessible_reveal_output_issues
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.manuscript_discovery import discover_manuscript_files
 
@@ -275,8 +276,13 @@ def _expected_slide_outputs(output_dir: Path, manuscript_dir: Path) -> list[Path
     return expected
 
 
-def _validate_slide_outputs(output_dir: Path, manuscript_dir: Path | None) -> bool:
-    """Validate structurally complete slide PDFs for the current manuscript."""
+def _validate_slide_outputs(
+    output_dir: Path,
+    manuscript_dir: Path | None,
+    *,
+    slides_profile: str = "archive",
+) -> bool:
+    """Validate slide identities under the selected profile contract."""
 
     if manuscript_dir is None:
         expected = sorted((output_dir / "slides").glob("*_slides.pdf"))
@@ -313,7 +319,17 @@ def _validate_slide_outputs(output_dir: Path, manuscript_dir: Path | None) -> bo
         for path in invalid:
             logger.error("Slide output missing or structurally invalid: %s", path)
         return False
-    log_success(f"Slide outputs valid: {len(expected)} expected deck(s)", logger)
+
+    if slides_profile == "accessible":
+        invalid_html = [
+            (path, accessible_reveal_output_issues(path)) for path in (pdf.with_suffix(".html") for pdf in expected)
+        ]
+        invalid_html = [(path, issues) for path, issues in invalid_html if issues]
+        if invalid_html:
+            for path, issues in invalid_html:
+                logger.error("Accessible Reveal output missing or invalid: %s (%s)", path, "; ".join(issues))
+            return False
+    log_success(f"Slide outputs valid: {len(expected)} expected deck(s), profile={slides_profile}", logger)
     return True
 
 
@@ -370,6 +386,7 @@ def validate_enabled_render_outputs(
     reject_disabled: bool = True,
     inventory: StableOutputInventory | None = None,
     inventory_mode: OutputInventoryMode = STABLE_OUTPUT_INVENTORY_MODE,
+    slides_profile: str = "archive",
 ) -> bool:
     """Validate exactly the enabled canonical formats in one output tree.
 
@@ -379,7 +396,8 @@ def validate_enabled_render_outputs(
     deliverable must also belong to the effective stable output inventory. For
     public exemplars this is the Git-shippable set; private/local projects whose
     canonical output tree is ignored use the explicitly labelled stable-local
-    set instead.
+    set instead. ``slides_profile="accessible"`` requires matching Beamer PDF
+    and Reveal HTML outputs; the default archive profile requires Beamer only.
     """
 
     output_dir = output_dir.absolute()
@@ -406,7 +424,7 @@ def validate_enabled_render_outputs(
     if "html" in enabled:
         checks.append(("HTML", _validate_combined_html(output_dir)))
     if "slides" in enabled:
-        checks.append(("slides", _validate_slide_outputs(output_dir, manuscript_dir)))
+        checks.append(("slides", _validate_slide_outputs(output_dir, manuscript_dir, slides_profile=slides_profile)))
     if "docx" in enabled:
         checks.append(("DOCX", _validate_docx_output(output_dir, project_basename)))
     if "epub" in enabled:
@@ -429,6 +447,7 @@ def validate_enabled_render_outputs(
         project_basename,
         enabled,
         current,
+        slides_profile=slides_profile,
     ):
         valid = False
     if valid:
@@ -441,6 +460,8 @@ def _enabled_outputs_are_stable(
     project_basename: str,
     enabled_formats: set[str],
     inventory: StableOutputInventory,
+    *,
+    slides_profile: str = "archive",
 ) -> bool:
     """Require each enabled canonical deliverable in the stable inventory."""
 
@@ -457,7 +478,10 @@ def _enabled_outputs_are_stable(
     if "html" in enabled_formats:
         required["HTML"] = (output_dir / "web" / "index.html",)
     if "slides" in enabled_formats:
-        required["slides"] = tuple(sorted((output_dir / "slides").glob("*_slides.pdf")))
+        slide_paths: tuple[Path, ...] = tuple(sorted((output_dir / "slides").glob("*_slides.pdf")))
+        if slides_profile == "accessible":
+            slide_paths = tuple(sorted((*slide_paths, *(output_dir / "slides").glob("*_slides.html"))))
+        required["slides"] = slide_paths
     if "docx" in enabled_formats:
         required["DOCX"] = (output_dir / "docx" / f"{project_basename}_combined.docx",)
     if "epub" in enabled_formats:

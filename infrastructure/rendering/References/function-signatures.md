@@ -56,6 +56,14 @@ class RenderManager:
             Path to generated slides
         """
 
+    def render_accessible_slide_pair(
+        self,
+        source_file: Path,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render one transactional Beamer-PDF/Reveal-HTML pair."""
+
     def render_web(self, source_file: Path) -> Path:
         """Render to web HTML format.
 
@@ -307,6 +315,21 @@ class SlidesRenderer:
 
         Returns:
             Path to generated slides
+        """
+
+    def render_accessible_pair(
+        self,
+        source_file: Path,
+        manuscript_dir: Optional[Path] = None,
+        figures_dir: Optional[Path] = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render both accessible derivatives from one composed Pandoc AST.
+
+        A failure in either renderer removes both public outputs. This method
+        requires ``slides_profile="accessible"``; the single-format ``render``
+        method remains available for compatibility and direct format requests.
         """
 
     def _render_beamer_with_paths(

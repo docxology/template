@@ -279,13 +279,15 @@ def test_accessible_beamer_overflow_discards_derivative_with_stable_diagnostic(t
 
 
 @pytest.mark.slow
-def test_failed_accessible_composition_removes_stale_derivative(tmp_path: Path) -> None:
+def test_failed_accessible_pair_composition_removes_both_stale_derivatives(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
     slides = tmp_path / "output" / "slides"
     slides.mkdir(parents=True)
-    stale = slides / "dense_slides.html"
-    stale.write_text("stale prior deck", encoding="utf-8")
+    stale_pdf = slides / "dense_slides.pdf"
+    stale_html = slides / "dense_slides.html"
+    stale_pdf.write_bytes(b"%PDF-1.7 stale\n%%EOF\n")
+    stale_html.write_text("stale prior deck", encoding="utf-8")
     source = tmp_path / "dense.md"
     source.write_text(
         "## Dense\n\n" + " ".join(f"word{index}" for index in range(81)) + "\n",
@@ -300,9 +302,10 @@ def test_failed_accessible_composition_removes_stale_derivative(tmp_path: Path) 
     )
 
     with pytest.raises(RenderingError, match="slides.density.indivisible-prose"):
-        renderer.render(source, output_format="revealjs")
+        renderer.render_accessible_pair(source)
 
-    assert not stale.exists()
+    assert not stale_pdf.exists()
+    assert not stale_html.exists()
     assert not list(slides.glob(".*.pandoc*.json"))
 
 
@@ -375,7 +378,7 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
 
 @pytest.mark.slow
 @pytest.mark.requires_latex
-def test_real_accessible_beamer_render_uses_font_floors_and_untagged_boundary(tmp_path: Path) -> None:
+def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
         pytest.skip("Pandoc not installed")
     compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
@@ -403,16 +406,20 @@ def test_real_accessible_beamer_render_uses_font_floors_and_untagged_boundary(tm
         latex_compiler=compiler,
     )
 
-    result = SlidesRenderer(config).render(
+    pdf_result, html_result = SlidesRenderer(config).render_accessible_pair(
         source,
-        output_format="beamer",
         manuscript_dir=manuscript,
         figures_dir=figures,
     )
 
-    assert result.is_file()
-    assert result.stat().st_size > 1_000
-    tex = result.with_suffix(".tex").read_text(encoding="utf-8")
+    assert pdf_result.is_file()
+    assert pdf_result.stat().st_size > 1_000
+    assert html_result.is_file()
+    reveal = html_result.read_text(encoding="utf-8")
+    assert 'aria-label="Presentation slides"' in reveal
+    assert 'aria-label="Presentation companion"' in reveal
+    assert "data-template-accessible-slides" in reveal
+    tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
     header = (slides / "_slides_math_header.tex").read_text(encoding="utf-8")
     assert "allowframebreaks" not in tex
     assert r"\setbeamerfont{frametitle}{size*={28pt}{32pt}}" in header
@@ -421,4 +428,41 @@ def test_real_accessible_beamer_render_uses_font_floors_and_untagged_boundary(tm
     assert "Untagged PDF derivative" in header
     assert "HTML reader" in header
     assert r"height=0.6\textheight" in tex
+    assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_accessible_pair_removes_beamer_when_reveal_postprocessing_fails(tmp_path: Path) -> None:
+    """A second-member failure cannot leave the first derivative publishable."""
+
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "output" / "figures"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    figures.mkdir(parents=True)
+    source = manuscript / "deck.md"
+    source.write_text("## Evidence boundary\n\nOne bounded statement.\n", encoding="utf-8")
+    (figures / "figure_registry.json").write_text("{malformed", encoding="utf-8")
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            figures_dir=str(figures),
+            slides_profile="accessible",
+            latex_compiler=compiler,
+        )
+    )
+
+    with pytest.raises(RenderingError, match="Failed to load figure accessibility registry"):
+        renderer.render_accessible_pair(source, manuscript_dir=manuscript, figures_dir=figures)
+
+    assert (slides / "deck_slides.tex").is_file()  # Beamer completed before Reveal post-processing failed.
+    assert not (slides / "deck_slides.pdf").exists()
+    assert not (slides / "deck_slides.html").exists()
     assert not list(slides.glob(".*.pandoc*.json"))

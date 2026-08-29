@@ -85,6 +85,8 @@ def test_pdf_renderer_cross_references():
 - Content layout and formatting
 - Opt-in semantic composition, density diagnostics, typography floors, figure allocation, and table excerpts
 - Reveal.js long-description/keyboard/landmark semantics and the explicit untagged Beamer boundary
+- Canonical accessible-profile Beamer/Reveal pair generation, shared-AST routing,
+  partial-pair cleanup, and archive-mode compatibility
 
 ### CLI and Configuration Tests
 

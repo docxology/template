@@ -144,6 +144,7 @@ def execute_copy_stage(project_name: str, *, repo_root: Path) -> int:
             enabled_formats=formats,
             manuscript_dir=manuscript_dir,
             inventory=copied_inventory,
+            slides_profile=render_config.slides_profile,
         )
 
         # Step 4b: Validate directory structure without inventing a PDF

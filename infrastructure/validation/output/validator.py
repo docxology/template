@@ -122,6 +122,7 @@ def validate_copied_outputs(
     enabled_formats: Collection[str] | None = None,
     manuscript_dir: Path | None = None,
     inventory: StableOutputInventory | None = None,
+    slides_profile: str = "archive",
 ) -> bool:
     """Validate all project outputs were copied successfully.
 
@@ -144,6 +145,8 @@ def validate_copied_outputs(
         inventory: Optional canonical inventory for the copied tree. Stage 5
             supplies one whose Git-ignore decisions are mapped to the source
             project output rather than the intentionally ignored root mirror.
+        slides_profile: Effective slide profile. ``accessible`` requires exact
+            Beamer/Reveal pairs; ``archive`` retains the Beamer-only requirement.
 
     Returns:
         True if validation successful, False if critical files missing
@@ -164,6 +167,7 @@ def validate_copied_outputs(
                 enabled_formats,
                 manuscript_dir=manuscript_dir,
                 inventory=inventory,
+                slides_profile=slides_profile,
             )
     else:
         # Preserve the historical PDF contract for callers without an

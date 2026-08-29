@@ -188,6 +188,64 @@ class SlidesRenderer:
             for temporary in temporary_sources:
                 temporary.unlink(missing_ok=True)
 
+    def render_accessible_pair(
+        self,
+        source_file: Path,
+        manuscript_dir: Path | None = None,
+        figures_dir: Path | None = None,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        """Render one accessible Beamer/Reveal pair from one composed AST.
+
+        The accessible profile is a paired publication contract: both the
+        projected Beamer PDF and the accessibility-enhanced Reveal.js reader
+        consume the same semantic Pandoc JSON document.  A failure in either
+        renderer removes both public derivatives so a stale or partial pair
+        cannot satisfy a later pipeline gate.
+        """
+
+        if self.config.slides_profile != "accessible":
+            raise RenderingError(
+                "Accessible slide-pair rendering requires slides_profile='accessible'",
+                context={"source": str(source_file), "diagnostic_code": "slides.profile.pair-required"},
+            )
+
+        output_dir = Path(self.config.slides_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        pdf_output = output_dir / f"{source_file.stem}_slides.pdf"
+        html_output = output_dir / f"{source_file.stem}_slides.html"
+        profile = self.config.security()
+        profile.validate_source(source_file)
+        profile.validate_output(pdf_output)
+        profile.validate_output(html_output)
+
+        # Clear both identities before composition.  If composition itself
+        # fails, neither derivative from an older source revision survives.
+        pdf_output.unlink(missing_ok=True)
+        html_output.unlink(missing_ok=True)
+        render_source = source_file
+        temporary_sources: tuple[Path, ...] = ()
+        completed = False
+        try:
+            render_source, temporary_sources = self._prepare_accessible_source(source_file, output_dir)
+            pdf_result = self._render_beamer_with_paths(
+                render_source,
+                pdf_output,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+            )
+            html_result = self._render_revealjs(render_source, html_output, manuscript_dir, figures_dir)
+            completed = True
+            return pdf_result, html_result
+        finally:
+            if not completed:
+                pdf_output.unlink(missing_ok=True)
+                html_output.unlink(missing_ok=True)
+            for temporary in temporary_sources:
+                temporary.unlink(missing_ok=True)
+
     def _prepare_accessible_source(self, source_file: Path, output_dir: Path) -> tuple[Path, tuple[Path, ...]]:
         """Compose Markdown into one bounded semantic Pandoc JSON document."""
 

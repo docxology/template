@@ -369,6 +369,14 @@ section dividers. Accessible Beamer also rejects and removes a compiled
 derivative when its LaTeX log reports an overfull frame, using the stable
 `slides.density.beamer-overflow` diagnostic.
 
+The canonical `RenderManager.render_all()` and Stage 03 path treat accessible
+slides as an exact pair: every eligible source produces both
+`*_slides.pdf` and `*_slides.html` from one composed Pandoc AST. If either
+renderer fails, both public derivatives are removed. Stage 03 verification and
+the Stage 04/05 enabled-output gates require the complete pair in accessible
+mode. The default archive profile retains its historical required-Beamer and
+optional-Reveal behavior.
+
 The two outputs have deliberately different accessibility status:
 
 | Surface | Reader contract | Boundary |
@@ -387,6 +395,7 @@ config = RenderingConfig(
     slides_reader_href="../web/index.html",
 )
 manager = RenderManager(config)
+pdf_path, reveal_path = manager.render_accessible_slide_pair(Path("manuscript/01_intro.md"))
 ```
 
 When a figure registry record includes `long_description`, rendered HTML places

@@ -119,6 +119,7 @@ def _build_core_checks(
                     formats,
                     manuscript_dir=render_config_manuscript_dir(project_root),
                     inventory_mode=inventory_mode,
+                    slides_profile=render_config.slides_profile,
                 ),
             )
         )

@@ -9,6 +9,8 @@ import zlib
 from pathlib import Path
 
 import pytest
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 from infrastructure.core.pipeline.artifacts import collect_stable_output_inventory, output_inventory_mode_for_project
 from infrastructure.project.discovery import resolve_project_root
@@ -32,6 +34,24 @@ from infrastructure.validation.output.render_formats import (
 
 def _minimal_pdf() -> bytes:
     return b"%PDF-1.4\n1 0 obj\n<<>>\nendobj\nstartxref\n0\n%%EOF\n"
+
+
+def _write_valid_pdf(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    pdf = canvas.Canvas(str(path), pagesize=letter)
+    pdf.drawString(72, 720, "Current slide output")
+    pdf.showPage()
+    pdf.save()
+
+
+def _write_accessible_reveal(path: Path) -> None:
+    path.write_text(
+        "<!doctype html><html><head><style data-template-accessible-slides></style></head>"
+        '<body><nav aria-label="Presentation companion"></nav>'
+        '<div aria-label="Presentation slides"><section aria-roledescription="slide">'
+        "<h2>Current</h2></section></div><script>keyboard: true</script></body></html>",
+        encoding="utf-8",
+    )
 
 
 def _write_epub(
@@ -803,4 +823,53 @@ def test_slides_enabled_rejects_deck_for_deleted_source(tmp_path) -> None:
             manuscript_dir=manuscript_dir,
         )
         is False
+    )
+
+
+def test_archive_slides_preserve_pdf_only_validation_contract(tmp_path: Path) -> None:
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "01_current.md").write_text("# Current\n", encoding="utf-8")
+    slides = tmp_path / "output" / "slides"
+    _write_valid_pdf(slides / "01_current_slides.pdf")
+
+    assert validate_enabled_render_outputs(
+        tmp_path / "output",
+        "demo",
+        {"slides"},
+        manuscript_dir=manuscript_dir,
+        slides_profile="archive",
+    )
+
+
+def test_accessible_slides_reject_missing_reveal_pair_member(tmp_path: Path) -> None:
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "01_current.md").write_text("# Current\n", encoding="utf-8")
+    slides = tmp_path / "output" / "slides"
+    _write_valid_pdf(slides / "01_current_slides.pdf")
+
+    assert not validate_enabled_render_outputs(
+        tmp_path / "output",
+        "demo",
+        {"slides"},
+        manuscript_dir=manuscript_dir,
+        slides_profile="accessible",
+    )
+
+
+def test_accessible_slides_accept_exact_stable_pair(tmp_path: Path) -> None:
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    (manuscript_dir / "01_current.md").write_text("# Current\n", encoding="utf-8")
+    slides = tmp_path / "output" / "slides"
+    _write_valid_pdf(slides / "01_current_slides.pdf")
+    _write_accessible_reveal(slides / "01_current_slides.html")
+
+    assert validate_enabled_render_outputs(
+        tmp_path / "output",
+        "demo",
+        {"slides"},
+        manuscript_dir=manuscript_dir,
+        slides_profile="accessible",
     )

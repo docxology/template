@@ -36,7 +36,10 @@ The `infrastructure/validation/output/` package contains pipeline output validat
 - `validate_enabled_render_outputs(...)` — validates every enabled canonical
   PDF, HTML, slide, DOCX, or EPUB artifact and rejects renderer-owned artifacts
   for disabled formats; an enabled file must also belong to the stable,
-  shippable inventory, so a valid but Git-ignored artifact cannot pass
+  shippable inventory, so a valid but Git-ignored artifact cannot pass.
+  Accessible slide profiles require an exact Beamer-PDF/Reveal-HTML pair for
+  each eligible source; archive profiles retain the historical PDF requirement
+  and tolerate an optional source-matched Reveal derivative
 - `remove_disabled_render_outputs(...)` — removes disabled renderer-owned
   artifacts only from Stage 5's freshly copied tree; it does not mutate project
   source outputs or unrelated authored web pages
