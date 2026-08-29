@@ -521,11 +521,7 @@ def test_textbook_matrix_provisions_the_pinned_mermaid_toolchain() -> None:
     workflow = yaml.safe_load((repo / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
 
     project_steps = workflow["jobs"]["test-project"]["steps"]
-    mermaid_steps = [
-        step
-        for step in project_steps
-        if step.get("uses") == "./.github/actions/setup-docs-lint"
-    ]
+    mermaid_steps = [step for step in project_steps if step.get("uses") == "./.github/actions/setup-docs-lint"]
 
     assert mermaid_steps == [
         {
@@ -534,9 +530,5 @@ def test_textbook_matrix_provisions_the_pinned_mermaid_toolchain() -> None:
         }
     ]
     mermaid_index = project_steps.index(mermaid_steps[0])
-    test_index = next(
-        index
-        for index, step in enumerate(project_steps)
-        if step.get("name") == "Run project tests"
-    )
+    test_index = next(index for index, step in enumerate(project_steps) if step.get("name") == "Run project tests")
     assert mermaid_index < test_index
