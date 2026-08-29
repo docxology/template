@@ -6,8 +6,10 @@ The Search module provides discovery utilities for academic literature
 (`literature/`), a normalized scientific-database connector registry with an
 opt-in pipeline stage (`connectors/`), Exa-backed general web search, content
 extraction, and grounded answers (`exa/` — see [`exa/README.md`](exa/README.md)
-and [`exa/AGENTS.md`](exa/AGENTS.md)), plus provider-neutral deep research
-orchestration (`deep_research/`) over OpenAI and Gemini. The literature side sits opposite
+and [`exa/AGENTS.md`](exa/AGENTS.md)), Monid gateway access (`monid/` — see
+[`monid/README.md`](monid/README.md) and [`monid/AGENTS.md`](monid/AGENTS.md)),
+plus provider-neutral deep research orchestration (`deep_research/`) over OpenAI
+and Gemini. The literature side sits opposite
 [`infrastructure/reference/`](../reference/) in the literature workflow:
 
 ```mermaid
@@ -65,6 +67,21 @@ configuration schema.
 
 See [`exa/README.md`](exa/README.md), [`exa/AGENTS.md`](exa/AGENTS.md), and
 [`exa/CAPABILITIES.md`](exa/CAPABILITIES.md) for full detail.
+
+### `monid/` — Monid gateway client
+
+| File | Role |
+|---|---|
+| `config.py` | `MonidConfig` (`MONID_API_KEY`, host, poll settings). |
+| `errors.py` | `MonidError`. |
+| `http.py` | `MonidHttpClient` protocol, `UrllibMonidHttpClient`, `MonidResponse`. |
+| `models.py` | `DiscoverResponse`, `InspectResponse`, `RunRecord`, `EndpointPrice`, etc. |
+| `client.py` | `MonidClient` — discover, inspect, run, poll, balance. |
+| `pricing.py` | Offline USD-per-1k table for direct search APIs + Monid gateway notes. |
+| `cli.py` | `discover` / `inspect` / `run` / `get-run` / `balance` / `pricing-table`. |
+
+See [`monid/README.md`](monid/README.md), [`monid/AGENTS.md`](monid/AGENTS.md),
+[`monid/PRICING.md`](monid/PRICING.md), and [`.agents/skills/monid/SKILL.md`](../../.agents/skills/monid/SKILL.md).
 
 ### `deep_research/` — Provider-neutral long-running research orchestration
 
@@ -174,6 +191,9 @@ Environment variables:
 * `OPENAI_DEEP_RESEARCH_MODEL` — optional OpenAI model override.
 * `GEMINI_API_KEY` — optional; enables `DeepResearchClient`'s Gemini path.
 * `GEMINI_DEEP_RESEARCH_AGENT` — optional Gemini agent override.
+* `MONID_API_KEY` — required for `MonidClient.from_env()` / the Monid CLI
+  wrapper (`python -m infrastructure.search.monid`). Generate at
+  https://app.monid.ai/access/api-keys.
 * `DeepResearchClient.submit_project_and_save_reports()` — packs project
   context, runs both providers, and saves full reports under
   `output/reports/deep_research/`.

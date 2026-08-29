@@ -1,6 +1,6 @@
 ---
 name: infrastructure-search
-description: Discovery utilities. Hosts three subpackages — `literature` for Paperclip-style multi-source academic search across arXiv, Crossref, local JSON corpora, and (opt-in) the Paperclip API, with deterministic JSON caching, a `LiteratureClient` aggregator, normalised `Paper` records, and a CLI; `exa` for Exa-backed general web search, content extraction, grounded answers, and find-similar via `ExaClient` (search/contents/answer/find_similar) and a CLI; and `deep_research` for provider-neutral long-running deep research over OpenAI (`o3-deep-research`) and Gemini, packaging a project's manuscript/outputs into the prompt and saving full reports with citations (PAID — ≈$2/report OpenAI, ≈$25 Gemini; see its README cost model). Use when the user wants to find papers, build reading lists, populate references.bib from a query, replay a prior search reproducibly, run general web search / content extraction / grounded answers, or dispatch a manuscript for a deep-research review with new citations and fix suggestions. Designed to host additional discovery workflows without breaking the public API.
+description: Discovery utilities. Hosts subpackages — `literature` for Paperclip-style multi-source academic search; `exa` for Exa-backed web search, contents, answers, and find-similar; `monid` for the Monid gateway (discover/inspect/run) plus offline USD-per-1k search API pricing; and `deep_research` for provider-neutral long-running research over OpenAI and Gemini (PAID). Use when finding papers, running web search, comparing search API costs, routing agent tasks through Monid, or dispatching manuscript deep-research reviews.
 ---
 
 # Search Module
@@ -138,6 +138,26 @@ uv run python -m infrastructure.search.exa contents "https://example.com/post" -
 uv run python -m infrastructure.search.exa answer "What is RAG?"
 uv run python -m infrastructure.search.exa find-similar "https://example.com/post"
 ```
+
+## `monid` — Gateway to hundreds of data endpoints (PAID)
+
+Monid routes agent tasks to third-party endpoints through one wallet. Python
+client: `MonidClient`; upstream CLI skill:
+[`.agents/skills/monid/SKILL.md`](../../.agents/skills/monid/SKILL.md).
+
+```python
+from infrastructure.search.monid import MonidClient, format_pricing_table
+
+client = MonidClient.from_env()
+for hit in client.discover("web search", limit=5).results:
+    print(hit.provider, hit.price)
+print(format_pricing_table())  # offline USD/1k for Exa, Brave, Tavily, Serper, …
+```
+
+Direct search API list prices (2026-08-28): Serper **$0.30–$1.00/1k**, Brave
+**$5/1k**, Exa search **$7/1k**, Tavily **$8/1k**, SerpAPI **$10/1k**. Monid
+gateway pricing is per-endpoint — always `inspect` before `run`. Full table:
+[`monid/PRICING.md`](monid/PRICING.md).
 
 ## `deep_research` — Manuscript-scale research reports (PAID)
 
