@@ -46,9 +46,7 @@ def apply_figure_long_description(
         return image_tag, ""
     identifier = _details_identifier(record)
     visible_label = html.escape(record.label.removeprefix("fig:").replace("-", " "))
-    paragraphs = "".join(
-        f"<p>{html.escape(paragraph)}</p>" for paragraph in record.long_description.split("\n\n")
-    )
+    paragraphs = "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in record.long_description.split("\n\n"))
     disclosure = (
         f'<details id="{html.escape(identifier, quote=True)}" class="figure-long-description" '
         f'data-figure-label="{html.escape(record.label, quote=True)}">'

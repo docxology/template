@@ -149,16 +149,12 @@ class RenderingConfig:
             or "\x00" in self.slides_reader_href
             or "\\" in self.slides_reader_href
         ):
-            raise ValueError(
-                "slides_reader_href must be a non-empty relative or https URL without backslashes"
-            )
+            raise ValueError("slides_reader_href must be a non-empty relative or https URL without backslashes")
         parsed_reader = urlsplit(self.slides_reader_href)
         if (parsed_reader.scheme and parsed_reader.scheme != "https") or (
             not parsed_reader.scheme and self.slides_reader_href.startswith("/")
         ):
-            raise ValueError(
-                "slides_reader_href must be a non-empty relative or https URL without backslashes"
-            )
+            raise ValueError("slides_reader_href must be a non-empty relative or https URL without backslashes")
 
     def accessible_slide_policy(self) -> AccessibleSlidePolicy:
         """Return the typed policy consumed by the semantic slide composer."""

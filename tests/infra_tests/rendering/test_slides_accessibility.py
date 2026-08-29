@@ -92,9 +92,7 @@ def _classed_headers(document: dict[str, Any]) -> list[tuple[str, set[str]]]:
 def _write_png(path: Path) -> None:
     # Valid one-pixel RGB PNG; avoids a Pillow dependency in the renderer test.
     path.write_bytes(
-        base64.b64decode(
-            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
-        )
+        base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")
     )
 
 
@@ -243,9 +241,7 @@ def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> Non
         {"evidence-slide"},
     ]
     assert composition.figure_frame_count == 1
-    assert "caption, long description, and exact values" in " ".join(
-        _visible_text(composition.document).split()
-    )
+    assert "caption, long description, and exact values" in " ".join(_visible_text(composition.document).split())
     rendered_figure = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
     rendered_image = rendered_figure["c"][2][0]["c"][0]
     assert ["height", "60%"] in rendered_image["c"][0][2]
@@ -325,8 +321,7 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
         "A bounded result is shown with a non-color square marker and dashed line.\n\n"
         "![Visible trend caption.](../output/figures/trend.png){#fig:trend}\n\n"
         "## Values\n\n"
-        "| Seed | Estimate |\n|---:|---:|\n"
-        + "".join(f"| {index} | {index / 10:.1f} |\n" for index in range(10)),
+        "| Seed | Estimate |\n|---:|---:|\n" + "".join(f"| {index} | {index / 10:.1f} |\n" for index in range(10)),
         encoding="utf-8",
     )
     _write_png(figures / "trend.png")

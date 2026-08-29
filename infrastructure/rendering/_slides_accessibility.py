@@ -197,8 +197,7 @@ def _block_kind(block: dict[str, Any]) -> str:
     if tag in {"Para", "Plain"} and _block_contains(block, "Math"):
         content = block.get("c")
         if isinstance(content, list) and all(
-            isinstance(item, dict) and item.get("t") in {"Math", "Space", "SoftBreak", "LineBreak"}
-            for item in content
+            isinstance(item, dict) and item.get("t") in {"Math", "Space", "SoftBreak", "LineBreak"} for item in content
         ):
             return "equation-led"
     if tag == "RawBlock" and re.search(
@@ -459,8 +458,8 @@ def compose_accessible_pandoc_document(
         level, attributes, _inlines = _header_parts(header)
         classes = {str(value) for value in (attributes[1] if len(attributes) > 1 else [])}
         next_level = _header_parts(segments[index + 1][0])[0] if index + 1 < len(segments) else None
-        explicit_divider = level == 1 or "section-divider" in classes or (
-            not blocks and next_level is not None and next_level > level
+        explicit_divider = (
+            level == 1 or "section-divider" in classes or (not blocks and next_level is not None and next_level > level)
         )
         if not blocks:
             if not explicit_divider:
