@@ -178,12 +178,12 @@
       "svg_path": "evidence_tier_ladder.svg",
       "png_exists": true,
       "svg_exists": true,
-      "png_bytes": 124099,
-      "svg_bytes": 53624,
-      "width_px": 3420,
+      "png_bytes": 123371,
+      "svg_bytes": 52166,
+      "width_px": 3419,
       "height_px": 1447,
-      "nonwhite_fraction": 0.110838,
-      "color_variance": 0.04019577,
+      "nonwhite_fraction": 0.113781,
+      "color_variance": 0.04048412,
       "passes_quality": true
     }
   ]

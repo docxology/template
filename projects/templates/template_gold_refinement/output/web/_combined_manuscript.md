@@ -271,7 +271,8 @@ The terminal predicate in [@eq:certification_predicate] requires the configured 
 
 The implementation trace handles accidental drift: missing tokens, unsupported claims, malformed citations, stale figures, or broken renders. A security assay adds a different question: could the manuscript sound certified while omitting threat scope, supply-chain provenance, or scan evidence? The assay therefore treats zero trust, secure software development, supply-chain provenance, attack-path modeling, SBOM standards, and secure-by-design guidance as boundary-setting standards rather than proof of compliance [@nist_sp800_207_zero_trust; @nist_sp800_218_ssdf; @slsa_v1_2; @sigstore_docs; @mitre_attack; @cyclonedx_spec; @spdx_spec; @cisa_secure_by_design].
 
-The assay is implemented as source-owned rows in `gold_refinement.security_assay` and generated records from `src/security_assay.py`. Each row must name a threat, standard or guidance source, local evidence surface, validator, and claim boundary, as specified by [@eq:adversarial_assay] and reported in [@tbl:security_assay]. This study did not run Codex Security or Deep Security Scan and reports no vulnerability findings. Completeness of the assay schema therefore supports scope disclosure, not security compliance.
+The assay is implemented as source-owned rows in `gold_refinement.security_assay` and generated records from `src/security_assay.py`. Each row must name a threat, standard or guidance source, local evidence surface, validator, and claim boundary, as specified by [@eq:adversarial_assay] and reported in [@tbl:security_assay]. This study did not run Codex Security or Deep Security Scan and reports no vulnerability findings. Completeness of the assay schema therefore supports scope disclosure, not security compliance — the assay checks only that named threats carry local evidence surfaces and validator rows; it does not certify an absence of vulnerabilities (negative control: removing a row's evidence surface fails schema validation rather than being scored as secure).
+A row missing any required element is rejected at load time rather than rendered as partial assurance. An assay with zero configured rows reports that no security-scope claim should be made — absence of evidence is rendered as "not configured", never as assurance.
 
 ### Scientific-integrity risk model
 
@@ -662,7 +663,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
 | claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
-| evidence_tier_ladder | yes | yes | 3420x1447 | 0.111 | 0.04019577 | pass |
+| evidence_tier_ladder | yes | yes | 3419x1447 | 0.114 | 0.04048412 | pass |
 | formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
 | implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
 | integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |
@@ -802,8 +803,8 @@ Executable-publication scholarship sharpens that norm. Executable research compe
 
 - **Seed:** 431
 - **Config hash:** 497be5f411529ad8
-- **Generation timestamp:** 2026-08-14T14:20:53Z
-- **Python version:** 3.12.12
+- **Generation timestamp:** 2026-08-29T02:01:46Z
+- **Python version:** 3.12.13
 
 ## Artifact inventory
 
@@ -827,7 +828,7 @@ uv run python projects/templates/template_gold_refinement/scripts/z_generate_man
 ./run.sh --project templates/template_gold_refinement --pipeline --core-only
 ```
 
-A reproduction report should record command exit status, the source revision, `497be5f411529ad8`, Python 3.12.12, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
+A reproduction report should record command exit status, the source revision, `497be5f411529ad8`, Python 3.12.13, and whether the generated registries pass. Matching prose alone is insufficient if the token plan, claim registry, or figure registry differs. Conversely, timestamp or renderer metadata differences should be interpreted separately from substantive differences in source-owned values.
 
 ## Config ownership
 
