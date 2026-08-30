@@ -119,3 +119,26 @@ See `my_projects/foo/`.
 """,
     )
     assert check_no_ghost_projects(repo) == []
+
+
+def test_dated_root_report_with_ghost_project_is_scanned(tmp_path: Path) -> None:
+    """Root dated reports are no longer exempt from ghost-project lint."""
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "PROJECT_STATE_REPORT_2026-08-26_sessionX.md",
+        "Receipt: `projects/ghost_project/` was referenced during the pass.\n",
+    )
+    issues = check_no_ghost_projects(repo)
+    assert len(issues) == 1
+    assert "ghost_project" in issues[0].detail
+
+
+def test_undated_root_report_is_still_scanned(tmp_path: Path) -> None:
+    """Non-dated root Markdown remains inside the long-lived doc surface."""
+    repo = scaffold_repo(tmp_path, n_packages=15)
+    write_doc(
+        repo / "NOTES.md",
+        "See `projects/ghost_project/manuscript/build.sh`.\n",
+    )
+    issues = check_no_ghost_projects(repo)
+    assert len(issues) == 1

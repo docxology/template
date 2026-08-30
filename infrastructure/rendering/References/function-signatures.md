@@ -433,7 +433,7 @@ preamble (geometry, hyperref, titlepage) is intentionally bypassed —
 those packages would clash with Beamer's document class. Only the
 math-font subset is propagated, via
 [`extract_math_font_preamble`](../_pdf_latex_helpers.py) and
-`SlidesRenderer._maybe_write_math_header`, which write a minimal
+[`write_slides_math_header`](../_slides_math_header.py), which write a minimal
 `_slides_math_header.tex` next to the slide deck and pass it to Pandoc
 through `-H header.tex`. This gives slides the same `\mid` / `\ll` /
 `\gg` rendering as the combined PDF without the rest of the preamble.

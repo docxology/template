@@ -1046,7 +1046,15 @@ reported in <span class="citation"
 data-cites="tbl:security_assay">[@tbl:security_assay]</span>. This study
 did not run Codex Security or Deep Security Scan and reports no
 vulnerability findings. Completeness of the assay schema therefore
-supports scope disclosure, not security compliance.</p>
+supports scope disclosure, not security compliance — the assay checks
+only that named threats carry local evidence surfaces and validator
+rows; it does not certify an absence of vulnerabilities (negative
+control: removing a row’s evidence surface fails schema validation
+rather than being scored as secure). A row missing any required element
+is rejected at load time rather than rendered as partial assurance. An
+assay with zero configured rows reports that no security-scope claim
+should be made — absence of evidence is rendered as “not configured”,
+never as assurance.</p>
 <h3 id="scientific-integrity-risk-model">Scientific-integrity risk
 model</h3>
 <p>The integrity model converts manuscript risks into source-owned

@@ -9,8 +9,84 @@ not to the contents of any specific workspace.
 
 ## [Unreleased]
 
+### Executable bundle (Stage 14)
+
+- Closed backlog row `EXECUTABLE-BUNDLE-MAJ-2` with the **self-contained
+  payload** contract: `bundle_project()` now vendors `infrastructure/` into
+  `source/infrastructure/` under the same symlink and cache-exclusion gates as
+  the project trees, refusing a missing or symlinked Layer-1 tree. The compose
+  `tests` service runs the project suite directly against the vendored payload,
+  `verify` proves collection cleanliness, and the full-pipeline services
+  (`reproduce`, `render`) fail closed with an explicit
+  `UNAVAILABLE-DEPENDENCY RECEIPT` (exit 3) instead of a bare
+  `ModuleNotFoundError: No module named 'infrastructure'` observed in an
+  offline container on 2026-08-22. Negative controls:
+  `test_bundle_refuses_missing_or_symlinked_infrastructure_tree` and
+  `test_compose_full_pipeline_services_fail_closed`.
+- Closed backlog row `EXECUTABLE-BUNDLE-MAJ-1` with the full
+  **offline-container verification receipt**
+  ([`docs/audit/executable-bundle-offline-receipt-2026-08-26.md`](docs/audit/executable-bundle-offline-receipt-2026-08-26.md)):
+  image `template-bundle-vendored:2026-08-26` (id `58c35a2d1675`) built from the
+  regenerated bundle; with `--network none` the vendored payload runs its real
+  project suite (242 passed, pytest exit 0) and a full-pipeline compose service
+  fails closed with the explicit `UNAVAILABLE-DEPENDENCY RECEIPT` (exit 3), never
+  a bare `ModuleNotFoundError`. Environment note: the image build requires >= 4 GiB
+  VM memory on colima (2 GiB OOM-kills texlive unpacking, docker exit 137).
+
+### Documentation audit
+
+- Closed backlog row `DOC-NEGCTRL-HARDEN-MED-1`: every active gate/verifier
+  claim previously flagged by `scripts/audit/audit_documentation.py` as lacking
+  a nearby negative control now carries an explicit control sentence — either a
+  named known-wrong input that fails the check, a fail-closed rejection
+  statement, or an honest scoping limitation. The advisory
+  `gate-negative-control` finding count dropped from 58 to 0; the detector was
+  not relaxed for this (controls were added per owning surface, no bulk edits).
+  Supporting detector fix: `_FAILS_ON_WRONG_INPUT_RE` now recognizes hyphenated
+  and inflected `fail-closed` variants so truthful fail-closed claims stop
+  reading as unbacked (`test_gate_claim_audit_accepts_hyphenated_fail_closed_evidence`).
+
+### Rendering
+
+- Tagged-PDF rendering retains PDF 2.0 tagging and catalog language while no
+  longer embedding a PDF/UA-2 conformance identifier. Tagged structure remains
+  bounded structural evidence, not PDF/UA certification.
+- Slide decks now recover manuscript-declared macros (`\newcommand`,
+  `\renewcommand`, `\DeclareMathOperator`) from `preamble.md` into the
+  Beamer header, rewritten as `\providecommand` so a clash with a class
+  built-in degrades to a no-op; only Beamer-safe packages survive the
+  fallback filter (layout/graphics machinery such as `geometry` is dropped).
+- Fixed the fallback rewrite so `\newcommand`/`\renewcommand` are actually
+  rewritten (the previous pattern never matched); covered by new
+  `extract_command_fallbacks` and header-injection tests.
+- `verbatim`/`lstlisting` bodies are now isolated environments during
+  allowframebreaks frame splitting, so no `\framebreak` can land inside a
+  code block; covered by a new split test.
+
 ### Robustness
 
+- Generic single-project Stage-01 pytest now uses the same 6,900-second
+  capacity as the declared structured-verifier path, instead of inheriting
+  `TestSuiteConfig`'s unrelated 1,800-second per-attempt default. Generic pytest
+  owns one monotonic subprocess-wait and retry-admission deadline across its
+  initial attempt and optional coverage-conflict retry; cleanup before retry
+  reduces the remaining allowance, while post-timeout process cleanup may
+  finish under the applicable outer backstop. Generic retry cleanup is now
+  confined recursively to the selected project, while infrastructure retry
+  cleanup remains nonrecursive at the checkout root so neither path deletes a
+  sibling project's live coverage. The declared verifier retains one
+  6,900-second attempt. Hosted CI invokes Stage-01 directly inside its unchanged
+  8,100-second job backstop, while a full-pipeline invocation also has its
+  separate 7,200-second process-tree boundary. Infrastructure timeout defaults
+  and all-project outer boundaries remain unchanged. This is timeout capacity
+  only, not a speedup or evidence of a passing test/coverage run.
+- Restored the single-source Agent Skills vendor boundary: the separately
+  sourced Monid CLI skill is no longer folded into the pinned Context
+  Engineering tree, the repository-owned Monid module skill remains
+  discoverable, and a negative control rejects any future unlocked skill
+  directory.
+- Completed the package-local Monid module map so the public-module
+  documentation gate covers `models.py` alongside the other six modules.
 - `uv sync` timeout no longer claims a successful workspace sync; it falls back
   to the same installed-package check as other `uv` failures.
 - Bounded hook execution no longer swallows post-launch `OSError` without

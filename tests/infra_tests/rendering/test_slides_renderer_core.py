@@ -28,6 +28,8 @@ from pypdf import PdfReader
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import slides_renderer
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering._slides_math_header import write_slides_math_header
+from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
 from infrastructure.rendering.slides_renderer import SlidesRenderer
 
 
@@ -226,6 +228,33 @@ class TestSlidesRendererClass:
         assert updated.index(r"\end{figure}") < updated.rindex(r"\end{frame}")
         assert updated.index(r"\end{figure}") < updated.index(r"After the figure.")
         assert updated.index(r"After the figure.") < updated.rindex(r"\end{frame}")
+
+    def test_split_long_slide_frames_isolates_verbatim_and_lstlisting(self):
+        """verbatim/lstlisting bodies must never receive an internal framebreak."""
+        for env in ("verbatim", "lstlisting"):
+            tex = (
+                r"\begin{frame}[allowframebreaks]{Code}" + "\n"
+                "Intro text before the code block.\n\n"
+                r"\begin{" + env + "}" + "\n"
+                "x = 1\n"
+                "y = 2\n"
+                r"\end{" + env + "}" + "\n\n"
+                "Closing prose after the block.\n"
+                r"\end{frame}" + "\n"
+            )
+
+            updated, changed = slides_renderer.split_long_slide_frames(tex)
+
+            assert changed == 1
+            # The environment is isolated into its own frame: no framebreak
+            # marker inside the body, and intro/env/closing each end up in
+            # distinct frames.
+            body_start = updated.index(r"\begin{" + env + "}")
+            body_end = updated.index(r"\end{" + env + "}")
+            assert r"\framebreak" not in updated[body_start:body_end]
+            intro_frame_end = updated.index(r"\end{frame}", updated.index("Intro text"))
+            assert body_start > intro_frame_end
+            assert updated.index("Closing prose") > body_end
 
     def test_split_long_slide_frames_breaks_top_level_paragraphs_only(self):
         tex = (
@@ -528,7 +557,7 @@ class TestFigurePathFixing:
     def test_fix_figure_paths_basic(self, tmp_path):
         """Test basic figure path fixing."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = r"\includegraphics{../output/figures/test.png}"
         output_dir = tmp_path / "slides"
@@ -536,14 +565,14 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         assert "../figures/test.png" in fixed
 
     def test_fix_figure_paths_already_correct(self, tmp_path):
         """Test that already correct paths are unchanged."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = r"\includegraphics{../figures/test.png}"
         output_dir = tmp_path / "slides"
@@ -551,7 +580,7 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         # Should remain unchanged
         assert "../figures/test.png" in fixed
@@ -559,7 +588,7 @@ class TestFigurePathFixing:
     def test_fix_figure_paths_multiple(self, tmp_path):
         """Test fixing multiple figure paths."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = r"""
         \includegraphics{../output/figures/fig1.png}
@@ -571,7 +600,7 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         assert "../figures/fig1.png" in fixed
         assert "../figures/fig2.png" in fixed
@@ -580,7 +609,7 @@ class TestFigurePathFixing:
     def test_fix_figure_paths_handles_pandoc_alt_text_brackets(self, tmp_path):
         """Pandoc Beamer alt text can contain brackets that defeat regex parsing."""
         config = RenderingConfig(output_dir=tmp_path)
-        renderer = SlidesRenderer(config)
+        SlidesRenderer(config)
 
         tex_content = (
             r"\pandocbounded{\includegraphics[keepaspectratio,"
@@ -592,7 +621,7 @@ class TestFigurePathFixing:
         output_dir.mkdir()
         figures_dir.mkdir()
 
-        fixed = renderer._fix_figure_paths(tex_content, output_dir, figures_dir)
+        fixed = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
         assert "{../figures/free_energy_curve.png}" in fixed
         assert "alt={Curve on {[}0, 6{]} with $I(q_\\lambda)$}" in fixed
@@ -630,9 +659,9 @@ class TestSlidesMathHeaderInjection:
             "```latex\n\\usepackage{unicode-math}\n```\n",
             encoding="utf-8",
         )
-        renderer = self._make_renderer(tmp_path)
+        self._make_renderer(tmp_path)
         output_dir = tmp_path / "slides"
-        header = renderer._maybe_write_math_header(manuscript, output_dir)
+        header = write_slides_math_header(manuscript, output_dir)
         assert header is not None
         assert header.name == "_slides_math_header.tex"
         content = header.read_text(encoding="utf-8")
@@ -646,8 +675,8 @@ class TestSlidesMathHeaderInjection:
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         assert header.name == "_slides_math_header.tex"
         content = header.read_text(encoding="utf-8")
@@ -658,6 +687,27 @@ class TestSlidesMathHeaderInjection:
         # No math snippet expected (no preamble).
         assert "unicode-math" not in content
 
+    def test_header_includes_manuscript_macros_with_unsafe_packages_filtered(self, tmp_path):
+        r"""Manuscript macros land in the slide header rewritten as
+        \providecommand; unsafe layout packages (geometry) are dropped while
+        Beamer-safe ones (amsmath) survive."""
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{geometry}\n\\usepackage{amsmath}\n\\newcommand{\\calD}{\\mathcal{D}}\n```\n",
+            encoding="utf-8",
+        )
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
+        # Macro rewritten to providecommand and present.
+        assert "\\providecommand{\\calD}" in content
+        assert "\\newcommand{\\calD}" not in content
+        # Safe package kept, layout machinery dropped.
+        assert "\\usepackage{amsmath}" in content
+        assert "geometry" not in content
+
     def test_helper_returns_header_with_citation_fallbacks_when_no_unicode_math(self, tmp_path):
         """When ``preamble.md`` exists but doesn't load unicode-math,
         the helper still writes a header for the natbib fallbacks.
@@ -665,8 +715,8 @@ class TestSlidesMathHeaderInjection:
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
         (manuscript / "preamble.md").write_text("```latex\n\\usepackage{geometry}\n```\n", encoding="utf-8")
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         content = header.read_text(encoding="utf-8")
         assert "\\providecommand{\\citep}" in content
@@ -683,8 +733,8 @@ class TestSlidesMathHeaderInjection:
         """
         manuscript = tmp_path / "manuscript"
         manuscript.mkdir()
-        renderer = self._make_renderer(tmp_path)
-        header = renderer._maybe_write_math_header(manuscript, tmp_path / "slides")
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
         assert header is not None
         content = header.read_text(encoding="utf-8")
         assert "\\newtheorem{proposition}{Proposition}" in content
@@ -693,6 +743,81 @@ class TestSlidesMathHeaderInjection:
         assert "\\newtheorem{lemma}" not in content
         assert "\\newtheorem{corollary}" not in content
         assert "\\newtheorem{definition}" not in content
+
+    def test_helper_declares_every_environment_the_extractor_skips(self, tmp_path):
+        """The skip-set and the unconditional block must agree.
+
+        ``write_slides_math_header`` drops a manuscript's ``\\newtheorem``
+        declarations for environments it believes are "already declared or
+        declared below/above". ``axiom`` and ``property`` sat in that set while
+        being declared in neither place, so a manuscript using
+        ``\\begin{property}`` had the declaration dropped on the way in and
+        never restored -- beamer then failed with "Environment property
+        undefined", and the render stage discarded the slide deck it had
+        already written. Six of Part 1's decks were lost this way.
+
+        This asserts the invariant rather than the two names: every environment
+        the extractor refuses to carry over must be one beamer ships natively
+        or one this header declares itself.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\newtheorem{property}{Property}[section]\n\\newtheorem{axiom}{Axiom}[section]\n```\n",
+            encoding="utf-8",
+        )
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
+
+        beamer_native = {"theorem", "lemma", "corollary", "definition", "example", "fact"}
+        skipped = beamer_native | {"proposition", "hypothesis", "remark", "axiom", "property"}
+        undeclared = [env for env in sorted(skipped - beamer_native) if f"\\newtheorem{{{env}}}" not in content]
+        assert not undeclared, (
+            "the extractor skips these environments as already handled, but the "
+            f"header declares none of them: {undeclared}"
+        )
+
+    def test_helper_provides_cleveref_range_fallbacks(self, tmp_path):
+        """``\\cref``'s fallback takes one argument and cannot cover
+        ``\\crefrange``, which takes two. Without its own fallback beamer
+        stopped at "Undefined control sequence" and Part 1's formal-framework
+        deck failed to compile.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        self._make_renderer(tmp_path)
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
+        content = header.read_text(encoding="utf-8")
+        assert "\\providecommand{\\crefrange}[2]" in content
+        assert "\\providecommand{\\Crefrange}[2]" in content
+
+    def test_helper_supplies_a_non_floating_algorithm_environment(self, tmp_path):
+        """`algorithm` must be replaced, not carried over.
+
+        Loading it under beamer defines the environment but leaves its float
+        machinery (\\@float@Hx, \\float@makebox) undefined, so a deck using it
+        dies one step later than it would have without the package -- still
+        dead, and harder to diagnose. 14 \\begin{algorithm} blocks in one
+        manuscript cost a 51-page deck this way.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        (manuscript / "preamble.md").write_text(
+            "```latex\n\\usepackage{algorithm}\n\\usepackage{algpseudocode}\n```\n",
+            encoding="utf-8",
+        )
+        self._make_renderer(tmp_path)
+        content = write_slides_math_header(manuscript, tmp_path / "slides").read_text(encoding="utf-8")
+        assert "\\usepackage{algpseudocode}" in content
+        assert "\\usepackage{algorithm}" not in content, (
+            "the float package was carried over; it has no beamer implementation"
+        )
+        assert "\\newenvironment{algorithm}" in content
+        # \providecommand is a no-op for \caption -- the caption package has
+        # already defined it, and then refuses it outside a float.
+        assert "\\renewcommand{\\caption}" in content
 
     def test_postprocessor_overrides_generated_codelisting_float(self):
         """The override lands after pandoc-crossref's preamble declaration."""

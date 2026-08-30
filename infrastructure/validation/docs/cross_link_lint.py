@@ -20,7 +20,7 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 from infrastructure.validation.docs._io import read_markdown
 from infrastructure.validation.docs.accuracy import heading_slug
-from infrastructure.validation.docs.consistency._shared import blank_content
+from infrastructure.validation.docs.consistency._shared import blank_content, blank_fences
 from infrastructure.validation.docs.scan_scope import DEFAULT_EXCLUDE_PARTS, iter_markdown_files
 
 logger = get_logger(__name__)
@@ -166,16 +166,6 @@ _EXPLICIT_ID_RE = re.compile(r"""<a\s+(?:id|name)\s*=\s*["']([^"']+)["']""", re.
 _CURLY_ID_RE = re.compile(r"\{#([A-Za-z0-9_:.-]+)\}")
 
 
-def _blank_fences(text: str) -> str:
-    """Blank fenced code blocks while PRESERVING inline-code spans.
-
-    Headings legitimately contain inline code (``## `uv` command not found``) and
-    GitHub slugs the code's *text content*, so the inline-span blanking used for
-    link discovery would mis-slug those headings.
-    """
-    return _FENCE_RE.sub(blank_content, text)
-
-
 def collect_anchors(md_file: Path) -> frozenset[str]:
     """Return every in-page anchor *md_file* defines.
 
@@ -188,7 +178,7 @@ def collect_anchors(md_file: Path) -> frozenset[str]:
         return frozenset()
     anchors: set[str] = set(_EXPLICIT_ID_RE.findall(raw))
     seen: dict[str, int] = {}
-    for match in _ATX_HEADING_RE.finditer(_blank_fences(raw)):
+    for match in _ATX_HEADING_RE.finditer(blank_fences(raw)):
         heading = match.group(2)
         custom = _CURLY_ID_RE.search(heading)
         if custom:

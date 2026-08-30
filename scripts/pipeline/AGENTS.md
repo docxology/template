@@ -24,6 +24,7 @@ belongs here.
 | `stage_10_research_workflow.py` | 10 | Research workflow orchestration (opt-in) | `research_workflow` |
 | `stage_11_ebook.py` | 11 | Ebook generation (EPUB/MOBI/DOCX; opt-in) | `core`, `ebook` |
 | `stage_12_metadata.py` | 12 | Metadata package (ONIX/OPF/JSON; opt-in) | `core`, `metadata` |
+| `stage_13_docxplus.py` | 13 | docxplus intelligent-document export (conforming `.docx` carrying its source tree; opt-in) | `core`, `docxplus` |
 
 ## Bootstrap pattern
 

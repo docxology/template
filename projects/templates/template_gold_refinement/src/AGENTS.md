@@ -14,7 +14,10 @@ visualization specs and quality reports; `manuscript_variables.py`
 generates all `{{TOKEN}}` values; `coercion.py` normalizes loosely-typed config
 values; `cover_visualization.py` renders the cover art; `dashboard.py` builds
 the self-contained HTML metrics dashboard; and `security_assay.py` models
-threat/standard/evidence-surface security-assay records.
+threat/standard/evidence-surface security-assay records; `analogy_boundary.py`
+guards the bounded analogy predicate; `transmission.py` validates the
+transmission bookends; and `parsing.py` supplies shared parsing and I/O
+helpers.
 
 ## Layer Contract
 
@@ -41,6 +44,9 @@ in `scripts/` (thin orchestrators).
 | `cover_visualization.py` | Renders the project's cover art from `figures/_common` specs and integrity/formalism data |
 | `dashboard.py` | Self-contained HTML dashboard: refinery metrics, purity progression, token distribution, evidence-registry status |
 | `security_assay.py` | `SecurityAssayRecord` — threat / standard / evidence-surface / validator / claim-boundary rows |
+| `analogy_boundary.py` | Bounded analogy-boundary predicate: executable mappings, measurable dimensions, explicit non-claims |
+| `transmission.py` | Transmission bookend validation (SHA-256 receipt for the begin/end manuscript pair) |
+| `parsing.py` | Shared parsing and I/O helpers |
 
 ## Key Design Rules
 
@@ -48,7 +54,7 @@ in `scripts/` (thin orchestrators).
 - Token selection is deterministic: same seed + lexicon = same plan
 - Every `{{TOKEN}}` in manuscript source must be produced by `generate_variables()`
 - Config owns all prose choices (lexicon, slots, narrative moves)
-- `manuscript/config.yaml` also owns the secure-pipeline `steganography` block and the optional `llm` review gate
+- `manuscript/config.yaml` also owns the secure-pipeline `steganography` block and the optional `llm` review gate (negative control: `tests/test_pipeline_policy.py` feeds an invalid boolean such as `steganography.enabled: definitely` and asserts a `ValueError`; the LLM-review gate stays closed when Ollama is unavailable or opt-in is missing)
 - `domain_profile.yaml` owns the stage-remap profile, benchmark rubric, and analogy-boundary notes
 - Figure labels, paths, captions, and visual encodings must come from
   `FIGURE_SPECS`; do not duplicate registry metadata in scripts or manuscript

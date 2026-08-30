@@ -34,3 +34,10 @@ uv run python scripts/pipeline/stage_04_validate.py --project templates/template
 - Keep phase logic in `src/multi_phase/` and numbered scripts thin.
 - Use real local HTTP servers in tests; never introduce mock frameworks.
 - Run stage 11 before stage 10 when adding full-text reproducibility evidence.
+
+## Optional gap-filler search (Monid)
+
+Prefer MCP connectors and configured retrieval keys first. Monid
+(`infrastructure/search/monid/`) is infrastructure-only gap filler — see
+[`PRICING.md`](../../../../../infrastructure/search/monid/PRICING.md). Offline
+`deep_research` replay remains the exemplar default for long-form synthesis.

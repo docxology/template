@@ -1,8 +1,9 @@
 # Test Coverage Gap Analysis
 
 This document tracks infrastructure test coverage gaps by Layer-1 module. The
-global infrastructure gate remains 60%; the rows below are targets and notes,
-not new CI gates.
+global infrastructure gate remains 60%. **Module-% tables below are historical
+notes, not live gates.** Live measured coverage and exemplar floors belong in
+[`docs/_generated/COUNTS.md`](../_generated/COUNTS.md).
 
 **Last verified:** 2026-08-09 (source-bound guidance; current measurements are
 read from the generated coverage receipts below rather than copied into this
@@ -101,14 +102,19 @@ coverage from the 2026-07-22 COVERAGE-BASELINE-1 wave (145 new tests). <!-- noqa
 The modules below are the remaining lower-coverage rows above the 60% gate
 that still have concrete branch gaps to close.
 
-| Module | Previous coverage | Tests added | Test file |
+| Module | Measured coverage (2026-08-21, module-scoped pytest) | Tests added | Test file |
 | --- | ---: | ---: | --- |
-| `project/workspace.py` | 51.11% | +15 | `tests/infra_tests/project/test_workspace_additional.py` |
-| `publishing/transmission_page_check.py` | 58.04% | +15 | `tests/infra_tests/publishing/test_transmission_page_check_additional.py` |
-| `rendering/docx_renderer.py` | 59.79% | +10 | `tests/infra_tests/rendering/test_docx_renderer_additional.py` |
-| `rendering/_pipeline_summary.py` | 46.83% | +30 | `tests/infra_tests/rendering/test_pipeline_summary_additional.py` |
-| `rendering/epub_renderer.py` | 63.92% | +10 | `tests/infra_tests/rendering/test_epub_renderer_additional.py` |
-| `documentation/publication_records.py` | 74.06% | +45 | `tests/infra_tests/documentation/test_publication_records_additional.py` |
+| `project/workspace.py` | 88.89% (94%+ incl. new branch-gap tests) | +6 | `tests/infra_tests/project/test_workspace_branches.py` |
+| `publishing/transmission_page_check.py` | 85.71% (remaining miss is the subprocess-tested `main()` guard) | covered by `_additional` | `tests/infra_tests/publishing/test_transmission_page_check_additional.py` |
+| `rendering/docx_renderer.py` | 84.09% (remaining gaps are optional-dependency error branches) | covered by `_additional` | `tests/infra_tests/rendering/test_docx_renderer_additional.py` |
+| `rendering/_pipeline_summary.py` | 85.95% (95.25% incl. new branch-gap tests) | +19 | `tests/infra_tests/rendering/test_pipeline_summary_branches.py` |
+| `rendering/epub_renderer.py` | 63.92% | covered by `_additional` | `tests/infra_tests/rendering/test_epub_renderer_additional.py` |
+| `documentation/publication_records.py` | 74.06% | covered by `_additional` | `tests/infra_tests/documentation/test_publication_records_additional.py` |
+
+> Note (2026-08-21): percentages in this table were re-measured with
+> module-scoped pytest runs; earlier single-module figures predate the
+> `_additional` test waves and understate current coverage. Re-derive before
+> citing any number here.
 
 ### Optional-Tool And Gated Rows
 
@@ -140,13 +146,13 @@ deterministic local paths — no mocks introduced.
 | `core/runtime/setup_checks.py` | 46.67% | 85.71% | +15 | `tests/infra_tests/core/test_setup_checks.py` |
 | `project/working_render.py` | 46.67% | 90.33% | +25 | `tests/infra_tests/project/test_working_render.py` |
 
-Scripts audit (43/49 clean thin orchestrators): six violations identified — two embed
-non-trivial algorithms in scripts (`scripts/docgen/api_reference.py` package discovery,
-`scripts/pipeline/stage_06_llm_review.py` stage-label resolution); two inline data-shaping logic that belongs
-in infrastructure (`audit_filepaths.py` statistics formatting, `verify_no_mocks.py`
-scan-root resolution); one embeds a mini-test-runner loop duplicating infrastructure
-aggregation (`scripts/pipeline/stage_00_setup.py`); one hardcodes a canonical configuration list
-(`scripts/docgen/stage_table.py`). No hardcoded external URLs found.
+The six thin-orchestrator script violations recorded here have been moved into
+`infrastructure/` (package discovery, stage-label resolution, filepath
+statistics, no-mocks scan-root resolution, Stage-00 setup aggregation, and
+stage-table generation from `pipeline.yaml`). Scripts in those paths now
+coordinate I/O; the algorithms live in tested Layer-1 modules. Re-run
+`scripts/audit/check_template_drift.py` rather than treating this paragraph as
+a live violation list.
 
 Parity notes: `infrastructure/docker/` has partial coverage via
 `tests/infra_tests/rendering/test_dockerfile_gen.py` (no dedicated `tests/infra_tests/docker/`

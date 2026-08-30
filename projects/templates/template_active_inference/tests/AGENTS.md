@@ -57,7 +57,8 @@ other than fixed-point remains at 1,800 seconds, and the fixed-point exception
 must not spread to unrelated coverage or producer commands.
 
 This suite is NOT xdist-safe: gate tests compose and validate the REAL project
-tree and the autouse conftest fixture restores tracked sources/outputs after
+tree (a known-wrong parallel run is a counterexample already on record: `-n 6`
+corrupted readiness mid-run) and the autouse conftest fixture restores tracked sources/outputs after
 every test, so parallel workers race each other (observed corrupting readiness
 mid-run under `-n 6`) — and any test that merely READS the real tree races
 with another worker's restore-writes. Run it serially. The safe multi-core
@@ -101,7 +102,11 @@ instead of rebuilding the full research pipeline inside test collection. Set
 `TEMPLATE_ACTIVE_INFERENCE_ALLOW_GATE_REBUILD=1` only for an intentional local
 refresh run that will regenerate and review the tracked outputs.
 
-`--collect-only` discovery must remain read-only and skip gate prewarming. The
+`--collect-only` discovery must remain read-only and skip gate prewarming. As a
+negative control, `tests/test_gate_support_contracts.py::test_session_prewarm_skips_collect_only`
+and `::test_collection_hook_skips_collect_only_before_selection` drive collect-only
+sessions with a stub that raises if any prewarm or mutation is attempted, so the
+skip path is proven rather than assumed. The
 real test process performs the readiness check; discovery timeouts must not
 leave partially refreshed artifacts behind for the run that follows.
 

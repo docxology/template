@@ -18,6 +18,7 @@ from typing import Any
 
 from json_io import load_json_strict as _load_json
 from roadmap_tracks.sheaf_tracks_registry import HASH_CYCLE_AUTHORITY, hash_cycle_excluded
+from roadmap_tracks.image_content_hash import image_content_sha256, is_image_artifact
 from yaml_io import load_yaml
 
 CORE_ARTIFACT_PRODUCERS: dict[str, str] = {
@@ -144,6 +145,9 @@ def _artifact_record(
     path = root / rel
     exists, size_bytes, sha256 = _file_fingerprint(path)
     cycle_excluded = hash_cycle_excluded(rel, producer)
+    content_sha256 = (
+        "" if cycle_excluded or not exists else image_content_sha256(path) if is_image_artifact(rel) else ""
+    )
     return {
         "path": rel,
         "producer": producer,
@@ -151,6 +155,10 @@ def _artifact_record(
         "size_bytes": 0 if cycle_excluded else size_bytes,
         "sha256": "" if cycle_excluded else sha256,
         "cycle_excluded": cycle_excluded,
+        # Compression-invariant digest the diffoscope gates on for images; see
+        # roadmap_tracks.image_content_hash. Empty for non-images and cycle-
+        # excluded records, matching the canonical sheaf-track provenance rows.
+        "content_sha256": content_sha256,
         "hash_authority": HASH_CYCLE_AUTHORITY if cycle_excluded else "this_record",
         "deterministic_seed": seed,
         "config_digest": config_digest,

@@ -18,6 +18,7 @@ logger = get_logger(__name__)
 __all__ = [
     "check_latex_log_for_graphics_errors",
     "ensure_setmathfont",
+    "extract_command_fallbacks",
     "extract_math_font_preamble",
     "extract_preamble",
     "generate_title_page_body",
@@ -220,6 +221,68 @@ def extract_preamble(preamble_file: Path) -> str:
 
     logger.debug(f"No LaTeX code blocks found in {preamble_file.name}")
     return ""
+
+
+def extract_command_fallbacks(preamble: str) -> str:
+    """Extract single-line, brace-balanced macro definitions from ``preamble``.
+
+    Slide decks intentionally load only a minimal header (math font +
+    layout fallbacks), so manuscript-declared macros such as
+    ``\\calD`` or ``\\cogstate`` are otherwise undefined there and fail
+    compilation with "Undefined control sequence". This recovers every
+    SELF-CONTAINED single-line ``\\newcommand``/``\\renewcommand``/
+    ``\\providecommand``/``\\DeclareMathOperator`` definition and rewrites
+    ``\\newcommand`` as ``\\providecommand`` so a definition that clashes
+    with a class built-in degrades to a no-op instead of erroring.
+    Multi-line constructs are dropped (same conservative rule as
+    :func:`extract_preamble`).
+
+    Args:
+        preamble: LaTeX preamble content as a string.
+
+    Returns:
+        A newline-joined snippet of fallback definitions (may be empty).
+    """
+    if not preamble:
+        return ""
+    cmd_re = re.compile(
+        r"^\s*(?:%|\\(?:newcommand|renewcommand|providecommand|DeclareMathOperator|DeclareUnicodeCharacter|usepackage|lstset)\b)"
+    )
+
+    def _self_contained(line: str) -> bool:
+        if line.lstrip().startswith("%"):
+            return True
+        return line.count("{") == line.count("}") and line.count("[") == line.count("]")
+
+    # Slide-safe packages are kept so math/tables still compile in decks;
+    # layout/graphics machinery (geometry, hyperref, ...) clashes with
+    # Beamer and must never leak into the minimal slide header.
+    slide_safe_packages = (
+        "listings",
+        "fancyvrb",
+        "amsmath",
+        "amssymb",
+        "bm",
+        "mathtools",
+        "booktabs",
+        "multirow",
+    )
+
+    recovered: list[str] = []
+    for ln in preamble.splitlines():
+        stripped = ln.rstrip()
+        if not stripped or not cmd_re.match(stripped) or not _self_contained(stripped):
+            continue
+        if stripped.lstrip().startswith("\\usepackage") and not any(pkg in stripped for pkg in slide_safe_packages):
+            continue
+        # Rewrite newcommand/renewcommand -> providecommand: clashes with
+        # class built-ins degrade to no-ops, and renewcommands of
+        # package-only macros (e.g. tocloft's \cftfigpresnum) simply define
+        # the macro harmlessly when the package is absent in slides.
+        fixed = re.sub(r"^(\s*)\\(?:renew|new)command\b", lambda m: m.group(1) + "\\providecommand", stripped)
+        recovered.append(fixed)
+
+    return "\n".join(recovered)
 
 
 def check_latex_log_for_graphics_errors(log_file: Path) -> dict[str, list[str]]:

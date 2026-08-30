@@ -56,7 +56,9 @@ infrastructure code (project scripts: warn 150, fail 250).
 
 - Multiple independent classes/functions that could be separate modules
 - Mixed concerns that would benefit from separation
-- File approaches the gate thresholds (800 warn / 950 fail for infra code)
+- File approaches the gate thresholds (800 warn / 950 fail for infra code; exceeding the fail threshold blocks the module-line-count gate) — negative control: `tests/infra_tests/validation/test_line_count.py::test_scan_line_counts_warn_and_fail` feeds a 960-line infra module and asserts it lands in the failures list
+Exceeding the fail threshold fails the gate outright; the warn threshold only invites refactoring review.
+These are enforcement numbers: a module over 950 lines fails the gate, while anything between the 800-line warn level and the ceiling emits warnings without blocking.
 
 **How to split**:
 

@@ -43,9 +43,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
     "absent",
     "may rotate",
     "no longer",
-    "for example",
-    "e.g.",
-    "e.g ",
     "guard",
     "skipping",
     "skipped",
@@ -56,7 +53,6 @@ CONDITIONAL_PHRASES: tuple[str, ...] = (
     "when the working tree",
     "when this tree",
     "is present",
-    "when ",
     "only when",
     "only if",
     "conditional on",
@@ -138,8 +134,7 @@ def iter_long_lived_docs(
         if candidate.is_dir():
             roots.append(candidate)
     if repo_root.is_dir():
-        for md in repo_root.glob(MD_GLOB):
-            roots.append(md)
+        roots.extend(repo_root.glob(MD_GLOB))
     if extra_roots:
         roots.extend(Path(p) for p in extra_roots)
 

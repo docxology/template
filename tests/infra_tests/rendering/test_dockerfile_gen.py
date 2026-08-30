@@ -139,6 +139,30 @@ def test_build_compose_yaml_uses_project_name_in_image_tag() -> None:
     assert "template-bundle-my_proj:latest" in text
 
 
+def test_build_dockerfile_bootstraps_deadsnakes_for_non_native_python() -> None:
+    # ubuntu:24.04 ships Python 3.12; requesting 3.14 without the deadsnakes
+    # PPA produced an image build that failed with "Unable to locate package
+    # python3.14". The generator must emit the PPA bootstrap for any version
+    # the base image does not natively provide.
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.14"))
+    assert "add-apt-repository -y ppa:deadsnakes/ppa" in text
+    assert "python3.14" in text
+
+
+def test_build_dockerfile_omits_deadsnakes_for_native_python() -> None:
+    text = build_dockerfile(DockerfileConfig(project_name="x", python_version="3.12"))
+    assert "deadsnakes" not in text
+
+
+def test_build_compose_yaml_verify_service_collects_payload_tests() -> None:
+    # EXECUTABLE-BUNDLE-MAJ-2: the payload is single-project and vendored, so
+    # `verify` proves collection cleanliness against source/ instead of running
+    # repo-root regression tests that no bundle carries.
+    text = build_compose_yaml("templates/my_proj")
+    assert "cd /workspace/source" in text
+    assert "pytest --collect-only -q" in text
+
+
 def test_dockerfile_config_immutable() -> None:
     cfg = DockerfileConfig(project_name="x", python_version="3.12")
     with pytest.raises((AttributeError, Exception)):

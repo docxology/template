@@ -569,7 +569,9 @@ mode adds `output/executive_summary/` as a disposable copied-output surface.
 Two entry points — `./run.sh` (interactive or `--pipeline`) and
 `uv run python scripts/runner/execute_pipeline.py --project <name> [--core-only]`.
 
-> **Pipeline (canonical phrasing — keep in sync with CLAUDE.md and AGENTS.md):** The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages**. YAML stages 5–14 use pipeline-stage scripts; YAML stage 15 (Executable Bundle) and YAML stage 16 (Archival Publication) use their opt-in runner entry points under `scripts/runner/`. YAML stage indices are distinct from script filename prefixes. `--core-only` excludes optional LLM and long-horizon stages.
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->

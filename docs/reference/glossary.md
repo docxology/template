@@ -13,7 +13,7 @@
 - **Thin Orchestrator Pattern**: Core architectural principle (capitalized when referring to the pattern name, lowercase in prose)
 - **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
 - **Version**: see `pyproject.toml` `[project].version` / the latest git tag for the current package version
-- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`COUNTS.md`](../_generated/COUNTS.md), [`coverage-gaps.md`](../development/coverage-gaps.md))
+- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code (live % → [`COUNTS.md`](../_generated/COUNTS.md))
 - **Build Pipeline**: Orchestrated DAG from setup through copied deliverables.
   Selection comes from tags and configuration in `pipeline.yaml`; the current
   order and failure modes are in the
@@ -425,7 +425,7 @@ GitHub repository type that can be used to create new repositories with same str
 
 ### Test Coverage
 
-Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure. Live measured percentages → [`../_generated/COUNTS.md`](../_generated/COUNTS.md) (exemplars) and [`../development/coverage-gaps.md`](../development/coverage-gaps.md) (infrastructure).
+Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure. Live measured percentages → [`../_generated/COUNTS.md`](../_generated/COUNTS.md). Module-gap notes (historical, not live gates) → [`../development/coverage-gaps.md`](../development/coverage-gaps.md).
 
 **Types**:
 

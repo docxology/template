@@ -394,11 +394,27 @@ def _write_final_validation_pass(root: Path, *, require_analysis_outputs: bool) 
     paths.update(_write_sheaf_owned_artifacts(root))
     paths.update(_refresh_animation_outputs(root))
     paths.update(_refresh_hydrated_manuscript(root, require_analysis_outputs=require_analysis_outputs))
+    # Hydration rewrites figure_registry.json (and variables), so the canonical
+    # sheaf-track writers must run after them: they alone own artifact_provenance,
+    # replay_matrix, release_bundle, and contract-index records bound to those
+    # final bytes.
+    from roadmap_tracks.sheaf_tracks import write_sheaf_track_artifacts
+
+    paths.update(write_sheaf_track_artifacts(root, finalize=False))
     paths.update(_write_contract_artifacts(root))
     paths.update(_write_semantic_core(root))
     paths.update(write_supplemental_artifacts(root))
+    # Terminal order matters: the certificate embeds live release predicates and
+    # the provenance/contract artifacts hash the certificate bytes. Ending on a
+    # contract refresh (then one final certificate rewrite, which only changes
+    # hash-cycle-excluded surfaces) leaves every saved-vs-live comparison green
+    # instead of oscillating between passes.
     paths.update(_write_contract_artifacts(root))
     paths.update(_write_semantic_core(root))
+    from roadmap_tracks.supplemental import write_supplemental_artifacts as _wsup
+
+    paths.update(_wsup(root))
+    paths.update(_write_contract_artifacts(root))
     return paths
 
 
@@ -437,10 +453,16 @@ def run_semantic_fixed_point(
         paths.update(_write_final_validation_pass(root, require_analysis_outputs=require_analysis_outputs))
         current = _fingerprint(root)
         final_issues = _validate_fixed_point(root)
-        if not final_issues and previous == current:
+        if not final_issues:
+            # A clean validation is the contract: every saved-vs-live comparison
+            # just passed against the bytes on disk. Requiring an additional
+            # byte-identical pass made the loop oscillate, because the writers
+            # legitimately rewrite self-referential artifacts (certificate,
+            # provenance, staleness) whose bytes differ per pass even when all
+            # validators agree.
             _write_fingerprint_cache(root, current)
             return _existing_fixed_point_paths(root)
-        if final_issues and previous == current:
+        if previous == current:
             break
         previous = current
     if final_issues:

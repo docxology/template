@@ -163,6 +163,52 @@ class TestSyntheticGate:
         assert "timed out" in result.output
 
 
+class TestGateTimeoutResolution:
+    """Per-gate timeout overrides and the environment knob."""
+
+    def test_default_gate_uses_registry_ceiling(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
+        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
+
+        assert _gate_timeout_seconds("mypy") == _GATE_TIMEOUT_SECONDS
+
+    def test_counts_override_exceeds_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
+        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
+
+        override = _gate_timeout_seconds("counts")
+        assert override > _GATE_TIMEOUT_SECONDS
+
+    def test_bandit_override_exceeds_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("TEMPLATE_HEALTH_GATE_TIMEOUT", raising=False)
+        from infrastructure.core.health import _GATE_TIMEOUT_SECONDS, _gate_timeout_seconds  # noqa: PLC0415
+
+        # Measured bandit wall time on a loaded workstation exceeds 10 minutes.
+        assert _gate_timeout_seconds("bandit") >= 1200.0
+        assert _gate_timeout_seconds("bandit") > _GATE_TIMEOUT_SECONDS
+
+    def test_env_override_applies_to_every_gate(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "42")
+        from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
+
+        assert _gate_timeout_seconds("counts") == 42.0
+        assert _gate_timeout_seconds("mypy") == 42.0
+
+    def test_env_override_rejects_nonpositive(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "0")
+        from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
+
+        with pytest.raises(ValueError, match="positive"):
+            _gate_timeout_seconds("mypy")
+
+    def test_env_override_rejects_non_numeric(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("TEMPLATE_HEALTH_GATE_TIMEOUT", "soon")
+        from infrastructure.core.health import _gate_timeout_seconds  # noqa: PLC0415
+
+        with pytest.raises(ValueError, match="Invalid TEMPLATE_HEALTH_GATE_TIMEOUT"):
+            _gate_timeout_seconds("mypy")
+
+
 class TestSubsetSelection:
     """``gates=[...]`` must run only the requested gates."""
 

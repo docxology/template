@@ -81,9 +81,13 @@ project config and the generated publication records are refreshed.
          deterministic_filters: {min_year: 2015}
    ```
 
+The default lane replays the committed fixture via
+`scripts/01b_fixture_phase_replay.py`; numbered scripts run from this
+template's own directory, while pipeline stages run from the repository root.
+
 2. **Replay the committed fixture (offline default)**:
    ```bash
-   uv run python scripts/01_multi_phase_search.py
+   uv run python scripts/01b_fixture_phase_replay.py
    ```
 
    Live retrieval is an explicit opt-in and never runs from the default

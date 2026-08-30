@@ -11,6 +11,7 @@ import pytest
 from infrastructure.rendering._pdf_latex_helpers import (
     check_latex_log_for_graphics_errors,
     ensure_setmathfont,
+    extract_command_fallbacks,
     extract_math_font_preamble,
     extract_preamble,
     generate_title_page_body,
@@ -533,3 +534,51 @@ class TestErrorPaths:
             assert parse_missing_latex_package_from_log(log) is None
         finally:
             log.chmod(stat.S_IRWXU)
+
+
+class TestExtractCommandFallbacks:
+    """Tests for extract_command_fallbacks (slides macro fallback recovery)."""
+
+    def test_empty_preamble_yields_empty(self):
+        assert extract_command_fallbacks("") == ""
+
+    def test_newcommand_recovered_and_rewritten_as_providecommand(self):
+        preamble = "\\usepackage{geometry}\n\\newcommand{\\calD}{\\mathcal{D}}\n"
+        snippet = extract_command_fallbacks(preamble)
+        assert "\\providecommand{\\calD}{\\mathcal{D}}" in snippet
+        # The raw newcommand line must be rewritten, not passed through.
+        assert "\\newcommand{\\calD}" not in snippet
+
+    def test_multiline_definition_dropped(self):
+        preamble = "\\newcommand{\\foo}{\n  line one\n  line two}\n"
+        snippet = extract_command_fallbacks(preamble)
+        assert "\\foo" not in snippet
+
+    def test_declaremathoperator_preserved(self):
+        preamble = "\\DeclareMathOperator{\\rank}{rank}\n"
+        assert "\\DeclareMathOperator{\\rank}{rank}" in extract_command_fallbacks(preamble)
+
+    def test_safe_usepackage_lines_kept(self):
+        preamble = "\\usepackage{amsmath}\n\\usepackage{booktabs}\n"
+        snippet = extract_command_fallbacks(preamble)
+        assert "amsmath" in snippet
+        assert "booktabs" in snippet
+
+    def test_comments_kept_verbatim(self):
+        preamble = "% a leading comment\n\\providecommand{\\x}{x}\n"
+        snippet = extract_command_fallbacks(preamble)
+        assert "% a leading comment" in snippet
+
+    def test_unsafe_package_with_options_dropped(self):
+        preamble = "\\usepackage[margin=1in]{geometry}\n\\newcommand{\\calD}{\\mathcal{D}}\n"
+        snippet = extract_command_fallbacks(preamble)
+        assert "geometry" not in snippet
+        assert "\\providecommand{\\calD}" in snippet
+
+    def test_unbalanced_braces_dropped(self):
+        preamble = "\\renewcommand{\\bar}{unbalanced{brace}\n"
+        assert "bar" not in extract_command_fallbacks(preamble)
+
+    def test_renewcommand_becomes_providecommand(self):
+        preamble = "\\renewcommand{\\cftfigpresnum}{Fig~}\n"
+        assert "\\providecommand{\\cftfigpresnum}" in extract_command_fallbacks(preamble)

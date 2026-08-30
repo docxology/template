@@ -165,7 +165,8 @@ metadata:
 renderer selects LuaLaTeX, writes that text into the cover image's PDF
 structure element, and fails before replacing an existing PDF if the selected
 configured cover has missing, blank, or non-string alt text. The option
-requests tagged PDF/UA-2 metadata; it does not certify PDF/UA conformance.
+requests PDF 2.0 tagging and catalog language without emitting a PDF/UA
+conformance identifier. Tagged structure does not certify PDF/UA conformance.
 Combined EPUB rendering consumes the same selected cover and alt pair. A cover
 with missing or blank alt fails before Pandoc runs; after rendering, the EPUB
 post-processor names Pandoc's SVG cover graphic from the configured alt, hides
@@ -225,6 +226,27 @@ fail closed when the filter is required but unavailable rather than silently
 emitting an unnumbered export. Beamer rendering includes the filter when it is
 available and retains a diagnostic warning when a caller intentionally uses a
 fallback environment.
+
+### Web link post-processing
+
+The HTML renderer performs a final, source-aware anchor pass after Pandoc and
+the accessibility/figure post-processors have run. Renderer-owned pages and
+fragments remain local to `output/web`; links from manuscript sections to
+another rendered section are mapped to that page when it is available. Other
+local links are resolved against the authored manuscript directory and, when
+they target public repository content, become canonical GitHub `main` links.
+This keeps deployed HTML from retaining checkout-relative links such as
+`../../../../docs/...` while preserving external `https:`, `mailto:`, and
+`tel:` links. Executable or malformed URI schemes, missing targets, path
+escapes, and links into private `projects/`, `fonds/`, `rules/`, or `tools/`
+trees fail closed. Combined public-checkout renders also scan renderer-owned
+pages for remaining local anchors that leave the deployed web directory.
+
+Renders from isolated or private paths skip the public-repository rewrite, so
+private source paths are never projected into the public repository URL. The
+source-aware behavior is covered by
+`tests/infra_tests/rendering/test_web_renderer.py` and exercised by the real
+Pandoc render path.
 
 ### Add Bibliography and Citations
 
@@ -394,7 +416,7 @@ graph TD
 | **slides_renderer.py** | Presentation slides | `SlidesRenderer` - Beamer and reveal.js support; chooses an adaptive `--slide-level` in the 2–4 range and applies `_beamer_allowframebreaks.lua` so long sections split across slides instead of overflowing a single Beamer frame | latex_utils, pandoc Lua filter |
 | **_slides_codelisting.py** | Captioned slide listings | Replaces pandoc-crossref's generated listing float after Pandoc preamble assembly so numbered code captions compile inside Beamer frames | slides_renderer |
 | **_slides_framebreaks.py** | Dense slide splitting | Isolates unbreakable listing, figure, table, and list environments while splitting long top-level frame content safely; explicit `\begingroup`/`\endgroup` regions remain in one continuation frame | slides_renderer |
-| **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration | pandoc |
+| **web_renderer.py** | Web HTML output | `WebRenderer` - MathJax integration; markdown preprocess in `_web_markdown_preprocess.py`, HTML postprocess in `_web_postprocess.py` | pandoc |
 | **latex_utils.py** | LaTeX compilation utilities | `compile_latex()` - Multi-pass compilation | LaTeX distribution |
 | **latex_package_validator.py** | Package dependency checking | `validate_packages()` - Pre-flight validation | kpsewhich |
 | **manuscript_discovery.py** | Content discovery | `discover_manuscript_files()` - File enumeration | pathlib |

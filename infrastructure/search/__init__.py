@@ -10,6 +10,8 @@ This package hosts independent **search interfaces**, each in its own subpackage
   endpoint (``search``, ``contents``, ``answer``, ``find_similar``).
 * :mod:`infrastructure.search.deep_research` — provider-neutral orchestration
   over OpenAI and Gemini deep research surfaces with lazy SDK adapters.
+* :mod:`infrastructure.search.monid` — Monid gateway (discover/inspect/run) and
+  offline search-API USD-per-1k pricing reference.
 * :mod:`infrastructure.search.connectors` — the Scientific Connector Registry
   (OpenAlex, arXiv, Semantic Scholar, CrossRef, Europe PMC, bioRxiv, UniProt,
   PDB), independent of the literature/exa/deep_research subpackages above.
@@ -51,6 +53,10 @@ __all__ = [
     "ExaClient",
     "ExaConfig",
     "ExaError",
+    # Monid gateway
+    "MonidClient",
+    "MonidConfig",
+    "MonidError",
     # Deep research orchestration
     "DEFAULT_GEMINI_AGENT",
     "DEFAULT_OPENAI_MODEL",
@@ -106,6 +112,7 @@ _EXPORT_SOURCES: dict[str, str] = {
     )
 }
 _EXPORT_SOURCES.update({name: "infrastructure.search.exa" for name in ("ExaClient", "ExaConfig", "ExaError")})
+_EXPORT_SOURCES.update({name: "infrastructure.search.monid" for name in ("MonidClient", "MonidConfig", "MonidError")})
 _EXPORT_SOURCES.update(
     {
         name: "infrastructure.search.deep_research"

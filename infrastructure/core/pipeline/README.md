@@ -6,6 +6,7 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 
 - `executor.py`
 - `dag.py`
+- `definition.py` — resolve `pipeline.yaml` for execution vs methods (`resolve_pipeline_source`)
 - `incremental.py` — opt-in content-hash stage skipping (default OFF)
 - `multi_project.py`
 - `multi_project_parallel.py`
@@ -22,9 +23,9 @@ Pipeline execution, summary, tracking, and multi-project orchestration helpers.
 - `types.py`
 - `stage_registry.py` — `STAGE_DISPATCH`, `MENU_KEY_TO_STAGE` (single source for `--stage` and menu keys)
 - `single_stage.py` — `execute_single_stage()` subprocess runner using the same bounded deadline as the full pipeline
-- `stage_vocabulary.py` — stage names from `pipeline.yaml`
-- `pipeline.yaml` — default declared DAG definition consumed by the executor
-- `artifacts.py` — stage-provenance manifests plus an explicit, deterministic
+- `stage_vocabulary.py` — stage names from `pipeline.yaml`; `core_only_stage_names` / `default_run_stage_count` follow YAML `opt_in_tags`
+- `pipeline.yaml` — default declared DAG plus `opt_in_tags` (the executor exclude set)
+- `artifacts/` — stage-provenance manifests package ([`artifacts/AGENTS.md`](artifacts/AGENTS.md)); public import path unchanged (`infrastructure.core.pipeline.artifacts`). Snapshots exclude
   current-output integrity snapshot for targeted renders. Snapshots exclude
   control reports, provider-controlled `output/fulltext/` caches, and transient
   TeX/log files; they attest stable derived outputs rather than local caches.

@@ -24,7 +24,8 @@ uv run python --version
 
 ## Run the Test Suite
 
-Validate the environment and check that the project test suite passes with the ≥90% coverage gate:
+Validate the environment and check that the project test suite passes with the ≥90% coverage gate.
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it), and zero-collected suites fail too rather than counting as a pass.
 
 ```bash
 uv run pytest projects/templates/template_code_project/tests/ -v --tb=short

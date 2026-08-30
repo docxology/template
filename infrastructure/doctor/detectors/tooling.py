@@ -3,16 +3,16 @@
 from __future__ import annotations
 
 import os
-import shutil
 from pathlib import Path
 
 from infrastructure.doctor.models import Finding, RepairLevel, Severity, TherapyLevel
+from infrastructure.core.runtime._tools import find_uv
 
 
 def detect_uv_available(repo_root: Path) -> list[Finding]:
     """Verify ``uv`` is on PATH — required for every doctor remediation
     that touches dependencies."""
-    uv_path = shutil.which("uv")
+    uv_path = find_uv()
     if uv_path is None:
         return [
             Finding(

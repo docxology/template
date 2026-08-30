@@ -1,8 +1,10 @@
 # Testing Philosophy
 
 The suite enforces the repository **no-mocks** rule: real code runs on real data,
+Introducing a prohibited mock framework is the forbidden seam that fails the check, keeping the suite behavioral.
 HTTP is served locally by `pytest-httpserver`, and file I/O uses real temp files.
-`src/` coverage is gated at **≥ 90 %**. See [`../tests/PATTERNS.md`](../tests/PATTERNS.md)
+`src/` coverage is gated at **≥ 90 %** (the gate fails closed: a run collecting
+zero tests or below threshold hard-fails rather than passing silently). See [`../tests/PATTERNS.md`](../tests/PATTERNS.md)
 for the concrete per-boundary patterns.
 
 ## Why no mocks

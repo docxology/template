@@ -27,7 +27,10 @@ from infrastructure.core.execution_boundary import validate_hook_root
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pytest_orchestration import TestSuiteResults, build_pythonpath, prepend_uv_to_path
 from infrastructure.core.pytest_profiles import test_runner_dependency_specs
-from infrastructure.reporting.suite_runner import run_pytest_stream
+from infrastructure.reporting.suite_runner import (
+    DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS,
+    run_pytest_stream,
+)
 
 logger = get_logger(__name__)
 
@@ -36,7 +39,7 @@ PROJECT_TEST_RECEIPT_ENV = "TEMPLATE_PROJECT_TEST_RECEIPT"
 PROJECT_TEST_RUN_ID_ENV = "TEMPLATE_PROJECT_TEST_RUN_ID"
 PROJECT_TEST_PROJECT_ENV = "TEMPLATE_PROJECT_TEST_PROJECT"
 PROJECT_TEST_COMMAND_SHA_ENV = "TEMPLATE_PROJECT_TEST_COMMAND_SHA256"
-DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS = 6900.0
+DEFAULT_PROJECT_VERIFIER_TIMEOUT_SECONDS = DEFAULT_SINGLE_PROJECT_TEST_TIMEOUT_SECONDS
 _MAX_RECEIPT_BYTES = 1_000_000
 
 

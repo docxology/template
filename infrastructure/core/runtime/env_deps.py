@@ -9,6 +9,7 @@ import shutil
 import subprocess
 
 from infrastructure.core.logging.utils import get_logger, log_success
+from infrastructure.core.runtime._tools import find_uv
 
 logger = get_logger(__name__)
 
@@ -78,7 +79,7 @@ def install_missing_packages(packages: list[str], *, add_timeout: float = 30, sy
     logger.info(f"Installing {len(packages)} missing package(s) with uv...")
 
     # Check if uv is available
-    if not shutil.which("uv"):
+    if find_uv() is None:
         logger.error("uv package manager not found - cannot auto-install dependencies")
         logger.error("Install uv with: pip install uv")
         logger.error("Or install packages manually: pip install " + " ".join(packages))

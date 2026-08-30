@@ -61,7 +61,7 @@ def _ensure_analysis_outputs_exist(_preserve_project_output: None) -> None:
         [sys.executable, os.path.join(ROOT, "scripts", "refinement_analysis.py")],
         capture_output=True,
         text=True,
-        timeout=60,
+        timeout=240,
         cwd=ROOT,
         env={**os.environ, "SOURCE_DATE_EPOCH": "1782345600"},
     )

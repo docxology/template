@@ -337,7 +337,7 @@ The visualization registry is paired with `output/reports/figure_quality_report.
 | Figure | PNG | SVG | Dimensions | Nonwhite | Variance | Status |
 |--------|-----|-----|------------|----------|----------|--------|
 | claim_evidence_assay | yes | yes | 3947x2038 | 0.218 | 0.06041014 | pass |
-| evidence_tier_ladder | yes | yes | 3420x1447 | 0.111 | 0.04019577 | pass |
+| evidence_tier_ladder | yes | yes | 3419x1447 | 0.114 | 0.04048412 | pass |
 | formalism_traceability | yes | yes | 3315x1797 | 0.140 | 0.04409869 | pass |
 | implementation_circuit | yes | yes | 2966x1842 | 0.068 | 0.02214905 | pass |
 | integrity_gate_matrix | yes | yes | 1833x2060 | 0.406 | 0.16147143 | pass |

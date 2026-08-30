@@ -218,8 +218,9 @@ book projects use `book.cover.image` and `book.cover.alt`. Setting
 LuaLaTeX tagging path. If the selected paper or book cover declares an image,
 its `alt` must then be a non-empty YAML string: both the publication audit and
 renderer fail closed, and the renderer checks before replacing a previous PDF.
-This emits a cover `Figure` alternative and requests PDF/UA-2 metadata; it does
-not prove the complete tag tree, reading order, or PDF/UA conformance.
+This emits a cover `Figure` alternative and requests PDF 2.0 tagging and catalog
+language without a PDF/UA conformance identifier. It does not prove the complete
+tag tree, reading order, or PDF/UA conformance.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -343,8 +344,11 @@ uv run python -m infrastructure.core.config.cli --schema-json
 ### Per-project schema extensions
 
 `infrastructure.core.config.schema` enforces a canonical set of top-level
+Schema enforcement checks key spelling only and does not guarantee that accepted values are semantically correct, which remains the caller's responsibility.
+Escape hatches aside, a deliberately introduced misspelled block keeps emitting the warning on each load — that configuration acts as the fixture demonstrating the enforcement.
 keys for `manuscript/config.yaml` and the loader emits a warning for any
-unrecognized key. Two existing escape hatches let projects pass through
+unrecognized key (negative control: `tests/infra_tests/core/test_config_loader.py::test_unknown_key_logs_warning`
+passes the misspelled key `papr` and asserts the warning fires). Two existing escape hatches let projects pass through
 arbitrary data:
 
 - Nest custom keys under the canonical `project_config:` mapping (no

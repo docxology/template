@@ -93,6 +93,7 @@ number) fails CI immediately.
 
 [`scripts/audit_textbook_quality.py`](../scripts/audit_textbook_quality.py) is a
 structural gate you can run as CI or before publication. It validates the config,
+A missing chapter or a contract violation fails the audit and blocks passage toward publication.
 checks every declared chapter exists and passes the contract, confirms each
 lab + question file is present, and prints a per-chapter stub-count / word-count
 progress table.

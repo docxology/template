@@ -52,7 +52,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from infrastructure.core.logging.utils import get_logger
-from infrastructure.core.pipeline.artifacts import _declared_output_paths
+from infrastructure.core.pipeline.artifacts import declared_output_paths
 from infrastructure.core.pipeline.types import StageContract
 
 logger = get_logger(__name__)
@@ -185,7 +185,7 @@ def _resolve_input_paths(repo_root: Path, project_dir: Path, contract: StageCont
     placeholders and ``projects/``/``output/`` prefixes resolve identically.
     """
     proxy = StageContract(output_artifacts=contract.input_artifacts)
-    return _declared_output_paths(repo_root, project_dir, proxy)
+    return declared_output_paths(repo_root, project_dir, proxy)
 
 
 def _hash_paths(paths: tuple[Path, ...]) -> str:
@@ -258,7 +258,7 @@ def compute_stage_output_hash(
     contract: StageContract,
 ) -> str:
     """Compute a deterministic content hash over a stage's declared outputs."""
-    return _hash_paths(_declared_output_paths(repo_root, project_dir, contract))
+    return _hash_paths(declared_output_paths(repo_root, project_dir, contract))
 
 
 def declared_outputs_present(
@@ -272,7 +272,7 @@ def declared_outputs_present(
     A stage with no declared outputs cannot be proven complete, so it returns
     ``False`` (never skippable) — the fail-safe default.
     """
-    paths = _declared_output_paths(repo_root, project_dir, contract)
+    paths = declared_output_paths(repo_root, project_dir, contract)
     if not paths:
         return False
     return all(path.exists() for path in paths)

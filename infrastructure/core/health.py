@@ -40,7 +40,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
 
-from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES, public_ci_lint_paths, public_ci_source_paths
+from infrastructure.core.health_gates import build_gate_specs
 
 __all__ = [
     "GateResult",
@@ -110,222 +110,41 @@ class HealthReport:
 _OUTPUT_TAIL_BYTES = 4000
 _GATE_TIMEOUT_SECONDS = 300.0
 
+# Per-gate timeout overrides (seconds). Gates whose runtime legitimately
+# exceeds the default ceiling — because they re-derive measured facts from
+# every public exemplar via per-project pytest collection subprocesses — get
+# an explicit, documented budget instead of failing spuriously on slower or
+# loaded machines. Every value here must remain a hard ceiling: the gate is
+# still expected to finish, only with more headroom than the 300s default.
+_GATE_TIMEOUT_OVERRIDES: dict[str, float] = {
+    # ``counts.py --check`` collects each public exemplar serially in its own
+    # declared environment; observed wall time exceeds 20 minutes locally.
+    "counts": 1800.0,
+    # ``lint_docs.py`` renders every discovered Mermaid block (268+ as of
+    # 2026-08) through real headless-Chrome subprocesses; observed local wall
+    # time exceeds the 300s default on loaded machines.
+    "docs-lint": 900.0,
+    # ``bandit`` scans every infrastructure/script/public-exemplar source
+    # file; observed local wall time on a loaded workstation exceeds 10
+    # minutes (12 min measured 2026-08-21).
+    "bandit": 1200.0,
+}
 
-def _public_source_targets(repo_root: Path) -> list[str]:
-    """Return public CI source paths for type checks."""
-    return [path.as_posix() for path in public_ci_source_paths(repo_root)]
 
-
-def _public_lint_targets(repo_root: Path) -> list[str]:
-    """Return the full public lint surface without private/generated trees."""
-    return [path.as_posix() for path in public_ci_lint_paths(repo_root)]
-
-
-def build_gate_specs(repo_root: Path) -> list[tuple[str, list[str]]]:
-    """Return the canonical ``(name, argv)`` list for every gate.
-
-    The list is parameterised on ``repo_root`` so callers can run static health
-    checks against any checkout (the live tree, a temp clone, or CI workspace).
-
-    Args:
-        repo_root: Repository root used to resolve relative paths in the
-            invoked commands.
-
-    Returns:
-        Ordered list of ``(gate_name, argv)`` tuples.
-    """
-
-    arch_overview_argv = [
-        sys.executable,
-        "-c",
-        (
-            "import sys; from pathlib import Path;"
-            " from infrastructure.documentation.architecture_overview import architecture_overview_is_current;"
-            f" sys.exit(0 if architecture_overview_is_current(Path({str(repo_root)!r})) else 1)"
-        ),
-    ]
-
-    public_targets = _public_source_targets(repo_root)
-    lint_targets = _public_lint_targets(repo_root)
-    public_project_targets = [f"projects/{name}/" for name in PUBLIC_PROJECT_NAMES]
-
-    return [
-        ("mypy", ["uv", "run", "python", "scripts/gates/mypy_ratchet.py", *public_targets]),
-        (
-            "ruff",
-            ["uv", "run", "ruff", "check", *lint_targets],
-        ),
-        (
-            "ruff-format",
-            ["uv", "run", "ruff", "format", "--check", *lint_targets],
-        ),
-        (
-            "bandit",
-            [
-                "uv",
-                "run",
-                "python",
-                "-m",
-                "bandit",
-                "-r",
-                "-ll",
-                "-c",
-                "bandit.yaml",
-                "infrastructure/",
-                "scripts/",
-                *public_project_targets,
-            ],
-        ),
-        (
-            "no-mocks",
-            ["uv", "run", "python", "scripts/audit/verify_no_mocks.py"],
-        ),
-        (
-            "semantic-standins",
-            [
-                "uv",
-                "run",
-                "python",
-                "scripts/audit/verify_no_mocks.py",
-                "--inventory",
-                "--max-dependency-replacements",
-                "0",
-            ],
-        ),
-        (
-            "all-exports",
-            [
-                "uv",
-                "run",
-                "python",
-                "-m",
-                "infrastructure.skills",
-                "check-all-exports",
-            ],
-        ),
-        (
-            "skills-manifest",
-            ["uv", "run", "python", "-m", "infrastructure.skills", "check"],
-        ),
-        (
-            "operations-manifest",
-            [
-                "uv",
-                "run",
-                "python",
-                "-m",
-                "infrastructure.skills",
-                "operations-check",
-            ],
-        ),
-        (
-            "skill-reachability",
-            ["uv", "run", "python", "scripts/gates/skill_reachability_check.py"],
-        ),
-        (
-            "confidentiality",
-            ["uv", "run", "python", "scripts/audit/check_tracked_all.py"],
-        ),
-        (
-            "codeowners",
-            [
-                sys.executable,
-                "-c",
-                (
-                    "import sys; from pathlib import Path;"
-                    " from infrastructure.project.codeowners import codeowners_is_current;"
-                    f" sys.exit(0 if codeowners_is_current(Path({str(repo_root)!r})) else 1)"
-                ),
-            ],
-        ),
-        (
-            "generated-artifacts",
-            ["uv", "run", "python", "scripts/audit/check_tracked_generated_artifacts.py"],
-        ),
-        (
-            "xml-parser-policy",
-            [
-                sys.executable,
-                "-c",
-                (
-                    "import sys; from pathlib import Path;"
-                    " from infrastructure.validation.xml_parser_policy import validate_xml_parser_policy;"
-                    " violations = validate_xml_parser_policy("
-                    f"Path({str(repo_root)!r}) / 'infrastructure', Path({str(repo_root)!r}));"
-                    " sys.exit(1 if violations else 0)"
-                ),
-            ],
-        ),
-        (
-            "template-drift",
-            ["uv", "run", "python", "scripts/audit/check_template_drift.py", "--strict"],
-        ),
-        (
-            "docs-lint",
-            ["uv", "run", "python", "scripts/audit/lint_docs.py", "--quiet"],
-        ),
-        (
-            "stage-table",
-            [
-                "uv",
-                "run",
-                "python",
-                "scripts/docgen/stage_table.py",
-            ],
-        ),
-        (
-            "api-reference",
-            [
-                "uv",
-                "run",
-                "python",
-                "scripts/docgen/api_reference.py",
-                "--check",
-            ],
-        ),
-        (
-            "counts",
-            ["uv", "run", "python", "scripts/docgen/counts.py", "--check"],
-        ),
-        (
-            "exemplar-roster",
-            ["uv", "run", "python", "scripts/docgen/exemplar_roster.py", "--check"],
-        ),
-        (
-            "publication-records",
-            ["uv", "run", "python", "scripts/docgen/publication_records.py", "--check"],
-        ),
-        (
-            "status-freshness",
-            ["uv", "run", "python", "scripts/gates/status_freshness.py"],
-        ),
-        (
-            "methods-plan",
-            [
-                "uv",
-                "run",
-                "python",
-                "scripts/gates/methods_plan_check.py",
-                "--all-public",
-                "--artifact-mode",
-                "source",
-            ],
-        ),
-        (
-            "public-capabilities",
-            ["uv", "run", "python", "scripts/gates/public_capabilities.py"],
-        ),
-        ("architecture-overview", arch_overview_argv),
-        (
-            "module-line-count",
-            [
-                "uv",
-                "run",
-                "python",
-                "scripts/gates/module_line_count_check.py",
-            ],
-        ),
-    ]
+def _gate_timeout_seconds(name: str) -> float:
+    """Return the effective timeout for *name*, honouring the env override."""
+    override = os.environ.get("TEMPLATE_HEALTH_GATE_TIMEOUT")
+    if override:
+        try:
+            parsed = float(override)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid TEMPLATE_HEALTH_GATE_TIMEOUT value {override!r}: expected a number of seconds"
+            ) from exc
+        if parsed <= 0:
+            raise ValueError(f"TEMPLATE_HEALTH_GATE_TIMEOUT must be positive, got {parsed}")
+        return parsed
+    return _GATE_TIMEOUT_OVERRIDES.get(name, _GATE_TIMEOUT_SECONDS)
 
 
 # Canonical, stable list of gate names (used by ``--gates`` parsing and
@@ -508,7 +327,9 @@ def run_health_checks(
     commit_before, clean_before = _repository_state(repo_root)
     start = time.perf_counter()
     if selected_workers == 1 or len(specs) == 1:
-        results = [_run_single_gate(name, argv, repo_root) for name, argv in specs]
+        results = [
+            _run_single_gate(name, argv, repo_root, timeout_seconds=_gate_timeout_seconds(name)) for name, argv in specs
+        ]
     else:
         # Gates are subprocess boundaries and do not share mutable Python
         # state. A bounded thread pool overlaps their I/O while preserving
@@ -516,7 +337,9 @@ def run_health_checks(
         with ThreadPoolExecutor(max_workers=min(selected_workers, len(specs))) as executor:
             results = list(
                 executor.map(
-                    lambda spec: _run_single_gate(spec[0], spec[1], repo_root),
+                    lambda spec: _run_single_gate(
+                        spec[0], spec[1], repo_root, timeout_seconds=_gate_timeout_seconds(spec[0])
+                    ),
                     specs,
                 )
             )

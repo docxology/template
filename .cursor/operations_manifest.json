@@ -574,6 +574,7 @@
         "SourceNode",
         "node_from_dict",
         "Provenance",
+        "ProvenanceStoreError",
         "Finding",
         "Review",
         "ReviewResult",
@@ -782,6 +783,7 @@
         "ExportResult",
         "ManuscriptRenderCache",
         "RenderManager",
+        "RenderCacheError",
         "RenderingConfig",
         "SectionCacheEntry",
         "discover_manuscript_files",
@@ -1053,6 +1055,65 @@
         "FetchResult",
         "enrich_papers",
         "write_corpus"
+      ],
+      "effect": "read_only"
+    },
+    {
+      "module": "infrastructure.search.monid",
+      "invocation": "python -m infrastructure.search.monid",
+      "source_path": "infrastructure/search/monid/cli.py",
+      "purpose": "Command-line interface for the Monid client.",
+      "subcommands": [
+        {
+          "name": "discover",
+          "help": "POST /v1/discover"
+        },
+        {
+          "name": "inspect",
+          "help": "POST /v1/inspect"
+        },
+        {
+          "name": "run",
+          "help": "POST /v1/run"
+        },
+        {
+          "name": "get-run",
+          "help": "GET /v1/runs/:runId"
+        },
+        {
+          "name": "balance",
+          "help": "GET /v1/wallet/balance"
+        },
+        {
+          "name": "pricing-table",
+          "help": "print search API USD/1k comparison (offline)"
+        },
+        {
+          "name": "schema",
+          "help": "Print this CLI's parameter schema as JSON and exit"
+        }
+      ],
+      "exports": [
+        "API_KEY_ENV",
+        "DEFAULT_BASE_URL",
+        "DiscoverHit",
+        "DiscoverResponse",
+        "EndpointPrice",
+        "InspectResponse",
+        "Money",
+        "MonidClient",
+        "MonidConfig",
+        "MonidError",
+        "MonidHttpClient",
+        "MonidResponse",
+        "RunRecord",
+        "LAST_REVIEWED",
+        "SEARCH_API_PRICES",
+        "SearchApiPrice",
+        "UrllibMonidHttpClient",
+        "WalletBalance",
+        "format_pricing_table",
+        "sorted_by_cost"
       ],
       "effect": "read_only"
     },

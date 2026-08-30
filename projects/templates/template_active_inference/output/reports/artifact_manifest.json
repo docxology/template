@@ -309,7 +309,7 @@
     {
       "contract_match": true,
       "path": "output/data/artifact_provenance.json",
-      "sha256": "bc94aa9bf177eebd3c73ebd2cce269ccc817d23b5c9a44422c32b98339f3cdbb",
+      "sha256": "4f56b45df8a90e6c41839b05e251a05f3fe646dc8bb6a027fa8d96542cfc4fcf",
       "size_bytes": 187038,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
@@ -1002,8 +1002,8 @@
     {
       "contract_match": true,
       "path": "output/manuscript/08_methods_sheaf.md",
-      "sha256": "cf7738527835c83ffc548d35d353beb646711f4f882514ffabf270f8294071c2",
-      "size_bytes": 72069,
+      "sha256": "1751a13c22ffeedeb076e4b53a2882d506b2d26847a4b43385e0e35b77cef78e",
+      "size_bytes": 72884,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,
       "timestamp": ""
@@ -1308,7 +1308,7 @@
     {
       "contract_match": true,
       "path": "output/reports/replay_matrix.json",
-      "sha256": "90d2e50f010e99d7e1492bb73cc771afbd72474571c528628daad4b8e5980b5f",
+      "sha256": "611ea3fc43048b2d1c206274f63b45b5e01565a4056224843027067ab3d1ff95",
       "size_bytes": 27762,
       "stage_name": "current-output-snapshot",
       "stage_num": 0,

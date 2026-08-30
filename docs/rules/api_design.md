@@ -315,6 +315,9 @@ __all__ = [
 ### Mandatory `__all__` for Re-Exporting Modules (MED5)
 
 **Rule:** Any module that re-exports symbols at module top level **MUST** declare an explicit `__all__`.
+Negative control: `test_top_level_f401_without_all_is_violation`
+([`tests/infra_tests/skills/test_all_exports_audit.py`](../../tests/infra_tests/skills/test_all_exports_audit.py))
+asserts a top-level re-export without `__all__` is flagged by the exports audit.
 
 A module is a "re-exporter" if it has at least one top-level `from X import Y` statement carrying a `# noqa: F401` marker (the canonical marker for an intentional backwards-compat re-export). Examples include `infrastructure/core/exceptions.py`, `infrastructure/core/runtime/environment.py`, and any package `__init__.py` that flattens a sub-tree.
 

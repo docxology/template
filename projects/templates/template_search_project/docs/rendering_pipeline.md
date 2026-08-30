@@ -123,18 +123,20 @@ uv run python scripts/pipeline/stage_03_render.py --project templates/template_s
 
 ### Phase 5 — Promote, Review, and Report
 
-**Scripts** (root-level): `scripts/pipeline/stage_05_copy.py`. Project-local: `scripts/zz_generate_review_report.py` and the `scripts/review` CLI directory.
+**Scripts** (root-level): `scripts/pipeline/stage_05_copy.py`. Project-local: `scripts/zz_generate_review_report.py`, `scripts/zzz_build_dashboard.py` (dashboard stage — runs last), and the `scripts/review` CLI directory.
 
 **Commands**:
 ```bash
 uv run python scripts/pipeline/stage_05_copy.py --project templates/template_search_project
 uv run python projects/templates/template_search_project/scripts/zz_generate_review_report.py
+uv run python projects/templates/template_search_project/scripts/zzz_build_dashboard.py
 ```
 
 **Outputs**:
 - `output/templates/template_search_project/template_search_project_combined.pdf` — the promoted artifact (used by CI artifact upload and the multi-project executive report).
 - `output/review/stage_*.json`, `output/review/summary.json` — per-stage review outputs from `scripts/review`.
 - `output/review/REVIEW_REPORT.md` — human-readable aggregation written by `zz_generate_review_report.py`.
+- `output/web/dashboard.html`, `output/data/dashboard_payload.json`, `output/reports/dashboard_*.txt` — dashboard artifacts written by `zzz_build_dashboard.py`.
 
 The review CLI (`scripts/review`) reads `review_config.yaml` to enable / disable stages. Available stages:
 

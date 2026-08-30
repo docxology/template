@@ -40,9 +40,12 @@ def test_matrix_preserves_roster_order_and_continues_after_failure(tmp_path: Pat
 
 
 def test_matrix_marks_timeout_without_cancelling_other_tasks(tmp_path: Path) -> None:
+    # The sleeper must comfortably exceed the deadline so scheduler jitter
+    # under a loaded CI host can never let the child exit before the
+    # timeout fires (a bare sleep(1)/timeout=1 pair is a coin flip).
     tasks = (
-        _task(tmp_path, 0, "timeout", "import time; time.sleep(1)", timeout=1),
-        _task(tmp_path, 1, "survivor", "print('survived')", timeout=5),
+        _task(tmp_path, 0, "timeout", "import time; time.sleep(30)", timeout=1),
+        _task(tmp_path, 1, "survivor", "print('survived')", timeout=30),
     )
 
     results = run_project_test_matrix(tasks, workers=2)
@@ -72,3 +75,15 @@ def test_matrix_rejects_non_positive_worker_count(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="workers must be positive"):
         run_project_test_matrix((task,), workers=0)
+
+
+def test_matrix_rejects_duplicate_task_indices(tmp_path: Path) -> None:
+    # Results are keyed by task.index; duplicate indices would silently
+    # overwrite each other and corrupt the roster-ordered result tuple.
+    tasks = (
+        _task(tmp_path, 0, "first", "pass"),
+        _task(tmp_path, 0, "second", "pass"),
+    )
+
+    with pytest.raises(ValueError, match="duplicate project matrix task index"):
+        run_project_test_matrix(tasks, workers=2)

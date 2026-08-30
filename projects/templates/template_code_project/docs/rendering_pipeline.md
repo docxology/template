@@ -172,7 +172,7 @@ uv run python projects/templates/template_code_project/scripts/optimization_anal
 
 **Cause**: Malformed entry in `manuscript/references.bib` (unclosed braces, duplicate keys, missing required fields).
 
-**Fix**: Validate `manuscript/references.bib` with a BibTeX linter or check `projects/templates/template_code_project/output/pdf/_combined_manuscript.log` for the specific error message.
+**Fix**: Validate `manuscript/references.bib` with a BibTeX linter or check `projects/templates/template_code_project/output/pdf/_combined_manuscript.log` for the specific error message. Negative control: a deliberately malformed bib entry (unclosed brace or duplicate key) makes the render fail with that exact error instead of producing a PDF with unresolved `[?]` citations.
 
 ### Slides not generated
 

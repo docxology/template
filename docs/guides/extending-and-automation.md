@@ -4,7 +4,7 @@
 
 **Previous**: [Testing and Reproducibility](../guides/testing-and-reproducibility.md) (Levels 7-9)
 
-This guide covers **Levels 10-12** of the Research Project Template. for expert developers ready to extend the template, create custom architectures, and build advanced automation systems.
+This guide covers **Levels 10-12** of the Research Project Template, for expert developers ready to extend the template, create custom architectures, and build advanced automation systems.
 
 ## 📚 What You'll Learn
 
@@ -42,17 +42,31 @@ By the end of this guide, you'll be able to:
 
 ### Extending the Template
 
-**Create specialized project types**:
+**Create specialized project types**: fork a canonical exemplar into the private
+sidecar (never hand-build a real directory under `projects/` — every mirror
+entry there is a managed symlink guarded by
+`scripts/audit/check_mirror_symlinks.py`):
 
 ```bash
-# Create custom project structure
-mkdir -p custom_projects/machine_learning
-mkdir -p custom_projects/simulation
-mkdir -p custom_projects/data_science
+# Clean-copy a public exemplar into a new private project workspace
+uv run python scripts/audit/copy_exemplar.py \
+    --source templates/template_code_project \
+    --dest "$TEMPLATE_PRIVATE_PROJECTS_ROOT/working/machine_learning" \
+    --new-name machine_learning
 
-# Copy and adapt base structure
-cp -r src tests scripts custom_projects/machine_learning/
+# Inspect the plan before writing anything
+uv run python scripts/audit/copy_exemplar.py \
+    --source templates/template_prose_project \
+    --dest /tmp/prose_fork --new-name prose_fork --dry-run
+
+# Sync the sidecar into projects/working/<name> so it can be rendered explicitly
+uv run python -m infrastructure.orchestration link-projects --dry-run
 ```
+
+Render a sidecar project explicitly with its qualified lifecycle name, e.g.
+`uv run python scripts/pipeline/stage_03_render.py --project working/machine_learning`.
+Deliberately restore it through the optional sidecar `active/` folder to enter
+default discovery.
 
 ### Custom Build Pipelines
 
@@ -60,28 +74,26 @@ cp -r src tests scripts custom_projects/machine_learning/
 
 ```bash
 #!/bin/bash
-# custom_projects/machine_learning/ml_build.sh
+# projects/working/machine_learning/ml_build.sh   (run from the repository root)
 
 set -e
 
 echo "ML Project Build Pipeline"
 
-# 1. Run ML-specific tests
-uv run pytest tests/ --cov=src --cov-report=html \
-    -m "ml"  # Only ML tests
+PROJECT=working/machine_learning
 
-# 2. Train models
-uv run python scripts/train_models.py
+# 1. Run project tests with coverage (one pytest process per project)
+uv run pytest "projects/$PROJECT/tests/" \
+    --cov="projects/$PROJECT/src" --cov-report=html --cov-fail-under=90
 
-# 3. Evaluate models
-uv run python scripts/evaluate_models.py
+# 2. Run the project's analysis scripts (thin orchestrators over src/)
+uv run python scripts/pipeline/stage_02_analysis.py --project "$PROJECT"
 
-# 4. Generate model cards
-uv run python scripts/generate_model_cards.py
+# 3. Render manuscript outputs from current inputs
+uv run python scripts/pipeline/stage_03_render.py --project "$PROJECT"
 
-# 5. Build documentation
-pandoc docs/*.md -o output/ml_docs.pdf \
-    --template=templates/ml_template.tex
+# 4. Validate outputs
+uv run python scripts/pipeline/stage_04_validate.py --project "$PROJECT"
 
 echo "ML build!"
 ```
@@ -91,14 +103,14 @@ echo "ML build!"
 **Example: External simulation tool**:
 
 ```python
-# custom_projects/machine_learning/scripts/external_simulation.py
+# projects/working/machine_learning/scripts/external_simulation.py
 #!/usr/bin/env python3
 """Integrate external simulation tool."""
 import subprocess
 import json
 import os
 
-from custom_projects.machine_learning.src.analysis import process_simulation_results  # From custom_projects/machine_learning/src/
+from projects.working.machine_learning.src.analysis import process_simulation_results  # From the project's src/
 
 def run_external_tool(config_file):
     """Run external simulation tool."""

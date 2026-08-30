@@ -8,9 +8,9 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Project | Effective core stages¹ | Discovered tests | Declared project floor |
 |---------|-----------------------|-----------------:|-----------------------:|
-| `template_code_project` | 8 | 243 | 90% |
+| `template_code_project` | 8 | 246 | 90% |
 | `template_prose_project` | 8 | 151 | 90% |
-| `template_autoresearch_project` | 8 | 304 | 90% |
+| `template_autoresearch_project` | 8 | 307 | 90% |
 
 ¹“Core-only” excludes LLM-tagged and other opt-in stages according to the YAML stage tags. A fresh run must be used to establish completion status or wall-clock performance for a particular machine and dependency set.
 
@@ -18,8 +18,8 @@ The `./run.sh` interactive orchestrator can execute the public roster through th
 
 | Metric | Value |
 |--------|-------|
-| Test files | 578+ |
-| Total tests | ~9,874 |
+| Test files | 589+ |
+| Total tests | ~10,163 |
 | Infrastructure coverage gate | ≥60% configured floor |
 | Prohibited mock-framework imports | Checked by the static no-mocks gate |
 
@@ -31,34 +31,34 @@ The introspection module (`template_template.introspection`) emits the authorita
 
 | Module | Python Files | Has AGENTS.md | Has README.md | Key Exports |
 |--------|:-----------:|:-------------:|:-------------:|-------------|
-| `autoresearch` | 10 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
+| `autoresearch` | 11 | ✓ | ✓ | `build_autoresearch_plan`, readiness validation CLI |
 | `benchmark` | 4 | ✓ | ✓ | Template harness scoring + comparative gates |
 | `config` | 0 | ✓ | ✓ | Repository defaults + hardened templates |
-| `core` | 128 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
+| `core` | 133 | ✓ | ✓ | `get_logger`, `load_config`, `TemplateError` |
 | `docker` | 0 | ✓ | ✓ | Containerisation scaffolding |
 | `doctor` | 14 | ✓ | ✓ | Checkout diagnose/fix/undo repairs |
-| `documentation` | 17 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
+| `documentation` | 23 | ✓ | ✓ | `FigureManager`, `generate_glossary` |
 | `fonds` | 6 | ✓ | ✓ | — |
 | `llm` | 55 | ✓ | ✓ | Ollama helpers, sanitization, review + translation pipelines |
 | `logrotate.d` | 0 | ✓ | ✓ | Rotation snippets (documentation-first) |
-| `methods` | 5 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
+| `methods` | 8 | ✓ | ✓ | `build_methods_orchestration_plan`, methods-stage contracts + validation |
 | `orchestration` | 12 | ✓ | ✓ | `PipelineRunner`, entry point for `./run.sh` |
 | `project` | 42 | ✓ | ✓ | `discover_projects`, workspace management |
 | `prose` | 9 | ✓ | ✓ | Markdown readability + prose tooling |
-| `provenance` | 7 | ✓ | ✓ | — |
-| `publishing` | 83 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
+| `provenance` | 8 | ✓ | ✓ | — |
+| `publishing` | 84 | ✓ | ✓ | Zenodo, executable bundle, archival targets |
 | `reference` | 16 | ✓ | ✓ | BibTeX models, parsers, converters |
-| `rendering` | 69 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
+| `rendering` | 81 | ✓ | ✓ | PDF/HTML/slide rendering, Pandoc filters |
 | `reporting` | 58 | ✓ | ✓ | Coverage parsers, dashboards, executive artefacts |
 | `research` | 3 | ✓ | ✓ | — |
 | `rules` | 6 | ✓ | ✓ | — |
 | `scientific` | 4 | ✓ | ✓ | `check_numerical_stability`, `benchmark_function` |
-| `search` | 62 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
+| `search` | 71 | ✓ | ✓ | `infrastructure.search.literature` clients + cache |
 | `sia` | 10 | ✓ | ✓ | Self-Improving-AI loop: task validation, harness, metric capture |
 | `skills` | 8 | ✓ | ✓ | `discover_skills`, SKILL manifest regeneration |
 | `steganography` | 13 | ✓ | ✓ | Watermark overlays + hash manifests |
 | `tools` | 6 | ✓ | ✓ | — |
-| `validation` | 82 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
+| `validation` | 84 | ✓ | ✓ | PDF + Markdown + integrity CLIs |
 
 All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS.md` coverage wherever the Documentation Duality standard applies; subsets ship Tier‑3 `SKILL.md` descriptors for MCP routing (`infrastructure/skills` manifest generation).
 
@@ -71,7 +71,7 @@ All 28 enumerated subdirectories carry Tier‑1/`README.md` and Tier‑2/`AGENTS
 | Skills | Optional `SKILL.md` manifests + generated `.cursor/skill_manifest.json` |
 | PAI capsule | Repository level `PAI.md` narratives |
 
-`341+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
+`411+` Markdown shards under `docs/` capture operational knowledge without duplicating auto-generated inventories.
 
 ## DAG Reference (Declarative Executor)
 
@@ -104,7 +104,7 @@ Rendered via `projects/templates/template_template` (`generate_manuscript_metric
 **Figure 1.** Live rendering of the Two-Layer Architecture from repository introspection: the infrastructure layer (top) holds the `28` reusable subpackages, each annotated with its Python file count and a four-slot documentation badge—`A` AGENTS.md, `R` README.md, `S` SKILL.md, `P` PAI.md, with `·` marking an absent file—so a fully documented module reads `[ARSP]`. A YAML DAG arrow connects it to the project layer (bottom) of public exemplars labelled with chapter and test counts. The takeaway: documentation-duality coverage is near-uniform across the infrastructure, and every box was placed from the same live data the prose cites.
 
 ![Pipeline Stage Flow](../output/figures/pipeline_stages.png)
-**Figure 2.** Pipeline DAG with 16 YAML-declared stages (core, LLM, ebook, metadata, bundle, archival tags).
+**Figure 2.** Pipeline DAG with 17 YAML-declared stages (core, LLM, ebook, docxplus, metadata, bundle, archival tags).
 
 ![Infrastructure Module Inventory](../output/figures/module_inventory.png)
 **Figure 3.** Horizontal file-count histogram of every infrastructure subdirectory, sorted largest-first. The long tail of small, single-purpose packages beside a handful of larger ones (`core`, `validation`, `publishing`) is the visual signature of the Unix-philosophy modularity the architecture section argues for—capability concentrated where it compounds, not spread evenly by fiat.

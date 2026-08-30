@@ -13,10 +13,10 @@ tree instead of copying volatile literals into prose.
 | --- | --- | --- |
 | Figures and manuscript helpers | `figure_manager.py`, `generated_figure_registry.py`, `image_manager.py`, `markdown_integration.py` | Interactive figure management plus deterministic, fail-closed pipeline registries, insertion, table-of-figures, and cross-reference helpers. |
 | API docs | `api_reference_gen.py`, `glossary_gen.py` | AST-derived public API docs and marker injection. |
-| Pipeline docs | `stage_table.py` | Stage table rendered from `core/pipeline/pipeline.yaml`. |
+| Pipeline docs | `stage_table.py` | Stage table and `STAGE_SUMMARY` counts rendered from `core/pipeline/pipeline.yaml`. |
 | Generated facts | `counts_doc.py`, `counts_coverage.py`, `active_projects_doc.py`, `architecture_overview.py` | `docs/_generated/COUNTS.md`, source-bound coverage provenance, active projects, architecture diagram and accessible topology summary. |
 | Backlog contracts | `backlog.py`, `backlog_normalizer.py` | Future-only root/public TODO validation, stable-ID checks, lifecycle-path hygiene, and idempotent exemplar backlog normalization. |
-| Publication docs | `publication_records.py`, `publication_standalone.py` | DOI/archive/config/GitHub publication matrix plus generated publication-identity blocks in every canonical exemplar's `STANDALONE.md`. |
+| Publication docs | `publication_records.py`, `_publication_records_{types,load,render,external,check}.py`, `publication_standalone.py` | DOI/archive/config/GitHub publication matrix plus generated publication-identity blocks in every canonical exemplar's `STANDALONE.md`. Public imports stay on `publication_records`. |
 
 ## Boundaries
 
@@ -49,7 +49,11 @@ tree instead of copying volatile literals into prose.
   nonignored project input, including source, tests, scripts, configuration,
   data, manuscripts, and dependency locks. Generated output plus runtime,
   build, cache, and environment artifacts are excluded; changing the inventory
-  contract requires a schema/mode bump and canonical provenance refresh. Active's
+  contract without a schema/mode bump fails closed with a `RuntimeError` during provenance recomputation and requires canonical provenance refresh; a
+A shape change shipped without the version bump is exactly the known-wrong inventory state this requirement exists to prevent.
+Identity receipt validation supplies the failure case: mutating inventory-bearing content without the schema/mode bump yields hashes that disagree with the canonical provenance and the refresh fails.
+  stale source-inventory mode fails closed with a `RuntimeError` during
+  provenance recomputation. Active's
   repository-level support closure has its own recorded identity: contract-bearing
   files are content-hashed, while generated `docs/_generated/COUNTS.md` and the
   sibling-exemplar directory marker bind only path, type, and existence to avoid a

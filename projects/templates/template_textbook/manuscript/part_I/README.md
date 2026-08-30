@@ -8,7 +8,7 @@
 
 This directory holds the three chapters of Part I. The part, its title, and its
 chapter order are **not** defined here — they are read from
-[`../config.yaml`](../config.yaml) (`parts:` → `part_I`). This README is a
+[`../config.yaml`](../config.yaml) (`units:` → `part_I`). This README is a
 human-facing index; edit `config.yaml` to change the structure, then run
 `scripts/scaffold_chapter.py` to materialise any missing stub files.
 

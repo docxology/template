@@ -62,7 +62,9 @@ Static (AST-only; never imports the target modules) catalog of agent-invocable `
 ## Cross-runtime sync (`runtime_sync.py`)
 
 - `validate_vendored_source(repo_root)` — verifies the pinned lock, exact tree
-  digest, inventory, and skill frontmatter without touching user state.
+  digest, inventory, and skill frontmatter without touching user state. The
+  complete `.agents/skills` tree is one source-bound vendor set; unrelated
+  upstream skills must not be folded into its digest.
 - `runtime_status(repo_root, home)` — audits the revisioned shared store and
   Codex (`~/.agents/skills`), Claude Code, and Hermes links.
 - `install_runtime_skills(repo_root, home)` — stages the reviewed tree under

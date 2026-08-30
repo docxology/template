@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (interactive menu and flags)
-2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): **8** DAG stages (clean → copy) with **`llm`-tagged and opt-in stages removed**. The default full run executes **10** core+LLM stages, while the YAML declares **17** stages including the opt-in science, provenance, ebook, docxplus, metadata, bundle, and archival contracts.
+2. **`uv run python scripts/runner/execute_pipeline.py --project {name} --core-only`** - Core pipeline via [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml): `llm`-tagged and opt-in stages removed. Live counts are in the generated `STAGE_SUMMARY` below.
 
 ## Thin Orchestration Architecture
 
@@ -287,7 +287,7 @@ The menu is rendered by [`render_menu()`](../infrastructure/orchestration/menu.p
 
 After the menu, the interactive loop prints a one-line key legend, a blank line, then `Choice: ` before reading input. Choosing **p** prints the project list to stdout and then `Choice [index / a=all / q=quit]: ` before reading the picker line.
 
-Progress logs use a **pre-step** `[0/9] Clean Output Directories`, then **`[1/9]` through `[9/9]`** for the nine tracked steps in the default core+LLM path (see `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). The **Python executor** follows [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml), which declares 17 stages total: 8 core, 2 science/provenance, 2 optional LLM, 3 opt-in ebook/docxplus/metadata, and 2 opt-in bundle/archival stages.
+Progress logs use `[0/N]` for Clean Output Directories and `[1/N]`–`[N/N]` for the numbered default-run stages (`STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py); `run.sh` is a thin shell dispatcher into `infrastructure.orchestration`). Live declared / default-full / core-only counts are in the generated `STAGE_SUMMARY` below.
 
 ### Manuscript Menu Options
 
@@ -394,7 +394,7 @@ Same as full pipeline but **skips infrastructure tests** (`--skip-infra` / fast 
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Default full run (10 executed stages; pipeline.yaml declares 17 total)
+./run.sh --pipeline          # Default full run (see STAGE_SUMMARY)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 uv run python scripts/pipeline/stage_01_test.py --infra-only          # Run infrastructure tests only
 uv run python scripts/pipeline/stage_01_test.py --project-only        # Run project tests only
@@ -428,6 +428,10 @@ uv run python scripts/runner/execute_pipeline.py --project {name} --core-only
 ### Core Pipeline Stages + Executive Reporting
 
 The canonical pipeline-stage table (rendered from `pipeline.yaml`):
+
+<!-- BEGIN:STAGE_SUMMARY -->
+The default [`pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages** (indices 0–16). Default full runs execute **10** core+LLM stages; `--core-only` executes **8**. Opt-in tags (`archival`, `bundle`, `docxplus`, `ebook`, `metadata`, `provenance`, `science`) stay out of those default runs unless a stage is invoked directly. YAML stage indices do not match `stage_NN_*.py` prefixes.
+<!-- END:STAGE_SUMMARY -->
 
 <!-- BEGIN:STAGE_TABLE -->
 <!-- This block is generated from [`infrastructure/core/pipeline/pipeline.yaml`](../infrastructure/core/pipeline/pipeline.yaml) by `scripts/docgen/stage_table.py`. Do not hand-edit. Stage indices are **0-based positions in the YAML** and intentionally do **not** match the `scripts/pipeline/stage_NN_*.py` numeric prefixes (for example, stage 11, "Copy Outputs", runs `scripts/pipeline/stage_05_copy.py`). -->

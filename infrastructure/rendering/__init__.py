@@ -23,7 +23,7 @@ from .manuscript_injection import (
     substitute_manuscript_text,
     write_resolved_manuscript_tree,
 )
-from .render_cache import ManuscriptRenderCache, SectionCacheEntry
+from .render_cache import ManuscriptRenderCache, RenderCacheError, SectionCacheEntry
 
 
 __all__ = [
@@ -33,6 +33,7 @@ __all__ = [
     "ExportResult",
     "ManuscriptRenderCache",
     "RenderManager",
+    "RenderCacheError",
     "RenderingConfig",
     "SectionCacheEntry",
     "discover_manuscript_files",

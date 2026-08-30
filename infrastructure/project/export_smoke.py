@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -15,6 +14,7 @@ try:
 except ImportError:  # Python 3.10 compatibility
     import tomli as tomllib  # type: ignore[no-redef]
 
+from infrastructure.core.runtime._tools import find_uv
 from infrastructure.project.copy_exemplar import export_exemplar
 from infrastructure.project.public_scope import PUBLIC_PROJECT_NAMES
 
@@ -74,7 +74,7 @@ def smoke_exported_exemplar(
     if not targets:
         raise RuntimeError(f"{project_name}: exported src tree has no import targets")
 
-    uv = shutil.which("uv")
+    uv = find_uv()
     if uv is None:
         raise RuntimeError("uv is required for clean exemplar export smoke tests")
     sync = subprocess.run(

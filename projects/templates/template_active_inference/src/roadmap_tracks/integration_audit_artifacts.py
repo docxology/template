@@ -126,7 +126,7 @@ def build_artifact_diffoscope(project_root: Path) -> dict[str, Any]:
     rows = []
     cycle_producers = {SELF_PRODUCER, LATE_HYDRATION_PRODUCER, SHEAF_TRACK_PRODUCER}
     for row in provenance.get("rows") or list((provenance.get("artifacts") or {}).values()):
-        rel = str(row.get("artifact") or "")
+        rel = str(row.get("artifact") or row.get("path") or "")
         if row.get("cycle_excluded") or row.get("producer") in cycle_producers:
             continue
         path = root / rel
@@ -176,7 +176,7 @@ def build_artifact_license_audit(project_root: Path) -> dict[str, Any]:
     project_license = str((config.get("metadata") or {}).get("license") or project_license)
     rows = []
     for row in provenance.get("rows") or list((provenance.get("artifacts") or {}).values()):
-        rel = str(row.get("artifact") or "")
+        rel = str(row.get("artifact") or row.get("path") or "")
         generated = rel.startswith("output/")
         rows.append(
             {

@@ -11,6 +11,7 @@ It performs:
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, cast
@@ -21,6 +22,21 @@ from infrastructure.core.logging.utils import get_logger
 from infrastructure.core.pipeline.types import StageContract, StageHooks
 
 logger = get_logger(__name__)
+
+
+def opt_in_tags_from_mapping(data: Mapping[str, Any] | None) -> frozenset[str]:
+    """Return the YAML ``opt_in_tags`` set, or empty when the key is absent."""
+    raw = (data or {}).get("opt_in_tags") or ()
+    return frozenset(str(tag) for tag in raw)
+
+
+def load_opt_in_tags(yaml_path: Path) -> frozenset[str]:
+    """Read ``opt_in_tags`` from a pipeline YAML file."""
+    raw = yaml.safe_load(yaml_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(raw, dict):
+        return frozenset()
+    return opt_in_tags_from_mapping(raw)
+
 
 _CONTRACT_KEYS = frozenset(
     {
@@ -77,8 +93,14 @@ class PipelineDAG:
         specs = dag.to_stage_specs(executor)
     """
 
-    def __init__(self, stages: list[StageDefinition]) -> None:
+    def __init__(
+        self,
+        stages: list[StageDefinition],
+        *,
+        opt_in_tags: frozenset[str] | None = None,
+    ) -> None:
         self.stages = list(stages)
+        self.opt_in_tags = frozenset(opt_in_tags) if opt_in_tags is not None else frozenset()
         # ``(stage, missing_dep)`` edges dropped by the most recent
         # ``sorted_stages()`` call — see the property of the same name.
         self._dropped_dependency_edges: list[tuple[str, str]] = []
@@ -114,7 +136,7 @@ class PipelineDAG:
                 )
             )
         logger.debug(f"Parsed {len(definitions)} stage definition(s) from {yaml_path.name}")
-        return cls(definitions)
+        return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(raw))
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PipelineDAG":
@@ -136,7 +158,7 @@ class PipelineDAG:
                     hooks=_parse_hooks(entry.get("hooks"), entry["name"]),
                 )
             )
-        return cls(definitions)
+        return cls(definitions, opt_in_tags=opt_in_tags_from_mapping(data))
 
     # ── Filtering ────────────────────────────────────────────────────────
 

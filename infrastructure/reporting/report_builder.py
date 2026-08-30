@@ -1,6 +1,6 @@
 """Summary report generation for the full repository test suite.
 
-This module builds the comprehensive test summary data structure by
+This module builds the test summary data structure by
 aggregating results from infrastructure and project test suites.
 """
 
@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 def discover_active_projects(repo_root: Path | None = None) -> list[str]:
     """Discover active projects from the projects/ directory."""
     root = repo_root or Path.cwd()
-    return sorted(p.name for p in discover_projects(root))
+    return sorted(p.qualified_name for p in discover_projects(root))
 
 
 def _calculate_weighted_coverage(
@@ -63,7 +63,7 @@ def _is_ollama_available() -> bool:
 
 
 def generate_summary_report(repo_root: Path | None = None) -> dict[str, Any]:
-    """Generate comprehensive test summary report."""
+    """Generate the test summary report."""
     root = repo_root or Path.cwd()
     timestamp = datetime.now().isoformat()
     active_projects = discover_active_projects(root)

@@ -36,8 +36,8 @@ claims:
     artifact_path: content/edition.yaml
   - claim_id: test-coverage-percent
     kind: number
-    value: 99.70
-    source: pytest --cov=newspaper run 2026-07-20 (150 tests; stage_01_test.py)
+    value: 99.25
+    source: pytest --cov=newspaper run 2026-08-14 (153 tests; stage_01_test.py)
     source_tier: project_source
     freshness: active
     artifact_path: output/reports/test_results.json

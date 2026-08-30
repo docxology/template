@@ -186,3 +186,15 @@ class TestMainNoCommand:
         captured = capsys.readouterr()
         assert rc == 0
         assert "usage:" in captured.out.lower() or "provenance" in captured.out.lower()
+
+
+def test_malformed_store_returns_actionable_cli_error(tmp_path, capsys):
+    dag = tmp_path / "dag.json"
+    dag.write_text("{not valid json", encoding="utf-8")
+
+    rc = main(["--dag-path", str(dag), "list"])
+    captured = capsys.readouterr()
+
+    assert rc == 2
+    assert captured.out == ""
+    assert "provenance store error:" in captured.err

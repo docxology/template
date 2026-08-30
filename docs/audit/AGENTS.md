@@ -4,10 +4,18 @@
 
 ## Purpose
 
-`docs/audit/` holds generated audit reports — currently just the filepath
-and reference audit from
-[`scripts/audit/audit_filepaths.py`](../../scripts/audit/audit_filepaths.py).
-Treat the checked-in `.md` report as a snapshot, not a hand-authored guide.
+`docs/audit/` holds generated audit reports and dated point-in-time session
+receipts (`DEEP_PASS_*`, `PROJECT_STATE_REPORT_*`, offline verification
+receipts). Do not place those at the repository root — consistency linters
+scan root Markdown as long-lived documentation.
+
+Currently tracked:
+
+- filepath/reference audit from
+  [`scripts/audit/audit_filepaths.py`](../../scripts/audit/audit_filepaths.py)
+- dated offline verification receipts (see [`README.md`](README.md) files table)
+
+Treat every checked-in `.md` report as a snapshot, not a hand-authored guide.
 
 ## Working here
 

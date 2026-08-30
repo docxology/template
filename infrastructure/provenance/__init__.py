@@ -41,7 +41,7 @@ from infrastructure.provenance.review import (
     Severity,
     review_provenance_store,
 )
-from infrastructure.provenance.store import Provenance
+from infrastructure.provenance.store import Provenance, ProvenanceStoreError
 from infrastructure.provenance.validation import (
     ProvenanceValidationFinding,
     ProvenanceValidationReport,
@@ -61,6 +61,7 @@ __all__ = [
     "node_from_dict",
     # Store
     "Provenance",
+    "ProvenanceStoreError",
     # Review
     "Finding",
     "Review",

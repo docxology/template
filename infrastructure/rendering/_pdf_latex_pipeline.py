@@ -238,7 +238,11 @@ def compile_latex_manuscript(
     cmd = [latex_compiler, *LATEX_CMD_OPTIONS, combined_tex.name]
     start_time = time.time()
     tex_stem = combined_tex.stem
-    latex_timeout = 8 if os.environ.get("PYTEST_CURRENT_TEST") else 600
+    # Test mode keeps a bounded-but-realistic ceiling: xelatex cold start alone
+    # can take several seconds and the suite marks these renders
+    # ``@pytest.mark.timeout(90)``, so an 8 s cap made the pipeline flaky on
+    # slower machines while still bounding runaway compiles.
+    latex_timeout = 60 if os.environ.get("PYTEST_CURRENT_TEST") else 600
 
     logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
     logger.info(f"  Source files: {len(source_files)}")

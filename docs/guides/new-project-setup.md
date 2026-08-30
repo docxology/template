@@ -362,7 +362,9 @@ dependencies = [
 
 **Symptom**: Pipeline prints 6+ `WARNING: Unknown config key 'X' in .../config.yaml` lines on every test and setup stage.
 
-**Root cause**: The infrastructure's config loader validates keys against a known schema. Project-specific keys (e.g., `search`, `knowledge_graph`, `pipeline_stages`, `llm_extraction`, `hypothesis_definitions`, `subfield_keywords`) that are not in the shared schema trigger warnings.
+**Root cause**: The infrastructure's config loader validates keys against a known schema. Project-specific keys (e.g., `search`, `knowledge_graph`, `pipeline_stages`, `llm_extraction`, `hypothesis_definitions`, `subfield_keywords`) that are not in the shared schema trigger warnings (negative control: `tests/infra_tests/core/test_config_loader.py::test_unknown_key_logs_warning` loads config containing the misspelled key `papr` and asserts the warning fires with the `paper` suggestion).
+Passing key validation does not guarantee correct values — matching the schema proves only that the keys are recognized.
+As a negative control, introducing a misspelled top-level key reproduces the documented WARNING on every run rather than being silently accepted, so the symptom cannot occur without the corresponding misconfiguration.
 
 **Fix options**:
 

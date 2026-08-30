@@ -9,9 +9,8 @@ and intentionally **does not** route through
 ``geometry`` / ``hyperref`` / ``titlepage`` machinery would clash.
 
 The math-font subset *is* propagated. Whenever ``preamble.md`` loads
-``unicode-math``, :func:`_maybe_write_math_header` calls
-:func:`infrastructure.rendering._pdf_latex_helpers.extract_math_font_preamble`
-to write a minimal ``_slides_math_header.tex`` containing only
+``unicode-math``, :func:`infrastructure.rendering._slides_math_header.write_slides_math_header`
+writes a minimal ``_slides_math_header.tex`` containing only
 ``\\usepackage{unicode-math}`` plus the active ``\\setmathfont`` (with
 the same ``latinmodern-math.otf`` auto-fallback as the combined-PDF
 path), and passes it to Pandoc via ``-H header.tex``. This gives Beamer
@@ -34,10 +33,6 @@ from pathlib import Path
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.core.logging.utils import get_logger
 from infrastructure.rendering._bibliography import pandoc_bibliography_args, resolve_bibliography
-from infrastructure.rendering._pdf_latex_helpers import (
-    extract_math_font_preamble,
-    extract_preamble,
-)
 from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
     parse_aux_label_numbers,
@@ -53,6 +48,8 @@ from infrastructure.rendering.latex_texttt import (
     make_long_texttt_breakable,
     make_pandoc_reference_tokens_breakable,
 )
+from infrastructure.rendering._slides_math_header import write_slides_math_header
+from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
 from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
@@ -246,7 +243,7 @@ class SlidesRenderer:
         # Inject the math-font subset of the manuscript preamble so
         # \mid, \ll, \gg etc. render cleanly in slide decks without
         # pulling in the full combined-PDF preamble.
-        math_header = self._maybe_write_math_header(manuscript_dir, output_dir)
+        math_header = write_slides_math_header(manuscript_dir, output_dir)
         if math_header is not None:
             cmd.extend(["-H", str(math_header)])
 
@@ -273,7 +270,7 @@ class SlidesRenderer:
 
             # Fix figure paths for LaTeX compilation
             if figures_dir:
-                tex_content = self._fix_figure_paths(tex_content, output_dir, figures_dir)
+                tex_content = fix_slides_figure_paths(tex_content, output_dir, figures_dir)
 
             tex_content = self._resolve_cross_deck_refs(
                 tex_content,
@@ -478,266 +475,3 @@ class SlidesRenderer:
                 section_replacements,
             )
         return tex_content
-
-    def _maybe_write_math_header(self, manuscript_dir: Path | None, output_dir: Path) -> Path | None:
-        """Write a Pandoc ``-H`` header file for Unicode math + citation
-        fallbacks, if needed.
-
-        Looks up ``preamble.md`` next to the manuscript, extracts any
-        ``\\usepackage{unicode-math}`` block, and writes a minimal
-        ``_slides_math_header.tex`` next to the slide output. The file is
-        rewritten on every render so it always reflects the current
-        ``preamble.md``; consumers should treat it as a build artefact.
-
-        The header also defines ``\\providecommand`` fallbacks for natbib
-        commands (``\\citep``, ``\\citet``, ``\\citealp``) and manuscript
-        cross-reference commands (``\\cref``, ``\\Cref``) so that
-        manuscript prose already normalized for the combined PDF still
-        typesets cleanly in slides. The fallback renders citations as
-        ``[key]`` and unresolved cross-references as detokenized label
-        strings — readable, distinct, and safe from undefined-control-
-        sequence and raw-underscore errors. It also unconditionally
-        declares the two auto-numbered formalism environments beamer does
-        not ship natively (``proposition``, ``hypothesis`` — see below).
-
-        Returns ``None`` only when ``manuscript_dir`` itself is ``None``;
-        otherwise a header path is always returned, since the natbib/cref
-        fallback and formalism-environment declarations are unconditional.
-        """
-        if manuscript_dir is None:
-            return None
-        preamble_file = manuscript_dir / "preamble.md"
-
-        snippet_parts: list[str] = []
-        if preamble_file.exists():
-            preamble = extract_preamble(preamble_file)
-            math_snippet = extract_math_font_preamble(preamble)
-            if math_snippet is not None:
-                snippet_parts.append(math_snippet)
-
-        # Natbib fallback definitions for slide rendering. \providecommand
-        # is a no-op when natbib is loaded (real definition wins). The layout
-        # defaults keep dense scientific prose and longtable-heavy sections
-        # within Beamer's narrower text block.
-        snippet_parts.append(
-            "% Slide layout defaults for warning-clean scientific decks.\n"
-            "\\usepackage{etoolbox}\n"
-            "\\IfFileExists{xurl.sty}{\\usepackage{xurl}}{}\n"
-            "\\IfFileExists{seqsplit.sty}{\\usepackage{seqsplit}}{\\newcommand{\\seqsplit}[1]{#1}}\n"
-            "\\protected\\def\\breakseq#1{\\seqsplit{#1}}\n"
-            "\\protected\\def\\breaktt#1{\\begingroup\\ttfamily\\seqsplit{#1}\\endgroup}\n"
-            "\\setlength{\\emergencystretch}{6em}\n"
-            "\\tolerance=5000\n"
-            "\\hbadness=10000\n"
-            "\\hfuzz=1pt\n"
-            "\\setlength{\\tabcolsep}{2pt}\n"
-            "\\AtBeginEnvironment{longtable}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
-            "\\AtBeginEnvironment{tabular}{\\tiny\\renewcommand{\\arraystretch}{0.86}\\setlength{\\tabcolsep}{1pt}}\n"
-            "\\AtBeginEnvironment{equation}{\\tiny}\n"
-            "\\AtBeginEnvironment{equation*}{\\tiny}\n"
-            "\\AtBeginEnvironment{align}{\\tiny}\n"
-            "\\AtBeginEnvironment{align*}{\\tiny}\n"
-            "\\AtBeginEnvironment{itemize}{\\footnotesize}\n"
-            "\\AtBeginEnvironment{enumerate}{\\footnotesize}\n"
-            "\\AtBeginEnvironment{description}{\\footnotesize}\n"
-            "\\setbeamerfont{caption}{size=\\tiny}\n"
-            "\\setbeamerfont{caption name}{size=\\tiny}\n"
-            "\\setbeamerfont{normal text}{size=\\small}\n"
-            "\\setbeamerfont{frametitle}{size=\\small}\n"
-            "\\setbeamerfont{section title}{size=\\footnotesize}\n"
-            "\\setbeamerfont{subsection title}{size=\\footnotesize}\n"
-            "\\setbeamertemplate{section page}{%\n"
-            "  \\centering\n"
-            "  \\begin{beamercolorbox}[sep=12pt,center,wd=\\paperwidth]{section title}\n"
-            "    \\parbox{0.86\\paperwidth}{\\centering\\usebeamerfont{section title}\\insertsection\\par}\n"
-            "  \\end{beamercolorbox}\n"
-            "}\n"
-            "\\setbeamertemplate{subsection page}{%\n"
-            "  \\centering\n"
-            "  \\begin{beamercolorbox}[sep=8pt,center,wd=\\paperwidth]{subsection title}\n"
-            "    \\parbox{0.86\\paperwidth}{\\centering\\usebeamerfont{subsection title}\\insertsubsection\\par}\n"
-            "  \\end{beamercolorbox}\n"
-            "}\n"
-            "\\setlength{\\abovecaptionskip}{2pt}\n"
-            "\\setlength{\\belowcaptionskip}{0pt}\n\n"
-            "% Natbib and cross-reference fallbacks — slides don't load natbib\n"
-            "% or cleveref, but combined-PDF manuscript prose may emit these\n"
-            "% commands. The fallback renders citations as a bracketed key list\n"
-            "% and cross-references as detokenized labels so slides don't fail on\n"
-            "% undefined control sequences or raw underscores. \\providecommand is\n"
-            "% a no-op if packages load later.\n"
-            "\\providecommand{\\citep}[1]{[#1]}\n"
-            "\\providecommand{\\citet}[1]{#1}\n"
-            "\\providecommand{\\citealp}[1]{#1}\n"
-            "\\providecommand{\\citeauthor}[1]{#1}\n"
-            "\\providecommand{\\citeyear}[1]{#1}\n"
-            "\\providecommand{\\cref}[1]{\\texttt{\\detokenize{#1}}}\n"
-            "\\providecommand{\\Cref}[1]{\\texttt{\\detokenize{#1}}}\n"
-        )
-
-        # Auto-numbered formalism environments the manuscript body may use
-        # (mirrors the \newtheorem declarations `preamble.md` defines for the
-        # combined PDF, per @sec:type-architecture-style raw-LaTeX blocks).
-        # Beamer's own document class already provides \theorem, \lemma,
-        # \corollary, and \definition as built-in styled blocks (redeclaring
-        # them via \newtheorem fails with "Command ... already defined"), so
-        # only the two environments beamer does *not* ship — proposition and
-        # hypothesis — need a declaration here. Each gets its own independent
-        # counter rather than chaining onto beamer's internal theorem counter
-        # (whose name is not a public API): slides already render several
-        # PDF-only features in simplified form (see the natbib/cref
-        # fallbacks above), so a proposition/hypothesis number that doesn't
-        # exactly match the PDF's shared sequence is consistent with that
-        # existing degraded-but-non-fatal slides behavior, not a regression.
-        snippet_parts.append("\\newtheorem{proposition}{Proposition}\n\\newtheorem{hypothesis}{Hypothesis}\n")
-
-        # snippet_parts is never empty past this point (the natbib/cref
-        # fallback and the formalism-environment declarations above are both
-        # unconditional appends) -- a header is always written here.
-        output_dir.mkdir(parents=True, exist_ok=True)
-        header_path = output_dir / "_slides_math_header.tex"
-        header_path.write_text("\n".join(snippet_parts), encoding="utf-8")
-        logger.debug(f"Wrote slides math header: {header_path}")
-        return header_path
-
-    def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:
-        """Fix figure paths in LaTeX content for proper compilation.
-
-        Converts paths like ../output/figures/file.png to relative paths
-        that work from the LaTeX compilation directory (output/slides).
-
-        Handles multiple path formats and preserves optional parameters.
-
-        Args:
-            tex_content: LaTeX content to process
-            output_dir: Directory where LaTeX compilation happens (output/slides)
-            figures_dir: Directory containing figures (output/figures)
-
-        Returns:
-            LaTeX content with corrected figure paths
-        """
-
-        def extract_filename(path_str: str) -> str:
-            """Extract filename from various path formats."""
-            # Handle various path formats
-            path_variations = [
-                "../output/figures/",
-                "output/figures/",
-                "../figures/",
-                "./figures/",
-            ]
-
-            for prefix in path_variations:
-                if prefix in path_str:
-                    return path_str.split(prefix)[-1]
-
-            # If no prefix matched, extract filename from path
-            if "/" in path_str or "\\" in path_str:
-                return re.split(r"[/\\]", path_str)[-1]
-            else:
-                # No separators — path_str is already a bare filename
-                return path_str
-
-        def matching_delimiter(start: int, opener: str, closer: str) -> int | None:
-            """Return the index just after a balanced delimiter group.
-
-            Pandoc commonly emits ``\\includegraphics[alt={... [ ...]}]{...}``.
-            A regex like ``\\[([^\\]]*)\\]`` stops at the first bracket inside
-            the alt text and therefore misses the real path argument.  This
-            scanner tracks braces while looking for the closing option
-            bracket, which is enough for Pandoc's generated Beamer LaTeX.
-            """
-            depth = 0
-            brace_depth = 0
-            escaped = False
-            for idx in range(start, len(tex_content)):
-                ch = tex_content[idx]
-                if escaped:
-                    escaped = False
-                    continue
-                if ch == "\\":
-                    escaped = True
-                    continue
-                if ch == "{":
-                    brace_depth += 1
-                    continue
-                if ch == "}":
-                    brace_depth = max(0, brace_depth - 1)
-                    continue
-                if ch == opener and brace_depth == 0:
-                    depth += 1
-                    continue
-                if ch == closer and brace_depth == 0:
-                    depth -= 1
-                    if depth == 0:
-                        return idx + 1
-            return None
-
-        def matching_brace(start: int) -> int | None:
-            """Find the index of the matching closing brace."""
-            depth = 0
-            escaped = False
-            for idx in range(start, len(tex_content)):
-                ch = tex_content[idx]
-                if escaped:
-                    escaped = False
-                    continue
-                if ch == "\\":
-                    escaped = True
-                    continue
-                if ch == "{":
-                    depth += 1
-                    continue
-                if ch == "}":
-                    depth -= 1
-                    if depth == 0:
-                        return idx + 1
-            return None
-
-        pieces: list[str] = []
-        cursor = 0
-        command = r"\includegraphics"
-        while True:
-            start = tex_content.find(command, cursor)
-            if start == -1:
-                pieces.append(tex_content[cursor:])
-                break
-
-            pieces.append(tex_content[cursor:start])
-            pos = start + len(command)
-            while pos < len(tex_content) and tex_content[pos].isspace():
-                pos += 1
-
-            if pos < len(tex_content) and tex_content[pos] == "[":
-                opt_end = matching_delimiter(pos, "[", "]")
-                if opt_end is None:
-                    pieces.append(tex_content[start:])
-                    cursor = len(tex_content)
-                    break
-                pos = opt_end
-                while pos < len(tex_content) and tex_content[pos].isspace():
-                    pos += 1
-
-            if pos >= len(tex_content) or tex_content[pos] != "{":
-                pieces.append(tex_content[start:pos])
-                cursor = pos
-                continue
-
-            arg_end = matching_brace(pos)
-            if arg_end is None:
-                pieces.append(tex_content[start:])
-                cursor = len(tex_content)
-                break
-
-            old_path = tex_content[pos + 1 : arg_end - 1]
-            if old_path.startswith("../figures/"):
-                pieces.append(tex_content[start:arg_end])
-            else:
-                filename = extract_filename(old_path)
-                new_path = f"../figures/{filename}"
-                pieces.append(tex_content[start : pos + 1])
-                pieces.append(new_path)
-                pieces.append("}")
-            cursor = arg_end
-
-        return "".join(pieces)

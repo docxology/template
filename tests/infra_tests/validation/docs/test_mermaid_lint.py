@@ -8,6 +8,7 @@ so the gate fails loudly there if it is missing.
 from __future__ import annotations
 
 import os
+import time
 from pathlib import Path
 
 import pytest
@@ -180,6 +181,105 @@ def test_validate_blocks_total_timeout_reports_targeted_block(tmp_path: Path) ->
     assert "total timeout" in failures[0].stderr
     assert str(md) in failures[0].stderr
     assert str(fake_mmdc) in failures[0].stderr
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
+def test_validate_blocks_retries_transient_timeout_then_succeeds(tmp_path: Path) -> None:
+    """A timeout on attempt 1 followed by success on attempt 2 is not a failure.
+
+    Real flaky-mmdc behavior under load: first render exceeds the per-render
+    budget, retry succeeds. Exercises the real subprocess path of the
+    per-block retry wrapper with a real two-attempt executable.
+    """
+    from infrastructure.validation.docs import mermaid_lint as ml
+
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
+    flaky_mmdc = tmp_path / "flaky_mmdc"
+    # Deterministic two-attempt script keyed off a counter file: attempt 0
+    # sleeps past the 1.5s per-render budget (exit 124), attempt 1 exits 0
+    # with real output.
+    flaky_mmdc.write_text(
+        "#!/usr/bin/env python3\n"
+        "import os, sys, time\n"
+        "counter = os.environ['MMLINT_TEST_COUNTER']\n"
+        "n = int(open(counter).read()) if os.path.exists(counter) else 0\n"
+        "open(counter, 'w').write(str(n + 1))\n"
+        "if n == 0:\n"
+        "    time.sleep(4)\n"
+        "open(sys.argv[sys.argv.index('-o') + 1], 'w').write('<svg/>')\n"
+        "sys.exit(0)\n",
+        encoding="utf-8",
+    )
+    flaky_mmdc.chmod(0o755)
+    counter = tmp_path / "counter"
+    os.environ["MMLINT_TEST_COUNTER"] = str(counter)
+
+    block = find_mermaid_blocks([tmp_path])[0]
+    workdir = tmp_path / "work"
+    workdir.mkdir()
+    cfg = workdir / "puppeteer-config.json"
+    cfg.write_text("{}", encoding="utf-8")
+
+    failure = ml._run_mmdc_with_timeout_retry(
+        block,
+        mmdc_bin=str(flaky_mmdc),
+        puppeteer_cfg_path=cfg,
+        workdir=workdir,
+        timeout_seconds=1.5,
+        total_timeout_seconds=60,
+        started_at=time.monotonic(),
+        retries_on_timeout=1,
+    )
+
+    assert failure is None
+    assert counter.exists() and counter.read_text() == "2"  # exactly one retry
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
+def test_validate_blocks_reports_timeout_after_retries_exhausted(tmp_path: Path) -> None:
+    """A block that times out on every attempt is reported once (exit 124)."""
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
+    slow_mmdc = tmp_path / "slow_mmdc"
+    slow_mmdc.write_text(
+        "#!/usr/bin/env python3\nimport time\ntime.sleep(5)\n",
+        encoding="utf-8",
+    )
+    slow_mmdc.chmod(0o755)
+
+    failures = validate_blocks(
+        find_mermaid_blocks([tmp_path]),
+        mmdc_path=str(slow_mmdc),
+        timeout_seconds=0.1,
+        total_timeout_seconds=60,
+        retries_on_timeout=1,
+    )
+
+    assert len(failures) == 1
+    assert failures[0].returncode == 124
+    assert "timed out" in failures[0].stderr
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX executable script semantics")
+def test_validate_blocks_does_not_retry_non_timeout_failures(tmp_path: Path) -> None:
+    """A genuine syntax failure (non-124 exit) is reported without retries."""
+    md = tmp_path / "p.md"
+    _write_md(md, "```mermaid\nflowchart TB\n  A-->B\n```\n")
+    fail_mmdc = tmp_path / "fail_mmdc"
+    fail_mmdc.write_text("#!/usr/bin/env python3\nsys_exit = 1\nraise SystemExit(1)\n", encoding="utf-8")
+    fail_mmdc.chmod(0o755)
+
+    failures = validate_blocks(
+        find_mermaid_blocks([tmp_path]),
+        mmdc_path=str(fail_mmdc),
+        timeout_seconds=10,
+        total_timeout_seconds=60,
+        retries_on_timeout=3,
+    )
+
+    assert len(failures) == 1
+    assert failures[0].returncode == 1
 
 
 def test_validate_blocks_flags_exit_zero_with_no_output(tmp_path: Path) -> None:

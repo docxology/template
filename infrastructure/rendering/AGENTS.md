@@ -13,7 +13,7 @@ renderers without owning validation policy or project analysis.
 | Facade | `core.py`, `config.py` | `RenderManager` and rendering configuration. |
 | Security profile | `security.py` | Trusted-local and isolated untrusted subprocess options, credential-free environments, and bounded output roots. |
 | PDF pipeline | `pdf_renderer.py`, `_pdf_combined_*.py`, `_pdf_title_page.py`, `_pdf_latex_helpers.py` | Combined PDF assembly, title/publishing pages, LaTeX helpers. |
-| Format renderers | `slides_renderer.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_postprocess.py`, `pptx_deck.py`, `slide_deck.py`, `mermaid_figure.py` | Slides, Beamer-safe captioned listings and frame splitting, HTML orchestration and deterministic HTML post-processing, DOCX (`docx_renderer.py`), EPUB (`epub_renderer.py`), PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
+| Format renderers | `slides_renderer.py`, `_slides_math_header.py`, `_slides_tex_figures.py`, `_slides_codelisting.py`, `_slides_framebreaks.py`, `web_renderer.py`, `_web_markdown_preprocess.py`, `_web_postprocess.py`, `docx_renderer.py`, `epub_renderer.py`, `pptx_deck.py`, `slide_deck.py`, `_slide_draw.py`, `mermaid_figure.py` | Slides, Beamer math-header and figure-path helpers, Beamer-safe captioned listings and frame splitting, HTML orchestration, web-only markdown preprocess (citations/theorems), deterministic HTML post-processing, DOCX, EPUB, PPTX deck rendering, slide deck helpers, and Mermaid figure rendering. |
 | Pandoc filters | `_pandoc_filters.py`, `formalism.lua`, `convert_latex_images.lua`, `_beamer_allowframebreaks.lua` | `_pandoc_filters.py` resolves the repo-shipped Lua filters for every writer; `formalism.lua` numbers Definition/Proposition/Theorem blocks and resolves `[@def:...]`. |
 | Bibliographies | `_bibliography.py`, `_pdf_combined_bibliography.py` | Shared sorted `manuscript/*.bib` discovery, repeated/symlink-path deduplication, duplicate-key rejection, Pandoc arguments, and PDF bibliography injection. |
 | Manuscript source | `manuscript_discovery.py`, `manuscript_injection.py`, `_manuscript_source.py`, `manuscript_composition.py`, `render_cache.py` | Section ordering, substitutions, resolved manuscript trees, render-boundary composition evidence (`manuscript_composition.py`), and modular section caching (`render_cache.py`). |
@@ -39,8 +39,9 @@ renderers without owning validation policy or project analysis.
 - Configured title-page artwork uses `paper.cover.image`/`paper.cover.alt` or
   the parallel `book.cover.*` fields. With `metadata.tagged_pdf: true`, the
   selected cover's `alt` must be a non-empty string; validation fails before a
-  prior combined PDF is replaced. The renderer requests tagged PDF/UA-2 output
-  through LuaLaTeX, but a successful render is not PDF/UA certification.
+  prior combined PDF is replaced. The renderer requests PDF 2.0 tagging and
+  catalog language through LuaLaTeX while deliberately omitting a PDF/UA
+  conformance identifier. Tagged structure is not PDF/UA certification.
 - Combined EPUB uses the same selected cover/alt pair and rejects a cover with
   missing or blank alt text before Pandoc runs. After Pandoc emits its SVG
   cover, `_epub_cover_accessibility.py` names the SVG graphic from the source
@@ -95,7 +96,11 @@ renderers without owning validation policy or project analysis.
   character-count or text-box-height estimates. Diagram figures likewise use
   one aspect-preserving fit inside the shared header/footer-safe content box;
   section-divider title and rule bands must remain structurally disjoint in
-  both formats.
+Bands that overlap produce invalid geometry and are detected during layout validation, which then fails.
+  both formats; rendering fails when title fit is missing or slide text enters
+  the protected footer band, raising `RenderingError` before any deck is
+  written. Overlapping divider bands are the known-wrong layout the slide
+  layout tests assert neither format can emit.
 - `formalism.lua` must be applied by **every** writer that applies
   `pandoc-crossref`, and always **before** it and before `--citeproc`: the
   combined PDF (`_pdf_combined_pandoc.py`), combined DOCX and EPUB
@@ -112,6 +117,11 @@ renderers without owning validation policy or project analysis.
   zero is the failure mode that policy exists to prevent. The error is
   deliberately a `RuntimeError` so the DOCX/EPUB warning handlers cannot
   swallow it.
+- `render_cache.py` is a local acceleration cache, never publication evidence.
+  Its entries use path-aware keys rather than basenames, require an exact list
+  of regular-file outputs, and reject malformed or unwritable cache state with
+  a `RenderCacheError`. Callers must regenerate a render when the cache is
+  missing or invalid.
 - The per-section HTML path (`WebRenderer.render`) intentionally gets neither
   filter: it pre-converts citations and renders sections standalone, where
   restarted numbering would be misleading.

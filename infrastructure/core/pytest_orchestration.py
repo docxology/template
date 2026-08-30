@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import os
 import re
-import shutil
 import subprocess
 from pathlib import Path
 from typing import Any, Literal, Mapping, TypedDict
@@ -45,6 +44,7 @@ from infrastructure.core.project_pyproject import (
     resolve_project_cov_config,
 )
 from infrastructure.core.runtime.environment import get_python_command, resolve_test_python
+from infrastructure.core.runtime._tools import find_uv
 
 logger = get_logger(__name__)
 
@@ -243,7 +243,7 @@ def build_pythonpath(
 
 def prepend_uv_to_path(env: dict[str, str]) -> None:
     """Ensure ``uv`` is on PATH when available."""
-    uv_path = shutil.which("uv")
+    uv_path = find_uv()
     if uv_path:
         env["PATH"] = f"{os.path.dirname(uv_path)}:{env.get('PATH', '')}"
 
@@ -347,7 +347,7 @@ def build_project_pytest_command(
     the relocation-safe ``python -m pytest`` invocation remain shared.
     """
     pyproject = project_root / "pyproject.toml"
-    uv_path = shutil.which("uv")
+    uv_path = find_uv()
     if pyproject.is_file() and uv_path:
         resolved_root = project_root.resolve()
         cmd: list[str] = [uv_path, "run", "--directory", str(resolved_root)]

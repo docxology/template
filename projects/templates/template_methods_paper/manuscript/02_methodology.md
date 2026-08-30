@@ -134,6 +134,7 @@ build.
    literal — a literal would silently stop testing the moment the
    compiler's hash input changed.
 4. **Coverage gate**: CI enforces a ≥90% statement-coverage gate on
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
    `projects/templates/template_methods_paper/src/`; the live figure is
    tracked in
    [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).

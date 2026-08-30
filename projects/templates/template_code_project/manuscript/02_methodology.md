@@ -55,11 +55,12 @@ Labels follow the same agency taxonomy used for plot colours (`_agency_category`
 
 ### Zero-Mock Testing Methodology
 
-The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/templates/template_code_project/tests/` during the infrastructure build phase.
+The most critical aspect of the project's methodology is its validation framework. The project is governed by a strict Zero-Mock testing policy, evaluated actively by executing `uv run pytest projects/templates/template_code_project/tests/` during the infrastructure build phase (negative control: the repository lexical no-mock gate `scripts/audit/verify_no_mocks.py --inventory` flags any prohibited mock import or call and fails on dependency-replacement debt).
 
-1. **Project tests**: [`projects/templates/template_code_project/tests/test_optimizer.py`](../tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [`docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
+1. **Project tests**: [the project optimizer test suite](https://github.com/docxology/template/blob/main/projects/templates/template_code_project/tests/test_optimizer.py) exercises `src/optimizer.py` (typical, edge, boundary, and pathological inputs including NaN/Inf and zero gradients) and, when infrastructure imports succeed, call into `optimization_analysis.py` helpers—without mocks. Suite size: [the measured repository counts](https://github.com/docxology/template/blob/main/docs/_generated/COUNTS.md).
 2. **Infrastructure validation**: The repository-level `tests/infra_tests/` suite validates shared template modules (e.g. pipeline and discovery helpers) independently of this project’s manuscript.
-3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/templates/template_code_project/src/` prior to treating the project as build-green.
+3. **Coverage Gates**: The [GitHub Actions CI workflow](https://github.com/docxology/template/blob/main/.github/workflows/ci.yml) enforces a mandatory ≥90% statement coverage gate on `projects/templates/template_code_project/src/` prior to treating the project as build-green. Coverage below the floor fails the test process through `--cov-fail-under`, so build-green status cannot be reached while silently skipping weakened coverage.
+Falling below that floor fails the gate outright (`--cov-fail-under` enforces it).
 
 ### Stopping rule and reporting
 

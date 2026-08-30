@@ -55,8 +55,10 @@ uv run python -m infrastructure.validation.cli publication-audit \
 The live verifier depends on external resolvers. Record resolver/network
 failures and `unchecked` or `unverifiable` references honestly; warning status
 is not evidence that a citation exists. An offline cache-only run is useful for
-replay but must not be reported as a live check. The figure-accessibility gate
-checks that required descriptions are present, not that the prose is
+replay but must not be reported as a live check — a cache-only run without network must be recorded `unchecked`, never `verified`. The figure-accessibility gate
+Presence checks do not certify description quality; human review owns whether alt text is meaningful.
+Read narrowly: the accessibility gate checks presence only, not scientific adequacy, and caption quality still requires human review.
+checks only that required descriptions are present, not that the prose is
 scientifically adequate; review captions, legends, encodings, and alt text by
 hand. The publication audit with `--rendered` must consume artifacts regenerated
 from the same source revision, not a convenient older hydrated copy.

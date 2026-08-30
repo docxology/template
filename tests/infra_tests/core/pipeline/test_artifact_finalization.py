@@ -97,6 +97,7 @@ def _manifest_digest(project: Path) -> str:
     return hashlib.sha256(manifest.read_bytes()).hexdigest()
 
 
+@pytest.mark.timeout(120)
 @pytest.mark.parametrize("full_pipeline", [False, True])
 def test_validation_seals_aggregate_before_core_and_full_downstream_stages(
     tmp_path: Path,

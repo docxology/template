@@ -8,10 +8,16 @@ and the boundary between private work and public or deployed scope.
 The authoritative sensitive-area map is
 [`../../.github/sensitive-ownership.yaml`](../../.github/sensitive-ownership.yaml).
 Its generated rules are the final rule-bearing block in
-[`../../.github/CODEOWNERS`](../../.github/CODEOWNERS). A sole-owner exception
+CODEOWNERS routes review requests but is not a review-enforcing gate by itself; authority lives in remote branch protection.
+Recording the mapping does not prove protection is active: CODEOWNERS content alone does not imply branch protection, which needs administrator-side evidence (see SECURITY-OWNERSHIP-1).
+[`../../.github/CODEOWNERS`](../../.github/CODEOWNERS); parity is machine-checked
+and rejects any CODEOWNERS file with an untrusted rule appended after the
+generated block: the known-wrong fixture
+`tests/infra_tests/project/test_codeowners_parity.py::test_codeowners_rejects_rule_after_generated_policy`
+feeds exactly that stale file and asserts parity judges it not current. A sole-owner exception
 is explicitly recorded for each current sensitive area because a second
 maintainer is not presently available. That exception documents residual risk
-and requires green blocking CI plus a recorded independent adversarial review;
+and requires green blocking CI plus a recorded independent adversarial review — merging a sensitive-path change without that receipt must block;
 it does not claim that the sole CODEOWNER supplies two-party approval.
 
 External GitHub branch protection must require:

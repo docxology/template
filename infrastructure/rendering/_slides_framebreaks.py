@@ -19,7 +19,9 @@ _FRAME_RE = re.compile(
 _ENV_BEGIN_RE = re.compile(r"\\begin\{(?P<name>[A-Za-z*]+)\}")
 _ENV_END_RE = re.compile(r"\\end\{(?P<name>[A-Za-z*]+)\}")
 _TEX_GROUP_RE = re.compile(r"\\(?P<kind>begin|end)group\b")
-_ISOLATE_SLIDE_ENVS = frozenset({"codelisting", "description", "enumerate", "figure", "itemize", "longtable", "table"})
+_ISOLATE_SLIDE_ENVS = frozenset(
+    {"codelisting", "lstlisting", "verbatim", "description", "enumerate", "figure", "itemize", "longtable", "table"}
+)
 _FRAMEBREAK_MARKER = "\n\\par\n\\framebreak\n"
 
 
@@ -195,13 +197,47 @@ def split_long_slide_frames(tex_content: str) -> tuple[str, int]:
         if "allowframebreaks" not in match.group("open"):
             return match.group(0)
         body = match.group("body")
+        # Beamer re-typesets allowframebreaks frames multiple times; the
+        # listings package's verbatim scanner cannot survive that (\par is
+        # injected between passes -> "Paragraph ended before \lst@next").
+        # Frames containing verbatim-like environments keep their content in
+        # one piece below; additionally strip allowframebreaks so Beamer does
+        # not re-typeset the frame.
+        has_verbatim = bool(re.search(r"\\begin\{(?:lstlisting|verbatim|lstinputlisting)\}", body))
         updated = _split_frame_body(body)
         if updated != body:
             changed += 1
         segments = updated.split(_FRAMEBREAK_MARKER)
+        # listings/verbatim need [fragile] frames: without it Beamer typesets
+        # the frame body inside macro definitions and any '#' (e.g. Python
+        # comments) is read as an illegal macro parameter character.
+        frame_open = match.group("open")
+        if has_verbatim and "fragile" not in frame_open:
+            frame_open = re.sub(
+                r"(\\begin\{frame\})\[allowframebreaks", r"\1[allowframebreaks,fragile", frame_open, count=1
+            )
         if len(segments) == 1:
-            return f"{match.group('open')}{updated}{match.group('close')}"
-        return "\n\n".join(f"{match.group('open')}{segment}{match.group('close')}" for segment in segments)
+            if has_verbatim and "allowframebreaks" in frame_open:
+                stripped_open = frame_open.replace("allowframebreaks,", "").replace("allowframebreaks", "")
+                if stripped_open.endswith("[]"):
+                    stripped_open = stripped_open[:-2]
+                return f"{stripped_open}{updated}{match.group('close')}"
+            return f"{frame_open}{updated}{match.group('close')}"
+        # A split frame's verbatim-bearing segment must not keep
+        # allowframebreaks either: Beamer would re-typeset that segment and
+        # the listings/verbatim scanner fails across the injected \par again.
+        if has_verbatim:
+
+            def _strip_af(segment: str) -> str:
+                if re.search(r"\\begin\{(?:lstlisting|verbatim|lstinputlisting)\}", segment):
+                    stripped_open = frame_open.replace("allowframebreaks,", "").replace("allowframebreaks", "")
+                    if stripped_open.endswith("[]"):
+                        stripped_open = stripped_open[:-2]
+                    return f"{stripped_open}{segment}{match.group('close')}"
+                return f"{match.group('open')}{segment}{match.group('close')}"
+
+            return "\n\n".join(_strip_af(segment) for segment in segments)
+        return "\n\n".join(f"{frame_open}{segment}{match.group('close')}" for segment in segments)
 
     return _FRAME_RE.sub(replace_frame, tex_content), changed
 

@@ -98,3 +98,7 @@ Each stage has defined inputs, outputs, and a completion gate.
 - Keep all intermediate artefacts in the `output/` directory tree.
 - Record every significant decision in the provenance DAG.
 - When a stage fails its gate, document why in the run ledger before retrying.
+A failed gate blocks the stage: an unauthorized retry without a ledger entry must never proceed.
+Ledger discipline is procedural only: writing the entry does not prove the retried stage will pass, and repeated failures escalate rather than loop.
+  The ledger entry itself checks only what was recorded; human review must
+  confirm the retry rationale before a stage advances.

@@ -1610,7 +1610,14 @@ href="#eq:adversarial_assay">7</a> and reported in tbl. <a
 href="#tbl:security_assay">5</a>. This study did not run Codex Security
 or Deep Security Scan and reports no vulnerability findings.
 Completeness of the assay schema therefore supports scope disclosure,
-not security compliance.</p>
+not security compliance — the assay checks only that named threats carry
+local evidence surfaces and validator rows; it does not certify an
+absence of vulnerabilities (negative control: removing a row’s evidence
+surface fails schema validation rather than being scored as secure). A
+row missing any required element is rejected at load time rather than
+rendered as partial assurance. An assay with zero configured rows
+reports that no security-scope claim should be made — absence of
+evidence is rendered as “not configured”, never as assurance.</p>
 <h3 data-number="4.12.2" id="scientific-integrity-risk-model"><span
 class="header-section-number">4.12.2</span> Scientific-integrity risk
 model</h3>
@@ -1810,7 +1817,7 @@ model; they are not empirical estimates of manuscript quality.</p>
 <h2 data-number="5.1" id="purity-progression"><span
 class="header-section-number">5.1</span> Purity progression</h2>
 <figure id="fig:purity_progression">
-<a class="figure-full-size-link" href="../figures/purity_progression.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/purity_progression.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/purity_progression.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/purity_progression.png"
 alt="Bars and a cumulative line rise monotonically across ore, smelting, assaying, cupellation, and certification, ending at nine-nines purity." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 1: Purity progression across the
 five refinery stages from ore (9K) to nine-nines
@@ -1874,7 +1881,7 @@ certification.</figcaption>
 <h2 data-number="5.2" id="karat-grading-scale"><span
 class="header-section-number">5.2</span> Karat grading scale</h2>
 <figure id="fig:karat_grading">
-<a class="figure-full-size-link" href="../figures/karat_grading.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/karat_grading.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/karat_grading.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/karat_grading.png"
 alt="A horizontal purity scale spans 9K through 24K and 99.999 percent, with markers showing where each successive refinery stage lands." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 2: Gold karat grading scale
 (9K–24K + nine-nines) with refinery stage markers.</figcaption>
@@ -1893,7 +1900,7 @@ class="header-section-number">5.4</span> Token plan summary</h2>
 <p>The mega-madlib engine generated 24 tokens from seed 431 across 8
 lexicon categories.</p>
 <figure id="fig:token_density">
-<a class="figure-full-size-link" href="../figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_density.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/token_density.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_density.png"
 alt="Ordered bars compare the number of injected manuscript tokens across sections and lexicon categories, exposing where the template concentrates configurable prose." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 3: Mega-madlib token distribution
 across manuscript sections and lexicon categories.</figcaption>
@@ -2194,7 +2201,7 @@ causal custody from raw material through assay and final certification,
 so a later change to the stage model must move through the same graph,
 table, and validation surfaces.</p>
 <figure id="fig:provenance_sankey">
-<a class="figure-full-size-link" href="../figures/provenance_sankey.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/provenance_sankey.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/provenance_sankey.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/provenance_sankey.png"
 alt="A directed left-to-right flow links ore through four refining stages to certification; edge widths increase with each stage&#x27;s purity gain." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 4: Provenance trace: ore → stages
 → certification purity flow.</figcaption>
@@ -2215,7 +2222,7 @@ independent observations suitable for association testing. Its purpose
 is to reveal disagreement between a late refinery state and weak overall
 claim support without combining the two into one score.</p>
 <figure id="fig:purity_claim_scatter">
-<a class="figure-full-size-link" href="../figures/purity_claim_scatter.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/purity_claim_scatter.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/purity_claim_scatter.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/purity_claim_scatter.png"
 alt="Five stage points progress rightward with increasing purity while sharing one vertical claim-support value, separating stage refinement from the project-level evidence assay." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 5: Stage purity plotted against
 the single project-level claim-support assay.</figcaption>
@@ -2245,7 +2252,7 @@ late-bound choices. The result is a sensitivity check on authoring
 machinery, not a claim that any particular synonym is scientifically
 superior.</p>
 <figure id="fig:token_heatmap">
-<a class="figure-full-size-link" href="../figures/token_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_heatmap.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/token_heatmap.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/token_heatmap.png"
 alt="A heatmap crosses deterministic seeds with lexicon categories; each cell color and label identify the selected inventory index for that seed-category pair." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 6: Token selection heatmap: seed ×
 category → selected index.</figcaption>
@@ -2276,7 +2283,7 @@ exemplar: coverage is measured against the specific audit rules
 configured here, not against a universal publication-readiness
 standard.</p>
 <figure id="fig:integrity_gate_matrix">
-<a class="figure-full-size-link" href="../figures/integrity_gate_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/integrity_gate_matrix.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/integrity_gate_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/integrity_gate_matrix.png"
 alt="Rows of integrity rules cross columns for tests, manuscript, and artifacts; categorical cells distinguish missing, partial, and complete gate coverage." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 7: Integrity-gate matrix linking
 audit rules to tests, manuscript surfaces, and generated
@@ -2307,7 +2314,7 @@ layer should change with it. That is the desired behavior: the formal
 layer is a generated contract, not hand-maintained mathematical
 ornamentation.</p>
 <figure id="fig:formalism_traceability">
-<a class="figure-full-size-link" href="../figures/formalism_traceability.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/formalism_traceability.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/formalism_traceability.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/formalism_traceability.png"
 alt="A bipartite network connects each named formalism to its equation label and then to the source module that owns the supporting definition." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 8: Formalism traceability from
 source-owned equation identifiers to source evidence.</figcaption>
@@ -2341,7 +2348,7 @@ backward to the owning source surface rather than encouraging local
 patching of rendered Markdown. That direction of repair is central to
 the manuscript’s definition of refinement.</p>
 <figure id="fig:implementation_circuit">
-<a class="figure-full-size-link" href="../figures/implementation_circuit.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/implementation_circuit.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/implementation_circuit.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/implementation_circuit.png"
 alt="A layered directed graph routes configuration and source modules into generated data, figures, and manuscript artifacts, then through validation feedback to publication." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 9: Implementation circuit from
 config-owned ore through generated manuscript artifacts and validation
@@ -2374,7 +2381,7 @@ extensions in this manuscript: a claim can be source-owned without
 becoming a compliance claim, and a generated assay can confirm local
 evidence without pretending to certify the wider supply chain.</p>
 <figure id="fig:claim_evidence_assay">
-<a class="figure-full-size-link" href="../figures/claim_evidence_assay.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/claim_evidence_assay.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/claim_evidence_assay.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/claim_evidence_assay.png"
 alt="Support bars summarize each contribution claim while a companion topology links claims to concrete evidence surfaces and explicit boundary classifications." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 10: Claim-evidence assay showing
 supported contribution claims, evidence surfaces, and boundary
@@ -2413,7 +2420,7 @@ issue has already been eliminated. It shows which risks this exemplar
 has made inspectable and where future work would need to add stronger
 measurement before using stronger language.</p>
 <figure id="fig:integrity_risk_matrix">
-<a class="figure-full-size-link" href="../figures/integrity_risk_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/integrity_risk_matrix.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/integrity_risk_matrix.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/integrity_risk_matrix.png"
 alt="A scatter matrix positions integrity risks by severity and detectability; marker size encodes residual risk and color identifies the evidence-source tier." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 11: Scientific-integrity risk
 matrix plotting severity, detectability, residual risk, and owning
@@ -2446,7 +2453,7 @@ counts visible in tabular form. Together they close the figure sequence
 by showing not only that the 12 public figures render, but also which
 source tiers make their claims inspectable.</p>
 <figure id="fig:evidence_tier_ladder">
-<a class="figure-full-size-link" href="../figures/evidence_tier_ladder.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/evidence_tier_ladder.png"
+<a class="figure-full-size-link" href="https://github.com/docxology/template/blob/main/projects/templates/template_gold_refinement/output/figures/evidence_tier_ladder.png" target="_blank" rel="noopener" aria-label="Open full-size figure"><img src="../figures/evidence_tier_ladder.png"
 alt="Ordered horizontal bars form a ladder from weaker to stronger evidence-source tiers, with each bar annotated by its registry count and percentage." /><span class="figure-full-size-label" aria-hidden="true">Open full-size figure</span></a>
 <figcaption>Figure 12: Evidence-tier ladder
 summarizing source tiers available to the shared template evidence
@@ -2752,9 +2759,9 @@ figure specs.</caption>
 <td>evidence_tier_ladder</td>
 <td>yes</td>
 <td>yes</td>
-<td>3420x1447</td>
-<td>0.111</td>
-<td>0.04019577</td>
+<td>3419x1447</td>
+<td>0.114</td>
+<td>0.04048412</td>
 <td>pass</td>
 </tr>
 <tr>
@@ -3279,8 +3286,8 @@ rendered PDF/HTML products rebuildable from source-owned inputs.</p>
 <ul>
 <li><strong>Seed:</strong> 431</li>
 <li><strong>Config hash:</strong> 497be5f411529ad8</li>
-<li><strong>Generation timestamp:</strong> 2026-08-14T14:20:53Z</li>
-<li><strong>Python version:</strong> 3.12.12</li>
+<li><strong>Generation timestamp:</strong> 2026-08-29T02:01:46Z</li>
+<li><strong>Python version:</strong> 3.12.13</li>
 </ul>
 <h2 data-number="8.2" id="artifact-inventory"><span
 class="header-section-number">8.2</span> Artifact inventory</h2>
@@ -3322,7 +3329,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Full pipeline (from repo root)</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span> <span class="at">--project</span> templates/template_gold_refinement <span class="at">--pipeline</span> <span class="at">--core-only</span></span></code></pre></div>
 <p>A reproduction report should record command exit status, the source
-revision, <code>497be5f411529ad8</code>, Python 3.12.12, and whether the
+revision, <code>497be5f411529ad8</code>, Python 3.12.13, and whether the
 generated registries pass. Matching prose alone is insufficient if the
 token plan, claim registry, or figure registry differs. Conversely,
 timestamp or renderer metadata differences should be interpreted

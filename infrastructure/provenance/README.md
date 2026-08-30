@@ -117,4 +117,4 @@ uv run pytest tests/infra_tests/provenance -q
 
 - `infrastructure/reporting/evidence_graph.py` — static pipeline DAG snapshot
 - `infrastructure/validation/evidence_registry.py` — manuscript-facing claim ledger
-- `infrastructure/core/pipeline/artifacts.py` — SHA-256 artifact manifests
+- `infrastructure/core/pipeline/artifacts/` — SHA-256 artifact manifests ([`AGENTS.md`](../core/pipeline/artifacts/AGENTS.md))

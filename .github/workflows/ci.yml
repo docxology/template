@@ -471,9 +471,11 @@ jobs:
     # also removes the old code_project/fep_lean conftest plugin-name collision
     # (every project is already isolated in its own job). py3.10 (floor) + py3.14
     # (ceiling) give cross-version coverage; macOS breadth is handled by test-infra.
-    # 135 min backstop — declared project verifiers may use 115 minutes inside
-    # the shared 120-minute stage boundary; retain setup/upload margin so the
-    # hosted runner never bypasses receipt creation or descendant cleanup.
+    # 135 min backstop — the directly invoked Stage-01 application owns one
+    # 115-minute generic-or-declared project budget. The hosted path does not
+    # have the full pipeline's separate 120-minute stage wrapper; 20 minutes of
+    # job margin remain for setup, descendant cleanup, and uploads. This is
+    # capacity, not evidence of success.
     timeout-minutes: 135
     needs: [verify-no-mocks, detect-projects]
     permissions:

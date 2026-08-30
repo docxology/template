@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 from infrastructure.core.secrets import is_secret_env_name, strip_secret_env
+from infrastructure.core.runtime._tools import find_uv
 from infrastructure.core.logging.utils import get_logger, log_success
 
 logger = get_logger(__name__)
@@ -196,7 +197,6 @@ def build_analysis_script_cmd_and_env(
     Returns:
         A (cmd, env) tuple ready for ``subprocess.run(cmd, env=env, ...)``.
     """
-    import shutil
     import tempfile
 
     script_path = validate_analysis_script_path(script_path, project_root)
@@ -211,7 +211,7 @@ def build_analysis_script_cmd_and_env(
     # dependencies (e.g. discopy), use uv run from the project directory.
     project_venv = project_root / ".venv"
     if project_venv.is_dir():
-        uv_path = shutil.which("uv")
+        uv_path = find_uv()
         if uv_path:
             cmd: list[str] = [uv_path, "run", "--directory", str(project_root), "python", str(script_path)]
         else:

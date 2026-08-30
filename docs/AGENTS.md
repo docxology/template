@@ -17,26 +17,8 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 
 ## Directory Structure
 
-| Directory | Purpose |
-| ---------- | ------- |
-| `core/` | Essential docs: usage guide, architecture overview, workflow |
-| `guides/` | Skill-level guides (Levels 1-12) + new project setup checklist |
-| `architecture/` | System design, two-layer architecture, thin orchestrator |
-| `usage/` | Content authoring, formatting, visualization patterns |
-| `operational/` | Runbooks, maintenance, configuration, Docker, logging, troubleshooting |
-| `plans/` | Strategic plans and architecture decision records |
-| `reference/` | API reference, glossary, FAQ, cheatsheet, workflows |
-| `modules/` | Infrastructure module guides (see [modules/modules-guide.md](modules/modules-guide.md); package count drifts — re-derive from `infrastructure/` discovery) |
-| `maintenance/` | Long-horizon maintenance: private-projects, ci-local, regression, archival, bundle |
-| `development/` | Contributing, testing, security, roadmap |
-| `best-practices/` | Best practices, version control, migration |
-| `prompts/` | Agent workflow skills — hub [`prompts/SKILL.md`](prompts/SKILL.md); see [prompts/AGENTS.md](prompts/AGENTS.md) |
-| `security/` | Security documentation and policies |
-| `rules/` | Contributor norms — expanded standards; repo-root [`.cursorrules`](../.cursorrules) is the Cursor-facing summary |
-| `audit/` | Generated, point-in-time audit snapshots; never hand-edit producer output |
-| `images/` | Small public assets used by repository documentation, not manuscript figures |
-| `streams/` | Timestamped notes for livestreams and recorded talks |
-| `_generated/` | Machine-generated snippets; authoritative active `projects/` names in `active_projects.md` — link there instead of duplicating rosters in guides |
+Folder purposes live in [`README.md`](README.md). Generated roster and count
+facts live under [`_generated/`](_generated/README.md).
 
 ## Key Conventions
 
@@ -54,11 +36,14 @@ To compose a **custom** subset of pipeline stages rather than running the whole 
 
 ## Review and evidence contract
 
-Deep documentation review must follow the fact to its producer and verifier.
+Deep documentation review must follow the fact to its producer and verifier. A review that cannot name the producing source or test must record the claim as unverifiable rather than repeat it - this contract is human review discipline, not something CI performs. Known-wrong input: prose edited to match accidental runtime behavior contradicts the docstring/test intent and must be reverted; tests such as `tests/infra_tests/validation/docs/test_consistency_lint.py` flag contract drift and fail the docs lane when the repair is skipped.
+An edit that forces prose to agree with stale runtime output is the known-wrong outcome reviewers reject rather than accept.
+This rule is a review discipline only; following it does not prove documentation correctness by itself, and disputes still require tracing to the owning source.
 Do not resolve a contradiction by changing prose to match an accidental runtime
 behavior when the code's docstring, public contract, and tests indicate the
 opposite intent; record the discrepancy and repair the owning source or narrow
-the claim.
+the claim. This contract binds review practice; no machine gate checks it
+mechanically, so compliance remains human review.
 
 | Surface | Producer / authority | Required review |
 | --- | --- | --- |
@@ -113,7 +98,7 @@ repository's normal pre-commit/pre-push checks.
 
 Key discoveries from multi-project development are documented in:
 
-- **[guides/new-project-setup.md](guides/new-project-setup.md)** — Comprehensive setup checklist with all pitfalls
+- **[guides/new-project-setup.md](guides/new-project-setup.md)** — Setup checklist with all pitfalls
 - **[guides/manuscript-semantics.md](guides/manuscript-semantics.md)** — Canonical manuscript syntax (citations, cross-references, sections, `{{TOKEN}}` substitution) shared by public template exemplars; project-specific overlays live in `projects/templates/template_*/manuscript/SYNTAX.md`
 - **[operational/troubleshooting/common-errors.md](operational/troubleshooting/common-errors.md)** — Pipeline-specific error patterns
 
@@ -159,19 +144,20 @@ This ensures the pipeline remains reproducible and does not make expensive netwo
 
 ## Typed-Subfolder Project Lifecycle
 
-Project lifecycle state is expressed as **typed subfolders under `projects/`**. Public exemplars are always discovered/rendered; optional `active/` entries are discovered/rendered when present; simplified sidecar `working/` and `archive/` mirrors are non-rendered by default. Authoritative public roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
+Project lifecycle state is expressed as **typed subfolders under `projects/`**. Public exemplars are always discovered/rendered; optional `active/` entries are discovered/rendered when present; simplified sidecar `working/`, `ongoing/`, and `archive/` mirrors are non-rendered by default. Authoritative public roster: [`docs/_generated/active_projects.md`](_generated/active_projects.md).
 
 | Subfolder | Purpose | Discovered + rendered? |
 | ---------- | ------- | ------------------------ |
 | `projects/templates/` | The git-tracked public exemplars (this repo) | ✅ Yes |
 | `projects/active/` | Optional hot-seat render set — symlinks to deliberately reintroduced private `active/` | ✅ Yes when present |
 | `projects/working/` | Simplified sidecar working set — symlinks, explicit targeted renders only | ❌ No |
+| `projects/ongoing/` | Long-lived private work with no publication target — symlinks, explicit renders only | ❌ No |
 | `projects/archive/` | Simplified sidecar archive — symlinks, historical/reference | ❌ No |
 
 **Movement rules:**
 
 - Only `projects/templates/*` and optional `projects/active/*` are discovered and rendered (qualified names `templates/<name>` and `active/<name>`).
-- Private lifecycle projects live in the sibling `docxology/projects` repo. Its default folders are `working/` and `archive/`, symlinked into matching typed subfolders on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). Render a working project explicitly with a lifecycle-qualified name such as `working/<name>`.
+- Private lifecycle projects live in the sidecar resolved by `TEMPLATE_PRIVATE_PROJECTS_ROOT` or `.private_projects_root` (default sibling `../projects`). See [`maintenance/private-projects-repo.md`](maintenance/private-projects-repo.md). Default folders are `working/` and `archive/`, with optional `ongoing/` for long-lived work without a publication target; each mirrors into matching typed subfolders on every `./run.sh` (or `uv run python -m infrastructure.orchestration link-projects`). Render explicitly with a lifecycle-qualified name such as `working/<name>` or `ongoing/<name>`.
 - The git-tracked public exemplars under `projects/templates/` never move — they are owned by this repo. Every other path under `projects/` is local-only and never committed (enforced by `scripts/audit/check_tracked_all.py`).
 
 **Configuring the active directory (advanced):**

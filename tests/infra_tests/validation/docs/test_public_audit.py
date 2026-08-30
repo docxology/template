@@ -79,6 +79,91 @@ def test_gate_claim_audit_accepts_nearby_negative_control(tmp_path: Path) -> Non
     assert find_gate_claims_without_negative_controls(tmp_path) == []
 
 
+def test_gate_claim_audit_accepts_fail_closed_wrong_input_evidence(tmp_path: Path) -> None:
+    """Naming the known-wrong input and its rejection is negative-control evidence."""
+    _write(
+        tmp_path / "docs/rules.md",
+        (
+            "Missing cells fail the artifact schema before they can become prose.\n"
+            "The schema validator enforces every record.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_accepts_bounded_claim_language(tmp_path: Path) -> None:
+    """An explicit limitation statement is honest scoping, not false certification."""
+    _write(
+        tmp_path / "docs/guide.md",
+        (
+            "The accessibility validator checks that the field is present; "
+            "human review must still check that it conveys the figure's purpose.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_accepts_coverage_floor_fail_under_reference(tmp_path: Path) -> None:
+    _write(
+        tmp_path / "docs/patterns.md",
+        "`pyproject.toml` enforces `fail_under = 90` as the CI gate.",
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_still_flags_unbacked_enforcement(tmp_path: Path) -> None:
+    """A bare enforcement claim with no control, bound, or rejection evidence stays flagged."""
+    _write(tmp_path / "docs/rules.md", "The schema validator enforces every record.\n")
+
+    findings = find_gate_claims_without_negative_controls(tmp_path)
+
+    assert [finding.category for finding in findings] == ["gate-negative-control"]
+
+
+def test_gate_claim_audit_accepts_index_gate_fails_language(tmp_path: Path) -> None:
+    """\u201cThe index gate fails when an equation lacks its evidence row\u201d names the rejection."""
+    _write(
+        tmp_path / "docs/proof.md",
+        (
+            "The manuscript claims each equation is validated by the index gate.\n"
+            "If a row loses its evidence artifact the index gate fails and the\n"
+            "equation cannot be presented as part of the validated surface.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_accepts_halts_and_reports_when_language(tmp_path: Path) -> None:
+    """A strong rule that halts and reports on violation is adversarial evidence."""
+    _write(
+        tmp_path / "docs/rules.md",
+        (
+            "The enforcement field means a pipeline must halt and report when this "
+            "rule is violated; missing test coverage therefore blocks the build.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
+def test_gate_claim_audit_accepts_hyphenated_fail_closed_evidence(tmp_path: Path) -> None:
+    """A fail-closed rejection claim is adversarial evidence in both hyphenations."""
+    _write(
+        tmp_path / "docs/guide.md",
+        (
+            "The loader rejects malformed JSON.\n"
+            "This gate must fail-closed when the payload is unusable, and must "
+            "fail closed when the manifest is missing.\n"
+        ),
+    )
+
+    assert find_gate_claims_without_negative_controls(tmp_path) == []
+
+
 def test_gate_claim_audit_ignores_tables_and_historical_records(tmp_path: Path) -> None:
     _write(
         tmp_path / "docs/rules.md",

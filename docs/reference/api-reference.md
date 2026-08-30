@@ -882,7 +882,7 @@ Create the log directory and append a session-start banner.
 *function — defined in `infrastructure.orchestration.discovery`*
 
 ```python
-validate_project_slug(slug: str, repo_root: Path) -> str
+validate_project_slug(slug: str, repo_root: Path, *, projects: Sequence[ProjectInfo] | None=None) -> str
 ```
 
 Validate a user-supplied project slug against discovered projects.
@@ -1488,6 +1488,16 @@ Runtime configuration for the provenance DAG.
 ```python
 ProvenanceNode = ArtifactNode | RunNode | SourceNode | ClaimNode
 ```
+
+### `ProvenanceStoreError`
+
+*class — defined in `infrastructure.provenance.store`*
+
+```python
+class ProvenanceStoreError(ValueError)
+```
+
+Raised when a provenance store is malformed or cannot be read.
 
 ### `ProvenanceValidationFinding`
 
@@ -2325,6 +2335,16 @@ render_epub(combined_md: Path, output_path: Path, *, bibliography: Path | None=N
 
 Render *combined_md* to an EPUB at *output_path*.
 
+### `RenderCacheError`
+
+*class — defined in `infrastructure.rendering.render_cache`*
+
+```python
+class RenderCacheError(ValueError)
+```
+
+Raised when the persistent render cache cannot be trusted or saved.
+
 ### `RenderingConfig`
 
 *class — defined in `infrastructure.rendering.config`*
@@ -2533,7 +2553,7 @@ Generate consolidated pipeline report from stage results and optional extras.
 generate_summary_report(repo_root: Path | None=None) -> dict[str, Any]
 ```
 
-Generate comprehensive test summary report.
+Generate the test summary report.
 
 ### `get_error_aggregator`
 
@@ -3026,6 +3046,18 @@ Container for numerical stability test results.
 *symbol — defined in `infrastructure.search`*
 
 ### `merge_papers`
+
+*symbol — defined in `infrastructure.search`*
+
+### `MonidClient`
+
+*symbol — defined in `infrastructure.search`*
+
+### `MonidConfig`
+
+*symbol — defined in `infrastructure.search`*
+
+### `MonidError`
 
 *symbol — defined in `infrastructure.search`*
 
