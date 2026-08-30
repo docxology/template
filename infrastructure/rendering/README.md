@@ -371,11 +371,12 @@ inside an equation, list, code block, table, or figure. An indivisible block
 that exceeds its declared budget fails with a `slides.density.*` diagnostic;
 an indivisible list is reported specifically as
 `slides.density.indivisible-list`. Table excerpts retain a contiguous prefix of
-at most eight complete body rows after title, header, cell wrapping, rules, and
-the canonical-reader link are priced against the same geometry. If even one
-complete body row cannot fit at the 20-point floor, the projected frame becomes
-an explicit `slides.density.table-reader-fallback` notice linking to the full
-semantic table in the HTML companion; it never clips a row or shrinks type.
+at most eight complete body rows after title, header, cell wrapping, and rules
+are priced against the same geometry. Persistent frame navigation links the
+full table and caption in the canonical HTML companion. If even one complete
+body row cannot fit at the 20-point floor, the paired render stops with
+`slides.density.indivisible-table` and exact geometry; it never publishes an
+implementation diagnostic as audience content, clips a row, or shrinks type.
 an accidental title-only frame fails with `slides.structure.title-only`.
 Explicit level-one headings and headings marked `section-divider` remain valid
 section dividers. Accessible Beamer also rejects and removes a compiled

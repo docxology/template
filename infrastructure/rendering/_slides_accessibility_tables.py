@@ -1,4 +1,4 @@
-"""Pandoc table geometry and bounded-reader fallbacks for accessible slides."""
+"""Pandoc table geometry and fail-closed bounded excerpts for accessible slides."""
 
 from __future__ import annotations
 
@@ -10,8 +10,6 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility_ast import (
     _frame_body_line_capacity,
     _plain_text,
-    _reader_link_block,
-    _text_inlines,
 )
 from infrastructure.rendering._slides_accessibility_contracts import (
     BODY_CHARACTERS_PER_LINE_20PT,
@@ -19,6 +17,7 @@ from infrastructure.rendering._slides_accessibility_contracts import (
     TABLE_MINIMUM_COLUMN_CHARACTERS,
     TABLE_RULE_PADDING_LINES,
     AccessibleSlidePolicy,
+    density_error,
 )
 
 
@@ -91,6 +90,51 @@ def _table_rows(content: list[Any]) -> tuple[list[Any], list[Any], list[Any]]:
     return table_head[1], body_rows, table_foot[1]
 
 
+def _table_row_groups(content: list[Any]) -> list[list[Any]]:
+    """Return row-span domains without allowing spans to cross table sections."""
+
+    head_rows, _body_rows, foot_rows = _table_rows(content)
+    groups = [head_rows]
+    for body in content[4]:
+        groups.append([*body[2], *body[3]])
+    groups.append(foot_rows)
+    return groups
+
+
+def _table_group_layout(
+    rows: list[Any],
+    column_count: int,
+) -> list[list[tuple[int, int, int, list[Any]]]]:
+    """Place cells in physical columns while honoring active row spans."""
+
+    active_until = [-1] * column_count
+    layout: list[list[tuple[int, int, int, list[Any]]]] = []
+    for row_index, row in enumerate(rows):
+        placements: list[tuple[int, int, int, list[Any]]] = []
+        search_start = 0
+        for cell in _table_row_cells(row):
+            row_span, column_span, blocks = _table_cell_parts(cell)
+            if row_index + row_span > len(rows):
+                raise RenderingError(
+                    "Accessible slide composition received a Pandoc Table row span outside its row group"
+                )
+            while search_start + column_span <= column_count:
+                candidate = range(search_start, search_start + column_span)
+                if all(active_until[index] < row_index for index in candidate):
+                    break
+                search_start += 1
+            else:
+                raise RenderingError(
+                    "Accessible slide composition received overlapping spans or a Table row wider than its column specs"
+                )
+            for index in range(search_start, search_start + column_span):
+                active_until[index] = row_index + row_span - 1
+            placements.append((search_start, row_span, column_span, blocks))
+            search_start += column_span
+        layout.append(placements)
+    return layout
+
+
 def _table_cell_demand(blocks: list[Any]) -> float:
     """Return a bounded relative width demand for one table cell."""
 
@@ -136,19 +180,29 @@ def _table_column_widths(content: list[Any]) -> list[float]:
         explicit.append(numeric_width)
 
     demand = [float(_TABLE_MINIMUM_COLUMN_CHARACTERS) for _ in range(column_count)]
-    head_rows, body_rows, foot_rows = _table_rows(content)
-    for row in [*head_rows, *body_rows, *foot_rows]:
-        column_index = 0
-        for cell in _table_row_cells(row):
-            _row_span, column_span, blocks = _table_cell_parts(cell)
-            if column_index + column_span > column_count:
-                raise RenderingError("Accessible slide composition received a Table row wider than its column specs")
-            per_column_demand = _table_cell_demand(blocks) / column_span
-            for index in range(column_index, column_index + column_span):
-                demand[index] = max(demand[index], per_column_demand)
-            column_index += column_span
+    for rows in _table_row_groups(content):
+        for placements in _table_group_layout(rows, column_count):
+            for column_index, _row_span, column_span, blocks in placements:
+                per_column_demand = _table_cell_demand(blocks) / column_span
+                for index in range(column_index, column_index + column_span):
+                    demand[index] = max(demand[index], per_column_demand)
 
-    if all(width is None for width in explicit):
+    explicit_values = [width for width in explicit if width is not None]
+    uniformly_explicit = (
+        bool(explicit_values)
+        and len(explicit_values) == len(explicit)
+        and math.isclose(
+            max(explicit_values),
+            min(explicit_values),
+            rel_tol=1e-9,
+            abs_tol=1e-12,
+        )
+    )
+    if all(width is None for width in explicit) or uniformly_explicit:
+        # Pandoc serializes ordinary pipe tables as equal numeric widths in
+        # some versions. Those values are writer defaults, not meaningful
+        # author allocation. Recompute them from visible demand so short
+        # symbol columns do not steal projection width from prose columns.
         weights = demand
     else:
         explicit_total = sum(width for width in explicit if width is not None)
@@ -239,108 +293,32 @@ def _table_cell_lines(blocks: list[Any], capacity: int) -> int:
     return max(1, lines)
 
 
-def _table_row_lines(row: Any, capacities: list[int]) -> int:
-    """Return the wrapped height of one row in body-line units."""
+def _table_rows_line_costs(rows: list[Any], capacities: list[int]) -> list[int]:
+    """Return conservative per-row costs with physical row/column spans."""
 
-    column_count = len(capacities)
-    column_index = 0
-    lines = 1
-    for cell in _table_row_cells(row):
-        row_span, column_span, blocks = _table_cell_parts(cell)
-        if column_index + column_span > column_count:
-            raise RenderingError("Accessible slide composition received a Table row wider than its column specs")
-        capacity = sum(capacities[column_index : column_index + column_span])
-        capacity += _TABLE_INTERCOLUMN_GUTTER_CHARACTERS * (column_span - 1)
-        cell_lines = math.ceil(_table_cell_lines(blocks, max(1, capacity)) / row_span)
-        lines = max(lines, cell_lines)
-        column_index += column_span
-    return lines
+    costs = [1] * len(rows)
+    for row_index, placements in enumerate(_table_group_layout(rows, len(capacities))):
+        for column_index, row_span, column_span, blocks in placements:
+            capacity = sum(capacities[column_index : column_index + column_span])
+            capacity += _TABLE_INTERCOLUMN_GUTTER_CHARACTERS * (column_span - 1)
+            cell_lines = _table_cell_lines(blocks, max(1, capacity))
+            # Equal ceiling allocation can overprice a spanning cell by fewer
+            # than ``row_span`` lines, but it cannot underprice the projected
+            # geometry. Every occupied row and physical column is accounted.
+            per_row = math.ceil(cell_lines / row_span)
+            for offset in range(row_span):
+                costs[row_index + offset] = max(costs[row_index + offset], per_row)
+    return costs
+
+
+def _table_row_lines(row: Any, capacities: list[int]) -> int:
+    """Return the wrapped height of one non-spanning row in body-line units."""
+
+    return _table_rows_line_costs([row], capacities)[0]
 
 
 def _table_rows_lines(rows: list[Any], capacities: list[int]) -> int:
-    return sum(_table_row_lines(row, capacities) for row in rows)
-
-
-def _table_reader_link_lines(policy: AccessibleSlidePolicy) -> int:
-    label = _plain_text(_reader_link_block(policy, "table and caption"))
-    capacity = max(1, math.floor(_BODY_CHARACTERS_PER_LINE_20PT * 20 / policy.body_font_pt))
-    return _wrapped_text_lines(" ".join(label.split()), capacity)
-
-
-def _table_reader_fallback(
-    block: dict[str, Any],
-    policy: AccessibleSlidePolicy,
-    *,
-    column_count: int,
-    row_count: int,
-    available_lines: int,
-    fixed_lines: int,
-    header_lines: int,
-    first_row_lines: int,
-) -> dict[str, Any]:
-    """Return an explicit reader-only projection when no whole row fits.
-
-    The complete table is not shrunk, split, or silently dropped. It remains
-    in the canonical HTML manuscript; the projected frame names the geometry
-    decision and links to that complete reader surface.
-    """
-
-    content = block.get("c")
-    attributes = copy.deepcopy(content[0]) if isinstance(content, list) and content else ["", [], []]
-    if not isinstance(attributes, list) or len(attributes) != 3:
-        attributes = ["", [], []]
-    classes = attributes[1] if isinstance(attributes[1], list) else []
-    key_values = attributes[2] if isinstance(attributes[2], list) else []
-    if "table-reader-fallback" not in classes:
-        classes.append("table-reader-fallback")
-    key_values = [
-        pair
-        for pair in key_values
-        if not (
-            isinstance(pair, list)
-            and pair
-            and str(pair[0]).casefold()
-            in {
-                "data-diagnostic-code",
-                "data-columns",
-                "data-body-rows",
-                "data-available-lines",
-                "data-fixed-lines",
-                "data-header-lines",
-                "data-first-row-lines",
-            }
-        )
-    ]
-    key_values.extend(
-        [
-            ["data-diagnostic-code", "slides.density.table-reader-fallback"],
-            ["data-columns", str(column_count)],
-            ["data-body-rows", str(row_count)],
-            ["data-available-lines", str(available_lines)],
-            ["data-fixed-lines", str(fixed_lines)],
-            ["data-header-lines", str(header_lines)],
-            ["data-first-row-lines", str(first_row_lines)],
-        ]
-    )
-    attributes[1] = classes
-    attributes[2] = key_values
-    prefix = _text_inlines(
-        f"Projection-safe table summary: {column_count} columns and {row_count} body rows exceed the complete "
-        "20-point frame geometry."
-    )
-    link = _reader_link_block(policy, "table, caption, and exact values")["c"]
-    return {
-        "t": "Div",
-        "c": [
-            attributes,
-            [
-                {
-                    "t": "Para",
-                    "c": [*prefix, {"t": "Space"}, *copy.deepcopy(link)],
-                }
-            ],
-        ],
-    }
+    return sum(_table_rows_line_costs(rows, capacities))
 
 
 def _excerpt_table(
@@ -349,6 +327,8 @@ def _excerpt_table(
     *,
     header: dict[str, Any],
     continuation: int,
+    source: str,
+    heading: str,
 ) -> tuple[dict[str, Any], bool]:
     """Create a row-bounded table excerpt that fits accessible 16:9 geometry."""
 
@@ -356,12 +336,21 @@ def _excerpt_table(
     content = updated.get("c")
     if not isinstance(content, list) or len(content) != 6 or not isinstance(content[4], list):
         raise RenderingError("Accessible slide composition received a malformed Pandoc Table")
+    head_rows, _all_body_rows, foot_rows = _table_rows(content)
+    if any(body[2] and not body[3] for body in content[4]):
+        raise density_error(
+            "slides.density.header-only-table-body",
+            "a table body header without data rows cannot form a meaningful projection excerpt",
+            source=source,
+            heading=heading,
+        )
     widths = _table_column_widths(content)
     capacities = _table_column_character_capacities(widths, policy)
-    head_rows, _all_body_rows, foot_rows = _table_rows(content)
     maximum_lines = _frame_body_line_capacity(header, continuation, policy)
-    link_lines = _table_reader_link_lines(policy)
-    fixed_lines = _TABLE_RULE_PADDING_LINES + link_lines
+    # Both projected surfaces already carry a persistent canonical-reader
+    # link. Repeating that link as a table caption consumes scarce geometry
+    # without adding a distinct accessible name.
+    fixed_lines = _TABLE_RULE_PADDING_LINES
     global_header_lines = _table_rows_lines(head_rows, capacities)
     footer_lines = _table_rows_lines(foot_rows, capacities)
     consumed_lines = fixed_lines + global_header_lines + footer_lines
@@ -372,14 +361,51 @@ def _excerpt_table(
     saw_first_body_row = False
     stop_excerpt = False
 
+    body_metrics: list[tuple[int, list[int], bool]] = []
+    full_table_lines = consumed_lines
     for body in content[4]:
         body_head_rows = body[2]
         rows = body[3]
+        combined_rows = [*body_head_rows, *rows]
+        combined_costs = _table_rows_line_costs(combined_rows, capacities)
+        body_head_lines = sum(combined_costs[: len(body_head_rows)])
+        row_line_costs = combined_costs[len(body_head_rows) :]
+        has_row_span = any(
+            row_span > 1
+            for placements in _table_group_layout(combined_rows, len(capacities))
+            for _column, row_span, _column_span, _blocks in placements
+        )
+        body_metrics.append((body_head_lines, row_line_costs, has_row_span))
+        full_table_lines += body_head_lines + sum(row_line_costs)
+
+    if (original_rows > policy.max_table_rows or full_table_lines > maximum_lines) and any(
+        has_row_span for _head_lines, _row_costs, has_row_span in body_metrics
+    ):
+        raise density_error(
+            "slides.density.indivisible-table",
+            "a row-spanning table cannot be excerpted without fragmenting a semantic cell",
+            source=source,
+            heading=heading,
+            column_count=len(widths),
+            body_row_count=original_rows,
+            available_lines=maximum_lines,
+            fixed_lines=fixed_lines,
+            footer_lines=footer_lines,
+            title_font_pt=policy.title_font_pt,
+            body_font_pt=policy.body_font_pt,
+            maximum_body_rows=policy.max_table_rows,
+            global_header_lines=global_header_lines,
+            row_span_excerpt_blocked=True,
+            resolved_widths=widths,
+            column_character_capacities=capacities,
+        )
+
+    for body, (body_head_lines, row_line_costs, _has_row_span) in zip(content[4], body_metrics, strict=True):
+        body_head_rows = body[2]
+        rows = body[3]
         kept_in_body: list[Any] = []
-        body_head_lines = _table_rows_lines(body_head_rows, capacities)
         if not stop_excerpt:
-            for row in rows:
-                row_lines = _table_row_lines(row, capacities)
+            for row, row_lines in zip(rows, row_line_costs, strict=True):
                 proposed = consumed_lines + row_lines + (body_head_lines if not kept_in_body else 0)
                 if remaining_rows <= 0 or proposed > maximum_lines:
                     excerpted = True
@@ -398,44 +424,55 @@ def _excerpt_table(
             body[2] = []
 
     if original_rows and not saw_first_body_row:
-        first_row: Any | None = None
         first_body_head_lines = 0
-        for body in block["c"][4]:
+        first_row_lines = 0
+        for body, (body_head_lines, row_line_costs, _has_row_span) in zip(block["c"][4], body_metrics, strict=True):
             if body[3]:
-                first_row = body[3][0]
-                first_body_head_lines = _table_rows_lines(body[2], capacities)
+                first_body_head_lines = body_head_lines
+                first_row_lines = row_line_costs[0]
                 break
-        first_row_lines = _table_row_lines(first_row, capacities) if first_row is not None else 0
-        return (
-            _table_reader_fallback(
-                block,
-                policy,
-                column_count=len(widths),
-                row_count=original_rows,
-                available_lines=maximum_lines,
-                fixed_lines=fixed_lines,
-                header_lines=global_header_lines + first_body_head_lines,
-                first_row_lines=first_row_lines,
-            ),
-            True,
+        raise density_error(
+            "slides.density.indivisible-table",
+            "one complete table row cannot fit the projection frame at the declared font floor",
+            source=source,
+            heading=heading,
+            column_count=len(widths),
+            body_row_count=original_rows,
+            available_lines=maximum_lines,
+            fixed_lines=fixed_lines,
+            title_font_pt=policy.title_font_pt,
+            body_font_pt=policy.body_font_pt,
+            maximum_body_rows=policy.max_table_rows,
+            global_header_lines=global_header_lines,
+            footer_lines=footer_lines,
+            first_body_header_lines=first_body_head_lines,
+            first_row_lines=first_row_lines,
+            resolved_widths=widths,
+            column_character_capacities=capacities,
         )
     if not original_rows and consumed_lines > maximum_lines:
-        return (
-            _table_reader_fallback(
-                block,
-                policy,
-                column_count=len(widths),
-                row_count=0,
-                available_lines=maximum_lines,
-                fixed_lines=fixed_lines,
-                header_lines=global_header_lines,
-                first_row_lines=0,
-            ),
-            True,
+        raise density_error(
+            "slides.density.indivisible-table",
+            "the complete table header cannot fit the projection frame at the declared font floor",
+            source=source,
+            heading=heading,
+            column_count=len(widths),
+            body_row_count=0,
+            available_lines=maximum_lines,
+            fixed_lines=fixed_lines,
+            title_font_pt=policy.title_font_pt,
+            body_font_pt=policy.body_font_pt,
+            maximum_body_rows=policy.max_table_rows,
+            global_header_lines=global_header_lines,
+            footer_lines=footer_lines,
+            first_body_header_lines=0,
+            first_row_lines=0,
+            resolved_widths=widths,
+            column_character_capacities=capacities,
         )
     excerpted = excerpted or kept_rows < original_rows or original_rows > policy.max_table_rows
     # The full source caption and every omitted row remain in the canonical
-    # reader. The short contextual link preserves the table identifier and
-    # cross-reference target without squeezing the complete table onto a frame.
-    content[1] = [None, [{"t": "Plain", "c": _reader_link_block(policy, "table and caption")["c"]}]]
+    # reader. The projected surfaces' persistent companion link preserves the
+    # route to that material without squeezing a duplicate caption onto frame.
+    content[1] = [None, []]
     return updated, excerpted

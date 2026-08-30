@@ -160,19 +160,26 @@ def _estimated_visible_characters(value: object) -> int:
 def _compact_continuation_title(title: str, continuation: int) -> str:
     """Return a bounded visible title while retaining the full first-frame title."""
 
+    suffix = f" (part {continuation})"
+    visible_budget = max(12, _CONTINUATION_TITLE_TARGET_CHARS - len(suffix))
     compact = title
     punctuation_prefix = re.split(r":|\s+[—–]\s+", title, maxsplit=1)[0].strip()
-    if punctuation_prefix != title and 12 <= len(punctuation_prefix) <= _CONTINUATION_TITLE_TARGET_CHARS:
+    if punctuation_prefix != title and 12 <= len(punctuation_prefix) <= visible_budget:
         compact = punctuation_prefix
-    elif len(title) > _CONTINUATION_TITLE_TARGET_CHARS:
+    elif len(title) > visible_budget:
         words: list[str] = []
         for word in title.split():
             candidate = " ".join([*words, word])
-            if words and len(candidate) > _CONTINUATION_TITLE_TARGET_CHARS - 1:
+            if words and len(candidate) > visible_budget - 1:
                 break
             words.append(word)
         compact = " ".join(words).rstrip(".,;:") + "…"
-    return f"{compact} (part {continuation})"
+    if len(compact) > visible_budget:
+        # A long identifier or URL may not contain a semantic word boundary.
+        # Keep the visible title inside the same one-line contract even in that
+        # case; the complete authored heading remains the frame's aria-label.
+        compact = compact[: max(1, visible_budget - 1)].rstrip(".,;: ") + "…"
+    return compact + suffix
 
 
 def _text_inlines(text: str) -> list[dict[str, Any]]:
@@ -658,48 +665,181 @@ def _reader_link_block(policy: AccessibleSlidePolicy, noun: str) -> dict[str, An
     }
 
 
+def _image_nodes(value: object) -> list[dict[str, Any]]:
+    """Return image nodes in source order without descending into image alt text."""
+
+    if isinstance(value, list):
+        return [image for item in value for image in _image_nodes(item)]
+    if not isinstance(value, dict):
+        return []
+    if value.get("t") == "Image":
+        return [value]
+    return _image_nodes(value.get("c"))
+
+
+def _is_projection_image_only(value: object) -> bool:
+    """Return whether a non-Figure block contains images but no visible peer content."""
+
+    if isinstance(value, list):
+        return all(_is_projection_image_only(item) for item in value)
+    if not isinstance(value, dict):
+        return not str(value).strip()
+    tag = value.get("t")
+    if tag == "Image":
+        return True
+    if tag in {"Space", "SoftBreak", "LineBreak"}:
+        return True
+    if tag in {"Para", "Plain"}:
+        return _is_projection_image_only(value.get("c"))
+    if tag in {"Link", "Span", "Div"}:
+        content = value.get("c")
+        return isinstance(content, list) and len(content) >= 2 and _is_projection_image_only(content[1])
+    return False
+
+
+def _image_width_percent(image: dict[str, Any]) -> float | None:
+    """Return one explicit percentage width from a validated Pandoc Image."""
+
+    content = image.get("c")
+    if not isinstance(content, list) or len(content) != 3 or not isinstance(content[0], list):
+        raise RenderingError("Accessible slide composition received a malformed Pandoc Image")
+    attributes = content[0]
+    if len(attributes) != 3 or not isinstance(attributes[2], list):
+        raise RenderingError("Accessible slide composition received malformed Pandoc Image attributes")
+    for pair in attributes[2]:
+        if not isinstance(pair, list) or len(pair) != 2 or pair[0] != "width":
+            continue
+        match = re.fullmatch(r"(?P<value>\d+(?:\.\d+)?)%", str(pair[1]).strip())
+        if match is None:
+            return None
+        value = float(match.group("value"))
+        return value if math.isfinite(value) and value > 0 else None
+    return None
+
+
+def _validate_projection_image_row(
+    value: object,
+    *,
+    source: str,
+    heading: str,
+) -> None:
+    """Require multi-panel figures to be one explicit, bounded image row."""
+
+    images = _image_nodes(value)
+    if len(images) <= 1:
+        return
+    row_block: object | None = None
+    if isinstance(value, list) and len(value) == 1:
+        row_block = value[0]
+    elif isinstance(value, dict):
+        row_block = value
+    if (
+        not isinstance(row_block, dict)
+        or row_block.get("t") not in {"Para", "Plain"}
+        or not _is_projection_image_only(row_block)
+    ):
+        raise density_error(
+            "slides.density.multi-image-layout",
+            "multiple images must form one explicit projection row",
+            source=source,
+            heading=heading,
+            image_count=len(images),
+        )
+    widths = [_image_width_percent(image) for image in images]
+    if any(width is None for width in widths) or sum(width for width in widths if width is not None) > 96:
+        raise density_error(
+            "slides.density.multi-image-layout",
+            "a multi-image row requires explicit percentage widths totaling at most 96 percent",
+            source=source,
+            heading=heading,
+            image_count=len(images),
+            authored_widths=widths,
+            maximum_total_width_percent=96,
+        )
+
+
 def _allocate_figure_area(value: object, image_height_percent: int) -> None:
     """Reserve figure area while retaining space for its accessible label.
 
-    The surrounding ``Figure`` block is the measured allocation. Fifteen
-    percentage points are reserved for the 16-point companion-reader label and
-    Beamer's figure/caption glue; the image occupies the title-adjusted
-    remainder. This keeps the complete figure region at the configured floor
-    without measuring against the global text height.
+    Accessible projection owns the full available frame width. The image
+    envelope takes the configured share of the title-adjusted body; preserved
+    aspect ratio may leave whitespace inside that envelope. Persistent frame
+    navigation supplies the 16-point reader link, and the full caption remains
+    in the linked HTML reader.
     """
 
-    if isinstance(value, list):
-        for item in value:
-            _allocate_figure_area(item, image_height_percent)
-        return
-    if not isinstance(value, dict):
-        return
-    if value.get("t") == "Image":
-        content = value.get("c")
+    images = _image_nodes(value)
+    image_count = len(images)
+    if not image_count:
+        raise RenderingError("Accessible figure frame does not contain a Pandoc Image")
+
+    for image in images:
+        content = image.get("c")
         if not isinstance(content, list) or len(content) != 3 or not isinstance(content[0], list):
             raise RenderingError("Accessible slide composition received a malformed Pandoc Image")
         attributes = content[0]
         if len(attributes) != 3 or not isinstance(attributes[2], list):
             raise RenderingError("Accessible slide composition received malformed Pandoc Image attributes")
-        key_values = [pair for pair in attributes[2] if not (isinstance(pair, list) and pair and pair[0] == "height")]
+        authored_width = next(
+            (pair for pair in attributes[2] if isinstance(pair, list) and len(pair) == 2 and pair[0] == "width"),
+            None,
+        )
+        key_values = [
+            pair
+            for pair in attributes[2]
+            if not (
+                isinstance(pair, list) and pair and (pair[0] == "height" or (pair[0] == "width" and image_count == 1))
+            )
+        ]
+        # A two-percent TeX safety inset prevents a nominal full-width image
+        # from acquiring an overfull hbox through figure-environment glue.
+        # The projected figure region still owns the complete usable frame;
+        # the inset is a keyline margin rather than space for other content.
+        if image_count == 1:
+            key_values.append(["width", "98%"])
+        elif authored_width is None:
+            raise RenderingError("Accessible multi-image projection reached allocation without an explicit width")
         key_values.append(["height", f"{image_height_percent}%"])
         attributes[2] = key_values
-    _allocate_figure_area(value.get("c"), image_height_percent)
 
 
 def _shorten_figure_caption(
     block: dict[str, Any],
-    policy: AccessibleSlidePolicy,
+    _policy: AccessibleSlidePolicy,
     *,
     image_height_percent: int,
+    source: str,
+    heading: str,
 ) -> dict[str, Any]:
     updated = copy.deepcopy(block)
     if updated.get("t") != "Figure":
+        if not _is_projection_image_only(updated):
+            raise density_error(
+                "slides.density.mixed-image-frame",
+                "an image and peer prose cannot share one accessible projection frame",
+                source=source,
+                heading=heading,
+            )
+        _validate_projection_image_row(updated, source=source, heading=heading)
+        _allocate_figure_area(updated, image_height_percent)
         return updated
     content = updated.get("c")
     if not isinstance(content, list) or len(content) != 3:
         raise RenderingError("Accessible slide composition received a malformed Pandoc Figure")
-    _allocate_figure_area(updated, image_height_percent)
-    reader_link = _reader_link_block(policy, "caption, long description, and exact values")
-    content[1] = [None, [{"t": "Plain", "c": reader_link["c"]}]]
+    if not _is_projection_image_only(content[2]):
+        raise density_error(
+            "slides.density.mixed-image-frame",
+            "an image and peer prose cannot share one accessible projection frame",
+            source=source,
+            heading=heading,
+        )
+    _validate_projection_image_row(content[2], source=source, heading=heading)
+    _allocate_figure_area(content[2], image_height_percent)
+    # The accessible Beamer footer and Reveal companion navigation already
+    # link the canonical HTML reader at the required label floor. Repeating a
+    # long caption-shaped link inside every figure would take space away from
+    # the declared 70% figure region. Keep the projected caption empty; the
+    # canonical reader retains the complete caption, long description, and
+    # exact-value fallback through the source-owned figure registry.
+    content[1] = [None, []]
     return updated

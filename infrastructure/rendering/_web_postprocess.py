@@ -19,6 +19,11 @@ from infrastructure.rendering._figure_alt_registry import (
     rendered_figure_filename,
     require_record_alt,
 )
+from infrastructure.rendering._html_attributes import (
+    html_attribute_assignment_pattern as _html_attribute_assignment_pattern,
+    remove_html_attribute_assignment,
+    remove_unquoted_whitespace_only_lines,
+)
 from infrastructure.rendering._web_figure_details import apply_figure_long_description
 
 logger = get_logger(__name__)
@@ -486,22 +491,6 @@ _TABLE_RE = re.compile(
 )
 
 
-def _html_attribute_assignment_pattern(name: str) -> re.Pattern[str]:
-    """Return an exact HTML attribute assignment pattern for ``name``.
-
-    HTML attributes in renderer output are separated by whitespace.  A regex
-    word boundary is insufficient here because ``-`` is not a word character,
-    so ``\balt`` also matches the suffix of ``data-fig-alt`` (and ``\bsrc``
-    matches ``data-src``).  Requiring the attribute to begin at the start of
-    the provided fragment or immediately after whitespace keeps lookup and
-    replacement on the real attribute.
-    """
-    return re.compile(
-        rf"(?<!\S){re.escape(name)}\s*=\s*(?:\"(?P<double>[^\"]*)\"|'(?P<single>[^']*)'|(?P<bare>[^\s>]+))",
-        flags=re.IGNORECASE | re.DOTALL,
-    )
-
-
 def _html_attribute(attributes: str, name: str) -> str | None:
     match = _html_attribute_assignment_pattern(name).search(attributes)
     if match is None:
@@ -857,6 +846,11 @@ def harden_mathjax_script(html_file: Path) -> None:
         r"<script\b(?=[^>]*\b" + re.escape(_MATHJAX_CONFIG_MARKER) + r"\b)[^>]*>.*?</script>",
         flags=re.IGNORECASE | re.DOTALL,
     )
+    config_line_re = re.compile(
+        r"^[ \t]*<script\b(?=[^>]*\b" + re.escape(_MATHJAX_CONFIG_MARKER) + r"\b)[^>]*>.*?</script>[ \t]*(?:\r?\n|$)",
+        flags=re.IGNORECASE | re.DOTALL | re.MULTILINE,
+    )
+    content = config_line_re.sub("", content)
     content = config_re.sub("", content)
     script_re = re.compile(r"<script\b(?P<attrs>[^>]*)>.*?</script>", flags=re.IGNORECASE | re.DOTALL)
     matched_loader = False
@@ -876,7 +870,8 @@ def harden_mathjax_script(html_file: Path) -> None:
             return ""
         matched_loader = True
         for attribute in ("src", "integrity", "crossorigin"):
-            attributes = _html_attribute_assignment_pattern(attribute).sub("", attributes)
+            attributes = remove_html_attribute_assignment(attributes, attribute)
+        attributes = remove_unquoted_whitespace_only_lines(attributes)
         attributes = attributes.rstrip()
         attributes += (
             f' src="{html.escape(MATHJAX_URL, quote=True)}" integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"'

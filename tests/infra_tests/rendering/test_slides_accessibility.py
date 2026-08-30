@@ -120,7 +120,7 @@ def _table(rows: int) -> dict[str, Any]:
         "c": [
             ["", [], []],
             [None, []],
-            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}]] * 2,
+            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}] for _ in range(2)],
             [["", [], []], [_row("key")]],
             [[["", [], []], 0, [], [_row(str(index)) for index in range(rows)]]],
             [["", [], []], []],
@@ -158,6 +158,40 @@ def _write_png(path: Path) -> None:
     path.write_bytes(
         base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")
     )
+
+
+def _image(path: str, *, width: str | None = None, alt: str = "Panel") -> dict[str, Any]:
+    attributes: list[list[str]] = [] if width is None else [["width", width]]
+    return {
+        "t": "Image",
+        "c": [["", [], attributes], _inlines(alt), [path, ""]],
+    }
+
+
+def _linked_image(
+    thumbnail: str,
+    full_size: str,
+    *,
+    width: str | None = None,
+    sibling_text: str | None = None,
+) -> dict[str, Any]:
+    inlines: list[dict[str, Any]] = [_image(thumbnail, width=width)]
+    if sibling_text is not None:
+        inlines.extend([{"t": "Space"}, *_inlines(sibling_text)])
+    return {
+        "t": "Link",
+        "c": [["", ["figure-full-size-link"], []], inlines, [full_size, "Open full-size figure"]],
+    }
+
+
+def _spanning_cell(value: str, *, row_span: int = 1, column_span: int = 1) -> list[Any]:
+    return [
+        ["", [], []],
+        {"t": "AlignDefault"},
+        row_span,
+        column_span,
+        [{"t": "Plain", "c": _inlines(value)}],
+    ]
 
 
 def test_archive_profile_remains_the_default_and_accessible_defaults_are_exact() -> None:
@@ -407,14 +441,55 @@ def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
     rendered_table = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     assert composition.excerpted_table_count == 1
     # The configured eight-row value remains an absolute ceiling. Projection
-    # geometry retains four compact rows after the header, table rules, and
-    # contextual canonical-reader link are accounted for at 20 points.
-    assert len(rendered_table["c"][4][0][3]) == 4
+    # geometry retains six compact rows after the header and table rules are
+    # accounted for at 20 points. The persistent frame navigation owns the
+    # canonical-reader link, so no duplicate table caption consumes a row.
+    assert len(rendered_table["c"][4][0][3]) == 6
     assert len(rendered_table["c"][4][0][3]) <= AccessibleSlidePolicy().max_table_rows
-    assert "canonical HTML manuscript" in " ".join(_visible_text(rendered_table).split())
+    assert rendered_table["c"][1] == [None, []]
     assert len(table["c"][4][0][3]) == 10
     assert all(colspec[1]["t"] == "ColWidth" for colspec in rendered_table["c"][2])
     assert all(colspec[1]["t"] == "ColWidthDefault" for colspec in table["c"][2])
+
+
+def test_uniform_pandoc_table_widths_are_redistributed_by_visible_demand() -> None:
+    table = _table_values(
+        ["ID", "Interpretation"],
+        [["A", "A substantially longer source-owned explanation"], ["B", "A second explanation"]],
+    )
+    table["c"][2] = [
+        [{"t": "AlignDefault"}, {"t": "ColWidth", "c": 0.5}],
+        [{"t": "AlignDefault"}, {"t": "ColWidth", "c": 0.5}],
+    ]
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Exact values"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    widths = [float(colspec[1]["c"]) for colspec in rendered["c"][2]]
+    assert widths[1] > widths[0]
+    assert sum(widths) == pytest.approx(1.0)
+
+
+def test_genuinely_unequal_authored_table_widths_are_preserved() -> None:
+    table = _table_values(["ID", "Interpretation"], [["A", "Explanation"]])
+    table["c"][2] = [
+        [{"t": "AlignDefault"}, {"t": "ColWidth", "c": 0.25}],
+        [{"t": "AlignDefault"}, {"t": "ColWidth", "c": 0.75}],
+    ]
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Exact values"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    widths = [float(colspec[1]["c"]) for colspec in rendered["c"][2]]
+    assert widths == pytest.approx([0.25, 0.75])
 
 
 def test_table_excerpt_geometry_accounts_for_cell_wrapping() -> None:
@@ -455,10 +530,10 @@ def test_table_excerpt_geometry_accounts_for_continuation_title_lines() -> None:
 
     rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     assert composition.section_divider_count == 1
-    assert len(rendered["c"][4][0][3]) == 2
+    assert len(rendered["c"][4][0][3]) == 6
 
 
-def test_table_excerpt_uses_contextual_reader_fallback_when_no_whole_row_fits() -> None:
+def test_table_excerpt_fails_closed_when_no_whole_row_fits() -> None:
     table = _table_values(
         [
             "Method",
@@ -469,26 +544,112 @@ def test_table_excerpt_uses_contextual_reader_fallback_when_no_whole_row_fits() 
             "Adjusted q value",
             "Reject null",
         ],
-        [["RKL", "0.5", "saturated", "large", "1e-8", "2e-8", "yes"]],
+        [
+            [
+                "RKL operating point " * 8,
+                "0.5 nested contamination " * 8,
+                "saturated effect " * 8,
+                "large conditional label " * 8,
+                "1e-8 raw probability " * 8,
+                "2e-8 adjusted probability " * 8,
+                "yes under declared family " * 8,
+            ]
+        ],
     )
 
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Paired contrasts"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+    context = exc_info.value.context
+    assert context["source"] == "manuscript/results.md"
+    assert context["heading"] == "Paired contrasts"
+    assert context["diagnostic_code"] == "slides.density.indivisible-table"
+    assert context["column_count"] == 7
+    assert context["body_row_count"] == 1
+    assert context["available_lines"] == 8
+    assert context["fixed_lines"] == 1
+    assert context["title_font_pt"] == 28
+    assert context["body_font_pt"] == 20
+    assert context["maximum_body_rows"] == 8
+    assert context["global_header_lines"] >= 1
+    assert context["footer_lines"] == 0
+    assert context["first_body_header_lines"] == 0
+    assert context["first_row_lines"] > context["available_lines"]
+    assert len(context["resolved_widths"]) == 7
+    assert len(context["column_character_capacities"]) == 7
+
+
+def test_row_span_uses_physical_columns_and_cannot_be_fragmented_by_excerpt() -> None:
+    table = {
+        "t": "Table",
+        "c": [
+            ["", [], []],
+            [None, []],
+            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}] for _ in range(2)],
+            [["", [], []], [[["", [], []], [_spanning_cell("ID"), _spanning_cell("Interpretation")]]]],
+            [
+                [
+                    ["", [], []],
+                    0,
+                    [],
+                    [
+                        [["", [], []], [_spanning_cell("A", row_span=2), _spanning_cell("short")]],
+                        [
+                            ["", [], []],
+                            [_spanning_cell("A source-owned explanatory value requiring the second physical column")],
+                        ],
+                    ],
+                ]
+            ],
+            [["", [], []], []],
+        ],
+    }
+
     composition = compose_accessible_pandoc_document(
-        _document([_header("Paired contrasts"), table]),
+        _document([_header("Spanning values"), table]),
         policy=AccessibleSlidePolicy(),
         source="manuscript/results.md",
     )
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    widths = [float(colspec[1]["c"]) for colspec in rendered["c"][2]]
+    assert widths[1] > widths[0]
+    assert len(rendered["c"][4][0][3]) == 2
 
-    assert composition.excerpted_table_count == 1
-    assert not any(block["t"] == "Table" for block in composition.document["blocks"])
-    fallback = next(block for block in composition.document["blocks"] if block["t"] == "Div")
-    assert "table-reader-fallback" in fallback["c"][0][1]
-    assert ["data-diagnostic-code", "slides.density.table-reader-fallback"] in fallback["c"][0][2]
-    assert ["data-columns", "7"] in fallback["c"][0][2]
-    assert ["data-body-rows", "1"] in fallback["c"][0][2]
-    assert ["data-available-lines", "8"] in fallback["c"][0][2]
-    visible = " ".join(_visible_text(fallback).split())
-    assert "20-point frame geometry" in visible
-    assert "canonical HTML manuscript" in visible
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-table\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Spanning values"), table]),
+            policy=AccessibleSlidePolicy(max_table_rows=1),
+            source="manuscript/results.md",
+        )
+    assert exc_info.value.context["row_span_excerpt_blocked"] is True
+
+
+def test_header_only_table_body_fails_closed_instead_of_disappearing() -> None:
+    table = _table(0)
+    table["c"][4][0][2] = [_row("subheader")]
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.header-only-table-body\]"):
+        compose_accessible_pandoc_document(
+            _document([_header("Header-only body"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+
+def test_malformed_table_body_still_raises_renderer_error() -> None:
+    table = _table(1)
+    table["c"][4] = [[]]
+
+    with pytest.raises(RenderingError, match="malformed Pandoc Table body"):
+        compose_accessible_pandoc_document(
+            _document([_header("Malformed body"), table]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
 
 
 def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> None:
@@ -518,10 +679,12 @@ def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> Non
         {"evidence-slide"},
     ]
     assert composition.figure_frame_count == 1
-    assert "caption, long description, and exact values" in " ".join(_visible_text(composition.document).split())
+    assert "A detailed caption" not in " ".join(_visible_text(composition.document).split())
     rendered_figure = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
+    assert rendered_figure["c"][1] == [None, []]
     rendered_image = rendered_figure["c"][2][0]["c"][0]
-    assert ["height", "55%"] in rendered_image["c"][0][2]
+    assert ["width", "98%"] in rendered_image["c"][0][2]
+    assert ["height", "70%"] in rendered_image["c"][0][2]
 
 
 def test_semantic_composer_drops_page_break_and_keeps_crossref_suffixed_equation_atomic() -> None:
@@ -567,11 +730,219 @@ def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> Non
     headers = _classed_headers(composition.document)
     assert "section-divider" in headers[0][1]
     assert "part 2" in headers[1][0]
-    continuation_header = next(block for block in composition.document["blocks"] if block["t"] == "Header")["c"]
+    continuation_headers = [block for block in composition.document["blocks"] if block["t"] == "Header"]
+    continuation_header = continuation_headers[1]["c"]
     assert continuation_header[2]
+    visible_title = " ".join(_visible_text(continuation_header[2]).split())
+    assert len(visible_title) <= 36
+    assert any(
+        pair
+        == [
+            "aria-label",
+            "A deliberately long evidence heading that wraps across multiple projection lines, part 2",
+        ]
+        for pair in continuation_header[1][2]
+    )
     rendered_figure = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
     rendered_image = rendered_figure["c"][2][0]["c"][0]
-    assert ["height", "41%"] in rendered_image["c"][0][2]
+    # The compact continuation title fits one projected title line while the
+    # complete authored heading remains its accessible name.
+    assert ["width", "98%"] in rendered_image["c"][0][2]
+    assert ["height", "70%"] in rendered_image["c"][0][2]
+
+
+def test_unbreakable_continuation_title_stays_within_one_line_contract() -> None:
+    image = _image("trend.png")
+    figure = {
+        "t": "Figure",
+        "c": [["fig:trend", [], []], [None, []], [{"t": "Plain", "c": [image]}]],
+    }
+    authored_title = "unbreakable_identifier_" + "x" * 64
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header(authored_title), figure]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    continuation_headers = [block for block in composition.document["blocks"] if block["t"] == "Header"]
+    visible_title = " ".join(_visible_text(continuation_headers[1]["c"][2]).split())
+    assert len(visible_title) <= 36
+    assert any(pair == ["aria-label", f"{authored_title}, part 2"] for pair in continuation_headers[1]["c"][1][2])
+
+
+def test_multi_panel_figure_preserves_one_bounded_authored_row() -> None:
+    left = _image("left.png", width="45%", alt="Left panel")
+    right = _image("right.png", width="45%", alt="Right panel")
+    figure = {
+        "t": "Figure",
+        "c": [
+            ["fig:panels", [], []],
+            [None, [_paragraph("Complete caption")]],
+            [{"t": "Plain", "c": [left, {"t": "Space"}, right]}],
+        ],
+    }
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Panel comparison"), figure]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
+    images = [item for item in rendered["c"][2][0]["c"] if item.get("t") == "Image"]
+    assert len(images) == 2
+    assert [[pair for pair in image["c"][0][2] if pair[0] == "width"] for image in images] == [
+        [["width", "45%"]],
+        [["width", "45%"]],
+    ]
+    assert all(["height", "70%"] in image["c"][0][2] for image in images)
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        [
+            {"t": "Plain", "c": [_image("left.png", width="45%", alt="Left")]},
+            {"t": "Plain", "c": [_image("right.png", width="45%", alt="Right")]},
+        ],
+        [
+            {
+                "t": "Plain",
+                "c": [
+                    _image("left.png", width="55%", alt="Left"),
+                    {"t": "Space"},
+                    _image("right.png", width="55%", alt="Right"),
+                ],
+            }
+        ],
+    ],
+)
+def test_multi_panel_figure_fails_closed_on_unbounded_layout(body: list[dict[str, Any]]) -> None:
+    figure = {"t": "Figure", "c": [["fig:panels", [], []], [None, []], body]}
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.multi-image-layout\]"):
+        compose_accessible_pandoc_document(
+            _document([_header("Panel comparison"), figure]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+
+def test_single_image_figure_rejects_peer_prose_but_accepts_image_only_body() -> None:
+    valid = {
+        "t": "Figure",
+        "c": [
+            ["fig:single", [], []],
+            [None, [_paragraph("Complete caption")]],
+            [{"t": "Plain", "c": [_image("single.png", alt="Single panel")]}],
+        ],
+    }
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Single panel"), valid]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
+    assert ["width", "98%"] in rendered["c"][2][0]["c"][0]["c"][0][2]
+
+    invalid = {
+        "t": "Figure",
+        "c": [
+            ["fig:mixed", [], []],
+            [None, []],
+            [
+                {"t": "Plain", "c": [_image("single.png", alt="Single panel")]},
+                _paragraph("Peer prose that must not bypass density accounting."),
+            ],
+        ],
+    }
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.mixed-image-frame\]"):
+        compose_accessible_pandoc_document(
+            _document([_header("Mixed single panel"), invalid]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+
+def test_image_only_paragraph_receives_allocation_and_mixed_image_prose_fails_closed() -> None:
+    image_paragraph = {"t": "Para", "c": [_image("trend.png", alt="Trend")]}
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Image"), image_paragraph]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Para")
+    assert ["width", "98%"] in rendered["c"][0]["c"][0][2]
+    assert ["height", "70%"] in rendered["c"][0]["c"][0][2]
+
+    mixed = {"t": "Para", "c": [_image("trend.png"), {"t": "Space"}, *_inlines("Peer prose")]}
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.mixed-image-frame\]"):
+        compose_accessible_pandoc_document(
+            _document([_header("Mixed"), mixed]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+
+def test_linked_and_classed_image_wrappers_preserve_targets_and_allocation() -> None:
+    linked = _linked_image("thumb.png", "full.png")
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Linked image"), {"t": "Para", "c": [linked]}]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+    rendered_link = next(block for block in composition.document["blocks"] if block["t"] == "Para")["c"][0]
+    assert rendered_link["c"][2] == ["full.png", "Open full-size figure"]
+    assert ["width", "98%"] in rendered_link["c"][1][0]["c"][0][2]
+    assert ["height", "70%"] in rendered_link["c"][1][0]["c"][0][2]
+
+    row = {
+        "t": "Plain",
+        "c": [
+            _linked_image("left.png", "left-full.png", width="45%"),
+            {"t": "Space"},
+            _linked_image("right.png", "right-full.png", width="45%"),
+        ],
+    }
+    figure = {"t": "Figure", "c": [["fig:links", [], []], [None, []], [row]]}
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Linked panels"), figure]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
+    links = [item for item in rendered["c"][2][0]["c"] if item.get("t") == "Link"]
+    assert [link["c"][2][0] for link in links] == ["left-full.png", "right-full.png"]
+
+    wrapped = {
+        "t": "Div",
+        "c": [
+            ["", ["figure-wrapper"], []],
+            [{"t": "Para", "c": [{"t": "Span", "c": [["", ["panel"], []], [_image("panel.png")]]}]}],
+        ],
+    }
+    wrapped_composition = compose_accessible_pandoc_document(
+        _document([_header("Wrapped image"), wrapped]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+    assert wrapped_composition.figure_frame_count == 1
+    wrapped_div = next(block for block in wrapped_composition.document["blocks"] if block["t"] == "Div")
+    wrapped_image = wrapped_div["c"][1][0]["c"][0]["c"][1][0]
+    assert ["width", "98%"] in wrapped_image["c"][0][2]
+
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.mixed-image-frame\]"):
+        compose_accessible_pandoc_document(
+            _document(
+                [
+                    _header("Linked prose"),
+                    {"t": "Para", "c": [_linked_image("thumb.png", "full.png", sibling_text="details")]},
+                ]
+            ),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
 
 
 def test_semantic_composer_rejects_accidental_title_only_but_accepts_section_divider() -> None:
@@ -683,6 +1054,71 @@ def test_reveal_crossrefs_use_aux_numbers_and_preserve_bibliographic_citations()
     assert "eq:foreign?" not in resolved
 
 
+def test_reveal_raw_inline_math_references_use_aux_numbers_and_consume_tex_join() -> None:
+    content = (
+        '<section id="sec:local"><h2>Local</h2>'
+        '<p>See Section~<span class="math inline">\\(\\ref{sec:local}\\)</span> '
+        'and identity (<span class="math inline">\\(\\ref{eq:foreign}\\)</span>).</p></section>'
+    )
+
+    resolved = resolve_reveal_cross_references(
+        content,
+        {"sec:local": "2.1", "eq:foreign": "7"},
+        strict=True,
+    )
+
+    assert 'Section\N{NO-BREAK SPACE}<a class="cross-reference" href="#sec:local">2.1</a>' in resolved
+    assert 'identity (<span class="cross-reference">7</span>)' in resolved
+    assert "~" not in resolved
+    assert r"\ref{" not in resolved
+
+
+def test_reveal_inline_equation_references_have_one_parenthesis_pair() -> None:
+    content = (
+        '<p>Equation <span class="math inline">\\(\\eqref{eq:model}\\)</span>; '
+        'Equation (<span class="math inline">\\(\\eqref{eq:model}\\)</span>); '
+        'identity (<span class="math inline">\\(\\ref{eq:model}\\)</span>).</p>'
+    )
+
+    resolved = resolve_reveal_cross_references(content, {"eq:model": "7"}, strict=True)
+    visible = " ".join(re.sub(r"<[^>]+>", "", resolved).split())
+
+    assert visible == "Equation (7); Equation (7); identity (7)."
+    assert "((7))" not in visible
+
+
+@pytest.mark.parametrize("command", ["ref", "eqref"])
+def test_reveal_parenthesized_reference_consumes_tex_join(command: str) -> None:
+    content = f'<p>Equation~(<span class="math inline">\\(\\{command}{{eq:model}}\\)</span>).</p>'
+
+    resolved = resolve_reveal_cross_references(content, {"eq:model": "7"}, strict=True)
+    visible = re.sub(r"<[^>]+>", "", resolved)
+
+    assert visible == "Equation\N{NO-BREAK SPACE}(7)."
+    assert "~" not in visible
+    assert "((7))" not in visible
+    assert reveal_reference_and_math_issues(resolved) == ()
+
+
+def test_reveal_raw_reference_validation_ignores_code_but_covers_unsupported_reference_family() -> None:
+    code = r"<pre><code>Use \ref{sec:example} and \pageref{sec:example} literally.</code></pre>"
+    assert "raw TeX cross-reference" not in " ".join(reveal_reference_and_math_issues(code))
+
+    for command in ("pageref", "nameref", "subref"):
+        issues = reveal_reference_and_math_issues(rf"<p>Use \{command}{{sec:example}}.</p>")
+        assert "Reveal deck contains a raw TeX cross-reference command" in issues
+
+
+def test_reveal_raw_inline_math_reference_is_strict_and_visible_validation_fails_closed() -> None:
+    content = '<p><span class="math inline">\\(\\ref{thm:missing}\\)</span></p>'
+
+    with pytest.raises(RenderingError, match="cannot resolve references") as exc_info:
+        resolve_reveal_cross_references(content, {}, strict=True)
+
+    assert exc_info.value.context["unresolved_labels"] == ["thm:missing"]
+    assert "Reveal deck contains a raw TeX cross-reference command" in reveal_reference_and_math_issues(content)
+
+
 def test_reveal_crossrefs_humanize_standalone_and_strict_mode_rejects_missing_aux() -> None:
     content = (
         '<span class="citation" data-cites="sec:results-hierarchical">'
@@ -735,6 +1171,67 @@ def test_reveal_crossref_suppresses_duplicate_authored_kind() -> None:
     assert visible == "See Figure 7. Figure 7. Table 3."
     assert "Figure Figure" not in visible
     assert "Table Table" not in visible
+
+
+def test_reveal_citation_crossrefs_handle_authored_parentheses_and_tex_join() -> None:
+    content = (
+        '<p>Equation (<span class="citation" data-cites="eq:model">'
+        "(<strong>eq:model?</strong>)</span>); "
+        'identity (<span class="citation" data-cites="eq:model">'
+        "(<strong>eq:model?</strong>)</span>); "
+        'Figure (<span class="citation" data-cites="fig:model">'
+        "(<strong>fig:model?</strong>)</span>); "
+        'Section~<span class="citation" data-cites="sec:model">'
+        "(<strong>sec:model?</strong>)</span>.</p>"
+    )
+
+    resolved = resolve_reveal_cross_references(
+        content,
+        {"eq:model": "7", "fig:model": "2", "sec:model": "3"},
+        strict=True,
+    )
+    visible = " ".join(re.sub(r"<[^>]+>", "", resolved).split(" "))
+
+    assert visible == "Equation (7); identity (7); Figure (2); Section\N{NO-BREAK SPACE}3."
+    assert "Equation Equation" not in visible
+    assert "Figure Figure" not in visible
+    assert "Section Section" not in visible
+    assert "((7))" not in visible
+    assert "~" not in visible
+    assert reveal_reference_and_math_issues(resolved) == ()
+
+
+@pytest.mark.parametrize(
+    ("identifiers", "body", "expected"),
+    [
+        (
+            "fig:model eq:model",
+            "(<strong>fig:model?</strong>; <strong>eq:model?</strong>)",
+            "See (Figure 2; Equation 7).",
+        ),
+        (
+            "eq:model eq:second",
+            "(<strong>eq:model?</strong>; <strong>eq:second?</strong>)",
+            "See (7; 8).",
+        ),
+    ],
+)
+def test_reveal_parenthesized_multi_reference_citations_keep_types_unambiguous(
+    identifiers: str,
+    body: str,
+    expected: str,
+) -> None:
+    content = f'<p>See (<span class="citation" data-cites="{identifiers}">{body}</span>).</p>'
+
+    resolved = resolve_reveal_cross_references(
+        content,
+        {"fig:model": "2", "eq:model": "7", "eq:second": "8"},
+        strict=True,
+    )
+    visible = re.sub(r"<[^>]+>", "", resolved)
+
+    assert visible == expected
+    assert reveal_reference_and_math_issues(resolved) == ()
 
 
 def test_reveal_mathjax_validation_requires_one_exact_sri_loader() -> None:
@@ -793,6 +1290,22 @@ def test_reveal_mathjax_activation_normalizes_existing_loaders(tmp_path: Path) -
     assert hardened.count(_MATHJAX_INTEGRITY) == 1
     assert hardened.count("data-template-mathjax-config") == 1
     assert reveal_reference_and_math_issues(hardened) == ()
+
+
+def test_reveal_mathjax_activation_removes_standalone_plugin_line_without_whitespace_residue() -> None:
+    raw = (
+        "<html><head>"
+        f'<script src="{MATHJAX_URL}"></script>'
+        "</head><body>\n"
+        f'  <script src="{ACCESSIBLE_REVEAL_URL}/plugin/math/math.js"></script>\n'
+        "  <script>Reveal.initialize({plugins: [ RevealMath ]});</script>\n"
+        "</body></html>\n"
+    )
+
+    activated = activate_hardened_reveal_mathjax(raw)
+
+    assert re.search(r"(?m)^[ \t]+$", activated) is None
+    assert "/plugin/math/math.js" not in activated
 
 
 def test_reveal_math_label_promotion_and_integrity_checks_reject_raw_derivatives() -> None:
@@ -901,6 +1414,7 @@ def test_real_accessible_reveal_resolves_crossrefs_and_hardens_complex_math(tmp_
     assert "{#eq:model}" not in rendered
     assert "$$" not in rendered
     assert r"\begin{aligned}" in rendered
+    assert re.search(r"(?m)^[ \t]+$", rendered) is None
     assert accessible_reveal_output_issues(output) == ()
 
 
@@ -1019,9 +1533,64 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
     assert 'class="figure-exact-values"' in rendered
     assert 'href="../figures/figure_exact_values.md#fig-values-trend"' in rendered
     assert 'class="table-scroll"' in rendered
-    assert 'aria-label="Scrollable table: Open the canonical HTML manuscript' in rendered
-    assert rendered.count("<tr") == 5  # one header plus the four-row geometry-bounded excerpt
+    assert 'aria-label="Scrollable data table"' in rendered
+    assert rendered.count("<tr") == 7  # one header plus the six-row geometry-bounded excerpt
     assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_accessible_beamer_preserves_plain_and_linked_image_aspect_ratio(tmp_path: Path) -> None:
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    figures = tmp_path / "output" / "figures"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    figures.mkdir(parents=True)
+    for name in ("plain.png", "linked.png", "left.png", "right.png"):
+        _write_png(figures / name)
+    source = manuscript / "images.md"
+    source.write_text(
+        "## Plain image under a deliberately long accessible presentation heading\n\n"
+        "![](../output/figures/plain.png)\n\n"
+        "## Linked image\n\n"
+        "[![Linked projection](../output/figures/linked.png)]"
+        '(../output/figures/linked.png "Open full-size linked projection")\n\n'
+        "## Linked panels\n\n"
+        "[![Left panel](../output/figures/left.png){width=45%}]"
+        '(../output/figures/left.png "Open full-size left panel") '
+        "[![Right panel](../output/figures/right.png){width=45%}]"
+        '(../output/figures/right.png "Open full-size right panel")\n',
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            slides_dir=str(slides),
+            figures_dir=str(figures),
+            slides_profile="accessible",
+            slides_min_figure_area_percent=80,
+            latex_compiler=compiler,
+        )
+    )
+
+    result = renderer.render(
+        source,
+        output_format="beamer",
+        manuscript_dir=manuscript,
+        figures_dir=figures,
+    )
+
+    assert result.is_file()
+    tex = result.with_suffix(".tex").read_text(encoding="utf-8")
+    for name in ("plain.png", "linked.png", "left.png", "right.png"):
+        image_command = re.search(rf"\\includegraphics\[(?P<options>[^]]+)\]\{{[^}}]*{name}\}}", tex)
+        assert image_command is not None
+        assert "keepaspectratio" in image_command.group("options")
 
 
 @pytest.mark.slow
@@ -1042,8 +1611,9 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     _write_png(figures / "allocation.png")
     source = manuscript / "deck.md"
     source.write_text(
-        "## Evidence boundary\n\n"
+        "## Evidence boundary {#sec:evidence-boundary}\n\n"
         "The projected derivative states one bounded engineering result and links the canonical reader.\n\n"
+        "See Section~\\ref{sec:evidence-boundary} and identity (\\ref{eq:model}).\n\n"
         "## Figure allocation\n\n"
         "![A one-pixel renderer fixture.](../output/figures/allocation.png){#fig:allocation}\n\n"
         "## Numbering parity\n\n"
@@ -1052,7 +1622,8 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
         encoding="utf-8",
     )
     (pdf_dir / "_combined_manuscript.aux").write_text(
-        r"\newlabel{eq:model}{{7}{9}{Model}{equation.7}{}}" + "\n",
+        r"\newlabel{sec:evidence-boundary}{{3.2}{8}{Evidence boundary}{subsection.3.2}{}}"
+        "\n" + r"\newlabel{eq:model}{{7}{9}{Model}{equation.7}{}}" + "\n",
         encoding="utf-8",
     )
     config = RenderingConfig(
@@ -1088,14 +1659,21 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     assert r"\setbeamerfont{caption}{size*={16pt}{19pt}}" in header
     assert "Untagged PDF derivative" in header
     assert "HTML reader" in header
-    assert r"height=0.55\textheight" in tex
+    assert r"height=0.7\textheight" in tex
+    assert r"width=0.98\linewidth" in tex
+    assert "keepaspectratio" in tex
+    assert r"\caption{}" not in tex
     # Pandoc-crossref chooses format-specific prose (``eq. 7`` in TeX and
     # ``(7)`` in the browser), but both canonical derivatives must consume the
     # combined AUX's exact number rather than locally renumbering it as 1.
     assert "The local display is Equation eq.~7." in tex
+    assert "See Section~3.2 and identity (7)." in " ".join(tex.split())
+    assert r"\textasciitilde{}" not in tex
     assert r"\ref{eq:model}" not in tex
     visible_reveal = " ".join(re.sub(r"<[^>]+>", "", reveal).split())
     assert "The local display is Equation (7)." in visible_reveal
+    assert "See Section 3.2 and identity (7)." in visible_reveal
+    assert r"\ref{" not in visible_reveal
     assert "Equation Equation" not in visible_reveal
     assert not list(slides.glob(".*.pandoc*.json"))
 

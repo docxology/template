@@ -22,7 +22,10 @@ BODY_CHARACTERS_PER_LINE_20PT = 43
 LIST_CHARACTERS_PER_LINE_20PT = 34
 TITLE_CHARACTERS_PER_LINE_28PT = 36
 BODY_LINES_PER_EXTRA_TITLE_LINE = 2
-CONTINUATION_TITLE_TARGET_CHARS = 48
+# One-line title capacity at the 28-point floor. The continuation compactor
+# subtracts the complete `` (part N)`` suffix before selecting visible words.
+# The authored heading remains the frame's accessible name.
+CONTINUATION_TITLE_TARGET_CHARS = TITLE_CHARACTERS_PER_LINE_28PT
 TABLE_INTERCOLUMN_GUTTER_CHARACTERS = 1
 TABLE_RULE_PADDING_LINES = 1
 TABLE_MINIMUM_COLUMN_CHARACTERS = 2

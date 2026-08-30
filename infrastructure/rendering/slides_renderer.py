@@ -39,6 +39,7 @@ from infrastructure.rendering._slides_crossref import (
     COMBINED_AUX_BASENAME,
     parse_aux_label_numbers,
     resolve_cross_deck_references,
+    transform_tex_prose,
 )
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
 from infrastructure.rendering._slides_accessibility import (
@@ -58,7 +59,7 @@ from infrastructure.rendering.latex_texttt import (
 )
 from infrastructure.rendering._slides_math_header import write_slides_math_header
 from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
-from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
+from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths, normalize_accessible_projection_latex
 from infrastructure.rendering._web_postprocess import MATHJAX_URL
 from infrastructure.rendering.security import subprocess_options
 
@@ -80,7 +81,11 @@ _ACCESSIBLE_BEAMER_ASPECT_RATIO = "169"
 _ACCESSIBLE_REVEAL_VERSION = ACCESSIBLE_REVEAL_VERSION
 _ACCESSIBLE_REVEAL_URL = ACCESSIBLE_REVEAL_URL
 _ACCESSIBLE_REVEAL_THEME = "white"
-_SECTION_REF_RE = re.compile(r"\\(?P<command>ref|eqref)\{(?P<label>sec:[^}]+)\}")
+_SECTION_REF_RE = re.compile(
+    r"(?P<escaped_join>\\textasciitilde\{\})?"
+    r"(?P<authored_open>\()?"
+    r"\\(?P<command>ref|eqref)\{(?P<label>sec:[^}]+)\}"
+)
 
 
 def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
@@ -584,6 +589,15 @@ class SlidesRenderer:
                     reference_replacements,
                 )
 
+            if self.config.slides_profile == "accessible":
+                tex_content, normalized_graphics, removed_empty_captions = normalize_accessible_projection_latex(
+                    tex_content
+                )
+                if normalized_graphics:
+                    logger.info("Preserved aspect ratio for %d accessible slide figure(s)", normalized_graphics)
+                if removed_empty_captions:
+                    logger.info("Removed %d empty projected caption(s)", removed_empty_captions)
+
             # A long scientific caption is part of an unbreakable figure
             # environment. Keep the image legible but leave vertical room for
             # its accessibility/source caption on the same frame.
@@ -725,18 +739,25 @@ class SlidesRenderer:
         accessible_section_replacements = 0
         if self.config.slides_profile == "accessible":
 
-            def _resolve_accessible_section(match: re.Match[str]) -> str:
-                nonlocal accessible_section_replacements
-                command = match.group("command")
-                label = match.group("label")
-                number = label_numbers.get(label)
-                if number is None:
-                    missing_accessible_sections.add(label)
-                    return match.group(0)
-                accessible_section_replacements += 1
-                return f"({number})" if command == "eqref" else number
+            def _resolve_accessible_section_segment(segment: str) -> str:
+                def _resolve_accessible_section(match: re.Match[str]) -> str:
+                    nonlocal accessible_section_replacements
+                    command = match.group("command")
+                    label = match.group("label")
+                    number = label_numbers.get(label)
+                    if number is None:
+                        missing_accessible_sections.add(label)
+                        return match.group(0)
+                    accessible_section_replacements += 1
+                    join = "~" if match.group("escaped_join") else ""
+                    authored_open = match.group("authored_open") or ""
+                    authored_pair = bool(authored_open and segment[match.end() :].startswith(")"))
+                    resolved_number = number if command == "ref" or authored_pair else f"({number})"
+                    return join + authored_open + resolved_number
 
-            tex_content = _SECTION_REF_RE.sub(_resolve_accessible_section, tex_content)
+                return _SECTION_REF_RE.sub(_resolve_accessible_section, segment)
+
+            tex_content = transform_tex_prose(tex_content, _resolve_accessible_section_segment)
             if accessible_section_replacements:
                 logger.info(
                     "Resolved %d accessible section reference(s) from %s",
@@ -783,24 +804,30 @@ class SlidesRenderer:
         # so a same-deck section label can otherwise remain ``??`` even after
         # the normal two-pass compile. Preserve the target identifier as a
         # visible, breakable token rather than shipping an unresolved marker.
-        def _render_section_label(match: re.Match[str]) -> str:
-            if self.config.slides_profile == "accessible":
-                slug = match.group("label").partition(":")[2]
-                readable = re.sub(r"[^A-Za-z0-9]+", " ", slug).strip() or "referenced"
-                return rf"\emph{{{readable} section}}"
-            # Pandoc section identifiers may contain underscores. They are
-            # ordinary characters inside the ``\texttt`` argument, but TeX
-            # treats an unescaped underscore as a math-mode subscript and
-            # aborts the standalone slide deck. Keep the visible identifier
-            # unchanged while escaping the only special character permitted
-            # by the section-label grammar that is unsafe here.
-            label = match.group("label").replace("_", r"\_")
-            return rf"\texttt{{{label}}}"
+        section_replacements = 0
 
-        tex_content, section_replacements = _SECTION_REF_RE.subn(
-            _render_section_label,
-            tex_content,
-        )
+        def _render_section_segment(segment: str) -> str:
+            def _render_section_label(match: re.Match[str]) -> str:
+                nonlocal section_replacements
+                section_replacements += 1
+                join = "~" if match.group("escaped_join") else ""
+                authored_open = match.group("authored_open") or ""
+                if self.config.slides_profile == "accessible":
+                    slug = match.group("label").partition(":")[2]
+                    readable = re.sub(r"[^A-Za-z0-9]+", " ", slug).strip() or "referenced"
+                    return join + authored_open + rf"\emph{{{readable} section}}"
+                # Pandoc section identifiers may contain underscores. They are
+                # ordinary characters inside the ``\texttt`` argument, but TeX
+                # treats an unescaped underscore as a math-mode subscript and
+                # aborts the standalone slide deck. Keep the visible identifier
+                # unchanged while escaping the only special character permitted
+                # by the section-label grammar that is unsafe here.
+                label = match.group("label").replace("_", r"\_")
+                return join + authored_open + rf"\texttt{{{label}}}"
+
+            return _SECTION_REF_RE.sub(_render_section_label, segment)
+
+        tex_content = transform_tex_prose(tex_content, _render_section_segment)
         if section_replacements:
             mode = "readable names" if self.config.slides_profile == "accessible" else "visible labels"
             logger.info("Rendered %d unnumbered section reference(s) as %s", section_replacements, mode)

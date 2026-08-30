@@ -4,6 +4,7 @@ Tests web/HTML rendering functionality using real implementations.
 Follows No Mocks Policy - all tests use real data and real execution.
 """
 
+import re
 from pathlib import Path
 
 import pytest
@@ -139,6 +140,27 @@ class TestMathJaxIntegration:
         assert content.count("data-template-mathjax-config") == 1
         assert "window.MathJax.chtml" in content
         assert content.index("data-template-mathjax-config") < content.index(_MATHJAX_URL)
+
+    def test_harden_mathjax_script_removes_line_owned_attributes_without_whitespace_residue(self, tmp_path):
+        """Canonicalization removes a Pandoc-formatted source line cleanly."""
+        html = tmp_path / "math.html"
+        html.write_text(
+            "<html><head>\n"
+            '<script defer=""\n'
+            "  \n"
+            f'  type="text/javascript" nonce="alpha beta" src="{_MATHJAX_URL}"\n'
+            f'  integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"></script>\n'
+            "</head><body></body></html>\n",
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert re.search(r"(?m)^[ \t]+$", content) is None
+        assert '<script defer=""\n  type="text/javascript" nonce="alpha beta"' in content
+        assert content.count(f'src="{_MATHJAX_URL}"') == 1
 
 
 class TestCssIntegration:

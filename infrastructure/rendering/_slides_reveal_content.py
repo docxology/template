@@ -34,6 +34,7 @@ _REFERENCE_KINDS = {
 }
 _REFERENCE_PREFIXES = "|".join(re.escape(prefix) for prefix in _REFERENCE_KINDS)
 _CITATION_SPAN_RE = re.compile(
+    r"(?P<nbsp>~)?(?P<authored_open>\()?"
     r"<span\b(?P<attrs>(?=[^>]*\bclass\s*=\s*[\"'][^\"']*\bcitation\b[^\"']*[\"'])"
     r"(?=[^>]*\bdata-cites\s*=\s*[\"'][^\"']+[\"'])[^>]*)>(?P<body>.*?)</span>",
     flags=re.IGNORECASE | re.DOTALL,
@@ -50,6 +51,14 @@ _DISPLAY_MATH_LABEL_RE = re.compile(
     r"[^>]*)>)(?P<body>.*?)</span>\s*\{#(?P<label>[A-Za-z][A-Za-z0-9_-]*:[A-Za-z0-9_.:-]+)\}",
     flags=re.IGNORECASE | re.DOTALL,
 )
+_INLINE_MATH_REFERENCE_RE = re.compile(
+    r"(?P<nbsp>~)?"
+    r"(?P<authored_open>\()?"
+    r"<span\b(?P<attrs>(?=[^>]*\bclass\s*=\s*[\"'][^\"']*\bmath\b[^\"']*\binline\b[^\"']*[\"'])"
+    r"[^>]*)>\s*\\\(\s*\\(?P<command>eqref|ref)\{"
+    r"(?P<label>[A-Za-z][A-Za-z0-9_-]*:[A-Za-z0-9_.:-]+)\}\s*\\\)\s*</span>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
 _VISIBLE_REFERENCE_PLACEHOLDER_RE = re.compile(
     rf"(?:<strong>\s*)?(?:{_REFERENCE_PREFIXES}):[A-Za-z0-9_.:-]+\?(?:\s*</strong>)?",
     flags=re.IGNORECASE,
@@ -58,7 +67,14 @@ _VISIBLE_LABEL_SUFFIX_RE = re.compile(
     rf"\{{#(?:{_REFERENCE_PREFIXES}):[A-Za-z0-9_.:-]+\}}",
     flags=re.IGNORECASE,
 )
+_RAW_TEX_REFERENCE_RE = re.compile(
+    r"\\(?:ref|eqref|autoref|cref|Cref|pageref|nameref|subref)\{[^{}]+\}",
+)
 _SCRIPT_OR_STYLE_RE = re.compile(r"<(?:script|style)\b[^>]*>.*?</(?:script|style)>", flags=re.IGNORECASE | re.DOTALL)
+_CODE_OR_PRE_RE = re.compile(
+    r"<(?P<tag>pre|code)\b[^>]*>.*?</(?P=tag)>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
 _MATHJAX_ANY_SCRIPT_RE = re.compile(
     r"<script\b(?=[^>]*\bsrc\s*=\s*[\"']" + re.escape(MATHJAX_URL) + r"(?:[?#][^\"']*)?[\"'])[^>]*>.*?</script>",
     flags=re.IGNORECASE | re.DOTALL,
@@ -91,9 +107,16 @@ _REVEAL_MATH_CONFIG_BLOCK_RE = re.compile(
     flags=re.IGNORECASE | re.DOTALL,
 )
 _REVEAL_MATH_PLUGIN_ENTRY_RE = re.compile(r"^\s*RevealMath,\s*$", flags=re.IGNORECASE | re.MULTILINE)
+_REVEAL_MATH_PLUGIN_TAG_PATTERN = (
+    r"<script\b[^>]*\bsrc\s*=\s*[\"'][^\"']*/plugin/math/math\.js(?:[^\"']*)?[\"'][^>]*></script>"
+)
 _ANY_REVEAL_MATH_PLUGIN_RE = re.compile(
-    r"<script\b[^>]*\bsrc\s*=\s*[\"'][^\"']*/plugin/math/math\.js(?:[^\"']*)?[\"'][^>]*></script>",
+    _REVEAL_MATH_PLUGIN_TAG_PATTERN,
     flags=re.IGNORECASE,
+)
+_STANDALONE_REVEAL_MATH_PLUGIN_RE = re.compile(
+    r"^[ \t]*" + _REVEAL_MATH_PLUGIN_TAG_PATTERN + r"[ \t]*(?:\r?\n|$)",
+    flags=re.IGNORECASE | re.MULTILINE,
 )
 
 
@@ -109,6 +132,10 @@ def activate_hardened_reveal_mathjax(content: str) -> str:
 
     if MATHJAX_URL not in content:
         return content
+    # Pandoc indents plugin tags on otherwise empty physical lines.  Consume
+    # the whole line before the general inline replacement so the removed
+    # legacy loader cannot leave a whitespace-only line in committed decks.
+    content = _STANDALONE_REVEAL_MATH_PLUGIN_RE.sub("", content)
     content = _ANY_REVEAL_MATH_PLUGIN_RE.sub("", content)
     content = _REVEAL_MATH_PLUGIN_ENTRY_RE.sub("", content)
     content = _REVEAL_MATH_CONFIG_BLOCK_RE.sub("\n\n        // reveal.js plugins", content, count=1)
@@ -151,6 +178,7 @@ def _reference_markup(
     local_ids: set[str],
     *,
     include_kind: bool = True,
+    equation_parentheses: bool = True,
 ) -> str:
     """Return one readable, non-placeholder reference."""
 
@@ -158,9 +186,9 @@ def _reference_markup(
     kind = _REFERENCE_KINDS[prefix.casefold()]
     if number is not None:
         if include_kind:
-            visible = f"{kind} ({number})" if prefix.casefold() == "eq" else f"{kind} {number}"
+            visible = f"{kind} ({number})" if prefix.casefold() == "eq" and equation_parentheses else f"{kind} {number}"
         else:
-            visible = f"({number})" if prefix.casefold() == "eq" else number
+            visible = f"({number})" if prefix.casefold() == "eq" and equation_parentheses else number
         if label in local_ids:
             return (
                 '<a class="cross-reference" href="#'
@@ -214,22 +242,29 @@ def resolve_reveal_cross_references(
         ]
         if not references:
             return match.group(0)
+        join = "\N{NO-BREAK SPACE}" if match.group("nbsp") else ""
+        authored_open = match.group("authored_open") or ""
+        after = content[match.end() :].lstrip()
+        authored_parentheses = bool(authored_open and after.startswith(")"))
+        all_equations = all(identifier.partition(":")[0].casefold() == "eq" for identifier in references)
         missing = [identifier for identifier in references if identifier not in numbers]
         unresolved.update(missing)
         rendered: dict[str, str] = {}
         for index, identifier in enumerate(references):
             prefix = identifier.partition(":")[0].casefold()
             include_kind = not (
-                index == 0 and _preceded_by_reference_kind(content, match.start(), _REFERENCE_KINDS[prefix])
+                (prefix == "eq" and authored_parentheses and all_equations)
+                or (index == 0 and _preceded_by_reference_kind(content, match.start(), _REFERENCE_KINDS[prefix]))
             )
             rendered[identifier] = _reference_markup(
                 identifier,
                 numbers.get(identifier),
                 local_ids,
                 include_kind=include_kind,
+                equation_parentheses=not authored_parentheses,
             )
         if len(references) == len(identifiers):
-            return "; ".join(rendered[identifier] for identifier in references)
+            return join + authored_open + "; ".join(rendered[identifier] for identifier in references)
 
         # Preserve resolved bibliographic citations in a mixed span while
         # replacing either citeproc's strong-tagged placeholder or Pandoc's
@@ -266,9 +301,46 @@ def resolve_reveal_cross_references(
             bibliographic = [identifier for identifier in identifiers if identifier not in references]
             escaped_cites = html.escape(" ".join(bibliographic), quote=True)
             attributes = _DATA_CITES_RE.sub(f'data-cites="{escaped_cites}"', attributes, count=1)
-        return f"<span{attributes}>{body}</span>"
+        return join + authored_open + f"<span{attributes}>{body}</span>"
 
     resolved = _CITATION_SPAN_RE.sub(_replace, content)
+    inline_source = resolved
+
+    def _replace_inline_math_reference(match: re.Match[str]) -> str:
+        label = match.group("label")
+        prefix = label.partition(":")[0].casefold()
+        if prefix not in _REFERENCE_KINDS:
+            unrendered.add(label)
+            return match.group(0)
+        number = numbers.get(label)
+        if number is None:
+            unresolved.add(label)
+        after = inline_source[match.end() :].lstrip()
+        authored_open = match.group("authored_open") or ""
+        equation_has_authored_parentheses = prefix == "eq" and bool(authored_open and after.startswith(")"))
+        include_kind = not (
+            equation_has_authored_parentheses
+            or _preceded_by_reference_kind(
+                inline_source,
+                match.start(),
+                _REFERENCE_KINDS[prefix],
+            )
+        )
+        replacement = _reference_markup(
+            label,
+            number,
+            local_ids,
+            include_kind=include_kind,
+            equation_parentheses=(
+                match.group("command").casefold() == "eqref" and not equation_has_authored_parentheses
+            ),
+        )
+        # A prose ``~`` immediately joining a reference is LaTeX's
+        # nonbreaking-space notation, not content to expose in the browser.
+        join = "\N{NO-BREAK SPACE}" if match.group("nbsp") else ""
+        return join + authored_open + replacement
+
+    resolved = _INLINE_MATH_REFERENCE_RE.sub(_replace_inline_math_reference, inline_source)
     if strict and (unresolved or unrendered):
         raise RenderingError(
             "[slides.crossref.reveal-unresolved] Accessible Reveal cannot resolve references from the current AUX",
@@ -285,10 +357,15 @@ def reveal_reference_and_math_issues(content: str) -> tuple[str, ...]:
 
     issues: list[str] = []
     visible = _SCRIPT_OR_STYLE_RE.sub("", content)
+    # Literal TeX examples inside projected code are teaching content, not
+    # unresolved navigation. The prose/math surface remains fail-closed.
+    visible = _CODE_OR_PRE_RE.sub("", visible)
     if _VISIBLE_REFERENCE_PLACEHOLDER_RE.search(visible):
         issues.append("Reveal deck contains an unresolved cross-reference placeholder")
     if _VISIBLE_LABEL_SUFFIX_RE.search(visible):
         issues.append("Reveal deck exposes a source cross-reference label")
+    if _RAW_TEX_REFERENCE_RE.search(visible):
+        issues.append("Reveal deck contains a raw TeX cross-reference command")
     for match in _CITATION_SPAN_RE.finditer(visible):
         cites_match = _DATA_CITES_RE.search(match.group("attrs"))
         if cites_match is None:

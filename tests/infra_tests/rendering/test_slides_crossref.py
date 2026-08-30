@@ -137,6 +137,46 @@ class TestResolveCrossDeckReferences:
         assert updated == "as shown in (1)."
         assert replaced == 1
 
+    def test_pandoc_escaped_reference_join_becomes_nonbreaking_space(self):
+        tex = r"Section\textasciitilde{}\ref{sec:intro-visual-map}."
+
+        updated, replaced, unresolved = resolve_cross_deck_references(tex, self.LABEL_MAP)
+
+        assert updated == r"Section~2.3.1."
+        assert replaced == 1
+        assert unresolved == []
+
+    @pytest.mark.parametrize("command", ["ref", "eqref"])
+    def test_pandoc_escaped_join_with_authored_parentheses_has_one_pair(self, command):
+        tex = rf"Equation\textasciitilde{{}}(\{command}{{eq:gen-bayes}})."
+
+        updated, replaced, unresolved = resolve_cross_deck_references(tex, self.LABEL_MAP)
+
+        assert updated == r"Equation~(1)."
+        assert r"\textasciitilde{}" not in updated
+        assert "((1))" not in updated
+        assert replaced == 1
+        assert unresolved == []
+
+    def test_literal_and_commented_references_are_not_rewritten_or_reported(self):
+        tex = "\n".join(
+            [
+                r"Prose \ref{def:generalized-bayes} and \ref{lem:missing}.",
+                r"% Comment \ref{def:generalized-bayes} and \ref{lem:comment}.",
+                r"\begin{verbatim}Use \ref{def:generalized-bayes} and \ref{lem:code}.\end{verbatim}",
+                r"\begin{Verbatim}Use \eqref{eq:gen-bayes}.\end{Verbatim}",
+                r"\begin{lstlisting}Use \ref{sec:intro-visual-map}.\end{lstlisting}",
+                r"\begin{minted}{tex}Use \ref{def:generalized-bayes}.\end{minted}",
+                r"Inline \verb|\ref{def:generalized-bayes}| remains literal.",
+            ]
+        )
+
+        updated, replaced, unresolved = resolve_cross_deck_references(tex, self.LABEL_MAP)
+
+        assert updated.replace("Prose 1", r"Prose \ref{def:generalized-bayes}") == tex
+        assert replaced == 1
+        assert unresolved == ["lem:missing"]
+
     def test_within_deck_ref_preserved_for_native_numbering(self):
         tex = "\n".join(
             [
@@ -242,6 +282,41 @@ class TestSlidesRendererHook:
         assert r"\label{sec:experimental_setup}" in updated
         assert "See Section 2.3." in updated
         assert r"\ref{sec:experimental_setup}" not in updated
+
+    def test_accessible_profile_restores_pandoc_escaped_section_join(self, tmp_path):
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{sec:experimental_setup}{{2.3}{7}{Setup}{subsection.2.3}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+
+        updated = renderer._resolve_cross_deck_refs(
+            r"See Section\textasciitilde{}\ref{sec:experimental_setup}.",
+            strict_cross_deck_refs=True,
+        )
+
+        assert updated == r"See Section~2.3."
+        assert r"\textasciitilde{}" not in updated
+
+    def test_accessible_profile_preserves_literal_section_references(self, tmp_path):
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{sec:experimental_setup}{{2.3}{7}{Setup}{subsection.2.3}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+        tex = (
+            r"See Section\textasciitilde{}(\ref{sec:experimental_setup}). "
+            r"\begin{verbatim}Section\textasciitilde{}\ref{sec:experimental_setup}\end{verbatim}"
+        )
+
+        updated = renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=True)
+
+        assert updated.startswith(r"See Section~(2.3).")
+        assert updated.endswith(r"\begin{verbatim}Section\textasciitilde{}\ref{sec:experimental_setup}\end{verbatim}")
 
     def test_accessible_strict_profile_resolves_local_equation_from_combined_aux(self, tmp_path):
         """Local Beamer and Reveal references use one combined-PDF number."""

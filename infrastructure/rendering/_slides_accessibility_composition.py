@@ -145,19 +145,23 @@ def _compose_segment(
         if kind == "figure-led":
             maximum_lines = _frame_body_line_capacity(header, continuation, policy)
             base_lines = max(1, math.floor(_BASE_BODY_LINES_16_9 * 20 / policy.body_font_pt))
-            # Fifteen percentage points of the declared figure-led region are
-            # reserved for the 16/19-point reader link and Beamer figure glue.
-            # Scale the image against the title-adjusted usable body, never
-            # against the global text height.
+            # Reserve the declared figure floor within the title-adjusted
+            # usable body. Persistent frame navigation owns the canonical-
+            # reader link, and the full caption stays in HTML. A wrapped title
+            # therefore reduces the global-text-height percentage while
+            # preserving the same fraction of space that is actually usable
+            # below that title.
             image_height_percent = max(
                 1,
-                math.floor(maximum_lines / base_lines * (policy.min_figure_area_percent - 15)),
+                math.floor(maximum_lines / base_lines * policy.min_figure_area_percent),
             )
             isolated_blocks = [
                 _shorten_figure_caption(
                     block,
                     policy,
                     image_height_percent=image_height_percent,
+                    source=source,
+                    heading=heading,
                 )
             ]
         elif kind == "table-led":
@@ -166,6 +170,8 @@ def _compose_segment(
                 policy,
                 header=header,
                 continuation=continuation,
+                source=source,
+                heading=heading,
             )
             excerpted_tables += int(excerpted)
             isolated_blocks = [table]
