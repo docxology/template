@@ -63,6 +63,22 @@ _TABLE_INTERCOLUMN_GUTTER_CHARACTERS = 1
 _TABLE_RULE_PADDING_LINES = 1
 _TABLE_MINIMUM_COLUMN_CHARACTERS = 2
 _SEMANTIC_BREAK_SUFFIXES = (".", "?", "!", ";", ":", "—")
+_CROSS_REFERENCE_LABELS = {
+    "alg": "alg.",
+    "cor": "cor.",
+    "def": "def.",
+    "eq": "eq.",
+    "ex": "ex.",
+    "fig": "fig.",
+    "lem": "lem.",
+    "lst": "lst.",
+    "prop": "prop.",
+    "rem": "rem.",
+    "sec": "sec.",
+    "subsec": "sec.",
+    "tbl": "tbl.",
+    "thm": "thm.",
+}
 _CLAUSE_COORDINATORS = {
     "although",
     "and",
@@ -145,12 +161,27 @@ def _plain_text(value: object) -> str:
         return " "
     if tag == "Cite" and isinstance(content, list) and content:
         citations = content[0]
-        count = len(citations) if isinstance(citations, list) else 1
-        # Citation identifiers are much longer than their rendered author-year
-        # form, but treating a whole cluster as one short token underestimates
-        # the projected line cost.  A stable author-year placeholder per item
-        # is conservative without depending on a particular CSL style.
-        return " ".join("(Author, 0000)" for _ in range(max(1, count)))
+        rendered: list[str] = []
+        if isinstance(citations, list):
+            for citation in citations:
+                identifier = citation.get("citationId") if isinstance(citation, dict) else None
+                namespace = identifier.partition(":")[0] if isinstance(identifier, str) else ""
+                label = _CROSS_REFERENCE_LABELS.get(namespace)
+                if label is not None and identifier:
+                    # A per-section deck may not yet have the combined-PDF AUX
+                    # map during its first pass.  The later cross-deck transform
+                    # then renders the complete source identifier as a visible
+                    # monospace fallback (for example,
+                    # ``sec. sec:results-hierarchical``).  Size that known
+                    # fallback here; treating it as an author-year citation can
+                    # make a composition that passed preflight overflow Beamer.
+                    rendered.append(f"{label} {identifier}")
+                else:
+                    # A stable author-year placeholder per bibliographic item
+                    # is conservative without depending on a particular CSL
+                    # style or exposing the usually longer source identifier.
+                    rendered.append("(Author, 0000)")
+        return " ".join(rendered or ["(Author, 0000)"])
     if tag == "Link" and isinstance(content, list) and len(content) >= 2:
         return _plain_text(content[1])
     if tag == "Note":
@@ -185,16 +216,40 @@ def _inline_code_character_count(value: object) -> int:
     return _inline_code_character_count(content)
 
 
+def _cross_reference_identifier_character_count(value: object) -> int:
+    """Count identifiers that a first-pass section deck renders monospace."""
+
+    if isinstance(value, list):
+        return sum(_cross_reference_identifier_character_count(item) for item in value)
+    if not isinstance(value, dict):
+        return 0
+    content = value.get("c")
+    if value.get("t") == "Cite" and isinstance(content, list) and content:
+        citations = content[0]
+        if not isinstance(citations, list):
+            return 0
+        total = 0
+        for citation in citations:
+            identifier = citation.get("citationId") if isinstance(citation, dict) else None
+            namespace = identifier.partition(":")[0] if isinstance(identifier, str) else ""
+            if identifier and namespace in _CROSS_REFERENCE_LABELS:
+                total += len(identifier)
+        return total
+    return _cross_reference_identifier_character_count(content)
+
+
 def _estimated_visible_characters(value: object) -> int:
     """Return proportional-width units with a conservative monospace debit."""
 
     visible = _normalized_text_length(value)
-    code_characters = _inline_code_character_count(value)
+    monospace_characters = _inline_code_character_count(value) + _cross_reference_identifier_character_count(value)
     # At the 20-point floor, the projected monospace face fits about 34
     # characters where the sans-serif body fits 43. Preserve inline code as an
-    # atomic Pandoc node and debit only the extra width it consumes.
+    # atomic Pandoc node.  Apply the same debit to source-known cross-reference
+    # identifiers because the first-pass section fallback also renders them in
+    # monospace before a combined-PDF AUX map exists.
     monospace_extra = math.ceil(
-        code_characters * (_BODY_CHARACTERS_PER_LINE_20PT / _LIST_CHARACTERS_PER_LINE_20PT - 1)
+        monospace_characters * (_BODY_CHARACTERS_PER_LINE_20PT / _LIST_CHARACTERS_PER_LINE_20PT - 1)
     )
     return visible + monospace_extra
 
@@ -268,10 +323,7 @@ def _estimated_block_lines(block: dict[str, Any], policy: AccessibleSlidePolicy)
             1,
             math.floor(_LIST_CHARACTERS_PER_LINE_20PT * 20 / policy.body_font_pt),
         )
-        return sum(
-            max(1, math.ceil(_estimated_visible_characters(item) / list_chars_per_line))
-            for item in raw_items
-        )
+        return sum(max(1, math.ceil(_estimated_visible_characters(item) / list_chars_per_line)) for item in raw_items)
     return max(1, math.ceil(_estimated_visible_characters(block) / body_chars_per_line))
 
 
@@ -280,17 +332,27 @@ def _trim_inline_spaces(inlines: list[Any]) -> list[Any]:
 
     start = 0
     end = len(inlines)
-    while start < end and isinstance(inlines[start], dict) and inlines[start].get("t") in {
-        "Space",
-        "SoftBreak",
-        "LineBreak",
-    }:
+    while (
+        start < end
+        and isinstance(inlines[start], dict)
+        and inlines[start].get("t")
+        in {
+            "Space",
+            "SoftBreak",
+            "LineBreak",
+        }
+    ):
         start += 1
-    while end > start and isinstance(inlines[end - 1], dict) and inlines[end - 1].get("t") in {
-        "Space",
-        "SoftBreak",
-        "LineBreak",
-    }:
+    while (
+        end > start
+        and isinstance(inlines[end - 1], dict)
+        and inlines[end - 1].get("t")
+        in {
+            "Space",
+            "SoftBreak",
+            "LineBreak",
+        }
+    ):
         end -= 1
     return copy.deepcopy(inlines[start:end])
 
@@ -1120,8 +1182,7 @@ def _compose_segment(
                 current_lines = _estimated_block_lines(current, policy)
                 combined_lines = pending_lines + (1 if pending else 0) + current_lines
                 if pending and (
-                    pending_words + current_words > policy.max_prose_words
-                    or combined_lines > maximum_lines
+                    pending_words + current_words > policy.max_prose_words or combined_lines > maximum_lines
                 ):
                     continuation = _flush_prose_frames(
                         frames,

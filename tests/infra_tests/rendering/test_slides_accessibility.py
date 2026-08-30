@@ -19,6 +19,7 @@ import pytest
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility import (
     AccessibleSlidePolicy,
+    _estimated_visible_characters,
     compose_accessible_pandoc_document,
 )
 from infrastructure.rendering.config import RenderingConfig
@@ -40,6 +41,34 @@ def _header(text: str, *, level: int = 2, classes: list[str] | None = None) -> d
 
 def _paragraph(text: str) -> dict[str, Any]:
     return {"t": "Para", "c": _inlines(text)}
+
+
+def _citation(identifier: str) -> dict[str, Any]:
+    return {
+        "t": "Cite",
+        "c": [
+            [
+                {
+                    "citationId": identifier,
+                    "citationPrefix": [],
+                    "citationSuffix": [],
+                    "citationMode": {"t": "NormalCitation"},
+                    "citationNoteNum": 0,
+                    "citationHash": 0,
+                }
+            ],
+            [{"t": "Str", "c": f"[@{identifier}]"}],
+        ],
+    }
+
+
+def _paragraph_with_citations(text: str, identifiers: list[str]) -> dict[str, Any]:
+    inlines = _inlines(text)
+    citations = {f"REF{index}": _citation(identifier) for index, identifier in enumerate(identifiers)}
+    return {
+        "t": "Para",
+        "c": [citations.get(str(inline.get("c")), inline) for inline in inlines],
+    }
 
 
 def _document(blocks: list[dict[str, Any]]) -> dict[str, Any]:
@@ -311,6 +340,43 @@ def test_semantic_composer_debits_inline_code_at_the_monospace_width() -> None:
             policy=AccessibleSlidePolicy(),
             source="manuscript/results.md",
         )
+
+
+def test_semantic_composer_debits_cross_reference_fallback_at_visible_label_width() -> None:
+    bibliography = {"t": "Para", "c": [_citation("mildner2025fedgvi")]}
+    section_reference = {"t": "Para", "c": [_citation("sec:results-hierarchical")]}
+
+    assert _estimated_visible_characters(section_reference) > 2 * _estimated_visible_characters(bibliography)
+
+
+def test_semantic_composer_splits_before_unresolved_crossrefs_overflow_beamer() -> None:
+    paragraph = _paragraph_with_citations(
+        "Five structural extension studies (Studies 5–9, Supplementary sections) build on the same POMDP "
+        "substrate and are described there: the moving disjoint-FOV sentinel ( REF0 ), the 2-level hierarchical "
+        "POMDP ( REF1 ), the N-level extension ( REF2 ), the 2-D sensitivity sweep ( REF3 ), and parameter "
+        "recovery ( REF4 ).",
+        [
+            "sec:results-moving",
+            "sec:results-hierarchical",
+            "sec:results-3level",
+            "sec:results-sensitivity",
+            "sec:results-parameter-recovery",
+        ],
+    )
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Server robustness setting"), paragraph]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/12_methods_experimental_design.md",
+    )
+
+    prose = [block for block in composition.document["blocks"] if block["t"] == "Para"]
+    assert composition.frame_count == 2
+    assert len(prose) == 2
+    assert "sec:results-3level" in json.dumps(prose[0])
+    assert "sec:results-sensitivity" not in json.dumps(prose[0])
+    assert "sec:results-sensitivity" in json.dumps(prose[1])
+    assert "sec:results-parameter-recovery" in json.dumps(prose[1])
 
 
 def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
@@ -647,7 +713,7 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
     assert 'href="../figures/figure_exact_values.md#fig-values-trend"' in rendered
     assert 'class="table-scroll"' in rendered
     assert 'aria-label="Scrollable table: Open the canonical HTML manuscript' in rendered
-    assert rendered.count("<tr") == 9  # one header plus the eight-row bounded excerpt
+    assert rendered.count("<tr") == 5  # one header plus the four-row geometry-bounded excerpt
     assert not list(slides.glob(".*.pandoc*.json"))
 
 
@@ -702,7 +768,50 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     assert r"\setbeamerfont{caption}{size*={16pt}{19pt}}" in header
     assert "Untagged PDF derivative" in header
     assert "HTML reader" in header
-    assert r"height=0.6\textheight" in tex
+    assert r"height=0.55\textheight" in tex
+    assert not list(slides.glob(".*.pandoc*.json"))
+
+
+@pytest.mark.slow
+@pytest.mark.requires_latex
+def test_real_accessible_pair_sizes_unresolved_section_reference_fallbacks(tmp_path: Path) -> None:
+    if not shutil.which("pandoc") or not shutil.which("pandoc-crossref"):
+        pytest.skip("Pandoc and pandoc-crossref are required")
+    compiler = next((name for name in ("xelatex", "lualatex", "pdflatex") if shutil.which(name)), None)
+    if compiler is None:
+        pytest.skip("No LaTeX compiler available")
+    manuscript = tmp_path / "manuscript"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    source = manuscript / "deck.md"
+    source.write_text(
+        "## Server robustness setting\n\n"
+        "Five structural extension studies (Studies 5–9, Supplementary sections) build on the same POMDP "
+        "substrate and are described there: the moving disjoint-FOV sentinel ([@sec:results-moving]), the "
+        "2-level hierarchical POMDP ([@sec:results-hierarchical]), the $N$-level extension "
+        "([@sec:results-3level]), the 2-D sensitivity sweep ([@sec:results-sensitivity]), and parameter "
+        "recovery ([@sec:results-parameter-recovery]).\n",
+        encoding="utf-8",
+    )
+    config = RenderingConfig(
+        output_dir=str(tmp_path / "output"),
+        slides_dir=str(slides),
+        slides_profile="accessible",
+        latex_compiler=compiler,
+    )
+
+    pdf_result, html_result = SlidesRenderer(config).render_accessible_pair(
+        source,
+        manuscript_dir=manuscript,
+    )
+
+    assert pdf_result.is_file()
+    assert html_result.is_file()
+    tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
+    log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
+    assert "Server robustness setting (part 2)" in tex
+    assert r"\breaktt{sec:results-hierarchical}" in tex
+    assert "Overfull \\vbox" not in log
     assert not list(slides.glob(".*.pandoc*.json"))
 
 
