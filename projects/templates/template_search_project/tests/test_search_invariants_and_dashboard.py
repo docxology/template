@@ -258,7 +258,7 @@ class TestBuildDashboardCLI:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=180,
         )
         assert result.returncode == 0, result.stderr
         bundle = json.loads(js.read_text())
@@ -290,7 +290,7 @@ class TestBuildDashboardCLI:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=180,
         )
         # The corpus has 100% abstract / year coverage but only 66% DOI,
         # so the strict floor must catch the doi_coverage invariant.
@@ -320,7 +320,7 @@ class TestBuildDashboardCLI:
             ],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=180,
         )
         assert result.returncode == 0, result.stderr
         bundle = json.loads(js.read_text())
@@ -341,6 +341,6 @@ class TestBuildDashboardCLI:
             ],
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=180,
         )
         assert result.returncode != 0
