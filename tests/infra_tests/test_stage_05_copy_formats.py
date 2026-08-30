@@ -47,11 +47,15 @@ def _write_epub(path: Path) -> None:
 
 def _write_accessible_reveal(path: Path) -> None:
     path.write_text(
-        "<!doctype html><html><head><style data-template-accessible-slides>"
-        "html, body { overflow-x: hidden; }</style></head>"
-        '<body><nav aria-label="Presentation companion"></nav>'
-        '<div aria-label="Presentation slides"><section aria-roledescription="slide">'
-        "<h2>Current</h2></section></div><script>keyboard: true</script></body></html>",
+        "<!doctype html><html><head><title>Current — presentation</title>"
+        '<link rel="stylesheet" href="https://unpkg.com/reveal.js@5.2.1/dist/theme/white.css">'
+        "<style data-template-accessible-slides>html, body { overflow-x: hidden; }</style></head>"
+        '<body><a class="skip-link" href="#main-content">Skip to main content</a>'
+        '<nav class="slide-reader-nav" aria-label="Presentation companion"></nav>'
+        '<main id="main-content"><h1>Current presentation</h1>'
+        '<div aria-label="Presentation slides"><section aria-roledescription="slide" '
+        'aria-labelledby="current-heading"><h2 id="current-heading">Current</h2></section></div>'
+        "<script>keyboard: true</script></main></body></html>",
         encoding="utf-8",
     )
 
