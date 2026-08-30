@@ -29,7 +29,7 @@ keeps a capability blocked rather than silently promoting it.
 ## Documentation and signposting gaps
 
 - Keep `.agents/skills/template-pools-rules-tools/SKILL.md` aligned with the public resource-pool surface it discovers.
-- Keep README, AGENTS, and CLAUDE guidance clear that repo-root resolution relies on `parents[4]` and that the module is named `type_defs.py` (never `types.py`).
+- Keep README, AGENTS, and CLAUDE guidance clear that repo-root resolution relies on `parents[4]` (in `fonds_reader.py`, `rules_applier.py`, `tools_invoker.py`) and that the module is named `type_defs.py` (never `types.py`).
 
 ## Test and validator gaps
 

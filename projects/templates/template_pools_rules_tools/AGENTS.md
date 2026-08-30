@@ -43,11 +43,16 @@ write back to `fonds/`, `rules/`, or `tools/` from project code.
 
 | Module | Role |
 |---|---|
+| `src/type_defs.py` | All TypedDict definitions — edit here first |
 | `src/fonds_reader.py` | Reads `fonds/templates/template_bibliography`, `template_contacts`, `template_datasets` |
 | `src/rules_applier.py` | Loads `rules/templates/template_project_rules` and `template_manuscript_rules` |
 | `src/strong_rule_evaluator.py` | Semantic evaluation of strong rule YAML against a runtime context dict |
+| `src/resource_schema.py` | Fail-closed shared-resource schema receipts |
 | `src/tools_invoker.py` | Discovers `tools/templates/template_code_executor` and other tool manifests |
 | `src/integration.py` | Orchestrates all three into a combined demo result dict |
+| `src/manuscript_variables.py` | Generates `{{UPPERCASE_KEY}}` manuscript variables from a live integration run |
+| `src/figure_support.py` | Figure themes, `INTEGRATION_FIGURE_SPECS`, and `COVER_FIGURE_FILENAMES` |
+| `src/figures.py` / `src/cover_figure.py` / `src/rule_hierarchy_figure.py` | Figure façade and renderers |
 
 ---
 
@@ -66,6 +71,8 @@ uv run python projects/templates/template_pools_rules_tools/scripts/01_validate_
 uv run python projects/templates/template_pools_rules_tools/scripts/02_run_integration.py
 uv run python projects/templates/template_pools_rules_tools/scripts/03_generate_manuscript.py
 uv run python projects/templates/template_pools_rules_tools/scripts/04_validate_strong_rules.py
+uv run python projects/templates/template_pools_rules_tools/scripts/05_generate_figures.py
+uv run python projects/templates/template_pools_rules_tools/scripts/z_generate_manuscript_variables.py
 ```
 
 ---

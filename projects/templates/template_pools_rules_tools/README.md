@@ -48,6 +48,7 @@ template_pools_rules_tools/
 │   ├── resource_schema.py     # Fail-closed shared-resource schema receipts
 │   ├── tools_invoker.py       # Discover tools from tools/templates/
 │   ├── integration.py         # Integration orchestrator; generate_figure_data()
+│   ├── manuscript_variables.py # {{UPPERCASE_KEY}} token generation
 │   ├── figure_support.py     # Figure themes, status maps, and provenance specs
 │   ├── figures.py             # Figure façade and shared manuscript figures
 │   ├── cover_figure.py        # Cover-art renderer
