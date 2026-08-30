@@ -42,7 +42,10 @@ or config and regenerate.
 
 ## Regeneration Order
 
-For a live corpus refresh followed by deterministic downstream stages, run from the template repository root:
+The default offline lane is `scripts/01b_fixture_phase_replay.py` followed by the
+deterministic stages below (that is what `analysis.scripts` in
+`manuscript/config.yaml` runs). For a live corpus refresh instead, run from the
+template repository root:
 
 ```bash
 uv sync --group scientific --group llm
