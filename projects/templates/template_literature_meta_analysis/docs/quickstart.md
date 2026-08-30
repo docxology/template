@@ -2,8 +2,8 @@
 
 Get up and running with the `template_literature_meta_analysis` exemplar in ~5 minutes. This
 template performs a full, reproducible literature review for a **single search term** across
-seven academic search engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
-ChinaRxiv), then de-duplicates, analyzes, and visualizes the corpus. The
+ten academic search engines (arXiv, OpenAlex, Semantic Scholar, Crossref, PubMed, SovietRxiv,
+ChinaRxiv, Europe PMC, bioRxiv, medRxiv), then de-duplicates, analyzes, and visualizes the corpus. The
 bundled default term is **`modafinil`**; change one config key to re-target any topic.
 
 ## Prerequisites
@@ -38,7 +38,7 @@ Falling below that floor fails the gate outright (`--cov-fail-under` enforces it
 uv run pytest projects/templates/template_literature_meta_analysis/tests/ -v --tb=short
 ```
 
-Expected: a passing suite (768+ tests). Live collection counts are tracked in
+Expected: a passing suite. Live collection counts are tracked in
 [`../../../docs/_generated/COUNTS.md`](../../../../docs/_generated/COUNTS.md).
 
 ## The Single Control Surface
@@ -53,7 +53,7 @@ project_config:
     query: '"modafinil" OR "provigil" OR "armodafinil"'
     start_year: 1990
     max_results: 1000
-    engines: { arxiv: true, openalex: true, semantic_scholar: true, crossref: true, pubmed: true }
+    engines: { arxiv: true, openalex: true, semantic_scholar: true, crossref: true, pubmed: true, sovietrxiv: true, chinarxiv: true, europepmc: true, biorxiv: true, medrxiv: true }
 ```
 
 To run a literature review on a different topic, edit `term`, `query`, `arxiv_queries`,
@@ -94,9 +94,11 @@ De-duplication is by `canonical_id` (priority `doi > arxiv_id > s2_id > openalex
 - `data/*.json` — `subfield_classification`, `temporal_analysis`, `tfidf_data`, `topics`,
   `citation_network`, `subfield_timeline`, plus `hypothesis_scores`/`nanopublications.trig` if stage 3 ran
 - `data/citation_graph.gml` — citation network (Gephi/NetworkX-readable)
-- `figures/*.png` — up to 12 figures (field summary, subfield distribution donut, growth curve,
-  subfield timeline, citation network, degree distribution, word cloud, topic-term bars,
-  PCA embeddings, term heatmap, dendrogram, co-occurrence matrix)
+- `figures/*.png` — figure set is dynamic: each figure renders only when its source JSON
+  input exists (caption registry in `src/visualization/figure_runner.py` → `FIGURE_CAPTIONS`,
+  21 possible figures: field summary, subfield distribution, growth curve, subfield timeline,
+  citation network, degree distribution, word cloud, topic-term bars, PCA embeddings,
+  term heatmap, dendrogram, co-occurrence matrix, and more)
 
 ## Render the Publication PDF
 
@@ -104,7 +106,7 @@ Run this one **from the repository root** (`scripts/pipeline/stage_03_render.py`
 orchestrator, distinct from the project's own `scripts/03_build_knowledge_graph.py`):
 
 ```bash
-uv run python scripts/pipeline/stage_03_render.py --project template_literature_meta_analysis
+uv run python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis
 ```
 
 Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/template_literature_meta_analysis_combined.pdf`
@@ -136,5 +138,5 @@ Final PDF: `projects/templates/template_literature_meta_analysis/output/pdf/temp
 | Knowledge graph (optional, Ollama) | `uv run python scripts/03_build_knowledge_graph.py --max-papers 25` |
 | Generate figures | `uv run python scripts/04_generate_figures.py` |
 | Inject manuscript variables | `uv run python scripts/05_inject_variables.py` |
-| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project template_literature_meta_analysis` |
+| Render PDF | `uv run python scripts/pipeline/stage_03_render.py --project templates/template_literature_meta_analysis` |
 | Clean outputs | `rm -rf projects/templates/template_literature_meta_analysis/output/` |
