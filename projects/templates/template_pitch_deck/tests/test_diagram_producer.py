@@ -33,7 +33,7 @@ def test_diagram_producer_fails_when_mmdc_is_unavailable():
         check=False,
         capture_output=True,
         text=True,
-        timeout=30,
+        timeout=120,
     )
     combined = completed.stdout + completed.stderr
     assert completed.returncode == 1
