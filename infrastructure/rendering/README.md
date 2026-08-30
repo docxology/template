@@ -406,6 +406,16 @@ one from another. Projectors display a short link where a complete caption or
 table would exceed the slide contract, while the linked manuscript retains the
 complete material.
 
+Figure-registry schema 1.2 may also declare an `exact_value_fallback` per
+figure and one top-level `exact_value_artifact` inventory. The renderer rejects
+unsafe paths, malformed or mismatched identifiers, and then adds a contextual
+link to the source-generated Markdown table. This makes the numerical fallback
+discoverable without copying values into rendering code. In manuscript HTML,
+wide tables are wrapped in labelled, keyboard-focusable scroll regions; code
+and displayed mathematics retain their own scroll regions. The page body uses
+no horizontal scroll at reflow zoom, and every full-size figure link is named
+from its numbered caption or concise alternative.
+
 ## Supported Formats
 
 | Format | Command | Output |

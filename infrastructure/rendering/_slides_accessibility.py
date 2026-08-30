@@ -43,6 +43,7 @@ _ACCESSIBLE_REVEAL_MARKERS = (
     'aria-label="Presentation companion"',
     'aria-label="Presentation slides"',
     'aria-roledescription="slide"',
+    "overflow-x: hidden",
 )
 
 
@@ -590,12 +591,21 @@ def _accessible_reveal_css(policy: AccessibleSlidePolicy) -> str:
     label_px = policy.figure_label_font_pt * (4 / 3)
     return f"""<style data-template-accessible-slides>
 :root {{ --r-background-color: #ffffff; --r-main-color: #111111; --r-link-color: #004b87; }}
+html, body {{ max-width: 100%; overflow-x: hidden; }}
 .reveal {{ color: #111111; background: #ffffff; font-size: {body_px:.2f}px; }}
-.reveal .slides section {{ text-align: left; line-height: 1.35; }}
+.reveal .slides section {{
+  max-width: 100%; min-width: 0; overflow-wrap: anywhere;
+  text-align: left; line-height: 1.35;
+}}
 .reveal h1, .reveal h2, .reveal h3 {{ color: #111111; font-size: {title_px:.2f}px; line-height: 1.15; }}
 .reveal a {{ color: #004b87; text-decoration: underline; text-decoration-thickness: 0.11em; }}
 .reveal a:focus-visible, .reveal button:focus-visible {{ outline: 4px solid #b34d00; outline-offset: 4px; }}
-.reveal table {{ display: block; max-width: 100%; overflow-x: auto; font-size: inherit; border-collapse: collapse; }}
+.reveal .table-scroll {{
+  max-width: 100%; overflow-x: auto;
+  overscroll-behavior-inline: contain; scrollbar-gutter: stable;
+}}
+.reveal .table-scroll:focus-visible {{ outline: 4px solid #b34d00; outline-offset: 4px; }}
+.reveal table {{ max-width: 100%; min-width: 100%; width: max-content; font-size: inherit; border-collapse: collapse; }}
 .reveal th, .reveal td {{ border: 2px solid #404040; padding: 0.25em 0.4em; }}
 .reveal section.figure-led figure {{
   min-height: {policy.min_figure_area_percent}vh;
@@ -633,7 +643,11 @@ def _accessible_reveal_css(policy: AccessibleSlidePolicy) -> str:
   padding: 0.5rem;
 }}
 .skip-link:focus {{ inset-block-start: 0.5rem; }}
-.figure-long-description {{ font-size: {label_px:.2f}px; max-height: 35vh; overflow: auto; }}
+.figure-long-description {{
+  font-size: {label_px:.2f}px; max-height: 35vh; max-width: 100%;
+  overflow: auto; overflow-wrap: anywhere;
+}}
+.figure-exact-values {{ font-size: {label_px:.2f}px; max-width: 100%; overflow-wrap: anywhere; }}
 @media (prefers-reduced-motion: reduce) {{ .reveal .slides section {{ transition: none !important; }} }}
 @media (forced-colors: active) {{ .reveal th, .reveal td, .slide-reader-nav {{ border: 2px solid CanvasText; }} }}
 </style>"""

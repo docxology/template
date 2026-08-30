@@ -71,6 +71,17 @@ renderers without owning validation policy or project analysis.
   options only on the opt-in `metadata.tagged_pdf: true` LuaLaTeX path.
   Untagged PDFs are unchanged, and neither tagged rendering nor metadata
   injection is a claim of PDF/UA certification.
+- Figure-registry 1.2 records may add a structured `long_description` and an
+  `exact_value_fallback`. The renderer associates long descriptions through
+  `aria-details`, validates the exact-value identifier inventory and its safe
+  `output/figures` companion paths, and emits contextual links without merging
+  the concise alt, visible caption, detailed description, or numerical table.
+  Older label-keyed and project-versioned registry shapes remain supported.
+- Publication HTML confines wide tables, code, and displayed mathematics to
+  their own keyboard-scrollable regions. The document body cannot scroll
+  horizontally at reflow zoom, and full-resolution figure links have
+  contextual accessible names. This is an accessibility-enhanced reader
+  contract, not a WCAG conformance claim.
 - Local-audit-only figures may be authored under the sibling
   `output/audit_figures/` directory and referenced as `../audit_figures/...`
   from the hydrated manuscript. PDF path normalization preserves that

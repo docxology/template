@@ -331,14 +331,25 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
     (figures / "figure_registry.json").write_text(
         json.dumps(
             {
-                "fig:trend": {
-                    "filename": "trend.png",
-                    "alt_text": "A dashed line with square markers rises from left to right.",
-                    "long_description": (
-                        "Reading left to right, five square markers rise monotonically.\n\n"
-                        "This explanatory fixture carries no scientific generalization."
-                    ),
-                }
+                "schema_version": "1.2",
+                "generated_by": "source-owned-test-producer",
+                "exact_value_artifact": {
+                    "json_path": "output/figures/figure_exact_values.json",
+                    "markdown_path": "output/figures/figure_exact_values.md",
+                    "identifiers": ["fig-values:trend"],
+                },
+                "figures": [
+                    {
+                        "label": "fig:trend",
+                        "filename": "trend.png",
+                        "alt_text": "A dashed line with square markers rises from left to right.",
+                        "long_description": (
+                            "Reading left to right, five square markers rise monotonically.\n\n"
+                            "This explanatory fixture carries no scientific generalization."
+                        ),
+                        "exact_value_fallback": "fig-values:trend",
+                    }
+                ],
             }
         ),
         encoding="utf-8",
@@ -372,6 +383,10 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
     assert 'alt="A dashed line with square markers rises from left to right."' in rendered
     assert 'class="figure-long-description"' in rendered
     assert 'aria-details="fig-trend-long-description"' in rendered
+    assert 'class="figure-exact-values"' in rendered
+    assert 'href="../figures/figure_exact_values.md#fig-values-trend"' in rendered
+    assert 'class="table-scroll"' in rendered
+    assert 'aria-label="Scrollable table: Open the canonical HTML manuscript' in rendered
     assert rendered.count("<tr") == 9  # one header plus the eight-row bounded excerpt
     assert not list(slides.glob(".*.pandoc*.json"))
 

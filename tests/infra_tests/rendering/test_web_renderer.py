@@ -369,8 +369,59 @@ def test_figure_images_link_to_full_resolution_assets_idempotently(tmp_path: Pat
     assert 'href="../figures/dense.png"' in content
     assert 'target="_blank"' in content
     assert 'rel="noopener"' in content
-    assert 'aria-label="Open full-size figure: Dense figure."' in content
+    assert 'aria-label="Open full-size figure, Dense figure."' in content
     assert 'class="figure-full-size-label"' in content
+
+
+def test_numbered_figure_full_size_link_has_contextual_accessible_name(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
+        'alt="Dense scientific figure"><figcaption>Figure 7: Evidence map.</figcaption>'
+        "</figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'aria-label="Open full-size Figure 7, Evidence map."' in content
+    assert 'aria-label="Open full-size figure"' not in content
+
+
+def test_full_size_figure_link_rejects_missing_context(tmp_path: Path) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure><img src="../figures/dense.png" alt=""></figure></body></html>',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RenderingError, match="contextual full-size link"):
+        WebRenderer._add_full_resolution_figure_links(html_file)
+
+
+def test_accessibility_wraps_wide_tables_without_body_scroll_idempotently(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        "<html><body><table><caption>Exact seed-level values</caption>"
+        "<thead><tr><th>Seed</th></tr></thead><tbody><tr><td>1</td></tr></tbody>"
+        "</table></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._enhance_accessibility(html_file)
+    WebRenderer._enhance_accessibility(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert content.count('class="table-scroll"') == 1
+    assert 'role="region"' in content
+    assert 'tabindex="0"' in content
+    assert 'aria-label="Scrollable table: Exact seed-level values"' in content
+    assert content.count('data-responsive-table="true"') == 1
 
 
 def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pages(tmp_path: Path) -> None:
@@ -411,6 +462,32 @@ def test_repository_link_rewrite_resolves_manuscript_paths_and_preserves_web_pag
     assert 'href="#local"' in content
 
 
+def test_repository_link_rewrite_preserves_safe_renderer_figure_assets(
+    tmp_path: Path,
+) -> None:
+    repository_root = repository_root_for(Path(__file__))
+    source = repository_root / "projects/templates/template_code_project/manuscript/01_introduction.md"
+    output = tmp_path / "output"
+    web_dir = output / "web"
+    figures_dir = output / "figures"
+    web_dir.mkdir(parents=True)
+    figures_dir.mkdir()
+    (figures_dir / "figure_exact_values.md").write_text("# Exact values\n", encoding="utf-8")
+    html_file = web_dir / "index.html"
+    html_file.write_text(
+        '<a href="../figures/figure_exact_values.md#fig-values-dense">Exact values</a>',
+        encoding="utf-8",
+    )
+
+    rewrite_repository_links(
+        html_file,
+        repository_root=repository_root,
+        rendered_sources={source: html_file.name},
+    )
+
+    assert 'href="../figures/figure_exact_values.md#fig-values-dense"' in html_file.read_text(encoding="utf-8")
+
+
 def test_repository_link_rewrite_rejects_unsafe_uri_schemes(tmp_path: Path) -> None:
     """Renderer-owned anchors fail closed for executable URI schemes."""
     repository_root = repository_root_for(Path(__file__))
@@ -447,6 +524,23 @@ def test_deployed_web_link_issues_reports_missing_local_renderer_links(tmp_path:
     assert len(issues) == 2
     assert any("missing.html" in issue for issue in issues)
     assert any("outside.html" in issue for issue in issues)
+
+
+def test_deployed_web_link_issues_accepts_safe_sibling_figure_assets(tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    web_dir = output / "web"
+    figures_dir = output / "figures"
+    web_dir.mkdir(parents=True)
+    figures_dir.mkdir()
+    (figures_dir / "dense.png").write_bytes(b"image")
+    (figures_dir / "figure_exact_values.md").write_text("# Exact values\n", encoding="utf-8")
+    (web_dir / "index.html").write_text(
+        '<a href="../figures/dense.png">Figure</a>'
+        '<a href="../figures/figure_exact_values.md#fig-values-dense">Exact values</a>',
+        encoding="utf-8",
+    )
+
+    assert deployed_web_link_issues(web_dir) == ()
 
 
 def test_individual_render_embeds_publication_css_and_full_resolution_figure_link(tmp_path: Path) -> None:
@@ -642,6 +736,10 @@ class TestEmbedCss:
         assert ".figure-full-size-link" in content
         assert "cursor: zoom-in" in content
         assert "width: min(1080px, calc(100vw - 3rem))" in content
+        assert "overflow-x: clip" in content
+        assert ".table-scroll" in content
+        assert "overflow-x: auto" in content
+        assert ".figure-exact-values" in content
 
 
 class TestTheoremBlocks:

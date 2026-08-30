@@ -40,19 +40,36 @@ def apply_figure_long_description(
     image_tag: str,
     record: FigureAltRecord,
 ) -> tuple[str, str]:
-    """Return an associated image tag and an escaped optional disclosure."""
+    """Return an associated image tag and escaped non-visual companions."""
 
-    if record.long_description is None:
+    if record.long_description is None and record.exact_value_fallback is None:
         return image_tag, ""
-    identifier = _details_identifier(record)
     visible_label = html.escape(record.label.removeprefix("fig:").replace("-", " "))
-    paragraphs = "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in record.long_description.split("\n\n"))
-    disclosure = (
-        f'<details id="{html.escape(identifier, quote=True)}" class="figure-long-description" '
-        f'data-figure-label="{html.escape(record.label, quote=True)}">'
-        f"<summary>Detailed description of figure {visible_label}</summary>{paragraphs}</details>"
-    )
-    return _set_aria_details(image_tag, identifier), disclosure
+    companions: list[str] = []
+    updated_image = image_tag
+    if record.long_description is not None:
+        identifier = _details_identifier(record)
+        paragraphs = "".join(f"<p>{html.escape(paragraph)}</p>" for paragraph in record.long_description.split("\n\n"))
+        companions.append(
+            f'<details id="{html.escape(identifier, quote=True)}" '
+            f'class="figure-long-description" '
+            f'data-figure-label="{html.escape(record.label, quote=True)}">'
+            f"<summary>Detailed description of figure {visible_label}</summary>"
+            f"{paragraphs}</details>"
+        )
+        updated_image = _set_aria_details(updated_image, identifier)
+    if record.exact_value_fallback is not None:
+        if record.exact_value_href is None:  # Registry parsing owns this invariant.
+            raise RenderingError(
+                f"Figure exact-value fallback has no safe companion path: {record.label}",
+            )
+        companions.append(
+            '<p class="figure-exact-values">'
+            f'<a href="{html.escape(record.exact_value_href, quote=True)}">'
+            f"Open exact values for figure {visible_label} "
+            f"({html.escape(record.exact_value_fallback)})</a></p>"
+        )
+    return updated_image, "".join(companions)
 
 
 __all__ = ["apply_figure_long_description"]

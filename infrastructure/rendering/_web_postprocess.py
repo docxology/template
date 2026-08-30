@@ -96,7 +96,19 @@ SHARED_DESIGN_TOKENS_CSS = """:root {
   padding: 0.5rem 0.75rem;
 }
 .figure-long-description > summary { cursor: pointer; font-weight: 700; }
-.figure-long-description > p { max-width: 80ch; }"""
+.figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
+.figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--brand-1);
+  outline-offset: 3px;
+}
+.table-scroll > table { margin-block: 0; min-width: 100%; width: max-content; }"""
 
 _ANCHOR_HREF_RE = re.compile(
     r"(?P<prefix><a\b[^>]*?(?<!\S)href\s*=\s*)(?P<quote>[\"'])(?P<href>.*?)(?P=quote)",
@@ -268,6 +280,26 @@ def _web_relative_target(html_file: Path, target: Path) -> str | None:
     return _quoted_relative_path(relative)
 
 
+def _renderer_figure_asset_target(html_file: Path, href_path: str) -> Path | None:
+    """Resolve a safe deployed link into the sibling ``output/figures`` tree."""
+
+    decoded = unquote(href_path)
+    if "\x00" in decoded or "\\" in decoded:
+        return None
+    lexical = Path(decoded)
+    if lexical.is_absolute():
+        return None
+    try:
+        target = (html_file.parent / lexical).resolve(strict=True)
+        figures_root = (html_file.parent.parent / "figures").resolve(strict=True)
+        target.relative_to(figures_root)
+    except (OSError, ValueError):
+        return None
+    if target.is_symlink() or not target.is_file():
+        return None
+    return target
+
+
 def rewrite_repository_links(
     html_file: Path,
     *,
@@ -303,6 +335,8 @@ def rewrite_repository_links(
         if scheme or parsed.netloc:
             raise RenderingError(f"Web link uses an unsupported URI scheme: {raw_href}")
         if not parsed.path or parsed.path.startswith("/"):
+            return match.group(0)
+        if _renderer_figure_asset_target(html_file, parsed.path) is not None:
             return match.group(0)
 
         target, is_directory = _resolve_repository_href_target(
@@ -372,7 +406,8 @@ def deployed_web_link_issues(web_dir: Path) -> tuple[str, ...]:
                 resolved = candidate.resolve(strict=True)
                 resolved.relative_to(root)
             except (OSError, ValueError):
-                issues.append(f"{page.name}: local href leaves output/web or is missing: {raw_href}")
+                if _renderer_figure_asset_target(page, parsed.path) is None:
+                    issues.append(f"{page.name}: local href leaves output/web or is missing: {raw_href}")
     return tuple(issues)
 
 
@@ -414,6 +449,10 @@ _FIGURE_RE = re.compile(
     flags=re.IGNORECASE | re.DOTALL,
 )
 _IMAGE_RE = re.compile(r"<img\b(?P<attrs>[^>]*)>", flags=re.IGNORECASE | re.DOTALL)
+_TABLE_RE = re.compile(
+    r"<table\b(?P<attrs>[^>]*)>(?P<body>.*?)</table>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
 
 
 def _html_attribute_assignment_pattern(name: str) -> re.Pattern[str]:
@@ -617,6 +656,7 @@ def enhance_accessibility(
         flags=re.IGNORECASE,
     )
     content = replace_figure_alts(content, registry_path=registry_path)
+    content = wrap_responsive_tables(content)
     if not re.search(r"<main\b", content, flags=re.IGNORECASE):
         main_open = '<main id="main-content" tabindex="-1">'
         toc_pattern = r'(?P<toc><nav\b[^>]*\bid=["\']TOC["\'][^>]*>.*?</nav>)'
@@ -640,6 +680,33 @@ def enhance_accessibility(
             flags=re.IGNORECASE,
         )
     write_if_changed(html_file, content)
+
+
+def wrap_responsive_tables(content: str) -> str:
+    """Confine wide tables to labelled keyboard-scrollable containers."""
+
+    def _table(match: re.Match[str]) -> str:
+        attributes = match.group("attrs")
+        if _has_html_attribute(attributes, "data-responsive-table"):
+            return match.group(0)
+        body = match.group("body")
+        caption_match = re.search(
+            r"<caption\b[^>]*>(?P<caption>.*?)</caption>",
+            body,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        caption = html.unescape(re.sub(r"<[^>]+>", " ", caption_match.group("caption"))) if caption_match else ""
+        context = " ".join(caption.split())
+        if len(context) > 120:
+            context = context[:117].rstrip() + "…"
+        accessible_name = f"Scrollable table: {context}" if context else "Scrollable data table"
+        table = f'<table{attributes} data-responsive-table="true">{body}</table>'
+        return (
+            '<div class="table-scroll" role="region" tabindex="0" '
+            f'aria-label="{html.escape(accessible_name, quote=True)}">{table}</div>'
+        )
+
+    return _TABLE_RE.sub(_table, content)
 
 
 def add_responsive_image_variants(html_file: Path) -> None:
@@ -692,10 +759,21 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
         caption = html.unescape(re.sub(r"<[^>]+>", " ", caption_match.group("caption"))) if caption_match else ""
         accessible_context = " ".join(caption.split()) or (_html_attribute(image_attributes, "alt") or "").strip()
         if not accessible_context:
-            return "Open full-size figure"
+            raise RenderingError(
+                "Rendered figure cannot receive a contextual full-size link without a caption or alternative",
+            )
         if len(accessible_context) > 140:
             accessible_context = accessible_context[:137].rstrip() + "…"
-        return f"Open full-size figure: {accessible_context}"
+        numbered_caption = re.match(
+            r"Figure\s+(?P<number>[^:]+):\s*(?P<title>.+)",
+            accessible_context,
+            flags=re.IGNORECASE,
+        )
+        if numbered_caption is not None:
+            number = numbered_caption.group("number").strip()
+            title = numbered_caption.group("title").strip()
+            return f"Open full-size Figure {number}, {title}"
+        return f"Open full-size figure, {accessible_context}"
 
     def _figure(match: re.Match[str]) -> str:
         figure_body = match.group("body")
