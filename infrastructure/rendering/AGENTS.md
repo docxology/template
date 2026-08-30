@@ -102,9 +102,14 @@ renderers without owning validation policy or project analysis.
   and Beamer from one Pandoc JSON AST, splits only between semantic blocks,
   bounds prose at 80 words and displayed tables at eight body rows, allocates
   at least 70% of a figure-led frame to the figure, and enforces native
-  title/body/figure-label floors of 28/20/16 points. A source block that cannot
+  title/body/figure-label floors of 28/20/16 points on an explicit 16:9 Beamer
+  projection canvas. A source block that cannot
   satisfy those bounds fails with a stable `slides.*` diagnostic instead of
-  shrinking or character-count splitting. Reveal.js is the keyboard-operable,
+  shrinking or character-count splitting. Dense tables retain a contiguous
+  whole-row excerpt when geometry permits; otherwise the slide emits the
+  explicit `slides.density.table-reader-fallback` notice and links to the full
+  table in HTML rather than shrinking, clipping, or fragmenting a row.
+  Reveal.js is the keyboard-operable,
   long-description-bearing presentation reader; dense captions and complete
   tables link to the canonical manuscript HTML. Beamer remains an explicitly
   labelled untagged presentation derivative. Neither a successful render nor

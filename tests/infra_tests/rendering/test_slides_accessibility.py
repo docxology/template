@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -65,6 +66,10 @@ def _row(value: str) -> list[Any]:
     return [["", [], []], [_cell(value), _cell("value")]]
 
 
+def _row_values(values: list[str]) -> list[Any]:
+    return [["", [], []], [_cell(value) for value in values]]
+
+
 def _table(rows: int) -> dict[str, Any]:
     return {
         "t": "Table",
@@ -72,8 +77,23 @@ def _table(rows: int) -> dict[str, Any]:
             ["", [], []],
             [None, []],
             [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}]] * 2,
-            [["", [], []], [[_row("key")]]],
+            [["", [], []], [_row("key")]],
             [[["", [], []], 0, [], [_row(str(index)) for index in range(rows)]]],
+            [["", [], []], []],
+        ],
+    }
+
+
+def _table_values(headers: list[str], rows: list[list[str]]) -> dict[str, Any]:
+    assert all(len(row) == len(headers) for row in rows)
+    return {
+        "t": "Table",
+        "c": [
+            ["", [], []],
+            [None, []],
+            [[{"t": "AlignDefault"}, {"t": "ColWidthDefault"}] for _ in headers],
+            [["", [], []], [_row_values(headers)]],
+            [[["", [], []], 0, [], [_row_values(row) for row in rows]]],
             [["", [], []], []],
         ],
     }
@@ -166,8 +186,8 @@ def test_accessible_profile_rejects_unsafe_reader_links(reader_href: str) -> Non
 
 
 def test_semantic_composer_splits_only_between_prose_blocks() -> None:
-    first = _paragraph(" ".join(f"alpha{index}" for index in range(50)))
-    second = _paragraph(" ".join(f"beta{index}" for index in range(50)))
+    first = _paragraph(" ".join(f"alpha{index}" for index in range(35)))
+    second = _paragraph(" ".join(f"beta{index}" for index in range(35)))
 
     composition = compose_accessible_pandoc_document(
         _document([_header("Bounded evidence"), first, second]),
@@ -178,15 +198,61 @@ def test_semantic_composer_splits_only_between_prose_blocks() -> None:
     headers = _classed_headers(composition.document)
     assert composition.frame_count == 2
     assert [classes for _title, classes in headers] == [{"prose-slide"}, {"prose-slide"}]
-    assert "continued 2" in headers[1][0]
+    assert "part 2" in headers[1][0]
     assert composition.document["blocks"][1] == first
     assert composition.document["blocks"][3] == second
+
+
+def test_semantic_composer_splits_long_paragraph_only_at_written_clause_boundary() -> None:
+    first_sentence = " ".join(f"alpha{index}" for index in range(35)) + "."
+    second_sentence = " ".join(f"beta{index}" for index in range(35)) + "."
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Projection geometry"), _paragraph(first_sentence + " " + second_sentence)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    prose = [block for block in composition.document["blocks"] if block["t"] == "Para"]
+    assert composition.frame_count == 2
+    assert len(prose) == 2
+    assert " ".join(_visible_text(prose[0]).split()).endswith("alpha34.")
+    assert " ".join(_visible_text(prose[1]).split()).endswith("beta34.")
+
+
+def test_semantic_composer_uses_comma_only_before_clause_coordinator() -> None:
+    prefix = " ".join(f"alpha{index}" for index in range(32)) + ","
+    suffix = "while " + " ".join(f"beta{index}" for index in range(28)) + "."
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Projection geometry"), _paragraph(prefix + " " + suffix)]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    prose = [block for block in composition.document["blocks"] if block["t"] == "Para"]
+    assert composition.frame_count == 2
+    assert " ".join(_visible_text(prose[0]).split()).endswith("alpha31,")
+    assert " ".join(_visible_text(prose[1]).split()).startswith("while beta0")
+
+
+def test_semantic_composer_rejects_geometry_overflow_without_written_boundary() -> None:
+    dense = _paragraph(" ".join(f"longword{index}" for index in range(45)))
+
+    with pytest.raises(RenderingError, match=r"one prose sentence or strong clause cannot fit") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Projection geometry"), dense]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+    assert exc_info.value.context["maximum_lines"] == 8
 
 
 def test_semantic_composer_fails_on_an_indivisible_dense_block() -> None:
     dense = _paragraph(" ".join(f"word{index}" for index in range(81)))
 
-    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\].*81 words") as exc_info:
+    with pytest.raises(RenderingError, match=r"\[slides\.density\.indivisible-prose\]") as exc_info:
         compose_accessible_pandoc_document(
             _document([_header("Too dense"), dense]),
             policy=AccessibleSlidePolicy(),
@@ -195,6 +261,56 @@ def test_semantic_composer_fails_on_an_indivisible_dense_block() -> None:
 
     assert exc_info.value.context["diagnostic_code"] == "slides.density.indivisible-prose"
     assert exc_info.value.context["maximum_words"] == 80
+
+
+@pytest.mark.parametrize(
+    ("block", "code"),
+    [
+        (
+            {"t": "BulletList", "c": [[_paragraph(" ".join(f"item{index}" for index in range(50)))]]},
+            "slides.density.indivisible-list",
+        ),
+        (
+            {
+                "t": "RawBlock",
+                "c": [
+                    "tex",
+                    "\\begin{definition}" + " ".join(f"condition{index}" for index in range(90)) + "\\end{definition}",
+                ],
+            },
+            "slides.density.indivisible-raw-block",
+        ),
+    ],
+)
+def test_semantic_composer_rejects_oversized_atomic_structures(
+    block: dict[str, Any],
+    code: str,
+) -> None:
+    with pytest.raises(RenderingError, match=rf"\[{re.escape(code)}\]") as exc_info:
+        compose_accessible_pandoc_document(
+            _document([_header("Atomic source structure"), block]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
+
+    assert exc_info.value.context["diagnostic_code"] == code
+    assert exc_info.value.context["estimated_lines"] > exc_info.value.context["maximum_lines"]
+
+
+def test_semantic_composer_debits_inline_code_at_the_monospace_width() -> None:
+    inlines: list[dict[str, Any]] = []
+    for index in range(12):
+        if index:
+            inlines.append({"t": "Space"})
+        inlines.append({"t": "Code", "c": [["", [], []], f"canonical_parameter_name_{index}"]})
+    block = {"t": "Para", "c": inlines}
+
+    with pytest.raises(RenderingError, match=r"slides\.density\.indivisible-prose"):
+        compose_accessible_pandoc_document(
+            _document([_header("Monospace geometry"), block]),
+            policy=AccessibleSlidePolicy(),
+            source="manuscript/results.md",
+        )
 
 
 def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
@@ -209,9 +325,89 @@ def test_semantic_composer_excerpts_table_without_mutating_source() -> None:
 
     rendered_table = next(block for block in composition.document["blocks"] if block["t"] == "Table")
     assert composition.excerpted_table_count == 1
-    assert len(rendered_table["c"][4][0][3]) == 8
+    # The configured eight-row value remains an absolute ceiling. Projection
+    # geometry retains four compact rows after the header, table rules, and
+    # contextual canonical-reader link are accounted for at 20 points.
+    assert len(rendered_table["c"][4][0][3]) == 4
+    assert len(rendered_table["c"][4][0][3]) <= AccessibleSlidePolicy().max_table_rows
     assert "canonical HTML manuscript" in " ".join(_visible_text(rendered_table).split())
     assert len(table["c"][4][0][3]) == 10
+    assert all(colspec[1]["t"] == "ColWidth" for colspec in rendered_table["c"][2])
+    assert all(colspec[1]["t"] == "ColWidthDefault" for colspec in table["c"][2])
+
+
+def test_table_excerpt_geometry_accounts_for_cell_wrapping() -> None:
+    table = _table_values(
+        ["Metric", "Value"],
+        [
+            ["first", "short"],
+            ["A source-owned explanatory cell " * 8, "long"],
+            ["third", "short"],
+        ],
+    )
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Exact values"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    assert len(rendered["c"][4][0][3]) == 1
+    assert composition.excerpted_table_count == 1
+
+
+def test_table_excerpt_geometry_accounts_for_continuation_title_lines() -> None:
+    table = _table(10)
+    composition = compose_accessible_pandoc_document(
+        _document(
+            [
+                _header(
+                    "A deliberately long table heading that preserves its full wording on a divider before projection"
+                ),
+                table,
+            ]
+        ),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    rendered = next(block for block in composition.document["blocks"] if block["t"] == "Table")
+    assert composition.section_divider_count == 1
+    assert len(rendered["c"][4][0][3]) == 2
+
+
+def test_table_excerpt_uses_contextual_reader_fallback_when_no_whole_row_fits() -> None:
+    table = _table_values(
+        [
+            "Method",
+            "Contamination rate",
+            "Rank-biserial-derived d-equivalent",
+            "Interpretive label",
+            "Raw p value",
+            "Adjusted q value",
+            "Reject null",
+        ],
+        [["RKL", "0.5", "saturated", "large", "1e-8", "2e-8", "yes"]],
+    )
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Paired contrasts"), table]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    assert composition.excerpted_table_count == 1
+    assert not any(block["t"] == "Table" for block in composition.document["blocks"])
+    fallback = next(block for block in composition.document["blocks"] if block["t"] == "Div")
+    assert "table-reader-fallback" in fallback["c"][0][1]
+    assert ["data-diagnostic-code", "slides.density.table-reader-fallback"] in fallback["c"][0][2]
+    assert ["data-columns", "7"] in fallback["c"][0][2]
+    assert ["data-body-rows", "1"] in fallback["c"][0][2]
+    assert ["data-available-lines", "8"] in fallback["c"][0][2]
+    visible = " ".join(_visible_text(fallback).split())
+    assert "20-point frame geometry" in visible
+    assert "canonical HTML manuscript" in visible
 
 
 def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> None:
@@ -244,7 +440,57 @@ def test_semantic_composer_isolates_figures_equations_code_and_evidence() -> Non
     assert "caption, long description, and exact values" in " ".join(_visible_text(composition.document).split())
     rendered_figure = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
     rendered_image = rendered_figure["c"][2][0]["c"][0]
-    assert ["height", "60%"] in rendered_image["c"][0][2]
+    assert ["height", "55%"] in rendered_image["c"][0][2]
+
+
+def test_semantic_composer_drops_page_break_and_keeps_crossref_suffixed_equation_atomic() -> None:
+    page_break = {"t": "RawBlock", "c": ["tex", "\\newpage"]}
+    equation = {
+        "t": "Para",
+        "c": [
+            {"t": "Math", "c": [{"t": "DisplayMath"}, "x = y"]},
+            {"t": "Space"},
+            {"t": "Str", "c": "{#eq:identity}"},
+        ],
+    }
+
+    composition = compose_accessible_pandoc_document(
+        _document([_header("Equation"), page_break, equation]),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/formalism.md",
+    )
+
+    assert composition.frame_count == 1
+    assert all(block != page_break for block in composition.document["blocks"])
+    assert _classed_headers(composition.document)[0][1] == {"equation-led"}
+
+
+def test_long_title_figure_allocation_uses_title_adjusted_body_geometry() -> None:
+    image = {"t": "Image", "c": [["", [], []], _inlines("Trend"), ["trend.png", ""]]}
+    figure = {
+        "t": "Figure",
+        "c": [["fig:trend", [], []], [None, []], [{"t": "Plain", "c": [image]}]],
+    }
+    composition = compose_accessible_pandoc_document(
+        _document(
+            [
+                _header("A deliberately long evidence heading that wraps across multiple projection lines"),
+                figure,
+            ]
+        ),
+        policy=AccessibleSlidePolicy(),
+        source="manuscript/results.md",
+    )
+
+    assert composition.section_divider_count == 1
+    headers = _classed_headers(composition.document)
+    assert "section-divider" in headers[0][1]
+    assert "part 2" in headers[1][0]
+    continuation_header = next(block for block in composition.document["blocks"] if block["t"] == "Header")["c"]
+    assert continuation_header[2]
+    rendered_figure = next(block for block in composition.document["blocks"] if block["t"] == "Figure")
+    rendered_image = rendered_figure["c"][2][0]["c"][0]
+    assert ["height", "41%"] in rendered_image["c"][0][2]
 
 
 def test_semantic_composer_rejects_accidental_title_only_but_accepts_section_divider() -> None:
@@ -276,6 +522,20 @@ def test_accessible_beamer_overflow_discards_derivative_with_stable_diagnostic(t
     assert not compiled_pdf.exists()
     assert exc_info.value.context["diagnostic_code"] == "slides.density.beamer-overflow"
     assert exc_info.value.context["finding_count"] == 1
+
+
+def test_accessible_beamer_overflow_gate_ignores_non_layout_log_findings(tmp_path: Path) -> None:
+    log_file = tmp_path / "deck.log"
+    compiled_pdf = tmp_path / "deck.pdf"
+    log_file.write_text(
+        "LaTeX Warning: Reference `fig:other-deck' on page 2 undefined on input line 42.\n",
+        encoding="utf-8",
+    )
+    compiled_pdf.write_bytes(b"%PDF-1.7\nlayout-valid")
+
+    _reject_accessible_beamer_overflow(log_file, compiled_pdf)
+
+    assert compiled_pdf.exists()
 
 
 @pytest.mark.slow

@@ -62,13 +62,23 @@ from infrastructure.rendering.security import subprocess_options
 logger = get_logger(__name__)
 
 
+# The accessible projection profile owns its physical canvas as well as its
+# typography.  Pandoc otherwise emits Beamer's historical 4:3 default, which
+# makes the required 20-point body text wrap into vertically overflowing
+# frames even when the semantic composer has respected every source boundary.
+# Keep archive mode untouched; this is an opt-in accessible-profile contract.
+_ACCESSIBLE_BEAMER_ASPECT_RATIO = "169"
+
+
 def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
     """Discard a Beamer derivative whose fixed accessible layout overflowed."""
 
-    findings = parse_latex_log_findings(
-        log_file,
-        blocked_layout_kinds={r"Overfull \hbox", r"Overfull \vbox"},
-    )
+    blocked = {r"Overfull \hbox", r"Overfull \vbox"}
+    findings = [
+        finding
+        for finding in parse_latex_log_findings(log_file, blocked_layout_kinds=blocked)
+        if finding.kind in blocked
+    ]
     if not findings:
         return
     compiled_pdf.unlink(missing_ok=True)
@@ -423,7 +433,13 @@ class SlidesRenderer:
             f"--slide-level={slide_level}",
         ]
         if self.config.slides_profile == "accessible":
-            cmd.extend(["-f", "json"])
+            cmd.extend(
+                [
+                    "-f",
+                    "json",
+                    f"--variable=aspectratio:{_ACCESSIBLE_BEAMER_ASPECT_RATIO}",
+                ]
+            )
 
         # Apply the allowframebreaks Lua filter so that long sections
         # without h2 sub-headings still split across slides instead of

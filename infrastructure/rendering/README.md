@@ -359,10 +359,23 @@ render without changing project metadata.
 
 Accessible mode first parses Markdown into Pandoc JSON, then creates frames at
 semantic block boundaries. Paragraphs are grouped only while the frame remains
-within the prose budget. Figures, equations, code blocks, evidence blocks, and
+within the prose budget. Its Beamer derivative uses an explicit 16:9 projection
+canvas so the native typography floors are evaluated against stable widescreen
+geometry; the default archive profile retains Beamer's historical canvas.
+When a long section spans several frames, continuation frames use a bounded
+word-boundary title with the complete section title retained as their accessible
+name; the first frame always preserves the full visible title.
+Figures, equations, code blocks, evidence blocks, and
 bounded table excerpts each receive their own frame. The composer never splits
 inside an equation, list, code block, table, or figure. An indivisible block
 that exceeds its declared budget fails with a `slides.density.*` diagnostic;
+an indivisible list is reported specifically as
+`slides.density.indivisible-list`. Table excerpts retain a contiguous prefix of
+at most eight complete body rows after title, header, cell wrapping, rules, and
+the canonical-reader link are priced against the same geometry. If even one
+complete body row cannot fit at the 20-point floor, the projected frame becomes
+an explicit `slides.density.table-reader-fallback` notice linking to the full
+semantic table in the HTML companion; it never clips a row or shrinks type.
 an accidental title-only frame fails with `slides.structure.title-only`.
 Explicit level-one headings and headings marked `section-divider` remain valid
 section dividers. Accessible Beamer also rejects and removes a compiled

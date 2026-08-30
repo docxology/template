@@ -906,6 +906,53 @@ code
         assert cmd[h_idx + 1].endswith("_slides_math_header.tex")
         assert Path(cmd[h_idx + 1]).exists()
 
+    @pytest.mark.parametrize(
+        ("slides_profile", "expected_aspect_ratio"),
+        [
+            ("archive", False),
+            ("accessible", True),
+        ],
+    )
+    def test_accessible_beamer_owns_widescreen_canvas_without_changing_archive(
+        self,
+        tmp_path,
+        slides_profile,
+        expected_aspect_ratio,
+    ):
+        """Only the opt-in projection profile requests Beamer's 16:9 canvas."""
+
+        source = tmp_path / "00_intro.md"
+        source.write_text("# Slide 1\n\nHello.\n", encoding="utf-8")
+        (tmp_path / "slides").mkdir()
+        captured: dict[str, list[str]] = {}
+
+        def fake_run(cmd, *args, **kwargs):
+            captured["cmd"] = cmd
+            tex_path = Path(cmd[cmd.index("-o") + 1])
+            tex_path.write_text("\\documentclass{beamer}\\begin{document}foo\\end{document}\n")
+            return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+        def fake_compile(tex, out_dir, **kwargs):
+            compiled = out_dir / f"{tex.stem}.pdf"
+            compiled.write_bytes(b"%PDF-1.4 fake\n")
+            return compiled
+
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                output_dir=tmp_path,
+                slides_dir=tmp_path / "slides",
+                slides_profile=slides_profile,
+            ),
+            process_runner=fake_run,
+            latex_compile=fake_compile,
+        )
+
+        output_file = tmp_path / "slides" / "00_intro_slides.pdf"
+        renderer._render_beamer_with_paths(source, output_file, manuscript_dir=None, figures_dir=None)
+
+        aspect_ratio_arg = "--variable=aspectratio:169"
+        assert (aspect_ratio_arg in captured["cmd"]) is expected_aspect_ratio
+
     def test_beamer_pandoc_cmd_includes_h_flag_for_citation_fallbacks(self, tmp_path):
         """The slides math header is now always written so natbib
         citation fallbacks are in scope, even when the preamble doesn't
