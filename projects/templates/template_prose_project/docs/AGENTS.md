@@ -24,7 +24,7 @@ in this project.
 | [`architecture.md`](architecture.md) | Two-layer compliance + data-flow sequence diagram | 80 |
 | [`style_guide.md`](style_guide.md) | 7 rules: Zero-Mock, Infrastructure Delegation, Thin Orchestrator, Show-Not-Tell, Explicit Paths, Type Hints, Error Messages | 268 |
 | [`syntax_guide.md`](syntax_guide.md) | Pandoc-crossref `[@sec:…]`, all eleven `{{TOKEN}}`s, code blocks, no-figures rationale | 209 |
-| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; coverage mechanics; integration test (live counts in `docs/_generated/COUNTS.md`) | 169 |
+| [`testing_philosophy.md`](testing_philosophy.md) | Zero-mock standard; coverage mechanics; integration test (live counts in `docs/_generated/COUNTS.md`) | 176 |
 | [`rendering_pipeline.md`](rendering_pipeline.md) | Four-phase manuscript→PDF flow; config.yaml controls; troubleshooting | 259 |
 | [`output_conventions.md`](output_conventions.md) | Producer/consumer table for every artefact in `output/` | 66 |
 | [`quickstart.md`](quickstart.md) | 5-step first-run walkthrough | 81 |
