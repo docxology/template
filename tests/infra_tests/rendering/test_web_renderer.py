@@ -100,6 +100,9 @@ class TestMathJaxIntegration:
         assert content.index(_MATHJAX_FONT_URL) < content.index(_MATHJAX_URL)
         assert "aria-roledescription" in content
         assert "mathematical expression" in content
+        assert 'displayOverflow: "linebreak"' in content
+        assert 'width: "100%"' in content
+        assert "lineleading: 0.5" in content
 
 
 class TestCssIntegration:
@@ -379,7 +382,7 @@ def test_numbered_figure_full_size_link_has_contextual_accessible_name(
     html_file = tmp_path / "index.html"
     html_file.write_text(
         '<html><body><figure id="fig:dense"><img src="../figures/dense.png" '
-        'alt="Dense scientific figure"><figcaption>Figure 7: Evidence map.</figcaption>'
+        'alt="Dense scientific figure"><figcaption>Figure 7: Evidence map \\(F(q)\\).</figcaption>'
         "</figure></body></html>",
         encoding="utf-8",
     )
@@ -387,8 +390,49 @@ def test_numbered_figure_full_size_link_has_contextual_accessible_name(
     WebRenderer._add_full_resolution_figure_links(html_file)
 
     content = html_file.read_text(encoding="utf-8")
-    assert 'aria-label="Open full-size Figure 7, Evidence map."' in content
+    assert 'aria-label="Open full-size Figure 7, Evidence map F(q)."' in content
     assert 'aria-label="Open full-size figure"' not in content
+
+
+def test_full_size_link_uses_concise_caption_result_not_caption_metadata(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure id="fig:evidence"><img src="../figures/evidence.png" '
+        'alt="Evidence map"><figcaption>Figure 12: Evidence classes remain in separate lanes. '
+        "Source relation: source-owned explanatory map; uncertainty: none.</figcaption>"
+        "</figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'aria-label="Open full-size Figure 12, Evidence classes remain in separate lanes."' in content
+    assert "Source relation" in content
+    assert 'aria-label="Open full-size Figure 12, Evidence classes remain in separate lanes. Source' not in content
+
+
+def test_full_size_link_shortens_a_long_result_at_a_semantic_boundary(
+    tmp_path: Path,
+) -> None:
+    html_file = tmp_path / "index.html"
+    html_file.write_text(
+        '<html><body><figure><img src="evidence.png" alt="Evidence map">'
+        "<figcaption>Figure 6: Evidence class and replication remain claim-lane specific; "
+        "guarantees do not migrate between client and server lanes.</figcaption></figure></body></html>",
+        encoding="utf-8",
+    )
+
+    WebRenderer._add_full_resolution_figure_links(html_file)
+
+    content = html_file.read_text(encoding="utf-8")
+    assert 'aria-label="Open full-size Figure 6, Evidence class and replication remain claim-lane specific"' in content
+    assert "guarantees do not migrate" in content
+    assert (
+        'aria-label="Open full-size Figure 6, Evidence class and replication remain claim-lane specific;' not in content
+    )
 
 
 def test_full_size_figure_link_rejects_missing_context(tmp_path: Path) -> None:
@@ -739,6 +783,10 @@ class TestEmbedCss:
         assert "overflow-x: clip" in content
         assert ".table-scroll" in content
         assert "overflow-x: auto" in content
+        assert "white-space: pre-wrap" in content
+        assert "pre > code.sourceCode > span" in content
+        assert "pre.sourceCode code span" in content
+        assert 'mjx-container[display="true"] { max-width: 100%; overflow: visible; }' in content
         assert ".figure-exact-values" in content
 
 

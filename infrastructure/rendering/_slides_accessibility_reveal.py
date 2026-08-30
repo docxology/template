@@ -18,16 +18,31 @@ from infrastructure.rendering._web_postprocess import (
 
 _SLIDE_OPEN_RE = re.compile(
     r"(?P<open><section\b(?P<attrs>[^>]*)>)(?P<spacing>\s*)"
-    r"(?P<heading><h(?P<level>[1-6])\b(?P<heading_attrs>[^>]*)>.*?</h(?P=level)>)",
+    r"(?P<heading_open><h(?P<level>[1-6])\b(?P<heading_attrs>[^>]*)>)"
+    r"(?P<heading_body>.*?)"
+    r"(?P<heading_close></h(?P=level)>)",
     flags=re.IGNORECASE | re.DOTALL,
 )
 _TAG_RE = re.compile(r"<[^>]+>")
 _STANDALONE_HTML_RE = re.compile(r"(?:<!doctype\s+html\b|<html(?:\s|>))", flags=re.IGNORECASE)
+_READER_NAV_RE = re.compile(
+    r"\s*<nav\b(?=[^>]*\bclass\s*=\s*[\"'][^\"']*\bslide-reader-nav\b)[^>]*>.*?</nav>\s*",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+_SKIP_LINK_RE = re.compile(
+    r"<a\b(?=[^>]*\bclass\s*=\s*[\"'][^\"']*\bskip-link\b)"
+    r"(?=[^>]*\bhref\s*=\s*(?:\"#main-content\"|'#main-content'))[^>]*>.*?</a>",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+_TITLE_RE = re.compile(r"<title\b[^>]*>.*?</title>", flags=re.IGNORECASE | re.DOTALL)
+_MAIN_OPEN_RE = re.compile(r"<main\b[^>]*>", flags=re.IGNORECASE)
+_HEADING_ID_RE = re.compile(r'(?<!\S)id\s*=\s*["\'](?P<id>[^"\']+)', flags=re.IGNORECASE)
 _ACCESSIBLE_REVEAL_MARKERS = (
     "data-template-accessible-slides",
     'aria-label="Presentation companion"',
     'aria-label="Presentation slides"',
     'aria-roledescription="slide"',
+    "dist/theme/white.css",
     "overflow-x: hidden",
 )
 
@@ -46,23 +61,31 @@ def _set_html_attribute(tag: str, name: str, value: str) -> str:
 def _reveal_semantics(content: str) -> str:
     """Name every Reveal slide from its first heading and add slide roles."""
 
+    seen_heading_ids: set[str] = set()
+
     def replace(match: re.Match[str]) -> str:
-        heading_tag = match.group("heading")
-        identifier_match = re.search(
-            r'(?<!\S)id\s*=\s*["\'](?P<id>[^"\']+)',
-            match.group("heading_attrs"),
-        )
-        if identifier_match is None:
-            heading_text = html.unescape(_TAG_RE.sub("", heading_tag)).strip()
-            heading_id = "slide-heading-" + hashlib.sha256(heading_text.encode("utf-8")).hexdigest()[:12]
-            updated_heading = _set_html_attribute(heading_tag, "id", heading_id)
+        heading_open = match.group("heading_open")
+        heading_body = match.group("heading_body")
+        identifier_match = _HEADING_ID_RE.search(match.group("heading_attrs"))
+        heading_text = " ".join(html.unescape(_TAG_RE.sub(" ", heading_body)).split())
+        candidate_id = identifier_match.group("id") if identifier_match is not None else ""
+        if not candidate_id or candidate_id in seen_heading_ids:
+            digest = hashlib.sha256(heading_text.encode("utf-8")).hexdigest()[:12]
+            base_id = f"slide-heading-{digest}"
+            heading_id = base_id
+            suffix = 2
+            while heading_id in seen_heading_ids:
+                heading_id = f"{base_id}-{suffix}"
+                suffix += 1
+            updated_heading_open = _set_html_attribute(heading_open, "id", heading_id)
         else:
-            heading_id = identifier_match.group("id")
-            updated_heading = heading_tag
+            heading_id = candidate_id
+            updated_heading_open = heading_open
+        seen_heading_ids.add(heading_id)
         open_tag = _set_html_attribute(match.group("open"), "role", "group")
         open_tag = _set_html_attribute(open_tag, "aria-roledescription", "slide")
         open_tag = _set_html_attribute(open_tag, "aria-labelledby", heading_id)
-        return f"{open_tag}{match.group('spacing')}{updated_heading}"
+        return f"{open_tag}{match.group('spacing')}{updated_heading_open}{heading_body}{match.group('heading_close')}"
 
     updated = _SLIDE_OPEN_RE.sub(replace, content)
     unnamed_slide = re.search(
@@ -79,6 +102,72 @@ def _reveal_semantics(content: str) -> str:
     return updated
 
 
+def _first_slide_heading(content: str) -> str:
+    """Return the first visible slide heading as plain, normalized text."""
+
+    match = _SLIDE_OPEN_RE.search(content)
+    if match is None:
+        raise RenderingError(
+            "[slides.structure.heading] Reveal deck has no authored slide heading",
+            context={"diagnostic_code": "slides.structure.heading"},
+        )
+    heading = " ".join(html.unescape(_TAG_RE.sub(" ", match.group("heading_body"))).split())
+    if not heading:
+        raise RenderingError(
+            "[slides.structure.heading] Reveal deck has an empty authored slide heading",
+            context={"diagnostic_code": "slides.structure.heading"},
+        )
+    return heading
+
+
+def _set_document_title_and_heading(content: str, heading: str) -> str:
+    """Bind the browser title and document heading to authored slide text."""
+
+    page_title = f"{heading} — presentation"
+    escaped_title = html.escape(page_title)
+    if _TITLE_RE.search(content):
+        content = _TITLE_RE.sub(lambda _match: f"<title>{escaped_title}</title>", content, count=1)
+    else:
+        content = content.replace("</head>", f"<title>{escaped_title}</title>\n</head>", 1)
+
+    # Pandoc emits h2 slide headings when the source has no explicit h1. Add a
+    # single visually hidden document-level heading in that case so heading
+    # navigation still exposes a page title without changing projected text.
+    if re.search(r"<h1\b", content, flags=re.IGNORECASE) is None:
+        digest = hashlib.sha256(page_title.encode("utf-8")).hexdigest()[:12]
+        heading_id = f"presentation-title-{digest}"
+        document_heading = f'<h1 id="{heading_id}" class="visually-hidden">{escaped_title}</h1>'
+
+        def add_heading(match: re.Match[str]) -> str:
+            main = _set_html_attribute(match.group(0), "aria-labelledby", heading_id)
+            return f"{main}\n{document_heading}"
+
+        content, replacements = _MAIN_OPEN_RE.subn(add_heading, content, count=1)
+        if replacements != 1:
+            raise RenderingError(
+                "[slides.structure.main] Reveal deck has no main landmark for its document heading",
+                context={"diagnostic_code": "slides.structure.main"},
+            )
+    return content
+
+
+def _place_reader_navigation_after_skip_link(content: str, reader_href: str) -> str:
+    """Make the skip link the first focusable body control."""
+
+    content = _READER_NAV_RE.sub("\n", content)
+    skip_match = _SKIP_LINK_RE.search(content)
+    if skip_match is None:
+        raise RenderingError(
+            "[slides.accessibility.skip-link] Reveal deck has no main-content skip link",
+            context={"diagnostic_code": "slides.accessibility.skip-link"},
+        )
+    nav = (
+        '<nav class="slide-reader-nav" aria-label="Presentation companion">'
+        f'<a href="{html.escape(reader_href, quote=True)}">Open canonical HTML manuscript</a></nav>'
+    )
+    return content[: skip_match.end()] + "\n" + nav + content[skip_match.end() :]
+
+
 def _accessible_reveal_css(policy: AccessibleSlidePolicy) -> str:
     body_px = policy.body_font_pt * (4 / 3)
     title_px = policy.title_font_pt * (4 / 3)
@@ -86,6 +175,7 @@ def _accessible_reveal_css(policy: AccessibleSlidePolicy) -> str:
     return f"""<style data-template-accessible-slides>
 :root {{ --r-background-color: #ffffff; --r-main-color: #111111; --r-link-color: #004b87; }}
 html, body {{ max-width: 100%; overflow-x: hidden; }}
+main#main-content {{ inline-size: 100%; block-size: 100vh; min-block-size: 100vh; }}
 .reveal {{ color: #111111; background: #ffffff; font-size: {body_px:.2f}px; }}
 .reveal .slides section {{
   max-width: 100%; min-width: 0; overflow-wrap: anywhere;
@@ -137,6 +227,11 @@ html, body {{ max-width: 100%; overflow-x: hidden; }}
   padding: 0.5rem;
 }}
 .skip-link:focus {{ inset-block-start: 0.5rem; }}
+.visually-hidden {{
+  position: absolute !important; inline-size: 1px !important; block-size: 1px !important;
+  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
+}}
 .figure-long-description {{
   font-size: {label_px:.2f}px; max-height: 35vh; max-width: 100%;
   overflow: auto; overflow-wrap: anywhere;
@@ -167,15 +262,11 @@ def enhance_accessible_reveal(
     enhance_accessibility(html_file, language=language, registry_path=registry_path)
     content = html_file.read_text(encoding="utf-8")
     content = _reveal_semantics(content)
+    authored_heading = _first_slide_heading(content)
+    content = _set_document_title_and_heading(content, authored_heading)
     if "data-template-accessible-slides" not in content:
         content = content.replace("</head>", _accessible_reveal_css(policy) + "\n</head>", 1)
-    if '<nav class="slide-reader-nav"' not in content:
-        reader_href = html.escape(policy.reader_href, quote=True)
-        nav = (
-            '<nav class="slide-reader-nav" aria-label="Presentation companion">'
-            f'<a href="{reader_href}">Open canonical HTML manuscript</a></nav>'
-        )
-        content = re.sub(r"(<body\b[^>]*>)", rf"\1\n{nav}", content, count=1, flags=re.IGNORECASE)
+    content = _place_reader_navigation_after_skip_link(content, policy.reader_href)
     content = content.replace(
         '<div class="slides">',
         '<div class="slides" role="region" aria-label="Presentation slides">',
@@ -207,4 +298,24 @@ def accessible_reveal_output_issues(html_file: Path) -> tuple[str, ...]:
     )
     if re.search(r"\bkeyboard\s*:\s*true\b", content) is None:
         issues.append("Reveal keyboard navigation is not enabled")
+    if re.search(r"</h[1-6]\s+[^>]*>", content, flags=re.IGNORECASE):
+        issues.append("Reveal heading attributes appear on a closing tag")
+    if re.search(r"<h1\b", content, flags=re.IGNORECASE) is None:
+        issues.append("Reveal deck has no document-level h1")
+    title_match = _TITLE_RE.search(content)
+    if title_match is None or ".pandoc.accessible" in title_match.group(0):
+        issues.append("Reveal document title is missing or exposes a temporary build filename")
+    skip_match = _SKIP_LINK_RE.search(content)
+    nav_match = _READER_NAV_RE.search(content)
+    if skip_match is None or nav_match is None or skip_match.start() > nav_match.start():
+        issues.append("Reveal skip link is not the first presentation navigation control")
+    ids = [match.group("id") for match in _HEADING_ID_RE.finditer(content)]
+    for labelled_by in re.findall(
+        r'<section\b[^>]*\baria-roledescription\s*=\s*["\']slide["\'][^>]*'
+        r'\baria-labelledby\s*=\s*["\']([^"\']+)["\']',
+        content,
+        flags=re.IGNORECASE,
+    ):
+        if ids.count(labelled_by) != 1:
+            issues.append(f"Reveal slide aria-labelledby does not resolve exactly once: {labelled_by}")
     return tuple(issues)

@@ -468,6 +468,9 @@ class TestRevealJsRendering:
         result = renderer._render_revealjs(source, output)
         assert result == output
         assert output.is_file()
+        # The opt-in accessible profile owns its valid Reveal theme; archive
+        # mode preserves the historical caller-configured theme unchanged.
+        assert "theme/metropolis.css" in output.read_text(encoding="utf-8")
 
     def test_render_revealjs_failure(self, tmp_path):
         """Test reveal.js rendering failure handling with real execution."""

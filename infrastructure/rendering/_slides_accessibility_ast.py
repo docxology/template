@@ -26,6 +26,17 @@ from infrastructure.rendering._slides_accessibility_contracts import (
 _WORD_RE = re.compile(r"[\w]+(?:[-'][\w]+)*", flags=re.UNICODE)
 _PRESENTATION_PAGE_BREAK_RE = re.compile(r"^\\(?:clearpage|newpage|pagebreak)\s*$")
 _EQUATION_LABEL_RE = re.compile(r"^\{#(?:eq|def|prop|lem|thm):[^{}]+\}$")
+_SHELL_CODE_CLASSES = frozenset(
+    {
+        "bash",
+        "console",
+        "sh",
+        "shell",
+        "shell-session",
+        "terminal",
+        "zsh",
+    }
+)
 _BASE_BODY_LINES_16_9 = BASE_BODY_LINES_16_9
 _BODY_CHARACTERS_PER_LINE_20PT = BODY_CHARACTERS_PER_LINE_20PT
 _LIST_CHARACTERS_PER_LINE_20PT = LIST_CHARACTERS_PER_LINE_20PT
@@ -217,6 +228,118 @@ def _estimated_block_lines(block: dict[str, Any], policy: AccessibleSlidePolicy)
         )
         return sum(max(1, math.ceil(_estimated_visible_characters(item) / list_chars_per_line)) for item in raw_items)
     return max(1, math.ceil(_estimated_visible_characters(block) / body_chars_per_line))
+
+
+def _code_block_parts(block: dict[str, Any]) -> tuple[list[Any], str, str]:
+    """Return validated attributes, source text, and the primary language."""
+
+    content = block.get("c")
+    if block.get("t") != "CodeBlock" or not isinstance(content, list) or len(content) != 2:
+        raise RenderingError("Accessible slide composition received a malformed Pandoc CodeBlock")
+    attributes, source_text = content
+    if (
+        not isinstance(attributes, list)
+        or len(attributes) != 3
+        or not isinstance(attributes[1], list)
+        or not isinstance(source_text, str)
+    ):
+        raise RenderingError("Accessible slide composition received a malformed Pandoc CodeBlock")
+    classes = [str(value).casefold() for value in attributes[1]]
+    language = next((value for value in classes if value), "plain")
+    return attributes, source_text, language
+
+
+def _shell_code_inlines(source_text: str) -> list[dict[str, Any]]:
+    """Represent shell tokens as breakable inline code with visible spacing.
+
+    Pandoc's fenced ``CodeBlock`` becomes a FancyVerb environment, whose
+    physical lines cannot wrap.  Inline ``Code`` tokens keep monospace text
+    while permitting line breaks at source whitespace; the existing Beamer
+    ``breaktt`` pass adds character-level opportunities inside long paths.
+    Logical source lines remain explicit ``LineBreak`` nodes.
+    """
+
+    inlines: list[dict[str, Any]] = []
+    logical_lines = source_text.splitlines() or [""]
+    for line_index, line in enumerate(logical_lines):
+        if line_index:
+            inlines.append({"t": "LineBreak"})
+        for token in re.split(r"(\s+)", line.expandtabs(4)):
+            if not token:
+                continue
+            if token.isspace():
+                # A normal Pandoc Space provides the legal line-break point.
+                # Preserve any additional source indentation in a short
+                # monospace span; leading whitespace has no preceding point
+                # at which TeX could break and therefore stays together.
+                at_line_start = not inlines or inlines[-1].get("t") == "LineBreak"
+                if not at_line_start:
+                    inlines.append({"t": "Space"})
+                    token = token[1:]
+                if not token:
+                    continue
+            inlines.append({"t": "Code", "c": [["", ["accessible-shell-token"], []], token]})
+    return inlines
+
+
+def _prepare_code_block_for_frame(
+    block: dict[str, Any],
+    *,
+    policy: AccessibleSlidePolicy,
+    maximum_lines: int,
+    source: str,
+    heading: str,
+) -> dict[str, Any]:
+    """Preflight one atomic code block and safely reflow long shell commands.
+
+    The accessible profile keeps code blocks atomic.  A long shell command is
+    safe to wrap at whitespace and inside long path tokens, so it is converted
+    to inline monospace tokens.  Other languages can be whitespace-sensitive;
+    an over-wide physical line therefore fails closed with a stable diagnostic
+    instead of being clipped or silently typeset below the font floor.
+    """
+
+    _attributes, source_text, language = _code_block_parts(block)
+    code_chars_per_line = max(
+        1,
+        math.floor(_LIST_CHARACTERS_PER_LINE_20PT * 20 / policy.body_font_pt),
+    )
+    logical_lines = source_text.splitlines() or [""]
+    expanded_lengths = [len(line.expandtabs(4)) for line in logical_lines]
+    overwide_lines = [
+        (index, length) for index, length in enumerate(expanded_lengths, start=1) if length > code_chars_per_line
+    ]
+    classes = {str(value).casefold() for value in block["c"][0][1] if isinstance(value, str)}
+    is_shell = bool(classes & _SHELL_CODE_CLASSES)
+    if overwide_lines and not is_shell:
+        line_number, observed_characters = overwide_lines[0]
+        raise _density_error(
+            "slides.density.indivisible-code-line",
+            "one whitespace-sensitive code line cannot fit the projection frame at the declared font floor",
+            source=source,
+            heading=heading,
+            language=language,
+            line_number=line_number,
+            observed_characters=observed_characters,
+            maximum_characters=code_chars_per_line,
+        )
+
+    estimated_lines = sum(max(1, math.ceil(max(1, length) / code_chars_per_line)) for length in expanded_lengths)
+    if estimated_lines > maximum_lines:
+        raise _density_error(
+            "slides.density.indivisible-code",
+            "one atomic code block cannot fit the projection frame at the declared font floor",
+            source=source,
+            heading=heading,
+            language=language,
+            source_line_count=len(logical_lines),
+            estimated_lines=estimated_lines,
+            maximum_lines=maximum_lines,
+        )
+
+    if not overwide_lines:
+        return copy.deepcopy(block)
+    return {"t": "Para", "c": _shell_code_inlines(source_text)}
 
 
 def _trim_inline_spaces(inlines: list[Any]) -> list[Any]:

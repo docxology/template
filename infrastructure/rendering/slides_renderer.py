@@ -69,6 +69,16 @@ logger = get_logger(__name__)
 # Keep archive mode untouched; this is an opt-in accessible-profile contract.
 _ACCESSIBLE_BEAMER_ASPECT_RATIO = "169"
 
+# Accessible Reveal derivatives use a known Reveal theme rather than reusing
+# the Beamer-only ``metropolis`` default. Reveal.js does not ship a Metropolis
+# theme, so forwarding that name produces a broken stylesheet request. Pin the
+# companion runtime as part of the published reader contract; archive mode
+# retains its historical caller-configured URL/theme behavior.
+_ACCESSIBLE_REVEAL_VERSION = "5.2.1"
+_ACCESSIBLE_REVEAL_URL = f"https://unpkg.com/reveal.js@{_ACCESSIBLE_REVEAL_VERSION}"
+_ACCESSIBLE_REVEAL_THEME = "white"
+_SECTION_REF_RE = re.compile(r"\\(?P<command>ref|eqref)\{(?P<label>sec:[^}]+)\}")
+
 
 def _reject_accessible_beamer_overflow(log_file: Path, compiled_pdf: Path) -> None:
     """Discard a Beamer derivative whose fixed accessible layout overflowed."""
@@ -340,6 +350,7 @@ class SlidesRenderer:
         figures_dir: Path | None = None,
     ) -> Path:
         """Render reveal.js slides."""
+        theme = _ACCESSIBLE_REVEAL_THEME if self.config.slides_profile == "accessible" else self.config.slide_theme
         cmd = [
             self.config.pandoc_path,
             str(source_file),
@@ -349,10 +360,18 @@ class SlidesRenderer:
             str(output_file),
             "--standalone",
             "-V",
-            f"theme={self.config.slide_theme}",
+            f"theme={theme}",
         ]
         if self.config.slides_profile == "accessible":
-            cmd.extend(["-f", "json", "--slide-level=2"])
+            cmd.extend(
+                [
+                    "-f",
+                    "json",
+                    "--slide-level=2",
+                    "-V",
+                    f"revealjs-url={_ACCESSIBLE_REVEAL_URL}",
+                ]
+            )
         cmd.extend(_slide_bibliography_args(manuscript_dir))
         if manuscript_dir is not None:
             cmd.extend(["--resource-path", str(manuscript_dir)])
@@ -655,14 +674,40 @@ class SlidesRenderer:
         references are untouched (Beamer numbers them natively), labels
         missing from the aux are left as-is and noted in the render log,
         and a missing aux (e.g. first-ever render, before any combined
-        build) skips only the numeric lookup. Section references still become
-        visible labels, so the first standalone render cannot ship ``??``.
+        build) skips only the numeric lookup. In the accessible profile,
+        section references use the combined-PDF number even when their label
+        is local to the deck; Beamer does not reliably number every heading
+        level that becomes a frame. A non-strict first pass uses a readable
+        section-name fallback rather than exposing the internal label.
         The default standalone pass remains fail-open. The producer-ordered
-        refresh sets ``strict_cross_deck_refs`` and fails when any non-section
-        foreign reference remains unresolved in the post-Pandoc TeX.
+        refresh sets ``strict_cross_deck_refs`` and, in accessible mode, fails
+        when any reference (including a local section reference) is absent
+        from the current combined-manuscript AUX.
         """
         aux_path = Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME
         label_numbers = parse_aux_label_numbers(aux_path)
+        missing_accessible_sections: set[str] = set()
+        accessible_section_replacements = 0
+        if self.config.slides_profile == "accessible":
+
+            def _resolve_accessible_section(match: re.Match[str]) -> str:
+                nonlocal accessible_section_replacements
+                command = match.group("command")
+                label = match.group("label")
+                number = label_numbers.get(label)
+                if number is None:
+                    missing_accessible_sections.add(label)
+                    return match.group(0)
+                accessible_section_replacements += 1
+                return f"({number})" if command == "eqref" else number
+
+            tex_content = _SECTION_REF_RE.sub(_resolve_accessible_section, tex_content)
+            if accessible_section_replacements:
+                logger.info(
+                    "Resolved %d accessible section reference(s) from %s",
+                    accessible_section_replacements,
+                    aux_path.name,
+                )
         tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
         if replaced:
             logger.info(
@@ -670,7 +715,12 @@ class SlidesRenderer:
                 replaced,
                 aux_path.name,
             )
-        strict_unresolved = [label for label in unresolved if not label.startswith("sec:")]
+        all_unresolved = sorted({*unresolved, *missing_accessible_sections})
+        strict_unresolved = (
+            all_unresolved
+            if self.config.slides_profile == "accessible"
+            else [label for label in all_unresolved if not label.startswith("sec:")]
+        )
         if strict_cross_deck_refs and strict_unresolved:
             raise RenderingError(
                 "Current combined-manuscript AUX cannot resolve post-Pandoc cross-deck slide references",
@@ -679,23 +729,26 @@ class SlidesRenderer:
                     "unresolved_labels": strict_unresolved,
                 },
             )
-        if unresolved:
+        if all_unresolved:
             logger.warning(
                 "Left %d cross-deck reference(s) unresolved in slides (labels not in %s): %s",
-                len(unresolved),
+                len(all_unresolved),
                 aux_path.name,
-                ", ".join(unresolved),
+                ", ".join(all_unresolved),
             )
         if not label_numbers:
             logger.debug("No combined-manuscript aux label map at %s; numeric refs left as-is", aux_path)
+
         # Pandoc-crossref emits ``\ref`` for section labels. Beamer does not
         # assign numbers to every subsection level used as a slide boundary,
         # so a same-deck section label can otherwise remain ``??`` even after
         # the normal two-pass compile. Preserve the target identifier as a
         # visible, breakable token rather than shipping an unresolved marker.
-        section_ref_re = re.compile(r"\\(?:ref|eqref)\{(?P<label>sec:[^}]+)\}")
-
         def _render_section_label(match: re.Match[str]) -> str:
+            if self.config.slides_profile == "accessible":
+                slug = match.group("label").partition(":")[2]
+                readable = re.sub(r"[^A-Za-z0-9]+", " ", slug).strip() or "referenced"
+                return rf"\emph{{{readable} section}}"
             # Pandoc section identifiers may contain underscores. They are
             # ordinary characters inside the ``\texttt`` argument, but TeX
             # treats an unescaped underscore as a math-mode subscript and
@@ -705,13 +758,11 @@ class SlidesRenderer:
             label = match.group("label").replace("_", r"\_")
             return rf"\texttt{{{label}}}"
 
-        tex_content, section_replacements = section_ref_re.subn(
+        tex_content, section_replacements = _SECTION_REF_RE.subn(
             _render_section_label,
             tex_content,
         )
         if section_replacements:
-            logger.info(
-                "Rendered %d unnumbered section reference(s) as visible labels",
-                section_replacements,
-            )
+            mode = "readable names" if self.config.slides_profile == "accessible" else "visible labels"
+            logger.info("Rendered %d unnumbered section reference(s) as %s", section_replacements, mode)
         return tex_content

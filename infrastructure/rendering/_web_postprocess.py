@@ -34,6 +34,15 @@ window.MathJax.chtml = Object.assign({{}}, window.MathJax.chtml, {{
   fontURL: "{_MATHJAX_FONT_URL}",
   dynamicPrefix: "{_MATHJAX_DYNAMIC_PREFIX}"
 }});
+var templateMathOutput = window.MathJax.output || {{}};
+window.MathJax.output = Object.assign({{}}, templateMathOutput, {{
+  displayOverflow: "linebreak",
+  linebreaks: Object.assign({{}}, templateMathOutput.linebreaks, {{
+    inline: true,
+    width: "100%",
+    lineleading: 0.5
+  }})
+}});
 window.normalizeTemplateMathJaxAria = function () {{
   document.querySelectorAll("mjx-speech[aria-roledescription]").forEach(function (node) {{
     var roleDescription = node.getAttribute("aria-roledescription") || "";
@@ -98,6 +107,28 @@ SHARED_DESIGN_TOKENS_CSS = """:root {
 .figure-long-description > summary { cursor: pointer; font-weight: 700; }
 .figure-long-description > p { max-width: 80ch; overflow-wrap: anywhere; }
 .figure-exact-values { max-width: 80ch; overflow-wrap: anywhere; }
+code { overflow-wrap: anywhere; word-break: break-word; }
+pre {
+  max-width: 100%;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+pre code { overflow-wrap: inherit; white-space: inherit; word-break: inherit; }
+div.sourceCode { max-width: 100%; overflow: visible; }
+pre.sourceCode { background: #2c3e50; color: #ecf0f1; }
+pre.sourceCode code,
+pre.sourceCode code span { color: inherit; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+mjx-container[display="true"] { max-width: 100%; overflow: visible; }
 .table-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -758,22 +789,28 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
         )
         caption = html.unescape(re.sub(r"<[^>]+>", " ", caption_match.group("caption"))) if caption_match else ""
         accessible_context = " ".join(caption.split()) or (_html_attribute(image_attributes, "alt") or "").strip()
+        accessible_context = re.sub(r"\\(?:\(|\)|\[|\])", "", accessible_context)
         if not accessible_context:
             raise RenderingError(
                 "Rendered figure cannot receive a contextual full-size link without a caption or alternative",
             )
-        if len(accessible_context) > 140:
-            accessible_context = accessible_context[:137].rstrip() + "…"
         numbered_caption = re.match(
             r"Figure\s+(?P<number>[^:]+):\s*(?P<title>.+)",
             accessible_context,
             flags=re.IGNORECASE,
         )
-        if numbered_caption is not None:
-            number = numbered_caption.group("number").strip()
-            title = numbered_caption.group("title").strip()
-            return f"Open full-size Figure {number}, {title}"
-        return f"Open full-size figure, {accessible_context}"
+        number = numbered_caption.group("number").strip() if numbered_caption is not None else None
+        title_source = numbered_caption.group("title").strip() if numbered_caption is not None else accessible_context
+        sentence = re.match(r"(?P<title>.+?[.!?])(?:\s|$)", title_source)
+        title = sentence.group("title").strip() if sentence is not None else title_source
+        if len(title) > 88:
+            boundary = re.search(r"(?:;|\s+—|\s+while\b|\s+and\b|\s+for\b|\s+\()", title[36:])
+            if boundary is not None:
+                title = title[: 36 + boundary.start()].rstrip(" ,.;:")
+        if len(title) > 96:
+            title = title[:93].rsplit(" ", 1)[0].rstrip(" ,;:") + "…"
+        prefix = f"Open full-size Figure {number}" if number is not None else "Open full-size figure"
+        return f"{prefix}, {title}"
 
     def _figure(match: re.Match[str]) -> str:
         figure_body = match.group("body")

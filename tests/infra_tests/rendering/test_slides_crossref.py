@@ -223,6 +223,55 @@ class TestSlidesRendererHook:
             r"See \texttt{sec:experimental\_setup} for the run configuration."
         )
 
+    def test_accessible_profile_resolves_local_section_from_combined_aux(self, tmp_path):
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{sec:experimental_setup}{{2.3}{7}{Setup}{subsection.2.3}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+        tex = (
+            r"\section{Setup}\label{sec:experimental_setup}"
+            "\n"
+            r"See Section \ref{sec:experimental_setup}."
+        )
+
+        updated = renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=True)
+
+        assert r"\label{sec:experimental_setup}" in updated
+        assert "See Section 2.3." in updated
+        assert r"\ref{sec:experimental_setup}" not in updated
+
+    def test_accessible_strict_profile_rejects_section_missing_from_aux(self, tmp_path):
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                pdf_dir=str(tmp_path / "output" / "pdf"),
+                slides_profile="accessible",
+            )
+        )
+
+        with pytest.raises(RenderingError, match="cannot resolve post-Pandoc") as exc_info:
+            renderer._resolve_cross_deck_refs(
+                r"\section{Setup}\label{sec:experimental_setup} See \ref{sec:experimental_setup}.",
+                strict_cross_deck_refs=True,
+            )
+
+        assert exc_info.value.context["unresolved_labels"] == ["sec:experimental_setup"]
+
+    def test_accessible_first_pass_humanizes_section_without_leaking_internal_label(self, tmp_path):
+        renderer = SlidesRenderer(
+            RenderingConfig(
+                pdf_dir=str(tmp_path / "output" / "pdf"),
+                slides_profile="accessible",
+            )
+        )
+
+        updated = renderer._resolve_cross_deck_refs(r"See \ref{sec:experimental_setup}.")
+
+        assert updated == r"See \emph{experimental setup section}."
+        assert "sec:" not in updated
+
     def test_strict_beamer_render_resolves_canonical_pandoc_crossref_after_conversion(self, tmp_path):
         """The strict second pass evaluates generated TeX, not Markdown syntax."""
         pdf_dir = tmp_path / "output" / "pdf"

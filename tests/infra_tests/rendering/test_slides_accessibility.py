@@ -20,7 +20,9 @@ from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility import (
     AccessibleSlidePolicy,
     _estimated_visible_characters,
+    accessible_reveal_output_issues,
     compose_accessible_pandoc_document,
+    enhance_accessible_reveal,
 )
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer, _reject_accessible_beamer_overflow
@@ -604,6 +606,47 @@ def test_accessible_beamer_overflow_gate_ignores_non_layout_log_findings(tmp_pat
     assert compiled_pdf.exists()
 
 
+def test_accessible_reveal_names_slides_on_opening_headings_and_orders_navigation(tmp_path: Path) -> None:
+    """Post-processing produces resolvable names without leaking build identities."""
+
+    reveal = tmp_path / "deck_slides.html"
+    reveal.write_text(
+        "<!doctype html><html><head>"
+        "<title>.deck-random.pandoc.accessible</title>"
+        '<link rel="stylesheet" href="https://unpkg.com/reveal.js@5.2.1/dist/theme/white.css">'
+        '</head><body><div class="reveal"><div class="slides">'
+        '<section class="slide level2"><h2>Evidence <em>boundary</em></h2><p>First.</p></section>'
+        '<section class="slide level2"><h2>Evidence <em>boundary</em></h2><p>Second.</p></section>'
+        "</div></div><script>Reveal.initialize({keyboard: true});</script></body></html>",
+        encoding="utf-8",
+    )
+
+    enhance_accessible_reveal(
+        reveal,
+        policy=AccessibleSlidePolicy(reader_href="../web/index.html"),
+        registry_path=None,
+    )
+    # The transform is intentionally idempotent; rerunning a validation-stage
+    # enhancement cannot duplicate document or slide identities.
+    enhance_accessible_reveal(
+        reveal,
+        policy=AccessibleSlidePolicy(reader_href="../web/index.html"),
+        registry_path=None,
+    )
+    rendered = reveal.read_text(encoding="utf-8")
+
+    assert "<title>Evidence boundary — presentation</title>" in rendered
+    assert '<h1 id="presentation-title-' in rendered
+    assert 'class="visually-hidden">Evidence boundary — presentation</h1>' in rendered
+    assert "</h2 id=" not in rendered
+    heading_ids = re.findall(r'<h2\b[^>]*\bid="([^"]+)"', rendered)
+    labelled_by = re.findall(r'<section\b[^>]*\baria-labelledby="([^"]+)"', rendered)
+    assert len(heading_ids) == len(set(heading_ids)) == 2
+    assert labelled_by == heading_ids
+    assert rendered.index('class="skip-link"') < rendered.index('class="slide-reader-nav"')
+    assert accessible_reveal_output_issues(reveal) == ()
+
+
 @pytest.mark.slow
 def test_failed_accessible_pair_composition_removes_both_stale_derivatives(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
@@ -696,14 +739,21 @@ def test_real_accessible_reveal_render_has_semantics_long_description_and_reader
         figures_dir=figures,
     ).read_text(encoding="utf-8")
 
-    assert '<main id="main-content" tabindex="-1">' in rendered
+    assert '<main id="main-content" tabindex="-1"' in rendered
     assert 'role="region" aria-label="Presentation slides"' in rendered
     assert rendered.count('role="main"') == 0
     assert rendered.count('aria-roledescription="slide"') == 3
     assert rendered.count('aria-labelledby="') >= 3
+    assert "</h2 id=" not in rendered
+    assert "<title>Result — presentation</title>" in rendered
+    assert re.search(r'<h1\b[^>]*class="visually-hidden"', rendered)
+    assert rendered.index('class="skip-link"') < rendered.index('class="slide-reader-nav"')
     assert 'aria-label="Presentation companion"' in rendered
     assert ">Open canonical HTML manuscript</a>" in rendered
+    assert "https://unpkg.com/reveal.js@5.2.1/dist/theme/white.css" in rendered
+    assert "theme/metropolis.css" not in rendered
     assert "keyboard: true" in rendered
+    assert "main#main-content { inline-size: 100%; block-size: 100vh; min-block-size: 100vh; }" in rendered
     assert "min-height: 70vh" in rendered
     assert "height: calc(70vh - 5.5rem)" in rendered
     assert 'alt="A dashed line with square markers rises from left to right."' in rendered
@@ -760,6 +810,8 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     assert 'aria-label="Presentation slides"' in reveal
     assert 'aria-label="Presentation companion"' in reveal
     assert "data-template-accessible-slides" in reveal
+    assert "https://unpkg.com/reveal.js@5.2.1/dist/theme/white.css" in reveal
+    assert accessible_reveal_output_issues(html_result) == ()
     tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
     header = (slides / "_slides_math_header.tex").read_text(encoding="utf-8")
     assert "allowframebreaks" not in tex
@@ -810,7 +862,8 @@ def test_real_accessible_pair_sizes_unresolved_section_reference_fallbacks(tmp_p
     tex = pdf_result.with_suffix(".tex").read_text(encoding="utf-8")
     log = pdf_result.with_suffix(".log").read_text(encoding="utf-8", errors="ignore")
     assert "Server robustness setting (part 2)" in tex
-    assert r"\breaktt{sec:results-hierarchical}" in tex
+    assert r"\emph{results hierarchical section}" in tex
+    assert "sec:results-" not in tex
     assert "Overfull \\vbox" not in log
     assert not list(slides.glob(".*.pandoc*.json"))
 

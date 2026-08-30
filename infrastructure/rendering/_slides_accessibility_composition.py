@@ -18,6 +18,7 @@ from infrastructure.rendering._slides_accessibility_ast import (
     _header_text,
     _header_with,
     _is_presentation_page_break,
+    _prepare_code_block_for_frame,
     _shorten_figure_caption,
     _split_prose_block_to_fit,
     _word_count,
@@ -168,6 +169,17 @@ def _compose_segment(
             )
             excerpted_tables += int(excerpted)
             isolated_blocks = [table]
+        elif kind == "code-led":
+            maximum_lines = _frame_body_line_capacity(header, continuation, policy)
+            isolated_blocks = [
+                _prepare_code_block_for_frame(
+                    block,
+                    policy=policy,
+                    maximum_lines=maximum_lines,
+                    source=source,
+                    heading=heading,
+                )
+            ]
         else:
             maximum_lines = _frame_body_line_capacity(header, continuation, policy)
             if kind == "evidence-slide" and (
