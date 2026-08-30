@@ -32,6 +32,8 @@ computation — no mocks.
 | `test_pipeline_policy.py` | `pipeline_policy.py` LLM-review gate reasoning and enablement logic |
 | `test_property_monotonicity.py` | Hypothesis property-based tests for monotone purity across refinery stages |
 | `test_security_assay.py` | Security assay record construction, table rendering, and claim-boundary summary |
+| `test_analogy_boundary.py` | Bounded analogy-boundary predicate and its negative control (`src/analogy_boundary.py` + `domain_profile.yaml`) |
+| `test_transmission.py` | Transmission bookend validation for the manuscript pair (`00_000_transmission_begin.md` / `99_999_transmission_end.md`) |
 
 `__init__.py` and `conftest.py` are package/fixture scaffolding, not test files, and are omitted from the table above.
 
