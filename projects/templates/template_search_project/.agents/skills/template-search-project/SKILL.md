@@ -47,8 +47,8 @@ uv run python scripts/pipeline/stage_05_copy.py --project templates/template_sea
 Prefer the user's MCP connectors and direct API keys first. For uncovered web
 search endpoints, Monid (`infrastructure/search/monid/`) is infrastructure-only
 gap filler — see
-[`PRICING.md`](../../../../../infrastructure/search/monid/PRICING.md) and
-[`infrastructure/search/monid/SKILL.md`](../../../../../infrastructure/search/monid/SKILL.md).
+[`PRICING.md`](../../../../../../infrastructure/search/monid/PRICING.md) and
+[`infrastructure/search/monid/SKILL.md`](../../../../../../infrastructure/search/monid/SKILL.md).
 This exemplar's `src/` does not import Monid; keep the offline default intact.
 
 ## Cross-refs
