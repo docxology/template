@@ -10,13 +10,17 @@ thin-orchestrator rules on root and project scripts.
 
 ## Detectors
 
-**Per exemplar (9 checks each)** — see [`AGENTS.md`](AGENTS.md) for the full list
-(doc/code parity, script inventory, output conventions, etc.).
+**Per exemplar (the 21 callables in `PROJECT_CHECKS`)** — see
+[`registry.py`](registry.py) for the authoritative tuple and
+[`AGENTS.md`](AGENTS.md) for what each one covers (doc/code parity, script
+inventory, output conventions, publication metadata, etc.).
 
-**Repo-level (2 checks):**
+**Repo-level (the 4 callables in `REPO_CHECKS`):**
 
-- `check_repo_docs_hardcoded_counts` — stale numeric claims in long-lived docs
-- `check_repo_thin_orchestrator_scripts` — AST + line-count on root `scripts/`
+- `check_docs_hardcoded_counts` — stale numeric claims in long-lived docs
+- `check_shared_template_design_contract` — shared `projects/templates/DESIGN.md` contract
+- `check_shared_template_truth_contract` — shared-template truth contract
+- `check_repo_scripts` — AST + line-count on root `scripts/`
 
 **Project scripts (all discovered exemplars):**
 

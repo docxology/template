@@ -79,8 +79,8 @@ Workflow definitions: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Jo
 ./secure_run.sh --steganography-only --project {project_name}
 ./secure_run.sh --steganography-only
 
-# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares 16 total,
-# including six opt-in ebook/metadata/bundle/archival/science/provenance stages)
+# Full pipeline default path (10 core+LLM stages; pipeline.yaml declares 17 total,
+# including seven opt-in ebook/docxplus/metadata/bundle/archival/science/provenance stages)
 ./run.sh --pipeline
 
 # Core pipeline only (8 stages — LLM and opt-in stages excluded)

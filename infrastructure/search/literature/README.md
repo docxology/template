@@ -35,7 +35,8 @@ flowchart LR
 | File | Role |
 |---|---|
 | `models.py` | `Paper`, `SearchQuery`, `SearchResult`, `merge_papers` |
-| `backends.py` | `SearchBackend` ABC + 4 concrete backends + HTTP layer |
+| `base.py`, `http_client.py` | `SearchBackend` ABC, `BackendError`, and the `HttpClient` protocol/`UrllibHttpClient` |
+| `arxiv_backend.py`, `crossref_backend.py`, `local_backend.py`, `paperclip_backend.py` | The 4 concrete backends (re-exported by the `backends/` package) |
 | `client.py` | `LiteratureClient` aggregator |
 | `cache.py` | `SearchCache` JSON-file cache |
 | `fulltext.py` | `AbstractFetcher`, `FulltextFetcher`, `enrich_papers`, `write_corpus` |

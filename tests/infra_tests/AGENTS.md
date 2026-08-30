@@ -30,21 +30,29 @@ module test on each project render.
 - `core/`
 - `doctor/`
 - `documentation/`
+- `fonds/`
+- `gates/`
 - `git_hook_smoke/`
 - `llm/`
 - `methods/`
 - `orchestration/`
+- `pipeline/`
 - `project/`
 - `prose/`
+- `provenance/`
 - `publishing/`
 - `reference/`
+- `regression/`
 - `rendering/`
 - `reporting/`
+- `research/`
+- `rules/`
 - `scientific/`
 - `search/`
 - `sia/`
 - `skills/`
 - `steganography/`
+- `tools/`
 - `validation/`
 
 Important nested guides:

@@ -145,7 +145,7 @@ Thin wrapper → [`infrastructure.rendering.preflight`](../../../../infrastructu
 ### 04_benchmark_stage.py
 
 Thin orchestrator for the `infrastructure.benchmark` rubric demo backed by
-`src/benchmark_support.py`. Writes `output/data/benchmark_report.json` and a
+`src/benchmark_support.py`. Writes `output/reports/benchmark_report.json` and a
 deterministic timing figure (`output/figures/benchmark_timings.png`) with
 wall-clock timing logged as a runtime diagnostic only. See
 [`src/benchmark_support.py`](../src/benchmark_support.py).

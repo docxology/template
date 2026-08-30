@@ -545,7 +545,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: default full pipeline — 10 core+LLM stages; pipeline.yaml also declares six opt-in stages (ebook, metadata, bundle, archival, science, provenance). --core-only drops LLM and opt-in stages and leaves 8.
+# Non-interactive: default full pipeline — 10 core+LLM stages; pipeline.yaml also declares seven opt-in stages (ebook, docxplus, metadata, bundle, archival, science, provenance). --core-only drops LLM and opt-in stages and leaves 8.
 ./run.sh --pipeline
 ```
 
@@ -637,7 +637,7 @@ steganography:
 
 ### Pipeline Stages
 
-**Full Pipeline Stages** — the default `pipeline.yaml` declares **16 named stages**: 8 core stages, 2 optional LLM stages, 2 opt-in ebook/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `run.sh` displays that default path as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages.
+**Full Pipeline Stages** — the default `pipeline.yaml` declares **17 named stages**: 8 core stages, 2 optional LLM stages, 3 opt-in ebook/docxplus/metadata stages, 2 opt-in bundle/archival stages, and 2 opt-in science/provenance stages (Connector Search, Provenance Record). Default full runs include the 10 core+LLM stages (`Clean Output Directories` plus nine numbered stages). `run.sh` displays that default path as `[0/9]` for clean and `[1/9]`–`[9/9]` for the nine numbered stages. `--core-only` runs **8 stages** by excluding LLM-tagged and opt-in stages.
 
 - **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
 1. **Environment Setup** - Verify system requirements and dependencies
@@ -653,9 +653,10 @@ steganography:
 **Opt-in long-horizon stages** (NOT in default core or `--core-only` runs — there is no `--tags` CLI flag; invoke the stage or runner script directly):
 
 12. **Ebook Generation** (`scripts/pipeline/stage_11_ebook.py`, tag `ebook`) — Generate EPUB, MOBI, and DOCX ebooks from the combined markdown manuscript. Gracefully skips (exit 2) when the combined markdown is absent. Invoke: `uv run python scripts/pipeline/stage_11_ebook.py --project <name>`.
-13. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
-14. **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project. Invoke the runner directly; it is not under `scripts/pipeline/`.
-15. **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to archival targets. Defaults to dry-run; pass `--commit` only with owner authorization. Invoke the runner directly; it is not under `scripts/pipeline/`.
+13. **docxplus Export** (`scripts/pipeline/stage_13_docxplus.py`, tag `docxplus`) — Export the project as a conforming `.docx`/`.docxplus` that carries its own source tree. Gracefully skips when the optional `docxplus` extra is not installed (`uv sync --extra docxplus`). Invoke: `uv run python scripts/pipeline/stage_13_docxplus.py --project <name>`.
+14. **Metadata Package** (`scripts/pipeline/stage_12_metadata.py`, tag `metadata`) — Generate ONIX 3.0 XML, metadata.json, and OPF skeleton from manuscript/config.yaml. Gracefully skips (exit 2) when config.yaml is absent. Invoke: `uv run python scripts/pipeline/stage_12_metadata.py --project <name>`.
+15. **Executable Bundle** (`scripts/runner/bundle_executable.py`, tag `bundle`) — Produce a container + lockfile + agent-runnable `manifest.json` for the project. Invoke the runner directly; it is not under `scripts/pipeline/`.
+16. **Archival Publication** (`scripts/runner/archive_publication.py`, tag `archival`) — Mirror the executable bundle to archival targets. Defaults to dry-run; pass `--commit` only with owner authorization. Invoke the runner directly; it is not under `scripts/pipeline/`.
 
 **Infrastructure Tests Behavior:**
 
@@ -669,7 +670,7 @@ steganography:
 
 **Stage numbering (canonical phrasing — keep in sync with CLAUDE.md and README.md):**
 
-> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **16 named stages**. YAML stages 5–13 use pipeline-stage scripts; YAML stage 14 (Executable Bundle) and YAML stage 15 (Archival Publication) use their opt-in runner entry points under `scripts/runner/`. YAML stage indices are distinct from script filename prefixes.
+> The default [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml) declares **17 named stages**. YAML stages 5–14 use pipeline-stage scripts; YAML stage 15 (Executable Bundle) and YAML stage 16 (Archival Publication) use their opt-in runner entry points under `scripts/runner/`. YAML stage indices are distinct from script filename prefixes.
 
 ### Manual Execution Options
 
@@ -1029,17 +1030,13 @@ Scientific computing best practices and tools.
 
 - `stability.py` - Numerical stability checking
 - `benchmarking.py` - Performance benchmarking
-- `documentation.py` - API documentation generation
-- `validation.py` - Best practices validation
-- `templates.py` - Research workflow templates
+- `confirmation.py` - Improvement-confirmation statistics
 
 **Key Features:**
 
 - **Numerical Stability**: Algorithm stability testing
 - **Performance Benchmarking**: Execution time and memory analysis
-- **Scientific Documentation**: API documentation generation
-- **Best Practices Validation**: Code quality assessment
-- **Research Workflow Templates**: Reproducible experiment templates
+- **Confirmation**: `confirm_improvement` verifies that measured improvements are real
 
 **Usage:**
 
@@ -1113,11 +1110,12 @@ Automated publishing to academic platforms.
 
 **Module Structure:**
 
-- `core.py` - Publication metadata extraction, DOI validation, citation generation
+- `_metadata_extraction.py` - Publication metadata extraction (`extract_publication_metadata`) and DOI validation (`validate_doi`)
 - `api.py` - Platform API clients (Zenodo, arXiv, GitHub)
 - `citations.py` - Citation helpers (BibTeX CLI target plus APA/MLA library helpers)
 - `metadata.py` - Publication metadata management
 - `platforms.py` - Platform-specific integration logic
+- `zenodo/`, `arxiv/`, `github/`, `huggingface/`, `osf/`, `pypi/`, `archival/`, `static_site/` - Per-platform subpackages
 
 **Key Features:**
 
