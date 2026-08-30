@@ -17,7 +17,7 @@ Decision memory and verifier hardening follow [`docs/rules/memory_and_decision_r
 | `src/loop_config.py` | Reads `project_config.sia` from `manuscript/config.yaml` |
 | `src/reports.py` | Loop markdown report + `{{SIA_*}}` manuscript variables |
 | `src/fixtures/recorded_generations/` | Fixture replay for gens 1–3 (default CI) |
-| `tasks/mini_classify/` | Public/private task split + `evaluate.py` |
+| `tasks/mini_classify/` | Public/private task split (`data/public/` + `data/private/`) with the scorer at `tasks/mini_classify/data/public/evaluate.py` |
 | `scripts/run_sia_loop.py` | Thin orchestrator (`--project-root`, `--live-sia`) |
 | `scripts/z_generate_manuscript_variables.py` | Post-analysis token hydration |
 
