@@ -47,7 +47,8 @@ def _write_epub(path: Path) -> None:
 
 def _write_accessible_reveal(path: Path) -> None:
     path.write_text(
-        "<!doctype html><html><head><style data-template-accessible-slides></style></head>"
+        "<!doctype html><html><head><style data-template-accessible-slides>"
+        "html, body { overflow-x: hidden; }</style></head>"
         '<body><nav aria-label="Presentation companion"></nav>'
         '<div aria-label="Presentation slides"><section aria-roledescription="slide">'
         "<h2>Current</h2></section></div><script>keyboard: true</script></body></html>",
