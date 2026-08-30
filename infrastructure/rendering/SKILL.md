@@ -66,7 +66,10 @@ figures/tables/equations/code/evidence, and fails with a coded `slides.*`
 diagnostic when an indivisible block cannot fit. Treat Reveal.js and the linked
 manuscript HTML as the accessibility-enhanced reader surfaces. Beamer output is
 an untagged presentation derivative; successful rendering is not a WCAG or
-PDF/UA conformance verdict.
+PDF/UA conformance verdict. Reveal core, theme, and plugin assets use one
+version-pinned CDN release and therefore remain network-dependent; that version
+pin is not an offline or byte-pinned guarantee. The MathJax executable path is
+separately normalized to one loader with the repository's exact SRI digest.
 
 With `slides_profile="accessible"`, the canonical `render_all()` path emits a
 transactional Beamer/Reveal pair for each eligible Markdown source. Both files

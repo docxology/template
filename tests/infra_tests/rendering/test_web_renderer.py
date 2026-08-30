@@ -104,6 +104,42 @@ class TestMathJaxIntegration:
         assert 'width: "100%"' in content
         assert "lineleading: 0.5" in content
 
+    def test_harden_mathjax_script_overwrites_wrong_sri_and_removes_duplicate_loader(self, tmp_path):
+        html = tmp_path / "math.html"
+        html.write_text(
+            "<html><head>"
+            f'<script src="{_MATHJAX_URL}" integrity="sha384-AAAA" crossorigin="use-credentials"></script>'
+            f'<script defer src="{_MATHJAX_URL}?bypass=1">ignored</script>'
+            "</head><body></body></html>",
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert content.count(_MATHJAX_URL) == 1
+        assert content.count(f'integrity="{_MATHJAX_INTEGRITY}"') == 1
+        assert content.count('crossorigin="anonymous"') == 1
+        assert "sha384-AAAA" not in content
+        assert "use-credentials" not in content
+
+    def test_harden_mathjax_script_replaces_untrusted_config_before_loader(self, tmp_path):
+        html = tmp_path / "math.html"
+        html.write_text(
+            "<html><head>"
+            f'<script src="{_MATHJAX_URL}"></script>'
+            "<script data-template-mathjax-config></script>"
+            "</head><body></body></html>",
+            encoding="utf-8",
+        )
+
+        WebRenderer._harden_mathjax_script(html)
+
+        content = html.read_text(encoding="utf-8")
+        assert content.count("data-template-mathjax-config") == 1
+        assert "window.MathJax.chtml" in content
+        assert content.index("data-template-mathjax-config") < content.index(_MATHJAX_URL)
+
 
 class TestCssIntegration:
     """Test CSS integration."""

@@ -843,22 +843,48 @@ def add_full_resolution_figure_links(html_file: Path) -> None:
 
 
 def harden_mathjax_script(html_file: Path) -> None:
-    """Add SRI integrity and crossorigin attributes to the MathJax CDN script tag and inject the config script."""
+    """Normalize the pinned MathJax loader and inject its shared config.
+
+    The URL is an executable dependency boundary: one page gets exactly one
+    loader, with exactly the reviewed SRI digest and anonymous CORS mode.
+    Existing, incorrect, or duplicate attributes are not trusted merely
+    because they use an ``integrity``-shaped value.
+    """
     content = html_file.read_text(encoding="utf-8")
     if MATHJAX_URL not in content:
         return
-    script_re = re.compile(r'(<script(?=[^>]*(?<!\S)src="' + re.escape(MATHJAX_URL) + r'")[^>]*)></script>')
+    config_re = re.compile(
+        r"<script\b(?=[^>]*\b" + re.escape(_MATHJAX_CONFIG_MARKER) + r"\b)[^>]*>.*?</script>",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    content = config_re.sub("", content)
+    script_re = re.compile(r"<script\b(?P<attrs>[^>]*)>.*?</script>", flags=re.IGNORECASE | re.DOTALL)
+    matched_loader = False
 
     def _replace(match: re.Match[str]) -> str:
-        tag = match.group(1)
-        if not _has_html_attribute(tag, "integrity"):
-            tag += f' integrity="{_MATHJAX_INTEGRITY}"'
-        if not _has_html_attribute(tag, "crossorigin"):
-            tag += ' crossorigin="anonymous"'
-        script = f"{tag}></script>"
-        return script if _MATHJAX_CONFIG_MARKER in content else f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"
+        nonlocal matched_loader
+        attributes = match.group("attrs")
+        sources = [
+            html.unescape(item.group("double") or item.group("single") or item.group("bare") or "")
+            for item in _html_attribute_assignment_pattern("src").finditer(attributes)
+        ]
+        if not any(
+            source == MATHJAX_URL or source.startswith((f"{MATHJAX_URL}?", f"{MATHJAX_URL}#")) for source in sources
+        ):
+            return match.group(0)
+        if matched_loader:
+            return ""
+        matched_loader = True
+        for attribute in ("src", "integrity", "crossorigin"):
+            attributes = _html_attribute_assignment_pattern(attribute).sub("", attributes)
+        attributes = attributes.rstrip()
+        attributes += (
+            f' src="{html.escape(MATHJAX_URL, quote=True)}" integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"'
+        )
+        script = f"<script{attributes}></script>"
+        return f"{_MATHJAX_CONFIG_SCRIPT}\n{script}"
 
-    write_if_changed(html_file, script_re.sub(_replace, content, count=1))
+    write_if_changed(html_file, script_re.sub(_replace, content))
 
 
 def embed_favicon(html_file: Path) -> None:

@@ -5,12 +5,20 @@ from __future__ import annotations
 import hashlib
 import html
 import re
+from collections.abc import Mapping
 from pathlib import Path
 
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering._slides_accessibility_contracts import AccessibleSlidePolicy
+from infrastructure.rendering._slides_reveal_content import (
+    activate_hardened_reveal_mathjax,
+    promote_display_math_labels,
+    resolve_reveal_cross_references,
+    reveal_reference_and_math_issues,
+)
 from infrastructure.rendering._web_postprocess import (
     enhance_accessibility,
+    harden_mathjax_script,
     normalize_figure_paths,
     write_if_changed,
 )
@@ -248,6 +256,8 @@ def enhance_accessible_reveal(
     policy: AccessibleSlidePolicy,
     registry_path: Path | None,
     language: str = "en",
+    label_numbers: Mapping[str, str] | None = None,
+    strict_cross_deck_refs: bool = False,
 ) -> None:
     """Apply deterministic semantic, navigation, and visual-accessibility hooks."""
 
@@ -258,7 +268,15 @@ def enhance_accessible_reveal(
     initial = html_file.read_text(encoding="utf-8")
     initial = re.sub(r"(?<!\S)data-src\s*=", "src=", initial, flags=re.IGNORECASE)
     initial = normalize_figure_paths(initial)
+    initial = activate_hardened_reveal_mathjax(initial)
+    initial = promote_display_math_labels(initial)
+    initial = resolve_reveal_cross_references(
+        initial,
+        label_numbers,
+        strict=strict_cross_deck_refs,
+    )
     write_if_changed(html_file, initial)
+    harden_mathjax_script(html_file)
     enhance_accessibility(html_file, language=language, registry_path=registry_path)
     content = html_file.read_text(encoding="utf-8")
     content = _reveal_semantics(content)
@@ -318,4 +336,5 @@ def accessible_reveal_output_issues(html_file: Path) -> tuple[str, ...]:
     ):
         if ids.count(labelled_by) != 1:
             issues.append(f"Reveal slide aria-labelledby does not resolve exactly once: {labelled_by}")
+    issues.extend(reveal_reference_and_math_issues(content))
     return tuple(issues)

@@ -42,6 +42,7 @@ from infrastructure.rendering._slides_crossref import (
 )
 from infrastructure.rendering._slides_codelisting import make_codelisting_slide_safe
 from infrastructure.rendering._slides_accessibility import (
+    accessible_reveal_output_issues,
     enhance_accessible_reveal,
     load_and_compose_pandoc_json,
 )
@@ -56,7 +57,9 @@ from infrastructure.rendering.latex_texttt import (
     make_pandoc_reference_tokens_breakable,
 )
 from infrastructure.rendering._slides_math_header import write_slides_math_header
+from infrastructure.rendering._slides_reveal_content import ACCESSIBLE_REVEAL_URL, ACCESSIBLE_REVEAL_VERSION
 from infrastructure.rendering._slides_tex_figures import fix_slides_figure_paths
+from infrastructure.rendering._web_postprocess import MATHJAX_URL
 from infrastructure.rendering.security import subprocess_options
 
 logger = get_logger(__name__)
@@ -74,8 +77,8 @@ _ACCESSIBLE_BEAMER_ASPECT_RATIO = "169"
 # theme, so forwarding that name produces a broken stylesheet request. Pin the
 # companion runtime as part of the published reader contract; archive mode
 # retains its historical caller-configured URL/theme behavior.
-_ACCESSIBLE_REVEAL_VERSION = "5.2.1"
-_ACCESSIBLE_REVEAL_URL = f"https://unpkg.com/reveal.js@{_ACCESSIBLE_REVEAL_VERSION}"
+_ACCESSIBLE_REVEAL_VERSION = ACCESSIBLE_REVEAL_VERSION
+_ACCESSIBLE_REVEAL_URL = ACCESSIBLE_REVEAL_URL
 _ACCESSIBLE_REVEAL_THEME = "white"
 _SECTION_REF_RE = re.compile(r"\\(?P<command>ref|eqref)\{(?P<label>sec:[^}]+)\}")
 
@@ -203,7 +206,13 @@ class SlidesRenderer:
                     strict_cross_deck_refs=strict_cross_deck_refs,
                 )
             # For reveal.js, use direct pandoc rendering.
-            return self._render_revealjs(render_source, output_file, manuscript_dir, figures_dir)
+            return self._render_revealjs(
+                render_source,
+                output_file,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+            )
         finally:
             for temporary in temporary_sources:
                 temporary.unlink(missing_ok=True)
@@ -256,7 +265,13 @@ class SlidesRenderer:
                 figures_dir,
                 strict_cross_deck_refs=strict_cross_deck_refs,
             )
-            html_result = self._render_revealjs(render_source, html_output, manuscript_dir, figures_dir)
+            html_result = self._render_revealjs(
+                render_source,
+                html_output,
+                manuscript_dir,
+                figures_dir,
+                strict_cross_deck_refs=strict_cross_deck_refs,
+            )
             completed = True
             return pdf_result, html_result
         finally:
@@ -348,6 +363,8 @@ class SlidesRenderer:
         output_file: Path,
         manuscript_dir: Path | None = None,
         figures_dir: Path | None = None,
+        *,
+        strict_cross_deck_refs: bool = False,
     ) -> Path:
         """Render reveal.js slides."""
         theme = _ACCESSIBLE_REVEAL_THEME if self.config.slides_profile == "accessible" else self.config.slide_theme
@@ -368,6 +385,7 @@ class SlidesRenderer:
                     "-f",
                     "json",
                     "--slide-level=2",
+                    f"--mathjax={MATHJAX_URL}",
                     "-V",
                     f"revealjs-url={_ACCESSIBLE_REVEAL_URL}",
                 ]
@@ -394,7 +412,24 @@ class SlidesRenderer:
                         output_file,
                         policy=self.config.accessible_slide_policy(),
                         registry_path=(figures_dir / "figure_registry.json") if figures_dir is not None else None,
+                        label_numbers=(
+                            parse_aux_label_numbers(Path(self.config.pdf_dir) / COMBINED_AUX_BASENAME)
+                            if strict_cross_deck_refs
+                            else None
+                        ),
+                        strict_cross_deck_refs=strict_cross_deck_refs,
                     )
+                    issues = accessible_reveal_output_issues(output_file)
+                    if issues:
+                        raise RenderingError(
+                            "[slides.accessibility.reveal-output] Accessible Reveal output failed validation",
+                            context={
+                                "diagnostic_code": "slides.accessibility.reveal-output",
+                                "source": str(source_file),
+                                "output": str(output_file),
+                                "issues": list(issues),
+                            },
+                        )
                 except (OSError, RenderingError):
                     output_file.unlink(missing_ok=True)
                     raise
@@ -708,7 +743,11 @@ class SlidesRenderer:
                     accessible_section_replacements,
                     aux_path.name,
                 )
-        tex_content, replaced, unresolved = resolve_cross_deck_references(tex_content, label_numbers)
+        tex_content, replaced, unresolved = resolve_cross_deck_references(
+            tex_content,
+            label_numbers,
+            resolve_local=self.config.slides_profile == "accessible" and strict_cross_deck_refs,
+        )
         if replaced:
             logger.info(
                 "Resolved %d cross-deck reference(s) in slides from %s",

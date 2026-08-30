@@ -243,6 +243,24 @@ class TestSlidesRendererHook:
         assert "See Section 2.3." in updated
         assert r"\ref{sec:experimental_setup}" not in updated
 
+    def test_accessible_strict_profile_resolves_local_equation_from_combined_aux(self, tmp_path):
+        """Local Beamer and Reveal references use one combined-PDF number."""
+
+        pdf_dir = tmp_path / "output" / "pdf"
+        pdf_dir.mkdir(parents=True)
+        (pdf_dir / COMBINED_AUX_BASENAME).write_text(
+            r"\newlabel{eq:model}{{7}{9}{Model}{equation.7}{}}" + "\n",
+            encoding="utf-8",
+        )
+        renderer = SlidesRenderer(RenderingConfig(pdf_dir=str(pdf_dir), slides_profile="accessible"))
+        tex = r"\begin{equation}\label{eq:model}x=1\end{equation} See Equation \eqref{eq:model}."
+
+        updated = renderer._resolve_cross_deck_refs(tex, strict_cross_deck_refs=True)
+
+        assert r"\label{eq:model}" in updated
+        assert "See Equation (7)." in updated
+        assert r"\eqref{eq:model}" not in updated
+
     def test_accessible_strict_profile_rejects_section_missing_from_aux(self, tmp_path):
         renderer = SlidesRenderer(
             RenderingConfig(

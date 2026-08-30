@@ -128,15 +128,21 @@ def parse_aux_label_numbers(aux_path: Path) -> dict[str, str]:
 def resolve_cross_deck_references(
     tex_content: str,
     label_numbers: dict[str, str],
+    *,
+    resolve_local: bool = False,
 ) -> tuple[str, int, list[str]]:
     """Substitute cross-deck ``\\ref``/``\\eqref`` with combined-PDF numbers.
 
     A reference is *cross-deck* when its label is not defined by any
     ``\\label{...}`` in ``tex_content`` itself. Cross-deck refs found in
     ``label_numbers`` become the literal printed number (``\\eqref``
-    additionally parenthesized, matching amsmath's rendering); within-deck
-    refs are preserved for Beamer's native numbering; cross-deck refs
-    missing from the map are left untouched and returned for logging.
+    additionally parenthesized, matching amsmath's rendering). Within-deck
+    refs are preserved for Beamer's native numbering by default. The
+    canonical accessible refresh sets ``resolve_local`` so local and foreign
+    references both use the combined manuscript's exact numbering; this keeps
+    Beamer and Reveal derivatives in parity. Any reference selected for
+    resolution but missing from the map is left untouched and returned for
+    logging.
 
     Returns ``(updated_tex, replaced_count, sorted_unresolved_labels)``.
     """
@@ -147,7 +153,7 @@ def resolve_cross_deck_references(
     def _substitute(match: re.Match[str]) -> str:
         nonlocal replaced
         command, label = match.group(1), match.group(2)
-        if label in local_labels:
+        if label in local_labels and not resolve_local:
             return match.group(0)  # within-deck: Beamer numbers it natively
         number = label_numbers.get(label)
         if number is None:

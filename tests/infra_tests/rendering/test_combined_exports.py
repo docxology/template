@@ -16,6 +16,7 @@ import shutil
 import zipfile
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Literal
 
 import defusedxml.ElementTree as safe_et
 import pytest
@@ -559,13 +560,13 @@ class _FailingRenderManager(RenderManager):
 
     def render_combined_pdf(
         self, source_files: list[Path], manuscript_dir: Path, project_name: str = "project"
-    ) -> Path:  # type: ignore[override]
+    ) -> Path:
         """Always raises the configured exception."""
         raise self._raise_with
 
     def render_combined_web(
         self, source_files: list[Path], manuscript_dir: Path, project_name: str = "project"
-    ) -> Path:  # type: ignore[override]
+    ) -> Path:
         """Always raises the configured exception."""
         raise self._raise_with
 
@@ -579,6 +580,7 @@ class _AuxRefreshManager(RenderManager):
         *,
         aux_text: str | None,
         slide_error: type[TemplateError] | None = None,
+        slides_profile: Literal["archive", "accessible"] = "archive",
     ) -> None:
         cfg = RenderingConfig(
             enable_pdf=True,
@@ -590,6 +592,7 @@ class _AuxRefreshManager(RenderManager):
             slides_dir=str(tmp_path / "output/slides"),
             figures_dir=str(tmp_path / "output/figures"),
             web_dir=str(tmp_path / "output/web"),
+            slides_profile=slides_profile,
         )
         super().__init__(config=cfg)
         self.aux_text = aux_text
@@ -602,7 +605,7 @@ class _AuxRefreshManager(RenderManager):
         source_files: list[Path],
         manuscript_dir: Path,
         project_name: str = "project",
-    ) -> Path:  # type: ignore[override]
+    ) -> Path:
         self.events.append("combined")
         aux_path = Path(self.config.pdf_dir) / "_combined_manuscript.aux"
         assert not aux_path.exists(), "the orchestration boundary must remove stale AUX state"
@@ -619,7 +622,7 @@ class _AuxRefreshManager(RenderManager):
         output_format: str = "beamer",
         *,
         strict_cross_deck_refs: bool = False,
-    ) -> Path:  # type: ignore[override]
+    ) -> Path:
         self.events.append(f"slides:{source_file.stem}")
         self.strict_refresh_flags.append(strict_cross_deck_refs)
         output = Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
@@ -638,6 +641,34 @@ class _AuxRefreshManager(RenderManager):
         )
         output.write_text(resolved, encoding="utf-8")
         return output
+
+    def render_accessible_slide_pair(
+        self,
+        source_file: Path,
+        *,
+        strict_cross_deck_refs: bool = False,
+    ) -> tuple[Path, Path]:
+        self.events.append(f"pair:{source_file.stem}")
+        self.strict_refresh_flags.append(strict_cross_deck_refs)
+        pdf_output = Path(self.config.slides_dir) / f"{source_file.stem}_slides.pdf"
+        html_output = pdf_output.with_suffix(".html")
+        pdf_output.parent.mkdir(parents=True, exist_ok=True)
+        if self.slide_error is not None and source_file.stem == "01_intro":
+            pdf_output.write_bytes(b"partial refreshed deck")
+            html_output.write_text("partial refreshed deck", encoding="utf-8")
+            raise self.slide_error("forced accessible-pair refresh failure")
+        post_pandoc_tex = (
+            r"See Equation \eqref{eq:foreign}."
+            if source_file.stem == "01_intro"
+            else r"\begin{equation}\label{eq:foreign}x=1\end{equation}"
+        )
+        resolved = self.slides_renderer._resolve_cross_deck_refs(
+            post_pandoc_tex,
+            strict_cross_deck_refs=strict_cross_deck_refs,
+        )
+        pdf_output.write_text(resolved, encoding="utf-8")
+        html_output.write_text(resolved, encoding="utf-8")
+        return pdf_output, html_output
 
 
 def _write_foreign_ref_sources(manuscript_dir: Path) -> tuple[Path, Path]:
@@ -704,6 +735,35 @@ def test_render_combined_outputs_refreshes_slides_after_current_aux_exists(tmp_p
     assert "See Equation (7)." in refreshed.read_text(encoding="utf-8")
 
 
+def test_render_combined_outputs_refreshes_accessible_pair_against_current_aux(tmp_path: Path) -> None:
+    """Accessible Reveal and Beamer receive the same strict current-AUX refresh."""
+
+    manager = _AuxRefreshManager(
+        tmp_path,
+        aux_text="\\relax\n\\newlabel{eq:foreign}{{7}{2}{Foreign equation}{equation.7}{}}\n",
+        slides_profile="accessible",
+    )
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source, definition = _write_foreign_ref_sources(manuscript_dir)
+
+    render_combined_outputs(
+        manager,
+        [source, definition],
+        manuscript_dir,
+        "templates/project",
+        _make_reporter(tmp_path),
+        rendered_count=1,
+    )
+
+    assert manager.events == ["combined", "pair:01_intro", "pair:03_results"]
+    assert manager.strict_refresh_flags == [True, True]
+    refreshed_pdf = Path(manager.config.slides_dir) / "01_intro_slides.pdf"
+    refreshed_html = refreshed_pdf.with_suffix(".html")
+    assert "See Equation (7)." in refreshed_pdf.read_text(encoding="utf-8")
+    assert refreshed_html.read_text(encoding="utf-8") == refreshed_pdf.read_text(encoding="utf-8")
+
+
 def test_render_combined_outputs_pdf_disabled_does_not_refresh_slides(tmp_path: Path) -> None:
     """A slides-enabled run cannot refresh from AUX when combined PDF is disabled."""
 
@@ -729,7 +789,7 @@ def test_render_combined_outputs_pdf_disabled_does_not_refresh_slides(tmp_path: 
             output_format: str = "beamer",
             *,
             strict_cross_deck_refs: bool = False,
-        ) -> Path:  # type: ignore[override]
+        ) -> Path:
             self.slide_calls += 1
             raise AssertionError("disabled combined PDF must not trigger a refresh")
 
@@ -776,7 +836,7 @@ def test_render_combined_outputs_pdf_failure_does_not_refresh_slides(tmp_path: P
             output_format: str = "beamer",
             *,
             strict_cross_deck_refs: bool = False,
-        ) -> Path:  # type: ignore[override]
+        ) -> Path:
             self.slide_calls += 1
             raise AssertionError("failed combined PDF must not trigger a refresh")
 
@@ -800,6 +860,46 @@ def test_render_combined_outputs_pdf_failure_does_not_refresh_slides(tmp_path: P
 
     assert manager.slide_calls == 0
     assert not aux_path.exists()
+
+
+def test_accessible_combined_pdf_failure_removes_first_pass_pair(tmp_path: Path) -> None:
+    """Accessible fallback derivatives cannot survive a failed numbering source."""
+
+    cfg = RenderingConfig(
+        enable_pdf=True,
+        enable_html=False,
+        enable_slides=True,
+        enable_docx=False,
+        enable_epub=False,
+        slides_profile="accessible",
+        pdf_dir=str(tmp_path / "output/pdf"),
+        figures_dir=str(tmp_path / "output/figures"),
+        slides_dir=str(tmp_path / "output/slides"),
+        web_dir=str(tmp_path / "output/web"),
+    )
+    manager = _FailingRenderManager(cfg, raise_with=RenderingError("forced combined failure"))
+    manuscript_dir = tmp_path / "manuscript"
+    manuscript_dir.mkdir()
+    source = manuscript_dir / "01_intro.md"
+    source.write_text("# Intro\n", encoding="utf-8")
+    slides_dir = Path(cfg.slides_dir)
+    slides_dir.mkdir(parents=True)
+    first_pass_pdf = slides_dir / "01_intro_slides.pdf"
+    first_pass_html = slides_dir / "01_intro_slides.html"
+    first_pass_pdf.write_bytes(b"fallback beamer")
+    first_pass_html.write_text("fallback reveal", encoding="utf-8")
+
+    render_combined_outputs(
+        manager,
+        [source],
+        manuscript_dir,
+        "templates/project",
+        _make_reporter(tmp_path),
+        rendered_count=1,
+    )
+
+    assert not first_pass_pdf.exists()
+    assert not first_pass_html.exists()
 
 
 @pytest.mark.parametrize(

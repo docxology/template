@@ -470,7 +470,9 @@ class TestRevealJsRendering:
         assert output.is_file()
         # The opt-in accessible profile owns its valid Reveal theme; archive
         # mode preserves the historical caller-configured theme unchanged.
-        assert "theme/metropolis.css" in output.read_text(encoding="utf-8")
+        rendered = output.read_text(encoding="utf-8")
+        assert "theme/metropolis.css" in rendered
+        assert "mathjax" not in rendered.casefold()
 
     def test_render_revealjs_failure(self, tmp_path):
         """Test reveal.js rendering failure handling with real execution."""
@@ -792,6 +794,7 @@ class TestSlidesMathHeaderInjection:
         manuscript.mkdir()
         self._make_renderer(tmp_path)
         header = write_slides_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
         content = header.read_text(encoding="utf-8")
         assert "\\providecommand{\\crefrange}[2]" in content
         assert "\\providecommand{\\Crefrange}[2]" in content
@@ -812,7 +815,9 @@ class TestSlidesMathHeaderInjection:
             encoding="utf-8",
         )
         self._make_renderer(tmp_path)
-        content = write_slides_math_header(manuscript, tmp_path / "slides").read_text(encoding="utf-8")
+        header = write_slides_math_header(manuscript, tmp_path / "slides")
+        assert header is not None
+        content = header.read_text(encoding="utf-8")
         assert "\\usepackage{algpseudocode}" in content
         assert "\\usepackage{algorithm}" not in content, (
             "the float package was carried over; it has no beamer implementation"

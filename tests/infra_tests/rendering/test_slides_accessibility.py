@@ -24,6 +24,19 @@ from infrastructure.rendering._slides_accessibility import (
     compose_accessible_pandoc_document,
     enhance_accessible_reveal,
 )
+from infrastructure.rendering._slides_reveal_content import (
+    ACCESSIBLE_REVEAL_URL,
+    activate_hardened_reveal_mathjax,
+    promote_display_math_labels,
+    resolve_reveal_cross_references,
+    reveal_reference_and_math_issues,
+)
+from infrastructure.rendering._web_postprocess import (
+    MATHJAX_URL,
+    _MATHJAX_CONFIG_SCRIPT,
+    _MATHJAX_INTEGRITY,
+    harden_mathjax_script,
+)
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.slides_renderer import SlidesRenderer, _reject_accessible_beamer_overflow
 
@@ -647,6 +660,250 @@ def test_accessible_reveal_names_slides_on_opening_headings_and_orders_navigatio
     assert accessible_reveal_output_issues(reveal) == ()
 
 
+def test_reveal_crossrefs_use_aux_numbers_and_preserve_bibliographic_citations() -> None:
+    content = (
+        '<section id="sec:local"><h2>Local</h2>'
+        '<p>See <span class="citation" data-cites="sec:local">'
+        "(<strong>sec:local?</strong>)</span>, "
+        '<span class="citation" data-cites="eq:foreign">'
+        "(<strong>eq:foreign?</strong>)</span>, and "
+        '<span class="citation" data-cites="smith2026">(Smith 2026)</span>.</p></section>'
+    )
+
+    resolved = resolve_reveal_cross_references(
+        content,
+        {"sec:local": "2.1", "eq:foreign": "7"},
+        strict=True,
+    )
+
+    assert '<a class="cross-reference" href="#sec:local">Section 2.1</a>' in resolved
+    assert '<span class="cross-reference">Equation (7)</span>' in resolved
+    assert '<span class="citation" data-cites="smith2026">(Smith 2026)</span>' in resolved
+    assert "sec:local?" not in resolved
+    assert "eq:foreign?" not in resolved
+
+
+def test_reveal_crossrefs_humanize_standalone_and_strict_mode_rejects_missing_aux() -> None:
+    content = (
+        '<span class="citation" data-cites="sec:results-hierarchical">'
+        "(<strong>sec:results-hierarchical?</strong>)</span>"
+    )
+
+    standalone = resolve_reveal_cross_references(content)
+    assert "results hierarchical section" in standalone
+    assert "sec:" not in standalone
+    assert "?" not in standalone
+
+    with pytest.raises(RenderingError, match=r"\[slides\.crossref\.reveal-unresolved\]") as exc_info:
+        resolve_reveal_cross_references(content, strict=True)
+    assert exc_info.value.context["unresolved_labels"] == ["sec:results-hierarchical"]
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "[@eq:model; @smith2026]",
+        "(<strong>eq:model?</strong>; Smith 2026)",
+    ],
+)
+def test_reveal_mixed_crossref_span_resolves_reference_and_preserves_bibliography(body: str) -> None:
+    content = f'<span class="citation" data-cites="eq:model smith2026">{body}</span>'
+
+    resolved = resolve_reveal_cross_references(content, {"eq:model": "7"}, strict=True)
+
+    assert "Equation (7)" in resolved
+    assert 'data-cites="smith2026"' in resolved
+    assert "@smith2026" in resolved or "Smith 2026" in resolved
+    assert "eq:model" not in re.sub(r"<[^>]+>", "", resolved)
+    assert reveal_reference_and_math_issues(resolved) == ()
+
+
+def test_reveal_crossref_suppresses_duplicate_authored_kind() -> None:
+    content = (
+        '<p>See <span class="citation" data-cites="fig:model">(<strong>fig:model?</strong>)</span>. '
+        'Figure <span class="citation" data-cites="fig:model">(<strong>fig:model?</strong>)</span>. '
+        'Table <span class="citation" data-cites="tbl:values">(<strong>tbl:values?</strong>)</span>.</p>'
+    )
+
+    resolved = resolve_reveal_cross_references(
+        content,
+        {"fig:model": "7", "tbl:values": "3"},
+        strict=True,
+    )
+    visible = " ".join(re.sub(r"<[^>]+>", "", resolved).split())
+
+    assert visible == "See Figure 7. Figure 7. Table 3."
+    assert "Figure Figure" not in visible
+    assert "Table Table" not in visible
+
+
+def test_reveal_mathjax_validation_requires_one_exact_sri_loader() -> None:
+    marker = _MATHJAX_CONFIG_SCRIPT
+    exact = f'<script src="{MATHJAX_URL}" integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"></script>'
+    wrong = f'<script src="{MATHJAX_URL}" integrity="sha384-AAAA" crossorigin="anonymous"></script>'
+
+    assert reveal_reference_and_math_issues(marker + exact) == ()
+    assert "exact pinned SRI" in " ".join(reveal_reference_and_math_issues(marker + wrong))
+    assert "exactly one pinned MathJax loader" in " ".join(reveal_reference_and_math_issues(marker + exact + exact))
+    legacy = (
+        f'<script src="{ACCESSIBLE_REVEAL_URL}/plugin/math/math.js"></script>'
+        "<script>Reveal.initialize({plugins: [ RevealMath ]});</script>"
+    )
+    assert "competing legacy RevealMath" in " ".join(reveal_reference_and_math_issues(marker + exact + legacy))
+
+    empty_config = "<script data-template-mathjax-config></script>"
+    assert "one canonical MathJax configuration" in " ".join(reveal_reference_and_math_issues(empty_config + exact))
+    assert "one canonical MathJax configuration" in " ".join(reveal_reference_and_math_issues(exact + marker))
+
+
+def test_reveal_mathjax_validation_rejects_nonempty_duplicate_loader_body() -> None:
+    exact = f'<script src="{MATHJAX_URL}" integrity="{_MATHJAX_INTEGRITY}" crossorigin="anonymous"></script>'
+    competing = f'<script src="{MATHJAX_URL}">ignored</script>'
+
+    issues = reveal_reference_and_math_issues(_MATHJAX_CONFIG_SCRIPT + exact + competing)
+
+    assert "exactly one pinned MathJax loader" in " ".join(issues)
+
+    query_loader = f'<script src="{MATHJAX_URL}?bypass=1"></script>'
+    query_issues = reveal_reference_and_math_issues(_MATHJAX_CONFIG_SCRIPT + exact + query_loader)
+    assert "exactly one pinned MathJax loader" in " ".join(query_issues)
+
+    duplicate_attribute = exact.replace(
+        f'integrity="{_MATHJAX_INTEGRITY}"',
+        f'integrity="{_MATHJAX_INTEGRITY}" integrity="sha384-AAAA"',
+    )
+    attribute_issues = reveal_reference_and_math_issues(_MATHJAX_CONFIG_SCRIPT + duplicate_attribute)
+    assert "exact pinned SRI" in " ".join(attribute_issues)
+
+
+def test_reveal_mathjax_activation_normalizes_existing_loaders(tmp_path: Path) -> None:
+    html_file = tmp_path / "deck.html"
+    raw = (
+        "<html><head>"
+        f'<script src="{MATHJAX_URL}" integrity="sha384-AAAA"></script>'
+        f'<script defer src="{MATHJAX_URL}?bypass=1"></script>'
+        "</head><body></body></html>"
+    )
+    html_file.write_text(activate_hardened_reveal_mathjax(raw), encoding="utf-8")
+
+    harden_mathjax_script(html_file)
+
+    hardened = html_file.read_text(encoding="utf-8")
+    assert hardened.count(MATHJAX_URL) == 1
+    assert hardened.count(_MATHJAX_INTEGRITY) == 1
+    assert hardened.count("data-template-mathjax-config") == 1
+    assert reveal_reference_and_math_issues(hardened) == ()
+
+
+def test_reveal_math_label_promotion_and_integrity_checks_reject_raw_derivatives() -> None:
+    raw = (
+        '<span class="math display">$$\\begin{aligned}x&amp;=1\\end{aligned}$$</span> '
+        "{#eq:model} "
+        '<span class="citation" data-cites="eq:model">(<strong>eq:model?</strong>)</span>'
+    )
+
+    promoted = promote_display_math_labels(raw)
+    assert 'id="eq:model"' in promoted
+    assert "{#eq:model}" not in promoted
+    issues = reveal_reference_and_math_issues(promoted)
+    assert "Reveal deck contains an unresolved cross-reference placeholder" in issues
+    assert "Reveal display math retains literal $$ delimiters" in issues
+    assert "Reveal display math contains an unrendered TeX environment without an executable math backend" in issues
+
+
+def test_accessible_reveal_renderer_discards_output_that_fails_post_render_validation(tmp_path: Path) -> None:
+    source = tmp_path / "deck.json"
+    source.write_text("{}", encoding="utf-8")
+    output = tmp_path / "deck.html"
+
+    def write_invalid_reveal(command: list[str], **_kwargs: object) -> None:
+        target = Path(command[command.index("-o") + 1])
+        target.write_text(
+            "<!doctype html><html><head><title>Invalid</title>"
+            '<link rel="stylesheet" href="https://unpkg.com/reveal.js@5.2.1/dist/theme/white.css">'
+            '</head><body><div class="reveal"><div class="slides">'
+            '<section class="slide level2"><h2>Invalid math</h2><p>\\begin{aligned}x=1\\end{aligned}</p>'
+            "</section></div></div><script>Reveal.initialize({keyboard: true});</script></body></html>",
+            encoding="utf-8",
+        )
+
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path),
+            slides_dir=str(tmp_path),
+            slides_profile="accessible",
+        ),
+        process_runner=write_invalid_reveal,
+    )
+
+    with pytest.raises(RenderingError, match=r"\[slides\.accessibility\.reveal-output\]") as exc_info:
+        renderer._render_revealjs(source, output)
+
+    assert "Reveal deck contains a TeX display environment outside a math span" in exc_info.value.context["issues"]
+    assert not output.exists()
+
+
+@pytest.mark.slow
+def test_real_accessible_reveal_resolves_crossrefs_and_hardens_complex_math(tmp_path: Path) -> None:
+    """The browser surface receives numbered refs and executable aligned math."""
+
+    if not shutil.which("pandoc"):
+        pytest.skip("Pandoc not installed")
+    manuscript = tmp_path / "manuscript"
+    pdf_dir = tmp_path / "output" / "pdf"
+    slides = tmp_path / "output" / "slides"
+    manuscript.mkdir()
+    pdf_dir.mkdir(parents=True)
+    source = manuscript / "deck.md"
+    source.write_text(
+        "## Model {#sec:model}\n\n"
+        "The local display [@eq:model] and the external discussion [@sec:other] are bounded references.\n\n"
+        "$$\n\\begin{aligned}\nq(s) &= \\operatorname{normalize}(p(s)) \\\\\n\\log q(s) &= \\log p(s) - \\log Z.\n\\end{aligned}\n$$ {#eq:model}\n",
+        encoding="utf-8",
+    )
+    (manuscript / "references.bib").write_text(
+        "@article{fixture2026, title={Fixture}, author={Example, Ada}, year={2026}}\n",
+        encoding="utf-8",
+    )
+    (pdf_dir / "_combined_manuscript.aux").write_text(
+        "\\newlabel{sec:model}{{2}{4}{Model}{section.2}{}}\n"
+        "\\newlabel{sec:other}{{3}{7}{Other}{section.3}{}}\n"
+        "\\newlabel{eq:model}{{7}{5}{Model equation}{equation.7}{}}\n",
+        encoding="utf-8",
+    )
+    renderer = SlidesRenderer(
+        RenderingConfig(
+            output_dir=str(tmp_path / "output"),
+            pdf_dir=str(pdf_dir),
+            slides_dir=str(slides),
+            slides_profile="accessible",
+        )
+    )
+
+    output = renderer.render(
+        source,
+        output_format="revealjs",
+        manuscript_dir=manuscript,
+        strict_cross_deck_refs=True,
+    )
+    rendered = output.read_text(encoding="utf-8")
+
+    assert MATHJAX_URL in rendered
+    assert "data-template-mathjax-config" in rendered
+    assert re.search(rf'<script\b[^>]*src="{re.escape(MATHJAX_URL)}"[^>]*integrity="sha384-', rendered)
+    assert 'crossorigin="anonymous"' in rendered
+    assert "RevealMath" not in rendered
+    assert '<a class="cross-reference" href="#eq:model">Equation (7)</a>' in rendered
+    assert '<span class="cross-reference">Section 3</span>' in rendered
+    assert 'id="eq:model"' in rendered
+    assert "eq:model?" not in rendered
+    assert "sec:other?" not in rendered
+    assert "{#eq:model}" not in rendered
+    assert "$$" not in rendered
+    assert r"\begin{aligned}" in rendered
+    assert accessible_reveal_output_issues(output) == ()
+
+
 @pytest.mark.slow
 def test_failed_accessible_pair_composition_removes_both_stale_derivatives(tmp_path: Path) -> None:
     if not shutil.which("pandoc"):
@@ -776,9 +1033,11 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     if compiler is None:
         pytest.skip("No LaTeX compiler available")
     manuscript = tmp_path / "manuscript"
+    pdf_dir = tmp_path / "output" / "pdf"
     figures = tmp_path / "output" / "figures"
     slides = tmp_path / "output" / "slides"
     manuscript.mkdir()
+    pdf_dir.mkdir(parents=True)
     figures.mkdir(parents=True)
     _write_png(figures / "allocation.png")
     source = manuscript / "deck.md"
@@ -786,11 +1045,19 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
         "## Evidence boundary\n\n"
         "The projected derivative states one bounded engineering result and links the canonical reader.\n\n"
         "## Figure allocation\n\n"
-        "![A one-pixel renderer fixture.](../output/figures/allocation.png){#fig:allocation}\n",
+        "![A one-pixel renderer fixture.](../output/figures/allocation.png){#fig:allocation}\n\n"
+        "## Numbering parity\n\n"
+        "The local display is Equation [@eq:model].\n\n"
+        "$$x = 1$$ {#eq:model}\n",
+        encoding="utf-8",
+    )
+    (pdf_dir / "_combined_manuscript.aux").write_text(
+        r"\newlabel{eq:model}{{7}{9}{Model}{equation.7}{}}" + "\n",
         encoding="utf-8",
     )
     config = RenderingConfig(
         output_dir=str(tmp_path / "output"),
+        pdf_dir=str(pdf_dir),
         slides_dir=str(slides),
         figures_dir=str(figures),
         slides_profile="accessible",
@@ -801,6 +1068,7 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
         source,
         manuscript_dir=manuscript,
         figures_dir=figures,
+        strict_cross_deck_refs=True,
     )
 
     assert pdf_result.is_file()
@@ -821,6 +1089,14 @@ def test_real_accessible_pair_uses_one_contract_for_beamer_and_reveal(tmp_path: 
     assert "Untagged PDF derivative" in header
     assert "HTML reader" in header
     assert r"height=0.55\textheight" in tex
+    # Pandoc-crossref chooses format-specific prose (``eq. 7`` in TeX and
+    # ``(7)`` in the browser), but both canonical derivatives must consume the
+    # combined AUX's exact number rather than locally renumbering it as 1.
+    assert "The local display is Equation eq.~7." in tex
+    assert r"\ref{eq:model}" not in tex
+    visible_reveal = " ".join(re.sub(r"<[^>]+>", "", reveal).split())
+    assert "The local display is Equation (7)." in visible_reveal
+    assert "Equation Equation" not in visible_reveal
     assert not list(slides.glob(".*.pandoc*.json"))
 
 

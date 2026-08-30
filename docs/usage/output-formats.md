@@ -133,8 +133,12 @@ reduced-motion behavior, source-owned figure alternatives and long
 descriptions, and a persistent manuscript-reader link. Beamer uses the same
 frame plan and visible 28/20/16-point floors but remains an explicitly labelled
 untagged PDF derivative. These controls do not establish WCAG or PDF/UA
-conformance. The linked manuscript HTML retains complete captions, tables, long
-descriptions, and exact-value fallbacks and remains the canonical reader.
+conformance. Reveal core, theme, and plugin assets use one version-pinned CDN
+release, so the browser deck remains network-dependent and is not an offline or
+byte-pinned bundle. Its MathJax loader is a narrower exception: the renderer
+normalizes it to one exact URL and reviewed SRI digest. The linked manuscript
+HTML retains complete captions, tables, long descriptions, and exact-value
+fallbacks and remains the canonical reader.
 
 Every slide-policy field also has an environment override: `SLIDES_PROFILE`,
 `SLIDES_MAX_PROSE_WORDS`, `SLIDES_MAX_TABLE_ROWS`,
