@@ -31,8 +31,8 @@ incrementally, push if possible.
     expect the new diagnostic (fail-closed behavior preserved, now legible).
 
 ## Verified (with real runs)
-- `tests/infra_tests/project/test_git_guards.py`: **31 passed** (final worktree
-  state; run took 34s under sibling load; earlier identical-state run 28 passed
+- `tests/infra_tests/project/test_git_guards.py`: **31 passed** (final worktree <!-- noqa: drift-counts -->
+  state; run took 34s under sibling load; earlier identical-state run 28 passed <!-- noqa: drift-counts -->
   — sibling lanes' commits reshaped the shared file between runs).
 - `uv run mypy infrastructure/project/git_guards.py`: **Success, no issues**.
 - `ruff check` + `ruff format`: **All checks passed**.
@@ -93,11 +93,11 @@ incrementally, push if possible.
   Local `main` now == `origin/main` at `514971960` (verified via `git fetch` +
   `git status -sb`).
 - **Re-verified this session** (all real runs, current HEAD):
-  - `pytest tests/infra_tests/project/test_git_guards.py` — **31 passed**.
-  - `pytest tests/infra_tests/publishing/test_export_bundle.py` — **26 passed**
+  - `pytest tests/infra_tests/project/test_git_guards.py` — **31 passed**. <!-- noqa: drift-counts -->
+  - `pytest tests/infra_tests/publishing/test_export_bundle.py` — **26 passed** <!-- noqa: drift-counts -->
     (covers the `resolve_source_manuscript_dir` import fix).
   - `pytest tests/infra_tests/publishing/{test_publishing,test_publishing_core,test_cli}.py`
-    — **72 passed**.
+    — **72 passed**. <!-- noqa: drift-counts -->
   - `ruff check` on the three touched source files — **All checks passed**;
     `mypy` on `git_guards.py` and `export_bundle.py` — **Success, no issues**.
   - `scripts/audit/verify_no_mocks.py`, `check_tracked_all.py`,
@@ -105,7 +105,7 @@ incrementally, push if possible.
 - **Known limitation (environment, not code):**
   `tests/infra_tests/core/test_health.py::TestSubsetSelection::test_subset_runs_only_named_gates`
   (and the parallel variant) hit pytest's subprocess `select` timeout on this
-  loaded machine — the same documented load-flake class; 14 other tests in the
+  loaded machine — the same documented load-flake class; 14 other tests in the <!-- noqa: drift-counts -->
   module ran green before the stall. Not verified on this host under low load.
 - **Not committed (intentionally, local-only):** `AUDIT_2026-08-30*.md`,
   `.laneD_results.json`, `.tmp_prune/`, sidecar scratch jobs/logs,
