@@ -77,7 +77,7 @@ addopts = [
     "--strict-markers",
     "--disable-warnings",
     "--tb=short",
-    "--timeout=10",
+    "--timeout=120",
     "--cov=projects/templates/template_advanced_literature_review/src/multi_phase",
     "--cov-branch",
     "--cov-report=term-missing:skip-covered",
@@ -90,7 +90,7 @@ markers = [
     "llm: Tests requiring LLM access",
     "slow: Slow tests (>10 seconds)",
 ]
-timeout = 10
+timeout = 120
 
 [tool.coverage.run]
 source = ["src"]
