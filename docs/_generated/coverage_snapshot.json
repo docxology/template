@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.89 %",
-      "source_hash": "a716bcee4975df1efa83cb100b90063b50156b2abd22db8d664c3ce4ba7c3663"
+      "source_hash": "cd9cc52495c440f5b0df2dbe198867b99ead2ac9ce669cce854af3b521ad33ad"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -99,7 +99,7 @@
     }
   },
   "schema_version": 5,
-  "source_commit": "2f6e56a9ae16e23fa8be24f9c9c8888060e05bcf",
+  "source_commit": "437589bae7e596ea10610874c111591d63d03939",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,7 +107,7 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "e507c513b7e38128314b447ae997e9308c4b9813e8db9af49870044c89295c67",
+        "digest": "f242418f4a84a11192d2a8839c2863fd0c75feb32d566f9d2797cedaea2b8ffc",
         "entries": [
           {
             "identity": "sha256",
@@ -157,6 +157,11 @@
             "type": "file"
           },
           {
+            "identity": "existence",
+            "path": "projects/templates/template_active_inference/manuscript/SYNTAX.md",
+            "type": "file"
+          },
+          {
             "identity": "sha256",
             "path": "docs/maintenance/archival-targets.md",
             "sha256": "6da1210deb8299e37007b2dd015e4b601a5886316fb83566a32a065be23e485a",
@@ -184,7 +189,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "a716bcee4975df1efa83cb100b90063b50156b2abd22db8d664c3ce4ba7c3663",
+      "template_active_inference": "cd9cc52495c440f5b0df2dbe198867b99ead2ac9ce669cce854af3b521ad33ad",
       "template_advanced_literature_review": "4fec980fa59febd34625bf9960d54e1e43dcec98b2b53f14699bf53c6e33e1a4",
       "template_autopoiesis": "33885da930213a7128597011bd0b8fc64613755d24640dddcf5dc48f90d83cfd",
       "template_autoresearch_project": "9c71e2e98b28d772a3c4563c4072a4be0adbdf0c6a76aac411480ec2003a2f72",
