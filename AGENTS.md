@@ -609,7 +609,7 @@ steganography:
 
 #### Entry Point Comparison
 
-- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Bash progress: `[0/9]` clean, then `[1/9]`–`[9/9]` for nine tracked steps (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py), kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
+- **`./run.sh`**: Main entry point — interactive menu or pipeline run. Progress banners are generic `[i/N]` lines emitted from the resolved DAG (see [`PipelineRunner._banner`](infrastructure/orchestration/pipeline_runner.py)): the default full run is **10** stages and `--core-only` is **8**, per the generated `STAGE_SUMMARY` below (kept in sync with [`pipeline.yaml`](infrastructure/core/pipeline/pipeline.yaml)).
 - **`./run.sh --pipeline`**: Non-interactive full DAG; optional LLM stages may skip if Ollama is unavailable.
 - **`./run.sh --secure-run`**: Forwards to the `secure` orchestration subcommand (same Python CLI as bare `./run.sh`; use when you want argv shaping from the main shell).
 - **`./secure_run.sh`**: Ensures steganography extras (`uv sync --group steganography`), then `python -m infrastructure.orchestration secure`. **`--project`** is required when running the pipeline phase (omit only for `--steganography-only` across all projects). See [Secure Pipeline](#secure-pipeline-secure_runsh) above.
@@ -619,7 +619,7 @@ steganography:
 
 **Full Pipeline Stages** — counts come from the generated `STAGE_SUMMARY` at the end of this file. `run.sh` shows `[0/N]` for clean and `[1/N]`–`[N/N]` for the numbered default-run stages (labels from [`STAGE_NAMES`](infrastructure/orchestration/menu.py)). `--core-only` drops LLM-tagged and opt-in stages.
 
-- **[0/9] Clean Output Directories** - Clean working and final output directories (pre-step)
+- **[1/10] Clean Output Directories** - Clean working and final output directories (first default-run stage)
 1. **Environment Setup** - Verify system requirements and dependencies
 2. **Infrastructure Tests** - Run the focused `pipeline-smoke` infrastructure contract (may be skipped; full coverage gate is explicit)
 3. **Project Tests** - Run project test suite (90% coverage minimum)

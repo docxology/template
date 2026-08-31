@@ -384,7 +384,7 @@ Runs `execute_pipeline.py` with **`--core-only`** (default [`pipeline.yaml`](../
 Runs the **full** default DAG (**10** stages in `pipeline.yaml`, including clean, both LLM stages, and copy).
 
 - LLM stages are optional at runtime (exit code 2 skip) if Ollama is unavailable
-- Bash progress lines use `[0/9]` for clean, then `[1/9]`–`[9/9]` for the nine entries in `STAGE_NAMES` in [`infrastructure/orchestration/menu.py`](../infrastructure/orchestration/menu.py) (see menu block above)
+- Progress banners are generic `[i/N]` lines from the resolved DAG: the default full run is **10** stages (clean included), `--core-only` is **8** (see the `STAGE_SUMMARY` in the root [`AGENTS.md`](../AGENTS.md))
 
 #### Menu `f`: Full Pipeline (fast)
 

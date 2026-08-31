@@ -127,7 +127,7 @@ log_resource_usage "PDF Rendering" "$duration"
 ## Log File Format
 
 **Operational scripts** that source `bash_utils.sh` may write transcripts like the sample below.
-The **pipeline** log contract (stage banners, `[0/9]`–`[9/9]`, Python orchestration output) lives in
+The **pipeline** log contract (stage banners, generic `[i/N]` — e.g. `[1/8]`–`[8/8]` for a core-only run, `[1/10]`–`[10/10]` full — plus Python orchestration output) lives in
 [output-design.md](output-design.md) — not in bash entry points.
 
 Example operational-script transcript:
@@ -142,11 +142,11 @@ Python: Python 3.13.11
 Log file: output/logs/pipeline_20251228_134833.log
 Pipeline started: Sat Dec 28 13:48:33 PST 2025
 
-[0/9] Clean Output Directories
+[1/10] Clean Output Directories
   Elapsed: 0m 0s | ETA: 0m 0s
 ✓ Output directories cleaned
 
-[1/9] Environment Setup (11%)
+[2/10] Environment Setup (10%)
   Elapsed: 0m 5s | ETA: 0m 40s
 ✓ Environment setup complete
 
