@@ -164,3 +164,10 @@ Implemented:
 Known-unverified this pass: mypy/pre-commit full hooks and full pytest not run (external-drive volume exceeds lane budget; scoped fast gates only). `docs/_generated/coverage_snapshot.json` regenerated (fresh provenance) — commit path-scoped.
 
 Scope disclosure: edits limited to AGENTS.md, TO-DO.md, REVIEW_LOG_2026-08-31.md, docs/audit/AGENTS.md, docs/audit/_FLEET_REPORT_2026-08-30.md (mv), docs/_generated/coverage_snapshot.json, docs/_generated/COUNTS.md.
+
+
+## Correction + final lane note — agent-ergonomics round 2 (2026-08-31 ~15:35 PDT)
+
+- Provenance re-stale observed POST-closure: `counts.py --check` (rerun ~15:30) reports STALE for `template_search_project` — its README was edited (commit 031f1a2ea) after the coverage provenance was measured, which is exactly the recurring post-measurement staleness the closed row's negative control describes. The closure claim "refreshed+verified" was true at commit time but is already stale on tree. Any future coverage-affecting edit re-stales `--check`; the fix belongs at the workflow level (refresh provenance in the same change as coverage-affecting edits), not as one-off ad-hoc runs.
+- Commit attribution: the shared staged set (this file, TO-DO.md, coverage_snapshot.json, docs/audit/AGENTS.md) was landed by sibling commit 482d6ce56 under its message; this lane's earlier independent commits (root-copy deletions, docs/audit README index rows) landed as 6e0c28b01/833b43bbc-adjacent sibling commits on the same shared index. Fleet-shared-checkout discipline: single index, racing lanes, stage-then-commit immediately.
+- Push state at this note: 482d6ce56 not yet on origin (245d5f924 was the remote tip); push retry in flight.
