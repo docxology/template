@@ -1,0 +1,20 @@
+
+## Sixth lane pass — agent-ergonomics deep pass round 2 (2026-08-31 ~14:10–14:25 PDT)
+
+Preflight: branch `main`, fetched origin; ahead 1 (9738022c8, the fifth lane's own commit not yet pushed by it — see push note below). Pre-existing dirty tree disclosed: untracked per-exemplar `docs/manuscript/` trees and one staged-but-uncommitted rename `_FLEET_REPORT_2026-08-30.md → docs/audit/` (sibling lane's index state, left untouched).
+
+- Full fast-gate battery re-verified live: `counts.py --check` FAIL (stale coverage provenance — known open row AGENT-ERG-COUNTS-PROVENANCE-MED-1); `exemplar_roster.py --check` OK (24 exemplars); `status_evidence.py --check` OK; `api_reference.py --check` OK (25 packages); `stage_table.py` no drift (7 marker blocks); `publication_records.py --check` OK; `check_template_drift.py --strict` OK; `check_backlog.py --strict` OK (32 IDs, 0 errors/warnings); `infrastructure.skills check` + `check-contracts` OK; `verify_no_mocks.py --inventory --max-dependency-replacements 0` clear (417 findings all permitted classes); `check_claim_bindings.py` pass; `check_tracked_all.py` clean (projects/fonds/rules/tools); `check_mirror_symlinks.py` OK.
+- Full docs-tree link lint (`lint_docs.py --paths docs/ --links-only`): 0 broken links, 0 mermaid/consistency findings. Entry-doc cold-start audit (README.md, START_HERE.md, AGENTS.md, STATUS.md, TO-DO.md): orientation ladder intact with verification commands on every claim; all cited scripts exist on disk (spot-checked stage_07_executive_report.py, docgen/audit scripts); no duplicate fact-classes found (counts/roster/status all delegate to docs/_generated/).
+- `AGENT-ERG-COUNTS-PROVENANCE-MED-1` remains open — deferred with reason: remediation requires a full coverage re-measurement (>10 min/project on this volume; a round-1 attempt at it was killed at timeout and truncated .git/index). Needs an unimpeded run, not a shared-fleet slot.
+- No new TODO rows opened: every scoped finding this pass was already captured by prior lanes; no stale claims, broken links, or duplicates discovered.
+- Push note: fifth lane's commit 9738022c8 was still unpushed at this pass's start; pushed together with this lane's log entry (pathspec-scoped commit of REVIEW_LOG_2026-08-31.md only; sibling staged rename excluded).
+
+## Seventh lane pass — agent-ergonomics deep pass round 2 (2026-08-31 ~14:2x–14:4x PDT, violet_line)
+
+Preflight: branch `main`, fetched origin (0 behind, ahead 1 = 9738022c8 at start; sibling lanes committed ba594d299 during this pass). Pre-existing untracked transient files (sidecar_*, .tmp_prune/, skillarum-docs/, per-exemplar docs/manuscript/ trees) disclosed and left untouched per DOC-ROOT-SCRATCH-HYGIENE-MIN-1.
+
+- Scoped docs link lint (`lint_docs.py --paths README.md START_HERE.md AGENTS.md CLAUDE.md STATUS.md TO-DO.md docs/ --links-only --json`): found 1 broken link the sixth lane's `--paths docs/` run missed — `docs/guides/testing-and-reproducibility.md:674` pointed at the escaped literal `../\_generated/README.md` (backslash inside the markdown link target), which does not exist on disk. Fixed to `../_generated/README.md` (target verified present); re-run: 0 broken.
+- Cold-start entry-doc audit (README/START_HERE/AGENTS/STATUS/TO-DO): orientation ladder intact, STATUS.md last updated 2026-08-09 within its 6-month refresh target, entry docs link generated surfaces rather than copying them. No stale claims or duplicate fact-classes newly found.
+- `check_backlog.py --strict` OK (25 backlog files, 32 stable IDs, 0 errors/warnings).
+- Deferred with reason (pre-existing open rows, not new findings): AGENT-ERG-COUNTS-PROVENANCE-MED-1 (counts provenance refresh exceeded 7 min wall on this external-drive volume with sibling fleet lanes running concurrent `counts.py --check`; needs an unimpeded run) and DOC-ROOT-SCRATCH-HYGIENE-MIN-1 (owner confirmation required to archive root scratch files).
+- Note: the sixth-lane-adjacent sibling staged move of this log from repo root to docs/audit/ initially dropped this lane's append; re-appended here at the moved location.
