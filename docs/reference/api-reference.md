@@ -2278,7 +2278,7 @@ Outcome of an EPUB render.
 *constant — defined in `infrastructure.rendering.manuscript_injection`*
 
 ```python
-EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({'AGENTS.md', 'README.md', 'SYNTAX.md'})
+EXCLUDED_DOC_FILENAMES: frozenset[str] = frozenset({'AGENTS.md', 'MANUSCRIPT_STATUS.md', 'README.md', 'SYNTAX.md'})
 ```
 
 ### `export_project`
