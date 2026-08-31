@@ -555,6 +555,13 @@ def test_active_coverage_workspace_has_exact_isolated_git_identity(tmp_path: Pat
     assert _regular_file_snapshot(canonical_git) == canonical_git_before
 
 
+def _repo_root_anchor(spec) -> str:
+    """Map a disposable-tree support spec to its canonical repo-root path."""
+    if spec.relative_path.as_posix() == "manuscript/SYNTAX.md":
+        return "projects/templates/template_active_inference/manuscript/SYNTAX.md"
+    return spec.relative_path.as_posix()
+
+
 def test_active_coverage_support_closure_exactly_matches_outward_documentation_links() -> None:
     import runpy
 
@@ -594,9 +601,8 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
         "projects/AGENTS.md",
         "projects/AGENTS.md",
         "projects/templates/template_code_project",
-        "projects/templates/template_active_inference/manuscript/SYNTAX.md",
     ]
-    declared_targets = {spec.relative_path.as_posix() for spec in _COVERAGE_COPY_SUPPORT_SPECS}
+    declared_targets = {_repo_root_anchor(spec) for spec in _COVERAGE_COPY_SUPPORT_SPECS}
 
     assert sorted(outward_targets) == sorted(expected_targets)
     assert set(outward_targets) == declared_targets
