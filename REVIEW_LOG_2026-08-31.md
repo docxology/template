@@ -61,3 +61,11 @@ path-scoped files below were staged.
   acceptance command.
 - mypy on the edited module: not completed this pass (uv/mypy on this volume
   exceeded lane budget); CI type-check will cover it. Honest statement.
+
+## Fleet lane pass — TO-DO.md backlog-shape fix (2026-08-31 ~13:30–14:00 PDT)
+- Found: `check_backlog.py --strict` erroring on TO-DO.md:52 — the `DOC-ROOT-SCRATCH-HYGIENE-MIN-1` acceptance command contained literal `|` pipe characters inside a table cell, splitting the row so `backlog_row_shape` saw 10+ fields (contract requires 8). A stray blank line also split the table between rows.
+- Fixed: removed the blank line; rewrote the acceptance command without pipes (described as prose: `git status --porcelain` filtered for `sidecar_` then `AUDIT_2026`). Note: the backlog parser splits cells on every literal `|` even inside backticks — commands in table cells must be pipe-free.
+- Verified: `uv run python scripts/audit/check_backlog.py --strict` → 0 errors, 0 warnings; scoped `lint_docs.py --paths TO-DO.md START_HERE.md README.md STATUS.md AGENTS.md --links-only` → 0 broken links.
+- Committed d79665db0 (TO-DO.md only, path-scoped) and pushed to origin/main (ls-remote verified d79665db0).
+- Gate status observed: counts.py --check still reports STALE coverage provenance even immediately after a successful `--refresh-coverage-provenance --write` (exit 0; snapshot regenerated but HEAD moved underneath by concurrent lanes) — confirms open row AGENT-ERG-COUNTS-PROVENANCE-MED-1; needs source-level fix, deferred.
+- Incident note: stale `.git/index.lock` files (0-byte, from OOM-killed git processes under fleet load) blocked git ops twice this session; verified no live git process held them before removing.
