@@ -207,6 +207,32 @@ def offending_tracked_tools(repo_root: Path) -> list[str]:
     )
 
 
+def _run_git(repo_root: Path, argv: list[str]) -> subprocess.CompletedProcess[bytes]:
+    """Run one git command, failing closed with a diagnostic on git errors.
+
+    Guards must never silently proceed when git itself fails (corrupt index,
+    transient filesystem stall, non-checkout): a raw ``CalledProcessError``
+    traceback names no guard and no repository state. This wrapper re-raises
+    with the failing argv, exit code, and stderr so operators see which guard
+    could not establish its evidence and why.
+    """
+    try:
+        return subprocess.run(
+            ["git", *argv],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            timeout=_GIT_TIMEOUT_SEC,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git guard subprocess timed out after {_GIT_TIMEOUT_SEC}s: git {' '.join(argv)}") from exc
+    except subprocess.CalledProcessError as exc:
+        stderr = exc.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(
+            f"git guard subprocess failed (exit {exc.returncode}): git {' '.join(argv)}: {stderr}"
+        ) from exc
+
+
 def _offending_tracked_paths(
     repo_root: Path,
     *,
@@ -214,13 +240,7 @@ def _offending_tracked_paths(
     allowed_toplevel: frozenset[str],
     allowed_dirs: tuple[str, ...],
 ) -> list[str]:
-    proc = subprocess.run(
-        ["git", "ls-files", "-z", path_prefix],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
-    )
+    proc = _run_git(repo_root, ["ls-files", "-z", path_prefix])
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     offenders: list[str] = []
     for path in paths:
@@ -290,13 +310,7 @@ def tracked_generated_artifacts(
     repo_root: Path, *, public_output_max_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_BYTES
 ) -> list[str]:
     """Return the set of tracked generated artifacts."""
-    proc = subprocess.run(
-        ["git", "ls-files", "-z"],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
-    )
+    proc = _run_git(repo_root, ["ls-files", "-z"])
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     return sorted(
         path
@@ -317,13 +331,7 @@ def public_template_output_budget_findings(
     max_single_file_bytes: int = PUBLIC_TEMPLATE_OUTPUT_MAX_SINGLE_FILE_BYTES,
 ) -> list[str]:
     """Return ratchet violations for canonical tracked exemplar evidence."""
-    proc = subprocess.run(
-        ["git", "ls-files", "-z", "projects/templates/*/output/**"],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
-    )
+    proc = _run_git(repo_root, ["ls-files", "-z", "projects/templates/*/output/**"])
     paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
     total_bytes = 0
     blobs: dict[str, tuple[int, int]] = {}
@@ -381,13 +389,7 @@ def tracked_public_output_secrets(repo_root: Path) -> list[str]:
 
 def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
     """Scan tracked publication text once for local paths and secrets."""
-    proc = subprocess.run(
-        ["git", "ls-files", "-z"],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
-    )
+    proc = _run_git(repo_root, ["ls-files", "-z"])
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     local_paths: list[str] = []
     secrets: list[str] = []
@@ -416,13 +418,7 @@ def tracked_secret_findings(repo_root: Path) -> list[str]:
     security tests and documentation are ignored; real credentials must not
     be hidden behind a broad test-directory exclusion.
     """
-    proc = subprocess.run(
-        ["git", "ls-files", "-z"],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
-    )
+    proc = _run_git(repo_root, ["ls-files", "-z"])
     findings: list[str] = []
     for raw_path in proc.stdout.decode("utf-8").split("\0"):
         if not raw_path:
@@ -460,30 +456,11 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
     tracked-index scanner. Like :func:`tracked_secret_findings`, the scanner
     never prints the matched credential value.
     """
-    proc = subprocess.run(
-        [
-            "git",
-            "diff",
-            "--cached",
-            "--find-renames",
-            "--find-copies",
-            "--diff-filter=ACMR",
-            "--name-only",
-            "-z",
-            "--",
-        ],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
+    proc = _run_git(
+        repo_root,
+        ["diff", "--cached", "--find-renames", "--find-copies", "--diff-filter=ACMR", "--name-only", "-z", "--"],
     )
-    index_proc = subprocess.run(
-        ["git", "ls-files", "--stage", "-z"],
-        cwd=repo_root,
-        check=True,
-        capture_output=True,
-        timeout=_GIT_TIMEOUT_SEC,
-    )
+    index_proc = _run_git(repo_root, ["ls-files", "--stage", "-z"])
     index_entries: dict[bytes, list[tuple[bytes, bytes, bytes]]] = {}
     for row in index_proc.stdout.split(b"\0"):
         if not row:
@@ -509,13 +486,7 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
             raise RuntimeError(f"unsupported staged index mode: {mode.decode('ascii', errors='replace')}")
 
         path = raw_path.decode("utf-8", errors="surrogateescape")
-        blob = subprocess.run(
-            ["git", "cat-file", "blob", object_id.decode("ascii")],
-            cwd=repo_root,
-            check=True,
-            capture_output=True,
-            timeout=_GIT_TIMEOUT_SEC,
-        )
+        blob = _run_git(repo_root, ["cat-file", "blob", object_id.decode("ascii")])
         content = blob.stdout
         if b"\x00" in content[:4096]:
             continue

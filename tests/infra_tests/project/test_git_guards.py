@@ -18,6 +18,7 @@ from infrastructure.project.git_guards import (
     tracked_generated_artifacts,
     tracked_public_output_local_paths,
     tracked_public_output_secrets,
+    tracked_secret_findings,
 )
 
 
@@ -170,7 +171,7 @@ def test_staged_secret_scan_fails_closed_for_unreadable_blob(tmp_path: Path) -> 
         check=True,
     )
 
-    with pytest.raises(subprocess.CalledProcessError):
+    with pytest.raises(RuntimeError, match="git guard subprocess failed"):
         staged_diff_secret_findings(tmp_path)
 
 
@@ -433,3 +434,61 @@ def test_public_output_budget_flags_single_file_over_advisory_ceiling(tmp_path: 
 
     findings_under = public_template_output_budget_findings(tmp_path, max_single_file_bytes=2048)
     assert not any("single-file bytes exceed advisory ceiling" in finding for finding in findings_under)
+
+
+def test_run_git_raises_diagnostic_on_git_failure(tmp_path: Path) -> None:
+    """Negative control: a git failure inside a guard becomes a named RuntimeError.
+
+    A directory that is not a git checkout makes ``git ls-files`` exit 128;
+    the guard must fail closed with the failing argv, exit code, and git's
+    stderr instead of a raw CalledProcessError traceback.
+    """
+    from infrastructure.project.git_guards import _run_git
+
+    with pytest.raises(RuntimeError) as excinfo:
+        _run_git(tmp_path, ["ls-files", "-z"])
+    message = str(excinfo.value)
+    assert "git guard subprocess failed" in message
+    assert "exit 128" in message
+    assert "git ls-files -z" in message
+
+
+def test_run_git_timeout_diagnoses_slow_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Negative control: a git subprocess exceeding the guard timeout names the argv.
+
+    A git wrapper that busy-loops forever (placed first on PATH) reproduces a
+    stalled spindle-disk git call; the guard must fail closed with an
+    explicit timeout diagnostic rather than hanging or raising bare
+    TimeoutExpired.
+    """
+    import infrastructure.project.git_guards as guards
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    stub = bin_dir / "git"
+    stub.write_text("#!/bin/sh\nwhile true; do :; done\n")  # busy-loop: no PATH deps
+    stub.chmod(0o755)
+
+    original = guards._GIT_TIMEOUT_SEC
+    guards._GIT_TIMEOUT_SEC = 1
+    try:
+        with monkeypatch.context() as m:
+            m.setenv("PATH", str(bin_dir))  # environment isolation: route to the stub git
+            with pytest.raises(RuntimeError) as excinfo:
+                guards._run_git(tmp_path, ["status", "--porcelain"])
+    finally:
+        guards._GIT_TIMEOUT_SEC = original
+    message = str(excinfo.value)
+    assert "timed out after 1s" in message
+    assert "git status --porcelain" in message
+
+
+def test_tracked_secret_findings_fail_closed_with_diagnostic(tmp_path: Path) -> None:
+    """Negative control: the guard-level entry points fail closed, not silently.
+
+    Running ``tracked_secret_findings`` against a non-checkout must raise the
+    guard diagnostic (never return an all-clear list) so a broken git state
+    cannot be mistaken for a clean scan.
+    """
+    with pytest.raises(RuntimeError, match="git guard subprocess failed"):
+        tracked_secret_findings(tmp_path)
