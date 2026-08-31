@@ -72,7 +72,7 @@ _COVERAGE_COPY_SUPPORT_SPECS = (
     _CoverageSupportSpec(Path("docs/guides/publishing-guide.md"), "file", True),
     _CoverageSupportSpec(Path("docs/guides/zenodo-doi-strategy.md"), "file", True),
     _CoverageSupportSpec(Path("docs/guides/manuscript-semantics.md"), "file", True),
-    _CoverageSupportSpec(Path("manuscript/SYNTAX.md"), "file", False),
+    _CoverageSupportSpec(Path("projects/templates/template_active_inference/manuscript/SYNTAX.md"), "file", False),
     _CoverageSupportSpec(Path("docs/maintenance/archival-targets.md"), "file", True),
     _CoverageSupportSpec(Path("docs/maintenance/exemplar-backlog-history.md"), "file", True),
     _CoverageSupportSpec(Path("infrastructure/publishing/README.md"), "file", True),
