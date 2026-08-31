@@ -34,6 +34,17 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path(__file__).resolve().parents[2],
     )
+    parser.add_argument(
+        "--paths",
+        nargs="+",
+        metavar="PATH",
+        default=None,
+        help=(
+            "Scope the lint to repo-relative files/directories (e.g. "
+            "--paths README.md START_HERE.md docs/) for fast targeted checks "
+            "on slow volumes; omit for the full repo-wide scan."
+        ),
+    )
     args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
@@ -46,6 +57,7 @@ def main(argv: list[str] | None = None) -> int:
             doc_pairs_only=args.doc_pairs_only,
             quiet=args.quiet,
             strict_mermaid=args.strict_mermaid,
+            paths=args.paths,
         )
     except ValueError as exc:
         parser.error(str(exc))
