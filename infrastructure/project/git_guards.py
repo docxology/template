@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import fnmatch
 import hashlib
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -15,6 +16,18 @@ from infrastructure.rules.public_scope import PUBLIC_RULE_NAMES
 from infrastructure.tools.public_scope import PUBLIC_TOOL_NAMES
 
 _GIT_TIMEOUT_SEC = 60
+
+# Inherited Git routing variables that would redirect a subprocess ``git`` away
+# from ``repo_root``. Under pre-push, ``git`` exports an absolute ``GIT_DIR``
+# (for example, a linked worktree's gitdir); without scrubbing, ``git ls-files``
+# lists the outer repository's index instead of the target repository's.
+_INHERITED_GIT_ROUTING_KEYS = ("GIT_DIR", "GIT_INDEX_FILE", "GIT_WORK_TREE")
+
+
+def _repo_git_env() -> dict[str, str]:
+    """Return an environment that pins ``git`` subprocesses to ``repo_root``."""
+    return {key: value for key, value in os.environ.items() if key not in _INHERITED_GIT_ROUTING_KEYS}
+
 
 # Derived from PUBLIC_PROJECT_NAMES — the single roster source of truth — so it
 # can never drift from the public exemplar roster. (Before 2026-06-10 this was a
@@ -220,6 +233,7 @@ def _offending_tracked_paths(
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     offenders: list[str] = []
@@ -296,6 +310,7 @@ def tracked_generated_artifacts(
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     return sorted(
@@ -323,6 +338,7 @@ def public_template_output_budget_findings(
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     paths = [path for path in proc.stdout.decode("utf-8").split("\0") if path]
     total_bytes = 0
@@ -387,6 +403,7 @@ def tracked_public_output_leaks(repo_root: Path) -> tuple[list[str], list[str]]:
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     paths = [p for p in proc.stdout.decode("utf-8").split("\0") if p]
     local_paths: list[str] = []
@@ -422,6 +439,7 @@ def tracked_secret_findings(repo_root: Path) -> list[str]:
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     findings: list[str] = []
     for raw_path in proc.stdout.decode("utf-8").split("\0"):
@@ -476,6 +494,7 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     index_proc = subprocess.run(
         ["git", "ls-files", "--stage", "-z"],
@@ -483,6 +502,7 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
         check=True,
         capture_output=True,
         timeout=_GIT_TIMEOUT_SEC,
+        env=_repo_git_env(),
     )
     index_entries: dict[bytes, list[tuple[bytes, bytes, bytes]]] = {}
     for row in index_proc.stdout.split(b"\0"):
@@ -515,6 +535,7 @@ def staged_diff_secret_findings(repo_root: Path) -> list[str]:
             check=True,
             capture_output=True,
             timeout=_GIT_TIMEOUT_SEC,
+            env=_repo_git_env(),
         )
         content = blob.stdout
         if b"\x00" in content[:4096]:
