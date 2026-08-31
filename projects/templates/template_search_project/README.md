@@ -262,6 +262,8 @@ component is in `infrastructure/`; only project-specific glue is in `src/`;
 
 ## Testing
 
+**Last verified: 2026-08-31** — `uv run pytest projects/templates/template_search_project/tests/ --cov=projects/templates/template_search_project/src --cov-fail-under=90 -q` → 321 passed, coverage 96.39% (gate ≥90%).
+
 ```bash
 uv run pytest projects/templates/template_search_project/tests/ -v
 ```
