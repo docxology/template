@@ -18,6 +18,8 @@ This document provides documentation for the Research Project Template system, e
 | [`README.md`](README.md) | Onboarding, documentation hub links, exemplar table |
 | [`.cursorrules`](.cursorrules) | Cursor agents: layer rules, CI scope, editing discipline |
 | [`CLAUDE.md`](CLAUDE.md) | Command cheat sheet, patterns; keep in sync with this file for pipeline wording |
+| [`START_HERE.md`](START_HERE.md) | Agent entry point: install, first pipeline run, orientation ladder |
+| [`STATUS.md`](STATUS.md) | Per-subsystem verification ledger (last-verified dates, health) |
 | **This file (`AGENTS.md`)** | Full reference: stages, validation, modules, troubleshooting |
 | [`docs/documentation-index.md`](docs/documentation-index.md) | Flat index of long-lived docs |
 | [`docs/_generated/active_projects.md`](docs/_generated/active_projects.md) | Authoritative public CI/documentation project names — never hard-code rotating private paths in docs |
@@ -385,7 +387,11 @@ flowchart TB
 
 The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `projects/{name}/manuscript/config.yaml`
+**Location**: `projects/{name}/manuscript/config.yaml` — resolved by
+`infrastructure.core.project_paths.resolve_source_manuscript_dir`, which also
+accepts a populated `docs/manuscript/` tree (conventional `manuscript/` with
+real sources wins when both exist). See the function's docstring for the exact
+precedence.
 **Template**: `projects/{name}/manuscript/config.yaml.example`
 
 **Example configuration**:
