@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -92,8 +93,9 @@ def test_tracked_secret_scan_reports_path_line_and_kind(tmp_path: Path) -> None:
     secret = "ghp_" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8"
     note = repo_root / "note.txt"
     note.write_text(f"reviewed\n{secret}\n", encoding="utf-8")
-    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
-    subprocess.run(["git", "add", "note.txt"], cwd=repo_root, check=True, timeout=30)
+    clean_env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30, env=clean_env)
+    subprocess.run(["git", "add", "note.txt"], cwd=repo_root, check=True, timeout=30, env=clean_env)
 
     findings = tracked_secret_findings(repo_root)
     assert findings == ["note.txt:2:github-token"]
@@ -107,8 +109,9 @@ def test_staged_secret_cli_reports_metadata_without_exposing_value(tmp_path: Pat
     secret = "ghp_" + "Z9y8X7w6V5u4T3s2R1q0N9m8L7k6J5h4G3f2E1d0"
     note = repo_root / "note.txt"
     note.write_text(f"reviewed\n{secret}\n", encoding="utf-8")
-    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30)
-    subprocess.run(["git", "add", "note.txt"], cwd=repo_root, check=True, timeout=30)
+    clean_env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    subprocess.run(["git", "init", "--quiet"], cwd=repo_root, check=True, timeout=30, env=clean_env)
+    subprocess.run(["git", "add", "note.txt"], cwd=repo_root, check=True, timeout=30, env=clean_env)
     note.write_text("safe unstaged replacement\n", encoding="utf-8")
 
     proc = subprocess.run(
