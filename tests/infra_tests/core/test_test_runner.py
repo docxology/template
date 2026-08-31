@@ -413,16 +413,29 @@ def test_default_fail_under_constant_matches_repo_threshold() -> None:
     assert DEFAULT_FAIL_UNDER == 75
 
 
-def test_stage01_public_projects_flag_is_documented_in_help() -> None:
-    """The Stage 01 CLI exposes public-scope all-projects validation."""
-    proc = subprocess.run(  # noqa: S603
-        [sys.executable, "scripts/pipeline/stage_01_test.py", "--help"],
+def _run_stage01(*args: str, timeout: int = 120) -> subprocess.CompletedProcess[str]:
+    """Run the real Stage 01 CLI as a subprocess with load-aware headroom.
+
+    A cold interpreter import of ``stage_01_test.py`` measures ~20s on a
+    healthy workstation but can exceed the previous 30s bound on loaded or
+    slow-filesystem checkouts (observed 2026-08-30 fleet lane), producing
+    order-dependent ``subprocess.TimeoutExpired`` flakes. A single generous
+    bound keeps the test real (subprocess, no mocks) while removing the flake
+    class; assertion strength is unchanged.
+    """
+    return subprocess.run(  # noqa: S603 - fixed interpreter and repo-local argv.
+        [sys.executable, "scripts/pipeline/stage_01_test.py", *args],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
         check=False,
-        timeout=30,
+        timeout=timeout,
     )
+
+
+def test_stage01_public_projects_flag_is_documented_in_help() -> None:
+    """The Stage 01 CLI exposes public-scope all-projects validation."""
+    proc = _run_stage01("--help")
 
     assert proc.returncode == 0
     assert "--public-projects" in proc.stdout
@@ -432,14 +445,7 @@ def test_stage01_public_projects_flag_is_documented_in_help() -> None:
 
 def test_stage01_parallel_flag_is_documented_in_help() -> None:
     """The Stage 01 CLI exposes opt-in pytest-xdist parallelism via -n/--parallel."""
-    proc = subprocess.run(  # noqa: S603
-        [sys.executable, "scripts/pipeline/stage_01_test.py", "--help"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
+    proc = _run_stage01("--help")
 
     assert proc.returncode == 0
     assert "--parallel" in proc.stdout
@@ -448,48 +454,25 @@ def test_stage01_parallel_flag_is_documented_in_help() -> None:
 
 def test_stage01_public_projects_requires_all_projects_mode() -> None:
     """The public-scope flag is not silently ignored on the wrong command."""
-    proc = subprocess.run(  # noqa: S603
-        [sys.executable, "scripts/pipeline/stage_01_test.py", "--public-projects"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
+    proc = _run_stage01("--public-projects")
 
     assert proc.returncode != 0
     assert "--public-projects requires --project-only --all-projects" in proc.stderr
 
 
 def test_stage01_invalid_profile_is_rejected() -> None:
-    proc = subprocess.run(  # noqa: S603
-        [sys.executable, "scripts/pipeline/stage_01_test.py", "--profile", "bogus"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
+    proc = _run_stage01("--profile", "bogus")
 
     assert proc.returncode != 0
     assert "invalid choice" in proc.stderr
 
 
 def test_stage01_invalid_project_workers_is_rejected() -> None:
-    proc = subprocess.run(  # noqa: S603
-        [
-            sys.executable,
-            "scripts/pipeline/stage_01_test.py",
-            "--project-only",
-            "--all-projects",
-            "--project-workers",
-            "0",
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
+    proc = _run_stage01(
+        "--project-only",
+        "--all-projects",
+        "--project-workers",
+        "0",
     )
 
     assert proc.returncode != 0
@@ -497,18 +480,9 @@ def test_stage01_invalid_project_workers_is_rejected() -> None:
 
 
 def test_stage01_project_workers_requires_all_projects_mode() -> None:
-    proc = subprocess.run(  # noqa: S603
-        [
-            sys.executable,
-            "scripts/pipeline/stage_01_test.py",
-            "--project-workers",
-            "2",
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
+    proc = _run_stage01(
+        "--project-workers",
+        "2",
     )
 
     assert proc.returncode != 0
@@ -518,7 +492,7 @@ def test_stage01_project_workers_requires_all_projects_mode() -> None:
 def test_stage01_rejects_hidden_nested_concurrency_from_env() -> None:
     env = os.environ.copy()
     env["PYTEST_XDIST_WORKERS"] = "2"
-    proc = subprocess.run(  # noqa: S603
+    proc = subprocess.run(  # noqa: S603 - fixed interpreter and repo-local argv.
         [
             sys.executable,
             "scripts/pipeline/stage_01_test.py",
@@ -532,7 +506,7 @@ def test_stage01_rejects_hidden_nested_concurrency_from_env() -> None:
         capture_output=True,
         text=True,
         check=False,
-        timeout=30,
+        timeout=120,
     )
 
     assert proc.returncode != 0
