@@ -584,6 +584,7 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
         "docs/_generated/COUNTS.md",
         "docs/_generated/COUNTS.md",
         "docs/guides/manuscript-semantics.md",
+        "docs/guides/manuscript-semantics.md",
         "docs/guides/publishing-guide.md",
         "docs/guides/zenodo-doi-strategy.md",
         "docs/maintenance/archival-targets.md",
@@ -593,6 +594,7 @@ def test_active_coverage_support_closure_exactly_matches_outward_documentation_l
         "projects/AGENTS.md",
         "projects/AGENTS.md",
         "projects/templates/template_code_project",
+        "projects/templates/template_active_inference/manuscript/SYNTAX.md",
     ]
     declared_targets = {spec.relative_path.as_posix() for spec in _COVERAGE_COPY_SUPPORT_SPECS}
 
