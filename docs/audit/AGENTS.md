@@ -25,6 +25,12 @@ working-tree snapshots, not yet in git history, and root Markdown is reserved
 for long-lived documentation. They are point-in-time audit lanes for
 2026-08-30 only; no entry doc links to them as current guidance.
 
+On 2026-08-31 (agent-ergonomics round 2), the tracked root-level
+`_FLEET_REPORT_2026-08-30.md` (git-guards diagnostics lane) was relocated here
+via `git mv` — root Markdown stays reserved for long-lived entry documentation.
+The dated `REVIEW_LOG_2026-08-31.md` remains at root as the tracked append-only
+review log (referenced by TO-DO.md rows).
+
 The two root-level dated session logs `_FLEET_REPORT_2026-08-30.md` and
 `REVIEW_LOG_2026-08-31.md` were moved here from the repo root on 2026-08-31
 (agent-ergonomics round-2 pass), per the same policy: root Markdown is

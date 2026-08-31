@@ -3,7 +3,7 @@
   "projects": {
     "template_active_inference": {
       "coverage_pct": "91.89 %",
-      "source_hash": "bc51cbe2c31815d43ceefa7ecc73b612ef020759a3c12d4f2f8916d011ff71c4"
+      "source_hash": "a716bcee4975df1efa83cb100b90063b50156b2abd22db8d664c3ce4ba7c3663"
     },
     "template_advanced_literature_review": {
       "coverage_pct": "91.96 %",
@@ -95,11 +95,11 @@
     },
     "template_textbook": {
       "coverage_pct": "96.08 %",
-      "source_hash": "777400a0e77926117aec61f3c72a7b57ef8548ece89fef39a12ca3548b0f890f"
+      "source_hash": "cf96fecd222a3e2c3fab4e77914bf9f0b50f01c5737889bbe879e4a87a6b497f"
     }
   },
   "schema_version": 5,
-  "source_commit": "ba37b7b8b380878eafb6754f3c653d3e70fe4a9a",
+  "source_commit": "9738022c85550153884a1a87d07f8f636a282d45",
   "source_inventory_mode": "tracked-and-nonignored-coverage-inputs-v3",
   "source_tree_identity": {
     "algorithm": "sha256",
@@ -107,12 +107,12 @@
     "measurement_support": {
       "template_active_inference": {
         "algorithm": "sha256",
-        "digest": "e116f35d4886f06cf291420770ff7eb8911a87bb9808720f8f1896e1f7450ea0",
+        "digest": "e507c513b7e38128314b447ae997e9308c4b9813e8db9af49870044c89295c67",
         "entries": [
           {
             "identity": "sha256",
             "path": "AGENTS.md",
-            "sha256": "f851c630cf231e5cab00acdfeadea36777870a881365da54b7b0b227d5d4e518",
+            "sha256": "fc725f4c594080ee321ba574bc2e12217b87fffb0c5225711ab3d66744159916",
             "type": "file"
           },
           {
@@ -184,7 +184,7 @@
       }
     },
     "projects": {
-      "template_active_inference": "bc51cbe2c31815d43ceefa7ecc73b612ef020759a3c12d4f2f8916d011ff71c4",
+      "template_active_inference": "a716bcee4975df1efa83cb100b90063b50156b2abd22db8d664c3ce4ba7c3663",
       "template_advanced_literature_review": "4fec980fa59febd34625bf9960d54e1e43dcec98b2b53f14699bf53c6e33e1a4",
       "template_autopoiesis": "33885da930213a7128597011bd0b8fc64613755d24640dddcf5dc48f90d83cfd",
       "template_autoresearch_project": "9c71e2e98b28d772a3c4563c4072a4be0adbdf0c6a76aac411480ec2003a2f72",
@@ -207,7 +207,7 @@
       "template_sia": "626fadb885525505050d010340392642d98f54d09427c8a255f8b4055c645ecb",
       "template_storybook": "93d61ac8d1331fd387c2123b9e3a69826bb6942b71ac5eb11a3c1f58fe2fb04b",
       "template_template": "a782037cf492b6a7ddd8a359d9238aff6587fbabcaaf37577fed9e70bf3f9ca0",
-      "template_textbook": "777400a0e77926117aec61f3c72a7b57ef8548ece89fef39a12ca3548b0f890f"
+      "template_textbook": "cf96fecd222a3e2c3fab4e77914bf9f0b50f01c5737889bbe879e4a87a6b497f"
     }
   }
 }

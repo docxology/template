@@ -149,3 +149,18 @@ Preflight: branch `main`, in sync with `origin/main` (fetch skipped — external
 - `AGENT-ERG-COUNTS-PROVENANCE-MED-1` remains open: counts.py --check still reports stale coverage provenance; the documented remediation (`--refresh-coverage-provenance --write`) requires a full coverage measurement (>10 min per project on this volume; a round-1 lane's attempt was killed at timeout and truncated .git/index). Deferred with reason — needs an unimpeded run, not a shared-fleet slot.
 - Gates verified live this pass: scoped docs lint over six entry docs — 0 broken links; `check_backlog.py --strict` — 32 IDs, 0 errors/warnings; `status_evidence.py --check` — OK. Fast pytest slice skipped (no source change beyond docs + .gitignore; repo-wide pytest exceeds the time box on this drive).
 - Commits path-scoped to TO-DO.md, .gitignore, REVIEW_LOG_2026-08-31.md.
+
+## Round-2 agent-ergonomics pass — 2026-08-31 (~14:00–15:20 PDT)
+
+Preflight: branch main, ahead 1 at dispatch (prior lane's backlog-shape commit, pushed this round — ls-remote verified). Dirty tree pre-existing (sidecar_*, docs/manuscript working dirs, staged REVIEW_LOG mod from a prior lane — left untouched).
+
+Cold-start re-audit: orientation ladder 3/3 (README→STATUS/TO-DO, START_HERE current-state block). Scoped link lint over the 10 root entry docs: 0 broken links. Gates: check_backlog --strict OK (32 IDs); status_evidence --check OK; skills check-all-exports OK (0 violations); active_projects regenerated-consistent; counts.py --check initially STALE (open Medium row).
+
+Implemented:
+- AGENT-ERG-COUNTS-PROVENANCE-MED-1 (Medium, closes): ran `uv run python scripts/docgen/counts.py --refresh-coverage-provenance --write` to completion (~25 min on this volume); `--check` now reports COUNTS.md OK (in sync with live tree). Negative control holds: a coverage input change re-stales --check by design.
+- `_FLEET_REPORT_2026-08-30.md` relocated root → `docs/audit/_FLEET_REPORT_2026-08-30.md` via git mv (root Markdown reserved for long-lived entry docs; file was unlinked from all entry docs — verified via git grep). Dated note added to `docs/audit/AGENTS.md`.
+- AGENTS.md stage list: signposts the LLM review/translation troubleshooting guide (`docs/operational/troubleshooting/llm-review.md`) at the LLM stage lines.
+
+Known-unverified this pass: mypy/pre-commit full hooks and full pytest not run (external-drive volume exceeds lane budget; scoped fast gates only). `docs/_generated/coverage_snapshot.json` regenerated (fresh provenance) — commit path-scoped.
+
+Scope disclosure: edits limited to AGENTS.md, TO-DO.md, REVIEW_LOG_2026-08-31.md, docs/audit/AGENTS.md, docs/audit/_FLEET_REPORT_2026-08-30.md (mv), docs/_generated/coverage_snapshot.json, docs/_generated/COUNTS.md.
