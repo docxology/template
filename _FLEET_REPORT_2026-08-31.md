@@ -45,3 +45,24 @@ compounding that damage, this lane did all work in an isolated git worktree:
 - The index churn on the main checkout is an operational hazard for any lane
   doing git work there concurrently — recommend staggering fleet lanes or
   giving each lane its own worktree (as done here).
+
+## Addendum (post-initial-report findings)
+
+2. `3c82ebbff` test(git_hook_smoke): scrub inherited GIT_* env from fixture git subprocesses
+3. `56e0a2e48` fix(git_guards): pin git subprocesses to repo_root under inherited GIT_DIR
+   - Root cause: during a real `git push`, git exports an absolute GIT_DIR (for a
+     linked worktree, the worktree gitdir). All `git ls-files` / `git diff --cached`
+     / `git cat-file` calls in `infrastructure.project.git_guards` inherited it,
+     so the pre-push secret-scan fixtures' tmp repos resolved to the outer repo's
+     index and found nothing → pre-push hook failed the push.
+   - Fix: `_repo_git_env()` helper strips GIT_DIR/GIT_INDEX_FILE/GIT_WORK_TREE;
+     all 8 git subprocesses in git_guards.py route through it. Also repaired
+     the shared repo config (`core.bare` was incorrectly `true`, which made git
+     treat every worktree as having no working tree — "this operation must be
+     run in a work tree"; that defect also explains the coverage-provenance
+     hook failure other lanes were fighting).
+
+## Final push status
+
+- Pushed and verified on origin: branch `fleet/pai-template-20260830` at
+  `56e0a2e48` (all pre-push hooks green). VERIFIED via `git ls-remote`.
