@@ -78,3 +78,36 @@ incrementally, push if possible.
 - Code change: **verified** (tests, mypy, ruff, real guard runs).
 - Push: **verified** (remote SHA == local SHA, my commit confirmed in range).
 - Coverage-provenance refresh: **not verified / blocked on machine load**.
+
+## Addendum (later same-day session — repo-state recovery + re-verification)
+
+- **Environment incident:** the checkout's git index was corrupted twice
+  (0-byte `.git/index`, stale `index.lock`/`next-index-*.lock`) during heavy
+  concurrent fleet load. Repaired in place (lock removal + `git reset --mixed`);
+  no repo data lost. The `_run_git` fail-closed diagnostics shipped above are
+  exactly the class of guard that would have surfaced this legibly.
+- **Sync:** branch had diverged from `origin/main` (1 local / 3 remote); local
+  commits `c4fa4b8a4` (export-bundle output-dir fix), `6ac90945f` (guards
+  diagnostics), `d625cda9d` (stage-banner docs) rebased cleanly onto
+  `origin/main`; then `3442eca7d` + `514971960` landed from a sibling lane.
+  Local `main` now == `origin/main` at `514971960` (verified via `git fetch` +
+  `git status -sb`).
+- **Re-verified this session** (all real runs, current HEAD):
+  - `pytest tests/infra_tests/project/test_git_guards.py` — **31 passed**.
+  - `pytest tests/infra_tests/publishing/test_export_bundle.py` — **26 passed**
+    (covers the `resolve_source_manuscript_dir` import fix).
+  - `pytest tests/infra_tests/publishing/{test_publishing,test_publishing_core,test_cli}.py`
+    — **72 passed**.
+  - `ruff check` on the three touched source files — **All checks passed**;
+    `mypy` on `git_guards.py` and `export_bundle.py` — **Success, no issues**.
+  - `scripts/audit/verify_no_mocks.py`, `check_tracked_all.py`,
+    `check_tracked_generated_artifacts.py` — all clean (rc 0).
+- **Known limitation (environment, not code):**
+  `tests/infra_tests/core/test_health.py::TestSubsetSelection::test_subset_runs_only_named_gates`
+  (and the parallel variant) hit pytest's subprocess `select` timeout on this
+  loaded machine — the same documented load-flake class; 14 other tests in the
+  module ran green before the stall. Not verified on this host under low load.
+- **Not committed (intentionally, local-only):** `AUDIT_2026-08-30*.md`,
+  `.laneD_results.json`, `.tmp_prune/`, sidecar scratch jobs/logs,
+  `skillarum-docs/`, and `projects/templates/*/docs/manuscript/` untracked
+  render helpers — kept out of the public tree per public-output hygiene.
