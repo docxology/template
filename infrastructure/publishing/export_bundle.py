@@ -36,7 +36,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from infrastructure.core.project_paths import (
-    resolve_manuscript_dir,
+    resolve_source_manuscript_dir,
 )
 
 
@@ -275,7 +275,7 @@ def export_for_publishing(
     project_root = _resolve_project_root(project, repo_root)
 
     # Gather metadata from manuscript/config.yaml
-    metadata = _read_config(resolve_manuscript_dir(project_root))
+    metadata = _read_config(resolve_source_manuscript_dir(project_root))
 
     # Collect artifacts from output/
     output_root = project_root / "output"
